@@ -3,8 +3,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./networking.nix
-    ./disko.nix
+    # Do NOT import ./home.nix here - it's handled by home-manager.users.zeev below
   ];
 
   # Bootloader
@@ -23,6 +22,8 @@
     htop
     tree
     unzip
+    sops
+    age
   ];
 
   # Users
@@ -30,8 +31,12 @@
     isNormalUser = true;
     description = "zeev";
     extraGroups = [ "wheel" "networkmanager" ];
-    hashedPassword = "$y$j9T$jEo/iEqN827Jzqa0dtndo1$xoCk/8WqZ/v.JaCV0gj1Tr9Km/dVB9qKfKGn9/hjmk2";
+    hashedPasswordFile = config.sops.secrets.zeev_password.path;
+    shell = pkgs.zsh;
   };
+
+  # Enable zsh system-wide
+  programs.zsh.enable = true;
 
   # Enable SSH
   services.openssh = {
@@ -47,17 +52,20 @@
     defaultSopsFile = ./secrets.yaml;
     defaultSopsFormat = "yaml";
     age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-  };
-
-  # Home Manager
-  home-manager = {
-    extraSpecialArgs = { inherit inputs; };
-    users = {
-      zeev = import ./home.nix;  # This imports your home.nix as a Home Manager config
+    
+    secrets = {
+      zeev_password = { };
+      # Add other secrets as needed
     };
   };
 
-  users.users.zeev.shell = pkgs.zsh;
-  programs.zsh.enable = true;
+  # Home Manager configuration - THIS IS WHERE HOME.NIX GETS IMPORTED
+  home-manager = {
+    extraSpecialArgs = { inherit inputs; };
+    users = {
+      zeev = import ./home.nix;  # This is the ONLY place home.nix should be imported
+    };
+  };
+
   system.stateVersion = "25.05";
 }
