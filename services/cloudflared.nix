@@ -2,35 +2,23 @@
 
 {
   sops.secrets.cloudflare_tunnel_token = { };
-  sops.secrets.cloudflare_tunnel_credentials = { };
 
-  services.cloudflared = {
+  systemd.services.cloudflared = {
     enable = true;
-    user = "cloudflared";
+    description = "Cloudflare Tunnel";
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
     
-    # Use environmentFile instead of tokenFile
-    environmentFile = config.sops.secrets.cloudflare_tunnel_token.path;
-    
-    tunnels = {
-      "homeserver" = {
-        credentialsFile = config.sops.secrets.cloudflare_tunnel_credentials.path;
-        default = "http://localhost:8080";
-        
-        ingress = {
-          "nextcloud.yourdomain.com" = "http://localhost:8080";
-          "keycloak.yourdomain.com" = "http://localhost:8081";
-          "jellyfin.yourdomain.com" = "http://localhost:8096";
-          "paperless.yourdomain.com" = "http://localhost:8082";
-          "home.yourdomain.com" = "http://localhost:8123";
-        };
-      };
+    serviceConfig = {
+      ExecStart = "${pkgs.cloudflared}/bin/cloudflared tunnel --no-autoupdate run --token-file ${config.sops.secrets.cloudflare_tunnel_token.path}";
+      Restart = "always";
+      RestartSec = "5s";
+      User = "cloudflared";
+      Group = "cloudflared";
+      DynamicUser = true;
     };
   };
 
-  # Ensure cloudflared user exists
-  users.users.cloudflared = {
-    isSystemUser = true;
-    group = "cloudflared";
-  };
-  users.groups.cloudflared = {};
+  # Open firewall for Cloudflared if needed
+  networking.firewall.allowedTCPPorts = [ 80 443 ];
 }
