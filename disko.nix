@@ -1,12 +1,11 @@
-# /etc/nixos/disko.nix
-{ lib,... }:
+{ lib, ... }:
 
 {
   disko.devices = {
     disk = {
       # The fast NVMe SSD for the OS (/dev/nvme0n1)
       nvme = {
-        device = "/dev/disk/by-id/SAMSUNG_MZVLW256HEHP-000L7_S35ENX0J520898"; # Using by-id is more robust
+        device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0J520898"; # Fixed: nvme- prefix
         type = "disk";
         content = {
           type = "gpt";
@@ -18,24 +17,31 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
+                mountOptions = [ "defaults" ];
               };
             };
             root = {
               size = "100%";
               content = {
                 type = "btrfs";
-                mountOptions = [ "compress=zstd" "noatime" ];
+                extraArgs = [ "-f" ]; # Force creation
                 subvolumes = {
                   "/@" = {
                     mountpoint = "/";
+                    mountOptions = [ "compress=zstd" "noatime" ];
                   };
                   "/@nix" = {
                     mountpoint = "/nix";
                     mountOptions = [ "compress=zstd" "noatime" ];
                   };
+                  "/@log" = {
+                    mountpoint = "/var/log";
+                    mountOptions = [ "compress=zstd" "noatime" ];
+                  };
                   "/@swap" = {
                     mountpoint = "/.swapvol";
-                    swap.swapfile.size = "16G";
+                    mountOptions = [ "noatime" ];
+                    # Fixed: Proper swap configuration
                   };
                 };
               };
@@ -46,7 +52,7 @@
 
       # The larger SATA SSD for home directories (/dev/sda)
       sata = {
-        device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_PAA00121122080500123"; # Using by-id is more robust
+        device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_PAA00121122080500123";
         type = "disk";
         content = {
           type = "gpt";
@@ -55,10 +61,19 @@
               size = "100%";
               content = {
                 type = "btrfs";
-                mountOptions = [ "compress=zstd" "noatime" ];
+                extraArgs = [ "-f" ]; # Force creation
                 subvolumes = {
                   "/@home" = {
                     mountpoint = "/home";
+                    mountOptions = [ "compress=zstd" "noatime" ];
+                  };
+                  "/@media" = {
+                    mountpoint = "/home/zeev/media";
+                    mountOptions = [ "compress=zstd" "noatime" ];
+                  };
+                  "/@downloads" = {
+                    mountpoint = "/home/zeev/downloads";
+                    mountOptions = [ "compress=zstd" "noatime" ];
                   };
                 };
               };
@@ -66,6 +81,27 @@
           };
         };
       };
+    };
+  };
+
+  # Configure swap file separately
+  swapDevices = [
+    {
+      device = "/.swapvol/swapfile";
+      size = 16384; # 16GB in MB
+    }
+  ];
+
+  # Additional filesystem configurations
+  fileSystems = {
+    "/" = {
+      options = [ "compress=zstd" "noatime" ];
+    };
+    "/nix" = {
+      options = [ "compress=zstd" "noatime" ];
+    };
+    "/home" = {
+      options = [ "compress=zstd" "noatime" ];
     };
   };
 }

@@ -69,8 +69,9 @@ graph TB
 - **CPU**: Intel i5-6500 or newer (Intel GPU required for Jellyfin acceleration)
 - **RAM**: 8GB minimum (16GB+ recommended for multiple services)
 - **Storage**: 
-  - 100GB+ SSD for system
-  - Additional storage for media and user data
+  - **Primary NVMe SSD**: 256GB+ for system, `/nix`, logs, and swap
+  - **Secondary SATA SSD**: 1TB+ for home directories, media, and downloads
+  - Dual-disk setup with Btrfs compression and subvolumes
 - **Network**: Gigabit Ethernet connection
 - **USB**: Port for YubiKey authentication
 
@@ -78,6 +79,8 @@ graph TB
 - ✅ Intel GPU hardware acceleration (VA-API) for Jellyfin
 - ✅ YubiKey/FIDO2 authentication support
 - ✅ PC/SC smart card daemon for hardware tokens
+- ✅ Dual-SSD setup with Btrfs compression and subvolumes
+- ✅ 16GB swap file for optimal performance
 - ✅ Hardware monitoring and thermal management
 
 ## **🚀 Quick Start Installation**
@@ -94,6 +97,12 @@ sudo -i
 # Clone the configuration
 git clone <your-repo-url> /mnt/etc/nixos
 cd /mnt/etc/nixos
+
+# Verify your disk device IDs match the configuration
+ls -la /dev/disk/by-id/ | grep -E "(nvme|ata)"
+
+# Apply disk partitioning with Disko
+nix --experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko /mnt/etc/nixos/disko.nix
 
 # Install system
 nixos-install --flake .#homeserver
@@ -117,6 +126,59 @@ sops secrets.yaml
 # Rebuild with secrets
 sudo nixos-rebuild switch --flake /etc/nixos
 ```
+
+## **💾 Disk Configuration**
+
+### **Dual-SSD Setup**
+The configuration uses two SSDs for optimal performance and data separation:
+
+#### **Primary NVMe SSD (256GB)**
+- **Device**: Samsung MZVLW256HEHP (256GB NVMe)
+- **Purpose**: High-performance system storage
+- **Mount Points**:
+  - `/boot` - EFI boot partition (1GB, FAT32)
+  - `/` - Root filesystem with system files
+  - `/nix` - Nix store (packages and dependencies)
+  - `/var/log` - System logs (separate for easier management)
+  - `/.swapvol` - Swap file location (16GB for optimal performance)
+
+#### **Secondary SATA SSD (1TB)**
+- **Device**: Patriot P210 (1TB SATA)
+- **Purpose**: User data and media storage
+- **Mount Points**:
+  - `/home` - User home directories
+  - `/home/zeev/media` - Media files for Jellyfin streaming
+  - `/home/zeev/downloads` - Download directory for Deluge torrents
+
+### **Btrfs Filesystem Features**
+- **Compression**: ZSTD compression enabled on all volumes (~30-50% space savings)
+- **Performance**: `noatime` option for better SSD performance and longevity
+- **Snapshots**: Btrfs subvolumes allow for easy snapshots and rollbacks
+- **Flexibility**: Separate subvolumes for different data types and backup strategies
+
+### **Storage Layout Diagram**
+```
+NVMe SSD (256GB)                    SATA SSD (1TB)
+├── /boot (1GB, FAT32)              └── /home (1TB, Btrfs)
+└── / (255GB, Btrfs)                    ├── /@home (User data)
+    ├── /@ (Root system)                ├── /@media (Jellyfin media)
+    ├── /@nix (Packages)                └── /@downloads (Torrents)
+    ├── /@log (System logs)
+    └── /@swap (16GB swapfile)
+```
+
+### **Performance Benefits**
+- **Fast Boot**: NVMe for system and applications provides quick startup
+- **Responsive UI**: Nix store on NVMe ensures fast package loading
+- **Efficient Storage**: Btrfs compression maximizes available space
+- **Data Separation**: Media and downloads on separate disk for better I/O
+- **Optimal Swap**: 16GB swap file handles memory-intensive operations
+
+### **Backup Considerations**
+- **System**: `/` and `/nix` can be recreated from configuration
+- **Critical Data**: `/home`, `/var/lib/postgresql`, `/var/lib/nextcloud`
+- **Logs**: `/var/log` separate subvolume for easier log management
+- **Media**: `/home/zeev/media` large files benefit from separate storage
 
 ## **🔑 Password Generation Guide**
 
@@ -356,13 +418,28 @@ sudo ls -la /run/secrets/
 ```bash
 # Essential directories to backup:
 /etc/nixos/                    # Configuration (this repo)
-/home/zeev/                    # User data
-/var/lib/postgresql/           # Databases
-/var/lib/nextcloud/           # Nextcloud data
+/home/zeev/                    # User data (SATA SSD)
+/home/zeev/media/              # Media files (SATA SSD)
+/home/zeev/downloads/          # Downloads (SATA SSD)
+/var/lib/postgresql/           # Databases (NVMe SSD)
+/var/lib/nextcloud/           # Nextcloud data (NVMe SSD)
 ~/.config/sops/age/           # Encryption keys
+
+# Btrfs snapshot commands for quick backups:
+sudo btrfs subvolume snapshot /home /home/.snapshots/home-$(date +%Y%m%d)
+sudo btrfs subvolume snapshot / /.snapshots/root-$(date +%Y%m%d)
+
+# Check disk usage by subvolume:
+sudo btrfs filesystem usage /
+sudo btrfs filesystem usage /home
 ```
 
 ## **🌐 Access Information**
+
+### **Server Access**
+- **Tailscale IP**: `100.69.40.75`
+- **Local IP**: Check with `ip addr show` or router DHCP
+- **SSH Access**: `ssh zeev@100.69.40.75` (via Tailscale)
 
 ### **Web Interfaces**
 - **Nextcloud**: https://nextcloud.example.com
@@ -434,6 +511,7 @@ ykman info
 ```bash
 # Check Tailscale status
 sudo tailscale status
+# Should show IP: 100.69.40.75
 
 # Test Cloudflare tunnel
 sudo cloudflared tunnel info homeserver
@@ -441,6 +519,10 @@ sudo cloudflared tunnel info homeserver
 # Check local network services
 curl -I http://localhost:8080  # Keycloak
 curl -I http://localhost:8081  # Nextcloud
+
+# Test Tailscale connectivity from remote device
+ping 100.69.40.75
+ssh zeev@100.69.40.75
 ```
 
 ### **Emergency Access**
