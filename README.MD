@@ -108,6 +108,9 @@ reboot
 mkdir -p ~/.config/sops/age
 # Add your age private key to ~/.config/sops/age/keys.txt
 
+# Generate strong passwords for services
+./generate-passwords.sh
+
 # Configure secrets
 sops secrets.yaml
 
@@ -115,6 +118,142 @@ sops secrets.yaml
 sudo nixos-rebuild switch --flake /etc/nixos
 ```
 
+## **🔑 Password Generation Guide**
+
+### **Quick Password Generation**
+
+#### **For Database Services**
+```bash
+# Generate secure passwords for all database services
+echo "keycloak_db_password: \"$(openssl rand -base64 32)\""
+echo "nextcloud_admin_password: \"$(openssl rand -base64 32)\""
+echo "paperless_admin_password: \"$(openssl rand -base64 32)\""
+echo "miniflux_admin_password: \"$(openssl rand -base64 32)\""
+echo "microbin_admin_password: \"$(openssl rand -base64 32)\""
+```
+
+#### **For System Authentication**
+```bash
+# Generate system user password hash
+read -s -p "Enter password for user zeev: " PASSWORD
+echo "zeev_password: \"$(echo $PASSWORD | mkpasswd -m yescrypt -s)\""
+
+# Generate Radicale htpasswd entry
+read -s -p "Enter password for Radicale: " RADPASS
+echo "radicale_htpasswd: \"$(echo "zeev:$(echo $RADPASS | htpasswd -niB zeev | cut -d: -f2)\"")"
+```
+
+### **Password Generation Methods**
+
+#### **Method 1: OpenSSL (Recommended)**
+```bash
+# 32-character base64 password
+openssl rand -base64 32
+
+# 40-character hex password  
+openssl rand -hex 20
+
+# Custom length (adjust number for different lengths)
+openssl rand -base64 24  # ~32 chars
+openssl rand -base64 48  # ~64 chars
+```
+
+#### **Method 2: System Random**
+```bash
+# Using /dev/urandom
+head -c 32 /dev/urandom | base64
+
+# Using /dev/random (slower, more entropy)
+head -c 32 /dev/random | base64
+
+# Remove special characters if needed
+head -c 32 /dev/urandom | base64 | tr -d '/+='
+```
+
+#### **Method 3: pwgen Tool**
+```bash
+# Install pwgen first
+nix-shell -p pwgen
+
+# Generate passwords
+pwgen -s 32 1          # Secure 32-char password
+pwgen -s -y 32 1       # With symbols
+pwgen -s -n 32 5       # 5 different passwords
+```
+
+#### **Method 4: Password Managers**
+- **1Password**: Generate 32+ character passwords
+- **Bitwarden**: Use password generator with symbols
+- **KeePass**: Configure custom generation rules
+- **LastPass**: Generate complex passwords
+
+### **Batch Password Generation Script**
+
+Create a helper script for generating all passwords:
+
+```bash
+#!/bin/bash
+# save as generate-passwords.sh
+
+echo "# Generated passwords for LabHome server"
+echo "# $(date)"
+echo ""
+
+echo "# User authentication"
+echo "zeev_password: \"# Run: mkpasswd -m yescrypt 'your-password'\""
+echo "radicale_htpasswd: \"# Run: htpasswd -nbB zeev 'your-password'\""
+echo ""
+
+echo "# Database passwords"
+services=("keycloak_db" "nextcloud_admin" "paperless_admin" "miniflux_admin" "microbin_admin")
+for service in "${services[@]}"; do
+    password=$(openssl rand -base64 32)
+    echo "${service}_password: \"${password}\""
+done
+
+echo ""
+echo "# API tokens (generate manually)"
+echo "cloudflare_api_token: \"# Get from Cloudflare dashboard\""
+echo "cloudflare_tunnel_token: \"# Run: cloudflared tunnel token homeserver\""
+echo "tailscale_auth_key: \"# Get from Tailscale admin console\""
+echo "telegram_bot_token: \"# Get from @BotFather\""
+echo "telegram_chat_id: \"# Get from bot messages\""
+
+echo ""
+echo "# Copy these values to your secrets.yaml file"
+```
+
+Make it executable and run:
+```bash
+chmod +x generate-passwords.sh
+./generate-passwords.sh > generated-passwords.txt
+```
+
+### **Password Security Guidelines**
+
+#### **Strength Requirements**
+- **Minimum Length**: 20 characters for admin, 32 for database
+- **Character Types**: Uppercase, lowercase, numbers, symbols
+- **Uniqueness**: Never reuse passwords across services
+- **Randomness**: Use cryptographically secure generators
+
+#### **Storage Best Practices**
+- Store in encrypted password manager
+- Backup encryption keys separately
+- Use SOPS for configuration secrets
+- Never store plaintext in version control
+
+#### **Password Validation**
+```bash
+# Test password strength
+echo "your-password" | zxcvbn
+
+# Check password in Have I Been Pwned
+curl -s "https://api.pwnedpasswords.com/range/$(echo -n 'password' | sha1sum | cut -c1-5)"
+
+# Verify hash generation
+echo "test" | mkpasswd -m yescrypt -s
+```
 ## **🔐 Security & Authentication**
 
 ### **Multi-Factor Authentication**
