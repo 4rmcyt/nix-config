@@ -3,8 +3,8 @@
 {
   sops.secrets.cloudflare_tunnel_token = { };
 
+  # Use systemd service instead of the NixOS module which has limited options
   systemd.services.cloudflared = {
-    enable = true;
     description = "Cloudflare Tunnel";
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
@@ -19,6 +19,6 @@
     };
   };
 
-  # Open firewall for Cloudflared if needed
+  # Open firewall ports if needed
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 }
