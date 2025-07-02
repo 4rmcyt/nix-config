@@ -10,6 +10,9 @@
     
     config = {
       dbtype = "pgsql";
+      dbhost = "localhost";
+      dbname = "nextcloud";
+      dbuser = "nextcloud";
       adminpassFile = config.sops.secrets.nextcloud_admin_password.path;
     };
     
@@ -19,14 +22,5 @@
     };
   };
 
-  services.postgresql = {
-    enable = true;
-    ensureDatabases = [ "nextcloud" ];
-    ensureUsers = [
-      {
-        name = "nextcloud";
-        ensureDBOwnership = true;
-      }
-    ];
-  };
+  # Remove PostgreSQL configuration - handled by database.nix
 }

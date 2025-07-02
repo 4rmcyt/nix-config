@@ -1,28 +1,34 @@
 { config, pkgs, ... }:
 
 {
-  # Enable Tailscale
+  sops.secrets.tailscale_auth_key = { };
+
   services.tailscale = {
     enable = true;
-    useRoutingFeatures = "both";
-    authKeyFile = config.sops.secrets.tailscale_auth_key.path;
+    useRoutingFeatures = "both";  # Enable subnet routing and exit node
+    
+    # Don't interfere with existing firewall rules
+    interfaceName = "tailscale0";
+    
+    # Use systemd-resolved for DNS
     extraUpFlags = [
-      "--accept-dns=false"  # Use NextDNS instead of Tailscale DNS
-      "--accept-routes"
-      "--ssh"
-      "--advertise-tags=tag:homeserver"
+      "--accept-dns=false"  # Don't override DNS settings
+      "--accept-routes"     # Accept subnet routes
+      "--shields-up=false"  # Allow incoming connections
     ];
   };
 
-  # Allow Tailscale through firewall
+  # Tailscale-specific firewall rules
   networking.firewall = {
-    allowedUDPPorts = [ config.services.tailscale.port ];
+    # Allow Tailscale traffic
     trustedInterfaces = [ "tailscale0" ];
+    
+    # Allow UDP for Tailscale coordination
+    allowedUDPPorts = [ 41641 ];
+    
+    # Don't check IP forwarding - Tailscale handles this
+    checkReversePath = "loose";
   };
-
-  # Tailscale secrets
-  sops.secrets.tailscale_auth_key = { };
-  sops.secrets.tailscale_ip = { };
 
   # Enable IP forwarding for subnet routing
   boot.kernel.sysctl = {
@@ -30,7 +36,16 @@
     "net.ipv6.conf.all.forwarding" = 1;
   };
 
-  # Configure static Tailscale IP (optional, for documentation)
-  # The actual IP is assigned by Tailscale control plane
-  # but we store it in secrets for reference
+  # Tailscale authentication service
+  systemd.services.tailscale-auth = {
+    description = "Tailscale authentication";
+    after = [ "tailscale.service" ];
+    wantedBy = [ "multi-user.target" ];
+    
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.tailscale}/bin/tailscale up --authkey file:${config.sops.secrets.tailscale_auth_key.path} --accept-routes --shields-up=false";
+    };
+  };
 }
