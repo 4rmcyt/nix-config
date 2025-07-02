@@ -1,27 +1,32 @@
-# /etc/nixos/services/nextcloud.nix
-{ config, pkgs,... }:
+{ config, pkgs, ... }:
 
 {
   sops.secrets.nextcloud_admin_password = { };
 
   services.nextcloud = {
     enable = true;
-    package = pkgs.nextcloud28; # Update this for major upgrades
-    hostName = "nextcloud.example.com"; # Replace with your domain
-    listenAddress = "127.0.0.1";
-    port = 8081; # Matches the port in cloudflared.nix
-    https = false;
-
-    database.createLocally = true;
-    configureRedis = true;
-
+    package = pkgs.nextcloud29;
+    hostName = "nextcloud.yourdomain.com";
+    
     config = {
-      adminuser = "zeev";
-      adminpassFile = config.sops.secrets.nextcloud_admin_password.path;
       dbtype = "pgsql";
+      adminpassFile = config.sops.secrets.nextcloud_admin_password.path;
     };
+    
+    settings = {
+      trusted_proxies = [ "127.0.0.1" ];
+      overwriteprotocol = "https";
+    };
+  };
 
-    maxUploadSize = "10G";
-    autoUpdateApps.enable = true;
+  services.postgresql = {
+    enable = true;
+    ensureDatabases = [ "nextcloud" ];
+    ensureUsers = [
+      {
+        name = "nextcloud";
+        ensureDBOwnership = true;
+      }
+    ];
   };
 }
