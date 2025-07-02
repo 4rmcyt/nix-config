@@ -16,20 +16,13 @@
     
     database = {
       type = "postgresql";
-      createLocally = true;
+      createLocally = false;  # Database managed centrally
+      host = "localhost";
+      name = "keycloak";
+      username = "keycloak";
       passwordFile = config.sops.secrets.keycloak_db_password.path;
     };
   };
 
-  # Enable PostgreSQL
-  services.postgresql = {
-    enable = true;
-    ensureDatabases = [ "keycloak" ];
-    ensureUsers = [
-      {
-        name = "keycloak";
-        ensureDBOwnership = true;
-      }
-    ];
-  };
+  # Remove PostgreSQL configuration - handled by database.nix
 }

@@ -39,12 +39,16 @@
         ./disko.nix
         ./networking.nix
         
+        # Centralized services
+        ./services/database.nix      # NEW: Centralized database config
+        ./services/nextdns.nix
+
         # Service modules
         ./services/cloudflared.nix
-        ./services/caddy.nix
         ./services/deluge-vpn.nix
         ./services/fail2ban.nix
         ./services/home-assistant.nix
+        ./services/homepage.nix
         ./services/jellyfin.nix
         ./services/keycloak.nix
         ./services/media-content.nix

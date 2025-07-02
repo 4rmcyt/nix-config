@@ -35,13 +35,12 @@
     '';
   };
 
-  # Configure Deluge daemon in network namespace
+  # Configure Deluge daemon in network namespace (headless)
   services.deluge = {
     enable = true;
-    web.enable = true;
+    web.enable = true;  # Web interface is server-compatible
     web.port = 8112;
     
-    # Use declarative configuration
     declarative = true;
     config = {
       download_location = "/home/zeev/downloads";
@@ -50,7 +49,7 @@
     };
   };
 
-  # Override deluge daemon to run in network namespace
+  # Override deluge services to run in network namespace
   systemd.services.deluged = {
     after = [ "wireguard-wg-deluge.service" ];
     requires = [ "wireguard-wg-deluge.service" ];
@@ -60,7 +59,6 @@
     };
   };
 
-  # Override deluge web to run in network namespace
   systemd.services.deluge-web = {
     after = [ "deluged.service" "wireguard-wg-deluge.service" ];
     requires = [ "deluged.service" "wireguard-wg-deluge.service" ];
