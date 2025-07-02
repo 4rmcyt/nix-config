@@ -1,0 +1,7 @@
+# /etc/nixos/.sops.yaml
+creation_rules:
+  - path_regex: secrets.yaml$
+    # Generate this key with `age-keygen` and place the private key in
+    # /var/lib/sops/age/keys.txt on the server.
+    age: >-
+      age1... # PASTE THE PUBLIC KEY FROM `age-keygen` HERE
