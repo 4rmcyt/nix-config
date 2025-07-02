@@ -4,7 +4,7 @@
   networking = {
     hostName = "homeserver";
     
-    # Use NextDNS as primary DNS
+    # Use NextDNS as primary DNS with DNS-over-TLS
     nameservers = [
       "45.90.28.0#2bffa2.dns.nextdns.io"
       "45.90.30.0#2bffa2.dns.nextdns.io"
@@ -14,9 +14,14 @@
 
     # Enable systemd-resolved for DNS over TLS
     networkmanager.dns = "systemd-resolved";
+    
+    # Disable automatic DNS from DHCP to prioritize NextDNS
+    dhcpcd.extraConfig = ''
+      nooption domain_name_servers
+    '';
   };
 
-  # Configure systemd-resolved for NextDNS
+  # Configure systemd-resolved for NextDNS with enhanced security
   services.resolved = {
     enable = true;
     dnssec = "true";
@@ -26,8 +31,18 @@
       "45.90.30.0#2bffa2.dns.nextdns.io"
     ];
     extraConfig = ''
+      # NextDNS configuration with DNS-over-TLS
       DNS=45.90.28.0#2bffa2.dns.nextdns.io 45.90.30.0#2bffa2.dns.nextdns.io
       DNSOverTLS=yes
+      
+      # Security and performance settings
+      DNSSEC=yes
+      DNSStubListener=yes
+      Cache=yes
+      
+      # Prevent DNS leaks
+      Domains=~.
+      ReadEtcHosts=yes
     '';
   };
 }
