@@ -5,7 +5,7 @@
     disk = {
       # The fast NVMe SSD for the OS (/dev/nvme0n1)
       nvme = {
-        device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0J520898"; # Fixed: nvme- prefix
+        device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315";
         type = "disk";
         content = {
           type = "gpt";
@@ -52,7 +52,7 @@
 
       # The larger SATA SSD for home directories (/dev/sda)
       sata = {
-        device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_PAA00121122080500123";
+        device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345";
         type = "disk";
         content = {
           type = "gpt";
