@@ -1,40 +1,36 @@
 { config, pkgs, ... }:
 
-let
-  # The base domain you provided
-  baseDomain = "example.com";
-in
 {
-  # Enable the cloudflared daemon
+  sops.secrets.cloudflare_tunnel_token = { };
+  sops.secrets.cloudflare_tunnel_credentials = { };
+
   services.cloudflared = {
     enable = true;
-    tokenFile = config.sops.secrets.cloudflare_tunnel_token.path;
-
-    tunnels.homeserver = {
-      credentialsFile = config.sops.secrets.cloudflare_tunnel_credentials.path;
-
-      # Define how public hostnames map to internal services
-      ingress = [
-        # Services via Cloudflare Tunnel
-        { hostname = "nextcloud.${baseDomain}"; service = "http://localhost:8081"; }
-        { hostname = "keycloak.${baseDomain}"; service = "http://localhost:8080"; }
-        { hostname = "paste.${baseDomain}"; service = "http://localhost:8083"; }        # microbin
-        { hostname = "rss.${baseDomain}"; service = "http://localhost:8084"; }          # miniflux
-        { hostname = "cal.${baseDomain}"; service = "http://localhost:5232"; }          # radicale
-        { hostname = "jellyfin.${baseDomain}"; service = "http://localhost:8096"; }     # jellyfin
+    user = "cloudflared";
+    
+    # Use environmentFile instead of tokenFile
+    environmentFile = config.sops.secrets.cloudflare_tunnel_token.path;
+    
+    tunnels = {
+      "homeserver" = {
+        credentialsFile = config.sops.secrets.cloudflare_tunnel_credentials.path;
+        default = "http://localhost:8080";
         
-        # Services still via Caddy (local access)
-        { hostname = "paperless.${baseDomain}"; service = "http://localhost:8082"; }
-        { hostname = "audio.${baseDomain}"; service = "http://localhost:8085"; }        # audiobookshelf
-        { hostname = "home.${baseDomain}"; service = "http://localhost:8123"; }         # home assistant
-
-        # A catch-all to prevent the tunnel from exposing other services by accident
-        { service = "http_status:404"; }
-      ];
+        ingress = {
+          "nextcloud.yourdomain.com" = "http://localhost:8080";
+          "keycloak.yourdomain.com" = "http://localhost:8081";
+          "jellyfin.yourdomain.com" = "http://localhost:8096";
+          "paperless.yourdomain.com" = "http://localhost:8082";
+          "home.yourdomain.com" = "http://localhost:8123";
+        };
+      };
     };
   };
 
-  # Define the new secrets required for this module
-  sops.secrets.cloudflare_tunnel_token = { };
-  sops.secrets.cloudflare_tunnel_credentials = { };
+  # Ensure cloudflared user exists
+  users.users.cloudflared = {
+    isSystemUser = true;
+    group = "cloudflared";
+  };
+  users.groups.cloudflared = {};
 }
