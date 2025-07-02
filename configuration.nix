@@ -3,7 +3,8 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./home.nix
+    ./networking.nix
+    ./disko.nix
   ];
 
   # Bootloader
@@ -52,9 +53,11 @@
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
     users = {
-      zeev = import ./home.nix;
+      zeev = import ./home.nix;  # This imports your home.nix as a Home Manager config
     };
   };
 
-  system.stateVersion = "24.11";
+  users.users.zeev.shell = pkgs.zsh;
+  programs.zsh.enable = true;
+  system.stateVersion = "25.05";
 }
