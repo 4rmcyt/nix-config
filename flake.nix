@@ -36,7 +36,7 @@
         ./configuration.nix
         ./disko.nix
         ./networking.nix
-
+        ./home.nix
         # Enable modules from flake inputs
         disko.nixosModules.disko
         sops-nix.nixosModules.sops
