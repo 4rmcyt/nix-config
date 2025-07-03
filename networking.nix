@@ -19,14 +19,17 @@
         22    # SSH
         3000  # Homepage Dashboard
         5232  # Radicale
-        8081  # Keycloak
+        8080  # Keycloak (fixed from 8081)
+        8081  # Nextcloud (fixed from missing)
         8082  # Paperless
         8083  # Miniflux
         8084  # File server
+        8085  # Audiobookshelf
         8096  # Jellyfin HTTP
         8112  # Deluge web
         8123  # Home Assistant
         8920  # Jellyfin HTTPS
+        8085  # Audiobookshelf
       ];
       
       allowedUDPPorts = [

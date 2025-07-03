@@ -6,10 +6,42 @@ This document explains all secrets used in the NixOS configuration, their format
 
 All secrets are managed using **SOPS-nix** with **Age encryption**. The secrets are stored in `secrets.yaml` and automatically decrypted at runtime.
 
+### **Age Encryption Setup (CRITICAL - DO THIS FIRST!)**
+
+**Age** is a modern encryption tool used by SOPS to encrypt your secrets. You need to generate Age keys before you can use any secrets.
+
+#### **1. Generate Age Key Pair**
+```bash
+# Install age tool
+nix-shell -p age
+
+# Generate new key pair
+age-keygen -o ~/.config/sops/age/keys.txt
+
+# This will output something like:
+# Public key: age1yyy6r96rw9wt6xz7d6y0y8fzwd6l8h8zv8l0rw5xl2kwhltwzthcqtq8j6
+# Private key saved to: ~/.config/sops/age/keys.txt
+```
+
+#### **2. Update .sops.yaml with Your Public Key**
+```yaml
+keys:
+  - &admin_key age1YOUR_ACTUAL_PUBLIC_KEY_HERE  # Replace with output from age-keygen
+```
+
+#### **3. Initial Secrets Setup**
+```bash
+# Encrypt secrets.yaml with your key
+sops -e -i secrets.yaml
+
+# Edit secrets (will decrypt, open editor, re-encrypt on save)
+sops secrets.yaml
+```
+
 ### **SOPS Setup Requirements**
-1. Age private key at: `~/.config/sops/age/keys.txt`
-2. Public key referenced in `.sops.yaml` file
-3. Secrets encrypted with: `sops secrets.yaml`
+1. Age private key at: `~/.config/sops/age/keys.txt` (generated above)
+2. Age public key in `.sops.yaml` (from age-keygen output)
+3. Secrets encrypted with: `sops -e -i secrets.yaml`
 
 ---
 

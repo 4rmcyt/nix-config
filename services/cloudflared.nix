@@ -26,22 +26,24 @@
     tunnel: $(cat ${config.sops.secrets.cloudflare_tunnel_token.path})
     
     ingress:
-      - hostname: nextcloud.yourdomain.com
-        service: http://localhost:8080
-      - hostname: keycloak.yourdomain.com
+      - hostname: nextcloud.labhome.work
         service: http://localhost:8081
-      - hostname: jellyfin.yourdomain.com
+      - hostname: keycloak.labhome.work
+        service: http://localhost:8080
+      - hostname: jellyfin.labhome.work
         service: http://localhost:8096
-      - hostname: paperless.yourdomain.com
+      - hostname: paperless.labhome.work
         service: http://localhost:8082
-      - hostname: home.yourdomain.com
+      - hostname: home.labhome.work
         service: http://localhost:8123
-      - hostname: rss.yourdomain.com
+      - hostname: rss.labhome.work
         service: http://localhost:8083
-      - hostname: deluge.yourdomain.com
+      - hostname: deluge.labhome.work
         service: http://localhost:8112
-      - hostname: cal.yourdomain.com
+      - hostname: cal.labhome.work
         service: http://localhost:5232
+      - hostname: audiobookshelf.labhome.work
+        service: http://localhost:8085
       - service: http_status:404
     EOF
   '';

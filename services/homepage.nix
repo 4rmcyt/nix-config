@@ -34,7 +34,7 @@
           {
             "Jellyfin" = {
               icon = "jellyfin";
-              href = "https://jellyfin.yourdomain.com";
+              href = "https://jellyfin.labhome.work";
               description = "Media streaming server";
               widget = {
                 type = "jellyfin";
@@ -46,7 +46,7 @@
           {
             "Deluge" = {
               icon = "deluge";
-              href = "https://deluge.yourdomain.com";
+              href = "https://deluge.labhome.work";
               description = "BitTorrent client";
               widget = {
                 type = "deluge";
@@ -62,7 +62,7 @@
           {
             "Home Assistant" = {
               icon = "home-assistant";
-              href = "https://home.yourdomain.com";
+              href = "https://home.labhome.work";
               description = "Home automation platform";
               widget = {
                 type = "homeassistant";
@@ -78,11 +78,11 @@
           {
             "Nextcloud" = {
               icon = "nextcloud";
-              href = "https://nextcloud.yourdomain.com";
+              href = "https://nextcloud.labhome.work";
               description = "Personal cloud storage";
               widget = {
                 type = "nextcloud";
-                url = "http://localhost:80";
+                url = "http://localhost:8081";
                 username = "admin";
                 password = "your-password";
               };
@@ -91,7 +91,7 @@
           {
             "Paperless" = {
               icon = "paperless";
-              href = "https://paperless.yourdomain.com";
+              href = "https://paperless.labhome.work";
               description = "Document management";
               widget = {
                 type = "paperlessngx";
@@ -103,7 +103,7 @@
           {
             "Miniflux" = {
               icon = "miniflux";
-              href = "https://rss.yourdomain.com";
+              href = "https://rss.labhome.work";
               description = "RSS reader";
               widget = {
                 type = "miniflux";
@@ -120,14 +120,14 @@
           {
             "Keycloak" = {
               icon = "keycloak";
-              href = "https://keycloak.yourdomain.com";
+              href = "https://keycloak.labhome.work";
               description = "Identity and access management";
             };
           }
           {
             "Radicale" = {
               icon = "radicale";
-              href = "https://cal.yourdomain.com";
+              href = "https://cal.labhome.work";
               description = "CalDAV and CardDAV server";
             };
           }

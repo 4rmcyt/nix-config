@@ -22,19 +22,7 @@
     
     virtualHosts = {
       # Nextcloud
-      "nextcloud.yourdomain.com" = {
-        extraConfig = ''
-          reverse_proxy localhost:8080 {
-            header_up Host {host}
-            header_up X-Real-IP {remote}
-            header_up X-Forwarded-For {remote}
-            header_up X-Forwarded-Proto {scheme}
-          }
-        '';
-      };
-      
-      # Keycloak
-      "keycloak.yourdomain.com" = {
+      "nextcloud.labhome.work" = {
         extraConfig = ''
           reverse_proxy localhost:8081 {
             header_up Host {host}
@@ -45,8 +33,20 @@
         '';
       };
       
+      # Keycloak
+      "keycloak.labhome.work" = {
+        extraConfig = ''
+          reverse_proxy localhost:8080 {
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+            header_up X-Forwarded-For {remote}
+            header_up X-Forwarded-Proto {scheme}
+          }
+        '';
+      };
+      
       # Jellyfin
-      "jellyfin.yourdomain.com" = {
+      "jellyfin.labhome.work" = {
         extraConfig = ''
           reverse_proxy localhost:8096 {
             header_up Host {host}
@@ -58,7 +58,7 @@
       };
       
       # Paperless
-      "paperless.yourdomain.com" = {
+      "paperless.labhome.work" = {
         extraConfig = ''
           reverse_proxy localhost:8082 {
             header_up Host {host}
@@ -70,7 +70,7 @@
       };
       
       # Home Assistant
-      "home.yourdomain.com" = {
+      "home.labhome.work" = {
         extraConfig = ''
           reverse_proxy localhost:8123 {
             header_up Host {host}
@@ -83,7 +83,7 @@
       };
       
       # Miniflux
-      "rss.yourdomain.com" = {
+      "rss.labhome.work" = {
         extraConfig = ''
           reverse_proxy localhost:8083 {
             header_up Host {host}
@@ -95,7 +95,7 @@
       };
       
       # Deluge Web UI
-      "deluge.yourdomain.com" = {
+      "deluge.labhome.work" = {
         extraConfig = ''
           reverse_proxy localhost:8112 {
             header_up Host {host}
@@ -107,9 +107,21 @@
       };
       
       # Radicale CalDAV/CardDAV
-      "cal.yourdomain.com" = {
+      "cal.labhome.work" = {
         extraConfig = ''
           reverse_proxy localhost:5232 {
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+            header_up X-Forwarded-For {remote}
+            header_up X-Forwarded-Proto {scheme}
+          }
+        '';
+      };
+      
+      # Audiobookshelf
+      "audiobookshelf.labhome.work" = {
+        extraConfig = ''
+          reverse_proxy localhost:8085 {
             header_up Host {host}
             header_up X-Real-IP {remote}
             header_up X-Forwarded-For {remote}

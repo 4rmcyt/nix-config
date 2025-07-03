@@ -1,11 +1,12 @@
-{ config, pkgs, ... }:
-
+{ config, pkgs, lib, ... }:
 {
+  sops.secrets.nextdns_config_id = { };
+
   # NextDNS configuration
   services.nextdns = {
     enable = true;
     arguments = [
-      "-config" "abcdef"  # Replace with your actual NextDNS config ID
+      "-config" "$(cat ${config.sops.secrets.nextdns_config_id.path})"
       "-listen" "127.0.0.1:53"
       "-cache-size" "10MB"
       "-max-ttl" "5m"
