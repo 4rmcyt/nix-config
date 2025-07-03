@@ -21,7 +21,6 @@
       
       # Database configuration
       db = "postgres";
-      db-url = "jdbc:postgresql://localhost:5432/keycloak";
       db-username = "keycloak";
       db-password-file = config.sops.secrets.keycloak_db_password.path;
       
@@ -35,7 +34,6 @@
       createLocally = false;
       host = "localhost";
       port = 5432;
-      name = "keycloak";
       username = "keycloak";
       passwordFile = config.sops.secrets.keycloak_db_password.path;
     };
