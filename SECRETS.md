@@ -230,6 +230,7 @@ curl -X GET "https://api.cloudflare.com/client/v4/accounts" \
 ```yaml
 keycloak_db_password: "a-very-strong-password-for-keycloak-db"
 nextcloud_admin_password: "a-very-strong-password-for-nextcloud"
+nextcloud_db_password: "a-very-strong-password-for-nextcloud-db"
 paperless_admin_password: "a-very-strong-password-for-paperless"
 miniflux_admin_password: "a-very-strong-password-for-miniflux"
 microbin_admin_password: "a-very-strong-password-for-microbin"
@@ -241,6 +242,24 @@ microbin_admin_password: "a-very-strong-password-for-microbin"
   - Unique for each service
 - **Usage**: Service-specific admin accounts and database authentication
 - **Generation**: `openssl rand -base64 32`
+
+#### **Nextcloud Database Password Details**
+```yaml
+nextcloud_db_password: "2BLm4SQUc8yry++YQ7fqci4/8jm8VkcObQQPkQ6v/MQ="
+```
+- **Purpose**: PostgreSQL database authentication for Nextcloud
+- **Usage**: Database connection from Nextcloud to PostgreSQL
+- **Requirements**: Must be unique and different from `nextcloud_admin_password`
+- **Generation Steps**:
+  ```bash
+  # Generate secure database password
+  openssl rand -base64 32
+  
+  # Example output:
+  # 2BLm4SQUc8yry++YQ7fqci4/8jm8VkcObQQPkQ6v/MQ=
+  ```
+- **Security**: This password is used internally by Nextcloud to connect to its database
+- **Note**: Different from `nextcloud_admin_password` which is for web interface login
 
 ---
 
