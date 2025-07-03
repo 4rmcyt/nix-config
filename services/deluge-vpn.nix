@@ -140,9 +140,9 @@ let
       endpoint $ENDPOINT \
       persistent-keepalive 25
 
-    # Setup routing table for deluge user (UID 993)
+    # Setup routing table for deluge user (UID 1001)
     ${pkgs.iproute2}/bin/ip route add default dev wg-deluge table 42 || true
-    ${pkgs.iproute2}/bin/ip rule add uidrange 993-993 table 42 || true
+    ${pkgs.iproute2}/bin/ip rule add uidrange 1001-1001 table 42 || true
 
     # Flush route cache
     ${pkgs.iproute2}/bin/ip route flush cache
@@ -156,7 +156,7 @@ let
 
   vpn-cleanup-script = pkgs.writeShellScript "vpn-cleanup.sh" ''
     echo "Cleaning up VPN routing..."
-    ${pkgs.iproute2}/bin/ip rule del uidrange 993-993 table 42 || true
+    ${pkgs.iproute2}/bin/ip rule del uidrange 1001-1001 table 42 || true
     ${pkgs.iproute2}/bin/ip route flush table 42 || true
     ${pkgs.wireguard-tools}/bin/wg set wg-deluge peer remove || true
   '';
@@ -166,15 +166,15 @@ in
   users.users.deluge = {
     isSystemUser = true;
     group = "deluge";
-    uid = 993;
+    uid = 1001;  # Use a definitely free UID
     home = "/var/lib/deluge";
     createHome = true;
   };
 
   users.groups.deluge = {
-    gid = 993;
+    gid = 1001;  # Use matching GID
   };
-
+  
   sops.secrets.pia_username = {
     owner = "deluge";
     group = "deluge";
@@ -273,9 +273,12 @@ in
   };
 
   # Ensure deluge config directory exists
-  system.activationScripts.deluge-config = ''
-    mkdir -p /var/lib/deluge/.config/deluge
-    chown deluge:deluge /var/lib/deluge/.config/deluge
-    chmod 755 /var/lib/deluge/.config/deluge
-  '';
+  system.activationScripts.deluge-config = {
+    text = ''
+      mkdir -p /var/lib/deluge/.config/deluge
+      chown deluge:deluge /var/lib/deluge/.config/deluge
+      chmod 755 /var/lib/deluge/.config/deluge
+    '';
+    deps = [ "users" ];  # Run after users are created
+  };
 }
