@@ -72,13 +72,13 @@
   # Hostname
   networking.hostName = "homeserver";
 
-  # Use traditional DHCP (disable NetworkManager)
-  networking.useDHCP = lib.mkDefault true;
-  networking.networkmanager.enable = false;
+  # Use NetworkManager (override hardware-configuration.nix setting)
+  networking.networkmanager.enable = true;
+  networking.useDHCP = lib.mkForce false;  # Force disable since we're using NetworkManager
 
   # Firewall configuration
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 ];  # Just SSH for now
+    allowedTCPPorts = [ 22 ];  # SSH
   };
 }
