@@ -44,7 +44,10 @@
         service: http://localhost:5232
       - hostname: audiobookshelf.labhome.work
         service: http://localhost:8085
+      - hostname: paste.labhome.work
+        service: http://localhost:8087      
       - service: http_status:404
+      
     EOF
   '';
 }
