@@ -12,7 +12,7 @@
 
   # Enable VSCode Server - ADD THIS ONE LINE
   services.vscode-server.enable = true;
-  
+
   # Enable flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -27,7 +27,12 @@
     unzip
     sops
     age
+    intel-gpu-tools
   ];
+
+  virtualisation.docker.storageDriver = "overlay2";
+  system.autoUpgrade.enable = true;
+
 
   # Users
   users.users.zeev = {

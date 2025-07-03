@@ -45,11 +45,7 @@
     libvdpau-va-gl
   ];
   
-  # For AMD graphics, use instead:
-  # hardware.opengl.extraPackages = with pkgs; [
-  #   rocm-opencl-icd
-  #   rocm-opencl-runtime
-  # ];
+
 
   # Power management
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
