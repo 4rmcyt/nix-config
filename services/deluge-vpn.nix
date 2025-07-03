@@ -93,7 +93,7 @@ let
 
     # Save the extracted values for our WireGuard service
     echo "$PRIVATE_KEY" > /var/lib/deluge/pia/private_key
-    echo "$SERVER_PUBLIC_KEY" > /var/lib/deluge/pia/peer_key  
+    echo "$SERVER_PUBLIC_KEY" > /var/lib/deluge/pia/peer_key
     echo "$CLIENT_IP" > /var/lib/deluge/pia/client_ip
     echo "$WG_SERVER_IP:1337" > /var/lib/deluge/pia/endpoint
 
@@ -128,37 +128,35 @@ let
     echo "Peer: $PEER_KEY"
     echo "Endpoint: $ENDPOINT"
 
-    # Make sure interface is up
-    ${pkgs.iproute2}/bin/ip link set wg-deluge up || true
+    # Create the network namespace
+    ${pkgs.iproute2}/bin/ip netns add pia || true
 
-    # Configure interface IP
-    ${pkgs.iproute2}/bin/ip addr add $CLIENT_IP/32 dev wg-deluge || true
+    # Move the WireGuard interface to the namespace
+    ${pkgs.iproute2}/bin/ip link set wg-deluge netns pia
 
-    # Add peer configuration
-    ${pkgs.wireguard-tools}/bin/wg set wg-deluge peer $PEER_KEY \
+    # Configure interface in the namespace
+    ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.iproute2}/bin/ip addr add $CLIENT_IP/32 dev wg-deluge
+    ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.iproute2}/bin/ip link set wg-deluge up
+
+    # Add peer configuration in the namespace
+    ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.wireguard-tools}/bin/wg set wg-deluge peer $PEER_KEY \
       allowed-ips 0.0.0.0/0 \
       endpoint $ENDPOINT \
       persistent-keepalive 25
 
-    # Setup routing table for deluge user (UID 1001)
-    ${pkgs.iproute2}/bin/ip route add default dev wg-deluge table 42 || true
-    ${pkgs.iproute2}/bin/ip rule add uidrange 1001-1001 table 42 || true
-
-    # Flush route cache
-    ${pkgs.iproute2}/bin/ip route flush cache
+    # Set up default route in the namespace
+    ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.iproute2}/bin/ip route add default dev wg-deluge
 
     echo "VPN routing configured successfully"
 
     # Test connectivity
     echo "Testing VPN connectivity..."
-    ${pkgs.wireguard-tools}/bin/wg show wg-deluge
+    ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.wireguard-tools}/bin/wg show wg-deluge
   '';
 
   vpn-cleanup-script = pkgs.writeShellScript "vpn-cleanup.sh" ''
     echo "Cleaning up VPN routing..."
-    ${pkgs.iproute2}/bin/ip rule del uidrange 1001-1001 table 42 || true
-    ${pkgs.iproute2}/bin/ip route flush table 42 || true
-    ${pkgs.wireguard-tools}/bin/wg set wg-deluge peer remove || true
+    ${pkgs.iproute2}/bin/ip netns del pia || true
   '';
 in
 {
@@ -174,7 +172,7 @@ in
   users.groups.deluge = {
     gid = 1001;  # Use matching GID
   };
-  
+
   sops.secrets.pia_username = {
     owner = "deluge";
     group = "deluge";
@@ -232,37 +230,39 @@ in
     preStop = "${vpn-cleanup-script}";
   };
 
-  # Deluge daemon service
+  # Deluge daemon service (runs in VPN namespace)
   systemd.services.deluged = {
     description = "Deluge BitTorrent Daemon";
     wantedBy = [ "multi-user.target" ];
     after = [ "deluge-vpn-routing.service" ];
     wants = [ "deluge-vpn-routing.service" ];
     serviceConfig = {
-      Type = "forking";
+      Type = "simple";
       User = "deluge";
       Group = "deluge";
       UMask = "0002";
-      ExecStart = "${pkgs.deluge}/bin/deluged -d -c /var/lib/deluge/.config/deluge -l /var/lib/deluge/daemon.log -L info";
-      PIDFile = "/var/lib/deluge/.config/deluge/deluged.pid";
-      Restart = "on-failure";
+      ExecStart = "${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.deluge}/bin/deluged --do-not-daemonize -c /var/lib/deluge/.config/deluge -l /var/lib/deluge/daemon.log -L info";
+      Restart = "always";
+      RestartSec = "5";
+      TimeoutStartSec = "30";
       PrivateNetwork = false;
     };
   };
 
-  # Deluge web interface
+  # Deluge web interface (runs on host network)
   systemd.services.deluge-web = {
     description = "Deluge BitTorrent Web UI";
     wantedBy = [ "multi-user.target" ];
     after = [ "deluged.service" ];
     wants = [ "deluged.service" ];
     serviceConfig = {
-      Type = "forking";
+      Type = "simple";
       User = "deluge";
       Group = "deluge";
-      ExecStart = "${pkgs.deluge}/bin/deluge-web -d -c /var/lib/deluge/.config/deluge -l /var/lib/deluge/web.log -L info";
-      PIDFile = "/var/lib/deluge/.config/deluge/deluge-web.pid";
-      Restart = "on-failure";
+      ExecStart = "${pkgs.deluge}/bin/deluge-web --do-not-daemonize -c /var/lib/deluge/.config/deluge -l /var/lib/deluge/web.log -L info";
+      Restart = "always";
+      RestartSec = "5";
+      TimeoutStartSec = "30";
     };
   };
 
