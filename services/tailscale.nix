@@ -30,11 +30,6 @@
     checkReversePath = "loose";
   };
 
-  # Enable IP forwarding for subnet routing
-  boot.kernel.sysctl = {
-    "net.ipv4.ip_forward" = 1;
-    "net.ipv6.conf.all.forwarding" = 1;
-  };
 
   # Tailscale authentication service
   systemd.services.tailscale-auth = {
