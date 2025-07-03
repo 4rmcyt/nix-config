@@ -35,9 +35,9 @@ wg set wg-deluge peer $PEER_KEY \
   endpoint $ENDPOINT \
   persistent-keepalive 25
 
-# Setup routing table for deluge user (UID 993)
+# Setup routing table for deluge user (UID 994)
 ip route add default dev wg-deluge table 42 || true
-ip rule add uidrange 993-993 table 42 || true
+ip rule add uidrange 994-994 table 42 || true
 
 # Flush route cache
 ip route flush cache
