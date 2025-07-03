@@ -111,20 +111,27 @@ nixos-install --flake .#homeserver
 reboot
 ```
 
-### **3. Initial Setup**
+### **3. Initial Setup (CRITICAL - Age Keys)**
 ```bash
-# Setup SOPS age key (after first boot)
-mkdir -p ~/.config/sops/age
-# Add your age private key to ~/.config/sops/age/keys.txt
+# STEP 1: Generate Age encryption keys (REQUIRED for secrets)
+nix-shell -p age
+age-keygen -o ~/.config/sops/age/keys.txt
 
-# Generate strong passwords for services
-./generate-passwords.sh
+# STEP 2: Copy the PUBLIC key from the output and update .sops.yaml
+# The output will show: "Public key: age1xyz..."
+# Replace the admin_key in .sops.yaml with this public key
 
-# Configure secrets
+# STEP 3: Encrypt secrets file
+sops -e -i secrets.yaml
+
+# STEP 4: Edit secrets with your actual values
 sops secrets.yaml
 
-# Rebuild with secrets
+# STEP 5: Rebuild with secrets
 sudo nixos-rebuild switch --flake /etc/nixos
+
+# STEP 6: Verify services are running
+systemctl status keycloak nextcloud jellyfin
 ```
 
 ## **💾 Disk Configuration**

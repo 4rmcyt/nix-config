@@ -6,7 +6,10 @@
   services.nextcloud = {
     enable = true;
     package = pkgs.nextcloud29;
-    hostName = "nextcloud.yourdomain.com";
+    hostName = "nextcloud.example.com";
+    
+    # Use Caddy instead of nginx
+    webserver = "caddy";
     
     config = {
       dbtype = "pgsql";
@@ -19,6 +22,7 @@
     settings = {
       trusted_proxies = [ "127.0.0.1" ];
       overwriteprotocol = "https";
+      overwritehost = "nextcloud.example.com";
     };
   };
 

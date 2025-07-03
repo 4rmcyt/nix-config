@@ -1,5 +1,5 @@
 keys:
-  - &admin_key age1234567890abcdef...  # Replace with your AGE key
+  - &admin_key age1yyy6r96rw9wt6xz7d6y0y8fzwd6l8h8zv8l0rw5xl2kwhltwzthcqtq8j6
 
 creation_rules:
   - path_regex: secrets\.ya?ml$

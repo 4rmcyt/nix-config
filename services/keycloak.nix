@@ -9,8 +9,8 @@
   services.keycloak = {
     enable = true;
     settings = {
-      hostname = "keycloak.yourdomain.com";
-      http-port = 8081;
+      hostname = "keycloak.example.com";
+      http-port = 8080;
       proxy = "edge";
     };
     

@@ -44,6 +44,8 @@
         ./services/nextdns.nix
 
         # Service modules
+        ./services/audiobookshelf.nix
+        ./services/caddy.nix
         ./services/cloudflared.nix
         ./services/deluge-vpn.nix
         ./services/fail2ban.nix
