@@ -66,16 +66,15 @@
 #     "net.ipv4.tcp_wmem" = "4096 65536 134217728";
 #   };
 # }
-
 { config, pkgs, lib, ... }:
 
 {
   # Hostname
   networking.hostName = "homeserver";
 
-  # Use DHCP for now (easier to get online)
-  networking.useDHCP = true;
-  networking.networkmanager.enable = true;
+  # Use traditional DHCP (disable NetworkManager)
+  networking.useDHCP = lib.mkDefault true;
+  networking.networkmanager.enable = false;
 
   # Firewall configuration
   networking.firewall = {
