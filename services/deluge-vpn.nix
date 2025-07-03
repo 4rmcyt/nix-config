@@ -1,10 +1,165 @@
 { config, pkgs, lib, ... }:
 
 let
-  # Create the scripts as proper Nix derivations
-  pia-setup-script = pkgs.writeShellScript "pia-setup.sh" (builtins.readFile ../scripts/pia-setup.sh);
-  vpn-routing-script = pkgs.writeShellScript "vpn-routing.sh" (builtins.readFile ../scripts/vpn-routing.sh);
-  vpn-cleanup-script = pkgs.writeShellScript "vpn-cleanup.sh" (builtins.readFile ../scripts/vpn-cleanup.sh);
+  # Create the scripts as proper Nix derivations with dependencies
+  pia-setup-script = pkgs.writeShellScript "pia-setup.sh" ''
+    # Create working directory
+    mkdir -p /var/lib/deluge/pia
+    cd /var/lib/deluge/pia
+
+    # Get PIA credentials (passed as arguments)
+    PIA_USER="$1"
+    PIA_PASS="$2"
+
+    echo "=== PIA WireGuard Config Generator ==="
+    echo "Setting up for region: ca_ontario"
+
+    # Generate WireGuard keypair
+    PRIVATE_KEY=$(${pkgs.wireguard-tools}/bin/wg genkey)
+    PUBLIC_KEY=$(echo "$PRIVATE_KEY" | ${pkgs.wireguard-tools}/bin/wg pubkey)
+
+    echo "Generated keypair, public key: $PUBLIC_KEY"
+
+    # Get server list
+    echo "Fetching server list..."
+    SERVER_LIST=$(${pkgs.curl}/bin/curl -s "https://serverlist.piaservers.net/vpninfo/servers/v6" | head -1)
+
+    # Find WireGuard server for ca_ontario
+    WG_SERVER_IP=$(echo "$SERVER_LIST" | ${pkgs.jq}/bin/jq -r '.regions[] | select(.id == "ca_ontario") | .servers.wg[0].ip')
+    WG_SERVER_CN=$(echo "$SERVER_LIST" | ${pkgs.jq}/bin/jq -r '.regions[] | select(.id == "ca_ontario") | .servers.wg[0].cn')
+    META_SERVER_IP=$(echo "$SERVER_LIST" | ${pkgs.jq}/bin/jq -r '.regions[] | select(.id == "ca_ontario") | .servers.meta[0].ip')
+
+    if [ -z "$WG_SERVER_IP" ] || [ "$WG_SERVER_IP" = "null" ]; then
+      echo "Failed to find WireGuard server for ca_ontario"
+      exit 1
+    fi
+
+    echo "Using WG server: $WG_SERVER_IP ($WG_SERVER_CN)"
+    echo "Using Meta server: $META_SERVER_IP"
+
+    # Get auth token
+    echo "Getting auth token..."
+    TOKEN_RESPONSE=$(${pkgs.curl}/bin/curl -s -u "$PIA_USER:$PIA_PASS" \
+      "https://$META_SERVER_IP/authv3/generateToken" \
+      --connect-timeout 15 \
+      --max-time 30 \
+      --insecure)
+
+    TOKEN=$(echo "$TOKEN_RESPONSE" | ${pkgs.jq}/bin/jq -r '.token // empty')
+
+    if [ -z "$TOKEN" ]; then
+      echo "Failed to get auth token"
+      echo "Response: $TOKEN_RESPONSE"
+      exit 1
+    fi
+
+    echo "Got auth token successfully"
+
+    # Add public key
+    echo "Adding public key to PIA..."
+    ADD_KEY_RESPONSE=$(${pkgs.curl}/bin/curl -s -G \
+      --data-urlencode "pubkey=$PUBLIC_KEY" \
+      --data-urlencode "pt=$TOKEN" \
+      "https://$WG_SERVER_IP:1337/addKey" \
+      --connect-timeout 15 \
+      --max-time 30 \
+      --insecure)
+
+    # Extract response data
+    if ! echo "$ADD_KEY_RESPONSE" | ${pkgs.jq}/bin/jq empty 2>/dev/null; then
+      echo "Invalid response from addKey"
+      echo "Response: $ADD_KEY_RESPONSE"
+      exit 1
+    fi
+
+    if [ "$(echo "$ADD_KEY_RESPONSE" | ${pkgs.jq}/bin/jq -r '.status // empty')" != "OK" ]; then
+      echo "AddKey failed"
+      echo "Response: $ADD_KEY_RESPONSE"
+      exit 1
+    fi
+
+    SERVER_PUBLIC_KEY=$(echo "$ADD_KEY_RESPONSE" | ${pkgs.jq}/bin/jq -r '.server_key')
+    CLIENT_IP=$(echo "$ADD_KEY_RESPONSE" | ${pkgs.jq}/bin/jq -r '.peer_ip')
+
+    if [ -z "$SERVER_PUBLIC_KEY" ] || [ -z "$CLIENT_IP" ]; then
+      echo "Failed to extract server key or client IP"
+      echo "Response: $ADD_KEY_RESPONSE"
+      exit 1
+    fi
+
+    echo "Key added successfully!"
+    echo "Client IP: $CLIENT_IP"
+    echo "Server Public Key: $SERVER_PUBLIC_KEY"
+
+    # Save the extracted values for our WireGuard service
+    echo "$PRIVATE_KEY" > /var/lib/deluge/pia/private_key
+    echo "$SERVER_PUBLIC_KEY" > /var/lib/deluge/pia/peer_key  
+    echo "$CLIENT_IP" > /var/lib/deluge/pia/client_ip
+    echo "$WG_SERVER_IP:1337" > /var/lib/deluge/pia/endpoint
+
+    # Set proper permissions
+    chmod 600 /var/lib/deluge/pia/*
+    chown deluge:deluge /var/lib/deluge/pia/*
+
+    echo "PIA WireGuard configuration setup complete!"
+  '';
+
+  vpn-routing-script = pkgs.writeShellScript "vpn-routing.sh" ''
+    # Wait for PIA setup with timeout
+    TIMEOUT=30
+    COUNT=0
+    while [ ! -f /var/lib/deluge/pia/client_ip ] && [ $COUNT -lt $TIMEOUT ]; do
+      echo "Waiting for PIA setup... ($COUNT/$TIMEOUT)"
+      sleep 2
+      COUNT=$((COUNT + 1))
+    done
+
+    if [ ! -f /var/lib/deluge/pia/client_ip ]; then
+      echo "PIA setup timeout - files not found"
+      exit 1
+    fi
+
+    # Read configuration
+    CLIENT_IP=$(cat /var/lib/deluge/pia/client_ip)
+    PEER_KEY=$(cat /var/lib/deluge/pia/peer_key)
+    ENDPOINT=$(cat /var/lib/deluge/pia/endpoint)
+
+    echo "Setting up VPN routing for $CLIENT_IP"
+    echo "Peer: $PEER_KEY"
+    echo "Endpoint: $ENDPOINT"
+
+    # Make sure interface is up
+    ${pkgs.iproute2}/bin/ip link set wg-deluge up || true
+
+    # Configure interface IP
+    ${pkgs.iproute2}/bin/ip addr add $CLIENT_IP/32 dev wg-deluge || true
+
+    # Add peer configuration
+    ${pkgs.wireguard-tools}/bin/wg set wg-deluge peer $PEER_KEY \
+      allowed-ips 0.0.0.0/0 \
+      endpoint $ENDPOINT \
+      persistent-keepalive 25
+
+    # Setup routing table for deluge user (UID 993)
+    ${pkgs.iproute2}/bin/ip route add default dev wg-deluge table 42 || true
+    ${pkgs.iproute2}/bin/ip rule add uidrange 993-993 table 42 || true
+
+    # Flush route cache
+    ${pkgs.iproute2}/bin/ip route flush cache
+
+    echo "VPN routing configured successfully"
+
+    # Test connectivity
+    echo "Testing VPN connectivity..."
+    ${pkgs.wireguard-tools}/bin/wg show wg-deluge
+  '';
+
+  vpn-cleanup-script = pkgs.writeShellScript "vpn-cleanup.sh" ''
+    echo "Cleaning up VPN routing..."
+    ${pkgs.iproute2}/bin/ip rule del uidrange 993-993 table 42 || true
+    ${pkgs.iproute2}/bin/ip route flush table 42 || true
+    ${pkgs.wireguard-tools}/bin/wg set wg-deluge peer remove || true
+  '';
 in
 {
   # Create deluge user first
@@ -43,7 +198,6 @@ in
       Type = "oneshot";
       RemainAfterExit = true;
       TimeoutStartSec = "120s";
-      PATH = "${pkgs.curl}/bin:${pkgs.jq}/bin:${pkgs.wireguard-tools}/bin:${pkgs.coreutils}/bin";
     };
 
     script = ''
@@ -72,7 +226,6 @@ in
       Type = "oneshot";
       RemainAfterExit = true;
       TimeoutStartSec = "60s";
-      PATH = "${pkgs.iproute2}/bin:${pkgs.wireguard-tools}/bin:${pkgs.coreutils}/bin";
     };
 
     script = "${vpn-routing-script}";
