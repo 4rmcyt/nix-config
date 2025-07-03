@@ -17,7 +17,7 @@
     isNormalUser = true;
     description = "Zeev";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
-    hashedPassword = config.sops.secrets.zeev_password.path;
+    hashedPasswordFile = config.sops.secrets.zeev_password.path;  # Fixed: use hashedPasswordFile
     shell = pkgs.bash;
   };
 

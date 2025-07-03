@@ -31,13 +31,13 @@
   # hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   # Hardware acceleration for media services (Jellyfin)
-  hardware.opengl = {
+  hardware.graphics.enable = {
     enable = true;
     # Remove deprecated driSupport options
   };
 
   # Enable hardware acceleration drivers
-  hardware.opengl.extraPackages = with pkgs; [
+  hardware.graphics.extraPackages = with pkgs; [
     intel-media-driver  # For Intel graphics
     vaapiIntel
     vaapiVdpau
