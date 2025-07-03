@@ -9,6 +9,10 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelModules = [ "kvm-intel" ];  # Change to "kvm-amd" for AMD
   boot.extraModulePackages = [ ];
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  boot.loader.systemd-boot.configurationLimit = 10;
 
   # File systems are handled by disko.nix - DO NOT DEFINE THEM HERE
   # The disko.nix configuration will create:

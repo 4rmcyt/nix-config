@@ -39,14 +39,18 @@
     };
   };
 
-  # SOPS configuration
+  # SOPS configuration - FIXED key file path
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
   
+  # Ensure key file exists before trying to decrypt secrets
+  sops.age.generateKey = true;
+  
   sops.secrets.zeev_password = {
     neededForUsers = true;
   };
+
 
   # System configuration
   system.stateVersion = "25.05";
