@@ -91,30 +91,60 @@ cloudflare_api_token: "your-cloudflare-api-token"
 
 ### **`cloudflare_tunnel_token`**
 ```yaml
-cloudflare_tunnel_token: "your-tunnel-token"
+cloudflare_tunnel_token: "REPLACE_WITH_ACTUAL_TUNNEL_TOKEN_FROM_CLOUDFLARED"
 ```
 - **Format**: Long base64-encoded string (200+ characters)
 - **Example**: `eyJhIjoiYWJjZGVmZ2hpams...` (much longer)
 - **Usage**: Cloudflare Tunnel daemon authentication
-- **How to Obtain**:
-  ```bash
-  # Method 1: Via cloudflared CLI
-  cloudflared tunnel login
-  cloudflared tunnel create homeserver
-  cloudflared tunnel token homeserver
-  
-  # Method 2: Via Cloudflare Dashboard
-  # Zero Trust → Networks → Tunnels → Create → Copy token
-  ```
-- **Security**: Contains tunnel credentials, keep secure
+
+#### **📋 Step-by-Step: Getting Tunnel Token**
+
+**Method 1: Via Cloudflared CLI (Recommended)**
+```bash
+# 1. Install cloudflared
+# On macOS:
+brew install cloudflared
+# On Linux:
+wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+sudo dpkg -i cloudflared-linux-amd64.deb
+
+# 2. Authenticate with Cloudflare
+cloudflared tunnel login
+# This opens browser - login to Cloudflare and authorize
+
+# 3. Create a new tunnel
+cloudflared tunnel create homeserver
+# Note: Replace "homeserver" with your preferred tunnel name
+
+# 4. Get the tunnel token
+cloudflared tunnel token homeserver
+# This outputs the token you need for cloudflare_tunnel_token
+```
+
+**Method 2: Via Cloudflare Dashboard**
+```
+1. Go to Cloudflare Dashboard
+2. Select your domain (labhome.work)
+3. Navigate to Zero Trust → Networks → Tunnels
+4. Click "Create a tunnel"
+5. Choose "Cloudflared" → Next
+6. Name your tunnel (e.g., "homeserver") → Save
+7. Copy the token shown in the installation command
+8. The token is everything after "tunnel run --token "
+```
+
+**Example Token Format:**
+```
+eyJhIjoiMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYiLCJ0IjoiMTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIzNDU2Nzg5MGFiY2RlZiIsInMiOiJhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejEyMzQ1Njc4OTBhYmNkZWYifQ==
+```
 
 ### **`cloudflare_tunnel_credentials`**
 ```yaml
 cloudflare_tunnel_credentials: |
   {
-    "AccountTag": "your-account-tag",
-    "TunnelSecret": "your-tunnel-secret", 
-    "TunnelID": "your-tunnel-id"
+    "AccountTag": "REPLACE_WITH_YOUR_ACCOUNT_TAG",
+    "TunnelSecret": "REPLACE_WITH_TUNNEL_SECRET", 
+    "TunnelID": "REPLACE_WITH_TUNNEL_UUID"
   }
 ```
 - **Format**: JSON object with specific fields
@@ -122,22 +152,75 @@ cloudflare_tunnel_credentials: |
   - `AccountTag`: 32-character hex string (Cloudflare account ID)
   - `TunnelSecret`: 44-character base64 string
   - `TunnelID`: UUID format (36 characters with hyphens)
-- **Example**:
-  ```json
-  {
-    "AccountTag": "a1b2c3d4e5f6789012345678901234567",
-    "TunnelSecret": "abcdefghijklmnopqrstuvwxyz0123456789ABCDEF==",
-    "TunnelID": "12345678-1234-5678-9abc-123456789012"
-  }
-  ```
-- **How to Obtain**:
-  ```bash
-  # After creating tunnel
-  cloudflared tunnel create homeserver
-  # Credentials saved to: ~/.cloudflared/<tunnel-id>.json
-  cat ~/.cloudflared/<tunnel-id>.json
-  ```
-- **Usage**: Tunnel authentication and configuration
+
+#### **📋 Step-by-Step: Getting Tunnel Credentials**
+
+**Method 1: From Cloudflared CLI (After Creating Tunnel)**
+```bash
+# 1. After creating tunnel with cloudflared tunnel create homeserver
+# The credentials are automatically saved to a JSON file
+
+# 2. Find your tunnel ID
+cloudflared tunnel list
+# Example output:
+# ID                                   NAME       CREATED              CONNECTIONS
+# 12345678-1234-5678-9abc-123456789012 homeserver 2024-01-01T00:00:00Z 0
+
+# 3. Locate the credentials file
+ls ~/.cloudflared/
+# Look for: <tunnel-id>.json
+
+# 4. View the credentials
+cat ~/.cloudflared/12345678-1234-5678-9abc-123456789012.json
+```
+
+**Method 2: From Cloudflare Dashboard**
+```
+1. Go to Zero Trust → Networks → Tunnels
+2. Find your tunnel and click on it
+3. Go to the "Configure" tab
+4. Look for the tunnel configuration details
+5. Your Account Tag is in the URL or account settings
+6. Tunnel ID is shown in the tunnel details
+7. For TunnelSecret, you may need to regenerate or use CLI method
+```
+
+**Method 3: Extract from Token (Advanced)**
+```bash
+# The tunnel token contains encoded credentials
+# You can decode it to extract the information:
+echo "YOUR_TUNNEL_TOKEN" | base64 -d | jq
+```
+
+**Example Credentials JSON:**
+```json
+{
+  "AccountTag": "a1b2c3d4e5f6789012345678901234567",
+  "TunnelSecret": "abcdefghijklmnopqrstuvwxyz0123456789ABCDEF==",
+  "TunnelID": "12345678-1234-5678-9abc-123456789012"
+}
+```
+
+**Finding Your Account Tag:**
+```
+Method 1: Cloudflare Dashboard
+- Right sidebar → Account ID (32-character hex string)
+
+Method 2: URL when logged in
+- https://dash.cloudflare.com/YOUR_ACCOUNT_TAG/
+
+Method 3: Via API
+curl -X GET "https://api.cloudflare.com/client/v4/accounts" \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+**⚠️ Important Notes:**
+- Keep both token and credentials secure
+- Token is used for daemon authentication
+- Credentials are used for tunnel configuration
+- Both contain sensitive authentication information
+- Never commit these to version control unencrypted
 
 ---
 
