@@ -17,6 +17,10 @@
       
       allowedTCPPorts = [
         22    # SSH
+        80    # HTTP
+        443   # HTTPS
+        445  # SMB
+        139  # NetBIOS
         3000  # Homepage Dashboard
         5232  # Radicale
         8080  # Keycloak (fixed from 8081)
@@ -25,6 +29,7 @@
         8083  # Miniflux
         8084  # File server
         8085  # Audiobookshelf
+        8087  # Microbin Paste Server
         8096  # Jellyfin HTTP
         8112  # Deluge web
         8123  # Home Assistant

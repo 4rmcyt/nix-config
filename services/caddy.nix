@@ -33,6 +33,18 @@
         '';
       };
       
+      # Microbin
+      "paste.example.com" = {
+        extraConfig = ''
+          reverse_proxy 127.0.0.1:8087
+    
+        log {
+        output file /var/log/caddy/paste.log
+        format json
+        }
+        '';
+      };
+          
       # Keycloak
       "keycloak.example.com" = {
         extraConfig = ''

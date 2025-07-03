@@ -54,6 +54,7 @@
         ./services/jellyfin.nix
         ./services/keycloak.nix
         ./services/media-content.nix
+        ./services/microbin.nix              # ADD THIS LINE
         ./services/nextcloud.nix
         ./services/paperless.nix
         ./services/radicale.nix
