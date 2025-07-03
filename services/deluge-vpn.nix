@@ -147,6 +147,10 @@ let
     # Set up default route in the namespace
     ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.iproute2}/bin/ip route add default dev wg-deluge
 
+    # Set up DNS in the namespace
+    ${pkgs.iproute2}/bin/ip netns exec pia mkdir -p /etc
+    ${pkgs.iproute2}/bin/ip netns exec pia bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
+
     echo "VPN routing configured successfully"
 
     # Test connectivity
@@ -245,7 +249,11 @@ in
       Restart = "always";
       RestartSec = "5";
       TimeoutStartSec = "30";
-      PrivateNetwork = false;
+      # Add capabilities needed for network namespace access
+      CapabilityBoundingSet = [ "CAP_SYS_ADMIN" "CAP_NET_ADMIN" ];
+      AmbientCapabilities = [ "CAP_SYS_ADMIN" "CAP_NET_ADMIN" ];
+      # Run with elevated privileges
+      NoNewPrivileges = false;
     };
   };
 
