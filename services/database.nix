@@ -33,16 +33,19 @@
       CREATE DATABASE IF NOT EXISTS keycloak;
       CREATE DATABASE IF NOT EXISTS nextcloud;
       CREATE DATABASE IF NOT EXISTS miniflux;
+      CREATE DATABASE IF NOT EXISTS hass;
       
       -- Create users
       CREATE USER IF NOT EXISTS keycloak WITH PASSWORD 'temp_password';
       CREATE USER IF NOT EXISTS nextcloud WITH PASSWORD 'temp_password';
       CREATE USER IF NOT EXISTS miniflux WITH PASSWORD 'temp_password';
+      CREATE USER IF NOT EXISTS hass WITH PASSWORD 'temp_password';
       
       -- Grant privileges
       GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak;
       GRANT ALL PRIVILEGES ON DATABASE nextcloud TO nextcloud;
       GRANT ALL PRIVILEGES ON DATABASE miniflux TO miniflux;
+      GRANT ALL PRIVILEGES ON DATABASE hass TO hass;
       
       -- Note: Passwords will be updated via secrets after first boot
     '';
@@ -56,7 +59,7 @@
     '';
   };
 
-  # Create backup script using systemd timer instead of the non-existent backup option
+  # Create backup script using systemd timer
   systemd.services.postgresql-backup = {
     description = "PostgreSQL backup service";
     serviceConfig = {
@@ -72,7 +75,7 @@
         mkdir -p $BACKUP_DIR
         
         # Backup each database
-        for db in keycloak nextcloud miniflux; do
+        for db in keycloak nextcloud miniflux hass; do
           ${pkgs.postgresql_15}/bin/pg_dump -h localhost -U postgres $db > $BACKUP_DIR/$db-$DATE.sql
         done
         

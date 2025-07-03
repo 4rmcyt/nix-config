@@ -9,7 +9,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Enable SSH - CRITICAL for remote access
+  # Enable SSH
   services.openssh = {
     enable = true;
     settings = {
@@ -20,28 +20,45 @@
     openFirewall = true;
   };
 
-  # User configuration
+  # SOPS configuration
+  sops.defaultSopsFile = ./secrets.yaml;
+  sops.defaultSopsFormat = "yaml";
+  sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+  
+  # Define all secrets
+  sops.secrets.zeev_password = {
+    neededForUsers = true;
+  };
+  sops.secrets.nextcloud_admin_password = {};
+  sops.secrets.microbin_admin_password = {};
+  sops.secrets.tailscale_auth_key = {};
+  sops.secrets.hass_postgres_password = {
+    owner = "hass";
+    group = "hass";
+    mode = "0400";
+  };
+
+  # User configuration with SOPS password
   users.users.zeev = {
     isNormalUser = true;
     description = "Zeev";
-    extraGroups = [ "networkmanager" "wheel" ];
-    password = "temppassword123";  # Change after installation
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    hashedPasswordFile = config.sops.secrets.zeev_password.path;
     shell = pkgs.bash;
   };
 
   # System packages
   environment.systemPackages = with pkgs; [
-    git
-    vim
-    wget
-    curl
-    htop
-    tmux
+    git vim wget curl htop tmux age sops openssh
   ];
 
-  # Completely disable SOPS for now
-  # NO sops configuration at all
+  # Enable Home Manager
+  home-manager = {
+    extraSpecialArgs = { inherit inputs; };
+    users = {
+      zeev = import ./home.nix;
+    };
+  };
 
-  # System configuration
-  system.stateVersion = "23.11";
+  system.stateVersion = "25.05";
 }

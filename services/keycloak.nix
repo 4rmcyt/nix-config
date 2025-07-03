@@ -2,34 +2,33 @@
 
 {
   sops.secrets.keycloak_db_password = {
-    owner = "keycloak";
-    group = "keycloak";
+    owner = "root";
+    group = "root";
+    mode = "0400";
   };
 
   services.keycloak = {
     enable = true;
-    
+
     settings = {
       hostname = "keycloak.labhome.work";
       http-host = "127.0.0.1";
       http-port = 8080;
       
-      # Updated proxy settings (removed deprecated 'proxy' option)
-      proxy-headers = "xforwarded";
-      hostname-strict = false;
+      # Fix HTTPS issue - disable HTTPS requirement for development
       hostname-strict-https = false;
+      proxy-headers = "xforwarded";
       
       # Database configuration
       db = "postgres";
       db-username = "keycloak";
       db-password-file = config.sops.secrets.keycloak_db_password.path;
-      
+
       # Logging
       log-level = "INFO";
       log-console-output = "default";
     };
-    
-    # Database creation is handled by database.nix
+
     database = {
       createLocally = false;
       host = "localhost";
@@ -39,6 +38,5 @@
     };
   };
 
-  # Open firewall port
   networking.firewall.allowedTCPPorts = [ 8080 ];
 }

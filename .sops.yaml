@@ -1,8 +1,7 @@
 keys:
-  - &admin_key age1yyy6r96rw9wt6xz7d6y0y8fzwd6l8h8zv8l0rw5xl2kwhltwzthcqtq8j6
-
+  - &homeserver age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5 
 creation_rules:
-  - path_regex: secrets\.ya?ml$
+  - path_regex: secrets\.yaml$
     key_groups:
       - age:
-          - *admin_key
+          - *homeserver

@@ -1,8 +1,23 @@
 { config, pkgs, ... }:
 
 {
+  # SOPS secret for Home Assistant database
+  sops.secrets.hass_postgres_password = {
+    owner = "hass";
+    group = "hass";
+  };
+
   services.home-assistant = {
     enable = true;
+    
+    # Add PostgreSQL support
+    package = pkgs.home-assistant.override {
+      extraPackages = ps: with ps; [
+        psycopg2  # PostgreSQL driver
+        # Add other packages if needed
+      ];
+    };
+    
     extraComponents = [
       "default_config"
       "met"
@@ -22,6 +37,7 @@
       "person"
       "device_tracker"
       "zone"
+      "recorder"  # Add recorder explicitly
     ];
     
     config = {
@@ -33,17 +49,17 @@
         longitude = 34.7818;
         elevation = 10;
         unit_system = "metric";
-        time_zone = "Asia/Jerusalem";
+        time_zone = "America/Edmonton";
       };
       
+      # Fixed HTTP configuration
       http = {
         server_port = 8123;
-        # Cloudflare Tunnel direct access
         use_x_forwarded_for = true;
         trusted_proxies = [
           "127.0.0.1"
           "::1"
-          # Add Cloudflare IP ranges
+          # Cloudflare IP ranges
           "173.245.48.0/20"
           "103.21.244.0/22"
           "103.22.200.0/22"
@@ -64,6 +80,23 @@
         login_attempts_threshold = 5;
       };
       
+      # Database configuration for PostgreSQL
+      recorder = {
+        db_url = "postgresql://hass:!secret db_password@localhost/hass";
+        purge_keep_days = 10;
+        auto_purge = true;
+        exclude = {
+          domains = [
+            "automation"
+            "updater"
+          ];
+          entity_globs = [
+            "sensor.*_battery"
+            "sensor.*_temperature"
+          ];
+        };
+      };
+      
       frontend = {};
       config = {};
       history = {};
@@ -73,11 +106,16 @@
     };
   };
 
+  # Add hass user to dialout group for USB devices
   users.users.hass.extraGroups = [ "dialout" ];
 
+  # USB device rules for Zigbee and Z-Wave
   services.udev.extraRules = ''
     SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="zigbee", GROUP="dialout", MODE="0660"
     SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", SYMLINK+="zigbee", GROUP="dialout", MODE="0660"
     SUBSYSTEM=="tty", ATTRS{idVendor}=="0658", ATTRS{idProduct}=="0200", SYMLINK+="zwave", GROUP="dialout", MODE="0660"
   '';
+
+  # Open firewall port
+  networking.firewall.allowedTCPPorts = [ 8123 ];
 }

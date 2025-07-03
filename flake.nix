@@ -26,28 +26,20 @@
         ./disko.nix
         ./networking.nix
         
-        # ONLY include services that don't require secrets
         ./services/fail2ban.nix
+        ./services/database.nix    # PostgreSQL (needed by many services)
+        ./services/caddy.nix       # Reverse proxy
+        ./services/homepage.nix    # Dashboard
+        ./services/jellyfin.nix    # Media server
         
-        # TEMPORARILY COMMENTED OUT - All services that use secrets
-        # ./services/database.nix
-        # ./services/nextdns.nix
-        # ./services/audiobookshelf.nix
-        # ./services/caddy.nix
-        # ./services/cloudflared.nix
-        # ./services/deluge-vpn.nix
-        # ./services/home-assistant.nix
-        # ./services/homepage.nix
-        # ./services/jellyfin.nix
-        # ./services/keycloak.nix
-        # ./services/media-content.nix
-        # ./services/microbin.nix              
-        # ./services/nextcloud.nix
-        # ./services/radicale.nix
-        # ./services/samba.nix
-        # ./services/tailscale.nix
-        # ./services/tg-notify.nix
-        # ./services/yubikey.nix
+        ./services/nextcloud.nix
+        ./services/tailscale.nix
+        ./services/microbin.nix
+        
+        ./services/keycloak.nix
+        ./services/home-assistant.nix
+        ./services/deluge-vpn.nix
+        ./services/audiobookshelf.nix
         
         # Enable modules from flake inputs
         disko.nixosModules.disko

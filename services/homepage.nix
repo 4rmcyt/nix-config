@@ -1,134 +1,52 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   services.homepage-dashboard = {
     enable = true;
+    listenPort = 8082;
     
-    settings = {
-      title = "Homeserver Dashboard";
-      
-      layout = {
-        "Media" = {
-          style = "row";
-          columns = 2;
-        };
-        "Home Automation" = {
-          style = "row";
-          columns = 2;
-        };
-        "Productivity" = {
-          style = "row";
-          columns = 3;
-        };
-        "System" = {
-          style = "row";
-          columns = 2;
-        };
-      };
-    };
-    
-    # Services configuration
+    # Enhanced service configuration
     services = [
       {
         "Media" = [
           {
             "Jellyfin" = {
+              href = "http://192.168.1.165:8096";
+              description = "Media Server";
               icon = "jellyfin";
-              href = "https://jellyfin.labhome.work";
-              description = "Media streaming server";
-              widget = {
-                type = "jellyfin";
-                url = "http://localhost:8096";
-                key = "your-jellyfin-api-key";
-              };
-            };
-          }
-          {
-            "Deluge" = {
-              icon = "deluge";
-              href = "https://deluge.labhome.work";
-              description = "BitTorrent client";
-              widget = {
-                type = "deluge";
-                url = "http://localhost:8112";
-                password = "deluge";
-              };
             };
           }
         ];
       }
       {
-        "Home Automation" = [
-          {
-            "Home Assistant" = {
-              icon = "home-assistant";
-              href = "https://home.labhome.work";
-              description = "Home automation platform";
-              widget = {
-                type = "homeassistant";
-                url = "http://localhost:8123";
-                key = "your-ha-token";
-              };
-            };
-          }
-        ];
-      }
-      {
-        "Productivity" = [
+        "Storage" = [
           {
             "Nextcloud" = {
+              href = "http://192.168.1.165:80/nextcloud";
+              description = "File Storage & Collaboration";
               icon = "nextcloud";
-              href = "https://nextcloud.labhome.work";
-              description = "Personal cloud storage";
-              widget = {
-                type = "nextcloud";
-                url = "http://localhost:8081";
-                username = "admin";
-                password = "your-password";
-              };
-            };
-          }
-          {
-            "Paperless" = {
-              icon = "paperless";
-              href = "https://paperless.labhome.work";
-              description = "Document management";
-              widget = {
-                type = "paperlessngx";
-                url = "http://localhost:8082";
-                key = "your-paperless-token";
-              };
-            };
-          }
-          {
-            "Miniflux" = {
-              icon = "miniflux";
-              href = "https://rss.labhome.work";
-              description = "RSS reader";
-              widget = {
-                type = "miniflux";
-                url = "http://localhost:8083";
-                username = "admin";
-                password = "your-miniflux-password";
-              };
             };
           }
         ];
       }
       {
-        "System" = [
+        "Tools" = [
           {
-            "Keycloak" = {
-              icon = "keycloak";
-              href = "https://keycloak.labhome.work";
-              description = "Identity and access management";
+            "Microbin" = {
+              href = "http://192.168.1.165:80/microbin";
+              description = "Pastebin Service";
+              icon = "microbin";
             };
           }
+        ];
+      }
+      {
+        "Automation" = [
           {
-            "Radicale" = {
-              icon = "radicale";
-              href = "https://cal.labhome.work";
-              description = "CalDAV and CardDAV server";
+            "Home Assistant" = {
+              href = "http://192.168.1.165:8123";
+              description = "Home Automation";
+              icon = "home-assistant";
             };
           }
         ];
@@ -137,8 +55,10 @@
     
     widgets = [
       {
-        logo = {
-          icon = "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/homepage.png";
+        resources = {
+          cpu = true;
+          memory = true;
+          disk = "/";
         };
       }
       {
@@ -147,53 +67,13 @@
           target = "_blank";
         };
       }
-      {
-        datetime = {
-          text_size = "xl";
-          format = {
-            timeStyle = "short";
-            dateStyle = "short";
-            hourCycle = "h23";
-          };
-        };
-      }
-      {
-        resources = {
-          cpu = true;
-          memory = true;
-          disk = "/";
-          uptime = true;
-        };
-      }
-    ];
-    
-    bookmarks = [
-      {
-        "Developer" = [
-          {
-            "Github" = [
-              {
-                abbr = "GH";
-                href = "https://github.com/";
-              }
-            ];
-          }
-        ];
-      }
-      {
-        "Social" = [
-          {
-            "Reddit" = [
-              {
-                abbr = "RE";
-                href = "https://reddit.com/";
-              }
-            ];
-          }
-        ];
-      }
     ];
   };
-
-  # Remove firewall config - handled centrally in networking.nix
+  
+  # Override environment variables
+  systemd.services.homepage-dashboard.environment = {
+    HOMEPAGE_ALLOWED_HOSTS = lib.mkForce "localhost,127.0.0.1,192.168.1.165,homeserver.local";
+  };
+  
+  networking.firewall.allowedTCPPorts = [ 8082 ];
 }
