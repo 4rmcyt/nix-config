@@ -267,17 +267,21 @@ in
   # Ensure deluge config directory exists and configure dark theme
   system.activationScripts.deluge-config = {
     text = ''
+      # Create main config directory
       mkdir -p /var/lib/deluge/.config/deluge
       chown deluge:deluge /var/lib/deluge/.config/deluge
       chmod 755 /var/lib/deluge/.config/deluge
 
+      # Create web themes directory structure
+      mkdir -p /var/lib/deluge/.config/deluge/web/themes/dark
+      
       # Create web.conf with dark theme configuration
       cat > /var/lib/deluge/.config/deluge/web.conf << 'EOF'
 {
     "base": "deluge",
     "port": 8112,
     "https": false,
-    "pkey": "ssl/daemon.pkey",
+    "pkey": "ssl/daemon.pkey", 
     "cert": "ssl/daemon.cert",
     "pwd_salt": "c26ab3bbd8b137f99cd83c2c1c0963bcc1a35cad",
     "pwd_sha1": "2ce1a410bcdcc53064129b6d950bda9458e4292f",
@@ -296,8 +300,7 @@ in
 }
 EOF
 
-      # Create custom dark theme CSS
-      mkdir -p /var/lib/deluge/.config/deluge/web/themes/dark
+      # Create dark theme CSS file
       cat > /var/lib/deluge/.config/deluge/web/themes/dark/style.css << 'EOF'
 /* Dark theme for Deluge Web UI */
 body, .x-panel-body, .x-window-body {
@@ -387,14 +390,12 @@ body, .x-panel-body, .x-window-body {
     background-color: #1e90ff !important;
 }
 
-/* Status bar styling */
 .x-statusbar {
     background-color: #404040 !important;
     border-color: #555555 !important;
     color: #ffffff !important;
 }
 
-/* Tree panel styling */
 .x-tree-node {
     color: #ffffff !important;
 }
@@ -408,7 +409,7 @@ body, .x-panel-body, .x-window-body {
 }
 EOF
 
-      # Create theme configuration file
+      # Create theme info file
       cat > /var/lib/deluge/.config/deluge/web/themes/dark/theme.json << 'EOF'
 {
     "name": "Dark Theme",
@@ -417,10 +418,11 @@ EOF
 }
 EOF
 
-      # Set proper ownership for all files
+      # Set proper ownership and permissions for all created files
       chown -R deluge:deluge /var/lib/deluge/.config/deluge
-      chmod -R 644 /var/lib/deluge/.config/deluge/web.conf
+      chmod 644 /var/lib/deluge/.config/deluge/web.conf
       chmod -R 755 /var/lib/deluge/.config/deluge/web
+      chmod 644 /var/lib/deluge/.config/deluge/web/themes/dark/*
     '';
     deps = [ "users" ];  # Run after users are created
   };
