@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   home.username = "zeev";
@@ -8,8 +8,8 @@
   programs.home-manager.enable = true;
   
   imports = [
-        inputs.nix4nvchad.homeManagerModule
-    ];
+    inputs.nix4nvchad.homeManagerModule
+  ];
 
   home.packages = with pkgs; [
     eza
@@ -28,31 +28,24 @@
   ];
 
   # Neovim with NvChad
-   programs.nvchad = {
-        enable = true;
-        extraPackages = with pkgs; [
-        nodePackages.bash-language-server
-        docker-compose-language-service
-        dockerfile-language-server-nodejs
-        emmet-language-server
-        nixd
-        (python3.withPackages(ps: with ps; [
-            python-lsp-server
-            flake8
-        ]))
-        ];
-        hm-activation = true;
-        backup = true;
-    };
+  programs.nvchad = {
+    enable = true;
+    extraPackages = with pkgs; [
+      nodePackages.bash-language-server
+      docker-compose-language-service
+      dockerfile-language-server-nodejs
+      emmet-language-server
+      nixd
+      (python3.withPackages(ps: with ps; [
+        python-lsp-server
+        flake8
+      ]))
+    ];
+    hm-activation = true;
+    backup = true;
+  };
 
-  # Install NvChad
-  home.activation.nvchad = ''
-    if [ ! -d ~/.config/nvim ]; then
-      ${pkgs.git}/bin/git clone https://github.com/NvChad/starter ~/.config/nvim
-      echo "NvChad installed! Run 'nvim' to complete setup."
-    fi
-  '';
-
+  # Additional shell configuration
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -71,18 +64,8 @@
 
     oh-my-zsh = {
       enable = true;
-      theme = "powerlevel10k/powerlevel10k";
+      theme = "robbyrussell";
       plugins = [ "git" "dirhistory" "vi-mode" ];
     };
-
-    initExtra = ''
-      # Enable Powerlevel10k instant prompt
-      if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-        source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-      fi
-
-      # Source p10k config
-      [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
-    '';
   };
 }

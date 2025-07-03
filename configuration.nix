@@ -3,77 +3,51 @@
 {
   imports = [
     ./hardware-configuration.nix
-    # Do NOT import ./home.nix here - it's handled by home-manager.users.zeev below
   ];
 
   # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Enable VSCode Server - ADD THIS ONE LINE
+  # Enable VSCode Server
   services.vscode-server.enable = true;
 
-  # Enable flakes
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  # User configuration
+  users.users.zeev = {
+    isNormalUser = true;
+    description = "Zeev";
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    hashedPassword = config.sops.secrets.zeev_password.path;
+    shell = pkgs.bash;
+  };
 
   # System packages
   environment.systemPackages = with pkgs; [
-    vim
     git
-    curl
+    vim
     wget
+    curl
     htop
-    tree
-    unzip
-    sops
-    age
-    intel-gpu-tools
+    tmux
   ];
 
-  virtualisation.docker.storageDriver = "overlay2";
-  system.autoUpgrade.enable = true;
-
-
-  # Users
-  users.users.zeev = {
-    isNormalUser = true;
-    description = "zeev";
-    extraGroups = [ "wheel" "networkmanager" ];
-    hashedPasswordFile = config.sops.secrets.zeev_password.path;
-    shell = pkgs.zsh;
-  };
-
-  # Enable zsh system-wide
-  programs.zsh.enable = true;
-
-  # Enable SSH
-  services.openssh = {
-    enable = true;
-    settings = {
-      PasswordAuthentication = false;
-      PermitRootLogin = "no";
-    };
-  };
-
-  # Sops configuration
-  sops = {
-    defaultSopsFile = ./secrets.yaml;
-    defaultSopsFormat = "yaml";
-    age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-    
-    secrets = {
-      zeev_password = { };
-      # Add other secrets as needed
-    };
-  };
-
-  # Home Manager configuration - THIS IS WHERE HOME.NIX GETS IMPORTED
+  # Enable Home Manager with inputs passed
   home-manager = {
-    extraSpecialArgs = { inherit inputs; };
+    extraSpecialArgs = { inherit inputs; };  # Pass inputs to home-manager
     users = {
-      zeev = import ./home.nix;  # This is the ONLY place home.nix should be imported
+      zeev = import ./home.nix;
     };
   };
 
+  # SOPS configuration
+  sops.defaultSopsFile = ./secrets.yaml;
+  sops.defaultSopsFormat = "yaml";
+  sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+  
+  sops.secrets.zeev_password = {
+    neededForUsers = true;
+  };
+
+  # System configuration
   system.stateVersion = "25.05";
 }
