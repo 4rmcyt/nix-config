@@ -10,9 +10,9 @@
   services.home-assistant = {
     enable = true;
     
-    # Add PostgreSQL driver properly
     extraPackages = python3Packages: with python3Packages; [
       psycopg2
+      getmac  # Add this to fix UPnP component
     ];
     
     extraComponents = [
@@ -35,14 +35,13 @@
       };
 
       recorder = {
-        db_url = "postgresql://hass:!secret db_password@localhost/hass";
+        db_url = "postgresql://homeassistant:!secret db_password@localhost/homeassistant";
         purge_keep_days = 10;
         auto_purge = true;
       };
     };
   };
 
-  # Create secrets file before Home Assistant starts
   systemd.services.home-assistant-secrets = {
     description = "Create Home Assistant secrets file";
     before = [ "home-assistant.service" ];
@@ -59,6 +58,5 @@
     };
   };
 
-  # Open firewall for Home Assistant
   networking.firewall.allowedTCPPorts = [ 8123 ];
 }
