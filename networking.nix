@@ -73,34 +73,13 @@
   # Hostname
   networking.hostName = "homeserver";
 
-  # Static IP configuration
-  networking.interfaces.enp0s3.ipv4.addresses = [{
-    address = "192.168.1.165";
-    prefixLength = 24;
-  }];
-
-  networking.defaultGateway = "192.168.1.254";
-  networking.nameservers = [ "8.8.8.8" "1.1.1.1" ];
-
-  # Enable networking
+  # Use DHCP for now (easier to get online)
+  networking.useDHCP = true;
   networking.networkmanager.enable = true;
-  networking.useDHCP = false;
 
   # Firewall configuration
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 
-      22    # SSH - CRITICAL
-      80    # HTTP
-      443   # HTTPS
-      8080  # Homepage
-    ];
-    allowedUDPPorts = [ ];
-  };
-
-  # Enable IP forwarding for VPN/routing
-  boot.kernel.sysctl = {
-    "net.ipv4.ip_forward" = lib.mkDefault 1;
-    "net.ipv6.conf.all.forwarding" = lib.mkDefault 1;
+    allowedTCPPorts = [ 22 ];  # Just SSH for now
   };
 }

@@ -26,33 +26,28 @@
         ./disko.nix
         ./networking.nix
         
-        # Centralized services
-        ./services/database.nix
-        ./services/nextdns.nix
-
-        # Basic services (no secrets required)
-        ./services/caddy.nix
+        # ONLY include services that don't require secrets
         ./services/fail2ban.nix
-        ./services/homepage.nix
-        ./services/jellyfin.nix
-        ./services/samba.nix
         
-        # TEMPORARILY COMMENTED OUT - Services that require secrets
+        # TEMPORARILY COMMENTED OUT - All services that use secrets
+        # ./services/database.nix
+        # ./services/nextdns.nix
         # ./services/audiobookshelf.nix
+        # ./services/caddy.nix
         # ./services/cloudflared.nix
         # ./services/deluge-vpn.nix
         # ./services/home-assistant.nix
+        # ./services/homepage.nix
+        # ./services/jellyfin.nix
         # ./services/keycloak.nix
         # ./services/media-content.nix
         # ./services/microbin.nix              
         # ./services/nextcloud.nix
         # ./services/radicale.nix
+        # ./services/samba.nix
         # ./services/tailscale.nix
         # ./services/tg-notify.nix
         # ./services/yubikey.nix
-        
-        # Scripts
-        # ./scripts/keycloak-yubikey-setup.nix
         
         # Enable modules from flake inputs
         disko.nixosModules.disko

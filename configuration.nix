@@ -9,30 +9,24 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Enable SSH - ADDED
+  # Enable SSH - CRITICAL for remote access
   services.openssh = {
     enable = true;
     settings = {
-      PermitRootLogin = "yes";  # Allow root login during setup
+      PermitRootLogin = "yes";
       PasswordAuthentication = true;
       PubkeyAuthentication = true;
     };
     openFirewall = true;
   };
 
-  # Enable VSCode Server
-  services.vscode-server.enable = true;
-
   # User configuration
   users.users.zeev = {
     isNormalUser = true;
     description = "Zeev";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
-    # Temporarily use a plain password until SOPS is working
-    password = "temppassword123";  # Change this after fixing SOPS
+    extraGroups = [ "networkmanager" "wheel" ];
+    password = "temppassword123";  # Change after installation
     shell = pkgs.bash;
-    createHome = true;
-    home = "/home/zeev";
   };
 
   # System packages
@@ -43,27 +37,11 @@
     curl
     htop
     tmux
-    age
-    sops
   ];
 
-  # Enable Home Manager with inputs passed
-  home-manager = {
-    extraSpecialArgs = { inherit inputs; };
-    users = {
-      zeev = import ./home.nix;
-    };
-  };
-
-  # TEMPORARILY DISABLE SOPS until we fix the encryption
-  # sops.defaultSopsFile = ./secrets.yaml;
-  # sops.defaultSopsFormat = "yaml";
-  # sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-  # sops.age.generateKey = true;
-  # sops.secrets.zeev_password = {
-  #   neededForUsers = true;
-  # };
+  # Completely disable SOPS for now
+  # NO sops configuration at all
 
   # System configuration
-  system.stateVersion = "25.05";
+  system.stateVersion = "23.11";
 }
