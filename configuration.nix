@@ -3,6 +3,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./services/deluge-vpn.nix  # Add this line
   ];
 
   # Bootloader
@@ -61,7 +62,7 @@
   };
 
   # DISABLE built-in Deluge service (we're using custom VPN version)
-  # services.deluge.enable = false;
+  services.deluge.enable = false;
 
   system.stateVersion = "25.05";
 }
