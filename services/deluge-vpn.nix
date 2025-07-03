@@ -138,6 +138,9 @@ let
     ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.iproute2}/bin/ip addr add $CLIENT_IP/32 dev wg-deluge
     ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.iproute2}/bin/ip link set wg-deluge up
 
+    # Set up loopback in namespace
+    ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.iproute2}/bin/ip link set lo up
+
     # Add peer configuration in the namespace
     ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.wireguard-tools}/bin/wg set wg-deluge peer $PEER_KEY \
       allowed-ips 0.0.0.0/0 \
@@ -147,7 +150,7 @@ let
     # Set up default route in the namespace
     ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.iproute2}/bin/ip route add default dev wg-deluge
 
-    # Set up DNS in the namespace (using sh instead of bash)
+    # Set up DNS in the namespace
     ${pkgs.iproute2}/bin/ip netns exec pia mkdir -p /etc
     ${pkgs.iproute2}/bin/ip netns exec pia sh -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
 
@@ -156,6 +159,15 @@ let
     # Test connectivity
     echo "Testing VPN connectivity..."
     ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.wireguard-tools}/bin/wg show wg-deluge
+  '';
+
+  # Script to run Deluge in namespace as the correct user
+  deluge-start-script = pkgs.writeShellScript "deluge-start.sh" ''
+    # Run Deluge in the namespace, switching to deluge user
+    exec ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.sudo}/bin/sudo -u deluge \
+      ${pkgs.deluge}/bin/deluged --do-not-daemonize \
+      -c /var/lib/deluge/.config/deluge \
+      -l /var/lib/deluge/daemon.log -L info
   '';
 
   vpn-cleanup-script = pkgs.writeShellScript "vpn-cleanup.sh" ''
@@ -234,7 +246,7 @@ in
     preStop = "${vpn-cleanup-script}";
   };
 
-  # Deluge daemon service (runs in VPN namespace)
+  # Deluge daemon service (runs in VPN namespace as root, then drops to deluge user)
   systemd.services.deluged = {
     description = "Deluge BitTorrent Daemon";
     wantedBy = [ "multi-user.target" ];
@@ -242,18 +254,13 @@ in
     wants = [ "deluge-vpn-routing.service" ];
     serviceConfig = {
       Type = "simple";
-      User = "deluge";
-      Group = "deluge";
-      UMask = "0002";
-      ExecStart = "${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.deluge}/bin/deluged --do-not-daemonize -c /var/lib/deluge/.config/deluge -l /var/lib/deluge/daemon.log -L info";
+      # Run as root to access namespace, then drop privileges with sudo
+      User = "root";
+      Group = "root";
+      ExecStart = "${deluge-start-script}";
       Restart = "always";
       RestartSec = "5";
       TimeoutStartSec = "30";
-      # Add capabilities needed for network namespace access
-      CapabilityBoundingSet = [ "CAP_SYS_ADMIN" "CAP_NET_ADMIN" ];
-      AmbientCapabilities = [ "CAP_SYS_ADMIN" "CAP_NET_ADMIN" ];
-      # Run with elevated privileges
-      NoNewPrivileges = false;
     };
   };
 
