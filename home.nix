@@ -18,7 +18,9 @@
     gcc
     unzip
     git
-    (nerdfonts.override { fonts = [ "Meslo" "FiraCode" "JetBrainsMono" ]; })
+    nerd-fonts.fira-code
+    nerd-fonts.droid-sans-mono
+    nerd-fonts.hack })
   ];
 
   # Neovim with NvChad
