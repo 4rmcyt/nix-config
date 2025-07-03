@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   sops.secrets.miniflux_admin_password = { };
@@ -8,7 +8,6 @@
     enable = true;
     config = {
       LISTEN_ADDR = "127.0.0.1:8083";
-      DATABASE_URL = "postgres://miniflux@localhost/miniflux?sslmode=disable";
       ADMIN_USERNAME = "admin";
       ADMIN_PASSWORD = "$(cat ${config.sops.secrets.miniflux_admin_password.path})";
       BASE_URL = "https://rss.labhome.work";
