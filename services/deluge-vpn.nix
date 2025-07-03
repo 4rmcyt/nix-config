@@ -147,9 +147,9 @@ let
     # Set up default route in the namespace
     ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.iproute2}/bin/ip route add default dev wg-deluge
 
-    # Set up DNS in the namespace
+    # Set up DNS in the namespace (using sh instead of bash)
     ${pkgs.iproute2}/bin/ip netns exec pia mkdir -p /etc
-    ${pkgs.iproute2}/bin/ip netns exec pia bash -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
+    ${pkgs.iproute2}/bin/ip netns exec pia sh -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
 
     echo "VPN routing configured successfully"
 
