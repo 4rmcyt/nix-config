@@ -264,7 +264,168 @@ in
     };
   };
 
-  # Deluge web interface (runs on host network)
+  # Ensure deluge config directory exists and configure dark theme
+  system.activationScripts.deluge-config = {
+    text = ''
+      mkdir -p /var/lib/deluge/.config/deluge
+      chown deluge:deluge /var/lib/deluge/.config/deluge
+      chmod 755 /var/lib/deluge/.config/deluge
+
+      # Create web.conf with dark theme configuration
+      cat > /var/lib/deluge/.config/deluge/web.conf << 'EOF'
+{
+    "base": "deluge",
+    "port": 8112,
+    "https": false,
+    "pkey": "ssl/daemon.pkey",
+    "cert": "ssl/daemon.cert",
+    "pwd_salt": "c26ab3bbd8b137f99cd83c2c1c0963bcc1a35cad",
+    "pwd_sha1": "2ce1a410bcdcc53064129b6d950bda9458e4292f",
+    "sessions": {},
+    "enabled_plugins": [],
+    "theme": "gray",
+    "sidebar_show_zero": false,
+    "sidebar_multiple_filters": true,
+    "show_sidebar": true,
+    "show_toolbar": true,
+    "show_statusbar": true,
+    "sidebar_show_trackers": true,
+    "default_daemon": "",
+    "interface": "0.0.0.0",
+    "language": ""
+}
+EOF
+
+      # Create custom dark theme CSS
+      mkdir -p /var/lib/deluge/.config/deluge/web/themes/dark
+      cat > /var/lib/deluge/.config/deluge/web/themes/dark/style.css << 'EOF'
+/* Dark theme for Deluge Web UI */
+body, .x-panel-body, .x-window-body {
+    background-color: #2b2b2b !important;
+    color: #ffffff !important;
+}
+
+.x-panel, .x-window, .x-grid-panel, .x-form-panel {
+    background-color: #3c3c3c !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+}
+
+.x-toolbar, .x-toolbar-left-row, .x-toolbar-right-row {
+    background-color: #404040 !important;
+    background-image: none !important;
+    border-color: #555555 !important;
+}
+
+.x-grid3-header {
+    background-color: #404040 !important;
+    background-image: none !important;
+    border-color: #555555 !important;
+}
+
+.x-grid3-header-inner, .x-grid3-hd-inner {
+    color: #ffffff !important;
+}
+
+.x-grid3-row {
+    background-color: #3c3c3c !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+}
+
+.x-grid3-row-alt {
+    background-color: #454545 !important;
+}
+
+.x-grid3-row-over {
+    background-color: #5a5a5a !important;
+}
+
+.x-grid3-row-selected {
+    background-color: #1e90ff !important;
+}
+
+.x-menu {
+    background-color: #3c3c3c !important;
+    border-color: #555555 !important;
+}
+
+.x-menu-item {
+    color: #ffffff !important;
+}
+
+.x-menu-item-active {
+    background-color: #1e90ff !important;
+}
+
+.x-btn, .x-btn-text {
+    color: #ffffff !important;
+    background-color: #404040 !important;
+    border-color: #555555 !important;
+}
+
+.x-btn-over {
+    background-color: #5a5a5a !important;
+}
+
+.x-form-field {
+    background-color: #3c3c3c !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+}
+
+.x-tab-panel-header {
+    background-color: #404040 !important;
+    border-color: #555555 !important;
+}
+
+.x-tab-strip-top .x-tab-strip-active {
+    background-color: #3c3c3c !important;
+}
+
+.x-progress-bar {
+    background-color: #1e90ff !important;
+}
+
+/* Status bar styling */
+.x-statusbar {
+    background-color: #404040 !important;
+    border-color: #555555 !important;
+    color: #ffffff !important;
+}
+
+/* Tree panel styling */
+.x-tree-node {
+    color: #ffffff !important;
+}
+
+.x-tree-node-over {
+    background-color: #5a5a5a !important;
+}
+
+.x-tree-selected {
+    background-color: #1e90ff !important;
+}
+EOF
+
+      # Create theme configuration file
+      cat > /var/lib/deluge/.config/deluge/web/themes/dark/theme.json << 'EOF'
+{
+    "name": "Dark Theme",
+    "description": "Dark theme for Deluge Web UI",
+    "css": ["style.css"]
+}
+EOF
+
+      # Set proper ownership for all files
+      chown -R deluge:deluge /var/lib/deluge/.config/deluge
+      chmod -R 644 /var/lib/deluge/.config/deluge/web.conf
+      chmod -R 755 /var/lib/deluge/.config/deluge/web
+    '';
+    deps = [ "users" ];  # Run after users are created
+  };
+
+  # Deluge web interface (runs on host network) with theme injection
   systemd.services.deluge-web = {
     description = "Deluge BitTorrent Web UI";
     wantedBy = [ "multi-user.target" ];
@@ -279,6 +440,8 @@ in
       RestartSec = "5";
       TimeoutStartSec = "30";
     };
+    # Ensure config is applied before starting
+    after = [ "deluge-config" ];
   };
 
   # Open firewall for Deluge web interface
