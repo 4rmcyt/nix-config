@@ -431,7 +431,7 @@ EOF
   systemd.services.deluge-web = {
     description = "Deluge BitTorrent Web UI";
     wantedBy = [ "multi-user.target" ];
-    after = [ "deluged.service" ];
+    after = [ "deluged.service" "deluge-config" ];
     wants = [ "deluged.service" ];
     serviceConfig = {
       Type = "simple";
@@ -442,8 +442,6 @@ EOF
       RestartSec = "5";
       TimeoutStartSec = "30";
     };
-    # Ensure config is applied before starting
-    after = [ "deluge-config" ];
   };
 
   # Open firewall for Deluge web interface
@@ -452,13 +450,4 @@ EOF
     allowedUDPPorts = [ 51820 ]; # WireGuard
   };
 
-  # Ensure deluge config directory exists
-  system.activationScripts.deluge-config = {
-    text = ''
-      mkdir -p /var/lib/deluge/.config/deluge
-      chown deluge:deluge /var/lib/deluge/.config/deluge
-      chmod 755 /var/lib/deluge/.config/deluge
-    '';
-    deps = [ "users" ];  # Run after users are created
-  };
 }
