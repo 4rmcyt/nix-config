@@ -4,11 +4,18 @@
   networking = {
     hostName = "homeserver";
     
-    networkmanager = {
-      enable = true;
-      dns = "none";
-      insertNameservers = [];
+    interfaces.enp0s31f6 = {  # Replace with your actual interface name
+      ipv4.addresses = [ {
+        address = "192.168.1.165";
+        prefixLength = 24;
+      } ];
     };
+    # Default gateway
+    defaultGateway = "192.168.1.254";
+
+    networkmanager.enable = false;
+    # Enable systemd-networkd for static configuration
+    useNetworkd = true;
     
     firewall = {
       enable = true;
@@ -41,6 +48,8 @@
         1900  # Jellyfin DLNA
         7359  # Jellyfin client discovery
         41641 # Tailscale coordination
+        137  # NetBIOS Name Service
+        138  # NetBIOS Datagram Service
       ];
     };
   };
