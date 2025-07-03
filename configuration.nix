@@ -10,6 +10,9 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Enable VSCode Server - ADD THIS ONE LINE
+  services.vscode-server.enable = true;
+  
   # Enable flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 

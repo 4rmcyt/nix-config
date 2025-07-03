@@ -25,9 +25,14 @@
     };
 
     flake-utils.url = "github:numtide/flake-utils";
+
+    vscode-server = {
+      url = "github:nix-community/nixos-vscode-server";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, sops-nix, disko, nix-index-database, flake-utils, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, sops-nix, disko, nix-index-database, flake-utils, vscode-server, ... }@inputs:
   {
     nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
@@ -54,7 +59,7 @@
         ./services/jellyfin.nix
         ./services/keycloak.nix
         ./services/media-content.nix
-        ./services/microbin.nix              # ADD THIS LINE
+        ./services/microbin.nix              
         ./services/nextcloud.nix
         ./services/paperless.nix
         ./services/radicale.nix
@@ -71,6 +76,7 @@
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
         nix-index-database.nixosModules.nix-index
+        vscode-server.nixosModules.default
       ];
     };
   };
