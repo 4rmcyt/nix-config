@@ -8,21 +8,39 @@
 
   services.keycloak = {
     enable = true;
+    
     settings = {
       hostname = "keycloak.example.com";
+      http-host = "127.0.0.1";
       http-port = 8080;
-      proxy = "edge";
+      
+      # Updated proxy settings (removed deprecated 'proxy' option)
+      proxy-headers = "xforwarded";
+      hostname-strict = false;
+      hostname-strict-https = false;
+      
+      # Database configuration
+      db = "postgresql";
+      db-url = "jdbc:postgresql://localhost:5432/keycloak";
+      db-username = "keycloak";
+      db-password-file = config.sops.secrets.keycloak_db_password.path;
+      
+      # Logging
+      log-level = "INFO";
+      log-console-output = "default";
     };
     
+    # Database creation is handled by database.nix
     database = {
-      type = "postgresql";
-      createLocally = false;  # Database managed centrally
+      createLocally = false;
       host = "localhost";
+      port = 5432;
       name = "keycloak";
       username = "keycloak";
       passwordFile = config.sops.secrets.keycloak_db_password.path;
     };
   };
 
-  # Remove PostgreSQL configuration - handled by database.nix
+  # Open firewall port
+  networking.firewall.allowedTCPPorts = [ 8080 ];
 }

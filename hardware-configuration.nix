@@ -33,8 +33,7 @@
   # Hardware acceleration for media services (Jellyfin)
   hardware.opengl = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
+    # Remove deprecated driSupport options
   };
 
   # Enable hardware acceleration drivers
@@ -44,8 +43,6 @@
     vaapiVdpau
     libvdpau-va-gl
   ];
-  
-
 
   # Power management
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
