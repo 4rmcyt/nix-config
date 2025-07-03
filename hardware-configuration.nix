@@ -50,4 +50,15 @@
 
   # Enable firmware updates
   services.fwupd.enable = true;
+
+  # Fix boot partition permissions - ADDED
+  systemd.tmpfiles.rules = [
+    "z /boot 0755 root root - -"
+    "z /boot/loader 0700 root root - -"
+    "z /boot/loader/random-seed 0600 root root - -"
+  ];
+
+  # Additional security hardening for boot partition
+  boot.loader.systemd-boot.editor = false;  # Disable boot editor
+  boot.loader.timeout = 3;  # Reduce boot timeout
 }
