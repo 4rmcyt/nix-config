@@ -427,11 +427,11 @@ EOF
     deps = [ "users" ];  # Run after users are created
   };
 
-  # Deluge web interface (runs on host network) with theme injection
+  # Deluge web interface (runs on host network)
   systemd.services.deluge-web = {
     description = "Deluge BitTorrent Web UI";
     wantedBy = [ "multi-user.target" ];
-    after = [ "deluged.service" "deluge-config" ];
+    after = [ "deluged.service" ];  # Remove "deluge-config" - activation scripts run before services
     wants = [ "deluged.service" ];
     serviceConfig = {
       Type = "simple";
