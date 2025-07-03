@@ -1,24 +1,23 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
-  sops.secrets.microbin_admin_password = { };
-
   services.microbin = {
     enable = true;
     settings = {
       MICROBIN_BIND = "127.0.0.1";
-      MICROBIN_PORT = "8087";
-      MICROBIN_PUBLIC_PATH = "https://paste.example.com";
-      MICROBIN_EDITABLE = "true";
-      MICROBIN_HIDE_FOOTER = "true";
-      MICROBIN_HIDE_HEADER = "true";
-      MICROBIN_HIDE_LOGO = "true";
-      MICROBIN_NO_LISTING = "true";
-      MICROBIN_HIGHLIGHTSYNTAX = "true";
-      MICROBIN_TITLE = "LabHome Paste";
+      MICROBIN_PORT = "8083";
+      MICROBIN_PUBLIC_PATH = "http://192.168.1.165:80/microbin";
+      MICROBIN_EDITABLE = true;
+      MICROBIN_HIGHLIGHTSYNTAX = true;
+      MICROBIN_TITLE = "Homeserver Pastebin";
+      MICROBIN_ADMIN_USERNAME = "admin";
+      MICROBIN_ADMIN_PASSWORD = config.sops.secrets.microbin_admin_password.path;
     };
   };
-
-  # Open firewall port
-  networking.firewall.allowedTCPPorts = [ 8087 ];
+  
+  # SOPS secret for Microbin
+  sops.secrets.microbin_admin_password = {};
+  
+  # Open firewall for Microbin
+  networking.firewall.allowedTCPPorts = [ 8083 ];
 }

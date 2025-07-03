@@ -1,46 +1,29 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
-  sops.secrets.tailscale_auth_key = { };
-
   services.tailscale = {
     enable = true;
-    useRoutingFeatures = "both";  # Enable subnet routing and exit node
+    useRoutingFeatures = "server";
     
-    # Don't interfere with existing firewall rules
-    interfaceName = "tailscale0";
-    
-    # Use systemd-resolved for DNS
+    # Enable as exit node
     extraUpFlags = [
-      "--accept-dns=false"  # Don't override DNS settings
-      "--accept-routes"     # Accept subnet routes
-      "--shields-up=false"  # Allow incoming connections
+      "--advertise-exit-node"
+      "--advertise-routes=192.168.1.0/24"
     ];
   };
-
-  # Tailscale-specific firewall rules
+  
+  # SOPS secret for Tailscale auth key
+  sops.secrets.tailscale_auth_key = {};
+  
+  # Open firewall for Tailscale
   networking.firewall = {
-    # Allow Tailscale traffic
-    trustedInterfaces = [ "tailscale0" ];
-    
-    # Allow UDP for Tailscale coordination
     allowedUDPPorts = [ 41641 ];
-    
-    # Don't check IP forwarding - Tailscale handles this
-    checkReversePath = "loose";
+    trustedInterfaces = [ "tailscale0" ];
   };
-
-
-  # Tailscale authentication service
-  systemd.services.tailscale-auth = {
-    description = "Tailscale authentication";
-    after = [ "tailscale.service" ];
-    wantedBy = [ "multi-user.target" ];
-    
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = "${pkgs.tailscale}/bin/tailscale up --authkey file:${config.sops.secrets.tailscale_auth_key.path} --accept-routes --shields-up=false";
-    };
+  
+  # Enable IP forwarding for exit node
+  boot.kernel.sysctl = {
+    "net.ipv4.ip_forward" = 1;
+    "net.ipv6.conf.all.forwarding" = 1;
   };
 }
