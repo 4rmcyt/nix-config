@@ -100,11 +100,24 @@
     '';
   };
 
-  # WireGuard interface using PIA configuration
+  # WireGuard interface (networkd compatible)
   networking.wireguard.interfaces.wg-deluge = {
     privateKeyFile = "/var/lib/deluge/pia/private_key";
+    # No postSetup/preShutdown - handle routing separately
+  };
+
+  # Separate service for VPN routing setup
+  systemd.services.deluge-vpn-routing = {
+    description = "Setup VPN routing for Deluge";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "wireguard-wg-deluge.service" "pia-wg-setup.service" ];
+    wants = [ "wireguard-wg-deluge.service" "pia-wg-setup.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
     
-    postSetup = ''
+    script = ''
       # Wait for PIA setup to complete
       while [ ! -f /var/lib/deluge/pia/client_ip ]; do
         sleep 1
@@ -116,7 +129,7 @@
       ENDPOINT=$(cat /var/lib/deluge/pia/endpoint)
       
       # Configure interface
-      ${pkgs.iproute2}/bin/ip addr add $CLIENT_IP/32 dev wg-deluge
+      ${pkgs.iproute2}/bin/ip addr add $CLIENT_IP/32 dev wg-deluge || true
       
       # Add peer
       ${pkgs.wireguard-tools}/bin/wg set wg-deluge peer $PEER_KEY \
@@ -124,15 +137,21 @@
         endpoint $ENDPOINT \
         persistent-keepalive 25
       
-      # Setup routing
-      ${pkgs.iproute2}/bin/ip route add default dev wg-deluge table 42
-      ${pkgs.iproute2}/bin/ip rule add uidrange 993-993 table 42
-      ${pkgs.iproute2}/bin/ip rule add uidrange 993-993 unreachable
+      # Setup routing table
+      ${pkgs.iproute2}/bin/ip route add default dev wg-deluge table 42 || true
+      
+      # Add routing rules for deluge user
+      ${pkgs.iproute2}/bin/ip rule add uidrange 993-993 table 42 || true
+      ${pkgs.iproute2}/bin/ip rule add uidrange 993-993 unreachable || true
+      
+      # Flush route cache
+      ${pkgs.iproute2}/bin/ip route flush cache
     '';
     
-    preShutdown = ''
+    preStop = ''
       ${pkgs.iproute2}/bin/ip rule del uidrange 993-993 table 42 || true
       ${pkgs.iproute2}/bin/ip rule del uidrange 993-993 unreachable || true
+      ${pkgs.iproute2}/bin/ip route flush table 42 || true
     '';
   };
 
@@ -164,8 +183,8 @@
 
   # Service dependencies
   systemd.services.deluged = {
-    after = [ "wireguard-wg-deluge.service" "pia-wg-setup.service" ];
-    wants = [ "wireguard-wg-deluge.service" "pia-wg-setup.service" ];
+    after = [ "deluge-vpn-routing.service" ];
+    wants = [ "deluge-vpn-routing.service" ];
     serviceConfig = {
       User = "deluge";
       Group = "deluge";
