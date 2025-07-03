@@ -11,7 +11,10 @@
       } ];
     };
     # Default gateway
-    defaultGateway = "192.168.1.254";
+    defaultGateway = {
+      address = "192.168.1.254";
+      interface = "enp0s31f6";  # Must match interface name above
+    };
 
     networkmanager.enable = false;
     # Enable systemd-networkd for static configuration
