@@ -20,7 +20,7 @@
       hostname-strict-https = false;
       
       # Database configuration
-      db = "postgresql";
+      db = "postgres";
       db-url = "jdbc:postgresql://localhost:5432/keycloak";
       db-username = "keycloak";
       db-password-file = config.sops.secrets.keycloak_db_password.path;
