@@ -13,7 +13,7 @@
       hostname = "keycloak.example.com";
       http-host = "0.0.0.0";
       http-port = 8080;
-      https-port = -1; # <--- Add this line!
+      # https-port = -1;  # REMOVE THIS LINE
       hostname-strict-https = false;
       proxy-headers = "xforwarded";
       db = "postgres";
