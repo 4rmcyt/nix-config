@@ -54,6 +54,12 @@ in
       log-level = "INFO";
       log-console-output = "default";
       http-enabled = true;
+
+      # Optionally set the default theme for login, account, admin, email:
+      "theme.login" = "zeev";
+      "theme.account" = "zeev";
+      "theme.admin" = "zeev";
+      "theme.email" = "zeev";
     };
   };
 
