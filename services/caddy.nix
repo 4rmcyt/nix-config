@@ -9,27 +9,27 @@
     '';
     
     extraConfig = ''
-      # Main homepage       
+      :80, :443 {
         # Microbin
         handle_path /microbin* {
           reverse_proxy localhost:8083
         }
-        
+
         # Home Assistant
         handle_path /hass* {
           reverse_proxy localhost:8123
         }
-        
+
         # Homepage
         handle_path /homepage* {
           reverse_proxy localhost:8082
         }
-        
-        # Jellyfin  
+
+        # Jellyfin
         handle_path /jellyfin* {
           reverse_proxy localhost:8096
         }
-        
+
         # Default to homepage
         handle {
           reverse_proxy localhost:80

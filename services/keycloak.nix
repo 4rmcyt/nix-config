@@ -20,6 +20,7 @@
       db-password-file = config.sops.secrets.keycloak_db_password.path;
       log-level = "INFO";
       log-console-output = "default";
+      http-enabled = true;
     };
 
     database = {
