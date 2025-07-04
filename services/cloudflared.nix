@@ -10,7 +10,7 @@
   };
 
   users.groups.cloudflared = {};
-  
+
   # Cloudflare Tunnel configuration with direct routing
   systemd.services.cloudflared = {
     description = "Cloudflare Tunnel";
@@ -23,7 +23,6 @@
       RestartSec = "5s";
       User = "cloudflared";
       Group = "cloudflared";
-      DynamicUser = true;
     };
   };
   systemd.tmpfiles.rules = [
