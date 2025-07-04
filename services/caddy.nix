@@ -30,6 +30,11 @@
           reverse_proxy localhost:8096
         }
 
+        # Nextcloud
+        handle_path /nextcloud* {
+          reverse_proxy localhost:8081
+        }
+
         # Default to homepage
         handle {
           reverse_proxy localhost:80
