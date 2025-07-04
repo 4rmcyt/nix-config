@@ -11,7 +11,6 @@ in
   };
   users.groups.nextcloud = {};
 
-  # Download Nextcloud (one-time, or manage manually)
   system.activationScripts.nextcloud = ''
     mkdir -p ${nextcloudWebDir}
     if [ ! -e ${nextcloudWebDir}/index.php ]; then
@@ -24,8 +23,7 @@ in
       rm -rf nextcloud nextcloud.tar.bz2
     fi
   '';
-  
-  services.phpfpm.enable = true;
+
   services.phpfpm.pools.nextcloud = {
     user = "nextcloud";
     group = "nextcloud";
