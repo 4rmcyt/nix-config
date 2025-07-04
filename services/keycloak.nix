@@ -46,7 +46,9 @@ in
       username = "keycloak";
       passwordFile = config.sops.secrets.keycloak_db_password.path;
     };
-    themes = [ keycloak_theme ];
+    themes = {
+      zeev = keycloak_theme;
+    };
     plugins = [ keycloak_trusted_device_plugin ];
     settings = {
       hostname = "keycloak.labhome.work";
