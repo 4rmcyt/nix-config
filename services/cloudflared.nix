@@ -25,10 +25,14 @@
       Group = "cloudflared";
     };
   };
-  
+
   systemd.tmpfiles.rules = [
     "d /var/lib/cloudflared 0755 cloudflared cloudflared -"
   ];
+  
+  after = [ "network.target" "systemd-tmpfiles-setup.service" ];
+  requires = [ "systemd-tmpfiles-setup.service" ];
+  
   # Create tunnel configuration file
   systemd.services.cloudflared.preStart = ''
   # Ensure directory exists (handled by tmpfiles, but safe to check)
