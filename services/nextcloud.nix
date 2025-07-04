@@ -41,17 +41,14 @@ in
 
   environment.systemPackages = with pkgs; [
     php
-    phpPackages.curl
-    phpPackages.zip
-    phpPackages.gd
-    phpPackages.intl
-    phpPackages.mbstring
-    phpPackages.xml
-    phpPackages.zlib
-    phpPackages.openssl
-    phpPackages.pgsql
-    phpPackages.redis
-    phpPackages.imagick
+    curl
+    zip
+    gd
+    zlib
+    openssl
+    postgresql
+    redis
+    imagemagick
   ];
 
   systemd.tmpfiles.rules = [
