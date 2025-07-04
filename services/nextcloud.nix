@@ -41,7 +41,6 @@ in
 
   environment.systemPackages = with pkgs; [
     php
-    phpPackages.fpm
     phpPackages.curl
     phpPackages.zip
     phpPackages.gd
