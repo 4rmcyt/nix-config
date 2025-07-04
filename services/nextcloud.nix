@@ -30,12 +30,4 @@
 
   networking.firewall.allowedTCPPorts = [ 8081 ];
 
-  services.fail2ban-cloudflare = lib.mkIf config.services.fail2ban-cloudflare.enable {
-    jails = {
-      nextcloud = {
-        serviceName = "phpfpm-nextcloud"; # Confirm this matches your PHP-FPM service
-        failRegex = "^.*Login failed:.*(Remote IP: <HOST>).*$";
-      };
-    };
-  };
 }
