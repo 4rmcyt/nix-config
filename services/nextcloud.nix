@@ -57,5 +57,5 @@ in
     "d ${nextcloudWebDir} 0755 nextcloud nextcloud - -"
   ];
 
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedTCPPorts = [ 80 443 8081 ];
 }
