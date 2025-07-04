@@ -30,5 +30,5 @@
   sops.secrets.nextcloud_admin_password = {};
   
   # Open firewall for Nextcloud
-  networking.firewall.allowedTCPPorts = [ 80 ];
+  networking.firewall.allowedTCPPorts = [ 8081 ];
 }
