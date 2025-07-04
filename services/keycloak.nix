@@ -13,7 +13,6 @@
       hostname = "keycloak.labhome.work";
       http-host = "0.0.0.0";
       http-port = 8080;
-      # https-port = -1;  # REMOVE THIS LINE
       hostname-strict-https = false;
       proxy-headers = "xforwarded";
       db = "postgres";
@@ -31,8 +30,11 @@
       passwordFile = config.sops.secrets.keycloak_db_password.path;
     };
   };
-  extraOptions = [
-    "--http-enabled=true"
-  ];
+
+  # This is the key fix:
+  systemd.services.keycloak.environment = {
+    KC_HTTP_ENABLED = "true";
+  };
+
   networking.firewall.allowedTCPPorts = [ 8080 ];
 }
