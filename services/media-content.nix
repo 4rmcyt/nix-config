@@ -1,6 +1,14 @@
 { config, pkgs, lib, ... }:
 
 {
+  users.users.fileserver = {
+    isSystemUser = true;
+    group = "fileserver";
+    home = "/srv/files";
+  };
+
+  users.groups.fileserver = {};
+
   sops.secrets.miniflux_admin_password = { };
 
   # Miniflux RSS reader
