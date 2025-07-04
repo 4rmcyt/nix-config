@@ -58,11 +58,12 @@
       })
     ];
 
-    # Add trusted device provider (update sha256 after first build error)
-    extraProviders = [
+    # Add trusted device and other plugins
+    extraClasspath = [
+      # Trusted Device SPI
       (pkgs.fetchurl {
         url = "https://github.com/wouterh-dev/keycloak-spi-trusted-device/releases/download/v0.0.2/keycloak-spi-trusted-device-0.0.2.jar";
-        sha256 = "e84f6e3f5b7ce4f33115b7080fb1671d91e00c629ed80ae7d97d8c1c9af62dcf"; # <-- replace with real hash after first build
+        sha256 = "e84f6e3f5b7ce4f33115b7080fb1671d91e00c629ed80ae7d97d8c1c9af62dcf";
       })
     ];
   };
