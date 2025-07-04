@@ -59,7 +59,7 @@
     ];
 
     # Add trusted device and other plugins
-    extraClasspath = [
+    plugins = [
       # Trusted Device SPI
       (pkgs.fetchurl {
         url = "https://github.com/wouterh-dev/keycloak-spi-trusted-device/releases/download/v0.0.2/keycloak-spi-trusted-device-0.0.2.jar";
