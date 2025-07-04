@@ -2,7 +2,15 @@
 
 {
   sops.secrets.cloudflare_tunnel_token = { };
+  
+  users.users.cloudflared = {
+    isSystemUser = true;
+    group = "cloudflared";
+    home = "/var/lib/cloudflared";
+  };
 
+  users.groups.cloudflared = {};
+  
   # Cloudflare Tunnel configuration with direct routing
   systemd.services.cloudflared = {
     description = "Cloudflare Tunnel";
