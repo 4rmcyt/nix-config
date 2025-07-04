@@ -24,7 +24,6 @@
   # Create tunnel configuration file
   systemd.services.cloudflared.preStart = ''
   # Ensure directory exists (handled by tmpfiles, but safe to check)
-  mkdir -p /var/lib/cloudflared
   cat > /var/lib/cloudflared/config.yml << EOF
   tunnel: $(cat ${config.sops.secrets.cloudflare_tunnel_token.path})
 
