@@ -13,7 +13,7 @@
       http://homeserver.local:80, http://192.168.1.165:80 {
         # Nextcloud
         handle_path /nextcloud* {
-          reverse_proxy localhost:80
+          reverse_proxy localhost:8081
         }
         
         # Microbin
