@@ -31,6 +31,8 @@
       passwordFile = config.sops.secrets.keycloak_db_password.path;
     };
   };
-
+  extraOptions = [
+    "--http-enabled=true"
+  ];
   networking.firewall.allowedTCPPorts = [ 8080 ];
 }
