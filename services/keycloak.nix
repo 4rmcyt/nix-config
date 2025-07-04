@@ -20,6 +20,8 @@
 
   services.keycloak = {
     enable = true;
+    initialAdminUser = "admin";
+    initialAdminPassword = builtins.readFile config.sops.secrets.keycloak_admin_password.path;
     settings = {
       hostname = "keycloak.example.com";
       http-host = "0.0.0.0";
@@ -28,7 +30,6 @@
       proxy-headers = "xforwarded";
       db = "postgres";
       db-username = "keycloak";
-      db-password-file = config.sops.secrets.keycloak_db_password.path;
       log-level = "INFO";
       log-console-output = "default";
       http-enabled = true;
@@ -41,10 +42,6 @@
       username = "keycloak";
       passwordFile = config.sops.secrets.keycloak_db_password.path;
     };
-
-    # Only include these if your NixOS version supports them!
-    initialAdminUser = builtins.readFile config.sops.secrets.keycloak_admin_user.path;
-    initialAdminPasswordFile = config.sops.secrets.keycloak_admin_password.path;
 
     # Add your custom theme (replace ./keycloak-theme with your theme path)
     themes = [
