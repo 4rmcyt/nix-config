@@ -56,10 +56,10 @@ in
       http-enabled = true;
 
       # Optionally set the default theme for login, account, admin, email:
-      "theme.login" = "zeev";
-      "theme.account" = "zeev";
-      "theme.admin" = "zeev";
-      "theme.email" = "zeev";
+      "theme.login" = "keycloak";
+      "theme.account" = "keycloak";
+      "theme.admin" = "keycloak";
+      "theme.email" = "keycloak";
     };
   };
 
