@@ -18,10 +18,12 @@
       DynamicUser = true;
     };
   };
-
+  systemd.tmpfiles.rules = [
+    "d /var/lib/cloudflared 0755 cloudflared cloudflared -"
+  ];
   # Create tunnel configuration file
   systemd.services.cloudflared.preStart = ''
-    mkdir -p /var/lib/cloudflared
+    mkdir -p /var/lib/cloudflared/config.yml
     cat > /var/lib/cloudflared/config.yml << EOF
     tunnel: $(cat ${config.sops.secrets.cloudflare_tunnel_token.path})
     
