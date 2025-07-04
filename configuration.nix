@@ -65,7 +65,6 @@
   services.deluge.enable = false;
 
   # Disable nginx service
-  services.nginx.enable = false;
   services.vscode-server.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 

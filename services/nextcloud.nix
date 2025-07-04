@@ -23,6 +23,11 @@
       trusted_domains = [ "192.168.1.165" "homeserver.local" ];
       trusted_proxies = [ "127.0.0.1" ];
     };
+    
+    # phpfpmPoolConfig = {
+    #   user = "nginx";
+    #   group = "nginx";
+    # };
   };
   
   # SOPS secrets for Nextcloud
