@@ -1,61 +1,34 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
-let
-  nextcloudWebDir = "/var/www/nextcloud";
-in
 {
-  users.users.nextcloud = {
-    isSystemUser = true;
-    home = nextcloudWebDir;
-    group = "nextcloud";
-  };
-  users.groups.nextcloud = {};
-
- system.activationScripts.nextcloud = ''
-  mkdir -p ${nextcloudWebDir}
-  if [ ! -e ${nextcloudWebDir}/index.php ]; then
-    cd /tmp
-    ${pkgs.curl}/bin/curl -L https://download.nextcloud.com/server/releases/latest.tar.bz2 -o nextcloud.tar.bz2
-    ${pkgs.busybox}/bin/tar -xjf nextcloud.tar.bz2
-    rm -rf ${nextcloudWebDir}/*
-    mv nextcloud/* ${nextcloudWebDir}/
-    chown -R nextcloud:nextcloud ${nextcloudWebDir}
-    rm -rf nextcloud nextcloud.tar.bz2
-  fi
-'';
-
-  services.phpfpm.pools.nextcloud = {
-    user = "nextcloud";
-    group = "nextcloud";
-    phpPackage = pkgs.php;
+  services.nextcloud = {
+    enable = true;
+    package = pkgs.nextcloud31;
+    
+    hostName = "192.168.1.165";
+    
+    # Use local database with trust authentication
+    database.createLocally = true;
+    config = {
+      dbtype = "pgsql";
+      dbuser = "nextcloud";
+      dbname = "nextcloud";
+      
+      adminpassFile = config.sops.secrets.nextcloud_admin_password.path;
+      adminuser = "admin";
+    };
+    
+    # System settings
     settings = {
-      "listen" = "/run/phpfpm-nextcloud.sock";
-      "listen.owner" = "nextcloud";
-      "listen.group" = "nextcloud";
-      "listen.mode" = "0660";
-      "pm" = "dynamic";
-      "pm.max_children" = 12;
-      "pm.start_servers" = 2;
-      "pm.min_spare_servers" = 1;
-      "pm.max_spare_servers" = 6;
+      overwriteprotocol = "http";
+      trusted_domains = [ "192.168.1.165" "homeserver.local" ];
+      trusted_proxies = [ "127.0.0.1" ];
     };
   };
-
-  environment.systemPackages = with pkgs; [
-    php
-    curl
-    zip
-    gd
-    zlib
-    openssl
-    postgresql
-    redis
-    imagemagick
-  ];
-
-  systemd.tmpfiles.rules = [
-    "d ${nextcloudWebDir} 0755 nextcloud nextcloud - -"
-  ];
-
+  
+  # SOPS secrets for Nextcloud
+  sops.secrets.nextcloud_admin_password = {};
+  
+  # Open firewall for Nextcloud
   networking.firewall.allowedTCPPorts = [ 8081 ];
 }
