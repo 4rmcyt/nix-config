@@ -21,6 +21,7 @@
       specialArgs = { inherit inputs; };
       
       modules = [
+        vscode-server.nixosModules.default
         # Core configuration files
         ./configuration.nix
         ./disko.nix
@@ -54,7 +55,6 @@
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
         nix-index-database.nixosModules.nix-index
-        vscode-server.nixosModules.default
       ];
     };
   };
