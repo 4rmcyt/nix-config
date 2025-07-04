@@ -31,6 +31,9 @@ in
     phpPackage = pkgs.php;
     settings = {
       "listen" = "/run/phpfpm-nextcloud.sock";
+      "listen.owner" = "nextcloud";
+      "listen.group" = "nextcloud";
+      "listen.mode" = "0660";
       "pm" = "dynamic";
       "pm.max_children" = 12;
       "pm.start_servers" = 2;
