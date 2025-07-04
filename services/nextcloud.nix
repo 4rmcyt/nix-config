@@ -32,6 +32,28 @@
     };
   };
 
+  # Override Nextcloud nginx to listen on 127.0.0.1:8081
+  services.nginx.virtualHosts."nextcloud.local" = {
+    listen = [
+      { addr = "127.0.0.1"; port = 8081; ssl = false; }
+    ];
+    locations."/" = {
+      proxyPass = "http://unix:/run/nextcloud/php-fpm.sock";
+      extraConfig = ''
+        include ${pkgs.nginx}/conf/fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_param HTTPS off;
+        fastcgi_pass unix:/run/nextcloud/php-fpm.sock;
+        fastcgi_index index.php;
+      '';
+    };
+    root = "/var/lib/nextcloud";
+    extraConfig = ''
+      client_max_body_size 512M;
+    '';
+  };
+
   # Enable nginx for Nextcloud
   services.nginx.enable = true;
 
