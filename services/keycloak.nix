@@ -32,6 +32,7 @@ in
 
   services.keycloak = {
     enable = true;
+    initialAdminUser = "admin"; # or your preferred username
     initialAdminPassword = config.sops.secrets.keycloak_admin_password.path;
     database = {
       createLocally = false;
