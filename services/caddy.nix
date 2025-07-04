@@ -9,9 +9,8 @@
     '';
     
     extraConfig = ''
-      # Main homepage
+      # Local network
       http://homeserver.local:80, http://192.168.1.165:80 {
-        # Nextcloud
         handle_path /nextcloud* {
           root * /var/www/nextcloud
           php_fastcgi unix//run/phpfpm-nextcloud.sock
@@ -42,6 +41,13 @@
         handle {
           reverse_proxy localhost:8082
         }
+      }
+
+      # Cloudflare tunnel expects Nextcloud on 8081 at /
+      http://localhost:8081 {
+        root * /var/www/nextcloud
+        php_fastcgi unix//run/phpfpm-nextcloud.sock
+        file_server
       }
     '';
   };
