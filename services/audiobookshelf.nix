@@ -5,7 +5,6 @@
     enable = true;
     host = "127.0.0.1";
     port = 8085;
-    serviceConfig.WorkingDirectory = "/var/lib/audiobookshelf";
   };
 
   # Create media directories
