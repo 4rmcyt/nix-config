@@ -6,6 +6,7 @@
     host = "127.0.0.1";
     port = 8085;
     dataDir = "/var/lib/audiobookshelf";
+    serviceConfig.WorkingDirectory = "/var/lib/audiobookshelf";
   };
 
   # Create media directories
