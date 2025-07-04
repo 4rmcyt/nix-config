@@ -5,7 +5,7 @@
     enable = true;
     package = pkgs.nextcloud31;
     
-    hostName = "192.168.1.165";
+    hostName = "nextcloud.example.com";
     
     # Use local database with trust authentication
     database.createLocally = true;
