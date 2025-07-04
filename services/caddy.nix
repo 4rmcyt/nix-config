@@ -22,10 +22,10 @@
         file_server
       }
 
-      # # Microbin ONLY on 8083
-      # http://localhost:8083 {
-      #   reverse_proxy localhost:8083
-      # }
+      # Microbin ONLY on 8083
+      http://localhost:8083 {
+        reverse_proxy localhost:8084
+      }
 
       # Jellyfin ONLY on 8096
       http://localhost:8096 {
