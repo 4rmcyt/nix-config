@@ -13,7 +13,9 @@
       http://homeserver.local:80, http://192.168.1.165:80 {
         # Nextcloud
         handle_path /nextcloud* {
-          reverse_proxy localhost:8081
+          root * /var/www/nextcloud
+          php_fastcgi unix//run/phpfpm-nextcloud.sock
+          file_server
         }
         
         # Microbin
@@ -44,5 +46,4 @@
     '';
   };
   
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
-}
+  networking.firewall.allowedTCPPorts = [ 80 443
