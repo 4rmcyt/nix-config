@@ -7,7 +7,7 @@
   services.miniflux = {
     enable = true;
     config = {
-      LISTEN_ADDR = "127.0.0.1:8083";
+      LISTEN_ADDR = "127.0.0.1:8086";
       ADMIN_USERNAME = "admin";
       ADMIN_PASSWORD = "$(cat ${config.sops.secrets.miniflux_admin_password.path})";
       BASE_URL = "https://rss.example.com";

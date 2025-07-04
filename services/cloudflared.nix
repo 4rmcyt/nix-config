@@ -21,8 +21,8 @@
 
   # Create tunnel configuration file
   systemd.services.cloudflared.preStart = ''
-    mkdir -p /etc/cloudflared
-    cat > /etc/cloudflared/config.yml << EOF
+    mkdir -p /var/lib/cloudflared
+    cat > /var/lib/cloudflared/config.yml << EOF
     tunnel: $(cat ${config.sops.secrets.cloudflare_tunnel_token.path})
     
     ingress:
