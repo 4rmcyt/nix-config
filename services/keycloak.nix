@@ -14,14 +14,7 @@ let
     '';
   };
 
-  keycloak_theme = pkgs.stdenv.mkDerivation {
-    name = "keycloak-theme";
-    src = ./keycloak-theme;
-    installPhase = ''
-      mkdir -p $out
-      cp -r * $out/
-    '';
-  };
+  keycloak_theme = import ./theme.nix { inherit (pkgs) stdenv; };
 in
 {
   # SOPS secrets
