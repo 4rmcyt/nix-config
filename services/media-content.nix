@@ -30,12 +30,12 @@
       User = "fileserver";
       Group = "fileserver";
       DynamicUser = true;
-      WorkingDirectory = "/home/zeev/fileserver";
+      WorkingDirectory = "/srv/files";
     };
   };
 
   systemd.tmpfiles.rules = [
-    "d /home/zeev/fileserver 0755 fileserver fileserver -"
+    "d /srv/files 0755 fileserver fileserver -"
   ];
 
   networking.firewall.allowedTCPPorts = [ 8083 8084 ];
