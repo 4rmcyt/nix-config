@@ -23,6 +23,13 @@
       trusted_domains = [ "192.168.1.165" "homeserver.local" ];
       trusted_proxies = [ "127.0.0.1" ];
     };
+
+    nginx = {
+      # Listen on 8081 instead of 80/443
+      listen = [
+        { addr = "127.0.0.1"; port = 8081; ssl = false; }
+      ];
+    };
   };
 
   # Enable nginx for Nextcloud
