@@ -45,7 +45,6 @@
         ./services/media-content.nix
         ./services/paperless.nix
         ./services/radicale.nix
-        # ./services/nextdns.nix
         ./services/samba.nix
         ./services/tg-notify.nix
         ./services/yubikey.nix
