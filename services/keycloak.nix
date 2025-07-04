@@ -11,7 +11,7 @@
     enable = true;
     settings = {
       hostname = "keycloak.example.com";
-      http-host = "0.0.0.0";
+      http-host = "0.0.0.0"; # TODO: Fix it after reverse proxy will be ready
       http-port = 8080;
       hostname-strict-https = false;
       proxy-headers = "xforwarded";

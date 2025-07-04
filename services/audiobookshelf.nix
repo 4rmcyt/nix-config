@@ -3,7 +3,7 @@
 {
   services.audiobookshelf = {
     enable = true;
-    host = "0.0.0.0";
+    host = "0.0.0.0"; # TODO: Fix it after reverse proxy will be ready
     port = 8085;
   };
 
