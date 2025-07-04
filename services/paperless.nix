@@ -8,7 +8,7 @@
     package = pkgs.paperless-ngx.overrideAttrs (oldAttrs: {
       doCheck = false;  # Skip tests to avoid build failures
     });
-    port = 8082;
+    port = 8888; # Changed from 8082 to 8888
     address = "127.0.0.1";
     
     settings = {
