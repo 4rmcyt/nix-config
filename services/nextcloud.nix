@@ -24,7 +24,8 @@ in
       rm -rf nextcloud nextcloud.tar.bz2
     fi
   '';
-
+  
+  services.phpfpm.enable = true;
   services.phpfpm.pools.nextcloud = {
     user = "nextcloud";
     group = "nextcloud";
