@@ -5,15 +5,18 @@
   # NextDNS configuration
   services.nextdns = {
     enable = true;
-    config = "nextdns0";
-    arguments = [
-      "-config" "$(cat ${config.sops.secrets.nextdns_config_id.path})"
-      "-listen" "127.0.0.1:53"
-      "-cache-size" "10MB"
-      "-max-ttl" "5m"
-      "-report-client-info"
-      "-auto-activate"
-    ];
+    settings = {
+      profile = "nextdns0";
+    };
+    # profile = "nextdns0";
+    # arguments = [
+    #   "-config" "$(cat ${config.sops.secrets.nextdns_config_id.path})"
+    #   "-listen" "127.0.0.1:53"
+    #   "-cache-size" "10MB"
+    #   "-max-ttl" "5m"
+    #   "-report-client-info"
+    #   "-auto-activate"
+    # ];
   };
 
   # System DNS configuration
