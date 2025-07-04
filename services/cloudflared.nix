@@ -14,9 +14,9 @@
   # Cloudflare Tunnel configuration with direct routing
   systemd.services.cloudflared = {
     description = "Cloudflare Tunnel";
-    after = [ "network.target" ];
+    after = [ "network.target" "systemd-tmpfiles-setup.service" ];
+    requires = [ "systemd-tmpfiles-setup.service" ];
     wantedBy = [ "multi-user.target" ];
-    
     serviceConfig = {
       ExecStart = "${pkgs.cloudflared}/bin/cloudflared tunnel --no-autoupdate run --token-file ${config.sops.secrets.cloudflare_tunnel_token.path}";
       Restart = "always";
@@ -25,6 +25,7 @@
       Group = "cloudflared";
     };
   };
+  
   systemd.tmpfiles.rules = [
     "d /var/lib/cloudflared 0755 cloudflared cloudflared -"
   ];
