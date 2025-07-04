@@ -32,7 +32,7 @@ in
 
   services.keycloak = {
     enable = true;
-    initialAdminPassword = "23031986"
+    initialAdminPassword = "23031986";
     database = {
       createLocally = false;
       host = "localhost";
