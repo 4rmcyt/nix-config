@@ -37,7 +37,6 @@ in
       createLocally = false;
       host = "localhost";
       port = 5432;
-      username = "keycloak";
       passwordFile = config.sops.secrets.keycloak_db_password.path;
     };
     themes = {
