@@ -54,7 +54,7 @@ in
       log-level = "INFO";
       log-console-output = "default";
       http-enabled = true;
-      cluster = "false";
+      clustered = false;
     };
   };
 
