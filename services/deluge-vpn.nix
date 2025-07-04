@@ -275,7 +275,7 @@ in
       # Create web themes directory structure
       mkdir -p /var/lib/deluge/.config/deluge/web/themes/dark
       
-      # Create web.conf with dark theme configuration
+      # Create web.conf with NO password
       cat > /var/lib/deluge/.config/deluge/web.conf << 'EOF'
 {
     "base": "deluge",
@@ -283,8 +283,8 @@ in
     "https": false,
     "pkey": "ssl/daemon.pkey", 
     "cert": "ssl/daemon.cert",
-    "pwd_salt": "c26ab3bbd8b137f99cd83c2c1c0963bcc1a35cad",
-    "pwd_sha1": "2ce1a410bcdcc53064129b6d950bda9458e4292f",
+    "pwd_salt": "",
+    "pwd_sha1": "",
     "sessions": {},
     "enabled_plugins": [],
     "theme": "gray",
