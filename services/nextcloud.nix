@@ -1,13 +1,6 @@
 { config, pkgs, lib, ... }:
 
 {
-  users.users.nextcloud = {
-    isSystemUser = true;
-    group = "nextcloud";
-    home = "/var/lib/nextcloud";
-  };
-  users.groups.nextcloud = {};
-
   services.nextcloud = {
     enable = true;
     package = pkgs.nextcloud31;
@@ -20,7 +13,6 @@
       dbtype = "pgsql";
       dbuser = "nextcloud";
       dbname = "nextcloud";
-      
       adminpassFile = config.sops.secrets.nextcloud_admin_password.path;
       adminuser = "admin";
     };
