@@ -12,6 +12,28 @@
       maintenance_work_mem = "64MB";
     };
     
+    initialScript = pkgs.writeText "init-postgres.sql" ''
+      -- Create databases
+      CREATE DATABASE IF NOT EXISTS keycloak;
+      CREATE DATABASE IF NOT EXISTS nextcloud;
+      CREATE DATABASE IF NOT EXISTS miniflux;
+      CREATE DATABASE IF NOT EXISTS hass;
+      
+      -- Create users
+      CREATE USER IF NOT EXISTS keycloak WITH PASSWORD 'temp_password';
+      CREATE USER IF NOT EXISTS nextcloud WITH PASSWORD 'temp_password';
+      CREATE USER IF NOT EXISTS miniflux WITH PASSWORD 'temp_password';
+      CREATE USER IF NOT EXISTS hass WITH PASSWORD 'temp_password';
+      
+      -- Grant privileges
+      GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak;
+      GRANT ALL PRIVILEGES ON DATABASE nextcloud TO nextcloud;
+      GRANT ALL PRIVILEGES ON DATABASE miniflux TO miniflux;
+      GRANT ALL PRIVILEGES ON DATABASE hass TO hass;
+      
+      -- Note: Passwords will be updated via secrets after first boot
+    '';
+    
     ensureDatabases = [
       "keycloak"
       "nextcloud" 
