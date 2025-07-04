@@ -11,18 +11,18 @@ in
   };
   users.groups.nextcloud = {};
 
-  system.activationScripts.nextcloud = ''
-    mkdir -p ${nextcloudWebDir}
-    if [ ! -e ${nextcloudWebDir}/index.php ]; then
-      cd /tmp
-      curl -L https://download.nextcloud.com/server/releases/latest.tar.bz2 -o nextcloud.tar.bz2
-      tar -xjf nextcloud.tar.bz2
-      rm -rf ${nextcloudWebDir}/*
-      mv nextcloud/* ${nextcloudWebDir}/
-      chown -R nextcloud:nextcloud ${nextcloudWebDir}
-      rm -rf nextcloud nextcloud.tar.bz2
-    fi
-  '';
+ system.activationScripts.nextcloud = ''
+  mkdir -p ${nextcloudWebDir}
+  if [ ! -e ${nextcloudWebDir}/index.php ]; then
+    cd /tmp
+    ${pkgs.curl}/bin/curl -L https://download.nextcloud.com/server/releases/latest.tar.bz2 -o nextcloud.tar.bz2
+    ${pkgs.busybox}/bin/tar -xjf nextcloud.tar.bz2
+    rm -rf ${nextcloudWebDir}/*
+    mv nextcloud/* ${nextcloudWebDir}/
+    chown -R nextcloud:nextcloud ${nextcloudWebDir}
+    rm -rf nextcloud nextcloud.tar.bz2
+  fi
+'';
 
   services.phpfpm.pools.nextcloud = {
     user = "nextcloud";
