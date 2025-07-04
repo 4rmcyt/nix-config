@@ -1,19 +1,7 @@
 { config, pkgs, ... }:
 
-{
-  # SOPS secrets
-  sops.secrets.keycloak_db_password = {
-    owner = "root";
-    group = "root";
-    mode = "0400";
-  };
-  sops.secrets.keycloak_admin_password = {
-    owner = "root";
-    group = "root";
-    mode = "0400";
-  };
-
-  # Package the trusted device plugin as a derivation (like notthebee)
+# Define plugins and themes as variables at the top-level
+let
   keycloak_trusted_device_plugin = pkgs.stdenv.mkDerivation {
     name = "keycloak-spi-trusted-device";
     src = pkgs.fetchurl {
@@ -26,7 +14,6 @@
     '';
   };
 
-  # Package your theme as a derivation (like notthebee)
   keycloak_theme = pkgs.stdenv.mkDerivation {
     name = "keycloak-theme";
     src = ./keycloak-theme;
@@ -34,6 +21,19 @@
       mkdir -p $out
       cp -r * $out/
     '';
+  };
+in
+{
+  # SOPS secrets
+  sops.secrets.keycloak_db_password = {
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+  sops.secrets.keycloak_admin_password = {
+    owner = "root";
+    group = "root";
+    mode = "0400";
   };
 
   services.keycloak = {
@@ -59,7 +59,6 @@
       log-level = "INFO";
       log-console-output = "default";
       http-enabled = true;
-      # Add any other settings you need
     };
   };
 
