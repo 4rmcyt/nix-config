@@ -19,20 +19,19 @@
 
   # Simple HTTP file server
   systemd.services.simple-fileserver = {
-    enable = true;
-    description = "Simple HTTP file server";
-    after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ];
-    
-    serviceConfig = {
-      ExecStart = "${pkgs.python3}/bin/python -m http.server 8084 --bind 127.0.0.1";
-      Restart = "always";
-      User = "fileserver";
-      Group = "fileserver";
-      DynamicUser = true;
-      WorkingDirectory = "/srv/files";
-    };
+  enable = true;
+  description = "Simple HTTP file server";
+  after = [ "network.target" "systemd-tmpfiles-setup.service" ];
+  wantedBy = [ "multi-user.target" ];
+  serviceConfig = {
+    ExecStart = "${pkgs.python3}/bin/python -m http.server 8084 --bind 127.0.0.1";
+    Restart = "always";
+    User = "fileserver";
+    Group = "fileserver";
+    DynamicUser = true;
+    WorkingDirectory = "/srv/files";
   };
+};
 
   systemd.tmpfiles.rules = [
     "d /srv/files 0755 fileserver fileserver -"
