@@ -60,7 +60,7 @@ in
 
   networking.firewall.allowedTCPPorts = [ 8080 ];
   networking.firewall.allowedTCPPortRanges = [
-    { from = 7800; to = 7900; } # JGroups default range
+    { from = 7800; to = 8000; } # Wider range for JGroups
   ];
 
   systemd.services.keycloak.environment = {
