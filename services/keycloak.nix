@@ -31,10 +31,6 @@
     };
   };
 
-  # This is the key fix:
-  systemd.services.keycloak.environment = {
-    KC_HTTP_ENABLED = "true";
-  };
 
   networking.firewall.allowedTCPPorts = [ 8080 ];
 }

@@ -64,5 +64,8 @@
   # Disable built-in Deluge service - using custom VPN version
   services.deluge.enable = false;
 
+  # Disable nginx service
+  services.nginx.enable = false;
+
   system.stateVersion = "25.05";
 }
