@@ -50,7 +50,7 @@
 
   # System packages
   environment.systemPackages = with pkgs; [
-    git vim wget curl htop tmux age sops openssh lsof neovim mc
+    git vim wget curl htop tmux age sops openssh lsof neovim mc htpasswd
   ];
 
   # Enable Home Manager
