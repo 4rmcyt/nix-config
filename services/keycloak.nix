@@ -62,4 +62,8 @@ in
   networking.firewall.allowedTCPPortRanges = [
     { from = 7800; to = 7900; } # JGroups default range
   ];
+
+  systemd.services.keycloak.environment = {
+    KC_CACHE_STACK = "local";
+  };
 }
