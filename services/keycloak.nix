@@ -9,22 +9,16 @@
 
   services.keycloak = {
     enable = true;
+    http.enable = true; # <-- Correct way to enable HTTP
     settings = {
-      http.enabled = true;
       hostname = "keycloak.example.com";
       http-host = "0.0.0.0";
       http-port = 8080;
-      
-      # Fix HTTPS issue - disable HTTPS requirement for development
       hostname-strict-https = false;
       proxy-headers = "xforwarded";
-      
-      # Database configuration
       db = "postgres";
       db-username = "keycloak";
       db-password-file = config.sops.secrets.keycloak_db_password.path;
-
-      # Logging
       log-level = "INFO";
       log-console-output = "default";
     };
