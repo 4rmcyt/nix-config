@@ -7,6 +7,18 @@
     mode = "0400";
   };
 
+  sops.secrets.keycloak_default_user = {
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+
+  sops.secrets.keycloak_default_password = {
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+
   services.keycloak = {
     enable = true;
     settings = {
