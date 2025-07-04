@@ -1,33 +1,63 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
+let
+  nextcloudWebDir = "/var/www/nextcloud";
+in
 {
-  services.nextcloud = {
-    enable = true;
-    package = pkgs.nextcloud31;
-    hostName = "nextcloud.labhome.work";
+  users.users.nextcloud = {
+    isSystemUser = true;
+    home = nextcloudWebDir;
+    group = "nextcloud";
+  };
+  users.groups.nextcloud = {};
 
-    database.createLocally = true;
-    config = {
-      dbtype = "pgsql";
-      dbuser = "nextcloud";
-      dbname = "nextcloud";
-      adminuser = "admin";
-      adminpassFile = config.sops.secrets.nextcloud_admin_password.path;
-    };
+  # Download Nextcloud (one-time, or manage manually)
+  system.activationScripts.nextcloud = ''
+    mkdir -p ${nextcloudWebDir}
+    if [ ! -e ${nextcloudWebDir}/index.php ]; then
+      cd /tmp
+      curl -L https://download.nextcloud.com/server/releases/latest.tar.bz2 -o nextcloud.tar.bz2
+      tar -xjf nextcloud.tar.bz2
+      rm -rf ${nextcloudWebDir}/*
+      mv nextcloud/* ${nextcloudWebDir}/
+      chown -R nextcloud:nextcloud ${nextcloudWebDir}
+      rm -rf nextcloud nextcloud.tar.bz2
+    fi
+  '';
 
+  services.phpfpm.pools.nextcloud = {
+    user = "nextcloud";
+    group = "nextcloud";
+    phpPackage = pkgs.php;
     settings = {
-      overwriteprotocol = "https"; # Use "https" if behind Cloudflare Tunnel
-      trusted_domains = [
-        "nextcloud.labhome.work"
-        "192.168.1.165"
-        "homeserver.local"
-      ];
-      trusted_proxies = [ "127.0.0.1" ];
+      "listen" = "/run/phpfpm-nextcloud.sock";
+      "pm" = "dynamic";
+      "pm.max_children" = 12;
+      "pm.start_servers" = 2;
+      "pm.min_spare_servers" = 1;
+      "pm.max_spare_servers" = 6;
     };
   };
 
-  sops.secrets.nextcloud_admin_password = {};
+  environment.systemPackages = with pkgs; [
+    php
+    phpPackages.fpm
+    phpPackages.curl
+    phpPackages.zip
+    phpPackages.gd
+    phpPackages.intl
+    phpPackages.mbstring
+    phpPackages.xml
+    phpPackages.zlib
+    phpPackages.openssl
+    phpPackages.pgsql
+    phpPackages.redis
+    phpPackages.imagick
+  ];
 
-  networking.firewall.allowedTCPPorts = [ 8081 ];
+  systemd.tmpfiles.rules = [
+    "d ${nextcloudWebDir} 0755 nextcloud nextcloud - -"
+  ];
 
+  networking.firewall.allowedTCPPorts = [ 80 443 ];
 }
