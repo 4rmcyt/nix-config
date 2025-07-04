@@ -1,7 +1,11 @@
 { config, pkgs, ... }:
 
 {
-  sops.secrets.cloudflare_tunnel_token = { };
+  sops.secrets.cloudflare_tunnel_token = {
+    owner = "cloudflared";
+    group = "cloudflared";
+    mode = "0400";
+  };
   
   users.users.cloudflared = {
     isSystemUser = true;
