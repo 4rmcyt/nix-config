@@ -1,6 +1,13 @@
 { config, pkgs, lib, ... }:
 
 {
+  users.users.nextcloud = {
+    isSystemUser = true;
+    group = "nextcloud";
+    home = "/var/lib/nextcloud";
+  };
+  users.groups.nextcloud = {};
+
   services.nextcloud = {
     enable = true;
     package = pkgs.nextcloud31;
