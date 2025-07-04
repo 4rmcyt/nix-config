@@ -9,11 +9,11 @@
 
   services.keycloak = {
     enable = true;
-    http.enable = true; # <-- Correct way to enable HTTP
     settings = {
       hostname = "keycloak.example.com";
       http-host = "0.0.0.0";
       http-port = 8080;
+      https-port = -1; # <--- Add this line!
       hostname-strict-https = false;
       proxy-headers = "xforwarded";
       db = "postgres";
