@@ -20,226 +20,227 @@
     ];
 
     jails = {
-  ssh = {
-    settings = {
-      enabled = true;
-      filter = "sshd";
-      logpath = "/var/log/auth.log";
-      maxretry = 3;
-      bantime = "1h";
-      findtime = "10m";
-      action = "cloudflare-token";
-    };
-  };
+      ssh = {
+        settings = {
+          enabled = true;
+          filter = "sshd";
+          logpath = "/var/log/auth.log";
+          maxretry = 3;
+          bantime = "1h";
+          findtime = "10m";
+          action = "cloudflare-token";
+        };
+      };
 
-  nextcloud = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=nextcloud-phpfpm.service";
-      filter = "nextcloud";
-      maxretry = 5;
-      findtime = "10m";
-      bantime = "1h";
-      action = "cloudflare-token";
-    };
-  };
+      nextcloud = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=nextcloud-phpfpm.service";
+          filter = "nextcloud";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
 
-  homeassistant = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=home-assistant.service";
-      filter = "homeassistant";
-      maxretry = 5;
-      findtime = "10m";
-      bantime = "1h";
-      action = "cloudflare-token";
-    };
-  };
+      homeassistant = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=home-assistant.service";
+          filter = "homeassistant";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
 
-  keycloak = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=keycloak.service";
-      filter = "keycloak";
-      maxretry = 3;
-      findtime = "10m";
-      bantime = "2h";
-      action = "cloudflare-token";
-    };
-  };
+      keycloak = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=keycloak.service";
+          filter = "keycloak";
+          maxretry = 3;
+          findtime = "10m";
+          bantime = "2h";
+          action = "cloudflare-token";
+        };
+      };
 
-  jellyfin = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=jellyfin.service";
-      filter = "jellyfin";
-      maxretry = 5;
-      findtime = "10m";
-      bantime = "30m";
-      action = "cloudflare-token";
-    };
-  };
+      jellyfin = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=jellyfin.service";
+          filter = "jellyfin";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "30m";
+          action = "cloudflare-token";
+        };
+      };
 
-  audiobookshelf = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=audiobookshelf.service";
-      filter = "audiobookshelf";
-      maxretry = 5;
-      findtime = "10m";
-      bantime = "1h";
-      action = "cloudflare-token";
-    };
-  };
+      audiobookshelf = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=audiobookshelf.service";
+          filter = "audiobookshelf";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
 
-  microbin = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=microbin.service";
-      filter = "microbin";
-      maxretry = 5;
-      findtime = "10m";
-      bantime = "1h";
-      action = "cloudflare-token";
-    };
-  };
+      microbin = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=microbin.service";
+          filter = "microbin";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
 
-  paperless = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=paperless.service";
-      filter = "paperless";
-      maxretry = 5;
-      findtime = "10m";
-      bantime = "1h";
-      action = "cloudflare-token";
-    };
-  };
+      paperless = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=paperless.service";
+          filter = "paperless";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
 
-  samba = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=smbd.service";
-      filter = "samba";
-      maxretry = 5;
-      findtime = "10m";
-      bantime = "1h";
-      action = "cloudflare-token";
-    };
-  };
+      samba = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=smbd.service";
+          filter = "samba";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
 
-  radicale = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=radicale.service";
-      filter = "radicale";
-      maxretry = 5;
-      findtime = "10m";
-      bantime = "1h";
-      action = "cloudflare-token";
-    };
-  };
+      radicale = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=radicale.service";
+          filter = "radicale";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
 
-  caddy = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=caddy.service";
-      filter = "caddy";
-      maxretry = 5;
-      findtime = "10m";
-      bantime = "1h";
-      action = "cloudflare-token";
-    };
-  };
+      caddy = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=caddy.service";
+          filter = "caddy";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
 
-  delugevpn = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=deluge-vpn.service";
-      filter = "delugevpn";
-      maxretry = 5;
-      findtime = "10m";
-      bantime = "1h";
-      action = "cloudflare-token";
-    };
-  };
+      delugevpn = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=deluge-vpn.service";
+          filter = "delugevpn";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
 
-  homepage = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=homepage.service";
-      filter = "homepage";
-      maxretry = 5;
-      findtime = "10m";
-      bantime = "1h";
-      action = "cloudflare-token";
-    };
-  };
+      homepage = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=homepage.service";
+          filter = "homepage";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
 
-  tailscale = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=tailscaled.service";
-      filter = "tailscale";
-      maxretry = 5;
-      findtime = "10m";
-      bantime = "1h";
-      action = "cloudflare-token";
-    };
-  };
+      tailscale = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=tailscaled.service";
+          filter = "tailscale";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
 
-  cloudflared = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=cloudflared.service";
-      filter = "cloudflared";
-      maxretry = 5;
-      findtime = "10m";
-      bantime = "1h";
-      action = "cloudflare-token";
-    };
-  };
+      cloudflared = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=cloudflared.service";
+          filter = "cloudflared";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
 
-  media-content = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=media-content.service";
-      filter = "media-content";
-      maxretry = 5;
-      findtime = "10m";
-      bantime = "1h";
-      action = "cloudflare-token";
-    };
-  };
+      media-content = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=media-content.service";
+          filter = "media-content";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
 
-  yubikey = {
-    settings = {
-      enabled = true;
-      backend = "systemd";
-      journalmatch = "_SYSTEMD_UNIT=yubikey.service";
-      filter = "yubikey";
-      maxretry = 5;
-      findtime = "10m";
-      bantime = "1h";
-      action = "cloudflare-token";
+      yubikey = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=yubikey.service";
+          filter = "yubikey";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
     };
   };
-};
 
   # Custom filters for each service
   environment.etc = {
@@ -269,6 +270,13 @@
       [Definition]
       failregex = Authentication request for .* has been denied \(IP: <HOST>\)
                   Invalid login attempt.*IP:<HOST>
+      ignoreregex =
+    '';
+
+    "fail2ban/filter.d/audiobookshelf.conf".text = ''
+      [Definition]
+      failregex = Failed login attempt.*ip=<HOST>
+                  Invalid credentials.*ip=<HOST>
       ignoreregex =
     '';
 
