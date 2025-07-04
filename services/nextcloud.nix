@@ -21,7 +21,7 @@
     # System settings
     settings = {
       overwriteprotocol = "http";
-      trusted_domains = [ "192.168.1.165" "homeserver.local" ];
+      trusted_domains = [ "nextcloud.example.com" "192.168.1.165" "homeserver.local" ];
       trusted_proxies = [ "127.0.0.1" ];
     };
   };
