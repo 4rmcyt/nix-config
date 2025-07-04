@@ -54,7 +54,6 @@ in
       log-level = "INFO";
       log-console-output = "default";
       http-enabled = true;
-      clustered = false;
     };
   };
 
@@ -62,8 +61,4 @@ in
   networking.firewall.allowedTCPPortRanges = [
     { from = 7800; to = 8000; } # Wider range for JGroups
   ];
-
-  systemd.services.keycloak.environment = {
-    KC_CACHE_STACK = "local";
-  };
 }
