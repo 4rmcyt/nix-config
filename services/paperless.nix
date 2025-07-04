@@ -31,5 +31,5 @@
   };
 
   # Open firewall port
-  networking.firewall.allowedTCPPorts = [ 8082 ];
+  networking.firewall.allowedTCPPorts = [ 8888 ];
 }

@@ -45,4 +45,10 @@
   ];
 
   networking.firewall.allowedTCPPorts = [ 8083 8084 ];
+
+  # users.groups.media = {};
+
+  # users.users.deluge.extraGroups = [ "media" ];
+  # users.users.nextcloud.extraGroups = [ "media" ];
+  # users.users.root.extraGroups = [ "media" ];
 }
