@@ -13,8 +13,6 @@
       http://homeserver.local:80, http://192.168.1.165:80 {
         root * /var/www/homepage
         file_server
-        # If homepage is a service on 8082, reverse proxy:
-        # reverse_proxy localhost:8082
       }
 
       # Nextcloud ONLY on 8081
@@ -38,8 +36,6 @@
       http://localhost:8123 {
         reverse_proxy localhost:8123
       }
-
-      # Add similar blocks for other services as needed
     '';
   };
 
