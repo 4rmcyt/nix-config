@@ -30,6 +30,9 @@
       username = "keycloak";
       passwordFile = config.sops.secrets.keycloak_db_password.path;
     };
+
+    initialAdminUser = config.sops.secrets.keycloak_default_user.path;
+    initialAdminPasswordFile = config.sops.secrets.keycloak_default_password.path;
   };
 
 
