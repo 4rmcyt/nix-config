@@ -19,7 +19,7 @@
       };
       
       web = {
-        base_prefix = "/";
+        # base_prefix = "/";
       };
       
       logging = {
