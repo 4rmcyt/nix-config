@@ -15,16 +15,9 @@
         file_server
       }
 
-      # Nextcloud ONLY on 8081
-      http://localhost:8081 {
-        root * /var/www/nextcloud
-        php_fastcgi unix//run/phpfpm-nextcloud.sock
-        file_server
-      }
-
       # Microbin ONLY on 8083
       http://localhost:8083 {
-        reverse_proxy localhost:8084
+        reverse_proxy localhost:8083
       }
 
       # Jellyfin ONLY on 8096
@@ -39,5 +32,5 @@
     '';
   };
 
-  networking.firewall.allowedTCPPorts = [ 80 443 8081 8083 8096 8123 ];
+  networking.firewall.allowedTCPPorts = [ 80 443 8083 8096 8123 ];
 }
