@@ -36,7 +36,6 @@
     Restart = "always";
     User = "fileserver";
     Group = "fileserver";
-    DynamicUser = true;
     WorkingDirectory = "/srv/files";
   };
 };
