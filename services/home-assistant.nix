@@ -13,6 +13,9 @@
     extraPackages = python3Packages: with python3Packages; [
       psycopg2
       getmac  # Add this to fix UPnP component
+      aioamazondevices
+      rokuecp
+
     ];
     
     extraComponents = [
