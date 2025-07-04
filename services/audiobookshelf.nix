@@ -14,12 +14,8 @@
     "d /home/zeev/audiobooks 0755 zeev users -"
     "d /home/zeev/podcasts 0755 zeev users -"
   ];
-  users.users.audiobookshelf = {
-    isSystemUser = true;
-    home = "/var/lib/audiobookshelf";
-    createHome = true;
-  };
   
+
   # Open firewall port
   networking.firewall.allowedTCPPorts = [ 8085 ];
 }
