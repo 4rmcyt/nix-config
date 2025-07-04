@@ -9,10 +9,10 @@
 
   services.keycloak = {
     enable = true;
-
     settings = {
+      http.enabled = true;
       hostname = "keycloak.example.com";
-      http-host = "127.0.0.1";
+      http-host = "0.0.0.0";
       http-port = 8080;
       
       # Fix HTTPS issue - disable HTTPS requirement for development
