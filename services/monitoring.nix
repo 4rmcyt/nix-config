@@ -8,11 +8,6 @@
     mode = "0400";
   };
 
-  # DISABLED: Broken Netdata (confirmed packaging bug)
-  # The NixOS package is missing the entire web dashboard
-  # Only contains API docs, no HTML/JS/CSS files
-  # services.netdata.enable = false;
-
   # REPLACEMENT: Professional monitoring stack
   services.prometheus = {
     enable = true;
@@ -207,18 +202,17 @@
     };
   };
 
-  # Terminal monitoring tools (better than broken Netdata)
+  # MONITORING-SPECIFIC packages (removed duplicates from configuration.nix)
   environment.systemPackages = with pkgs; [
-    btop          # Beautiful system monitor
-    htop          # Process viewer
+    # Advanced monitoring tools
     iotop         # I/O monitor
     nethogs       # Network per process
     bandwhich     # Network bandwidth
     bmon          # Network monitor
     ncdu          # Disk usage analyzer
-    lsof          # Open files
-    iproute2      # Network tools (includes ss command)
     iftop         # Network connections
+
+    # Note: btop, htop, lsof, iproute2 are in configuration.nix
   ];
 
   # Firewall configuration

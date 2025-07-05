@@ -1,4 +1,3 @@
-
 { config, pkgs, ... }:
 
 {
@@ -9,8 +8,8 @@
     group = "jellyfin";
   };
 
-  # Add jellyfin user to video and render groups for hardware acceleration
-  users.users.jellyfin.extraGroups = [ "video" "render" ];
+  # Add jellyfin user to required groups for hardware acceleration AND media access
+  users.users.jellyfin.extraGroups = [ "video" "render" "media" ];
 
   # Enable hardware graphics acceleration
   hardware.graphics = {
@@ -27,12 +26,6 @@
   networking.firewall.allowedTCPPorts = [ 8096 8920 ];
   networking.firewall.allowedUDPPorts = [ 1900 7359 ];
 
-  # Ensure media directories exist and have proper permissions
-  systemd.tmpfiles.rules = [
-    "d /home/zeev/media/movies 0770 zeev media -"
-    "d /home/zeev/media/tv 0770 zeev media -"
-    "d /home/zeev/media/series 0770 zeev media -"
-    "d /home/zeev/media/music 0770 zeev media -"
-    "d /home/zeev/media/other 0770 zeev media -"
-  ];
+  # REMOVED: Media directories (now handled centrally in configuration.nix)
+  # This prevents duplicate tmpfiles rules
 }
