@@ -1,7 +1,18 @@
-
 { config, pkgs, lib, ... }:
 
-let
+{
+  # SOPS secrets for PIA
+  sops.secrets.pia_username = {
+    owner = "deluge";
+    group = "deluge";
+    mode = "0400";
+  };
+  sops.secrets.pia_password = {
+    owner = "deluge";
+    group = "deluge";
+    mode = "0400";
+  };
+
   # Enhanced PIA setup script with port forwarding
   pia-setup-script = pkgs.writeShellScript "pia-setup.sh" ''
     set -euo pipefail
@@ -170,19 +181,6 @@ let
     # Restart deluge to apply changes
     systemctl restart deluge-vpn
   '';
-in
-{
-  # SOPS secrets for PIA
-  sops.secrets.pia_username = {
-    owner = "deluge";
-    group = "deluge";
-    mode = "0400";
-  };
-  sops.secrets.pia_password = {
-    owner = "deluge";
-    group = "deluge";
-    mode = "0400";
-  };
 
   # Deluge VPN service with enhanced configuration
   systemd.services.deluge-vpn = {
@@ -288,7 +286,7 @@ in
       Type = "oneshot";
       User = "deluge";
       Group = "deluge";
-      ExecStart = "${pia-port-refresh}";
+      ExecStart = pia-port-refresh;
     };
   };
 
@@ -326,6 +324,6 @@ in
     # Note: BitTorrent port is handled dynamically by PIA port forwarding
   };
 
-  # REMOVED: IP forwarding configuration (now handled by tailscale.nix)
-  # This prevents duplicate sysctl definitions
+  # Enable IP forwarding for VPN routing
+
 }
