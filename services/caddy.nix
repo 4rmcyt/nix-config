@@ -1,31 +1,18 @@
-
 { config, pkgs, lib, ... }:
 
 {
   services.caddy = {
     enable = true;
-
-    # Use a single, clean extraConfig without globalConfig conflicts
-    extraConfig = ''
-      {
-        auto_https off
-        admin localhost:2019
-
-        log {
-          output file /var/log/caddy/access.log {
-            roll_size 100mb
-            roll_keep 5
-          }
-          format json
-        }
-      }
-
-      :80 {
+    
+    # Use virtualHosts instead of extraConfig to avoid conflicts
+    virtualHosts."localhost" = {
+      listenAddresses = [ ":80" ];
+      extraConfig = ''
         # Security headers
         header {
           Strict-Transport-Security "max-age=15768000; includeSubDomains"
           X-Content-Type-Options "nosniff"
-          X-Frame-Options "SAMEORIGIN"
+          X-Frame-Options "SAMEORIGIN" 
           X-XSS-Protection "1; mode=block"
           Referrer-Policy "strict-origin-when-cross-origin"
           -Server
@@ -116,6 +103,20 @@
         handle {
           reverse_proxy localhost:8082
         }
+      '';
+    };
+
+    # Global settings
+    globalConfig = ''
+      auto_https off
+      admin localhost:2019
+      
+      log {
+        output file /var/log/caddy/access.log {
+          roll_size 100mb
+          roll_keep 5
+        }
+        format json
       }
     '';
   };
