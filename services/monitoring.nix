@@ -204,7 +204,7 @@
 
   # MONITORING-SPECIFIC packages (removed duplicates from configuration.nix)
   environment.systemPackages = with pkgs; [
-    # Advanced monitoring tools
+    # Advanced monitoring tools (ONLY)
     iotop         # I/O monitor
     nethogs       # Network per process
     bandwhich     # Network bandwidth
@@ -212,8 +212,9 @@
     ncdu          # Disk usage analyzer
     iftop         # Network connections
 
-    # Note: btop, htop, lsof, iproute2 are in configuration.nix
+    # REMOVED: htop, btop, lsof (already in configuration.nix)
   ];
+
 
   # Firewall configuration
   networking.firewall.allowedTCPPorts = [ 9090 9100 3000 ];

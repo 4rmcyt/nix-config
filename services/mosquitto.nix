@@ -1,8 +1,7 @@
-
 { config, pkgs, ... }:
 
 {
-  # Define the SOPS secret first
+  # MOVED: Define the SOPS secret here (removed from configuration.nix)
   sops.secrets.mosquitto_iotdevice_password = {
     owner = "mosquitto";
     group = "mosquitto";
@@ -20,7 +19,6 @@
           "write IoT/device/observations"
           "write IoT/device/LW"
         ];
-        # Use passwordFile instead of password for SOPS secrets
         passwordFile = config.sops.secrets.mosquitto_iotdevice_password.path;
       };
     }];
