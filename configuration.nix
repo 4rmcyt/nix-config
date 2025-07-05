@@ -10,13 +10,16 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Enable SSH
+  # Enable SSH with hardened security
   services.openssh = {
     enable = true;
     settings = {
-      PermitRootLogin = "yes";
-      PasswordAuthentication = true;
+      PermitRootLogin = "no";
+      PasswordAuthentication = false;
       PubkeyAuthentication = true;
+      X11Forwarding = false;
+      MaxAuthTries = 3;
+      LoginGraceTime = 30;
     };
     openFirewall = true;
   };
