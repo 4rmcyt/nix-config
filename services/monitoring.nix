@@ -35,7 +35,6 @@
         enabledCollectors = [ "systemd" ];
         port = 9100;
       };
-      # Add more exporters as needed
     };
   };
 
@@ -50,7 +49,6 @@
       };
       security = {
         admin_user = "admin";
-        # Use SOPS for password in production
         admin_password = "$${GRAFANA_ADMIN_PASSWORD}";
       };
       auth.anonymous = {
@@ -74,43 +72,8 @@
     };
   };
 
-  # Update Caddy configuration to expose Grafana
-  services.caddy.extraConfig = lib.mkIf config.services.caddy.enable (lib.mkAfter ''
-    # Grafana
-    handle_path /grafana* {
-      reverse_proxy localhost:3000 {
-        header_up Host {upstream_hostport}
-        header_up X-Real-IP {remote_host}
-      }
-    }
-  '');
-
-  # Alerting configuration (commented as reference)
-  # services.prometheus.alertmanager = {
-  #   enable = true;
-  #   port = 9093;
-  #   configuration = {
-  #     route = {
-  #       group_by = [ "alertname" ];
-  #       group_wait = "30s";
-  #       group_interval = "5m";
-  #       repeat_interval = "4h";
-  #       receiver = "telegram";
-  #     };
-  #     receivers = [
-  #       {
-  #         name = "telegram";
-  #         telegram_configs = [
-  #           {
-  #             bot_token = "$${TELEGRAM_BOT_TOKEN}";
-  #             chat_id = 123456789;
-  #             parse_mode = "HTML";
-  #           }
-  #         ];
-  #       }
-  #     ];
-  #   };
-  # };
+  # REMOVED: Conflicting Caddy extraConfig section
+  # The Grafana route is now included directly in caddy.nix
 
   # Expose prometheus ports in firewall
   networking.firewall.allowedTCPPorts = [
