@@ -26,7 +26,7 @@ let
     
     # This automatically creates the PATH for the script with all its dependencies.
     runtimeInputs = [
-      pkgs.bash # Ensures the script runs with a full-featured bash
+      pkgs.bash
       pkgs.wireguard-tools
       pkgs.curl
       pkgs.jq
@@ -35,7 +35,7 @@ let
       pkgs.coreutils
       pkgs.gnugrep
       pkgs.gnused
-      pkgs.which # A missing dependency the script checks for
+      pkgs.which
     ];
 
     # This is the content of our wrapper script.
@@ -102,7 +102,7 @@ in
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStart = "${pia-wg-package}/bin/pia-wg";
+      ExecStart = "${pia-wg-package}/bin/pia-wg-wrapper"; # Note the wrapper name
       ExecStop = "${pkgs.iproute2}/bin/ip link del dev pia";
       Restart = "on-failure";
       RestartSec = "10s";
