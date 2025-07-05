@@ -1,10 +1,9 @@
-
 { config, pkgs, lib, ... }:
 
 {
   services.caddy = {
     enable = true;
-    
+
     virtualHosts."192.168.1.165" = {
       extraConfig = ''
         # Security headers
@@ -20,6 +19,16 @@
         # Compression
         encode gzip zstd
 
+        # Netdata - Real-time monitoring
+        handle /netdata* {
+          reverse_proxy localhost:19999 {
+            header_up Host {upstream_hostport}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+          }
+        }
+
         # Grafana - Special handling for subpath
         handle /grafana* {
           reverse_proxy localhost:3000 {
@@ -28,6 +37,14 @@
             header_up X-Forwarded-For {remote_host}
             header_up X-Forwarded-Proto {scheme}
             header_up X-Forwarded-Host {host}
+          }
+        }
+
+        # Prometheus - Metrics server
+        handle /prometheus* {
+          reverse_proxy localhost:9090 {
+            header_up Host {upstream_hostport}
+            header_up X-Real-IP {remote_host}
           }
         }
 
