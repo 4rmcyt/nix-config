@@ -22,10 +22,6 @@
     ];
   };
 
-  # Open necessary ports for Jellyfin
-  networking.firewall.allowedTCPPorts = [ 8096 8920 ];
-  networking.firewall.allowedUDPPorts = [ 1900 7359 ];
-
+  # REMOVED: Firewall ports (now handled centrally in networking.nix)
   # REMOVED: Media directories (now handled centrally in configuration.nix)
-  # This prevents duplicate tmpfiles rules
 }

@@ -14,6 +14,5 @@
   # REMOVED: Media directories (now handled centrally in configuration.nix)
   # This prevents permission conflicts
 
-  # Open firewall port
-  networking.firewall.allowedTCPPorts = [ 8085 ];
+  # REMOVED: Firewall port (now handled centrally in networking.nix)
 }

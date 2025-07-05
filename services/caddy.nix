@@ -126,6 +126,5 @@
     };
   };
 
-  # Open firewall ports
-  networking.firewall.allowedTCPPorts = [ 80 443 2019 ];
+  # REMOVED: Firewall ports (now handled centrally in networking.nix)
 }
