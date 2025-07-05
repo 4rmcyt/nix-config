@@ -8,13 +8,13 @@
     mode = "0400";
   };
 
-  # Netdata real-time monitoring
+  # Netdata real-time monitoring - Fixed bind configuration
   services.netdata = {
     enable = true;
     config = {
       global = {
         "default port" = "19999";
-        "bind to" = "localhost";
+        "bind to" = "*";  # Changed from "localhost" to "*" to allow external access
         "access log" = "none";
         "error log" = "syslog";
         "debug log" = "none";
@@ -26,7 +26,7 @@
       web = {
         "web files owner" = "root";
         "web files group" = "netdata";
-        "bind to" = "*";
+        "bind to" = "*";  # This was correct, but global bind was wrong
         "allow connections from" = "localhost 192.168.*";
         "allow dashboard from" = "localhost 192.168.*";
         "allow badges from" = "*";
