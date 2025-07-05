@@ -37,6 +37,15 @@
         # Enable compression
         encode gzip zstd
 
+        # Audiobookshelf
+        handle_path /audiobookshelf* {
+          reverse_proxy localhost:8085 {
+            header_up Host {upstream_hostport}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+          }
+        }
+
         # Microbin
         handle_path /microbin* {
           reverse_proxy localhost:8083 {
@@ -80,6 +89,15 @@
           }
         }
 
+        # Paperless
+        handle_path /paperless* {
+          reverse_proxy localhost:8888 {
+            header_up Host {upstream_hostport}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+          }
+        }
+
         # Default to homepage
         handle {
           reverse_proxy localhost:8082
@@ -101,6 +119,6 @@
   systemd.tmpfiles.rules = [
     "d /var/log/caddy 0755 caddy caddy -"
   ];
-  
+
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 }
