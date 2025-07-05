@@ -1,3 +1,4 @@
+
 { config, pkgs, lib, ... }:
 
 {
@@ -8,7 +9,7 @@
     mode = "0400";
   };
 
-  # Minimal Netdata configuration - just the basics
+  # Fixed Netdata configuration with proper web settings
   services.netdata = {
     enable = true;
     config = {
@@ -16,22 +17,30 @@
         "default port" = "19999";
         "bind to" = "0.0.0.0";
         "hostname" = "homeserver";
+        "update every" = "1";
+        "memory mode" = "ram";
+        "history" = "3600";
       };
       web = {
         "bind to" = "0.0.0.0";
+        "allow connections from" = "*";
+        "allow dashboard from" = "*";
+        "allow badges from" = "*";
+        "allow streaming from" = "*";
+        "allow netdata.conf from" = "*";
+        "allow management from" = "*";
+        "web files owner" = "root";
+        "web files group" = "root";
+        "disconnect idle clients after seconds" = "60";
+        "timeout for first request" = "60";
+        "accept a streaming request every seconds" = "2";
+        "respect do not track policy" = "no";
+        "x-frame-options response header" = "";
+        "enable gzip compression" = "yes";
       };
-      # Disable ALL external plugins - keep only internal ones
-      "plugins" = {
-        "apps" = "no";
-        "cgroups" = "no";
-        "charts.d" = "no";
-        "freeipmi" = "no";
-        "go.d" = "no";
-        "ioping" = "no";
-        "node.d" = "no";
-        "perf" = "no";
-        "python.d" = "no";
-        "tc" = "no";
+      # Disable health monitoring that might cause issues
+      "health" = {
+        "enabled" = "no";
       };
     };
   };
