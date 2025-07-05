@@ -1,4 +1,3 @@
-
 { config, pkgs, lib, ... }:
 
 {
@@ -218,7 +217,7 @@
     bmon          # Network monitor
     ncdu          # Disk usage analyzer
     lsof          # Open files
-    ss            # Socket stats
+    iproute2      # Network tools (includes ss command)
     iftop         # Network connections
   ];
 
