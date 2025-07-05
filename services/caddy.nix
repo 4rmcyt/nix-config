@@ -1,12 +1,12 @@
+
 { config, pkgs, lib, ... }:
 
 {
   services.caddy = {
     enable = true;
-    
-    # Consider enabling HTTPS in production
+
     globalConfig = ''
-      # Enable auto-HTTPS when moving to production
+      # Disable auto-HTTPS for local development
       auto_https off
 
       # Log settings
@@ -20,17 +20,11 @@
       :80, :443 {
         # Common security headers for all routes
         header {
-          # Enable HSTS with a 6 month duration
           Strict-Transport-Security "max-age=15768000; includeSubDomains"
-          # Prevent MIME type sniffing
           X-Content-Type-Options "nosniff"
-          # Clickjacking protection
           X-Frame-Options "SAMEORIGIN"
-          # XSS protection
           X-XSS-Protection "1; mode=block"
-          # Referrer policy
           Referrer-Policy "strict-origin-when-cross-origin"
-          # Remove server identifier
           -Server
         }
 
@@ -80,11 +74,9 @@
 
         # Nextcloud
         handle_path /nextcloud* {
-          # Nextcloud has special handling requirements
           reverse_proxy localhost:8081 {
             header_up Host {upstream_hostport}
             header_up X-Real-IP {remote_host}
-            # Additional headers for Nextcloud
             header_up X-Forwarded-Proto {scheme}
           }
         }
@@ -103,10 +95,9 @@
           reverse_proxy localhost:8082
         }
 
-        # Basic rate limiting
+        # Basic rate limiting for known attack patterns
         @abuse {
           path_regexp ^/(wp-login|login|admin|xmlrpc)\.php$
-          header_regexp User-Agent (curl|wget|python)
         }
         handle @abuse {
           respond "Access denied" 403
