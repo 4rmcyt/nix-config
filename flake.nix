@@ -46,6 +46,7 @@
         ./services/tailscale.nix     # VPN
         ./services/cloudflared.nix   # Cloudflare tunnel
         ./services/mosquitto.nix     # MQTT broker
+        ./services/monitoring.nix    # Prometheus + Grafana monitoring
 
         # Media services
         ./services/jellyfin.nix      # Media server
