@@ -1,3 +1,4 @@
+
 { config, pkgs, lib, ... }:
 
 {
@@ -8,31 +9,26 @@
     mode = "0400";
   };
 
-  # Fixed Netdata configuration with proper web directory
+  # Simplified Netdata configuration
   services.netdata = {
     enable = true;
     config = {
       global = {
         "default port" = "19999";
-        "bind to" = "*";
+        "bind to" = "0.0.0.0";  # Changed from "*" to "0.0.0.0"
         "hostname" = "homeserver";
         "update every" = "3";
         "memory mode" = "ram";
         "history" = "3600";
-        # Explicitly set web files directory
-        "web files directory" = "${pkgs.netdata}/share/netdata/web";
       };
       web = {
-        "bind to" = "*";
+        "bind to" = "0.0.0.0";  # Changed from "*" to "0.0.0.0"
         "allow connections from" = "*";
         "allow dashboard from" = "*";
         "allow badges from" = "*";
         "allow streaming from" = "*";
         "allow netdata.conf from" = "*";
         "allow management from" = "*";
-        # Ensure web files permissions
-        "web files owner" = "root";
-        "web files group" = "root";
       };
       # Disable problematic plugins
       "plugin:freeipmi" = { "enabled" = "no"; };
@@ -41,8 +37,9 @@
       "plugin:logs-management" = { "enabled" = "no"; };
       "plugin:ioping" = { "enabled" = "no"; };
       "plugin:perf" = { "enabled" = "no"; };
-      # Disable network cgroup plugin that's causing errors
       "plugin:cgroup-network" = { "enabled" = "no"; };
+      "plugin:cgroup-network-helper" = { "enabled" = "no"; };
+      "plugin:systemd-journal" = { "enabled" = "no"; };
     };
   };
 
@@ -65,16 +62,6 @@
           labels = { instance = "homeserver"; };
         }];
       }
-      # Disable netdata scraping for now to avoid errors
-      # {
-      #   job_name = "netdata";
-      #   static_configs = [{
-      #     targets = [ "localhost:19999" ];
-      #     labels = { instance = "homeserver"; };
-      #   }];
-      #   metrics_path = "/api/v1/allmetrics";
-      #   params = { format = ["prometheus"]; };
-      # }
     ];
     exporters = {
       node = {
