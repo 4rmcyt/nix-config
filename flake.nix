@@ -21,41 +21,49 @@
       specialArgs = { inherit inputs; };
       
       modules = [
+        # External modules
         vscode-server.nixosModules.default
-        # Core configuration files
-        ./configuration.nix
-        ./disko.nix
-        ./networking.nix
-        
-        ./services/fail2ban.nix
-        ./services/database.nix    # PostgreSQL (needed by many services)
-        ./services/caddy.nix       # Reverse proxy
-        ./services/homepage.nix    # Dashboard
-        ./services/jellyfin.nix    # Media server
-        
-        ./services/nextcloud.nix
-        ./services/tailscale.nix
-        ./services/microbin.nix
-        
-        ./services/keycloak.nix
-        ./services/home-assistant.nix
-        ./services/deluge-vpn.nix
-        ./services/audiobookshelf.nix
-
-        ./services/cloudflared.nix
-        ./services/media-content.nix
-        ./services/paperless.nix
-        ./services/radicale.nix
-        ./services/samba.nix
-        ./services/tg-notify.nix
-        ./services/yubikey.nix
-        ./services/mosquitto.nix
-        
-        # Enable modules from flake inputs
         disko.nixosModules.disko
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
         nix-index-database.nixosModules.nix-index
+
+        # Core system configuration
+        ./configuration.nix
+        ./hardware-configuration.nix
+        ./disko.nix
+        ./networking.nix
+        ./modules/base.nix
+
+        # Security services
+        ./services/fail2ban.nix
+        ./services/yubikey.nix
+
+        # Infrastructure services
+        ./services/database.nix      # PostgreSQL
+        ./services/caddy.nix         # Reverse proxy
+        ./services/homepage.nix      # Dashboard
+        ./services/tailscale.nix     # VPN
+        ./services/cloudflared.nix   # Cloudflare tunnel
+        ./services/mosquitto.nix     # MQTT broker
+
+        # Media services
+        ./services/jellyfin.nix      # Media server
+        ./services/audiobookshelf.nix
+        ./services/deluge-vpn.nix    # Torrent client
+        ./services/media-content.nix
+
+        # Productivity & Personal services
+        ./services/nextcloud.nix
+        ./services/microbin.nix
+        ./services/paperless.nix
+        ./services/radicale.nix      # Calendar/contacts
+        ./services/samba.nix         # File sharing
+
+        # Smart home & notifications
+        ./services/home-assistant.nix
+        ./services/keycloak.nix      # Authentication
+        ./services/tg-notify.nix     # Telegram notifications
       ];
     };
   };
