@@ -1,3 +1,4 @@
+
 { config, pkgs, lib, ... }:
 
 {
@@ -51,10 +52,12 @@
         admin_user = "admin";
         admin_password = "$${GRAFANA_ADMIN_PASSWORD}";
       };
-      auth.anonymous = {
+      "auth.anonymous" = {
         enabled = false;
       };
-      analytics.reporting_enabled = false;
+      analytics = {
+        reporting_enabled = false;
+      };
     };
 
     # Provision datasources automatically
@@ -71,9 +74,6 @@
       ];
     };
   };
-
-  # REMOVED: Conflicting Caddy extraConfig section
-  # The Grafana route is now included directly in caddy.nix
 
   # Expose prometheus ports in firewall
   networking.firewall.allowedTCPPorts = [
