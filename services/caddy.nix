@@ -104,11 +104,14 @@
           }
         }
 
-        # Grafana
+        # Grafana - Enhanced configuration for subpath handling
         handle_path /grafana* {
           reverse_proxy localhost:3000 {
-            header_up Host {upstream_hostport}
+            header_up Host {host}
             header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            header_up X-Forwarded-Host {host}
           }
         }
 

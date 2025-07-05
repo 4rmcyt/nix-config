@@ -61,8 +61,8 @@
     settings = {
       server = {
         http_port = 3000;
-        domain = "192.168.1.165";  # Changed from localhost
-        root_url = "http://192.168.1.165/grafana/";  # Changed to use server IP
+        domain = "192.168.1.165";
+        root_url = "%(protocol)s://%(domain)s/grafana/";
         serve_from_sub_path = true;
       };
       security = {
