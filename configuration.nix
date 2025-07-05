@@ -57,34 +57,11 @@
     shell = pkgs.bash;
   };
 
-  # Define groups
-  users.groups = {
-    media = {};
-    microbin = {};
-    miniflux = {};
-    samba = {};
-  };
+  # Define the media group
+  users.groups.media = {};
 
-  # Define system users for services that need them
-  users.users = {
-    microbin = {
-      isSystemUser = true;
-      group = "microbin";
-      extraGroups = [ "media" ];
-    };
-    miniflux = {
-      isSystemUser = true;
-      group = "miniflux";
-      extraGroups = [ "media" ];
-    };
-    samba = {
-      isSystemUser = true;
-      group = "samba";
-      extraGroups = [ "media" ];
-    };
-  };
-
-  # Add existing service users to media group
+  # Add existing service users to media group (these are created by the services themselves)
+  # Don't manually define users that are already created by services
   users.users.jellyfin.extraGroups = [ "media" ];
   users.users.deluge.extraGroups = [ "media" ];
   users.users.nextcloud.extraGroups = [ "media" ];
@@ -120,7 +97,7 @@
   # Disable built-in Deluge service - using custom VPN version
   services.deluge.enable = false;
 
-  # Disable nginx service
+  # Enable VSCode server
   services.vscode-server.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
