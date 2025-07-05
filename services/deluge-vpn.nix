@@ -20,28 +20,32 @@ let
     PORTFORWARD_HOOK="${update-deluge-port-script}"
   '';
 
-  # 3. Package the Dynamic pia-wg.sh Script
-  pia-wg-package = pkgs.runCommand "pia-wg-unstable" {
-    nativeBuildInputs = [ pkgs.makeWrapper ];
-  } ''
-    mkdir -p $out/bin
-    cp ${../scripts/pia-wg.sh} $out/bin/pia-wg
-    chmod +x $out/bin/pia-wg
-    # --- THIS IS THE CORRECTED WRAPPER ---
-    # We add more packages to the PATH so the script can find all the commands it needs.
-    wrapProgram $out/bin/pia-wg \
-      --add-flags "PIA_CONFIG=${pia-config-file}" \
-      --prefix PATH : ${lib.makeBinPath [
-        pkgs.wireguard-tools
-        pkgs.curl
-        pkgs.jq
-        pkgs.iproute2
-        pkgs.qrencode
-        pkgs.coreutils  # Provides: head, sort, cut, realpath, etc.
-        pkgs.gnugrep    # Provides: grep
-        pkgs.gnused     # Provides: sed
-      ]}
-  '';
+  # 3. Package the Dynamic pia-wg.sh Script (using writeShellApplication for robustness)
+  pia-wg-package = pkgs.writeShellApplication {
+    name = "pia-wg-wrapper";
+    
+    # This automatically creates the PATH for the script with all its dependencies.
+    runtimeInputs = [
+      pkgs.bash # Ensures the script runs with a full-featured bash
+      pkgs.wireguard-tools
+      pkgs.curl
+      pkgs.jq
+      pkgs.iproute2
+      pkgs.qrencode
+      pkgs.coreutils
+      pkgs.gnugrep
+      pkgs.gnused
+      pkgs.which # A missing dependency the script checks for
+    ];
+
+    # This is the content of our wrapper script.
+    text = ''
+      # Set the environment variable that pia-wg.sh needs to find its config.
+      export PIA_CONFIG=${pia-config-file}
+      # Execute the real script, passing along any arguments.
+      exec ${../scripts/pia-wg.sh} "$@"
+    '';
+  };
 
 in
 {
