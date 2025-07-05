@@ -11,8 +11,8 @@
   # Create media directories
   systemd.tmpfiles.rules = [
     "d /var/lib/audiobookshelf 0755 audiobookshelf audiobookshelf -"
-    "d /home/zeev/audiobooks 0755 zeev users -"
-    "d /home/zeev/podcasts 0755 zeev users -"
+    "d /home/zeev/media/audiobooks 0770 zeev media -"
+    "d /home/zeev/media/podcasts 0770 zeev media -"
   ];
   
 
