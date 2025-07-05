@@ -1,4 +1,3 @@
-
 { config, pkgs, lib, inputs, ... }:
 
 {
@@ -88,28 +87,43 @@
   };
 
   # Add existing service users to media group where needed
-  # Note: Don't define audiobookshelf user here - it's created by the service
-  users.users.jellyfin.extraGroups = [ "media" ];
+  # Note: Service-specific groups are handled in their respective files
   users.users.deluge.extraGroups = [ "media" ];
   users.users.nextcloud.extraGroups = [ "media" ];
   users.users.radicale.extraGroups = [ "media" ];
   users.users.paperless.extraGroups = [ "media" ];
 
+  # CENTRALIZED: Media directory structure (moved from individual services)
   systemd.tmpfiles.rules = [
+    # Base media directory
     "d /home/zeev/media 0770 zeev media -"
+
+    # Media subdirectories with consistent permissions
     "d /home/zeev/media/audiobooks 0770 zeev media -"
+    "d /home/zeev/media/podcasts 0770 zeev media -"
     "d /home/zeev/media/movies 0770 zeev media -"
     "d /home/zeev/media/tv 0770 zeev media -"
     "d /home/zeev/media/series 0770 zeev media -"
     "d /home/zeev/media/music 0770 zeev media -"
     "d /home/zeev/media/other 0770 zeev media -"
-    "d /home/zeev/media/podcasts 0770 zeev media -"
+
+    # Download directory
     "d /home/zeev/Downloads 0770 deluge deluge -"
   ];
 
-  # System packages
+  # CENTRALIZED: Base system packages (service-specific tools in their files)
   environment.systemPackages = with pkgs; [
-    git vim wget curl jq htop btop age sops openssh lsof neovim mc apacheHttpd wireguard-tools iproute2
+    # Essential system tools
+    git vim wget curl jq age sops openssh neovim mc
+
+    # Network tools
+    wireguard-tools iproute2
+
+    # Web server tools
+    apacheHttpd
+
+    # Basic monitoring (advanced tools in monitoring.nix)
+    htop btop lsof
   ];
 
   # Enable Home Manager
