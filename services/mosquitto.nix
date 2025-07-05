@@ -1,6 +1,14 @@
+
 { config, pkgs, ... }:
 
 {
+  # Define the SOPS secret first
+  sops.secrets.mosquitto_iotdevice_password = {
+    owner = "mosquitto";
+    group = "mosquitto";
+    mode = "0400";
+  };
+
   services.mosquitto = {
     enable = true;
     listeners = [{
@@ -12,7 +20,8 @@
           "write IoT/device/observations"
           "write IoT/device/LW"
         ];
-        password = builtins.readFile config.sops.secrets.mosquitto_iotdevice_password.path;
+        # Use passwordFile instead of password for SOPS secrets
+        passwordFile = config.sops.secrets.mosquitto_iotdevice_password.path;
       };
     }];
     bridges."home-lab" = {
