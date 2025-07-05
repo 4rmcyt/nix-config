@@ -1,3 +1,4 @@
+
 { config, pkgs, ... }:
 
 {
@@ -6,37 +7,12 @@
     openFirewall = true;
     user = "jellyfin";
     group = "jellyfin";
-
-    settings = {
-      movies = {
-        name = "Movies";
-        content_type = "movies";
-        paths = [ "/home/zeev/media/movies" ];
-        enable = true;
-      };
-      tv = {
-        name = "TV";
-        content_type = "shows";
-        paths = [ "/home/zeev/media/tv" "/home/zeev/media/series" ];
-        enable = true;
-      };
-      music = {
-        name = "Music";
-        content_type = "music";
-        paths = [ "/home/zeev/media/music" ];
-        enable = true;
-      };
-      other = {
-        name = "Other";
-        content_type = "mixed";
-        paths = [ "/home/zeev/media/other" ];
-        enable = true;
-      };
-    };
   };
 
+  # Add jellyfin user to video and render groups for hardware acceleration
   users.users.jellyfin.extraGroups = [ "video" "render" ];
 
+  # Enable hardware graphics acceleration
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
@@ -47,6 +23,16 @@
     ];
   };
 
+  # Open necessary ports for Jellyfin
   networking.firewall.allowedTCPPorts = [ 8096 8920 ];
   networking.firewall.allowedUDPPorts = [ 1900 7359 ];
+
+  # Ensure media directories exist and have proper permissions
+  systemd.tmpfiles.rules = [
+    "d /home/zeev/media/movies 0770 zeev media -"
+    "d /home/zeev/media/tv 0770 zeev media -"
+    "d /home/zeev/media/series 0770 zeev media -"
+    "d /home/zeev/media/music 0770 zeev media -"
+    "d /home/zeev/media/other 0770 zeev media -"
+  ];
 }
