@@ -82,11 +82,6 @@
         handle {
           reverse_proxy localhost:8082
         }
-
-        @abuse path_regexp ^/(wp-login|admin)\.php$
-        handle @abuse {
-          respond "Access denied" 403
-        }
       }
     '';
   };
