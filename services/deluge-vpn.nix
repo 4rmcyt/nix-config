@@ -1,18 +1,6 @@
 { config, pkgs, lib, ... }:
 
-{
-  # SOPS secrets for PIA
-  sops.secrets.pia_username = {
-    owner = "deluge";
-    group = "deluge";
-    mode = "0400";
-  };
-  sops.secrets.pia_password = {
-    owner = "deluge";
-    group = "deluge";
-    mode = "0400";
-  };
-
+let
   # Enhanced PIA setup script with port forwarding
   pia-setup-script = pkgs.writeShellScript "pia-setup.sh" ''
     set -euo pipefail
@@ -181,6 +169,19 @@
     # Restart deluge to apply changes
     systemctl restart deluge-vpn
   '';
+in
+{
+  # SOPS secrets for PIA
+  sops.secrets.pia_username = {
+    owner = "deluge";
+    group = "deluge";
+    mode = "0400";
+  };
+  sops.secrets.pia_password = {
+    owner = "deluge";
+    group = "deluge";
+    mode = "0400";
+  };
 
   # Deluge VPN service with enhanced configuration
   systemd.services.deluge-vpn = {
@@ -286,7 +287,7 @@
       Type = "oneshot";
       User = "deluge";
       Group = "deluge";
-      ExecStart = pia-port-refresh;
+      ExecStart = "${pia-port-refresh}";
     };
   };
 
