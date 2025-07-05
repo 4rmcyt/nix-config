@@ -1,41 +1,44 @@
-services.mosquitto = {
-  enable = true;
-  listeners = [{
-    address = "192.168.1.165";
-    port = 1883;
-    users.iotdevice = {
-      acl = [
-        "read IoT/device/action"
-        "write IoT/device/observations"
-        "write IoT/device/LW"
-      ];
-      password = builtins.readFile config.sops.secrets.mosquitto_iotdevice_password.path;
-    };
-  }];
-  bridges."home-lab" = {
-    addresses = [{
-      address = "iot.example.com";
-      port = 8883;
+{ config, pkgs, ... }:
+
+{
+  services.mosquitto = {
+    enable = true;
+    listeners = [{
+      address = "192.168.1.165";
+      port = 1883;
+      users.iotdevice = {
+        acl = [
+          "read IoT/device/action"
+          "write IoT/device/observations"
+          "write IoT/device/LW"
+        ];
+        password = builtins.readFile config.sops.secrets.mosquitto_iotdevice_password.path;
+      };
     }];
-    topics = [
-      "IoT/device/action in 1 \"\""
-      "IoT/device/observations out 1 \"\""
-      "IoT/device/LW out 0 \"\""
-    ];
-    settings = {
-      local_clientid = "NiXOS-Mosquitto";
-      remote_clientid = "NiXOS-Mosquitto";
-      cleansession = true;
-      notifications = false;
-      start_type = "automatic";
-      bridge_protocol_version = "mqttv311";
-      bridge_outgoing_retain = false;
+    bridges."home-lab" = {
+      addresses = [{
+        address = "iot.example.com";
+        port = 8883;
+      }];
+      topics = [
+        "IoT/device/action in 1 \"\""
+        "IoT/device/observations out 1 \"\""
+        "IoT/device/LW out 0 \"\""
+      ];
+      settings = {
+        local_clientid = "NiXOS-Mosquitto";
+        remote_clientid = "NiXOS-Mosquitto";
+        cleansession = true;
+        notifications = false;
+        start_type = "automatic";
+        bridge_protocol_version = "mqttv311";
+        bridge_outgoing_retain = false;
+      };
     };
   };
-};
 
-networking.firewall = {
-  enable = true;
-  allowedTCPPorts = [ 1883 ];
-};
-config.sops.secrets.mosquitto_iotdevice_password.path
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 1883 ];
+  };
+}
