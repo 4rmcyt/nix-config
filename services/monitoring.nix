@@ -1,7 +1,13 @@
-
 { config, pkgs, lib, ... }:
 
 {
+  # SOPS secret for Grafana
+  sops.secrets.grafana_admin_password = {
+    owner = "grafana";
+    group = "grafana";
+    mode = "0400";
+  };
+
   # Prometheus monitoring server
   services.prometheus = {
     enable = true;
@@ -27,6 +33,15 @@
           };
         }];
       }
+      {
+        job_name = "prometheus";
+        static_configs = [{
+          targets = [ "localhost:9090" ];
+          labels = {
+            instance = "homeserver";
+          };
+        }];
+      }
     ];
 
     # Add exporters for system metrics
@@ -46,11 +61,12 @@
       server = {
         http_port = 3000;
         domain = "localhost";
-        root_url = "http://localhost:3000/";
+        root_url = "http://localhost:3000/grafana/";
+        serve_from_sub_path = true;
       };
       security = {
         admin_user = "admin";
-        admin_password = "$${GRAFANA_ADMIN_PASSWORD}";
+        admin_password = "$__file{${config.sops.secrets.grafana_admin_password.path}}";
       };
       "auth.anonymous" = {
         enabled = false;
