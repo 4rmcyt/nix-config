@@ -10,6 +10,35 @@
       { domain = "*"; type = "soft"; item = "nofile"; value = "1024"; }
       { domain = "*"; type = "hard"; item = "nofile"; value = "4096"; }
     ];
+    time = {
+        timeZone = "America/Edmonton";  # Change this to your timezone
+        hardwareClockInUTC = true;
+    };
+
+    services.timesyncd = {
+        enable = true;
+        servers = [
+            "0.nixos.pool.ntp.org"
+            "1.nixos.pool.ntp.org"
+            "2.nixos.pool.ntp.org"
+            "3.nixos.pool.ntp.org"
+        ];
+    };
+
+    # Locale settings
+    i18n.defaultLocale = "en_US.UTF-8";
+    i18n.extraLocaleSettings = {
+        LC_ADDRESS = "en_US.UTF-8";
+        LC_IDENTIFICATION = "en_US.UTF-8";
+        LC_MEASUREMENT = "en_US.UTF-8";
+        LC_MONETARY = "en_US.UTF-8";
+        LC_NAME = "en_US.UTF-8";
+        LC_NUMERIC = "en_US.UTF-8";
+        LC_PAPER = "en_US.UTF-8";
+        LC_TELEPHONE = "en_US.UTF-8";
+        LC_TIME = "en_US.UTF-8";
+    };
+
 
     # Audit system events
     auditd.enable = true;
