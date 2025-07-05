@@ -7,7 +7,6 @@
   # Time and locale configuration
   time = {
     timeZone = "America/Edmonton";  # Change this to your timezone
-    hardwareClockInUTC = true;
   };
 
   # Enable automatic time synchronization
@@ -21,7 +20,7 @@
     ];
   };
 
-  # Locale settings (moved to top level, NOT under security)
+  # Locale settings
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
