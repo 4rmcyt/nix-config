@@ -9,10 +9,25 @@
     mode = "0400";
   };
 
-  # Minimal Netdata configuration - let NixOS handle defaults
+  # Official NixOS Wiki approach for Netdata
   services.netdata = {
     enable = true;
-    # No custom config - use NixOS packaging defaults
+    # Use default configuration as recommended by NixOS Wiki
+    config = {
+      global = {
+        "default port" = "19999";
+        "bind to" = "*";
+      };
+      web = {
+        "web files owner" = "root";
+        "web files group" = "root";
+      };
+    };
+  };
+
+  # Ensure netdata user has proper permissions
+  users.users.netdata = {
+    extraGroups = [ "systemd-journal" ];
   };
 
   # Prometheus monitoring server
@@ -40,6 +55,10 @@
           targets = [ "localhost:19999" ];
           labels = { instance = "homeserver"; };
         }];
+        metrics_path = "/api/v1/allmetrics";
+        params = {
+          format = ["prometheus"];
+        };
       }
     ];
     exporters = {
