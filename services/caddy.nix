@@ -5,28 +5,9 @@
   services.caddy = {
     enable = true;
 
-    # Fix: Remove conflicting global config
-    globalConfig = '''';
-
-    # Fix: Use proper Caddyfile syntax with global block first
-    extraConfig = ''
-      {
-        # Global options go here first
-        auto_https off
-        admin localhost:2019
-
-        # Single log configuration
-        log {
-          output file /var/log/caddy/access.log {
-            roll_size 100mb
-            roll_keep 5
-          }
-          format json
-        }
-      }
-
-      # HTTP server block - only listen on port 80, no service ports
-      :80 {
+    # Use virtualHosts instead of extraConfig for better control
+    virtualHosts."localhost" = {
+      extraConfig = ''
         # Security headers
         header {
           Strict-Transport-Security "max-age=15768000; includeSubDomains"
@@ -102,7 +83,7 @@
           }
         }
 
-        # Miniflux proxy (port 8086 from media-content.nix)
+        # Miniflux proxy (corrected port)
         handle_path /miniflux* {
           reverse_proxy localhost:8086 {
             header_up Host {upstream_hostport}
@@ -110,19 +91,33 @@
           }
         }
 
-        # Default handler - redirect to homepage
+        # Default handler - homepage dashboard
         handle {
           reverse_proxy localhost:8082
         }
+      '';
+    };
+
+    # Global configuration - simplified and clean
+    globalConfig = ''
+      {
+        auto_https off
+        admin localhost:2019
       }
     '';
+
+    # Logging configuration
+    logFormat = "json";
   };
 
-  # Ensure log directory exists
+  # Ensure log directory exists with proper permissions
   systemd.tmpfiles.rules = [
     "d /var/log/caddy 0755 caddy caddy -"
   ];
 
-  # Only open port 80 and 443 for Caddy itself
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  # Open firewall ports for Caddy
+  networking.firewall.allowedTCPPorts = [ 80 443 2019 ];
+
+  # Additional Caddy user permissions if needed
+  users.users.caddy.extraGroups = [ "caddy" ];
 }
