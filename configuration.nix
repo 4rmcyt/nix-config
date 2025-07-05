@@ -10,7 +10,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Enable SSH with hardened security
+  # Enable SSH
   services.openssh = {
     enable = true;
     settings = {
@@ -28,7 +28,7 @@
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-  
+
   # Define all secrets
   sops.secrets.zeev_password = {
     neededForUsers = true;
@@ -39,6 +39,12 @@
   sops.secrets.hass_postgres_password = {
     owner = "hass";
     group = "hass";
+    mode = "0400";
+  };
+  # Add missing Mosquitto secret
+  sops.secrets.mosquitto_iotdevice_password = {
+    owner = "mosquitto";
+    group = "mosquitto";
     mode = "0400";
   };
 
@@ -96,6 +102,6 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Create /home/zeev/media and set group ownership and permissions
-  
+
   system.stateVersion = "25.05";
 }
