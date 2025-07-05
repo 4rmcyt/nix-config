@@ -57,16 +57,39 @@
     shell = pkgs.bash;
   };
 
-  users.groups.media = {};
+  # Define groups
+  users.groups = {
+    media = {};
+    microbin = {};
+    miniflux = {};
+    samba = {};
+  };
 
+  # Define system users for services that need them
+  users.users = {
+    microbin = {
+      isSystemUser = true;
+      group = "microbin";
+      extraGroups = [ "media" ];
+    };
+    miniflux = {
+      isSystemUser = true;
+      group = "miniflux";
+      extraGroups = [ "media" ];
+    };
+    samba = {
+      isSystemUser = true;
+      group = "samba";
+      extraGroups = [ "media" ];
+    };
+  };
+
+  # Add existing service users to media group
   users.users.jellyfin.extraGroups = [ "media" ];
   users.users.deluge.extraGroups = [ "media" ];
-  users.users.samba.extraGroups = [ "media" ];
   users.users.nextcloud.extraGroups = [ "media" ];
-  users.users.microbin.extraGroups = [ "media" ];
   users.users.radicale.extraGroups = [ "media" ];
   users.users.audiobookshelf.extraGroups = [ "media" ];
-  users.users.miniflux.extraGroups = [ "media" ];
   users.users.paperless.extraGroups = [ "media" ];
 
   systemd.tmpfiles.rules = [
@@ -100,8 +123,6 @@
   # Disable nginx service
   services.vscode-server.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # Create /home/zeev/media and set group ownership and permissions
 
   system.stateVersion = "25.05";
 }
