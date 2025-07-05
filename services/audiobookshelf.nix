@@ -5,6 +5,13 @@
     enable = true;
     host = "0.0.0.0"; # TODO: Fix it after reverse proxy will be ready
     port = 8085;
+    libraries = [
+      {
+        name = "Audiobooks";
+        path = "/home/zeev/media/audiobooks";
+        type = "audiobooks";
+      }
+    ];
   };
 
   # Create media directories

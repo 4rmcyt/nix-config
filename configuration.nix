@@ -43,10 +43,34 @@
   users.users.zeev = {
     isNormalUser = true;
     description = "Zeev";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "media" ];
     hashedPasswordFile = config.sops.secrets.zeev_password.path;
     shell = pkgs.bash;
   };
+
+  users.groups.media = {};
+
+  users.users.jellyfin.extraGroups = [ "media" ];
+  users.users.deluge.extraGroups = [ "media" ];
+  users.users.samba.extraGroups = [ "media" ];
+  users.users.nextcloud.extraGroups = [ "media" ];
+  users.users.microbin.extraGroups = [ "media" ];
+  users.users.radicale.extraGroups = [ "media" ];
+  users.users.audiobookshelf.extraGroups = [ "media" ];
+  users.users.miniflux.extraGroups = [ "media" ];
+  users.users.paperless.extraGroups = [ "media" ];
+
+  systemd.tmpfiles.rules = [
+    "d /home/zeev/media 0770 zeev media -"
+    "d /home/zeev/media/audiobooks 0770 zeev media -"
+    "d /home/zeev/media/movies 0770 zeev media -"
+    "d /home/zeev/media/tv 0770 zeev media -"
+    "d /home/zeev/media/series 0770 zeev media -"
+    "d /home/zeev/media/music 0770 zeev media -"
+    "d /home/zeev/media/other 0770 zeev media -"
+    "d /home/zeev/media/podcasts 0770 audiobookshelf media -"
+    "d /home/zeev/Downloads 0770 deluge deluge -"
+  ];
 
   # System packages
   environment.systemPackages = with pkgs; [
@@ -68,5 +92,7 @@
   services.vscode-server.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  # Create /home/zeev/media and set group ownership and permissions
+  
   system.stateVersion = "25.05";
 }

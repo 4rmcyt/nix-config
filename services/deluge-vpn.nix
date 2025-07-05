@@ -423,6 +423,11 @@ EOF
       chmod 644 /var/lib/deluge/.config/deluge/web.conf
       chmod -R 755 /var/lib/deluge/.config/deluge/web
       chmod 644 /var/lib/deluge/.config/deluge/web/themes/dark/*
+
+      # Set download location in core.conf
+      echo '{
+        "download_location": "/home/zeev/Downloads"
+      }' > /var/lib/deluge/.config/deluge/core.conf
     '';
     deps = [ "users" ];  # Run after users are created
   };

@@ -49,6 +49,7 @@
         ./services/samba.nix
         ./services/tg-notify.nix
         ./services/yubikey.nix
+        ./services/mosquitto.nix
         
         # Enable modules from flake inputs
         disko.nixosModules.disko
