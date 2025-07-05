@@ -1,3 +1,4 @@
+
 { config, pkgs, lib, ... }:
 
 {
@@ -60,8 +61,8 @@
     settings = {
       server = {
         http_port = 3000;
-        domain = "localhost";
-        root_url = "http://localhost:3000/grafana/";
+        domain = "192.168.1.165";  # Changed from localhost
+        root_url = "http://192.168.1.165/grafana/";  # Changed to use server IP
         serve_from_sub_path = true;
       };
       security = {
