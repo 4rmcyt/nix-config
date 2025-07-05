@@ -31,5 +31,5 @@
   };
 
   sops.secrets.nextcloud_admin_password = {};
-  networking.firewall.allowedTCPPorts = [ 80 443 8081 ];
+  # REMOVED: Firewall ports (now handled centrally in networking.nix)
 }

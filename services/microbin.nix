@@ -1,3 +1,4 @@
+
 { config, pkgs, lib, ... }:
 
 {
@@ -18,6 +19,5 @@
   # SOPS secret for Microbin
   sops.secrets.microbin_admin_password = {};
   
-  # Open firewall for Microbin
-  networking.firewall.allowedTCPPorts = [ 8083 ];
+  # REMOVED: Firewall port (now handled centrally in networking.nix)
 }

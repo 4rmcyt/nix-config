@@ -62,9 +62,4 @@ in
       "theme.email" = "keycloak";
     };
   };
-
-  networking.firewall.allowedTCPPorts = [ 8080 ];
-  networking.firewall.allowedTCPPortRanges = [
-    { from = 7800; to = 8000; } # Wider range for JGroups
-  ];
 }

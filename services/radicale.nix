@@ -55,6 +55,5 @@
     '';
   };
 
-  # Open firewall port
-  networking.firewall.allowedTCPPorts = [ 5232 ];
+  # REMOVED: Firewall port (now handled centrally in networking.nix)
 }
