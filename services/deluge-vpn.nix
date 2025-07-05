@@ -20,14 +20,10 @@ let
     PORTFORWARD_HOOK="${update-deluge-port-script}"
   '';
 
- # 3. Package the Dynamic pia-wg.sh Script
+  # 3. Package the Dynamic pia-wg.sh Script
   pia-wg-package = pkgs.writeShellApplication {
     name = "pia-wg-wrapper";
     
-    # --- ADD THIS LINE ---
-    doCheck = false;
-    # ---------------------
-
     runtimeInputs = [
       pkgs.bash
       pkgs.wireguard-tools
@@ -42,6 +38,10 @@ let
     ];
 
     text = ''
+      # This directive tells the automatic script checker to ignore
+      # all warnings for the third-party script below.
+      # shellcheck disable=all
+
       export PIA_CONFIG=${pia-config-file}
       ${builtins.replaceStrings ["#!/bin/bash"] ["#!${pkgs.bash}/bin/bash"] (builtins.readFile ../scripts/pia-wg.sh)}
     '';
