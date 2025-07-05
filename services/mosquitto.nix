@@ -24,7 +24,6 @@
       };
     }];
   };
-}
 
   # SOPS secret for Mosquitto
   sops.secrets.mosquitto_iotdevice_password = {
@@ -35,4 +34,4 @@
 
   # Open firewall port for Mosquitto
   networking.firewall.allowedTCPPorts = [ 1883 ];
-}     
+}
