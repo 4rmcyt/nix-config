@@ -1,18 +1,31 @@
+
 { config, pkgs, lib, ... }:
 
 {
   services.caddy = {
     enable = true;
     
-    # Use virtualHosts instead of extraConfig to avoid conflicts
-    virtualHosts."localhost" = {
-      listenAddresses = [ ":80" ];
-      extraConfig = ''
+    # Use configFile to completely override NixOS defaults
+    configFile = pkgs.writeText "Caddyfile" ''
+      {
+        auto_https off
+        admin localhost:2019
+        
+        log {
+          output file /var/log/caddy/access.log {
+            roll_size 100mb
+            roll_keep 5
+          }
+          format json
+        }
+      }
+
+      :80 {
         # Security headers
         header {
           Strict-Transport-Security "max-age=15768000; includeSubDomains"
           X-Content-Type-Options "nosniff"
-          X-Frame-Options "SAMEORIGIN" 
+          X-Frame-Options "SAMEORIGIN"
           X-XSS-Protection "1; mode=block"
           Referrer-Policy "strict-origin-when-cross-origin"
           -Server
@@ -91,7 +104,7 @@
           }
         }
 
-        # Grafana (if monitoring enabled)
+        # Grafana
         handle_path /grafana* {
           reverse_proxy localhost:3000 {
             header_up Host {upstream_hostport}
@@ -103,20 +116,6 @@
         handle {
           reverse_proxy localhost:8082
         }
-      '';
-    };
-
-    # Global settings
-    globalConfig = ''
-      auto_https off
-      admin localhost:2019
-      
-      log {
-        output file /var/log/caddy/access.log {
-          roll_size 100mb
-          roll_keep 5
-        }
-        format json
       }
     '';
   };
