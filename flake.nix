@@ -41,12 +41,12 @@
 
         # Infrastructure services
         ./services/database.nix      # PostgreSQL
-        ./services/caddy.nix         # Reverse proxy
+        ./services/caddy.nix         # Reverse proxy (UPDATED)
         ./services/homepage.nix      # Dashboard
         ./services/tailscale.nix     # VPN
         ./services/cloudflared.nix   # Cloudflare tunnel
         ./services/mosquitto.nix     # MQTT broker
-        ./services/monitoring.nix    # Prometheus + Grafana monitoring
+        ./services/monitoring.nix    # NEW: Superior monitoring
 
         # Media services
         ./services/jellyfin.nix      # Media server
