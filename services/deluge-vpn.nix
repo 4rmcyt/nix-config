@@ -20,11 +20,10 @@ let
     PORTFORWARD_HOOK="${update-deluge-port-script}"
   '';
 
-  # 3. Package the Dynamic pia-wg.sh Script (using writeShellApplication for robustness)
+  # 3. Package the Dynamic pia-wg.sh Script (with shebang patching)
   pia-wg-package = pkgs.writeShellApplication {
     name = "pia-wg-wrapper";
     
-    # This automatically creates the PATH for the script with all its dependencies.
     runtimeInputs = [
       pkgs.bash
       pkgs.wireguard-tools
@@ -38,12 +37,9 @@ let
       pkgs.which
     ];
 
-    # This is the content of our wrapper script.
     text = ''
-      # Set the environment variable that pia-wg.sh needs to find its config.
       export PIA_CONFIG=${pia-config-file}
-      # Execute the real script, passing along any arguments.
-      exec ${../scripts/pia-wg.sh} "$@"
+      ${builtins.replaceStrings ["#!/bin/bash"] ["#!${pkgs.bash}/bin/bash"] (builtins.readFile ../scripts/pia-wg.sh)}
     '';
   };
 
@@ -102,7 +98,7 @@ in
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStart = "${pia-wg-package}/bin/pia-wg-wrapper"; # Note the wrapper name
+      ExecStart = "${pia-wg-package}/bin/pia-wg-wrapper";
       ExecStop = "${pkgs.iproute2}/bin/ip link del dev pia";
       Restart = "on-failure";
       RestartSec = "10s";
