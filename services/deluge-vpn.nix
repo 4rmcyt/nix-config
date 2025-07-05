@@ -182,6 +182,8 @@ in
     uid = 1001;
     home = "/var/lib/deluge";
     createHome = true;
+    extraGroups = [ "users" ]; # <-- ADD THIS LINE
+
   };
 
   users.groups.deluge = {
