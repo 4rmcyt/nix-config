@@ -29,35 +29,18 @@
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
 
-  # Define all secrets
+  # CLEANED: Only central secrets (removed service-specific duplicates)
   sops.secrets.zeev_password = {
     neededForUsers = true;
   };
   sops.secrets.nextcloud_admin_password = {};
   sops.secrets.microbin_admin_password = {};
   sops.secrets.tailscale_auth_key = {};
-  sops.secrets.hass_postgres_password = {
-    owner = "hass";
-    group = "hass";
-    mode = "0400";
-  };
-  sops.secrets.mosquitto_iotdevice_password = {
-    owner = "mosquitto";
-    group = "mosquitto";
-    mode = "0400";
-  };
 
-  sops.secrets.pia_username = {
-    owner = "deluge";
-    group = "deluge";
-    mode = "0400";
-  };
-  sops.secrets.pia_password = {
-    owner = "deluge";
-    group = "deluge";
-    mode = "0400";
-  };
-
+  # REMOVED: Service-specific secrets moved to their respective files
+  # - mosquitto_iotdevice_password (moved to mosquitto.nix)
+  # - hass_postgres_password (moved to home-assistant.nix)
+  # - pia_username, pia_password (moved to deluge-vpn.nix)
 
   # Define groups first
   users.groups = {
@@ -99,7 +82,6 @@
   };
 
   # Add existing service users to media group where needed
-  # Note: Service-specific groups are handled in their respective files
   users.users.deluge.extraGroups = [ "media" ];
   users.users.nextcloud.extraGroups = [ "media" ];
   users.users.radicale.extraGroups = [ "media" ];
@@ -134,7 +116,7 @@
     # Web server tools
     apacheHttpd
 
-    # Basic monitoring (advanced tools in monitoring.nix)
+    # Basic monitoring (NO advanced tools - those are in monitoring.nix)
     htop btop lsof
   ];
 
