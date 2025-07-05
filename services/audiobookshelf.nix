@@ -5,7 +5,7 @@
     enable = true;
     host = "0.0.0.0";
     port = 8085;
-    dataDir = "/home/zeev/media/audiobooks"
+    dataDir = "/home/zeev/media/audiobooks";
   };
 
   # Create media directories
