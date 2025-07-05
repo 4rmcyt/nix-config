@@ -1,4 +1,3 @@
-
 { config, pkgs, lib, ... }:
 
 {
@@ -55,15 +54,13 @@
     };
   };
 
-  # Grafana for visualization
+  # Grafana for visualization - Simplified configuration
   services.grafana = {
     enable = true;
     settings = {
       server = {
         http_port = 3000;
-        domain = "192.168.1.165";
-        root_url = "%(protocol)s://%(domain)s/grafana/";
-        serve_from_sub_path = true;
+        http_addr = "0.0.0.0";  # Listen on all interfaces
       };
       security = {
         admin_user = "admin";
