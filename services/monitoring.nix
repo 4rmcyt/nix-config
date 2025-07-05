@@ -1,3 +1,4 @@
+
 { config, pkgs, lib, ... }:
 
 {
@@ -8,13 +9,13 @@
     mode = "0400";
   };
 
-  # Netdata real-time monitoring - Fixed bind configuration
+  # Netdata real-time monitoring - Fixed Host header validation
   services.netdata = {
     enable = true;
     config = {
       global = {
         "default port" = "19999";
-        "bind to" = "*";  # Changed from "localhost" to "*" to allow external access
+        "bind to" = "*";
         "access log" = "none";
         "error log" = "syslog";
         "debug log" = "none";
@@ -26,13 +27,20 @@
       web = {
         "web files owner" = "root";
         "web files group" = "netdata";
-        "bind to" = "*";  # This was correct, but global bind was wrong
-        "allow connections from" = "localhost 192.168.*";
-        "allow dashboard from" = "localhost 192.168.*";
+        "bind to" = "*";
+        "allow connections from" = "localhost 192.168.* *";
+        "allow dashboard from" = "localhost 192.168.* *";
         "allow badges from" = "*";
         "allow streaming from" = "*";
-        "allow netdata.conf from" = "localhost 192.168.*";
+        "allow netdata.conf from" = "localhost 192.168.* *";
+        "allow management from" = "localhost 192.168.* *";
         "enable gzip compression" = "yes";
+        "accept a streaming request every seconds" = "0";
+        # Fix Host header validation
+        "allow hostnames" = "localhost homeserver 192.168.1.165 *";
+        "disconnect idle clients after seconds" = "60";
+        "timeout for first request" = "60";
+        "timeout for idle connections" = "60";
       };
       # Disable problematic plugins
       "plugin:freeipmi" = {
@@ -55,6 +63,16 @@
         "enabled" = "no";
       };
       "go.d:docker" = {
+        "enabled" = "no";
+      };
+      # Disable more problematic plugins
+      "plugin:logs-management" = {
+        "enabled" = "no";
+      };
+      "plugin:ioping" = {
+        "enabled" = "no";
+      };
+      "plugin:perf" = {
         "enabled" = "no";
       };
     };
