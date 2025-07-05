@@ -25,12 +25,22 @@ let
     nativeBuildInputs = [ pkgs.makeWrapper ];
   } ''
     mkdir -p $out/bin
-    # --- THIS IS THE CORRECTED LINE ---
     cp ${../scripts/pia-wg.sh} $out/bin/pia-wg
     chmod +x $out/bin/pia-wg
+    # --- THIS IS THE CORRECTED WRAPPER ---
+    # We add more packages to the PATH so the script can find all the commands it needs.
     wrapProgram $out/bin/pia-wg \
       --add-flags "PIA_CONFIG=${pia-config-file}" \
-      --prefix PATH : ${lib.makeBinPath [ pkgs.wireguard-tools pkgs.curl pkgs.jq pkgs.iproute2 pkgs.qrencode ]}
+      --prefix PATH : ${lib.makeBinPath [
+        pkgs.wireguard-tools
+        pkgs.curl
+        pkgs.jq
+        pkgs.iproute2
+        pkgs.qrencode
+        pkgs.coreutils  # Provides: head, sort, cut, realpath, etc.
+        pkgs.gnugrep    # Provides: grep
+        pkgs.gnused     # Provides: sed
+      ]}
   '';
 
 in
