@@ -5,14 +5,30 @@
   services.caddy = {
     enable = true;
 
-    # Use virtualHosts instead of extraConfig for better control
-    virtualHosts."localhost" = {
-      extraConfig = ''
+    # Use simple extraConfig instead of virtualHosts to avoid conflicts
+    extraConfig = ''
+      # Global configuration block
+      {
+        auto_https off
+        admin localhost:2019
+        
+        # Logging
+        log {
+          output file /var/log/caddy/access.log {
+            roll_size 100mb
+            roll_keep 5
+          }
+          format json
+        }
+      }
+
+      # Main server block - listen on all interfaces port 80
+      :80 {
         # Security headers
         header {
           Strict-Transport-Security "max-age=15768000; includeSubDomains"
           X-Content-Type-Options "nosniff"
-          X-Frame-Options "SAMEORIGIN"
+          X-Frame-Options "SAMEORIGIN" 
           X-XSS-Protection "1; mode=block"
           Referrer-Policy "strict-origin-when-cross-origin"
           -Server
@@ -83,7 +99,7 @@
           }
         }
 
-        # Miniflux proxy (corrected port)
+        # Miniflux proxy (corrected port 8086)
         handle_path /miniflux* {
           reverse_proxy localhost:8086 {
             header_up Host {upstream_hostport}
@@ -95,19 +111,8 @@
         handle {
           reverse_proxy localhost:8082
         }
-      '';
-    };
-
-    # Global configuration - simplified and clean
-    globalConfig = ''
-      {
-        auto_https off
-        admin localhost:2019
       }
     '';
-
-    # Logging configuration
-    logFormat = "json";
   };
 
   # Ensure log directory exists with proper permissions
@@ -117,7 +122,4 @@
 
   # Open firewall ports for Caddy
   networking.firewall.allowedTCPPorts = [ 80 443 2019 ];
-
-  # Additional Caddy user permissions if needed
-  users.users.caddy.extraGroups = [ "caddy" ];
 }
