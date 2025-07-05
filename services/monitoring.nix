@@ -1,4 +1,3 @@
-
 { config, pkgs, lib, ... }:
 
 {
@@ -9,20 +8,20 @@
     mode = "0400";
   };
 
-  # Simplified Netdata configuration
+  # Properly configured Netdata with disabled problematic plugins
   services.netdata = {
     enable = true;
     config = {
       global = {
         "default port" = "19999";
-        "bind to" = "0.0.0.0";  # Changed from "*" to "0.0.0.0"
+        "bind to" = "0.0.0.0";
         "hostname" = "homeserver";
         "update every" = "3";
         "memory mode" = "ram";
         "history" = "3600";
       };
       web = {
-        "bind to" = "0.0.0.0";  # Changed from "*" to "0.0.0.0"
+        "bind to" = "0.0.0.0";
         "allow connections from" = "*";
         "allow dashboard from" = "*";
         "allow badges from" = "*";
@@ -30,16 +29,28 @@
         "allow netdata.conf from" = "*";
         "allow management from" = "*";
       };
-      # Disable problematic plugins
-      "plugin:freeipmi" = { "enabled" = "no"; };
+      # Properly disable problematic plugins
+      "plugin:freeipmi" = {
+        "enabled" = "no";
+        "update every" = "never";
+      };
       "plugin:charts.d" = { "enabled" = "no"; };
       "plugin:python.d" = { "enabled" = "no"; };
       "plugin:logs-management" = { "enabled" = "no"; };
       "plugin:ioping" = { "enabled" = "no"; };
       "plugin:perf" = { "enabled" = "no"; };
       "plugin:cgroup-network" = { "enabled" = "no"; };
-      "plugin:cgroup-network-helper" = { "enabled" = "no"; };
       "plugin:systemd-journal" = { "enabled" = "no"; };
+      "plugin:network-viewer" = { "enabled" = "no"; };
+      "plugin:debugfs" = { "enabled" = "no"; };
+
+      # Keep essential plugins enabled
+      "plugin:proc" = { "enabled" = "yes"; };
+      "plugin:diskspace" = { "enabled" = "yes"; };
+      "plugin:cgroups" = { "enabled" = "yes"; };
+      "plugin:tc" = { "enabled" = "no"; };  # Traffic control - not needed
+      "plugin:apps" = { "enabled" = "yes"; };
+      "plugin:go.d" = { "enabled" = "yes"; };
     };
   };
 
