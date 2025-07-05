@@ -1,3 +1,4 @@
+
 { config, pkgs, lib, ... }:
 
 {
@@ -42,6 +43,5 @@
     "d /srv/files 0755 fileserver fileserver -"
   ];
 
-  # Fix: Update firewall ports
-  networking.firewall.allowedTCPPorts = [ 8086 8087 ];  # Updated ports
+  # REMOVED: Firewall ports (now handled centrally in networking.nix)
 }
