@@ -1,3 +1,4 @@
+
 { config, pkgs, lib, ... }:
 
 let
@@ -325,9 +326,6 @@ in
     # Note: BitTorrent port is handled dynamically by PIA port forwarding
   };
 
-  # Enable IP forwarding for VPN routing
-  boot.kernel.sysctl = {
-    "net.ipv4.ip_forward" = 1;
-    "net.ipv6.conf.all.forwarding" = 1;
-  };
+  # REMOVED: IP forwarding configuration (now handled by tailscale.nix)
+  # This prevents duplicate sysctl definitions
 }
