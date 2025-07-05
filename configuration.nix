@@ -41,27 +41,52 @@
     group = "hass";
     mode = "0400";
   };
-  # Add missing Mosquitto secret
   sops.secrets.mosquitto_iotdevice_password = {
     owner = "mosquitto";
     group = "mosquitto";
     mode = "0400";
   };
 
-  # User configuration with SOPS password
-  users.users.zeev = {
-    isNormalUser = true;
-    description = "Zeev";
-    extraGroups = [ "networkmanager" "wheel" "docker" "media" ];
-    hashedPasswordFile = config.sops.secrets.zeev_password.path;
-    shell = pkgs.bash;
+  # Define groups first
+  users.groups = {
+    media = {};
+    microbin = {};
+    miniflux = {};
+    samba = {};
   };
 
-  # Define the media group
-  users.groups.media = {};
+  # User configuration
+  users.users = {
+    # Main user
+    zeev = {
+      isNormalUser = true;
+      description = "Zeev";
+      extraGroups = [ "networkmanager" "wheel" "docker" "media" ];
+      hashedPasswordFile = config.sops.secrets.zeev_password.path;
+      shell = pkgs.bash;
+    };
 
-  # Add existing service users to media group (these are created by the services themselves)
-  # Don't manually define users that are already created by services
+    # System users for services
+    microbin = {
+      isSystemUser = true;
+      group = "microbin";
+      extraGroups = [ "media" ];
+    };
+
+    miniflux = {
+      isSystemUser = true;
+      group = "miniflux";
+      extraGroups = [ "media" ];
+    };
+
+    samba = {
+      isSystemUser = true;
+      group = "samba";
+      extraGroups = [ "media" ];
+    };
+  };
+
+  # Add existing service users to media group where needed
   users.users.jellyfin.extraGroups = [ "media" ];
   users.users.deluge.extraGroups = [ "media" ];
   users.users.nextcloud.extraGroups = [ "media" ];
