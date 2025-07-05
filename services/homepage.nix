@@ -245,5 +245,5 @@
     HOMEPAGE_ALLOWED_HOSTS = lib.mkForce "localhost,127.0.0.1,192.168.1.165,homeserver.local";
   };
 
-  networking.firewall.allowedTCPPorts = [ 8082 ];
+  # REMOVED: Firewall port (now handled centrally in networking.nix)
 }

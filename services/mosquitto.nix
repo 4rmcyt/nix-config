@@ -1,3 +1,4 @@
+
 { config, pkgs, ... }:
 
 {
@@ -44,8 +45,5 @@
     };
   };
 
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [ 1883 ];
-  };
+  # REMOVED: Firewall configuration (now handled centrally in networking.nix)
 }
