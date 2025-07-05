@@ -89,34 +89,35 @@
           }
         ];
       }
+      # Update the monitoring section to use working tools:
       {
         "Monitoring & Analytics" = [
           {
             "Grafana" = {
-              href = "http://192.168.1.165:3000";  # Direct access - simpler and reliable
-              description = "Monitoring Dashboard";
+              href = "http://192.168.1.165:3000";
+              description = "Real-time System Dashboard";
               icon = "grafana";
             };
           }
           {
             "Prometheus" = {
               href = "http://192.168.1.165:9090";
-              description = "Metrics Collection";
+              description = "Metrics & Alerting";
               icon = "prometheus";
             };
           }
           {
             "Node Exporter" = {
               href = "http://192.168.1.165:9100/metrics";
-              description = "System Metrics";
+              description = "System Metrics (Raw)";
               icon = "prometheus";
             };
           }
           {
-            "Netdata" = {
-              href = "http://192.168.1.165:19999";
-              description = "Real-time System Monitor";
-              icon = "netdata";
+            "Terminal Monitoring" = {
+              href = "#";
+              description = "SSH: btop, htop, iotop, nethogs";
+              icon = "terminal";
             };
           }
         ];

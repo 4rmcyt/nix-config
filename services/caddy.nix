@@ -19,15 +19,15 @@
         # Compression
         encode gzip zstd
 
-        # Netdata - Real-time monitoring
-        handle /netdata* {
-          reverse_proxy localhost:19999 {
-            header_up Host {upstream_hostport}
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-For {remote_host}
-            header_up X-Forwarded-Proto {scheme}
-          }
-        }
+#        # Netdata - Real-time monitoring
+#        handle /netdata* {
+#          reverse_proxy localhost:19999 {
+#            header_up Host {upstream_hostport}
+#            header_up X-Real-IP {remote_host}
+#            header_up X-Forwarded-For {remote_host}
+#            header_up X-Forwarded-Proto {scheme}
+#          }
+#        }
 
         # Grafana - Special handling for subpath
         handle /grafana* {
