@@ -1,4 +1,3 @@
-
 { config, pkgs, lib, ... }:
 
 {
@@ -7,6 +6,58 @@
     owner = "grafana";
     group = "grafana";
     mode = "0400";
+  };
+
+  # Netdata real-time monitoring
+  services.netdata = {
+    enable = true;
+    config = {
+      global = {
+        "default port" = "19999";
+        "bind to" = "localhost";
+        "access log" = "none";
+        "error log" = "syslog";
+        "debug log" = "none";
+        "update every" = "3";
+        "memory mode" = "ram";
+        "history" = "3600";
+        "hostname" = "homeserver";
+      };
+      web = {
+        "web files owner" = "root";
+        "web files group" = "netdata";
+        "bind to" = "*";
+        "allow connections from" = "localhost 192.168.*";
+        "allow dashboard from" = "localhost 192.168.*";
+        "allow badges from" = "*";
+        "allow streaming from" = "*";
+        "allow netdata.conf from" = "localhost 192.168.*";
+        "enable gzip compression" = "yes";
+      };
+      # Disable problematic plugins
+      "plugin:freeipmi" = {
+        "enabled" = "no";
+      };
+      "plugin:charts.d" = {
+        "enabled" = "no";
+      };
+      "plugin:python.d" = {
+        "enabled" = "no";
+      };
+      "plugin:go.d" = {
+        "enabled" = "yes";
+      };
+      # Disable specific problematic collectors
+      "go.d:prometheus:caddy_local" = {
+        "enabled" = "no";
+      };
+      "go.d:prometheus:grafana_local" = {
+        "enabled" = "no";
+      };
+      "go.d:docker" = {
+        "enabled" = "no";
+      };
+    };
   };
 
   # Prometheus monitoring server
@@ -43,6 +94,19 @@
           };
         }];
       }
+      {
+        job_name = "netdata";
+        static_configs = [{
+          targets = [ "localhost:19999" ];
+          labels = {
+            instance = "homeserver";
+          };
+        }];
+        metrics_path = "/api/v1/allmetrics";
+        params = {
+          format = ["prometheus"];
+        };
+      }
     ];
 
     # Add exporters for system metrics
@@ -74,6 +138,11 @@
       analytics = {
         reporting_enabled = false;
       };
+      metrics = {
+        enabled = true;
+        basic_auth_username = "";
+        basic_auth_password = "";
+      };
     };
 
     # Provision datasources automatically
@@ -96,5 +165,6 @@
     9090  # Prometheus
     9100  # Node exporter
     3000  # Grafana
+    19999 # Netdata
   ];
 }

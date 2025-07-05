@@ -20,17 +20,6 @@
     lockKernelModules = false; # Be careful with this, may break some hardware
   };
 
-  # Basic system monitoring
-  services.netdata = {
-    enable = true;
-    config = {
-      global = {
-        "update every" = 10;
-        "memory mode" = "ram";
-      };
-    };
-  };
-
   # Better entropy gathering for improved cryptographic operations
   services.haveged.enable = true;
 
