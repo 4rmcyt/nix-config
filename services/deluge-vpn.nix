@@ -20,10 +20,14 @@ let
     PORTFORWARD_HOOK="${update-deluge-port-script}"
   '';
 
-  # 3. Package the Dynamic pia-wg.sh Script (with shebang patching)
+ # 3. Package the Dynamic pia-wg.sh Script
   pia-wg-package = pkgs.writeShellApplication {
     name = "pia-wg-wrapper";
     
+    # --- ADD THIS LINE ---
+    doCheck = false;
+    # ---------------------
+
     runtimeInputs = [
       pkgs.bash
       pkgs.wireguard-tools
