@@ -26,7 +26,7 @@ let
   } ''
     mkdir -p $out/bin
     # --- THIS IS THE CORRECTED LINE ---
-    cp ${./scripts/pia-wg.sh} $out/bin/pia-wg
+    cp ${../scripts/pia-wg.sh} $out/bin/pia-wg
     chmod +x $out/bin/pia-wg
     wrapProgram $out/bin/pia-wg \
       --add-flags "PIA_CONFIG=${pia-config-file}" \
