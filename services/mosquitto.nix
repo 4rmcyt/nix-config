@@ -1,8 +1,7 @@
-
 { config, pkgs, ... }:
 
 {
-  # MOVED: Define the SOPS secret here (removed from configuration.nix)
+  # SOPS secret for MQTT local user
   sops.secrets.mosquitto_iotdevice_password = {
     owner = "mosquitto";
     group = "mosquitto";
@@ -12,7 +11,7 @@
   services.mosquitto = {
     enable = true;
     listeners = [{
-      address = "192.168.1.165";
+      address = "0.0.0.0";  # Allow connections from any IP
       port = 1883;
       users.iotdevice = {
         acl = [
@@ -22,28 +21,11 @@
         ];
         passwordFile = config.sops.secrets.mosquitto_iotdevice_password.path;
       };
-    }];
-    bridges."home-lab" = {
-      addresses = [{
-        address = "iot.labhome.work";
-        port = 8883;
-      }];
-      topics = [
-        "IoT/device/action in 1 \"\""
-        "IoT/device/observations out 1 \"\""
-        "IoT/device/LW out 0 \"\""
-      ];
+      # Add anonymous access for testing (remove later)
       settings = {
-        local_clientid = "NiXOS-Mosquitto";
-        remote_clientid = "NiXOS-Mosquitto";
-        cleansession = true;
-        notifications = false;
-        start_type = "automatic";
-        bridge_protocol_version = "mqttv311";
-        bridge_outgoing_retain = false;
+        allow_anonymous = true;
       };
-    };
+    }];
+    # REMOVED: Bridge configuration - causing connection issues
   };
-
-  # REMOVED: Firewall configuration (now handled centrally in networking.nix)
 }
