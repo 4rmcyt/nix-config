@@ -143,7 +143,7 @@
         "Infrastructure & Security" = [
           {
             "Keycloak" = {
-              href = "http://192.168.1.165:8080";
+              href = "https://keycloak.labhome.work";
               description = "Identity & Access Management";
               icon = "keycloak";
             };
