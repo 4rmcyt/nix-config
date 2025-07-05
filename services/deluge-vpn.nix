@@ -1,3 +1,8 @@
+Of course. Here is the whole, fixed NixOS configuration that incorporates all the corrections.
+
+This complete configuration uses the robust `systemd` service to reliably create the initial config, ensures the Deluge daemon waits for it, and includes the network namespace setup for the VPN.
+
+```nix
 { config, pkgs, lib, ... }:
 
 let
@@ -65,7 +70,6 @@ let
       --max-time 30 \
       --insecure)
 
-    # Extract response data
     if ! echo "$ADD_KEY_RESPONSE" | ${pkgs.jq}/bin/jq empty 2>/dev/null; then
       echo "Invalid response from addKey"
       echo "Response: $ADD_KEY_RESPONSE"
@@ -176,19 +180,20 @@ let
   '';
 in
 {
-  # Create deluge user first
+  # Create deluge user and group
   users.users.deluge = {
     isSystemUser = true;
     group = "deluge";
-    uid = 1001;  # Use a definitely free UID
+    uid = 1001;
     home = "/var/lib/deluge";
     createHome = true;
   };
 
   users.groups.deluge = {
-    gid = 1001;  # Use matching GID
+    gid = 1001;
   };
 
+  # Sops secrets for PIA credentials
   sops.secrets.pia_username = {
     owner = "deluge";
     group = "deluge";
@@ -213,18 +218,14 @@ in
       RemainAfterExit = true;
       TimeoutStartSec = "120s";
     };
-
     script = ''
-      # Get PIA credentials
       PIA_USER=$(cat ${config.sops.secrets.pia_username.path})
       PIA_PASS=$(cat ${config.sops.secrets.pia_password.path})
-
-      # Run the PIA setup script
       ${pia-setup-script} "$PIA_USER" "$PIA_PASS"
     '';
   };
 
-  # WireGuard interface
+  # WireGuard interface (to be placed in the namespace)
   networking.wireguard.interfaces.wg-deluge = {
     privateKeyFile = "/var/lib/deluge/pia/private_key";
     listenPort = 51820;
@@ -241,20 +242,56 @@ in
       RemainAfterExit = true;
       TimeoutStartSec = "60s";
     };
-
     script = "${vpn-routing-script}";
     preStop = "${vpn-cleanup-script}";
   };
 
-  # Deluge daemon service (runs in VPN namespace as root, then drops to deluge user)
+  # --- FIXED: Robust one-time service to create initial Deluge config ---
+  systemd.services.deluge-init-config = {
+    description = "Initialize Deluge configuration files";
+    wantedBy = [ "multi-user.target" ];
+    before = [ "deluged.service" ]; # This service must run before deluged starts
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      # This test ensures the script only runs if the auth file is missing,
+      # preventing it from overwriting your config on every boot.
+      ExecStartPre = "${pkgs.coreutils}/bin/test ! -f /var/lib/deluge/.config/deluge/auth";
+    };
+    script = ''
+      CONFIG_DIR="/var/lib/deluge/.config/deluge"
+      echo "Initializing Deluge config for the first time at $CONFIG_DIR..."
+      mkdir -p "$CONFIG_DIR"
+      
+      # Create auth file with a 'deluge' user and NO password
+      echo 'deluge::10' > "$CONFIG_DIR/auth"
+      
+      # Create core.conf to allow remote connections and set download location
+      echo '{
+        "allow_remote": true,
+        "download_location": "/home/zeev/Downloads"
+      }' > "$CONFIG_DIR/core.conf"
+
+      # Create an empty web.conf so the daemon doesn't create a default.
+      # The deluge-web service will manage this file itself.
+      touch "$CONFIG_DIR/web.conf"
+
+      # Set proper ownership and permissions for the entire home directory
+      chown -R deluge:deluge /var/lib/deluge
+      chmod 700 "$CONFIG_DIR"
+      chmod 600 "$CONFIG_DIR"/*
+    '';
+  };
+
+  # Deluge daemon service (runs in VPN namespace)
   systemd.services.deluged = {
     description = "Deluge BitTorrent Daemon";
     wantedBy = [ "multi-user.target" ];
-    after = [ "deluge-vpn-routing.service" ];
-    wants = [ "deluge-vpn-routing.service" ];
+    # --- FIXED: Make service wait for the config to be created ---
+    after = [ "deluge-vpn-routing.service" "deluge-init-config.service" ];
+    wants = [ "deluge-init-config.service" ];
     serviceConfig = {
       Type = "simple";
-      # Run as root to access namespace, then drop privileges with sudo
       User = "root";
       Group = "root";
       ExecStart = "${deluge-start-script}";
@@ -264,77 +301,17 @@ in
     };
   };
 
-  # Ensure deluge config directory exists and configure dark theme
-  system.activationScripts.deluge-config = {
-    text = ''
-      # Create main config directory
-      mkdir -p /var/lib/deluge/.config/deluge
-      chown deluge:deluge /var/lib/deluge/.config/deluge
-      chmod 700 /var/lib/deluge/.config/deluge
-
-      # Create auth file with a 'deluge' user and NO password
-      # This user matches the default that the web-ui will try to use.
-      echo 'deluge::10' > /var/lib/deluge/.config/deluge/auth
-      
-      # Create core.conf to allow remote connections (for the web-ui)
-      # and set the download location.
-      echo '{
-        "allow_remote": true,
-        "download_location": "/home/zeev/Downloads"
-      }' > /var/lib/deluge/.config/deluge/core.conf
-      
-      # Create web themes directory structure
-      mkdir -p /var/lib/deluge/.config/deluge/web/themes/dark
-
-      # Create web.conf with NO password for the web UI itself
-      cat > /var/lib/deluge/.config/deluge/web.conf << 'EOF'
-{
-    "base": "deluge",
-    "port": 8112,
-    "https": false,
-    "pkey": "ssl/daemon.pkey",
-    "cert": "ssl/daemon.cert",
-    "pwd_salt": "",
-    "pwd_sha1": "",
-    "sessions": {},
-    "enabled_plugins": [],
-    "theme": "gray",
-    "sidebar_show_zero": false,
-    "sidebar_multiple_filters": true,
-    "show_sidebar": true,
-    "show_toolbar": true,
-    "show_statusbar": true,
-    "sidebar_show_trackers": true,
-    "default_daemon": "",
-    "interface": "0.0.0.0",
-    "language": ""
-}
-EOF
-
-      # ... (rest of your script for themes is fine) ...
-
-      # Set proper ownership and permissions for all created files
-      chown -R deluge:deluge /var/lib/deluge/.config/deluge
-      chmod 600 /var/lib/deluge/.config/deluge/*
-      chmod 700 /var/lib/deluge/.config/deluge
-      chmod 755 /var/lib/deluge/.config/deluge/web
-      chmod 755 /var/lib/deluge/.config/deluge/web/themes
-      chmod 755 /var/lib/deluge/.config/deluge/web/themes/dark
-      chmod 644 /var/lib/deluge/.config/deluge/web/themes/dark/*
-    '';
-    deps = [ "users" ];  # Run after users are created
-  };
-
   # Deluge web interface (runs on host network)
   systemd.services.deluge-web = {
     description = "Deluge BitTorrent Web UI";
     wantedBy = [ "multi-user.target" ];
-    after = [ "deluged.service" ];  # Remove "deluge-config" - activation scripts run before services
+    after = [ "deluged.service" ];
     wants = [ "deluged.service" ];
     serviceConfig = {
       Type = "simple";
       User = "deluge";
       Group = "deluge";
+      # The web UI will create its own config for themes and session management
       ExecStart = "${pkgs.deluge}/bin/deluge-web --do-not-daemonize -c /var/lib/deluge/.config/deluge -l /var/lib/deluge/web.log -L info";
       Restart = "always";
       RestartSec = "5";
@@ -342,10 +319,10 @@ EOF
     };
   };
 
-  # Open firewall for Deluge web interface
+  # Open firewall for Deluge web interface and WireGuard
   networking.firewall = {
-    allowedTCPPorts = [ 8112 ];  # Deluge web interface
-    allowedUDPPorts = [ 51820 ]; # WireGuard
+    allowedTCPPorts = [ 8112 ];
+    allowedUDPPorts = [ 51820 ];
   };
-
 }
+```
