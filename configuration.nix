@@ -1,3 +1,4 @@
+
 { config, pkgs, lib, inputs, ... }:
 
 {
@@ -87,11 +88,11 @@
   };
 
   # Add existing service users to media group where needed
+  # Note: Don't define audiobookshelf user here - it's created by the service
   users.users.jellyfin.extraGroups = [ "media" ];
   users.users.deluge.extraGroups = [ "media" ];
   users.users.nextcloud.extraGroups = [ "media" ];
   users.users.radicale.extraGroups = [ "media" ];
-  users.users.audiobookshelf.extraGroups = [ "media" ];
   users.users.paperless.extraGroups = [ "media" ];
 
   systemd.tmpfiles.rules = [
@@ -102,7 +103,7 @@
     "d /home/zeev/media/series 0770 zeev media -"
     "d /home/zeev/media/music 0770 zeev media -"
     "d /home/zeev/media/other 0770 zeev media -"
-    "d /home/zeev/media/podcasts 0770 audiobookshelf media -"
+    "d /home/zeev/media/podcasts 0770 zeev media -"
     "d /home/zeev/Downloads 0770 deluge deluge -"
   ];
 
