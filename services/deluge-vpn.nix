@@ -1,329 +1,458 @@
 { config, pkgs, lib, ... }:
 
-{
-  # SOPS secrets for PIA
-  sops.secrets.pia_username = {
-    owner = "deluge";
-    group = "deluge";
-    mode = "0400";
-  };
-  sops.secrets.pia_password = {
-    owner = "deluge";
-    group = "deluge";
-    mode = "0400";
-  };
-
-  # Enhanced PIA setup script with port forwarding
+let
+  # Create the scripts as proper Nix derivations with dependencies
   pia-setup-script = pkgs.writeShellScript "pia-setup.sh" ''
-    set -euo pipefail
+    # Create working directory
+    mkdir -p /var/lib/deluge/pia
+    cd /var/lib/deluge/pia
 
-    PIA_DIR="/var/lib/deluge/pia"
-    WG_CONFIG="$PIA_DIR/wg0.conf"
-    PORT_FILE="$PIA_DIR/forwarded_port"
+    # Get PIA credentials (passed as arguments)
+    PIA_USER="$1"
+    PIA_PASS="$2"
 
-    mkdir -p "$PIA_DIR"
-    chmod 700 "$PIA_DIR"
+    echo "=== PIA WireGuard Config Generator ==="
+    echo "Setting up for region: ca_ontario"
 
-    # Read PIA credentials
-    PIA_USER="$(cat ${config.sops.secrets.pia_username.path})"
-    PIA_PASS="$(cat ${config.sops.secrets.pia_password.path})"
-
-    echo "🔐 Authenticating with PIA..."
-
-    # Get auth token
-    AUTH_RESPONSE=$(${pkgs.curl}/bin/curl -s -u "$PIA_USER:$PIA_PASS" \
-      "https://privateinternetaccess.com/api/client/v2/token")
-
-    if ! echo "$AUTH_RESPONSE" | ${pkgs.jq}/bin/jq -e '.token' > /dev/null; then
-      echo "❌ PIA authentication failed"
-      exit 1
-    fi
-
-    TOKEN=$(echo "$AUTH_RESPONSE" | ${pkgs.jq}/bin/jq -r '.token')
-    echo "✅ PIA authentication successful"
-
-    # Get optimal server list (port forwarding enabled)
-    echo "🌍 Finding optimal PF-enabled server..."
-    SERVERS_RESPONSE=$(${pkgs.curl}/bin/curl -s \
-      "https://serverlist.piaservers.net/vpninfo/servers/v6")
-
-    # Filter for port forwarding enabled servers and select best one
-    BEST_SERVER=$(echo "$SERVERS_RESPONSE" | ${pkgs.jq}/bin/jq -r '
-      .regions[] | select(.port_forward == true and .geo == true) |
-      select(.country == "US" or .country == "CA" or .country == "NL") |
-      .servers.wg[0]
-    ' | head -1)
-
-    if [ -z "$BEST_SERVER" ]; then
-      echo "❌ No suitable PF servers found"
-      exit 1
-    fi
-
-    SERVER_IP=$(echo "$BEST_SERVER" | ${pkgs.jq}/bin/jq -r '.ip')
-    SERVER_CN=$(echo "$BEST_SERVER" | ${pkgs.jq}/bin/jq -r '.cn')
-    SERVER_PORT=$(echo "$BEST_SERVER" | ${pkgs.jq}/bin/jq -r '.port')
-
-    echo "📍 Selected server: $SERVER_CN ($SERVER_IP:$SERVER_PORT)"
-
-    # Generate WireGuard key pair
+    # Generate WireGuard keypair
     PRIVATE_KEY=$(${pkgs.wireguard-tools}/bin/wg genkey)
     PUBLIC_KEY=$(echo "$PRIVATE_KEY" | ${pkgs.wireguard-tools}/bin/wg pubkey)
 
-    # Add key to PIA
-    echo "🔑 Registering WireGuard key with PIA..."
-    ADD_KEY_RESPONSE=$(${pkgs.curl}/bin/curl -s \
-      -H "Authorization: Token $TOKEN" \
-      -H "Content-Type: application/json" \
-      -d "{\"pubkey\":\"$PUBLIC_KEY\"}" \
-      "https://$SERVER_CN:19999/addKey")
+    echo "Generated keypair, public key: $PUBLIC_KEY"
 
-    if ! echo "$ADD_KEY_RESPONSE" | ${pkgs.jq}/bin/jq -e '.status == "OK"' > /dev/null; then
-      echo "❌ Failed to add WireGuard key"
+    # Get server list
+    echo "Fetching server list..."
+    SERVER_LIST=$(${pkgs.curl}/bin/curl -s "https://serverlist.piaservers.net/vpninfo/servers/v6" | head -1)
+
+    # Find WireGuard server for ca_ontario
+    WG_SERVER_IP=$(echo "$SERVER_LIST" | ${pkgs.jq}/bin/jq -r '.regions[] | select(.id == "ca_ontario") | .servers.wg[0].ip')
+    WG_SERVER_CN=$(echo "$SERVER_LIST" | ${pkgs.jq}/bin/jq -r '.regions[] | select(.id == "ca_ontario") | .servers.wg[0].cn')
+    META_SERVER_IP=$(echo "$SERVER_LIST" | ${pkgs.jq}/bin/jq -r '.regions[] | select(.id == "ca_ontario") | .servers.meta[0].ip')
+
+    if [ -z "$WG_SERVER_IP" ] || [ "$WG_SERVER_IP" = "null" ]; then
+      echo "Failed to find WireGuard server for ca_ontario"
       exit 1
     fi
 
-    PEER_IP=$(echo "$ADD_KEY_RESPONSE" | ${pkgs.jq}/bin/jq -r '.peer_ip')
+    echo "Using WG server: $WG_SERVER_IP ($WG_SERVER_CN)"
+    echo "Using Meta server: $META_SERVER_IP"
+
+    # Get auth token
+    echo "Getting auth token..."
+    TOKEN_RESPONSE=$(${pkgs.curl}/bin/curl -s -u "$PIA_USER:$PIA_PASS" \
+      "https://$META_SERVER_IP/authv3/generateToken" \
+      --connect-timeout 15 \
+      --max-time 30 \
+      --insecure)
+
+    TOKEN=$(echo "$TOKEN_RESPONSE" | ${pkgs.jq}/bin/jq -r '.token // empty')
+
+    if [ -z "$TOKEN" ]; then
+      echo "Failed to get auth token"
+      echo "Response: $TOKEN_RESPONSE"
+      exit 1
+    fi
+
+    echo "Got auth token successfully"
+
+    # Add public key
+    echo "Adding public key to PIA..."
+    ADD_KEY_RESPONSE=$(${pkgs.curl}/bin/curl -s -G \
+      --data-urlencode "pubkey=$PUBLIC_KEY" \
+      --data-urlencode "pt=$TOKEN" \
+      "https://$WG_SERVER_IP:1337/addKey" \
+      --connect-timeout 15 \
+      --max-time 30 \
+      --insecure)
+
+    # Extract response data
+    if ! echo "$ADD_KEY_RESPONSE" | ${pkgs.jq}/bin/jq empty 2>/dev/null; then
+      echo "Invalid response from addKey"
+      echo "Response: $ADD_KEY_RESPONSE"
+      exit 1
+    fi
+
+    if [ "$(echo "$ADD_KEY_RESPONSE" | ${pkgs.jq}/bin/jq -r '.status // empty')" != "OK" ]; then
+      echo "AddKey failed"
+      echo "Response: $ADD_KEY_RESPONSE"
+      exit 1
+    fi
+
     SERVER_PUBLIC_KEY=$(echo "$ADD_KEY_RESPONSE" | ${pkgs.jq}/bin/jq -r '.server_key')
+    CLIENT_IP=$(echo "$ADD_KEY_RESPONSE" | ${pkgs.jq}/bin/jq -r '.peer_ip')
 
-    echo "✅ WireGuard key registered. Client IP: $PEER_IP"
-
-    # Create WireGuard configuration
-    cat > "$WG_CONFIG" << EOF
-    [Interface]
-    PrivateKey = $PRIVATE_KEY
-    Address = $PEER_IP/32
-    DNS = 10.0.0.243
-
-    [Peer]
-    PublicKey = $SERVER_PUBLIC_KEY
-    Endpoint = $SERVER_IP:$SERVER_PORT
-    AllowedIPs = 0.0.0.0/0
-    PersistentKeepalive = 25
-    EOF
-
-    chmod 600 "$WG_CONFIG"
-    echo "📝 WireGuard config created"
-
-    # Setup port forwarding
-    echo "🔌 Setting up port forwarding..."
-
-    # Request port forward
-    PF_RESPONSE=$(${pkgs.curl}/bin/curl -s \
-      -H "Authorization: Token $TOKEN" \
-      "https://$SERVER_CN:19999/getSignature?token=$TOKEN")
-
-    if echo "$PF_RESPONSE" | ${pkgs.jq}/bin/jq -e '.status == "OK"' > /dev/null; then
-      SIGNATURE=$(echo "$PF_RESPONSE" | ${pkgs.jq}/bin/jq -r '.signature')
-      PAYLOAD=$(echo "$PF_RESPONSE" | ${pkgs.jq}/bin/jq -r '.payload')
-
-      # Bind the port
-      BIND_RESPONSE=$(${pkgs.curl}/bin/curl -s \
-        -H "Authorization: Token $TOKEN" \
-        -d "payload=$PAYLOAD&signature=$SIGNATURE" \
-        "https://$SERVER_CN:19999/bindPort")
-
-      if echo "$BIND_RESPONSE" | ${pkgs.jq}/bin/jq -e '.status == "OK"' > /dev/null; then
-        FORWARDED_PORT=$(echo "$BIND_RESPONSE" | ${pkgs.jq}/bin/jq -r '.port')
-        echo "$FORWARDED_PORT" > "$PORT_FILE"
-        echo "✅ Port forwarding enabled: $FORWARDED_PORT"
-      else
-        echo "⚠️  Port forwarding failed, continuing without"
-        echo "0" > "$PORT_FILE"
-      fi
-    else
-      echo "⚠️  Port forwarding not available, continuing without"
-      echo "0" > "$PORT_FILE"
+    if [ -z "$SERVER_PUBLIC_KEY" ] || [ -z "$CLIENT_IP" ]; then
+      echo "Failed to extract server key or client IP"
+      echo "Response: $ADD_KEY_RESPONSE"
+      exit 1
     fi
 
-    echo "🚀 PIA WireGuard setup complete!"
+    echo "Key added successfully!"
+    echo "Client IP: $CLIENT_IP"
+    echo "Server Public Key: $SERVER_PUBLIC_KEY"
+
+    # Save the extracted values for our WireGuard service
+    echo "$PRIVATE_KEY" > /var/lib/deluge/pia/private_key
+    echo "$SERVER_PUBLIC_KEY" > /var/lib/deluge/pia/peer_key
+    echo "$CLIENT_IP" > /var/lib/deluge/pia/client_ip
+    echo "$WG_SERVER_IP:1337" > /var/lib/deluge/pia/endpoint
+
+    # Set proper permissions
+    chmod 600 /var/lib/deluge/pia/*
+    chown deluge:deluge /var/lib/deluge/pia/*
+
+    echo "PIA WireGuard configuration setup complete!"
   '';
 
-  # Port forwarding renewal script
-  pia-port-refresh = pkgs.writeShellScript "pia-port-refresh.sh" ''
-    set -euo pipefail
+  vpn-routing-script = pkgs.writeShellScript "vpn-routing.sh" ''
+    # Wait for PIA setup with timeout
+    TIMEOUT=30
+    COUNT=0
+    while [ ! -f /var/lib/deluge/pia/client_ip ] && [ $COUNT -lt $TIMEOUT ]; do
+      echo "Waiting for PIA setup... ($COUNT/$TIMEOUT)"
+      sleep 2
+      COUNT=$((COUNT + 1))
+    done
 
-    PORT_FILE="/var/lib/deluge/pia/forwarded_port"
-    DELUGE_CONFIG="/var/lib/deluge/.config/deluge/core.conf"
-
-    if [ ! -f "$PORT_FILE" ]; then
-      echo "No port file found, skipping refresh"
-      exit 0
+    if [ ! -f /var/lib/deluge/pia/client_ip ]; then
+      echo "PIA setup timeout - files not found"
+      exit 1
     fi
 
-    CURRENT_PORT=$(cat "$PORT_FILE")
+    # Read configuration
+    CLIENT_IP=$(cat /var/lib/deluge/pia/client_ip)
+    PEER_KEY=$(cat /var/lib/deluge/pia/peer_key)
+    ENDPOINT=$(cat /var/lib/deluge/pia/endpoint)
 
-    if [ "$CURRENT_PORT" = "0" ]; then
-      echo "Port forwarding not active"
-      exit 0
-    fi
+    echo "Setting up VPN routing for $CLIENT_IP"
+    echo "Peer: $PEER_KEY"
+    echo "Endpoint: $ENDPOINT"
 
-    echo "Updating Deluge with port: $CURRENT_PORT"
+    # Create the network namespace
+    ${pkgs.iproute2}/bin/ip netns add pia || true
 
-    # Update Deluge configuration
-    ${pkgs.python3}/bin/python3 << EOF
-    import json
-    import os
+    # Move the WireGuard interface to the namespace
+    ${pkgs.iproute2}/bin/ip link set wg-deluge netns pia
 
-    config_file = "$DELUGE_CONFIG"
-    if os.path.exists(config_file):
-        with open(config_file, 'r') as f:
-            config = json.load(f)
+    # Configure interface in the namespace
+    ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.iproute2}/bin/ip addr add $CLIENT_IP/32 dev wg-deluge
+    ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.iproute2}/bin/ip link set wg-deluge up
 
-        config['listen_ports'] = [$CURRENT_PORT, $CURRENT_PORT]
-        config['random_port'] = False
+    # Set up loopback in namespace
+    ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.iproute2}/bin/ip link set lo up
 
-        with open(config_file, 'w') as f:
-            json.dump(config, f, indent=2)
+    # Add peer configuration in the namespace
+    ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.wireguard-tools}/bin/wg set wg-deluge peer $PEER_KEY \
+      allowed-ips 0.0.0.0/0 \
+      endpoint $ENDPOINT \
+      persistent-keepalive 25
 
-        print(f"Updated Deluge to use port {$CURRENT_PORT}")
-    EOF
+    # Set up default route in the namespace
+    ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.iproute2}/bin/ip route add default dev wg-deluge
 
-    # Restart deluge to apply changes
-    systemctl restart deluge-vpn
+    # Set up DNS in the namespace
+    ${pkgs.iproute2}/bin/ip netns exec pia mkdir -p /etc
+    ${pkgs.iproute2}/bin/ip netns exec pia sh -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf'
+
+    echo "VPN routing configured successfully"
+
+    # Test connectivity
+    echo "Testing VPN connectivity..."
+    ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.wireguard-tools}/bin/wg show wg-deluge
   '';
 
-  # Deluge VPN service with enhanced configuration
-  systemd.services.deluge-vpn = {
-    description = "Deluge BitTorrent daemon with PIA VPN";
-    after = [ "network.target" "systemd-resolved.service" ];
-    wantedBy = [ "multi-user.target" ];
-    wants = [ "systemd-resolved.service" ];
+  # Script to run Deluge in namespace as the correct user
+  deluge-start-script = pkgs.writeShellScript "deluge-start.sh" ''
+    # Run Deluge in the namespace, switching to deluge user
+    exec ${pkgs.iproute2}/bin/ip netns exec pia ${pkgs.sudo}/bin/sudo -u deluge \
+      ${pkgs.deluge}/bin/deluged --do-not-daemonize \
+      -c /var/lib/deluge/.config/deluge \
+      -l /var/lib/deluge/daemon.log -L info
+  '';
 
-    preStart = ''
-      # Run PIA setup
-      ${pia-setup-script}
-
-      # Wait for setup completion
-      sleep 5
-
-      # Configure network namespace
-      ${pkgs.iproute2}/bin/ip netns add deluge-vpn || true
-      ${pkgs.iproute2}/bin/ip link add veth-deluge type veth peer name veth-deluge-ns
-      ${pkgs.iproute2}/bin/ip link set veth-deluge-ns netns deluge-vpn
-      ${pkgs.iproute2}/bin/ip addr add 10.10.10.1/24 dev veth-deluge
-      ${pkgs.iproute2}/bin/ip link set veth-deluge up
-
-      # Setup namespace network
-      ${pkgs.iproute2}/bin/ip netns exec deluge-vpn ip addr add 10.10.10.2/24 dev veth-deluge-ns
-      ${pkgs.iproute2}/bin/ip netns exec deluge-vpn ip link set veth-deluge-ns up
-      ${pkgs.iproute2}/bin/ip netns exec deluge-vpn ip link set lo up
-
-      # Start WireGuard in namespace
-      ${pkgs.iproute2}/bin/ip netns exec deluge-vpn ${pkgs.wireguard-tools}/bin/wg-quick up /var/lib/deluge/pia/wg0.conf
-
-      # Setup NAT for local access
-      ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.10.10.0/24 -o wg0 -j MASQUERADE || true
-      ${pkgs.iptables}/bin/iptables -A FORWARD -i veth-deluge -o wg0 -j ACCEPT || true
-      ${pkgs.iptables}/bin/iptables -A FORWARD -i wg0 -o veth-deluge -j ACCEPT || true
-
-      # Port forwarding for web UI
-      ${pkgs.iptables}/bin/iptables -t nat -A PREROUTING -p tcp --dport 8112 -j DNAT --to-destination 10.10.10.2:8112 || true
-
-      # Ensure deluge directories exist
-      mkdir -p /var/lib/deluge/.config/deluge
-      mkdir -p /home/zeev/Downloads
-      chown -R deluge:deluge /var/lib/deluge
-      chown -R deluge:deluge /home/zeev/Downloads
-
-      # Wait for port assignment
-      sleep 10
-
-      # Update Deluge with forwarded port
-      ${pia-port-refresh}
-    '';
-
-    serviceConfig = {
-      Type = "forking";
-      User = "deluge";
-      Group = "deluge";
-      UMask = "0002";
-
-      # Run deluge in network namespace
-      ExecStart = "${pkgs.iproute2}/bin/ip netns exec deluge-vpn ${pkgs.deluge}/bin/deluged -d -c /var/lib/deluge/.config/deluge -L info";
-      ExecStartPost = "${pkgs.iproute2}/bin/ip netns exec deluge-vpn ${pkgs.deluge}/bin/deluge-web -c /var/lib/deluge/.config/deluge -L info --fork";
-
-      Restart = "on-failure";
-      RestartSec = "5s";
-      TimeoutSec = "300s";
-
-      # Security settings
-      PrivateTmp = true;
-      ProtectSystem = "strict";
-      ReadWritePaths = [ "/var/lib/deluge" "/home/zeev/Downloads" "/tmp" ];
-      ProtectHome = "read-only";
-      NoNewPrivileges = true;
-
-      # Network namespace capabilities
-      AmbientCapabilities = [ "CAP_NET_ADMIN" "CAP_NET_RAW" ];
-      CapabilityBoundingSet = [ "CAP_NET_ADMIN" "CAP_NET_RAW" ];
-    };
-
-    preStop = ''
-      # Gracefully stop services
-      ${pkgs.iproute2}/bin/ip netns exec deluge-vpn pkill deluge-web || true
-      ${pkgs.iproute2}/bin/ip netns exec deluge-vpn pkill deluged || true
-      sleep 5
-    '';
-
-    postStop = ''
-      # Cleanup network namespace
-      ${pkgs.wireguard-tools}/bin/wg-quick down /var/lib/deluge/pia/wg0.conf || true
-      ${pkgs.iproute2}/bin/ip netns delete deluge-vpn || true
-      ${pkgs.iproute2}/bin/ip link delete veth-deluge || true
-
-      # Cleanup iptables rules
-      ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.10.10.0/24 -o wg0 -j MASQUERADE || true
-      ${pkgs.iptables}/bin/iptables -D FORWARD -i veth-deluge -o wg0 -j ACCEPT || true
-      ${pkgs.iptables}/bin/iptables -D FORWARD -i wg0 -o veth-deluge -j ACCEPT || true
-      ${pkgs.iptables}/bin/iptables -t nat -D PREROUTING -p tcp --dport 8112 -j DNAT --to-destination 10.10.10.2:8112 || true
-    '';
-  };
-
-  # Port refresh timer (every 15 minutes)
-  systemd.services.deluge-port-refresh = {
-    description = "Refresh PIA port forwarding for Deluge";
-    serviceConfig = {
-      Type = "oneshot";
-      User = "deluge";
-      Group = "deluge";
-      ExecStart = pia-port-refresh;
-    };
-  };
-
-  systemd.timers.deluge-port-refresh = {
-    description = "Refresh PIA port forwarding timer";
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnBootSec = "20min";
-      OnUnitActiveSec = "15min";
-      RandomizedDelaySec = "5min";
-    };
-  };
-
-  # Deluge user configuration
+  vpn-cleanup-script = pkgs.writeShellScript "vpn-cleanup.sh" ''
+    echo "Cleaning up VPN routing..."
+    ${pkgs.iproute2}/bin/ip netns del pia || true
+  '';
+in
+{
+  # Create deluge user first
   users.users.deluge = {
     isSystemUser = true;
     group = "deluge";
+    uid = 1001;  # Use a definitely free UID
     home = "/var/lib/deluge";
     createHome = true;
   };
 
-  users.groups.deluge = {};
-
-  # CLEANED: Only service-specific packages (removed duplicates)
-  environment.systemPackages = with pkgs; [
-    deluge        # ✅ Service-specific
-    iptables      # ✅ Not found elsewhere
-    jq            # ✅ Not found elsewhere
-    # REMOVED: wireguard-tools, iproute2, curl (already in configuration.nix)
-  ];
-
-  # Firewall configuration
-  networking.firewall = {
-    allowedTCPPorts = [ 8112 ];  # Deluge web UI
-    # Note: BitTorrent port is handled dynamically by PIA port forwarding
+  users.groups.deluge = {
+    gid = 1001;  # Use matching GID
   };
 
-  # Enable IP forwarding for VPN routing
+  sops.secrets.pia_username = {
+    owner = "deluge";
+    group = "deluge";
+    mode = "0600";
+  };
+
+  sops.secrets.pia_password = {
+    owner = "deluge";
+    group = "deluge";
+    mode = "0600";
+  };
+
+  # Service to generate PIA WireGuard config
+  systemd.services.pia-wg-setup = {
+    description = "Generate PIA WireGuard configuration";
+    wantedBy = [ "multi-user.target" ];
+    before = [ "wireguard-wg-deluge.service" ];
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      TimeoutStartSec = "120s";
+    };
+
+    script = ''
+      # Get PIA credentials
+      PIA_USER=$(cat ${config.sops.secrets.pia_username.path})
+      PIA_PASS=$(cat ${config.sops.secrets.pia_password.path})
+
+      # Run the PIA setup script
+      ${pia-setup-script} "$PIA_USER" "$PIA_PASS"
+    '';
+  };
+
+  # WireGuard interface
+  networking.wireguard.interfaces.wg-deluge = {
+    privateKeyFile = "/var/lib/deluge/pia/private_key";
+    listenPort = 51820;
+  };
+
+  # VPN routing setup service
+  systemd.services.deluge-vpn-routing = {
+    description = "Setup VPN routing for Deluge";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "wireguard-wg-deluge.service" "pia-wg-setup.service" ];
+    wants = [ "wireguard-wg-deluge.service" "pia-wg-setup.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      TimeoutStartSec = "60s";
+    };
+
+    script = "${vpn-routing-script}";
+    preStop = "${vpn-cleanup-script}";
+  };
+
+  # Deluge daemon service (runs in VPN namespace as root, then drops to deluge user)
+  systemd.services.deluged = {
+    description = "Deluge BitTorrent Daemon";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "deluge-vpn-routing.service" ];
+    wants = [ "deluge-vpn-routing.service" ];
+    serviceConfig = {
+      Type = "simple";
+      # Run as root to access namespace, then drop privileges with sudo
+      User = "root";
+      Group = "root";
+      ExecStart = "${deluge-start-script}";
+      Restart = "always";
+      RestartSec = "5";
+      TimeoutStartSec = "30";
+    };
+  };
+
+  # Ensure deluge config directory exists and configure dark theme
+  system.activationScripts.deluge-config = {
+    text = ''
+      # Create main config directory
+      mkdir -p /var/lib/deluge/.config/deluge
+      chown deluge:deluge /var/lib/deluge/.config/deluge
+      chmod 755 /var/lib/deluge/.config/deluge
+
+      # Create web themes directory structure
+      mkdir -p /var/lib/deluge/.config/deluge/web/themes/dark
+
+      # Create web.conf with NO password
+      cat > /var/lib/deluge/.config/deluge/web.conf << 'EOF'
+{
+    "base": "deluge",
+    "port": 8112,
+    "https": false,
+    "pkey": "ssl/daemon.pkey",
+    "cert": "ssl/daemon.cert",
+    "pwd_salt": "",
+    "pwd_sha1": "",
+    "sessions": {},
+    "enabled_plugins": [],
+    "theme": "gray",
+    "sidebar_show_zero": false,
+    "sidebar_multiple_filters": true,
+    "show_sidebar": true,
+    "show_toolbar": true,
+    "show_statusbar": true,
+    "sidebar_show_trackers": true,
+    "default_daemon": "",
+    "interface": "0.0.0.0",
+    "language": ""
+}
+EOF
+
+      # Create dark theme CSS file
+      cat > /var/lib/deluge/.config/deluge/web/themes/dark/style.css << 'EOF'
+/* Dark theme for Deluge Web UI */
+body, .x-panel-body, .x-window-body {
+    background-color: #2b2b2b !important;
+    color: #ffffff !important;
+}
+
+.x-panel, .x-window, .x-grid-panel, .x-form-panel {
+    background-color: #3c3c3c !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+}
+
+.x-toolbar, .x-toolbar-left-row, .x-toolbar-right-row {
+    background-color: #404040 !important;
+    background-image: none !important;
+    border-color: #555555 !important;
+}
+
+.x-grid3-header {
+    background-color: #404040 !important;
+    background-image: none !important;
+    border-color: #555555 !important;
+}
+
+.x-grid3-header-inner, .x-grid3-hd-inner {
+    color: #ffffff !important;
+}
+
+.x-grid3-row {
+    background-color: #3c3c3c !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+}
+
+.x-grid3-row-alt {
+    background-color: #454545 !important;
+}
+
+.x-grid3-row-over {
+    background-color: #5a5a5a !important;
+}
+
+.x-grid3-row-selected {
+    background-color: #1e90ff !important;
+}
+
+.x-menu {
+    background-color: #3c3c3c !important;
+    border-color: #555555 !important;
+}
+
+.x-menu-item {
+    color: #ffffff !important;
+}
+
+.x-menu-item-active {
+    background-color: #1e90ff !important;
+}
+
+.x-btn, .x-btn-text {
+    color: #ffffff !important;
+    background-color: #404040 !important;
+    border-color: #555555 !important;
+}
+
+.x-btn-over {
+    background-color: #5a5a5a !important;
+}
+
+.x-form-field {
+    background-color: #3c3c3c !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+}
+
+.x-tab-panel-header {
+    background-color: #404040 !important;
+    border-color: #555555 !important;
+}
+
+.x-tab-strip-top .x-tab-strip-active {
+    background-color: #3c3c3c !important;
+}
+
+.x-progress-bar {
+    background-color: #1e90ff !important;
+}
+
+.x-statusbar {
+    background-color: #404040 !important;
+    border-color: #555555 !important;
+    color: #ffffff !important;
+}
+
+.x-tree-node {
+    color: #ffffff !important;
+}
+
+.x-tree-node-over {
+    background-color: #5a5a5a !important;
+}
+
+.x-tree-selected {
+    background-color: #1e90ff !important;
+}
+EOF
+
+      # Create theme info file
+      cat > /var/lib/deluge/.config/deluge/web/themes/dark/theme.json << 'EOF'
+{
+    "name": "Dark Theme",
+    "description": "Dark theme for Deluge Web UI",
+    "css": ["style.css"]
+}
+EOF
+
+      # Set proper ownership and permissions for all created files
+      chown -R deluge:deluge /var/lib/deluge/.config/deluge
+      chmod 644 /var/lib/deluge/.config/deluge/web.conf
+      chmod -R 755 /var/lib/deluge/.config/deluge/web
+      chmod 644 /var/lib/deluge/.config/deluge/web/themes/dark/*
+
+      # Set download location in core.conf
+      echo '{
+        "download_location": "/home/zeev/Downloads"
+      }' > /var/lib/deluge/.config/deluge/core.conf
+    '';
+    deps = [ "users" ];  # Run after users are created
+  };
+
+  # Deluge web interface (runs on host network)
+  systemd.services.deluge-web = {
+    description = "Deluge BitTorrent Web UI";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "deluged.service" ];  # Remove "deluge-config" - activation scripts run before services
+    wants = [ "deluged.service" ];
+    serviceConfig = {
+      Type = "simple";
+      User = "deluge";
+      Group = "deluge";
+      ExecStart = "${pkgs.deluge}/bin/deluge-web --do-not-daemonize -c /var/lib/deluge/.config/deluge -l /var/lib/deluge/web.log -L info";
+      Restart = "always";
+      RestartSec = "5";
+      TimeoutStartSec = "30";
+    };
+  };
+
+  # Open firewall for Deluge web interface
+  networking.firewall = {
+    allowedTCPPorts = [ 8112 ];  # Deluge web interface
+    allowedUDPPorts = [ 51820 ]; # WireGuard
+  };
 
 }
