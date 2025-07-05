@@ -5,14 +5,12 @@
   services.caddy = {
     enable = true;
 
-    # Use simple extraConfig instead of virtualHosts to avoid conflicts
+    # Use a single, clean extraConfig without globalConfig conflicts
     extraConfig = ''
-      # Global configuration block
       {
         auto_https off
         admin localhost:2019
-        
-        # Logging
+
         log {
           output file /var/log/caddy/access.log {
             roll_size 100mb
@@ -22,13 +20,12 @@
         }
       }
 
-      # Main server block - listen on all interfaces port 80
       :80 {
         # Security headers
         header {
           Strict-Transport-Security "max-age=15768000; includeSubDomains"
           X-Content-Type-Options "nosniff"
-          X-Frame-Options "SAMEORIGIN" 
+          X-Frame-Options "SAMEORIGIN"
           X-XSS-Protection "1; mode=block"
           Referrer-Policy "strict-origin-when-cross-origin"
           -Server
@@ -37,7 +34,7 @@
         # Compression
         encode gzip zstd
 
-        # Audiobookshelf proxy
+        # Audiobookshelf
         handle_path /audiobookshelf* {
           reverse_proxy localhost:8085 {
             header_up Host {upstream_hostport}
@@ -46,7 +43,7 @@
           }
         }
 
-        # Microbin proxy
+        # Microbin
         handle_path /microbin* {
           reverse_proxy localhost:8083 {
             header_up Host {upstream_hostport}
@@ -54,7 +51,7 @@
           }
         }
 
-        # Home Assistant proxy
+        # Home Assistant
         handle_path /hass* {
           reverse_proxy localhost:8123 {
             header_up Host {upstream_hostport}
@@ -64,7 +61,7 @@
           }
         }
 
-        # Homepage dashboard proxy
+        # Homepage dashboard
         handle_path /homepage* {
           reverse_proxy localhost:8082 {
             header_up Host {upstream_hostport}
@@ -72,7 +69,7 @@
           }
         }
 
-        # Jellyfin proxy
+        # Jellyfin
         handle_path /jellyfin* {
           reverse_proxy localhost:8096 {
             header_up Host {upstream_hostport}
@@ -81,7 +78,7 @@
           }
         }
 
-        # Nextcloud proxy
+        # Nextcloud
         handle_path /nextcloud* {
           reverse_proxy localhost:8081 {
             header_up Host {upstream_hostport}
@@ -90,7 +87,7 @@
           }
         }
 
-        # Paperless proxy
+        # Paperless
         handle_path /paperless* {
           reverse_proxy localhost:8888 {
             header_up Host {upstream_hostport}
@@ -99,9 +96,17 @@
           }
         }
 
-        # Miniflux proxy (corrected port 8086)
+        # Miniflux
         handle_path /miniflux* {
           reverse_proxy localhost:8086 {
+            header_up Host {upstream_hostport}
+            header_up X-Real-IP {remote_host}
+          }
+        }
+
+        # Grafana (if monitoring enabled)
+        handle_path /grafana* {
+          reverse_proxy localhost:3000 {
             header_up Host {upstream_hostport}
             header_up X-Real-IP {remote_host}
           }
@@ -115,11 +120,11 @@
     '';
   };
 
-  # Ensure log directory exists with proper permissions
+  # Ensure log directory exists
   systemd.tmpfiles.rules = [
     "d /var/log/caddy 0755 caddy caddy -"
   ];
 
-  # Open firewall ports for Caddy
+  # Open firewall ports
   networking.firewall.allowedTCPPorts = [ 80 443 2019 ];
 }
