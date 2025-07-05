@@ -1,29 +1,44 @@
+
 { config, pkgs, lib, ... }:
 
 {
-  services.tailscale = {
-    enable = true;
-    useRoutingFeatures = "server";
-    
-    # Enable as exit node
-    extraUpFlags = [
-      "--advertise-exit-node"
-      "--advertise-routes=192.168.1.0/24"
-    ];
-  };
-  
   # SOPS secret for Tailscale auth key
   sops.secrets.tailscale_auth_key = {};
-  
-  # Open firewall for Tailscale
-  networking.firewall = {
-    allowedUDPPorts = [ 41641 ];
-    trustedInterfaces = [ "tailscale0" ];
+
+  # Enable Tailscale
+  services.tailscale = {
+    enable = true;
+    useRoutingFeatures = "both";  # Enable subnet routing and exit nodes
   };
-  
-  # Enable IP forwarding for exit node
-  boot.kernel.sysctl = {
-    "net.ipv4.ip_forward" = 1;
-    "net.ipv6.conf.all.forwarding" = 1;
+
+  # Enable tailscale daemon
+  systemd.services.tailscale-autoconnect = {
+    description = "Automatic connection to Tailscale";
+    after = [ "network-pre.target" "tailscale.service" ];
+    wants = [ "network-pre.target" "tailscale.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig.Type = "oneshot";
+    script = with pkgs; ''
+      # wait for tailscaled to settle
+      sleep 2
+
+      # check if we are already authenticated to tailscale
+      status="$(${tailscale}/bin/tailscale status -json | ${jq}/bin/jq -r .BackendState)"
+      if [ $status = "Running" ]; then # if so, then do nothing
+        exit 0
+      fi
+
+      # otherwise authenticate with tailscale
+      ${tailscale}/bin/tailscale up --authkey file:${config.sops.secrets.tailscale_auth_key.path} --accept-routes
+    '';
+  };
+
+  # REMOVED: IP forwarding (now handled centrally in networking.nix)
+  # This prevents duplicate sysctl definitions
+
+  # Allow Tailscale UDP port
+  networking.firewall = {
+    trustedInterfaces = [ "tailscale0" ];
+    allowedUDPPorts = [ config.services.tailscale.port ];
   };
 }
