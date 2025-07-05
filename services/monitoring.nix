@@ -8,7 +8,7 @@
     mode = "0400";
   };
 
-  # Properly configured Netdata with disabled problematic plugins
+  # Minimal Netdata configuration - just the basics
   services.netdata = {
     enable = true;
     config = {
@@ -16,41 +16,23 @@
         "default port" = "19999";
         "bind to" = "0.0.0.0";
         "hostname" = "homeserver";
-        "update every" = "3";
-        "memory mode" = "ram";
-        "history" = "3600";
       };
       web = {
         "bind to" = "0.0.0.0";
-        "allow connections from" = "*";
-        "allow dashboard from" = "*";
-        "allow badges from" = "*";
-        "allow streaming from" = "*";
-        "allow netdata.conf from" = "*";
-        "allow management from" = "*";
       };
-      # Properly disable problematic plugins
-      "plugin:freeipmi" = {
-        "enabled" = "no";
-        "update every" = "never";
+      # Disable ALL external plugins - keep only internal ones
+      "plugins" = {
+        "apps" = "no";
+        "cgroups" = "no";
+        "charts.d" = "no";
+        "freeipmi" = "no";
+        "go.d" = "no";
+        "ioping" = "no";
+        "node.d" = "no";
+        "perf" = "no";
+        "python.d" = "no";
+        "tc" = "no";
       };
-      "plugin:charts.d" = { "enabled" = "no"; };
-      "plugin:python.d" = { "enabled" = "no"; };
-      "plugin:logs-management" = { "enabled" = "no"; };
-      "plugin:ioping" = { "enabled" = "no"; };
-      "plugin:perf" = { "enabled" = "no"; };
-      "plugin:cgroup-network" = { "enabled" = "no"; };
-      "plugin:systemd-journal" = { "enabled" = "no"; };
-      "plugin:network-viewer" = { "enabled" = "no"; };
-      "plugin:debugfs" = { "enabled" = "no"; };
-
-      # Keep essential plugins enabled
-      "plugin:proc" = { "enabled" = "yes"; };
-      "plugin:diskspace" = { "enabled" = "yes"; };
-      "plugin:cgroups" = { "enabled" = "yes"; };
-      "plugin:tc" = { "enabled" = "no"; };  # Traffic control - not needed
-      "plugin:apps" = { "enabled" = "yes"; };
-      "plugin:go.d" = { "enabled" = "yes"; };
     };
   };
 

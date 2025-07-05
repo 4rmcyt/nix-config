@@ -143,7 +143,7 @@
         "Infrastructure & Security" = [
           {
             "Keycloak" = {
-              href = "https://keycloak.labhome.work";
+              href = "https://keycloak.labhome.work";  # Changed from local IP to external domain
               description = "Identity & Access Management";
               icon = "keycloak";
             };
