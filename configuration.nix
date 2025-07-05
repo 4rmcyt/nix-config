@@ -47,6 +47,18 @@
     mode = "0400";
   };
 
+  sops.secrets.pia_username = {
+    owner = "deluge";
+    group = "deluge";
+    mode = "0400";
+  };
+  sops.secrets.pia_password = {
+    owner = "deluge";
+    group = "deluge";
+    mode = "0400";
+  };
+
+
   # Define groups first
   users.groups = {
     media = {};
