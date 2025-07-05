@@ -5,13 +5,13 @@
     enable = true;
     listenPort = 8082;
 
-    # Enhanced service configuration with mixed access methods
+    # Enhanced service configuration with external domain URLs
     services = [
       {
         "Media" = [
           {
             "Jellyfin" = {
-              href = "http://192.168.1.165/jellyfin";
+              href = "https://jellyfin.labhome.work";
               description = "Media Server";
               icon = "jellyfin";
             };
@@ -36,14 +36,14 @@
         "Storage & Documents" = [
           {
             "Nextcloud" = {
-              href = "http://192.168.1.165/nextcloud";
+              href = "https://nextcloud.labhome.work/";
               description = "File Storage & Collaboration";
               icon = "nextcloud";
             };
           }
           {
             "Paperless" = {
-              href = "http://192.168.1.165/paperless";
+              href = "https://paperless.labhome.work";
               description = "Document Management";
               icon = "paperless-ngx";
             };
@@ -82,7 +82,7 @@
           }
           {
             "Radicale" = {
-              href = "http://192.168.1.165:5232";
+              href = "https://cal.labhome.work";
               description = "Calendar & Contacts";
               icon = "calendar";
             };
@@ -126,7 +126,7 @@
         "Smart Home & IoT" = [
           {
             "Home Assistant" = {
-              href = "http://192.168.1.165/hass";
+              href = "https://home.labhome.work";
               description = "Home Automation";
               icon = "home-assistant";
             };
@@ -144,7 +144,7 @@
         "Infrastructure & Security" = [
           {
             "Keycloak" = {
-              href = "https://keycloak.labhome.work";  # Changed from local IP to external domain
+              href = "https://keycloak.labhome.work";
               description = "Identity & Access Management";
               icon = "keycloak";
             };
@@ -244,6 +244,6 @@
   systemd.services.homepage-dashboard.environment = {
     HOMEPAGE_ALLOWED_HOSTS = lib.mkForce "localhost,127.0.0.1,192.168.1.165,homeserver.local";
   };
-  
+
   networking.firewall.allowedTCPPorts = [ 8082 ];
 }
