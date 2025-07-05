@@ -9,40 +9,10 @@
     mode = "0400";
   };
 
-  # Fixed Netdata configuration with proper web settings
+  # Minimal Netdata configuration - let NixOS handle defaults
   services.netdata = {
     enable = true;
-    config = {
-      global = {
-        "default port" = "19999";
-        "bind to" = "0.0.0.0";
-        "hostname" = "homeserver";
-        "update every" = "1";
-        "memory mode" = "ram";
-        "history" = "3600";
-      };
-      web = {
-        "bind to" = "0.0.0.0";
-        "allow connections from" = "*";
-        "allow dashboard from" = "*";
-        "allow badges from" = "*";
-        "allow streaming from" = "*";
-        "allow netdata.conf from" = "*";
-        "allow management from" = "*";
-        "web files owner" = "root";
-        "web files group" = "root";
-        "disconnect idle clients after seconds" = "60";
-        "timeout for first request" = "60";
-        "accept a streaming request every seconds" = "2";
-        "respect do not track policy" = "no";
-        "x-frame-options response header" = "";
-        "enable gzip compression" = "yes";
-      };
-      # Disable health monitoring that might cause issues
-      "health" = {
-        "enabled" = "no";
-      };
-    };
+    # No custom config - use NixOS packaging defaults
   };
 
   # Prometheus monitoring server
@@ -61,6 +31,13 @@
         job_name = "prometheus";
         static_configs = [{
           targets = [ "localhost:9090" ];
+          labels = { instance = "homeserver"; };
+        }];
+      }
+      {
+        job_name = "netdata";
+        static_configs = [{
+          targets = [ "localhost:19999" ];
           labels = { instance = "homeserver"; };
         }];
       }
