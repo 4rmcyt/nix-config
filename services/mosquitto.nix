@@ -11,7 +11,7 @@
   services.mosquitto = {
     enable = true;
     listeners = [{
-      address = "0.0.0.0";  # Allow connections from any IP
+      address = "0.0.0.0";
       port = 1883;
       users.iotdevice = {
         acl = [
@@ -21,11 +21,17 @@
         ];
         passwordFile = config.sops.secrets.mosquitto_iotdevice_password.path;
       };
-      # Add anonymous access for testing (remove later)
       settings = {
         allow_anonymous = true;
+        # Add more permissive settings for debugging
+        max_connections = 100;
+        max_keepalive = 65535;
+        protocol = "mqtt";
       };
     }];
-    # REMOVED: Bridge configuration - causing connection issues
+
+    # Add debug logging
+    logDest = [ "stdout" ];
+    logLevel = "debug";
   };
 }
