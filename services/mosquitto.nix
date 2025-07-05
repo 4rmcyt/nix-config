@@ -9,7 +9,7 @@ services.mosquitto = {
         "write IoT/device/observations"
         "write IoT/device/LW"
       ];
-      password = "zeev:$2y$05$Fb1wQLtzujQ5m37aLH0qUeT.geHLbl0xC/EXL52WyHfLoJomSh9ue";
+      password = builtins.readFile config.sops.secrets.mosquitto_iotdevice_password.path;
     };
   }];
   bridges."home-lab" = {
@@ -38,3 +38,4 @@ networking.firewall = {
   enable = true;
   allowedTCPPorts = [ 1883 ];
 };
+config.sops.secrets.mosquitto_iotdevice_password.path
