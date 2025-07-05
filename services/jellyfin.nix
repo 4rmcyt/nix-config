@@ -6,6 +6,13 @@
     openFirewall = true;
     user = "jellyfin";
     group = "jellyfin";
+    mediaDirectories = [
+      { name = "Movies"; path = "/home/zeev/media/movies"; }
+      { name = "TV"; path = "/home/zeev/media/tv"; }
+      { name = "Series"; path = "/home/zeev/media/series"; }
+      { name = "Music"; path = "/home/zeev/media/music"; }
+      { name = "Other"; path = "/home/zeev/media/other"; }
+    ];
   };
 
   # Add jellyfin user to video group for hardware acceleration
