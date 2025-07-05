@@ -1,3 +1,4 @@
+
 { config, pkgs, lib, ... }:
 
 {
@@ -54,7 +55,7 @@
     };
   };
 
-  # Grafana for visualization - Simplified configuration
+  # Grafana for visualization - Fixed SOPS secret configuration
   services.grafana = {
     enable = true;
     settings = {
@@ -64,7 +65,8 @@
       };
       security = {
         admin_user = "admin";
-        admin_password = "$__file{${config.sops.secrets.grafana_admin_password.path}}";
+        # Use admin_password_file instead of admin_password for SOPS secrets
+        admin_password_file = config.sops.secrets.grafana_admin_password.path;
       };
       "auth.anonymous" = {
         enabled = false;
