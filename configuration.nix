@@ -35,8 +35,12 @@
 
   services.transmission = {
     enable = true;
+    package = pkgs.transmission_4;
+    openRPCPort = true;
     settings = {
-      "download-dir" = "/home/zeev/Downloads";
+      download-dir = "/home/zeev/Downloads";
+      rpc-bind-address = "0.0.0.0"; #Bind to own IP
+      rpc-whitelist = "127.0.0.1,10.0.0.1, 192.168.0.1";
     };
     vpn.enable = true;
   };
@@ -45,9 +49,8 @@
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-  sops.secrets.pia_credentials = {
-    sopsFile = ./secrets/pia_credentials.txt;
-  };
+  sops.secrets.pia_credentials = {};
+
 
 
   # CLEANED: Only central secrets (removed service-specific duplicates)
