@@ -1,8 +1,3 @@
-# /etc/nixos/services/transmission-vpn.nix
-#
-# A NixOS module to run Transmission behind a PIA WireGuard VPN
-# with automatic port forwarding.
-
 { config, lib, pkgs, inputs, ... }:
 
 with lib;
@@ -90,18 +85,15 @@ in
     };
     users.groups.${cfg.group} = {};
 
-    # Configure the SOPS secret for PIA credentials.
-    sops.secrets.pia_credentials = {
-      owner = cfg.user;
-      group = cfg.group;
-    };
+    # The nix-pia-vpn module has its own sops integration.
+    # We point it to the credentials file and it handles the rest.
+    services.pia-vpn.sops.file = ../secrets/pia_credentials.txt;
 
     # Configure the PIA VPN service.
     services.pia-vpn = {
       enable = true;
       user = cfg.user;
       region = cfg.region;
-      credentialsFile = config.sops.secrets.pia_credentials.path;
       portForward = {
         enable = true;
         script = update-transmission-port-script;
