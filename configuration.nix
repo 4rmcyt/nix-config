@@ -2,9 +2,7 @@
 
 {
   imports = [
-    ./hardware-configuration.nix
-    ./modules/pia-vpn.nix
-    ./services/transmission.nix
+    ./hardware-configuration.nix    
   ];
 
   # Bootloader
