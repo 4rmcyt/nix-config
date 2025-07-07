@@ -58,6 +58,8 @@
           service: http://localhost:8086
         - hostname: microbin.example.com
           service: http://localhost:8084
+         - hostname: hass.example.com
+          service: http://localhost:8123  
         - service: http_status:404
       EOF
     '';
