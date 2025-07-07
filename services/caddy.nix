@@ -13,9 +13,10 @@
   services.caddy = {
     enable = true;
     email = "4rmcyt@gmail.com"; # Email for Let's Encrypt
+    user = "caddy";
+    group = "caddy";
 
-    # --- CORRECTED: Use the correct syntax for withPlugins ---
-    # We provide a list of plugins directly to the function.
+    # Use Caddy with the Cloudflare DNS plugin
     package = pkgs.caddy.withPlugins [
       pkgs.caddy-dns-cloudflare
     ];
@@ -87,17 +88,10 @@
   # Define the SOPS secret for the Cloudflare API key.
   sops.secrets.cloudflare_api_key = {};
 
-  # Use a systemd pre-start script to create the environment file for Caddy.
-  systemd.services.caddy = {
-    preStart = ''
-      # This script runs before Caddy starts.
-      # It reads the API key from the sops-managed secret file and formats it
-      # as an environment variable that the Caddy plugin expects.
-      echo "CLOUDFLARE_API_TOKEN=$(cat ${config.sops.secrets.cloudflare_api_key.path})" > /run/caddy-secrets.env
-    '';
-    serviceConfig = {
-      # Caddy will load the environment variables from this file.
-      EnvironmentFile = "/run/caddy-secrets.env";
-    };
+  # --- CORRECTED: Use serviceConfig.Environment ---
+  # This directly provides the Cloudflare API token to the Caddy service
+  # as an environment variable, which is cleaner than using a preStart script.
+  systemd.services.caddy.serviceConfig = {
+    Environment = "CLOUDFLARE_API_TOKEN_FILE=${config.sops.secrets.cloudflare_api_key.path}";
   };
 }
