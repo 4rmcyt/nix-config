@@ -6,11 +6,6 @@
     user = "jellyfin";
     group = "jellyfin";
     openFirewall = true;
-    plugins = with pkgs.jellyfin-plugins; [
-      introskipper
-      skiptro
-      sso
-    ];
   };
 
   users.users.jellyfin = {
