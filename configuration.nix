@@ -24,6 +24,12 @@
     openFirewall = true;
   };
 
+   services.transmission-vpn = {
+    enable = true;
+    region = "ca_ontario"; # You can easily override defaults
+    downloadDir = "/home/zeev/Downloads";
+  };
+
   # SOPS configuration
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
