@@ -43,7 +43,7 @@
         - hostname: home.example.com
           service: http://localhost:8082
         - hostname: rss.example.com
-          service: http://localhost:8083
+          service: http://localhost:8086
         - hostname: transmission.example.com
           service: http://localhost:9091
         - hostname: cal.example.com
@@ -51,11 +51,9 @@
         - hostname: audiobookshelf.example.com
           service: http://localhost:8085
         - hostname: paste.example.com
-          service: http://localhost:8087
+          service: http://localhost:8083
         - hostname: kavita.example.com
           service: http://localhost:5000
-        - hostname: miniflux.example.com
-          service: http://localhost:8086
         - hostname: microbin.example.com
           service: http://localhost:8084
         - hostname: hass.example.com

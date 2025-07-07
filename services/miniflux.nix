@@ -13,12 +13,12 @@ in
     adminCredentialsFile = minifluxCredentialsFile;
 
     config = {
-      BASE_URL = "https://miniflux.example.com";
+      BASE_URL = "https://rss.example.com";
       CREATE_ADMIN = "1";
       LISTEN_ADDR = "localhost:8086";
       OAUTH2_PROVIDER = "oidc";
       OAUTH2_CLIENT_ID = "miniflux";
-      OAUTH2_REDIRECT_URL = "https://miniflux.example.com/oauth2/oidc/callback";
+      OAUTH2_REDIRECT_URL = "https://rss.example.com/oauth2/oidc/callback";
       OAUTH2_OIDC_DISCOVERY_ENDPOINT = "https://keycloak.example.com/realms/master";
       OAUTH2_USER_CREATION = "1";
       DISABLE_LOCAL_AUTH = "true";
