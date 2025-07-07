@@ -16,12 +16,11 @@
     user = "caddy";
     group = "caddy";
 
-    # --- CORRECTED: Use the canonical syntax for withPlugins ---
-    # This uses a function to select the plugin, which is a more robust
-    # way to define the package and resolves the type error.
-    package = pkgs.caddy.withPlugins (p: [
-      p.caddy-dns-cloudflare
-    ]);
+    # --- CORRECTED: Use the correct syntax for withPlugins ---
+    # We provide a list of plugins directly to the function.
+    package = pkgs.caddy.withPlugins [
+      pkgs.caddy-dns-cloudflare
+    ];
 
     # We provide the entire Caddyfile as a single configuration block.
     config = ''
