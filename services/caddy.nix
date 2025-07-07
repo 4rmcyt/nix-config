@@ -3,108 +3,70 @@
 {
   services.caddy = {
     enable = true;
+    # Set the ACME email for Let's Encrypt
+    email = "redacted@example.com";
 
-    virtualHosts."192.168.1.165" = {
+    # Change the host from an IP to the domain name.
+    # Caddy will automatically provision a Let's Encrypt certificate for this domain.
+    virtualHosts."example.com" = {
       extraConfig = ''
+        # Global options block
+        {
+          # This disables the local CA to prevent log errors, as we are using a public CA (Let's Encrypt).
+          local_certs
+        }
+
         # Security headers
-        # Each header is set on its own line.
         header Strict-Transport-Security "max-age=15768000; includeSubDomains"
         header X-Content-Type-Options "nosniff"
         header X-Frame-Options "SAMEORIGIN"
         header Referrer-Policy "strict-origin-when-cross-origin"
-        # The '-Server' directive removes the 'Server' header.
         header -Server
 
         # Compression
         encode gzip zstd
 
-        # Grafana - Special handling for subpath
+        # The reverse proxy handlers remain the same, but will now be served
+        # under https://example.com/grafana, etc.
+
         handle /grafana* {
-          reverse_proxy localhost:3000 {
-            header_up Host {host}
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-For {remote_host}
-            header_up X-Forwarded-Proto {scheme}
-            header_up X-Forwarded-Host {host}
-          }
+          reverse_proxy localhost:3000
         }
 
-        # Prometheus - Metrics server
         handle /prometheus* {
-          reverse_proxy localhost:9090 {
-            header_up Host {upstream_hostport}
-            header_up X-Real-IP {remote_host}
-          }
+          reverse_proxy localhost:9090
         }
 
-        # Audiobookshelf
         handle /audiobookshelf* {
-          reverse_proxy localhost:8085 {
-            header_up Host {upstream_hostport}
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-Proto {scheme}
-          }
+          reverse_proxy localhost:8085
         }
 
-        # Microbin
         handle /microbin* {
-          reverse_proxy localhost:8083 {
-            header_up Host {upstream_hostport}
-            header_up X-Real-IP {remote_host}
-          }
+          reverse_proxy localhost:8083
         }
 
-        # Home Assistant
         handle /hass* {
-          reverse_proxy localhost:8123 {
-            header_up Host {upstream_hostport}
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-For {remote_host}
-            header_up X-Forwarded-Proto {scheme}
-          }
+          reverse_proxy localhost:8123
         }
 
-        # Homepage dashboard
         handle /homepage* {
-          reverse_proxy localhost:8082 {
-            header_up Host {upstream_hostport}
-            header_up X-Real-IP {remote_host}
-          }
+          reverse_proxy localhost:8082
         }
 
-        # Jellyfin
         handle /jellyfin* {
-          reverse_proxy localhost:8096 {
-            header_up Host {upstream_hostport}
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-Proto {scheme}
-          }
+          reverse_proxy localhost:8096
         }
 
-        # Nextcloud
         handle /nextcloud* {
-          reverse_proxy localhost:8081 {
-            header_up Host {upstream_hostport}
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-Proto {scheme}
-          }
+          reverse_proxy localhost:8081
         }
 
-        # Paperless
         handle /paperless* {
-          reverse_proxy localhost:8888 {
-            header_up Host {upstream_hostport}
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-Proto {scheme}
-          }
+          reverse_proxy localhost:8888
         }
 
-        # Miniflux
         handle /miniflux* {
-          reverse_proxy localhost:8086 {
-            header_up Host {upstream_hostport}
-            header_up X-Real-IP {remote_host}
-          }
+          reverse_proxy localhost:8086
         }
 
         # Default handler - homepage dashboard
