@@ -30,7 +30,7 @@ in
       export $(${pkgs.coreutils}/bin/cat ${config.sops.secrets.transmission_rpc_auth.path} | ${pkgs.findutils}/bin/xargs)
 
       # Use the --authenv flag to authenticate with the exported credentials
-      ${pkgs.transmission}/bin/transmission-remote --authenv --peerport "$PORT" || true
+      ${pkgs.transmission_4}/bin/transmission-remote --authenv --peerport "$PORT" || true
     '';
 
     # --- Configure the Transmission User ---
