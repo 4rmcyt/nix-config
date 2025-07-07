@@ -53,7 +53,7 @@
         # Media services
         ./services/jellyfin.nix
         ./services/audiobookshelf.nix
-        ./services/media-content.nix
+        ./services/miniflux.nix
         ./services/transmission.nix
 
         # Productivity & Personal services
