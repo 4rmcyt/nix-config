@@ -16,7 +16,8 @@
     nix-pia-vpn.url = "github:rcambrj/nix-pia-vpn";
   };
 
-  outputs = { self, nixpkgs, disko, sops-nix, home-manager, nix-index-database, vscode-server, nix4nvchad, ... }@inputs: {
+  # --- CORRECTED OUTPUTS SECTION ---
+  outputs = { self, nixpkgs, disko, sops-nix, home-manager, nix-index-database, vscode-server, nix4nvchad, nix-pia-vpn, ... }@inputs: {
     nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
@@ -28,7 +29,7 @@
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
         nix-index-database.nixosModules.nix-index
-        inputs.nix-pia-vpn.nixosModules.default # <-- Correctly imported module
+        nix-pia-vpn.nixosModules.default
 
         # Core system configuration
         ./configuration.nix
@@ -42,31 +43,32 @@
         ./services/yubikey.nix
 
         # Infrastructure services
-        ./services/database.nix      # PostgreSQL
-        ./services/caddy.nix         # Reverse proxy (UPDATED)
-        ./services/homepage.nix      # Dashboard
-        ./services/tailscale.nix     # VPN
-        ./services/cloudflared.nix   # Cloudflare tunnel
-        ./services/mosquitto.nix     # MQTT broker
-        ./services/monitoring.nix    # NEW: Superior monitoring
+        ./services/database.nix
+        ./services/caddy.nix
+        ./services/homepage.nix
+        ./services/tailscale.nix
+        ./services/cloudflared.nix
+        ./services/mosquitto.nix
+        ./services/monitoring.nix
 
         # Media services
-        ./services/jellyfin.nix      # Media server
+        ./services/jellyfin.nix
         ./services/audiobookshelf.nix
-        ./services/deluge-vpn.nix    # Torrent client
+        ./services/deluge-vpn.nix
         ./services/media-content.nix
 
         # Productivity & Personal services
         ./services/nextcloud.nix
         ./services/microbin.nix
         ./services/paperless.nix
-        ./services/radicale.nix      # Calendar/contacts
-        ./services/samba.nix         # File sharing
+        ./services/radicale.nix
+        ./services/samba.nix
 
         # Smart home & notifications
         ./services/home-assistant.nix
-        ./services/keycloak.nix      # Authentication
-        ./services/tg-notify.nix     # Telegram notifications
+        ./services/keycloak.nix
+        ./services/tg-notify.nix
       ];
-    };
+    }; # <-- THE MISSING SEMICOLON GOES HERE
   };
+}
