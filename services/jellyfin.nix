@@ -3,25 +3,29 @@
 {
   services.jellyfin = {
     enable = true;
-    openFirewall = true;
     user = "jellyfin";
     group = "jellyfin";
+    openFirewall = true;
+    plugins = with pkgs.jellyfin-plugins; [
+      introskipper
+      skiptro
+      sso
+    ];
   };
 
-  # Add jellyfin user to required groups for hardware acceleration AND media access
-  users.users.jellyfin.extraGroups = [ "video" "render" "media" ];
+  users.users.jellyfin = {
+    extraGroups = [ "render" "video" "media" ];
+  };
 
-  # Enable hardware graphics acceleration
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
       intel-media-driver
-      intel-vaapi-driver
-      vaapiVdpau
       libvdpau-va-gl
     ];
   };
 
-  # REMOVED: Firewall ports (now handled centrally in networking.nix)
-  # REMOVED: Media directories (now handled centrally in configuration.nix)
+  systemd.services.jellyfin = {
+    serviceConfig.SupplementaryGroups = [ "render" "video" ];
+  };
 }
