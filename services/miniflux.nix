@@ -11,7 +11,7 @@ in
 
   services.miniflux = {
     enable = true;
-      adminCredentialsFile = cfg.adminCredentialsFile;
+      adminCredentialsFile = minifluxCredentials;
       config = {
         BASE_URL = "https://miniflux.example.com";
         CREATE_ADMIN = "1";
