@@ -20,32 +20,32 @@ let
     PORTFORWARD_HOOK="${update-deluge-port-script}"
   '';
 
-  # 3. Package the Dynamic pia-wg.sh Script
-  pia-wg-package = pkgs.writeShellApplication {
-    name = "pia-wg-wrapper";
+  # 3. Package the Dynamic Script using runCommand to bypass shellcheck
+  pia-wg-package = pkgs.runCommand "pia-wg-unstable" {
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+  } ''
+    mkdir -p $out/bin
+    cp ${../scripts/pia-wg.sh} $out/bin/pia-wg
+    chmod +x $out/bin/pia-wg
     
-    runtimeInputs = [
-      pkgs.bash
-      pkgs.wireguard-tools
-      pkgs.curl
-      pkgs.jq
-      pkgs.iproute2
-      pkgs.qrencode
-      pkgs.coreutils
-      pkgs.gnugrep
-      pkgs.gnused
-      pkgs.which
-    ];
-
-    text = ''
-      # This directive tells the automatic script checker to ignore
-      # all warnings for the third-party script below.
-      # shellcheck disable=all
-
-      export PIA_CONFIG=${pia-config-file}
-      ${builtins.replaceStrings ["#!/bin/bash"] ["#!${pkgs.bash}/bin/bash"] (builtins.readFile ../scripts/pia-wg.sh)}
-    '';
-  };
+    # Manually patch the shebang to use Nix's bash
+    sed -i '1s|.*|#!${pkgs.bash}/bin/bash|' $out/bin/pia-wg
+    
+    # Wrap the program to provide the correct PATH and environment variables
+    wrapProgram $out/bin/pia-wg \
+      --set PIA_CONFIG ${pia-config-file} \
+      --prefix PATH : ${lib.makeBinPath [
+        pkgs.wireguard-tools
+        pkgs.curl
+        pkgs.jq
+        pkgs.iproute2
+        pkgs.qrencode
+        pkgs.coreutils
+        pkgs.gnugrep
+        pkgs.gnused
+        pkgs.which
+      ]}
+  '';
 
 in
 {
@@ -102,7 +102,7 @@ in
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStart = "${pia-wg-package}/bin/pia-wg-wrapper";
+      ExecStart = "${pia-wg-package}/bin/pia-wg"; # Note: path changed back to pia-wg
       ExecStop = "${pkgs.iproute2}/bin/ip link del dev pia";
       Restart = "on-failure";
       RestartSec = "10s";
