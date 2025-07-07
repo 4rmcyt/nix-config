@@ -77,7 +77,7 @@
     zeev = {
       isNormalUser = true;
       description = "Zeev";
-      extraGroups = [ "networkmanager" "wheel" "docker" "media" ];
+      extraGroups = [ "networkmanager" "wheel" "docker" "media" "samba"];
       hashedPasswordFile = config.sops.secrets.zeev_password.path;
       shell = pkgs.bash;
     };
