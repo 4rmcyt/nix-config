@@ -1,8 +1,3 @@
-# /etc/nixos/services/transmission.nix
-#
-# A module to extend the official Transmission service, adding the
-# necessary hooks to run it securely behind the PIA VPN service.
-
 { config, lib, pkgs, ... }:
 
 with lib;
@@ -32,7 +27,7 @@ in
       echo "PIA Hook: Received new port $PORT. Updating Transmission." | ${pkgs.systemd}/bin/systemd-cat -t transmission-port-hook
 
       # Export the credentials from the sops-managed file
-      export $(${pkgs.coreutils}/bin/cat ${config.sops.secrets.transmission_rpc_auth.path} | ${pkgs.xorg.xargs}/bin/xargs)
+      export $(${pkgs.coreutils}/bin/cat ${config.sops.secrets.transmission_rpc_auth.path} | ${pkgs.findutils}/bin/xargs)
 
       # Use the --authenv flag to authenticate with the exported credentials
       ${pkgs.transmission}/bin/transmission-remote --authenv --peerport "$PORT" || true
