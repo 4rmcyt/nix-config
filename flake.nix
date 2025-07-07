@@ -36,7 +36,6 @@
         ./disko.nix
         ./networking.nix
         ./modules/base.nix
-        ./modules/pia-vpn.nix
 
         # Security services
         ./services/fail2ban.nix
