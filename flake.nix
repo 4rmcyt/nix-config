@@ -54,6 +54,7 @@
         ./services/jellyfin.nix
         ./services/audiobookshelf.nix
         ./services/media-content.nix
+        ./services/transmission.nix
 
         # Productivity & Personal services
         ./services/nextcloud.nix
