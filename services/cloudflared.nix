@@ -44,8 +44,8 @@
           service: http://localhost:8123
         - hostname: rss.example.com
           service: http://localhost:8083
-        - hostname: deluge.example.com
-          service: http://localhost:8112
+        - hostname: transmission.example.com
+          service: http://localhost:9091
         - hostname: cal.example.com
           service: http://localhost:5232
         - hostname: audiobookshelf.example.com

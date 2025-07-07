@@ -106,8 +106,14 @@
       group = "transmission";
       extraGroups = [ "media" ];
     };
-  };
 
+    kavita = {
+      isSystemUser = true;
+      group = "kavita";
+      extraGroups = [ "media" ];
+    };
+  };
+  
   # Add existing service users to media group where needed
   users.users.nextcloud.extraGroups = [ "media" ];
   users.users.radicale.extraGroups = [ "media" ];
@@ -126,7 +132,10 @@
     "d /home/zeev/media/series 0770 zeev media -"
     "d /home/zeev/media/music 0770 zeev media -"
     "d /home/zeev/media/other 0770 zeev media -"
-
+    "d /home/zeev/library 0775 zeev media -"
+    "d /home/zeev/library/books 0775 zeev media -"
+    "d /home/zeev/library/comics 0775 zeev media -"
+    "d /home/zeev/library/manga 0775 zeev media -"
     # Download directory
     "d /home/zeev/Downloads 0770 zeev media -"
   ];
