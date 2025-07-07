@@ -45,7 +45,9 @@
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-  sops.secrets.pia_credentials = {};
+  sops.secrets.pia_credentials = {
+    source = ./secrets/pia_credentials.txt;
+  };
 
 
   # CLEANED: Only central secrets (removed service-specific duplicates)
