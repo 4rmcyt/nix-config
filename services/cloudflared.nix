@@ -58,7 +58,7 @@
           service: http://localhost:8086
         - hostname: microbin.labhome.work
           service: http://localhost:8084
-         - hostname: hass.labhome.work
+        - hostname: hass.labhome.work
           service: http://localhost:8123  
         - service: http_status:404
       EOF
