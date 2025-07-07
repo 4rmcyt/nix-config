@@ -15,7 +15,7 @@ in
     config = {
       BASE_URL = "https://miniflux.example.com";
       CREATE_ADMIN = "1";
-      LISTEN_ADDR = "127.0.0.1:8086";
+      LISTEN_ADDR = "localhost:8086";
       OAUTH2_PROVIDER = "oidc";
       OAUTH2_CLIENT_ID = "miniflux";
       OAUTH2_REDIRECT_URL = "https://miniflux.example.com/oauth2/oidc/callback";
