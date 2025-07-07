@@ -23,7 +23,7 @@ in
 
     downloadDir = mkOption {
       type = types.path;
-      default = "/var/lib/transmission/downloads";
+      default = "/home/zeev/Downloads";
       description = "The directory where Transmission will store downloaded files.";
     };
 
@@ -51,12 +51,6 @@ in
       extraGroups = [ config.services.pia-vpn.group "media" ];
     };
     users.groups.transmission = {};
-
-    # --- Declaratively create the download directory ---
-    # This ensures the folder exists with the correct permissions.
-    systemd.tmpfiles.rules = [
-      "d ${cfg.downloadDir} 0775 ${config.services.transmission.user} ${config.services.transmission.group} - -"
-    ];
 
     # --- Configure the main Transmission Service ---
     # This configures the existing NixOS module for Transmission.
