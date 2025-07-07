@@ -14,10 +14,11 @@
     enable = true;
     email = "4rmcyt@gmail.com"; # Email for Let's Encrypt
 
-    # Use Caddy with the Cloudflare DNS plugin
-    package = pkgs.caddy.withPlugins (plugins: [
-      plugins.caddy-dns-cloudflare
-    ]);
+    # --- CORRECTED: Use the correct syntax for withPlugins ---
+    # We provide a list of plugins directly to the function.
+    package = pkgs.caddy.withPlugins [
+      pkgs.caddy-dns-cloudflare
+    ];
 
     # We provide the entire Caddyfile as a single configuration block.
     config = ''
