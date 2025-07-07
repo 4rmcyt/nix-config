@@ -106,6 +106,13 @@
               icon = "prometheus";
             };
           }
+          {
+            "NextDns" = {
+              href = "https://my.nextdns.io/";
+              description = "Nextdns Dashboard";
+              icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
+            };
+          }
         ];
       }
       {
