@@ -18,7 +18,7 @@
           }
           {
             "Audiobookshelf" = {
-              href = "http://192.168.1.165/audiobookshelf";
+              href = "https://audiobookshelf.labhome.work";
               description = "Audiobook & Podcast Server";
               icon = "audiobookshelf";
             };
@@ -49,26 +49,25 @@
             };
           }
           {
-            "Samba" = {
-              href = "smb://192.168.1.165";
-              description = "Network File Share";
-              icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/samba-server.svg";
+            "Kavita" = {
+              href = "https://kavita.labhome.work";
+              description = "Ebook & Manga Library";
+              icon = "kavita";
             };
           }
-        ];
       }
       {
         "Productivity Tools" = [
           {
             "Microbin" = {
-              href = "http://192.168.1.165/microbin";
+              href = "https://microbin.labhome.work";
               description = "Pastebin Service";
               icon = "microbin";
             };
           }
           {
             "Miniflux" = {
-              href = "http://192.168.1.165/miniflux";
+              href = "https://miniflux.labhome.work";
               description = "RSS Reader";
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/miniflux.svg";
             };
