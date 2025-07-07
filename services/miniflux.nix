@@ -1,19 +1,27 @@
-{ config, pkgs, lib, ... }:
+# /etc/nixos/services/miniflux.nix
+#
+# Configures the Miniflux RSS reader service.
+
+{ config, pkgs, ... }:
 
 {
-  sops.secrets.miniflux_admin_password = { };
+  # This defines the SOPS secret for the Miniflux admin password.
+  # sops-nix will look for a key named 'miniflux_admin_password' in your default secrets.yaml.
+  sops.secrets.miniflux_admin_password = {};
 
-  # Miniflux RSS reader - Fix: Use correct port 8086
+  # This configures the Miniflux service using the standard NixOS module options.
   services.miniflux = {
     enable = true;
-    config = {
-      LISTEN_ADDR = "127.0.0.1:8086";  # Changed from 8084 to 8086
-      services.miniflux = {
-    enable = true;
+    # Set the admin username.
     adminUser = "admin";
+    # Point to the file containing the decrypted admin password.
     adminPasswordFile = config.sops.secrets.miniflux_admin_password.path;
-    };
-    adminCredentialsFile = config.sops.secrets.miniflux_admin_password.path;
-  };
 
+    # The 'config' block is used to set environment variables for Miniflux.
+    config = {
+      # This sets the service to listen on the local interface at port 8086.
+      LISTEN_ADDR = "127.0.0.1:8086";
+      # You can add other Miniflux environment variables here if needed.
+    };
+  };
 }
