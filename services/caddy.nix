@@ -28,6 +28,10 @@ in
       enable = true;
       email = cfg.email;
 
+      admin = {
+        listenAddress = "0.0.0.0:2019";
+      };
+
       package = pkgs.caddy.withPlugins (plugins: [
         plugins.caddy-dns-cloudflare
       ]);
@@ -89,11 +93,11 @@ in
       '';
     };
 
- 
     sops.secrets.cloudflare_api_key = {};
 
     systemd.services.caddy = {
       preStart = ''
+
         echo "CLOUDFLARE_API_TOKEN=$(cat ${config.sops.secrets.cloudflare_api_key.path})" > /run/caddy-secrets.env
       '';
       serviceConfig = {
