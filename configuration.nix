@@ -30,7 +30,10 @@
 
   services.transmission = {
     enable = true;
-    downloadDir = "/home/zeev/Downloads";
+    settings = {
+      "download-dir" = "/home/zeev/Downloads";
+    };
+    vpn.enable = true;
   };
 
   # SOPS configuration
