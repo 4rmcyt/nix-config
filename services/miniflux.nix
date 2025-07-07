@@ -1,4 +1,5 @@
 { config, pkgs, ... }:
+
 {
   sops.secrets.miniflux_admin_password = {};
 
@@ -14,9 +15,7 @@
       OAUTH2_OIDC_DISCOVERY_ENDPOINT = "https://keycloak.labhome.work/realms/master";
       OAUTH2_USER_CREATION = "1";
       DISABLE_LOCAL_AUTH = "true";
-    };
 
-    environmentVariables = {
       ADMIN_USERNAME = "admin";
       ADMIN_PASSWORD = "${config.sops.secrets.miniflux_admin_password.path}";
     };
