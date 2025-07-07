@@ -6,15 +6,3 @@ creation_rules:
     key_groups:
       - age:
           - *homeserver
-
-  # --- ADD THIS NEW RULE ---
-  # This rule specifically targets your new PIA credentials file.
-  - path_regex: secrets/pia_credentials\.txt$
-    key_groups:
-      - age:
-          - *homeserver
-
-  - path_regex: secrets/transmission_rpc_auth\.env$
-    key_groups:
-      - age:
-          - *homeserver
