@@ -228,7 +228,7 @@
   };
 
   systemd.services.homepage-dashboard.environment = {
-    HOMEPAGE_ALLOWED_HOSTS = lib.mkForce "localhost,127.0.0.1,192.168.1.165,homese.labhome.work";
+    HOMEPAGE_ALLOWED_HOSTS = lib.mkForce "localhost,127.0.0.1,192.168.1.165,home.labhome.work";
   };
 
   # REMOVED: Firewall port (now handled centrally in networking.nix)
