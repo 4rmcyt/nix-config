@@ -55,7 +55,6 @@
         # Media services
         ./services/jellyfin.nix
         ./services/audiobookshelf.nix
-        ./services/transmission-vpn.nix
         ./services/media-content.nix
         ./services/transmission.nix
 
