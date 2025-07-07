@@ -30,7 +30,7 @@
       url = "https://raw.githubusercontent.com/pia-foss/manual-connections/master/ca.rsa.4096.crt";
       sha256 = "sha256-473m9DP6O82M5TjLdsm3+xsohEXGPyD0352j5i/jD5E=";
     };
-    portForward.enable = true; # Enable the hook mechanism
+    portForward.enable = true;
   };
 
   services.transmission = {
