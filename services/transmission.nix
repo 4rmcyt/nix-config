@@ -52,6 +52,12 @@ in
     };
     users.groups.transmission = {};
 
+    # --- Declaratively create the download directory ---
+    # This ensures the folder exists with the correct permissions.
+    systemd.tmpfiles.rules = [
+      "d ${cfg.downloadDir} 0775 ${config.services.transmission.user} ${config.services.transmission.group} - -"
+    ];
+
     # --- Configure the main Transmission Service ---
     # This configures the existing NixOS module for Transmission.
     services.transmission = {
@@ -59,11 +65,11 @@ in
       user = "transmission";
       group = "transmission";
       # --- CORRECTED OPTIONS ---
-      # Most settings must be nested inside the 'settings' attribute set.
+      # Settings with hyphens must be quoted.
       settings = {
-        download-dir = cfg.downloadDir;
-        rpc-bind-address = "127.0.0.1";
-        peer-port = 51413; # Default, will be changed by hook.
+        "download-dir" = cfg.downloadDir;
+        "rpc-bind-address" = "127.0.0.1";
+        "peer-port" = 51413; # Default, will be changed by hook.
       };
     };
 
