@@ -20,20 +20,24 @@ let
     PORTFORWARD_HOOK="${update-deluge-port-script}"
   '';
 
-  # 3. Package the Dynamic Script using runCommand to bypass shellcheck
+  # 3. Package the Dynamic Script using runCommand
   pia-wg-package = pkgs.runCommand "pia-wg-unstable" {
     nativeBuildInputs = [ pkgs.makeWrapper ];
   } ''
     mkdir -p $out/bin
+    
+    # Copy our declarative config file into the same directory as the script,
+    # as this is where the script expects to find it.
+    cp ${pia-config-file} $out/bin/pia-config.sh
+
     cp ${../scripts/pia-wg.sh} $out/bin/pia-wg
     chmod +x $out/bin/pia-wg
     
     # Manually patch the shebang to use Nix's bash
     sed -i '1s|.*|#!${pkgs.bash}/bin/bash|' $out/bin/pia-wg
     
-    # Wrap the program to provide the correct PATH and environment variables
+    # Wrap the program to provide the correct PATH
     wrapProgram $out/bin/pia-wg \
-      --set PIA_CONFIG ${pia-config-file} \
       --prefix PATH : ${lib.makeBinPath [
         pkgs.wireguard-tools
         pkgs.curl
@@ -102,7 +106,7 @@ in
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStart = "${pia-wg-package}/bin/pia-wg"; # Note: path changed back to pia-wg
+      ExecStart = "${pia-wg-package}/bin/pia-wg";
       ExecStop = "${pkgs.iproute2}/bin/ip link del dev pia";
       Restart = "on-failure";
       RestartSec = "10s";
