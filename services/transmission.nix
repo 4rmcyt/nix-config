@@ -1,70 +1,30 @@
-# /etc/nixos/services/transmission-vpn.nix
-#
-# A NixOS module to run Transmission behind a PIA WireGuard VPN
-# with automatic port forwarding.
-
-{ config, lib, pkgs, inputs, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
 let
-  # A shorthand for our module's options
-  cfg = config.services.transmission-vpn;
+  # 'cfg' refers to OUR module's options, nested to avoid conflicts.
+  cfg = config.services.transmission.vpn;
 
-  # This script is automatically executed by the nix-pia-vpn module whenever
-  # PIA assigns a new forwarded port.
+  # This script specifically updates Transmission's port. It will be passed
+  # to the pia-vpn module's portForwardScript option.
   update-transmission-port-script = pkgs.writeShellScript "update-transmission-port.sh" ''
     #!${pkgs.runtimeShell}
     PORT="$1"
-    echo "Received new PIA port: $PORT. Updating Transmission." | ${pkgs.systemd}/bin/systemd-cat -t update-transmission-port
-    ${pkgs.sudo}/bin/sudo -u ${cfg.user} ${pkgs.transmission}/bin/transmission-remote --peerport "$PORT"
+    echo "PIA Hook: Received new port $PORT. Updating Transmission." | ${pkgs.systemd}/bin/systemd-cat -t transmission-port-hook
+    ${pkgs.sudo}/bin/sudo -u ${config.services.transmission.user} ${pkgs.transmission}/bin/transmission-remote --peerport "$PORT"
   '';
-
 in
 {
-  # == 1. Import Required Modules ==
-  imports = [
-    inputs.nix-pia-vpn.nixosModules.default
-  ];
-
-  # == 2. Define the Module's Options ==
-  options.services.transmission-vpn = {
-    enable = mkEnableOption "Transmission over PIA VPN";
-
-    user = mkOption {
-      type = types.str;
-      default = "transmission";
-      description = "User to run Transmission and the VPN service as.";
-    };
-
-    group = mkOption {
-      type = types.str;
-      default = "transmission";
-      description = "Group to run Transmission and the VPN service as.";
-    };
-
-    extraGroups = mkOption {
-      type = types.listOf types.str;
-      default = [];
-      description = "A list of extra groups to add the user to.";
-    };
+  # == 1. Define the options for this module ==
+  # We nest them under services.transmission.vpn to avoid any conflicts.
+  options.services.transmission.vpn = {
+    enable = mkEnableOption "Transmission to run over the PIA VPN";
 
     downloadDir = mkOption {
       type = types.path;
       default = "/var/lib/transmission/downloads";
       description = "The directory where Transmission will store downloaded files.";
-    };
-
-    configDir = mkOption {
-      type = types.path;
-      default = "/var/lib/transmission";
-      description = "The directory where Transmission will store its configuration.";
-    };
-
-    region = mkOption {
-      type = types.str;
-      default = "ca_ontario";
-      description = "The PIA server region to connect to.";
     };
 
     openFirewall = mkOption {
@@ -74,55 +34,45 @@ in
     };
   };
 
-
-  # == 3. Implement the Module's Configuration ==
+  # == 2. Implement the Module's Configuration ==
   config = mkIf cfg.enable {
 
-    # Configure the user and group for the services.
-    users.users.${cfg.user} = {
+    # --- Configure the main PIA VPN service ---
+    # This assumes services.pia-vpn.enable = true is set in configuration.nix.
+    # We are just adding the port forwarding script to it.
+    services.pia-vpn.portForwardScript = update-transmission-port-script;
+
+    # --- Configure the Transmission User ---
+    users.users.transmission = {
       isSystemUser = true;
-      group = cfg.group;
-      home = cfg.configDir;
-      extraGroups = cfg.extraGroups;
+      group = "transmission";
+      # Add this user to the group that the pia-vpn service creates.
+      # This is the key to routing its traffic through the VPN.
+      extraGroups = [ config.services.pia-vpn.group "media" ];
     };
-    users.groups.${cfg.group} = {};
+    users.groups.transmission = {};
 
-    # Use the main sops module to make the secret file available.
-    sops.secrets.pia_credentials = {
-      owner = cfg.user;
-      group = cfg.group;
-    };
-
-    # Configure the PIA VPN service with the correct options.
-    services.pia-vpn = {
+    # --- Configure the main Transmission Service ---
+    # This configures the existing NixOS module for Transmission.
+    services.transmission = {
       enable = true;
-      user = cfg.user;
-      region = cfg.region;
-
-      # --- CORRECTED OPTIONS BASED ON SOURCE ---
-      # The module expects an environment file for credentials.
-      environmentFile = config.sops.secrets.pia_credentials.path;
-
-      # The module requires a path to the PIA CA certificate.
-      certificateFile = ../secrets/ca.rsa.4096.crt;
-
-      portForward = {
-        enable = true;
-        script = update-transmission-port-script;
+      user = "transmission";
+      group = "transmission";
+      # --- CORRECTED OPTIONS ---
+      # Most settings must be nested inside the 'settings' attribute set.
+      settings = {
+        download-dir = cfg.downloadDir;
+        rpc-bind-address = "127.0.0.1";
+        peer-port = 51413; # Default, will be changed by hook.
       };
     };
 
-    # Configure the Transmission service.
-    services.transmission = {
-      enable = true;
-      user = cfg.user;
-      group = cfg.group;
-      download-dir = cfg.downloadDir;
-      rpc-bind-address = "127.0.0.1";
-      peer-port = 51413; # Default, will be changed by hook.
-    };
+    # --- Systemd Integration ---
+    # Ensure transmission only starts after the VPN is up.
+    systemd.services.transmission-daemon.wants = [ "pia-vpn.service" ];
+    systemd.services.transmission-daemon.after = [ "pia-vpn.service" ];
 
-    # Open the firewall if the option is enabled.
+    # --- Firewall ---
     networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [ 9091 ];
   };
 }
