@@ -13,3 +13,8 @@ creation_rules:
     key_groups:
       - age:
           - *homeserver
+
+  - path_regex: secrets/ptransmission_rpc_auth\.env$
+    key_groups:
+      - age:
+          - *homeserver
