@@ -1,8 +1,11 @@
 # /etc/nixos/modules/pia-vpn.nix
 #
 # A generic local module to abstract the configuration of the
-# nix-pia-vpn flake. It defines its own options under "my.pia-vpn"
-# to avoid conflicts with the flake's "services.pia-vpn".
+# nix-pia-vpn flake.
+#
+# It defines its own options under the UNIQUE name "my.pia-vpn"
+# to avoid conflicts with the flake's module, which uses "services.pia-vpn".
+# This module then configures the flake's module using our options.
 
 { config, lib, pkgs, inputs, ... }:
 
@@ -14,12 +17,13 @@ let
 in
 {
   # == 1. Import the module from the flake ==
-  # This makes the flake's options available for us to configure.
+  # This makes the flake's options (services.pia-vpn.*) available for us to configure.
   imports = [
     inputs.nix-pia-vpn.nixosModules.default
   ];
 
   # == 2. Define OUR module's options ==
+  # We use a unique namespace "my.pia-vpn" to prevent "already declared" errors.
   options.my.pia-vpn = {
     enable = mkEnableOption "a generic PIA VPN service";
 
