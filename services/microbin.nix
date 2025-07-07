@@ -16,8 +16,6 @@
     };
   };
   
-  # SOPS secret for Microbin
   sops.secrets.microbin_admin_password = {};
   
-  # REMOVED: Firewall port (now handled centrally in networking.nix)
 }
