@@ -69,6 +69,7 @@
     microbin = {};
     miniflux = {};
     samba = {};
+    kavita{};
   };
 
   # User configuration
