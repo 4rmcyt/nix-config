@@ -44,10 +44,6 @@
       rpc-bind-address = "0.0.0.0"; #Bind to own IP
       rpc-whitelist = "127.0.0.1,10.0.0.1, 192.168.0.1";
     };
-    script = ''
-      export $(cat transmission-rpc.env | xargs)
-      ${pkgs.transmission_4}/bin/transmission-remote --authenv --port $port || true
-    '';
   };
 
   # SOPS configuration
