@@ -37,12 +37,17 @@
     enable = true;
     package = pkgs.transmission_4;
     openRPCPort = true;
+    after = [ "pia-vpn.service" ];
+    bindsTo = [ "pia-vpn.service" ];
     settings = {
       download-dir = "/home/zeev/Downloads";
       rpc-bind-address = "0.0.0.0"; #Bind to own IP
       rpc-whitelist = "127.0.0.1,10.0.0.1, 192.168.0.1";
     };
-    vpn.enable = true;
+    script = ''
+      export $(cat transmission-rpc.env | xargs)
+      ${pkgs.transmission_4}/bin/transmission-remote --authenv --port $port || true
+    '';
   };
 
   # SOPS configuration
@@ -60,7 +65,7 @@
   sops.secrets.microbin_admin_password = {};
   sops.secrets.tailscale_auth_key = {};
   sops.secrets.pia_credentials = {};
-  
+
   # Define groups first
   users.groups = {
     media = {};
