@@ -28,6 +28,7 @@
     enable = true;
     region = "ca_ontario"; # You can easily override defaults
     downloadDir = "/home/zeev/Downloads";
+    extraGroups = [ "media" ];
   };
 
   # SOPS configuration
@@ -83,7 +84,6 @@
   };
 
   # Add existing service users to media group where needed
-  users.users.transmission.extraGroups = [ "media" ];
   users.users.nextcloud.extraGroups = [ "media" ];
   users.users.radicale.extraGroups = [ "media" ];
   users.users.paperless.extraGroups = [ "media" ];
@@ -103,7 +103,7 @@
     "d /home/zeev/media/other 0770 zeev media -"
 
     # Download directory
-    "d /home/zeev/Downloads 0770 transmission transmission -"
+    "d /home/zeev/Downloads 2775 zeev media -"
   ];
 
   # CENTRALIZED: Base system packages (service-specific tools in their files)

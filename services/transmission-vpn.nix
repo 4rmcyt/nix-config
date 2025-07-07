@@ -1,8 +1,3 @@
-# /etc/nixos/services/transmission-vpn.nix
-#
-# A NixOS module to run Transmission behind a PIA WireGuard VPN
-# with automatic port forwarding.
-
 { config, lib, pkgs, inputs, ... }:
 
 with lib;
@@ -37,6 +32,13 @@ in
       type = types.str;
       default = "transmission";
       description = "Group to run Transmission and the VPN service as.";
+    };
+
+    # NEW OPTION: Allows adding the service user to other groups (e.g., 'media').
+    extraGroups = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      description = "A list of extra groups to add the user to.";
     };
 
     downloadDir = mkOption {
@@ -79,6 +81,8 @@ in
       isSystemUser = true;
       group = cfg.group;
       home = cfg.configDir;
+      # Use the new option to add extra groups.
+      extraGroups = cfg.extraGroups;
     };
     users.groups.${cfg.group} = {};
 
