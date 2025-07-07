@@ -44,22 +44,21 @@ in
     enable = true;
 
     # --- CORRECTED STRUCTURE ---
-    # The module likely expects all configuration to be nested under a 'settings' attribute.
-    settings = {
-      # The user that the Transmission service will run as.
-      user = "transmission";
+    # The module options are set directly, not nested under a 'settings' attribute.
+    
+    # The user that the Transmission service will run as.
+    user = "transmission";
 
-      # The option to specify a server location.
-      region = "ca_ontario";
+    # The option to specify a server location.
+    region = "ca_ontario";
 
-      # Provide the path to the credentials file decrypted by the main sops module.
-      credentialsFile = config.sops.secrets.pia_credentials.path;
+    # Provide the path to the credentials file decrypted by the main sops module.
+    credentialsFile = config.sops.secrets.pia_credentials.path;
 
-      # Port forwarding settings are likely configured in an attribute set.
-      portForward = {
-        enable = true;
-        script = update-transmission-port-script;
-      };
+    # Port forwarding settings are configured in an attribute set.
+    portForward = {
+      enable = true;
+      script = update-transmission-port-script;
     };
   };
 
