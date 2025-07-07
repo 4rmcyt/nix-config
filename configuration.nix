@@ -49,10 +49,7 @@
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-  sops.files."pia_credentials" = {
-    source = ./secrets/pia_credentials.txt;
-    owner = config.services.pia-vpn.user;
-  };
+  sops.pia_credentials = "./secrets/pia_credentials.txt";
 
 
   # CLEANED: Only central secrets (removed service-specific duplicates)
