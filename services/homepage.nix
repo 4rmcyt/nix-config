@@ -24,10 +24,10 @@
             };
           }
           {
-            "Deluge" = {
-              href = "http://192.168.1.165:8112";
+            "Transmission" = {
+              href = "http://192.168.1.165:9091";
               description = "Torrent Client (VPN)";
-              icon = "deluge";
+              icon = "transmission";
             };
           }
         ];
