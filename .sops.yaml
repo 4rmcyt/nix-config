@@ -1,7 +1,15 @@
 keys:
-  - &homeserver age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5 
+  - &homeserver age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
 creation_rules:
+  # This rule is for your main secrets.yaml file
   - path_regex: secrets\.yaml$
+    key_groups:
+      - age:
+          - *homeserver
+
+  # --- ADD THIS NEW RULE ---
+  # This rule specifically targets your new PIA credentials file.
+  - path_regex: secrets/pia_credentials\.txt$
     key_groups:
       - age:
           - *homeserver
