@@ -52,6 +52,8 @@
           service: http://localhost:8085
         - hostname: paste.labhome.work
           service: http://localhost:8087
+         - hostname: kavita.labhome.work
+          service: http://localhost:5000
         - service: http_status:404
 
       EOF
