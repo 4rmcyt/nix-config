@@ -1,3 +1,5 @@
+# /etc/nixos/services/transmission-vpn.nix
+
 { config, pkgs, inputs, ... }:
 
 let
@@ -29,31 +31,37 @@ in
     inputs.nix-pia-vpn.nixosModules.default
   ];
 
+  # Define the sops secret for the PIA credentials.
+  # This makes the decrypted file available at a predictable path in /run/secrets.
+  sops.secrets.pia_credentials = {
+    # The user/group that will run the VPN service needs read access.
+    owner = config.users.users.transmission.name;
+    group = config.users.groups.transmission.name;
+  };
+
   # Enable the PIA VPN service.
   services.pia-vpn = {
     enable = true;
-    # The user that the Transmission service will run as.
-    # This user will be automatically added to the 'pia-vpn' group,
-    # ensuring all its traffic is routed through the VPN.
-    user = "transmission";
 
-    # Point directly to your SOPS-encrypted credentials file.
-    # The module handles decryption automatically.
-    sopsFile = ../secrets/pia_credentials.txt;
+    # --- CORRECTED STRUCTURE ---
+    # The module likely expects all configuration to be nested under a 'settings' attribute.
+    settings = {
+      # The user that the Transmission service will run as.
+      user = "transmission";
 
-    # The option to specify a server location is 'region'.
-    region = "ca_ontario";
+      # The option to specify a server location.
+      region = "ca_ontario";
 
-    # --- CORRECTED OPTION ---
-    # Port forwarding settings are configured in an attribute set.
-    portForward = {
-      enable = true;
-      script = update-transmission-port-script;
+      # Provide the path to the credentials file decrypted by the main sops module.
+      credentialsFile = config.sops.secrets.pia_credentials.path;
+
+      # Port forwarding settings are likely configured in an attribute set.
+      portForward = {
+        enable = true;
+        script = update-transmission-port-script;
+      };
     };
   };
-
-  # The sops.secrets block for pia_credentials is no longer needed here,
-  # as the nix-pia-vpn module manages the secret itself via the sopsFile option.
 
 
   # == 2. Transmission Service Configuration ==
