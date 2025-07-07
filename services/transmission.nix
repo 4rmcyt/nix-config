@@ -1,3 +1,8 @@
+# /etc/nixos/services/transmission.nix
+#
+# A module to extend the official Transmission service, adding the
+# necessary hooks to run it securely behind the PIA VPN service.
+
 { config, lib, pkgs, ... }:
 
 with lib;
@@ -33,8 +38,9 @@ in
     services.pia-vpn.portForward.script = update-transmission-port-script;
 
     # --- Configure the Transmission User ---
-    # Add the transmission user to the vpn group to route its traffic.
-    users.users.${cfg.user}.extraGroups = [ config.services.pia-vpn.group "media" ];
+    # The 'nix-pia-vpn' module creates a group named 'pia-vpn'. We add our
+    # transmission user to that group to route its traffic through the VPN.
+    users.users.${cfg.user}.extraGroups = [ "pia-vpn" "media" ];
 
     # --- Systemd Integration ---
     # Ensure transmission only starts after the VPN is up.
