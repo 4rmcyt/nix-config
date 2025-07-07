@@ -49,17 +49,10 @@
             };
           }
           {
-            "Simple File Server" = {
-              href = "http://192.168.1.165:8087";
-              description = "Static File Server";
-              icon = "folder";
-            };
-          }
-          {
             "Samba" = {
               href = "smb://192.168.1.165";
               description = "Network File Share";
-              icon = "samba";
+              icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/samba-server.svg";
             };
           }
         ];
@@ -77,14 +70,14 @@
             "Miniflux" = {
               href = "http://192.168.1.165/miniflux";
               description = "RSS Reader";
-              icon = "rss";
+              icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/miniflux.svg";
             };
           }
           {
             "Radicale" = {
               href = "https://cal.labhome.work";
               description = "Calendar & Contacts";
-              icon = "calendar";
+              icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/radicale.svg";
             };
           }
         ];
@@ -111,13 +104,6 @@
               href = "http://192.168.1.165:9100/metrics";
               description = "System Metrics (Raw)";
               icon = "prometheus";
-            };
-          }
-          {
-            "Terminal Monitoring" = {
-              href = "#";
-              description = "SSH: btop, htop, iotop, nethogs";
-              icon = "terminal";
             };
           }
         ];
@@ -174,7 +160,7 @@
             "Fail2ban" = {
               href = "#";
               description = "Intrusion Prevention (CLI only)";
-              icon = "shield";
+              icon = "https://upload.wikimedia.org/wikipedia/commons/d/db/Fail2ban_logo.png";
             };
           }
         ];
