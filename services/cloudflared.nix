@@ -6,8 +6,6 @@
 
 {
   # == 1. SOPS Secret for Tunnel Credentials ==
-  # This makes the tunnel's JSON credentials file available to the service.
-  # This is more robust than using a one-time token.
   sops.secrets.cloudflare_tunnel_credentials = {
     owner = "cloudflared";
     group = "cloudflared";
@@ -22,10 +20,19 @@
   };
   users.groups.cloudflared = {};
 
+  # --- ADDED: Declaratively create the directory ---
+  # This ensures the directory exists with the correct ownership
+  # before the cloudflared service attempts to write to it.
+  systemd.tmpfiles.rules = [
+    "d /var/lib/cloudflared 0750 cloudflared cloudflared -"
+  ];
+
   # == 3. Systemd Service for Cloudflared ==
   systemd.services.cloudflared = {
     description = "Cloudflare Tunnel";
-    after = [ "network.target" "sops.service" ]; # <-- Added sops.service dependency
+    # This dependency ensures tmpfiles are created before the service starts.
+    after = [ "network.target" "systemd-tmpfiles-setup.service" ];
+    requires = [ "systemd-tmpfiles-setup.service" ];
     wantedBy = [ "multi-user.target" ];
 
     # The preStart script writes the necessary configuration files at runtime.
@@ -39,7 +46,6 @@
       # Write the main config.yml with all the ingress rules
       cat > /var/lib/cloudflared/config.yml << EOF
       # This file is managed by NixOS.
-      # The tunnel UUID is read from the credentials file.
       tunnel: $TUNNEL_ID
       credentials-file: /var/lib/cloudflared/$TUNNEL_ID.json
 
