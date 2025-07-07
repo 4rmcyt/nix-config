@@ -1,153 +1,155 @@
 { config, pkgs, lib, ... }:
 
 let
-  # 1. Port Forwarding Hook Script
+  # A helper script to update the Deluge port when PIA assigns a new one.
+  # This script is called by the main pia-wg script via the PORTFORWARD_HOOK.
   update-deluge-port-script = pkgs.writeShellScript "update-deluge-port.sh" ''
     #!/bin/sh
     PORT="$1"
-    echo "Port Forwarding Hook: Received port $PORT. Updating Deluge..."
-    ${pkgs.sudo}/bin/sudo -u deluge ${pkgs.deluge}/bin/deluge-console \
-      "config --set listen_ports ($PORT,$PORT); config --set random_port false"
+    # This check ensures we only run the command if a valid port is given.
+    if [ -n "$PORT" ] && [ "$PORT" -gt 0 ]; then
+      echo "PIA Hook: Updating Deluge to listen on port $PORT"
+      # Use the 'deluge' user to run the deluge-console command.
+      ${pkgs.sudo}/bin/sudo -u deluge ${pkgs.deluge}/bin/deluge-console \
+        "config --set listen_ports ($PORT,$PORT); config --set random_port false"
+    fi
   '';
 
-  # 2. Declarative PIA Configuration
-  pia-config-file = pkgs.writeText "pia-config.sh" ''
-    PIA_USERNAME="$(cat ${config.sops.secrets.pia_username.path})"
-    PIA_PASSWORD="$(cat ${config.sops.secrets.pia_password.path})"
-    LOC="ca_ontario"
-    PIA_INTERFACE="pia"
-    PORTFORWARD="yes"
-    PORTFORWARD_HOOK="${update-deluge-port-script}"
-  '';
+  # Package for the pia-wg script.
+  # This uses the official package and wraps it with a declarative configuration.
+  pia-wg-package = pkgs.unstable.pia-wg.overrideAttrs (oldAttrs: {
+    # The overrideAttrs allows us to modify the package without rebuilding it from scratch.
+    postInstall = ''
+      # Create a declarative config file that the pia-wg script will automatically use.
+      # It looks for a file named 'pia-config.sh' in the same directory as the main script.
+      cat > $out/bin/pia-config.sh <<EOF
+      # Get credentials securely from sops
+      PIA_USERNAME="$(cat ${config.sops.secrets.pia_username.path})"
+      PIA_PASSWORD="$(cat ${config.sops.secrets.pia_password.path})"
 
-  # 3. Package the Dynamic Script using runCommand
-  pia-wg-package = pkgs.runCommand "pia-wg-unstable" {
-    nativeBuildInputs = [ pkgs.makeWrapper ];
-  } ''
-    mkdir -p $out/bin
-    
-    # Copy our declarative config file into the same directory as the script,
-    # as this is where the script expects to find it.
-    cp ${pia-config-file} $out/bin/pia-config.sh
+      # Set your desired location
+      LOC="ca_ontario"
 
-    cp ${../scripts/pia-wg.sh} $out/bin/pia-wg
-    chmod +x $out/bin/pia-wg
-    
-    # Manually patch the shebang to use Nix's bash
-    sed -i '1s|.*|#!${pkgs.bash}/bin/bash|' $out/bin/pia-wg
-    
-    # Wrap the program to provide the correct PATH
-    wrapProgram $out/bin/pia-wg \
-      --prefix PATH : ${lib.makeBinPath [
-        pkgs.wireguard-tools
-        pkgs.curl
-        pkgs.jq
-        pkgs.iproute2
-        pkgs.qrencode
-        pkgs.coreutils
-        pkgs.gnugrep
-        pkgs.gnused
-        pkgs.which
-      ]}
-  '';
+      # Name for the WireGuard network interface
+      PIA_INTERFACE="pia"
+
+      # Enable port forwarding and set the hook to our script
+      PORTFORWARD="yes"
+      PORTFORWARD_HOOK="${update-deluge-port-script}"
+      EOF
+    '';
+  });
 
 in
 {
   # == User and System Setup ==
+  # Creates the 'deluge' user and group for running the services.
   users.users.deluge = {
     isSystemUser = true;
     group = "deluge";
-    uid = 1001;
     home = "/var/lib/deluge";
-    createHome = true;
-    extraGroups = [ "users" ];
   };
-  users.groups.deluge = { gid = 1001; };
-  sops.secrets.pia_username.owner = "deluge";
-  sops.secrets.pia_password.owner = "deluge";
-  systemd.tmpfiles.rules = [
-    "d /var/lib/deluge/downloads 0755 deluge deluge - -"
-  ];
+  users.groups.deluge = {};
+
+  # == Secrets Management ==
+  # Ensures the 'deluge' user has permission to read the PIA credentials.
+  sops.secrets.pia_username.owner = config.users.users.deluge.name;
+  sops.secrets.pia_password.owner = config.users.users.deluge.name;
 
   # == Deluge Configuration Service ==
+  # This service runs ONLY ONCE to create initial, sane default settings for Deluge.
   systemd.services.deluge-init-config = {
     description = "Initialize Deluge configuration files";
     wantedBy = [ "multi-user.target" ];
+    # This service must run before the main Deluge daemon.
     before = [ "deluged.service" ];
+
+    # This condition checks if the 'auth' file exists. If it does, the service does nothing.
+    # This makes the service idempotent (safe to run multiple times).
+    conditionPathExists = "!/var/lib/deluge/.config/deluge/auth";
+
     serviceConfig = {
       Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStartPre = "${pkgs.coreutils}/bin/test ! -f /var/lib/deluge/.config/deluge/auth";
+      User = "deluge"; # Run all commands as the 'deluge' user.
+      Group = "deluge";
     };
+
+    # The script creates the necessary config files and sets permissions.
     script = ''
       CONFIG_DIR="/var/lib/deluge/.config/deluge"
-      AUTH_FILE="$CONFIG_DIR/auth"
-      echo "Initializing Deluge config for the first time..."
       mkdir -p "$CONFIG_DIR"
-      echo "localclient:placeholder:10" > "$AUTH_FILE"
-      echo "deluge::10" >> "$AUTH_FILE"
+      # Set up authentication and allow remote connections
+      echo "localclient:placeholder:10" > "$CONFIG_DIR/auth"
       echo '{
         "allow_remote": true,
         "download_location": "/var/lib/deluge/downloads"
       }' > "$CONFIG_DIR/core.conf"
-      chown -R deluge:deluge /var/lib/deluge
-      chmod 700 "$CONFIG_DIR"
-      chmod 600 "$CONFIG_DIR"/*
     '';
   };
 
-  # == VPN and Deluge Services ==
+  # == VPN Service ==
+  # This service establishes and maintains the WireGuard connection to PIA.
   systemd.services.pia-connection = {
     description = "Manages the dynamic PIA WireGuard connection";
     wantedBy = [ "multi-user.target" ];
+    # It must start after the network is online.
     after = [ "network-online.target" ];
     wants = [ "network-online.target" ];
-    path = [ config.sops.secrets.pia_username.path config.sops.secrets.pia_password.path ];
+
     serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = "${pia-wg-package}/bin/pia-wg";
-      ExecStop = "${pkgs.iproute2}/bin/ip link del dev pia";
+      Type = "simple"; # Use 'simple' for long-running processes.
+      # The user needs access to SOPS secrets and networking capabilities.
+      User = "deluge";
+      # The command to run. The '&' backgrounds it, and 'wait' keeps the service running.
+      ExecStart = "${pia-wg-package}/bin/pia-wg & wait $!";
+      # When the service stops, tear down the WireGuard interface.
+      ExecStop = "${pkgs.wireguard-tools}/bin/wg-quick down pia";
       Restart = "on-failure";
-      RestartSec = "10s";
+      RestartSec = 10;
     };
   };
 
+  # == Deluge Daemon Service ==
+  # This is the main Deluge process.
   systemd.services.deluged = {
     description = "Deluge BitTorrent Daemon (VPN-only)";
+    wantedBy = [ "multi-user.target" ];
+    # Must start after both the PIA connection is up and the initial config is done.
     after = [ "pia-connection.service" "deluge-init-config.service" ];
-    wants = [ "pia-connection.service" "deluge-init-config.service" ];
+    wants = [ "pia-connection.service" ];
+
     serviceConfig = {
       User = "deluge";
       Group = "deluge";
-      ExecStart = ''
-        ${pkgs.deluge}/bin/deluged --do-not-daemonize \
-          -c /var/lib/deluge/.config/deluge \
-          -l /var/lib/deluge/daemon.log -L info
-      '';
+      # This critical option forces all of Deluge's network traffic through the 'pia' interface.
       BindToInterface = "pia";
+      ExecStart = ''
+        ${pkgs.deluge}/bin/deluged --do-not-daemonize -c /var/lib/deluge/.config/deluge
+      '';
       Restart = "always";
     };
   };
 
+  # == Deluge Web UI Service ==
+  # This provides the web interface for managing Deluge.
   systemd.services.deluge-web = {
     description = "Deluge BitTorrent Web UI";
     wantedBy = [ "multi-user.target" ];
     after = [ "deluged.service" ];
     wants = [ "deluged.service" ];
+
     serviceConfig = {
       Type = "simple";
       User = "deluge";
       Group = "deluge";
       ExecStart = ''
-        ${pkgs.deluge}/bin/deluge-web --do-not-daemonize \
-          -c /var/lib/deluge/.config/deluge \
-          -l /var/lib/deluge/web.log -L info
+        ${pkgs.deluge}/bin/deluge-web --do-not-daemonize -c /var/lib/deluge/.config/deluge
       '';
       Restart = "always";
     };
   };
 
   # == Firewall ==
-  networking.firewall.allowedTCPPorts = [ 8112 ]; # Deluge Web UI
+  # Allows access to the Deluge Web UI from other computers on your network.
+  networking.firewall.allowedTCPPorts = [ 8112 ];
 }
