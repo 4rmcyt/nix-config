@@ -1,6 +1,6 @@
 # /etc/nixos/services/transmission-vpn.nix
 
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 let
   # This script is automatically executed by the nix-pia-vpn module whenever
@@ -22,6 +22,13 @@ let
     ${pkgs.sudo}/bin/sudo -u transmission ${pkgs.transmission}/bin/transmission-remote --peerport "$PORT"
   '';
 
+  # This creates a credentials file in the format required by nix-pia-vpn
+  # by combining your existing sops secrets for username and password.
+  pia-credentials-file = pkgs.writeText "pia-credentials" ''
+    PIA_USER=$(cat ${config.sops.secrets.pia_username.path})
+    PIA_PASS=$(cat ${config.sops.secrets.pia_password.path})
+  '';
+
 in
 {
   # == 1. PIA VPN Configuration ==
@@ -40,8 +47,8 @@ in
     # ensuring all its traffic is routed through the VPN.
     user = "transmission";
 
-    # Credentials for PIA. These are securely managed by sops.
-    credentialsFile = config.sops.secrets.pia_credentials.path;
+    # Point to the credentials file we just generated declaratively.
+    credentialsFile = pia-credentials-file;
 
     # Specify your desired server location.
     # A list of locations can be found here: https://github.com/rcambrj/nix-pia-vpn
@@ -51,12 +58,14 @@ in
     onPortForward = update-transmission-port-script;
   };
 
-  # Define the sops secret containing your PIA username and password.
-  # The file should contain:
-  # PIA_USER=p1234567
-  # PIA_PASS=YourPassword
-  sops.secrets.pia_credentials = {
-    owner = config.services.pia-vpn.user; # Allow the vpn user to read it.
+  # Define permissions for your existing SOPS secrets.
+  # This ensures the 'transmission' user can read them to create the credentials file.
+  sops.secrets.pia_username = {
+    owner = config.services.pia-vpn.user;
+    group = config.users.users.transmission.group;
+  };
+  sops.secrets.pia_password = {
+    owner = config.services.pia-vpn.user;
     group = config.users.users.transmission.group;
   };
 
