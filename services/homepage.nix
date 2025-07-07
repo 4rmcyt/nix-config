@@ -55,6 +55,7 @@
               icon = "kavita";
             };
           }
+        ];
       }
       {
         "Productivity Tools" = [
