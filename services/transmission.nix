@@ -29,12 +29,11 @@ in
     services.pia-vpn.portForward.script = ''
       #!${pkgs.runtimeShell}
       PORT="$1"
-      echo "PIA Hook: Received new port $PORT. Updating Transmission." | ${pkgs.systemd}/bin/systemd-cat -t transmission-port-hook
+      echo "PIA Hook: Received new port $PORT. Updating Transmission." | systemd-cat -t transmission-port-hook
 
-      # --- SIMPLIFIED COMMAND ---
       # Since the script runs locally, we don't need RPC authentication.
       # We just tell transmission-remote to set the new port.
-      ${pkgs.transmission_4}/bin/transmission-remote --peerport "$PORT" || true
+      transmission-remote --peerport "$PORT" || true
     '';
 
     # --- Configure the Transmission User ---
@@ -47,5 +46,12 @@ in
     # transmission-daemon.service will be stopped as well.
     systemd.services.transmission-daemon.bindsTo = [ "pia-vpn.service" ];
     systemd.services.transmission-daemon.after = [ "pia-vpn.service" ];
+
+    # --- CORRECTED: Add required packages to the hook's PATH ---
+    # This ensures the port-forwarding service can find the commands it needs.
+    systemd.services.pia-vpn-portforward.path = [
+      pkgs.transmission_4
+      pkgs.systemd # for systemd-cat
+    ];
   };
 }
