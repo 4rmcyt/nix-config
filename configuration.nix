@@ -46,7 +46,7 @@
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
   sops.secrets.pia_credentials = {
-    source = ./secrets/pia_credentials.txt;
+    sopsFile = ./secrets/pia_credentials.txt;
   };
 
 
