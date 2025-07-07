@@ -1,3 +1,8 @@
+# /etc/nixos/services/transmission-vpn.nix
+#
+# A NixOS module to run Transmission behind a PIA WireGuard VPN
+# with automatic port forwarding.
+
 { config, lib, pkgs, inputs, ... }:
 
 with lib;
@@ -18,13 +23,11 @@ let
 in
 {
   # == 1. Import Required Modules ==
-  # This must be at the top level of the module, not inside the 'config' block.
   imports = [
     inputs.nix-pia-vpn.nixosModules.default
   ];
 
   # == 2. Define the Module's Options ==
-  # This section creates the configuration interface for our module.
   options.services.transmission-vpn = {
     enable = mkEnableOption "Transmission over PIA VPN";
 
@@ -73,7 +76,6 @@ in
 
 
   # == 3. Implement the Module's Configuration ==
-  # This section uses the options above to configure the system.
   config = mkIf cfg.enable {
 
     # Configure the user and group for the services.
@@ -91,15 +93,18 @@ in
       group = cfg.group;
     };
 
-    # Configure the PIA VPN service.
+    # Configure the PIA VPN service with the correct options.
     services.pia-vpn = {
       enable = true;
       user = cfg.user;
       region = cfg.region;
 
-      # --- CORRECTED OPTION ---
-      # The credentials option is a set containing a 'path'.
-      credentials.path = config.sops.secrets.pia_credentials.path;
+      # --- CORRECTED OPTIONS BASED ON SOURCE ---
+      # The module expects an environment file for credentials.
+      environmentFile = config.sops.secrets.pia_credentials.path;
+
+      # The module requires a path to the PIA CA certificate.
+      certificateFile = ../secrets/ca.rsa.4096.crt;
 
       portForward = {
         enable = true;
