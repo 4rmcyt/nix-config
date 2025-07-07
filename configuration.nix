@@ -31,7 +31,7 @@
       sha256 = "sha256-Mumx0UM+qXYU8qFMbjWOP1fAVwzJ9rLugSaZumlsZqs=";
   };
     portForward.enable = true;
-    maxLatency = 1.0;
+    maxLatency = 18.0;
   };
 
   services.transmission = {
