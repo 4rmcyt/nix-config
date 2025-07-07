@@ -10,20 +10,6 @@ with lib;
 let
   # 'cfg' now refers to the official services.transmission options
   cfg = config.services.transmission;
-
-  # This script specifically updates Transmission's port.
-  # It now uses an environment file for authentication instead of sudo.
-  update-transmission-port-script = pkgs.writeShellScript "update-transmission-port.sh" ''
-    #!${pkgs.runtimeShell}
-    PORT="$1"
-    echo "PIA Hook: Received new port $PORT. Updating Transmission." | ${pkgs.systemd}/bin/systemd-cat -t transmission-port-hook
-
-    # Export the credentials from the sops-managed file
-    export $(cat ${config.sops.secrets.transmission_rpc_auth.path} | xargs)
-
-    # Use the --authenv flag to authenticate with the exported credentials
-    ${pkgs.transmission}/bin/transmission-remote --authenv --peerport "$PORT" || true
-  '';
 in
 {
   # == 1. Extend the official module with a new option ==
@@ -40,7 +26,17 @@ in
     # --- Configure the main PIA VPN service ---
     # This assumes services.pia-vpn is enabled and configured elsewhere.
     # We are just ADDING the port forwarding script to it.
-    services.pia-vpn.portForward.script = update-transmission-port-script;
+    services.pia-vpn.portForward.script = ''
+      #!${pkgs.runtimeShell}
+      PORT="$1"
+      echo "PIA Hook: Received new port $PORT. Updating Transmission." | ${pkgs.systemd}/bin/systemd-cat -t transmission-port-hook
+
+      # Export the credentials from the sops-managed file
+      export $(${pkgs.coreutils}/bin/cat ${config.sops.secrets.transmission_rpc_auth.path} | ${pkgs.xorg.xargs}/bin/xargs)
+
+      # Use the --authenv flag to authenticate with the exported credentials
+      ${pkgs.transmission}/bin/transmission-remote --authenv --peerport "$PORT" || true
+    '';
 
     # --- Configure the Transmission User ---
     # The 'nix-pia-vpn' module creates a group named 'pia-vpn'. We add our
