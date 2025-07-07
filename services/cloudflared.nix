@@ -52,8 +52,12 @@
           service: http://localhost:8085
         - hostname: paste.labhome.work
           service: http://localhost:8087
-         - hostname: kavita.labhome.work
+        - hostname: kavita.labhome.work
           service: http://localhost:5000
+        - hostname: miniflux.labhome.work
+          service: http://localhost:8086
+        - hostname: microbin.labhome.work
+          service: http://localhost:8084
         - service: http_status:404
       EOF
     '';
