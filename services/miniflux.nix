@@ -24,8 +24,6 @@ in
       DISABLE_LOCAL_AUTH = "true";
 
       ADMIN_USERNAME = "admin";
-      # CHANGE THIS LINE BACK: Pass the path to the secret, not its content.
-      # Miniflux knows to read the file if the value is a path.
       ADMIN_PASSWORD = config.sops.secrets.miniflux_admin_password.path;
     };
   };
