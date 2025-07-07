@@ -11,10 +11,8 @@ in
 
   services.miniflux = {
     enable = true;
-    CREATE_ADMIN = lib.mkDefault 1;
-    
+    CREATE_ADMIN = 1;
     adminCredentialsFile = minifluxCredentials;
-
     config = {
       LISTEN_ADDR = "127.0.0.1:8086";
     };
