@@ -26,13 +26,21 @@
   services.pia-vpn = {
     enable = true;
     region = "ca_ontario";
+    user = "pia-vpn"; # User to run the vpn service
+    environmentFile = config.sops.secrets.pia_credentials.path;
+    certificateFile = ./secrets/ca.rsa.4096.crt;
+    portForward.enable = true; # Enable the hook mechanism
   };
 
   services.transmission = {
     enable = true;
+    user = "transmission";
+    group = "transmission";
+    # Use the official 'settings' block for configuration
     settings = {
       "download-dir" = "/home/zeev/Downloads";
     };
+    # Enable our new VPN integration flag
     vpn.enable = true;
   };
 
@@ -40,6 +48,8 @@
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+  sops.secrets.pia_credentials = {};
+
 
   # CLEANED: Only central secrets (removed service-specific duplicates)
   sops.secrets.zeev_password = {
