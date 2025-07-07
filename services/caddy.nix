@@ -7,19 +7,17 @@
     email = "4rmcyt@gmail.com";
 
     # --- CORRECTED ---
-    # The global options block is moved here, to the top level of the Caddyfile.
-    # This resolves the syntax error.
-    globalConfig = ''
+    # We now provide the entire Caddyfile as a single configuration block.
+    # This gives us full control and avoids the module's syntax errors.
+    config = ''
+      # Global options block to disable the local CA, preventing log errors.
       {
-        # This disables the local CA to prevent log errors, as we are using a public CA (Let's Encrypt).
         local_certs
       }
-    '';
 
-    # Change the host from an IP to the domain name.
-    # Caddy will automatically provision a Let's Encrypt certificate for this domain.
-    virtualHosts."labhome.work" = {
-      extraConfig = ''
+      # Main site block for your domain.
+      # Caddy will automatically handle getting a Let's Encrypt certificate.
+      labhome.work {
         # Security headers
         header Strict-Transport-Security "max-age=15768000; includeSubDomains"
         header X-Content-Type-Options "nosniff"
@@ -30,10 +28,8 @@
         # Compression
         encode gzip zstd
 
-        # By removing the manual `header_up` directives, we let Caddy use its
-        # smart defaults. This automatically handles all the necessary headers
-        # and resolves the "Unnecessary header_up" warnings.
-
+        # Reverse proxy handlers for all your services.
+        # We use the simple form of reverse_proxy, letting Caddy handle headers.
         handle /grafana* {
           reverse_proxy localhost:3000
         }
@@ -78,9 +74,7 @@
         handle {
           reverse_proxy localhost:8082
         }
-      '';
-    };
+      }
+    '';
   };
-
-  # REMOVED: Firewall ports (now handled centrally in networking.nix)
 }
