@@ -85,15 +85,19 @@ in
     };
     users.groups.${cfg.group} = {};
 
-    # The nix-pia-vpn module has its own sops integration.
-    # We point it to the credentials file and it handles the rest.
-    services.pia-vpn.sops.file = ../secrets/pia_credentials.txt;
+    # Use the main sops module to make the secret file available.
+    sops.secrets.pia_credentials = {
+      owner = cfg.user;
+      group = cfg.group;
+    };
 
     # Configure the PIA VPN service.
     services.pia-vpn = {
       enable = true;
       user = cfg.user;
       region = cfg.region;
+      # Pass the path to the decrypted secret file.
+      credentialsFile = config.sops.secrets.pia_credentials.path;
       portForward = {
         enable = true;
         script = update-transmission-port-script;
