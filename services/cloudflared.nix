@@ -39,9 +39,9 @@
         - hostname: jellyfin.example.com
           service: http://localhost:8096
         - hostname: paperless.example.com
-          service: http://localhost:8082
+          service: http://localhost:8888
         - hostname: home.example.com
-          service: http://localhost:8123
+          service: http://localhost:8082
         - hostname: rss.example.com
           service: http://localhost:8083
         - hostname: transmission.example.com
