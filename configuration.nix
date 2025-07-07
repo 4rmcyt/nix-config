@@ -37,13 +37,13 @@
     enable = true;
     package = pkgs.transmission_4;
     openRPCPort = true;
-    after = [ "pia-vpn.service" ];
-    bindsTo = [ "pia-vpn.service" ];
     settings = {
-      download-dir = "/home/zeev/Downloads";
-      rpc-bind-address = "0.0.0.0"; #Bind to own IP
-      rpc-whitelist = "127.0.0.1,10.0.0.1, 192.168.0.1";
+      "download-dir" = "/home/zeev/Downloads";
+      "rpc-bind-address" = "0.0.0.0";
+      "rpc-whitelist" = "127.0.0.1,10.0.0.1, 192.168.0.1";
     };
+    # Enable our custom VPN integration from the module
+    vpn.enable = true;
   };
 
   # SOPS configuration
