@@ -44,8 +44,8 @@
           service: http://localhost:8123
         - hostname: rss.labhome.work
           service: http://localhost:8083
-        - hostname: deluge.labhome.work
-          service: http://localhost:8112
+        - hostname: transmission.labhome.work
+          service: http://localhost:9091
         - hostname: cal.labhome.work
           service: http://localhost:5232
         - hostname: audiobookshelf.labhome.work
