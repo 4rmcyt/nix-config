@@ -26,16 +26,9 @@ let
   '';
 in
 {
-  # == 1. Extend the official module with new options ==
+  # == 1. Extend the official module with a new option ==
   options.services.transmission.vpn = {
     enable = mkEnableOption "that Transmission should run through the PIA VPN";
-
-    # New option to specify the location of the RPC auth secret file.
-    rpcAuthSecretFile = mkOption {
-      type = types.path;
-      description = "Path to the sops-encrypted file containing 'TR_AUTH=username:password'.";
-      example = "/etc/nixos/secrets/transmission_auth.env";
-    };
   };
 
   # == 2. Implement the VPN integration if enabled ==
@@ -55,9 +48,9 @@ in
     users.users.${cfg.user}.extraGroups = [ "pia-vpn" "media" ];
 
     # --- SOPS Integration for RPC Auth ---
-    # Make the RPC auth secret available to the hook script.
+    # This declares that we need a secret named 'transmission_rpc_auth'.
+    # sops-nix will look for a corresponding encrypted file.
     sops.secrets.transmission_rpc_auth = {
-      source = cfg.vpn.rpcAuthSecretFile;
       owner = cfg.user; # The transmission user needs to read this.
     };
 
