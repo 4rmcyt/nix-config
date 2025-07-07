@@ -83,6 +83,12 @@
       group = "samba";
       extraGroups = [ "media" ];
     };
+
+    transmission = {
+      isSystemUser = true;
+      group = "transmission";
+      extraGroups = [ "media" ];
+    };
   };
 
   # Add existing service users to media group where needed
@@ -105,7 +111,7 @@
     "d /home/zeev/media/other 0770 zeev media -"
 
     # Download directory
-    "d /home/zeev/Downloads 2775 zeev media -"
+    "d /home/zeev/Downloads 0770 zeev media -"
   ];
 
   # CENTRALIZED: Base system packages (service-specific tools in their files)
