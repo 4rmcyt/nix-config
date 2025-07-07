@@ -6,15 +6,8 @@
     # Set the ACME email for Let's Encrypt
     email = "4rmcyt@gmail.com";
 
-    # --- CORRECTED ---
-    # We now provide the entire Caddyfile as a single configuration block.
-    # This gives us full control and avoids the module's syntax errors.
+    # We provide the entire Caddyfile as a single configuration block.
     config = ''
-      # Global options block to disable the local CA, preventing log errors.
-      {
-        local_certs
-      }
-
       # Main site block for your domain.
       # Caddy will automatically handle getting a Let's Encrypt certificate.
       labhome.work {
