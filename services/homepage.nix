@@ -61,14 +61,14 @@
         "Productivity Tools" = [
           {
             "Microbin" = {
-              href = "https://microbin.labhome.work";
+              href = "https://paste.labhome.work";
               description = "Pastebin Service";
               icon = "microbin";
             };
           }
           {
             "Miniflux" = {
-              href = "https://miniflux.labhome.work";
+              href = "https://rss.labhome.work";
               description = "RSS Reader";
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/miniflux.svg";
             };

@@ -7,7 +7,7 @@
     settings = {
       MICROBIN_BIND = "127.0.0.1";
       MICROBIN_PORT = "8083";
-      MICROBIN_PUBLIC_PATH = "http://192.168.1.165:80/microbin";
+      MICROBIN_PUBLIC_PATH = "https://paste.labhome.work";
       MICROBIN_EDITABLE = true;
       MICROBIN_HIGHLIGHTSYNTAX = true;
       MICROBIN_TITLE = "Homeserver Pastebin";

@@ -43,7 +43,7 @@
         - hostname: home.labhome.work
           service: http://localhost:8082
         - hostname: rss.labhome.work
-          service: http://localhost:8083
+          service: http://localhost:8086
         - hostname: transmission.labhome.work
           service: http://localhost:9091
         - hostname: cal.labhome.work
@@ -51,11 +51,9 @@
         - hostname: audiobookshelf.labhome.work
           service: http://localhost:8085
         - hostname: paste.labhome.work
-          service: http://localhost:8087
+          service: http://localhost:8083
         - hostname: kavita.labhome.work
           service: http://localhost:5000
-        - hostname: miniflux.labhome.work
-          service: http://localhost:8086
         - hostname: microbin.labhome.work
           service: http://localhost:8084
         - hostname: hass.labhome.work
