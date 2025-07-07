@@ -1,14 +1,11 @@
 # /etc/nixos/services/caddy.nix
 #
 # Configures Caddy as a reverse proxy with automatic HTTPS
-# via the Cloudflare DNS challenge.
+# via the Cloudflare DNS challenge, following modern best practices.
 
 { config, lib, pkgs, ... }:
 
 {
-  # This file now directly configures the Caddy service,
-  # rather than defining a custom module.
-
   # == Caddy Service Configuration ==
   services.caddy = {
     enable = true;
@@ -16,11 +13,10 @@
     user = "caddy";
     group = "caddy";
 
-    # --- CORRECTED: Use the correct syntax for withPlugins ---
-    # We provide a list of plugins directly to the function.
-    package = pkgs.caddy.withPlugins [
-      pkgs.caddy-dns-cloudflare
-    ];
+    # Use Caddy with the Cloudflare DNS plugin.
+    package = pkgs.caddy.withPlugins (p: [
+      p.caddy-dns-cloudflare
+    ]);
 
     # We provide the entire Caddyfile as a single configuration block.
     config = ''
@@ -32,9 +28,10 @@
       # Main site block for your domain.
       labhome.work {
         # This tells Caddy to use the Cloudflare DNS provider to solve the
-        # ACME challenge, reading the token from the environment variable.
+        # ACME challenge. The plugin will read the token from the
+        # CLOUDFLARE_API_TOKEN_FILE environment variable.
         tls {
-          dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+          dns cloudflare
         }
 
         # Security headers
@@ -85,14 +82,18 @@
     '';
   };
 
-  # == Systemd and SOPS Integration ==
-  # Define the SOPS secret for the Cloudflare API key.
+  # == Systemd and SOPS Integration (Following noah.masu.rs example) ==
+
+  # This defines a secret for the Cloudflare API token.
+  # sops-nix will look for a key named 'cloudflare_api_key' in your default secrets.yaml file.
   sops.secrets.cloudflare_api_key = {};
 
-  # --- CORRECTED: Use serviceConfig.Environment ---
-  # This directly provides the Cloudflare API token to the Caddy service
-  # as an environment variable, which is cleaner than using a preStart script.
+  # This directly provides the path to the decrypted secret file to the Caddy service
+  # as an environment variable. This is the cleanest way to handle this.
   systemd.services.caddy.serviceConfig = {
-    Environment = "CLOUDFLARE_API_TOKEN_FILE=${config.sops.secrets.cloudflare_api_key.path}";
+    # The Environment option expects a list of strings.
+    Environment = [
+      "CLOUDFLARE_API_TOKEN_FILE=${config.sops.secrets.cloudflare_api_key.path}"
+    ];
   };
 }
