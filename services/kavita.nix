@@ -5,6 +5,13 @@
 { config, pkgs, ... }:
 
 {
+  users.users.kavita = {
+    isSystemUser = true;
+    group = "kavita";
+    home = "/var/lib/kavita";
+  };
+
+  users.groups.kavita = {};
   # This block configures the Kavita service itself.
   services.kavita = {
     enable = true;
@@ -15,4 +22,5 @@
     # when using Cloudflare Tunnels, it's good practice for local access.
     openFirewall = true;
   };
+  
 }
