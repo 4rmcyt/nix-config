@@ -15,14 +15,4 @@
     # when using Cloudflare Tunnels, it's good practice for local access.
     openFirewall = true;
   };
-
-  # This creates the 'kavita' user and group.
-  users.users.kavita = {
-    isSystemUser = true;
-    group = "kavita";
-    # Adding the user to the 'media' group gives it permission
-    # to read from your media and library folders.
-    extraGroups = [ "media" ];
-  };
-  users.groups.kavita = {};
 }
