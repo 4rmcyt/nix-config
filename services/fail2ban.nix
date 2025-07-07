@@ -149,19 +149,6 @@
         };
       };
 
-      caddy = {
-        settings = {
-          enabled = true;
-          backend = "systemd";
-          journalmatch = "_SYSTEMD_UNIT=caddy.service";
-          filter = "caddy";
-          maxretry = 5;
-          findtime = "10m";
-          bantime = "1h";
-          action = "cloudflare-token";
-        };
-      };
-
       delugevpn = {
         settings = {
           enabled = true;

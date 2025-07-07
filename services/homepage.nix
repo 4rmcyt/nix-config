@@ -143,13 +143,6 @@
             };
           }
           {
-            "Caddy Admin" = {
-              href = "http://192.168.1.165:2019";
-              description = "Reverse Proxy Admin";
-              icon = "caddy";
-            };
-          }
-          {
             "PostgreSQL" = {
               href = "#";
               description = "Database Server (CLI only)";

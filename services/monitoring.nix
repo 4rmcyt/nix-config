@@ -33,14 +33,6 @@
           labels = { instance = "homeserver"; };
         }];
       }
-      {
-        job_name = "caddy";
-        static_configs = [{
-          targets = [ "localhost:2019" ];
-          labels = { instance = "homeserver"; };
-        }];
-        metrics_path = "/metrics";
-      }
     ];
 
     exporters = {
