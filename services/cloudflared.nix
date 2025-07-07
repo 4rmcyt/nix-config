@@ -39,9 +39,9 @@
         - hostname: jellyfin.labhome.work
           service: http://localhost:8096
         - hostname: paperless.labhome.work
-          service: http://localhost:8082
+          service: http://localhost:8888
         - hostname: home.labhome.work
-          service: http://localhost:8123
+          service: http://localhost:8082
         - hostname: rss.labhome.work
           service: http://localhost:8083
         - hostname: transmission.labhome.work
