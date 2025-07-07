@@ -13,6 +13,7 @@
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     nix4nvchad.url = "github:nix-community/nix4nvchad";
+    nix-pia-vpn.url = "github:rcambrj/nix-pia-vpn";
   };
 
   outputs = { self, nixpkgs, disko, sops-nix, home-manager, nix-index-database, vscode-server, nix4nvchad, ... }@inputs: {
@@ -27,6 +28,7 @@
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
         nix-index-database.nixosModules.nix-index
+        inputs.nix-pia-vpn.nixosModules.default # <-- Correctly imported module
 
         # Core system configuration
         ./configuration.nix
@@ -68,4 +70,3 @@
       ];
     };
   };
-}
