@@ -1,44 +1,32 @@
-
-{ config, pkgs, lib, ... }:
+# /etc/nixos/services/tailscale.nix
+{ config, pkgs, ... }:
 
 {
-  # SOPS secret for Tailscale auth key
+  # Enable the Tailscale service
+  services.tailscale.enable = true;
+
+  # Define the sops secret for the auth key
   sops.secrets.tailscale_auth_key = {};
 
-  # Enable Tailscale
-  services.tailscale = {
-    enable = true;
-    useRoutingFeatures = "both";  # Enable subnet routing and exit nodes
-  };
-
-  # Enable tailscale daemon
-  systemd.services.tailscale-autoconnect = {
-    description = "Automatic connection to Tailscale";
-    after = [ "network-pre.target" "tailscale.service" ];
-    wants = [ "network-pre.target" "tailscale.service" ];
+  # Use a systemd service to authenticate the node on first boot
+  # or if the node key expires.
+  systemd.services.tailscale-auth = {
+    description = "Tailscale Authentication";
+    # This should only run once after the main service starts
     wantedBy = [ "multi-user.target" ];
-    serviceConfig.Type = "oneshot";
-    script = with pkgs; ''
-      # wait for tailscaled to settle
-      sleep 2
+    after = [ "tailscale.service" ];
 
-      # check if we are already authenticated to tailscale
-      status="$(${tailscale}/bin/tailscale status -json | ${jq}/bin/jq -r .BackendState)"
-      if [ $status = "Running" ]; then # if so, then do nothing
-        exit 0
-      fi
+    # This condition ensures it only runs if the node is not already authenticated
+    conditionPathExists = "!/var/lib/tailscale/tailscaled.state";
 
-      # otherwise authenticate with tailscale
-      ${tailscale}/bin/tailscale up --authkey file:${config.sops.secrets.tailscale_auth_key.path} --accept-routes
+    script = ''
+      # Authenticate using the pre-auth key from sops
+      ${pkgs.tailscale}/bin/tailscale up --authkey-file=${config.sops.secrets.tailscale_auth_key.path}
     '';
-  };
 
-  # REMOVED: IP forwarding (now handled centrally in networking.nix)
-  # This prevents duplicate sysctl definitions
-
-  # Allow Tailscale UDP port
-  networking.firewall = {
-    trustedInterfaces = [ "tailscale0" ];
-    allowedUDPPorts = [ config.services.tailscale.port ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
   };
 }

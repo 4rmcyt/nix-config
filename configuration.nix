@@ -41,7 +41,7 @@
     settings = {
       "download-dir" = "/home/zeev/Downloads";
       "rpc-bind-address" = "0.0.0.0";
-      "rpc-whitelist" = "127.0.0.1,10.0.0.1,192.168.1.0/24";
+      "rpc-whitelist" = "127.0.0.1,10.0.0.1,192.168.1.0/24,100.64.0.0/10";
     };
     # Enable our custom VPN integration from the module
     vpn.enable = true;
