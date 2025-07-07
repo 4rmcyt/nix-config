@@ -32,10 +32,11 @@
         # Content management
         8081  # Nextcloud
         8083  # Microbin
-        8086  # Miniflux (updated port)
-        8087  # Simple file server (updated port)
+        8086  # Miniflux
         8888  # Paperless
         5232  # Radicale
+        5000  # Kavita
+        9091 # Transmission web UI
 
         # System services
         8082  # Homepage dashboard

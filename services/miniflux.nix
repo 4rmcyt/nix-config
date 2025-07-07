@@ -1,18 +1,19 @@
-# In your miniflux.nix or configuration.nix
-
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
-  # Define the secret so sops-nix knows about it
-  sops.secrets.miniflux_admin_password = {};
+  sops.secrets.miniflux_admin_password = { };
 
-  # Configure the Miniflux service
+  # Miniflux RSS reader - Fix: Use correct port 8086
   services.miniflux = {
     enable = true;
-    # Set the admin username
+    config = {
+      LISTEN_ADDR = "127.0.0.1:8086";  # Changed from 8084 to 8086
+      services.miniflux = {
+    enable = true;
     adminUser = "admin";
     adminPasswordFile = config.sops.secrets.miniflux_admin_password.path;
-    
-    # ... other miniflux settings
+    };
+    adminCredentialsFile = config.sops.secrets.miniflux_admin_password.path;
   };
+
 }
