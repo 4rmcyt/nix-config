@@ -43,7 +43,6 @@
 
         # Infrastructure services
         ./services/database.nix
-        ./services/caddy.nix
         ./services/homepage.nix
         ./services/tailscale.nix
         ./services/cloudflared.nix
