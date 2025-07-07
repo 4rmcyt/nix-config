@@ -28,8 +28,9 @@ in
     # and if so, we layer on the VPN configuration.
 
     # --- Configure the main PIA VPN service ---
-    # Add the port forwarding script to the pia-vpn module.
-    services.pia-vpn.portForwardScript = update-transmission-port-script;
+    # This assumes services.pia-vpn is enabled and configured elsewhere.
+    # We are just ADDING the port forwarding script to it.
+    services.pia-vpn.portForward.script = update-transmission-port-script;
 
     # --- Configure the Transmission User ---
     # Add the transmission user to the vpn group to route its traffic.
