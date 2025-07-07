@@ -52,8 +52,12 @@
           service: http://localhost:8085
         - hostname: paste.example.com
           service: http://localhost:8087
-         - hostname: kavita.example.com
+        - hostname: kavita.example.com
           service: http://localhost:5000
+        - hostname: miniflux.example.com
+          service: http://localhost:8086
+        - hostname: microbin.example.com
+          service: http://localhost:8084
         - service: http_status:404
       EOF
     '';
