@@ -25,65 +25,38 @@ let
 in
 {
   # == 1. PIA VPN Configuration ==
-  # This section leverages the nix-pia-vpn flake to manage the connection.
   imports = [
-    # Import the module from the flake input.
     inputs.nix-pia-vpn.nixosModules.default
   ];
 
-  # Enable the PIA VPN service.
   services.pia-vpn = {
     enable = true;
-    # The user that the Transmission service will run as.
-    # This user will be automatically added to the 'pia-vpn' group,
-    # ensuring all its traffic is routed through the VPN.
     user = "transmission";
-
-    # --- CORRECTED OPTION ---
-    # Point directly to your SOPS-encrypted credentials file.
-    # The module handles decryption automatically.
-    # The path is relative to this .nix file.
     sopsFile = ../secrets/pia_credentials.txt;
 
-    # Specify your desired server location.
-    # A list of locations can be found here: https://github.com/rcambrj/nix-pia-vpn
-    location = "ca_ontario";
+    # --- CORRECTED OPTION ---
+    # The option to specify a server location is 'region'.
+    region = "ca_ontario";
 
-    # Hook to automatically update Transmission's port.
     onPortForward = update-transmission-port-script;
   };
-
-  # The sops.secrets block for pia_credentials is no longer needed here,
-  # as the nix-pia-vpn module manages the secret itself via the sopsFile option.
-
 
   # == 2. Transmission Service Configuration ==
   services.transmission = {
     enable = true;
-    # Run the service as the 'transmission' user.
     user = "transmission";
     group = "transmission";
-
-    # For security, only allow access to the Web UI from the local machine.
     rpc-bind-address = "127.0.0.1";
-
-    # Set the default download directory.
     download-dir = "/var/lib/transmission/downloads";
-
-    # Initial port setting. This will be immediately updated by the VPN hook.
     peer-port = 51413;
   };
 
-  # Create the 'transmission' user and group.
+  # == 3. User and Firewall Configuration ==
   users.users.transmission = {
     isSystemUser = true;
     group = "transmission";
     home = "/var/lib/transmission";
   };
   users.groups.transmission = {};
-
-
-  # == 3. Firewall Configuration ==
-  # Allows access to the Transmission Web UI (port 9091) from your local network.
   networking.firewall.allowedTCPPorts = [ 9091 ];
 }
