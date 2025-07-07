@@ -8,9 +8,9 @@
     email = "redacted@example.com";
 
     # Use Caddy with the Cloudflare DNS plugin
-    package = pkgs.caddy.withPlugins [
-      pkgs.caddy-dns-cloudflare
-    ];
+    package = pkgs.caddy.withPlugins (plugins: [
+      plugins.caddy-dns-cloudflare
+    ]);
 
     # We provide the entire Caddyfile as a single configuration block.
     config = ''
@@ -86,9 +86,6 @@
 
   systemd.services.caddy = {
     preStart = ''
-      # This script runs before Caddy starts.
-      # It reads the API key from the sops-managed secret file and formats it
-      # as an environment variable that the Caddy plugin expects.
       echo "CLOUDFLARE_API_TOKEN=$(cat ${config.sops.secrets.cloudflare_api_key.path})" > /run/caddy-secrets.env
     '';
     serviceConfig = {
