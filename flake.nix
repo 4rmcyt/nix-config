@@ -46,7 +46,7 @@
         ./services/caddy.nix
         ./services/homepage.nix
         ./services/tailscale.nix
-        ./services/cloudflared.nix
+        # ./services/cloudflared.nix
         ./services/mosquitto.nix
         ./services/monitoring.nix
 
