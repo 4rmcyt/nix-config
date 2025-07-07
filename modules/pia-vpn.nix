@@ -12,7 +12,6 @@ let
 in
 {
   # == 1. Import Required Modules ==
-  # This must be at the top level of the module, not inside the 'config' block.
   imports = [
     inputs.nix-pia-vpn.nixosModules.default
   ];
@@ -49,7 +48,7 @@ in
   # == 3. Implement the Module's Configuration ==
   config = mkIf cfg.enable {
 
-    # Configure the user and group for the VPN service.
+    # Configure the user and group for the VPN service itself.
     users.users.${cfg.user} = {
       isSystemUser = true;
       group = cfg.group;
@@ -62,17 +61,15 @@ in
       group = cfg.group;
     };
 
-    # Configure the actual PIA VPN service using the nix-pia-vpn flake.
+
     services.pia-vpn = {
       enable = true;
       user = cfg.user;
       region = cfg.region;
-
-      # These are the correct options based on the module's source code.
       environmentFile = config.sops.secrets.pia_credentials.path;
       certificateFile = ../secrets/ca.rsa.4096.crt;
 
-      # Conditionally enable the port forwarding hook.
+      # Conditionally enable the port forwarding hook if a script is provided.
       portForward = mkIf (cfg.portForwardScript != null) {
         enable = true;
         script = cfg.portForwardScript;
