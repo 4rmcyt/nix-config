@@ -49,7 +49,7 @@
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-  sops.age.pia_credentials = "./secrets/pia_credentials.txt";
+  
 
 
   # CLEANED: Only central secrets (removed service-specific duplicates)
@@ -59,7 +59,8 @@
   sops.secrets.nextcloud_admin_password = {};
   sops.secrets.microbin_admin_password = {};
   sops.secrets.tailscale_auth_key = {};
-
+  sops.secrets.pia_credentials = {};
+  
   # Define groups first
   users.groups = {
     media = {};

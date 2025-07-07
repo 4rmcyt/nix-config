@@ -41,9 +41,6 @@ in
     # --- SOPS Integration for RPC Auth ---
     # This declares that we need a secret named 'transmission_rpc_auth'.
     # sops-nix will look for a corresponding encrypted file.
-    sops.secrets.transmission_rpc_auth = {
-      owner = cfg.user; # The transmission user needs to read this.
-    };
 
     # --- Systemd Integration ---
     # Use 'bindsTo' for a stronger dependency. If pia-vpn.service is stopped,
