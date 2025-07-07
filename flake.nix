@@ -37,6 +37,7 @@
         ./disko.nix
         ./networking.nix
         ./modules/base.nix
+        ./modules/pia-vpn.nix
 
         # Security services
         ./services/fail2ban.nix
@@ -56,6 +57,7 @@
         ./services/audiobookshelf.nix
         ./services/transmission-vpn.nix
         ./services/media-content.nix
+        ./services/transmission.nix
 
         # Productivity & Personal services
         ./services/nextcloud.nix
