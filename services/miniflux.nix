@@ -1,10 +1,17 @@
 { config, pkgs, ... }:
 
+let
+  minifluxCredentials = pkgs.writeText "miniflux-credentials" ''
+    admin:$(cat ${config.sops.secrets.miniflux_admin_password.path})
+  '';
+in
 {
   sops.secrets.miniflux_admin_password = {};
 
   services.miniflux = {
     enable = true;
+    adminCredentialsFile = minifluxCredentials; # This is required by the assertion
+
     config = {
       BASE_URL = "https://miniflux.example.com";
       CREATE_ADMIN = "1";
@@ -16,15 +23,18 @@
       OAUTH2_USER_CREATION = "1";
       DISABLE_LOCAL_AUTH = "true";
 
-      ADMIN_USERNAME = "admin";
-      ADMIN_PASSWORD = "${config.sops.secrets.miniflux_admin_password.path}";
+      # ***** REMOVE these two lines if they are still here *****
+      # ADMIN_USERNAME = "admin";
+      # ADMIN_PASSWORD = "${config.sops.secrets.miniflux_admin_password.path}";
     };
   };
-
+  
   systemd.tmpfiles.rules = [
     "d /var/lib/miniflux 0755 miniflux miniflux - -"
+    "f ${minifluxCredentials} 0640 miniflux miniflux -" # This rule is correct for the file
   ];
 
+  # Ensure the user and group exist
   users.users.miniflux = {
     isSystemUser = true;
     group = "miniflux";
