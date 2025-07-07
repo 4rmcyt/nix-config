@@ -16,7 +16,6 @@
     nix-pia-vpn.url = "github:rcambrj/nix-pia-vpn";
   };
 
-  # --- CORRECTED OUTPUTS SECTION ---
   outputs = { self, nixpkgs, disko, sops-nix, home-manager, nix-index-database, vscode-server, nix4nvchad, nix-pia-vpn, ... }@inputs: {
     nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
@@ -70,6 +69,6 @@
         ./services/keycloak.nix
         ./services/tg-notify.nix
       ];
-    }; # <-- THE MISSING SEMICOLON GOES HERE
+    }; 
   };
 }
