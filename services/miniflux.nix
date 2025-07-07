@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }: # <-- ADD 'lib' here
+{ config, lib, pkgs, ... }:
 
 let
   minifluxCredentialsFile = pkgs.writeText "miniflux-credentials-file" ''
@@ -24,8 +24,9 @@ in
       DISABLE_LOCAL_AUTH = "true";
 
       ADMIN_USERNAME = "admin";
-      # Correct use of lib.removeSuffix with builtins.readFile
-      ADMIN_PASSWORD = lib.removeSuffix "\n" (builtins.readFile config.sops.secrets.miniflux_admin_password.path);
+      # CHANGE THIS LINE BACK: Pass the path to the secret, not its content.
+      # Miniflux knows to read the file if the value is a path.
+      ADMIN_PASSWORD = config.sops.secrets.miniflux_admin_password.path;
     };
   };
   
