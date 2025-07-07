@@ -55,7 +55,6 @@
          - hostname: kavita.labhome.work
           service: http://localhost:5000
         - service: http_status:404
-
       EOF
     '';
   };
