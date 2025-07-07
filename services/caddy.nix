@@ -16,10 +16,12 @@
     user = "caddy";
     group = "caddy";
 
-    # Use Caddy with the Cloudflare DNS plugin
-    package = pkgs.caddy.withPlugins [
-      pkgs.caddy-dns-cloudflare
-    ];
+    # --- CORRECTED: Use the canonical syntax for withPlugins ---
+    # This uses a function to select the plugin, which is a more robust
+    # way to define the package and resolves the type error.
+    package = pkgs.caddy.withPlugins (p: [
+      p.caddy-dns-cloudflare
+    ]);
 
     # We provide the entire Caddyfile as a single configuration block.
     config = ''
