@@ -1,38 +1,33 @@
 { config, pkgs, ... }:
 
+let
+
+  minifluxCredentials = pkgs.writeText "miniflux-credentials" ''
+    admin:$(cat ${config.sops.secrets.miniflux_admin_password.path})
+  '';
+in
 {
   sops.secrets.miniflux_admin_password = {};
 
   services.miniflux = {
     enable = true;
-    # Remove adminCredentialsFile if you're using ADMIN_USERNAME and ADMIN_PASSWORD directly.
-    # adminCredentialsFile = minifluxCredentials; # <-- Remove this line
-
-    config = {
-      BASE_URL = "https://miniflux.example.com";
-      CREATE_ADMIN = "1";
-      LISTEN_ADDR = "127.0.0.1:8086";
-      OAUTH2_PROVIDER = "oidc";
-      OAUTH2_CLIENT_ID = "miniflux";
-      OAUTH2_REDIRECT_URL = "https://miniflux.example.com/oauth2/oidc/callback";
-      OAUTH2_OIDC_DISCOVERY_ENDPOINT = "https://keycloak.example.com/realms/master";
-      OAUTH2_USER_CREATION = "1";
-      DISABLE_LOCAL_AUTH = "true";
-    };
-
-    # Add these explicitly
-    environmentVariables = {
-      ADMIN_USERNAME = "admin"; # Explicitly set the admin username
-      ADMIN_PASSWORD = "${config.sops.secrets.miniflux_admin_password.path}"; # Path to the decrypted password
-      # Miniflux will read the content of this file as the password.
-    };
+      adminCredentialsFile = minifluxCredentials;
+      config = {
+        BASE_URL = "https://miniflux.example.com";
+        CREATE_ADMIN = "1";
+        LISTEN_ADDR = "127.0.0.1:8086";
+        OAUTH2_PROVIDER = "oidc";
+        OAUTH2_CLIENT_ID = "miniflux";
+        OAUTH2_REDIRECT_URL = "https://miniflux.example.com/oauth2/oidc/callback";
+        OAUTH2_OIDC_DISCOVERY_ENDPOINT = "https://keycloak.example.com/realms/master";
+        OAUTH2_USER_CREATION = "1";
+        DISABLE_LOCAL_AUTH = "true";
+      };
   };
-
-  # The tmpfiles rule for 'miniflux-credentials' is no longer needed if you remove adminCredentialsFile
-  # and use environmentVariables.
+    # Ensure the credentials file is created with the correct permissions
   systemd.tmpfiles.rules = [
     "d /var/lib/miniflux 0755 miniflux miniflux - -"
-    # "f ${minifluxCredentials} 0640 miniflux miniflux -" # <-- Remove this line
+    "f ${minifluxCredentials} 0640 miniflux miniflux -"
   ];
 
   # Ensure the user and group exist
@@ -43,4 +38,5 @@
   };
 
   users.groups.miniflux = {};
+
 }
