@@ -3,7 +3,8 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./services/transmission-vpn.nix
+    ./modules/pia-vpn.nix
+    ./services/transmission.nix
   ];
 
   # Bootloader
@@ -24,11 +25,14 @@
     openFirewall = true;
   };
 
-   services.transmission-vpn = {
+   services.pia-vpn = {
     enable = true;
-    region = "ca_ontario"; # You can easily override defaults
+    region = "ca_ontario";
+  };
+
+  services.transmission = {
+    enable = true;
     downloadDir = "/home/zeev/Downloads";
-    extraGroups = [ "media" ];
   };
 
   # SOPS configuration
