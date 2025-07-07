@@ -3,7 +3,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./services/deluge-vpn.nix
+    ./services/transmission-vpn.nix
   ];
 
   # Bootloader
@@ -36,11 +36,6 @@
   sops.secrets.nextcloud_admin_password = {};
   sops.secrets.microbin_admin_password = {};
   sops.secrets.tailscale_auth_key = {};
-
-  # REMOVED: Service-specific secrets moved to their respective files
-  # - mosquitto_iotdevice_password (moved to mosquitto.nix)
-  # - hass_postgres_password (moved to home-assistant.nix)
-  # - pia_username, pia_password (moved to deluge-vpn.nix)
 
   # Define groups first
   users.groups = {
@@ -82,7 +77,7 @@
   };
 
   # Add existing service users to media group where needed
-  users.users.deluge.extraGroups = [ "media" ];
+  users.users.transmission.extraGroups = [ "media" ];
   users.users.nextcloud.extraGroups = [ "media" ];
   users.users.radicale.extraGroups = [ "media" ];
   users.users.paperless.extraGroups = [ "media" ];
@@ -102,7 +97,7 @@
     "d /home/zeev/media/other 0770 zeev media -"
 
     # Download directory
-    "d /home/zeev/Downloads 0770 deluge deluge -"
+    "d /home/zeev/Downloads 0770 transmission transmission -"
   ];
 
   # CENTRALIZED: Base system packages (service-specific tools in their files)
@@ -128,8 +123,6 @@
     };
   };
 
-  # Disable built-in Deluge service - using custom VPN version
-  services.deluge.enable = false;
 
   # Enable VSCode server
   services.vscode-server.enable = true;

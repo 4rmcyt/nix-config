@@ -54,7 +54,7 @@
         # Media services
         ./services/jellyfin.nix
         ./services/audiobookshelf.nix
-        ./services/deluge-vpn.nix
+        ./services/transmission-vpn.nix
         ./services/media-content.nix
 
         # Productivity & Personal services
