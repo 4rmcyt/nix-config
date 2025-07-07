@@ -96,8 +96,11 @@ in
       enable = true;
       user = cfg.user;
       region = cfg.region;
-      # Pass the path to the decrypted secret file.
-      credentialsFile = config.sops.secrets.pia_credentials.path;
+
+      # --- CORRECTED OPTION ---
+      # The credentials option is a set containing a 'path'.
+      credentials.path = config.sops.secrets.pia_credentials.path;
+
       portForward = {
         enable = true;
         script = update-transmission-port-script;
