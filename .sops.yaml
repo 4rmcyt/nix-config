@@ -14,7 +14,7 @@ creation_rules:
       - age:
           - *homeserver
 
-  - path_regex: secrets/ptransmission_rpc_auth\.env$
+  - path_regex: secrets/transmission_rpc_auth\.env$
     key_groups:
       - age:
           - *homeserver
