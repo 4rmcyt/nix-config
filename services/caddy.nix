@@ -7,27 +7,16 @@
     virtualHosts."192.168.1.165" = {
       extraConfig = ''
         # Security headers
-        header {
-          Strict-Transport-Security "max-age=15768000; includeSubDomains"
-          X-Content-Type-Options "nosniff"
-          X-Frame-Options "SAMEORIGIN"
-          X-XSS-Protection "1; mode=block"
-          Referrer-Policy "strict-origin-when-cross-origin"
-          -Server
-        }
+        # Each header is set on its own line.
+        header Strict-Transport-Security "max-age=15768000; includeSubDomains"
+        header X-Content-Type-Options "nosniff"
+        header X-Frame-Options "SAMEORIGIN"
+        header Referrer-Policy "strict-origin-when-cross-origin"
+        # The '-Server' directive removes the 'Server' header.
+        header -Server
 
         # Compression
         encode gzip zstd
-
-#        # Netdata - Real-time monitoring
-#        handle /netdata* {
-#          reverse_proxy localhost:19999 {
-#            header_up Host {upstream_hostport}
-#            header_up X-Real-IP {remote_host}
-#            header_up X-Forwarded-For {remote_host}
-#            header_up X-Forwarded-Proto {scheme}
-#          }
-#        }
 
         # Grafana - Special handling for subpath
         handle /grafana* {
