@@ -42,11 +42,9 @@
 
   systemd.services.transmission-vpn-handler = {
     description = "Update Transmission IP and Port after VPN connects";
-    # This service runs after the vpn is up and is part of the normal boot process.
     after = [ "pia-vpn.service" ];
     wantedBy = [ "multi-user.target" ];
 
-    # This resilient script waits for the port file and IP to be ready.
     script = ''
       #!${pkgs.runtimeShell}
 
@@ -63,7 +61,7 @@
         sleep 2
       done
 
-      echo "Handler: Found Port $PORT and IP $VPN_IP. Updating Transmission." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
+      echo "Handler: Found Port $PORT and IP $VPN_IP. Updating config file." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
 
       SETTINGS_FILE="/var/lib/transmission/.config/transmission-daemon/settings.json"
 
@@ -73,7 +71,8 @@
         '."bind-address-ipv4" = $ip | ."peer-port" = $port' \
         "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
 
-      ${pkgs.systemd}/bin/systemctl restart transmission.service
+      # The 'systemctl restart' command is REMOVED.
+      # Systemd will now handle starting Transmission at the right time.
     '';
 
     serviceConfig = {
@@ -104,8 +103,8 @@
   };
 
   systemd.services.transmission = {
-    bindsTo = [ "pia-vpn-portforward.service" ];
-    after = [ "pia-vpn-portforward.service" ];
+    requires = [ "transmission-vpn-handler.service" ];
+    after = [ "transmission-vpn-handler.service" ];
     serviceConfig.BindToDevice = "wg0";
   };
 
