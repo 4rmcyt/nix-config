@@ -130,15 +130,12 @@
   users.users.paperless.extraGroups = [ "media" ];
 
   # CENTRALIZED: Media directory structure (moved from individual services)
-  systemd.tmpfiles.rules = [
-    # Base media directory
+ systemd.tmpfiles.rules = [
+    "d /home/zeev 0770 zeev media -" 
     "d /home/zeev/media 0770 zeev media -"
-
-    # Media subdirectories with consistent permissions
     "d /home/zeev/media/audiobooks 0770 zeev media -"
     "d /home/zeev/media/podcasts 0770 zeev media -"
     "d /home/zeev/media/movies 0770 zeev media -"
-    "d /home/zeev/media/tv 0770 zeev media -"
     "d /home/zeev/media/series 0770 zeev media -"
     "d /home/zeev/media/music 0770 zeev media -"
     "d /home/zeev/media/other 0770 zeev media -"
@@ -146,25 +143,16 @@
     "d /home/zeev/library/books 0775 zeev media -"
     "d /home/zeev/library/comics 0775 zeev media -"
     "d /home/zeev/library/manga 0775 zeev media -"
-    # Download directory
-    "d /home/zeev/Downloads 0770 zeev media -" # This rule will need to be aligned with the new download-dir for Transmission
+    "d /home/zeev/Downloads 0770 zeev media -"
     "d /home/zeev/Downloads/incomplete 0770 zeev media -"
     "d /home/zeev/Downloads/torrents 0770 zeev media -"
   ];
 
-  # CENTRALIZED: Base system packages (service-specific tools in their files)
+
   environment.systemPackages = with pkgs; [
-    # Essential system tools
     git vim wget curl jq age sops openssh neovim mc
-
-    # Network tools
     wireguard-tools iproute2
-
-    # Web server tools
-    apacheHttpd # Note: you previously said you don't use Nginx, but apacheHttpd is here.
-                # If you're not using it, consider removing.
-
-    # Basic monitoring (NO advanced tools - those are in monitoring.nix)
+    apacheHttpd 
     htop btop lsof
   ];
 
