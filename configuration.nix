@@ -87,10 +87,6 @@
     openFirewall = true;
     openPeerPorts = true;
     openRPCPort = true;
-    requires = [ "transmission-vpn-handler.service" ];
-    after = [ "transmission-vpn-handler.service" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig.BindToDevice = "wg0";
     settings = {
       "download-dir" = "/home/zeev/Downloads";
       "rpc-whitelist" = "127.0.0.1,192.168.1.*,100.64.0.*,localhost,transmission.labhome.work";
@@ -105,6 +101,18 @@
       "blocklist-enabled" = true;
       "blocklist-url" = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
     };
+  };
+
+  systemd.services.transmission = {
+    # Enforces the correct startup chain: Handler -> Transmission
+    requires = [ "transmission-vpn-handler.service" ];
+    after = [ "transmission-vpn-handler.service" ];
+
+    # Ensures Transmission is started on boot (by pulling in the handler chain).
+    wantedBy = [ "multi-user.target" ];
+
+    # The network kill-switch.
+    serviceConfig.BindToDevice = "wg0";
   };
 
   sops.defaultSopsFile = ./secrets.yaml;
