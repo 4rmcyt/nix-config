@@ -53,7 +53,7 @@
         ./services/jellyfin.nix
         ./services/audiobookshelf.nix
         ./services/miniflux.nix
-        ./services/transmission.nix
+        # ./services/transmission.nix
         # ./services/kavita.nix
 
         # Productivity & Personal services
