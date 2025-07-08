@@ -1,4 +1,4 @@
-{ config, lib, pkks, ... }:
+{ config, lib, pkgs, ... }: # Corrected 'pkks' to 'pkgs'
 
 let
   # Define cfg at the top-level let binding so it's accessible to the module's config
