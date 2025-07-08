@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkks, ... }:
 
 let
   # Define cfg at the top-level let binding so it's accessible to the module's config
@@ -95,11 +95,6 @@ let
   '';
 in
 {
-  # Define sops secrets for bot token and chat ID.
-  # These secrets must be defined and encrypted in your main sops secrets file (e.g., secrets.yaml).
-  sops.secrets.telegram_bot_token = { };
-  sops.secrets.telegram_chat_id = { };
-
   # Define module options
   options.tg-notify = {
     enable = lib.mkEnableOption "Send system notifications via Telegram";
@@ -107,6 +102,11 @@ in
 
   # Configure the module based on options
   config = lib.mkIf cfg.enable {
+    # Define sops secrets for bot token and chat ID here, inside the config block.
+    # These secrets must be defined and encrypted in your main sops secrets file (e.g., secrets.yaml).
+    sops.secrets.telegram_bot_token = { };
+    sops.secrets.telegram_chat_id = { };
+
     # Define a templated systemd service for Telegram notifications
     systemd.services."tg-notify@" = {
       description = "Send a Telegram notification on service failure";
