@@ -69,7 +69,7 @@
     openFirewall = true;
 		openPeerPorts = true;
 		openRPCPort = true;
-    vpn.enable = true;
+    # vpn.enable = true;
     settings = {
       "download-dir" = "/home/zeev/Downloads";
       "rpc-whitelist" = "127.0.0.1,192.168.1.*,100.64.0.*,localhost,transmission.labhome.work";
