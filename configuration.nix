@@ -52,7 +52,6 @@
     bindsTo = [ "pia-vpn.service" ];
     enable = true;
     package = pkgs.transmission_4;
-    openFirewall = true;
     openPeerPorts = true;
     openRPCPort = true;
     settings = {
