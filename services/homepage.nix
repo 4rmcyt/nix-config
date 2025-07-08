@@ -119,7 +119,7 @@
         "Smart Home & IoT" = [
           {
             "Home Assistant" = {
-              href = "https://home.labhome.work";
+              href = "https://hass.labhome.work";
               description = "Home Automation";
               icon = "home-assistant";
             };
