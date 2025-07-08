@@ -1,6 +1,9 @@
 { config, lib, pkgs, ... }:
 
 let
+  # Define cfg at the top-level let binding so it's accessible to the module's config
+  cfg = config.tg-notify;
+
   # Define the tg-notify script as a shell script binary
   tg-notify = pkgs.writeShellScriptBin "tg-notify" ''
     #!${pkgs.bash}/bin/bash
