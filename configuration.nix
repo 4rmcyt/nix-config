@@ -30,9 +30,17 @@
       url = "https://raw.githubusercontent.com/pia-foss/manual-connections/master/ca.rsa.4096.crt";
       sha256 = "sha256-Mumx0UM+qXYU8qFMbjWOP1fAVwzJ9rLugSaZumlsZqs=";
     };
-    portForward.enable = true;
     maxLatency = 18.0;
   };
+
+  services.pia-vpn.portForward = {
+    enable = true;
+    script = ''
+      export $(cat transmission-rpc.env | xargs)
+      ${pkgs.transmission_4}/bin/transmission-remote --port $port || true
+    '';
+  };
+
 
   services.transmission = {
     enable = true;
