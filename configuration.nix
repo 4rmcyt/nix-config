@@ -41,33 +41,30 @@
   };
 
   systemd.services.transmission-vpn-handler = {
-    description = "Prepare Transmission config after VPN connects";
-    after = [ "pia-vpn.service" ];
+    description = "Prepare Transmission config after PIA port is forwarded";
 
+    # This is the key: We wait for the specific port-forwarding service to succeed.
+    requires = [ "pia-vpn-portforward.service" ];
+    after = [ "pia-vpn-portforward.service" ];
+
+    # The resilient script is still essential.
     script = ''
       #!${pkgs.runtimeShell}
-
-      # Loop until the port file appears. This is the crucial fix for timing.
-      while [ ! -f /run/pia-vpn/port ]; do
-        sleep 2
-      done
+      # This script will now run only after the port forward service succeeds,
+      # but we keep the loops as a final guarantee of robustness.
+      while [ ! -f /run/pia-vpn/port ]; do sleep 1; done
       PORT=$(cat /run/pia-vpn/port)
 
-      # Loop until the wg0 interface has an IP.
       VPN_IP=""
       while [ -z "$VPN_IP" ]; do
         VPN_IP=$(${pkgs.iproute2}/bin/ip -4 addr show wg0 | ${pkgs.gnugrep}/bin/grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-        sleep 2
+        sleep 1
       done
 
       echo "Handler: Found Port $PORT and IP $VPN_IP. Preparing config." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
-
       SETTINGS_FILE="/var/lib/transmission/.config/transmission-daemon/settings.json"
-
-      # Create the config file for Transmission.
       ${pkgs.jq}/bin/jq \
-        --arg ip "$VPN_IP" \
-        --argjson port "$PORT" \
+        --arg ip "$VPN_IP" --argjson port "$PORT" \
         '."bind-address-ipv4" = $ip | ."peer-port" = $port' \
         "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
     '';
@@ -76,6 +73,20 @@
       Type = "oneshot";
       RemainAfterExit = true;
     };
+  };
+
+  # 2. The Transmission service with the final, correct dependencies.
+  systemd.services.transmission = {
+    # This creates the startup chain: port-forward -> handler -> transmission
+    requires = [ "transmission-vpn-handler.service" ];
+    after = [ "transmission-vpn-handler.service" ];
+
+    # This tells systemd that Transmission is a component of the VPN service.
+    # If the VPN stops, Transmission stops. This is a clean dependency.
+    partOf = [ "pia-vpn.service" ];
+
+    # The network kill-switch.
+    serviceConfig.BindToDevice = "wg0";
   };
 
   services.transmission = {
@@ -100,12 +111,7 @@
     };
   };
 
-  systemd.services.transmission = {
-    requires = [ "transmission-vpn-handler.service" ];
-    after = [ "transmission-vpn-handler.service" ];
-    serviceConfig.BindToDevice = "wg0";
-  };
-
+ 
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
