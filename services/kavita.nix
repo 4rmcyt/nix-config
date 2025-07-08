@@ -11,6 +11,8 @@
     isSystemUser = true;
     group = "kavita";
     home = "/var/lib/kavita";
+    # Add 'media' to extraGroups to ensure Kavita has access to media directories
+    extraGroups = [ "media" ];
   };
 
   # Define the system group for Kavita.
@@ -21,10 +23,10 @@
     enable = true;
     # The user that will run the Kavita process.
     user = "kavita";
-    # Removed: group = "kavita";
-    # This line is removed because 'services.kavita.group' is not a valid option
-    # in the NixOS Kavita module. The user's group is already handled by
-    # 'users.users.kavita.group' above.
+    # Re-adding 'group' as it is a valid option in recent Nixpkgs versions.
+    group = "kavita";
+    # Explicitly set the data directory for Kavita. This is crucial for its operation.
+    dataDir = "/var/lib/kavita";
     
     # Removed: openFirewall = true;
     # This line is removed because 'services.kavita.openFirewall' is not a valid option.
