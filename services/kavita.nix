@@ -27,14 +27,5 @@
     group = "kavita";
     # Explicitly set the data directory for Kavita. This is crucial for its operation.
     dataDir = "/var/lib/kavita";
-    
-    # Removed: openFirewall = true;
-    # This line is removed because 'services.kavita.openFirewall' is not a valid option.
-    # Firewall rules are managed globally via networking.firewall.
   };
-
-  # Open port 5000 for Kavita in the system firewall.
-  # This is done at the top-level 'config' block.
-  networking.firewall.allowedPorts = [ 5000 ];
-  
 }
