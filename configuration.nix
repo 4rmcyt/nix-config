@@ -103,14 +103,9 @@
   };
 
   systemd.services.transmission = {
-    # Enforces the correct startup chain: Handler -> Transmission
     requires = [ "transmission-vpn-handler.service" ];
     after = [ "transmission-vpn-handler.service" ];
-
-    # Ensures Transmission is started on boot (by pulling in the handler chain).
     wantedBy = [ "multi-user.target" ];
-
-    # The network kill-switch.
     serviceConfig.BindToDevice = "wg0";
   };
 
