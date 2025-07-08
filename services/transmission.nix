@@ -30,34 +30,27 @@ in
 
       echo "PIA Hook: Found VPN IP $VPN_IP. Updating settings file." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
 
-      # --- KEY CHANGE ---
-      # Use one jq command to update both the IP and the Port in the settings file.
-      # We use --argjson for the port so it's treated as a number, not a string.
       ${pkgs.jq}/bin/jq \
         --arg ip "$VPN_IP" \
         --argjson port "$PORT" \
         '."bind-address-ipv4" = $ip | ."peer-port" = $port' \
         "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
       
-      # Now, reload the service to apply *both* changes from the file at once.
-      # The 'transmission-remote' command is no longer needed.
       ${pkgs.systemd}/bin/systemctl reload transmission.service
     '';
 
-    # Ensure the static IP and port are managed by the script, not the config.
     services.transmission.settings = {
       "bind-address-ipv4" = mkForce null;
-      "peer-port" = mkForce null;
+      # FIX: Provide a valid default port. The script will overwrite this.
+      "peer-port" = 51413;
     };
 
-    # Systemd settings for service ordering and as a defense-in-depth kill switch.
     systemd.services.transmission = {
       after = [ "pia-vpn.service" ];
       wantedBy = [ "pia-vpn.service" ];
       serviceConfig.BindToDevice = "wg0";
     };
 
-    # Ensure the transmission user is in the correct group.
     users.users.${cfg.user}.extraGroups = [ "pia-vpn" "media" ];
   };
 }
