@@ -26,9 +26,13 @@
     # in the NixOS Kavita module. The user's group is already handled by
     # 'users.users.kavita.group' above.
     
-    # This opens port 5000 in the firewall. While not strictly necessary
-    # when using Cloudflare Tunnels, it's good practice for local access.
-    openFirewall = true;
+    # Removed: openFirewall = true;
+    # This line is removed because 'services.kavita.openFirewall' is not a valid option.
+    # Firewall rules are managed globally via networking.firewall.
   };
+
+  # Open port 5000 for Kavita in the system firewall.
+  # This is done at the top-level 'config' block.
+  networking.firewall.allowedPorts = [ 5000 ];
   
 }
