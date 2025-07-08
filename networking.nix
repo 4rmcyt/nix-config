@@ -7,7 +7,7 @@
     hostName = "homeserver";
     networkmanager.enable = true;
     useDHCP = lib.mkForce false;
-    enableIPv6 = true;
+    enableIPv6 = false;
     
     # Firewall configuration
     firewall = {
