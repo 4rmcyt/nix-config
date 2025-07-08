@@ -110,7 +110,7 @@
     transmission = {
       isSystemUser = true;
       group = "transmission";
-      extraGroups = [ "media" ];
+      extraGroups = [ "media" "users" "pia-vpn" ];
     };
 
     kavita = {
