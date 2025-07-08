@@ -50,7 +50,7 @@
     vpn.enable = true;
     settings = {
       "download-dir" = "/home/zeev/Downloads";
-      # "rpc-bind-address" = "0.0.0.0";
+      "bind-address-ipv4" = "10.5.228.247";
       "rpc-whitelist" = "127.0.0.1,192.168.1.*,100.64.0.*,localhost,transmission.labhome.work";
       "rpc-host-whitelist-enabled" = "false";
 			"rpc-whitelist-enabled" = "false";
