@@ -40,61 +40,43 @@
     portForward.enable = true;
   };
 
-  systemd.paths.transmission-vpn-port-watcher = {
-    wantedBy = [ "multi-user.target" ];
-    pathConfig = {
-      # When this file appears...
-      PathExists = "/run/pia-vpn/port";
-      # ...trigger the handler service.
-      Unit = "transmission-vpn-handler.service";
-    };
-  };
-
   systemd.services.transmission-vpn-handler = {
-    description = "Prepare and start Transmission after port is forwarded";
+    description = "Prepare Transmission config after VPN connects";
+    after = [ "pia-vpn.service" ];
 
-    # The script is now simpler because it knows the port file exists.
+    # This script contains the robust while loops to prevent race conditions.
     script = ''
       #!${pkgs.runtimeShell}
 
-      # We no longer need to wait for the port file.
+      # Loop until the port file appears. This is the crucial fix for timing.
+      while [ ! -f /run/pia-vpn/port ]; do
+        sleep 2
+      done
       PORT=$(cat /run/pia-vpn/port)
 
-      # We still wait for the IP to be safe.
+      # Loop until the wg0 interface has an IP.
       VPN_IP=""
       while [ -z "$VPN_IP" ]; do
         VPN_IP=$(${pkgs.iproute2}/bin/ip -4 addr show wg0 | ${pkgs.gnugrep}/bin/grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-        sleep 1
+        sleep 2
       done
 
-      echo "Handler: Path watcher triggered. Found Port $PORT and IP $VPN_IP." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
+      echo "Handler: Found Port $PORT and IP $VPN_IP. Preparing config." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
 
       SETTINGS_FILE="/var/lib/transmission/.config/transmission-daemon/settings.json"
 
-      # Create the config file.
+      # Create the config file for Transmission.
       ${pkgs.jq}/bin/jq \
-        --arg ip "$VPN_IP" --argjson port "$PORT" \
+        --arg ip "$VPN_IP" \
+        --argjson port "$PORT" \
         '."bind-address-ipv4" = $ip | ."peer-port" = $port' \
         "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
-
-      # Start Transmission with the correct config.
-      ${pkgs.systemd}/bin/systemctl start transmission.service
     '';
 
-    serviceConfig.Type = "oneshot";
-  };
-
-  # The Transmission service now requires and starts the handler.
-  systemd.services.transmission = {
-    requires = [ "transmission-vpn-handler.service" ];
-    after = [ "transmission-vpn-handler.service" ];
-
-    # --- KEY CHANGE ---
-    # This tells systemd that whenever the main services are started
-    # (like on boot), this service should also be started.
-    wantedBy = [ "multi-user.target" ];
-
-    serviceConfig.BindToDevice = "wg0";
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
   };
 
   services.transmission = {
