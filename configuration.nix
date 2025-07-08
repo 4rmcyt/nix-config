@@ -39,9 +39,19 @@
     maxLatency = 18.0;
   };
 
-  services.transmission = {
+  systemd.services.transmission = {
     after = [ "pia-vpn.service" ];
     bindsTo = [ "pia-vpn.service" ];
+  };
+
+  services.pia-vpn.portForward = {
+    enable = true;
+    script = ''
+      ${pkgs.transmission_4}/bin/transmission-remote --port $port || true
+    '';
+  };
+
+  services.transmission = {
     enable = true;
     package = pkgs.transmission_4;
     settings = {
@@ -60,14 +70,6 @@
       "blocklist-url" = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
     };
   };
-
-  services.pia-vpn.portForward = {
-    enable = true;
-    script = ''
-      ${pkgs.transmission_4}/bin/transmission-remote --port $port || true
-    '';
-  };
-
 
   # SOPS configuration
   sops.defaultSopsFile = ./secrets.yaml;
