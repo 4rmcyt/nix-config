@@ -1,7 +1,6 @@
 #!/bin/sh
 
-TRANSMISSION_REMOTE='/usr/bin/transmission-remote'
-AUTH='transmission:hunter2'
+TRANSMISSION_REMOTE='/run/current-system/sw/bin/transmission-remote'
 TRACKERLIST="/tmp/trackers.list"
 
 trap "rm -f ./$TRACKERLIST" EXIT
@@ -13,4 +12,4 @@ sed -i '/^$/d' $TRACKERLIST
 echo "[+] Got $(wc -l $TRACKERLIST) trackers"
 
 # Add trackers to all torrents, just in case™
-cat $TRACKERLIST | while read TRACKER; do $TRANSMISSION_REMOTE --auth=$AUTH -t all -td $TRACKER; done
+cat $TRACKERLIST | while read TRACKER; do $TRANSMISSION_REMOTE -t all -td $TRACKER; done
