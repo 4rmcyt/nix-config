@@ -65,6 +65,11 @@
     };
     vpn.enable = true;
   };
+  
+  systemd.services.transmission.vpnConfinement = {
+    enable = true;
+    vpnNamespace = "wg0";
+  };
 
   # SOPS configuration
   sops.defaultSopsFile = ./secrets.yaml;
