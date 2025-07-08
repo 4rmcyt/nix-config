@@ -40,40 +40,48 @@
     portForward.enable = true;
   };
 
+  systemd.paths.transmission-vpn-port-watcher = {
+    wantedBy = [ "multi-user.target" ];
+    pathConfig = {
+      # When this file appears...
+      PathExists = "/run/pia-vpn/port";
+      # ...trigger the handler service.
+      Unit = "transmission-vpn-handler.service";
+    };
+  };
+
   systemd.services.transmission-vpn-handler = {
-    description = "Prepare Transmission config after PIA port is forwarded";
+    description = "Prepare and start Transmission after port is forwarded";
 
-    # This dependency remains correct.
-    after = [ "pia-vpn-portforward.service" ];
-
-    # --- KEY CHANGE ---
-    # This tells systemd not to include this service in the initial boot-up
-    # transaction. This prevents the 'nixos-rebuild switch' from getting stuck.
-    wantedBy = lib.mkForce [ ];
-
-    # The script is perfect and needs no changes.
+    # The script is now simpler because it knows the port file exists.
     script = ''
       #!${pkgs.runtimeShell}
-      # ... (script content is unchanged) ...
-      while [ ! -f /run/pia-vpn/port ]; do sleep 1; done
+
+      # We no longer need to wait for the port file.
       PORT=$(cat /run/pia-vpn/port)
+
+      # We still wait for the IP to be safe.
       VPN_IP=""
       while [ -z "$VPN_IP" ]; do
         VPN_IP=$(${pkgs.iproute2}/bin/ip -4 addr show wg0 | ${pkgs.gnugrep}/bin/grep -oP '(?<=inet\s)\d+(\.\d+){3}')
         sleep 1
       done
-      echo "Handler: Found Port $PORT and IP $VPN_IP. Preparing config." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
+
+      echo "Handler: Path watcher triggered. Found Port $PORT and IP $VPN_IP." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
+
       SETTINGS_FILE="/var/lib/transmission/.config/transmission-daemon/settings.json"
+
+      # Create the config file.
       ${pkgs.jq}/bin/jq \
         --arg ip "$VPN_IP" --argjson port "$PORT" \
         '."bind-address-ipv4" = $ip | ."peer-port" = $port' \
         "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+
+      # Start Transmission with the correct config.
+      ${pkgs.systemd}/bin/systemctl start transmission.service
     '';
 
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
+    serviceConfig.Type = "oneshot";
   };
 
   # The Transmission service now requires and starts the handler.
