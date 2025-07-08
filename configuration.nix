@@ -50,6 +50,10 @@
       "incomplete-dir-enabled" = true;
       "watch-dir" = "/home/zeev/Downloads/torrents";
       "dht-enabled" = "true";
+      "script-torrent-added-enabled" = "true";
+      "script-torrent-added-filename" = "/etc/nixos/scripts/add-trackers-to-torrent.sh";
+      "blocklist-enabled" = true;
+      "blocklist-url" = "https://raw.githubusercontent.com/ngosang/trackerslist/master/blacklist.txt";
     };
     vpn.enable = true;
   };
