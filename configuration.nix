@@ -33,27 +33,6 @@
     maxLatency = 18.0;
   };
 
-  services.pia-vpn.portForward = {
-  enable = true;
-  script = ''
-    # The forwarded port is written to this file by the pia-vpn service
-    PORT_FILE="/run/pia-vpn/port"
-
-    # Check if the file exists and has content
-    if [ -s "$PORT_FILE" ]; then
-      # Read the port from the file
-      PORT=$(cat "$PORT_FILE")
-      
-      # Set the port in Transmission
-      echo "PIA Hook: Setting Transmission port to $PORT"
-      ${pkgs.transmission_4}/bin/transmission-remote --peerport "$PORT" || true
-    else
-      echo "PIA Hook: Port file not found or empty."
-    fi
-  '';
-  };
-
-
   services.transmission = {
     enable = true;
     package = pkgs.transmission_4;
