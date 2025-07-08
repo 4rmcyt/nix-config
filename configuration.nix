@@ -74,6 +74,16 @@
     };
   };
 
+  systemd.services.transmission = {
+    # This makes Transmission wait for the VPN to be up.
+    after = [ "pia-vpn.service" ];
+
+    # This is the essential network "kill switch" that binds Transmission to the VPN.
+    serviceConfig = {
+      BindToDevice = "wg0";
+    };
+  };
+  
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
