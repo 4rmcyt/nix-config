@@ -3,12 +3,6 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./services/transmission.nix # <--- ADD THIS LINE
-    # Add other service modules here if they are in ./services/
-    # For example:
-    # ./services/miniflux.nix
-    # ./services/cloudflared.nix
-    # ./services/kavita.nix
   ];
 
   # Bootloader
