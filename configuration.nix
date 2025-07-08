@@ -40,6 +40,8 @@
   };
 
   services.transmission = {
+    after = [ "pia-vpn.service" ];
+    bindsTo = [ "pia-vpn.service" ];
     enable = true;
     package = pkgs.transmission_4;
     settings = {
@@ -66,10 +68,6 @@
     '';
   };
 
-  systemd.services.transmission.service = {
-    after = [ "pia-vpn.service" ];
-    bindsTo = [ "pia-vpn.service" ];
-  };
 
   # SOPS configuration
   sops.defaultSopsFile = ./secrets.yaml;
