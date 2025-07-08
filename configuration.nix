@@ -52,8 +52,6 @@
     bindsTo = [ "pia-vpn.service" ];
     enable = true;
     package = pkgs.transmission_4;
-    openPeerPorts = true;
-    openRPCPort = true;
     settings = {
       "download-dir" = "/home/zeev/Downloads";
       "rpc-bind-address" = "0.0.0.0";
