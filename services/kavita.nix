@@ -1,6 +1,3 @@
-# /etc/nixos/services/kavita.nix
-#
-# Configures the Kavita reading server.
 
 { config, pkgs, ... }:
 
@@ -17,4 +14,5 @@
     enable = true;
     user = "kavita";
     dataDir = "/home/zeev/media/library";
+  }
 }
