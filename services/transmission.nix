@@ -5,10 +5,8 @@ with lib;
 let
   cfg = config.services.transmission;
 
-  # Define the complete settings.json content as a Nix string
-  # IMPORTANT: All settings must be listed here, as this overrides the module's default settings generation.
-  # Use builtins.toJSON for proper JSON formatting.
-  transmissionSettingsJson = pkgs.writeText "transmission-daemon-settings.json" (builtins.toJSON {
+  # This now contains JUST the JSON string content.
+  transmissionSettingsContent = builtins.toJSON {
     alt-speed-down = 50;
     alt-speed-enabled = false;
     alt-speed-time-begin = 540;
@@ -27,15 +25,13 @@ let
     cache-size-mb = 4;
     default-trackers = "";
     dht-enabled = true;
-    # --- IMPORTANT: Desired download-dir ---
-    download-dir = "/var/lib/transmission/downloads";
+    download-dir = "/var/lib/transmission/downloads"; # YOUR DESIRED PATH
     download-queue-enabled = true;
     download-queue-size = 5;
     encryption = 1;
     idle-seeding-limit = 30;
     idle-seeding-limit-enabled = false;
-    # --- IMPORTANT: Desired incomplete-dir ---
-    incomplete-dir = "/var/lib/transmission/incomplete";
+    incomplete-dir = "/var/lib/transmission/incomplete"; # YOUR DESIRED PATH
     incomplete-dir-enabled = true;
     lpd-enabled = true;
     message-level = 2;
@@ -56,21 +52,15 @@ let
     ratio-limit = 2;
     ratio-limit-enabled = false;
     rename-partial-files = false;
-    rpc-authentication-required = false; # Set to true if you want Transmission's built-in login
+    rpc-authentication-required = false;
     rpc-bind-address = "0.0.0.0";
     rpc-enabled = true;
     rpc-host-whitelist = "";
     rpc-host-whitelist-enabled = true;
-    # NOTE: We're not setting rpc-password/username here.
-    # If you need RPC authentication, you'd need to manually manage
-    # this password or use a different mechanism (e.g., Nginx basic auth).
-    # Since rpc-authentication-required is false, it's not strictly needed.
     rpc-port = 9091;
-    rpc-socket-mode = "0750";
-    # --- IMPORTANT: Desired rpc-url ---
-    rpc-url = "/";
+    rpc-url = "/"; # YOUR DESIRED PATH
     rpc-username = "";
-    rpc-whitelist = "127.0.0.1"; # Ensure localhost is whitelisted for Cloudflare Tunnel
+    rpc-whitelist = "127.0.0.1";
     rpc-whitelist-enabled = true;
     scrape-paused-torrents-enabled = true;
     script-torrent-added-enabled = false;
@@ -92,9 +82,16 @@ let
     umask = "022";
     upload-slots-per-torrent = 8;
     utp-enabled = true;
-    watch-dir = "/var/lib/transmission/watchdir"; # Ensure this path is correct if used
+    watch-dir = "/var/lib/transmission/watchdir";
     watch-dir-enabled = false;
   });
+
+  # This creates a DIRECTORY in the Nix store containing the settings.json file.
+  transmissionConfigDir = pkgs.runCommand "transmission-config-dir" {} ''
+    mkdir -p $out/transmission-daemon
+    echo "$transmissionSettingsContent" > $out/transmission-daemon/settings.json
+  '';
+
 in
 {
   options.services.transmission.vpn = {
@@ -108,20 +105,22 @@ in
       group = "transmission";
       home = "/var/lib/transmission";
 
-      port = 9091; # This port will still be read by the service
+      port = 9091;
 
-      # --- REMOVE THIS 'settings' BLOCK ---
-      # settings = {
-      #   rpc-enabled = true;
-      #   rpc-whitelist-enabled = true;
-      #   rpc-whitelist = "127.0.0.1";
-      #   rpc-url = "/";
-      #   rpc-authentication-required = false;
-      #   download-dir = "/var/lib/transmission/downloads";
-      #   incomplete-dir-enabled = true;
-      #   incomplete-dir = "/var/lib/transmission/incomplete";
-      #   peer-port = 51413;
-      # };
+      # THIS IS THE CORRECT WAY TO OVERRIDE ExecStart
+      systemd.serviceConfig.ExecStart = [ # Use a list to clear previous ExecStart
+        "" # This empty string resets any inherited ExecStart definitions
+        # Pass the *directory* containing settings.json to -g
+        "${pkgs.transmission_4}/bin/transmission-daemon -f -g ${transmissionConfigDir}/transmission-daemon"
+      ];
+      # The 'settings' attribute is implicitly ignored if ExecStart is set this way.
+      # You can remove or comment it out entirely to avoid confusion.
+      # settings = { ... };
+
+      # Conditional systemd dependencies and orderings are now handled here
+      bindsTo = lib.mkIf cfg.vpn.enable [ "pia-vpn.service" ];
+      after = [ "network-online.target" ]
+              ++ lib.mkIf cfg.vpn.enable [ "pia-vpn.service" ];
     };
 
     users.users.transmission = {
@@ -131,13 +130,6 @@ in
     };
     users.groups.transmission = {};
 
-    # Override the default ExecStart to point to our custom settings file
-    systemd.services.transmission.extraConfig = ''
-      ExecStart=
-      ExecStart=${pkgs.transmission_4}/bin/transmission-daemon -f -g ${transmissionSettingsJson}
-      # Also add any other ExecStart flags you saw in 'systemctl status' output if needed,
-      # like '-l 4' for logging level or '-a' for allowlist directly.
-    '';
   } // (mkIf (cfg.enable && cfg.vpn.enable) {
     services.pia-vpn.portForward.script = ''
       #!${pkgs.runtimeShell}
@@ -147,16 +139,6 @@ in
     '';
 
     users.users.${cfg.user}.extraGroups = [ "pia-vpn" "media" ];
-
-    systemd.services.transmission-daemon = {
-      bindsTo = [ "pia-vpn.service" ];
-      after = [
-        "pia-vpn.service"
-        "network-online.target"
-      ];
-      # These flags are for the service wrapper, not the daemon itself.
-      # extraConfig above directly modifies the ExecStart line for the daemon.
-    };
 
     systemd.services.pia-vpn-portforward.path = [
       pkgs.transmission_4
