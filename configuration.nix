@@ -30,50 +30,56 @@
   };
 
   services.pia-vpn = {
-  enable = true;
-  environmentFile = config.sops.secrets.pia_credentials.path;
-  certificateFile = pkgs.fetchurl {
-    url = "https://raw.githubusercontent.com/pia-foss/manual-connections/master/ca.rsa.4096.crt";
-    sha256 = "sha256-Mumx0UM+qXYU8qFMbjWOP1fAVwzJ9rLugSaZumlsZqs=";
-  };
-  maxLatency = 18.0;
-
-  portForward = {
     enable = true;
-    # This script correctly uses the $PORT environment variable
-    # provided by the service, and also handles the IP binding.
+    environmentFile = config.sops.secrets.pia_credentials.path;
+    certificateFile = pkgs.fetchurl {
+      url = "https://raw.githubusercontent.com/pia-foss/manual-connections/master/ca.rsa.4096.crt";
+      sha256 = "sha256-Mumx0UM+qXYU8qFMbjWOP1fAVwzJ9rLugSaZumlsZqs=";
+    };
+    maxLatency = 18.0;
+    portForward.enable = true;
+  };
+
+  systemd.services.transmission-vpn-handler = {
+    description = "Update Transmission IP and Port after VPN connects";
+    # This service runs after the vpn is up and is part of the normal boot process.
+    after = [ "pia-vpn.service" ];
+    wantedBy = [ "multi-user.target" ];
+
+    # This resilient script waits for the port file and IP to be ready.
     script = ''
       #!${pkgs.runtimeShell}
-      
-      # Exit gracefully if the PORT variable is not set or empty.
-      if [ -z "$PORT" ]; then
-        echo "PIA Hook: PORT environment variable not set. Nothing to do." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
-        exit 0
-      fi
 
-      # Get the VPN IP address.
-      VPN_IP=$(${pkgs.iproute2}/bin/ip -4 addr show wg0 | ${pkgs.gnugrep}/bin/grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-      if [ -z "$VPN_IP" ]; then
-        echo "PIA Hook: VPN IP not found. Cannot update bind address." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
-        exit 0
-      fi
+      # Loop until the port file appears
+      while [ ! -f /run/pia-vpn/port ]; do
+        sleep 2
+      done
+      PORT=$(cat /run/pia-vpn/port)
 
-      echo "PIA Hook: Found Port $PORT and IP $VPN_IP. Updating Transmission." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
-      
+      # Loop until the wg0 interface has an IP
+      VPN_IP=""
+      while [ -z "$VPN_IP" ]; do
+        VPN_IP=$(${pkgs.iproute2}/bin/ip -4 addr show wg0 | ${pkgs.gnugrep}/bin/grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+        sleep 2
+      done
+
+      echo "Handler: Found Port $PORT and IP $VPN_IP. Updating Transmission." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
+
       SETTINGS_FILE="/var/lib/transmission/.config/transmission-daemon/settings.json"
 
-      # Atomically update both the IP and Port in the settings file.
       ${pkgs.jq}/bin/jq \
         --arg ip "$VPN_IP" \
         --argjson port "$PORT" \
         '."bind-address-ipv4" = $ip | ."peer-port" = $port' \
         "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
-      
-      # Restart Transmission to apply the new settings from the file.
+
       ${pkgs.systemd}/bin/systemctl restart transmission.service
     '';
+
+    serviceConfig = {
+      Type = "oneshot";
+    };
   };
-};
 
   services.transmission = {
     enable = true;
