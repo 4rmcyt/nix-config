@@ -36,7 +36,9 @@
       url = "https://raw.githubusercontent.com/pia-foss/manual-connections/master/ca.rsa.4096.crt";
       sha256 = "sha256-Mumx0UM+qXYU8qFMbjWOP1fAVwzJ9rLugSaZumlsZqs=";
     };
-    maxLatency = 18.0;
+    # To solve port forwarding issues, explicitly set a server
+    # that is known to support it and remove maxLatency.
+    server = "ca-toronto";
     portForward.enable = true;
   };
 
@@ -44,11 +46,11 @@
     description = "Prepare Transmission config after VPN connects";
     after = [ "pia-vpn.service" ];
 
-    # This script contains the robust while loops to prevent race conditions.
+    # This resilient script waits for the VPN to be ready.
     script = ''
       #!${pkgs.runtimeShell}
 
-      # Loop until the port file appears. This is the crucial fix for timing.
+      # Loop until the port file appears.
       while [ ! -f /run/pia-vpn/port ]; do
         sleep 2
       done
@@ -65,7 +67,7 @@
 
       SETTINGS_FILE="/var/lib/transmission/.config/transmission-daemon/settings.json"
 
-      # Create the config file for Transmission.
+      # Use jq to create the perfect settings file.
       ${pkgs.jq}/bin/jq \
         --arg ip "$VPN_IP" \
         --argjson port "$PORT" \
@@ -85,6 +87,10 @@
     openFirewall = true;
     openPeerPorts = true;
     openRPCPort = true;
+    requires = [ "transmission-vpn-handler.service" ];
+    after = [ "transmission-vpn-handler.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig.BindToDevice = "wg0";
     settings = {
       "download-dir" = "/home/zeev/Downloads";
       "rpc-whitelist" = "127.0.0.1,192.168.1.*,100.64.0.*,localhost,transmission.example.com";
