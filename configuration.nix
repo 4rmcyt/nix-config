@@ -29,13 +29,8 @@
     openFirewall = true;
   };
 
+  # PIA VPN configured as per the official documentation
   services.pia-vpn = {
-    serviceConfig.path = [
-      pkgs.wireguard-tools
-      pkgs.iproute2
-      pkgs.gnugrep
-      pkgs.curl
-    ];
     enable = true;
     environmentFile = config.sops.secrets.pia_credentials.path;
     certificateFile = pkgs.fetchurl {
@@ -44,49 +39,19 @@
     };
     maxLatency = 0.5;
     region = "port-forwarding-regions";
-    portForward.enable = true;
-  };
-
-
-  systemd.services.transmission-vpn-handler = {
-    description = "Prepare Transmission config after VPN connects";
-    after = [ "pia-vpn.service" ];
-
-    # This resilient script waits for the VPN to be ready.
-    script = ''
-      #!${pkgs.runtimeShell}
-
-      # Loop until the port file appears.
-      while [ ! -f /run/pia-vpn/port ]; do
-        sleep 2
-      done
-      PORT=$(cat /run/pia-vpn/port)
-
-      # Loop until the wg0 interface has an IP.
-      VPN_IP=""
-      while [ -z "$VPN_IP" ]; do
-        VPN_IP=$(${pkgs.iproute2}/bin/ip -4 addr show wg0 | ${pkgs.gnugrep}/bin/grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-        sleep 2
-      done
-
-      echo "Handler: Found Port $PORT and IP $VPN_IP. Preparing config." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
-
-      SETTINGS_FILE="/var/lib/transmission/.config/transmission-daemon/settings.json"
-
-      # Use jq to create the perfect settings file.
-      ${pkgs.jq}/bin/jq \
-        --arg ip "$VPN_IP" \
-        --argjson port "$PORT" \
-        '."bind-address-ipv4" = $ip | ."peer-port" = $port' \
-        "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
-    '';
-
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
+    portForward = {
+      enable = true;
+      # This script follows the official example to set the forwarded port.
+      script = ''
+        #!${pkgs.runtimeShell}
+        if [ -n "$PORT" ]; then
+          ${pkgs.transmission_4}/bin/transmission-remote --peerport "$PORT" || true
+        fi
+      '';
     };
   };
 
+  # Standard Transmission service configuration
   services.transmission = {
     enable = true;
     package = pkgs.transmission_4;
@@ -107,11 +72,6 @@
       "blocklist-enabled" = true;
       "blocklist-url" = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
     };
-  };
-
-  systemd.services.transmission = {
-    requires = [ "transmission-vpn-handler.service" ];
-    after = [ "transmission-vpn-handler.service" ];
   };
 
   sops.defaultSopsFile = ./secrets.yaml;
