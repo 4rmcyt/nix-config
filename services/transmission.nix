@@ -10,7 +10,7 @@ in
     enable = mkEnableOption "that Transmission should run through the PIA VPN";
     settings = { #Override default settings
       rpc-bind-address = "0.0.0.0"; #Bind to own IP
-      rpc-whitelist = "127.0.0.1,100.60.0.1/24,192.168.1.0/24"; 
+      rpc-whitelist = "127.0.0.1,100.60.0.1/24,192.168.1.0/24,localhost"; 
     };
   };
 
