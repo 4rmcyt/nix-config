@@ -1,10 +1,4 @@
-{
-  config,
-  pkgs,
-  lib,
-  inputs,
-  ...
-}:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   imports = [
@@ -29,7 +23,6 @@
     openFirewall = true;
   };
 
-  # PIA VPN configured as per the official documentation
   services.pia-vpn = {
     enable = true;
     environmentFile = config.sops.secrets.pia_credentials.path;
@@ -37,32 +30,31 @@
       url = "https://raw.githubusercontent.com/pia-foss/manual-connections/master/ca.rsa.4096.crt";
       sha256 = "sha256-Mumx0UM+qXYU8qFMbjWOP1fAVwzJ9rLugSaZumlsZqs=";
     };
-    maxLatency = 0.5;
-    region = "port-forwarding-regions";
-    portForward = {
-      enable = true;
-      # This script follows the official example to set the forwarded port.
-      script = ''
-        #!${pkgs.runtimeShell}
-        if [ -n "$PORT" ]; then
-          ${pkgs.transmission_4}/bin/transmission-remote --peerport "$PORT" || true
-        fi
-      '';
-    };
+    maxLatency = 18.0;
   };
 
-  # Standard Transmission service configuration
+  services.pia-vpn.portForward = {
+    enable = true;
+    script = ''
+      export $(cat transmission-rpc.env | xargs)
+      ${pkgs.transmission_4}/bin/transmission-remote --port $port || true
+    '';
+  };
+
+
   services.transmission = {
     enable = true;
     package = pkgs.transmission_4;
     openFirewall = true;
-    openPeerPorts = true;
-    openRPCPort = true;
+		openPeerPorts = true;
+		openRPCPort = true;
+    vpn.enable = true;
     settings = {
       "download-dir" = "/home/zeev/Downloads";
+      "rpc-bind-address" = "0.0.0.0";
       "rpc-whitelist" = "127.0.0.1,192.168.1.*,100.64.0.*,localhost,transmission.example.com";
       "rpc-host-whitelist-enabled" = "false";
-      "rpc-whitelist-enabled" = "false";
+			"rpc-whitelist-enabled" = "false";
       "incomplete-dir" = "/home/zeev/Downloads/incomplete";
       "incomplete-dir-enabled" = true;
       "watch-dir" = "/home/zeev/Downloads/torrents";
@@ -73,51 +65,39 @@
       "blocklist-url" = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
     };
   };
-
-  systemd.services.transmission = {
-    # This makes Transmission wait for the VPN to be up.
-    after = [ "pia-vpn.service" ];
-
-    # This is the essential network "kill switch" that binds Transmission to the VPN.
-    serviceConfig = {
-      BindToDevice = "wg0";
-    };
-  };
   
+  # SOPS configuration
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
 
+  # CLEANED: Only central secrets (removed service-specific duplicates)
   sops.secrets.zeev_password = {
     neededForUsers = true;
   };
-  sops.secrets.nextcloud_admin_password = { };
-  sops.secrets.microbin_admin_password = { };
-  sops.secrets.tailscale_auth_key = { };
-  sops.secrets.pia_credentials = { };
-  sops.secrets.telegram_bot_token = { };
-  sops.secrets.telegram_chat_id = { };
+  sops.secrets.nextcloud_admin_password = {};
+  sops.secrets.microbin_admin_password = {};
+  sops.secrets.tailscale_auth_key = {};
+  sops.secrets.pia_credentials = {};
+  sops.secrets.telegram_bot_token = {};
+  sops.secrets.telegram_chat_id = {};
 
+  # Define groups first
   users.groups = {
-    media = { };
-    microbin = { };
-    miniflux = { };
-    samba = { };
-    kavita = { };
+    media = {};
+    microbin = {};
+    miniflux = {};
+    samba = {};
+    kavita = {};
   };
 
+  # User configuration
   users.users = {
     # Main user
     zeev = {
       isNormalUser = true;
       description = "Zeev";
-      extraGroups = [
-        "networkmanager"
-        "wheel"
-        "docker"
-        "media"
-        "samba"
-      ];
+      extraGroups = [ "networkmanager" "wheel" "docker" "media" "samba"];
       hashedPasswordFile = config.sops.secrets.zeev_password.path;
       shell = pkgs.bash;
     };
@@ -144,11 +124,7 @@
     transmission = {
       isSystemUser = true;
       group = "transmission";
-      extraGroups = [
-        "media"
-        "users"
-        "pia-vpn"
-      ];
+      extraGroups = [ "media" "users" "pia-vpn" ];
     };
 
     kavita = {
@@ -164,8 +140,8 @@
   users.users.paperless.extraGroups = [ "media" ];
 
   # CENTRALIZED: Media directory structure (moved from individual services)
-  systemd.tmpfiles.rules = [
-    "d /home/zeev 0770 zeev media -"
+ systemd.tmpfiles.rules = [
+    "d /home/zeev 0770 zeev media -" 
     "d /home/zeev/media 0770 zeev media -"
     "d /home/zeev/media/audiobooks 0770 zeev media -"
     "d /home/zeev/media/podcasts 0770 zeev media -"
@@ -182,23 +158,12 @@
     "d /home/zeev/Downloads/torrents 0770 zeev media -"
   ];
 
+
   environment.systemPackages = with pkgs; [
-    git
-    vim
-    wget
-    curl
-    jq
-    age
-    sops
-    openssh
-    neovim
-    mc
-    wireguard-tools
-    iproute2
-    apacheHttpd
-    htop
-    btop
-    lsof
+    git vim wget curl jq age sops openssh neovim mc
+    wireguard-tools iproute2
+    apacheHttpd 
+    htop btop lsof
   ];
 
   # Enable Home Manager
@@ -211,10 +176,7 @@
 
   # Enable VSCode server
   services.vscode-server.enable = true;
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   system.stateVersion = "25.05";
 }
