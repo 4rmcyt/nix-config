@@ -53,7 +53,7 @@
       "script-torrent-added-enabled" = "true";
       "script-torrent-added-filename" = "/etc/nixos/scripts/add-trackers.sh";
       "blocklist-enabled" = true;
-      "blocklist-url" = "https://raw.githubusercontent.com/ngosang/trackerslist/master/blacklist.txt";
+      "blocklist-url" = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
     };
     vpn.enable = true;
   };
