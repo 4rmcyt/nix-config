@@ -48,6 +48,8 @@
     openFirewall = true;
 		openPeerPorts = true;
 		openRPCPort = true;
+    vpn.enable = true;
+    vpnNamespace = "wg0";
     settings = {
       "download-dir" = "/home/zeev/Downloads";
       "rpc-bind-address" = "0.0.0.0";
@@ -63,14 +65,8 @@
       "blocklist-enabled" = true;
       "blocklist-url" = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
     };
-    vpn.enable = true;
   };
   
-  systemd.services.transmission.vpnConfinement = {
-    enable = true;
-    vpnNamespace = "wg0";
-  };
-
   # SOPS configuration
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
