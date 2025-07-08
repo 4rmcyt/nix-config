@@ -71,6 +71,10 @@
     bindsTo = [ "pia-vpn.service" ];
   };
 
+  systemd.services.pia-vpn-portforward-start = {
+    after = [ "transmission-daemon.service" ];
+  };
+
   # SOPS configuration
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
