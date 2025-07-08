@@ -42,16 +42,14 @@
 
   systemd.services.transmission-vpn-handler = {
     description = "Prepare Transmission config after VPN connects";
-    # This dependency is correct.
     after = [ "pia-vpn.service" ];
 
-    # This script now contains the wait loops again.
     script = ''
       #!${pkgs.runtimeShell}
 
-      # Loop until the port file appears. This is the crucial fix.
+      # Loop until the port file appears. This is the crucial fix for timing.
       while [ ! -f /run/pia-vpn/port ]; do
-        sleep 1
+        sleep 2
       done
       PORT=$(cat /run/pia-vpn/port)
 
@@ -59,7 +57,7 @@
       VPN_IP=""
       while [ -z "$VPN_IP" ]; do
         VPN_IP=$(${pkgs.iproute2}/bin/ip -4 addr show wg0 | ${pkgs.gnugrep}/bin/grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-        sleep 1
+        sleep 2
       done
 
       echo "Handler: Found Port $PORT and IP $VPN_IP. Preparing config." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
@@ -79,6 +77,7 @@
       RemainAfterExit = true;
     };
   };
+
   services.transmission = {
     enable = true;
     package = pkgs.transmission_4;
