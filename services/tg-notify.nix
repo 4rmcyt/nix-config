@@ -103,12 +103,22 @@ in
 
   # Configure the module based on options, also under the 'services' namespace
   config = lib.mkIf cfg.enable {
-    services.tg-notify = { # <--- Added this services.tg-notify block
-      # Define sops secrets for bot token and chat ID here, inside the config block.
-      # These secrets must be defined and encrypted in your main sops secrets file (e.g., secrets.yaml).
-      sops.secrets.telegram_bot_token = { };
-      sops.secrets.telegram_chat_id = { };
+    # Define sops secrets for bot token and chat ID here, at the top level of the config block.
+    # These secrets must be defined and encrypted in your main sops secrets file (e.g., secrets.yaml).
+    sops.secrets.telegram_bot_token = { };
+    sops.secrets.telegram_chat_id = { };
 
+    # Make the tg-notify script available in the system's PATH
+    environment.systemPackages = [ tg-notify ];
+
+    # Add a tmpfiles rule for the credentials file, similar to miniflux.nix.
+    # This ensures proper permissions and ownership for the temporary file.
+    systemd.tmpfiles.rules = [
+      "f ${telegramCredentialsFile} 0640 root root -"
+    ];
+
+    # Define the services block for tg-notify
+    services.tg-notify = { # This block correctly defines options specific to services.tg-notify
       # Define a templated systemd service for Telegram notifications
       systemd.services."tg-notify@" = {
         description = "Send a Telegram notification on service failure";
@@ -125,15 +135,6 @@ in
           Path = with pkgs; [ systemd curl ]; # coreutils is not strictly needed here if 'cat' isn't used in script directly
         };
       };
-
-      # Make the tg-notify script available in the system's PATH
-      environment.systemPackages = [ tg-notify ];
-
-      # Add a tmpfiles rule for the credentials file, similar to miniflux.nix.
-      # This ensures proper permissions and ownership for the temporary file.
-      systemd.tmpfiles.rules = [
-        "f ${telegramCredentialsFile} 0640 root root -"
-      ];
     }; # <--- End of services.tg-notify block
   };
 }
