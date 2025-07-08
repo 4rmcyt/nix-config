@@ -1,8 +1,9 @@
-{ config, lib, pkgs, ... }: # Corrected 'pkks' to 'pkgs'
+{ config, lib, pkgs, ... }:
 
 let
   # Define cfg at the top-level let binding so it's accessible to the module's config
-  cfg = config.tg-notify;
+  # cfg now refers to config.services.tg-notify
+  cfg = config.services.tg-notify;
 
   # Create a file containing the Telegram bot token and chat ID as environment variables.
   # This file's content is derived from the sops secrets.
@@ -95,42 +96,44 @@ let
   '';
 in
 {
-  # Define module options
-  options.tg-notify = {
+  # Define module options under the 'services' namespace
+  options.services.tg-notify = {
     enable = lib.mkEnableOption "Send system notifications via Telegram";
   };
 
-  # Configure the module based on options
+  # Configure the module based on options, also under the 'services' namespace
   config = lib.mkIf cfg.enable {
-    # Define sops secrets for bot token and chat ID here, inside the config block.
-    # These secrets must be defined and encrypted in your main sops secrets file (e.g., secrets.yaml).
-    sops.secrets.telegram_bot_token = { };
-    sops.secrets.telegram_chat_id = { };
+    services.tg-notify = { # <--- Added this services.tg-notify block
+      # Define sops secrets for bot token and chat ID here, inside the config block.
+      # These secrets must be defined and encrypted in your main sops secrets file (e.g., secrets.yaml).
+      sops.secrets.telegram_bot_token = { };
+      sops.secrets.telegram_chat_id = { };
 
-    # Define a templated systemd service for Telegram notifications
-    systemd.services."tg-notify@" = {
-      description = "Send a Telegram notification on service failure";
-      after = [ "network.target" ]; # Ensure network is up before attempting to send
+      # Define a templated systemd service for Telegram notifications
+      systemd.services."tg-notify@" = {
+        description = "Send a Telegram notification on service failure";
+        after = [ "network.target" ]; # Ensure network is up before attempting to send
 
-      serviceConfig = {
-        Type = "oneshot"; # Service runs once and exits
-        # ExecStart command uses the tg-notify script with the service name as title
-        # %i is the instance name (e.g., "my-service" if you use tg-notify@my-service)
-        ExecStart = "${lib.getExe tg-notify} -t %i";
-        # Use EnvironmentFile to load BOT_TOKEN and CHAT_ID into the service's environment
-        EnvironmentFile = telegramCredentialsFile;
-        # Add necessary packages to the service's PATH
-        Path = with pkgs; [ systemd curl ]; # coreutils is not strictly needed here if 'cat' isn't used in script directly
+        serviceConfig = {
+          Type = "oneshot"; # Service runs once and exits
+          # ExecStart command uses the tg-notify script with the service name as title
+          # %i is the instance name (e.g., "my-service" if you use tg-notify@my-service)
+          ExecStart = "${lib.getExe tg-notify} -t %i";
+          # Use EnvironmentFile to load BOT_TOKEN and CHAT_ID into the service's environment
+          EnvironmentFile = telegramCredentialsFile;
+          # Add necessary packages to the service's PATH
+          Path = with pkgs; [ systemd curl ]; # coreutils is not strictly needed here if 'cat' isn't used in script directly
+        };
       };
-    };
 
-    # Make the tg-notify script available in the system's PATH
-    environment.systemPackages = [ tg-notify ];
+      # Make the tg-notify script available in the system's PATH
+      environment.systemPackages = [ tg-notify ];
 
-    # Add a tmpfiles rule for the credentials file, similar to miniflux.nix.
-    # This ensures proper permissions and ownership for the temporary file.
-    systemd.tmpfiles.rules = [
-      "f ${telegramCredentialsFile} 0640 root root -"
-    ];
+      # Add a tmpfiles rule for the credentials file, similar to miniflux.nix.
+      # This ensures proper permissions and ownership for the temporary file.
+      systemd.tmpfiles.rules = [
+        "f ${telegramCredentialsFile} 0640 root root -"
+      ];
+    }; # <--- End of services.tg-notify block
   };
 }
