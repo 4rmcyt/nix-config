@@ -38,10 +38,18 @@
     };
     maxLatency = 18.0;
 
-    # The script must be inside the portForward block
     portForward = {
       enable = true;
-     script = ''
+      # SCRIPT IS INTENTIONALLY LEFT BLANK HERE.
+    };
+  };
+
+  systemd.services.transmission-vpn-handler = {
+    description = "Update Transmission IP and Port after VPN connects";
+    after = [ "pia-vpn.service" ];
+    wantedBy = [ "multi-user.target" ];
+
+    script = ''
       #!${pkgs.runtimeShell}
 
       # Loop until the port file appears
@@ -51,13 +59,14 @@
       PORT=$(cat /run/pia-vpn/port)
 
       # Loop until the wg0 interface has an IP
+      VPN_IP=""
       while [ -z "$VPN_IP" ]; do
         VPN_IP=$(${pkgs.iproute2}/bin/ip -4 addr show wg0 | ${pkgs.gnugrep}/bin/grep -oP '(?<=inet\s)\d+(\.\d+){3}')
         sleep 1
       done
 
-      echo "Handler: Found Port $PORT and IP $VPN_IP. Updating Transmission."
-      
+      echo "Handler: Found Port $PORT and IP $VPN_IP. Updating Transmission." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
+
       SETTINGS_FILE="/var/lib/transmission/.config/transmission-daemon/settings.json"
 
       # Update both IP and Port in the settings file.
@@ -66,11 +75,11 @@
         --argjson port "$PORT" \
         '."bind-address-ipv4" = $ip | ."peer-port" = $port' \
         "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
-      
+
       # Restart Transmission to apply the new settings.
       ${pkgs.systemd}/bin/systemctl restart transmission.service
     '';
-    
+
     serviceConfig = {
       Type = "oneshot";
     };
