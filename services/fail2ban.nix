@@ -149,38 +149,12 @@
         };
       };
 
-      delugevpn = {
-        settings = {
-          enabled = true;
-          backend = "systemd";
-          journalmatch = "_SYSTEMD_UNIT=deluge-vpn.service";
-          filter = "delugevpn";
-          maxretry = 5;
-          findtime = "10m";
-          bantime = "1h";
-          action = "cloudflare-token";
-        };
-      };
-
       homepage = {
         settings = {
           enabled = true;
           backend = "systemd";
           journalmatch = "_SYSTEMD_UNIT=homepage.service";
           filter = "homepage";
-          maxretry = 5;
-          findtime = "10m";
-          bantime = "1h";
-          action = "cloudflare-token";
-        };
-      };
-
-      tailscale = {
-        settings = {
-          enabled = true;
-          backend = "systemd";
-          journalmatch = "_SYSTEMD_UNIT=tailscaled.service";
-          filter = "tailscale";
           maxretry = 5;
           findtime = "10m";
           bantime = "1h";
@@ -201,12 +175,12 @@
         };
       };
 
-      media-content = {
+      miniflux = {
         settings = {
           enabled = true;
           backend = "systemd";
-          journalmatch = "_SYSTEMD_UNIT=media-content.service";
-          filter = "media-content";
+          journalmatch = "_SYSTEMD_UNIT=miniflux.service";
+          filter = "miniflux";
           maxretry = 5;
           findtime = "10m";
           bantime = "1h";
@@ -220,6 +194,42 @@
           backend = "systemd";
           journalmatch = "_SYSTEMD_UNIT=yubikey.service";
           filter = "yubikey";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
+      kavita = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=kavita.service";
+          filter = "kavita";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
+      transmission = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=transmission.service";
+          filter = "transmission";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+        };
+      };
+      tailscale = {
+        settings = {
+          enabled = true;
+          backend = "systemd";
+          journalmatch = "_SYSTEMD_UNIT=tailscaled.service";
+          filter = "tailscale";
           maxretry = 5;
           findtime = "10m";
           bantime = "1h";
