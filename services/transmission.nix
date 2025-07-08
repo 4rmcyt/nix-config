@@ -27,7 +27,10 @@ in
 
     systemd.services.transmission.bindsTo = [ "pia-vpn.service" ];
     systemd.services.transmission.after = [ "pia-vpn.service" ];
-
+    systemd.services.transmission.vpnConfinement = {
+      enable = true;
+      vpnNamespace = "wg0";
+    };
 
     systemd.services.pia-vpn-portforward.path = [
       pkgs.transmission_4
