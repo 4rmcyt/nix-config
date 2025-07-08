@@ -8,6 +8,10 @@ in
 {
   options.services.transmission.vpn = {
     enable = mkEnableOption "that Transmission should run through the PIA VPN";
+    settings = { #Override default settings
+      rpc-bind-address = "0.0.0.0"; #Bind to own IP
+      rpc-whitelist = "127.0.0.1,10.0.0.1"; #Whitelist your remote machine (10.0.0.1 in this example)
+    };
   };
 
   config = mkIf (cfg.enable && cfg.vpn.enable) {
