@@ -32,16 +32,7 @@
     };
     maxLatency = 18.0;
   };
-
-  services.pia-vpn.portForward = {
-    enable = true;
-    script = ''
-      export $(cat transmission-rpc.env | xargs)
-      ${pkgs.transmission_4}/bin/transmission-remote --port $port || true
-    '';
-  };
-
-
+ 
   services.transmission = {
     enable = true;
     package = pkgs.transmission_4;
