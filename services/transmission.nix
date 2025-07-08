@@ -7,36 +7,42 @@ let
 in
 {
   options.services.transmission.vpn = {
-    enable = mkEnableOption "that Transmission should run through the PIA VPN";
+    enable = mkEnableOption "that Transmission should run through the VPN";
   };
 
   config = mkIf (cfg.enable && cfg.vpn.enable) {
+    # Ensure Transmission only starts after the VPN is fully connected.
+    services.transmission.wantedBy = [ "pia-vpn.service" ];
+    services.transmission.after = [ "pia-vpn.service" ];
+
+    # Bind the Transmission service to the VPN's network interface IP address.
+    # This is the critical part to prevent traffic from leaking.
+    # Your VPN interface is named 'wg0'.
+    systemd.services.transmission.serviceConfig = {
+      BindToDevice = "wg0";
+    };
+
+    # Configure PIA port forwarding for optimal torrenting.
     services.pia-vpn.portForward.script = ''
       #!${pkgs.runtimeShell}
       PORT="$1"
       echo "PIA Hook: Received new port $PORT. Updating Transmission." | systemd-cat -t transmission-port-hook
 
-      # Since the script runs locally, we don't need RPC authentication.
+      # Wait a moment to ensure the transmission daemon is ready.
+      sleep 5
+
       # We just tell transmission-remote to set the new port.
-      transmission-remote --peerport "$PORT" || true
+      # No RPC authentication is needed since the script runs locally.
+      ${pkgs.transmission}/bin/transmission-remote --peerport "$PORT" || true
     '';
 
-    # Add the Transmission user to the pia-vpn group. This is essential for
-    # network namespace permissions.
+    # Add the transmission user to the necessary groups.
     users.users.${cfg.user}.extraGroups = [ "pia-vpn" "media" ];
 
-    # Ensure Transmission starts after PIA VPN and stops if PIA VPN stops.
-    systemd.services.transmission-daemon.bindsTo = [ "pia-vpn.service" ];
-    systemd.services.transmission-daemon.after = [ "pia-vpn.service" ];
-    
-    # This is the crucial part: tell pia-vpn to put transmission-daemon
-    # into its network namespace, forcing its traffic through the VPN.
-    # We append "transmission-daemon" to the list of services managed by pia-vpn's network namespace.
-    services.pia-vpn.networkNamespace.services = [ "transmission-daemon" ];
-
+    # Ensure the port forwarding script has access to necessary packages.
     systemd.services.pia-vpn-portforward.path = [
-      pkgs.transmission_4
+      pkgs.transmission
       pkgs.systemd # for systemd-cat
     ];
   };
-}
+} 
