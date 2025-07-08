@@ -51,7 +51,7 @@
       "watch-dir" = "/home/zeev/Downloads/torrents";
       "dht-enabled" = "true";
       "script-torrent-added-enabled" = "true";
-      "script-torrent-added-filename" = "/etc/nixos/scripts/add-trackers-to-torrent.sh";
+      "script-torrent-added-filename" = "/etc/nixos/scripts/add-trackers.sh";
       "blocklist-enabled" = true;
       "blocklist-url" = "https://raw.githubusercontent.com/ngosang/trackerslist/master/blacklist.txt";
     };
