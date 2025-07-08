@@ -40,44 +40,16 @@
 
     portForward = {
       enable = true;
-      # This is now the one and only script, in the correct location.
-      # It will run automatically whenever a port is forwarded.
+      # This is the official method, with a corrected script.
       script = ''
         #!${pkgs.runtimeShell}
-
-        # Loop until the port file appears, but max 10 seconds.
-        for i in {1..10}; do
-          [ -f /run/pia-vpn/port ] && break
-          sleep 1
-        done
-
-        # Exit gracefully if port file never appeared.
-        if [ ! -f /run/pia-vpn/port ]; then
-          echo "PIA/Transmission Hook: Port file did not appear in time." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
-          exit 0
+        PORT_FILE="/run/pia-vpn/port"
+        if [ -s "$PORT_FILE" ]; then
+          PORT=$(cat "$PORT_FILE")
+          echo "PIA Hook: Setting Transmission port to $PORT"
+          # The script's only job is to tell the running daemon the new port.
+          ${pkgs.transmission_4}/bin/transmission-remote --peerport "$PORT" || true
         fi
-        PORT=$(cat /run/pia-vpn/port)
-
-        # Get the VPN IP.
-        VPN_IP=$(${pkgs.iproute2}/bin/ip -4 addr show wg0 | ${pkgs.gnugrep}/bin/grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-        if [ -z "$VPN_IP" ]; then
-          echo "PIA/Transmission Hook: VPN IP not found. Can't update bind address." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
-          exit 0
-        fi
-
-        echo "PIA/Transmission Hook: Found Port $PORT and IP $VPN_IP. Updating Transmission." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
-
-        SETTINGS_FILE="/var/lib/transmission/.config/transmission-daemon/settings.json"
-
-        # Update both IP and Port in the settings file.
-        ${pkgs.jq}/bin/jq \
-          --arg ip "$VPN_IP" \
-          --argjson port "$PORT" \
-          '."bind-address-ipv4" = $ip | ."peer-port" = $port' \
-          "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
-
-        # Restart Transmission to apply the new settings.
-        ${pkgs.systemd}/bin/systemctl restart transmission.service
       '';
     };
   };
@@ -105,8 +77,10 @@
   };
 
   systemd.services.transmission = {
-    after = [ "pia-vpn.service" ];
-    wantedBy = [ "pia-vpn.service" ];
+    bindsTo = [ "pia-vpn-portforward.service" ];
+    after = [ "pia-vpn-portforward.service" ];
+
+    # This is the essential network "kill switch" that binds Transmission to the VPN.
     serviceConfig.BindToDevice = "wg0";
   };
 
