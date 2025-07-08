@@ -36,8 +36,7 @@
       url = "https://raw.githubusercontent.com/pia-foss/manual-connections/master/ca.rsa.4096.crt";
       sha256 = "sha256-Mumx0UM+qXYU8qFMbjWOP1fAVwzJ9rLugSaZumlsZqs=";
     };
-    # To solve port forwarding issues, explicitly set a server
-    # that is known to support it and remove maxLatency.
+    maxLatency = 0.5;
     region = "port-forwarding-regions";
     portForward.enable = true;
   };
