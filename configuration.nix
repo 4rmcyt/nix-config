@@ -49,7 +49,6 @@
 		openPeerPorts = true;
 		openRPCPort = true;
     vpn.enable = true;
-    vpnNamespace = "wg0";
     settings = {
       "download-dir" = "/home/zeev/Downloads";
       "rpc-bind-address" = "0.0.0.0";
