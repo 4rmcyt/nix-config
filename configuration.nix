@@ -71,6 +71,8 @@
   sops.secrets.microbin_admin_password = {};
   sops.secrets.tailscale_auth_key = {};
   sops.secrets.pia_credentials = {};
+  sops.secrets.telegram_bot_token = {};
+  sops.secrets.telegram_chat_id = {};
 
   # Define groups first
   users.groups = {
@@ -167,6 +169,7 @@
   # Enable VSCode server
   services.vscode-server.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  services.tg-notify.enable = true;
 
   system.stateVersion = "25.05";
 }
