@@ -32,7 +32,7 @@
     };
     maxLatency = 18.0;
   };
-  
+
   services.pia-vpn = {
     enable = true;
     # ... your other pia-vpn settings
@@ -68,6 +68,19 @@
       # Restart the service to apply both settings from the file.
       ${pkgs.systemd}/bin/systemctl restart transmission.service
     '';
+  };
+
+  services.transmission = {
+    enable = true;
+    package = pkgs.transmission_4;
+    # REMOVE 'vpn.enable = true;' from this section.
+    settings = {
+      "download-dir" = "/home/zeev/Downloads";
+      # REMOVE any hardcoded "bind-address-ipv4" from here.
+      # ... your other transmission settings
+    };
+  };
+
 
   services.transmission = {
     enable = true;
@@ -78,6 +91,7 @@
     vpn.enable = true;
     settings = {
       "download-dir" = "/home/zeev/Downloads";
+      "bind-address-ipv4" = "10.5.228.247";
       "rpc-whitelist" = "127.0.0.1,192.168.1.*,100.64.0.*,localhost,transmission.example.com";
       "rpc-host-whitelist-enabled" = "false";
 			"rpc-whitelist-enabled" = "false";
