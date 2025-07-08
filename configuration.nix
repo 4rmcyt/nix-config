@@ -40,7 +40,7 @@
     settings = {
       "download-dir" = "/home/zeev/Downloads";
       "rpc-bind-address" = "0.0.0.0";
-      "rpc-whitelist-enabled" = false; # Disable whitelist to allow access through VPN
+      "rpc-whitelist-enabled" = "false"; # Disable whitelist to allow access through VPN
       "rpc-whitelist" = "127.0.0.1,192.168.1.0/24,100.64.0.0/10,localhost";
     };
     vpn.enable = true;
