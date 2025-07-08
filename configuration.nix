@@ -37,11 +37,16 @@
   services.transmission = {
     enable = true;
     package = pkgs.transmission_4;
+    openFirewall = true;
+		openPeerPorts = true;
+		openRPCPort = true;
     settings = {
       "download-dir" = "/home/zeev/Downloads";
       "rpc-bind-address" = "0.0.0.0";
-      "rpc-whitelist-enabled" = "false"; 
       "rpc-whitelist" = "127.0.0.1,192.168.1.*,100.64.0.*,localhost,transmission.labhome.work";
+      "rpc-host-whitelist-enabled" = "false";
+			"rpc-whitelist-enabled" = "false";
+      "dht-enabled" = "true";
     };
     vpn.enable = true;
   };
