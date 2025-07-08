@@ -46,6 +46,9 @@
       "rpc-whitelist" = "127.0.0.1,192.168.1.*,100.64.0.*,localhost,transmission.labhome.work";
       "rpc-host-whitelist-enabled" = "false";
 			"rpc-whitelist-enabled" = "false";
+      "incomplete-dir" = "/home/zeev/Downloads/incomplete";
+      "incomplete-dir-enabled" = true;
+      "watch-dir" = "/home/zeev/Downloads/torrents";
       "dht-enabled" = "true";
     };
     vpn.enable = true;
@@ -141,6 +144,8 @@
     "d /home/zeev/library/manga 0775 zeev media -"
     # Download directory
     "d /home/zeev/Downloads 0770 zeev media -" # This rule will need to be aligned with the new download-dir for Transmission
+    "d /home/zeev/Downloads/incomplete 0770 zeev media -"
+    "d /home/zeev/Downloads/torrents 0770 zeev media -"
   ];
 
   # CENTRALIZED: Base system packages (service-specific tools in their files)
