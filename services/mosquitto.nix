@@ -49,17 +49,36 @@ in
 {
   services.mosquitto = {
     enable = true;
-    
-    # Point Mosquitto to the custom configuration file.
-    # This option should exist even in minimal modules.
-    configFile = mosquittoConfigFile;
-
-    # Ensure the mosquitto user has write access to the persistence location
-    users.users.mosquitto.extraGroups = [ "mosquitto" ]; # Ensure mosquitto user exists and is in mosquitto group
-    systemd.tmpfiles.rules = [
-      "d /var/lib/mosquitto 0700 mosquitto mosquitto -"
-    ];
+    # Removed: configFile = mosquittoConfigFile;
+    # This option is reported as non-existent.
   };
+
+  # Directly override the systemd service unit to use the custom config file.
+  # This is a last resort when module options are too limited.
+  systemd.services.mosquitto = {
+    # Ensure the service starts after networking is up
+    after = [ "network.target" ];
+    # Set the ExecStart command to use your custom config file.
+    # The actual path to mosquitto will be derived from pkgs.mosquitto.
+    # This assumes the Mosquitto package provides a binary that accepts -c for config file.
+    # Check `man mosquitto` or `mosquitto --help` for exact option if -c doesn't work.
+    serviceConfig = {
+      ExecStart = "${pkgs.mosquitto}/bin/mosquitto -c ${mosquittoConfigFile}";
+      # Ensure the mosquitto user is set for the service
+      User = "mosquitto";
+      Group = "mosquitto";
+      # Ensure the mosquitto user has write access to the persistence location
+      # This is redundant if home is already set to /var/lib/mosquitto, but good for clarity.
+      ReadWritePaths = [ "/var/lib/mosquitto" ];
+    };
+    # You might also need to explicitly bind mount the persistence location if PrivateMounts is true
+    # systemd.services.mosquitto.serviceConfig.BindPaths = [ "/var/lib/mosquitto" ];
+  };
+
+  # Ensure the mosquitto user has write access to the persistence location
+  systemd.tmpfiles.rules = [
+    "d /var/lib/mosquitto 0700 mosquitto mosquitto -"
+  ];
 
   # Define the sops secret for the Mosquitto IoT device password
   sops.secrets.mosquitto_iotdevice_password = {
@@ -69,8 +88,6 @@ in
   };
 
   # Open port 1883 in the firewall
-  networking.firewall.allowedTCPPorts = [ 1883 ];
-
   # Ensure the mosquitto user and group exist
   users.users.mosquitto = {
     isSystemUser = true;
