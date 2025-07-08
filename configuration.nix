@@ -36,7 +36,7 @@
 
   services.transmission = {
     enable = true;
-    package = pkgs.transmission_3;
+    package = pkgs.transmission_4;
     settings = {
       "download-dir" = "/home/zeev/Downloads";
       "rpc-bind-address" = "0.0.0.0";
