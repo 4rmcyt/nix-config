@@ -12,41 +12,43 @@ in
 
   config = mkIf (cfg.enable && cfg.vpn.enable) {
 
-    # This is the ONLY script hook available in the pia-vpn module.
-    # We will perform all actions (IP update and Port update) here.
     services.pia-vpn.portForward.script = ''
       #!${pkgs.runtimeShell}
-      # The port is passed as the first argument to this script.
       PORT="$1"
       
       echo "PIA Hook: Received new port $PORT. Updating Transmission." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
       
-      # Give the interface a moment to be fully ready
       sleep 2
 
-      # Get the IP address of the wg0 interface
       VPN_IP=$(${pkgs.iproute2}/bin/ip -4 addr show wg0 | ${pkgs.gnugrep}/bin/grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-
-      # Path to Transmission's real settings file
       SETTINGS_FILE="/var/lib/transmission/.config/transmission-daemon/settings.json"
 
-      if [ -n "$VPN_IP" ]; then
-        echo "PIA Hook: Found VPN IP $VPN_IP. Updating bind address." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
-        # Use jq to safely update the JSON file in-place
-        ${pkgs.jq}/bin/jq --arg ip "$VPN_IP" '."bind-address-ipv4" = $ip' "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
-      else
-        echo "PIA Hook: Could not find IP for wg0. Bind address not updated." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
+      if [ -z "$VPN_IP" ]; then
+        echo "PIA Hook: Could not find IP for wg0. Aborting update." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
+        exit 1
       fi
 
-      # Update the peer port using transmission-remote
-      ${pkgs.transmission_4}/bin/transmission-remote --peerport "$PORT" || true
+      echo "PIA Hook: Found VPN IP $VPN_IP. Updating settings file." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
+
+      # --- KEY CHANGE ---
+      # Use one jq command to update both the IP and the Port in the settings file.
+      # We use --argjson for the port so it's treated as a number, not a string.
+      ${pkgs.jq}/bin/jq \
+        --arg ip "$VPN_IP" \
+        --argjson port "$PORT" \
+        '."bind-address-ipv4" = $ip | ."peer-port" = $port' \
+        "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
       
-      # Tell the running transmission service to reload its config to apply the new IP
+      # Now, reload the service to apply *both* changes from the file at once.
+      # The 'transmission-remote' command is no longer needed.
       ${pkgs.systemd}/bin/systemctl reload transmission.service
     '';
 
-    # Ensure the static IP setting is null, so our script can manage it.
-    services.transmission.settings."bind-address-ipv4" = mkForce null;
+    # Ensure the static IP and port are managed by the script, not the config.
+    services.transmission.settings = {
+      "bind-address-ipv4" = mkForce null;
+      "peer-port" = mkForce null;
+    };
 
     # Systemd settings for service ordering and as a defense-in-depth kill switch.
     systemd.services.transmission = {
