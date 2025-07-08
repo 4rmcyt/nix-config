@@ -41,7 +41,7 @@
       "download-dir" = "/home/zeev/Downloads";
       "rpc-bind-address" = "0.0.0.0";
       "rpc-whitelist-enabled" = "false"; 
-      "rpc-whitelist" = "127.0.0.1,192.168.1.*,100.64.0.*,localhost";
+      "rpc-whitelist" = "127.0.0.1,192.168.1.*,100.64.0.*,localhost,transmission.labhome.work";
     };
     vpn.enable = true;
   };
