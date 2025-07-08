@@ -41,44 +41,44 @@
   };
 
   systemd.services.transmission-vpn-handler = {
-    description = "Update Transmission IP and Port after VPN connects";
-    after = [ "pia-vpn.service" ];
-    wantedBy = [ "multi-user.target" ];
+  description = "Update Transmission IP and Port after VPN connects";
+  
+  # --- KEY CHANGE ---
+  # Instead of the generic vpn service, we now require and wait for the
+  # specific service that creates the port file. This resolves the final race condition.
+  requires = [ "pia-vpn-portforward.service" ];
+  after = [ "pia-vpn-portforward.service" ];
 
-    script = ''
-      #!${pkgs.runtimeShell}
+  # The 'wantedBy' can be removed, as this service is now started by
+  # the 'requires' directive from the transmission service.
+  # wantedBy = [ "multi-user.target" ];
 
-      # Loop until the port file appears
-      while [ ! -f /run/pia-vpn/port ]; do
-        sleep 2
-      done
-      PORT=$(cat /run/pia-vpn/port)
+  # The script itself is now perfect and needs no changes.
+  script = ''
+    #!${pkgs.runtimeShell}
+    
+    # This script will now only run AFTER the port file and IP are available.
+    PORT=$(cat /run/pia-vpn/port)
+    VPN_IP=$(${pkgs.iproute2}/bin/ip -4 addr show wg0 | ${pkgs.gnugrep}/bin/grep -oP '(?<=inet\s)\d+(\.\d+){3}')
 
-      # Loop until the wg0 interface has an IP
-      VPN_IP=""
-      while [ -z "$VPN_IP" ]; do
-        VPN_IP=$(${pkgs.iproute2}/bin/ip -4 addr show wg0 | ${pkgs.gnugrep}/bin/grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-        sleep 2
-      done
+    echo "Handler: Found Port $PORT and IP $VPN_IP. Updating config file." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
+    
+    SETTINGS_FILE="/var/lib/transmission/.config/transmission-daemon/settings.json"
 
-      echo "Handler: Found Port $PORT and IP $VPN_IP. Updating config file." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
-
-      SETTINGS_FILE="/var/lib/transmission/.config/transmission-daemon/settings.json"
-
-      ${pkgs.jq}/bin/jq \
-        --arg ip "$VPN_IP" \
-        --argjson port "$PORT" \
-        '."bind-address-ipv4" = $ip | ."peer-port" = $port' \
-        "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
-
-      # The 'systemctl restart' command is REMOVED.
-      # Systemd will now handle starting Transmission at the right time.
-    '';
-
-    serviceConfig = {
-      Type = "oneshot";
-    };
+    ${pkgs.jq}/bin/jq \
+      --arg ip "$VPN_IP" \
+      --argjson port "$PORT" \
+      '."bind-address-ipv4" = $ip | ."peer-port" = $port' \
+      "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+  '';
+  
+  serviceConfig = {
+    Type = "oneshot";
+    # This is important. It tells systemd that the script's job is done,
+    # and the next service in the chain (Transmission) can start.
+    RemainAfterExit = true; 
   };
+};
 
   services.transmission = {
     enable = true;
