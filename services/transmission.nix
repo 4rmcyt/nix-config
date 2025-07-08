@@ -94,8 +94,8 @@ let
     utp-enabled = true;
     # --- YOUR DESIRED WATCH DIRECTORY ---
     watch-dir = "/home/zeev/Downloads/torrents";
-    watch-dir-enabled = false; # Set to true to enable watching
-  });
+    watch-dir-enabled = false; 
+  }; # <--- Problem is here, no semicolon
 
   # This creates a *directory* in the Nix store that contains our settings.json file.
   # Transmission's -g flag expects a directory.
