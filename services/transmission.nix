@@ -1,54 +1,28 @@
-# /etc/nixos/transmission.nix
 { config, lib, pkgs, ... }:
 
 with lib;
 
 let
   cfg = config.services.transmission;
+  updateTransmissionScript = pkgs.writeShellApplication {
+    name = "update-transmission-ip";
+    runtimeInputs = with pkgs; [ iproute2 jq coreutils systemd ];
+    text = builtins.readFile ./scripts/update-transmission-ip.sh;
+  };
 in
 {
   options.services.transmission.vpn = {
-    enable = mkEnableOption "that Transmission should run through the VPN";
+    enable = mkEnableOption "that Transmission should run through the PIA VPN";
   };
 
   config = mkIf (cfg.enable && cfg.vpn.enable) {
-
-    # 1. CONFIGURE SYSTEMD
-    # This is where all service management and network binding happens.
-    #--------------------------------------------------------------------
+    services.pia-vpn.upScript = "${updateTransmissionScript}/bin/update-transmission-ip";
+    services.transmission.settings."bind-address-ipv4" = mkForce null;
     systemd.services.transmission = {
-      # Make transmission start after and be wanted by the VPN service.
       after = [ "pia-vpn.service" ];
       wantedBy = [ "pia-vpn.service" ];
-
-      # This is the network kill-switch. It forces all traffic for this
-      # service through the 'wg0' (WireGuard) network interface.
       serviceConfig.BindToDevice = "wg0";
     };
-
-
-    # 2. CONFIGURE PIA PORT FORWARDING
-    #--------------------------------------------------------------------
-    services.pia-vpn.portForward.script = ''
-      #!${pkgs.runtimeShell}
-      PORT="$1"
-      echo "PIA Hook: Received new port $PORT. Updating Transmission." | systemd-cat -t transmission-port-hook
-      # Give the daemon a moment to be ready for commands
-      sleep 5
-      # Update the port using the full package path
-      ${pkgs.transmission_4}/bin/transmission-remote --peerport "$PORT" || true
-    '';
-
-    # Ensure the port forward script has access to necessary packages
-    systemd.services.pia-vpn-portforward.path = [
-      pkgs.transmission_4
-      pkgs.systemd # for systemd-cat
-    ];
-
-
-    # 3. CONFIGURE USER PERMISSIONS
-    #--------------------------------------------------------------------
     users.users.${cfg.user}.extraGroups = [ "pia-vpn" "media" ];
-
   };
 }
