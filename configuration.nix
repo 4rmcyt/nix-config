@@ -105,7 +105,6 @@
   systemd.services.transmission = {
     requires = [ "transmission-vpn-handler.service" ];
     after = [ "transmission-vpn-handler.service" ];
-    wantedBy = [ "multi-user.target" ];
   };
 
   sops.defaultSopsFile = ./secrets.yaml;
