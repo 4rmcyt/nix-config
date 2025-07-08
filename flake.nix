@@ -66,7 +66,7 @@
         # Smart home & notifications
         ./services/home-assistant.nix
         ./services/keycloak.nix
-        ./services/tg-notify.nix
+        # ./services/tg-notify.nix
       ];
     }; 
   };
