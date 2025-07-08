@@ -46,7 +46,7 @@
         ./services/homepage.nix
         ./services/tailscale.nix
         ./services/cloudflared.nix
-        ./services/mosquitto.nix
+        # ./services/mosquitto.nix
         ./services/monitoring.nix
 
         # Media services
