@@ -143,24 +143,10 @@
             };
           }
           {
-            "PostgreSQL" = {
-              href = "#";
-              description = "Database Server (CLI only)";
-              icon = "postgresql";
-            };
-          }
-          {
             "Tailscale" = {
               href = "https://login.tailscale.com/admin/machines";
               description = "Mesh VPN Administration";
               icon = "tailscale";
-            };
-          }
-          {
-            "Fail2ban" = {
-              href = "#";
-              description = "Intrusion Prevention (CLI only)";
-              icon = "https://upload.wikimedia.org/wikipedia/commons/d/db/Fail2ban_logo.png";
             };
           }
         ];
