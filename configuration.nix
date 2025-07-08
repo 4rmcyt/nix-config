@@ -14,7 +14,7 @@
     enable = true;
     settings = {
       PermitRootLogin = "no";
-      PasswordAuthentication = false;
+      PasswordAuthentication = true;
       PubkeyAuthentication = true;
       X11Forwarding = false;
       MaxAuthTries = 3;
@@ -141,10 +141,10 @@
     "d /home/zeev/media/series 0770 zeev media -"
     "d /home/zeev/media/music 0770 zeev media -"
     "d /home/zeev/media/other 0770 zeev media -"
-    "d /home/zeev/library 0775 zeev media -"
-    "d /home/zeev/library/books 0775 zeev media -"
-    "d /home/zeev/library/comics 0775 zeev media -"
-    "d /home/zeev/library/manga 0775 zeev media -"
+    "d /home/zeev/media/library 0775 zeev media -"
+    "d /home/zeev/media/library/books 0775 zeev media -"
+    "d /home/zeev/media/library/comics 0775 zeev media -"
+    "d /home/zeev/media/library/manga 0775 zeev media -"
     "d /home/zeev/Downloads 0770 zeev media -"
     "d /home/zeev/Downloads/incomplete 0770 zeev media -"
     "d /home/zeev/Downloads/torrents 0770 zeev media -"
