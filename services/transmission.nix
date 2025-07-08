@@ -11,15 +11,12 @@ in
   };
 
   config = mkIf (cfg.enable && cfg.vpn.enable) {
-    services.pia-vpn.portForward.script = ''
-      #!${pkgs.runtimeShell}
-      PORT="$1"
-      echo "PIA Hook: Received new port $PORT. Updating Transmission." | systemd-cat -t transmission-port-hook
-
-      # Since the script runs locally, we don't need RPC authentication.
-      # We just tell transmission-remote to set the new port.
-      transmission-remote --peerport "$PORT" || true
+     services.pia-vpn.portForward = {
+    enable = true;
+    script = ''
+      ${pkgs.transmission_4}/bin/transmission-remote --port $port || true
     '';
+  };
 
    
     users.users.${cfg.user}.extraGroups = [ "pia-vpn" "media" ];
