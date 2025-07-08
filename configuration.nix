@@ -169,7 +169,7 @@
   # Enable VSCode server
   services.vscode-server.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  services.tg-notify.enable = true;
+  services.tg-notify.enable = false;
 
   system.stateVersion = "25.05";
 }
