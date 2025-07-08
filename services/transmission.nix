@@ -22,8 +22,8 @@ in
     users.users.${cfg.user}.extraGroups = [ "pia-vpn" "media" ];
 
 
-    systemd.services.transmission-daemon.bindsTo = [ "pia-vpn.service" ];
-    systemd.services.transmission-daemon.after = [ "pia-vpn.service" ];
+    systemd.services.transmission.bindsTo = [ "pia-vpn.service" ];
+    systemd.services.transmission.after = [ "pia-vpn.service" ];
 
 
     systemd.services.pia-vpn-portforward.path = [
