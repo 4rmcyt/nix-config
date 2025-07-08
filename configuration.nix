@@ -2,7 +2,13 @@
 
 {
   imports = [
-    ./hardware-configuration.nix    
+    ./hardware-configuration.nix
+    ./services/transmission.nix # <--- ADD THIS LINE
+    # Add other service modules here if they are in ./services/
+    # For example:
+    # ./services/miniflux.nix
+    # ./services/cloudflared.nix
+    # ./services/kavita.nix
   ];
 
   # Bootloader
@@ -29,30 +35,15 @@
     certificateFile = pkgs.fetchurl {
       url = "https://raw.githubusercontent.com/pia-foss/manual-connections/master/ca.rsa.4096.crt";
       sha256 = "sha256-Mumx0UM+qXYU8qFMbjWOP1fAVwzJ9rLugSaZumlsZqs=";
-  };
+    };
     portForward.enable = true;
     maxLatency = 18.0;
   };
-
-   services.transmission = {
-    enable = true;
-    package = pkgs.transmission_4;
-    openRPCPort = true;
-    settings = {
-      "download-dir" = "/home/zeev/Downloads";
-      "rpc-bind-address" = "0.0.0.0";
-      "rpc-whitelist" = "127.0.0.1,10.0.0.1,192.168.1.0/24,100.64.0.0/10";
-    };
-    # Enable our custom VPN integration from the module
-    vpn.enable = true;
-  };
 
   # SOPS configuration
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-  
-
 
   # CLEANED: Only central secrets (removed service-specific duplicates)
   sops.secrets.zeev_password = {
@@ -102,11 +93,6 @@
       extraGroups = [ "media" ];
     };
 
-    transmission = {
-      isSystemUser = true;
-      group = "transmission";
-      extraGroups = [ "media" ];
-    };
 
     kavita = {
       isSystemUser = true;
@@ -114,7 +100,7 @@
       extraGroups = [ "media" ];
     };
   };
-  
+
   # Add existing service users to media group where needed
   users.users.nextcloud.extraGroups = [ "media" ];
   users.users.radicale.extraGroups = [ "media" ];
@@ -138,7 +124,7 @@
     "d /home/zeev/library/comics 0775 zeev media -"
     "d /home/zeev/library/manga 0775 zeev media -"
     # Download directory
-    "d /home/zeev/Downloads 0770 zeev media -"
+    "d /home/zeev/Downloads 0770 zeev media -" # This rule will need to be aligned with the new download-dir for Transmission
   ];
 
   # CENTRALIZED: Base system packages (service-specific tools in their files)
@@ -150,7 +136,8 @@
     wireguard-tools iproute2
 
     # Web server tools
-    apacheHttpd
+    apacheHttpd # Note: you previously said you don't use Nginx, but apacheHttpd is here.
+                # If you're not using it, consider removing.
 
     # Basic monitoring (NO advanced tools - those are in monitoring.nix)
     htop btop lsof
@@ -163,7 +150,6 @@
       zeev = import ./home.nix;
     };
   };
-
 
   # Enable VSCode server
   services.vscode-server.enable = true;
