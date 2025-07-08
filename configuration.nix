@@ -38,7 +38,7 @@
     };
     # To solve port forwarding issues, explicitly set a server
     # that is known to support it and remove maxLatency.
-    server = "ca-toronto";
+    region = "port-forwarding-regions";
     portForward.enable = true;
   };
 
