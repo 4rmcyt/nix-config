@@ -30,6 +30,12 @@
   };
 
   services.pia-vpn = {
+    serviceConfig.path = [
+      pkgs.wireguard-tools
+      pkgs.iproute2
+      pkgs.gnugrep
+      pkgs.curl
+    ];
     enable = true;
     environmentFile = config.sops.secrets.pia_credentials.path;
     certificateFile = pkgs.fetchurl {
@@ -41,14 +47,6 @@
     portForward.enable = true;
   };
 
-  systemd.services.pia-connection = {
-    serviceConfig.path = [
-      pkgs.wireguard-tools
-      pkgs.iproute2
-      pkgs.gnugrep
-      pkgs.curl
-    ];
-  };
 
   systemd.services.transmission-vpn-handler = {
     description = "Prepare Transmission config after VPN connects";
