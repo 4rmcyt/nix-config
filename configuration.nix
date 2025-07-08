@@ -41,6 +41,15 @@
     portForward.enable = true;
   };
 
+  systemd.services.pia-connection = {
+    serviceConfig.path = [
+      pkgs.wireguard-tools
+      pkgs.iproute2
+      pkgs.gnugrep
+      pkgs.curl
+    ];
+  };
+
   systemd.services.transmission-vpn-handler = {
     description = "Prepare Transmission config after VPN connects";
     after = [ "pia-vpn.service" ];
