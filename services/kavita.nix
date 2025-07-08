@@ -14,5 +14,5 @@
     enable = true;
     user = "kavita";
     dataDir = "/home/zeev/media/library";
-  }
+  };
 }
