@@ -66,13 +66,13 @@
     '';
   };
 
-  systemd.services.transmission-daemon = {
+  systemd.services.transmission = {
     after = [ "pia-vpn.service" ];
     bindsTo = [ "pia-vpn.service" ];
   };
 
   systemd.services.pia-vpn-portforward-start = {
-    after = [ "transmission-daemon.service" ];
+    after = [ "transmission.service" ];
   };
 
   # SOPS configuration
