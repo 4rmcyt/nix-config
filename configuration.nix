@@ -41,14 +41,38 @@
     # The script must be inside the portForward block
     portForward = {
       enable = true;
-      script = ''
-        PORT_FILE="/run/pia-vpn/port"
-        if [ -s "$PORT_FILE" ]; then
-          PORT=$(cat "$PORT_FILE")
-          echo "PIA Hook: Setting Transmission port to $PORT"
-          ${pkgs.transmission_4}/bin/transmission-remote --peerport "$PORT" || true
-        fi
-      '';
+     script = ''
+      #!${pkgs.runtimeShell}
+
+      # Loop until the port file appears
+      while [ ! -f /run/pia-vpn/port ]; do
+        sleep 1
+      done
+      PORT=$(cat /run/pia-vpn/port)
+
+      # Loop until the wg0 interface has an IP
+      while [ -z "$VPN_IP" ]; do
+        VPN_IP=$(${pkgs.iproute2}/bin/ip -4 addr show wg0 | ${pkgs.gnugrep}/bin/grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+        sleep 1
+      done
+
+      echo "Handler: Found Port $PORT and IP $VPN_IP. Updating Transmission."
+      
+      SETTINGS_FILE="/var/lib/transmission/.config/transmission-daemon/settings.json"
+
+      # Update both IP and Port in the settings file.
+      ${pkgs.jq}/bin/jq \
+        --arg ip "$VPN_IP" \
+        --argjson port "$PORT" \
+        '."bind-address-ipv4" = $ip | ."peer-port" = $port' \
+        "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+      
+      # Restart Transmission to apply the new settings.
+      ${pkgs.systemd}/bin/systemctl restart transmission.service
+    '';
+    
+    serviceConfig = {
+      Type = "oneshot";
     };
   };
 
@@ -80,12 +104,10 @@
     serviceConfig.BindToDevice = "wg0";
   };
 
-  # SOPS configuration
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
 
-  # CLEANED: Only central secrets (removed service-specific duplicates)
   sops.secrets.zeev_password = {
     neededForUsers = true;
   };
@@ -96,7 +118,6 @@
   sops.secrets.telegram_bot_token = { };
   sops.secrets.telegram_chat_id = { };
 
-  # Define groups first
   users.groups = {
     media = { };
     microbin = { };
@@ -105,7 +126,6 @@
     kavita = { };
   };
 
-  # User configuration
   users.users = {
     # Main user
     zeev = {
