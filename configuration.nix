@@ -40,48 +40,45 @@
 
     portForward = {
       enable = true;
-      # SCRIPT IS INTENTIONALLY LEFT BLANK HERE.
-    };
-  };
+      # This is now the one and only script, in the correct location.
+      # It will run automatically whenever a port is forwarded.
+      script = ''
+        #!${pkgs.runtimeShell}
 
-  systemd.services.transmission-vpn-handler = {
-    description = "Update Transmission IP and Port after VPN connects";
-    after = [ "pia-vpn.service" ];
-    wantedBy = [ "multi-user.target" ];
+        # Loop until the port file appears, but max 10 seconds.
+        for i in {1..10}; do
+          [ -f /run/pia-vpn/port ] && break
+          sleep 1
+        done
 
-    script = ''
-      #!${pkgs.runtimeShell}
+        # Exit gracefully if port file never appeared.
+        if [ ! -f /run/pia-vpn/port ]; then
+          echo "PIA/Transmission Hook: Port file did not appear in time." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
+          exit 0
+        fi
+        PORT=$(cat /run/pia-vpn/port)
 
-      # Loop until the port file appears
-      while [ ! -f /run/pia-vpn/port ]; do
-        sleep 1
-      done
-      PORT=$(cat /run/pia-vpn/port)
-
-      # Loop until the wg0 interface has an IP
-      VPN_IP=""
-      while [ -z "$VPN_IP" ]; do
+        # Get the VPN IP.
         VPN_IP=$(${pkgs.iproute2}/bin/ip -4 addr show wg0 | ${pkgs.gnugrep}/bin/grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-        sleep 1
-      done
+        if [ -z "$VPN_IP" ]; then
+          echo "PIA/Transmission Hook: VPN IP not found. Can't update bind address." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
+          exit 0
+        fi
 
-      echo "Handler: Found Port $PORT and IP $VPN_IP. Updating Transmission." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
+        echo "PIA/Transmission Hook: Found Port $PORT and IP $VPN_IP. Updating Transmission." | ${pkgs.systemd}/bin/systemd-cat -t transmission-hook
 
-      SETTINGS_FILE="/var/lib/transmission/.config/transmission-daemon/settings.json"
+        SETTINGS_FILE="/var/lib/transmission/.config/transmission-daemon/settings.json"
 
-      # Update both IP and Port in the settings file.
-      ${pkgs.jq}/bin/jq \
-        --arg ip "$VPN_IP" \
-        --argjson port "$PORT" \
-        '."bind-address-ipv4" = $ip | ."peer-port" = $port' \
-        "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+        # Update both IP and Port in the settings file.
+        ${pkgs.jq}/bin/jq \
+          --arg ip "$VPN_IP" \
+          --argjson port "$PORT" \
+          '."bind-address-ipv4" = $ip | ."peer-port" = $port' \
+          "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp" && mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
 
-      # Restart Transmission to apply the new settings.
-      ${pkgs.systemd}/bin/systemctl restart transmission.service
-    '';
-
-    serviceConfig = {
-      Type = "oneshot";
+        # Restart Transmission to apply the new settings.
+        ${pkgs.systemd}/bin/systemctl restart transmission.service
+      '';
     };
   };
 
