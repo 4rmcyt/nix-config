@@ -4,14 +4,20 @@ let
   # Define cfg at the top-level let binding so it's accessible to the module's config
   cfg = config.tg-notify;
 
-  # Define the tg-notify script as a shell script binary
+  # Create a file containing the Telegram bot token and chat ID as environment variables.
+  # This file's content is derived from the sops secrets.
+  telegramCredentialsFile = pkgs.writeText "telegram-credentials" ''
+    BOT_TOKEN=$(cat ${config.sops.secrets.telegram_bot_token.path})
+    CHAT_ID=$(cat ${config.sops.secrets.telegram_chat_id.path})
+  '';
+
+  # Define the tg-notify script as a shell script binary.
+  # This script now expects BOT_TOKEN and CHAT_ID to be set as environment variables.
   tg-notify = pkgs.writeShellScriptBin "tg-notify" ''
     #!${pkgs.bash}/bin/bash
 
-    # Retrieve BOT_TOKEN and CHAT_ID directly from sops secrets paths
-    # Ensure 'cat' is explicitly path'd using pkgs.coreutils
-    BOT_TOKEN="$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.telegram_bot_token.path})"
-    CHAT_ID="$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.telegram_chat_id.path})"
+    # BOT_TOKEN and CHAT_ID are now provided via environment variables
+    # by the systemd service's EnvironmentFile. No need to 'cat' them here.
 
     # Initialize positional arguments array
     POSITIONAL_ARGS=()
@@ -80,7 +86,8 @@ let
     <code>$final_message</code>
     "
     
-    # Send the Telegram message using explicitly path'd curl
+    # Send the Telegram message using explicitly path'd curl.
+    # BOT_TOKEN and CHAT_ID are now environment variables.
     ${pkgs.curl}/bin/curl --data "chat_id=$CHAT_ID" \
       --data-urlencode "text=$text" \
       --data-urlencode "parse_mode=HTML" \
@@ -88,14 +95,14 @@ let
   '';
 in
 {
-  # Define sops secrets for bot token and chat ID
+  # Define sops secrets for bot token and chat ID.
+  # These secrets must be defined and encrypted in your main sops secrets file (e.g., secrets.yaml).
   sops.secrets.telegram_bot_token = { };
   sops.secrets.telegram_chat_id = { };
 
   # Define module options
   options.tg-notify = {
     enable = lib.mkEnableOption "Send system notifications via Telegram";
-    # The credentialsFile option is removed as secrets are accessed directly
   };
 
   # Configure the module based on options
@@ -110,13 +117,20 @@ in
         # ExecStart command uses the tg-notify script with the service name as title
         # %i is the instance name (e.g., "my-service" if you use tg-notify@my-service)
         ExecStart = "${lib.getExe tg-notify} -t %i";
-        # EnvironmentFile is removed as secrets are accessed directly in the script
-        # Add necessary packages to the service's PATH for commands not explicitly path'd
-        Path = with pkgs; [ systemd curl coreutils ]; # Added coreutils for 'cat'
+        # Use EnvironmentFile to load BOT_TOKEN and CHAT_ID into the service's environment
+        EnvironmentFile = telegramCredentialsFile;
+        # Add necessary packages to the service's PATH
+        Path = with pkgs; [ systemd curl ]; # coreutils is not strictly needed here if 'cat' isn't used in script directly
       };
     };
 
     # Make the tg-notify script available in the system's PATH
     environment.systemPackages = [ tg-notify ];
+
+    # Add a tmpfiles rule for the credentials file, similar to miniflux.nix.
+    # This ensures proper permissions and ownership for the temporary file.
+    systemd.tmpfiles.rules = [
+      "f ${telegramCredentialsFile} 0640 root root -"
+    ];
   };
 }
