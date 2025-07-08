@@ -21,16 +21,18 @@ in
       transmission-remote --peerport "$PORT" || true
     '';
 
-   
+    # Add the Transmission user to the pia-vpn group. This is essential for
+    # network namespace permissions.
     users.users.${cfg.user}.extraGroups = [ "pia-vpn" "media" ];
 
-
-    systemd.services.transmission.bindsTo = [ "pia-vpn.service" ];
-    systemd.services.transmission.after = [ "pia-vpn.service" ];
-    systemd.services.transmission.vpnConfinement = {
-      enable = true;
-      vpnNamespace = "wg0";
-    };
+    # Ensure Transmission starts after PIA VPN and stops if PIA VPN stops.
+    systemd.services.transmission-daemon.bindsTo = [ "pia-vpn.service" ];
+    systemd.services.transmission-daemon.after = [ "pia-vpn.service" ];
+    
+    # This is the crucial part: tell pia-vpn to put transmission-daemon
+    # into its network namespace, forcing its traffic through the VPN.
+    # We append "transmission-daemon" to the list of services managed by pia-vpn's network namespace.
+    services.pia-vpn.networkNamespace.services = [ "transmission-daemon" ];
 
     systemd.services.pia-vpn-portforward.path = [
       pkgs.transmission_4
