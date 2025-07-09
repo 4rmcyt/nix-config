@@ -134,6 +134,21 @@
   users.users.nextcloud.extraGroups = [ "media" ];
   users.users.radicale.extraGroups = [ "media" ];
   users.users.paperless.extraGroups = [ "media" ];
+  users.users.git = {
+    isSystemUser = true;
+    group = "git";
+    home = "/var/lib/git-server";
+    createHome = true;
+    shell = "${pkgs.git}/bin/git-shell";
+    openssh.authorizedKeys.keys = [
+      # FIXME: Add pubkeys of authorized users
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAokdbrMinZjhDnVLnrXOjNn9SvzsPdlP6P3T9hAtGG8 vk@Volodymyr-Kondratenko-Mac.local"
+    ];
+  };
+
+  users.groups.git = {};
+
 
   # CENTRALIZED: Media directory structure (moved from individual services)
   systemd.tmpfiles.rules = [
@@ -194,6 +209,12 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAokdbrMinZjhDnVLnrXOjNn9SvzsPdlP6P3T9hAtGG8 vk@Volodymyr-Kondratenko-Mac.local"
   ];
+
+  programs.git = {
+    enable = true;
+    userName  = "4rmcyt";
+    userEmail = "4rmcyt@gmail.com";
+  };
 
 
   nix.settings.experimental-features = [
