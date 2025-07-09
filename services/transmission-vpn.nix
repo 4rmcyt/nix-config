@@ -5,17 +5,39 @@ let
   piaInterface = config.services.pia-vpn.interface;
   
   startTransmission = pkgs.writeScript "start-transmission" ''
-    #!${pkgs.stdenv.shell}
-    IP=$(${pkgs.iproute2}/bin/ip addr show dev ${piaInterface} | ${pkgs.gnugrep}/bin/grep "inet" | ${pkgs.gawk}/bin/awk '{print $2}')
-      echo "Using IP address: $IP"
-      
-      if [ -z "$IP" ]; then
-        echo "Error: Could not determine IP address for interface ${piaInterface}" >&2
-        exit 1
-      fi
+    ${pkgs.transmission_4}/bin/transmission-daemon -f \
+    -g "${config.services.transmission.home}/.config/transmission-daemon" \
+    --rpc-bind-address $IP
   '';
 in
-{
+{ 
+   services.pia-vpn.networkConfig = ''
+    [Match]
+    Name = ''${interface}
+
+    [Network]
+    Description = WireGuard PIA network interface
+    Address = ''${peerip}/32
+
+    [RoutingPolicyRule]
+    To = ''${wg_ip}/32
+    Priority = 1000
+
+    # if port forwarding is required, make an exception for that service
+    # as it's not accessible from inside the VPN
+    [RoutingPolicyRule]
+    To = ''${meta_ip}/32
+    Priority = 1000
+
+    [RoutingPolicyRule]
+    To = 0.0.0.0/0
+    Priority = 2000
+    Table = 42
+
+    [Route]
+    Destination = 0.0.0.0/0
+    Table = 42
+  '';
   services = {
     pia-vpn = {
     enable = true;
