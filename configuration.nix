@@ -149,8 +149,8 @@
     htop
     btop
     lsof
-    awk
     gawk
+    gnugrep
   ];
 
   # Enable Home Manager
