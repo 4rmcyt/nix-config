@@ -28,7 +28,7 @@
     openFirewall = true;
   };
 
-   services.nixarr = {
+  services.nixarr = {
     enable = true;
     # These two values are also the default, but you can set them to whatever
     # else you want
@@ -40,7 +40,6 @@
       enable = true;
       wgConf = "/home/zeev/.config/nixarr/wg.conf";
     };
-
 
     transmission = {
       enable = true;
@@ -65,7 +64,7 @@
     sonarr.enable = true;
     jellyseerr.enable = true;
   };
-  
+
   # SOPS configuration
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
@@ -127,7 +126,7 @@
       group = "samba";
       extraGroups = [ "media" ];
     };
-    
+
     kavita = {
       isSystemUser = true;
       group = "kavita";
