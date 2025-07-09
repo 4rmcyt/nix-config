@@ -53,6 +53,7 @@ in
       download-dir = "/home/zeev/Downloads";
       rpc-enabled = true;
       rpc-bind-address = "0.0.0.0";
+      bind-address-ipv4 = "0.0.0.0"
       rpc-whitelist = "127.0.0.1,192.168.1.*,100.64.0.*,localhost,transmission.example.com";
       rpc-whitelist-enabled = false;
       dht-enabled = "true";
