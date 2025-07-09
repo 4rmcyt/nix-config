@@ -5,17 +5,6 @@
   inputs,
   ...
 }:
-with lib;
-let
-  piaInterface = config.services.pia-vpn.interface;
-  startTransmission = pkgs.writeScript "start-transmission" ''
-    #!${pkgs.stdenv.shell}
-    IP=$(${pkgs.iproute2}/bin/ip -j addr show dev ${piaInterface} | ${pkgs.jq}/bin/jq -r '.[0].addr_info | map(select(.family == "inet"))[0].local')
-    ${pkgs.transmission_3}/bin/transmission-daemon -f \
-      -g "${config.services.transmission.home}/.config/transmission-daemon" \
-      --bind-address-ipv4 $IP
-  '';
-in
 {
   imports = [
     ./hardware-configuration.nix
@@ -72,6 +61,7 @@ in
       "script-torrent-added-filename" = "/etc/nixos/scripts/add-trackers.sh";
       "blocklist-enabled" = true;
       "blocklist-url" = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
+      "bind-address-ipv4" = "$(${pkgs.iproute2}/bin/ip -j addr show dev ${piaInterface} | ${pkgs.jq}/bin/jq -r '.[0].addr_info | map(select(.family == "inet"))[0].local')";
     };
   };
 
