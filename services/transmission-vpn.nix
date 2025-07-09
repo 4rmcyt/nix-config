@@ -1,10 +1,5 @@
-# /etc/nixos/services/transmission-vpn.nix
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}:
+{ config, lib, pkgs, ... }:
+
 with lib;
 let
   piaInterface = config.services.pia-vpn.interface;
@@ -16,8 +11,8 @@ let
 
 in
 {
-  # PIA VPN Service Configuration
-  services.pia-vpn = {
+  services = {
+    pia-vpn = {
     enable = true;
     environmentFile = config.sops.secrets.pia_credentials.path;
     certificateFile = pkgs.fetchurl {
@@ -33,8 +28,7 @@ in
     };
   };
 
-  # Transmission Service Configuration
-  services.transmission = {
+  transmission = {
     enable = true;
     settings = {
       download-queue-enabled = true;
@@ -78,7 +72,7 @@ in
       blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
     };
   };
-
+}
   systemd.services.transmission = {
     after = [ "pia-vpn.service" ];
     bindsTo = [ "pia-vpn.service" ];
