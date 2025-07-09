@@ -76,15 +76,12 @@ in
   };
 
   # Remove or comment out this entire block
-  # systemd.services.transmission = {
-  #   after = [ "pia-vpn.service" ];
-  #   bindsTo = [ "pia-vpn.service" ];
-  #   requires = [ "network.target" ];
-  #   wantedBy = [ "multi-user.target" ];
-  #   serviceConfig.ExecStart = mkForce ''
-  #     ${startTransmission}
-  #   '';
-  # };
+  systemd.services.transmission = {
+    after = [ "pia-vpn.service" ];
+    bindsTo = [ "pia-vpn.service" ];
+    requires = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
+  };
 
   # SOPS configuration
   sops.defaultSopsFile = ./secrets.yaml;
