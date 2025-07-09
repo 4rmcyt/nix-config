@@ -6,6 +6,17 @@
   ...
 }:
 
+let
+
+  piaInterface = config.services.pia-vpn.interface;
+  startTransmission = pkgs.writeScript "start-transmission" ''
+    #!${pkgs.stdenv.shell}
+    IP=$(${pkgs.iproute2}/bin/ip -j addr show dev ${piaInterface} | ${pkgs.jq}/bin/jq -r '.[0].addr_info | map(select(.family == "inet"))[0].local')
+    ${pkgs.transmission_3}/bin/transmission-daemon -f \
+      -g "${config.services.transmission.home}/.config/transmission-daemon" \
+      --bind-address-ipv4 $IP
+  '';
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -37,18 +48,12 @@
       sha256 = "sha256-Mumx0UM+qXYU8qFMbjWOP1fAVwzJ9rLugSaZumlsZqs=";
     };
     maxLatency = 18.0;
-  };
-
-  systemd.services.transmission = {
-    after = [ "pia-vpn.service" ];
-    bindsTo = [ "pia-vpn.service" ];
-  };
-
-  services.pia-vpn.portForward = {
-    enable = true;
-    script = ''
-      ${pkgs.transmission_4}/bin/transmission-remote --port $port || true
-    '';
+    portForward = {
+      enable = true;
+      script = ''
+        ${pkgs.transmission_4}/bin/transmission-remote --port $port || true
+      '';
+    };
   };
 
   services.transmission = {
@@ -69,6 +74,16 @@
       "blocklist-enabled" = true;
       "blocklist-url" = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
     };
+  };
+
+  systemd.services.transmission = {
+    after = [ "pia-vpn.service" ];
+    bindsTo = [ "pia-vpn.service" ];
+    requires = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig.ExecStart = mkForce ''
+      ${startTransmission}
+    '';
   };
 
   # SOPS configuration
