@@ -70,7 +70,7 @@ in
       upload-slots-per-torrent = 14;
       utp-enabled = true;
       watch-dir-enabled = false;
-      script-torrent-added-enabled = "true";
+      script-torrent-added-enabled = true;
       script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
       blocklist-enabled = true;
       blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
