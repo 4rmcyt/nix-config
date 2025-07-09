@@ -13,10 +13,10 @@
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     nix4nvchad.url = "github:nix-community/nix4nvchad";
-    nix-pia-vpn.url = "github:rcambrj/nix-pia-vpn";
+    nixarr.url = "github:rasmus-kirk/nixarr";
   };
 
-  outputs = { self, nixpkgs, disko, sops-nix, home-manager, nix-index-database, vscode-server, nix4nvchad, nix-pia-vpn, ... }@inputs: {
+  outputs = { self, nixpkgs, disko, sops-nix, home-manager, nix-index-database, vscode-server, nix4nvchad, nixarr, ... }@inputs: {
     nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
@@ -28,7 +28,7 @@
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
         nix-index-database.nixosModules.nix-index
-        nix-pia-vpn.nixosModules.default
+        nixarr.nixosModules.default
 
         # Core system configuration
         ./configuration.nix
@@ -53,7 +53,6 @@
         ./services/jellyfin.nix
         ./services/audiobookshelf.nix
         ./services/miniflux.nix
-        ./services/transmission-vpn.nix
         # ./services/kavita.nix
 
         # Productivity & Personal services
