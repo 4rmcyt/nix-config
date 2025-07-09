@@ -152,7 +152,6 @@
     "d /home/zeev/Downloads 0770 zeev media -"
     "d /home/zeev/Downloads/incomplete 0770 zeev media -"
     "d /home/zeev/Downloads/torrents 0770 zeev media -"
-    "d /home/zeev/.config/nixarr 0770 zeev nixarr -"
   ];
 
   environment.systemPackages = with pkgs; [
