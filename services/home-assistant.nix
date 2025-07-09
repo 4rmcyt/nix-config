@@ -15,7 +15,7 @@
       "default_config"
       "mqtt"
       "http"
-      "rokuecp"
+      "roku"
     ];
 
     config = {
