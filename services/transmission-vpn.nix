@@ -10,7 +10,7 @@ let
   piaInterface = config.services.pia-vpn.interface;
   startTransmission = pkgs.writeScript "start-transmission" ''
     #!${pkgs.stdenv.shell}
-    IP=$(${pkgs.iproute2}/bin/ip addr show dev wg0 | grep "inet" | ${pkgs.awk} '{print $2}' | cut -d/ -f10)
+    IP=$(${pkgs.iproute2}/bin/ip addr show dev wg0 | grep "inet" | awk '{print $2}' | cut -d/ -f10)
     if [ -z "$IP" ]; then
       echo "Error: Unable to determine PIA VPN IP address. Ensure the VPN is connected."
       exit 1
