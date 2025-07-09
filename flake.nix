@@ -54,6 +54,7 @@
         ./services/audiobookshelf.nix
         ./services/miniflux.nix
         # ./services/kavita.nix
+        ./services/nixarr.nix
 
         # Productivity & Personal services
         ./services/nextcloud.nix
