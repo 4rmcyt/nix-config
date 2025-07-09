@@ -28,6 +28,44 @@
     openFirewall = true;
   };
 
+   nixarr = {
+    enable = true;
+    # These two values are also the default, but you can set them to whatever
+    # else you want
+    # WARNING: Do _not_ set them to `/home/user/whatever`, it will not work!
+    mediaDir = "/data/media";
+    stateDir = "/data/media/.state/nixarr";
+
+    vpn = {
+      enable = true;
+      wgConf = "/home/zeev/.config/nixarr/wg.conf";
+    };
+
+
+    transmission = {
+      enable = true;
+      vpn.enable = true;
+      peerPort = 63998; # Set this to the port forwarded by your VPN
+      settings = {
+        download-dir = "/home/zeev/Downloads";
+        script-torrent-added-enabled = true;
+        script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
+        blocklist-enabled = true;
+        blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
+      };
+    };
+
+    # It is possible for this module to run the *Arrs through a VPN, but it
+    # is generally not recommended, as it can cause rate-limiting issues.
+    bazarr.enable = true;
+    lidarr.enable = true;
+    prowlarr.enable = true;
+    radarr.enable = true;
+    readarr.enable = true;
+    sonarr.enable = true;
+    jellyseerr.enable = true;
+  };
+  
   # SOPS configuration
   sops.defaultSopsFile = ./secrets.yaml;
   sops.defaultSopsFormat = "yaml";
@@ -52,7 +90,6 @@
     samba = { };
     kavita = { };
     transmission = { };
-    pia-vpn = { };
   };
 
   # User configuration
@@ -90,17 +127,7 @@
       group = "samba";
       extraGroups = [ "media" ];
     };
-
-    transmission = {
-      isSystemUser = true;
-      group = "transmission";
-      extraGroups = [
-        "media"
-        "users"
-        "pia-vpn"
-      ];
-    };
-
+    
     kavita = {
       isSystemUser = true;
       group = "kavita";
@@ -130,6 +157,7 @@
     "d /home/zeev/Downloads 0770 zeev media -"
     "d /home/zeev/Downloads/incomplete 0770 zeev media -"
     "d /home/zeev/Downloads/torrents 0770 zeev media -"
+    "d /home/zeev/.config/nixarr 0770 zeev nixarr -"
   ];
 
   environment.systemPackages = with pkgs; [
