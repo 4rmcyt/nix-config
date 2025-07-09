@@ -1,6 +1,6 @@
 # /etc/nixos/services/transmission-vpn.nix
 { config, pkgs, lib, ... }:
-wwith lib;
+with lib;
 let
   piaInterface = config.services.pia-vpn.interface;
   startTransmission = pkgs.writeScript "start-transmission" ''
