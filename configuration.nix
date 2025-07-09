@@ -187,7 +187,9 @@
    programs.gnupg.agent = {
       enable = true;
       enableSSHSupport = true; # Optional: Enables SSH support
-  };  services.vscode-server.enable = true;
+  };  
+  services.vscode-server.enable = true;
+  
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
