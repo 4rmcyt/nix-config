@@ -151,6 +151,7 @@
     lsof
     gawk
     gnugrep
+    coreutils
   ];
 
   # Enable Home Manager
