@@ -10,59 +10,11 @@
 
   services.home-assistant = {
     enable = true;
+    configWritable = true;
     extraComponents = [
       "default_config"
       "mqtt"
       "http"
-      "websocket_api"
-      "mobile_app"
-      "media_player"
-      "cast"
-      "spotify"
-      "zha"
-      "zwave_js"
-      "esphome"
-      "tasmota"
-      "sensor"
-      "binary_sensor"
-      "template"
-      "history"
-      "logbook"
-      "recorder"
-      "automation"
-      "script"
-      "scene"
-      "input_boolean"
-      "input_number"
-      "input_select"
-      "input_text"
-      "input_datetime"
-      "person"
-      "device_tracker"
-      "zone"
-      "sun"
-      "weather"
-      "file_upload"
-      "energy"
-      "shopping_list"
-      "calendar"
-      "system_health"
-      "logger"
-    ];
-
-    extraPackages = python3Packages: with python3Packages; [
-      # Database drivers
-      psycopg2
-      # MQTT support
-      paho-mqtt
-      pyserial
-      pyusb
-      pillow
-      requests
-      aiohttp
-      cryptography
-      numpy
-      python-dateutil
     ];
 
     config = {
