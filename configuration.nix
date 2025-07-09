@@ -210,12 +210,6 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAokdbrMinZjhDnVLnrXOjNn9SvzsPdlP6P3T9hAtGG8 vk@Volodymyr-Kondratenko-Mac.local"
   ];
 
-  programs.git = {
-    enable = true;
-    userName  = "4rmcyt";
-    userEmail = "redacted@example.com";
-  };
-
 
   nix.settings.experimental-features = [
     "nix-command"
