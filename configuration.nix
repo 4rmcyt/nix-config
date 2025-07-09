@@ -149,6 +149,8 @@
     htop
     btop
     lsof
+    awk
+    gawk
   ];
 
   # Enable Home Manager
