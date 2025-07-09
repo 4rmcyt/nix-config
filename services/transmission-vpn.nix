@@ -1,10 +1,5 @@
 # /etc/nixos/services/transmission-vpn.nix
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}:
+{ config, pkgs, lib, ... }:
 
 let
   # Define the PIA VPN interface name.
@@ -59,10 +54,9 @@ in
   services.transmission = {
     enable = true;
     package = pkgs.transmission_4;
-    # Key change here: use the piaInterface variable for rpc-bind-address
     settings = {
       "download-dir" = "/home/zeev/Downloads";
-      "rpc-bind-address" = "0.0.0.0"; # Keep this as 0.0.0.0 for RPC to be accessible
+      "rpc-bind-address" = "0.0.0.0"; # RPC will still bind here
       "rpc-whitelist" = "127.0.0.1,192.168.1.*,100.64.0.*,localhost,transmission.example.com";
       "rpc-host-whitelist-enabled" = "false";
       "rpc-whitelist-enabled" = "false";
@@ -74,13 +68,7 @@ in
       "script-torrent-added-filename" = "/etc/nixos/scripts/add-trackers.sh";
       "blocklist-enabled" = true;
       "blocklist-url" = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
-      # You can also set the 'bind-address-ipv4' here if you want to explicitly bind torrent traffic
-      # to the VPN IP, though RPC bind address is often sufficient for most use cases.
-      "bind-address-ipv4" =
-        "$(${pkgs.iproute2}/bin/ip -j addr show dev ${piaInterface} | ${pkgs.jq}/bin/jq -r '.[0].addr_info | map(select(.family == " inet "))[0].local')";
-      # NOTE: This dynamic binding for torrent traffic might still have timing issues.
-      # A better approach is often to use network namespaces or stricter firewall rules
-      # to ensure all traffic goes through the VPN, rather than relying on application binding alone.
+      # REMOVED THE PROBLEMATIC LINE: "bind-address-ipv4" is handled by 'startTransmission' script.
     };
   };
 
@@ -96,15 +84,14 @@ in
   };
 
   # Define the 'transmission' system user and add it to necessary groups.
-  # This ensures the user exists and has permissions for media and VPN.
   users.groups.transmission = { }; # Ensure the group is defined
   users.users.transmission = {
     isSystemUser = true;
     group = "transmission";
     extraGroups = [
       "media"
-      "users" # Often useful for system users
-      "pia-vpn" # Crucial for binding to the VPN interface and potentially port forwarding
+      "users"
+      "pia-vpn"
     ];
   };
 }
