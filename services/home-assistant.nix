@@ -16,6 +16,7 @@
       "mqtt"
       "http"
       "roku"
+      "alexa"
     ];
 
     config = {
