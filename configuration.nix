@@ -56,13 +56,13 @@
 
     # It is possible for this module to run the *Arrs through a VPN, but it
     # is generally not recommended, as it can cause rate-limiting issues.
-    bazarr.enable = true;
-    lidarr.enable = true;
-    prowlarr.enable = true;
-    radarr.enable = true;
-    readarr.enable = true;
-    sonarr.enable = true;
-    jellyseerr.enable = true;
+    # bazarr.enable = true;
+    # lidarr.enable = true;
+    # prowlarr.enable = true;
+    # radarr.enable = true;
+    # readarr.enable = true;
+    # sonarr.enable = true;
+    # jellyseerr.enable = true;
   };
 
   # SOPS configuration
