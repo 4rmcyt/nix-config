@@ -5,9 +5,8 @@
   inputs,
   ...
 }:
-
+with lib;
 let
-
   piaInterface = config.services.pia-vpn.interface;
   startTransmission = pkgs.writeScript "start-transmission" ''
     #!${pkgs.stdenv.shell}
