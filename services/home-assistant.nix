@@ -17,6 +17,7 @@
       "http"
       "roku"
       "alexa"
+      "alexa_devices"
     ];
 
     config = {
