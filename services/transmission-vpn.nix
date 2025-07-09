@@ -7,15 +7,12 @@ let
   startTransmission = pkgs.writeScript "start-transmission" ''
     #!${pkgs.stdenv.shell}
     IP=$(${pkgs.iproute2}/bin/ip addr show dev ${piaInterface} | ${pkgs.gnugrep}/bin/grep "inet" | ${pkgs.gawk}/bin/awk '{print $2}')
-      echo $IP
-      # Extract the IP address from the output
+      echo "Using IP address: $IP"
+      
       if [ -z "$IP" ]; then
         echo "Error: Could not determine IP address for interface ${piaInterface}" >&2
         exit 1
       fi
-    ${pkgs.transmission_4}/bin/transmission-daemon -f \
-    -g "${config.services.transmission.home}/.config/transmission-daemon" \
-    --rpc-bind-address $IP
   '';
 in
 {
