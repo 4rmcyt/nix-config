@@ -4,40 +4,35 @@ with lib;
 let
   piaInterface = config.services.pia-vpn.interface;
   
-  startTransmission = pkgs.writeScript "start-transmission" ''
-    ${pkgs.transmission_4}/bin/transmission-daemon -f \
-    -g "${config.services.transmission.home}/.config/transmission-daemon" \
-    --rpc-bind-address $IP
-  '';
 in
 { 
-   services.pia-vpn.networkConfig = ''
-    [Match]
-    Name = ''${interface}
+  #  services.pia-vpn.networkConfig = ''
+  #   [Match]
+  #   Name = ''${interface}
 
-    [Network]
-    Description = WireGuard PIA network interface
-    Address = ''${peerip}/32
+  #   [Network]
+  #   Description = WireGuard PIA network interface
+  #   Address = ''${peerip}/32
 
-    [RoutingPolicyRule]
-    To = ''${wg_ip}/32
-    Priority = 1000
+  #   [RoutingPolicyRule]
+  #   To = ''${wg_ip}/32
+  #   Priority = 1000
 
-    # if port forwarding is required, make an exception for that service
-    # as it's not accessible from inside the VPN
-    [RoutingPolicyRule]
-    To = ''${meta_ip}/32
-    Priority = 1000
+  #   # if port forwarding is required, make an exception for that service
+  #   # as it's not accessible from inside the VPN
+  #   [RoutingPolicyRule]
+  #   To = ''${meta_ip}/32
+  #   Priority = 1000
 
-    [RoutingPolicyRule]
-    To = 0.0.0.0/0
-    Priority = 2000
-    Table = 42
+  #   [RoutingPolicyRule]
+  #   To = 0.0.0.0/0
+  #   Priority = 2000
+  #   Table = 42
 
-    [Route]
-    Destination = 0.0.0.0/0
-    Table = 42
-  '';
+  #   [Route]
+  #   Destination = 0.0.0.0/0
+  #   Table = 42
+  # '';
   services = {
     pia-vpn = {
     enable = true;
