@@ -77,8 +77,8 @@ in
   };
 
   systemd.services.transmission = {
-    after = [ "pia-vpn.service" ];
-    bindsTo = [ "pia-vpn.service" ];
+    Requires = [ "pia-vpn-portforward.service" ];
+    After = [ "pia-vpn-portforward.service" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig.ExecStart = mkForce ''
       ${startTransmission}
