@@ -7,6 +7,7 @@ let
   startTransmission = pkgs.writeScript "start-transmission" ''
     #!${pkgs.stdenv.shell}
     IP=$(${pkgs.iproute2}/bin/ip addr show dev ${piaInterface} | ${pkgs.gnugrep}/bin/grep "inet" | ${pkgs.gawk}/bin/awk '{print $2}')
+    wait 5
     ${pkgs.transmission_4}/bin/transmission-daemon -f \
     -g "${config.services.transmission.home}/.config/transmission-daemon" \
     --bind-address-ipv4 $IP
