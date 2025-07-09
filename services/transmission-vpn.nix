@@ -5,20 +5,18 @@ let
   piaInterface = config.services.pia-vpn.interface;
   
   startTransmission = pkgs.writeScript "start-transmission" ''
-     #!${pkgs.stdenv.shell}
+    #!${pkgs.stdenv.shell}
     IP=$(${pkgs.iproute2}/bin/ip addr show dev ${piaInterface} | ${pkgs.gnugrep}/bin/grep "inet" | ${pkgs.gawk}/bin/awk '{print $2}')
-    if [ -z "$IP" ]; then
-      echo "Error: Could not determine IP address for interface ${piaInterface}" >&2
-      exit 1
-    fi
-
-    # Start transmission-daemon, binding the RPC interface to the VPN IP
-    # The peer traffic will automatically route through the VPN due to systemd setup
+      echo $IP
+      # Extract the IP address from the output
+      if [ -z "$IP" ]; then
+        echo "Error: Could not determine IP address for interface ${piaInterface}" >&2
+        exit 1
+      fi
     ${pkgs.transmission_4}/bin/transmission-daemon -f \
     -g "${config.services.transmission.home}/.config/transmission-daemon" \
     --rpc-bind-address $IP
   '';
-
 in
 {
   services = {
@@ -63,6 +61,7 @@ in
       download-dir = "/home/zeev/Downloads";
       rpc-enabled = true;
       rpc-bind-address = "0.0.0.0";
+      bind-address-ipv4 =
       rpc-whitelist = "127.0.0.1,192.168.1.*,100.64.0.*,localhost,transmission.labhome.work";
       rpc-whitelist-enabled = false;
       dht-enabled = "true";
