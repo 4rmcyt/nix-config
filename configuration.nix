@@ -28,37 +28,37 @@
     openFirewall = true;
   };
 
-  services.nixarr = {
-    enable = true;
-    mediaDir = "/data/media";
-    stateDir = "/data/media/.state/nixarr";
+  # services.nixarr = {
+  #   enable = true;
+  #   mediaDir = "/data/media";
+  #   stateDir = "/data/media/.state/nixarr";
 
-    vpn = {
-      enable = true;
-      wgConf = "/home/zeev/.config/nixarr/wg.conf"; # Ensure this path is correct and accessible
-    };
+  #   vpn = {
+  #     enable = true;
+  #     wgConf = "/home/zeev/.config/nixarr/wg.conf"; # Ensure this path is correct and accessible
+  #   };
 
-    transmission = {
-      enable = true;
-      vpn.enable = true;
-      peerPort = 63998;
-      extraSettings = {
-        download-dir = "/home/zeev/Downloads";
-        script-torrent-added-enabled = true;
-        script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
-        blocklist-enabled = true;
-        blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
-      };
-    };
+  #   transmission = {
+  #     enable = true;
+  #     vpn.enable = true;
+  #     peerPort = 63998;
+  #     extraSettings = {
+  #       download-dir = "/home/zeev/Downloads";
+  #       script-torrent-added-enabled = true;
+  #       script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
+  #       blocklist-enabled = true;
+  #       blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
+  #     };
+  #   };
 
-    # bazarr.enable = true;
-    # lidarr.enable = true;
-    # prowlarr.enable = true;
-    # radarr.enable = true;
-    # readarr.enable = true;
-    # sonarr.enable = true;
-    # jellyseerr.enable = true;
-  };
+  #   # bazarr.enable = true;
+  #   # lidarr.enable = true;
+  #   # prowlarr.enable = true;
+  #   # radarr.enable = true;
+  #   # readarr.enable = true;
+  #   # sonarr.enable = true;
+  #   # jellyseerr.enable = true;
+  # };
   
 
   # SOPS configuration
