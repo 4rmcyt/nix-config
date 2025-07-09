@@ -187,7 +187,6 @@
 
   # Enable VSCode server
   services.vscode-server.enable = true;
-  services.nixarr.enable = true;
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
