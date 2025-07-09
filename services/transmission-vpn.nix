@@ -5,7 +5,7 @@ let
   piaInterface = config.services.pia-vpn.interface;
   startTransmission = pkgs.writeScript "start-transmission" ''
     #!${pkgs.stdenv.shell}
-    IP=$(${pkgs.iproute2}/bin/ip addr show dev wg0 | grep "inet" | ${pkgs.gawk}/bin/awk '{print $2}' | cut -d/ -f10)
+    IP=$(${pkgs.iproute2}/bin/ip addr show dev wg0 | ${pkgs.gnugrep}/bin/grep "inet" | ${pkgs.gawk}/bin/awk '{print $2}' |  ${pkgs.coreutils}/bin/cut -d/ -f10)
     ${pkgs.transmission_4}/bin/transmission-daemon -f -g "${config.services.transmission.home}/.config/transmission-daemon" --bind-address-ipv4 $IP
   '';
 
