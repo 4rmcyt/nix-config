@@ -28,7 +28,7 @@
     openFirewall = true;
   };
 
-   nixarr = {
+   services.nixarr = {
     enable = true;
     # These two values are also the default, but you can set them to whatever
     # else you want
@@ -46,7 +46,7 @@
       enable = true;
       vpn.enable = true;
       peerPort = 63998; # Set this to the port forwarded by your VPN
-      settings = {
+      extraSettings = {
         download-dir = "/home/zeev/Downloads";
         script-torrent-added-enabled = true;
         script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
