@@ -5,10 +5,8 @@ let
   piaInterface = config.services.pia-vpn.interface;
 
   startTransmission = pkgs.writeScript "start-transmission" ''
-    #!${pkgs.stdenv.shell}
-    # Get the IP address of the PIA VPN interface (e.g., wg0)
-    IP=$(${pkgs.iproute2}/bin/ip addr show dev ${piaInterface} | ${pkgs.gnugrep}/bin/grep "inet " | ${pkgs.gawk}/bin/awk '{print $2}' | ${pkgs.gnugrep}/bin/grep -oE '\b([0-9]{1,3}\.){3}[0-9]{1,3}\b' | head -n 1)
-
+     #!${pkgs.stdenv.shell}
+    IP=$(${pkgs.iproute2}/bin/ip addr show dev ${piaInterface} | ${pkgs.gnugrep}/bin/grep "inet" | ${pkgs.gawk}/bin/awk '{print $2}')
     if [ -z "$IP" ]; then
       echo "Error: Could not determine IP address for interface ${piaInterface}" >&2
       exit 1
