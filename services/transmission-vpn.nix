@@ -72,7 +72,7 @@ in
       blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
     };
   };
-}
+};
   systemd.services.transmission = {
     after = [ "pia-vpn.service" ];
     bindsTo = [ "pia-vpn.service" ];
