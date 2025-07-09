@@ -10,6 +10,7 @@ let
     ${pkgs.transmission_4}/bin/transmission-daemon -f \
     -g "${config.services.transmission.home}/.config/transmission-daemon" \
     --bind-address-ipv4 $IP
+    wait $!
   '';
 
 in
