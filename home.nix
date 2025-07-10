@@ -29,20 +29,14 @@
     oh-my-zsh = {
       enable = true;
       plugins = [ "git" ];
-      # Use the full theme name here
+      # This line is all you need for the theme.
       theme = "powerlevel10k/powerlevel10k";
     };
   };
 
-  # 2. Powerlevel10k (as its own program)
-  programs.powerlevel10k = {
-    enable = true;
-    enableTransientPrompt = true;
-  };
-
-  # 3. NvChad Configuration
+  # 2. NvChad Configuration
   programs.nvchad.enable = true;
-
+  
   # Optional: Custom NvChad config
   xdg.configFile."nvim/lua/custom/chadrc.lua".text = ''
     -- This is my custom chadrc
@@ -54,7 +48,7 @@
     return M
   '';
 
-  # 4. Git Configuration
+  # 3. Git Configuration
   programs.git = {
     enable = true;
     userName = "Zeev";
@@ -64,7 +58,7 @@
     };
   };
   
-  # 5. Home Manager Setup
+  # 4. Home Manager Setup
   programs.home-manager.enable = true;
   home.stateVersion = "25.05";
 }
