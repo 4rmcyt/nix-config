@@ -56,6 +56,7 @@
       }
       return M
     '';
+    
     git = {
       enable = true;
       userName = "4rmcyt";
