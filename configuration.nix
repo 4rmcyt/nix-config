@@ -190,6 +190,8 @@
     gnugrep
     coreutils
     ssh-to-age
+    zsh-powerlevel10k
+    meslo-lgs-nf
   ];
 
   # Enable Home Manager
@@ -200,12 +202,39 @@
     };
   };
 
-   programs.gnupg.agent = {
+  programs.gnupg.agent = {
       enable = true;
       enableSSHSupport = true; # Optional: Enables SSH support
   };  
   services.vscode-server.enable = true;
-  
+  programs.neovim.defaultEditor = true;
+
+  programs.zsh = {
+    enable = true;
+    enableBashCompletion = true;
+    autosuggestions.enable = true;
+    syntaxHighlighting.enable = true;
+  };
+
+  programs.zsh.ohMyZsh = {
+    enable = true;
+    plugins = [ 
+      "git"
+      "zsh-autosuggestions"
+      "zsh-completions"
+      "zsh-history-substring-search"
+      "zsh-syntax-highlighting"
+      "you-should-use"
+      "pass" 
+      "direnv" 
+      "nix"
+      "nix-shell"
+      "do-you-even-nix "
+    ];
+    custom = "$HOME/.oh-my-zsh/custom/";
+    theme = "powerlevel10k/powerlevel10k";
+  };
+
   users.users."zeev".openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks redacted@example.com"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAokdbrMinZjhDnVLnrXOjNn9SvzsPdlP6P3T9hAtGG8 vk@Volodymyr-Kondratenko-Mac.local"
