@@ -75,10 +75,6 @@
   programs = {
     neovim.defaultEditor = true;
     home-manager.enable = true;
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
   };
   
   home.stateVersion = "25.05";
