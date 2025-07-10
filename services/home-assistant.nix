@@ -23,7 +23,7 @@
         installCheckPhase = ":";
       })).override {
         extraPackages = ps: with ps; [
-          jsonrpc-async jsonrpc-websocket mpd2 pkgs.picotts psycopg2
+         pyatv getmac pywemo metno radios jsonrpc-async jsonrpc-websocket mpd2 pkgs.picotts psycopg2
         ];
       };
       configDir = "/var/lib/home-assistant";

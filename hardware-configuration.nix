@@ -12,26 +12,16 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.loader.systemd-boot.configurationLimit = 10;
-  boot.kernelParams = [
-    "panic=10" # Reboot after 10 seconds of kernel panic
-    "panic_on_oops=1" # Reboot on any kernel oops
-  ];
 
 
-  networking.useDHCP = lib.mkDefault false; 
+  networking.useDHCP = lib.mkDefault false;  # We use static IP in networking.nix
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   hardware.graphics.enable = true;
 
-  hardware.graphics.extraPackages = with pkgs; [
-    intel-media-driver 
-    vaapiIntel
-    vaapiVdpau
-    libvdpau-va-gl
-  ];
-
+ 
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
 
   services.fwupd.enable = true;

@@ -2,22 +2,19 @@
 { config, pkgs, ... }: {
   nixarr = {
     enable = true;
-    mediaUsers = [ "zeev" "jellyfin" "kavita" "sonarr" "radarr" "lidarr" "readarr" "bazarr" "prowlarr"  "jellyseerr" "audiobookshelf" "transmission" "sabnzbd" ];
-    mediaDir = "/home/zeev/media";
-    stateDir = "/home/zeev/media/.state/nixarr";
 
-    # It is possible for this module to run the *Arrs through a VPN, but it
-    # is generally not recommended, as it can cause rate-limiting issues.
     vpn = {
       enable = true;
       wgConf = "/home/zeev/src/wg.conf";
     };
 
+    mediaDir = "/home/zeev/media";
 
     transmission = {
         enable = true;
         vpn.enable = true;
         peerPort = 63998;
+        flood.enable = true;
         extraSettings = {
           download-dir = "/home/zeev/Downloads";
           script-torrent-added-enabled = true;
@@ -26,11 +23,11 @@
           blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
         };
       };
-     
+    
+    
     sabnzbd = {
       enable = true;
       vpn.enable = true;
-      #openFirewall = true;
     };
 
     audiobookshelf.enable = true;
@@ -42,5 +39,15 @@
     readarr.enable = true;
     sonarr.enable = true;
     jellyseerr.enable = true;
+
+    hardware.graphics.extraPackages = with pkgs; [
+      intel-media-driver
+      intel-vaapi-driver
+      vaapiIntel
+      vaapiVdpau
+      intel-compute-runtime
+      libvdpau-va-gl
+  ];
+
   };
 }
