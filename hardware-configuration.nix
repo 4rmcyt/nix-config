@@ -21,6 +21,14 @@
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   hardware.graphics.enable = true;
 
+  hardware.graphics.extraPackages = with pkgs; [
+      intel-media-driver
+      intel-vaapi-driver
+      vaapiIntel
+      vaapiVdpau
+      intel-compute-runtime
+      libvdpau-va-gl
+  ];
  
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
 
