@@ -23,11 +23,70 @@
               icon = "audiobookshelf";
             };
           }
+        ];
+      }
+      {
+        "Arrs" = [
+          {
+            "Sonarr" = {
+              icon = "sonarr.png";
+
+              href = "https://tv.labhome.work/";
+              widgets = [
+                {
+                  type = "sonarr";
+                  url = "https://tv.labhome.work/";
+                }
+              ];
+            };
+          }
+          {
+            "Radarr" = {
+              icon = "radarr.png";
+
+              href = "https://movies.labhome.work/";
+              widgets = [
+                {
+                  type = "radarr";
+                  url = "https://movies.labhome.work/";
+                }
+              ];
+            };
+          }
           {
             "Transmission" = {
-              href = "http://192.168.1.165:9091";
-              description = "Torrent Client (VPN)";
-              icon = "transmission";
+              icon = "transmission.png";
+              href = "https://transmission.labhome.work/";
+              widgets = [
+                {
+                  type = "transmission";
+                  url = "https://transmission.labhome.work/transmission/rpc";
+                }
+              ];
+            };
+          }
+          {
+            "Prowlarr" = {
+              icon = "prowlarr.png";
+              href = "https://prowlarr.labhome.work/";
+              widgets = [
+                {
+                  type = "prowlarr";
+                  url = "https://prowlarr.labhome.work/";
+                }
+              ];
+            };
+          }
+          {
+            "Bazarr" = {
+              icon = "bazarr.png";
+              href = "htts://bazarr.labhome.work/";
+              widgets = [
+                {
+                  type = "bazarr";
+                  url = "htts://bazarr.labhome.work/";
+                }
+              ];
             };
           }
         ];

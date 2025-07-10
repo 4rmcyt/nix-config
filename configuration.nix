@@ -14,6 +14,7 @@
     package = pkgs.nixVersions.latest;
     settings = {
       experimental-features = ["nix-command" "flakes"];
+      warn-dirty = false;
       download-buffer-size = 500000000; # 500 MB
       # Faster builds
       cores = 0;
@@ -112,11 +113,14 @@
     apacheHttpd
     zsh-powerlevel10k
     meslo-lgs-nf
+    yamllint
+    nix-index
     
     zip
     unar
     unzip
     p7zip
+    calibre
 
     # Terminal programs
     iotop
