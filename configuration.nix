@@ -4,153 +4,76 @@
   lib,
   inputs,
   ...
-}:
-{
+}: {
   imports = [
     ./hardware-configuration.nix
   ];
 
-  # Bootloader
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # Enable SSH
-  services.openssh = {
-    enable = true;
-    settings = {
-      PermitRootLogin = "no";
-      PasswordAuthentication = true;
-      PubkeyAuthentication = true;
-      X11Forwarding = false;
-      MaxAuthTries = 3;
-      LoginGraceTime = 30;
-    };
-    openFirewall = true;
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
   };
 
-  # services.nixarr = {
-  #   enable = true;
-  #   mediaDir = "/data/media";
-  #   stateDir = "/data/media/.state/nixarr";
-
-  #   vpn = {
-  #     enable = true;
-  #     wgConf = "/home/zeev/.config/nixarr/wg.conf"; # Ensure this path is correct and accessible
-  #   };
-
-  #   transmission = {
-  #     enable = true;
-  #     vpn.enable = true;
-  #     peerPort = 63998;
-  #     extraSettings = {
-  #       download-dir = "/home/zeev/Downloads";
-  #       script-torrent-added-enabled = true;
-  #       script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
-  #       blocklist-enabled = true;
-  #       blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
-  #     };
-  #   };
-
-  #   # bazarr.enable = true;
-  #   # lidarr.enable = true;
-  #   # prowlarr.enable = true;
-  #   # radarr.enable = true;
-  #   # readarr.enable = true;
-  #   # sonarr.enable = true;
-  #   # jellyseerr.enable = true;
-  # };
-  
-
-  # SOPS configuration
-  sops.defaultSopsFile = ./secrets.yaml;
-  sops.defaultSopsFormat = "yaml";
-  sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-
-  # CLEANED: Only central secrets (removed service-specific duplicates)
-  sops.secrets.zeev_password = {
-    neededForUsers = true;
-  };
-  sops.secrets.nextcloud_admin_password = { };
-  sops.secrets.microbin_admin_password = { };
-  sops.secrets.tailscale_auth_key = { };
-  sops.secrets.pia_credentials = { };
-  sops.secrets.telegram_bot_token = { };
-  sops.secrets.telegram_chat_id = { };
-
-  # Define groups first
-  users.groups = {
-    media = { };
-    microbin = { };
-    miniflux = { };
-    samba = { };
-    kavita = { };
-    transmission = { };
-  };
-
-  # User configuration
-  users.users = {
-    # Main user
-    zeev = {
-      isNormalUser = true;
-      description = "Zeev";
-      extraGroups = [
-        "networkmanager"
-        "wheel"
-        "docker"
-        "media"
-        "samba"
-      ];
-      hashedPasswordFile = config.sops.secrets.zeev_password.path;
-      shell = pkgs.bash;
+  users = {
+    groups = {
+      media = {};
+      microbin = {};
+      miniflux = {};
+      samba = {};
+      kavita = {};
+      transmission = {};
+      git = {};
     };
-
-    # System users for services
-    microbin = {
-      isSystemUser = true;
-      group = "microbin";
-      extraGroups = [ "media" ];
-    };
-
-    miniflux = {
-      isSystemUser = true;
-      group = "miniflux";
-      extraGroups = [ "media" ];
-    };
-
-    samba = {
-      isSystemUser = true;
-      group = "samba";
-      extraGroups = [ "media" ];
-    };
-
-    kavita = {
-      isSystemUser = true;
-      group = "kavita";
-      extraGroups = [ "media" ];
+    users = {
+      zeev = {
+        isNormalUser = true;
+        description = "Zeev";
+        shell = pkgs.zsh;
+        extraGroups = [ "networkmanager" "wheel" "docker" "media" "samba" ];
+        hashedPasswordFile = config.sops.secrets.zeev_password.path;
+        openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAokdbrMinZjhDnVLnrXOjNn9SvzsPdlP6P3T9hAtGG8 vk@Volodymyr-Kondratenko-Mac.local"
+        ];
+      };
+      microbin = { isSystemUser = true; group = "microbin"; extraGroups = [ "media" ]; };
+      miniflux = { isSystemUser = true; group = "miniflux"; extraGroups = [ "media" ]; };
+      samba = { isSystemUser = true; group = "samba"; extraGroups = [ "media" ]; };
+      kavita = { isSystemUser = true; group = "kavita"; extraGroups = [ "media" ]; };
+      git = {
+        isSystemUser = true;
+        group = "git";
+        home = "/var/lib/git-server";
+        createHome = true;
+        shell = "${pkgs.git}/bin/git-shell";
+        openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAokdbrMinZjhDnVLnrXOjNn9SvzsPdlP6P3T9hAtGG8 vk@Volodymyr-Kondratenko-Mac.local"
+        ];
+      };
+      nextcloud.extraGroups = [ "media" ];
+      radicale.extraGroups = [ "media" ];
+      paperless.extraGroups = [ "media" ];
     };
   };
 
-  # Add existing service users to media group where needed
-  users.users.nextcloud.extraGroups = [ "media" ];
-  users.users.radicale.extraGroups = [ "media" ];
-  users.users.paperless.extraGroups = [ "media" ];
-  users.users.git = {
-    isSystemUser = true;
-    group = "git";
-    home = "/var/lib/git-server";
-    createHome = true;
-    shell = "${pkgs.git}/bin/git-shell";
-    openssh.authorizedKeys.keys = [
-      # FIXME: Add pubkeys of authorized users
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAokdbrMinZjhDnVLnrXOjNn9SvzsPdlP6P3T9hAtGG8 vk@Volodymyr-Kondratenko-Mac.local"
-    ];
+  home-manager = {
+    extraSpecialArgs = { inherit inputs; };
+    users = {
+      zeev = import ./home.nix;
+    };
   };
 
-  users.groups.git = {};
+  environment.systemPackages = with pkgs; [
+    zsh git vim wget curl jq coreutils gawk gnugrep iproute2 neovim mc
+    htop btop lsof
+    age sops ssh-to-age openssh
+    wireguard-tools apacheHttpd
+    zsh-powerlevel10k meslo-lgs-nf
+  ];
 
-
-  # CENTRALIZED: Media directory structure (moved from individual services)
   systemd.tmpfiles.rules = [
     "d /home/zeev 0770 zeev media -"
     "d /home/zeev/media 0770 zeev media -"
@@ -169,82 +92,61 @@
     "d /home/zeev/Downloads/torrents 0770 zeev media -"
   ];
 
-  environment.systemPackages = with pkgs; [
-    git
-    vim
-    wget
-    curl
-    jq
-    age
-    sops
-    openssh
-    neovim
-    mc
-    wireguard-tools
-    iproute2
-    apacheHttpd
-    htop
-    btop
-    lsof
-    gawk
-    gnugrep
-    coreutils
-    ssh-to-age
-    zsh-powerlevel10k
-    meslo-lgs-nf
-  ];
-
-  # Enable Home Manager
-  home-manager = {
-    extraSpecialArgs = { inherit inputs; };
-    users = {
-      zeev = import ./home.nix;
+  programs = {
+    neovim.defaultEditor = true;
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+    zsh = {
+      enable = true;
+      enableBashCompletion = true;
+      autosuggestions.enable = true;
+      syntaxHighlighting.enable = true;
+      ohMyZsh = {
+        enable = true;
+        plugins = [
+          "git" "zsh-autosuggestions" "zsh-completions"
+          "zsh-history-substring-search" "zsh-syntax-highlighting"
+          "you-should-use" "pass" "direnv" "nix" "nix-shell" "do-you-even-nix"
+        ];
+        custom = "$HOME/.oh-my-zsh/custom/";
+        theme = "powerlevel10k/powerlevel10k";
+      };
     };
   };
 
-  programs.gnupg.agent = {
+  services = {
+    openssh = {
       enable = true;
-      enableSSHSupport = true; # Optional: Enables SSH support
-  };  
-  services.vscode-server.enable = true;
-  programs.neovim.defaultEditor = true;
-
-  programs.zsh = {
-    enable = true;
-    enableBashCompletion = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
+      openFirewall = true;
+      settings = {
+        PermitRootLogin = "no";
+        PasswordAuthentication = true;
+        PubkeyAuthentication = true;
+        X11Forwarding = false;
+        MaxAuthTries = 3;
+        LoginGraceTime = "30s";
+      };
+    };
+    vscode-server.enable = true;
   };
 
-  programs.zsh.ohMyZsh = {
-    enable = true;
-    plugins = [ 
-      "git"
-      "zsh-autosuggestions"
-      "zsh-completions"
-      "zsh-history-substring-search"
-      "zsh-syntax-highlighting"
-      "you-should-use"
-      "pass" 
-      "direnv" 
-      "nix"
-      "nix-shell"
-      "do-you-even-nix "
-    ];
-    custom = "$HOME/.oh-my-zsh/custom/";
-    theme = "powerlevel10k/powerlevel10k";
+  sops = {
+    defaultSopsFile = ./secrets.yaml;
+    defaultSopsFormat = "yaml";
+    age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+    secrets = {
+      zeev_password.neededForUsers = true;
+      nextcloud_admin_password = {};
+      microbin_admin_password = {};
+      tailscale_auth_key = {};
+      pia_credentials = {};
+      telegram_bot_token = {};
+      telegram_chat_id = {};
+    };
   };
-
-  users.users."zeev".openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com"
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAokdbrMinZjhDnVLnrXOjNn9SvzsPdlP6P3T9hAtGG8 vk@Volodymyr-Kondratenko-Mac.local"
-  ];
-
-
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
 
   system.stateVersion = "25.05";
 }
+
