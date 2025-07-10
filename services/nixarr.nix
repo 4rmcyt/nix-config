@@ -2,7 +2,7 @@
 { config, pkgs, ... }: {
   nixarr = {
     enable = true;
-    mediaUsers = [ "zeev" ];
+    mediaUsers = [ "zeev" "jellyfin" "kavita" "sonarr" "radarr" "lidarr" "readarr" "bazarr" "prowlarr"  "jellyseerr" "audiobookshelf" "transmission" "sabnzbd" ];
     mediaDir = "/home/zeev/media";
     stateDir = "/home/zeev/media/.state/nixarr";
 
