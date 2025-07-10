@@ -3,7 +3,7 @@
   home.homeDirectory = "/home/zeev";
 
   imports = [
-    inputs.nvchad-nix.homeManagerModules.default
+    inputs.nix4nvchad.homeManagerModules.default
   ];
 
   programs.git = {

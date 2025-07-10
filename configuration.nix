@@ -125,6 +125,14 @@
       telegram_chat_id = {};
     };
   };
+  
+    # In configuration.nix
+  home-manager = {
+    extraSpecialArgs = { inherit inputs; };
+    users = {
+      zeev = import ./home.nix;
+    };
+  };
 
   system.stateVersion = "25.05";
 }
