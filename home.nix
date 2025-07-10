@@ -6,17 +6,7 @@
     inputs.nix4nvchad.homeManagerModules.default
   ];
 
-  programs.git = {
-    enable = true;
-    userName = "4rmcyt";
-    userEmail = "redacted@example.com"; # Change this to your email
-
-    # This is the key setting to force SSH for GitHub
-    extraConfig = {
-      "url.git@github.com:".insteadOf = "https://github.com/";
-    };
-  };  
-# 1. Zsh Configuration
+  # 1. Zsh Configuration
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -39,16 +29,18 @@
     oh-my-zsh = {
       enable = true;
       plugins = [ "git" ];
-      theme = "powerlevel10k";
-    };
-
-    powerlevel10k = {
-      enable = true;
-      enableTransientPrompt = true;
+      # Use the full theme name here
+      theme = "powerlevel10k/powerlevel10k";
     };
   };
 
-  # 2. NvChad Configuration
+  # 2. Powerlevel10k (as its own program)
+  programs.powerlevel10k = {
+    enable = true;
+    enableTransientPrompt = true;
+  };
+
+  # 3. NvChad Configuration
   programs.nvchad.enable = true;
 
   # Optional: Custom NvChad config
@@ -62,7 +54,17 @@
     return M
   '';
 
-  # 3. Home Manager Setup
+  # 4. Git Configuration
+  programs.git = {
+    enable = true;
+    userName = "Zeev";
+    userEmail = "your-email@example.com";
+    extraConfig = {
+      "url.git@github.com:".insteadOf = "https://github.com/";
+    };
+  };
+  
+  # 5. Home Manager Setup
   programs.home-manager.enable = true;
   home.stateVersion = "25.05";
 }
