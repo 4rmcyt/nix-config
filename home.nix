@@ -62,19 +62,6 @@
       hm-activation = true;
       backup = true;
     };
-      
-    git = {
-      enable = true;
-      userName = "4rmcyt";
-      userEmail = "redacted@example.com";
-      extraConfig = {
-        "Host github.com" = {
-          HostName = "github.com";
-          IdentityFile = "~/.ssh/zeev";
-          IdentitiesOnly = "yes";
-        };
-      };
-    };
   };
   
   home.stateVersion = "25.05";
