@@ -135,7 +135,6 @@
         enable = true;
         wgConf = "/home/zeev/src/wg.conf";
       };
-      jellyfin.enable = true;
       transmission = {
         enable = true;
         vpn.enable = true;
