@@ -4,8 +4,8 @@
     enable = true;
     # These two values are also the default, but you can set them to whatever
     # else you want
-    mediaDir = "/data/media";
-    stateDir = "/data/media/.state/nixarr";
+    mediaDir = "/home/zeev/media";
+    stateDir = "/home/zeev/media/.state/nixarr";
 
     # It is possible for this module to run the *Arrs through a VPN, but it
     # is generally not recommended, as it can cause rate-limiting issues.

@@ -23,7 +23,7 @@
       installCheckPhase = ":";
     })).override {
       extraPackages = ps: with ps; [
-        python-forecastio jsonrpc-async jsonrpc-websocket mpd2 pkgs.picotts psycopg2
+        jsonrpc-async jsonrpc-websocket mpd2 pkgs.picotts psycopg2
       ];
     };
     configDir = "/var/lib/home-assistant";
