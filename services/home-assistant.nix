@@ -11,7 +11,7 @@
   services = {
     home-assistant = {
     enable = true;
-    package = (unstable.home-assistant.overrideAttrs (old: {
+    package = (pkgs.home-assistant.overrideAttrs (old: {
       doCheck = false;
       checkPhase = ":";
       installCheckPhase = ":";
