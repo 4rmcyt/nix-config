@@ -141,7 +141,6 @@
       nextcloud_admin_password = {};
       microbin_admin_password = {};
       tailscale_auth_key = {};
-      pia_credentials = {};
       telegram_bot_token = {};
       telegram_chat_id = {};
     };
