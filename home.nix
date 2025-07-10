@@ -61,7 +61,7 @@
     enable = true;
     userName = "4rmcyt";
     userEmail = "redacted@example.com";
-    config = {
+    extraConfig = {
     "Host github.com" = {
       HostName = "github.com";
       # Tell SSH to use this specific key for GitHub
