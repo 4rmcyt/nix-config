@@ -105,37 +105,14 @@
     "d /home/zeev/Downloads/torrents 0770 zeev media -"
   ];
 
-  # programs = {
-  #   neovim.defaultEditor = true;
-  #   gnupg.agent = {
-  #     enable = true;
-  #     enableSSHSupport = true;
-  #   };
-  #   zsh.enable = true;
-  # };
-
-    nixarr = {
+  programs = {
+    neovim.defaultEditor = true;
+    gnupg.agent = {
       enable = true;
-      mediaDir = "/data/media";
-      stateDir = "/data/media/.state/nixarr";
-      vpn = {
-        enable = true;
-        wgConf = "/home/zeev/src/wg.conf";
-      };
-
-      transmission = {
-        enable = true;
-        vpn.enable = true;
-        peerPort = 63998;
-        extraSettings = {
-          download-dir = "/home/zeev/Downloads";
-          script-torrent-added-enabled = true;
-          script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
-          blocklist-enabled = true;
-          blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
-        };
-      };
+      enableSSHSupport = true;
     };
+    zsh.enable = true;
+  };
 
   services = {
     openssh = {
@@ -150,7 +127,30 @@
         LoginGraceTime = "30s";
       };
     };
+
     vscode-server.enable = true;
+
+    nixarr = {
+      enable = true;
+      mediaDir = "/data/media";
+      stateDir = "/data/media/.state/nixarr";
+      vpn = {
+        enable = true;
+        wgConfFile = "/home/zeev/src/wg.conf";
+      };
+      transmission = {
+        enable = true;
+        vpn.enable = true;
+        peerPort = 63998;
+        extraSettings = {
+          "download-dir" = "/home/zeev/Downloads";
+          "script-torrent-added-enabled" = true;
+          "script-torrent-added-filename" = "/etc/nixos/scripts/add-trackers.sh";
+          "blocklist-enabled" = true;
+          "blocklist-url" = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
+        };
+      };
+    };
   };
 
   sops = {
@@ -176,4 +176,3 @@
 
   system.stateVersion = "25.05";
 }
-
