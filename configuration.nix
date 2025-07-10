@@ -141,6 +141,7 @@
     openssh = {
       enable = true;
       openFirewall = true;
+      startAgent = true;
       settings = {
         PermitRootLogin = "no";
         PasswordAuthentication = true;
