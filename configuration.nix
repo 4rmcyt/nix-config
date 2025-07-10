@@ -141,13 +141,6 @@
         vpn.enable = true;
         peerPort = 63998;
       };
-      bazarr.enable = true;
-      lidarr.enable = true;
-      prowlarr.enable = true;
-      radarr.enable = true;
-      readarr.enable = true;
-      sonarr.enable = true;
-      jellyseerr.enable = true;
     };
     vscode-server.enable = true;
   };
