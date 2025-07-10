@@ -71,12 +71,17 @@
   };
   };
 
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
+
+  programs = {
+    neovim.defaultEditor = true;
+    home-manager.enable = true;
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+    zsh.enable = true;
   };
   
-  programs.home-manager.enable = true;
   home.stateVersion = "25.05";
 }
 
