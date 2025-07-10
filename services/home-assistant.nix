@@ -16,26 +16,26 @@
   
   services = {
     home-assistant = {
-    enable = true;
-    package = (pkgs.home-assistant.overrideAttrs (old: {
-      doCheck = false;
-      checkPhase = ":";
-      installCheckPhase = ":";
-    })).override {
-      extraPackages = ps: with ps; [
-        jsonrpc-async jsonrpc-websocket mpd2 pkgs.picotts psycopg2
+      enable = true;
+      package = (pkgs.home-assistant.overrideAttrs (old: {
+        doCheck = false;
+        checkPhase = ":";
+        installCheckPhase = ":";
+      })).override {
+        extraPackages = ps: with ps; [
+          jsonrpc-async jsonrpc-websocket mpd2 pkgs.picotts psycopg2
+        ];
+      };
+      configDir = "/var/lib/home-assistant";
+      configWritable = true;
+      extraComponents = [
+        "default_config"
+        "mqtt"
+        "http"
+        "roku"
+        "alexa"
+        "alexa_devices"
       ];
-    };
-    configDir = "/var/lib/home-assistant";
-    configWritable = true;
-    extraComponents = [
-      "default_config"
-      "mqtt"
-      "http"
-      "roku"
-      "alexa"
-      "alexa_devices"
-    ];
 
       config = {
         homeassistant = {
@@ -60,7 +60,6 @@
           login_attempts_threshold = 5;
         };
 
-        # PostgreSQL configuration
         recorder = {
           db_url = "postgresql://hass:$(cat ${config.sops.secrets.hass_postgres_password.path})@localhost/hass";
           include = {
@@ -113,14 +112,17 @@
 
     mosquitto = {
       enable = true;
-      allowAnonymous = true;
+      # This is the corrected structure
+      settings = {
+        allow_anonymous = true;
+      };
       listeners = [
         {
-          address = "0.0.0.0";
+          # This address is not needed if it's the default 0.0.0.0
           users = {
             hass = {
               acl = [ "topic readwrite #" ];
-              password = config.sops.secrets.mosquitto_iotdevice_password.path;
+              passwordFile = config.sops.secrets.mosquitto_iotdevice_password.path;
             };
           };
         }
