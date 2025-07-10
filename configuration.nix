@@ -24,8 +24,10 @@
       samba = {};
       kavita = {};
       transmission = {};
+      mqtt = {};
       git = {};
     };
+
     users = {
       zeev = {
         isNormalUser = true;
@@ -38,10 +40,12 @@
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAokdbrMinZjhDnVLnrXOjNn9SvzsPdlP6P3T9hAtGG8 vk@Volodymyr-Kondratenko-Mac.local"
         ];
       };
+     
       microbin = { isSystemUser = true; group = "microbin"; extraGroups = [ "media" ]; };
       miniflux = { isSystemUser = true; group = "miniflux"; extraGroups = [ "media" ]; };
       samba = { isSystemUser = true; group = "samba"; extraGroups = [ "media" ]; };
       kavita = { isSystemUser = true; group = "kavita"; extraGroups = [ "media" ]; };
+      mqtt = { isSystemUser = true; group = "mqtt"; };
       git = {
         isSystemUser = true;
         group = "git";
@@ -50,7 +54,6 @@
         shell = "${pkgs.git}/bin/git-shell";
         openssh.authorizedKeys.keys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com"
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAokdbrMinZjhDnVLnrXOjNn9SvzsPdlP6P3T9hAtGG8 vk@Volodymyr-Kondratenko-Mac.local"
         ];
       };
       nextcloud.extraGroups = [ "media" ];
@@ -108,7 +111,6 @@
   services = {
     openssh = {
       enable = true;
-      openFirewall = true;
       settings = {
         PermitRootLogin = "no";
         PasswordAuthentication = true;
@@ -117,6 +119,14 @@
         MaxAuthTries = 3;
         LoginGraceTime = "30s";
       };
+      extraConfig = ''
+        Match user git
+          AllowTcpForwarding no
+          AllowAgentForwarding no
+          PasswordAuthentication no
+          PermitTTY no
+          X11Forwarding no
+        '';
     };
     vscode-server.enable = true;
   };
