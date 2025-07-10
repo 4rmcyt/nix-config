@@ -1,6 +1,6 @@
 # In ~/src/server/services/nixarr.nix
 { config, pkgs, ... }: {
-  services.nixarr = {
+  nixarr = {
     enable = true;
     # These two values are also the default, but you can set them to whatever
     # else you want
