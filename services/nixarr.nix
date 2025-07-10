@@ -12,7 +12,7 @@
     vpn = {
       enable = true;
       # You can usually get this wireguard file from your VPN provider
-      wgConfFile = "/home/zeev/src/wg.conf";
+      wgConf = "/home/zeev/src/wg.conf";
     };
 
     # Note: the *arrs do not need vpn.enable set, as this VPN setup does not
