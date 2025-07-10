@@ -114,19 +114,6 @@
     zsh.enable = true;
   };
 
-  services = {
-    openssh = {
-      enable = true;
-      openFirewall = true;
-      settings = {
-        PermitRootLogin = "no";
-        PasswordAuthentication = true;
-        PubkeyAuthentication = true;
-        X11Forwarding = false;
-        MaxAuthTries = 3;
-        LoginGraceTime = "30s";
-      };
-    };
     nixarr = {
       enable = true;
       mediaDir = "/data/media";
@@ -140,6 +127,27 @@
         enable = true;
         vpn.enable = true;
         peerPort = 63998;
+        extraSettings = {
+          download-dir = "/home/zeev/Downloads";
+          script-torrent-added-enabled = true;
+          script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
+          blocklist-enabled = true;
+          blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
+        };
+      };
+    };
+
+  services = {
+    openssh = {
+      enable = true;
+      openFirewall = true;
+      settings = {
+        PermitRootLogin = "no";
+        PasswordAuthentication = true;
+        PubkeyAuthentication = true;
+        X11Forwarding = false;
+        MaxAuthTries = 3;
+        LoginGraceTime = "30s";
       };
     };
     vscode-server.enable = true;

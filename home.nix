@@ -40,7 +40,7 @@
 
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" ];
+      plugins = [ "git" "sudo" ];
       theme = "do-you-even-nix";
     };
   };
