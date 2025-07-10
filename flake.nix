@@ -81,6 +81,7 @@
         ./services/samba.nix
         ./services/home-assistant.nix
         ./services/keycloak.nix
+        ./services/nixarr.nix
       ];
     };
   };
