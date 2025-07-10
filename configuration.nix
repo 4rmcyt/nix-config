@@ -59,21 +59,20 @@
     };
   };
 
-  home-manager = {
-    extraSpecialArgs = { inherit inputs; };
-    users = {
-      zeev = import ./home.nix;
-    };
-  };
-
   environment.systemPackages = with pkgs; [
-    zsh direnv
+    zsh direnv pass
     neovim
     git vim wget curl jq coreutils gawk gnugrep iproute2 mc
     htop btop lsof
     age sops ssh-to-age openssh
     wireguard-tools apacheHttpd
     zsh-powerlevel10k meslo-lgs-nf
+    zsh-autosuggestions
+    zsh-completions
+    zsh-history-substring-search
+    zsh-syntax-highlighting
+    zsh-you-should-use
+    zsh-do-you-even-nix
   ];
 
   systemd.tmpfiles.rules = [
@@ -96,41 +95,11 @@
 
   programs = {
     neovim.defaultEditor = true;
-
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
     };
-
-    zsh = {
-      enable = true;
-      enableCompletion = true;
-      
-      # This is the correct option for NixOS system configuration
-      interactiveShellInit = "setopt autocd";
-      
-      shellAliases = {
-        ll = "ls -l";
-        update = "sudo nixos-rebuild switch --flake .#homeserver";
-      };
-      plugins = [
-        { name = "zsh-autosuggestions"; src = pkgs.zsh-autosuggestions; }
-        { name = "zsh-completions"; src = pkgs.zsh-completions; }
-        { name = "zsh-history-substring-search"; src = pkgs.zsh-history-substring-search; }
-        { name = "zsh-syntax-highlighting"; src = pkgs.zsh-syntax-highlighting; }
-        { name = "you-should-use"; src = pkgs.you-should-use; }
-        { name = "do-you-even-nix"; src = pkgs.zsh-do-you-even-nix; }
-      ];
-      oh-my-zsh = {
-        enable = true;
-        plugins = [ "git" ];
-        theme = "powerlevel10k";
-      };
-      powerlevel10k = {
-        enable = true;
-        enableTransientPrompt = true;
-      };
-    };
+    zsh.enable = true;
   };
 
   services = {
@@ -157,7 +126,8 @@
       zeev_password.neededForUsers = true;
       nextcloud_admin_password = {};
       microbin_admin_password = {};
-      tailscale_auth-key = {};
+      tailscale_auth_key = {};
+      pia_credentials = {};
       telegram_bot_token = {};
       telegram_chat_id = {};
     };
