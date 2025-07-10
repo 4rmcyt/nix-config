@@ -67,12 +67,6 @@
     age sops ssh-to-age openssh
     wireguard-tools apacheHttpd
     zsh-powerlevel10k meslo-lgs-nf
-    zsh-autosuggestions
-    zsh-completions
-    zsh-history-substring-search
-    zsh-syntax-highlighting
-    zsh-you-should-use
-    zsh-do-you-even-nix
   ];
 
   systemd.tmpfiles.rules = [
