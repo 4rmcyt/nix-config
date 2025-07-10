@@ -44,7 +44,6 @@
 
   users = {
     groups = {
-      media = {};
       microbin = {};
       miniflux = {};
       samba = {};
@@ -66,9 +65,9 @@
         ];
       };
      
-      microbin = { isSystemUser = true; group = "microbin"; extraGroups = [ "media" ]; };
-      miniflux = { isSystemUser = true; group = "miniflux"; extraGroups = [ "media" ]; };
-      samba = { isSystemUser = true; group = "samba"; extraGroups = [ "media" ]; };
+      microbin = { isSystemUser = true; group = "microbin"; extraGroups = [ "work" ]; };
+      miniflux = { isSystemUser = true; group = "miniflux"; extraGroups = [ "work" ]; };
+      samba = { isSystemUser = true; group = "samba"; extraGroups = [ "work" ]; };
       kavita = { isSystemUser = true; group = "kavita"; extraGroups = [ "media" ]; };
       mqtt = { isSystemUser = true; group = "mqtt"; };
       git = {
@@ -81,9 +80,9 @@
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com"
         ];
       };
-      nextcloud.extraGroups = [ "media" ];
-      radicale.extraGroups = [ "media" ];
-      paperless.extraGroups = [ "media" ];
+      nextcloud.extraGroups = [ "work" ];
+      radicale.extraGroups = [ "work" ];
+      paperless.extraGroups = [ "work" ];
     };
   };
 
@@ -133,21 +132,6 @@
   ];
 
   systemd.tmpfiles.rules = [
-    "d /home/zeev 0770 zeev media -"
-    "d /home/zeev/media 774 zeev media -"
-    "d /home/zeev/media/audiobooks 774 zeev media -"
-    "d /home/zeev/media/podcasts 774 zeev media -"
-    "d /home/zeev/media/movies 774 zeev media -"
-    "d /home/zeev/media/series 774 zeev media -"
-    "d /home/zeev/media/music 774 zeev media -"
-    "d /home/zeev/media/other 774 zeev media -"
-    "d /home/zeev/media/library 774 zeev media -"
-    "d /home/zeev/media/library/books 774 zeev media -"
-    "d /home/zeev/media/library/comics 774 zeev media -"
-    "d /home/zeev/media/library/manga 774 zeev media -"
-    "d /home/zeev/Downloads 774 zeev media -"
-    "d /home/zeev/Downloads/torrents 774 zeev media -"
-    "d /home/zeev/media/torrents/.incomplete 0770 zeev media -"
     "A /home/zeev - - - - d:u:transmission:rwx,u:transmission:rwx"
     "A /home/zeev - - - - d:g:media:X,g:media:X"
     "A /home/zeev/media - - - - d:g:media:rwx,g:media:rwx"
