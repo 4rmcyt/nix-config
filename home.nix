@@ -10,6 +10,7 @@
 
 
   programs = {
+      home-manager.enable = true;
       zsh = {
         enable = true;
         enableCompletion = true;
@@ -51,9 +52,9 @@
       ---@type ChadrcConfig
       local M = {}
       M.ui = {
-      theme = 'onedark',
+        theme = 'onedark',
       }
-    return M
+      return M
     '';
     git = {
       enable = true;
