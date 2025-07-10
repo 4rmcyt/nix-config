@@ -4,7 +4,7 @@ keys:
     - &vk age1h9kk9fktkn0t2yk7m89jxlf2atl0808ewn3j5updmq8knt0c84uqs24ew4
   - &hosts:
     - &homeserver age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
-    - &VolodymtenkoMac age1cjvaelr2zeynyv0jquywran8u3hwfg79elkswlk9mv8l0ev7c3aqrhjhr2
+    - &vkmac age1cjvaelr2zeynyv0jquywran8u3hwfg79elkswlk9mv8l0ev7c3aqrhjhr2
 creation_rules:
   # This rule is for your main secrets.yaml file
   - path_regex: secrets.yaml$
@@ -13,4 +13,4 @@ creation_rules:
           - *homeserver
           - *zeev
           - *vk
-          - *VolodymtenkoMac
+          - *vkmac
