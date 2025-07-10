@@ -3,35 +3,26 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     vscode-server.url = "github:nix-community/nixos-vscode-server";
-
     nix4nvchad.url = "github:nix-community/nix4nvchad";
+    nixarr.url = "github:rasmus-kirk/nixarr";
 
-    nixarr = {
-      url = "github:nixarr/nixarr";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   # The inputs are passed as arguments to this function
