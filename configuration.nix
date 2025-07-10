@@ -141,7 +141,7 @@
       enable = true;
       enableSSHSupport = true;
     };
-    neovim.defaultEditor = true;
+    
     zsh.enable = true;
   };
 
@@ -150,6 +150,7 @@
     users = {
       zeev = import ./home.nix;
     };
+    neovim.defaultEditor = true;
   };
 
 
