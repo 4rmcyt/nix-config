@@ -105,14 +105,14 @@
     "d /home/zeev/Downloads/torrents 0770 zeev media -"
   ];
 
-  programs = {
-    neovim.defaultEditor = true;
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
-    zsh.enable = true;
-  };
+  # programs = {
+  #   neovim.defaultEditor = true;
+  #   gnupg.agent = {
+  #     enable = true;
+  #     enableSSHSupport = true;
+  #   };
+  #   zsh.enable = true;
+  # };
 
     nixarr = {
       enable = true;
@@ -141,7 +141,6 @@
     openssh = {
       enable = true;
       openFirewall = true;
-      startAgent = true;
       settings = {
         PermitRootLogin = "no";
         PasswordAuthentication = true;
