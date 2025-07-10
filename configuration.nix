@@ -105,7 +105,10 @@
     zsh = {
       enable = true;
       enableCompletion = true;
-      initExtra = "setopt autocd";
+      
+      # This is the correct option for NixOS system configuration
+      interactiveShellInit = "setopt autocd";
+      
       shellAliases = {
         ll = "ls -l";
         update = "sudo nixos-rebuild switch --flake .#homeserver";
