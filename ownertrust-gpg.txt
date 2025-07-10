@@ -1,3 +1,0 @@
-# List of assigned trustvalues, created Thu 10 Jul 2025 10:30:13 AM MDT
-# (Use "gpg --import-ownertrust" to restore them)
-REDACTED:6:
