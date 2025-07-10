@@ -40,14 +40,6 @@
     sonarr.enable = true;
     jellyseerr.enable = true;
 
-    hardware.graphics.extraPackages = with pkgs; [
-      intel-media-driver
-      intel-vaapi-driver
-      vaapiIntel
-      vaapiVdpau
-      intel-compute-runtime
-      libvdpau-va-gl
-  ];
 
   };
 }
