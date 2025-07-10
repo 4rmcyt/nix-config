@@ -2,7 +2,7 @@
   description = "NixOS configuration for homeserver";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,7 +21,6 @@
     };
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     nix4nvchad.url = "github:nix-community/nix4nvchad";
-    nixarr.url = "github:rasmus-kirk/nixarr";
     nixarr = {
       url = "github:rasmus-kirk/nixarr";
       inputs.nixpkgs.follows = "nixpkgs";
