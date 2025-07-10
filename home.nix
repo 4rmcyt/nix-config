@@ -10,8 +10,8 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    initExtra = "setopt autocd"; 
-    
+    initExtra = "setopt autocd";
+
     shellAliases = {
       ll = "ls -l";
       update = "sudo nixos-rebuild switch --flake .#homeserver";
@@ -22,7 +22,7 @@
       { name = "zsh-completions"; src = pkgs.zsh-completions; }
       { name = "zsh-history-substring-search"; src = pkgs.zsh-history-substring-search; }
       { name = "zsh-syntax-highlighting"; src = pkgs.zsh-syntax-highlighting; }
-      { name = "you-should-use"; src = pkgs.zsh-you-should-use; } 
+      { name = "you-should-use"; src = pkgs.zsh-you-should-use; }
       { name = "do-you-even-nix"; src = pkgs.zsh-do-you-even-nix; }
     ];
 
@@ -51,7 +51,7 @@
     }
     return M
   '';
-  
+
   # 3. Home Manager Setup
   programs.home-manager.enable = true;
   home.stateVersion = "25.05";
