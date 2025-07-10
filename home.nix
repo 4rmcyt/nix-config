@@ -61,6 +61,14 @@
     enable = true;
     userName = "4rmcyt";
     userEmail = "redacted@example.com";
+    config = {
+    "Host github.com" = {
+      HostName = "github.com";
+      # Tell SSH to use this specific key for GitHub
+      IdentityFile = "~/.ssh/zeev";
+      IdentitiesOnly = "yes";
+    };
+  };
   };
 
   programs.gpg.agent = {
