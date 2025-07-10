@@ -189,6 +189,7 @@
     gawk
     gnugrep
     coreutils
+    ssh-to-age
   ];
 
   # Enable Home Manager
