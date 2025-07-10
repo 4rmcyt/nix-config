@@ -31,7 +31,7 @@
     nixarr.url = "github:rasmus-kirk/nixarr";
   };
 
-  outputs = { self, nixpkgs, ... }@inputs:
+  outputs = { self, nixpkgs, disko, sops-nix, home-manager, nix-index-database, vscode-server, nix4nvchad, nixare, ... }@inputs:
   let
     specialArgs = {inherit inputs;};
       system = "x86_64-linux";
