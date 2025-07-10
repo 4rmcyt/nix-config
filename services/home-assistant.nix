@@ -7,6 +7,12 @@
     group = "hass";
     mode = "0400";
   };
+
+  sops.secrets.mosquitto_iotdevice_password = {
+    owner = "mqtt";
+    group = "mqtt";
+    mode = "0400";
+  };
   
   services = {
     home-assistant = {
