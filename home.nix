@@ -27,15 +27,6 @@
       { name = "zsh-history-substring-search"; src = pkgs.zsh-history-substring-search; }
       { name = "zsh-syntax-highlighting"; src = pkgs.zsh-syntax-highlighting; }
       { name = "you-should-use"; src = pkgs.zsh-you-should-use; }
-      {
-        name = "do-you-even-nix";
-        src = pkgs.fetchFromGitHub {
-          owner = "joalter";
-          repo = "zsh-do-you-even-nix";
-          rev = "d08e709a36f1ac3424d6d67b2d56d95ed068770b";
-          sha256 = "0v2i7i9vsj72r63q9d0i9q8hshkkv4cwq8372z8j5j53723321r6";
-        };
-      }
       # The 'do-you-even-nix' plugin has been removed as it's unavailable
     ];
 
