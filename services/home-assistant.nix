@@ -11,7 +11,7 @@
   sops.secrets.mosquitto_iotdevice_password = {
     owner = "mqtt";
     group = "mqtt";
-    mode = "0400";
+    mode = "444";
   };
   
   services = {
@@ -112,13 +112,8 @@
 
     mosquitto = {
       enable = true;
-      # This is the corrected structure
-      settings = {
-        allow_anonymous = true;
-      };
       listeners = [
         {
-          # This address is not needed if it's the default 0.0.0.0
           users = {
             hass = {
               acl = [ "topic readwrite #" ];
