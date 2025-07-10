@@ -113,6 +113,7 @@
 
     mosquitto = {
       enable = true;
+      allowAnonymous = true;
       listeners = [
         {
           address = "0.0.0.0";
