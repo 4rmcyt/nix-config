@@ -2,8 +2,7 @@
   home.username = "zeev";
   home.homeDirectory = "/home/zeev";
   home.packages = with pkgs; [
-    git             # Required by NvChad's plugin manager
-    # The theme files for Zsh
+    git nixfmt-rfc-style
   ];
   imports = [
     inputs.nix4nvchad.homeManagerModules.default
@@ -37,7 +36,6 @@
            sha256 = "n9QYjpXlGdLx6agwp14rwcc6Jr5+0E/2h/oMuFsveHA=";
   	 };
        }
-      # The 'do-you-even-nix' plugin has been removed as it's unavailable
     ];
 
     oh-my-zsh = {
@@ -65,6 +63,10 @@
     userEmail = "redacted@example.com";
   };
 
+  programs.gpg.agent = {
+    enable = true;
+    enableSshSupport = true;
+  };
   # 4. Home Manager Setup
   programs.home-manager.enable = true;
   home.stateVersion = "25.05";
