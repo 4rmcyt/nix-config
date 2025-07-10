@@ -70,7 +70,6 @@
         ./services/paperless.nix
         ./services/radicale.nix
         ./services/samba.nix
-        # This path was corrected
         ./services/home-assistant.nix
         ./services/keycloak.nix
       ];
