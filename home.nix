@@ -10,13 +10,6 @@
 
 
   programs = {
-    # 0. General Home Manager Configuration
-    home-manager = {
-      enable = true;
-      useGlobalPkgs = true;
-      useUserPackages = true;
-      extraSpecialArgs = { inherit inputs; };
-      homeDirectory = "/home/zeev";
       zsh = {
         enable = true;
         enableCompletion = true;
@@ -51,7 +44,6 @@
             theme = "do-you-even-nix";
           };
       };
-    };
     
     nvchad.enable = true;
     xdg.configFile."nvim/lua/custom/chadrc.lua".text = ''
