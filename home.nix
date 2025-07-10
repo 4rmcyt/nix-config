@@ -6,7 +6,17 @@
     inputs.nvchad-nix.homeManagerModules.default
   ];
 
-  # 1. Zsh Configuration
+  programs.git = {
+    enable = true;
+    userName = "4rmcyt";
+    userEmail = "4rmcyt@gmail.com"; # Change this to your email
+
+    # This is the key setting to force SSH for GitHub
+    extraConfig = {
+      "url.git@github.com:".insteadOf = "https://github.com/";
+    };
+  };  
+# 1. Zsh Configuration
   programs.zsh = {
     enable = true;
     enableCompletion = true;
