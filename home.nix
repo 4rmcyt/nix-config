@@ -1,7 +1,10 @@
 { pkgs, inputs, ... }: {
   home.username = "zeev";
   home.homeDirectory = "/home/zeev";
-
+  home.packages = with pkgs; [
+    git             # Required by NvChad's plugin manager
+    zsh-powerlevel10k # The theme files for Zsh
+  ];
   imports = [
     inputs.nix4nvchad.homeManagerModules.default
   ];
@@ -24,6 +27,15 @@
       { name = "zsh-history-substring-search"; src = pkgs.zsh-history-substring-search; }
       { name = "zsh-syntax-highlighting"; src = pkgs.zsh-syntax-highlighting; }
       { name = "you-should-use"; src = pkgs.zsh-you-should-use; }
+      {
+        name = "do-you-even-nix";
+        src = pkgs.fetchFromGitHub {
+          owner = "joalter";
+          repo = "zsh-do-you-even-nix";
+          rev = "d08e709a36f1ac3424d6d67b2d56d95ed068770b";
+          sha256 = "0v2i7i9vsj72r63q9d0i9q8hshkkv4cwq8372z8j5j53723321r6";
+        };
+      }
       # The 'do-you-even-nix' plugin has been removed as it's unavailable
     ];
 
@@ -36,13 +48,21 @@
 
   # 2. NvChad Configuration
   programs.nvchad.enable = true;
-
+  xdg.configFile."nvim/lua/custom/chadrc.lua".text = ''
+    -- This is my custom chadrc
+    ---@type ChadrcConfig
+    local M = {}
+    M.ui = {
+      theme = 'onedark',
+    }
+    return M
+  '';
   # 3. Git Configuration
   programs.git = {
     enable = true;
     userName = "4rmcyt";
     userEmail = "redacted@example.com";
-    extraConfig = {
+    	extraConfig = {
       "url.git@github.com:".insteadOf = "https://github.com/";
     };
   };
