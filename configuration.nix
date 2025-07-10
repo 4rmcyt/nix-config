@@ -150,7 +150,6 @@
     users = {
       zeev = import ./home.nix;
     };
-    neovim.defaultEditor = true;
   };
 
 
