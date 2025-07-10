@@ -116,6 +116,29 @@
         "type": "github"
       }
     },
+    "nixarr": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "vpnconfinement": "vpnconfinement",
+        "website-builder": "website-builder"
+      },
+      "locked": {
+        "lastModified": 1750671039,
+        "narHash": "sha256-bqxLYQKrreAyygRtMtXaJ1vzPmKAjOddWu13z6WQGGQ=",
+        "owner": "rasmus-kirk",
+        "repo": "nixarr",
+        "rev": "decf631992b88882fb42285739ce716cf7895910",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rasmus-kirk",
+        "ref": "dev",
+        "repo": "nixarr",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1751285371,
@@ -185,6 +208,7 @@
         "home-manager": "home-manager",
         "nix-index-database": "nix-index-database",
         "nix4nvchad": "nix4nvchad",
+        "nixarr": "nixarr",
         "nixpkgs": "nixpkgs_2",
         "sops-nix": "sops-nix",
         "vscode-server": "vscode-server"
@@ -240,6 +264,21 @@
         "type": "github"
       }
     },
+    "vpnconfinement": {
+      "locked": {
+        "lastModified": 1749672087,
+        "narHash": "sha256-j8LG0s0QcvNkZZLcItl78lvTZemvsScir0dG3Ii4B1c=",
+        "owner": "Maroka-chan",
+        "repo": "VPN-Confinement",
+        "rev": "880b3bd2c864dce4f6afc79f6580ca699294c011",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Maroka-chan",
+        "repo": "VPN-Confinement",
+        "type": "github"
+      }
+    },
     "vscode-server": {
       "inputs": {
         "flake-utils": "flake-utils_2",
@@ -256,6 +295,27 @@
       "original": {
         "owner": "nix-community",
         "repo": "nixos-vscode-server",
+        "type": "github"
+      }
+    },
+    "website-builder": {
+      "inputs": {
+        "nixpkgs": [
+          "nixarr",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1750317638,
+        "narHash": "sha256-B4RWcXXOLO6gMeYyV+K4olu+kGGsYamKH+JAm0cIXqI=",
+        "owner": "rasmus-kirk",
+        "repo": "website-builder",
+        "rev": "b54192000a00e865947f45bacf3184d56363ee38",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rasmus-kirk",
+        "repo": "website-builder",
         "type": "github"
       }
     }
