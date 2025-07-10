@@ -57,8 +57,6 @@
         ./services/tailscale.nix
         ./services/cloudflared.nix
         ./services/monitoring.nix
-        ./services/jellyfin.nix
-        ./services/audiobookshelf.nix
         ./services/miniflux.nix
         ./services/nextcloud.nix
         ./services/microbin.nix
