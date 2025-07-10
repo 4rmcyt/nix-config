@@ -135,6 +135,7 @@
         enable = true;
         wgConf = "/home/zeev/src/wg.conf";
       };
+
       transmission = {
         enable = true;
         vpn.enable = true;
