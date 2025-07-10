@@ -28,10 +28,7 @@
 
     nix4nvchad.url = "github:nix-community/nix4nvchad";
 
-    nixarr = {
-      url = "github:nixarr/nixarr";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixarr.url = "github:rasmus-kirk/nixarr";
   };
 
   outputs = { self, nixpkgs, ... }@inputs: {
