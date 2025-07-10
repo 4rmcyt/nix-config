@@ -29,7 +29,7 @@
     nix4nvchad.url = "github:nix-community/nix4nvchad";
 
     nixarr = {
-      url = "github:rasmus-kirk/nixarr/dev";
+      url = "github:nixarr/nixarr";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
