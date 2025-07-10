@@ -119,6 +119,21 @@
       };
     };
     vscode-server.enable = true;
+    
+    mosquitto = {
+      enable = true;
+      listeners = [
+        {
+          address = "0.0.0.0";
+          users = {
+            hass = {
+              acl = [ "topic readwrite #" ];
+              password = config.sops.secrets.mosquitto_iotdevice_password.path;
+            };
+          }
+        }
+      ];
+    };
   };
 
 
