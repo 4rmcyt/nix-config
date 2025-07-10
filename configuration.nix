@@ -141,11 +141,17 @@
       enable = true;
       enableSSHSupport = true;
     };
-    home-manager.enable = true;
-    home-manager.users.zeev = import ./home.nix;
     neovim.defaultEditor = true;
     zsh.enable = true;
   };
+
+  home-manager = {
+    extraSpecialArgs = { inherit inputs; };
+    users = {
+      zeev = import ./home.nix;
+    };
+  };
+
 
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "25.05";
