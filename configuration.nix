@@ -112,7 +112,7 @@
     "d /home/zeev/media/library/manga 774 zeev media -"
     "d /home/zeev/Downloads 774 zeev media -"
     "d /home/zeev/Downloads/torrents 774 zeev media -"
-    "d /home/zeev/media/torrents/.incomplete 774 zeev media -"
+    "d /home/zeev/media/torrents/.incomplete 0770 zeev media -"
     "A /home/zeev - - - - d:u:transmission:rwx,u:transmission:rwx"
   ];
 
