@@ -79,7 +79,6 @@
       enable = true;
       enableSSHSupport = true;
     };
-    zsh.enable = true;
   };
   
   home.stateVersion = "25.05";
