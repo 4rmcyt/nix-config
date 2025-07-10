@@ -26,15 +26,6 @@
       transmission = {};
       mqtt = {};
       git = {};
-      bazarr = {};
-      jellyfin = {};
-      jellyseerr = {};
-      lidarr = {};
-      prowlarr = {};
-      radarr = {};
-      readarr = {};
-      sonarr = {};
-      transmission = {};
     };
 
     users = {
@@ -55,15 +46,6 @@
       samba = { isSystemUser = true; group = "samba"; extraGroups = [ "media" ]; };
       kavita = { isSystemUser = true; group = "kavita"; extraGroups = [ "media" ]; };
       mqtt = { isSystemUser = true; group = "mqtt"; };
-      bazarr = { isSystemUser = true; group = "bazarr"; extraGroups = [ "media" ]; };
-      jellyfin = { isSystemUser = true; group = "jellyfin"; extraGroups = [ "media" ]; };
-      jellyseerr = { isSystemUser = true; group = "jellyseerr"; extraGroups = [ "media" ]; };
-      lidarr = { isSystemUser = true; group = "lidarr"; extraGroups = [ "media" ]; };
-      prowlarr = { isSystemUser = true; group = "prowlarr"; extraGroups = [ "media" ]; };
-      radarr = { isSystemUser = true; group = "radarr"; extraGroups = [ "media" ]; };
-      readarr = { isSystemUser = true; group = "readarr"; extraGroups = [ "media" ]; };
-      sonarr = { isSystemUser = true; group = "sonarr"; extraGroups = [ "media" ]; };
-      transmission = { isSystemUser = true; group = "transmission"; extraGroups = [ "media" ]; };
       git = {
         isSystemUser = true;
         group = "git";
