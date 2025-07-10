@@ -73,7 +73,7 @@
 
   programs.gpg.agent = {
     enable = true;
-    enableSshSupport = true;
+    enableSSHSupport = true;
   };
   
   programs.home-manager.enable = true;
