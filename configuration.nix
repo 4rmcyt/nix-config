@@ -59,6 +59,13 @@
       nextcloud.extraGroups = [ "media" ];
       radicale.extraGroups = [ "media" ];
       paperless.extraGroups = [ "media" ];
+      bazarr.extraGroups = [ "media" ];
+      lidarr.extraGroups = [ "media" ];
+      prowlarr.extraGroups = [ "media" ];
+      radarr.extraGroups = [ "media" ];
+      readarr.extraGroups = [ "media" ];
+      sonarr.extraGroups = [ "media" ];
+      jellyseerr.extraGroups = [ "media" ];
     };
   };
 
@@ -92,21 +99,20 @@
 
   systemd.tmpfiles.rules = [
     "d /home/zeev 0770 zeev media -"
-    "d /home/zeev/media 0770 zeev media -"
-    "d /home/zeev/media/audiobooks 0770 zeev media -"
-    "d /home/zeev/media/podcasts 0770 zeev media -"
-    "d /home/zeev/media/movies 0770 zeev media -"
-    "d /home/zeev/media/series 0770 zeev media -"
-    "d /home/zeev/media/music 0770 zeev media -"
-    "d /home/zeev/media/other 0770 zeev media -"
-    "d /home/zeev/media/library 0775 zeev media -"
-    "d /home/zeev/media/library/books 0775 zeev media -"
-    "d /home/zeev/media/library/comics 0775 zeev media -"
-    "d /home/zeev/media/library/manga 0775 zeev media -"
-    "d /home/zeev/Downloads 0770 zeev media -"
-    "d /home/zeev/Downloads/incomplete 0770 zeev media -"
-    "d /home/zeev/Downloads/torrents 0770 zeev media -"
-    "d /home/zeev/media/torrents/.incomplete 0770 zeev media -"
+    "d /home/zeev/media 774 zeev media -"
+    "d /home/zeev/media/audiobooks 774 zeev media -"
+    "d /home/zeev/media/podcasts 774 zeev media -"
+    "d /home/zeev/media/movies 774 zeev media -"
+    "d /home/zeev/media/series 774 zeev media -"
+    "d /home/zeev/media/music 774 zeev media -"
+    "d /home/zeev/media/other 774 zeev media -"
+    "d /home/zeev/media/library 774 zeev media -"
+    "d /home/zeev/media/library/books 774 zeev media -"
+    "d /home/zeev/media/library/comics 774 zeev media -"
+    "d /home/zeev/media/library/manga 774 zeev media -"
+    "d /home/zeev/Downloads 774 zeev media -"
+    "d /home/zeev/Downloads/torrents 774 zeev media -"
+    "d /home/zeev/media/torrents/.incomplete 774 zeev media -"
     "A /home/zeev - - - - d:u:transmission:rwx,u:transmission:rwx"
   ];
 
