@@ -17,14 +17,24 @@
       update = "sudo nixos-rebuild switch --flake .#homeserver";
     };
 
-    plugins = [
+        plugins = [
       { name = "zsh-autosuggestions"; src = pkgs.zsh-autosuggestions; }
       { name = "zsh-completions"; src = pkgs.zsh-completions; }
       { name = "zsh-history-substring-search"; src = pkgs.zsh-history-substring-search; }
       { name = "zsh-syntax-highlighting"; src = pkgs.zsh-syntax-highlighting; }
       { name = "you-should-use"; src = pkgs.zsh-you-should-use; }
-      { name = "do-you-even-nix"; src = pkgs.zsh-do-you-even-nix; }
+      # Replace the broken line with this:
+      {
+        name = "do-you-even-nix";
+        src = pkgs.fetchFromGitHub {
+          owner = "seletskiy";
+          repo = "zsh-do-you-even-nix";
+          rev = "985d1e605d67e716e9c6806543b5735158654ff4";
+          sha256 = "1m837gq8z73nfm3kpl8zvyw6rzznzsihy0h42vnhygljw5sv3sjw";
+        };
+      }
     ];
+
 
     oh-my-zsh = {
       enable = true;
@@ -51,8 +61,8 @@
   # 3. Git Configuration
   programs.git = {
     enable = true;
-    userName = "Zeev";
-    userEmail = "your-email@example.com";
+    userName = "4rmcyt";
+    userEmail = "4rmcyt@gmail.com";
     extraConfig = {
       "url.git@github.com:".insteadOf = "https://github.com/";
     };
