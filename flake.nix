@@ -31,14 +31,23 @@
     nixarr.url = "github:rasmus-kirk/nixarr";
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
-    nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
+  outputs = { self, nixpkgs, ... }@inputs:
+  let
+    specialArgs = {inherit inputs;};
       system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
       pkgs-unstable = import nixpkgs-unstable {
         inherit system;
         config.allowUnfree = true;
       };
+      pkgs-24-11 = import nixpkgs-24-11 {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      lib = nixpkgs.lib;
+  in
+  {
+    nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
+      inherit system = "x86_64-linux";
       modules = [
         # External modules
         inputs.vscode-server.nixosModules.default
