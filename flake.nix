@@ -37,7 +37,7 @@
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
         nix-index-database.nixosModules.nix-index
-        nixarr.nixosModules.nixarr
+        nixarr.nixosModules.default
 
         # Core system configuration
         ./configuration.nix
