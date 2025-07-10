@@ -136,9 +136,15 @@
     };
   };
   
-  programs.gnupg.agent = {
-        enable = true;
-        enableSSHSupport = true;
+  programs = {
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+    home-manager.enable = true;
+    home-manager.users.zeev = import ./home.nix;
+    neovim.defaultEditor = true;
+    zsh.enable = true;
   };
 
   nixpkgs.config.allowUnfree = true;
