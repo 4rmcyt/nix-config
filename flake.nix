@@ -28,33 +28,25 @@
 
     nix4nvchad.url = "github:nix-community/nix4nvchad";
 
-    nixarr.url = "github:rasmus-kirk/nixarr";
+    nixarr = {
+      url = "github:nixarr/nixarr";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
+  # The inputs are passed as arguments to this function
   outputs = { self, nixpkgs, disko, sops-nix, home-manager, nix-index-database, vscode-server, nixarr, ... }@inputs: {
-  let
-    specialArgs = {inherit inputs;};
-      system = "x86_64-linux";
-      pkgs-unstable = import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
-      pkgs-25-05 = import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
-      lib = nixpkgs.lib;
-  in
-  {
     nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; }; # This is used inside the modules themselves
       modules = [
-        # External modules
-        inputs.vscode-server.nixosModules.default
-        inputs.disko.nixosModules.disko
-        inputs.sops-nix.nixosModules.sops
-        inputs.home-manager.nixosModules.home-manager
-        inputs.nix-index-database.nixosModules.nix-index
-        inputs.nixarr.nixosModules.nixarr
+        # External modules are referred to directly by their argument name
+        vscode-server.nixosModules.default
+        disko.nixosModules.disko
+        sops-nix.nixosModules.sops
+        home-manager.nixosModules.home-manager
+        nix-index-database.nixosModules.nix-index
+        nixarr.nixosModules.nixarr
 
         # Core system configuration
         ./configuration.nix
@@ -86,4 +78,3 @@
     };
   };
 }
-
