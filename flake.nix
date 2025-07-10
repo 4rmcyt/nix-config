@@ -29,7 +29,7 @@
   };
 
   # The inputs are passed as arguments to this function
-  outputs = { self, nixpkgs, disko, sops-nix, home-manager, nix-index-database, vscode-server, nixarr, ... }@inputs: {
+  outputs = { self, nixpkgs, disko, sops-nix, home-manager, nix-index-database, vscode-server, nix4nvchad, nixarr, ... }@inputs: {
     nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; }; # This is used inside the modules themselves
