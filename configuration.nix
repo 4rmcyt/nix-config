@@ -123,7 +123,6 @@
     mosquitto = {
       enable = true;
       listeners = [
-        {
           address = "0.0.0.0";
           users = {
             hass = {
@@ -131,7 +130,6 @@
               password = config.sops.secrets.mosquitto_iotdevice_password.path;
             };
           }
-        }
       ];
     };
   };
