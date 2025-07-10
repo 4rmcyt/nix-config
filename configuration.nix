@@ -4,12 +4,38 @@
   lib,
   inputs,
   ...
-}: {
+}: 
+{
   imports = [
     ./hardware-configuration.nix
   ];
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix = {
+    package = pkgs.nixVersions.latest;
+    settings = {
+      experimental-features = ["nix-command" "flakes"];
+      download-buffer-size = 500000000; # 500 MB
+      # Faster builds
+      cores = 0;
+      # Return more information when errors happen
+      show-trace = true;
+    };
+    # Use the pinned nixpkgs version that is already used, when using `nix shell nixpkgs#package`
+    registry.nixpkgs = {
+      from = {
+        id = "nixpkgs";
+        type = "indirect";
+      };
+      flake = inputs.nixpkgs;
+    };
+  };
+
+  security.sudo = {
+    execWheelOnly = true; # For security
+    package = pkgs.sudo.override {withInsults = true;};
+    extraConfig = "Defaults insults";
+  };
+
 
   boot.loader = {
     systemd-boot.enable = true;
@@ -23,7 +49,6 @@
       miniflux = {};
       samba = {};
       kavita = {};
-      transmission = {};
       mqtt = {};
       git = {};
     };
@@ -59,13 +84,6 @@
       nextcloud.extraGroups = [ "media" ];
       radicale.extraGroups = [ "media" ];
       paperless.extraGroups = [ "media" ];
-      bazarr.extraGroups = [ "media" ];
-      lidarr.extraGroups = [ "media" ];
-      prowlarr.extraGroups = [ "media" ];
-      radarr.extraGroups = [ "media" ];
-      readarr.extraGroups = [ "media" ];
-      sonarr.extraGroups = [ "media" ];
-      jellyseerr.extraGroups = [ "media" ];
     };
   };
 
@@ -95,6 +113,23 @@
     apacheHttpd
     zsh-powerlevel10k
     meslo-lgs-nf
+    
+    zip
+    unar
+    unzip
+    p7zip
+
+    # Terminal programs
+    iotop
+    tuptime # Uptime doesn't work lol
+    git
+    smartmontools
+    fzf
+    ffmpeg
+    nmap
+    trash-cli
+    wget
+
   ];
 
   systemd.tmpfiles.rules = [
