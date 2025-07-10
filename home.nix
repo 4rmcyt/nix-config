@@ -67,7 +67,8 @@
     enable = true;
     enableSshSupport = true;
   };
-  # 4. Home Manager Setup
+
+  programs.ssh.startAgent = true;
   programs.home-manager.enable = true;
   home.stateVersion = "25.05";
 }
