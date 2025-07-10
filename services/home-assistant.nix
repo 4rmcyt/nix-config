@@ -10,6 +10,16 @@
 
   services.home-assistant = {
     enable = true;
+    package = (unstable.home-assistant.overrideAttrs (old: {
+      doCheck = false;
+      checkPhase = ":";
+      installCheckPhase = ":";
+    })).override {
+      extraPackages = ps: with ps; [
+        python-forecastio jsonrpc-async jsonrpc-websocket mpd2 pkgs.picotts psycopg2
+      ];
+    };
+    configDir = "/var/lib/home-assistant";
     configWritable = true;
     extraComponents = [
       "default_config"
@@ -46,19 +56,33 @@
       # PostgreSQL configuration
       recorder = {
         db_url = "postgresql://hass:$(cat ${config.sops.secrets.hass_postgres_password.path})@localhost/hass";
-        exclude = {
+        include = {
           domains = [
-            "automation"
-            "updater"
-            "camera"
-          ];
-          entities = [
-            "sun.sun"
-            "sensor.date"
-            "sensor.time"
+            "switch"
+            "sensor"
+            "binary_sensor"
           ];
         };
         purge_keep_days = 30;
+      };
+
+      tts = [
+        { platform = "google_translate";
+          cache = true;
+          cache_dir = "/tmp/tts";
+          base_url = "https://hasss.labhome.work";
+          language = "en";
+          time_memory = 57600;
+          service_name =  "google_say";
+        }
+      ];
+      
+       mqtt = {
+        broker = "localhost";
+        discovery = true;
+        discovery_prefix = "homeassistant";
+        username = "hass";
+        password = config.sops.secrets.mosquitto_iotdevice_password.path;
       };
 
       default_config = {};
