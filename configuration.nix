@@ -141,13 +141,6 @@
         enableSSHSupport = true;
   };
 
-  home-manager = {
-    extraSpecialArgs = { inherit inputs; };
-    users = {
-      zeev = import ./home.nix;
-    };
-  };
-
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "25.05";
 }
