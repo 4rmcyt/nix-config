@@ -54,7 +54,7 @@
         inputs.sops-nix.nixosModules.sops
         inputs.home-manager.nixosModules.home-manager
         inputs.nix-index-database.nixosModules.nix-index
-        inputs.nixarr.nixosModules.default
+        inputs.nixarr.nixosModules.nixarr
 
         # Core system configuration
         ./configuration.nix
