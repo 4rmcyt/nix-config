@@ -135,6 +135,11 @@
       telegram_chat_id = {};
     };
   };
+  
+  programs.gnupg.agent = {
+        enable = true;
+        enableSSHSupport = true;
+  };
 
   home-manager = {
     extraSpecialArgs = { inherit inputs; };

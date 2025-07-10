@@ -53,11 +53,6 @@
       };
     };
     
-    gnupg.agent = {
-        enable = true;
-        enableSSHSupport = true;
-    };
-
     nvchad.enable = true;
     xdg.configFile."nvim/lua/custom/chadrc.lua".text = ''
       -- This is my custom chadrc
