@@ -120,10 +120,7 @@
     };
     vscode-server.enable = true;
   };
-  programs.gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-  };
+
 
   sops = {
     defaultSopsFile = ./secrets.yaml;
