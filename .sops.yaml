@@ -8,6 +8,7 @@ keys:
 creation_rules:
   # This rule is for your main secrets.yaml file
   - path_regex: secrets.yaml$
+  - path_regex: cert.pem$
     key_groups:
       - age:
           - *homeserver
