@@ -34,6 +34,8 @@
         "radio_browser"
         "met"
         "paperless_ngx"
+        "playstation_network"
+        "jellyfin"
       ];
 
       config = {
