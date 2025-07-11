@@ -2,17 +2,8 @@
 
 {
   # SOPS secrets for Home Assistant
-  sops.secrets.hass_postgres_password = {
-    owner = "hass";
-    group = "hass";
-    mode = "0400";
-  };
-
-  sops.secrets.mosquitto_iotdevice_password = {
-    owner = "mqtt";
-    group = "mqtt";
-    mode = "444";
-  };
+  sops.secrets.hass_postgres_password.owner = "hass";
+  sops.secrets.mosquitto_iotdevice_password.owner = "mqtt";
 
   services = {
     home-assistant = {
@@ -73,21 +64,19 @@
           purge_keep_days = 30;
         };
 
-        tts = [
-          { platform = "google_translate";
-            cache = true;
-            cache_dir = "/tmp/tts";
-            base_url = "https://hass.labhome.work";
-            language = "en";
-            time_memory = 57600;
-            service_name =  "google_say";
-          }
-        ];
+        tts = [{
+          platform = "google_translate";
+          language = "en";
+        }];
 
         mqtt = {
           broker = "localhost";
           discovery = true;
         };
+        
+        roku = {
+          host = "192.168.1.153"; 
+        }  
 
         default_config = {};
 
