@@ -14,7 +14,7 @@
         enable = true;
         vpn.enable = true;
         peerPort = 63998;
-        flood.enable = true;
+        flood.enable = false;
         extraSettings = {
           download-dir = "/home/zeev/Downloads";
           script-torrent-added-enabled = true;
