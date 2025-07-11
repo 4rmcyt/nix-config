@@ -23,7 +23,7 @@
         installCheckPhase = ":";
       })).override {
         extraPackages = ps: with ps; [
-         pyatv getmac pywemo metno_locationforecast radios jsonrpc-async jsonrpc-websocket mpd2 pkgs.picotts psycopg2
+         pyatv getmac pywemo pymetno radios jsonrpc-async jsonrpc-websocket mpd2 pkgs.picotts psycopg2
         ];
       };
       configDir = "/var/lib/home-assistant";
@@ -45,7 +45,7 @@
           time_zone = "America/Edmonton";
           country = "CA";
           currency = "CAD";
-          external_url = "https://hass.example.com";
+          external_url = "https://home.example.com";
           internal_url = "http://192.168.1.165:8123";
         };
 
