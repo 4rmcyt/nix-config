@@ -73,10 +73,6 @@
           broker = "localhost";
           discovery = true;
         };
-        
-        roku = {
-          host = "192.168.1.153"; 
-        }  
 
         default_config = {};
 
