@@ -6,6 +6,13 @@
     group = "cloudflared";
     mode = "0400";
   };
+  
+#   sops.secrets."cloudflared/cert".path = "services/cloudflared.nix";
+#   sops.secrets."cloudflared/test" = {
+#     # Both are "cloudflared" by default
+#     owner = config.services.cloudflared.user;
+#     group = config.services.cloudflared.group;
+# };
 
   users.users.cloudflared = {
     isSystemUser = true;
@@ -15,6 +22,14 @@
 
   users.groups.cloudflared = {};
 
+#   services.cloudflared.tunnels.config.sops.secrets."cloudflared/clouflare_tunnel_id".path = {
+#   credentialsFile = config.sops.secrets."cloudflared/test".path;
+#   default = "http_status:404";
+#   ingress = {
+#     "nextcloud.example.com" = "http://localhost:8081";
+#     "keycloak.example.com" = "http://localhost:8080";
+#   };
+# };
   systemd.services.cloudflared = {
     description = "Cloudflare Tunnel";
     after = [ "network.target" "systemd-tmpfiles-setup.service" ];
