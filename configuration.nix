@@ -4,7 +4,7 @@
   lib,
   inputs,
   ...
-}: 
+}:
 {
   imports = [
     ./hardware-configuration.nix
@@ -13,7 +13,10 @@
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
-      experimental-features = ["nix-command" "flakes"];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       warn-dirty = false;
       download-buffer-size = 500000000; # 500 MB
       # Faster builds
@@ -33,10 +36,9 @@
 
   security.sudo = {
     execWheelOnly = true; # For security
-    package = pkgs.sudo.override {withInsults = true;};
+    package = pkgs.sudo.override { withInsults = true; };
     extraConfig = "Defaults insults";
   };
-
 
   boot.loader = {
     systemd-boot.enable = true;
@@ -45,12 +47,12 @@
 
   users = {
     groups = {
-      microbin = {};
-      miniflux = {};
-      samba = {};
-      kavita = {};
-      mqtt = {};
-      git = {};
+      microbin = { };
+      miniflux = { };
+      samba = { };
+      kavita = { };
+      mqtt = { };
+      git = { };
     };
 
     users = {
@@ -58,19 +60,44 @@
         isNormalUser = true;
         description = "Zeev";
         shell = pkgs.zsh;
-        extraGroups = [ "networkmanager" "wheel" "docker" "media" "samba" ];
+        extraGroups = [
+          "networkmanager"
+          "wheel"
+          "docker"
+          "media"
+          "samba"
+        ];
         hashedPasswordFile = config.sops.secrets.zeev_password.path;
         openssh.authorizedKeys.keys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com"
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAokdbrMinZjhDnVLnrXOjNn9SvzsPdlP6P3T9hAtGG8 vk@Volodymyr-Kondratenko-Mac.local"
         ];
       };
-     
-      microbin = { isSystemUser = true; group = "microbin"; extraGroups = [ "work" ]; };
-      miniflux = { isSystemUser = true; group = "miniflux"; extraGroups = [ "work" ]; };
-      samba = { isSystemUser = true; group = "samba"; extraGroups = [ "work" ]; };
-      kavita = { isSystemUser = true; group = "kavita"; extraGroups = [ "media" ]; };
-      mqtt = { isSystemUser = true; group = "mqtt"; };
+
+      microbin = {
+        isSystemUser = true;
+        group = "microbin";
+        extraGroups = [ "work" ];
+      };
+      miniflux = {
+        isSystemUser = true;
+        group = "miniflux";
+        extraGroups = [ "work" ];
+      };
+      samba = {
+        isSystemUser = true;
+        group = "samba";
+        extraGroups = [ "work" ];
+      };
+      kavita = {
+        isSystemUser = true;
+        group = "kavita";
+        extraGroups = [ "media" ];
+      };
+      mqtt = {
+        isSystemUser = true;
+        group = "mqtt";
+      };
       git = {
         isSystemUser = true;
         group = "git";
@@ -115,7 +142,7 @@
     meslo-lgs-nf
     yamllint
     nix-index
-    
+
     zip
     unar
     unzip
@@ -161,11 +188,10 @@
           PasswordAuthentication no
           PermitTTY no
           X11Forwarding no
-        '';
+      '';
     };
     vscode-server.enable = true;
   };
-
 
   sops = {
     defaultSopsFile = ./secrets.yaml;
@@ -173,20 +199,20 @@
     age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
     secrets = {
       zeev_password.neededForUsers = true;
-      nextcloud_admin_password = {};
-      microbin_admin_password = {};
-      tailscale_auth_key = {};
-      telegram_bot_token = {};
-      telegram_chat_id = {};
+      nextcloud_admin_password = { };
+      microbin_admin_password = { };
+      tailscale_auth_key = { };
+      telegram_bot_token = { };
+      telegram_chat_id = { };
     };
   };
-  
+
   programs = {
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
     };
-    
+
     zsh.enable = true;
   };
 
@@ -197,8 +223,6 @@
     };
   };
 
-
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "25.05";
 }
-

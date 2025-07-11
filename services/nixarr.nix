@@ -1,5 +1,6 @@
 # In ~/src/server/services/nixarr.nix
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+{
   nixarr = {
     enable = true;
 
@@ -11,27 +12,26 @@
     mediaDir = "/home/zeev/media";
 
     transmission = {
-        enable = true;
-        vpn.enable = true;
-        peerPort = 63998;
-        flood.enable = false;
-        extraSettings = {
-          download-dir = "/home/zeev/Downloads";
-          script-torrent-added-enabled = true;
-          script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
-          blocklist-enabled = true;
-          blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
-        };
+      enable = true;
+      vpn.enable = true;
+      peerPort = 63998;
+      flood.enable = false;
+      extraSettings = {
+        download-dir = "/home/zeev/Downloads";
+        script-torrent-added-enabled = true;
+        script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
+        blocklist-enabled = true;
+        blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
       };
-    
-    
+    };
+
     sabnzbd = {
       enable = true;
       vpn.enable = true;
     };
 
     audiobookshelf.enable = true;
-    jellyfin.enable = true;  
+    jellyfin.enable = true;
     bazarr.enable = true;
     lidarr.enable = true;
     prowlarr.enable = true;
@@ -39,7 +39,6 @@
     readarr.enable = true;
     sonarr.enable = true;
     jellyseerr.enable = true;
-
 
   };
 }

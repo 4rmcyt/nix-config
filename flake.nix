@@ -29,44 +29,57 @@
   };
 
   # The inputs are passed as arguments to this function
-  outputs = { self, nixpkgs, disko, sops-nix, home-manager, nix-index-database, vscode-server, nixarr, nix4nvchad, ... }@inputs: {
-    nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = { inherit inputs; }; # This is used inside the modules themselves
-      modules = [
-        # External modules are referred to directly by their argument name
-        vscode-server.nixosModules.default
-        disko.nixosModules.disko
-        sops-nix.nixosModules.sops
-        home-manager.nixosModules.home-manager
-        nix-index-database.nixosModules.nix-index
-        nixarr.nixosModules.default
+  outputs =
+    {
+      self,
+      nixpkgs,
+      disko,
+      sops-nix,
+      home-manager,
+      nix-index-database,
+      vscode-server,
+      nixarr,
+      nix4nvchad,
+      ...
+    }@inputs:
+    {
+      nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; }; # This is used inside the modules themselves
+        modules = [
+          # External modules are referred to directly by their argument name
+          vscode-server.nixosModules.default
+          disko.nixosModules.disko
+          sops-nix.nixosModules.sops
+          home-manager.nixosModules.home-manager
+          nix-index-database.nixosModules.nix-index
+          nixarr.nixosModules.default
 
-        # Core system configuration
-        ./configuration.nix
-        ./hardware-configuration.nix
-        ./disko.nix
-        ./networking.nix
-        ./modules/base.nix
+          # Core system configuration
+          ./configuration.nix
+          ./hardware-configuration.nix
+          ./disko.nix
+          ./networking.nix
+          ./modules/base.nix
 
-        # Services
-        ./services/fail2ban.nix
-        ./services/yubikey.nix
-        ./services/database.nix
-        ./services/homepage.nix
-        ./services/tailscale.nix
-        ./services/cloudflared.nix
-        ./services/monitoring.nix
-        ./services/miniflux.nix
-        ./services/nextcloud.nix
-        ./services/microbin.nix
-        ./services/paperless.nix
-        ./services/radicale.nix
-        ./services/samba.nix
-        ./services/home-assistant.nix
-        ./services/keycloak.nix
-        ./services/nixarr.nix
-      ];
+          # Services
+          ./services/fail2ban.nix
+          ./services/yubikey.nix
+          ./services/database.nix
+          ./services/homepage.nix
+          ./services/tailscale.nix
+          ./services/cloudflared.nix
+          ./services/monitoring.nix
+          ./services/miniflux.nix
+          ./services/nextcloud.nix
+          ./services/microbin.nix
+          ./services/paperless.nix
+          ./services/radicale.nix
+          ./services/samba.nix
+          ./services/home-assistant.nix
+          ./services/keycloak.nix
+          ./services/nixarr.nix
+        ];
+      };
     };
-  };
 }

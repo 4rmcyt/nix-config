@@ -1,6 +1,11 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
-{ 
+{
   #   age.secrets = {
   #   sonarrApiKey.file = ./secrets/sonarrApiKey.age;
   #   radarrApiKey.file = ./secrets/radarrApiKey.age;
@@ -131,7 +136,7 @@
             };
           }
           {
-             "Jellyseerr" = {
+            "Jellyseerr" = {
               icon = "jellyseerr.png";
               href = "https://jellyseerr.abhome.work/";
               widgets = [
