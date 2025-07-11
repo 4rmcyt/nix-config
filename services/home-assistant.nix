@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   # SOPS secrets for Home Assistant
@@ -19,19 +24,20 @@
       enable = true;
       configDir = "/var/lib/home-assistant";
       configWritable = true;
-      extraPackages = python3Packages: with python3Packages; [
-        psycopg2
-        flatdict
-        pyatv
-        getmac
-        pywemo
-        metno-locationforecast
-        pyradios
-        jsonrpc-async
-        jsonrpc-websocket
-        mpd2
-        pkgs.picotts
-      ];
+      extraPackages =
+        python3Packages: with python3Packages; [
+          psycopg2
+          flatdict
+          pyatv
+          getmac
+          pywemo
+          metno-locationforecast
+          pyradios
+          jsonrpc-async
+          jsonrpc-websocket
+          mpd2
+          pkgs.picotts
+        ];
       extraComponents = [
         "default_config"
         "mqtt"
@@ -78,13 +84,14 @@
         };
 
         tts = [
-          { platform = "google_translate";
+          {
+            platform = "google_translate";
             cache = true;
             cache_dir = "/tmp/tts";
             base_url = "https://hass.example.com";
             language = "en";
             time_memory = 57600;
-            service_name =  "google_say";
+            service_name = "google_say";
           }
         ];
 
@@ -96,15 +103,15 @@
           passwordFile = config.sops.secrets.mosquitto_iotdevice_password.path;
         };
 
-        default_config = {};
+        default_config = { };
 
         frontend = {
           themes = "!include_dir_merge_named themes";
         };
 
-        shopping_list = {};
-        map = {};
-        system_health = {};
+        shopping_list = { };
+        map = { };
+        system_health = { };
 
         logger = {
           default = "info";
@@ -117,12 +124,10 @@
 
     mosquitto = {
       enable = true;
-      # This is the correct way to pass settings to mosquitto.conf
-      extraConfig = ''
-        allow_anonymous true
-      '';
       listeners = [
         {
+          # This allows anonymous connections on this listener
+          settings.allow_anonymous = true;
           users = {
             hass = {
               acl = [ "readwrite #" ];
