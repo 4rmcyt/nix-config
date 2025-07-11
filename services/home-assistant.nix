@@ -25,14 +25,13 @@
             psycopg2
           ];
       extraComponents = [
-        "default_config"
         "mqtt"
         "http"
         "roku"
-        "alexa"
         "alexa_devices"
         "upnp"
         "radio_browser"
+        "met"
       ];
 
       config = {
