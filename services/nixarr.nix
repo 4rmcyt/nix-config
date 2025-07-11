@@ -3,14 +3,15 @@
 {
   nixarr = {
     enable = true;
+    group = "media";
+    mediaUsers = [ "zeev" ];
+    mediaDir = "/home/zeev/media";
+    stateDir = "/home/zeev/media/.state/nixarr";
 
     vpn = {
       enable = true;
       wgConf = "/home/zeev/src/wg.conf";
     };
-
-    mediaDir = "/home/zeev/media";
-    stateDir = "/home/zeev/media/.state/nixarr";
 
     transmission = {
       enable = true;
