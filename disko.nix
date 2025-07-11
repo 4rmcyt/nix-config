@@ -64,7 +64,7 @@
                 subvolumes = {
                   "/@home" = {
                     mountpoint = "/home";
-                    mountOptions = [ "compress=zstd" "noatime" ];
+                    mountOptions = [ "compress=zstd" "compress=zstd" "noatime" ];
                   };
                   "/@media" = {
                     mountpoint = "/home/zeev/media";
