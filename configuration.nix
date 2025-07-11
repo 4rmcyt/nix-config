@@ -131,4 +131,39 @@
 
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "25.05";
+
+
+  environment.etc."nixos/scripts/add-trackers.sh" = {
+  # The mode "0755" makes the script executable
+  mode = "0755";
+  # The text of the script
+  text = ''
+    #!/binis/sh
+
+    # Use direct paths to programs for reliability in NixOS
+    TRANSMISSION_REMOTE="${pkgs.transmission}/bin/transmission-remote"
+    WGET="${pkgs.wget}/bin/wget"
+    SED="${pkgs.gnused}/bin/sed"
+    WC="${pkgs.coreutils}/bin/wc"
+    CAT="${pkgs.coreutils}/bin/cat"
+
+    TRACKERLIST="/tmp/trackers.list"
+
+    # Clean up the temp file on exit
+    trap "rm -f $TRACKERLIST" EXIT
+
+    # Get tracker lists
+    $WGET https://newtrackon.com/api/stable -O "$TRACKERLIST"
+    $WGET https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt -O - >> "$TRACKERLIST"
+
+    # Process the list
+    $SED -i '/^$/d' "$TRACKERLIST"
+    echo "[+] Got $($WC -l < "$TRACKERLIST") trackers"
+
+    # Add trackers to all torrents
+    while IFS= read -r TRACKER; do
+      "$TRANSMISSION_REMOTE" -t all -td "$TRACKER"
+    done < "$TRACKERLIST"
+  '';
+};
 }
