@@ -77,6 +77,5 @@
   services.jellyseerr = {
     enable = true;
     group = "media";
-    dataDir = "/home/zeev/media/.state/nixarr/jellyseerr";
   };
 }
