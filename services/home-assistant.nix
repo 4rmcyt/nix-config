@@ -45,7 +45,7 @@
           time_zone = "America/Edmonton";
           country = "CA";
           currency = "CAD";
-          external_url = "https://home.labhome.work";
+          external_url = "https://hass.labhome.work";
           internal_url = "http://192.168.1.165:8123";
         };
 
