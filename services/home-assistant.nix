@@ -122,7 +122,7 @@
           # This allows anonymous connections on this listener
           settings.allow_anonymous = true;
           users = {
-            hass = {
+            root = {
               acl = [ "readwrite #" ];
               passwordFile = config.sops.secrets.mosquitto_iotdevice_password.path;
             };
