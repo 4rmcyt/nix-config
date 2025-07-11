@@ -21,7 +21,7 @@
       configWritable = true;
       # This block has been rewritten to be more explicit and correct
       extraPackages = ps: [
-        python3.13-psycopg
+        psycopg2
         ps.flatdict
         ps.pyatv
         ps.getmac
