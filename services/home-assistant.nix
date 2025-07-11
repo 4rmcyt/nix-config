@@ -21,12 +21,11 @@
       configWritable = true;
       # This block has been rewritten to be more explicit and correct
       extraPackages = ps: [
-        ps.psycopg2
+        ps.psycopg
         ps.flatdict
         ps.pyatv
         ps.getmac
         ps.pywemo
-        # This is the correct package name
         ps.pymetno
         ps.pyradios
         ps.jsonrpc-async
