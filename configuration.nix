@@ -168,6 +168,8 @@
     "A /home/zeev/media - - - - d:g:media:rwx,g:media:rwx"
     "d /home/zeev/media/torrents/.incomplete 0755 transmission media - -"
     "d /home/zeev/media/torrents/.watch      0755 transmission media - -"
+    "d /home/zeev/media/.state 0770 zeev media -",
+    "d /home/zeev/media/.state/nixarr 0770 zeev media -"
   ];
 
   services = {
