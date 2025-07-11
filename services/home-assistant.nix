@@ -20,19 +20,10 @@
       configDir = "/var/lib/home-assistant";
       configWritable = true;
       # This block has been rewritten to be more explicit and correct
-      extraPackages = ps: [
-        psycopg2
-        ps.flatdict
-        ps.pyatv
-        ps.getmac
-        ps.pywemo
-        ps.pymetno
-        ps.pyradios
-        ps.jsonrpc-async
-        ps.jsonrpc-websocket
-        ps.mpd2
-        pkgs.picotts
-      ];
+      extraPackages =
+          python3Packages: with python3Packages; [
+            psycopg2
+          ];
       extraComponents = [
         "default_config"
         "mqtt"
