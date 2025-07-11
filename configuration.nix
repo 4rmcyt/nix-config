@@ -13,7 +13,10 @@
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       warn-dirty = false;
       download-buffer-size = 500000000;
       cores = 0;
@@ -43,7 +46,13 @@
         isNormalUser = true;
         description = "Zeev";
         shell = pkgs.zsh;
-        extraGroups = [ "networkmanager" "wheel" "docker" "media" "samba" ];
+        extraGroups = [
+          "networkmanager"
+          "wheel"
+          "docker"
+          "media"
+          "samba"
+        ];
         hashedPasswordFile = config.sops.secrets.zeev_password.path;
         openssh.authorizedKeys.keys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks redacted@example.com"
@@ -53,7 +62,6 @@
 
       git = {
         isSystemUser = true;
-        group = "git";
         home = "/var/lib/git-server";
         createHome = true;
         shell = "${pkgs.git}/bin/git-shell";
@@ -66,13 +74,47 @@
 
   environment.systemPackages = with pkgs; [
     # Shell
-    zsh zsh-powerlevel10k meslo-lgs-nf
+    zsh
+    zsh-powerlevel10k
+    meslo-lgs-nf
     # Dev
-    git neovim direnv pass
+    git
+    neovim
+    direnv
+    pass
     # Tools
-    vim wget curl jq coreutils gawk gnugrep iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools apacheHttpd yamllint nix-index iotop tuptime smartmontools fzf ffmpeg nmap trash-cli
+    vim
+    wget
+    curl
+    jq
+    coreutils
+    gawk
+    gnugrep
+    iproute2
+    mc
+    htop
+    btop
+    lsof
+    age
+    sops
+    ssh-to-age
+    openssh
+    wireguard-tools
+    apacheHttpd
+    yamllint
+    nix-index
+    iotop
+    tuptime
+    smartmontools
+    fzf
+    ffmpeg
+    nmap
+    trash-cli
     # Archives
-    zip unar unzip p7zip
+    zip
+    unar
+    unzip
+    p7zip
     # Misc
     calibre
   ];
@@ -96,6 +138,10 @@
           PermitTTY no
           X11Forwarding no
       '';
+      hostKeys = [
+        { type = "ed25519"; path = config.sops.secrets.ssh_host_ed25519_key.path; }
+        { type = "rsa"; bits = 4096; path = config.sops.secrets.ssh_host_rsa_key.path; }
+      ];
     };
     vscode-server.enable = true;
   };
@@ -106,11 +152,11 @@
     age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
     secrets = {
       zeev_password.neededForUsers = true;
-      nextcloud_admin_password = {};
-      microbin_admin_password = {};
-      tailscale_auth_key = {};
-      telegram_bot_token = {};
-      telegram_chat_id = {};
+      nextcloud_admin_password = { };
+      microbin_admin_password = { };
+      tailscale_auth_key = { };
+      telegram_bot_token = { };
+      telegram_chat_id = { };
     };
   };
 
@@ -132,38 +178,26 @@
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "25.05";
 
-
   environment.etc."nixos/scripts/add-trackers.sh" = {
-  # The mode "0755" makes the script executable
-  mode = "0755";
-  # The text of the script
-  text = ''
-    #!/binis/sh
+    # The mode "0755" makes the script executable
+    mode = "0755";
+    # The text of the script
+    text = ''
+          #!/bin/sh
 
-    # Use direct paths to programs for reliability in NixOS
-    TRANSMISSION_REMOTE="${pkgs.transmission}/bin/transmission-remote"
-    WGET="${pkgs.wget}/bin/wget"
-    SED="${pkgs.gnused}/bin/sed"
-    WC="${pkgs.coreutils}/bin/wc"
-    CAT="${pkgs.coreutils}/bin/cat"
+      TRANSMISSION_REMOTE='/run/current-system/sw/bin/transmission-remote'
+      TRACKERLIST="/tmp/trackers.list"
 
-    TRACKERLIST="/tmp/trackers.list"
+      trap "rm -f ./$TRACKERLIST" EXIT
 
-    # Clean up the temp file on exit
-    trap "rm -f $TRACKERLIST" EXIT
+      wget https://newtrackon.com/api/stable -O "$TRACKERLIST"
+      wget https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt -O ->> "$TRACKERLIST"
 
-    # Get tracker lists
-    $WGET https://newtrackon.com/api/stable -O "$TRACKERLIST"
-    $WGET https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt -O - >> "$TRACKERLIST"
+      sed -i '/^$/d' $TRACKERLIST
+      echo "[+] Got $(wc -l $TRACKERLIST) trackers"
 
-    # Process the list
-    $SED -i '/^$/d' "$TRACKERLIST"
-    echo "[+] Got $($WC -l < "$TRACKERLIST") trackers"
-
-    # Add trackers to all torrents
-    while IFS= read -r TRACKER; do
-      "$TRANSMISSION_REMOTE" -t all -td "$TRACKER"
-    done < "$TRACKERLIST"
-  '';
-};
+      # Add trackers to all torrents, just in case™
+      cat $TRACKERLIST | while read TRACKER; do $TRANSMISSION_REMOTE -t all -td $TRACKER; done
+    '';
+  };
 }
