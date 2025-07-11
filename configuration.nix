@@ -111,6 +111,16 @@
       nextcloud.extraGroups = [ "work" ];
       radicale.extraGroups = [ "work" ];
       paperless.extraGroups = [ "work" ];
+      jellyfin.extraGroups = [ "media" ];
+      audiobookshelf.extraGroups = [ "media" ];
+      transmission.extraGroups = [ "media" ];
+      bazarr.extraGroups = [ "media" ];
+      lidarr.extraGroups = [ "media" ];
+      prowlarr.extraGroups = [ "media" ];
+      radarr.extraGroups = [ "media" ];
+      readarr.extraGroups = [ "media" ];
+      sonarr.extraGroups = [ "media" ];
+      jellyseerr.extraGroups = [ "media" ];
     };
   };
 
