@@ -3,7 +3,6 @@
 {
   nixarr = {
     enable = true;
-    group = "media";
     mediaUsers = [ "zeev" ];
     mediaDir = "/home/zeev/media";
     stateDir = "/home/zeev/media/.state/nixarr";
