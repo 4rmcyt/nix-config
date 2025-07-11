@@ -3,7 +3,20 @@
 {
   nixarr = {
     enable = true;
-    mediaUsers = [ "zeev" ];
+    mediaUsers = [ 
+      "zeev"
+      "transmission"
+      "sabnzbd"
+      "audiobookshelf"
+      "jellyfin"
+      "bazarr"
+      "lidarr"
+      "prowlarr"
+      "radarr"
+      "readarr"
+      "sonarr"
+      "jellyseerr"  
+       ];
     mediaDir = "/home/zeev/media";
     stateDir = "/home/zeev/media/.state/nixarr";
 
