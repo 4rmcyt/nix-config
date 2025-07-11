@@ -13,7 +13,7 @@
     group = "mqtt";
     mode = "444";
   };
-  
+
   services = {
     home-assistant = {
       enable = true;
@@ -23,7 +23,7 @@
         installCheckPhase = ":";
       })).override {
         extraPackages = ps: with ps; [
-         pyatv getmac pywemo metno-locationforecast radios jsonrpc-async jsonrpc-websocket mpd2 pkgs.picotts psycopg2
+         pyatv getmac pywemo metno_locationforecast radios jsonrpc-async jsonrpc-websocket mpd2 pkgs.picotts psycopg2
         ];
       };
       configDir = "/var/lib/home-assistant";
@@ -35,7 +35,7 @@
         "roku"
         "alexa"
         "alexa_devices"
-	"upnp"
+        "upnp"
       ];
 
       config = {
@@ -45,7 +45,7 @@
           time_zone = "America/Edmonton";
           country = "CA";
           currency = "CAD";
-          external_url = "https://home.labhome.work";
+          external_url = "https://hass.labhome.work";
           internal_url = "http://192.168.1.165:8123";
         };
 
@@ -83,7 +83,7 @@
             service_name =  "google_say";
           }
         ];
-        
+
         mqtt = {
           broker = "localhost";
           discovery = true;
@@ -126,3 +126,4 @@
     };
   };
 }
+
