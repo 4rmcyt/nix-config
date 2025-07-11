@@ -25,8 +25,9 @@
         pyatv
         getmac
         pywemo
-        metno
-        radios
+        # Corrected package names:
+        metno-locationforecast
+        pyradios
         jsonrpc-async
         jsonrpc-websocket
         mpd2
@@ -93,7 +94,7 @@
           discovery = true;
           discovery_prefix = "homeassistant";
           username = "hass";
-          password = config.sops.secrets.mosquitto_iotdevice_password.path;
+          passwordFile = config.sops.secrets.mosquitto_iotdevice_password.path;
         };
 
         default_config = {};
@@ -117,6 +118,7 @@
 
     mosquitto = {
       enable = true;
+      settings.allow_anonymous = true;
       listeners = [
         {
           users = {
@@ -130,4 +132,3 @@
     };
   };
 }
-
