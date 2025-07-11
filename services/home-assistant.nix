@@ -25,7 +25,6 @@
         pyatv
         getmac
         pywemo
-        # Corrected package names:
         metno-locationforecast
         pyradios
         jsonrpc-async
@@ -94,7 +93,6 @@
           discovery = true;
           discovery_prefix = "homeassistant";
           username = "hass";
-          # This should be 'passwordFile'
           passwordFile = config.sops.secrets.mosquitto_iotdevice_password.path;
         };
 
@@ -119,7 +117,10 @@
 
     mosquitto = {
       enable = true;
-      settings.allow_anonymous = true;
+      # This is the correct way to pass settings to mosquitto.conf
+      extraConfig = ''
+        allow_anonymous true
+      '';
       listeners = [
         {
           users = {
