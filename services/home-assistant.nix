@@ -41,6 +41,7 @@
         "alexa"
         "alexa_devices"
         "upnp"
+        "radio_browser"
       ];
 
       config = {
@@ -93,8 +94,6 @@
           broker = "localhost";
           discovery = true;
           discovery_prefix = "homeassistant";
-          username = "hass";
-          passwordFile = config.sops.secrets.mosquitto_iotdevice_password.path;
         };
 
         default_config = {};
