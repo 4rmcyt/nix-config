@@ -17,17 +17,21 @@
   services = {
     home-assistant = {
       enable = true;
-      package = (pkgs.home-assistant.overrideAttrs (old: {
-        doCheck = false;
-        checkPhase = ":";
-        installCheckPhase = ":";
-      })).override {
-        extraPackages = ps: with ps; [
-         pyatv getmac pywemo pymetno radios jsonrpc-async jsonrpc-websocket mpd2 pkgs.picotts psycopg2
-        ];
-      };
       configDir = "/var/lib/home-assistant";
       configWritable = true;
+      extraPackages = python3Packages: with python3Packages; [
+        psycopg2
+        flatdict
+        pyatv
+        getmac
+        pywemo
+        metno
+        radios
+        jsonrpc-async
+        jsonrpc-websocket
+        mpd2
+        pkgs.picotts
+      ];
       extraComponents = [
         "default_config"
         "mqtt"
@@ -117,9 +121,9 @@
         {
           users = {
             hass = {
-  acl = [ "readwrite #" ];
-  passwordFile = config.sops.secrets.mosquitto_iotdevice_password.path;
-};
+              acl = [ "readwrite #" ];
+                passwordFile = config.sops.secrets.mosquitto_iotdevice_password.path;
+            };
           };
         }
       ];
