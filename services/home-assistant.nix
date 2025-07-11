@@ -77,7 +77,7 @@
           { platform = "google_translate";
             cache = true;
             cache_dir = "/tmp/tts";
-            base_url = "https://hasss.example.com";
+            base_url = "https://hass.example.com";
             language = "en";
             time_memory = 57600;
             service_name =  "google_say";
@@ -117,9 +117,9 @@
         {
           users = {
             hass = {
-              acl = [ "topic readwrite #" ];
-              passwordFile = config.sops.secrets.mosquitto_iotdevice_password.path;
-            };
+  acl = [ "readwrite #" ];
+  passwordFile = config.sops.secrets.mosquitto_iotdevice_password.path;
+};
           };
         }
       ];
