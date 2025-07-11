@@ -1,6 +1,47 @@
 { config, pkgs, lib, ... }:
 
-{
+{ 
+  #   age.secrets = {
+  #   sonarrApiKey.file = ./secrets/sonarrApiKey.age;
+  #   radarrApiKey.file = ./secrets/radarrApiKey.age;
+  #   bazarrApiKey.file = ./secrets/bazarrApiKey.age;
+  #   prowlarrApiKey.file = ./secrets/prowlarrApiKey.age;
+  #   jellyfinApiKey.file = ./secrets/jellyfinApiKey.age;
+  #   jellyseerrApiKey.file = ./secrets/jellyseerrApiKey.age;
+  #   truenasApiKey.file = ./secrets/truenasApiKey.age;
+  #   adguardPass.file = ./secrets/adguardPass.age;
+  #   transmissionPwd.file = ./secrets/transmissionPwd.age;
+  #   opnsenseUser.file = ./secrets/opnsenseUser.age;
+  #   opnsensePass.file = ./secrets/opnsensePass.age;
+  # };
+  # age-template.files."hompage-keys.env" = {
+  #   vars = {
+  #     sonarrKey = config.age.secrets.sonarrApiKey.path;
+  #     radarrKey = config.age.secrets.radarrApiKey.path;
+  #     bazarrKey = config.age.secrets.bazarrApiKey.path;
+  #     prowlarrKey = config.age.secrets.prowlarrApiKey.path;
+  #     jellyfinKey = config.age.secrets.jellyfinApiKey.path;
+  #     jellyseerrKey = config.age.secrets.jellyseerrApiKey.path;
+  #     truenasKey = config.age.secrets.truenasApiKey.path;
+  #     adguardPass = config.age.secrets.adguardPass.path;
+  #     opnsenseUser = config.age.secrets.opnsenseUser.path;
+  #     opnsensePass = config.age.secrets.opnsensePass.path;
+  #     transmissionPwd = config.age.secrets.transmissionPwd.path;
+  #   };
+
+  #   content = ''
+  #     HOMEPAGE_VAR_SONARR_KEY="$sonarrKey"
+  #     HOMEPAGE_VAR_RADARR_KEY="$radarrKey"
+  #     HOMEPAGE_VAR_PROWLARR_KEY="$prowlarrKey"
+  #     HOMEPAGE_VAR_BAZARR_KEY="$bazarrKey"
+  #     HOMEPAGE_VAR_JELLYFIN_KEY="$jellyfinKey"
+  #     HOMEPAGE_VAR_JELLYSEERR_KEY="$jellyseerrKey"
+  #     HOMEPAGE_VAR_TRUENAS_KEY="$truenasKey"
+  #     HOMEPAGE_VAR_ADGUARD_PWD="$adguardPass"
+  #     HOMEPAGE_VAR_OPNSENSE_USER="$opnsenseUser"
+  #     HOMEPAGE_VAR_OPNSENSE_PWD="$opnsensePass"
+  #     HOMEPAGE_VAR_TRANSMISSION_PWD="$transmissionPwd"
+  #   '';
   services.homepage-dashboard = {
     enable = true;
     listenPort = 8082;
@@ -35,7 +76,7 @@
               widgets = [
                 {
                   type = "sonarr";
-                  url = "https://tv.labhome.work/";
+                  url = "http://localhost:8989";
                 }
               ];
             };
@@ -48,7 +89,7 @@
               widgets = [
                 {
                   type = "radarr";
-                  url = "https://movies.labhome.work/";
+                  url = "http://localhost:7878";
                 }
               ];
             };
@@ -60,7 +101,7 @@
               widgets = [
                 {
                   type = "transmission";
-                  url = "https://transmission.labhome.work/transmission/rpc";
+                  url = "http://localhost:9091";
                 }
               ];
             };
@@ -72,7 +113,7 @@
               widgets = [
                 {
                   type = "prowlarr";
-                  url = "https://prowlarr.labhome.work/";
+                  url = "http://localhost:9696";
                 }
               ];
             };
@@ -84,7 +125,19 @@
               widgets = [
                 {
                   type = "bazarr";
-                  url = "htts://bazarr.labhome.work/";
+                  url = "http://localhost:6767";
+                }
+              ];
+            };
+          }
+            "Jellyseerr" = {
+              icon = "jellyseerr.png";
+              href = "https://jellyseerr.abhome.work/";
+              widgets = [
+                {
+                  type = "jellyseerr";
+                  url = "http://localhost:5055/";
+                  # key = "{{HOMEPAGE_VAR_JELLYSEERR_KEY}}";
                 }
               ];
             };
