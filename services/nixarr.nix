@@ -10,6 +10,7 @@
     };
 
     mediaDir = "/home/zeev/media";
+    stateDir = "/home/zeev/media/.state/nixarr";
 
     transmission = {
       enable = true;

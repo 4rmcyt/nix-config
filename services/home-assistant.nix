@@ -33,6 +33,7 @@
         "upnp"
         "radio_browser"
         "met"
+        "pypaperless"
       ];
 
       config = {
@@ -84,7 +85,6 @@
         mqtt = {
           broker = "localhost";
           discovery = true;
-          discovery_prefix = "homeassistant";
         };
 
         default_config = {};
