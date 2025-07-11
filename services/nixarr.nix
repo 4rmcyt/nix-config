@@ -2,6 +2,65 @@
 { config, pkgs, ... }:
 {
   nixarr = {
+     services.sabnzbd = {
+    enable = true;
+    vpn.enable = true;
+  };
+  
+  services.audiobookshelf = {
+    enable = true;
+    user = "zeev";
+    group = "media";
+  };
+  
+  services.jellyfin = {
+    enable = true;
+    user = "zeev";
+    group = "media";
+  };
+  
+  services.bazarr = {
+    enable = true;
+    user = "zeev";
+    group = "media";
+  };
+  
+  services.lidarr = {
+    enable = true;
+    user = "zeev";
+    group = "media";
+  };
+  
+  services.prowlarr = {
+    enable = true;
+    user = "zeev";
+    group = "media";
+  };
+  
+  services.radarr = {
+    enable = true;
+    user = "zeev";
+    group = "media";
+  };
+  
+  services.readarr = {
+    enable = true;
+    user = "zeev";
+    group = "media";
+  };
+  
+  services.sonarr = {
+    enable = true;
+    user = "zeev";
+    group = "media";
+  };
+  
+  services.jellyseerr = {
+    enable = true;
+    user = "zeev";
+    group = "media";
+  };
+}
     enable = true;
     mediaUsers = [ 
       "zeev"
