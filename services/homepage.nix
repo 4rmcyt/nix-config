@@ -130,7 +130,8 @@
               ];
             };
           }
-            "Jellyseerr" = {
+          {
+             "Jellyseerr" = {
               icon = "jellyseerr.png";
               href = "https://jellyseerr.abhome.work/";
               widgets = [
