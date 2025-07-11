@@ -60,7 +60,7 @@
     user = "zeev";
     group = "media";
   };
-}
+};
     enable = true;
     mediaUsers = [ 
       "zeev"
