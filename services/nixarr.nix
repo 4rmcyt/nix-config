@@ -2,7 +2,7 @@
 { config, pkgs, ... }:
 {
   nixarr = {
-     services.sabnzbd = {
+  services.sabnzbd = {
     enable = true;
     vpn.enable = true;
   };
