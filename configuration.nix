@@ -163,13 +163,13 @@
   ];
 
     systemd.tmpfiles.rules = [
-    "d /home/zeev/media 0770 zeev media -",
-    "d /home/zeev/downloads 0770 zeev media -",
-    "d /home/zeev/media/.state 0770 zeev media -",
-    "d /home/zeev/media/.state/nixarr 0770 zeev media -",
+    "d /home/zeev/media 0770 zeev media -"
+    "d /home/zeev/downloads 0770 zeev media -"
+    "d /home/zeev/media/.state 0770 zeev media -"
+    "d /home/zeev/media/.state/nixarr 0770 zeev media -"
     
     # This rule gives the 'media' group permission to enter /home/zeev
-    "A /home/zeev - - - - d:g:media:X,g:media:X",
+    "A /home/zeev - - - - d:g:media:X,g:media:X"
     # This rule gives the 'media' group full permissions for your media folder
     "A /home/zeev/media - - - - d:g:media:rwx,g:media:rwx"
   ];
