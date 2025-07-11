@@ -26,7 +26,8 @@
         ps.pyatv
         ps.getmac
         ps.pywemo
-        ps."metno-locationforecast" # Quoted to handle the hyphen
+        # This is the correct package name
+        ps.pymetno
         ps.pyradios
         ps.jsonrpc-async
         ps.jsonrpc-websocket
