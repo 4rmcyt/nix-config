@@ -24,7 +24,6 @@
           python3Packages: with python3Packages; [
             psycopg2
             pyatv
-            pypaperless
           ];
       extraComponents = [
         "mqtt"
@@ -34,6 +33,7 @@
         "upnp"
         "radio_browser"
         "met"
+        "paperless_ngx"
       ];
 
       config = {
