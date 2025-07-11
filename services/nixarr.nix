@@ -1,81 +1,61 @@
+# In ~/src/server/services/nixarr.nix
 { config, pkgs, ... }:
-
 {
-  # Central VPN configuration
-  services.nixarr.vpn = {
+  nixarr = {
+    
     enable = true;
-    wgConfFile = "/home/zeev/src/wg.conf";
-  };
+    mediaUsers = [ 
+      "zeev"
+      "transmission"
+      "sabnzbd"
+      "audiobookshelf"
+      "jellyfin"
+      "bazarr"
+      "lidarr"
+      "prowlarr"
+      "radarr"
+      "readarr"
+      "sonarr"
+      "jellyseerr"  
+       ];
+    mediaDir = "/home/zeev/media";
+    stateDir = "/home/zeev/media/.state/nixarr";
 
-  # Each application is its own service, with its own dataDir and group
-  services.transmission = {
-    enable = true;
-    vpn.enable = true;
-    group = "media";
-    dataDir = "/home/zeev/media/.state/nixarr/transmission";
-    settings = {
-      peer-port = 63998;
-      download-dir = "/home/zeev/downloads"; # Note: Transmission has its own download setting
+    vpn = {
+      enable = true;
+      wgConf = "/home/zeev/src/wg.conf";
     };
-  };
 
-  services.sabnzbd = {
-    enable = true;
-    vpn.enable = true;
-    group = "media";
-    dataDir = "/home/zeev/media/.state/nixarr/sabnzbd";
-  };
+    transmission = {
+      enable = true;
+      vpn.enable = true;
+      peerPort = 63998;
+      flood.enable = false;
+      extraSettings = {
+        download-dir = "/home/zeev/Downloads";
+        script-torrent-added-enabled = true;
+        script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
+        blocklist-enabled = true;
+        blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
+      };
+    };
 
-  services.audiobookshelf = {
-    enable = true;
-    group = "media";
-    dataDir = "/home/zeev/media/.state/nixarr/audiobookshelf";
-  };
+    sabnzbd = {
+      enable = true;
+      vpn.enable = true;
+    };
 
-  services.jellyfin = {
-    enable = true;
-    group = "media";
-    dataDir = "/home/zeev/media/.state/nixarr/jellyfin";
-  };
+    audiobookshelf.enable = true;
+    jellyfin.enable = true;
+    bazarr.enable = true;
+    lidarr.enable = true;
+    prowlarr.enable = true;
+    radarr.enable = true;
+    readarr.enable = true;
+    sonarr.enable = true;
+    jellyseerr.enable = true;
 
-  services.bazarr = {
-    enable = true;
-    group = "media";
-    dataDir = "/home/zeev/media/.state/nixarr/bazarr";
-  };
+    
 
-  services.lidarr = {
-    enable = true;
-    group = "media";
-    dataDir = "/home/zeev/media/.state/nixarr/lidarr";
-  };
-
-  services.prowlarr = {
-    enable = true;
-    group = "media";
-    dataDir = "/home/zeev/media/.state/nixarr/prowlarr";
-  };
-
-  services.radarr = {
-    enable = true;
-    group = "media";
-    dataDir = "/home/zeev/media/.state/nixarr/radarr";
-  };
-
-  services.readarr = {
-    enable = true;
-    group = "media";
-    dataDir = "/home/zeev/media/.state/nixarr/readarr";
-  };
-
-  services.sonarr = {
-    enable = true;
-    group = "media";
-    dataDir = "/home/zeev/media/.state/nixarr/sonarr";
-  };
-
-  services.jellyseerr = {
-    enable = true;
-    group = "media";
   };
 }
