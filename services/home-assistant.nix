@@ -22,7 +22,7 @@
       # This block has been rewritten to be more explicit and correct
       extraPackages = ps: [
         psycopg
-        ps.flatdict
+        flatdict
         ps.pyatv
         ps.getmac
         ps.pywemo
