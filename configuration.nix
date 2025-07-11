@@ -139,6 +139,8 @@
     "A /home/zeev - - - - d:u:transmission:rwx,u:transmission:rwx"
     "A /home/zeev - - - - d:g:media:X,g:media:X"
     "A /home/zeev/media - - - - d:g:media:rwx,g:media:rwx"
+    "d /home/zeev/media/torrents/.incomplete 0755 transmission media - -"
+    "d /home/zeev/media/torrents/.watch      0755 transmission media - -"
   ];
 
   services = {
