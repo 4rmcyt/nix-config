@@ -1,118 +1,82 @@
-# In ~/src/server/services/nixarr.nix
 { config, pkgs, ... }:
+
 {
-  nixarr = {
-
+  # Central VPN configuration
+  services.nixarr.vpn = {
     enable = true;
-    mediaUsers = [
-      "zeev"
-      "transmission"
-      "sabnzbd"
-      "audiobookshelf"
-      "jellyfin"
-      "bazarr"
-      "lidarr"
-      "prowlarr"
-      "radarr"
-      "readarr"
-      "sonarr"
-      "jellyseerr"
-    ];
-    mediaDir = "/home/zeev/media";
-    stateDir = "/home/zeev/media/.state/nixarr";
+    wgConfFile = "/home/zeev/src/wg.conf";
+  };
 
-    vpn = {
-      enable = true;
-      wgConf = "/home/zeev/src/wg.conf";
+  # Each application is its own service, with its own dataDir and group
+  services.transmission = {
+    enable = true;
+    vpn.enable = true;
+    group = "media";
+    dataDir = "/home/zeev/media/.state/nixarr/transmission";
+    settings = {
+      peer-port = 63998;
+      download-dir = "/home/zeev/downloads"; # Note: Transmission has its own download setting
     };
+  };
 
-    transmission = {
-      enable = true;
-      vpn.enable = true;
-      peerPort = 63998;
-      flood.enable = false;
-      extraSettings = {
-        download-dir = "/home/zeev/Downloads";
-        script-torrent-added-enabled = true;
-        script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
-        blocklist-enabled = true;
-        blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
-      };
-    };
+  services.sabnzbd = {
+    enable = true;
+    vpn.enable = true;
+    group = "media";
+    dataDir = "/home/zeev/media/.state/nixarr/sabnzbd";
+  };
 
-    sabnzbd = {
-      enable = true;
-      vpn.enable = true;
-    };
+  services.audiobookshelf = {
+    enable = true;
+    group = "media";
+    dataDir = "/home/zeev/media/.state/nixarr/audiobookshelf";
+  };
 
-    audiobookshelf.enable = true;
-    jellyfin.enable = true;
-    bazarr.enable = true;
-    lidarr.enable = true;
-    prowlarr.enable = true;
-    radarr.enable = true;
-    readarr.enable = true;
-    sonarr.enable = true;
-    jellyseerr.enable = true;
+  services.jellyfin = {
+    enable = true;
+    group = "media";
+    dataDir = "/home/zeev/media/.state/nixarr/jellyfin";
+  };
 
-    services.sabnzbd = {
-      enable = true;
-      vpn.enable = true;
-    };
+  services.bazarr = {
+    enable = true;
+    group = "media";
+    dataDir = "/home/zeev/media/.state/nixarr/bazarr";
+  };
 
-    services.audiobookshelf = {
-      enable = true;
-      user = "zeev";
-      group = "media";
-    };
+  services.lidarr = {
+    enable = true;
+    group = "media";
+    dataDir = "/home/zeev/media/.state/nixarr/lidarr";
+  };
 
-    services.jellyfin = {
-      enable = true;
-      user = "zeev";
-      group = "media";
-    };
+  services.prowlarr = {
+    enable = true;
+    group = "media";
+    dataDir = "/home/zeev/media/.state/nixarr/prowlarr";
+  };
 
-    services.bazarr = {
-      enable = true;
-      user = "zeev";
-      group = "media";
-    };
+  services.radarr = {
+    enable = true;
+    group = "media";
+    dataDir = "/home/zeev/media/.state/nixarr/radarr";
+  };
 
-    services.lidarr = {
-      enable = true;
-      user = "zeev";
-      group = "media";
-    };
+  services.readarr = {
+    enable = true;
+    group = "media";
+    dataDir = "/home/zeev/media/.state/nixarr/readarr";
+  };
 
-    services.prowlarr = {
-      enable = true;
-      user = "zeev";
-      group = "media";
-    };
+  services.sonarr = {
+    enable = true;
+    group = "media";
+    dataDir = "/home/zeev/media/.state/nixarr/sonarr";
+  };
 
-    services.radarr = {
-      enable = true;
-      user = "zeev";
-      group = "media";
-    };
-
-    services.readarr = {
-      enable = true;
-      user = "zeev";
-      group = "media";
-    };
-
-    services.sonarr = {
-      enable = true;
-      user = "zeev";
-      group = "media";
-    };
-
-    services.jellyseerr = {
-      enable = true;
-      user = "zeev";
-      group = "media";
-    };
-
+  services.jellyseerr = {
+    enable = true;
+    group = "media";
+    dataDir = "/home/zeev/media/.state/nixarr/jellyseerr";
   };
 }
