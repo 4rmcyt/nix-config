@@ -61,7 +61,6 @@
           "git"
           "sudo"
         ];
-        theme = "do-you-even-nix";
       };
     };
 
