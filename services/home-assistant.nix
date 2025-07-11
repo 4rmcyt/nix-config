@@ -23,7 +23,7 @@
         installCheckPhase = ":";
       })).override {
         extraPackages = ps: with ps; [
-         pyatv getmac pywemo metno radios jsonrpc-async jsonrpc-websocket mpd2 pkgs.picotts psycopg2
+         pyatv getmac pywemo metno-locationforecast radios jsonrpc-async jsonrpc-websocket mpd2 pkgs.picotts psycopg2
         ];
       };
       configDir = "/var/lib/home-assistant";
@@ -35,6 +35,7 @@
         "roku"
         "alexa"
         "alexa_devices"
+	"upnp"
       ];
 
       config = {
