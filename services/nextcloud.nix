@@ -17,7 +17,7 @@
       adminuser = "admin";
     };
     settings = {
-      overwriteprotocol = "https";
+      overwriteprotocol = "http";
       trusted_domains = [ "nextcloud.local" "192.168.1.165" "nextcloud.labhome.work" ];
       trusted_proxies = [ "127.0.0.1" ];
     };
@@ -25,12 +25,12 @@
 
   services.nginx.enable = true;
 
-  services.nginx.virtualHosts."nextcloud.local" = {
+  "nextcloud.local" = {
         forceSSL = true;
     listen = [
       { addr = "127.0.0.1"; port = 8081; ssl = false; }
     ];
-    # No need to set root/locations, Nextcloud module will do it
+    # No needservices.nginx.virtualHosts. to set root/locations, Nextcloud module will do it
   };
 
 }
