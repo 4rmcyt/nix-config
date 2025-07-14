@@ -5,6 +5,8 @@ keys:
   - &hosts:
     - &homeserver age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
     - &vkmac age1cjvaelr2zeynyv0jquywran8u3hwfg79elkswlk9mv8l0ev7c3aqrhjhr2
+  - &gpg:
+    - REDACTED  
 groups:
   users: [*zeev, *vk]
   hosts: [*homeserver, *vkmac]
@@ -19,3 +21,5 @@ creation_rules:
           - *vkmac
           - *users
           - *hosts
+      - pgp:
+          - *gpg
