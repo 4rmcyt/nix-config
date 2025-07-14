@@ -71,6 +71,7 @@
     homepage_audiobookshelf_key = { owner = "homepage-dashboard"; };
     homepage_grafana_key = { owner = "homepage-dashboard"; };
     homepage_nextdns_key = { owner = "homepage-dashboard"; };
+    homepage_nextdns_profile_id = { owner = "homepage-dashboard"; };
     };
   };
 }

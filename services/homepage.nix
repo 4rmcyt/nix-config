@@ -184,6 +184,13 @@
               href = "https://rss.labhome.work";
               description = "RSS Reader";
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/miniflux.svg";
+              widgets = [
+                {
+                  type = "miniflux";
+                  url = "http://localhost:8086";
+                  key = "${config.sops.secrets.homepage_miniflux_key.path}";
+                }
+              ];
             };
           }
           {
