@@ -48,10 +48,9 @@ in
       samba = { };
       git = { };
       keycloak = { };
-      "homepage-dashboard" = {};
+      homepage-dashboard = {};
     };
-    users = {
-      zeev = {
+     zeev = {
         isNormalUser = true;
         description = "Zeev";
         shell = pkgs.zsh;
@@ -73,8 +72,7 @@ in
         shell = "${pkgs.git}/bin/git-shell";
         openssh.authorizedKeys.keys = allKeys.user-keys;
       };
-      
-      "homepage-dashboard" = {
+      homepage-dashboard = {
         isSystemUser = true;
         group = homepage-dashboard;
       };
