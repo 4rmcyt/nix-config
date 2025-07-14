@@ -69,10 +69,7 @@
           language = "en";
         }];
 
-        mqtt = {
-          broker = "localhost";
-          discovery = true;
-        };
+        mqtt = {};
 
         default_config = {};
 
