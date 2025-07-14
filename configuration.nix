@@ -40,6 +40,9 @@ in
     groups.media = {};
     groups.samba = {};
     groups.git = {};
+    groups.homepage-dashboard = {};
+    groups.hass = {};
+    groups.keycloak = {};
     users = {
       zeev = {
         isNormalUser = true;
