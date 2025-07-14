@@ -59,6 +59,15 @@ in
         shell = "${pkgs.git}/bin/git-shell";
         openssh.authorizedKeys.keys = allKeys.user-keys;
       };
+      keycloak = {
+        isSystemUser = true;
+        group = "keycloak";
+      };
+      homepage-dashboard = {
+        isSystemUser = true;
+        # This line is now correctly quoted
+        group = "homepage-dashboard";
+      };
     };
   };
 
