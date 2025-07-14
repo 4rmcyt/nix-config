@@ -4,15 +4,6 @@
   lib,
   ...
 }:
-let
-  # Create a file containing all the environment variables from secrets
-  secretsEnvFile = pkgs.writeText "homepage-secrets.env" ''
-    HOMEPAGE_VAR_SONARR_KEY=$(cat ${config.sops.secrets.homepage_sonarr_key.path})
-    HOMEPAGE_VAR_RADARR_KEY=$(cat ${config.sops.secrets.homepage_radarr_key.path})
-    HOMEPAGE_VAR_PROWLARR_KEY=$(cat ${config.sops.secrets.homepage_prowlarr_key.path})
-    # ... add a line for each secret
-  '';
-in
 {
   services.homepage-dashboard = {
     enable = true;
@@ -212,6 +203,14 @@ in
               href = "http://192.168.1.165:3000";
               description = "Real-time System Dashboard";
               icon = "grafana";
+              widgets = [
+                {
+                  type = "grafana";
+                  url = "http://localhost:3000";
+                  username = "admin";
+                  password = "${config.sops.secrets.grafana_admin_password.path}";
+                }
+              ];
             };
           }
           {
@@ -228,13 +227,6 @@ in
               icon = "prometheus";
             };
           }
-          {
-            "NextDns" = {
-              href = "https://my.nextdns.io/";
-              description = "Nextdns Dashboard";
-              icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
-            };
-          }
         ];
       }
       {
@@ -244,6 +236,13 @@ in
               href = "https://hass.labhome.work";
               description = "Home Automation";
               icon = "home-assistant";
+              widgets = [
+                {
+                  type = "home-assistant";
+                  url = "http://localhost:8123";
+                  key = "${config.sops.secrets.homepage_hass_key.path}";
+                }
+              ];
             };
           }
           {
@@ -264,6 +263,21 @@ in
               icon = "keycloak";
             };
           }
+           {
+            "NextDns" = {
+              href = "https://my.nextdns.io/";
+              description = "Nextdns Dashboard";
+              icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
+              widgets = [
+                {
+                  type = "nextdns";
+                  url = "http://localhost:3000";
+                  profileId = "${config.sops.secrets.homepage_nextdns_profile_id.path}";
+                  key = "${config.sops.secrets.homepage_nextdns_key.path}";
+                }
+              ];
+            };
+          }
           {
             "Tailscale" = {
               href = "https://login.tailscale.com/admin/machines";
@@ -272,28 +286,22 @@ in
               widgets = [
                 {
                   type = "tailscale";
-                  url = "http://localhost:41641";
+                  deviceId = "${config.sops.secrets.homepage_tailscale_device_id.path}";
                   key = "${config.sops.secrets.homepage_tailscale_key.path}";
                 }
               ];
             };
           }
           {
-            "Cloudflare Zero Trust" = {
-              href = "https://one.dash.cloudflare.com";
-              description = "Zero Trust Network Access";
-              icon = "cloudflare-zero-trust";
-            };
-          }
-          {
-            "Cloudflare DNS" = {
-              href = "https://dash.cloudflare.com/8239dd1bb0d0bfedf13673a195df59cf/home";
-              description = "DNS Management";
-              icon = "cloudflare-dns";
+            "Cloudflare Tunnels" = {
+              href = "https://one.dash.cloudflare.com/8239dd1bb0d0bfedf13673a195df59cf/networks/tunnels";
+              description = "Cloudflare Tunnels Management";
+              icon = "Cloudflare Tunnels";
               widgets = [
                 {
-                  type = "cloudflare";
-                  url = "http://localhost:8080";
+                  type = "cloudflared";
+                  accountId = "${config.sops.secrets.homepage_cloudflared_account_id.path}";
+                  tunnelId = "${config.sops.secrets.homepage_cloudflared_tunnel_id.path}";
                   key = "${config.sops.secrets.homepage_cloudflared_key.path}";
                 }
               ];
