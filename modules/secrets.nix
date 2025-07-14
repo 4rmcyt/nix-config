@@ -27,12 +27,12 @@
     mosquitto_iotdevice_password = { owner = "mosquitto"; };
     grafana_admin_password = { owner = "grafana"; };
 
-    cloudflare_tunnel_token   = { owner = "cloudflared"; group = "cloudflared"; mode = "0600"; };
+    cloudflare_tunnel_credentials   = { owner = "cloudflared"; group = "cloudflared"; mode = "0600"; };
+    cloudflare_tunnel_id = { owner = "cloudflared"; group = "cloudflared"; mode = "0600"; };
 
-    # This key is used by a root process, so default is fine
     tailscale_auth_key = {};
     tailscale_ip  = {};
-
+    
 
     # You need to set the owner for these based on which service uses them.
     # For example, if Home Assistant sends notifications: owner = "hass";
