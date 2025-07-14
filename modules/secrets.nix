@@ -66,10 +66,15 @@
     homepage_hass_key = { owner = "homepage-dashboard"; };
     homepage_radicale_key = { owner = "homepage-dashboard"; };
     homepage_kavita_key = { owner = "homepage-dashboard"; };
+    
     homepage_cloudflared_key = { owner = "homepage-dashboard"; };
+    homepage_cloudflared_account_id = { owner = "homepage-dashboard"; };
+    
     homepage_jellyfin_key = { owner = "homepage-dashboard"; };
     homepage_audiobookshelf_key = { owner = "homepage-dashboard"; };
+    
     homepage_grafana_key = { owner = "homepage-dashboard"; };
+    
     homepage_nextdns_key = { owner = "homepage-dashboard"; };
     homepage_nextdns_profile_id = { owner = "homepage-dashboard"; };
     };
