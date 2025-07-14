@@ -1,11 +1,14 @@
 { config, pkgs, ... }:
-
+let 
+  cloudflareTunnelId = config.sops.secrets.cloudflare_tunnel_id.path;
+  cloudflareTunnelCredentials = config.sops.secrets.cloudflare_tunnel_credentials.path;
+in
 {
   services.cloudflared = {
     enable = true;
     tunnels = {
-      ${config.sops.secrets.cloudflare_tunnel_id.path} = {
-        credentialsFile = "${config.sops.secrets.cloudflare_tunnel_credentials.path}";
+      cloudflareTunnelId = {
+        credentialsFile = cloudflareTunnelCredentials;
         ingress = [
           {
             hostname = "nextcloud.labhome.work";
