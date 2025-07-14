@@ -54,6 +54,4 @@
       fi
     '';
   };
-
-  # REMOVED: Firewall port (now handled centrally in networking.nix)
 }

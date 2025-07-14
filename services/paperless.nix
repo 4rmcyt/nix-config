@@ -6,9 +6,9 @@
   services.paperless = {
     enable = true;
     package = pkgs.paperless-ngx.overrideAttrs (oldAttrs: {
-      doCheck = false;  # Skip tests to avoid build failures
+      doCheck = false;  
     });
-    port = 8888; # Changed from 8082 to 8888
+    port = 8888;
     address = "127.0.0.1";
     
     settings = {
@@ -29,7 +29,4 @@
       };
     };
   };
-
-  # Open firewall port
-  networking.firewall.allowedTCPPorts = [ 8888 ];
 }

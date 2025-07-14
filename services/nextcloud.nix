@@ -31,5 +31,4 @@
   };
 
   sops.secrets.nextcloud_admin_password = {};
-  # REMOVED: Firewall ports (now handled centrally in networking.nix)
 }

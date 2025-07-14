@@ -36,7 +36,7 @@ in
   users.users.miniflux = {
     isSystemUser = true;
     group = "miniflux";
-    home = "/var/lib/miniflux";
+    home = "/data/miniflux";
   };
 
   users.groups.miniflux = {};
