@@ -57,7 +57,19 @@ in
         shell = "${pkgs.git}/bin/git-shell";
         openssh.authorizedKeys.keys = allKeys.user-keys;
       };
+      homepage-dashboard = {
+        isSystemUser = true;
+        group = "homepage-dashboard";
+      };
+      hass = {
+        isSystemUser = true;
+        group = "hass";
     };
+      keycloak = {
+        isSystemUser = true;
+        group = "keycloak";
+      };
+    };    
   };
 
   environment.systemPackages = with pkgs; [
