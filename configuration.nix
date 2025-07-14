@@ -112,30 +112,6 @@ in
     extraSpecialArgs = { inherit inputs; };
     users.zeev = import ./home.nix;
   };
-
-  environment.etc."nixos/scripts/add-trackers.sh" = {
-    mode = "0755";
-    text = ''
-      #!/bin/sh
-      TRANSMISSION_REMOTE="${pkgs.transmission}/bin/transmission-remote"
-      WGET="${pkgs.wget}/bin/wget"
-      SED="${pkgs.gnused}/bin/sed"
-      WC="${pkgs.coreutils}/bin/wc"
-
-      TRACKERLIST="/tmp/trackers.list"
-      trap "rm -f $TRACKERLIST" EXIT
-
-      $WGET https://newtrackon.com/api/stable -O "$TRACKERLIST"
-      $WGET https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt -O - >> "$TRACKERLIST"
-
-      $SED -i '/^$/d' "$TRACKERLIST"
-      echo "[+] Got $($WC -l < "$TRACKERLIST") trackers"
-
-      while IFS= read -r TRACKER; do
-        "$TRANSMISSION_REMOTE" -t all -td "$TRACKER"
-      done < "$TRACKERLIST"
-    '';
-  };
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "25.05";
 }
