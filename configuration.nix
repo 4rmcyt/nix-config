@@ -17,20 +17,14 @@ in
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
+      experimental-features = [ "nix-command" "flakes" ];
       warn-dirty = false;
       download-buffer-size = 500000000;
       cores = 0;
       show-trace = true;
     };
     registry.nixpkgs = {
-      from = {
-        id = "nixpkgs";
-        type = "indirect";
-      };
+      from = { id = "nixpkgs"; type = "indirect"; };
       flake = inputs.nixpkgs;
     };
   };
@@ -43,24 +37,17 @@ in
   };
 
   users = {
-    groups = {
-      media = { };
-      samba = { };
-      git = { };
-      keycloak = { };
-      homepage-dashboard = {};
-    };
-     zeev = {
+    groups.media = {};
+    groups.samba = {};
+    groups.git = {};
+    ghoups.keycloak = {};
+    groups.homepage-dashboard = {};
+    users = {
+      zeev = {
         isNormalUser = true;
         description = "Zeev";
         shell = pkgs.zsh;
-        extraGroups = [
-          "networkmanager"
-          "wheel"
-          "docker"
-          "media"
-          "samba"
-        ];
+        extraGroups = [ "networkmanager" "wheel" "docker" "media" "samba" ];
         hashedPasswordFile = config.sops.secrets.zeev_password.path;
         openssh.authorizedKeys.keys = allKeys.server-keys;
       };
@@ -72,57 +59,14 @@ in
         shell = "${pkgs.git}/bin/git-shell";
         openssh.authorizedKeys.keys = allKeys.user-keys;
       };
-      homepage-dashboard = {
-        isSystemUser = true;
-        group = homepage-dashboard;
-      };
-
-      keycloak = {
-        isSystemUser = true;
-        group = "keycloak";
-      };
     };
   };
 
   environment.systemPackages = with pkgs; [
-    zsh
-    git
-    neovim
-    direnv
-    pass
-    vim
-    wget
-    curl
-    jq
-    coreutils
-    gawk
-    gnugrep
-    iproute2
-    mc
-    htop
-    btop
-    lsof
-    age
-    sops
-    ssh-to-age
-    openssh
-    wireguard-tools
-    apacheHttpd
-    zsh-powerlevel10k
-    meslo-lgs-nf
-    yamllint
-    nix-index
-    iotop
-    tuptime
-    smartmontools
-    fzf
-    ffmpeg
-    nmap
-    trash-cli
-    zip
-    unar
-    unzip
-    p7zip
+    zsh git neovim direnv pass vim wget curl jq coreutils gawk gnugrep
+    iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools
+    apacheHttpd zsh-powerlevel10k meslo-lgs-nf yamllint nix-index iotop
+    tuptime smartmontools fzf ffmpeg nmap trash-cli zip unar unzip p7zip
     calibre
   ];
 
@@ -130,15 +74,8 @@ in
     openssh = {
       enable = true;
       hostKeys = [
-        {
-          type = "ed25519";
-          path = config.sops.secrets.ssh_host_ed25519_key.path;
-        }
-        {
-          type = "rsa";
-          bits = 4096;
-          path = config.sops.secrets.ssh_host_rsa_key.path;
-        }
+        { type = "ed25519"; path = config.sops.secrets.ssh_host_ed25519_key.path; }
+        { type = "rsa"; bits = 4096; path = config.sops.secrets.ssh_host_rsa_key.path; }
       ];
       settings = {
         PermitRootLogin = "no";
@@ -157,10 +94,7 @@ in
   };
 
   programs = {
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
+    gnupg.agent = { enable = true; enableSSHSupport = true; };
     zsh.enable = true;
   };
 
