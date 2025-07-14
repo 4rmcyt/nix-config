@@ -53,7 +53,7 @@
                 {
                   type = "sonarr";
                   url = "http://localhost:8989";
-                  key = "${config.sops.secrets.homepage_sonarr_key.path}";
+                  key = "${config.sops.secrets.sonarr_key.path}";
                 }
               ];
             };
@@ -66,7 +66,7 @@
                 {
                   type = "radarr";
                   url = "http://localhost:7878";
-                  key = "${config.sops.secrets.homepage_radarr_key.path}";
+                  key = "${config.sops.secrets.radarr_key.path}";
                 }
               ];
             };
@@ -91,7 +91,7 @@
                 {
                   type = "prowlarr";
                   url = "http://localhost:9696";
-                  key = "${config.sops.secrets.homepage_prowlarr_key.path}";
+                  key = "${config.sops.secrets.prowlarr_key.path}";
                 }
               ];
             };
@@ -104,7 +104,7 @@
                 {
                   type = "bazarr";
                   url = "http://localhost:6767";
-                  key = "${config.sops.secrets.homepage_bazarr_key.path}";
+                  key = "${config.sops.secrets.bazarr_key.path}";
                 }
               ];
             };
@@ -117,7 +117,7 @@
                 {
                   type = "jellyseerr";
                   url = "http://localhost:5055/";
-                  key = "${config.sops.secrets.homepage_jellyseerr_key.path}";
+                  key = "${config.sops.secrets.jellyseerr_key.path}";
                 }
               ];
             };
