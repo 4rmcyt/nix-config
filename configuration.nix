@@ -95,7 +95,7 @@
     ];
     secrets = {
       zeev_password.neededForUsers = true;
-      sh_host_ed25519_key = { owner = "root"; group = "root"; mode = "0600"; };
+      ssh_host_ed25519_key = { owner = "root"; group = "root"; mode = "0600"; };
       ssh_host_rsa_key = { owner = "root"; group = "root"; mode = "0600"; };
       nextcloud_admin_password = {};
       microbin_admin_password = {};
