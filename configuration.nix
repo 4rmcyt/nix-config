@@ -47,8 +47,8 @@ in
       media = { };
       samba = { };
       git = { };
-      homepage-dashboard = { };
       keycloak = { };
+      "homepage-dashboard" = {};
     };
     users = {
       zeev = {
@@ -73,7 +73,8 @@ in
         shell = "${pkgs.git}/bin/git-shell";
         openssh.authorizedKeys.keys = allKeys.user-keys;
       };
-      homepage-dashboard = {
+      
+      "homepage-dashboard" = {
         isSystemUser = true;
         group = homepage-dashboard;
       };
