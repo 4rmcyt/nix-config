@@ -13,27 +13,19 @@
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
+      experimental-features = [ "nix-command" "flakes" ];
       warn-dirty = false;
       download-buffer-size = 500000000;
       cores = 0;
       show-trace = true;
     };
-    registry.nixpkgs.from = {
-      id = "nixpkgs";
-      type = "indirect";
+    registry.nixpkgs = {
+      from = { id = "nixpkgs"; type = "indirect"; };
+      flake = inputs.nixpkgs;
     };
-    registry.nixpkgs.flake = inputs.nixpkgs;
   };
 
-  security.sudo = {
-    execWheelOnly = true;
-    package = pkgs.sudo.override { withInsults = true; };
-    extraConfig = "Defaults insults";
-  };
+  security.sudo.execWheelOnly = true;
 
   boot.loader = {
     systemd-boot.enable = true;
@@ -41,27 +33,24 @@
   };
 
   users = {
+    groups.media = {};
+    groups.samba = {};
+    groups.git = {};
     users = {
       zeev = {
         isNormalUser = true;
         description = "Zeev";
         shell = pkgs.zsh;
-        extraGroups = [
-          "networkmanager"
-          "wheel"
-          "docker"
-          "media"
-          "samba"
-        ];
+        extraGroups = [ "networkmanager" "wheel" "docker" "media" "samba" ];
         hashedPasswordFile = config.sops.secrets.zeev_password.path;
         openssh.authorizedKeys.keys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks redacted@example.com"
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAokdbrMinZjhDnVLnrXOjNn9SvzsPdlP6P3T9hAtGG8 vk@Volodymyr-Kondratenko-Mac.local"
         ];
       };
-
       git = {
         isSystemUser = true;
+        group = "git";
         home = "/var/lib/git-server";
         createHome = true;
         shell = "${pkgs.git}/bin/git-shell";
@@ -73,50 +62,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-    # Shell
-    zsh
-    zsh-powerlevel10k
-    meslo-lgs-nf
-    # Dev
-    git
-    neovim
-    direnv
-    pass
-    # Tools
-    vim
-    wget
-    curl
-    jq
-    coreutils
-    gawk
-    gnugrep
-    iproute2
-    mc
-    htop
-    btop
-    lsof
-    age
-    sops
-    ssh-to-age
-    openssh
-    wireguard-tools
-    apacheHttpd
-    yamllint
-    nix-index
-    iotop
-    tuptime
-    smartmontools
-    fzf
-    ffmpeg
-    nmap
-    trash-cli
-    # Archives
-    zip
-    unar
-    unzip
-    p7zip
-    # Misc
-    calibre
+    zsh git neovim direnv pass vim wget curl jq coreutils gawk gnugrep iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools apacheHttpd zsh-powerlevel10k meslo-lgs-nf yamllint nix-index iotop tuptime smartmontools fzf ffmpeg nmap trash-cli zip unar unzip p7zip calibre
   ];
 
   services = {
@@ -125,10 +71,6 @@
       settings = {
         PermitRootLogin = "no";
         PasswordAuthentication = true;
-        PubkeyAuthentication = true;
-        X11Forwarding = false;
-        MaxAuthTries = 3;
-        LoginGraceTime = "30s";
       };
       extraConfig = ''
         Match user git
@@ -148,56 +90,62 @@
 
   sops = {
     defaultSopsFile = ./secrets.yaml;
-    defaultSopsFormat = "yaml";
-    age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
     secrets = {
       zeev_password.neededForUsers = true;
-      nextcloud_admin_password = { };
-      microbin_admin_password = { };
-      tailscale_auth_key = { };
-      telegram_bot_token = { };
-      telegram_chat_id = { };
+      nextcloud_admin_password = {};
+      microbin_admin_password = {};
+      tailscale_auth_key = {};
+      telegram_bot_token = {};
+      telegram_chat_id = {};
+      
+      # Add these definitions for your host keys
+      "ssh_host_ed25519_key" = {
+        owner = "root";
+        group = "root";
+        mode = "0600";
+      };
+      "ssh_host_rsa_key" = {
+        owner = "root";
+        group = "root";
+        mode = "0600";
+      };
     };
   };
 
   programs = {
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
+    gnupg.agent = { enable = true; enableSSHSupport = true; };
     zsh.enable = true;
   };
 
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
-    users = {
-      zeev = import ./home.nix;
-    };
+    users.zeev = import ./home.nix;
   };
 
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "25.05";
 
   environment.etc."nixos/scripts/add-trackers.sh" = {
-    # The mode "0755" makes the script executable
     mode = "0755";
-    # The text of the script
     text = ''
-          #!/bin/sh
+      #!/bin/sh
+      TRANSMISSION_REMOTE="${pkgs.transmission}/bin/transmission-remote"
+      WGET="${pkgs.wget}/bin/wget"
+      SED="${pkgs.gnused}/bin/sed"
+      WC="${pkgs.coreutils}/bin/wc"
 
-      TRANSMISSION_REMOTE='/run/current-system/sw/bin/transmission-remote'
       TRACKERLIST="/tmp/trackers.list"
+      trap "rm -f $TRACKERLIST" EXIT
 
-      trap "rm -f ./$TRACKERLIST" EXIT
+      $WGET https://newtrackon.com/api/stable -O "$TRACKERLIST"
+      $WGET https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt -O - >> "$TRACKERLIST"
 
-      wget https://newtrackon.com/api/stable -O "$TRACKERLIST"
-      wget https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt -O ->> "$TRACKERLIST"
+      $SED -i '/^$/d' "$TRACKERLIST"
+      echo "[+] Got $($WC -l < "$TRACKERLIST") trackers"
 
-      sed -i '/^$/d' $TRACKERLIST
-      echo "[+] Got $(wc -l $TRACKERLIST) trackers"
-
-      # Add trackers to all torrents, just in case™
-      cat $TRACKERLIST | while read TRACKER; do $TRANSMISSION_REMOTE -t all -td $TRACKER; done
+      while IFS= read -r TRACKER; do
+        "$TRANSMISSION_REMOTE" -t all -td "$TRACKER"
+      done < "$TRACKERLIST"
     '';
   };
 }
