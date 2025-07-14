@@ -1,10 +1,8 @@
 { config, pkgs, ... }:
 
 {
-  # YubiKey support for server (no GUI)
   services.udev.packages = [ pkgs.yubikey-personalization ];
   
-  # Enable smart card daemon
   services.pcscd.enable = true;
   
   # Install only CLI YubiKey tools (no GUI)
@@ -12,10 +10,6 @@
     yubikey-personalization      # CLI tool
     yubikey-manager             # CLI tool
     yubico-piv-tool            # CLI tool
-    # Removed GUI tools:
-    # yubikey-personalization-gui
-    # yubikey-manager-qt
-    # yubioath-flutter
   ];
 
   # Security services

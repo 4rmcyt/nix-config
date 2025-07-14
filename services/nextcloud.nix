@@ -22,7 +22,6 @@
 
   services.nginx.enable = true;
 
-  # Override the default vhost to listen only on localhost:8081
   services.nginx.virtualHosts."nextcloud.local" = {
     listen = [
       { addr = "127.0.0.1"; port = 8081; ssl = false; }
@@ -30,5 +29,4 @@
     # No need to set root/locations, Nextcloud module will do it
   };
 
-  sops.secrets.nextcloud_admin_password = {};
 }

@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  sops.secrets.paperless_admin_password = { };
 
   services.paperless = {
     enable = true;

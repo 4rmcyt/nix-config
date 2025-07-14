@@ -6,8 +6,9 @@
   ...
 }:
 let
-  allKeys = import ./secrets.nix;
-in  
+  # Import your keys file here at the top
+  allKeys = import ./keys.nix;
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -46,10 +47,7 @@ in
         shell = pkgs.zsh;
         extraGroups = [ "networkmanager" "wheel" "docker" "media" "samba" ];
         hashedPasswordFile = config.sops.secrets.zeev_password.path;
-        openssh.authorizedKeys.keys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com"
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAokdbrMinZjhDnVLnrXOjNn9SvzsPdlP6P3T9hAtGG8 vk@Volodymyr-Kondratenko-Mac.local"
-        ];
+        openssh.authorizedKeys.keys = allKeys.server-keys;
       };
       git = {
         isSystemUser = true;
@@ -57,9 +55,7 @@ in
         home = "/var/lib/git-server";
         createHome = true;
         shell = "${pkgs.git}/bin/git-shell";
-        openssh.authorizedKeys.keys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com"
-        ];
+        openssh.authorizedKeys.keys = allKeys.user-keys;
       };
     };
   };
@@ -93,21 +89,6 @@ in
       '';
     };
     vscode-server.enable = true;
-  };
-
-  sops = {
-    defaultSopsFile = ./secrets.yaml;
-    age.keyFile = "/etc/sops/age.key";
-    secrets = {
-      zeev_password.neededForUsers = true;
-      ssh_host_ed25519_key = { owner = "root"; group = "root"; mode = "0600"; };
-      ssh_host_rsa_key = { owner = "root"; group = "root"; mode = "0600"; };
-      nextcloud_admin_password = {};
-      microbin_admin_password = {};
-      tailscale_auth_key = {};
-      telegram_bot_token = {};
-      telegram_chat_id = {};
-    };
   };
 
   programs = {

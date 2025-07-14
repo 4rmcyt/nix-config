@@ -25,7 +25,7 @@
       done < "$TRACKERLIST"
     '';
   };
-  
+
   nixarr = {
     
     enable = true;
@@ -43,8 +43,8 @@
       "sonarr"
       "jellyseerr"  
        ];
-    mediaDir = "/home/zeev/media";
-    stateDir = "/home/zeev/media/.state/nixarr";
+    mediaDir = "/data/media";
+    stateDir = "/data/media/.state/nixarr";
 
     vpn = {
       enable = true;
@@ -57,7 +57,7 @@
       peerPort = 63998;
       flood.enable = false;
       extraSettings = {
-        download-dir = "/home/zeev/Downloads";
+        download-dir = "/data/Downloads";
         script-torrent-added-enabled = true;
         script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
         blocklist-enabled = true;

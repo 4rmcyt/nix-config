@@ -2,16 +2,12 @@
 { config, pkgs, lib, ... }:
 
 {
-  # SOPS secret for Tailscale auth key
-  sops.secrets.tailscale_auth_key = {};
 
-  # Enable Tailscale
   services.tailscale = {
     enable = true;
-    useRoutingFeatures = "both";  # Enable subnet routing and exit nodes
+    useRoutingFeatures = "both"; 
   };
 
-  # Enable tailscale daemon
   systemd.services.tailscale-autoconnect = {
     description = "Automatic connection to Tailscale";
     after = [ "network-pre.target" "tailscale.service" ];
@@ -33,10 +29,6 @@
     '';
   };
 
-  # REMOVED: IP forwarding (now handled centrally in networking.nix)
-  # This prevents duplicate sysctl definitions
-
-  # Allow Tailscale UDP port
   networking.firewall = {
     trustedInterfaces = [ "tailscale0" ];
     allowedUDPPorts = [ config.services.tailscale.port ];

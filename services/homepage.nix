@@ -4,49 +4,16 @@
   lib,
   ...
 }:
-
+let
+  # Create a file containing all the environment variables from secrets
+  secretsEnvFile = pkgs.writeText "homepage-secrets.env" ''
+    HOMEPAGE_VAR_SONARR_KEY=$(cat ${config.sops.secrets.homepage_sonarr_key.path})
+    HOMEPAGE_VAR_RADARR_KEY=$(cat ${config.sops.secrets.homepage_radarr_key.path})
+    HOMEPAGE_VAR_PROWLARR_KEY=$(cat ${config.sops.secrets.homepage_prowlarr_key.path})
+    # ... add a line for each secret
+  '';
+in
 {
-  #   age.secrets = {
-  #   sonarrApiKey.file = ./secrets/sonarrApiKey.age;
-  #   radarrApiKey.file = ./secrets/radarrApiKey.age;
-  #   bazarrApiKey.file = ./secrets/bazarrApiKey.age;
-  #   prowlarrApiKey.file = ./secrets/prowlarrApiKey.age;
-  #   jellyfinApiKey.file = ./secrets/jellyfinApiKey.age;
-  #   jellyseerrApiKey.file = ./secrets/jellyseerrApiKey.age;
-  #   truenasApiKey.file = ./secrets/truenasApiKey.age;
-  #   adguardPass.file = ./secrets/adguardPass.age;
-  #   transmissionPwd.file = ./secrets/transmissionPwd.age;
-  #   opnsenseUser.file = ./secrets/opnsenseUser.age;
-  #   opnsensePass.file = ./secrets/opnsensePass.age;
-  # };
-  # age-template.files."hompage-keys.env" = {
-  #   vars = {
-  #     sonarrKey = config.age.secrets.sonarrApiKey.path;
-  #     radarrKey = config.age.secrets.radarrApiKey.path;
-  #     bazarrKey = config.age.secrets.bazarrApiKey.path;
-  #     prowlarrKey = config.age.secrets.prowlarrApiKey.path;
-  #     jellyfinKey = config.age.secrets.jellyfinApiKey.path;
-  #     jellyseerrKey = config.age.secrets.jellyseerrApiKey.path;
-  #     truenasKey = config.age.secrets.truenasApiKey.path;
-  #     adguardPass = config.age.secrets.adguardPass.path;
-  #     opnsenseUser = config.age.secrets.opnsenseUser.path;
-  #     opnsensePass = config.age.secrets.opnsensePass.path;
-  #     transmissionPwd = config.age.secrets.transmissionPwd.path;
-  #   };
-
-  #   content = ''
-  #     HOMEPAGE_VAR_SONARR_KEY="$sonarrKey"
-  #     HOMEPAGE_VAR_RADARR_KEY="$radarrKey"
-  #     HOMEPAGE_VAR_PROWLARR_KEY="$prowlarrKey"
-  #     HOMEPAGE_VAR_BAZARR_KEY="$bazarrKey"
-  #     HOMEPAGE_VAR_JELLYFIN_KEY="$jellyfinKey"
-  #     HOMEPAGE_VAR_JELLYSEERR_KEY="$jellyseerrKey"
-  #     HOMEPAGE_VAR_TRUENAS_KEY="$truenasKey"
-  #     HOMEPAGE_VAR_ADGUARD_PWD="$adguardPass"
-  #     HOMEPAGE_VAR_OPNSENSE_USER="$opnsenseUser"
-  #     HOMEPAGE_VAR_OPNSENSE_PWD="$opnsensePass"
-  #     HOMEPAGE_VAR_TRANSMISSION_PWD="$transmissionPwd"
-  #   '';
   services.homepage-dashboard = {
     enable = true;
     listenPort = 8082;
@@ -60,6 +27,13 @@
               href = "https://jellyfin.labhome.work";
               description = "Media Server";
               icon = "jellyfin";
+              widgets = [
+                {
+                  type = "jellyfin";
+                  url = "http://localhost:8096";
+                  key = "${config.sops.secrets.homepage_jellyfin_key.path}";
+                }
+              ];
             };
           }
           {
@@ -67,6 +41,13 @@
               href = "https://audiobookshelf.labhome.work";
               description = "Audiobook & Podcast Server";
               icon = "audiobookshelf";
+              widgets = [
+                {
+                  type = "audiobookshelf";
+                  url = "http://localhost:8085";
+                  key = "${config.sops.secrets.homepage_audiobookshelf_key.path}";
+                }
+              ];
             };
           }
         ];
@@ -76,12 +57,12 @@
           {
             "Sonarr" = {
               icon = "sonarr.png";
-
               href = "https://tv.labhome.work/";
               widgets = [
                 {
                   type = "sonarr";
                   url = "http://localhost:8989";
+                  key = "${config.sops.secrets.homepage_sonarr_key.path}";
                 }
               ];
             };
@@ -89,12 +70,12 @@
           {
             "Radarr" = {
               icon = "radarr.png";
-
               href = "https://movies.labhome.work/";
               widgets = [
                 {
                   type = "radarr";
                   url = "http://localhost:7878";
+                  key = "${config.sops.secrets.homepage_radarr_key.path}";
                 }
               ];
             };
@@ -119,6 +100,7 @@
                 {
                   type = "prowlarr";
                   url = "http://localhost:9696";
+                  key = "${config.sops.secrets.homepage_prowlarr_key.path}";
                 }
               ];
             };
@@ -126,11 +108,12 @@
           {
             "Bazarr" = {
               icon = "bazarr.png";
-              href = "htts://bazarr.labhome.work/";
+              href = "https://bazarr.labhome.work/";
               widgets = [
                 {
                   type = "bazarr";
                   url = "http://localhost:6767";
+                  key = "${config.sops.secrets.homepage_bazarr_key.path}";
                 }
               ];
             };
@@ -138,12 +121,12 @@
           {
             "Jellyseerr" = {
               icon = "jellyseerr.png";
-              href = "https://jellyseerr.abhome.work/";
+              href = "https://jellyseerr.labhome.work/";
               widgets = [
                 {
                   type = "jellyseerr";
                   url = "http://localhost:5055/";
-                  # key = "{{HOMEPAGE_VAR_JELLYSEERR_KEY}}";
+                  key = "${config.sops.secrets.homepage_jellyseerr_key.path}";
                 }
               ];
             };
@@ -157,6 +140,13 @@
               href = "https://nextcloud.labhome.work/";
               description = "File Storage & Collaboration";
               icon = "nextcloud";
+              widgets = [
+                {
+                  type = "nextcloud";
+                  url = "http://localhost:8081";
+                  key = "${config.sops.secrets.homepage_nextcloud_key.path}";
+                }
+              ];
             };
           }
           {
@@ -164,6 +154,13 @@
               href = "https://paperless.labhome.work";
               description = "Document Management";
               icon = "paperless-ngx";
+              widgets = [
+                {
+                  type = "paperless";
+                  url = "http://localhost:8888";
+                  key = "${config.sops.secrets.homepage_paperless_key.path}";
+                }
+              ];
             };
           }
           {
@@ -171,6 +168,13 @@
               href = "https://kavita.labhome.work";
               description = "Ebook & Manga Library";
               icon = "kavita";
+              widgets = [
+                {
+                  type = "kavita";
+                  url = "http://localhost:5000";
+                  key = "${config.sops.secrets.homepage_kavita_key.path}";
+                }
+              ];
             };
           }
         ];
@@ -265,6 +269,34 @@
               href = "https://login.tailscale.com/admin/machines";
               description = "Mesh VPN Administration";
               icon = "tailscale";
+              widgets = [
+                {
+                  type = "tailscale";
+                  url = "http://localhost:41641";
+                  key = "${config.sops.secrets.homepage_tailscale_key.path}";
+                }
+              ];
+            };
+          }
+          {
+            "Cloudflare Zero Trust" = {
+              href = "https://one.dash.cloudflare.com";
+              description = "Zero Trust Network Access";
+              icon = "cloudflare-zero-trust";
+            };
+          }
+          {
+            "Cloudflare DNS" = {
+              href = "https://dash.cloudflare.com/8239dd1bb0d0bfedf13673a195df59cf/home";
+              description = "DNS Management";
+              icon = "cloudflare-dns";
+              widgets = [
+                {
+                  type = "cloudflare";
+                  url = "http://localhost:8080";
+                  key = "${config.sops.secrets.homepage_cloudflared_key.path}";
+                }
+              ];
             };
           }
         ];
