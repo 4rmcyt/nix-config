@@ -11,10 +11,10 @@
     ssh_host_rsa_key     = { owner = "root"; group = "root"; mode = "0600"; };
 
     # Passwords for databases used by postgres
-    miniflux_db_password = { owner = config.services.postgresql.user; };
-    hass_db_password          = { owner = config.services.postgresql.user; };
-    keycloak_db_password       = { owner = config.services.postgresql.user; };
-    nextcloud_db_password      = { owner = config.services.postgresql.user; };
+      "miniflux_db_password"  = { owner = config.services.postgresql.user; }; # CORRECTED
+      "hass_db_password"      = { owner = config.services.postgresql.user; }; # CORRECTED
+      "keycloak_db_password"  = { owner = config.services.postgresql.user; }; # CORRECTED
+      "nextcloud_db_password" = { owner = config.services.postgresql.user; }; # CORRECTED
 
     # Passwords for applications, owned by the application's user
     nextcloud_admin_password = { owner = "nextcloud"; };
