@@ -40,8 +40,6 @@ in
     groups.media = {};
     groups.samba = {};
     groups.git = {};
-    groups.keycloak = {};
-    groups.homepage-dashboard = {};
     users = {
       zeev = {
         isNormalUser = true;
@@ -58,15 +56,6 @@ in
         createHome = true;
         shell = "${pkgs.git}/bin/git-shell";
         openssh.authorizedKeys.keys = allKeys.user-keys;
-      };
-      keycloak = {
-        isSystemUser = true;
-        group = "keycloak";
-      };
-      homepage-dashboard = {
-        isSystemUser = true;
-        # This line is now correctly quoted
-        group = "homepage-dashboard";
       };
     };
   };
