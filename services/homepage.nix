@@ -308,7 +308,7 @@
                 {
                   type = "cloudflared";
                   accountId = "${config.sops.secrets.homepage_cloudflared_account_id.path}";
-                  tunnelId = "${config.sops.secrets.homepage_cloudflared_tunnel_id.path}";
+                  tunnelId = "${config.sops.secrets.cloudflare_tunnel_id.path}";
                   key = "${config.sops.secrets.homepage_cloudflared_key.path}";
                 }
               ];
