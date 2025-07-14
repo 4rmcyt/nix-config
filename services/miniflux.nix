@@ -19,7 +19,7 @@ in
       BASE_URL = "https://rss.labhome.work";
       CREATE_ADMIN = "1";
       LISTEN_ADDR = "localhost:8086";
-      DATABASE_URL = "postgres://miniflux:$(cat ${config.sops.secrets.miniflux_db_password.path})@localhost/miniflux?sslmode=disable";
+      DATABASE_URL = lib.mkForce "postgres://miniflux:$(cat ${config.sops.secrets.miniflux_db_password.path})@localhost/miniflux?sslmode=disable";
       OAUTH2_PROVIDER = "oidc";
       OAUTH2_CLIENT_ID = "miniflux";
       OAUTH2_REDIRECT_URL = "https://rss.labhome.work/oauth2/oidc/callback";
@@ -31,17 +31,4 @@ in
       ADMIN_PASSWORD = config.sops.secrets.miniflux_admin_password.path;
     };
   };
-
-  systemd.tmpfiles.rules = [
-    "d /var/lib/miniflux 0755 miniflux miniflux - -"
-    "f ${minifluxCredentialsFile} 0640 miniflux miniflux -"
-  ];
-
-  users.users.miniflux = {
-    isSystemUser = true;
-    group = "miniflux";
-    home = "/data/miniflux";
-  };
-
-  users.groups.miniflux = { };
 }
