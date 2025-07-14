@@ -57,13 +57,19 @@ in
         home = "/var/lib/git-server";
         createHome = true;
         shell = "${pkgs.git}/bin/git-shell";
-        openssh.authorizedKeys.keys = allKeys.user-keys;
+        openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com"
+        ];
       };
     };
   };
 
   environment.systemPackages = with pkgs; [
-    zsh git neovim direnv pass vim wget curl jq coreutils gawk gnugrep iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools apacheHttpd zsh-powerlevel10k meslo-lgs-nf yamllint nix-index iotop tuptime smartmontools fzf ffmpeg nmap trash-cli zip unar unzip p7zip calibre
+    zsh git neovim direnv pass vim wget curl jq coreutils gawk gnugrep
+    iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools
+    apacheHttpd zsh-powerlevel10k meslo-lgs-nf yamllint nix-index iotop
+    tuptime smartmontools fzf ffmpeg nmap trash-cli zip unar unzip p7zip
+    calibre
   ];
 
   services = {
@@ -93,6 +99,7 @@ in
     defaultSopsFile = ./secrets.yaml;
     age.keyFile = "/etc/sops/age.key";
     secrets = {
+      zeev_password.neededForUsers = true;
       ssh_host_ed25519_key = { owner = "root"; group = "root"; mode = "0600"; };
       ssh_host_rsa_key = { owner = "root"; group = "root"; mode = "0600"; };
       nextcloud_admin_password = {};
