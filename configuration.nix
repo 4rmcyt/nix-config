@@ -43,6 +43,9 @@ in
     groups.homepage-dashboard = {};
     groups.hass = {};
     groups.keycloak = {};
+    groups.nextcloud = {};
+    groups.miniflux = {};
+    
     users = {
       zeev = {
         isNormalUser = true;
