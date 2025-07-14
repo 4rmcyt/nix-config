@@ -57,7 +57,7 @@
     
     # Homepage widgets
     homepage_tailscale_key = { owner  = "homepage-dashboard"; };
-    homepage_tailscale_ip = { owner = "homepage-dashboard"; };
+    homepage_tailscale_device_id = { owner = "homepage-dashboard"; };
     homepage_paperless_key = { owner = "homepage-dashboard"; };
     homepage_miniflux_key = { owner = "homepage-dashboard"; };
     homepage_nextcloud_key = { owner = "homepage-dashboard"; };
