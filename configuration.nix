@@ -90,25 +90,18 @@
 
   sops = {
     defaultSopsFile = ./secrets.yaml;
+    gnupg.recipients = [
+      "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E"
+    ];
     secrets = {
       zeev_password.neededForUsers = true;
+      sh_host_ed25519_key = { owner = "root"; group = "root"; mode = "0600"; };
+      ssh_host_rsa_key = { owner = "root"; group = "root"; mode = "0600"; };
       nextcloud_admin_password = {};
       microbin_admin_password = {};
       tailscale_auth_key = {};
       telegram_bot_token = {};
       telegram_chat_id = {};
-      
-      # Add these definitions for your host keys
-      "ssh_host_ed25519_key" = {
-        owner = "root";
-        group = "root";
-        mode = "0600";
-      };
-      "ssh_host_rsa_key" = {
-        owner = "root";
-        group = "root";
-        mode = "0600";
-      };
     };
   };
 
