@@ -20,28 +20,16 @@
     ];
     
     ensureUsers = [
-      {
-        name = "keycloak";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "nextcloud";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "miniflux";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "hass";
-        ensureDBOwnership = true;
-      }
+      { name = "keycloak"; ensureDBOwnership = true; }
+      { name = "nextcloud"; ensureDBOwnership = true; }
+      { name = "miniflux"; ensureDBOwnership = true; }
+      { name = "hass"; ensureDBOwnership = true; }
     ];
     
-    authentication = pkgs.lib.mkOverride 10 ''
-      local all all trust
-      host all all 127.0.0.1/32 trust
-      host all all ::1/128 trust
+   authentication = pkgs.lib.mkOverride 10 ''
+      local   all   all   scram-sha-256
+      host    all   all   127.0.0.1/32   scram-sha-256
+      host    all   all   ::1/128        scram-sha-256
     '';
   };
 
