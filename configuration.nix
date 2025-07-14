@@ -37,9 +37,12 @@ in
   };
 
   users = {
-    groups.media = {};
-    groups.samba = {};
-    groups.git = {};
+    groups = {
+      media = {};
+      samba = {};
+      git = {};
+      homepage-dashboard = {};
+    };
     users = {
       zeev = {
         isNormalUser = true;
@@ -56,6 +59,10 @@ in
         createHome = true;
         shell = "${pkgs.git}/bin/git-shell";
         openssh.authorizedKeys.keys = allKeys.user-keys;
+      };
+      homepage-dashboard = {
+        isSystemUser = true;
+        group = "homepage-dashboard";
       };
     };
   };
