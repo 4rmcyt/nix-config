@@ -47,22 +47,15 @@
     cloudflare_zone_id = {};
 
     #arr
-
-    bazarr.enable = true;
-    lidarr.enable = true;
-    prowlarr.enable = true;
-    radarr.enable = true;
-    readarr.enable = true;
-    sonarr.enable = true;
-    jellyseerr.enable = true;
-
-    homepage_sonarr_key = { owner = "homepage-dashboard"; };
-    homepage_radarr_key = { owner = "homepage-dashboard"; };
-    homepage_prowlarr_key = { owner = "homepage-dashboard"; };
-    homepage_jellyseerr_key = { owner = "homepage-dashboard"; };
-    homepage_bazarr_key = { owner = "homepage-dashboard"; };
-    homepage_lidarr_key = { owner = "homepage-dashboard"; };
-    homepage_readarr_key = { owner = "homepage-dashboard"; };
+    sonarr_key = {  };
+    radarr_key = { };
+    prowlarr_key = {  };
+    jellyseerr_key = {  };
+    bazarr_key = {  };
+    lidarr_key = { };
+    readarr_key = {  };
+    
+    # Homepage widgets
     homepage_tailscale_key = { owner  = "homepage-dashboard"; };
     homepage_tailscale_ip = { owner = "homepage-dashboard"; };
     homepage_paperless_key = { owner = "homepage-dashboard"; };
