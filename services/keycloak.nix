@@ -1,6 +1,5 @@
 { config, pkgs, ... }:
 
-# Define plugins and themes as variables at the top-level
 let
   keycloak_trusted_device_plugin = pkgs.stdenv.mkDerivation {
     name = "keycloak-spi-trusted-device";
@@ -17,9 +16,7 @@ let
 
   keycloak_theme = import ./theme.nix { inherit (pkgs) stdenv; };
 in
-{
-  # SOPS secrets
-  sops.secrets.keycloak_db_password = {
+{  sops.secrets.keycloak_db_password = {
     owner = "root";
     group = "root";
     mode = "0400";
