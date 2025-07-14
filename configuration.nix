@@ -40,7 +40,7 @@ in
     groups.media = {};
     groups.samba = {};
     groups.git = {};
-    ghoups.keycloak = {};
+    groups.keycloak = {};
     groups.homepage-dashboard = {};
     users = {
       zeev = {
