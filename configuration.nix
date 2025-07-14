@@ -5,6 +5,9 @@
   inputs,
   ...
 }:
+let
+  allKeys = import ./secrets.nix;
+in  
 {
   imports = [
     ./hardware-configuration.nix
@@ -54,9 +57,7 @@
         home = "/var/lib/git-server";
         createHome = true;
         shell = "${pkgs.git}/bin/git-shell";
-        openssh.authorizedKeys.keys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks redacted@example.com"
-        ];
+        openssh.authorizedKeys.keys = allKeys.user-keys;
       };
     };
   };
@@ -68,6 +69,10 @@
   services = {
     openssh = {
       enable = true;
+      hostKeys = [
+        { type = "ed25519"; path = config.sops.secrets.ssh_host_ed25519_key.path; }
+        { type = "rsa"; bits = 4096; path = config.sops.secrets.ssh_host_rsa_key.path; }
+      ];
       settings = {
         PermitRootLogin = "no";
         PasswordAuthentication = true;
@@ -80,21 +85,14 @@
           PermitTTY no
           X11Forwarding no
       '';
-      hostKeys = [
-        { type = "ed25519"; path = config.sops.secrets.ssh_host_ed25519_key.path; }
-        { type = "rsa"; bits = 4096; path = config.sops.secrets.ssh_host_rsa_key.path; }
-      ];
     };
     vscode-server.enable = true;
   };
 
   sops = {
     defaultSopsFile = ./secrets.yaml;
-    gnupg.recipients = [
-      "REDACTED"
-    ];
+    age.keyFile = "/etc/sops/age.key";
     secrets = {
-      zeev_password.neededForUsers = true;
       ssh_host_ed25519_key = { owner = "root"; group = "root"; mode = "0600"; };
       ssh_host_rsa_key = { owner = "root"; group = "root"; mode = "0600"; };
       nextcloud_admin_password = {};
@@ -114,9 +112,6 @@
     extraSpecialArgs = { inherit inputs; };
     users.zeev = import ./home.nix;
   };
-
-  nixpkgs.config.allowUnfree = true;
-  system.stateVersion = "25.05";
 
   environment.etc."nixos/scripts/add-trackers.sh" = {
     mode = "0755";
@@ -141,4 +136,6 @@
       done < "$TRACKERLIST"
     '';
   };
+  nixpkgs.config.allowUnfree = true;
+  system.stateVersion = "25.05";
 }
