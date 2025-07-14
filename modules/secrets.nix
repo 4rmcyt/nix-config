@@ -27,7 +27,7 @@
     mosquitto_iotdevice_password = { owner = "mosquitto"; };
     grafana_admin_password = { owner = "grafana"; };
 
-    cloudflare_credentials   = { owner = "cloudflared"; group = "cloudflared"; mode = "0600"; };
+    cloudflare_tunnel_token   = { owner = "cloudflared"; group = "cloudflared"; mode = "0600"; };
 
     # This key is used by a root process, so default is fine
     tailscale_auth_key = {};
