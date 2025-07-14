@@ -16,17 +16,7 @@ let
 
   keycloak_theme = import ./theme.nix { inherit (pkgs) stdenv; };
 in
-{  sops.secrets.keycloak_db_password = {
-    owner = "root";
-    group = "root";
-    mode = "0400";
-  };
-  sops.secrets.keycloak_admin_password = {
-    owner = "root";
-    group = "root";
-    mode = "0400";
-  };
-
+{  
   services.keycloak = {
     enable = true;
     initialAdminPassword = "23031986";

@@ -1,21 +1,21 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
-  # SOPS secrets for Home Assistant
-  sops.secrets.hass_postgres_password.owner = "hass";
-  sops.secrets.mosquitto_iotdevice_password.owner = "mqtt";
-
   services = {
     home-assistant = {
       enable = true;
       configDir = "/var/lib/home-assistant";
       configWritable = true;
       # This block has been rewritten to be more explicit and correct
-      extraPackages =
-          python3Packages: with python3Packages; [
-            psycopg2
-            pyatv
-          ];
+      extraPackages = ps: [
+        ps.psycopg # Use the modern postgresql driver
+        ps.pyatv
+      ];
       extraComponents = [
         "mqtt"
         "http"
@@ -53,7 +53,7 @@
         };
 
         recorder = {
-          db_url = "postgresql://hass:$(cat ${config.sops.secrets.hass_postgres_password.path})@localhost/hass";
+          db_url = "postgresql://hass:$(cat ${config.sops.secrets.hass_db_password.path})@localhost/hass";
           include = {
             domains = [
               "switch"
@@ -64,22 +64,24 @@
           purge_keep_days = 30;
         };
 
-        tts = [{
-          platform = "google_translate";
-          language = "en";
-        }];
+        tts = [
+          {
+            platform = "google_translate";
+            language = "en";
+          }
+        ];
 
-        mqtt = {};
+        mqtt = { };
 
-        default_config = {};
+        default_config = { };
 
         frontend = {
           themes = "!include_dir_merge_named themes";
         };
 
-        shopping_list = {};
-        map = {};
-        system_health = {};
+        shopping_list = { };
+        map = { };
+        system_health = { };
 
         logger = {
           default = "info";

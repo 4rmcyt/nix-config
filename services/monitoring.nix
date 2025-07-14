@@ -1,14 +1,6 @@
 { config, pkgs, lib, ... }:
 
 {
-  # SOPS secrets for monitoring
-  sops.secrets.grafana_admin_password = {
-    owner = "grafana";
-    group = "grafana";
-    mode = "0400";
-  };
-
-  # REPLACEMENT: Professional monitoring stack
   services.prometheus = {
     enable = true;
     port = 9090;

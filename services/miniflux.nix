@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   minifluxCredentialsFile = pkgs.writeText "miniflux-credentials-file" ''
@@ -6,8 +11,6 @@ let
   '';
 in
 {
-  sops.secrets.miniflux_admin_password = {};
-
   services.miniflux = {
     enable = true;
     adminCredentialsFile = minifluxCredentialsFile;
@@ -27,7 +30,7 @@ in
       ADMIN_PASSWORD = config.sops.secrets.miniflux_admin_password.path;
     };
   };
-  
+
   systemd.tmpfiles.rules = [
     "d /var/lib/miniflux 0755 miniflux miniflux - -"
     "f ${minifluxCredentialsFile} 0640 miniflux miniflux -"
@@ -39,5 +42,5 @@ in
     home = "/data/miniflux";
   };
 
-  users.groups.miniflux = {};
+  users.groups.miniflux = { };
 }

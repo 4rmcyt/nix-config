@@ -1,5 +1,9 @@
-
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   services.microbin = {
@@ -15,7 +19,5 @@
       MICROBIN_ADMIN_PASSWORD = config.sops.secrets.microbin_admin_password.path;
     };
   };
-  
-  sops.secrets.microbin_admin_password = {};
-  
+
 }

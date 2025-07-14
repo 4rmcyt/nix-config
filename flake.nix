@@ -61,6 +61,7 @@
           ./disko.nix
           ./networking.nix
           ./modules/base.nix
+          ./modules/secrets.nix
 
           # Services
           ./services/fail2ban.nix
