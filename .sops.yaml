@@ -6,7 +6,7 @@ keys:
   - &mygpg FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E
 
 creation_rules:
-  - path_regex: *yaml$
+  - path_regex: '.*\.yaml$'
     key_groups:
       # This group contains all the keys that should be able to decrypt the file
       - pgp:
