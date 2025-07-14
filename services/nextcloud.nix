@@ -4,15 +4,14 @@
   services.nextcloud = {
     enable = true;
     package = pkgs.nextcloud31;
-    hostName = "nextcloud.example.com";
+    hostName = "nextcloud.local";
     database.createLocally = false;
     config = {
       dbtype = "pgsql";
       dbhost = "localhost";       
       dbuser = "nextcloud";
       dbname = "nextcloud";
-      dbpassFile = config.sops.secrets.nextcloud_db_password.path;  
-
+      dbpassFile = config.sops.secrets.nextcloud_db_password.path;      
       adminpassFile = config.sops.secrets.nextcloud_admin_password.path;
       adminuser = "admin";
     };
@@ -25,12 +24,11 @@
 
   services.nginx.enable = true;
 
-  "nextcloud.local" = {
-        forceSSL = true;
+  services.nginx.virtualHosts."nextcloud.local" = {
     listen = [
       { addr = "127.0.0.1"; port = 8081; ssl = false; }
     ];
-    # No needservices.nginx.virtualHosts. to set root/locations, Nextcloud module will do it
+    # No need to set root/locations, Nextcloud module will do it
   };
 
 }
