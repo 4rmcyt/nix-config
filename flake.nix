@@ -55,9 +55,7 @@
           nix-index-database.nixosModules.nix-index
           nixarr.nixosModules.default
 
-        ({
-          sops.defaultSopsFile = ./secrets/secrets.yaml;
-        })
+        
           # Core system configuration files
           ./configuration.nix
           ./hardware-configuration.nix
@@ -68,6 +66,10 @@
           ./users
           ./modules/base
           ./modules/sops
+          
+          ({
+            sops.defaultSopsFile = ./secrets/secrets.yaml;
+          })
 
           # Services
           ./services/fail2ban.nix
