@@ -1,6 +1,6 @@
 {
   description = "NixOS configuration for homeserver";
-
+  
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     disko = {
@@ -25,7 +25,6 @@
       url = "github:rasmus-kirk/nixarr";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
 
   # The inputs are passed as arguments to this function
@@ -42,7 +41,19 @@
       nix4nvchad,
       ...
     }@inputs:
-    {
+    { 
+      nixConfig = {
+        substituters = [
+          "https://cache.nixos.org/"
+          "https://nix-community.cachix.org"
+          "https://nixarr.cachix.org"
+        ];
+        trusted-public-keys = [
+          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+          "nix-community.cachix.org-1:mB9FSh9UfP3dIR2A7ahVhES3/x1V2S4G/P5t0hKprM4="
+          "nixarr.cachix.org-1:HER9y2eS44D4T822z61t2u3Z6zY2S4T5f/Yg7R/86aA="
+        ];
+      };
       nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; }; # This is used inside the modules themselves
@@ -55,7 +66,6 @@
           nix-index-database.nixosModules.nix-index
           nixarr.nixosModules.default
 
-        
           # Core system configuration files
           ./configuration.nix
           ./hardware-configuration.nix
@@ -66,7 +76,7 @@
           ./users
           ./modules/base
           ./modules/sops
-          
+
           ({
             sops.defaultSopsFile = ./secrets/secrets.yaml;
           })
