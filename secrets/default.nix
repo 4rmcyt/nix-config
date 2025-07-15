@@ -43,5 +43,4 @@ in {
   "mosquitto_iotdevice_password".publicKeys = server-keys;
   "grafana_admin_password".publicKeys = server-keys;
 
-
 }
