@@ -37,13 +37,4 @@
       };
     };
   };
-
-  # Create directories
-  systemd.tmpfiles.rules = [
-    "d /home/zeev/media 0755 zeev users -"
-    "d /home/zeev/downloads 0755 zeev users -"
-  ];
-
-  # Samba users need to be added manually after installation with:
-  # sudo smbpasswd -a zeev
 }

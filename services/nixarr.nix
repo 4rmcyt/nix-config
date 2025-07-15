@@ -29,6 +29,7 @@
   nixarr = {
     
     enable = true;
+    mediaGroup = "media";
     mediaUsers = [ 
       "zeev"
       "transmission"
@@ -51,7 +52,7 @@
       wgConf = "/data/.secret/wg.conf";
     };
 
-    transmission = {
+    transmission_4 = {
       enable = true;
       vpn.enable = true;
       peerPort = 63998;
