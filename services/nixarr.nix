@@ -51,7 +51,7 @@
       wgConf = "/data/.secret/wg.conf";
     };
 
-    transmission_4 = {
+    transmission = {
       enable = true;
       vpn.enable = true;
       peerPort = 63998;
