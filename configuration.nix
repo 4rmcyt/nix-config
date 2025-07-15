@@ -7,12 +7,11 @@
 }:
 let
   # Import your keys file here at the top
-  allKeys = import ./keys.nix;
+  allKeys = import ./secrets;
 in
 {
   imports = [
     ./hardware-configuration.nix
-    ./users
   ];
 
   nix = {

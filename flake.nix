@@ -55,12 +55,18 @@
           nix-index-database.nixosModules.nix-index
           nixarr.nixosModules.default
 
-          # Core system configuration
+          # Core system configuration files
           ./configuration.nix
+          ./hardware-configuration.nix
+
+          # Core system configuration
           ./disko
           ./networking
-          ./modules/base.nix
-          ./modules/secrets.nix
+          ./users
+          ./secrets
+          ./modules/base
+          ./modules/sops
+          ./
 
           # Services
           ./services/fail2ban.nix
