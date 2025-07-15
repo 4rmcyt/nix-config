@@ -6,7 +6,7 @@ keys:
   - &mygpg REDACTED
 
 creation_rules:
-  - path_regex: '*\.yaml$'
+  - path_regex: 'secrets/.*\.yaml$'
     key_groups:
       - pgp:
           - *mygpg
