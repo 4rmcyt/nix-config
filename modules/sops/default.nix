@@ -58,9 +58,7 @@
       "homepage_miniflux_key"           = { owner = "homepage-dashboard"; };
       "homepage_nextcloud_key"          = { owner = "homepage-dashboard"; };
       "homepage_microbin_key"           = { owner = "homepage-dashboard"; };
-      "homepage_keycloak_key"           = { owner = "homepage-dashboard"; };
       "homepage_hass_key"               = { owner = "homepage-dashboard"; };
-      "homepage_radicale_key"           = { owner = "homepage-dashboard"; };
       "homepage_kavita_key"             = { owner = "homepage-dashboard"; };
       "homepage_cloudflared_key"        = { owner = "homepage-dashboard"; };
       "homepage_cloudflared_account_id" = { owner = "homepage-dashboard"; };
