@@ -63,7 +63,6 @@
           ./disko
           ./networking
           ./users
-          ./secrets
           ./modules/base
           ./modules/sops
 
