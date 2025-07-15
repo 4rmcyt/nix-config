@@ -1,0 +1,22 @@
+keys:
+  - &zeev age1vl8q6cvxskrxqr2np6ckxpvl9w9tqnsdf3gqtv4q9r6g0uj0mudq33znfg
+  - &vk age1h9kk9fktkn0t2yk7m89jxlf2atl0808ewn3j5updmq8knt0c84uqs24ew4
+  - &homeserver age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
+  - &vkmac age1cjvaelr2zeynyv0jquywran8u3hwfg79elkswlk9mv8l0ev7c3aqrhjhr2
+  - &mygpg REDACTED
+
+creation_rules:
+  - path_regex: 'secrets/.*\.yaml$'
+    key_groups:
+      # This group contains all the keys that should be able to decrypt the file
+      - pgp:
+          - *mygpg
+        age:
+          - *zeev
+          - *vk
+          - *homeserver
+          - *vkmac
+  - path_regex: 'secrets/.*\.conf$'
+    key_groups:
+      - age:
+          - *homeserver
