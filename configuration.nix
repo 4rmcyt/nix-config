@@ -7,7 +7,7 @@
 }:
 let
   # Import your keys file here at the top
-  allKeys = import ./secrets;
+  allKeys = import ./secrets/keys.nix;
 in
 {
   imports = [
