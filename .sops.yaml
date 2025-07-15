@@ -16,3 +16,7 @@ creation_rules:
           - *vk
           - *homeserver
           - *vkmac
+  - path_regex: 'secrets/.*\.conf$'
+    key_groups:
+      - age:
+          - *homeserver
