@@ -29,7 +29,6 @@
   nixarr = {
     
     enable = true;
-    mediaGroup = "media";
     mediaUsers = [ 
       "zeev"
       "transmission"

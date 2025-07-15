@@ -1,20 +1,14 @@
 keys:
-  - &zeev age1vl8q6cvxskrxqr2np6ckxpvl9w9tqnsdf3gqtv4q9r6g0uj0mudq33znfg
-  - &vk age1h9kk9fktkn0t2yk7m89jxlf2atl0808ewn3j5updmq8knt0c84uqs24ew4
-  - &homeserver age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
-  - &vkmac age1cjvaelr2zeynyv0jquywran8u3hwfg79elkswlk9mv8l0ev7c3aqrhjhr2
-  - &mygpg FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E
-
-
+    - &zeev age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
+    - &vk age1h9kk9fktkn0t2yk7m89jxlf2atl0808ewn3j5updmq8knt0c84uqs24ew4
+    - &homeserver age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
+    - &mypgp FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E
 creation_rules:
-  - path_regex: 'secrets/secrets.yaml$'
-    # This defines the two groups of keys that can decrypt the file
+  # This rule is for your main secrets.yaml file
+  - path_regex: 'secrets/.*\.yaml$'
     key_groups:
       - pgp:
-          - *mygpg
+          - *mypgp
       - age:
-          - *zeev
-          - *vk
           - *homeserver
-          - *vkmac
-    threshold: 1
+          - *zeev
