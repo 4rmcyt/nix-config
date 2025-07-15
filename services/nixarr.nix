@@ -30,18 +30,7 @@
     
     enable = true;
     mediaUsers = [ 
-      "zeev"
-      "transmission"
-      "sabnzbd"
-      "audiobookshelf"
-      "jellyfin"
-      "bazarr"
-      "lidarr"
-      "prowlarr"
-      "radarr"
-      "readarr"
-      "sonarr"
-      "jellyseerr"  
+      "zeev"  
        ];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
