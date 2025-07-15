@@ -66,7 +66,6 @@
           ./secrets
           ./modules/base
           ./modules/sops
-          ./
 
           # Services
           ./services/fail2ban.nix
