@@ -16,7 +16,6 @@ in
     ./networking
     ./modules/base
     ./modules/sops
-    ./secrets
   ];
 
   nix = {
