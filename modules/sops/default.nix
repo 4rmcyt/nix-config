@@ -22,7 +22,6 @@
       "microbin_admin_password"  = { owner = "microbin"; };
       "paperless_admin_password" = { owner = "paperless"; };
       "miniflux_admin_password"  = { owner = "miniflux"; };
-      "hass_admin_password"      = { owner = "hass"; };
       "radicale_htpasswd"        = { owner = "radicale"; };
       "keycloak_admin_password"  = { owner = "keycloak"; };
       "mosquitto_iotdevice_password" = { owner = "mosquitto"; };
