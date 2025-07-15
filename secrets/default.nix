@@ -1,46 +1,83 @@
-let
-  user-ed25519 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyieBFROVPWmH3iC2ZAE+5zofMd6mnunBzfObEwMgFx";
-  user-rsa = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7QtXHGjNp8yxRIbMwb605n3fqFoq+PxOzbq6i2dEr6YDIKqajRNBHiEHjV3z7ABLpi2cfHPcw8Cgg/esD/98uGM9lKxdCev1VEubmsTmZAuDBz04p/S/yB7UBc5muHJLkzFNjlwMYP3x3JAr9if3nmrAZNh5qOrymZndJ7h9IT9WZNvvgFW2I+S/Ugi7eq5yRIDm5S7ADW/9wThfvG8ZqhMXDvvKXHJYx/O8D8th1ffN5l8pAJZkiV21zW0pu4od4iAaVM531H22FORAq6PbHAwr5u8a0jBlTqkwlo9x3O+hdKBVhW1XQfeRqg69lJtmUUFipl4viBj9Rpz+gtv4BjKL9ChCgqVLMLPe/bviRjqx3bvC2I78H0N51SvAh0QOj1ByAk3Xvj3R2qwk7LAmLgSlPoOsGpkbILhudF7KLJ/Uh2kpZI3NOcYdy9TYMws97zCvevgqw07HEEOydYpPB4+ml8Zzb+Tcw0U7yLRWMAB1VP1WE1vM0U6XQa7CRhcU=";
-  user-keys = [ user-ed25519 user-rsa ];
+{ config, pkgs, ... }:
 
-  system-ed25519 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJV+/pct8PNZhUqvnflYY5auIE1zTl3sPtCfVynTnajN";
-  system-rsa = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCRCKSMfoxE3uVaNDemMYYls0yoA4h4so6bVG0E+4XPa0ZEVLJYFT+tvsNdyxRmrIDLv745JCVHtv41t5qUjnafl/uBnl5dggt6W3Kkl1iZ6nyb8lgChp9egyXruEXekqTtYC0AQVjB7yC2GV5rS4R4FYY8pNYzzmmFjRT/IM6JIGn3GZubMv4GLc/xCnXZPNluNLJPxQ8oML5IjHzYFDXzDvlgB8i6ugNqE8zqIMxSFFXIrhAev41wcOE0lSjSE9gb3+HTyAmJtWCRcSyPHmKeugytNca6X3KtoU5tO1MrSlIQn8wfJkJWe/2zXueA/e4uENgS0DBVWuNXLcojYBxHFXF2OtR7R5qpVw0hcfOJkC9+EjTcRTf4MnzGfQUrDeiZerf02Dp9mvN4IBMc4nDL2h81YZcfucDd76BUkei0ppI6UbeEEFgOz1zQAggCY0I8HLZZjccK+zJzAo3JoFFbhNjX0iEWPEbcHxR3FQRDMnis0MV1gqHj8wtbWJPtqMrcAjjMu+aWfvzedEH0SDvOD6AppD2IeNVrVUJJlSk3zcX2gYfhrXEbgKG3PWxEvVnTRPk2PR+73j8ms9dONwrugKZGwMmO4c2xVWTXiI4qPfqxsBK7v7dP3f+hkx3cB34cpwtDEEBuR8hqjae4T0mJhJkcMWvDixEUxrDIJ7efkQ==";
-  system-keys = [ system-ed25519 system-rsa ];
+{
+ sops = {
+    defaultSopsFile = ../secrets.yaml;
+    age.keyFile = "/etc/sops/age.key";
+    secrets = {
+      zeev_password.neededForUsers = true;
 
-  server-keys = system-keys ++ user-keys;
-in {
-  "smbcredentials.age".publicKeys = server-keys;
-  "wg.conf.age".publicKeys = server-keys;
-  "sonarrApiKey.age".publicKeys = server-keys;
-  "radarrApiKey.age".publicKeys = server-keys;
-  "prowlarrApiKey.age".publicKeys = server-keys;
-  "bazarrApiKey.age".publicKeys = server-keys;
-  "jellyfinApiKey.age".publicKeys = server-keys;
-  "jellyseerrApiKey.age".publicKeys = server-keys;
-  "zeev_password".publicKeys = server-keys;
-  "cloudflare_email".publicKeys = server-keys;
-  "cloudflare_api_key".publicKeys = server-keys;
-  "cloudflare_zone_id".publicKeys = server-keys;
-  "cloudflare_tunnel_token".publicKeys = server-keys;
-  "cloudflare_tunnel_credentials".publicKeys = server-keys;
-  "keycloak_db_password".publicKeys = server-keys;
-  "nextcloud_admin_password".publicKeys = server-keys;
-  "nextcloud_db_password".publicKeys = server-keys;
-  "paperless_admin_password".publicKeys = server-keys;
-  "miniflux_admin_password".publicKeys = server-keys;
-  "microbin_admin_password".publicKeys = server-keys;
-  "hass_postgres_password".publicKeys = server-keys;
-  "radicale_htpasswd".publicKeys = server-keys;
-  "tailscale_auth_key".publicKeys = server-keys;
-  "tailscale_ip".publicKeys = server-keys;
-  "telegram_bot_token".publicKeys = server-keys;
-  "telegram_chat_id".publicKeys = server-keys;
-  "yubikey_client_id".publicKeys = server-keys;
-  "yubikey_secret_key".publicKeys = server-keys;
-  "webauthn_relying_party_name".publicKeys = server-keys;
-  "webauthn_relying_party_id".publicKeys = server-keys;
-  "keycloak_admin_password".publicKeys = server-keys;
-  "mosquitto_iotdevice_password".publicKeys = server-keys;
-  "grafana_admin_password".publicKeys = server-keys;
+    ssh_host_ed25519_key = { owner = "root"; group = "root"; mode = "0600"; };
+    ssh_host_rsa_key     = { owner = "root"; group = "root"; mode = "0600"; };
 
+    # Passwords for databases used by postgres
+    miniflux_db_password = { owner = "postgres"; };
+    hass_db_password ={ owner = "postgres"; };
+    keycloak_db_password = { owner = "postgres"; };
+    nextcloud_db_password = { owner = "postgres"; };
+
+
+    # Passwords for applications, owned by the application's user
+    nextcloud_admin_password = { owner = "nextcloud"; };
+    microbin_admin_password  = { owner = "microbin"; };
+    paperless_admin_password = { owner = "paperless"; };
+    miniflux_admin_password = { owner = "miniflux"; };
+    hass_admin_password     = { owner = "hass"; };
+    radicale_htpasswd = { owner = "radicale"; };
+    keycloak_admin_password = { owner = "keycloak"; };
+    mosquitto_iotdevice_password = { owner = "mosquitto"; };
+    grafana_admin_password = { owner = "grafana"; };
+
+    cloudflare_tunnel_credentials   = { owner = "cloudflared"; group = "cloudflared"; mode = "0600"; };
+    cloudflare_tunnel_id = { owner = "cloudflared"; group = "cloudflared"; mode = "0600"; };
+
+    tailscale_auth_key = {};
+    tailscale_ip  = {};
+    
+
+    # You need to set the owner for these based on which service uses them.
+    # For example, if Home Assistant sends notifications: owner = "hass";
+    telegram_bot_token = { };
+    telegram_chat_id  = { };
+
+    yubikey_client_id = { };
+    yubikey_secret_key = { };
+    webauthn_relying_party_name = { };
+    webauthn_relying_party_id = { };
+    cloudflare_api_key = {};
+    cloudflare_zone_id = {};
+
+    #arr
+    sonarr_key = {  };
+    radarr_key = { };
+    prowlarr_key = {  };
+    jellyseerr_key = {  };
+    bazarr_key = {  };
+    lidarr_key = { };
+    readarr_key = {  };
+    
+    # Homepage widgets
+    homepage_tailscale_key = { owner  = "homepage-dashboard"; };
+    homepage_tailscale_device_id = { owner = "homepage-dashboard"; };
+    homepage_paperless_key = { owner = "homepage-dashboard"; };
+    homepage_miniflux_key = { owner = "homepage-dashboard"; };
+    homepage_nextcloud_key = { owner = "homepage-dashboard"; };
+    homepage_microbin_key = { owner = "homepage-dashboard"; };
+    homepage_keycloak_key = { owner = "homepage-dashboard"; };
+    homepage_hass_key = { owner = "homepage-dashboard"; };
+    homepage_radicale_key = { owner = "homepage-dashboard"; };
+    homepage_kavita_key = { owner = "homepage-dashboard"; };
+    
+    homepage_cloudflared_key = { owner = "homepage-dashboard"; };
+    homepage_cloudflared_account_id = { owner = "homepage-dashboard"; };
+    
+    homepage_jellyfin_key = { owner = "homepage-dashboard"; };
+    homepage_audiobookshelf_key = { owner = "homepage-dashboard"; };
+    
+    homepage_grafana_key = { owner = "homepage-dashboard"; };
+    
+    homepage_nextdns_key = { owner = "homepage-dashboard"; };
+    homepage_nextdns_profile_id = { owner = "homepage-dashboard"; };
+    };
+  };
 }
