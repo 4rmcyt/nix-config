@@ -6,7 +6,7 @@ keys:
   - &mygpg FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E
 
 creation_rules:
-  - path_regex: 'secrets/.*\.yaml$'
+  - path_regex: '*\.yaml$'
     key_groups:
       - pgp:
           - *mygpg
@@ -15,7 +15,3 @@ creation_rules:
           - *vk
           - *homeserver
           - *vkmac
-  - path_regex: 'secrets/.*\.conf$'
-    key_groups:
-      - age:
-          - *homeserver
