@@ -57,9 +57,8 @@
 
           # Core system configuration
           ./configuration.nix
-          ./hardware-configuration.nix
-          ./disko.nix
-          ./networking.nix
+          ./disko
+          ./networking
           ./modules/base.nix
           ./modules/secrets.nix
 
