@@ -48,7 +48,7 @@
 
     vpn = {
       enable = true;
-      wgConf = "/home/zeev/src/wg.conf";
+      wgConf = "/data/.secret/wg.conf";
     };
 
     transmission = {

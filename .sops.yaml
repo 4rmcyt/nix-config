@@ -8,7 +8,6 @@ keys:
 creation_rules:
   - path_regex: 'secrets/.*\.yaml$'
     key_groups:
-      # This group contains all the keys that should be able to decrypt the file
       - pgp:
           - *mygpg
         age:
