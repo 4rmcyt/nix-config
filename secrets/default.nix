@@ -9,8 +9,6 @@ let
   system-keys = [ system-ed25519 system-rsa ];
 
   server-keys = system-keys ++ user-keys;
-in
-{
-  # This makes the key lists available to any file that imports this one
+in {
   inherit user-keys system-keys server-keys;
 }
