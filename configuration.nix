@@ -16,7 +16,6 @@ in
     ./networking
     ./modules/base
     ./modules/sops
-    ./home-manager
   ];
 
   nix = {
@@ -205,7 +204,7 @@ in
 
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
-    users.zeev = import ./home-manager;
+    users.zeev = import ../home-manager;
   };
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "25.05";
