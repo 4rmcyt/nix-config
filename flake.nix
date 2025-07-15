@@ -55,6 +55,9 @@
           nix-index-database.nixosModules.nix-index
           nixarr.nixosModules.default
 
+        ({
+          sops.defaultSopsFile = ./secrets/secrets.yaml;
+        })
           # Core system configuration files
           ./configuration.nix
           ./hardware-configuration.nix

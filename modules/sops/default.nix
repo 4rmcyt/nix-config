@@ -2,7 +2,6 @@
 
 {
  sops = {
-    defaultSopsFile = "../../secrets/secrets.yaml";
     age.keyFile = "/etc/sops/age.key";
     secrets = {
       zeev_password.neededForUsers = true;
