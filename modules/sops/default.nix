@@ -9,16 +9,7 @@
 
     ssh_host_ed25519_key = { owner = "root"; group = "root"; mode = "0600"; };
     ssh_host_rsa_key     = { owner = "root"; group = "root"; mode = "0600"; };
-    
-    zeev-ed25519 = { owner = "zeev"; group = "zeev"; mode = "0600"; };
-    zeev-rsa = { owner = "zeev"; group = "zeev"; mode = "0600"; };
-    homeserver-ed25519 = { owner = "root"; group = "root"; mode = "0600"; };
-    homeserver-rsa = { owner = "root"; group = "root"; mode = "0600"; };
 
-     owner = "root"; group = "root"; mode = "0600";
-
-    system-ed25519 = config.sops.secrets.system-ed25519.path;
-    system-rsa = config.sops.secrets.system-rsa.path;
     # Passwords for databases used by postgres
     miniflux_db_password = { owner = "postgres"; };
     hass_db_password ={ owner = "postgres"; };
@@ -39,7 +30,6 @@
 
     # Cloudflare Credentials
     cloudflare_credentials = { owner = "cloudflared"; group = "cloudflared"; mode = "0600"; };
-    cloudflare_tunnel_id = { };
     cloudflare_api_key     = {}; # Used by root (fail2ban)
     cloudflare_zone_id     = {}; # Used by root (fail2ban)
 
@@ -56,7 +46,8 @@
     yubikey_secret_key = { };
     webauthn_relying_party_name = { };
     webauthn_relying_party_id = { };
-
+    cloudflare_api_key = {};
+    cloudflare_zone_id = {};
 
     #arr
     sonarr_key = {  };
