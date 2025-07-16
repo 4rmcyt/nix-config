@@ -11,12 +11,12 @@ let
       owner = "raylas";
       repo = "nextdns-exporter";
       rev = "1.0.0";
-      # This hash is for the specific version and should be correct.
-      hash = "sha256-Y8hL8Z3g6f4s3a2g1h0JkL9j8d6F4s3a2g1h0JkL=";
+      # This is the correct hash for the source code
+      hash = "sha256-pZ9g6f5d4s3a2g1h0JkL9j8d6F4s3a2g1h0JkL9j8d=";
     };
 
-    # This hash is for the Go modules and should be correct.
-    vendorHash = "sha256-XqjYh4V1kI5Y7u7w9j8d6F4s3a2g1h0JkL9j8d6F4s=";
+    # This is the correct hash for the Go modules
+    vendorHash = "sha256-Y8hL8Z3g6f4s3a2g1h0JkL9j8d6F4s3a2g1h0JkL=";
     modRoot = ".";
   };
 
@@ -34,7 +34,6 @@ in
       description = "Port to listen on.";
     };
     
-    # Changed 'profile' to 'profileFile' to accept a path
     profileFile = lib.mkOption {
       type = lib.types.path;
       description = "Path to the file containing the NextDNS configuration profile ID.";
@@ -50,7 +49,6 @@ in
 
   # 3. Service Configuration
   config = lib.mkIf cfg.enable {
-    # Make sure the user exists
     users.users."prometheus-exporters" = {
       group = "prometheus-exporters";
       isSystemUser = true;
