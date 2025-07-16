@@ -57,9 +57,12 @@ in
               #!${pkgs.bash}/bin/bash
               set -euo pipefail
               
-              IP=$(cat ${device.credentialsFile} | ${pkgs.jq}/bin/jq -r .ip)
-              USER=$(cat ${device.credentialsFile} | ${pkgs.jq}/bin/jq -r .user)
-              PASSWORD=$(cat ${device.credentialsFile} | ${pkgs.jq}/bin/jq -r .password)
+              # Read the credentials file once for efficiency
+              CREDS_JSON=$(cat ${device.credentialsFile})
+              
+              IP=$(echo "$CREDS_JSON" | ${pkgs.jq}/bin/jq -r .ip)
+              USER=$(echo "$CREDS_JSON" | ${pkgs.jq}/bin/jq -r .user)
+              PASSWORD=$(echo "$CREDS_JSON" | ${pkgs.jq}/bin/jq -r .password)
 
               CONFIG_FILE=$(mktemp)
               trap 'rm -f "$CONFIG_FILE"' EXIT
