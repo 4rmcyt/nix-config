@@ -39,24 +39,6 @@
         port = 9100;
       };
       
-      # This configuration is correct for your custom tplink-exporter module.
-      tplink.devices = {
-        "tplink_living_room" = {
-          credentialsFile = config.sops.secrets.tplink_living_room.path;
-          port = 9266;
-        };
-        "tplink_office" = {
-          credentialsFile = config.sops.secrets.tplink_office.path;
-          port = 9267;
-        };
-      };
-
-      # nextdns = {
-      #   enable = true;
-      #   port = 9790;
-      #   profileFile = config.sops.secrets.homepage_nextdns_profile_id.path;
-      #   apiKeyFile = config.sops.secrets.nextdns_api_key.path;
-      # };
     };
 
     ruleFiles = [

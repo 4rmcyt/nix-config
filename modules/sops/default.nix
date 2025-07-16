@@ -42,11 +42,13 @@
       "webauthn_relying_party_name" = {};
       "webauthn_relying_party_id"   = {};
       
-      "nextdns_api_key" = { owner = "prometheus-exporters"; };
+      "nextdns_api_key" = { owner = "root"; };
+      "nextdns_profile_id" = { owner = "root"; };
 
-      "tplink_living_room" = { owner = "prometheus-exporters"; };
-      "tplink_office"   = { owner = "prometheus-exporters"; };
+      "tplink_living_room_creds" = { owner = "root"; };
+      "tplink_office_creds" = { owner = "root"; };
 
+      
       # Nixarr API Keys
       "sonarr_key"     = { owner = "homepage-dashboard"; };
       "radarr_key"     = { owner = "homepage-dashboard"; };
