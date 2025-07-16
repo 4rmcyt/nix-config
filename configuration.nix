@@ -59,7 +59,7 @@ in
     iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools
     apacheHttpd zsh-powerlevel10k meslo-lgs-nf yamllint nix-index iotop
     tuptime smartmontools fzf ffmpeg nmap trash-cli zip unar unzip p7zip
-    calibre
+    calibre go
   ];
 
   services = {

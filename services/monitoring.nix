@@ -34,11 +34,29 @@
           "systemd" "processes" "interrupts" "cpu" "diskstats"
           "filesystem" "loadavg" "meminfo" "netdev" "netstat"
           "stat" "time" "vmstat" "logind" "thermal_zone"
-          "hwmon"  # Hardware monitoring
+          "hwmon"
         ];
         port = 9100;
       };
+      tplink.devices = {
+        "tplink_living_room" = {
+          credentialsFile = config.sops.secrets.tplink_living_room.path;
+          port = 9266;
+        };
+        "tplink_office" = {
+          credentialsFile = config.sops.secrets.tplink_office.path;
+          port = 9267;
+        };
+      };
+      nextdns = {
+        enable = true;
+        port = 9790;
+        # Corrected to use the new 'profileFile' option
+        profileFile = config.sops.secrets.homepage_nextdns_profile_id.path;
+        apiKeyFile = config.sops.secrets.nextdns_api_key.path;
+      };
     };
+
 
     # Rule files for alerting
     ruleFiles = [
@@ -196,6 +214,4 @@
     ncdu          # Disk usage analyzer
     iftop         # Network connections
   ];
-
-  # REMOVED: Firewall ports (now handled centrally in networking.nix)
 }
