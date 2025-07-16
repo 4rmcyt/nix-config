@@ -13,7 +13,7 @@
     users = {
       zeev = {
         isNormalUser = true;
-        description = "Zeev";
+        description = "zeev";
         shell = pkgs.zsh;
         extraGroups = [ "networkmanager" "wheel" "docker" "media" "samba" ];
         hashedPasswordFile = config.sops.secrets.zeev_password.path;
