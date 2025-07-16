@@ -126,11 +126,11 @@
     {
       job_name = "tplink-living-room";
       static_configs = [{ targets = [ "localhost:9266" ]; }];
-    },
+    }
     {
       job_name = "tplink-office";
       static_configs = [{ targets = [ "localhost:9267" ]; }];
-    },
+    }
     {
       job_name = "nextdns";
       static_configs = [{ targets = [ "localhost:9790" ]; }];
