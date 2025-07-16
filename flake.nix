@@ -100,7 +100,7 @@
           ./services/nixarr.nix
 
           ./services/tplink-exporter.nix
-          ./services/nextdns-exporter.nix
+          # ./services/nextdns-exporter.nix
         ];
       };
     };
