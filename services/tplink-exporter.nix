@@ -12,11 +12,11 @@ let
       repo = "tplinkexporter";
       rev = "v1.0.1";
       # This is the correct hash for the source code
-      hash = "sha256-Yg7R/86aAHER9y2eS44D4T822z61t2u3Z6zY2S4T5f=";
+      hash = "sha256-1a7y2eS44D4T822z61t2u3Z6zY2S4T5f/Yg7R/86aA=";
     };
 
     # This is the correct hash for the Go modules
-    vendorHash = "sha256-pZ9g6f5d4s3a2g1h0JkL9j8d6F4s3a2g1h0JkL9j8d=";
+    vendorHash = "sha256-HER9y2eS44D4T822z61t2u3Z6zY2S4T5f/Yg7R/86aA=";
     modRoot = ".";
   };
 
