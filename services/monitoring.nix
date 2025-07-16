@@ -51,13 +51,12 @@
         };
       };
 
-      nextdns = {
-        enable = true;
-        port = 9790;
-        # CORRECTED: The option is 'profileFile', not 'profile'.
-        profileFile = config.sops.secrets.homepage_nextdns_profile_id.path;
-        apiKeyFile = config.sops.secrets.nextdns_api_key.path;
-      };
+      # nextdns = {
+      #   enable = true;
+      #   port = 9790;
+      #   profileFile = config.sops.secrets.homepage_nextdns_profile_id.path;
+      #   apiKeyFile = config.sops.secrets.nextdns_api_key.path;
+      # };
     };
 
     ruleFiles = [
