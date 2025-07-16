@@ -25,14 +25,6 @@
       url = "github:rasmus-kirk/nixarr";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    tplinkexporter = {
-      url = "github:thelastguardian/tplinkexporter";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nextdns-exporter ={
-      url = "github:raylas/nextdns-exporter";
-      inputs.nixpkgs.follows = "nixpkgs";
-    }
   };
 
   # The inputs are passed as arguments to this function
