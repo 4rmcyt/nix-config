@@ -26,23 +26,6 @@
         optimize = 1;
         pdfa_image_compression = "lossless";
       };
-
-      systemd.services.paperless-web = {
-        after = [ "redis-paperless.service" ];
-        requires = [ "redis-paperless.service" ];
-      };
-      systemd.services.paperless-consumer = {
-        after = [ "redis-paperless.service" ];
-        requires = [ "redis-paperless.service" ];
-      };
-      systemd.services.paperless-scheduler = {
-        after = [ "redis-paperless.service" ];
-        requires = [ "redis-paperless.service" ];
-      };
-      systemd.services.paperless-task-queue = {
-        after = [ "redis-paperless.service" ];
-        requires = [ "redis-paperless.service" ];
-      };
     };
   };
 }
