@@ -1,40 +1,73 @@
 { config, pkgs, ... }:
 
 {
+
   services.paperless = {
     enable = true;
-    # Let the module manage the user and group
-    user = "paperless";
-    group = "paperless";
-    
-    settings = {
-      PAPERLESS_URL = "https://paperless.example.com";
-      PAPERLESS_REDIS = "unix:///run/redis-paperless/redis.sock?db=0";
-      PAPERLESS_DBENGINE = "postgresql";
-      PAPERLESS_DBHOST = "localhost";
-      PAPERLESS_DBNAME = "paperless";
-      PAPERLESS_DBUSER = "paperless";
-      PAPERLESS_DBPASS_COMMAND = "cat ${config.sops.secrets.paperless_db_password.path}";
-      PAPERLESS_ADMIN_USER = "admin";
-      PAPERLESS_ADMIN_PASSWORD_COMMAND = "cat ${config.sops.secrets.paperless_admin_password.path}";
-    };
-  };
+    package = pkgs.paperless-ngx.overrideAttrs (oldAttrs: {
+      doCheck = false;
+    });
+    port = 8888;
+    address = "127.0.0.1";
 
-  # Ensure Paperless services wait for their dependencies
-  systemd.services.paperless-web = {
-    after = [ "postgresql.service" "redis-paperless.service" ];
-    requires = [ "postgresql.service" "redis-paperless.service" ];
-  };
-  systemd.services.paperless-consumer = {
-    after = [ "postgresql.service" "redis-paperless.service" ];
-    requires = [ "postgresql.service" "redis-paperless.service" ];
-  };
-  systemd.services.paperless-scheduler = {
-    after = [ "postgresql.service" "redis-paperless.service" ];
-    requires = [ "postgresql.service" "redis-paperless.service" ];
-  };
-  systemd.services.paperless-task-queue = {
-    after = [ "postgresql.service" "redis-paperless.service" ];
-    requires = [ "postgresql.service" "redis-paperless.service" ];
+    settings = {
+      PAPERLESS_ADMIN_USER = "admin";
+      PAPERLESS_ADMIN_PASSWORD = "$(cat ${config.sops.secrets.paperless_admin_password.path})";
+      PAPERLESS_URL = "https://paperless.example.com";
+      PAPERLESS_ALLOWED_HOSTS = "paperless.example.com,localhost,127.0.0.1";
+      PAPERLESS_CORS_ALLOWED_HOSTS = "https://paperless.example.com";
+      PAPERLESS_USE_X_FORWARD_HOST = true;
+      PAPERLESS_USE_X_FORWARD_PORT = true;
+      PAPERLESS_USE_X_FORWARD_PROTO = true;
+
+      # OCR settings
+      PAPERLESS_OCR_LANGUAGE = "eng+heb";
+      PAPERLESS_OCR_USER_ARGS = {
+        optimize = 1;
+        pdfa_image_compression = "lossless";
+      };
+
+      systemd.services.paperless-web = {
+        after = [
+          "postgresql.service"
+          "redis-paperless.service"
+        ];
+        requires = [
+          "postgresql.service"
+          "redis-paperless.service"
+        ];
+      };
+      systemd.services.paperless-consumer = {
+        after = [
+          "postgresql.service"
+          "redis-paperless.service"
+        ];
+        requires = [
+          "postgresql.service"
+          "redis-paperless.service"
+        ];
+      };
+      systemd.services.paperless-scheduler = {
+        after = [
+          "postgresql.service"
+          "redis-paperless.service"
+        ];
+        requires = [
+          "postgresql.service"
+          "redis-paperless.service"
+        ];
+      };
+      systemd.services.paperless-task-queue = {
+        after = [
+          "postgresql.service"
+          "redis-paperless.service"
+        ];
+        requires = [
+          "postgresql.service"
+          "redis-paperless.service"
+        ];
+      };
+
+    };
   };
 }
