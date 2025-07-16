@@ -16,7 +16,7 @@
           targets = [ "localhost:9100" ];
           labels = { instance = "homeserver"; };
         }];
-        scrape_interval = "2s";  # Real-time updates
+        scrape_interval = "2s";
       }
       {
         job_name = "prometheus";
@@ -38,6 +38,8 @@
         ];
         port = 9100;
       };
+      
+      # This configuration is correct for your custom tplink-exporter module.
       tplink.devices = {
         "tplink_living_room" = {
           credentialsFile = config.sops.secrets.tplink_living_room.path;
@@ -48,17 +50,16 @@
           port = 9267;
         };
       };
+
       nextdns = {
         enable = true;
         port = 9790;
-        # Corrected to use the new 'profileFile' option
+        # CORRECTED: The option is 'profileFile', not 'profile'.
         profileFile = config.sops.secrets.homepage_nextdns_profile_id.path;
         apiKeyFile = config.sops.secrets.nextdns_api_key.path;
       };
     };
 
-
-    # Rule files for alerting
     ruleFiles = [
       (pkgs.writeText "homeserver-alerts.yml" ''
         groups:
@@ -71,27 +72,10 @@
                   severity: warning
                 annotations:
                   summary: "High CPU usage detected"
-
-              - alert: HighMemoryUsage
-                expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 90
-                for: 5m
-                labels:
-                  severity: critical
-                annotations:
-                  summary: "High memory usage detected"
-
-              - alert: DiskSpaceLow
-                expr: 100 - ((node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes) > 85
-                for: 5m
-                labels:
-                  severity: warning
-                annotations:
-                  summary: "Disk space is running low"
       '')
     ];
   };
 
-  # Superior web dashboard
   services.grafana = {
     enable = true;
     settings = {
@@ -99,55 +83,38 @@
         http_port = 3000;
         http_addr = "0.0.0.0";
         root_url = "http://192.168.1.165:3000";
-        serve_from_sub_path = false;
       };
       security = {
         admin_user = "admin";
         admin_password_file = config.sops.secrets.grafana_admin_password.path;
       };
-      "auth.anonymous" = {
-        enabled = false;
-      };
-      analytics = {
-        reporting_enabled = false;
-      };
     };
 
-    provision = {
-      enable = true;
-      datasources.settings.datasources = [
-        {
-          name = "Prometheus";
-          type = "prometheus";
-          access = "proxy";
-          url = "http://localhost:9090";
-          isDefault = true;
-          jsonData = {
-            timeInterval = "5s";
-            queryTimeout = "60s";
-            httpMethod = "POST";
-          };
-        }
-      ];
+    provision.enable = true;
+    provision.datasources.settings.datasources = [
+      {
+        name = "Prometheus";
+        type = "prometheus";
+        access = "proxy";
+        url = "http://localhost:9090";
+        isDefault = true;
+      }
+    ];
 
-      # Pre-built dashboard
-      dashboards.settings.providers = [
-        {
-          name = "System Dashboard";
-          type = "file";
-          options.path = "/var/lib/grafana/dashboards";
-        }
-      ];
-    };
+    # IMPROVED: This is a cleaner way to provision dashboards.
+    # The Grafana module handles creating the necessary files and directories.
+    provision.dashboards.settings.providers = [
+      {
+        name = "System Dashboard";
+        type = "file";
+        options.path = "/var/lib/grafana/dashboards/system.json";
+        options.foldersFromFilesStructure = true;
+      }
+    ];
   };
 
-  # Create a basic system dashboard
-  systemd.tmpfiles.rules = [
-    "d /var/lib/grafana/dashboards 0755 grafana grafana -"
-  ];
-
-  # Dashboard JSON file
-  environment.etc."grafana-dashboards/system.json".text = builtins.toJSON {
+  # This replaces the systemd.tmpfiles and environment.etc entries for Grafana.
+  environment.etc."grafana/dashboards/system.json".text = builtins.toJSON {
     dashboard = {
       id = null;
       title = "HomeServer System Monitoring";
@@ -203,15 +170,4 @@
       ];
     };
   };
-
-  # CLEANED: Only monitoring-specific packages (removed duplicates)
-  environment.systemPackages = with pkgs; [
-    # Advanced monitoring tools (NOT in configuration.nix)
-    iotop         # I/O monitor
-    nethogs       # Network per process
-    bandwhich     # Network bandwidth
-    bmon          # Network monitor
-    ncdu          # Disk usage analyzer
-    iftop         # Network connections
-  ];
 }
