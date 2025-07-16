@@ -41,6 +41,11 @@
       "yubikey_secret_key" = {};
       "webauthn_relying_party_name" = {};
       "webauthn_relying_party_id"   = {};
+      
+      "nextdns_api_key" = { owner = "prometheus-exporters"; };
+
+      "tplink_living_room" = { owner = "prometheus-exporters"; };
+      "tplink_office"   = { owner = "prometheus-exporters"; };
 
       # Nixarr API Keys
       "sonarr_key"     = { owner = "homepage-dashboard"; };
