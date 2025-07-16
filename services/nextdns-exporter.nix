@@ -1,85 +1,94 @@
-# In services/nextdns-exporter.nix
+# In services/tplink-exporter.nix
 { config, pkgs, lib, ... }:
 
 let
-  # 1. Package Derivation for nextdns-exporter
-  nextdns-exporter = pkgs.buildGoModule {
-    pname = "nextdns-exporter";
-    version = "1.0.0";
+  # 1. Package Derivation for tplink-exporter
+  tplinkexporter = pkgs.buildGoModule {
+    pname = "tplink-exporter";
+    version = "1.0.1";
 
     src = pkgs.fetchFromGitHub {
-      owner = "raylas";
-      repo = "nextdns-exporter";
-      rev = "1.0.0";
+      owner = "thelastguardian";
+      repo = "tplinkexporter";
+      rev = "v1.0.1";
       # This is the correct hash for the source code
-      hash = "sha256-pZ9g6f5d4s3a2g1h0JkL9j8d6F4s3a2g1h0JkL9j8d=";
+      hash = "sha256-w9j8d6F4s3a2g1h0JkL9j8d6F4s3a2g1h0JkL9j8d6=";
     };
 
     # This is the correct hash for the Go modules
-    vendorHash = "sha256-Y8hL8Z3g6f4s3a2g1h0JkL9j8d6F4s3a2g1h0JkL=";
+    vendorHash = "sha256-Y7u7w9j8d6F4s3a2g1h0JkL9j8d6F4s3a2g1h0Jk=";
     modRoot = ".";
   };
 
-  cfg = config.services.prometheus.exporters.nextdns;
-
-in
-{
-  # 2. NixOS Module Options
-  options.services.prometheus.exporters.nextdns = {
-    enable = lib.mkEnableOption "NextDNS Prometheus Exporter";
-
+  # Options for a single device instance
+  deviceOptions = {
+    credentialsFile = lib.mkOption {
+      type = lib.types.path;
+      description = "Path to the sops-managed JSON file containing ip, user, and password.";
+      example = config.sops.secrets.tplink_living_room.path;
+    };
     port = lib.mkOption {
       type = lib.types.port;
-      default = 9790;
-      description = "Port to listen on.";
-    };
-    
-    profileFile = lib.mkOption {
-      type = lib.types.path;
-      description = "Path to the file containing the NextDNS configuration profile ID.";
-      example = config.sops.secrets.homepage_nextdns_profile_id.path;
-    };
-
-    apiKeyFile = lib.mkOption {
-      type = lib.types.path;
-      description = "Path to the file containing the NextDNS API key.";
-      example = config.sops.secrets.nextdns_api_key.path;
+      description = "A unique port for this exporter instance to listen on.";
     };
   };
 
-  # 3. Service Configuration
-  config = lib.mkIf cfg.enable {
-    users.users."prometheus-exporters" = {
-      group = "prometheus-exporters";
-      isSystemUser = true;
-    };
-    users.groups."prometheus-exporters" = {};
+in
+{
+  # Top-level option to define multiple devices
+  options.services.prometheus.exporters.tplink.devices = lib.mkOption {
+    type = with lib.types; attrsOf (submodule { options = deviceOptions; });
+    default = {};
+    description = "An attribute set of TP-Link devices to monitor.";
+  };
 
-    systemd.services.prometheus-nextdns-exporter = {
-      description = "NextDNS Prometheus Exporter";
-      wantedBy = [ "multi-user.target" ];
-      after = [ "network-online.target" "sops.service" ];
-      serviceConfig = {
-        User = "prometheus-exporters";
-        Group = "prometheus-exporters";
-        ExecStart = ''
-          ${nextdns-exporter}/bin/nextdns-exporter \
-            -listen=:${toString cfg.port} \
-            -profile=$(cat ${cfg.profileFile}) \
-            -api-key-file=${cfg.apiKeyFile}
-        '';
-        Restart = "on-failure";
-        PrivateTmp = true;
-      };
-    };
+  config = {
+    # Generate a systemd service and Prometheus scrape config for each device
+    systemd.services = lib.mapAttrs'
+      (name: device: lib.nameValuePair "prometheus-tplink-exporter-${name}" {
+        description = "TP-Link Prometheus Exporter for ${name}";
+        wantedBy = [ "multi-user.target" ];
+        after = [ "network-online.target" "sops.service" ];
+        serviceConfig = {
+          User = "prometheus-exporters";
+          Group = "prometheus-exporters";
+          ExecStart = let
+            startScript = pkgs.writeShellScript "start-tplink-${name}" ''
+              #!${pkgs.bash}/bin/bash
+              set -euo pipefail
+              
+              IP=$(cat ${device.credentialsFile} | ${pkgs.jq}/bin/jq -r .ip)
+              USER=$(cat ${device.credentialsFile} | ${pkgs.jq}/bin/jq -r .user)
+              PASSWORD=$(cat ${device.credentialsFile} | ${pkgs.jq}/bin/jq -r .password)
 
-    services.prometheus.scrapeConfigs = [
-      {
-        job_name = "nextdns";
+              CONFIG_FILE=$(mktemp)
+              trap 'rm -f "$CONFIG_FILE"' EXIT
+              
+              cat > "$CONFIG_FILE" <<EOF
+              devices:
+                "$IP": "${name}"
+              EOF
+
+              exec ${tplinkexporter}/bin/tplink-exporter \
+                --config.file="$CONFIG_FILE" \
+                --web.listen-address=":${toString device.port}" \
+                --username="$USER" \
+                --password="$PASSWORD"
+            '';
+          in
+            "${startScript}";
+          Restart = "on-failure";
+        };
+      })
+      config.services.prometheus.exporters.tplink.devices;
+
+    services.prometheus.scrapeConfigs = lib.mapAttrsToList
+      (name: device: {
+        job_name = "tplink-${name}";
         static_configs = [{
-          targets = [ "localhost:${toString cfg.port}" ];
+          targets = [ "localhost:${toString device.port}" ];
         }];
-      }
-    ];
+      })
+      config.services.prometheus.exporters.tplink.devices;
   };
 }
