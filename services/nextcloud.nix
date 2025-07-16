@@ -22,13 +22,23 @@
     };
   };
 
+  systemd.services.nextcloud-setup = {
+    after = [ "postgresql.service" ];
+    requires = [ "postgresql.service" ];
+  };
+  
+  # This ensures the main Nextcloud PHP service also waits for the database
+  systemd.services.phpfpm-nextcloud = {
+    after = [ "postgresql.service" ];
+    requires = [ "postgresql.service" ];
+  };
+
   services.nginx.enable = true;
 
   services.nginx.virtualHosts."nextcloud.local" = {
     listen = [
       { addr = "127.0.0.1"; port = 8081; ssl = false; }
     ];
-    # No need to set root/locations, Nextcloud module will do it
   };
 
-}
+} 

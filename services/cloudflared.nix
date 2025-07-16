@@ -1,9 +1,6 @@
 { config, pkgs, ... }:
-let
-  cloudflareTunnelId = config.sops.secrets.cloudflare_tunnel_id.path;
-in
 {
-  services.cloudflared.tunnels.cloudflareTunnelId = {
+  services.cloudflared.tunnels."f7876e26f7876e26-87a8-4bdd-9798-3986b0f7cebc" = {
     enable = true;
     credentialsFile = config.sops.secrets.cloudflareTunnelCredentials.path;
     default = "http_status:404";
