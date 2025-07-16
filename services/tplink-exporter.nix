@@ -64,6 +64,8 @@ in
               USER=$(echo "$CREDS_JSON" | ${pkgs.jq}/bin/jq -r .user)
               PASSWORD=$(echo "$CREDS_JSON" | ${pkgs.jq}/bin/jq -r .password)
 
+              # The exporter needs a YAML config file with the device IP.
+              # We create it on the fly.
               CONFIG_FILE=$(mktemp)
               trap 'rm -f "$CONFIG_FILE"' EXIT
               
@@ -72,6 +74,7 @@ in
                 "$IP": "${name}"
               EOF
 
+              # Launch the exporter with the credentials
               exec ${tplinkexporter}/bin/tplink-exporter \
                 --config.file="$CONFIG_FILE" \
                 --web.listen-address=":${toString device.port}" \
