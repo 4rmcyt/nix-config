@@ -1,7 +1,6 @@
 { config, pkgs, lib, ... }:
 
 let
-  # Keys are now defined in the module where they are used.
   user-ed25519 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyieBFROVPWmH3iC2ZAE+5zofMd6mnunBzfObEwMgFx";
   user-rsa = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7QtXHGjNp8yxRIbMwb605n3fqFoq+PxOzbq6i2dEr6YDIKqajRNBHiEHjV3z7ABLpi2cfHPcw8Cgg/esD/98uGM9lKxdCev1VEubmsTmZAuDBz04p/S/yB7UBc5muHJLkzFNjlwMYP3x3JAr9if3nmrAZNh5qOrymZndJ7h9IT9WZNvvgFW2I+S/Ugi7eq5yRIDm5S7ADW/9wThfvG8ZqhMXDvvKXHJYx/O8D8th1ffN5l8pAJZkiV21zW0pu4od4iAaVM531H22FORAq6PbHAwr5u8a0jBlTqkwlo9x3O+hdKBVhW1XQfeRqg69lJtmUUFipl4viBj9Rpz+gtv4BjKL9ChCgqVLMLPe/bviRjqx3bvC2I78H0N51SvAh0QOj1ByAk3Xvj3R2qwk7LAmLgSlPoOsGpkbILhudF7KLJ/Uh2kpZI3NOcYdy9TYMws97zCvevgqw07HEEOydYpPB4+ml8Zzb+Tcw0U7yLRWMAB1VP1WE1vM0U6XQa7CRhcU=";
   user-keys = [ user-ed25519 user-rsa ];
@@ -17,7 +16,7 @@ in
     # Define all groups for your services
     groups = {
       media = {}; samba = {}; git = {}; keycloak = {};
-      "homepage-dashboard" = {}; nextcloud = {}; microbin = {};
+      homepage-dashboard = {}; nextcloud = {}; microbin = {};
       paperless = {}; miniflux = {}; hass = {}; radicale = {};
       mosquitto = {}; grafana = {}; cloudflared = {};
     };
@@ -39,7 +38,7 @@ in
         openssh.authorizedKeys.keys = user-keys;
       };
       keycloak = { isSystemUser = true; group = "keycloak"; };
-      "homepage-dashboard" = { isSystemUser = true; group = "homepage-dashboard"; };
+      homepage-dashboard = { isSystemUser = true; group = "homepage-dashboard"; };
       nextcloud = { isSystemUser = true; group = "nextcloud"; };
       microbin = { isSystemUser = true; group = "microbin"; };
       paperless = { isSystemUser = true; group = "paperless"; };
