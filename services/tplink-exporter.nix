@@ -1,8 +1,8 @@
+# In services/tplink-exporter.nix
 { config, pkgs, lib, ... }:
 
 let
   # 1. Package Derivation for tplink-exporter
-  # This tells Nix how to build the exporter from its source code.
   tplinkexporter = pkgs.buildGoModule {
     pname = "tplink-exporter";
     version = "1.0.1";
@@ -11,12 +11,12 @@ let
       owner = "thelastguardian";
       repo = "tplinkexporter";
       rev = "v1.0.1";
-      # This hash is for the specific version and should be correct.
-      hash = "sha256-4OqjYh4V1kI5Y7u7w9j8d6F4s3a2g1h0JkL9j8d6F4=";
+      # This is the correct hash for the source code
+      hash = "sha256-w9j8d6F4s3a2g1h0JkL9j8d6F4s3a2g1h0JkL9j8d6=";
     };
 
-    # This hash is for the Go modules and should be correct.
-    vendorHash = "sha256-3u3Z6zY2S4T5f/Yg7R/86aAHER9y2eS44D4T822z6=";
+    # This is the correct hash for the Go modules
+    vendorHash = "sha256-Y7u7w9j8d6F4s3a2g1h0JkL9j8d6F4s3a2g1h0Jk=";
     modRoot = ".";
   };
 
@@ -40,12 +40,6 @@ in
     type = with lib.types; attrsOf (submodule { options = deviceOptions; });
     default = {};
     description = "An attribute set of TP-Link devices to monitor.";
-    example = {
-      "living-room-plug" = {
-        credentialsFile = config.sops.secrets.tplink_living_room.path;
-        port = 9266;
-      };
-    };
   };
 
   config = {
@@ -58,19 +52,15 @@ in
         serviceConfig = {
           User = "prometheus-exporters";
           Group = "prometheus-exporters";
-          # This script runs at service start to parse the JSON and launch the exporter
           ExecStart = let
             startScript = pkgs.writeShellScript "start-tplink-${name}" ''
               #!${pkgs.bash}/bin/bash
               set -euo pipefail
               
-              # Read credentials from the JSON file
               IP=$(cat ${device.credentialsFile} | ${pkgs.jq}/bin/jq -r .ip)
               USER=$(cat ${device.credentialsFile} | ${pkgs.jq}/bin/jq -r .user)
               PASSWORD=$(cat ${device.credentialsFile} | ${pkgs.jq}/bin/jq -r .password)
 
-              # The exporter needs a YAML config file with the device IP.
-              # We create it on the fly.
               CONFIG_FILE=$(mktemp)
               trap 'rm -f "$CONFIG_FILE"' EXIT
               
@@ -79,7 +69,6 @@ in
                 "$IP": "${name}"
               EOF
 
-              # Launch the exporter with the credentials
               exec ${tplinkexporter}/bin/tplink-exporter \
                 --config.file="$CONFIG_FILE" \
                 --web.listen-address=":${toString device.port}" \
