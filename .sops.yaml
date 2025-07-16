@@ -2,7 +2,7 @@ keys:
   - &zeev age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
   - &vk age1h9kk9fktkn0t2yk7m89jxlf2atl0808ewn3j5updmq8knt0c84uqs24ew4
   - &homeserver age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
-  - &mypgp F8B8AD81ABA9B153E32B77FF7F5972E465C96655
+  - &mypgp REDACTED
 
 creation_rules:
   - path_regex: 'secrets/.*\.yaml$'
