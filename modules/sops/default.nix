@@ -2,7 +2,7 @@
 
 {
  sops = {
-    age.sshKeyPaths = "/etc/ssh/ssh_host_ed25519_key";
+    age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
     secrets = {
        # User Passwords
       zeev_password.neededForUsers = true;
