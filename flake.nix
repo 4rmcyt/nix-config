@@ -27,7 +27,6 @@
     };
   };
 
-  # The inputs are passed as arguments to this function
   outputs =
     {
       self,
