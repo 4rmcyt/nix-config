@@ -12,6 +12,8 @@
     ./networking
     ./modules/base
     ./modules/sops
+    ./hardware-configuration.nix
+
   ];
 
   nix = {
