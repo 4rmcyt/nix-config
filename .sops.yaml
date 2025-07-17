@@ -1,11 +1,10 @@
 keys:
-    - &zeev age18pkk5washz5p8vl4tkemulvv8x23deaqwqqvfmwu7r7vwvjfwdqsg657vd
     - &homeserver age1vl8q6cvxskrxqr2np6ckxpvl9w9tqnsdf3gqtv4q9r6g0uj0mudq33znfg
+    - &pgp FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E
 creation_rules:
   - path_regex: 'secrets/.*\.yaml$'
     key_groups:
       - age:
           - *homeserver
-          - *zeev
-
-    
+      - pgp:
+          - *pgp
