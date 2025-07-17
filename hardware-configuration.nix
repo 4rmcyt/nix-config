@@ -54,9 +54,10 @@
       options = [ "subvol=@root" "compress=zstd" "noatime" ];
     };
 
-    "/boot" = {
+   "/boot" = {
       device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part1";
       fsType = "vfat";
+      options = [ "fmask=0137" "dmask=0027" ];
     };
 
     "/home" = {
