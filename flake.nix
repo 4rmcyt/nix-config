@@ -1,9 +1,8 @@
 {
   description = "NixOS configuration for homeserver";
-
+  
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
-    
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -32,64 +31,80 @@
     };
   };
 
- outputs = { self, nixpkgs, ... }@inputs: {
-    nixConfig = {
-      substituters = [
-        "https://cache.nixos.org/"
-        "https://nix-community.cachix.org"
-        "https://nixarr.cachix.org"
-      ];
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "nix-community.cachix.org-1:mB9FSh9UfP3dIR2A7ahVhES3/x1V2S4G/P5t0hKprM4="
-        "nixarr.cachix.org-1:HER9y2eS44D4T822z61t2u3Z6zY2S4T5f/Yg7R/86aA="
-      ];
+  outputs =
+    {
+      self,
+      nixpkgs,
+      disko,
+      sops-nix,
+      home-manager,
+      nix-index-database,
+      vscode-server,
+      nixarr,
+      nix4nvchad,
+      ...
+    }@inputs:
+    { 
+      nixConfig = {
+        substituters = [
+          "https://cache.nixos.org/"
+          "https://nix-community.cachix.org"
+          "https://nixarr.cachix.org"
+        ];
+        trusted-public-keys = [
+          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+          "nix-community.cachix.org-1:mB9FSh9UfP3dIR2A7ahVhES3/x1V2S4G/P5t0hKprM4="
+          "nixarr.cachix.org-1:HER9y2eS44D4T822z61t2u3Z6zY2S4T5f/Yg7R/86aA="
+        ];
+      };
+      nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; }; # This is used inside the modules themselves
+        modules = [
+          # External modules are referred to directly by their argument name
+          vscode-server.nixosModules.default
+          disko.nixosModules.disko
+          sops-nix.nixosModules.sops
+          home-manager.nixosModules.home-manager
+          nix-index-database.nixosModules.nix-index
+          nixarr.nixosModules.default
+          
+
+          # Core system configuration files
+          ./configuration.nix
+          ./hardware-configuration.nix
+
+          # Core system configuration
+          # ./disko
+          ./networking
+          ./users
+          ./modules/base
+          ./modules/sops
+
+          ({
+            sops.defaultSopsFile = ./secrets/secrets.yaml;
+          })
+
+          # Services
+          ./services/fail2ban.nix
+          ./services/yubikey.nix
+          ./services/database.nix
+          ./services/homepage.nix
+          ./services/tailscale.nix
+          ./services/cloudflared.nix
+          ./services/monitoring.nix
+          ./services/miniflux.nix
+          ./services/nextcloud.nix
+          ./services/microbin.nix
+          ./services/paperless.nix
+          ./services/radicale.nix
+          ./services/samba.nix
+          ./services/home-assistant.nix
+          ./services/keycloak.nix
+          ./services/nixarr.nix
+
+          ./services/containers.nix
+        ];
+      };
     };
-
-    nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
-      modules = [
-        # External modules that define options
-        inputs.disko.nixosModules.disko
-        inputs.sops-nix.nixosModules.sops
-        inputs.home-manager.nixosModules.home-manager
-        inputs.nix-index-database.nixosModules.nix-index
-        inputs.vscode-server.nixosModules.default
-        inputs.nixarr.nixosModules.nixarr
-
-        # Your local modules that use those options
-        ./configuration.nix
-        ./hardware-configuration.nix
-        ./disko
-        ./networking
-        ./users
-        ./modules/base
-        ./modules/sops
-        ({ sops.defaultSopsFile = ./secrets/secrets.yaml; })
-
-        # All your service files
-        ./services/fail2ban.nix
-        ./services/yubikey.nix
-        ./services/database.nix
-        ./services/homepage.nix
-        ./services/tailscale.nix
-        ./services/cloudflared.nix
-        ./services/monitoring.nix
-        ./services/miniflux.nix
-        ./services/nextcloud.nix
-        ./services/microbin.nix
-        ./services/paperless.nix
-        ./services/radicale.nix
-        ./services/samba.nix
-        ./services/home-assistant.nix
-        ./services/keycloak.nix
-        ./services/nixarr.nix
-        ./services/containers.nix
-        ./services/kavita.nix
-        ./services/tg-notify.nix
-        ./services/theme.nix
-      ];
-    };
-  };
 }
