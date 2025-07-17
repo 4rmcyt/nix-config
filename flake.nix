@@ -35,13 +35,14 @@
     let
       # Define the system configuration once to be reused
       systemModules = [
-        vscode-server.nixosModules.default
-        disko.nixosModules.disko
-        sops-nix.nixosModules.sops
-        home-manager.nixosModules.home-manager
-        nix-index-database.nixosModules.nix-index
-        nixarr.nixosModules.default
-
+        inputs.disko.nixosModules.disko
+        inputs.sops-nix.nixosModules.sops
+        inputs.home-manager.nixosModules.home-manager
+        inputs.nix-index-database.nixosModules.nix-index
+        inputs.vscode-server.nixosModules.default
+        inputs.nixarr.nixosModules.default
+        inputs.nixos-generators.nixosModules.nixos-generators
+        inputs.nix4nvchad.nixosModules.default
 
         # Core system configuration files
         ./configuration.nix
