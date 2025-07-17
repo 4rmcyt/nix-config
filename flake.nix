@@ -1,6 +1,6 @@
 {
   description = "NixOS configuration for homeserver";
-  
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     disko = {
@@ -31,15 +31,15 @@
     };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs:
-    # This 'let' block makes 'commonModules' available to everything inside the 'in' block.
+  outputs =
+    { self, nixpkgs, ... }@inputs:
     let
       commonModules = [
         inputs.sops-nix.nixosModules.sops
         inputs.home-manager.nixosModules.home-manager
         inputs.nix-index-database.nixosModules.nix-index
         inputs.vscode-server.nixosModules.default
-        inputs.nixarr.nixosModules.nixarr
+        inputs.nixarr.nixosModules.default
         ./configuration.nix
         ./networking
         ./users
@@ -99,4 +99,4 @@
         format = "iso";
       };
     };
-  }
+}
