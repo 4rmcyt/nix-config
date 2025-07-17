@@ -1,21 +1,20 @@
+# In .sops.yaml at the root of your project
 keys:
-  - &users:
-    - &zeev age1vl8q6cvxskrxqr2np6ckxpvl9w9tqnsdf3gqtv4q9r6g0uj0mudq33znfg
-  - &hosts:
-    - &homeserver age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
-  - &pgp:
-    - &mypgp REDACTED  
-groups:
-  users: [*zeev]
-  hosts: [*homeserver]
-  pgp: [*mypgp]
+  - &zeev age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
+  - &vk age1h9kk9fktkn0t2yk7m89jxlf2atl0808ewn3j5updmq8knt0c84uqs24ew4
+  - &homeserver age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
+  # This is the correct fingerprint from your GPG keyring
+  - &mypgp REDACTED
 
 creation_rules:
-  - path_regex: 'secrets/.*\.yaml$'
+  # This rule allows either your PGP key OR the AGE keys to decrypt the file.
+  - path_regex: 'secrets/secrets.yaml$'
     key_groups:
+      - pgp:
+          - *mypgp
       - age:
           - *homeserver
           - *zeev
-      - pgp:
-          - *mypgp
-    
+          - *vk
+    # This is the crucial line: it means only one of the groups above needs to succeed.
+    threshold: 1
