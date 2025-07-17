@@ -33,27 +33,18 @@
 
     outputs = { self, nixpkgs, ... }@inputs:
     let
-      systemModules = [
-        inputs.disko.nixosModules.disko
+      commonModules = [
         inputs.sops-nix.nixosModules.sops
         inputs.home-manager.nixosModules.home-manager
         inputs.nix-index-database.nixosModules.nix-index
         inputs.vscode-server.nixosModules.default
-        inputs.nixarr.nixosModules.default
-
-        # Core system configuration files
+        inputs.nixarr.nixosModules.nixarr
         ./configuration.nix
-        # ./hardware-configuration.nix
-
-        # Core system configuration
-        # ./disko
         ./networking
         ./users
         ./modules/base
         ./modules/sops
         ({ sops.defaultSopsFile = ./secrets/secrets.yaml; })
-        
-        # Services
         ./services/fail2ban.nix
         ./services/yubikey.nix
         ./services/database.nix
@@ -70,8 +61,10 @@
         ./services/home-assistant.nix
         ./services/keycloak.nix
         ./services/nixarr.nix
-
-        ./services/containers.nix 
+        ./services/containers.nix
+        ./services/kavita.nix
+        ./services/tg-notify.nix
+        ./services/theme.nix
       ];
     in
     {
