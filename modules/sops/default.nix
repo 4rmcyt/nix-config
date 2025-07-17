@@ -2,7 +2,7 @@
 
 {
  sops = {
-    age.keyFile = "/var/lib/sops/age.key";
+    age.keyFile = "/etc/ssh/ssh_host_ed25519_key";
     secrets = {
        # User Passwords
       zeev_password.neededForUsers = true;
