@@ -6,8 +6,8 @@ keys:
   - &pgp:
     - &mypgp FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E  
 groups:
-  users: [*zeev, *vk]
-  hosts: [*homeserver, *vkmac]
+  users: [*zeev]
+  hosts: [*homeserver]
   pgp: [*mypgp]
 
 creation_rules:
