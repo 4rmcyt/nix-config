@@ -31,9 +31,8 @@
     };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs:
+    outputs = { self, nixpkgs, ... }@inputs:
     let
-      # Define the system configuration once to be reused
       systemModules = [
         inputs.disko.nixosModules.disko
         inputs.sops-nix.nixosModules.sops
