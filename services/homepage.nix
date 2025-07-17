@@ -323,7 +323,9 @@
         "system" = {
           "cpu" = true;
           "memory" = true;
-          "disk" = "/";
+          "uptime" = true;
+          "network" = true;
+          "storage" = [ "/" "/data" ];
         };
       }
       {
