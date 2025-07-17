@@ -1,10 +1,14 @@
-# In .sops.yaml at the root of your project
 keys:
-  - &zeev age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
-  - &vk age1h9kk9fktkn0t2yk7m89jxlf2atl0808ewn3j5updmq8knt0c84uqs24ew4
-  - &homeserver age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
-  - &mypgp REDACTED
-
+  - &users:
+    - &zeev age1vl8q6cvxskrxqr2np6ckxpvl9w9tqnsdf3gqtv4q9r6g0uj0mudq33znfg
+  - &hosts:
+    - &homeserver age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
+  - &pgp:
+    - &mypgp REDACTED  
+groups:
+  users: [*zeev]
+  hosts: [*homeserver]
+  pgp: [*mypgp]
 
 creation_rules:
   - path_regex: 'secrets/.*\.yaml$'
