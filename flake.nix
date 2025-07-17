@@ -70,7 +70,7 @@
           ./hardware-configuration.nix
 
           # Core system configuration
-          ./disko
+          # ./disko
           ./networking
           ./users
           ./modules/base
