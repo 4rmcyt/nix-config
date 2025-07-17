@@ -66,11 +66,9 @@
     };
   };
 
-  # This defines the swap file based on your disko configuration.
   swapDevices = [
     { device = "/.swapvol/swapfile"; size = 16384; }
   ];
-  # ------------------------
 }
 
   boot.loader.systemd-boot.configurationLimit = 10;
