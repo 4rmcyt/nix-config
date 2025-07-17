@@ -96,7 +96,7 @@
 
       packages.x86_64-linux.iso = inputs.nixos-generators.nixosGenerate {
         system = "x86_64-linux";
-        # The ISO configuration uses only the common modules
+        specialArgs = { inherit inputs; };
         modules = commonModules;
         format = "iso";
       };
