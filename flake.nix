@@ -80,6 +80,7 @@
           ./users
           ./modules/base
           ./modules/sops
+          
 
           ({
             sops.defaultSopsFile = ./secrets/secrets.yaml;
@@ -102,6 +103,8 @@
           ./services/home-assistant.nix
           ./services/keycloak.nix
           ./services/nixarr.nix
+
+          ./scripts/wg-sync.nix
 
           ./services/containers.nix
         ];
