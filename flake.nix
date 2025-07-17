@@ -43,10 +43,10 @@
 
         # Core system configuration files
         ./configuration.nix
-        ./hardware-configuration.nix
+        # ./hardware-configuration.nix
 
         # Core system configuration
-        ./disko
+        # ./disko
         ./networking
         ./users
         ./modules/base
@@ -91,7 +91,11 @@
       nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
-        modules = systemModules;
+        # The server configuration includes the hardware-specific files
+        modules = commonModules ++ [
+          ./hardware-configuration.nix
+          ./disko
+        ];
       };
 
       packages.x86_64-linux.iso = inputs.nixos-generators.nixosGenerate {
