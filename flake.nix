@@ -35,20 +35,27 @@
     let
       # Define the system configuration once to be reused
       systemModules = [
-        inputs.disko.nixosModules.disko
-        inputs.sops-nix.nixosModules.sops
-        inputs.home-manager.nixosModules.home-manager
-        inputs.nix-index-database.nixosModules.nix-index
-        inputs.vscode-server.nixosModules.default
-        inputs.nixarr.nixosModules.nixarr
+        scode-server.nixosModules.default
+        disko.nixosModules.disko
+        sops-nix.nixosModules.sops
+        home-manager.nixosModules.home-manager
+        nix-index-database.nixosModules.nix-index
+        nixarr.nixosModules.default
+
+
+        # Core system configuration files
         ./configuration.nix
         ./hardware-configuration.nix
+
+        # Core system configuration
         ./disko
         ./networking
         ./users
         ./modules/base
         ./modules/sops
         ({ sops.defaultSopsFile = ./secrets/secrets.yaml; })
+        
+        # Services
         ./services/fail2ban.nix
         ./services/yubikey.nix
         ./services/database.nix
@@ -65,10 +72,8 @@
         ./services/home-assistant.nix
         ./services/keycloak.nix
         ./services/nixarr.nix
-        ./services/containers.nix
-        ./services/kavita.nix
-        ./services/tg-notify.nix
-        ./services/theme.nix
+
+        ./services/containers.nix 
       ];
     in
     {
