@@ -23,8 +23,6 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  
-
   boot.loader.systemd-boot.configurationLimit = 10;
 
   networking.useDHCP = lib.mkDefault false; # We use static IP in networking.nix
@@ -54,7 +52,7 @@
       options = [ "subvol=@root" "compress=zstd" "noatime" ];
     };
 
-   "/boot" = {
+    "/boot" = {
       device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part1";
       fsType = "vfat";
       options = [ "fmask=0137" "dmask=0027" ];
@@ -93,13 +91,6 @@
 
   swapDevices = [
     { device = "/.swapvol/swapfile"; size = 16384; }
-  ];
-
-
-  systemd.tmpfiles.rules = [
-    "z /boot 0755 root root - -"
-    "z /boot/loader 0700 root root - -"
-    "z /boot/loader/random-seed 0600 root root - -"
   ];
 
   boot.loader.systemd-boot.editor = false; # Disable boot editor
