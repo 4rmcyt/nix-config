@@ -9,7 +9,7 @@
         content = {
           type = "gpt";
           partitions = {
-            boot = { size = "1G"; type = "EF00"; content = { type = "filesystem"; format = "vfat"; mountpoint = "/boot"; }; };
+            boot = { size = "1G"; type = "EF00"; content = { type = "filesystem"; format = "vfat"; mountpoint = "/boot"; mountOptions = [ "/boot" "fmask=0137" "dmask=0027"] }; };
             root = {
               size = "100%";
               content = {
