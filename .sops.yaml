@@ -6,8 +6,8 @@ keys:
   - &pgp:
     - &mypgp REDACTED  
 groups:
-  users: [*zeev, *vk]
-  hosts: [*homeserver, *vkmac]
+  users: [*zeev]
+  hosts: [*homeserver]
   pgp: [*mypgp]
 
 creation_rules:
