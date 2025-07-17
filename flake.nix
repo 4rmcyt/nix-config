@@ -40,7 +40,6 @@
         inputs.nix-index-database.nixosModules.nix-index
         inputs.vscode-server.nixosModules.default
         inputs.nixarr.nixosModules.default
-        inputs.nixos-generators.nixosModules.nixos-generators
         inputs.nix4nvchad.nixosModules.default
 
         # Core system configuration files
