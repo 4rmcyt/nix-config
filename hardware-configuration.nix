@@ -23,6 +23,56 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part2";
+      fsType = "btrfs";
+      options = [ "subvol=@root" "compress=zstd" "noatime" ];
+    };
+
+    "/boot" = {
+      device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part1";
+      fsType = "vfat";
+    };
+
+    "/home" = {
+      device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part2";
+      fsType = "btrfs";
+      options = [ "subvol=@home" "compress=zstd" "noatime" ];
+    };
+
+    "/nix" = {
+      device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part2";
+      fsType = "btrfs";
+      options = [ "subvol=@nix" "compress=zstd" "noatime" ];
+    };
+
+    "/var/log" = {
+      device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part2";
+      fsType = "btrfs";
+      options = [ "subvol=@log" "compress=zstd" "noatime" ];
+    };
+
+    "/.swapvol" = {
+      device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part2";
+      fsType = "btrfs";
+      options = [ "subvol=@swap" "noatime" ];
+    };
+
+    "/data" = {
+      device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345-part1";
+      fsType = "btrfs";
+      options = [ "subvol=@data" "compress=zstd" "noatime" ];
+    };
+  };
+
+  # This defines the swap file based on your disko configuration.
+  swapDevices = [
+    { device = "/.swapvol/swapfile"; size = 16384; }
+  ];
+  # ------------------------
+}
+
   boot.loader.systemd-boot.configurationLimit = 10;
 
   networking.useDHCP = lib.mkDefault false; # We use static IP in networking.nix
