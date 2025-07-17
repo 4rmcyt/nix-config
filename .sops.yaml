@@ -1,5 +1,5 @@
 keys:
-    - &zeev age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
+    - &zeev age1dmhspgk3vpss8jt9v2w0wu7gtwpu84x809wkvmjxurrrycpgf5lqa079tg
     - &homeserver age147ne38q0m33qxclgsrsvzglkanc0c86vtaq5a4n4xvjpddfgce2s46qnz5
 creation_rules:
   - path_regex: 'secrets/.*\.yaml$'
