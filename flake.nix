@@ -35,7 +35,7 @@
     let
       # Define the system configuration once to be reused
       systemModules = [
-        scode-server.nixosModules.default
+        vscode-server.nixosModules.default
         disko.nixosModules.disko
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
