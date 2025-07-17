@@ -23,6 +23,30 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  
+
+  boot.loader.systemd-boot.configurationLimit = 10;
+
+  networking.useDHCP = lib.mkDefault false; # We use static IP in networking.nix
+
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.graphics.enable = true;
+
+  hardware.graphics.extraPackages = with pkgs; [
+    intel-media-driver
+    intel-vaapi-driver
+    vaapiIntel
+    vaapiVdpau
+    intel-compute-runtime
+    libvdpau-va-gl
+  ];
+
+  powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
+
+  services.fwupd.enable = true;
+
   fileSystems = {
     "/" = {
       device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part2";
@@ -69,29 +93,7 @@
   swapDevices = [
     { device = "/.swapvol/swapfile"; size = 16384; }
   ];
-}
 
-  boot.loader.systemd-boot.configurationLimit = 10;
-
-  networking.useDHCP = lib.mkDefault false; # We use static IP in networking.nix
-
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  hardware.graphics.enable = true;
-
-  hardware.graphics.extraPackages = with pkgs; [
-    intel-media-driver
-    intel-vaapi-driver
-    vaapiIntel
-    vaapiVdpau
-    intel-compute-runtime
-    libvdpau-va-gl
-  ];
-
-  powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
-
-  services.fwupd.enable = true;
 
   systemd.tmpfiles.rules = [
     "z /boot 0755 root root - -"
