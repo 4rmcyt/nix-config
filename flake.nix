@@ -87,7 +87,6 @@
       nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
-        # The server configuration includes the hardware-specific files
         modules = commonModules ++ [
           ./hardware-configuration.nix
           ./disko
