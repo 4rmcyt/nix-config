@@ -2,7 +2,7 @@
 
 {
  sops = {
-    age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+    age.keyFile = "/var/lib/sops/age.key";
     secrets = {
        # User Passwords
       zeev_password.neededForUsers = true;
