@@ -1,5 +1,5 @@
 keys:
-    - &zeev age1g89am2sgm0c40gv0jm73gdpql8scffnlkt4zpnvshh908yk2wvdqljl6q2
+    - &zeev age18pkk5washz5p8vl4tkemulvv8x23deaqwqqvfmwu7r7vwvjfwdqsg657vd
     - &pgp REDACTED
 creation_rules:
   - path_regex: 'secrets/.*\.yaml$'
