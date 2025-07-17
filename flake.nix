@@ -91,13 +91,10 @@
         modules = systemModules;
       };
 
-      # --- ADDED THIS BLOCK ---
-      # This defines a new output for your ISO image
       packages.x86_64-linux.iso = inputs.nixos-generators.nixosGenerate {
         system = "x86_64-linux";
-        modules = systemModules; # Reuse the same modules as your server
+        modules = systemModules; 
         format = "iso";
       };
-      # ------------------------
     };
 }    
