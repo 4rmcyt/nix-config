@@ -42,10 +42,7 @@
         inputs.nixarr.nixosModules.default
   # Core system configuration files
         ./configuration.nix
-        # ./hardware-configuration.nix
-
-        # Core system configuration
-        # ./disko
+ 
         ./networking
         ./users
         ./modules/base
