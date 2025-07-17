@@ -25,22 +25,53 @@
       url = "github:rasmus-kirk/nixarr";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs =
+  outputs = { self, nixpkgs, ... }@inputs:
+    let
+      # Define the system configuration once to be reused
+      systemModules = [
+        inputs.disko.nixosModules.disko
+        inputs.sops-nix.nixosModules.sops
+        inputs.home-manager.nixosModules.home-manager
+        inputs.nix-index-database.nixosModules.nix-index
+        inputs.vscode-server.nixosModules.default
+        inputs.nixarr.nixosModules.nixarr
+        ./configuration.nix
+        ./hardware-configuration.nix
+        ./disko
+        ./networking
+        ./users
+        ./modules/base
+        ./modules/sops
+        ({ sops.defaultSopsFile = ./secrets/secrets.yaml; })
+        ./services/fail2ban.nix
+        ./services/yubikey.nix
+        ./services/database.nix
+        ./services/homepage.nix
+        ./services/tailscale.nix
+        ./services/cloudflared.nix
+        ./services/monitoring.nix
+        ./services/miniflux.nix
+        ./services/nextcloud.nix
+        ./services/microbin.nix
+        ./services/paperless.nix
+        ./services/radicale.nix
+        ./services/samba.nix
+        ./services/home-assistant.nix
+        ./services/keycloak.nix
+        ./services/nixarr.nix
+        ./services/containers.nix
+        ./services/kavita.nix
+        ./services/tg-notify.nix
+        ./services/theme.nix
+      ];
+    in
     {
-      self,
-      nixpkgs,
-      disko,
-      sops-nix,
-      home-manager,
-      nix-index-database,
-      vscode-server,
-      nixarr,
-      nix4nvchad,
-      ...
-    }@inputs:
-    { 
       nixConfig = {
         substituters = [
           "https://cache.nixos.org/"
@@ -53,53 +84,20 @@
           "nixarr.cachix.org-1:HER9y2eS44D4T822z61t2u3Z6zY2S4T5f/Yg7R/86aA="
         ];
       };
+
       nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit inputs; }; # This is used inside the modules themselves
-        modules = [
-          # External modules are referred to directly by their argument name
-          vscode-server.nixosModules.default
-          disko.nixosModules.disko
-          sops-nix.nixosModules.sops
-          home-manager.nixosModules.home-manager
-          nix-index-database.nixosModules.nix-index
-          nixarr.nixosModules.default
-
-          # Core system configuration files
-          ./configuration.nix
-          ./hardware-configuration.nix
-
-          # Core system configuration
-          # ./disko
-          ./networking
-          ./users
-          ./modules/base
-          ./modules/sops
-
-          ({
-            sops.defaultSopsFile = ./secrets/secrets.yaml;
-          })
-
-          # Services
-          ./services/fail2ban.nix
-          ./services/yubikey.nix
-          ./services/database.nix
-          ./services/homepage.nix
-          ./services/tailscale.nix
-          ./services/cloudflared.nix
-          ./services/monitoring.nix
-          ./services/miniflux.nix
-          ./services/nextcloud.nix
-          ./services/microbin.nix
-          ./services/paperless.nix
-          ./services/radicale.nix
-          ./services/samba.nix
-          ./services/home-assistant.nix
-          ./services/keycloak.nix
-          ./services/nixarr.nix
-
-          ./services/containers.nix
-        ];
+        specialArgs = { inherit inputs; };
+        modules = systemModules;
       };
+
+      # --- ADDED THIS BLOCK ---
+      # This defines a new output for your ISO image
+      packages.x86_64-linux.iso = inputs.nixos-generators.nixosGenerate {
+        system = "x86_64-linux";
+        modules = systemModules; # Reuse the same modules as your server
+        format = "iso";
+      };
+      # ------------------------
     };
-}
+}    
