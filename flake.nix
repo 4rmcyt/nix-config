@@ -31,7 +31,8 @@
     };
   };
 
-    outputs = { self, nixpkgs, ... }@inputs:
+  outputs = { self, nixpkgs, ... }@inputs:
+    # This 'let' block makes 'commonModules' available to everything inside the 'in' block.
     let
       commonModules = [
         inputs.sops-nix.nixosModules.sops
@@ -93,8 +94,9 @@
 
       packages.x86_64-linux.iso = inputs.nixos-generators.nixosGenerate {
         system = "x86_64-linux";
-        modules = systemModules; 
+        # The ISO configuration uses only the common modules
+        modules = commonModules;
         format = "iso";
       };
     };
-}    
+  }
