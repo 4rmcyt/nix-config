@@ -23,7 +23,7 @@
       warn-dirty = false;
       cores = 0;
       show-trace = true;
-      download-buffer-size = 10737418240; # 1 GiB
+      download-buffer-size = 10737418240; # 10 GiB
       max-jobs = 4;
     };
     registry.nixpkgs = {
