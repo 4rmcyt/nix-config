@@ -19,7 +19,6 @@
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
       warn-dirty = false;
-      auto-optimise-store = true;
       cores = 0;
       show-trace = true;
       download-buffer-size = 1073741824; # 1 GiB
