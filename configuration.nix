@@ -21,7 +21,8 @@
       warn-dirty = false;
       cores = 0;
       show-trace = true;
-      download-buffer-size = 524288000; # 500 MiB
+      download-buffer-size = 1073741824; # 1 GiB
+      max-jobs = 4;
     };
     registry.nixpkgs = {
       from = { id = "nixpkgs"; type = "indirect"; };
