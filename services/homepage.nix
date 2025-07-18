@@ -47,6 +47,22 @@
       HOMEPAGE_VAR_OPNSENSE_USER="$opnsenseUser"
       HOMEPAGE_VAR_OPNSENSE_PWD="$opnsensePass"
       HOMEPAGE_VAR_TRANSMISSION_PWD="$transmissionPwd"
+      HOMEPAGE_VAR_NEXTCLOUD_KEY="$homepageNextcloudKey"
+      HOMEPAGE_VAR_PAPERLESS_KEY="$homepagePaperlessKey"
+      HOMEPAGE_VAR_KAVITA_KEY="$homepageKavitaKey"
+      HOMEPAGE_VAR_HASS_KEY="$homepageHassKey"
+      HOMEPAGE_VAR_MINIFLUX_KEY="$homepageMinifluxKey"
+      HOMEPAGE_VAR_READARR_KEY="$homepageReadarrKey"
+      HOMEPAGE_VAR_LIDARR_KEY="$homepageLidarrKey"
+      HOMEPAGE_VAR_GRAFANA_KEY="$homepageGrafanaKey"
+      HOMEPAGE_VAR_NEXTDNS_KEY="$homepageNextdnsKey"
+      HOMEPAGE_VAR_NEXTDNS_PROFILE_ID="$homepageNextdnsProfileId"
+      HOMEPAGE_VAR_TAILSCALE_KEY="$homepageTailscaleKey"
+      HOMEPAGE_VAR_TAILSCALE_DEVICE_ID="$homepageTailscaleDeviceId"
+      HOMEPAGE_VAR_CLOUDFLARED_KEY="$homepageCloudflaredKey"
+      HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID="$homepageCloudflaredAccountId"
+      HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID="$homepageCloudflaredTunnelId"
+      HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY="$homepageAudiobookshelfKey"
     '';
   };
  
@@ -67,7 +83,7 @@
                 {
                   type = "jellyfin";
                   url = "http://localhost:8096";
-                  key = "${homepageJellyfinKey}";
+                  key = "{{HOMEPAGE_VAR_JELLYFIN_KEY}}";
                 }
               ];
             };
@@ -81,7 +97,7 @@
                 {
                   type = "audiobookshelf";
                   url = "http://localhost:8085";
-                  key = "${homepageAudiobookshelfKey}";
+                  key = "{{HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY}}";
                 }
               ];
             };
@@ -98,7 +114,7 @@
                 {
                   type = "sonarr";
                   url = "http://localhost:8989";
-                  key = "${homepageSonarrKey}";
+                  key = "{{HOMEPAGE_VAR_SONARR_KEY}}";
                 }
               ];
             };
@@ -111,7 +127,7 @@
                 {
                   type = "radarr";
                   url = "http://localhost:7878";
-                  key = "${homepageRadarrKey}";
+                  key = "{{HOMEPAGE_VAR_RADARR_KEY}}";
                 }
               ];
             };
@@ -136,7 +152,7 @@
                 {
                   type = "prowlarr";
                   url = "http://localhost:9696";
-                  key = "${homepageProwlarrKey}";
+                  key = "{{HOMEPAGE_VAR_PROWLARR_KEY}}";
                 }
               ];
             };
@@ -149,7 +165,7 @@
                 {
                   type = "bazarr";
                   url = "http://localhost:6767";
-                  key = "${homepageBazarrKey}";
+                  key = "{{HOMEPAGE_VAR_BAZARR_KEY}}";
                 }
               ];
             };
@@ -162,7 +178,7 @@
                 {
                   type = "jellyseerr";
                   url = "http://localhost:5055/";
-                  key = "${homepageJellyseerrKey}";
+                  key = "{{HOMEPAGE_VAR_JELLYSEERR_KEY}}";
                 }
               ];
             };
@@ -180,7 +196,7 @@
                 {
                   type = "nextcloud";
                   url = "http://localhost:8081";
-                  key = "${homepageNextcloudKey}";
+                  key = "{{HOMEPAGE_VAR_NEXTCLOUD_KEY}}";
                 }
               ];
             };
@@ -194,7 +210,7 @@
                 {
                   type = "paperless";
                   url = "http://localhost:8888";
-                  key = "${homepagePaperlessKey}";
+                  key = "{{HOMEPAGE_VAR_PAPERLESS_KEY}}";
                 }
               ];
             };
@@ -208,7 +224,7 @@
                 {
                   type = "kavita";
                   url = "http://localhost:5000";
-                  key = "${homepageKavitaKey}";
+                  key = "{{HOMEPAGE_VAR_KAVITA_KEY}}";
                 }
               ];
             };
@@ -260,7 +276,7 @@
                   type = "grafana";
                   url = "http://localhost:3000";
                   username = "admin";
-                  password = homepageGrafanaKey;
+                  password = "{{HOMEPAGE_VAR_GRAFANA_KEY}}";
                 }
               ];
             };
@@ -292,7 +308,7 @@
                 {
                   type = "home-assistant";
                   url = "http://localhost:8123";
-                  key = "${homepageHassKey}";
+                  key = "{{HOMEPAGE_VAR_HASS_KEY}}";
                 }
               ];
             };
@@ -322,8 +338,8 @@
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
               widget = {
                 type = "nextdns";
-                  profile = "${homepageNextdnsProfileId}";
-                  key = "${homepageNextdnsKey}"; 
+                  profile = "{{HOMEPAGE_VAR_NEXTDNS_PROFILE_ID}}";
+                  key = "{{HOMEPAGE_VAR_NEXTDNS_KEY}}"; 
               };
             };
           }
@@ -334,8 +350,8 @@
               icon = "tailscale";
               widget = {
                 type = "tailscale";
-                deviceid = "${homepageTailscaleDeviceId}";
-                key = "${homepageTailscaleKey}";
+                deviceid = "{{HOMEPAGE_VAR_TAILSCALE_DEVICE_ID}}";
+                key = "{{HOMEPAGE_VAR_TAILSCALE_KEY}}";
               };
             };
           }
@@ -346,9 +362,9 @@
               icon = "cloudflare-zero-trust";
               widget = {
                 type = "cloudflared"; 
-                accountid = "${homepageCloudflaredAccountId}";
-                tunnelid = "${homepageCloudflaredTunnelId}";
-                key = "${homepageCloudflaredKey}";
+                accountid = "{{HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID}}";
+                tunnelid = "{{HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID}}";
+                key = "{{HOMEPAGE_VAR_CLOUDFLARED_KEY}}";
               };
             };
           }
