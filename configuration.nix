@@ -72,6 +72,11 @@
           X11Forwarding no
       '';
     };
+
+    nextdns = {
+      enable = true;
+      arguments = [ "-config" "2bffa2" "-cache-size" "10MB" ];
+    };
     vscode-server.enable = true;
   };
 
@@ -86,6 +91,14 @@
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
     users.zeev = import ./home-manager;
+  };
+  
+  systemd.services.nextdns-activate = {
+    script = ''
+      /run/current-system/sw/bin/nextdns activate
+    '';
+    after = [ "nextdns.service" ];
+    wantedBy = [ "multi-user.target" ];
   };
   
   nixpkgs.config.allowUnfree = true;
