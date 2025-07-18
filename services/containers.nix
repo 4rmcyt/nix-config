@@ -105,8 +105,8 @@
         # This is the correct way to pass the secrets as environment variables.
         # The container's entrypoint will read these automatically.
         Environment = [
-          "NEXTDNS_PROFILE=${config.sops.secrets.nextdns_profile_id}"
-          "NEXTDNS_API_KEY=${config.sops.secrets.nextdns_api_key}"
+          NEXTDNS_PROFILE="${config.sops.secrets.nextdns_profile_id}"
+          NEXTDNS_API_KEY="${config.sops.secrets.nextdns_api_key}"
         ];
         ExecStart = ''
           ${pkgs.podman}/bin/podman run --rm --name nextdns-exporter \
