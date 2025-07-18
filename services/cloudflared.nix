@@ -2,9 +2,9 @@
 {
 services.cloudflared = {
     enable = true;
+    certificateFile = ./secrets/cert.pem; # Path to the certificate file
     tunnels = {
       "f7876e26-87a8-4bdd-9798-3986b0f7cebc" = {
-        cert-file = "/home/zeev/.cloudflared/cert.pem";
         default = "http_status:404";
         ingress = {
           "nextcloud.labhome.work" =  "http://localhost:8081";
