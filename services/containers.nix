@@ -106,6 +106,7 @@
       description = "NextDNS Prometheus Exporter";
       after = [ "network-online.target" "sops.service" ];
       wants = [ "network-online.target" "sops.service" ];
+
       serviceConfig = {
         Restart = "always";
         ExecStartPre = "${pkgs.podman}/bin/podman pull ghcr.io/raylas/nextdns-exporter:latest";
@@ -114,8 +115,8 @@
             --network=host \
             ghcr.io/raylas/nextdns-exporter:latest \
             -listen=:9790 \
-            -profile=$(cat ${config.sops.secrets.nextdns_profile_id.path}) \
-            -api-key=$(cat ${config.sops.secrets.nextdns_api_key.path})
+            -profile=$(cat ${config.sops.secrets.nextdns_secrets.nextdns_profile_id}) \
+            -api-key=$(cat ${config.sops.secrets.nextdns_secrets.nextdns_api_key})
         '';
       };
     };
