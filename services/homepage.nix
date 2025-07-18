@@ -397,8 +397,13 @@
     '';
 
     # Point the service to the file created by our preStart script
-    environmentFile = "/run/homepage-dashboard/homepage-keys.env";
-    
+    serviceConfig = {
+      EnvironmentFile = "/run/homepage-dashboard/homepage-keys.env"; # <--- This is CORRECT
+      # You can add other systemd service options here too, like:
+      # Restart = "always";
+      # User = "myuser";
+    };
+
     # Add other environment variables here
     environment = {
       HOMEPAGE_ALLOWED_HOSTS = lib.mkForce "localhost,127.0.0.1,192.168.1.165,home.labhome.work";
