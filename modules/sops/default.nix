@@ -73,6 +73,11 @@
         sopsFile = ../../secrets/cloudflare.yaml;
         key = "cloudflare_api_key";
       };
+
+      cloudflare_zone_id = {
+        sopsFile = ../../secrets/cloudflare.yaml;
+        key = "cloudflare_zone_id";
+      };
       
       tailscale_secrets = {
         sopsFile = ../../secrets/tailscale.yaml;
