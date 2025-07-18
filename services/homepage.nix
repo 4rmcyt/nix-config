@@ -277,8 +277,8 @@
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
               widget = {
                 type = "nextdns";
-                  profile = "2bffa2";
-                  key = "a6961bc6da99dc4335c98263706c963eceed39ef";
+                  profile = config.sops.secrets.homepage_nextdns_profile_id.path;
+                  key = config.sops.secrets.homepage_nextdns_key.path; 
               };
             };
           }
@@ -289,8 +289,8 @@
               icon = "tailscale";
               widget = {
                 type = "tailscale";
-                deviceid = "nXJkpdBaD611CNTRL";
-                key = "tskey-api-kcY19LgP3m11CNTRL-G369y5gJfz8T82PxZ5GH19AvFC1wvHVS1";
+                deviceid = config.sops.secrets.homepage_tailscale_device_id.path;
+                key = config.sops.secrets.homepage_tailscale_key.path;
               };
             };
           }
@@ -301,9 +301,9 @@
               icon = "cloudflare-zero-trust";
               widget = {
                 type = "cloudflared"; 
-                accountid = "8239dd1bb0d0bfedf13673a195df59cf";
-                tunnelid = "f7876e26-87a8-4bdd-9798-3986b0f7cebc";
-                key = "yMAEOHdD1sDxrw9tLbu-QRKmn2SftHVx2Q8Cj3j9";
+                accountid = config.sops.secrets.homepage_cloudflared_account_id.path;
+                tunnelid = config.sops.secrets.homepage_cloudflared_tunnel_id.path;
+                key = config.sops.secrets.homepage_cloudflared_key.path;
               };
             };
           }
@@ -319,8 +319,8 @@
         openmeteo = {
           label = "Calgary";
           timezone = "America/Edmonton";
-          latitude = "51.043674";
-          longitude = "-114.095210";
+          latitude = config.sops.secrets.homepage_latitude.path;
+          longitude = config.sops.secrets.homepage_longitude.path;
           units = "metric";
         };
       }
