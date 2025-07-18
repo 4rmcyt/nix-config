@@ -363,7 +363,7 @@
   # environment variable into the systemd service.
   systemd.services.homepage-dashboard.serviceConfig = {
     # This points to the environment file created by sops-nix for your homepage secrets.
-    EnvironmentFile = config.sops.secrets.homepage_secrets.path;
+    EnvironmentFile = lib.mkForce config.sops.secrets.homepage_secrets.path;
     # This adds the allowed hosts variable.
     Environment = [
       "HOMEPAGE_ALLOWED_HOSTS=localhost,127.0.0.1,192.168.1.165,home.labhome.work"
