@@ -1,31 +1,27 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
-
   services.paperless = {
     enable = true;
-    package = pkgs.paperless-ngx.overrideAttrs (oldAttrs: {
-      doCheck = false;  
-    });
-    port = 8888;
-    address = "127.0.0.1";
-    
+    passwordFile = config.sops.secrets.paperless.path;
     settings = {
       PAPERLESS_ADMIN_USER = "admin";
-      PAPERLESS_ADMIN_PASSWORD = "$(cat ${config.sops.secrets.paperless.paperless_admin_password.path})";
       PAPERLESS_URL = "https://paperless.example.com";
-      PAPERLESS_ALLOWED_HOSTS = "paperless.example.com,localhost,127.0.0.1";
-      PAPERLESS_CORS_ALLOWED_HOSTS = "https://paperless.example.com";
-      PAPERLESS_USE_X_FORWARD_HOST = true;
-      PAPERLESS_USE_X_FORWARD_PORT = true;
-      PAPERLESS_USE_X_FORWARD_PROTO = true;
-      
-      # OCR settings
+      PAPERLESS_TIME_ZONE = "America/Edmonton";
+      PAPERLESS_REDIS = "redis://localhost:6379/1";
+
       PAPERLESS_OCR_LANGUAGE = "eng+heb";
       PAPERLESS_OCR_USER_ARGS = {
         optimize = 1;
         pdfa_image_compression = "lossless";
       };
     };
+  };
+
+  # Enable a dedicated redis instance for paperless
+  services.redis.servers.paperless = {
+    enable = true;
+    port = 6379;
+    database = 1;
   };
 }
