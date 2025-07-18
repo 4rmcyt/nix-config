@@ -301,9 +301,9 @@
               icon = "cloudflare-zero-trust";
               widget = {
                 type = "cloudflared"; 
-                accountid = "${config.sops.secrets.homepage_cloudflared_account_id.path}";
-                tunnelid = "${config.sops.secrets.homepage_cloudflared_tunnel_id.path}";
-                key = "${config.sops.secrets.homepage_cloudflared_key.path}";
+                accountid = "config.sops.secrets.homepage_cloudflared_account_id.path";
+                tunnelid = "config.sops.secrets.homepage_cloudflared_tunnel_id.path";
+                key = "config.sops.secrets.homepage_cloudflared_key.path";
               };
             };
           }
