@@ -1,4 +1,3 @@
-# In services/containers.nix
 { config, pkgs, lib, ... }:
 
 {
@@ -15,21 +14,17 @@
       serviceConfig = {
         Restart = "always";
         ExecStartPre = "${pkgs.podman}/bin/podman pull docker.io/thelastguardian/tplinkexporter:latest";
-        # This script now reads all credentials from a single JSON file
         ExecStart = let
           startScript = pkgs.writeShellScript "start-tplink-living-room" ''
             #!${pkgs.bash}/bin/bash
             set -euo pipefail
             
-            # Read all credentials from the single JSON file
             CREDS_JSON=$(cat /run/credentials/podman-tplink-exporter-living-room.service/tplink_living_room_creds)
             
             IP=$(echo "$CREDS_JSON" | ${pkgs.jq}/bin/jq -r .ip)
             USER=$(echo "$CREDS_JSON" | ${pkgs.jq}/bin/jq -r .user)
             PASSWORD=$(echo "$CREDS_JSON" | ${pkgs.jq}/bin/jq -r .password)
 
-            # The exporter needs a YAML config file with the device IP.
-            # We create it on the fly.
             CONFIG_FILE=$(mktemp)
             trap 'rm -f "$CONFIG_FILE"' EXIT
             
@@ -38,7 +33,6 @@
               "$IP": "living-room"
             EOF
 
-            # Run the container, mounting the dynamically created config file
             exec ${pkgs.podman}/bin/podman run --rm --name tplink-exporter-living-room \
               --network=host \
               -e TPLINK_USER="$USER" \
@@ -50,7 +44,6 @@
           '';
         in
           "${startScript}";
-        # Load the single JSON secret file for this device
         LoadCredential = [
           "tplink_living_room_creds:${config.sops.secrets.tplink_living_room_creds.path}"
         ];
@@ -101,22 +94,27 @@
       };
     };
 
-    # --- NextDNS Exporter ---
+    # --- NextDNS Exporter (Corrected) ---
     podman-nextdns-exporter = {
       description = "NextDNS Prometheus Exporter";
       after = [ "network-online.target" "sops.service" ];
       wants = [ "network-online.target" "sops.service" ];
-
       serviceConfig = {
         Restart = "always";
         ExecStartPre = "${pkgs.podman}/bin/podman pull ghcr.io/raylas/nextdns-exporter:latest";
+        # This is the correct way to pass the secrets as environment variables.
+        # The container's entrypoint will read these automatically.
+        Environment = [
+          "NEXTDNS_PROFILE=${config.sops.secrets.nextdns_secrets.nextdns_profile_id}"
+          "NEXTDNS_API_KEY=${config.sops.secrets.nextdns_secrets.nextdns_api_key}"
+        ];
         ExecStart = ''
           ${pkgs.podman}/bin/podman run --rm --name nextdns-exporter \
             --network=host \
+            -e NEXTDNS_PROFILE \
+            -e NEXTDNS_API_KEY \
             ghcr.io/raylas/nextdns-exporter:latest \
-            -listen=:9790 \
-            -profile=$(cat ${config.sops.secrets.nextdns_secrets.nextdns_profile_id.path}) \
-            -api-key=$(cat ${config.sops.secrets.nextdns_secrets.nextdns_api_key.path})
+            -listen=:9790
         '';
       };
     };
