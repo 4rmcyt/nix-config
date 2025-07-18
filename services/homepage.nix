@@ -4,7 +4,7 @@
   lib,
   ...
 }:
-let 
+{
   homepageJellyfinKey = "${config.sops.secrets.homepage_jellyfin_key.path}";
   homepageJellyseerrKey = "${config.sops.secrets.homepage_jellyseerr_key.path}";
   homepageSonarrKey = "${config.sops.secrets.homepage_sonarr_key.path}";
@@ -30,8 +30,6 @@ let
   homepageLongitude = "${config.sops.secrets.homepage_longitude.path}";
   homepageReadarrKey = "${config.sops.secrets.homepage_readarr_key.path}";
   homepageLidarrKey = "${config.sops.secrets.homepage_lidarr_key.path}";
-in
-{
   services.homepage-dashboard = {
     enable = true;
     listenPort = 8082;
