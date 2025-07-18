@@ -55,7 +55,7 @@ in
           "media"
           "samba"
         ];
-        hashedPasswordFile = config.sops.secrets.zeev_password.path;
+        hashedPasswordFile = config.sops.secrets.common.zeev_password.path;
         openssh.authorizedKeys.keys = server-keys;
       };
 

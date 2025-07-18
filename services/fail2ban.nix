@@ -309,16 +309,16 @@
         actioncheck =
 
         actionunban = id=$(curl -s -X GET "${cfapi}" \
-            -H "Authorization: Bearer $(cat ${config.sops.secrets.cloudflare_api_key.path})" \
+            -H "Authorization: Bearer $(cat ${config.sops.secrets.cloudflare.cloudflare_api_key.path})" \
             -H "Content-Type: application/json" \
             | jq -r '.result[] | select(.notes == "${notes}" and .configuration.target == "ip" and .configuration.value == "<ip>") | .id')
             if [ -z "$id" ]; then echo "ID for <ip> not found"; exit 0; fi; \
             curl -s -X DELETE "${cfapi}/$id" \
-                -H "Authorization: Bearer $(cat ${config.sops.secrets.cloudflare_api_key.path})" \
+                -H "Authorization: Bearer $(cat ${config.sops.secrets.cloudflare.cloudflare_api_key.path})" \
                 -H "Content-Type: application/json"
 
         actionban = curl -s -X POST "${cfapi}" \
-            -H "Authorization: Bearer $(cat ${config.sops.secrets.cloudflare_api_key.path})" \
+            -H "Authorization: Bearer $(cat ${config.sops.secrets.cloudflare.cloudflare_api_key.path})" \
             -H "Content-Type: application/json" \
             --data '{"mode":"block","configuration":{"target":"ip","value":"<ip>"},"notes":"${notes}"}'
 
