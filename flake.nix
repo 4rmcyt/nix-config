@@ -79,7 +79,7 @@
           ./networking
           ./users
           ./modules/base
-          ./modules/sops
+          # ./modules/sops
           
 
           ({
