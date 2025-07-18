@@ -387,6 +387,6 @@
 
   # Add other environment variables here
   environment = {
-    HOMEPAGE_ALLOWED_HOSTS = lib.mkForce "localhost,127.0.0.1,192.168.1.165,home.labhome.work";
+    homepage_allowed_hosts = lib.mkForce "localhost,127.0.0.1,192.168.1.165,home.labhome.work";
   };
 }
