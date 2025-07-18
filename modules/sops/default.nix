@@ -36,9 +36,9 @@
       "cloudflare_api_key"     = {};
       "cloudflare_zone_id"     = {};
 
-      # Other root-owned secrets
-      "tailscale_auth_key" = {};
-      "tailscale_ip"       = {};
+      "tailscale_auth_key" = {  owner = "tailscale"; group = "tailscale"; };
+      "tailscale_ip"       = { owner = "tailscale"; group = "tailscale"; };
+
       "telegram_bot_token" = {};
       "telegram_chat_id"   = {};
       "yubikey_client_id"  = {};
