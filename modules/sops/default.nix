@@ -53,7 +53,7 @@
         # The autoconnect service runs as root
         owner = "root";
       };
-      
+
       homepage_secrets = {
         sopsFile = ../../secrets/homepage.yaml;
         owner = "homepage-dashboard";
@@ -69,6 +69,11 @@
         sopsFile = ../../secrets/cloudflare.yaml;
       };
 
+      cloudflare_api_key = {
+        sopsFile = ../../secrets/cloudflare.yaml;
+        key = "cloudflare_api_key";
+      };
+      
       tailscale_secrets = {
         sopsFile = ../../secrets/tailscale.yaml;
         owner = "tailscale";
