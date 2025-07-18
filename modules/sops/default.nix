@@ -11,21 +11,19 @@
         neededForUsers = true;
       };
 
-      # System SSH Host Keys - Defined individually to get unique paths
-      "ssh_host_ed25519_key" = {
+      ssh_host_ed25519_key = {
         sopsFile = ../../secrets/system.yaml;
         owner = "root";
         group = "root";
         mode = "0600";
       };
-      "ssh_host_rsa_key" = {
+      ssh_host_rsa_key = {
         sopsFile = ../../secrets/system.yaml;
         owner = "root";
         group = "root";
         mode = "0600";
       };
 
-      # Other system keys can remain in a group if not needed individually
       system_keys = {
         sopsFile = ../../secrets/system.yaml;
         owner = "root";
@@ -42,13 +40,12 @@
         owner = "homepage-dashboard";
       };
 
-      # Dedicated secret for the Cloudflare Tunnel JSON credentials
       cloudflare_tunnel_credentials = {
         sopsFile = ../../secrets/cloudflare-creds.json;
         owner = "cloudflared";
         group = "cloudflared";
       };
-      # Other cloudflare secrets can remain grouped
+      
       cloudflare_secrets = {
         sopsFile = ../../secrets/cloudflare.yaml;
       };
