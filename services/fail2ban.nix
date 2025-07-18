@@ -7,7 +7,6 @@
     extraPackages = [ pkgs.curl pkgs.jq ];
 
     # Ensure fail2ban starts after secrets are available
-    systemd.services.fail2ban.after = [ "sops.service" ];
 
     ignoreIP = [
       "127.0.0.0/8"
