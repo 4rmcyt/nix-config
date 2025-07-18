@@ -4,83 +4,112 @@
  sops = {
     age.keyFile = "/var/lib/sops/age.key";
     defaultSopsFormat = "yaml";
-    defaultSopsFile = ../../secrets/secrets.yaml;
     secrets = {
        # User Passwords
-      zeev_password.neededForUsers = true;
+      zeev_password = {
+        sopsFile = ../../secrets/common.yaml;
+        neededForUsers = true;
+      };
 
-      # System SSH Host Keys
-      "ssh_host_ed25519_key" = { owner = "root"; group = "root"; mode = "0600"; };
-      "ssh_host_rsa_key"     = { owner = "root"; group = "root"; mode = "0600"; };
+      system_keys = {
+        sopsFile = ../../secrets/system.yaml;
+        owner = "root";
+        group = "root";
+      };
 
-      # Database Passwords
-      "postgres_password" = { owner = "postgres"; };
-      "miniflux_db_password"  = { owner = "postgres"; };
-      "hass_db_password"      = { owner = "postgres"; };
-      "keycloak_db_password"  = { owner = "postgres"; };
-      "nextcloud_db_password" = { owner = "postgres"; };
-
-      # Application Admin Passwords
-      "nextcloud_admin_password" = { owner = "nextcloud"; };
-      "microbin_admin_password"  = { owner = "microbin"; };
-      "paperless_admin_password" = { owner = "paperless"; };
-      "miniflux_admin_password"  = { owner = "miniflux"; };
-      "radicale_htpasswd"        = { owner = "radicale"; };
-      "keycloak_admin_password"  = { owner = "keycloak"; };
-      "mosquitto_iotdevice_password" = { owner = "mosquitto"; };
-      "grafana_admin_password"   = { owner = "grafana"; };
-
-      # Cloudflare Credentials
-      "cloudflare_tunnel_credentials" = { owner = "cloudflared"; group = "cloudflared"; };
-      "cloudflare_tunnel_token" = { owner = "cloudflared"; group = "cloudflared"; };
-      "cloudflare_api_key"     = {};
-      "cloudflare_zone_id"     = {};
-
-      "tailscale_auth_key" = {  owner = "tailscale"; group = "tailscale"; };
-      "tailscale_ip"       = { owner = "tailscale"; group = "tailscale"; };
-
-      "telegram_bot_token" = {};
-      "telegram_chat_id"   = {};
-      "yubikey_client_id"  = {};
-      "yubikey_secret_key" = {};
-      "webauthn_relying_party_name" = {};
-      "webauthn_relying_party_id"   = {};
+      database_passwords = {
+        sopsFile = ../../secrets/postgres.yaml;
+        owner = "postgres";
+      };
       
-      "nextdns_api_key" = { owner = "root"; };
-      "nextdns_profile_id" = { owner = "root"; };
+      homepage_secrets = {
+        sopsFile = ../../secrets/homepage.yaml;
+        owner = "homepage-dashboard";
+      };
 
-      "tplink_living_room_creds" = { owner = "root"; };
-      "tplink_office_creds" = { owner = "root"; };
+      cloudflare_secrets = {
+        sopsFile = ../../secrets/cloudflare.yaml;
+        owner = "cloudflared";
+        group = "cloudflared";
+      };
 
+      tailscale_secrets = {
+        sopsFile = ../../secrets/tailscale.yaml;
+        owner = "tailscale";
+        group = "tailscale";
+      };
+
+      keycloak_secrets = {
+        sopsFile = ../../secrets/keycloak.yaml; # You will need to create this file
+        owner = "keycloak";
+      };
       
-      # Nixarr API Keys
-      "homepage_sonarr_key"     = { owner = "homepage-dashboard"; };
-      "homepage_radarr_key"     = { owner = "homepage-dashboard"; };
-      "homepage_prowlarr_key"   = { owner = "homepage-dashboard"; };
-      "homepage_jellyseerr_key" = { owner = "homepage-dashboard"; };
-      "homepage_bazarr_key"     = { owner = "homepage-dashboard"; };
-      "homepage_lidarr_key"     = { owner = "homepage-dashboard"; };
-      "homepage_readarr_key"    = { owner = "homepage-dashboard"; };
+      grafana_secrets = {
+        sopsFile = ../../secrets/grafana.yaml; # You will need to create this file
+        owner = "grafana";
+      };
+
+      miniflux_secrets = {
+        sopsFile = ../../secrets/miniflux.yaml; # You will need to create this file
+        owner = "miniflux";
+      };
+
+      microbin_secrets = {
+        sopsFile = ../../secrets/microbin.yaml; # You will need to create this file
+        owner = "microbin";
+      };
+
+      paperless_secrets = {
+        sopsFile = ../../secrets/paperless.yaml; # You will need to create this file
+        owner = "paperless";
+      };
+
+      hass_secrets = {
+        sopsFile = ../../secrets/hass.yaml; # You will need to create this file
+        owner = "hass";
+      };
+
+      radicale_secrets = {
+        sopsFile = ../../secrets/radicale.yaml; # You will need to create this file
+        owner = "radicale";
+      };
+
+      mosquitto_secrets = {
+        sopsFile = ../../secrets/mosquitto.yaml; # You will need to create this file
+        owner = "mosquitto";
+      };
+
+      audiobookshelf_secrets = {
+        sopsFile = ../../secrets/audiobookshelf.yaml; # You will need to create this file
+        owner = "audiobookshelf";
+      };
+
+      kavita_secrets = {
+        sopsFile = ../../secrets/kavita.yaml; # You will need to create this file
+        owner = "kavita";
+      };
+
+      jellyfin_secrets = {
+        sopsFile = ../../secrets/jellyfin.yaml; # You will need to create this file
+        owner = "jellyfin";
+      };
+
+      nextcloud_secrets = {
+        sopsFile = ../../secrets/nextcloud.yaml; # You will need to create this file
+        owner = "nextcloud";
+      };
+
+      tplink_living_room_creds = {
+        sopsFile = ../../secrets/tplink_living_room.yaml; # You will need to create this file   
+      };
+
+      tplink_office_creds = {
+        sopsFile = ../../secrets/tplink_office.yaml; # You will need to create this file   
+      };
       
-      # Other Homepage Widget Keys
-      "homepage_tailscale_key"          = { owner = "homepage-dashboard"; };
-      "homepage_tailscale_device_id"    = { owner = "homepage-dashboard"; };
-      "homepage_paperless_key"          = { owner = "homepage-dashboard"; };
-      "homepage_miniflux_key"           = { owner = "homepage-dashboard"; };
-      "homepage_nextcloud_key"          = { owner = "homepage-dashboard"; };
-      "homepage_hass_key"               = { owner = "homepage-dashboard"; };
-      "homepage_kavita_key"             = { owner = "homepage-dashboard"; };
-      "homepage_cloudflared_key"        = { owner = "homepage-dashboard"; };
-      "homepage_cloudflared_account_id" = { owner = "homepage-dashboard"; };
-      "homepage_cloudflared_tunnel_id"  = { owner = "homepage-dashboard"; };
-      "homepage_jellyfin_key"           = { owner = "homepage-dashboard"; };
-      "homepage_audiobookshelf_key"     = { owner = "homepage-dashboard"; };
-      "homepage_grafana_key"            = { owner = "homepage-dashboard"; };
-      "homepage_nextdns_key"            = { owner = "homepage-dashboard"; };
-      "homepage_nextdns_profile_id"     = { owner = "homepage-dashboard"; };
-      "homepage_latitude"            = { owner = "homepage-dashboard"; };
-      "homepage_longitude"           = { owner = "homepage-dashboard"; };
-      "homepage_grafana_admin_password"        = { owner = "homepage-dashboard"; };
+      nextdns_secrets = {
+        sopsFile = ../../secrets/nextdns.yaml; # You will need to create this file
+      };
     };
   };
 }
