@@ -6,7 +6,6 @@
   ...
 }:
 {
-  # The 'let' block has been removed from this file.
   imports = [
     ./users
     ./networking
