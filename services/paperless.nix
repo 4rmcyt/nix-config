@@ -18,10 +18,5 @@
     };
   };
 
-  # Enable a dedicated redis instance for paperless
-  services.redis.servers.paperless = {
-    enable = true;
-    port = 6379;
-    database = 1;
-  };
+  # Enable a dedicated redis instance for paperle
 }
