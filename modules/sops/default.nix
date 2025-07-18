@@ -12,6 +12,7 @@
       "ssh_host_rsa_key"     = { owner = "root"; group = "root"; mode = "0600"; };
 
       # Database Passwords
+      "postgres_password" = { owner = "postgres"; };
       "miniflux_db_password"  = { owner = "postgres"; };
       "hass_db_password"      = { owner = "postgres"; };
       "keycloak_db_password"  = { owner = "postgres"; };
