@@ -45,8 +45,6 @@
       ...
     }@inputs:
     { 
-      nixosModules.declarative-cachix = import ./default.nix;
-      homeManagerModules.declarative-cachix = import ./home-manager.nix;
       nixConfig = {
         substituters = [
           "https://cache.nixos.org/"
