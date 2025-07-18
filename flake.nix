@@ -79,12 +79,8 @@
           ./networking
           ./users
           ./modules/base
-          # ./modules/sops
-          
-
-          ({
-            sops.defaultSopsFile = ./secrets/secrets.yaml;
-          })
+          ./modules/sops
+        
 
           # Services
           ./services/fail2ban.nix
