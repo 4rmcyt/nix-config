@@ -25,7 +25,7 @@
       fi
 
       # otherwise authenticate with tailscale
-      ${tailscale}/bin/tailscale up --authkey file:${config.sops.secrets.tailscale.tailscale_auth_key.path} --accept-routes
+      ${tailscale}/bin/tailscale up --authkey file:${config.sops.secrets.tailscale_auth_key.path} --accept-routes
     '';
   };
 

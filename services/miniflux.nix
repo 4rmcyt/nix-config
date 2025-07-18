@@ -7,7 +7,7 @@
 
 let
   minifluxCredentialsFile = pkgs.writeText "miniflux-credentials-file" ''
-    admin:$(cat ${config.sops.secrets.miniflux.miniflux_admin_password.path})
+    admin:$(cat ${config.sops.secrets.miniflux_admin_password.path})
   '';
 in
 {
@@ -19,7 +19,7 @@ in
       BASE_URL = "https://rss.labhome.work";
       CREATE_ADMIN = "1";
       LISTEN_ADDR = "localhost:8086";
-      DATABASE_URL = lib.mkForce "postgres://miniflux:$(cat ${config.sops.secrets.postgres.miniflux_db_password.path})@localhost/miniflux?sslmode=disable";
+      DATABASE_URL = lib.mkForce "postgres://miniflux:$(cat ${config.sops.secrets.miniflux_db_password.path})@localhost/miniflux?sslmode=disable";
       OAUTH2_PROVIDER = "oidc";
       OAUTH2_CLIENT_ID = "miniflux";
       OAUTH2_REDIRECT_URL = "https://rss.labhome.work/oauth2/oidc/callback";
@@ -28,7 +28,7 @@ in
       DISABLE_LOCAL_AUTH = "true";
 
       ADMIN_USERNAME = "admin";
-      ADMIN_PASSWORD = config.sops.secrets.miniflux.miniflux_admin_password.path;
+      ADMIN_PASSWORD = config.sops.secrets.miniflux_admin_password.path;
     };
   };
 }
