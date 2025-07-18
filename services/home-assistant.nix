@@ -101,7 +101,6 @@
           users = {
             root = {
               acl = [ "readwrite #" ];
-              passwordFile = config.sops.secrets.mosquitto_iotdevice_password.path;
             };
           };
         }
