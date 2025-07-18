@@ -280,7 +280,7 @@
                   type = "nextdns";
                   url = "http://localhost:3000";
                   profileId = "2bffa2";
-                  key = "${config.sops.secrets.homepage_nextdns_key.path}";
+                  key = "d8553dc2cb725d804b7e93331e5e883ea10e9ff4";
                 }
               ];
             };
