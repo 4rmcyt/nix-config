@@ -75,7 +75,7 @@
 
     nextdns = {
       enable = true;
-      arguments = [ "-config" "nextdns0" "-cache-size" "10MB" ];
+      arguments = [ "-config" "nextdns0" "-cache-size" "10MB" "--report-client-info" ];
     };
     vscode-server.enable = true;
   };
@@ -100,7 +100,7 @@
     after = [ "nextdns.service" ];
     wantedBy = [ "multi-user.target" ];
   };
-  
+
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "25.05";
 }
