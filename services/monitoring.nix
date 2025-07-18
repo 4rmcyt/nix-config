@@ -59,15 +59,17 @@
 
   services.grafana = {
     enable = true;
-    adminPasswordFile = config.sops.secrets.grafana_secrets.path;
+    # The adminPasswordFile option has been moved to the correct location below.
     settings = {
       server = {
         http_port = 3000;
         http_addr = "0.0.0.0";
         root_url = "http://192.168.1.165:3000";
       };
-      auth = {
+      security = {
         admin_user = "admin";
+        # This is the correct option for setting the admin password from a file.
+        admin_password_file = config.sops.secrets.grafana_secrets.path;
       };
     };
 
@@ -82,7 +84,7 @@
       }
     ];
 
-    # IMPROVED: This is a cleaner way to provision dashboards.
+    # This is a cleaner way to provision dashboards.
     # The Grafana module handles creating the necessary files and directories.
     provision.dashboards.settings.providers = [
       {
