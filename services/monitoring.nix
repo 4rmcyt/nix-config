@@ -67,7 +67,7 @@
       };
       security = {
         admin_user = "admin";
-        admin_password_file = config.sops.secrets.grafana_admin_password.path;
+        admin_password_file = config.sops.secrets.grafana.grafana_admin_password.path;
       };
     };
 
