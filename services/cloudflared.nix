@@ -3,8 +3,8 @@
 {
   systemd.services.cloudflared = {
     description = "Cloudflare Tunnel";
-    after = [ "network.target" "systemd-tmpfiles-setup.service" ];
-    requires = [ "systemd-tmpfiles-setup.service" ];
+    after = [ "network.target" "systemd-tmpfiles-setup.service" "sops.service" ];
+    requires = [ "systemd-tmpfiles-setup.service" "sops.service"];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       ExecStart = "${pkgs.cloudflared}/bin/cloudflared tunnel --no-autoupdate --config /var/lib/cloudflared/config.yml run --token-file ${config.sops.secrets.cloudflare_tunnel_token.path}";
@@ -13,6 +13,7 @@
       User = "cloudflared";
       Group = "cloudflared";
     };
+
     preStart = ''
       cat > /var/lib/cloudflared/config.yml << EOF
       tunnel: $(cat ${config.sops.secrets.cloudflare_tunnel_token.path})
