@@ -18,7 +18,7 @@ in
       media = {}; samba = {}; git = {}; keycloak = {};
       homepage-dashboard = {}; nextcloud = {}; microbin = {};
       paperless = {}; miniflux = {}; hass = {}; radicale = {};
-      mosquitto = {}; grafana = {}; cloudflared = {};
+      mosquitto = {}; grafana = {}; cloudflared = {}; tailscale = {};
     };
 
     users = {
@@ -48,6 +48,7 @@ in
       mosquitto = { isSystemUser = true; group = "mosquitto"; };
       grafana = { isSystemUser = true; group = "grafana"; };
       cloudflared = { isSystemUser = true; group = "cloudflared"; };
-    };
+      tailscale = { isSystemUser = true; group = "tailscale";  };
+      
   };
 }
