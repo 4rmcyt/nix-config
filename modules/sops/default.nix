@@ -50,7 +50,6 @@
       tailscale_auth_key = {
         sopsFile = ../../secrets/tailscale.yaml;
         key = "tailscale_auth_key";
-        # The autoconnect service runs as root
         owner = "root";
       };
 
@@ -62,6 +61,15 @@
       nextdns_api_key = {
         sopsFile = ../../secrets/nextdns.yaml;
         key = "nextdns_api_key";
+      };
+
+      tplink_living_room_creds = {
+        sopsFile = ../../secrets/system.yaml;
+        owner = "tplink-living-room";
+      };  
+      tplink_office_creds = {
+        sopsFile = ../../secrets/system.yaml;
+        owner = "tplink-office";
       };
 
       homepage_secrets = {
