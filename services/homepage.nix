@@ -334,7 +334,7 @@
               {
                 "name" = "Admin Console";
                 "href" = "https://dash.cloudflare.com/8239dd1bb0d0bfedf13673a195df59cf/home";
-                "icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/cloudflare.svg";
+                "icon" = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/cloudflare.svg"; # <-- FIX WAS HERE
               }
               {
                 "name" = "ACL Editor";
