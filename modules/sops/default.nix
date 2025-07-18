@@ -35,6 +35,18 @@
         owner = "postgres";
       };
       
+      nextcloud_db_password = {
+        sopsFile = ../../secrets/postgres.yaml; # Still reads from the main postgres file
+        key = "nextcloud_db_password";        # But only extracts this specific key
+        owner = "nextcloud";
+      };
+
+      nextcloud_admin_password = {
+        sopsFile = ../../secrets/nextcloud.yaml; # Reads from the nextcloud secrets file
+        key = "nextcloud_admin_password";     # But only extracts this specific key
+        owner = "nextcloud";
+      };
+      
       homepage_secrets = {
         sopsFile = ../../secrets/homepage.yaml;
         owner = "homepage-dashboard";
@@ -45,7 +57,7 @@
         owner = "cloudflared";
         group = "cloudflared";
       };
-      
+
       cloudflare_secrets = {
         sopsFile = ../../secrets/cloudflare.yaml;
       };
