@@ -30,6 +30,7 @@
 
       # Cloudflare Credentials
       "cloudflare_tunnel_credentials" = { owner = "cloudflared"; group = "cloudflared"; };
+      "cloudflare_tunnel_token" = { owner = "cloudflared"; group = "cloudflared"; };
       "cloudflare_api_key"     = {};
       "cloudflare_zone_id"     = {};
 
