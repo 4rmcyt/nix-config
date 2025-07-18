@@ -42,9 +42,7 @@
       listen = [{
         addr = "0.0.0.0";
         port = 8081; # The port your Cloudflare tunnel points to
-      }];
-      # This uses the official NixOS helper to configure nginx correctly for Nextcloud
-      enableNextcloud = true;
+      }];   # This uses the official NixOS helper to configure nginx correctly for Nextcloud
     };
   };
 }
