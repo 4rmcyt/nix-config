@@ -1,24 +1,33 @@
 { config, pkgs, ... }:
+
 {
-  services.cloudflared.tunnels."f7876e26f7876e26-87a8-4bdd-9798-3986b0f7cebc" = {
+  services.cloudflared = {
     enable = true;
-    credentialsFile = config.sops.secrets.cloudflareTunnelCredentials.path;
-    default = "http_status:404";
-    ingress = {
-      "nextcloud.example.com" = "http://localhost:8081";
-      "keycloak.example.com" = "http://localhost:8080";
-      "jellyfin.example.com" = "http://localhost:8096";
-      "paperless.example.com" = "http://localhost:8888";
-      "home.example.com" = "http://localhost:8082";
-      "rss.example.com" = "http://localhost:8086";
-      "hass.example.com" = "http://localhost:8123";
-      "miniflux.example.com" = "http://localhost:8086";
-      "transmission.example.com" = "http://localhost:9091";
-      "cal.example.com" = "http://localhost:5232";
-      "audiobookshelf.example.com" = "http://localhost:8085";
-      "paste.example.com" = "http://localhost:8083";
-      "kavita.example.com" = "http://localhost:5000";
-      "microbin.example.com" = "http://localhost:8084";
+    tunnels = {
+      main = {
+        # This must be the actual Tunnel ID string, not a file path
+        id = "f7876e26-87a8-4bdd-9798-3986b0f7cebc"; # Get this from your Cloudflare dashboard
+
+        # This correctly points to the file containing your token
+        tokenFile = config.sops.secrets.cloudflare_tunnel_token.path;
+
+        ingress = [
+          { hostname = "nextcloud.example.com";      service = "http://localhost:8081"; }
+          { hostname = "keycloak.example.com";       service = "http://localhost:8080"; }
+          { hostname = "jellyfin.example.com";       service = "http://localhost:8096"; }
+          { hostname = "paperless.example.com";      service = "http://localhost:8888"; }
+          { hostname = "home.example.com";           service = "http://localhost:8082"; }
+          { hostname = "rss.example.com";            service = "http://localhost:8086"; }
+          { hostname = "transmission.example.com";   service = "http://localhost:9091"; }
+          { hostname = "cal.example.com";            service = "http://localhost:5232"; }
+          { hostname = "audiobookshelf.example.com"; service = "http://localhost:8085"; }
+          { hostname = "paste.example.com";          service = "http://localhost:8083"; }
+          { hostname = "kavita.example.com";         service = "http://localhost:5000"; }
+          { hostname = "microbin.example.com";       service = "http://localhost:8084"; }
+          { hostname = "hass.example.com";           service = "http://localhost:8123"; }
+          { service = "http_status:404"; }
+        ];
+      };
     };
   };
 }
