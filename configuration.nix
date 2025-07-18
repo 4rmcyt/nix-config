@@ -75,7 +75,7 @@
 
     nextdns = {
       enable = true;
-      arguments = [ "-config" "nextdns0" "-cache-size" "10MB" "--report-client-info" ];
+      arguments = [ "-profile" "nextdns0" "-cache-size" "10MB" "--report-client-info" ];
     };
     vscode-server.enable = true;
   };
