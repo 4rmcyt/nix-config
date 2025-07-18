@@ -54,6 +54,16 @@
         owner = "root";
       };
 
+      nextdns_profile_id = {
+        sopsFile = ../../secrets/nextdns.yaml;
+        key = "nextdns_profile_id";
+      };
+
+      nextdns_api_key = {
+        sopsFile = ../../secrets/nextdns.yaml;
+        key = "nextdns_api_key";
+      };
+
       homepage_secrets = {
         sopsFile = ../../secrets/homepage.yaml;
         owner = "homepage-dashboard";
