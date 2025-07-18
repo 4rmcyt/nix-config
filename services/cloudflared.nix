@@ -2,9 +2,9 @@
 {
 services.cloudflared = {
     enable = true;
+    credentials-file = config.sops.secrets.cloudflare_tunnel_credentials.path;
     tunnels = {
       "f7876e26-87a8-4bdd-9798-3986b0f7cebc" = {
-        credentials-file = config.sops.secrets.cloudflare_tunnel_credentials.path;
         default = "http_status:404";
         ingress = {
           "nextcloud.example.com" =  "http://localhost:8081";
