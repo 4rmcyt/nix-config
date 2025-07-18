@@ -5,71 +5,51 @@
   ...
 }:
 { 
-  age-template.files."hompage-keys.env" = {
-    vars = {
-     homepageJellyfinKey = config.sops.secrets.homepage_jellyfin_key.path;
-      homepageJellyseerrKey = config.sops.secrets.homepage_jellyseerr_key.path;
-      homepageSonarrKey = config.sops.secrets.homepage_sonarr_key.path;
-      homepageRadarrKey = config.sops.secrets.homepage_radarr_key.path;
-      homepageProwlarrKey = config.sops.secrets.homepage_prowlarr_key.path;
-      homepageBazarrKey = config.sops.secrets.homepage_bazarr_key.path;
-      homepageHassKey = config.sops.secrets.homepage_hass_key.path;
-      homepageAudiobookshelfKey = config.sops.secrets.homepage_audiobookshelf_key.path;
-      homepageNextcloudKey = config.sops.secrets.homepage_nextcloud_key.path;
-      homepagePaperlessKey = config.sops.secrets.homepage_paperless_key.path;
-      homepageKavitaKey = config.sops.secrets.homepage_kavita_key.path;
-      homepageMinifluxKey = config.sops.secrets.homepage_miniflux_key.path;
-      homepageGrafanaKey = config.sops.secrets.grafana_admin_password.path;
-      homepageNextdnsKey = config.sops.secrets.homepage_nextdns_key.path;
-      homepageNextdnsProfileId = config.sops.secrets.homepage_nextdns_profile_id.path;
-      homepageTailscaleKey = config.sops.secrets.homepage_tailscale_key.path;
-      homepageTailscaleDeviceId = config.sops.secrets.homepage_tailscale_device_id.path;
-      homepageCloudflaredKey = config.sops.secrets.homepage_cloudflared_key.path;
-      homepageCloudflaredAccountId = config.sops.secrets.homepage_cloudflared_account_id.path;
-      homepageCloudflaredTunnelId = config.sops.secrets.homepage_cloudflared_tunnel_id.path;
-      homepageLatitude = config.sops.secrets.homepage_latitude.path;
-      homepageLongitude = config.sops.secrets.homepage_longitude.path;
-      homepageReadarrKey = config.sops.secrets.homepage_readarr_key.path;
-      homepageLidarrKey = config.sops.secrets.homepage_lidarr_key.path;
-    };
+  systemd.services.homepage-dashboard = {
+    # This script runs as root before the main service starts.
+    preStart = ''
+      # Ensure the target directory exists
+      mkdir -p /run/homepage-dashboard
 
-    content = ''
-      HOMEPAGE_VAR_LATITUDE="$homepageLatitude"
-      HOMEPAGE_VAR_LONGITUDE="$homepageLongitude"
-      HOMEPAGE_VAR_RADARR_KEY="$homepageRadarrKey"
-      HOMEPAGE_VAR_PROWLARR_KEY="$homepageProwlarrKey"
-      HOMEPAGE_VAR_BAZARR_KEY="$homepageBazarrKey"
-      HOMEPAGE_VAR_JELLYFIN_KEY="$homepageJellyfinKey"
-      HOMEPAGE_VAR_JELLYSEERR_KEY="$homepageJellyseerrKey"
-      HOMEPAGE_VAR_TRUENAS_KEY="$truenasKey"
-      HOMEPAGE_VAR_ADGUARD_PWD="$adguardPass"
-      HOMEPAGE_VAR_OPNSENSE_USER="$opnsenseUser"
-      HOMEPAGE_VAR_OPNSENSE_PWD="$opnsensePass"
-      HOMEPAGE_VAR_TRANSMISSION_PWD="$transmissionPwd"
-      HOMEPAGE_VAR_NEXTCLOUD_KEY="$homepageNextcloudKey"
-      HOMEPAGE_VAR_PAPERLESS_KEY="$homepagePaperlessKey"
-      HOMEPAGE_VAR_KAVITA_KEY="$homepageKavitaKey"
-      HOMEPAGE_VAR_HASS_KEY="$homepageHassKey"
-      HOMEPAGE_VAR_MINIFLUX_KEY="$homepageMinifluxKey"
-      HOMEPAGE_VAR_READARR_KEY="$homepageReadarrKey"
-      HOMEPAGE_VAR_LIDARR_KEY="$homepageLidarrKey"
-      HOMEPAGE_VAR_GRAFANA_KEY="$homepageGrafanaKey"
-      HOMEPAGE_VAR_NEXTDNS_KEY="$homepageNextdnsKey"
-      HOMEPAGE_VAR_NEXTDNS_PROFILE_ID="$homepageNextdnsProfileId"
-      HOMEPAGE_VAR_TAILSCALE_KEY="$homepageTailscaleKey"
-      HOMEPAGE_VAR_TAILSCALE_DEVICE_ID="$homepageTailscaleDeviceId"
-      HOMEPAGE_VAR_CLOUDFLARED_KEY="$homepageCloudflaredKey"
-      HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID="$homepageCloudflaredAccountId"
-      HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID="$homepageCloudflaredTunnelId"
-      HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY="$homepageAudiobookshelfKey"
+      # Create the environment file by reading the content of each secret file
+      cat <<EOF > /run/homepage-dashboard/homepage-keys.env
+      HOMEPAGE_VAR_LATITUDE=$(cat ${config.sops.secrets.homepage_latitude.path})
+      HOMEPAGE_VAR_LONGITUDE=$(cat ${config.sops.secrets.homepage_longitude.path})
+      HOMEPAGE_VAR_JELLYFIN_KEY=$(cat ${config.sops.secrets.homepage_jellyfin_key.path})
+      HOMEPAGE_VAR_JELLYSEERR_KEY=$(cat ${config.sops.secrets.homepage_jellyseerr_key.path})
+      HOMEPAGE_VAR_SONARR_KEY=$(cat ${config.sops.secrets.homepage_sonarr_key.path})
+      HOMEPAGE_VAR_RADARR_KEY=$(cat ${config.sops.secrets.homepage_radarr_key.path})
+      HOMEPAGE_VAR_PROWLARR_KEY=$(cat ${config.sops.secrets.homepage_prowlarr_key.path})
+      HOMEPAGE_VAR_BAZARR_KEY=$(cat ${config.sops.secrets.homepage_bazarr_key.path})
+      HOMEPAGE_VAR_READARR_KEY=$(cat ${config.sops.secrets.homepage_readarr_key.path})
+      HOMEPAGE_VAR_LIDARR_KEY=$(cat ${config.sops.secrets.homepage_lidarr_key.path})
+      HOMEPAGE_VAR_HASS_KEY=$(cat ${config.sops.secrets.homepage_hass_key.path})
+      HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY=$(cat ${config.sops.secrets.homepage_audiobookshelf_key.path})
+      HOMEPAGE_VAR_NEXTCLOUD_KEY=$(cat ${config.sops.secrets.homepage_nextcloud_key.path})
+      HOMEPAGE_VAR_PAPERLESS_KEY=$(cat ${config.sops.secrets.homepage_paperless_key.path})
+      HOMEPAGE_VAR_KAVITA_KEY=$(cat ${config.sops.secrets.homepage_kavita_key.path})
+      HOMEPAGE_VAR_MINIFLUX_KEY=$(cat ${config.sops.secrets.homepage_miniflux_key.path})
+      HOMEPAGE_VAR_GRAFANA_KEY=$(cat ${config.sops.secrets.grafana_admin_password.path})
+      HOMEPAGE_VAR_NEXTDNS_KEY=$(cat ${config.sops.secrets.homepage_nextdns_key.path})
+      HOMEPAGE_VAR_NEXTDNS_PROFILE_ID=$(cat ${config.sops.secrets.homepage_nextdns_profile_id.path})
+      HOMEPAGE_VAR_TAILSCALE_KEY=$(cat ${config.sops.secrets.homepage_tailscale_key.path})
+      HOMEPAGE_VAR_TAILSCALE_DEVICE_ID=$(cat ${config.sops.secrets.homepage_tailscale_device_id.path})
+      HOMEPAGE_VAR_CLOUDFLARED_KEY=$(cat ${config.sops.secrets.homepage_cloudflared_key.path})
+      HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID=$(cat ${config.sops.secrets.homepage_cloudflared_account_id.path})
+      HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID=$(cat ${config.sops.secrets.homepage_cloudflared_tunnel_id.path})
+      EOF
+
+      # Set correct ownership for the service user
+      chown homepage-dashboard:homepage-dashboard /run/homepage-dashboard/homepage-keys.env
     '';
-  };
+
+    # Point the service to the file created by our preStart script
+    environmentFile = "/run/homepage-dashboard/homepage-keys.env";
   
 
   services.homepage-dashboard = {
     enable = true;
     listenPort = 8082;
-    environmentFile = config.age-template.files."homepage-keys.env".path;
 
     # Enhanced service configuration with external domain URLs
     services = [
