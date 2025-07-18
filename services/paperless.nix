@@ -11,7 +11,7 @@
       # The password is now handled by `passwordFile` above, so this line is removed.
       PAPERLESS_URL = "https://paperless.labhome.work";
       PAPERLESS_TIME_ZONE = "America/Edmonton";
-      # Ensure Paperless uses the dedicated redis instance
+      # This URL correctly tells Paperless to use database #1 on the redis instance.
       PAPERLESS_REDIS = "redis://localhost:6379/1";
     };
   };
@@ -20,7 +20,6 @@
   services.redis.servers.paperless = {
     enable = true;
     port = 6379;
-    # Using a different database number isolates it from other services
-    database = 1;
+    # The invalid 'database = 1;' line has been removed from here.
   };
 }
