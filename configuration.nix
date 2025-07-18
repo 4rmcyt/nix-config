@@ -12,6 +12,7 @@
     ./networking
     ./modules/base
     ./modules/sops
+    ./cachix.nix
   ];
 
   nix = {
