@@ -299,14 +299,12 @@
               href = "https://one.dash.cloudflare.com/8239dd1bb0d0bfedf13673a195df59cf/networks/tunnels";
               description = "Cloudflare Tunnels Management";
               icon = "cloudflare-zero-trust";
-              widgets = [
-                {
-                  type = "cloudflared";
-                  accountId = "${config.sops.secrets.homepage_cloudflared_account_id.path}";
-                  tunnelId = "${config.sops.secrets.homepage_cloudflared_tunnel_id.path}";
-                  key = "${config.sops.secrets.homepage_cloudflared_key.path}";
-                }
-              ];
+              widget = {
+                type = "cloudflared"; 
+                accountId = "${config.sops.secrets.homepage_cloudflared_account_id.path}";
+                tunnelId = "${config.sops.secrets.homepage_cloudflared_tunnel_id.path}";
+                key = "${config.sops.secrets.homepage_cloudflared_key.path}";
+              };
             };
           }
         ];
