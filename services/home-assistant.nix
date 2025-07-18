@@ -53,7 +53,7 @@
         };
 
         recorder = {
-          db_url = "postgresql://hass:$(cat ${config.sops.secrets.hass_db_password.path})@localhost/hass";
+          db_url = "postgresql://hass:${config.sops.secrets.database_passwords.hass_db_password}@localhost/hass";
           include = {
             domains = [
               "switch"
