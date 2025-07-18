@@ -12,7 +12,7 @@
     
     settings = {
       PAPERLESS_ADMIN_USER = "admin";
-      PAPERLESS_ADMIN_PASSWORD = "${config.sops.secrets.paperless.paperless_admin_password.path}";
+      PAPERLESS_ADMIN_PASSWORD = "$(cat ${config.sops.secrets.paperless.paperless_admin_password.path})";
       PAPERLESS_URL = "https://paperless.labhome.work";
       PAPERLESS_ALLOWED_HOSTS = "paperless.labhome.work,localhost,127.0.0.1";
       PAPERLESS_CORS_ALLOWED_HOSTS = "https://paperless.labhome.work";

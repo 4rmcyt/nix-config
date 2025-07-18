@@ -383,5 +383,5 @@
         ];
       }
     ];
-  }; # <-- Closing brace for services.homepage-dashboard
+  };
 }
