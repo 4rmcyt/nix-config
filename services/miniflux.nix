@@ -7,7 +7,7 @@
 
     config = {
       BASE_URL = "https://rss.example.com";
-      DATABASE_URL = "postgres://miniflux:${config.sops.secrets.database_passwords.miniflux_db_password}@/miniflux";
+      DATABASE_URL = "postgres://miniflux:${config.sops.secrets.miniflux_db_password.path}@/miniflux";
       PORT = "8086";
       RUN_AS_USER = "miniflux";
     };
