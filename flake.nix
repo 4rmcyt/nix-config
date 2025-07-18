@@ -68,7 +68,6 @@
           home-manager.nixosModules.home-manager
           nix-index-database.nixosModules.nix-index
           nixarr.nixosModules.default
-          cachix.nixosModules.cachix
           
 
           # Core system configuration files
