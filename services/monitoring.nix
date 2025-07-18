@@ -66,7 +66,7 @@
         http_addr = "0.0.0.0";
         root_url = "http://192.168.1.165:3000";
       };
-      security = {
+      auth = {
         admin_user = "admin";
       };
     };
