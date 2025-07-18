@@ -52,7 +52,7 @@
           "${startScript}";
         # Load the single JSON secret file for this device
         LoadCredential = [
-          "tplink_living_room_creds:${config.sops.secrets.system.tplink_living_room_creds.path}"
+          "tplink_living_room_creds:${config.sops.secrets.tplink_living_room_creds.path}"
         ];
       };
     };
@@ -114,8 +114,8 @@
             --network=host \
             ghcr.io/raylas/nextdns-exporter:latest \
             -listen=:9790 \
-            -profile=$(cat ${config.sops.secrets.nextdns.nextdns_profile_id.path}) \
-            -api-key=$(cat ${config.sops.secrets.nextdns.nextdns_api_key.path})
+            -profile=$(cat ${config.sops.secrets.nextdns_profile_id.path}) \
+            -api-key=$(cat ${config.sops.secrets.nextdns_api_key.path})
         '';
       };
     };

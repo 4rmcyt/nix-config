@@ -47,10 +47,10 @@
           sleep 1
         done
 
-        ${pkgs.postgresql_15}/bin/psql -U postgres -c "ALTER USER hass WITH PASSWORD '$(cat ${config.sops.secrets.postgres.hass_db_password.path})';"
-        ${pkgs.postgresql_15}/bin/psql -U postgres -c "ALTER USER miniflux WITH PASSWORD '$(cat ${config.sops.secrets.postgres.miniflux_db_password.path})';"
-        ${pkgs.postgresql_15}/bin/psql -U postgres -c "ALTER USER nextcloud WITH PASSWORD '$(cat ${config.sops.secrets.postgres.nextcloud_db_password.path})';"
-        ${pkgs.postgresql_15}/bin/psql -U postgres -c "ALTER USER keycloak WITH PASSWORD '$(cat ${config.sops.secrets.postgres.keycloak_db_password.path})';"
+        ${pkgs.postgresql_15}/bin/psql -U postgres -c "ALTER USER hass WITH PASSWORD '$(cat ${config.sops.secrets.hass_db_password.path})';"
+        ${pkgs.postgresql_15}/bin/psql -U postgres -c "ALTER USER miniflux WITH PASSWORD '$(cat ${config.sops.secrets.miniflux_db_password.path})';"
+        ${pkgs.postgresql_15}/bin/psql -U postgres -c "ALTER USER nextcloud WITH PASSWORD '$(cat ${config.sops.secrets.nextcloud_db_password.path})';"
+        ${pkgs.postgresql_15}/bin/psql -U postgres -c "ALTER USER keycloak WITH PASSWORD '$(cat ${config.sops.secrets.keycloak_db_password.path})';"
       '';
     };
   };

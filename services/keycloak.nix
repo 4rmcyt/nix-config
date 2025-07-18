@@ -24,7 +24,7 @@ in
       createLocally = false;
       host = "localhost";
       port = 5432;
-      passwordFile = config.sops.secrets.postgres.keycloak_db_password.path;
+      passwordFile = config.sops.secrets.keycloak_db_password.path;
     };
     themes = {
       zeev = keycloak_theme;
