@@ -279,7 +279,7 @@
                 {
                   type = "nextdns";
                   url = "http://localhost:3000";
-                  profileId = "${config.sops.secrets.homepage_nextdns_profile_id.path}";
+                  profileId = "2bffa2";
                   key = "${config.sops.secrets.homepage_nextdns_key.path}";
                 }
               ];
