@@ -78,6 +78,8 @@
       "homepage_grafana_key"            = { owner = "homepage-dashboard"; };
       "homepage_nextdns_key"            = { owner = "homepage-dashboard"; };
       "homepage_nextdns_profile_id"     = { owner = "homepage-dashboard"; };
+      "homepage_latitude"            = { owner = "homepage-dashboard"; };
+      "homepage_longitude"           = { owner = "homepage-dashboard"; };
     };
   };
 }
