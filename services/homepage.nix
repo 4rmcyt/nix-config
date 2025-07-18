@@ -30,6 +30,22 @@
   homepageLongitude = "${config.sops.secrets.homepage_longitude.path}";
   homepageReadarrKey = "${config.sops.secrets.homepage_readarr_key.path}";
   homepageLidarrKey = "${config.sops.secrets.homepage_lidarr_key.path}";
+
+   content = ''
+      HOMEPAGE_VAR_LATITUDE="$homepageLatitude"
+      HOMEPAGE_VAR_LONGITUDE="$homepageLongitude"
+      HOMEPAGE_VAR_RADARR_KEY="$homepageRadarrKey"
+      HOMEPAGE_VAR_PROWLARR_KEY="$homepageProwlarrKey"
+      HOMEPAGE_VAR_BAZARR_KEY="$homepageBazarrKey"
+      HOMEPAGE_VAR_JELLYFIN_KEY="$homepageJellyfinKey"
+      HOMEPAGE_VAR_JELLYSEERR_KEY="$homepageJellyseerrKey"
+      HOMEPAGE_VAR_TRUENAS_KEY="$truenasKey"
+      HOMEPAGE_VAR_ADGUARD_PWD="$adguardPass"
+      HOMEPAGE_VAR_OPNSENSE_USER="$opnsenseUser"
+      HOMEPAGE_VAR_OPNSENSE_PWD="$opnsensePass"
+      HOMEPAGE_VAR_TRANSMISSION_PWD="$transmissionPwd"
+    '';
+    
   services.homepage-dashboard = {
     enable = true;
     listenPort = 8082;
@@ -344,8 +360,8 @@
         openmeteo = {
           label = "Calgary";
           timezone = "America/Edmonton";
-          latitude = homepageLatitude;
-          longitude = homepageLongitude;
+          latitude = "{{HOMEPAGE_VAR_LATITUDE}}";
+          longitude = "{{HOMEPAGE_VAR_LONGITUDE}}";
           units = "metric";
         };
       }
