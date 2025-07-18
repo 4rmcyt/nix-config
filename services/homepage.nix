@@ -278,7 +278,7 @@
               widget = {
                 type = "nextdns";
                   profileId = "2bffa2";
-                  key = "d8553dc2cb725d804b7e93331e5e883ea10e9ff4";
+                  key = "a6961bc6da99dc4335c98263706c963eceed39ef";
               };
             };
           }
