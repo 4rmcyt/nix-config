@@ -2,10 +2,11 @@
 {
 services.cloudflared = {
     enable = true;
-    config = {
-      tunnel = "f7876e26-87a8-4bdd-9798-3986b0f7cebc";
-      "credentials-file" = config.sops.secrets.cloudflare_tunnel_credentials.path;
-      ingress = [
+    tunnels = {
+      "f7876e26-87a8-4bdd-9798-3986b0f7cebc" = {
+        credentials-file = "${config.sops.secrets.cloudflare_tunnel_credentials.path}";
+        default = "http_status:404";
+        ingress = {
           { hostname = "nextcloud.example.com";      service = "http://localhost:8081"; }
           { hostname = "keycloak.example.com";       service = "http://localhost:8080"; }
           { hostname = "jellyfin.example.com";       service = "http://localhost:8096"; }
@@ -19,8 +20,9 @@ services.cloudflared = {
           { hostname = "kavita.example.com";         service = "http://localhost:5000"; }
           { hostname = "microbin.example.com";       service = "http://localhost:8084"; }
           { hostname = "hass.example.com";           service = "http://localhost:8123"; }
-          { service = "http_status:404"; }
-      ];
+          { default = "http_status:404"; }
+        };
+      };
     };
   };
 }
