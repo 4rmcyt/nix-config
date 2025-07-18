@@ -303,7 +303,7 @@
                 type = "cloudflared"; 
                 accountId = "8239dd1bb0d0bfedf13673a195df59cf";
                 tunnelId = "f7876e26-87a8-4bdd-9798-3986b0f7cebc";
-                key = "bd80c870ddf09e4bb5f9e1e6f86fa31dfe746";
+                key = "yMAEOHdD1sDxrw9tLbu-QRKmn2SftHVx2Q8Cj3j9";
               };
             };
           }
