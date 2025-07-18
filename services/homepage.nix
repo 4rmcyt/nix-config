@@ -4,10 +4,10 @@
   lib,
   ...
 }:
-{
+{ 
   age-template.files."hompage-keys.env" = {
     vars = {
-      homepageJellyfinKey = config.sops.secrets.homepage_jellyfin_key.path;
+     homepageJellyfinKey = config.sops.secrets.homepage_jellyfin_key.path;
       homepageJellyseerrKey = config.sops.secrets.homepage_jellyseerr_key.path;
       homepageSonarrKey = config.sops.secrets.homepage_sonarr_key.path;
       homepageRadarrKey = config.sops.secrets.homepage_radarr_key.path;
@@ -64,10 +64,12 @@
       HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY="$homepageAudiobookshelfKey"
     '';
   };
+  
 
   services.homepage-dashboard = {
     enable = true;
     listenPort = 8082;
+    environmentFile = config.age-template.files."homepage-keys.env".path;
 
     # Enhanced service configuration with external domain URLs
     services = [
