@@ -377,16 +377,11 @@
                 "name" = "GitHub Server Config";
                 "href" = "https://github.com/your-username/server-config";
                 "icon" = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/github-light.svg";
-              }
+             }
             ];
           }
         ];
       }
     ];
-  };
-
-  # Add other environment variables here
-  # environment = {
-  #   homepage_allowed_hosts = lib.mkForce "localhost,127.0.0.1,192.168.1.165,home.labhome.work";
-  # };
+  }; # <-- Closing brace for services.homepage-dashboard
 }
