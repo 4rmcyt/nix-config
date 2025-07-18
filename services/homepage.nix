@@ -277,8 +277,8 @@
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
               widget = {
                 type = "nextdns";
-                  profile = config.sops.secrets.homepage_nextdns_profile_id.path;
-                  key = config.sops.secrets.homepage_nextdns_key.path; 
+                  profile = "${config.sops.secrets.homepage_nextdns_profile_id.path}";
+                  key = "${config.sops.secrets.homepage_nextdns_key.path}"; 
               };
             };
           }
@@ -289,8 +289,8 @@
               icon = "tailscale";
               widget = {
                 type = "tailscale";
-                deviceid = config.sops.secrets.homepage_tailscale_device_id.path;
-                key = config.sops.secrets.homepage_tailscale_key.path;
+                deviceid = "${config.sops.secrets.homepage_tailscale_device_id.path}";
+                key = "${config.sops.secrets.homepage_tailscale_key.path}";
               };
             };
           }
@@ -301,9 +301,9 @@
               icon = "cloudflare-zero-trust";
               widget = {
                 type = "cloudflared"; 
-                accountid = config.sops.secrets.homepage_cloudflared_account_id.path;
-                tunnelid = config.sops.secrets.homepage_cloudflared_tunnel_id.path;
-                key = config.sops.secrets.homepage_cloudflared_key.path;
+                accountid = "${config.sops.secrets.homepage_cloudflared_account_id.path}";
+                tunnelid = "${config.sops.secrets.homepage_cloudflared_tunnel_id.path}";
+                key = "${config.sops.secrets.homepage_cloudflared_key.path}";
               };
             };
           }
