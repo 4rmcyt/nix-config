@@ -1,6 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
+  # 1. Nextcloud Service Configuration
   services.nextcloud = {
     enable = true;
     hostName = "nextcloud.labhome.work";
@@ -30,16 +31,20 @@
       adminuser = "admin";
     };
 
-    # Configure Nginx for reverse proxying
-    nginx = {
-      enable = true;
-      virtualHost = {
-        hostName = "nextcloud.labhome.work";
-        listen = [{
-          addr = "0.0.0.0";
-          port = 8081; # Nextcloud will be accessible on this port
-        }];
-      };
+    # The nginx block has been removed from here, as it must be configured separately.
+  };
+
+  # 2. Nginx Reverse Proxy Configuration for Nextcloud
+  # This is the correct way to configure the web server for Nextcloud.
+  services.nginx = {
+    enable = true;
+    virtualHosts."nextcloud.labhome.work" = {
+      listen = [{
+        addr = "0.0.0.0";
+        port = 8081; # The port your Cloudflare tunnel points to
+      }];
+      # This uses the official NixOS helper to configure nginx correctly for Nextcloud
+      enableNextcloud = true;
     };
   };
 }
