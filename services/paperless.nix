@@ -8,7 +8,6 @@
       PAPERLESS_ADMIN_USER = "admin";
       PAPERLESS_URL = "https://paperless.labhome.work";
       PAPERLESS_TIME_ZONE = "America/Edmonton";
-      PAPERLESS_REDIS = "redis://localhost:6379/1";
 
       PAPERLESS_OCR_LANGUAGE = "eng+heb";
       PAPERLESS_OCR_USER_ARGS = {
