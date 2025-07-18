@@ -397,7 +397,7 @@
     '';
 
     serviceConfig = {
-      EnvironmentFile = "/run/homepage-dashboard/homepage-keys.env";
+      EnvironmentFile = lib.mkForce "/run/homepage-dashboard/homepage-keys.env"; # Correctly overrides the default
     };
 
     # Add other environment variables here
