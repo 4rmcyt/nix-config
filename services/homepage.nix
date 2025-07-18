@@ -19,7 +19,6 @@
       homepagePaperlessKey = config.sops.secrets.homepage_paperless_key.path;
       homepageKavitaKey = config.sops.secrets.homepage_kavita_key.path;
       homepageMinifluxKey = config.sops.secrets.homepage_miniflux_key.path;
-      homepageRadicaleKey = config.sops.secrets.homepage_radicale_key.path;
       homepageGrafanaKey = config.sops.secrets.grafana_admin_password.path;
       homepageNextdnsKey = config.sops.secrets.homepage_nextdns_key.path;
       homepageNextdnsProfileId = config.sops.secrets.homepage_nextdns_profile_id.path;
@@ -65,7 +64,7 @@
       HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY="$homepageAudiobookshelfKey"
     '';
   };
- 
+
   services.homepage-dashboard = {
     enable = true;
     listenPort = 8082;
@@ -331,15 +330,15 @@
               icon = "keycloak";
             };
           }
-           {
+          {
             "NextDns" = {
               href = "https://my.nextdns.io/";
               description = "Nextdns Dashboard";
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
               widget = {
                 type = "nextdns";
-                  profile = "{{HOMEPAGE_VAR_NEXTDNS_PROFILE_ID}}";
-                  key = "{{HOMEPAGE_VAR_NEXTDNS_KEY}}"; 
+                profile = "{{HOMEPAGE_VAR_NEXTDNS_PROFILE_ID}}";
+                key = "{{HOMEPAGE_VAR_NEXTDNS_KEY}}";
               };
             };
           }
@@ -361,7 +360,7 @@
               description = "Cloudflare Tunnels Management";
               icon = "cloudflare-zero-trust";
               widget = {
-                type = "cloudflared"; 
+                type = "cloudflared";
                 accountid = "{{HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID}}";
                 tunnelid = "{{HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID}}";
                 key = "{{HOMEPAGE_VAR_CLOUDFLARED_KEY}}";
@@ -373,9 +372,25 @@
     ];
 
     widgets = [
-      { search = { provider = "google"; target = "_blank"; }; }
-      { resources = { label = "system"; cpu = true; memory = true; }; }
-      { resources = { label = "storage"; disk = [ "/data" ]; }; }
+      {
+        search = {
+          provider = "google";
+          target = "_blank";
+        };
+      }
+      {
+        resources = {
+          label = "system";
+          cpu = true;
+          memory = true;
+        };
+      }
+      {
+        resources = {
+          label = "storage";
+          disk = [ "/data" ];
+        };
+      }
       {
         openmeteo = {
           label = "Calgary";
