@@ -278,9 +278,8 @@
               widgets = [
                 {
                   type = "nextdns";
-                  url = "http://localhost:3000";
-                  profileId = "2bffa2";
-                  key = "d8553dc2cb725d804b7e93331e5e883ea10e9ff4";
+                  profileId = "${config.sops.secrets.homepage_nextdns_profile_id.path}";
+                  key = "${config.sops.secrets.homepage_nextdns_key.path}";
                 }
               ];
             };
