@@ -10,7 +10,18 @@
     enable = true;
     listenPort = 8082;
 
-    # Enhanced service configuration with external domain URLs
+    # This line integrates sops-nix with the service. It automatically
+    # creates an environment file with all secrets from your homepage.yaml
+    # and ensures the service waits for it to be created.
+    sopsFile = config.sops.secrets.homepage_keys.path;
+
+    # This is the correct place for other service-specific environment variables.
+    environment = {
+      HOMEPAGE_ALLOWED_HOSTS = "localhost,127.0.0.1,192.168.1.165,home.labhome.work";
+    };
+
+    # The rest of your configuration is now updated to use the correct
+    # secret variable format: {{HOMEPAGE_VAR_your_secret_name}}
     services = [
       {
         "Media" = [
@@ -19,13 +30,11 @@
               href = "https://jellyfin.labhome.work";
               description = "Media Server";
               icon = "jellyfin";
-              widgets = [
-                {
-                  type = "jellyfin";
-                  url = "http://localhost:8096";
-                  key = "{{homepage_jellyfin_key}}";
-                }
-              ];
+              widgets = [{
+                type = "jellyfin";
+                url = "http://localhost:8096";
+                key = "{{HOMEPAGE_VAR_homepage_jellyfin_key}}";
+              }];
             };
           }
           {
@@ -33,13 +42,11 @@
               href = "https://audiobookshelf.labhome.work";
               description = "Audiobook & Podcast Server";
               icon = "audiobookshelf";
-              widgets = [
-                {
-                  type = "audiobookshelf";
-                  url = "http://localhost:8085";
-                  key = "{{homepage_audiobookshelf_key}}";
-                }
-              ];
+              widgets = [{
+                type = "audiobookshelf";
+                url = "http://localhost:8085";
+                key = "{{HOMEPAGE_VAR_homepage_audiobookshelf_key}}";
+              }];
             };
           }
         ];
@@ -50,77 +57,65 @@
             "Sonarr" = {
               icon = "sonarr.png";
               href = "https://tv.labhome.work/";
-              widgets = [
-                {
-                  type = "sonarr";
-                  url = "http://localhost:8989";
-                  key = "{{homepage_sonarr_key}}";
-                }
-              ];
+              widgets = [{
+                type = "sonarr";
+                url = "http://localhost:8989";
+                key = "{{HOMEPAGE_VAR_homepage_sonarr_key}}";
+              }];
             };
           }
           {
             "Radarr" = {
               icon = "radarr.png";
               href = "https://movies.labhome.work/";
-              widgets = [
-                {
-                  type = "radarr";
-                  url = "http://localhost:7878";
-                  key = "{{homepage_radarr_key}}";
-                }
-              ];
+              widgets = [{
+                type = "radarr";
+                url = "http://localhost:7878";
+                key = "{{HOMEPAGE_VAR_homepage_radarr_key}}";
+              }];
             };
           }
           {
             "Transmission" = {
               icon = "transmission.png";
               href = "https://transmission.labhome.work/";
-              widgets = [
-                {
-                  type = "transmission";
-                  url = "http://localhost:9091";
-                }
-              ];
+              widgets = [{
+                type = "transmission";
+                url = "http://localhost:9091";
+              }];
             };
           }
           {
             "Prowlarr" = {
               icon = "prowlarr.png";
               href = "https://prowlarr.labhome.work/";
-              widgets = [
-                {
-                  type = "prowlarr";
-                  url = "http://localhost:9696";
-                  key = "{{homepage_prowlarr_key}}";
-                }
-              ];
+              widgets = [{
+                type = "prowlarr";
+                url = "http://localhost:9696";
+                key = "{{HOMEPAGE_VAR_homepage_prowlarr_key}}";
+              }];
             };
           }
           {
             "Bazarr" = {
               icon = "bazarr.png";
               href = "https://bazarr.labhome.work/";
-              widgets = [
-                {
-                  type = "bazarr";
-                  url = "http://localhost:6767";
-                  key = "{{homepage_bazarr_key}}";
-                }
-              ];
+              widgets = [{
+                type = "bazarr";
+                url = "http://localhost:6767";
+                key = "{{HOMEPAGE_VAR_homepage_bazarr_key}}";
+              }];
             };
           }
           {
             "Jellyseerr" = {
               icon = "jellyseerr.png";
               href = "https://jellyseerr.labhome.work/";
-              widgets = [
-                {
-                  type = "jellyseerr";
-                  url = "http://localhost:5055/";
-                  key = "{{HOMEPAGE_VAR_JELLYSEERR_KEY}}";
-                }
-              ];
+              widgets = [{
+                type = "jellyseerr";
+                url = "http://localhost:5055/";
+                key = "{{HOMEPAGE_VAR_homepage_jellyseerr_key}}";
+              }];
             };
           }
         ];
@@ -132,13 +127,11 @@
               href = "https://nextcloud.labhome.work/";
               description = "File Storage & Collaboration";
               icon = "nextcloud";
-              widgets = [
-                {
-                  type = "nextcloud";
-                  url = "http://localhost:8081";
-                  key = "{{HOMEPAGE_VAR_NEXTCLOUD_KEY}}";
-                }
-              ];
+              widgets = [{
+                type = "nextcloud";
+                url = "http://localhost:8081";
+                key = "{{HOMEPAGE_VAR_homepage_nextcloud_key}}";
+              }];
             };
           }
           {
@@ -146,13 +139,11 @@
               href = "https://paperless.labhome.work";
               description = "Document Management";
               icon = "paperless-ngx";
-              widgets = [
-                {
-                  type = "paperless";
-                  url = "http://localhost:8888";
-                  key = "{{homepage_paperless_key}}";
-                }
-              ];
+              widgets = [{
+                type = "paperless";
+                url = "http://localhost:8888";
+                key = "{{HOMEPAGE_VAR_homepage_paperless_key}}";
+              }];
             };
           }
           {
@@ -160,13 +151,11 @@
               href = "https://kavita.labhome.work";
               description = "Ebook & Manga Library";
               icon = "kavita";
-              widgets = [
-                {
-                  type = "kavita";
-                  url = "http://localhost:5000";
-                  key = "{{homepage_kavita_key}}";
-                }
-              ];
+              widgets = [{
+                type = "kavita";
+                url = "http://localhost:5000";
+                key = "{{HOMEPAGE_VAR_homepage_kavita_key}}";
+              }];
             };
           }
         ];
@@ -185,13 +174,11 @@
               href = "https://rss.labhome.work";
               description = "RSS Reader";
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/miniflux.svg";
-              widgets = [
-                {
-                  type = "miniflux";
-                  url = "http://localhost:8086";
-                  key = "{{homepage_miniflux_key}}";
-                }
-              ];
+              widgets = [{
+                type = "miniflux";
+                url = "http://localhost:8086";
+                key = "{{HOMEPAGE_VAR_homepage_miniflux_key}}";
+              }];
             };
           }
           {
@@ -210,14 +197,12 @@
               href = "http://192.168.1.165:3000";
               description = "Real-time System Dashboard";
               icon = "grafana";
-              widgets = [
-                {
-                  type = "grafana";
-                  url = "http://localhost:3000";
-                  username = "admin";
-                  password = "{{homepage_grafana_key}}";
-                }
-              ];
+              widgets = [{
+                type = "grafana";
+                url = "http://localhost:3000";
+                username = "admin";
+                password = "{{HOMEPAGE_VAR_homepage_grafana_admin_password}}";
+              }];
             };
           }
           {
@@ -243,13 +228,11 @@
               href = "https://hass.labhome.work";
               description = "Home Automation";
               icon = "home-assistant";
-              widgets = [
-                {
-                  type = "home-assistant";
-                  url = "http://localhost:8123";
-                  key = "{{homepage_hass_key}}";
-                }
-              ];
+              widgets = [{
+                type = "home-assistant";
+                url = "http://localhost:8123";
+                key = "{{HOMEPAGE_VAR_homepage_hass_key}}";
+              }];
             };
           }
           {
@@ -277,8 +260,8 @@
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
               widget = {
                 type = "nextdns";
-                profile = "{{homepage_nextdns_profile_id}}";
-                key = "{{homepage_nextdns_key}}";
+                profile = "{{HOMEPAGE_VAR_homepage_nextdns_profile_id}}";
+                key = "{{HOMEPAGE_VAR_homepage_nextdns_key}}";
               };
             };
           }
@@ -289,8 +272,8 @@
               icon = "tailscale";
               widget = {
                 type = "tailscale";
-                deviceid = "{{homepage_tailscale_device_id}}";
-                key = "{{homepage_tailscale_key}}";
+                deviceid = "{{HOMEPAGE_VAR_homepage_tailscale_device_id}}";
+                key = "{{HOMEPAGE_VAR_homepage_tailscale_key}}";
               };
             };
           }
@@ -301,9 +284,9 @@
               icon = "cloudflare-zero-trust";
               widget = {
                 type = "cloudflared";
-                accountid = "{{homepage_cloudflared_account_id}}";
-                tunnelid = "{{homepage_cloudflared_tunnel_id}}";
-                key = "{{homepage_cloudflared_key}}";
+                accountid = "{{HOMEPAGE_VAR_homepage_cloudflared_account_id}}";
+                tunnelid = "{{HOMEPAGE_VAR_homepage_cloudflared_tunnel_id}}";
+                key = "{{HOMEPAGE_VAR_homepage_cloudflared_key}}";
               };
             };
           }
@@ -335,8 +318,8 @@
         openmeteo = {
           label = "Calgary";
           timezone = "America/Edmonton";
-          latitude = "{{homepage_latitude}}";
-          longitude = "{{homepage_longitude}}";
+          latitude = "{{HOMEPAGE_VAR_homepage_latitude}}";
+          longitude = "{{HOMEPAGE_VAR_homepage_longitude}}";
           units = "metric";
         };
       }
@@ -377,7 +360,7 @@
                 "name" = "GitHub Server Config";
                 "href" = "https://github.com/your-username/server-config";
                 "icon" = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/github-light.svg";
-             }
+              }
             ];
           }
         ];
