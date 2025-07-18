@@ -7,7 +7,7 @@
 {
   # 1. Main application configuration
   services.homepage-dashboard = {
-    enable = true; # <-- This enables the service
+    enable = true;
     listenPort = 8082;
 
     # Enhanced service configuration with external domain URLs
@@ -19,11 +19,13 @@
               href = "https://jellyfin.labhome.work";
               description = "Media Server";
               icon = "jellyfin";
-              widgets = [{
-                type = "jellyfin";
-                url = "http://localhost:8096";
-                key = "{{HOMEPAGE_VAR_JELLYFIN_KEY}}";
-              }];
+              widgets = [
+                {
+                  type = "jellyfin";
+                  url = "http://localhost:8096";
+                  key = "{{homepage_jellyfin_key}}";
+                }
+              ];
             };
           }
           {
@@ -31,11 +33,13 @@
               href = "https://audiobookshelf.labhome.work";
               description = "Audiobook & Podcast Server";
               icon = "audiobookshelf";
-              widgets = [{
-                type = "audiobookshelf";
-                url = "http://localhost:8085";
-                key = "{{HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY}}";
-              }];
+              widgets = [
+                {
+                  type = "audiobookshelf";
+                  url = "http://localhost:8085";
+                  key = "{{homepage_audiobookshelf_key}}";
+                }
+              ];
             };
           }
         ];
@@ -46,65 +50,77 @@
             "Sonarr" = {
               icon = "sonarr.png";
               href = "https://tv.labhome.work/";
-              widgets = [{
-                type = "sonarr";
-                url = "http://localhost:8989";
-                key = "{{HOMEPAGE_VAR_SONARR_KEY}}";
-              }];
+              widgets = [
+                {
+                  type = "sonarr";
+                  url = "http://localhost:8989";
+                  key = "{{homepage_sonarr_key}}";
+                }
+              ];
             };
           }
           {
             "Radarr" = {
               icon = "radarr.png";
               href = "https://movies.labhome.work/";
-              widgets = [{
-                type = "radarr";
-                url = "http://localhost:7878";
-                key = "{{HOMEPAGE_VAR_RADARR_KEY}}";
-              }];
+              widgets = [
+                {
+                  type = "radarr";
+                  url = "http://localhost:7878";
+                  key = "{{homepage_radarr_key}}";
+                }
+              ];
             };
           }
           {
             "Transmission" = {
               icon = "transmission.png";
               href = "https://transmission.labhome.work/";
-              widgets = [{
-                type = "transmission";
-                url = "http://localhost:9091";
-              }];
+              widgets = [
+                {
+                  type = "transmission";
+                  url = "http://localhost:9091";
+                }
+              ];
             };
           }
           {
             "Prowlarr" = {
               icon = "prowlarr.png";
               href = "https://prowlarr.labhome.work/";
-              widgets = [{
-                type = "prowlarr";
-                url = "http://localhost:9696";
-                key = "{{HOMEPAGE_VAR_PROWLARR_KEY}}";
-              }];
+              widgets = [
+                {
+                  type = "prowlarr";
+                  url = "http://localhost:9696";
+                  key = "{{homepage_prowlarr_key}}";
+                }
+              ];
             };
           }
           {
             "Bazarr" = {
               icon = "bazarr.png";
               href = "https://bazarr.labhome.work/";
-              widgets = [{
-                type = "bazarr";
-                url = "http://localhost:6767";
-                key = "{{HOMEPAGE_VAR_BAZARR_KEY}}";
-              }];
+              widgets = [
+                {
+                  type = "bazarr";
+                  url = "http://localhost:6767";
+                  key = "{{homepage_bazarr_key}}";
+                }
+              ];
             };
           }
           {
             "Jellyseerr" = {
               icon = "jellyseerr.png";
               href = "https://jellyseerr.labhome.work/";
-              widgets = [{
-                type = "jellyseerr";
-                url = "http://localhost:5055/";
-                key = "{{HOMEPAGE_VAR_JELLYSEERR_KEY}}";
-              }];
+              widgets = [
+                {
+                  type = "jellyseerr";
+                  url = "http://localhost:5055/";
+                  key = "{{HOMEPAGE_VAR_JELLYSEERR_KEY}}";
+                }
+              ];
             };
           }
         ];
@@ -116,11 +132,13 @@
               href = "https://nextcloud.labhome.work/";
               description = "File Storage & Collaboration";
               icon = "nextcloud";
-              widgets = [{
-                type = "nextcloud";
-                url = "http://localhost:8081";
-                key = "{{HOMEPAGE_VAR_NEXTCLOUD_KEY}}";
-              }];
+              widgets = [
+                {
+                  type = "nextcloud";
+                  url = "http://localhost:8081";
+                  key = "{{HOMEPAGE_VAR_NEXTCLOUD_KEY}}";
+                }
+              ];
             };
           }
           {
@@ -128,11 +146,13 @@
               href = "https://paperless.labhome.work";
               description = "Document Management";
               icon = "paperless-ngx";
-              widgets = [{
-                type = "paperless";
-                url = "http://localhost:8888";
-                key = "{{HOMEPAGE_VAR_PAPERLESS_KEY}}";
-              }];
+              widgets = [
+                {
+                  type = "paperless";
+                  url = "http://localhost:8888";
+                  key = "{{homepage_paperless_key}}";
+                }
+              ];
             };
           }
           {
@@ -140,11 +160,13 @@
               href = "https://kavita.labhome.work";
               description = "Ebook & Manga Library";
               icon = "kavita";
-              widgets = [{
-                type = "kavita";
-                url = "http://localhost:5000";
-                key = "{{HOMEPAGE_VAR_KAVITA_KEY}}";
-              }];
+              widgets = [
+                {
+                  type = "kavita";
+                  url = "http://localhost:5000";
+                  key = "{{homepage_kavita_key}}";
+                }
+              ];
             };
           }
         ];
@@ -163,11 +185,13 @@
               href = "https://rss.labhome.work";
               description = "RSS Reader";
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/miniflux.svg";
-              widgets = [{
-                type = "miniflux";
-                url = "http://localhost:8086";
-                key = "{{HOMEPAGE_VAR_MINIFLUX_KEY}}";
-              }];
+              widgets = [
+                {
+                  type = "miniflux";
+                  url = "http://localhost:8086";
+                  key = "{{homepage_miniflux_key}}";
+                }
+              ];
             };
           }
           {
@@ -186,12 +210,14 @@
               href = "http://192.168.1.165:3000";
               description = "Real-time System Dashboard";
               icon = "grafana";
-              widgets = [{
-                type = "grafana";
-                url = "http://localhost:3000";
-                username = "admin";
-                password = "{{HOMEPAGE_VAR_GRAFANA_KEY}}";
-              }];
+              widgets = [
+                {
+                  type = "grafana";
+                  url = "http://localhost:3000";
+                  username = "admin";
+                  password = "{{homepage_grafana_key}}";
+                }
+              ];
             };
           }
           {
@@ -217,11 +243,13 @@
               href = "https://hass.labhome.work";
               description = "Home Automation";
               icon = "home-assistant";
-              widgets = [{
-                type = "home-assistant";
-                url = "http://localhost:8123";
-                key = "{{HOMEPAGE_VAR_HASS_KEY}}";
-              }];
+              widgets = [
+                {
+                  type = "home-assistant";
+                  url = "http://localhost:8123";
+                  key = "{{homepage_hass_key}}";
+                }
+              ];
             };
           }
           {
@@ -249,8 +277,8 @@
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
               widget = {
                 type = "nextdns";
-                profile = "{{HOMEPAGE_VAR_NEXTDNS_PROFILE_ID}}";
-                key = "{{HOMEPAGE_VAR_NEXTDNS_KEY}}";
+                profile = "{{homepage_nextdns_profile_id}}";
+                key = "{{homepage_nextdns_key}}";
               };
             };
           }
@@ -261,8 +289,8 @@
               icon = "tailscale";
               widget = {
                 type = "tailscale";
-                deviceid = "{{HOMEPAGE_VAR_TAILSCALE_DEVICE_ID}}";
-                key = "{{HOMEPAGE_VAR_TAILSCALE_KEY}}";
+                deviceid = "{{homepage_tailscale_device_id}}";
+                key = "{{homepage_tailscale_key}}";
               };
             };
           }
@@ -273,9 +301,9 @@
               icon = "cloudflare-zero-trust";
               widget = {
                 type = "cloudflared";
-                accountid = "{{HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID}}";
-                tunnelid = "{{HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID}}";
-                key = "{{HOMEPAGE_VAR_CLOUDFLARED_KEY}}";
+                accountid = "{{homepage_cloudflared_account_id}}";
+                tunnelid = "{{homepage_cloudflared_tunnel_id}}";
+                key = "{{homepage_cloudflared_key}}";
               };
             };
           }
@@ -307,8 +335,8 @@
         openmeteo = {
           label = "Calgary";
           timezone = "America/Edmonton";
-          latitude = "{{HOMEPAGE_VAR_LATITUDE}}";
-          longitude = "{{HOMEPAGE_VAR_LONGITUDE}}";
+          latitude = "{{homepage_latitude}}";
+          longitude = "{{homepage_longitude}}";
           units = "metric";
         };
       }
@@ -357,52 +385,8 @@
     ];
   };
 
-  # 2. Systemd overrides to prepare the environment
-  systemd.services.homepage-dashboard = {
-    # This script runs as root before the main service starts.
-    preStart = ''
-      # Ensure the target directory exists
-      mkdir -p /run/homepage-dashboard
-
-      # Create the environment file by reading the content of each secret file
-      cat <<EOF > /run/homepage-dashboard/homepage-keys.env
-      HOMEPAGE_VAR_LATITUDE=$(cat ${config.sops.secrets.homepage_latitude.path})
-      HOMEPAGE_VAR_LONGITUDE=$(cat ${config.sops.secrets.homepage_longitude.path})
-      HOMEPAGE_VAR_JELLYFIN_KEY=$(cat ${config.sops.secrets.homepage_jellyfin_key.path})
-      HOMEPAGE_VAR_JELLYSEERR_KEY=$(cat ${config.sops.secrets.homepage_jellyseerr_key.path})
-      HOMEPAGE_VAR_SONARR_KEY=$(cat ${config.sops.secrets.homepage_sonarr_key.path})
-      HOMEPAGE_VAR_RADARR_KEY=$(cat ${config.sops.secrets.homepage_radarr_key.path})
-      HOMEPAGE_VAR_PROWLARR_KEY=$(cat ${config.sops.secrets.homepage_prowlarr_key.path})
-      HOMEPAGE_VAR_BAZARR_KEY=$(cat ${config.sops.secrets.homepage_bazarr_key.path})
-      HOMEPAGE_VAR_READARR_KEY=$(cat ${config.sops.secrets.homepage_readarr_key.path})
-      HOMEPAGE_VAR_LIDARR_KEY=$(cat ${config.sops.secrets.homepage_lidarr_key.path})
-      HOMEPAGE_VAR_HASS_KEY=$(cat ${config.sops.secrets.homepage_hass_key.path})
-      HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY=$(cat ${config.sops.secrets.homepage_audiobookshelf_key.path})
-      HOMEPAGE_VAR_NEXTCLOUD_KEY=$(cat ${config.sops.secrets.homepage_nextcloud_key.path})
-      HOMEPAGE_VAR_PAPERLESS_KEY=$(cat ${config.sops.secrets.homepage_paperless_key.path})
-      HOMEPAGE_VAR_KAVITA_KEY=$(cat ${config.sops.secrets.homepage_kavita_key.path})
-      HOMEPAGE_VAR_MINIFLUX_KEY=$(cat ${config.sops.secrets.homepage_miniflux_key.path})
-      HOMEPAGE_VAR_GRAFANA_KEY=$(cat ${config.sops.secrets.grafana_admin_password.path})
-      HOMEPAGE_VAR_NEXTDNS_KEY=$(cat ${config.sops.secrets.homepage_nextdns_key.path})
-      HOMEPAGE_VAR_NEXTDNS_PROFILE_ID=$(cat ${config.sops.secrets.homepage_nextdns_profile_id.path})
-      HOMEPAGE_VAR_TAILSCALE_KEY=$(cat ${config.sops.secrets.homepage_tailscale_key.path})
-      HOMEPAGE_VAR_TAILSCALE_DEVICE_ID=$(cat ${config.sops.secrets.homepage_tailscale_device_id.path})
-      HOMEPAGE_VAR_CLOUDFLARED_KEY=$(cat ${config.sops.secrets.homepage_cloudflared_key.path})
-      HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID=$(cat ${config.sops.secrets.homepage_cloudflared_account_id.path})
-      HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID=$(cat ${config.sops.secrets.homepage_cloudflared_tunnel_id.path})
-      EOF
-
-      # Set correct ownership for the service user
-      chown homepage-dashboard:homepage-dashboard /run/homepage-dashboard/homepage-keys.env
-    '';
-
-    serviceConfig = {
-      EnvironmentFile = lib.mkForce "/run/homepage-dashboard/homepage-keys.env"; # Correctly overrides the default
-    };
-
-    # Add other environment variables here
-    environment = {
-      HOMEPAGE_ALLOWED_HOSTS = lib.mkForce "localhost,127.0.0.1,192.168.1.165,home.labhome.work";
-    };
+  # Add other environment variables here
+  environment = {
+    HOMEPAGE_ALLOWED_HOSTS = lib.mkForce "localhost,127.0.0.1,192.168.1.165,home.labhome.work";
   };
 }
