@@ -4,32 +4,35 @@
   lib,
   ...
 }:
+let 
+  homepageJellyfinKey = config.sops.secrets.homepage_jellyfin_key.path;
+  homepageJellyseerrKey = config.sops.secrets.homepage_jellyseerr_key.path;
+  homepageSonarrKey = config.sops.secrets.homepage_sonarr_key.path;
+  homepageRadarrKey = config.sops.secrets.homepage_radarr_key.path;
+  homepageProwlarrKey = config.sops.secrets.homepage_prowlarr_key.path;
+  homepageBazarrKey = config.sops.secrets.homepage_bazarr_key.path;
+  homepageHassKey = config.sops.secrets.homepage_hass_key.path;
+  homepageAudiobookshelfKey = config.sops.secrets.homepage_audiobookshelf_key.path;
+  homepageNextcloudKey = config.sops.secrets.homepage_nextcloud_key.path;
+  homepagePaperlessKey = config.sops.secrets.homepage_paperless_key.path;
+  homepageKavitaKey = config.sops.secrets.homepage_kavita_key.path;
+  homepageMinifluxKey = config.sops.secrets.homepage_miniflux_key.path;
+  homepageRadicaleKey = config.sops.secrets.homepage_radicale_key.path;
+  homepageGrafanaKey = config.sops.secrets.grafana_admin_password.path;
+  homepageNextdnsKey = config.sops.secrets.homepage_nextdns_key.path;
+  homepageNextdnsProfileId = config.sops.secrets.homepage_nextdns_profile_id.path;
+  homepageTailscaleKey = config.sops.secrets.homepage_tailscale_key.path;
+  homepageTailscaleDeviceId = config.sops.secrets.homepage_tailscale_device_id.path;
+  homepageCloudflaredKey = config.sops.secrets.homepage_cloudflared_key.path;
+  homepageCloudflaredAccountId = config.sops.secrets.homepage_cloudflared_account_id.path;
+  homepageCloudflaredTunnelId = config.sops.secrets.homepage_cloudflared_tunnel_id.path;
+  homepageLatitude = config.sops.secrets.homepage_latitude.path;
+  homepageLongitude = config.sops.secrets.homepage_longitude.path;
+  homepageReadarrKey = config.sops.secrets.homepage_readarr_key.path;
+  homepageLidarrKey = config.sops.secrets.homepage_lidarr_key.path;
+in
 {
-  homepageJellyfinKey = "${config.sops.secrets.homepage_jellyfin_key.path}";
-  homepageJellyseerrKey = "${config.sops.secrets.homepage_jellyseerr_key.path}";
-  homepageSonarrKey = "${config.sops.secrets.homepage_sonarr_key.path}";
-  homepageRadarrKey = "${config.sops.secrets.homepage_radarr_key.path}";
-  homepageProwlarrKey = "${config.sops.secrets.homepage_prowlarr_key.path}";
-  homepageBazarrKey = "${config.sops.secrets.homepage_bazarr_key.path}";
-  homepageHassKey = "${config.sops.secrets.homepage_hass_key.path}";
-  homepageAudiobookshelfKey = "${config.sops.secrets.homepage_audiobookshelf_key.path}";
-  homepageNextcloudKey = "${config.sops.secrets.homepage_nextcloud_key.path}";
-  homepagePaperlessKey = "${config.sops.secrets.homepage_paperless_key.path}";
-  homepageKavitaKey = "${config.sops.secrets.homepage_kavita_key.path}";
-  homepageMinifluxKey = "${config.sops.secrets.homepage_miniflux_key.path}";
-  homepageRadicaleKey = "${config.sops.secrets.homepage_radicale_key.path}";
-  homepageGrafanaKey = "${config.sops.secrets.grafana_admin_password.path}";
-  homepageNextdnsKey = "${config.sops.secrets.homepage_nextdns_key.path}";
-  homepageNextdnsProfileId = "${config.sops.secrets.homepage_nextdns_profile_id.path}";
-  homepageTailscaleKey = "${config.sops.secrets.homepage_tailscale_key.path}";
-  homepageTailscaleDeviceId = "${config.sops.secrets.homepage_tailscale_device_id.path}";
-  homepageCloudflaredKey = "${config.sops.secrets.homepage_cloudflared_key.path}";
-  homepageCloudflaredAccountId = "${config.sops.secrets.homepage_cloudflared_account_id.path}";
-  homepageCloudflaredTunnelId = "${config.sops.secrets.homepage_cloudflared_tunnel_id.path}";
-  homepageLatitude = "${config.sops.secrets.homepage_latitude.path}";
-  homepageLongitude = "${config.sops.secrets.homepage_longitude.path}";
-  homepageReadarrKey = "${config.sops.secrets.homepage_readarr_key.path}";
-  homepageLidarrKey = "${config.sops.secrets.homepage_lidarr_key.path}";
+  
 
    content = ''
       HOMEPAGE_VAR_LATITUDE="$homepageLatitude"
