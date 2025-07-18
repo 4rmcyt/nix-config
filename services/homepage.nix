@@ -302,7 +302,7 @@
             "Cloudflare Tunnels" = {
               href = "https://one.dash.cloudflare.com/8239dd1bb0d0bfedf13673a195df59cf/networks/tunnels";
               description = "Cloudflare Tunnels Management";
-              icon = "https://github.com/homarr-labs/dashboard-icons/blob/main/png/cloudflare-zero-trust.png";
+              icon = "cloudflare-zero-trust";
               widgets = [
                 {
                   type = "cloudflared";
