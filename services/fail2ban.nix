@@ -300,7 +300,7 @@
     "fail2ban/action.d/cloudflare-token.conf".text =
       let
         notes = "Fail2Ban-${config.networking.hostName}";
-        zoneId = config.sops.secrets.cloudflare_secrets.cloudflare_zone_id;
+        zoneId = config.sops.secrets.cloudflare_zone_id.path;
         apiKeyFile = config.sops.secrets.cloudflare_api_key.path;
         cfapi = "https://api.cloudflare.com/client/v4/zones/${zoneId}/firewall/access_rules/rules";
       in
