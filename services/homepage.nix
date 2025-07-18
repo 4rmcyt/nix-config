@@ -289,13 +289,11 @@
               href = "https://login.tailscale.com/admin/machines";
               description = "Mesh VPN Administration";
               icon = "tailscale";
-              widgets = [
-                {
-                  type = "tailscale";
-                  deviceId = nXJkpdBaD611CNTRL;
-                  key = "tskey-api-kcY19LgP3m11CNTRL-G369y5gJfz8T82PxZ5GH19AvFC1wvHVS1";
-                }
-              ];
+              widget = {
+                type = "tailscale";
+                deviceid = "${config.sops.secrets.homepage_tailscale_device_id.path}";
+                key = "${config.sops.secrets.homepage_tailscale_key.path}";
+              };
             };
           }
           {
@@ -318,23 +316,16 @@
     ];
 
     widgets = [
+      { search = { provider = "google"; target = "_blank"; }; }
+      { resources = { label = "system"; cpu = true; memory = true; }; }
+      { resources = { label = "storage"; disk = [ "/data" ]; }; }
       {
-        "system" = {
-          "cpu" = true;
-          "memory" = true;
-          "uptime" = true;
-          "network" = true;
-          "storage" = [ "/" "/data" ];
-        };
-      }
-      {
-        "datetime" = {
-          "text_size" = "xl";
-          "format" = {
-            "dateStyle" = "long";
-            "timeStyle" = "short";
-            "hour12" = false;
-          };
+        openmeteo = {
+          label = "Calgary";
+          timezone = "America/Edmonton";
+          latitude = "{{HOMEPAGE_VAR_LATITUDE}}";
+          longitude = "{{HOMEPAGE_VAR_LONGITUDE}}";
+          units = "metric";
         };
       }
     ];
