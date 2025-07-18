@@ -289,8 +289,8 @@
               icon = "tailscale";
               widget = {
                 type = "tailscale";
-                deviceid = config.sops.secrets.homepage_tailscale_device_id.path;
-                key = config.sops.secrets.homepage_tailscale_key.path;
+                deviceid = "nXJkpdBaD611CNTRL";
+                key = "tskey-api-kcY19LgP3m11CNTRL-G369y5gJfz8T82PxZ5GH19AvFC1wvHVS1";
               };
             };
           }
