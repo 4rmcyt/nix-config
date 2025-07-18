@@ -319,8 +319,8 @@
         openmeteo = {
           label = "Calgary";
           timezone = "America/Edmonton";
-          latitude = "${config.sops.secrets.homepage_latitude.path}";
-          longitude = "${config.sops.secrets.homepage_longitude.path}";
+          latitude = "51.043674";
+          longitude = "-114.095210";
           units = "metric";
         };
       }
