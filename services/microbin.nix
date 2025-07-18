@@ -1,23 +1,16 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}:
+{ config, pkgs, lib, ... }:
 
 {
   services.microbin = {
     enable = true;
+    listenAddr = "0.0.0.0";
+    port = 8083;
+    environmentFile = config.sops.secrets.microbin_secrets.path;
+
     settings = {
-      MICROBIN_BIND = "127.0.0.1";
-      MICROBIN_PORT = "8083";
-      MICROBIN_PUBLIC_PATH = "https://paste.labhome.work";
-      MICROBIN_EDITABLE = true;
-      MICROBIN_HIGHLIGHTSYNTAX = true;
-      MICROBIN_TITLE = "Homeserver Pastebin";
-      MICROBIN_ADMIN_USERNAME = "admin";
-      MICROBIN_ADMIN_PASSWORD = config.sops.secrets.microbin_admin_password.path;
+      admin_username = "admin";
+      private = true;
+      no_listing = true;
     };
   };
-
 }
