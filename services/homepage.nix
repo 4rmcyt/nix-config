@@ -277,7 +277,7 @@
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
               widget = {
                 type = "nextdns";
-                  profileId = "2bffa2";
+                  profileId = '2bffa2';
                   key = "a6961bc6da99dc4335c98263706c963eceed39ef";
               };
             };
@@ -301,7 +301,7 @@
               icon = "cloudflare-zero-trust";
               widget = {
                 type = "cloudflared"; 
-                accountId = [ "8239dd1bb0d0bfedf13673a195df59cf" ];
+                accountId = "8239dd1bb0d0bfedf13673a195df59cf";
                 tunnelId = "f7876e26-87a8-4bdd-9798-3986b0f7cebc";
                 key = "yMAEOHdD1sDxrw9tLbu-QRKmn2SftHVx2Q8Cj3j9";
               };
