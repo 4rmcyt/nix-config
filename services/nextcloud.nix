@@ -5,12 +5,12 @@
   services.nextcloud = {
     enable = true;
     hostName = "nextcloud.example.com";
-    package = pkgs.nextcloud28;
+    package = pkgs.nextcloud31;
 
     # Use php-fpm for better performance
     phpPackage = pkgs.php82;
     extraAppsEnable = true;
-    extraApps = with pkgs.nextcloud28Apps; [
+    extraApps = with pkgs.nextcloud31Apps; [
       calendar
       contacts
       deck
