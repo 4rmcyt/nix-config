@@ -7,7 +7,7 @@
 {
   # 1. Main application configuration
   services.homepage-dashboard = {
-    enable = true;
+    enable = true; # <-- This enables the service
     listenPort = 8082;
 
     # Enhanced service configuration with external domain URLs
@@ -334,7 +334,7 @@
               {
                 "name" = "Admin Console";
                 "href" = "https://dash.cloudflare.com/8239dd1bb0d0bfedf13673a195df59cf/home";
-                "icon" = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/cloudflare.svg"; # <-- FIX WAS HERE
+                "icon" = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/cloudflare.svg";
               }
               {
                 "name" = "ACL Editor";
