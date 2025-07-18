@@ -8,17 +8,16 @@
 {
   services.microbin = {
     enable = true;
-    listenAddr = "0.0.0.0";
-    port = 8084;
-
     settings = {
-      admin_username = "admin";
-      private = true;
-      no_listing = true;
-    };
-
-    systemd.services.microbin.serviceConfig = {
-      EnvironmentFile = config.sops.secrets.microbin_secrets.path;
+      MICROBIN_BIND = "127.0.0.1";
+      MICROBIN_PORT = "8083";
+      MICROBIN_PUBLIC_PATH = "https://paste.example.com";
+      MICROBIN_EDITABLE = true;
+      MICROBIN_HIGHLIGHTSYNTAX = true;
+      MICROBIN_TITLE = "Homeserver Pastebin";
+      MICROBIN_ADMIN_USERNAME = "admin";
+      MICROBIN_ADMIN_PASSWORD = config.sops.secrets.microbin_secrets.path;
     };
   };
+
 }
