@@ -249,7 +249,7 @@
                 {
                   type = "miniflux";
                   url = "http://localhost:8086";
-                  key = "${homepageMinifluxKey}";
+                  key = "{{HOMEPAGE_VAR_MINIFLUX_KEY}}";
                 }
               ];
             };
