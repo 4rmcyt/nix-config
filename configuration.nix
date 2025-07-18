@@ -52,12 +52,12 @@
       hostKeys = [
         {
           type = "ed25519";
-          path = config.sops.secrets.system.ssh_host_ed25519_key.path;
+          path = config.sops.secrets.ssh_host_ed25519_key.path;
         }
         {
           type = "rsa";
           bits = 4096;
-          path = config.sops.secrets.system.ssh_host_rsa_key.path;
+          path = config.sops.secrets.ssh_host_rsa_key.path;
         }
       ];
       settings = {
