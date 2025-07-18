@@ -293,7 +293,7 @@
                 {
                   type = "tailscale";
                   deviceId = nXJkpdBaD611CNTRL;
-                  key = tskey-api-kcY19LgP3m11CNTRL-G369y5gJfz8T82PxZ5GH19AvFC1wvHVS1;
+                  key = "tskey-api-kcY19LgP3m11CNTRL-G369y5gJfz8T82PxZ5GH19AvFC1wvHVS1";
                 }
               ];
             };
