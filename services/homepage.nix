@@ -4,6 +4,33 @@
   lib,
   ...
 }:
+let 
+  homepageJellyfinKey = config.sops.secrets.homepage_jellyfin_key.path;
+  homepageJellyseerrKey = config.sops.secrets.homepage_jellyseerr_key.path;
+  homepageSonarrKey = config.sops.secrets.homepage_sonarr_key.path;
+  homepageRadarrKey = config.sops.secrets.homepage_radarr_key.path;
+  homepageProwlarrKey = config.sops.secrets.homepage_prowlarr_key.path;
+  homepageBazarrKey = config.sops.secrets.homepage_bazarr_key.path;
+  homepageHassKey = config.sops.secrets.homepage_hass_key.path;
+  homepageAudiobookshelfKey = config.sops.secrets.homepage_audiobookshelf_key.path;
+  homepageNextcloudKey = config.sops.secrets.homepage_nextcloud_key.path;
+  homepagePaperlessKey = config.sops.secrets.homepage_paperless_key.path;
+  homepageKavitaKey = config.sops.secrets.homepage_kavita_key.path;
+  homepageMinifluxKey = config.sops.secrets.homepage_miniflux_key.path;
+  homepageRadicaleKey = config.sops.secrets.homepage_radicale_key.path;
+  homepageGrafanaKey = config.sops.secrets.grafana_admin_password.path;
+  homepageNextdnsKey = config.sops.secrets.homepage_nextdns_key.path;
+  homepageNextdnsProfileId = config.sops.secrets.homepage_nextdns_profile_id.path;
+  homepageTailscaleKey = config.sops.secrets.homepage_tailscale_key.path;
+  homepageTailscaleDeviceId = config.sops.secrets.homepage_tailscale_device_id.path;
+  homepageCloudflaredKey = config.sops.secrets.homepage_cloudflared_key.path;
+  homepageCloudflaredAccountId = config.sops.secrets.homepage_cloudflared_account_id.path;
+  homepageCloudflaredTunnelId = config.sops.secrets.homepage_cloudflared_tunnel_id.path;
+  homepageLatitude = config.sops.secrets.homepage_latitude.path;
+  homepageLongitude = config.sops.secrets.homepage_longitude.path;
+  homepageReadarrKey = config.sops.secrets.homepage_readarr_key.path;
+  homepageLidarrKey = config.sops.secrets.homepage_lidarr_key.path;
+in
 {
   services.homepage-dashboard = {
     enable = true;
@@ -22,7 +49,7 @@
                 {
                   type = "jellyfin";
                   url = "http://localhost:8096";
-                  key = "${config.sops.secrets.homepage_jellyfin_key.path}";
+                  key = "${homepageJellyfinKey}";
                 }
               ];
             };
@@ -36,7 +63,7 @@
                 {
                   type = "audiobookshelf";
                   url = "http://localhost:8085";
-                  key = "${config.sops.secrets.homepage_audiobookshelf_key.path}";
+                  key = "${homepageAudiobookshelfKey}";
                 }
               ];
             };
@@ -53,7 +80,7 @@
                 {
                   type = "sonarr";
                   url = "http://localhost:8989";
-                  key = "${config.sops.secrets.sonarr_key.path}";
+                  key = "${homepageSonarrKey}";
                 }
               ];
             };
@@ -66,7 +93,7 @@
                 {
                   type = "radarr";
                   url = "http://localhost:7878";
-                  key = "${config.sops.secrets.radarr_key.path}";
+                  key = "${homepageRadarrKey}";
                 }
               ];
             };
@@ -91,7 +118,7 @@
                 {
                   type = "prowlarr";
                   url = "http://localhost:9696";
-                  key = "${config.sops.secrets.prowlarr_key.path}";
+                  key = "${homepageProwlarrKey}";
                 }
               ];
             };
@@ -104,7 +131,7 @@
                 {
                   type = "bazarr";
                   url = "http://localhost:6767";
-                  key = "${config.sops.secrets.bazarr_key.path}";
+                  key = "${homepageBazarrKey}";
                 }
               ];
             };
@@ -117,7 +144,7 @@
                 {
                   type = "jellyseerr";
                   url = "http://localhost:5055/";
-                  key = "${config.sops.secrets.jellyseerr_key.path}";
+                  key = "${homepageJellyseerrKey}";
                 }
               ];
             };
@@ -135,7 +162,7 @@
                 {
                   type = "nextcloud";
                   url = "http://localhost:8081";
-                  key = "${config.sops.secrets.homepage_nextcloud_key.path}";
+                  key = "${homepageNextcloudKey}";
                 }
               ];
             };
@@ -149,7 +176,7 @@
                 {
                   type = "paperless";
                   url = "http://localhost:8888";
-                  key = "${config.sops.secrets.homepage_paperless_key.path}";
+                  key = "${homepagePaperlessKey}";
                 }
               ];
             };
@@ -163,7 +190,7 @@
                 {
                   type = "kavita";
                   url = "http://localhost:5000";
-                  key = "${config.sops.secrets.homepage_kavita_key.path}";
+                  key = "${homepageKavitaKey}";
                 }
               ];
             };
@@ -188,7 +215,7 @@
                 {
                   type = "miniflux";
                   url = "http://localhost:8086";
-                  key = "${config.sops.secrets.homepage_miniflux_key.path}";
+                  key = "${homepageMinifluxKey}";
                 }
               ];
             };
@@ -215,7 +242,7 @@
                   type = "grafana";
                   url = "http://localhost:3000";
                   username = "admin";
-                  password = "${config.sops.secrets.grafana_admin_password.path}";
+                  password = "${homepageGrafanaKey}";
                 }
               ];
             };
@@ -247,7 +274,7 @@
                 {
                   type = "home-assistant";
                   url = "http://localhost:8123";
-                  key = "${config.sops.secrets.homepage_hass_key.path}";
+                  key = "${homepageHassKey}";
                 }
               ];
             };
@@ -277,8 +304,8 @@
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
               widget = {
                 type = "nextdns";
-                  profile = "${config.sops.secrets.homepage_nextdns_profile_id.path}";
-                  key = "${config.sops.secrets.homepage_nextdns_key.path}"; 
+                  profile = "${homepageNextdnsProfileId}";
+                  key = "${homepageNextdnsKey}"; 
               };
             };
           }
@@ -289,8 +316,8 @@
               icon = "tailscale";
               widget = {
                 type = "tailscale";
-                deviceid = "${config.sops.secrets.homepage_tailscale_device_id.path}";
-                key = "${config.sops.secrets.homepage_tailscale_key.path}";
+                deviceid = "${homepageTailscaleDeviceId}";
+                key = "${homepageTailscaleKey}";
               };
             };
           }
@@ -301,9 +328,9 @@
               icon = "cloudflare-zero-trust";
               widget = {
                 type = "cloudflared"; 
-                accountid = "config.sops.secrets.homepage_cloudflared_account_id.path";
-                tunnelid = "config.sops.secrets.homepage_cloudflared_tunnel_id.path";
-                key = "config.sops.secrets.homepage_cloudflared_key.path";
+                accountid = "${homepageCloudflaredAccountId}";
+                tunnelid = "${homepageCloudflaredTunnelId}";
+                key = "${homepageCloudflaredKey}";
               };
             };
           }
@@ -319,8 +346,8 @@
         openmeteo = {
           label = "Calgary";
           timezone = "America/Edmonton";
-          latitude = "${config.sops.secrets.homepage_latitude.path}";
-          longitude = "${config.sops.secrets.homepage_longitude.path}";
+          latitude = "${homepageLatitude}";
+          longitude = "${homepageLongitude}";
           units = "metric";
         };
       }

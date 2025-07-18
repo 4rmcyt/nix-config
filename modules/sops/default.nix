@@ -54,13 +54,13 @@
 
       
       # Nixarr API Keys
-      "sonarr_key"     = { owner = "homepage-dashboard"; };
-      "radarr_key"     = { owner = "homepage-dashboard"; };
-      "prowlarr_key"   = { owner = "homepage-dashboard"; };
-      "jellyseerr_key" = { owner = "homepage-dashboard"; };
-      "bazarr_key"     = { owner = "homepage-dashboard"; };
-      "lidarr_key"     = { owner = "homepage-dashboard"; };
-      "readarr_key"    = { owner = "homepage-dashboard"; };
+      "homepage_sonarr_key"     = { owner = "homepage-dashboard"; };
+      "homepage_radarr_key"     = { owner = "homepage-dashboard"; };
+      "homepage_prowlarr_key"   = { owner = "homepage-dashboard"; };
+      "homepage_jellyseerr_key" = { owner = "homepage-dashboard"; };
+      "homepage_bazarr_key"     = { owner = "homepage-dashboard"; };
+      "homepage_lidarr_key"     = { owner = "homepage-dashboard"; };
+      "homepage_readarr_key"    = { owner = "homepage-dashboard"; };
       
       # Other Homepage Widget Keys
       "homepage_tailscale_key"          = { owner = "homepage-dashboard"; };
@@ -80,6 +80,7 @@
       "homepage_nextdns_profile_id"     = { owner = "homepage-dashboard"; };
       "homepage_latitude"            = { owner = "homepage-dashboard"; };
       "homepage_longitude"           = { owner = "homepage-dashboard"; };
+      "homepage_grafana_admin_password"        = { owner = "homepage-dashboard"; };
     };
   };
 }
