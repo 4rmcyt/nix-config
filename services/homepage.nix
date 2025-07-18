@@ -275,13 +275,11 @@
               href = "https://my.nextdns.io/";
               description = "Nextdns Dashboard";
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
-              widgets = [
-                {
-                  type = "nextdns";
+              widget = {
+                type = "nextdns";
                   profileId = "${config.sops.secrets.homepage_nextdns_profile_id.path}";
                   key = "${config.sops.secrets.homepage_nextdns_key.path}";
-                }
-              ];
+              };
             };
           }
           {
