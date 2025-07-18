@@ -47,6 +47,13 @@
         owner = "nextcloud";
       };
       
+      tailscale_auth_key = {
+        sopsFile = ../../secrets/tailscale.yaml;
+        key = "tailscale_auth_key";
+        # The autoconnect service runs as root
+        owner = "root";
+      };
+      
       homepage_secrets = {
         sopsFile = ../../secrets/homepage.yaml;
         owner = "homepage-dashboard";
