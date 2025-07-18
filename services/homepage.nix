@@ -242,7 +242,7 @@ in
                   type = "grafana";
                   url = "http://localhost:3000";
                   username = "admin";
-                  password = "${homepageGrafanaKey}";
+                  password = homepageGrafanaKey;
                 }
               ];
             };
@@ -346,8 +346,8 @@ in
         openmeteo = {
           label = "Calgary";
           timezone = "America/Edmonton";
-          latitude = "${homepageLatitude}";
-          longitude = "${homepageLongitude}";
+          latitude = homepageLatitude;
+          longitude = homepageLongitude;
           units = "metric";
         };
       }
