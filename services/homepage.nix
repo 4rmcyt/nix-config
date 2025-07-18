@@ -10,12 +10,9 @@
     enable = true;
     listenPort = 8082;
 
-    # This line has been corrected to use 'homepage_secrets'
-    # to match your sops/default.nix file.
-    sopsFile = config.sops.secrets.homepage_secrets.path;
+    # The invalid 'sopsFile' option has been removed.
+    # The secrets will be injected via the systemd service config below.
 
-    # The incorrect 'environment' block has been removed from here.
-    # All other configuration for services, widgets, and bookmarks remains.
     services = [
       {
         "Media" = [
@@ -362,9 +359,14 @@
     ];
   };
 
-  # This is the correct way to add an extra environment variable
-  # to the underlying systemd service.
-  systemd.services.homepage-dashboard.serviceConfig.Environment = [
-    "HOMEPAGE_ALLOWED_HOSTS=localhost,127.0.0.1,192.168.1.165,home.labhome.work"
-  ];
+  # This block correctly injects both the secrets file and the extra
+  # environment variable into the systemd service.
+  systemd.services.homepage-dashboard.serviceConfig = {
+    # This points to the environment file created by sops-nix for your homepage secrets.
+    EnvironmentFile = config.sops.secrets.homepage_secrets.path;
+    # This adds the allowed hosts variable.
+    Environment = [
+      "HOMEPAGE_ALLOWED_HOSTS=localhost,127.0.0.1,192.168.1.165,home.labhome.work"
+    ];
+  };
 }
