@@ -11,6 +11,21 @@
         neededForUsers = true;
       };
 
+      # System SSH Host Keys - Defined individually to get unique paths
+      "ssh_host_ed25519_key" = {
+        sopsFile = ../../secrets/system.yaml;
+        owner = "root";
+        group = "root";
+        mode = "0600";
+      };
+      "ssh_host_rsa_key" = {
+        sopsFile = ../../secrets/system.yaml;
+        owner = "root";
+        group = "root";
+        mode = "0600";
+      };
+
+      # Other system keys can remain in a group if not needed individually
       system_keys = {
         sopsFile = ../../secrets/system.yaml;
         owner = "root";
@@ -27,10 +42,15 @@
         owner = "homepage-dashboard";
       };
 
-      cloudflare_secrets = {
-        sopsFile = ../../secrets/cloudflare.yaml;
+      # Dedicated secret for the Cloudflare Tunnel JSON credentials
+      cloudflare_tunnel_credentials = {
+        sopsFile = ../../secrets/cloudflare-creds.json;
         owner = "cloudflared";
         group = "cloudflared";
+      };
+      # Other cloudflare secrets can remain grouped
+      cloudflare_secrets = {
+        sopsFile = ../../secrets/cloudflare.yaml;
       };
 
       tailscale_secrets = {
@@ -40,75 +60,67 @@
       };
 
       keycloak_secrets = {
-        sopsFile = ../../secrets/keycloak.yaml; # You will need to create this file
+        sopsFile = ../../secrets/keycloak.yaml;
         owner = "keycloak";
       };
       
       grafana_secrets = {
-        sopsFile = ../../secrets/grafana.yaml; # You will need to create this file
+        sopsFile = ../../secrets/grafana.yaml;
         owner = "grafana";
       };
 
       miniflux_secrets = {
-        sopsFile = ../../secrets/miniflux.yaml; # You will need to create this file
+        sopsFile = ../../secrets/miniflux.yaml;
         owner = "miniflux";
       };
 
       microbin_secrets = {
-        sopsFile = ../../secrets/microbin.yaml; # You will need to create this file
+        sopsFile = ../../secrets/microbin.yaml;
         owner = "microbin";
       };
 
       paperless_secrets = {
-        sopsFile = ../../secrets/paperless.yaml; # You will need to create this file
+        sopsFile = ../../secrets/paperless.yaml;
         owner = "paperless";
       };
 
       hass_secrets = {
-        sopsFile = ../../secrets/hass.yaml; # You will need to create this file
-        owner = "hass";
+        sopsFile = ../../secrets/hass.yaml;
+        owner = "home-assistant"; # Corrected owner
       };
 
       radicale_secrets = {
-        sopsFile = ../../secrets/radicale.yaml; # You will need to create this file
+        sopsFile = ../../secrets/radicale.yaml;
         owner = "radicale";
       };
 
       mosquitto_secrets = {
-        sopsFile = ../../secrets/mosquitto.yaml; # You will need to create this file
+        sopsFile = ../../secrets/mosquitto.yaml;
         owner = "mosquitto";
       };
 
       audiobookshelf_secrets = {
-        sopsFile = ../../secrets/audiobookshelf.yaml; # You will need to create this file
+        sopsFile = ../../secrets/audiobookshelf.yaml;
         owner = "audiobookshelf";
       };
 
       kavita_secrets = {
-        sopsFile = ../../secrets/kavita.yaml; # You will need to create this file
+        sopsFile = ../../secrets/kavita.yaml;
         owner = "kavita";
       };
 
       jellyfin_secrets = {
-        sopsFile = ../../secrets/jellyfin.yaml; # You will need to create this file
+        sopsFile = ../../secrets/jellyfin.yaml;
         owner = "jellyfin";
       };
 
       nextcloud_secrets = {
-        sopsFile = ../../secrets/nextcloud.yaml; # You will need to create this file
+        sopsFile = ../../secrets/nextcloud.yaml;
         owner = "nextcloud";
-      };
-
-      tplink_living_room_creds = {
-        sopsFile = ../../secrets/tplink_living_room.yaml; # You will need to create this file   
-      };
-
-      tplink_office_creds = {
-        sopsFile = ../../secrets/tplink_office.yaml; # You will need to create this file   
       };
       
       nextdns_secrets = {
-        sopsFile = ../../secrets/nextdns.yaml; # You will need to create this file
+        sopsFile = ../../secrets/nextdns.yaml;
       };
     };
   };
