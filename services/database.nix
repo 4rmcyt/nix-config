@@ -1,57 +1,44 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_15;
-    
-    settings = {
-      max_connections = 100;
-      shared_buffers = "256MB";
-      effective_cache_size = "1GB";
-      maintenance_work_mem = "64MB";
-    };
-    
-    ensureDatabases = [
-      "keycloak"
-      "nextcloud" 
-      "miniflux"
-      "hass"
-    ];
-    
-    ensureUsers = [
-      { name = "keycloak"; ensureDBOwnership = true; }
-      { name = "nextcloud"; ensureDBOwnership = true; }
-      { name = "miniflux"; ensureDBOwnership = true; }
-      { name = "hass"; ensureDBOwnership = true; }
-    ];
-    
-   authentication = pkgs.lib.mkOverride 10 ''
-      local all all trust
-      host all all 127.0.0.1/32 trust
-      host all all ::1/128 trust
-      '';
+    authentication = pkgs.lib.mkForce ''
+      # TYPE  DATABASE        USER            ADDRESS                 METHOD
+      local   all             all                                     peer
+      host    all             all             127.0.0.1/32            scram-sha-256
+      host    all             all             ::1/128                 scram-sha-256
+    '';
+
+    initialScript = pkgs.writeText "initial-db-script" ''
+      CREATE ROLE keycloak WITH LOGIN;
+      CREATE DATABASE keycloak WITH OWNER keycloak;
+      CREATE ROLE nextcloud WITH LOGIN;
+      CREATE DATABASE nextcloud WITH OWNER nextcloud;
+      CREATE ROLE miniflux WITH LOGIN;
+      CREATE DATABASE miniflux WITH OWNER miniflux;
+      CREATE ROLE hass WITH LOGIN;
+      CREATE DATABASE hass WITH OWNER hass;
+    '';
   };
 
-  # Set up database passwords after PostgreSQL is running
+  # This systemd service runs once to set the passwords for your database users.
+  # It correctly references the secret values from your sops configuration.
   systemd.services.postgresql-setup-passwords = {
-    description = "Set up PostgreSQL passwords";
-    after = [ "postgresql.service" ];
+    description = "Set initial PostgreSQL user passwords from sops";
+    after = [ "postgresql.service" "sops.service" ];
+    wants = [ "postgresql.service" "sops.service" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = pkgs.writeShellScript "setup-postgres-passwords" ''
-        # Wait for PostgreSQL to be ready
-        until ${pkgs.postgresql_15}/bin/pg_isready -h localhost; do
-          sleep 1
-        done
-
-        ${pkgs.postgresql_15}/bin/psql -U postgres -c "ALTER USER hass WITH PASSWORD '$(cat ${config.sops.secrets.hass_db_password.path})';"
-        ${pkgs.postgresql_15}/bin/psql -U postgres -c "ALTER USER miniflux WITH PASSWORD '$(cat ${config.sops.secrets.miniflux_db_password.path})';"
-        ${pkgs.postgresql_15}/bin/psql -U postgres -c "ALTER USER nextcloud WITH PASSWORD '$(cat ${config.sops.secrets.nextcloud_db_password.path})';"
-        ${pkgs.postgresql_15}/bin/psql -U postgres -c "ALTER USER keycloak WITH PASSWORD '$(cat ${config.sops.secrets.keycloak_db_password.path})';"
-      '';
+      User = "postgres";
     };
+    script = ''
+      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER keycloak WITH PASSWORD '${config.sops.secrets.database_passwords.keycloak_db_password}';"
+      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER nextcloud WITH PASSWORD '${config.sops.secrets.database_passwords.nextcloud_db_password}';"
+      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER hass WITH PASSWORD '${config.sops.secrets.database_passwords.hass_db_password}';"
+      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER miniflux WITH PASSWORD '${config.sops.secrets.database_passwords.miniflux_db_password}';"
+    '';
   };
 }
