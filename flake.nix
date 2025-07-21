@@ -1,6 +1,6 @@
 {
   description = "NixOS configuration for homeserver";
-  
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     disko = {
@@ -20,7 +20,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     vscode-server.url = "github:nix-community/nixos-vscode-server";
-    nix4nvchad.url = "github:nix-community/nix4nvchad";
+    nvchad4nix = {
+      url = "github:MOIS3Y/nvchad4nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixarr = {
       url = "github:rasmus-kirk/nixarr";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -44,7 +47,7 @@
       nix4nvchad,
       ...
     }@inputs:
-    { 
+    {
       nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; }; # This is used inside the modules themselves
@@ -53,10 +56,21 @@
           vscode-server.nixosModules.default
           disko.nixosModules.disko
           sops-nix.nixosModules.sops
-          home-manager.nixosModules.home-manager
           nix-index-database.nixosModules.nix-index
           nixarr.nixosModules.default
-          
+
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              inherit extraSpecialArgs; # <- this will make inputs available anywhere in the HM configuration
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.zeev = import ./.home-manager/default.nix {
+                inherit inputs config;
+                pkgs = inputs.nixpkgs.legacyPackages.${builtins.currentSystem};
+              };
+            };
+          }
 
           # Core system configuration files
           ./configuration.nix
@@ -68,7 +82,6 @@
           ./users
           ./modules/base
           ./modules/sops
-        
 
           # Services
           ./services/fail2ban.nix
