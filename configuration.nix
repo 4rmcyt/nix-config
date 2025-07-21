@@ -42,7 +42,7 @@
     iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools
     apacheHttpd zsh-powerlevel10k meslo-lgs-nf yamllint nix-index iotop
     tuptime smartmontools fzf ffmpeg nmap trash-cli zip unar unzip p7zip
-    calibre go nextdns gnupg
+    calibre go nextdns
   ];
 
 
@@ -91,11 +91,9 @@
 
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
-    users.zeev = {
-      imports = [ ./home-manager ];
-    };
+    users.zeev = import ./home-manager;
   };
-
+  
   systemd.services.nextdns-activate = {
     script = ''
       /run/current-system/sw/bin/nextdns activate

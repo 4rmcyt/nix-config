@@ -26,6 +26,7 @@ let
 in
 {
   users = {
+    # Define all groups for your services
     groups = {
       media = { };
       samba = { };
