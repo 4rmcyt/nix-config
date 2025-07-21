@@ -47,7 +47,6 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs; }; # This is used inside the modules themselves
         modules = [
-          # External modules are referred to directly by their argument name
           vscode-server.nixosModules.default
           disko.nixosModules.disko
           sops-nix.nixosModules.sops
