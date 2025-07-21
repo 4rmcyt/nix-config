@@ -31,8 +31,8 @@
       };
      
       nextcloud_admin_password = {
-        sopsFile = ../../secrets/nextcloud.yaml; # Reads from the nextcloud secrets file
-        key = "nextcloud_admin_password";     # But only extracts this specific key
+        sopsFile = ../../secrets/nextcloud.yaml; 
+        key = "nextcloud_admin_password";
         owner = "nextcloud";
       };
       
