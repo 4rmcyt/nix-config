@@ -5,7 +5,6 @@
     age.keyFile = "/var/lib/sops/age.key";
     defaultSopsFormat = "yaml";
     secrets = {
-       # User Passwords
       zeev_password = {
         sopsFile = ../../secrets/common.yaml;
         neededForUsers = true;
