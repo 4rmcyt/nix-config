@@ -14,7 +14,6 @@
       nextdns_api_key = { sopsFile = ../../secrets/nextdns.yaml; key = "nextdns_api_key"; };
       tplink_living_room_creds = { sopsFile = ../../secrets/system.yaml; owner = "root"; };
       tplink_office_creds = { sopsFile = ../../secrets/system.yaml; owner = "root"; };
-      homepage_secrets = { sopsFile = ../../secrets/homepage.yaml; owner = "homepage-dashboard"; format = "binary"; };
       cloudflare_tunnel_credentials = { sopsFile = ../../secrets/cloudflare_tunnel_credentials.json; owner = "cloudflared"; group = "cloudflared"; format = "binary"; };
       cloudflare_api_key = { sopsFile = ../../secrets/cloudflare.yaml; key = "cloudflare_api_key"; };
       cloudflare_zone_id = { sopsFile = ../../secrets/cloudflare.yaml; key = "cloudflare_zone_id"; };
