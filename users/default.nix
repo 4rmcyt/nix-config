@@ -65,7 +65,6 @@ in
       git = {
         isSystemUser = true;
         group = "git";
-        openssh.authorizedKeys.keys = user-keys;
       };
       keycloak = {
         isSystemUser = true;
