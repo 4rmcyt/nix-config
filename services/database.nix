@@ -36,7 +36,7 @@
     script = ''
       ${pkgs.postgresql_15}/bin/psql -c "ALTER USER keycloak WITH PASSWORD '${config.sops.secrets.keycloak_db_password.path}';"
       ${pkgs.postgresql_15}/bin/psql -c "ALTER USER nextcloud WITH PASSWORD '${config.sops.secrets.nextcloud_db_password.path}';"
-      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER hass WITH PASSWORD '${config.sops.secrets.database_passwords.hass_db_password}';"
+      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER hass WITH PASSWORD '${config.sops.secrets.hass_db_password}';"
       ${pkgs.postgresql_15}/bin/psql -c "ALTER USER miniflux WITH PASSWORD '${config.sops.secrets.database_passwords.miniflux_db_password}';"
     '';
   };
