@@ -159,10 +159,10 @@
       #   owner = "audiobookshelf";
       # };
 
-      kavita_secrets = {
-        sopsFile = ../../secrets/kavita.yaml;
-        owner = "kavita";
-      };
+      # kavita_secrets = {
+      #   sopsFile = ../../secrets/kavita.yaml;
+      #   owner = "kavita";
+      # };
 
       # jellyfin_secrets = {
       #   sopsFile = ../../secrets/jellyfin.yaml;
