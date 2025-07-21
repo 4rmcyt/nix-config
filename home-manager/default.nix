@@ -12,6 +12,13 @@
 
   programs = {
     home-manager.enable = true;
+    gpg = {
+      enable = true;
+      keys = [{
+        source = config.sops.secrets.zeev_gpg_key.path;
+        trust-ultimate = true;
+     }];
+
     zsh = {
       enable = true;
       enableCompletion = true;
