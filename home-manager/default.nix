@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  inputs,
-  ...
-}:
+{ pkgs, inputs, ... }:
 {
   home.username = "zeev";
   home.homeDirectory = "/home/zeev";
@@ -12,11 +7,11 @@
     nixfmt-rfc-style
   ];
   imports = [
-    inputs.nix4nvchad.homeManagerModule
+    inputs.nix4nvchad.homeManagerModules.default
   ];
 
   programs = {
-    home-manager.enable = true;     
+    home-manager.enable = true;
     zsh = {
       enable = true;
       enableCompletion = true;
@@ -25,10 +20,6 @@
       shellAliases = {
         ll = "ls -l";
         update = "sudo nixos-rebuild switch --flake .#homeserver";
-      };
-
-      powerlevel10k = {
-        enable = true;
       };
 
       plugins = [
@@ -52,6 +43,16 @@
           name = "you-should-use";
           src = pkgs.zsh-you-should-use;
         }
+        {
+          name = "do-you-even-nix";
+          file = "do-you-even-nix.zsh-theme";
+          src = pkgs.fetchFromGitHub {
+            owner = "miche1e";
+            repo = "do-you-even-nix";
+            rev = "v1.0.1";
+            sha256 = "n9QYjpXlGdLx6agwp14rwcc6Jr5+0E/2h/oMuFsveHA=";
+          };
+        }
       ];
 
       oh-my-zsh = {
@@ -61,12 +62,31 @@
           "sudo"
         ];
       };
-      nvchad.enable = true;
+    };
+
+    nvchad = {
+      enable = true;
+      extraPackages = with pkgs; [
+        nodePackages.bash-language-server
+        docker-compose-language-service
+        dockerfile-language-server-nodejs
+        emmet-language-server
+        nixd
+        (python3.withPackages (
+          ps: with ps; [
+            python-lsp-server
+            flake8
+          ]
+        ))
+      ];
+      hm-activation = true;
+      backup = true;
     };
   };
   services.gpg-agent = {
     enable = true;
     enableSshSupport = true;
   };
+
   home.stateVersion = "25.05";
 }
