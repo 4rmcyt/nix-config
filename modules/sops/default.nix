@@ -67,7 +67,7 @@
       };
 
       cloudflare_tunnel_credentials = {
-        sopsFile = ../../secrets/cloudflare-creds.json;
+        sopsFile = ../../secrets/cloudflare_tunnel_credentials.json;
         owner = "cloudflared";
         group = "cloudflared";
       };
