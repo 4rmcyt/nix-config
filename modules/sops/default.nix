@@ -154,20 +154,20 @@
         owner = "mosquitto";
       };
 
-      audiobookshelf_secrets = {
-        sopsFile = ../../secrets/audiobookshelf.yaml;
-        owner = "audiobookshelf";
-      };
+      # audiobookshelf_secrets = {
+      #   sopsFile = ../../secrets/audiobookshelf.yaml;
+      #   owner = "audiobookshelf";
+      # };
 
       kavita_secrets = {
         sopsFile = ../../secrets/kavita.yaml;
         owner = "kavita";
       };
 
-      jellyfin_secrets = {
-        sopsFile = ../../secrets/jellyfin.yaml;
-        owner = "jellyfin";
-      };
+      # jellyfin_secrets = {
+      #   sopsFile = ../../secrets/jellyfin.yaml;
+      #   owner = "jellyfin";
+      # };
 
       nextcloud_secrets = {
         sopsFile = ../../secrets/nextcloud.yaml;
