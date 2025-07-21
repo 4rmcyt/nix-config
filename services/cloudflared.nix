@@ -4,7 +4,7 @@
     enable = true;
     tunnels = {
       "f7876e26f7876e26-87a8-4bdd-9798-3986b0f7cebc" = {
-        credentialsFile = config.sops.secrets.cloudflare_tunnel_credentials.path;
+        credentialsFile = config.sops.secrets.cloudflare_tunnel_credentials;
         default = "http_status:404";
         ingress = {
           "nextcloud.labhome.work" = "http://localhost:8081";
