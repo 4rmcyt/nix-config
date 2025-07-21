@@ -62,7 +62,6 @@
           home-manager.nixosModules.home-manager
           {
             home-manager = {
-              inherit extraSpecialArgs; # <- this will make inputs available anywhere in the HM configuration
               useGlobalPkgs = true;
               useUserPackages = true;
               users.zeev = import ./.home-manager/default.nix {
