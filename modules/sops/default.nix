@@ -1,43 +1,37 @@
 { config, pkgs, ... }:
 
 {
- sops = {
-    age.keyFile = "/var/lib/sops/age.key"; defaultSopsFormat = "yaml";
+  sops = {
+    age.keyFile = "/var/lib/sops/age.key";
+    defaultSopsFormat = "yaml";
     secrets = {
-      zeev_password = { sopsFile = ../../secrets/common.yaml;  neededForUsers = true; };
+      # --- System & User Secrets ---
+      zeev_password = { sopsFile = ../../secrets/common.yaml; neededForUsers = true; };
       ssh_host_ed25519_key = { sopsFile = ../../secrets/system.yaml; owner = "root"; group = "root"; mode = "0600"; };
       ssh_host_rsa_key = { sopsFile = ../../secrets/system.yaml; owner = "root"; group = "root"; mode = "0600"; };
-      system_keys = { sopsFile = ../../secrets/system.yaml; owner = "root"; group = "root"; };
-      nextcloud_admin_password = { sopsFile = ../../secrets/nextcloud.yaml; key = "nextcloud_admin_password"; owner = "nextcloud"; };
-      tailscale_auth_key = { sopsFile = ../../secrets/tailscale.yaml; key = "tailscale_auth_key"; owner = "root"; };
-      nextdns_profile_id = { sopsFile = ../../secrets/nextdns.yaml; key = "nextdns_profile_id"; };
-      nextdns_api_key = { sopsFile = ../../secrets/nextdns.yaml; key = "nextdns_api_key"; };
-      tplink_living_room_creds = { sopsFile = ../../secrets/system.yaml; owner = "root"; };
-      tplink_office_creds = { sopsFile = ../../secrets/system.yaml; owner = "root"; };
       cloudflare_tunnel_credentials = { sopsFile = ../../secrets/cloudflare_tunnel_credentials.json; owner = "cloudflared"; group = "cloudflared"; format = "binary"; };
       cloudflare_api_key = { sopsFile = ../../secrets/cloudflare.yaml; key = "cloudflare_api_key"; };
       cloudflare_zone_id = { sopsFile = ../../secrets/cloudflare.yaml; key = "cloudflare_zone_id"; };
-      tailscale_secrets = { sopsFile = ../../secrets/tailscale.yaml; owner = "tailscale"; group = "tailscale"; };
+      tailscale_auth_key = { sopsFile = ../../secrets/tailscale.yaml; key = "tailscale_auth_key"; owner = "root"; };
+      nextdns_profile_id = { sopsFile = ../../secrets/nextdns.yaml; key = "nextdns_profile_id"; };
+      nextdns_api_key = { sopsFile = ../../secrets/nextdns.yaml; key = "nextdns_api_key"; };
+      
+      # --- Service Secrets ---
+      nextcloud_admin_password = { sopsFile = ../../secrets/nextcloud.yaml; key = "nextcloud_admin_password"; owner = "nextcloud"; };
       keycloak_secrets = { sopsFile = ../../secrets/keycloak.yaml; owner = "keycloak"; };
       grafana_admin_password = { sopsFile = ../../secrets/grafana.yaml; owner = "grafana"; };
       miniflux_admin_password = { sopsFile = ../../secrets/miniflux.yaml; owner = "miniflux"; };
       microbin_secrets = { sopsFile = ../../secrets/microbin.yaml; owner = "microbin"; };
       paperless_secrets = { sopsFile = ../../secrets/paperless.yaml; owner = "paperless"; };
+      radicale_secrets = { sopsFile = ../../secrets/radicale.yaml; owner = "radicale"; };
+
+      # --- Database Passwords (from postgres.yaml) ---
       nextcloud_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "nextcloud_db_password"; };
       hass_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "hass_db_password"; };
       miniflux_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "miniflux_db_password"; };
       keycloak_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "keycloak_db_password"; };
       
-      # hass_secrets = { sopsFile = ../../secrets/hass.yaml; owner = "hass"; group = "hass"; };
-      radicale_secrets = { sopsFile = ../../secrets/radicale.yaml; owner = "radicale"; };
-      # mosquitto_secrets = { sopsFile = ../../secrets/mosquitto.yaml; owner = "mosquitto"; };
-      # audiobookshelf_secrets = { sopsFile = ../../secrets/audiobookshelf.yaml; owner = "audiobookshelf"; };
-      # kavita_secrets = { sopsFile = ../../secrets/kavita.yaml; owner = "kavita"; };
-      # jellyfin_secrets = { sopsFile = ../../secrets/jellyfin.yaml; owner = "jellyfin"; };
-      nextcloud_secrets = { sopsFile = ../../secrets/nextcloud.yaml; owner = "nextcloud"; };
-      nextdns_secrets = { sopsFile = ../../secrets/nextdns.yaml; };
-      
-      # Homepage widgets credentials
+      # --- Homepage Widget Credentials (from homepage.yaml) ---
       homepage_hass_key = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_hass_key"; };
       homepage_jellyseerr_key = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_jellyseerr_key"; };
       homepage_lidarr_key     = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_lidarr_key"; };
