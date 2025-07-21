@@ -2,14 +2,9 @@
 
 {
   # 1. CONFIGURE THE SERVICE LAYOUT
-  # This section only contains the dashboard's visual layout.
-  # ALL secret and environment variable settings have been removed from here.
   services.homepage-dashboard = {
     enable = true;
     listenPort = 8082;
-    # ... all of your 'services', 'widgets', and 'bookmarks' sections go here,
-    # with the corrected `{{HOMEPAGE_VAR_...}}` syntax from the previous step ...
-    # For example:
     services = [
       {
         "Media" = [
@@ -59,7 +54,7 @@
               widgets = [{
                 type = "radarr";
                 url = "http://localhost:7878";
-                key = "{{HOMEPAGE_RADARR_KEY}}";
+                key = "{{HOMEPAGE_VAR_RADARR_KEY}}";
               }];
             };
           }
@@ -127,7 +122,7 @@
                 key = "{{HOMEPAGE_VAR_READARR_KEY}}";
               }];
             };
-          } 
+          }
         ];
       }
       {
@@ -237,7 +232,7 @@
             "Home Assistant" = {
               href = "https://hass.labhome.work";
               description = "Home Automation";
-              icon = "home-assistant";
+              icon = "homeassistant";
               widgets = [{
                 type = "homeassistant";
                 url = "http://localhost:8123";
@@ -270,7 +265,7 @@
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
               widget = {
                 type = "nextdns";
-                profile = "{{HOMEPAGE_NEXTDNS_PROFILE_ID}}";
+                profile = "{{HOMEPAGE_VAR_NEXTDNS_PROFILE_ID}}";
                 key = "{{HOMEPAGE_VAR_NEXTDNS_KEY}}";
               };
             };
@@ -282,7 +277,7 @@
               icon = "tailscale";
               widget = {
                 type = "tailscale";
-                deviceid = "{{HOMEPAGE_TAILSCALE_DEVICE_ID}}";
+                deviceid = "{{HOMEPAGE_VAR_TAILSCALE_DEVICE_ID}}";
                 key = "{{HOMEPAGE_VAR_TAILSCALE_KEY}}";
               };
             };
@@ -328,8 +323,8 @@
         openmeteo = {
           label = "Calgary";
           timezone = "America/Edmonton";
-          latitude = "{{HOMEPAGE_LATITUDE}}";
-          longitude = "{{HOMEPAGE_LONGITUDE}}";
+          latitude = "{{HOMEPAGE_VAR_LATITUDE}}";
+          longitude = "{{HOMEPAGE_VAR_LONGITUDE}}";
           units = "metric";
         };
       }
@@ -378,12 +373,14 @@
     ];
   };
 
-
+  # 2. CONFIGURE THE UNDERLYING SYSTEMD SERVICE
   systemd.services.homepage-dashboard.serviceConfig = {
     Environment = [
       "HOMEPAGE_ALLOWED_HOSTS=localhost,127.0.0.1,192.168.1.165,home.labhome.work"
     ];
 
+    # This is the corrected syntax for LoadCredential.
+    # It is a list of strings, each in the format "KEY:VALUE".
     LoadCredential = [
       "HOMEPAGE_VAR_JELLYSEERR_KEY:${config.sops.secrets.homepage_jellyseerr_key.path}"
       "HOMEPAGE_VAR_LIDARR_KEY:${config.sops.secrets.homepage_lidarr_key.path}"
