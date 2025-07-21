@@ -120,7 +120,6 @@
 
       database_passwords = {
         sopsFile = ../../secrets/postgres.yaml;
-        owner = "postgres";
       };
 
 
