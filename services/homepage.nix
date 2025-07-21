@@ -8,13 +8,6 @@
   services.homepage-dashboard = {
     enable = true;
     listenPort = 8082;
-
-    # Set environment variables using the correct module option.
-    environment = {
-      HOMEPAGE_ALLOWED_HOSTS = "localhost,127.0.0.1,192.168.1.165,home.labhome.work";
-    };
-
-    # Use the 'secrets' option to map your SOPS secrets to environment variables.
     secrets = {
       "HOMEPAGE_VAR_JELLYSEERR_KEY" = { file = config.sops.secrets.homepage_jellyseerr_key.path; };
       "HOMEPAGE_VAR_LIDARR_KEY"     = { file = config.sops.secrets.homepage_lidarr_key.path; };
