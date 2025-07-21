@@ -1,4 +1,9 @@
-{ config, pkgs, inputs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 {
   home.username = "zeev";
   home.homeDirectory = "/home/zeev";
@@ -7,17 +12,19 @@
     nixfmt-rfc-style
   ];
   imports = [
-    inputs.nix4nvchad.homeManagerModules.default
+    inputs.nix4nvchad.homeManagerModule
   ];
 
   programs = {
     home-manager.enable = true;
     gpg = {
       enable = true;
-      keys = [{
-        source = config.sops.secrets.zeev_gpg_key.path;
-        trust-ultimate = true;
-      }];
+      keys = [
+        {
+          source = config.sops.secrets.zeev_gpg_key.path;
+          trust-ultimate = true;
+        }
+      ];
     };
     zsh = {
       enable = true;
@@ -32,7 +39,7 @@
       powerlevel10k = {
         enable = true;
       };
-      
+
       plugins = [
         {
           name = "zsh-autosuggestions";
@@ -63,32 +70,13 @@
           "sudo"
         ];
       };
+      nvchad.enable = true;
     };
 
-    nvchad = {
+    services.gpg-agent = {
       enable = true;
-      extraPackages = with pkgs; [
-        nodePackages.bash-language-server
-        docker-compose-language-service
-        dockerfile-language-server-nodejs
-        emmet-language-server
-        nixd
-        (python3.withPackages (
-          ps: with ps; [
-            python-lsp-server
-            flake8
-          ]
-        ))
-      ];
-      hm-activation = true;
-      backup = true;
+      enableSshSupport = true;
     };
   };
-
-  services.gpg-agent = {
-    enable = true;
-    enableSshSupport = true;
-  };
-
   home.stateVersion = "25.05";
 }
