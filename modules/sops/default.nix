@@ -37,7 +37,7 @@
       
 
       # --- Homepage Widget Credentials (from homepage.yaml) ---
-      homepage_secrets = { sopsFile = ../../secrets/homepage.yaml; };
+      homepage_secrets = { sopsFile = ../../secrets/homepage.yaml; key = ""; };
       # homepage_hass_key = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_hass_key"; };
       # homepage_jellyseerr_key = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_jellyseerr_key"; };
       # homepage_lidarr_key     = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_lidarr_key"; };
