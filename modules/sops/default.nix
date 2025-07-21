@@ -22,9 +22,9 @@
 
       # --- Service Secrets ---
       nextcloud_admin_password = { sopsFile = ../../secrets/nextcloud.yaml; key = "nextcloud_admin_password"; owner = "nextcloud"; };
-      keycloak_secrets = { sopsFile = ../../secrets/keycloak.yaml; owner = "keycloak"; };
-      grafana_admin_password = { sopsFile = ../../secrets/grafana.yaml; owner = "grafana"; };
-      miniflux_admin_password = { sopsFile = ../../secrets/miniflux.yaml; owner = "miniflux"; };
+      keycloak_admin_password = { sopsFile = ../../secrets/keycloak.yaml; key = "keycloak_admin_password"; owner = "keycloak"; };
+      grafana_admin_password = { sopsFile = ../../secrets/grafana.yaml; key = "grafana_admin_password"; owner = "grafana"; };
+      miniflux_admin_password = { sopsFile = ../../secrets/miniflux.yaml; key = "miniflux_admin_password"; owner = "miniflux"; };
       microbin_secrets = { sopsFile = ../../secrets/microbin.yaml; owner = "microbin"; };
       paperless_secrets = { sopsFile = ../../secrets/paperless.yaml; owner = "paperless"; };
       radicale_secrets = { sopsFile = ../../secrets/radicale.yaml; owner = "radicale"; };
