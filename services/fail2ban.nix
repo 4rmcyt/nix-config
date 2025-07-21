@@ -50,20 +50,6 @@
           action = "cloudflare-token";
         };
   };
-
-      nextcloud = {
-        settings = {
-          enabled = true;
-          backend = "systemd";
-          journalmatch = "_SYSTEMD_UNIT=nextcloud-phpfpm.service";
-          filter = "nextcloud";
-          maxretry = 5;
-          findtime = "10m";
-          bantime = "1h";
-          action = "cloudflare-token";
-        };
-      };
-
       homeassistant = {
         settings = {
           enabled = true;

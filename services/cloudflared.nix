@@ -7,7 +7,6 @@
         credentialsFile = config.sops.secrets.cloudflare_tunnel_credentials.path;
         default = "http_status:404";
         ingress = {
-          "nextcloud.example.com" = "http://localhost:8081";
           "keycloak.example.com" = "http://localhost:8080";
           "jellyfin.example.com" = "http://localhost:8096";
           "paperless.example.com" = "http://localhost:8888";

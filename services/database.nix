@@ -14,8 +14,6 @@
     initialScript = pkgs.writeText "initial-db-script" ''
       CREATE ROLE keycloak WITH LOGIN;
       CREATE DATABASE keycloak WITH OWNER keycloak;
-      CREATE ROLE nextcloud WITH LOGIN;
-      CREATE DATABASE nextcloud WITH OWNER nextcloud;
       CREATE ROLE miniflux WITH LOGIN;
       CREATE DATABASE miniflux WITH OWNER miniflux;
       CREATE ROLE hass WITH LOGIN;
@@ -35,7 +33,6 @@
     };
     script = ''
       ${pkgs.postgresql_15}/bin/psql -c "ALTER USER keycloak WITH PASSWORD '${config.sops.secrets.keycloak_db_password.path}';"
-      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER nextcloud WITH PASSWORD '${config.sops.secrets.nextcloud_db_password.path}';"
       ${pkgs.postgresql_15}/bin/psql -c "ALTER USER hass WITH PASSWORD '${config.sops.secrets.hass_db_password.path}';"
       ${pkgs.postgresql_15}/bin/psql -c "ALTER USER miniflux WITH PASSWORD '${config.sops.secrets.miniflux_db_password.path}';"
     '';
