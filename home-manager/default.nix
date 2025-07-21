@@ -44,14 +44,9 @@
           src = pkgs.zsh-you-should-use;
         }
         {
-          name = "do-you-even-nix";
-          file = "do-you-even-nix.zsh-theme";
-          src = pkgs.fetchFromGitHub {
-            owner = "miche1e";
-            repo = "do-you-even-nix";
-            rev = "v1.0.1";
-            sha256 = "n9QYjpXlGdLx6agwp14rwcc6Jr5+0E/2h/oMuFsveHA=";
-          };
+          name = "powerlevel10k";
+          src = pkgs.zsh-powerlevel10k;
+          file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
         }
       ];
 
