@@ -63,6 +63,7 @@
       homepage_secrets = {
         sopsFile = ../../secrets/homepage.yaml;
         owner = "homepage-dashboard";
+        format = "binary";
       };
 
       cloudflare_tunnel_credentials = {

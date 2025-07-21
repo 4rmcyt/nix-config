@@ -9,10 +9,7 @@
   services.homepage-dashboard = {
     enable = true;
     listenPort = 8082;
-
-    # The invalid 'sopsFile' option has been removed.
-    # The secrets will be injected via the systemd service config below.
-
+    envFile = config.sops.secrets.homepage_secrets.path;
     services = [
       {
         "Media" = [
