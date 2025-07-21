@@ -29,18 +29,7 @@
         owner = "root";
         group = "root";
       };
-
-      database_passwords = {
-        sopsFile = ../../secrets/postgres.yaml;
-        owner = "postgres";
-      };
-      
-      nextcloud_db_password = {
-        sopsFile = ../../secrets/postgres.yaml; # Still reads from the main postgres file
-        key = "nextcloud_db_password";        # But only extracts this specific key
-        owner = "nextcloud";
-      };
-
+     
       nextcloud_admin_password = {
         sopsFile = ../../secrets/nextcloud.yaml; # Reads from the nextcloud secrets file
         key = "nextcloud_admin_password";     # But only extracts this specific key
@@ -127,6 +116,30 @@
         sopsFile = ../../secrets/paperless.yaml;
         owner = "paperless";
       };
+
+
+      database_passwords = {
+        sopsFile = ../../secrets/postgres.yaml;
+        owner = "postgres";
+      };
+      keycloak_db_password = {
+        sopsFile = ../../secrets/grafana.yaml;
+        key = "keycloak_db_password";
+        owner = "keycloak";
+      };
+      hass_db_password = {
+        sopsFile = ../../secrets/postgres.yaml;
+        key = "hass_db_password";
+      };
+      miniflux_db_password = {
+        sopsFile = ../../secrets/postgres.yaml; # Reads from the main postgres file
+        key = "miniflux_db_password";
+      };
+      nextcloud_db_password = {
+        sopsFile = ../../secrets/postgres.yaml; # Reads from the main postgres file
+        key = "nextcloud_db_password";
+      };
+
 
       hass_secrets = {
         sopsFile = ../../secrets/hass.yaml;
