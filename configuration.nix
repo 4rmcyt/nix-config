@@ -89,12 +89,7 @@
     zsh.enable = true;
   };
 
-  home-manager = {
-    extraSpecialArgs = { inherit inputs config; };
-    users.zeev = {
-      imports = [ ./home-manager ];
-    };
-  };
+  
 
   systemd.services.nextdns-activate = {
     script = ''
