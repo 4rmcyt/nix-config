@@ -102,7 +102,7 @@
         owner = "grafana";
       };
 
-      miniflux_secrets = {
+      miniflux_admin_password = {
         sopsFile = ../../secrets/miniflux.yaml;
         owner = "miniflux";
       };
