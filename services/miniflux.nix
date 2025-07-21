@@ -1,17 +1,34 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
+let
+  minifluxCredentialsFile = pkgs.writeText "miniflux-credentials-file" ''
+    admin:$(cat ${config.sops.secrets.miniflux_admin_password.path})
+  '';
+in
 {
   services.miniflux = {
     enable = true;
-    # This correctly points to the file containing the admin user/pass.
-    adminCredentialsFile = config.sops.secrets.miniflux_secrets.path;
+    adminCredentialsFile = minifluxCredentialsFile;
 
     config = {
       BASE_URL = "https://rss.labhome.work";
-      # This is the corrected line. It now correctly gets the password
-      # value from within your 'database_passwords' secret group.
-      PORT = "8086";
-      RUN_AS_USER = "miniflux";
+      CREATE_ADMIN = "1";
+      LISTEN_ADDR = "localhost:8086";
+      DATABASE_URL = lib.mkForce "postgres://miniflux:$(cat ${config.sops.secrets.miniflux_db_password.path})@localhost/miniflux?sslmode=disable";
+      OAUTH2_PROVIDER = "oidc";
+      OAUTH2_CLIENT_ID = "miniflux";
+      OAUTH2_REDIRECT_URL = "https://rss.labhome.work/oauth2/oidc/callback";
+      OAUTH2_OIDC_DISCOVERY_ENDPOINT = "https://keycloak.labhome.work/realms/master";
+      OAUTH2_USER_CREATION = "1";
+      DISABLE_LOCAL_AUTH = "false";
+
+      ADMIN_USERNAME = "admin";
+      ADMIN_PASSWORD = config.sops.secrets.miniflux_admin_password.path;
     };
   };
 }
