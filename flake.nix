@@ -65,7 +65,6 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               users.zeev = import ./.home-manager/default.nix {
-                inherit inputs config;
                 pkgs = inputs.nixpkgs.legacyPackages.${builtins.currentSystem};
               };
             };
