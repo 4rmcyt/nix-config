@@ -122,6 +122,22 @@
         sopsFile = ../../secrets/postgres.yaml;
       };
 
+      nextcloud_db_password = {
+        sopsFile = ../../secrets/postgres.yaml;
+        key = "nextcloud_db_password";
+      };
+      hass_db_password = {
+        sopsFile = ../../secrets/postgres.yaml;
+        key = "hass_db_password";
+      };
+      miniflux_db_password = {
+        sopsFile = ../../secrets/postgres.yaml;
+        key = "miniflux_db_password";
+      };
+      keycloak_db_password = {
+        sopsFile = ../../secrets/postgres.yaml;
+        key = "keycloak_db_password";
+      };
 
       hass_secrets = {
         sopsFile = ../../secrets/hass.yaml;
