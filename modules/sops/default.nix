@@ -36,7 +36,7 @@
       keycloak_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "keycloak_db_password"; };
       
       homepage_settings = {
-        sopsFile = ../../secrets/settings.yaml;
+        sopsFile = ../../secrets/homepage_settings.yaml;
         owner = "homepage-dashboard";
         format = "binary"; 
       };
