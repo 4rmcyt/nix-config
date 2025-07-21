@@ -54,11 +54,11 @@
 
       tplink_living_room_creds = {
         sopsFile = ../../secrets/system.yaml;
-        owner = "tplink-living-room";
+        owner = "root";
       };  
       tplink_office_creds = {
         sopsFile = ../../secrets/system.yaml;
-        owner = "tplink-office";
+        owner = "root";
       };
 
       homepage_secrets = {
