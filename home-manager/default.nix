@@ -1,5 +1,4 @@
-# Make sure 'config' is in the function arguments
-{ config, pkgs, inputs, ... }:
+{ pkgs, inputs, ... }:
 {
   home.username = "zeev";
   home.homeDirectory = "/home/zeev";
@@ -7,18 +6,12 @@
     git
     nixfmt-rfc-style
   ];
-
   imports = [
     inputs.nix4nvchad.homeManagerModules.default
   ];
 
-  # The gpg-agent is a service
-  services.gpg-agent = {
-    enable = true;
-    enableSshSupport = true;
-  };
-
   programs = {
+    home-manager.enable = true;
     gpg = {
       enable = true;
       keys = [{
@@ -26,10 +19,10 @@
         trust-ultimate = true;
       }];
     };
-
     zsh = {
       enable = true;
       enableCompletion = true;
+      initContent = "setopt autocd";
 
       shellAliases = {
         ll = "ls -l";
@@ -96,6 +89,11 @@
       hm-activation = true;
       backup = true;
     };
+  };
+
+  services.gpg-agent = {
+    enable = true;
+    enableSshSupport = true;
   };
 
   home.stateVersion = "25.05";
