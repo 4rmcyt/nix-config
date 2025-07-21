@@ -73,6 +73,11 @@
           X11Forwarding no
       '';
     };
+
+    gpg-agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
     
     nextdns = {
       enable = true;
@@ -82,10 +87,8 @@
   };
 
   home-manager = {
-    extraSpecialArgs = { inherit inputs config; };
-    users.zeev = {
-      imports = [ ./home-manager ];
-    };
+    extraSpecialArgs = { inherit inputs; };
+    users.zeev = import ./home-manager;
   };
   
   systemd.services.nextdns-activate = {
