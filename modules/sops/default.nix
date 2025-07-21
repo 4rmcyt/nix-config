@@ -139,10 +139,10 @@
         key = "keycloak_db_password";
       };
 
-      hass_secrets = {
-        sopsFile = ../../secrets/hass.yaml;
-        owner = "homeassistant";
-      };
+      # hass_secrets = {
+      #   sopsFile = ../../secrets/hass.yaml;
+      #   owner = "hass"; # Corrected owner
+      # };
 
       radicale_secrets = {
         sopsFile = ../../secrets/radicale.yaml;
