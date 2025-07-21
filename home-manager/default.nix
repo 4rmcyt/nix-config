@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   home.username = "zeev";
@@ -11,7 +11,7 @@
   ];
 
   imports = [
-    ../dots/nvim/default.nix
+    ./dots/nvim/default.nix
   ];
 
   services.gpg-agent = {
