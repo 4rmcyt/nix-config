@@ -1,4 +1,5 @@
-{ pkgs, inputs, ... }:
+# Make sure 'config' is in the function arguments
+{ config, pkgs, inputs, ... }:
 {
   home.username = "zeev";
   home.homeDirectory = "/home/zeev";
@@ -6,19 +7,29 @@
     git
     nixfmt-rfc-style
   ];
+
   imports = [
     inputs.nix4nvchad.homeManagerModules.default
   ];
 
+  # The gpg-agent is a service
+  services.gpg-agent = {
+    enable = true;
+    enableSshSupport = true;
+  };
+
   programs = {
-    home-manager.enable = true;
+    # --- Merged GPG configuration ---
     gpg = {
       enable = true;
       keys = [{
         source = config.sops.secrets.zeev_gpg_key.path;
         trust-ultimate = true;
-     }];
+      }];
+    };
+    # -----------------------------
 
+    home-manager.enable = true;
     zsh = {
       enable = true;
       enableCompletion = true;
@@ -89,12 +100,6 @@
       hm-activation = true;
       backup = true;
     };
-
-    services.gpg-agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
-
   };
 
   home.stateVersion = "25.05";

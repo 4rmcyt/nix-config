@@ -82,7 +82,7 @@
   };
 
   home-manager = {
-    extraSpecialArgs = { inherit inputs; };
+    extraSpecialArgs = { inherit inputs config; };
     users.zeev = import ./home-manager;
   };
   
