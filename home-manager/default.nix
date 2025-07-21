@@ -77,11 +77,22 @@
       hm-activation = true;
       backup = true;
     };
+    gpg = {
+      enable = true;
+      keys = [
+        # This is your existing secret key from sops
+        {
+          source = config.sops.secrets.zeev_gpg_key.path;
+          trust-ultimate = true;
+        }
+        {
+          fingerprint = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";        
+          trust = "fully"; 
+        }
+      ];
+    };
   };
-  services.gpg-agent = {
-    enable = true;
-    enableSshSupport = true;
-  };
+  
 
   home.stateVersion = "25.05";
 }
