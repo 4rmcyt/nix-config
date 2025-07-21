@@ -40,7 +40,6 @@
       nix-index-database,
       vscode-server,
       nixarr,
-      nix4nvchad,
       ...
     }@inputs:
     { 
