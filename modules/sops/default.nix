@@ -25,9 +25,9 @@
       keycloak_admin_password = { sopsFile = ../../secrets/keycloak.yaml; key = "keycloak_admin_password"; owner = "keycloak"; };
       grafana_admin_password = { sopsFile = ../../secrets/grafana.yaml; key = "grafana_admin_password"; owner = "grafana"; };
       miniflux_admin_password = { sopsFile = ../../secrets/miniflux.yaml; key = "miniflux_admin_password"; owner = "miniflux"; };
-      microbin_secrets = { sopsFile = ../../secrets/microbin.yaml; owner = "microbin"; };
-      paperless_secrets = { sopsFile = ../../secrets/paperless.yaml; owner = "paperless"; };
-      radicale_secrets = { sopsFile = ../../secrets/radicale.yaml; owner = "radicale"; };
+      microbin_admin_password = { sopsFile = ../../secrets/microbin.yaml; key = "microbin_admin_password"; owner = "microbin"; };
+      paperless_admin_password = { sopsFile = ../../secrets/paperless.yaml; key = "paperless_admin_password"; owner = "paperless"; };
+      radicale_users = { sopsFile = ../../secrets/radicale.yaml; owner = "radicale"; group = "radicale"; mode = "0440"; };
 
       # --- Database Passwords (from postgres.yaml) ---
       nextcloud_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "nextcloud_db_password"; };
