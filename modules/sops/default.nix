@@ -22,7 +22,6 @@
       tplink_office_creds = { sopsFile = ../../secrets/system.yaml; key = "tplink_office_creds"; owner = "root"; group = "root"; };
 
       # --- Service Secrets ---
-      nextcloud_admin_password = { sopsFile = ../../secrets/nextcloud.yaml; key = "nextcloud_admin_password"; owner = "nextcloud"; };
       keycloak_admin_password = { sopsFile = ../../secrets/keycloak.yaml; key = "keycloak_admin_password"; owner = "keycloak"; };
       grafana_admin_password = { sopsFile = ../../secrets/grafana.yaml; key = "grafana_admin_password"; owner = "grafana"; };
       miniflux_admin_password = { sopsFile = ../../secrets/miniflux.yaml; key = "miniflux_admin_password"; owner = "miniflux"; };
@@ -31,7 +30,6 @@
       radicale_users = { sopsFile = ../../secrets/radicale_users.txt; owner = "radicale"; group = "radicale"; mode = "0440"; format = "binary"; };
 
       # --- Database Passwords (from postgres.yaml) ---
-      nextcloud_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "nextcloud_db_password"; };
       hass_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "hass_db_password"; };
       miniflux_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "miniflux_db_password"; };
       keycloak_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "keycloak_db_password"; };
@@ -49,7 +47,6 @@
       # homepage_bazarr_key     = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_bazarr_key"; };
       # homepage_paperless_key  = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_paperless_key"; };
       # homepage_miniflux_key   = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_miniflux_key"; };
-      # homepage_nextcloud_key  = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_nextcloud_key"; };
       # homepage_tailscale_key         = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_tailscale_key"; };
       # homepage_tailscale_device_id   = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_tailscale_device_id"; };
       # homepage_cloudflared_account_id = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_cloudflared_account_id"; };

@@ -79,7 +79,6 @@
           ./services/cloudflared.nix
           ./services/monitoring.nix
           ./services/miniflux.nix
-          ./services/nextcloud.nix
           ./services/microbin.nix
           ./services/paperless.nix
           ./services/radicale.nix

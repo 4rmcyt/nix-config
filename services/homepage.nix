@@ -128,18 +128,6 @@
       {
         "Storage & Documents" = [
           {
-            "Nextcloud" = {
-              href = "https://nextcloud.labhome.work/";
-              description = "File Storage & Collaboration";
-              icon = "nextcloud";
-              widgets = [{
-                type = "nextcloud";
-                url = "http://localhost:8081";
-                key = "{{HOMEPAGE_VAR_NEXTCLOUD_KEY}}";
-              }];
-            };
-          }
-          {
             "Paperless" = {
               href = "https://paperless.labhome.work";
               description = "Document Management";
