@@ -57,7 +57,7 @@ in
           "media"
           "samba"
         ];
-        home-manager.users.zeev = import ../home.nix;
+        home-manager.users.zeev = import ../home-manager/default.nix;
         hashedPasswordFile = config.sops.secrets.zeev_password.path;
         openssh.authorizedKeys.keys = server-keys;
       };
