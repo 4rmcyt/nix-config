@@ -11,7 +11,7 @@
       dbhost = "localhost";       
       dbuser = "nextcloud";
       dbname = "nextcloud";
-      dbpassFile = config.sops.secrets.nextcloud_db_password.path;
+      dbpassFile = config.sops.secrets.database_passwords.nextcloud_db_password;
       adminpassFile = config.sops.secrets.nextcloud_admin_password;
       adminuser = "admin";
     };
