@@ -7,7 +7,7 @@
     secrets = {
       # --- System & User Secrets ---
       zeev_password = { sopsFile = ../../secrets/common.yaml; neededForUsers = true; };
-      zeev_gpg_key = { sopsFile = ../../secrets/system.yaml; key = "pgp"; owner = "zeev"; group = "zeev"; mode = "0400"; };
+      zeev_gpg_key = { sopsFile = ../../secrets/system.yaml; key = "gpg"; owner = "zeev"; group = "zeev"; mode = "0400"; };
       ssh_host_ed25519_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_ed25519_key"; owner = "root"; group = "root"; mode = "0600"; };
       ssh_host_rsa_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_rsa_key"; owner = "root"; group = "root"; mode = "0600"; };
       cloudflare_tunnel_credentials = { sopsFile = ../../secrets/cloudflare_tunnel_credentials.bin; owner = "cloudflared"; group = "cloudflared"; format = "binary"; };
