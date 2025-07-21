@@ -1,4 +1,4 @@
-{ pkgs, inputs, config,... }:
+{ pkgs, inputs, ... }:
 {
   home.username = "zeev";
   home.homeDirectory = "/home/zeev";
@@ -10,8 +10,28 @@
     inputs.nix4nvchad.homeManagerModules.default
   ];
 
+  services.gpg-agent = {
+    enable = true;
+    enableSshSupport = true;
+  };
+
+  home.activation.import-gpg-key = pkgs.lib.hm.dag.entryAfter ["writeBoundary"] ''
+    # The GPG key is imported from the path provided by sops-nix
+    $DRY_RUN_CMD ${pkgs.gnupg}/bin/gpg --import ${config.sops.secrets.zeev_gpg_key.path} &> /dev/null
+  '';
+
   programs = {
     home-manager.enable = true;
+    git = {
+      enable = true;
+      userName = "4rmcyt";
+      userEmail = "4rmcyt@gmail.com"; # Set your email
+      signing = {
+        key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E"; # Find with: gpg --list-secret-keys
+        signByDefault = true;
+      };
+    };
+
     zsh = {
       enable = true;
       enableCompletion = true;
@@ -77,21 +97,6 @@
       hm-activation = true;
       backup = true;
     };
-    gpg = {
-      enable = true;
-      keys = [
-        {
-          source = config.sops.secrets.zeev_gpg_key.path;
-          trust-ultimate = true;
-        }
-        {
-          fingerprint = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";        
-          trust = "fully"; 
-        }
-      ];
-    };
   };
-  
-
   home.stateVersion = "25.05";
 }
