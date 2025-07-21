@@ -74,7 +74,8 @@
 
       cloudflare_secrets = {
         sopsFile = ../../secrets/cloudflare.yaml;
-        
+        owner = "cloudflare";
+        group = "cloudflare";
       };
 
       cloudflare_api_key = {
