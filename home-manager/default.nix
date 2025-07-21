@@ -33,7 +33,6 @@
     zsh = {
       enable = true;
       enableCompletion = true;
-      initContent = "setopt autocd";
 
       shellAliases = {
         ll = "ls -l";
