@@ -12,7 +12,7 @@
       dbuser = "nextcloud";
       dbname = "nextcloud";
       dbpassFile = config.sops.secrets.nextcloud_db_password.path;
-      adminpassFile = config.sops.secrets.nextcloud_admin_password.path;
+      adminpassFile = config.sops.secrets.nextcloud_admin_password;
       adminuser = "admin";
     };
     settings = {
