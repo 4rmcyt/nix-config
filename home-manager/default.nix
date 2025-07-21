@@ -19,7 +19,6 @@
   };
 
   programs = {
-    # --- Merged GPG configuration ---
     gpg = {
       enable = true;
       keys = [{
@@ -27,9 +26,7 @@
         trust-ultimate = true;
       }];
     };
-    # -----------------------------
 
-    home-manager.enable = true;
     zsh = {
       enable = true;
       enableCompletion = true;
