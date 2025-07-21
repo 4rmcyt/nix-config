@@ -113,11 +113,6 @@
         owner = "paperless";
       };
 
-
-      database_passwords = {
-        sopsFile = ../../secrets/postgres.yaml;
-      };
-
       nextcloud_db_password = {
         sopsFile = ../../secrets/postgres.yaml;
         key = "nextcloud_db_password";
