@@ -83,7 +83,9 @@
 
   home-manager = {
     extraSpecialArgs = { inherit inputs config; };
-    users.zeev = import ./home-manager;
+    users.zeev = {
+      imports = [ ./home-manager ];
+    };
   };
   
   systemd.services.nextdns-activate = {
