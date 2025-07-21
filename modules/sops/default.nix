@@ -93,7 +93,7 @@
         owner = "keycloak";
       };
       
-      grafana_secrets = {
+      grafana_admin_password = {
         sopsFile = ../../secrets/grafana.yaml;
         owner = "grafana";
       };
