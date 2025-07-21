@@ -5,3 +5,5 @@ creation_rules:
     key_groups:
       - age:
           - *primary
+      - gpg:
+          - *primary    
