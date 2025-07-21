@@ -70,6 +70,7 @@
         sopsFile = ../../secrets/cloudflare_tunnel_credentials.json;
         owner = "cloudflared";
         group = "cloudflared";
+        format = "binary";
       };
 
       cloudflare_api_key = {
