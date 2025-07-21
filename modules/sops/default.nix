@@ -169,6 +169,38 @@
       nextdns_secrets = {
         sopsFile = ../../secrets/nextdns.yaml;
       };
+
+    homepage_jellyseerr_key = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_jellyseerr_key"; };
+    homepage_lidarr_key     = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_lidarr_key"; };
+    homepage_prowlarr_key   = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_prowlarr_key"; };
+    homepage_radarr_key     = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_radarr_key"; };
+    homepage_readarr_key    = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_readarr_key"; };
+    homepage_sonarr_key     = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_sonarr_key"; };
+    homepage_bazarr_key     = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_bazarr_key"; };
+
+    homepage_paperless_key  = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_paperless_key"; };
+    homepage_miniflux_key   = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_miniflux_key"; };
+    homepage_nextcloud_key  = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_nextcloud_key"; };
+
+    homepage_tailscale_key         = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_tailscale_key"; };
+    homepage_tailscale_device_id   = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_tailscale_device_id"; };
+
+    homepage_cloudflared_account_id = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_cloudflared_account_id"; };
+    homepage_cloudflared_key        = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_cloudflared_key"; };
+    homepage_cloudflared_tunnel_id  = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_cloudflared_tunnel_id"; };
+
+    homepage_nextdns_profile_id = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_nextdns_profile_id"; };
+    homepage_nextdns_key        = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_nextdns_key"; };
+    homepage_grafana_key        = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_grafana_key"; };
+    homepage_jellyfin_key       = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_jellyfin_key"; };
+    homepage_audiobookshelf_key = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_audiobookshelf_key"; };
+    homepage_kavita_key         = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_kavita_key"; };
+
+    homepage_latitude  = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_latitude"; };
+    homepage_longitude = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_longitude"; };
+    
+    homepage_grafana_admin_password = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_grafana_admin_password"; };
+    
     };
   };
 }

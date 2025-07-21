@@ -5,11 +5,46 @@
   ...
 }:
 {
-  # 1. Main application configuration
   services.homepage-dashboard = {
     enable = true;
     listenPort = 8082;
-    envFile = config.sops.secrets.homepage_secrets.path;
+
+    # Set environment variables using the correct module option.
+    environment = {
+      HOMEPAGE_ALLOWED_HOSTS = "localhost,127.0.0.1,192.168.1.165,home.labhome.work";
+    };
+
+    # Use the 'secrets' option to map your SOPS secrets to environment variables.
+    secrets = {
+      "HOMEPAGE_VAR_JELLYSEERR_KEY" = { file = config.sops.secrets.homepage_jellyseerr_key.path; };
+      "HOMEPAGE_VAR_LIDARR_KEY"     = { file = config.sops.secrets.homepage_lidarr_key.path; };
+      "HOMEPAGE_VAR_PROWLARR_KEY"   = { file = config.sops.secrets.homepage_prowlarr_key.path; };
+      "HOMEPAGE_VAR_RADARR_KEY"     = { file = config.sops.secrets.homepage_radarr_key.path; };
+      "HOMEPAGE_VAR_READARR_KEY"    = { file = config.sops.secrets.homepage_readarr_key.path; };
+      "HOMEPAGE_VAR_SONARR_KEY"     = { file = config.sops.secrets.homepage_sonarr_key.path; };
+      "HOMEPAGE_VAR_BAZARR_KEY"     = { file = config.sops.secrets.homepage_bazarr_key.path; };
+      "HOMEPAGE_VAR_PAPERLESS_KEY"  = { file = config.sops.secrets.homepage_paperless_key.path; };
+      "HOMEPAGE_VAR_MINIFLUX_KEY"   = { file = config.sops.secrets.homepage_miniflux_key.path; };
+      "HOMEPAGE_VAR_NEXTCLOUD_KEY"  = { file = config.sops.secrets.homepage_nextcloud_key.path; };
+      "HOMEPAGE_VAR_TAILSCALE_KEY"        = { file = config.sops.secrets.homepage_tailscale_key.path; };
+      "HOMEPAGE_VAR_TAILSCALE_DEVICE_ID"  = { file = config.sops.secrets.homepage_tailscale_device_id.path; };
+      "HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID" = { file = config.sops.secrets.homepage_cloudflared_account_id.path; };
+      "HOMEPAGE_VAR_CLOUDFLARED_KEY"        = { file = config.sops.secrets.homepage_cloudflared_key.path; };
+      "HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID"  = { file = config.sops.secrets.homepage_cloudflared_tunnel_id.path; };
+      "HOMEPAGE_VAR_NEXTDNS_PROFILE_ID" = { file = config.sops.secrets.homepage_nextdns_profile_id.path; };
+      "HOMEPAGE_VAR_NEXTDNS_KEY"        = { file = config.sops.secrets.homepage_nextdns_key.path; };
+      "HOMEPAGE_VAR_GRAFANA_KEY"        = { file = config.sops.secrets.homepage_grafana_key.path; };
+      "HOMEPAGE_VAR_JELLYFIN_KEY"       = { file = config.sops.secrets.homepage_jellyfin_key.path; };
+      "HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY" = { file = config.sops.secrets.homepage_audiobookshelf_key.path; };
+      "HOMEPAGE_VAR_KAVITA_KEY"         = { file = config.sops.secrets.homepage_kavita_key.path; };
+      "HOMEPAGE_VAR_LATITUDE"  = { file = config.sops.secrets.homepage_latitude.path; };
+      "HOMEPAGE_VAR_LONGITUDE" = { file = config.sops.secrets.homepage_longitude.path; };
+      "HOMEPAGE_VAR_GRAFANA_ADMIN_PASSWORD" = { file = config.sops.secrets.homepage_grafana_admin_password.path; };
+      # NOTE: You are using homepage_hass_key below but have not defined it here.
+      # You'll need to add it to your sops file and uncomment the next line.
+      # "HOMEPAGE_VAR_HASS_KEY" = { file = config.sops.secrets.homepage_hass_key.path; };
+    };
+
     services = [
       {
         "Media" = [
@@ -21,7 +56,7 @@
               widgets = [{
                 type = "jellyfin";
                 url = "http://localhost:8096";
-                key = "{{HOMEPAGE_VAR_homepage_jellyfin_key}}";
+                key = "{{HOMEPAGE_VAR_JELLYFIN_KEY}}";
               }];
             };
           }
@@ -33,7 +68,7 @@
               widgets = [{
                 type = "audiobookshelf";
                 url = "http://localhost:8085";
-                key = "{{HOMEPAGE_VAR_homepage_audiobookshelf_key}}";
+                key = "{{HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY}}";
               }];
             };
           }
@@ -48,7 +83,7 @@
               widgets = [{
                 type = "sonarr";
                 url = "http://localhost:8989";
-                key = "{{HOMEPAGE_VAR_homepage_sonarr_key}}";
+                key = "{{HOMEPAGE_VAR_SONARR_KEY}}";
               }];
             };
           }
@@ -59,20 +94,11 @@
               widgets = [{
                 type = "radarr";
                 url = "http://localhost:7878";
-                key = "{{HOMEPAGE_VAR_homepage_radarr_key}}";
+                key = "{{HOMEPAGE_VAR_RADARR_KEY}}";
               }];
             };
           }
-          {
-            "Transmission" = {
-              icon = "transmission.png";
-              href = "https://transmission.labhome.work/";
-              widgets = [{
-                type = "transmission";
-                url = "http://localhost:9091";
-              }];
-            };
-          }
+          { "Transmission" = { icon = "transmission.png"; href = "https://transmission.labhome.work/"; widgets = [{ type = "transmission"; url = "http://localhost:9091"; }]; }; }
           {
             "Prowlarr" = {
               icon = "prowlarr.png";
@@ -80,7 +106,7 @@
               widgets = [{
                 type = "prowlarr";
                 url = "http://localhost:9696";
-                key = "{{HOMEPAGE_VAR_homepage_prowlarr_key}}";
+                key = "{{HOMEPAGE_VAR_PROWLARR_KEY}}";
               }];
             };
           }
@@ -91,7 +117,7 @@
               widgets = [{
                 type = "bazarr";
                 url = "http://localhost:6767";
-                key = "{{HOMEPAGE_VAR_homepage_bazarr_key}}";
+                key = "{{HOMEPAGE_VAR_BAZARR_KEY}}";
               }];
             };
           }
@@ -102,7 +128,7 @@
               widgets = [{
                 type = "jellyseerr";
                 url = "http://localhost:5055/";
-                key = "{{HOMEPAGE_VAR_homepage_jellyseerr_key}}";
+                key = "{{HOMEPAGE_VAR_JELLYSEERR_KEY}}";
               }];
             };
           }
@@ -118,7 +144,7 @@
               widgets = [{
                 type = "nextcloud";
                 url = "http://localhost:8081";
-                key = "{{HOMEPAGE_VAR_homepage_nextcloud_key}}";
+                key = "{{HOMEPAGE_VAR_NEXTCLOUD_KEY}}";
               }];
             };
           }
@@ -130,7 +156,7 @@
               widgets = [{
                 type = "paperless";
                 url = "http://localhost:8888";
-                key = "{{HOMEPAGE_VAR_homepage_paperless_key}}";
+                key = "{{HOMEPAGE_VAR_PAPERLESS_KEY}}";
               }];
             };
           }
@@ -142,7 +168,7 @@
               widgets = [{
                 type = "kavita";
                 url = "http://localhost:5000";
-                key = "{{HOMEPAGE_VAR_homepage_kavita_key}}";
+                key = "{{HOMEPAGE_VAR_KAVITA_KEY}}";
               }];
             };
           }
@@ -150,13 +176,7 @@
       }
       {
         "Productivity Tools" = [
-          {
-            "Microbin" = {
-              href = "https://paste.labhome.work";
-              description = "Pastebin Service";
-              icon = "microbin";
-            };
-          }
+          { "Microbin" = { href = "https://paste.labhome.work"; description = "Pastebin Service"; icon = "microbin"; }; }
           {
             "Miniflux" = {
               href = "https://rss.labhome.work";
@@ -165,17 +185,11 @@
               widgets = [{
                 type = "miniflux";
                 url = "http://localhost:8086";
-                key = "{{HOMEPAGE_VAR_homepage_miniflux_key}}";
+                key = "{{HOMEPAGE_VAR_MINIFLUX_KEY}}";
               }];
             };
           }
-          {
-            "Radicale" = {
-              href = "https://cal.labhome.work";
-              description = "Calendar & Contacts";
-              icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/radicale.svg";
-            };
-          }
+          { "Radicale" = { href = "https://cal.labhome.work"; description = "Calendar & Contacts"; icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/radicale.svg"; }; }
         ];
       }
       {
@@ -189,24 +203,12 @@
                 type = "grafana";
                 url = "http://localhost:3000";
                 username = "admin";
-                password = "{{HOMEPAGE_VAR_homepage_grafana_admin_password}}";
+                password = "{{HOMEPAGE_VAR_GRAFANA_ADMIN_PASSWORD}}";
               }];
             };
           }
-          {
-            "Prometheus" = {
-              href = "http://192.168.1.165:9090";
-              description = "Metrics & Alerting";
-              icon = "prometheus";
-            };
-          }
-          {
-            "Node Exporter" = {
-              href = "http://192.168.1.165:9100/metrics";
-              description = "System Metrics (Raw)";
-              icon = "prometheus";
-            };
-          }
+          { "Prometheus" = { href = "http://192.168.1.165:9090"; description = "Metrics & Alerting"; icon = "prometheus"; }; }
+          { "Node Exporter" = { href = "http://192.168.1.165:9100/metrics"; description = "System Metrics (Raw)"; icon = "prometheus"; }; }
         ];
       }
       {
@@ -219,28 +221,16 @@
               widgets = [{
                 type = "home-assistant";
                 url = "http://localhost:8123";
-                key = "{{HOMEPAGE_VAR_homepage_hass_key}}";
+                key = "{{HOMEPAGE_VAR_HASS_KEY}}";
               }];
             };
           }
-          {
-            "Mosquitto MQTT" = {
-              href = "http://192.168.1.165:1883";
-              description = "MQTT Broker";
-              icon = "mqtt";
-            };
-          }
+          { "Mosquitto MQTT" = { href = "http://192.168.1.165:1883"; description = "MQTT Broker"; icon = "mqtt"; }; }
         ];
       }
       {
         "Infrastructure & Security" = [
-          {
-            "Keycloak" = {
-              href = "https://keycloak.labhome.work";
-              description = "Identity & Access Management";
-              icon = "keycloak";
-            };
-          }
+          { "Keycloak" = { href = "https://keycloak.labhome.work"; description = "Identity & Access Management"; icon = "keycloak"; }; }
           {
             "NextDns" = {
               href = "https://my.nextdns.io/";
@@ -248,8 +238,8 @@
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
               widget = {
                 type = "nextdns";
-                profile = "{{HOMEPAGE_VAR_homepage_nextdns_profile_id}}";
-                key = "{{HOMEPAGE_VAR_homepage_nextdns_key}}";
+                profile = "{{HOMEPAGE_VAR_NEXTDNS_PROFILE_ID}}";
+                key = "{{HOMEPAGE_VAR_NEXTDNS_KEY}}";
               };
             };
           }
@@ -260,8 +250,8 @@
               icon = "tailscale";
               widget = {
                 type = "tailscale";
-                deviceid = "{{HOMEPAGE_VAR_homepage_tailscale_device_id}}";
-                key = "{{HOMEPAGE_VAR_homepage_tailscale_key}}";
+                deviceid = "{{HOMEPAGE_VAR_TAILSCALE_DEVICE_ID}}";
+                key = "{{HOMEPAGE_VAR_TAILSCALE_KEY}}";
               };
             };
           }
@@ -272,9 +262,9 @@
               icon = "cloudflare-zero-trust";
               widget = {
                 type = "cloudflared";
-                accountid = "{{HOMEPAGE_VAR_homepage_cloudflared_account_id}}";
-                tunnelid = "{{HOMEPAGE_VAR_homepage_cloudflared_tunnel_id}}";
-                key = "{{HOMEPAGE_VAR_homepage_cloudflared_key}}";
+                accountid = "{{HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID}}";
+                tunnelid = "{{HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID}}";
+                key = "{{HOMEPAGE_VAR_CLOUDFLARED_KEY}}";
               };
             };
           }
@@ -283,31 +273,15 @@
     ];
 
     widgets = [
-      {
-        search = {
-          provider = "google";
-          target = "_blank";
-        };
-      }
-      {
-        resources = {
-          label = "system";
-          cpu = true;
-          memory = true;
-        };
-      }
-      {
-        resources = {
-          label = "storage";
-          disk = [ "/data" ];
-        };
-      }
+      { search = { provider = "google"; target = "_blank"; }; }
+      { resources = { label = "system"; cpu = true; memory = true; }; }
+      { resources = { label = "storage"; disk = [ "/data" ]; }; }
       {
         openmeteo = {
           label = "Calgary";
           timezone = "America/Edmonton";
-          latitude = "{{HOMEPAGE_VAR_homepage_latitude}}";
-          longitude = "{{HOMEPAGE_VAR_homepage_longitude}}";
+          latitude = "{{HOMEPAGE_VAR_LATITUDE}}";
+          longitude = "{{HOMEPAGE_VAR_LONGITUDE}}";
           units = "metric";
         };
       }
@@ -318,37 +292,19 @@
         "External Services" = [
           {
             "Cloudflare" = [
-              {
-                "name" = "Dashboard";
-                "href" = "https://dash.cloudflare.com";
-              }
-              {
-                "name" = "Zero Trust";
-                "href" = "https://one.dash.cloudflare.com";
-              }
+              { "name" = "Dashboard"; "href" = "https://dash.cloudflare.com"; }
+              { "name" = "Zero Trust"; "href" = "https://one.dash.cloudflare.com"; }
             ];
           }
           {
             "Tailscale" = [
-              {
-                "name" = "Admin Console";
-                "href" = "https://dash.cloudflare.com/8239dd1bb0d0bfedf13673a195df59cf/home";
-                "icon" = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/cloudflare.svg";
-              }
-              {
-                "name" = "ACL Editor";
-                "href" = "https://login.tailscale.com/admin/acls";
-                "icon" = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tailscale-light.svg";
-              }
+              { "name" = "Admin Console"; "href" = "https://dash.cloudflare.com/8239dd1bb0d0bfedf13673a195df59cf/home"; "icon" = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/cloudflare.svg"; }
+              { "name" = "ACL Editor"; "href" = "https://login.tailscale.com/admin/acls"; "icon" = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tailscale-light.svg"; }
             ];
           }
           {
             "GitHub" = [
-              {
-                "name" = "GitHub Server Config";
-                "href" = "https://github.com/your-username/server-config";
-                "icon" = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/github-light.svg";
-              }
+              { "name" = "GitHub Server Config"; "href" = "https://github.com/your-username/server-config"; "icon" = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/github-light.svg"; }
             ];
           }
         ];
@@ -356,14 +312,6 @@
     ];
   };
 
-  # This block correctly injects both the secrets file and the extra
-  # environment variable into the systemd service.
-  systemd.services.homepage-dashboard.serviceConfig = {
-    # This points to the environment file created by sops-nix for your homepage secrets.
-    EnvironmentFile = lib.mkForce config.sops.secrets.homepage_secrets.path;
-    # This adds the allowed hosts variable.
-    Environment = [
-      "HOMEPAGE_ALLOWED_HOSTS=localhost,127.0.0.1,192.168.1.165,home.labhome.work"
-    ];
-  };
+  # DO NOT use a systemd override like this. The block above handles it correctly.
+  # systemd.services.homepage-dashboard.serviceConfig = { ... };
 }
