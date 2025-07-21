@@ -16,7 +16,7 @@
       MICROBIN_HIGHLIGHTSYNTAX = true;
       MICROBIN_TITLE = "Homeserver Pastebin";
       MICROBIN_ADMIN_USERNAME = "admin";
-      MICROBIN_ADMIN_PASSWORD = config.sops.secrets.microbin_secrets.path;
+      MICROBIN_ADMIN_PASSWORD = config.sops.secrets.microbin_admin_password.path;
     };
   };
 
