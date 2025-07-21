@@ -8,10 +8,10 @@
     gnupg 
   ];
  
-  xdg.configFile."nvim" = {
-    source = ./dots/nvim/default.nix; # Assumes the config is in a 'nvim' directory next to this file
-    recursive = true;
-  };
+  imports = [
+    ./dots/nvim/default.nix
+  ];
+
 
   services.gpg-agent = {
     enable = true;
