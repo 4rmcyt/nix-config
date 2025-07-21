@@ -3,9 +3,7 @@
 {
   services.paperless = {
     enable = true;
-    # This is the correct, idiomatic way to provide the admin password.
-    # It now points to your new 'paperless_secrets' sops group.
-    passwordFile = config.sops.secrets.paperless_secrets.path;
+    passwordFile = config.sops.secrets.paperless_admin_password.path;
     settings = {
       PAPERLESS_ADMIN_USER = "admin";
       # The password is now handled by `passwordFile` above, so this line is removed.
