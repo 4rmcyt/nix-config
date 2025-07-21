@@ -1,458 +1,358 @@
-#
-# This is the neovim config from the provided github link
-#
-{ pkgs, ... }: {
-  # an absolute dumpster fire of a config
-  # some plugins might not be in the right groups
-  # but they work so who am i to complain
-  plugins = with pkgs.vimPlugins; [
-    # list of plugins
-    # essential plugins
-    nvim-tree-lua
-    plenary-nvim # dependency for telescope
-    nvim-web-devicons
-    lualine-nvim
-    nvim-autopairs
-    which-key-nvim
-    impatient-nvim
+{
+  inputs,
+  config,
+  pkgs,
+  ...
+}:
+let
+  coc = import ./coc.nix;
+in
+{
+  imports = [ inputs.nixvim.homeManagerModules.nixvim ];
 
-    # themes
-    (catppuccin-nvim.overrideAttrs (oldAttrs: {
-      # version = "main";
-      # src = pkgs.fetchFromGitHub {
-      #   owner = "catppuccin";
-      #   repo = "nvim";
-      #   rev = "main";
-      #   sha256 = "sha256-k/4N8p/L99e2D4Zl/E8r4L6z4wJ2z3a4k5l6n7m8o9i=";
-      # };
-    }))
-
-    # syntax highlighting/completion
-    nvim-treesitter.withAllGrammars
-    nvim-cmp
-    cmp-buffer
-    cmp-path
-    cmp-nvim-lsp
-    cmp-nvim-lua
-    cmp-vsnip
-    nvim-lspconfig
-    nvim-jdtls
-
-    # utilities
-    alpha-nvim
-    telescope-nvim
-    telescope-fzf-native-nvim
-    (gitsigns-nvim.overrideAttrs (oldAttrs: {
-      # broken on aarch64-darwin for some reason
-      # postPatch = pkgs.lib.optionalString pkgs.stdenv.isDarwin ''
-      #   rm -r lua/gitsigns/is_aarch64_darwin
-      # '';
-    }))
-
-    trouble-nvim # pretty list for diagnostics
-    comment-nvim
-    nvim-colorizer
-    indent-blankline-nvim
-    (vim-illuminate.overrideAttrs (oldAttrs: {
-      # treesitter is a dependency for this but its not specified in the package
-      # postPatch = ''
-      #   sed -i 's/config = function()/config = function(plugin, values)/' lua/illuminate/init.lua
-      #   sed -i '/local default_config = {/a\  providers = { "lsp", "treesitter", "regex" },' lua/illuminate/init.lua
-      # '';
-    }))
-
-    # filetype specific plugins
-    vim-vsnip
-    friendly-snippets # snippets for vsnip
-    vim-visual-multi
-
-    vim-nix
-    (rust-tools-nvim.overrideAttrs (oldAttrs: {
-      # version = "master";
-      # src = pkgs.fetchFromGitHub {
-      #   owner = "simrat39";
-      #   repo = "rust-tools.nvim";
-      #   rev = "master";
-      #   sha256 = "sha256-k/4N8p/L99e2D4Zl/E8r4L6z4wJ2z3a4k5l6n7m8o9i=";
-      # };
-    }))
-
-    # fun
-    neotest
-    neotest-vitest
-    neotest-jest
-    (neotest-go.overrideAttrs (oldAttrs: {
-      # version = "master";
-      # src = pkgs.fetchFromGitHub {
-      #   owner = "nvim-neotest";
-      #   repo = "neotest-go";
-      #   rev = "master";
-      #   sha256 = "sha256-k/4N8p/L99e2D4Zl/E8r4L6z4wJ2z3a4k5l6n7m8o9i=";
-      # };
-    }))
-    (neotest-python.overrideAttrs (oldAttrs: {
-      # version = "master";
-      # src = pkgs.fetchFromGitHub {
-      #   owner = "nvim-neotest";
-      #   repo = "neotest-python";
-      #   rev = "master";
-      #   sha256 = "sha256-k/4N8p/L99e2D4Zl/E8r4L6z4wJ2z3a4k5l6n7m8o9i=";
-      # };
-    }))
-    neotest-plenary
-    (neotest-vim-test.overrideAttrs (oldAttrs: {
-      # version = "master";
-      # src = pkgs.fetchFromGitHub {
-      #   owner = "nvim-neotest";
-      #   repo = "neotest-vim-test";
-      #   rev = "master";
-      #   sha256 = "sha256-k/4N8p/L99e2D4Zl/E8r4L6z4wJ2z3a4k5l6n7m8o9i=";
-      # };
-    }))
-    vim-startuptime
+  home.packages = with pkgs; [
+    figlet
+    nodejs
+    ripgrep
+    terraform-ls
   ];
 
-  extraConfig = ''
-    " vim options
-    set termguicolors
-    set mouse=a
-    set number
-    set relativenumber
-    set signcolumn=yes
-    set scrolloff=8
-    set sidescrolloff=8
-    set showmode
-    set showcmd
-    set wildmenu
-    set wildmode=list:longest,full
-    set visualbell
-    set t_vb=
-    set noerrorbells
-    set encoding=utf-8
-    set laststatus=3
-    set expandtab
-    set tabstop=2
-    set shiftwidth=2
-    set softtabstop=2
-    set smarttab
-    set autoindent
-    set smartindent
-    set wrap
-    set textwidth=80
-    set linebreak
-    set nolist
-    set formatoptions-=l
-    set showbreak=…
-    set whichwrap+=<,>,h,l,[,]
-    set listchars=tab:▸\ ,eol:¬,trail:·,extends:⟩,precedes:⟨,nbsp:␣
-    set fillchars=eob:\ ,fold: ,vert:│
-    set ignorecase
-    set smartcase
-    set gdefault
-    set incsearch
-    set hlsearch
-    set nobackup
-    set nowritebackup
-    set noswapfile
-    set completeopt=menu,menuone,noselect
-    set updatetime=500
-    set timeoutlen=500
-    set shortmess+=c
-    set inccommand=split
-    set splitright
-    set splitbelow
-    set hidden
-    set path+=**
-    set wildignore+=*/node_modules/*,*/.git/*,*/.next/*,*/dist/*,*/build/*
-    set wildignore+=*.o,*.obj,*.pyc,*.swp,*.DS_Store
-    set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.7z
-    set wildignore+=*.png,*.jpg,*.jpeg,*.gif,*.svg
-    set wildignore+=*.pdf,*.doc,*.docx,*.xls,*.xlsx,*.ppt,*.pptx
-    set wildignorecase
-    set undofile
-    set undodir=~/.config/nvim/undodir
+  programs.neovim = {
+    viAlias = true;
+    vimAlias = true;
+    defaultEditor = true;
+  };
 
-    " leader keys
-    let mapleader = " "
-    let maplocalleader = " "
-
-    " key mappings
-    " switch between buffers
-    nnoremap <silent> <S-l> :bnext<CR>
-    nnoremap <silent> <S-h> :bprevious<CR>
-
-    " move lines up and down
-    nnoremap <A-j> :m .+1<CR>==
-    nnoremap <A-k> :m .-2<CR>==
-    inoremap <A-j> <Esc>:m .+1<CR>==gi
-    inoremap <A-k> <Esc>:m .-2<CR>==gi
-    vnoremap <A-j> :m '>+1<CR>gv=gv
-    vnoremap <A-k> :m '<-2<CR>gv=gv
-
-    " copy/paste to system clipboard
-    vnoremap <leader>y "+y
-    vnoremap <leader>d "+d
-    nnoremap <leader>p "+p
-    nnoremap <leader>P "+P
-    vnoremap <leader>p "+p
-    vnoremap <leader>P "+P
-
-    " better window movement
-    nnoremap <C-h> <C-w>h
-    nnoremap <C-j> <C-w>j
-    nnoremap <C-k> <C-w>k
-    nnoremap <C-l> <C-w>l
-
-    " resize windows
-    nnoremap <C-Up> :resize +2<CR>
-    nnoremap <C-Down> :resize -2<CR>
-  '';
-
-  # lua config
-  luaConfig = ''
-    -- impatient.nvim
-    require("impatient")
-
-    -- disable netrw
-    vim.g.loaded_netrw = 1
-    vim.g.loaded_netrwPlugin = 1
-
-    -- catppuccin
-    vim.g.catppuccin_flavour = "macchiato" -- latte, frappe, macchiato, mocha
-    require("catppuccin").setup({
-        transparent_background = true,
-        integrations = {
-            cmp = true,
-            gitsigns = true,
-            nvimtree = true,
-            telescope = true,
-            treesitter = true,
-            which_key = true,
-            illuminate = {
-                enabled = true,
-            }
-        }
-    })
-    vim.cmd([[colorscheme catppuccin]])
-
-    -- nvim-tree
-    require("nvim-tree").setup({
-        -- sort_by = "case_sensitive",
-        view = {
-            adaptive_size = true,
-            -- mappings = {
-            --   list = {
-            --     { key = "u", action = "dir_up" },
-            --   },
-            -- },
-        },
-        renderer = {
-            group_empty = true,
-        },
-        filters = {
-            dotfiles = true,
-        },
-    })
-    vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>')
-
-    -- lualine
-    require('lualine').setup {
-        options = {
-            icons_enabled = true,
-            theme = 'catppuccin',
-            component_separators = { left = '', right = ''},
-            section_separators = { left = '', right = ''},
-            disabled_filetypes = {
-                statusline = {},
-                winbar = {},
-            },
-            ignore_focus = {},
-            always_divide_middle = true,
-            globalstatus = false,
-            refresh = {
-                statusline = 1000,
-                tabline = 1000,
-                winbar = 1000,
-            }
-        },
-        sections = {
-            lualine_a = {'mode'},
-            lualine_b = {'branch', 'diff', 'diagnostics'},
-            lualine_c = {'filename'},
-            lualine_x = {'encoding', 'fileformat', 'filetype'},
-            lualine_y = {'progress'},
-            lualine_z = {'location'}
-        },
-        inactive_sections = {
-            lualine_a = {},
-            lualine_b = {},
-            lualine_c = {'filename'},
-            lualine_x = {'location'},
-            lualine_y = {},
-            lualine_z = {}
-        },
-        tabline = {},
-        winbar = {},
-        inactive_winbar = {},
-        extensions = {}
-    }
-
-    -- which-key
-    require("which-key").setup {}
-
-    -- autopairs
-    require("nvim-autopairs").setup {}
-
-    -- treesitter
-    require'nvim-treesitter.configs'.setup {
-        ensure_installed = { "c", "lua", "vim", "help", "nix", "rust", "go", "python", "typescript", "javascript", "html", "css", "json", "yaml", "toml", "bash", "dockerfile", "markdown", "markdown_inline" },
-        sync_install = false,
-        auto_install = true,
-        highlight = {
-            enable = true,
-            additional_vim_regex_highlighting = false,
-        },
-    }
-
-    -- lsp
-    local lsp = require('lspconfig')
-    local cmp = require('cmp')
-    local capabilities = require('cmp_nvim_lsp').default_capabilities()
-    local servers = { "pyright", "rust_analyzer", "gopls", "nil_ls", "tsserver", "emmet_ls", "cssls", "html", "jsonls", "yamlls", "dockerls", "bashls", "vimls", "tailwindcss" }
-    for _, l in ipairs(servers) do
-        lsp[l].setup {
-            capabilities = capabilities,
-        }
-    end
-
-    -- cmp
-    cmp.setup({
-        snippet = {
-            expand = function(args)
-                vim.fn["vsnip#anonymous"](args.body)
-            end,
-        },
-        mapping = cmp.mapping.preset.insert({
-            ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-            ['<C-f>'] = cmp.mapping.scroll_docs(4),
-            ['<C-Space>'] = cmp.mapping.complete(),
-            ['<C-e>'] = cmp.mapping.abort(),
-            ['<CR>'] = cmp.mapping.confirm({ select = true }),
-        }),
-        sources = cmp.config.sources({
-            { name = 'nvim_lsp' },
-            { name = 'vsnip' },
-        }, {
-            { name = 'buffer' },
+  xdg.configFile = {
+    "nvim/coc-settings.json" = {
+      source = pkgs.writeText "coc-settings.json" (
+        builtins.toJSON (coc {
+          homeDir = config.xdg.configHome;
+          pkgs = pkgs;
         })
-    })
+      );
+    };
+  };
 
-    -- alpha
-    local alpha = require("alpha")
-    local dashboard = require("alpha.themes.dashboard")
+  programs.nixvim = {
+    enable = true;
+    colorschemes.nord = {
+      enable = true;
+      settings = {
+        borders = true;
+        contrast = true;
+      };
+    };
+    plugins = {
+      notify.enable = true;
+      web-devicons = {
+        enable = true;
+      };
+      barbecue.enable = true;
+      project-nvim = {
+        enable = true;
+      };
+      telescope = {
+        enable = true;
+      };
+      alpha = {
+        enable = true;
+        theme = "startify";
+      };
+      fugitive = {
+        enable = true;
+      };
+      trim = {
+        enable = true;
+        settings = {
+          ft_blocklist = [ "coc-explorer" ];
+          highlight = false;
+        };
+      };
+      lualine = {
+        enable = true;
+        settings = {
+          sections = {
+            lualine_x = [
+              "diagnostics"
+              "encoding"
+              "filetype"
+            ];
+          };
+        };
+      };
+      indent-blankline = {
+        enable = true;
+        settings = {
+          exclude.filetypes = [ "startify" ];
+        };
+      };
+      barbar = {
+        enable = true;
+      };
+      gitgutter = {
+        enable = true;
+      };
+      vim-surround = {
+        enable = true;
+      };
+      colorizer = {
+        enable = true;
+      };
+      which-key = {
+        enable = true;
+      };
+      illuminate = {
+        enable = true;
+      };
+    };
+    extraPlugins = with pkgs.vimPlugins; [
+      llm-nvim
+      ansible-vim
+      coc-nvim
+      coc-markdownlint
+      vim-suda
+    ];
+    opts = {
+      number = true;
+      syntax = "enable";
+      fileencodings = "utf-8,sjis,euc-jp,latin";
+      encoding = "utf-8";
+      title = true;
+      autoindent = true;
+      background = "dark";
+      backup = false;
+      hlsearch = true;
+      showcmd = true;
+      cmdheight = 1;
+      laststatus = 2;
+      scrolloff = 10;
+      expandtab = true;
+      shell = "zsh";
+      backupskip = "/tmp/*,/private/tmp/*";
+      inccommand = "split";
+      ruler = false;
+      showmatch = false;
+      lazyredraw = true;
+      ignorecase = true;
+      smarttab = true;
+      shiftwidth = 2;
+      tabstop = 2;
+      ai = true;
+      ci = true;
+      wrap = true;
+      backspace = "start,eol,indent";
+      path = "vim.opts.path \+ **";
+      wildignore = "vim.opts.wildignore \+ */node_modules/*";
+      cursorline = true;
+      exrc = true;
+      mouse = "a";
+      suffixesadd = ".js,.es,.jsx,.json,.css,.less,.sass,.styl,.php,.py,.md";
+    };
 
-    dashboard.section.header.val = {
-        [[                               __                ]],
-        [[  ____  _________  ____  _____/ /_  ____ __  __   ]],
-        [[ / __ \/ ___/ __ \/ __ \/ ___/ __ \/ __ `| |/_/   ]],
-        [[/ /_/ / /  / /_/ / /_/ (__  ) / / / /_/ />  <     ]],
-        [[\____/_/   \____/ .___/____/_/ /_/\__,_/_/|_|     ]],
-        [[               /_/                               ]],
-    }
-    dashboard.section.buttons.val = {
-        dashboard.button("e", "  New file", ":ene <BAR> startinsert <CR>"),
-        dashboard.button("f", "  Find file", ":Telescope find_files <CR>"),
-        dashboard.button("r", "  Recent files", ":Telescope oldfiles <CR>"),
-        dashboard.button("g", "  Find text", ":Telescope live_grep <CR>"),
-        dashboard.button("c", "  Config", ":e ~/.config/nix/dots/nvim/init.lua <CR>"),
-        dashboard.button("q", "  Quit", ":qa<CR>"),
-    }
-    dashboard.config.opts.noautocmd = true
-    alpha.setup(dashboard.config)
+    autoCmd = [
+      {
+        event = [
+          "BufRead"
+          "BufNewFile"
+        ];
+        pattern = [ "*.tf" ];
+        command = "setfiletype tf";
+      }
 
-    -- telescope
-    require('telescope').setup{
-        defaults = {
-            file_ignore_patterns = { "node_modules", ".git", "dist", ".next", "build" },
-        },
-    }
-    require('telescope').load_extension('fzf')
-    vim.keymap.set('n', '<leader>ff', ':Telescope find_files<CR>')
-    vim.keymap.set('n', '<leader>fg', ':Telescope live_grep<CR>')
-    vim.keymap.set('n', '<leader>fb', ':Telescope buffers<CR>')
-    vim.keymap.set('n', '<leader>fh', ':Telescope help_tags<CR>')
-
-    -- gitsigns
-    require('gitsigns').setup()
-
-    -- trouble
-    require("trouble").setup {
-        icons = false,
-    }
-
-    -- comment
-    require('Comment').setup()
-
-    -- colorizer
-    require('colorizer').setup()
-
-    -- indent-blankline
-    require("indent_blankline").setup {
-        -- for example, context is off by default, use this to turn it on
-        show_current_context = true,
-        show_current_context_start = true,
-    }
-
-    -- illuminate
-    require("illuminate").configure({
-        delay = 200,
-        filetypes_denylist = {
-            "NvimTree",
-            "alpha",
-            "packer",
-            "Trouble",
-            "trouble",
-            "help"
-        },
-    })
-
-    -- rustaceanvim
-    vim.g.rustaceanvim = {
-        -- Plugin configuration
-        tools = {
-        },
-        -- LSP configuration
-        server = {
-            on_attach = function(client, bufnr)
-                -- you can also put keymaps in here
-            end,
-            default_settings = {
-                -- rust-analyzer language server configuration
-                ['rust-analyzer'] = {
-                },
-            },
-        },
-    }
-
-    -- neotest
-    require("neotest").setup({
-        adapters = {
-            require("neotest-vitest"),
-            require("neotest-jest")({
-                jest_command = "npm test --",
-                jest_config = "jest.config.js",
-            }),
-            require("neotest-go")({
-                args = { "-count=1", "-timeout=60s" }
-            }),
-            require("neotest-python")({
-                dap = { justMyCode = false },
-            }),
-            require("neotest-plenary"),
-            require("neotest-vim-test")({
-                ignore_file_types = { "go", "python", "vim", "lua" },
-            })
-        }
-    })
-  '';
+      {
+        event = [ "InsertEnter" ];
+        pattern = [ "*" ];
+        command = "match EOLWS // | match EOLWSInsert /\\s\\+\\%#\\@<!$\\| \\+\\ze\\t/";
+      }
+      {
+        event = [ "InsertLeave" ];
+        pattern = [ "*" ];
+        command = "match EOLWS // | match EOLWSInsert /\\s\\+\\%#\\@<!$\\| \\+\\ze\\t/";
+      }
+      {
+        event = [
+          "WinEnter"
+          "BufWinEnter"
+          "WinNew"
+        ];
+        pattern = [ "*" ];
+        command = "match EOLWS /\\s\\+$\\| \\+\\ze\t/";
+      }
+      {
+        event = [ "WinEnter" ];
+        pattern = [ "*" ];
+        command = "set cul";
+      }
+      {
+        event = [ "WinLeave" ];
+        pattern = [ "*" ];
+        command = "set nocul";
+      }
+    ];
+    highlight = {
+      BufferCurrent = {
+        fg = "#eceff4";
+        bg = "#434c5e";
+        bold = true;
+      };
+      BufferCurrentMod = {
+        fg = "#ebcb8b";
+        bg = "#434c5e";
+        bold = true;
+      };
+      BufferCurrentSign = {
+        fg = "#4c566a";
+        bg = "#4c566a";
+      };
+      BufferCurrentTarget = {
+        bg = "#434c5e";
+      };
+      BufferInactive = {
+        fg = "#4c566a";
+        bg = "none";
+      };
+      BufferInactiveSign = {
+        fg = "#4c566a";
+        bg = "none";
+      };
+      BufferInactiveMod = {
+        fg = "#ebcb8b";
+        bg = "none";
+      };
+      BufferTabpageFill = {
+        fg = "#4c566a";
+        bg = "none";
+      };
+    };
+    globals = {
+      coc_filetype_map = {
+        "yaml.ansible" = "ansible";
+      };
+      coc_global_extensions = [
+        "coc-explorer"
+        "@yaegassy/coc-ansible"
+        "@yaegassy/coc-nginx"
+        "@yaegassy/coc-intelephense"
+        "@yaegassy/coc-phpstan"
+        "coc-nil"
+        "coc-pyright"
+      ];
+      suda_smart_edit = 1;
+      "suda#nopass" = 1;
+    };
+    extraConfigLua = ''
+      vim.api.nvim_set_hl(0, "MatchParen", { bg="#4c566a", fg="#88c0d0" })
+    '';
+    extraConfigVim = ''
+      inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
+      set undofile
+      set clipboard+=unnamedplus
+      function CheckForExplorer()
+      if CocAction('runCommand', 'explorer.getNodeInfo', 'closest') isnot# v:null
+        CocCommand explorer --toggle
+          endif
+          endfunction
+    '';
+    keymaps = [
+      {
+        mode = "n";
+        key = "sf";
+        action = "<cmd>CocCommand explorer<cr>";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = ";j";
+        action = "<Cmd>BufferPrevious<CR>";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = ";k";
+        action = "<Cmd>BufferNext<CR>";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = ";x";
+        action = "<Cmd>BufferClose<CR>";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = ";xx";
+        action = "<Cmd>BufferRestore<CR>";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = "p";
+        action = "p`]<Esc>";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = "<A-CR>";
+        action = "O<Esc>";
+        options = {
+          silent = true;
+          remap = true;
+        };
+      }
+      {
+        mode = "n";
+        key = "<CR>";
+        action = "o<Esc>";
+        options = {
+          silent = true;
+          remap = true;
+        };
+      }
+      {
+        mode = "n";
+        key = ";r";
+        action = ":call CheckForExplorer()<CR> <cmd>lua require('telescope.builtin').live_grep()<cr>";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = ";f";
+        action = ":call CheckForExplorer()<CR> <cmd>lua require('telescope.builtin').find_files()<cr>";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = ";b";
+        action = ":call CheckForExplorer()<CR> <cmd>lua require('telescope.builtin').file_browser()<cr>";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        mode = "n";
+        key = ";;";
+        action = ":call CheckForExplorer()<CR> <cmd>Telescope buffers<cr>";
+        options = {
+          silent = true;
+        };
+      }
+    ];
+  };
 }
