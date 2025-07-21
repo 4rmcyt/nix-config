@@ -149,10 +149,10 @@
         owner = "radicale";
       };
 
-      mosquitto_secrets = {
-        sopsFile = ../../secrets/mosquitto.yaml;
-        owner = "mosquitto";
-      };
+      # mosquitto_secrets = {
+      #   sopsFile = ../../secrets/mosquitto.yaml;
+      #   owner = "mosquitto";
+      # };
 
       # audiobookshelf_secrets = {
       #   sopsFile = ../../secrets/audiobookshelf.yaml;
