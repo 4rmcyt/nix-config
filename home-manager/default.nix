@@ -11,7 +11,7 @@
   ];
 
   imports = [
-    ./dots/nvim/default.nix
+    ../dots/nvim/default.nix
   ];
 
   services.gpg-agent = {
