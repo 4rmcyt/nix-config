@@ -122,23 +122,6 @@
         sopsFile = ../../secrets/postgres.yaml;
         owner = "postgres";
       };
-      keycloak_db_password = {
-        sopsFile = ../../secrets/grafana.yaml;
-        key = "keycloak_db_password";
-        owner = "keycloak";
-      };
-      hass_db_password = {
-        sopsFile = ../../secrets/postgres.yaml;
-        key = "hass_db_password";
-      };
-      miniflux_db_password = {
-        sopsFile = ../../secrets/postgres.yaml; # Reads from the main postgres file
-        key = "miniflux_db_password";
-      };
-      nextcloud_db_password = {
-        sopsFile = ../../secrets/postgres.yaml; # Reads from the main postgres file
-        key = "nextcloud_db_password";
-      };
 
 
       hass_secrets = {
