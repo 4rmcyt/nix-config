@@ -74,16 +74,19 @@
       '';
     };
 
-    gpg-agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
-    
     nextdns = {
       enable = true;
       arguments = [ "-profile" "nextdns0" "-cache-size" "10MB" "--report-client-info" ];
     };
     vscode-server.enable = true;
+  };
+
+  programs = {
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+    zsh.enable = true;
   };
 
   home-manager = {
