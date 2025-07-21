@@ -1,0 +1,5 @@
+{
+    "sops.configPath": "./.sops.yaml",
+    "sops.defaults.ageKeyFile": "/var/lib/sops/age.key",
+    "sops.binPath": "/run/current-system/sw/bin/sops"
+}
