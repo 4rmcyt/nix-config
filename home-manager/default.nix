@@ -1,10 +1,4 @@
-# This function MUST accept 'config' to use sops secrets
-{
-  config,
-  pkgs,
-  inputs,
-  ...
-}:
+{ config, pkgs, inputs, ... }:
 
 {
   home.username = "zeev";
@@ -13,7 +7,7 @@
   home.packages = with pkgs; [
     git
     nixfmt-rfc-style
-    gnupg
+    gnupg # Keep gnupg since you're using it
   ];
 
   imports = [
@@ -32,6 +26,7 @@
       enable = true;
       userName = "4rmcyt";
       userEmail = "4rmcyt@gmail.com";
+
       signing = {
         key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
         signByDefault = true;
