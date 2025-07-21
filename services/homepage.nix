@@ -66,7 +66,7 @@
       "HOMEPAGE_VAR_LATITUDE:${config.sops.secrets.homepage_latitude.path}"
       "HOMEPAGE_VAR_LONGITUDE:${config.sops.secrets.homepage_longitude.path}"
       "HOMEPAGE_VAR_GRAFANA_ADMIN_PASSWORD:${config.sops.secrets.homepage_grafana_admin_password.path}"
-      "HOMEPAGE_VAR_HASS_KEY:${config.sops.secrets.homepage_hass.path}"
+      "HOMEPAGE_VAR_HASS_KEY:${config.sops.secrets.homepage_hass_key.path}"
     ];
   };
 }
