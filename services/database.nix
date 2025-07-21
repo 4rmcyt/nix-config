@@ -23,8 +23,7 @@
     '';
   };
 
-  # This systemd service runs once to set the passwords for your database users.
-  # It correctly references the secret values from your sops configuration.
+
   systemd.services.postgresql-setup-passwords = {
     description = "Set initial PostgreSQL user passwords from sops";
     after = [ "postgresql.service" "sops.service" ];
@@ -35,10 +34,10 @@
       User = "postgres";
     };
     script = ''
-      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER keycloak WITH PASSWORD '${config.sops.secrets.keycloak_db_password}';"
-      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER nextcloud WITH PASSWORD '${config.sops.secrets.nextcloud_db_password}';"
-      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER hass WITH PASSWORD '${config.sops.secrets.hass_db_password}';"
-      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER miniflux WITH PASSWORD '${config.sops.secrets.miniflux_db_password}';"
+      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER keycloak WITH PASSWORD '${config.sops.secrets.database_passwords.keycloak_db_password}';"
+      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER nextcloud WITH PASSWORD '${config.sops.secrets.database_passwords.nextcloud_db_password}';"
+      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER hass WITH PASSWORD '${config.sops.secrets.database_passwords.hass_db_password}';"
+      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER miniflux WITH PASSWORD '${config.sops.secrets.database_passwords.miniflux_db_password}';"
     '';
   };
 }
