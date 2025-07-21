@@ -16,16 +16,7 @@
   ];
 
   programs = {
-    home-manager.enable = true;
-    gpg = {
-      enable = true;
-      keys = [
-        {
-          source = config.sops.secrets.zeev_gpg_key.path;
-          trust-ultimate = true;
-        }
-      ];
-    };
+    home-manager.enable = true;     
     zsh = {
       enable = true;
       enableCompletion = true;
@@ -72,6 +63,10 @@
       };
       nvchad.enable = true;
     };
+  };
+  services.gpg-agent = {
+    enable = true;
+    enableSshSupport = true;
   };
   home.stateVersion = "25.05";
 }
