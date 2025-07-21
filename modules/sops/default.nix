@@ -141,7 +141,7 @@
 
       hass_secrets = {
         sopsFile = ../../secrets/hass.yaml;
-        owner = "hass"; # Corrected owner
+        owner = "homeassistant";
       };
 
       radicale_secrets = {
