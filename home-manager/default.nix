@@ -29,6 +29,10 @@
         update = "sudo nixos-rebuild switch --flake .#homeserver";
       };
 
+      powerlevel10k = {
+        enable = true;
+      };
+      
       plugins = [
         {
           name = "zsh-autosuggestions";
@@ -49,16 +53,6 @@
         {
           name = "you-should-use";
           src = pkgs.zsh-you-should-use;
-        }
-        {
-          name = "do-you-even-nix";
-          file = "do-you-even-nix.zsh-theme";
-          src = pkgs.fetchFromGitHub {
-            owner = "miche1e";
-            repo = "do-you-even-nix";
-            rev = "v1.0.1";
-            sha256 = "n9QYjpXlGdLx6agwp14rwcc6Jr5+0E/2h/oMuFsveHA=";
-          };
         }
       ];
 
