@@ -7,7 +7,7 @@
     nixfmt-rfc-style
   ];
   imports = [
-    inputs.nix4nvchad.homeManagerModules.default
+    inputs.nix4nvchad.homeManagerModule
   ];
 
   services.gpg-agent = {
