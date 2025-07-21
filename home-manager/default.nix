@@ -89,6 +89,12 @@
       hm-activation = true;
       backup = true;
     };
+
+    services.gpg-agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+
   };
 
   home.stateVersion = "25.05";

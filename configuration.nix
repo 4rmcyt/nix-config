@@ -73,11 +73,6 @@
           X11Forwarding no
       '';
     };
-
-    gpg-agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
     
     nextdns = {
       enable = true;
