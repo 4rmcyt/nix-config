@@ -69,7 +69,7 @@
       security = {
         admin_user = "admin";
         # This is the correct option for setting the admin password from a file.
-        admin_password_file = config.sops.secrets.grafana_secrets.path;
+        admin_password_file = config.sops.secrets.grafana_admin_password.path;
       };
     };
 
