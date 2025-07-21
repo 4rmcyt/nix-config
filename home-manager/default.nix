@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, config,... }:
 {
   home.username = "zeev";
   home.homeDirectory = "/home/zeev";
@@ -80,7 +80,6 @@
     gpg = {
       enable = true;
       keys = [
-        # This is your existing secret key from sops
         {
           source = config.sops.secrets.zeev_gpg_key.path;
           trust-ultimate = true;
