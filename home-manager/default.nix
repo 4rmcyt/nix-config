@@ -7,11 +7,11 @@
   home.packages = with pkgs; [
     git
     nixfmt-rfc-style
-    gnupg # Keep gnupg since you're using it
+    gnupg 
   ];
 
   imports = [
-    ../dots/nvim/default.nix
+    ./dots/nvim/default.nix
   ];
 
   services.gpg-agent = {
