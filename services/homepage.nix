@@ -59,7 +59,7 @@
               widgets = [{
                 type = "radarr";
                 url = "http://localhost:7878";
-                key = "{{HOMEPAGE_VAR_RADARR_KEY}}";
+                key = "{{HOMEPAGE_RADARR_KEY}}";
               }];
             };
           }
@@ -239,7 +239,7 @@
               description = "Home Automation";
               icon = "home-assistant";
               widgets = [{
-                type = "home-assistant";
+                type = "homeassistant";
                 url = "http://localhost:8123";
                 key = "{{HOMEPAGE_VAR_HASS_KEY}}";
               }];
