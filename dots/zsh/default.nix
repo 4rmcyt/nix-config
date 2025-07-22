@@ -66,19 +66,17 @@
          enable = true;
          theme = "powerlevel10k/powerlevel10k";
          plugins = [
-           macos
-	       git
-           sudo
-           docker
-           zsh-autosuggestions
-           zsh-completions
-           zsh-history-substring-search
-           zsh-syntax-highlighting
-           you-should-use
-           web-search
-	       taskwarrior
-	       you-should-use
-	       pass
+	        git
+          sudo
+          docker
+          zsh-autosuggestions
+          zsh-completions
+          zsh-history-substring-search
+          zsh-syntax-highlighting
+          you-should-use
+          web-search
+	        taskwarrior
+	        pass
          ];
       };
     };
