@@ -33,8 +33,8 @@
     };
 
     imports = [
-      ./dots/zsh/default.nix
-      ./dots/nvim/default.nix
+      ../dots/zsh/default.nix
+      ../dots/nvim/default.nix
     ];
     programs.nix-index = {
       enable = true;
