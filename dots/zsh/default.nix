@@ -44,6 +44,7 @@
       zsh-autoenv.enable = true;
       syntaxHighlighting.enable = true;
       histSize = 10000;
+      
       promptInit = ''
         # this act as your ~/.zshrc but for all users (/etc/zshrc)
         source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
@@ -61,10 +62,12 @@
         #LS_COLORS='...'
         #export LS_COLORS
       '';
-      ohMyZsh = {
+    };
+    ohMyZsh = {
         enable = true;
         theme = "powerlevel10k/powerlevel10k";
         plugins = [
+          git
           sudo
           docker
           zsh-autosuggestions
@@ -75,6 +78,5 @@
           pass
         ];
       };
-    };
   };
 }
