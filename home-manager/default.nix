@@ -9,7 +9,7 @@
     nixfmt-rfc-style
     gnupg zsh-powerlevel10k meslo-lgs-nf
   ];
-
+  
   imports = [
     ./dots/nvim/default.nix
   ];
@@ -21,7 +21,6 @@
 
   programs = {
     home-manager.enable = true;
-
     git = {
       enable = true;
       userName = "4rmcyt";
@@ -36,8 +35,12 @@
     zsh = {
       enable = true;
       enableCompletion = true;
+      autosuggestions.enable = true;
+      syntaxHighlighting.enable = true;
       initContent = "setopt autocd";
-
+      initExtra = ''
+        [[ ! -f ${./dots/zsh/p10k.zsh;} ]] || source ${./dots/zsh/p10k.zsh}
+      '';
       shellAliases = {
         ll = "ls -l";
         update = "sudo nixos-rebuild switch --flake .#homeserver";
@@ -63,11 +66,6 @@
         {
           name = "you-should-use";
           src = pkgs.zsh-you-should-use;
-        }
-        {
-          name = "powerlevel10k-config";
-          src = ./dots/zsh;
-          file = ".p10k.zsh";
         }
         {
           name = "zsh-powerlevel10k";
