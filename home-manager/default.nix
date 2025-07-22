@@ -63,8 +63,9 @@
           src = pkgs.zsh-you-should-use;
         }
         {
-          name = "powerlevel10k/powerlevel10k";
-          src = pkgs.powerlevel10k;
+          name = "zsh-powerlevel10k";
+          src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/";
+          file = "powerlevel10k.zsh-theme";
         }
         {
           name = "powerlevel10k-config";
@@ -79,7 +80,7 @@
           "git"
           "sudo"
         ];
-        theme = "powerlevel10k/powerlevel10k";
+       theme = "powerlevel10k/powerlevel10k";
       };
     };
   };
