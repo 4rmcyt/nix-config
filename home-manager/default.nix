@@ -79,11 +79,6 @@
         ];
       };
     };
-
-    nixfmt = {
-      enable = true;
-      rfcStyle = true;
-    };
   };
 
   home.stateVersion = "25.05";
