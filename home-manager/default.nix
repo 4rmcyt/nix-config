@@ -35,9 +35,7 @@
     zsh = {
       enable = true;
       syntaxHighlighting.enable = true;
-      initContent = ''
-        [[ ! -f ${./dots/zsh/p10k.zsh} ]] || source ${./dots/zsh/p10k.zsh}
-      '';
+      initContent = "setopt autocd";
       shellAliases = {
         ll = "ls -l";
         update = "sudo nixos-rebuild switch --flake .#homeserver";
@@ -69,7 +67,12 @@
           src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/";
           file = "powerlevel10k.zsh-theme";
         }
-      ];
+        {
+          name = "powerlevel10k-config";
+          src = "./";
+          file = "p10k.zsh";
+        }
+    ];
 
       oh-my-zsh = {
         enable = true;
