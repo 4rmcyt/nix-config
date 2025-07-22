@@ -17,9 +17,11 @@
   ];
   
 
-  services.gpg-agent = {
+  programs.gnupg.agent = {
     enable = true;
-    enableSshSupport = true;
+    enableSSHSupport = true;
+    defaultCacheTtl = 3600;
+    maxCacheTtl = 14400;
   };
 
   programs = {
@@ -35,7 +37,7 @@
       };
     };
 
-    programs.nix-index = {
+    nix-index = {
       enable = true;
       enableZshIntegration = true;
     };
