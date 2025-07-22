@@ -63,20 +63,20 @@
         #export LS_COLORS
       '';
     };
-    ohMyZsh = {
-        enable = true;
-        theme = "powerlevel10k/powerlevel10k";
-        plugins = [
-          git
-          sudo
-          docker
-          zsh-autosuggestions
-          zsh-completions
-          zsh-history-substring-search
-          zsh-syntax-highlighting
-          you-should-use
-          pass
-        ];
-      };
+    oh-my-zsh = {
+      enable = true;
+      theme = "powerlevel10k/powerlevel10k";
+      plugins = [
+        git
+        sudo
+        docker
+        zsh-autosuggestions
+        zsh-completions
+        zsh-history-substring-search
+        zsh-syntax-highlighting
+        you-should-use
+        pass
+      ];
+    };
   };
 }
