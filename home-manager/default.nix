@@ -79,6 +79,7 @@
           "git"
           "sudo"
         ];
+        theme = "powerlevel10k/powerlevel10k";
       };
     };
   };
