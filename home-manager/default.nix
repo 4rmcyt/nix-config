@@ -10,9 +10,6 @@
     gnupg zsh-powerlevel10k meslo-lgs-nf
   ];
   
-  imports = [
-    ./dots/nvim/default.nix
-  ];
 
   services.gpg-agent = {
     enable = true;
