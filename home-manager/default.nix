@@ -82,7 +82,6 @@
 
     nixfmt = {
       enable = true;
-      formatOnSave = true;
       rfcStyle = true;
     };
   };
