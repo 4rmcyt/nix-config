@@ -7,7 +7,7 @@
   home.packages = with pkgs; [
     git
     nixfmt-rfc-style
-    gnupg 
+    gnupg zsh-powerlevel10k meslo-lgs-nf
   ];
 
   imports = [
@@ -42,12 +42,7 @@
         ll = "ls -l";
         update = "sudo nixos-rebuild switch --flake .#homeserver";
       };
-
-      powerlevel10k = {
-        enable = true;
-        configFile = ./dots/zsh/.p10k.zsh;
-      };
-
+      
       plugins = [
         {
           name = "zsh-autosuggestions";
@@ -68,6 +63,16 @@
         {
           name = "you-should-use";
           src = pkgs.zsh-you-should-use;
+        }
+        {
+          name = "powerlevel10k-config";
+          src = ./p10k;
+          file = "./dots/zsh/.p10k.zsh";
+        }
+        {
+          name = "zsh-powerlevel10k";
+          src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/";
+          file = "powerlevel10k.zsh-theme";
         }
       ];
 
