@@ -35,8 +35,7 @@
     zsh = {
       enable = true;
       syntaxHighlighting.enable = true;
-      initContent = "setopt autocd";
-      initExtra = ''
+      initContent = ''
         [[ ! -f ${./dots/zsh/p10k.zsh} ]] || source ${./dots/zsh/p10k.zsh}
       '';
       shellAliases = {
