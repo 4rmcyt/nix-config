@@ -42,7 +42,7 @@
         ll = "ls -l";
         update = "sudo nixos-rebuild switch --flake .#homeserver";
       };
-      
+
       plugins = [
         {
           name = "zsh-autosuggestions";
@@ -66,8 +66,8 @@
         }
         {
           name = "powerlevel10k-config";
-          src = ./p10k;
-          file = "./dots/zsh/.p10k.zsh";
+          src = ./dots/zsh;
+          file = ".p10k.zsh";
         }
         {
           name = "zsh-powerlevel10k";
