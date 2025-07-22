@@ -12,7 +12,7 @@
   home.packages = with pkgs; [
     git
     nixfmt-rfc-style
-    gnupg zsh-powerlevel10k meslo-lgs-nf
+    gnupg meslo-lgs-nf
   ];
   
 
