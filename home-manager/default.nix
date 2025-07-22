@@ -69,7 +69,7 @@
         }
         {
           name = "powerlevel10k-config";
-          src = "~/src/server/dots/zsh/p10k.zsh";
+          src = "./dots/zsh;";
           file = "p10k.zsh";
         }
     ];
