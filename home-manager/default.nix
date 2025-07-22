@@ -32,56 +32,13 @@
       };
     };
 
-    zsh = {
-      enable = true;
-      syntaxHighlighting.enable = true;
-      initContent = "setopt autocd";
-      shellAliases = {
-        ll = "ls -l";
-        update = "sudo nixos-rebuild switch --flake .#homeserver";
-      };
-
-      plugins = [
-        {
-          name = "zsh-autosuggestions";
-          src = pkgs.zsh-autosuggestions;
-        }
-        {
-          name = "zsh-completions";
-          src = pkgs.zsh-completions;
-        }
-        {
-          name = "zsh-history-substring-search";
-          src = pkgs.zsh-history-substring-search;
-        }
-        {
-          name = "zsh-syntax-highlighting";
-          src = pkgs.zsh-syntax-highlighting;
-        }
-        {
-          name = "you-should-use";
-          src = pkgs.zsh-you-should-use;
-        }
-        {
-          name = "zsh-powerlevel10k";
-          src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/";
-          file = "powerlevel10k.zsh-theme";
-        }
-        {
-          name = "powerlevel10k-config";
-          src = ./dots/zsh;
-          file = "p10k.zsh";
-        }
+    imports = [
+      ../../dots/zsh/default.nix
+      ../../dots/nvim/default.nix
     ];
-
-      oh-my-zsh = {
-        enable = true;
-        plugins = [
-          "git"
-          "sudo"
-        ];
-       theme = "powerlevel10k/powerlevel10k";
-      };
+    programs.nix-index = {
+      enable = true;
+      enableZshIntegration = true;
     };
   };
 
