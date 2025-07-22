@@ -3,9 +3,9 @@
 
 {
   imports = [
-      ././dots/zsh/default.nix
-      ././dots/nvim/default.nix
-    ];
+    ../../dots/zsh
+    ../../dots/nvim
+  ];
   home.username = "zeev";
   home.homeDirectory = "/home/zeev";
 
