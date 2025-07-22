@@ -1,6 +1,11 @@
 { pkgs, inputs, ... }:
 
+
 {
+  imports = [
+      ../dots/zsh/default.nix
+      ../dots/nvim/default.nix
+    ];
   home.username = "zeev";
   home.homeDirectory = "/home/zeev";
 
@@ -29,10 +34,6 @@
       };
     };
 
-    imports = [
-      ../dots/zsh/default.nix
-      ../dots/nvim/default.nix
-    ];
     programs.nix-index = {
       enable = true;
       enableZshIntegration = true;
