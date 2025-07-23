@@ -170,6 +170,9 @@ in
     "d /var/lib/microbin 0775 microbin microbin -" # Standard data dir for microbin
 
     "d /var/lib/kavita 0775 kavita kavita -" # Standard data dir for kavita
+    "d /var/lib/paperless 0775 paperless paperless -" # Standard data dir for paperless
+    "d /var/lib/radicale 0775 radicale radicale -" # Standard
+    "d /var/lib/grafana 0775 grafana grafana -" # Standard data dir for grafana dashboards
     "d /var/lib/transmission 0775 transmission transmission -" # Standard data dir for transmission
     "d /data/.secret 0700 zeev media -" # Keep tight permissions for secrets directory
   ];
