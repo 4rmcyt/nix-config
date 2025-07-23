@@ -40,15 +40,17 @@
       wgConf = "/data/.secret/wg.conf";
     };
 
-    transmission = {
+    transmission_4 = {
       enable = true;
       vpn.enable = true;
       peerPort = 63998;
       flood.enable = false;
+      privateTrackers.cross-seed.enable = true;
       extraSettings = {
+        rpc-whitelist-enabled = false;
         download-dir = "/data/Downloads";
-        script-torrent-added-enabled = true;
-        script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
+        # script-torrent-added-enabled = true;
+        # script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
         blocklist-enabled = true;
         blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
       };
