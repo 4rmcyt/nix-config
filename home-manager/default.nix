@@ -36,7 +36,6 @@
 
     zsh = {
       enable = true;
-      enableZshIntegration = true;
       enableAutosuggestions = true;
       enableSyntaxHighlighting = true;
       histSize = 10000;
@@ -57,8 +56,12 @@
         theme = "powerlevel10k/powerlevel10k";
         plugins = [
           "git"
+          "sudo"
+          "zsh-completions"
+          "zsh-history-substring-search"
           "zsh-autosuggestions"
           "zsh-syntax-highlighting"
+          "you-should-use"
           "direnv"
         ];
       };
@@ -66,6 +69,11 @@
 
     
     nix-index = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+
+    direnv = {
       enable = true;
       enableZshIntegration = true;
     };
