@@ -116,6 +116,14 @@ in
     # Top-level /data directory and its children that are shared
     # Ensure /data is writable by root and the 'media' group
     "d /data 0775 root media -"
+    "d /data/media/movies 0775 zeev media -"
+    "d /data/media/audiobooks 0775 zeev media -"
+    "d /data/media/music 0775 zeev media -"
+    "d /data/media/shows 0775 zeev media -"
+    "d /data/media/books 0775 zeev media -"
+    "d /data/media/comics 0775 zeev media -"
+    "d /data/media/manga 0775 zeev media -"
+
 
     # /data/Downloads needs to be writable by its owner and the 'users' group
     "d /data/Downloads 0775 zeev users -"
