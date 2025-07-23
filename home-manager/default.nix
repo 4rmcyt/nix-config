@@ -61,19 +61,19 @@
           file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
         }
       ];
+      ohmyzsh = {
+        enable = true;
+        theme = "powerlevel10k/powerlevel10k";
+        plugins = [
+          "git"
+          "zsh-autosuggestions"
+          "zsh-syntax-highlighting"
+          "direnv"
+        ];
+      };
     };
 
-    ohmyzsh = {
-      enable = true;
-      theme = "powerlevel10k/powerlevel10k";
-      plugins = [
-        "git"
-        "zsh-autosuggestions"
-        "zsh-syntax-highlighting"
-        "direnv"
-      ];
-    };
-
+    
     nix-index = {
       enable = true;
       enableZshIntegration = true;
