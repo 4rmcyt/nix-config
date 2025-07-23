@@ -1,11 +1,8 @@
-# In services/containers.nix
 { config, pkgs, lib, ... }:
 
 {
-  # 1. Enable Podman
   virtualisation.podman.enable = true;
 
-  # 2. Define the systemd services that will run the containers
   systemd.services = {
     # --- TP-Link Exporter for Living Room ---
     podman-tplink-exporter-living-room = {
@@ -57,7 +54,6 @@
       };
     };
 
-    # --- TP-Link Exporter for Office ---
     podman-tplink-exporter-office = {
       description = "TP-Link Exporter for Office";
       after = [ "network-online.target" "sops.service" ];
@@ -101,7 +97,6 @@
       };
     };
 
-    # --- NextDNS Exporter ---
     podman-nextdns-exporter = {
       description = "NextDNS Prometheus Exporter";
       after = [ "network-online.target" "sops.service" ];
@@ -122,7 +117,6 @@
     };
   };
 
-  # 4. Define Prometheus scrape configs for the new containerized exporters
   services.prometheus.scrapeConfigs = [
     {
       job_name = "tplink-living-room";

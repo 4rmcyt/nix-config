@@ -27,7 +27,7 @@
               icon = "audiobookshelf";
               widgets = [{
                 type = "audiobookshelf";
-                url = "http://localhost:8085";
+                url = "http://localhost:9292";
                 key = "{{HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY}}";
               }];
             };
@@ -50,7 +50,7 @@
           {
             "Radarr" = {
               icon = "radarr.png";
-              href = "https://movies.labhome.work/";
+              href = "https://radarr.labhome.work/";
               widgets = [{
                 type = "radarr";
                 url = "http://localhost:7878";
