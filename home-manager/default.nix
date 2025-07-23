@@ -9,9 +9,7 @@
 
   programs.gnupg.agent = {
     enable = true;
-    enableSSHSupport = true;
-    defaultCacheTtl = 3600;
-    maxCacheTtl = 14400;
+    enableSSHSupport = true;  
   };
 
   programs = {
