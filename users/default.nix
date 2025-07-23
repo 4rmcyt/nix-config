@@ -55,6 +55,7 @@ in
       transmission = {};
       readarr-audiobook = {};
       cross-seed = {};
+      kavita = {};
     };
 
     users = {
@@ -86,30 +87,24 @@ in
       cloudflared = { isSystemUser = true; group = "cloudflared"; };
       tailscale = { isSystemUser = true; group = "tailscale"; };
 
-      microbin = {
-        isSystemUser = true;
-        group = "microbin"; # Keep its primary group
-        extraGroups = [ "users" "media" ]; # Add to both 'users' and 'media' groups
-      };
-      # Samba:
-      samba = {
-        isSystemUser = true;
-        group = "samba"; # Keep its primary group
-        extraGroups = [ "users" "media" ]; # Add to both 'users' and 'media' groups
-      };
+     
+      microbin = { isSystemUser = true; group = "microbin"; extraGroups = [ "users" "media" ]; };
+      samba = { isSystemUser = true; group = "samba"; extraGroups = [ "users" "media" ]; };
 
-      audiobookshelf = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      bazarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      jellyfin = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      jellyseerr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      lidarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      prowlarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      radarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      readarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      sonarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      transmission = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      readarr-audiobook = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      cross-seed = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+
+      audiobookshelf = { isSystemUser = true; group = "audiobookshelf"; extraGroups = [ "users" "media" ]; };
+      bazarr = { isSystemUser = true; group = "bazarr"; extraGroups = [ "users" "media" ]; };
+      jellyfin = { isSystemUser = true; group = "jellyfin"; extraGroups = [ "users" "media" ]; };
+      jellyseerr = { isSystemUser = true; group = "jellyseerr"; extraGroups = [ "users" "media" ]; };
+      lidarr = { isSystemUser = true; group = "lidarr"; extraGroups = [ "users" "media" ]; };
+      prowlarr = { isSystemUser = true; group = "prowlarr"; extraGroups = [ "users" "media" ]; };
+      radarr = { isSystemUser = true; group = "radarr"; extraGroups = [ "users" "media" ]; };
+      readarr = { isSystemUser = true; group = "readarr"; extraGroups = [ "users" "media" ]; };
+      sonarr = { isSystemUser = true; group = "sonarr"; extraGroups = [ "users" "media" ]; };
+      transmission = { isSystemUser = true; group = "transmission"; extraGroups = [ "users" "media" ]; };
+      readarr-audiobook = { isSystemUser = true; group = "readarr-audiobook"; extraGroups = [ "users" "media" ]; };
+      cross-seed = { isSystemUser = true; group = "cross-seed"; extraGroups = [ "users" "media" ]; };
+      kavita = { isSystemUser = true; group = "kavita"; extraGroups = [ "users" "media" ]; };
     };
   };
 
@@ -127,14 +122,13 @@ in
     "d /data/media/manga 0775 zeev media -"
     "d /data/media/torrents 0775 zeev media -"
     "d /data/media/usenet 0775 zeev media -"
-    "d /data/Downloads 0775 zeev users -"
+    "d /data/Downloads 0775 zeev media -"
 
     
     # /data/media and its subdirectories (library, torrents, usenet)
     # should be writable by root/zeev and the 'media' group
-    "d /data/media 0775 root media -"
+    "d /data/media 0775 zeev media -"
     "d /data/media/library 0775 zeev media -"
-    "d /data/media/torrents 0775 zeev media -"
     "d /data/media/usenet 0775 zeev media -"
 
     # /data/media/.state and /data/media/.state/nixarr need to be writable by root and the 'media' group
@@ -149,14 +143,13 @@ in
     "d /data/media/.state/nixarr/jellyfin/config 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/cache 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/log 0755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/audiobookshelf/metadata 0755 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/audiobookshelf/metadata 0755 audiobookshelf audiobookshelf -"
 
     "d /data/media/.state/nixarr/lidarr 0775 lidarr lidarr -"
     "d /data/media/.state/nixarr/prowlarr 0775 prowlarr prowlarr -"
     "d /data/media/.state/nixarr/radarr 0775 radarr radarr -"
     "d /data/media/.state/nixarr/readarr 0775 readarr readarr -"
     "d /data/media/.state/nixarr/sonarr 0775 sonarr sonarr -"
-    "d /data/media/.state/nixarr/sabnzbd 0775 sabnzbd sabnzbd -"
     "d /data/media/.state/nixarr/readarr-audiobook 0775 readarr-audiobook readarr-audiobook -"
     "d /data/media/.state/nixarr/bazarr 0775 bazarr bazarr -"
     "d /data/media/.state/nixarr/transmission 0775 transmission transmission -"
