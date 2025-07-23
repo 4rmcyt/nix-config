@@ -363,9 +363,6 @@
     Environment = [  
       "HOMEPAGE_ALLOWED_HOSTS=localhost,127.0.0.1,192.168.1.165,home.labhome.work"  
     ];  
-
-    # Use EnvironmentFile to load all secrets as environment variables.
-    # Make sure you've defined sops.secrets."homepage-env" in your sops-nix config.
-    EnvironmentFile = config.sops.secrets."homepage-env".path;
+    EnvironmentFile = config.sops.secrets.homepage_env.path;
   };  
 }
