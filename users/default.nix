@@ -141,18 +141,22 @@ in
     # Individual service state directories under nixarr (keep as 0755 for isolation)
     "d /data/media/.state/nixarr/audiobookshelf 0775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/bazarr 0775 bazarr bazarr -"
+    
     "d /data/media/.state/nixarr/jellyfin 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/data 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/config 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/cache 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/log 0755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/jellyseerr 0775 jellyseerr jellyseerr -"
+    
     "d /data/media/.state/nixarr/lidarr 0775 lidarr lidarr -"
     "d /data/media/.state/nixarr/prowlarr 0775 prowlarr prowlarr -"
     "d /data/media/.state/nixarr/radarr 0775 radarr radarr -"
     "d /data/media/.state/nixarr/readarr 0775 readarr readarr -"
     "d /data/media/.state/nixarr/sonarr 0775 sonarr sonarr -"
-    
+    "d /data/media/.state/nixarr/sabnzbd 0775 sabnzbd sabnzbd -"
+    "d /data/media/.state/nixarr/transmission 0775 transmission transmission -"
+
+    "d /data/media/.state/nixarr/jellyseerr 0775 jellyseerr jellyseerr -"
     "d /data/media/.state/nixarr/jellyseerr/db 0775 jellyseerr jellyseerr -" # New line for 'db'
     "d /data/media/.state/nixarr/jellyseerr/logs 0755 jellyseerr jellyseerr -" # For 'logs'
 
@@ -160,9 +164,7 @@ in
     "d /var/lib/miniflux 0775 miniflux miniflux -" # Standard data dir for miniflux
     "d /var/lib/microbin 0775 microbin microbin -" # Standard data dir for microbin
 
-    "d /data/media/.state/nixarr/sabnzbd 0775 sabnzbd sabnzbd -"
     "d /var/lib/transmission 0775 transmission transmission -" # Standard data dir for transmission
-
     "d /data/.secret 0700 zeev media -" # Keep tight permissions for secrets directory
   ];
 }
