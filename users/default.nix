@@ -113,17 +113,26 @@ in
   };
 
   # Correct placement for systemd.tmpfiles.rules - it's a top-level option.
-  systemd.tmpfiles.rules = [
-    "d /data 0755 zeev root -"
+  ssystemd.tmpfiles.rules = [
+    # Top-level /data directory and its children that are shared
+    # Ensure /data is writable by root and the 'media' group
+    "d /data 0775 root media -"
 
+    # /data/Downloads needs to be writable by its owner and the 'users' group
     "d /data/Downloads 0775 zeev users -"
 
+    # /data/media and its subdirectories (library, torrents, usenet)
+    # should be writable by root/zeev and the 'media' group
     "d /data/media 0775 root media -"
     "d /data/media/library 0775 zeev media -"
     "d /data/media/torrents 0775 zeev media -"
     "d /data/media/usenet 0775 zeev media -"
+
+    # /data/media/.state and /data/media/.state/nixarr need to be writable by root and the 'media' group
     "d /data/media/.state 0775 root media -"
     "d /data/media/.state/nixarr 0775 root media -"
+
+    # Individual service state directories under nixarr (keep as 0755 for isolation)
     "d /data/media/.state/nixarr/audiobookshelf 0755 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/bazarr 0755 bazarr bazarr -"
     "d /data/media/.state/nixarr/jellyfin 0755 jellyfin jellyfin -"
@@ -133,16 +142,18 @@ in
     "d /data/media/.state/nixarr/jellyfin/log 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyseerr 0755 jellyseerr jellyseerr -"
     "d /data/media/.state/nixarr/lidarr 0755 lidarr lidarr -"
-    "d /data/media/.state/nixarr/prowlarr = { isSystemUser = true; group = "prowlarr"; };" # Fix: This should be "d <path> <mode> <owner> <group> -"
+    "d /data/media/.state/nixarr/prowlarr 0755 prowlarr prowlarr -"
     "d /data/media/.state/nixarr/radarr 0755 radarr radarr -"
     "d /data/media/.state/nixarr/readarr 0755 readarr readarr -"
-    
     "d /data/media/.state/nixarr/sonarr 0755 sonarr sonarr -"
-    "d /var/lib/miniflux 0750 miniflux miniflux -"
-    
-    "d /data/media/.state/nixarr/sabnzbd 0755 sabnzbd sabnzbd -"
-    "d /var/lib/transmission 0755 transmission transmission -"
 
-    "d /data/.secret 0700 zeev media -"
+    # Specific directories for other services
+    "d /var/lib/miniflux 0750 miniflux miniflux -" # Standard data dir for miniflux
+    "d /var/lib/microbin 0750 microbin microbin -" # Standard data dir for microbin
+
+    "d /data/media/.state/nixarr/sabnzbd 0755 sabnzbd sabnzbd -"
+    "d /var/lib/transmission 0755 transmission transmission -" # Standard data dir for transmission
+
+    "d /data/.secret 0700 zeev media -" # Keep tight permissions for secrets directory
   ];
 }
