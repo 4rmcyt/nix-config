@@ -23,31 +23,48 @@
         # Media services
         8096  # Jellyfin
         8920  # Jellyfin HTTPS
-        8085  # Audiobookshelf
+        9292  # Audiobookshelf
+        58403 # VPN test service
+        63998 # Transmission peer
+        9091  # Transmission web UI
+        8989  # Sonarr
+        7878  # Radarr
+        9696  # Prowlarr
+        6767  # Bazarr
+        5055  # Jellyseerr
+        8686  # Lidarr
+        8787  # Readarr
+        9494  # Readarr-audiobook
+
+
+
+
 
         # Content management
-        8081  # Nextcloud
         8083  # Microbin
         8086  # Miniflux
         8888  # Paperless
         5232  # Radicale
         5000  # Kavita
-        9091 # Transmission web UI
 
         # System services
         8082  # Homepage dashboard
         8123  # Home Assistant
-        8112  # Deluge web UI
-        51413 # Deluge daemon
+
 
         # Monitoring (from monitoring.nix)
         3000  # Grafana
         9090  # Prometheus
         9100  # Node Exporter
+        9266  # TP-Link living-room Exporter
+        9267  # TP-Link office Exporter
+        9790  # Nextdns Exporter
+
 
         # Database & Infrastructure
         1883  # Mosquitto MQTT
         5432  # PostgreSQL (if needed externally)
+        
       ];
 
       # UDP ports for specific services
@@ -56,11 +73,7 @@
         7359  # Jellyfin discovery
       ];
       
-      trustedInterfaces = [ "tailscale0" ];
       
-      logReversePathDrops = true;
-    };
-  };
 
   boot.kernel.sysctl = {
     "net.core.default_qdisc" = "fq";
