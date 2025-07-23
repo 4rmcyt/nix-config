@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
-{
+{ 
+  imports = [ ./homepage.nix ];
+  
   sops = {
     age.keyFile = "/var/lib/sops/age.key";
     defaultSopsFormat = "yaml";
