@@ -50,7 +50,7 @@
           file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
         }
       ];
-      ohmyzsh = {
+      oh-my-zsh = {
         enable = true;
         theme = "powerlevel10k/powerlevel10k";
         plugins = [
