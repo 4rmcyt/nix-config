@@ -101,7 +101,8 @@
     after = [ "nextdns.service" ];
     wantedBy = [ "multi-user.target" ];
   };
-
+  
+  environment.variables.EDITOR = "neovim";
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "25.05";
 }
