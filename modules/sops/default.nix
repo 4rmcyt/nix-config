@@ -37,7 +37,10 @@
       
 
       # --- Homepage Widget Credentials (from homepage.yaml) ---
-      homepage_secrets = { sopsFile = ../../secrets/homepage.yaml; key = ""; };
+      homepage_env = {
+        sopsFile = ../../secrets/homepage.env;
+        owner = config.users.users.homepage-dashboard.name;
+      };    
     };
   };
 }
