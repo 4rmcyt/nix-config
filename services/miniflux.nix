@@ -9,7 +9,7 @@
     enable = true;
     adminCredentialsFile = builtins.toFile "miniflux-initial-credentials" ''
       ADMIN_USERNAME="admin"
-      ADMIN_PASSWORD="${config.sops.secrets.miniflux_admin_password.path}"
+      ADMIN_PASSWORD="12345678"
     '';
     config = {
       WORKER_POOL_SIZE = "5"; # number of background workers
