@@ -76,7 +76,6 @@ in
       git = { isSystemUser = true; group = "git"; };
       keycloak = { isSystemUser = true; group = "keycloak"; };
       homepage-dashboard = { isSystemUser = true; group = "homepage-dashboard"; };
-      nextcloud = { isSystemUser = true; group = "nextcloud"; };
       paperless = { isSystemUser = true; group = "paperless"; };
       miniflux = { isSystemUser = true; group = "miniflux"; };
       hass = { isSystemUser = true; group = "hass"; };
