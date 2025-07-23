@@ -147,6 +147,7 @@ in
     "d /data/media/.state/nixarr/sonarr 0755 sonarr sonarr -"
     
     "d /data/media/.state/nixarr/jellyseerr/logs 0755 jellyseerr jellyseerr -"
+    "d /data/media/.state/nixarr/jellyseerr 0755 jellyseerr jellyseerr -"
 
 
     # Specific directories for other services

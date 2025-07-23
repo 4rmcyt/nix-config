@@ -39,7 +39,7 @@
           {
             "Sonarr" = {
               icon = "sonarr.png";
-              href = "https://tv.labhome.work/";
+              href = "https://sonnar.labhome.work/";
               widgets = [{
                 type = "sonarr";
                 url = "http://localhost:8989";
@@ -244,18 +244,6 @@
               href = "https://keycloak.labhome.work";
               description = "Identity & Access Management";
               icon = "keycloak";
-            };
-          }
-          {
-            "NextDns" = {
-              href = "https://my.nextdns.io/";
-              description = "Nextdns Dashboard";
-              icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
-              widget = {
-                type = "nextdns";
-                profile = "{{HOMEPAGE_VAR_NEXTDNS_PROFILE_ID}}";
-                key = "{{HOMEPAGE_VAR_NEXTDNS_KEY}}";
-              };
             };
           }
           {
