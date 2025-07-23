@@ -123,9 +123,8 @@ in
     "d /data/media/books 0775 zeev media -"
     "d /data/media/comics 0775 zeev media -"
     "d /data/media/manga 0775 zeev media -"
-
-
-    # /data/Downloads needs to be writable by its owner and the 'users' group
+    "d /data/media/torrents 0775 zeev media -"
+    "d /data/media/usenet 0775 zeev media -"
     "d /data/Downloads 0775 zeev users -"
 
     # /data/media and its subdirectories (library, torrents, usenet)
