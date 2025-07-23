@@ -42,7 +42,7 @@
       homepage_prowlarr_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_PROWLARR_KEY"; };
       homepage_radarr_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_RADARR_KEY"; };
       homepage_readarr_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_READARR_KEY"; };
-      homepage_readarr_audiobooks_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_READARR_AUDIOBOOKS_KEY"; };Í
+      homepage_readarr_audiobooks_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_READARR_AUDIOBOOKS_KEY"; };
       homepage_sonarr_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_SONARR_KEY"; };
       homepage_bazarr_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_BAZARR_KEY"; };
       homepage_paperless_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_PAPERLESS_KEY"; };
