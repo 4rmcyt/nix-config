@@ -4,7 +4,9 @@
   services.homepage-dashboard = {  
     enable = true;  
     listenPort = 8082;
-    secrets = {
+    environment = {
+      HOMEPAGE_ALLOWED_HOSTS = "localhost,127.0.0.1,192.168.1.165,home.labhome.work";
+
       HOMEPAGE_VAR_JELLYFIN_KEY = config.sops.secrets.homepage_jellyfin_key.value;
       HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY = config.sops.secrets.homepage_audiobookshelf_key.value;
       HOMEPAGE_VAR_SONARR_KEY = config.sops.secrets.homepage_sonarr_key.value;
@@ -379,12 +381,6 @@
           }  
         ];  
       }  
-    ];  
-  };  
-
-  systemd.services.homepage-dashboard.serviceConfig = {  
-    Environment = [  
-      "HOMEPAGE_ALLOWED_HOSTS=localhost,127.0.0.1,192.168.1.165,home.labhome.work"  
     ];  
   };  
 }
