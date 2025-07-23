@@ -33,11 +33,10 @@
         marker = "#EBCB8B";
       };
     };
-
     zsh = {
       enable = true;
-      enableAutosuggestions = true;
-      enableSyntaxHighlighting = true;
+      syntaxHighlighting.enable = true;
+      autosuggestion.enable = true;
       initContent = ''
         if [[ -r "''${XDG_CACHE_HOME:-''$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
           source "''${XDG_CACHE_HOME:-''$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
