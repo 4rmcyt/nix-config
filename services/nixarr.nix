@@ -42,7 +42,11 @@
 
     transmission = {
       enable = true;
-      vpn.enable = true;
+      vpn = {
+        enable = true;
+        # Add this line to allow access from your local network
+        allowRPCAccessFrom = [ "192.168.0.0/16" ]; # Or a more specific subnet
+      };
       peerPort = 63998;
       flood.enable = false;
       privateTrackers.cross-seed.enable = true;
