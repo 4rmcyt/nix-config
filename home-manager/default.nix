@@ -1,10 +1,11 @@
 { pkgs, inputs, ... }:
-
-
+let
+    configThemeNormal = ./dots/nvim/p10k-config/p10k.zsh;
+in    
 {
   imports = [
-    ../dots/nvim/default.nix
-    ../dots/zsh/default.nix
+    inputs.home-manager.nixosModules.home-manager
+    inputs.sops-nix.nixosModules.sops
   ];
 
   home.username = "zeev";
@@ -30,19 +31,70 @@
       enable = true;
       userName = "4rmcyt";
       userEmail = "4rmcyt@gmail.com";
-
-      signing = {
-        key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
-        signByDefault = true;
-      };
+      signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
+      signing.signCommits = true;
     };
 
     ssh = {
       enable = true;
       enableZshIntegration = true;
-      addKeysToAgent = "yes"; 
+      addKeysToAgent = "yes";
+      authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com"
+      ];
     };
-    
+
+    fzf = {
+      enable = true;
+      enableZshIntegration = true;
+      colors = {
+        fg = "#D8DEE9";
+        bg = "#2E3440";
+        hl = "#A3BE8C";
+        "fg+" = "#D8DEE9";
+        "bg+" = "#434C5E";
+        "hl+" = "#A3BE8C";
+        pointer = "#BF616A";
+        info = "#4C566A";
+        spinner = "#4C566A";
+        header = "#4C566A";
+        prompt = "#81A1C1";
+        marker = "#EBCB8B";
+      };
+    };
+
+    zsh = {
+      enable = true;
+      enableZshIntegration = true;
+      enableAutosuggestions = true;
+      enableSyntaxHighlighting = true;
+      histSize = 10000;
+      promptInit = ''
+        if [[ -r "''${XDG_CACHE_HOME:-''$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+        source "''${XDG_CACHE_HOME:-''$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+        fi
+      '';
+      plugins = [
+        {
+
+          name = "powerlevel10k";
+          src = pkgs.zsh-powerlevel10k;
+          file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
+        }
+      ];
+    };
+
+    oh-my-zsh = {
+      enable = true;
+      theme = "powerlevel10k/powerlevel10k";
+      plugins = [
+        "git"
+        "zsh-autosuggestions"
+        "zsh-syntax-highlighting"
+        "direnv"
+      ];
+    };
+
     nix-index = {
       enable = true;
       enableZshIntegration = true;
