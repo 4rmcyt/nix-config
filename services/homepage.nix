@@ -361,7 +361,7 @@
   };  
 
   systemd.services.homepage-dashboard.serviceConfig = {  
-    environment = {
+    environment = [
       HOMEPAGE_ALLOWED_HOSTS = "localhost,127.0.0.1,192.168.1.165,home.labhome.work";
 
       HOMEPAGE_VAR_JELLYFIN_KEY = config.sops.secrets.homepage_jellyfin_key.value;
@@ -385,6 +385,6 @@
       HOMEPAGE_VAR_CLOUDFLARED_KEY = config.sops.secrets.homepage_cloudflared_key.value;
       HOMEPAGE_VAR_LATITUDE = config.sops.secrets.homepage_latitude.value;
       HOMEPAGE_VAR_LONGITUDE = config.sops.secrets.homepage_longitude.value;
-    };
+    ];
   };  
 }
