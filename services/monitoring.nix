@@ -59,7 +59,6 @@
 
   services.grafana = {
     enable = true;
-    mutableDashboards = true;
     dataDir = "/var/lib/grafana";
     settings = {
       server = {
