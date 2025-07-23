@@ -1,8 +1,17 @@
 { config, pkgs, lib, ... }:
 let
+  # Import the formats library explicitly from pkgs.lib
+  formats = pkgs.lib.formats;
+
+  # Path to the decrypted homepage_secrets.yaml provided by sops-nix
   homepageSecretsDecryptedPath = config.sops.secrets.homepage_secrets.path;
-  homepageSecrets = lib.formats.yaml.parse (builtins.readFile homepageSecretsDecryptedPath); # Corrected: Use lib.formats.yaml.parse
+
+  # Read the content of the decrypted file and parse it as YAML
+  homepageSecrets = formats.yaml.parse (builtins.readFile homepageSecretsDecryptedPath); # Corrected: Use formats.yaml.parse
+
+  # Transform the parsed secrets into a list of "HOMEPAGE_VAR_KEY=VALUE" strings
   homepageEnvVars = lib.mapAttrsToList (name: value:
+    # Ensure the key in the environment variable is uppercase and add the prefix
     "HOMEPAGE_VAR_${lib.toUpper name}=${value}"
   ) homepageSecrets;
 in
