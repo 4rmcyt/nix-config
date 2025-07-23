@@ -17,7 +17,6 @@
           "transmission.labhome.work" = "http://127.0.0.1:9091";
           "cal.labhome.work" = "http://localhost:5232";
           "audiobookshelf.labhome.work" = "http://localhost:9292";
-          "paste.labhome.work" = "http://localhost:8083";
           "kavita.labhome.work" = "http://localhost:5000";
           "microbin.labhome.work" = "http://localhost:8084";
           "prowlarr.labhome.work" = "http://localhost:9696";
