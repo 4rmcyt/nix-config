@@ -37,6 +37,12 @@
       };
     };
 
+    ssh = {
+      enable = true;
+      enableZshIntegration = true;
+      addKeysToAgent = "yes"; 
+    };
+    
     nix-index = {
       enable = true;
       enableZshIntegration = true;
