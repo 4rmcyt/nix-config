@@ -54,6 +54,7 @@ in
       sonarr = {};
       transmission = {};
       readarr-audiobook = {};
+      cross-seed = {};
     };
 
     users = {
@@ -108,6 +109,7 @@ in
       sonarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       transmission = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       readarr-audiobook = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      cross-seed = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
     };
   };
 
@@ -140,7 +142,7 @@ in
 
     # Individual service state directories under nixarr (keep as 0755 for isolation)
     "d /data/media/.state/nixarr/audiobookshelf 0775 audiobookshelf audiobookshelf -"
-    
+    "d /data/media/.state/nixarr/cross-seed 0775 cross-seed cross-seed -"
     "d /data/media/.state/nixarr/jellyfin 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/data 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/config 0755 jellyfin jellyfin -"
