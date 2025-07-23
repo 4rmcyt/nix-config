@@ -2,42 +2,38 @@
 
 { config, pkgs, lib, ... }:
 
-let
-  envFile = pkgs.runCommand "homepage-env" {} ''
-    echo "HOMEPAGE_VAR_JELLYFIN_KEY=$(cat ${config.sops.secrets.homepage_jellyfin_key.path})" > $out
-    echo "HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY=$(cat ${config.sops.secrets.homepage_audiobookshelf_key.path})" >> $out
-    echo "HOMEPAGE_VAR_SONARR_KEY=$(cat ${config.sops.secrets.homepage_sonarr_key.path})" >> $out
-    echo "HOMEPAGE_VAR_RADARR_KEY=$(cat ${config.sops.secrets.homepage_radarr_key.path})" >> $out
-    echo "HOMEPAGE_VAR_PROWLARR_KEY=$(cat ${config.sops.secrets.homepage_prowlarr_key.path})" >> $out
-    echo "HOMEPAGE_VAR_BAZARR_KEY=$(cat ${config.sops.secrets.homepage_bazarr_key.path})" >> $out
-    echo "HOMEPAGE_VAR_JELLYSEERR_KEY=$(cat ${config.sops.secrets.homepage_jellyseerr_key.path})" >> $out
-    echo "HOMEPAGE_VAR_LIDARR_KEY=$(cat ${config.sops.secrets.homepage_lidarr_key.path})" >> $out
-    echo "HOMEPAGE_VAR_READARR_KEY=$(cat ${config.sops.secrets.homepage_readarr_key.path})" >> $out
-    echo "HOMEPAGE_VAR_READARR_AUDIOBOOKS_KEY=$(cat ${config.sops.secrets.homepage_readarr_audiobooks_key.path})" >> $out
-    echo "HOMEPAGE_VAR_PAPERLESS_KEY=$(cat ${config.sops.secrets.homepage_paperless_key.path})" >> $out
-    echo "HOMEPAGE_VAR_KAVITA_KEY=$(cat ${config.sops.secrets.homepage_kavita_key.path})" >> $out
-    echo "HOMEPAGE_VAR_GRAFANA_ADMIN_PASSWORD=$(cat ${config.sops.secrets.grafana_admin_password.path})" >> $out
-    echo "HOMEPAGE_VAR_HASS_KEY=$(cat ${config.sops.secrets.homepage_hass_key.path})" >> $out
-    echo "HOMEPAGE_VAR_TAILSCALE_DEVICE_ID=$(cat ${config.sops.secrets.homepage_tailscale_device_id.path})" >> $out
-    echo "HOMEPAGE_VAR_TAILSCALE_KEY=$(cat ${config.sops.secrets.homepage_tailscale_key.path})" >> $out
-    echo "HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID=$(cat ${config.sops.secrets.homepage_cloudflared_account_id.path})" >> $out
-    echo "HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID=$(cat ${config.sops.secrets.homepage_cloudflared_tunnel_id.path})" >> $out
-    echo "HOMEPAGE_VAR_CLOUDFLARED_KEY=$(cat ${config.sops.secrets.homepage_cloudflared_key.path})" >> $out
-    echo "HOMEPAGE_VAR_LATITUDE=$(cat ${config.sops.secrets.homepage_latitude.path})" >> $out
-    echo "HOMEPAGE_VAR_LONGITUDE=$(cat ${config.sops.secrets.homepage_longitude.path})" >> $out
-    echo "HOMEPAGE_VAR_MINIFLUX_KEY=" >> $out # Ensure the variable exists even if empty
-  '';
-
-in
 {
   services.homepage-dashboard = {
     enable = true;
     listenPort = 8082;
-    environmentFile = "${envFile}";
 
-    # The rest of your configuration remains unchanged.
-    # The {{PLACEHOLDER}} variables will be correctly substituted
-    # from the environment variables loaded from the file.
+    # All environment variables, including secrets, are defined here as strings.
+    environment = {
+      HOMEPAGE_ALLOWED_HOSTS = "localhost,127.0.0.1,192.168.1.165,home.labhome.work";
+      HOMEPAGE_VAR_JELLYSEERR_KEY = "MTc1MzI0Mzg5OTUwN2M2YmRjZmU5LWI1YzktNDMwMi1iNDAzLTlhMzY0NDdjMzdiYQ==";
+      HOMEPAGE_VAR_LIDARR_KEY = "64667f73a2874bcc9b2cd64827ae06a6";
+      HOMEPAGE_VAR_PROWLARR_KEY = "9d24bc9a25174e9cab035094b085c13c";
+      HOMEPAGE_VAR_RADARR_KEY = "035416a4da9f4dbd8cd74783b92a607d";
+      HOMEPAGE_VAR_READARR_KEY = "ff9911f318764d23a06635cca79e1e7a";
+      HOMEPAGE_VAR_READARR_AUDIOBOOKS_KEY = "5aad134f8e714f30bd4d98cbbb6cafd1";
+      HOMEPAGE_VAR_SONARR_KEY = "96661495dcac4fbb90e7b01ede2f1b36";
+      HOMEPAGE_VAR_BAZARR_KEY = "ec02b57b195afb25c73b89df7802af82";
+      HOMEPAGE_VAR_PAPERLESS_KEY = "77e2a8e18afcaa64a204441fe1c5c6a3a232e3d8";
+      HOMEPAGE_VAR_MINIFLUX_KEY = ""; # Set to empty string from null
+      HOMEPAGE_VAR_TAILSCALE_KEY = "tskey-api-kcY19LgP3m11CNTRL-G369y5gJfz8T82PxZ5GH19AvFC1wvHVS1";
+      HOMEPAGE_VAR_TAILSCALE_DEVICE_ID = "nXJkpdBaD611CNTRL";
+      HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID = "8239dd1bb0d0bfedf13673a195df59cf";
+      HOMEPAGE_VAR_CLOUDFLARED_KEY = "yMAEOHdD1sDxrw9tLbu-QRKmn2SftHVx2Q8Cj3j9";
+      HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID = "f7876e26-87a8-4bdd-9798-3986b0f7cebc";
+      HOMEPAGE_VAR_GRAFANA_ADMIN_PASSWORD = "Septuagint@1990";
+      HOMEPAGE_VAR_JELLYFIN_KEY = "MTc1MzI0Mzg5OTUwN2M2YmRjZmU5LWI1YzktNDMwMi1iNDAzLTlhMzY0NDdjMzdiYQ==";
+      HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlJZCI6ImNkMjUwZDE4LTg3ZmEtNGRkMC1iNDc0LTQ0ZDFlYzliN2Y5MCIsIm5hbWUiOiJob21lcGFnZSIsInR5cGUiOiJhcGkiLCJpYXQiOjE3NTMyNDY4OTB9.ZciPaGs_zxUF7axHQTk0eSelSEvLoF7OO8f2";
+      HOMEPAGE_VAR_KAVITA_KEY = "vdi6CWjzI1zSxFovJnwhO4wWQcbWErSWqhZ9N7OhSc71Ahv5bEL7vkU1K6QwJ600gL7jZ2HDALC3jODa3B4OtQ==";
+      HOMEPAGE_VAR_LATITUDE = "51.043674";
+      HOMEPAGE_VAR_LONGITUDE = "-114.09521";
+      HOMEPAGE_VAR_HASS_KEY = "eeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkNjVmNDg4OWRiODE0MTFjYWU5YjBiZDAxZDM5NjEwMiIsImlhdCI6MTc1MzEyNzI3OCwiZXhwIjoyMDY4NDg3Mjc4fQ.GlLvDuYh8DctiNa6O00zUzRFJw9n6SycmcuPbK8yjjM";
+    };
+
     services = [
       {
         "Media" = [
@@ -390,13 +386,6 @@ in
           }
         ];
       }
-    ];
-  };
-
-  # This systemd override block is clean and correct.
-  systemd.services.homepage-dashboard.serviceConfig = {
-    Environment = [
-      "HOMEPAGE_ALLOWED_HOSTS=localhost,127.0.0.1,192.168.1.165,home.labhome.work"
     ];
   };
 }
