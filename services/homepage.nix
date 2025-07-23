@@ -1,5 +1,11 @@
 { config, pkgs, lib, ... }:
-
+let
+  homepageSecretsDecryptedPath = config.sops.secrets.homepage_secrets.path;
+  homepageSecrets = lib.fromYaml (builtins.readFile homepageSecretsDecryptedPath);
+  homepageEnvVars = lib.mapAttrsToList (name: value:
+    "HOMEPAGE_VAR_${lib.toUpper name}=${value}"
+  ) homepageSecrets;
+in
 {
   services.homepage-dashboard = {
     enable = true;
@@ -364,10 +370,6 @@
       "HOMEPAGE_ALLOWED_HOSTS=localhost,127.0.0.1,192.168.1.165,home.labhome.work"
     ];
 
-    # This single line now loads all your secrets from homepage.yaml automatically.
-    # It replaces the previous 20+ line list.
-    LoadCredential = [
-      "HOMEPAGE_VAR_:${config.sops.secrets.homepage_secrets.path}"
-    ];
+    EnvironmentFile = pkgs.writeText "homepage-env-vars" (lib.concatStringsSep "\n" homepageEnvVars);
   };
 }
