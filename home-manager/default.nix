@@ -17,11 +17,7 @@
 
     ssh = {
       enable = true;
-      enableZshIntegration = true;
-      addKeysToAgent = "yes";
-      authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com"
-      ];
+      startAgent = true;
     };
 
     fzf = {
