@@ -26,6 +26,8 @@
     '';
   };
 
+  util-nixarr.upnp.enable = true;
+
   nixarr = {
     
     enable = true;
@@ -42,7 +44,6 @@
 
     transmission = {
       enable = true;
-      extraAllowedIps = [ "0.0.0.0" ]; # Or a more specific subnet
       peerPort = 63998;
       flood.enable = false;
       privateTrackers.cross-seed.enable = true;
