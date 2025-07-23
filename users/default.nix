@@ -132,8 +132,8 @@ in
     "d /data/media/.state/nixarr 0775 root media -"
 
     # Individual service state directories under nixarr (keep as 0755 for isolation)
-    "d /data/media/.state/nixarr/audiobookshelf 0755 audiobookshelf audiobookshelf -"
-    "d /data/media/.state/nixarr/bazarr 0755 bazarr bazarr -"
+    "d /data/media/.state/nixarr/audiobookshelf 0775 audiobookshelf audiobookshelf -"
+    "d /data/media/.state/nixarr/bazarr 0775 bazarr bazarr -"
     "d /data/media/.state/nixarr/jellyfin 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/data 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/config 0755 jellyfin jellyfin -"
