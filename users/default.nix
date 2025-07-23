@@ -140,7 +140,6 @@ in
 
     # Individual service state directories under nixarr (keep as 0755 for isolation)
     "d /data/media/.state/nixarr/audiobookshelf 0775 audiobookshelf audiobookshelf -"
-    "d /data/media/.state/nixarr/bazarr 0775 bazarr bazarr -"
     
     "d /data/media/.state/nixarr/jellyfin 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/data 0755 jellyfin jellyfin -"
@@ -154,6 +153,8 @@ in
     "d /data/media/.state/nixarr/readarr 0775 readarr readarr -"
     "d /data/media/.state/nixarr/sonarr 0775 sonarr sonarr -"
     "d /data/media/.state/nixarr/sabnzbd 0775 sabnzbd sabnzbd -"
+    "d /data/media/.state/nixarr/readarr-audiobook 0775 readarr-audiobook readarr-audiobook -"
+    "d /data/media/.state/nixarr/bazarr 0775 bazarr bazarr -"
     "d /data/media/.state/nixarr/transmission 0775 transmission transmission -"
 
     "d /data/media/.state/nixarr/jellyseerr 0775 jellyseerr jellyseerr -"

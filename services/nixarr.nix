@@ -54,10 +54,10 @@
       };
     };
 
-    sabnzbd = {
-      enable = true;
-      vpn.enable = true;
-    };
+    # sabnzbd = {
+    #   enable = true;
+    #   vpn.enable = true;
+    # };
 
     audiobookshelf.enable = true;
     jellyfin.enable = true;
@@ -68,8 +68,6 @@
     readarr.enable = true;
     sonarr.enable = true;
     jellyseerr.enable = true;
-
-    
-
+    readarr-audiobook.enable = true;
   };
 }
