@@ -96,59 +96,59 @@
   };
 
   environment.etc."grafana/dashboards/system.json".text = builtins.toJSON {
-    dashboard = {
-      id = null;
-      title = "HomeServer System Monitoring";
-      refresh = "5s";
-      time = { from = "now-1h"; to = "now"; };
-      panels = [
-        {
-          id = 1;
-          title = "CPU Usage";
-          type = "stat";
-          targets = [{
-            expr = "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)";
-            legendFormat = "CPU %";
-          }];
-          gridPos = { h = 8; w = 6; x = 0; y = 0; };
-        }
-        {
-          id = 2;
-          title = "Memory Usage";
-          type = "stat";
-          targets = [{
-            expr = "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100";
-            legendFormat = "Memory %";
-          }];
-          gridPos = { h = 8; w = 6; x = 6; y = 0; };
-        }
-        {
-          id = 3;
-          title = "Disk Usage";
-          type = "stat";
-          targets = [{
-            expr = "100 - ((node_filesystem_avail_bytes{mountpoint=\"/\"} * 100) / node_filesystem_size_bytes{mountpoint=\"/\"})";
-            legendFormat = "Root %";
-          }];
-          gridPos = { h = 8; w = 6; x = 12; y = 0; };
-        }
-        {
-          id = 4;
-          title = "Network Traffic";
-          type = "graph";
-          targets = [
-            {
-              expr = "rate(node_network_receive_bytes_total{device!=\"lo\"}[5m])";
-              legendFormat = "RX {{device}}";
-            }
-            {
-              expr = "rate(node_network_transmit_bytes_total{device!=\"lo\"}[5m])";
-              legendFormat = "TX {{device}}";
-            }
-          ];
-          gridPos = { h = 8; w = 18; x = 0; y = 8; };
-        }
-      ];
-    };
+    # REMOVED the "dashboard =" wrapper from here.
+    # The dashboard object is now the top-level object.
+    id = null;
+    title = "HomeServer System Monitoring";
+    refresh = "5s";
+    time = { from = "now-1h"; to = "now"; };
+    panels = [
+      {
+        id = 1;
+        title = "CPU Usage";
+        type = "stat";
+        targets = [{
+          expr = "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)";
+          legendFormat = "CPU %";
+        }];
+        gridPos = { h = 8; w = 6; x = 0; y = 0; };
+      }
+      {
+        id = 2;
+        title = "Memory Usage";
+        type = "stat";
+        targets = [{
+          expr = "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100";
+          legendFormat = "Memory %";
+        }];
+        gridPos = { h = 8; w = 6; x = 6; y = 0; };
+      }
+      {
+        id = 3;
+        title = "Disk Usage";
+        type = "stat";
+        targets = [{
+          expr = "100 - ((node_filesystem_avail_bytes{mountpoint=\"/\"} * 100) / node_filesystem_size_bytes{mountpoint=\"/\"})";
+          legendFormat = "Root %";
+        }];
+        gridPos = { h = 8; w = 6; x = 12; y = 0; };
+      }
+      {
+        id = 4;
+        title = "Network Traffic";
+        type = "graph";
+        targets = [
+          {
+            expr = "rate(node_network_receive_bytes_total{device!=\"lo\"}[5m])";
+            legendFormat = "RX {{device}}";
+          }
+          {
+            expr = "rate(node_network_transmit_bytes_total{device!=\"lo\"}[5m])";
+            legendFormat = "TX {{device}}";
+          }
+        ];
+        gridPos = { h = 8; w = 18; x = 0; y = 8; };
+      }
+    ];
   };
 }
