@@ -92,18 +92,18 @@ in
       samba = { isSystemUser = true; group = "samba"; extraGroups = [ "users" "media" ]; };
 
 
-      audiobookshelf = { isSystemUser = true; group = "audiobookshelf"; extraGroups = [ "users" "media" ]; };
-      bazarr = { isSystemUser = true; group = "bazarr"; extraGroups = [ "users" "media" ]; };
-      jellyfin = { isSystemUser = true; group = "jellyfin"; extraGroups = [ "users" "media" ]; };
-      jellyseerr = { isSystemUser = true; group = "jellyseerr"; extraGroups = [ "users" "media" ]; };
-      lidarr = { isSystemUser = true; group = "lidarr"; extraGroups = [ "users" "media" ]; };
-      prowlarr = { isSystemUser = true; group = "prowlarr"; extraGroups = [ "users" "media" ]; };
-      radarr = { isSystemUser = true; group = "radarr"; extraGroups = [ "users" "media" ]; };
-      readarr = { isSystemUser = true; group = "readarr"; extraGroups = [ "users" "media" ]; };
-      sonarr = { isSystemUser = true; group = "sonarr"; extraGroups = [ "users" "media" ]; };
-      transmission = { isSystemUser = true; group = "transmission"; extraGroups = [ "users" "media" ]; };
-      readarr-audiobook = { isSystemUser = true; group = "readarr-audiobook"; extraGroups = [ "users" "media" ]; };
-      cross-seed = { isSystemUser = true; group = "cross-seed"; extraGroups = [ "users" "media" ]; };
+      audiobookshelf = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      bazarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      jellyfin = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      jellyseerr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      lidarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      prowlarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      radarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      readarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      sonarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      transmission = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      readarr-audiobook = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      cross-seed = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       kavita = { isSystemUser = true; group = "kavita"; extraGroups = [ "users" "media" ]; };
     };
   };
