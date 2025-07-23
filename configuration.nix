@@ -102,7 +102,6 @@
     wantedBy = [ "multi-user.target" ];
   };
   
-  environment.variables.EDITOR = "nvim";
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "25.05";
 }
