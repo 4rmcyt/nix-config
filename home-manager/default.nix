@@ -40,8 +40,7 @@
       syntaxHighlighting.enable = true;
       autosuggestion.enable = true;
       enableCompletion = true;
-
-      programs.zsh.initExtra = "source ~/.p10k.zsh";
+      initExtra = "source ~/.p10k.zsh";
       initContent = ''
         PROMPT="''${purple}%n%\@$HOST%{$reset_color%} in ''${limegreen}%~%{$reset_color%}\$(virtualenv_prompt_info)\$(ruby_prompt_info)\$vcs_info_msg_0_''${orange} λ%{$reset_color%} "
         zsh --info-right | source /dev/stdin
