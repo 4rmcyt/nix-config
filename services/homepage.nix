@@ -25,16 +25,15 @@ let
     echo "HOMEPAGE_VAR_CLOUDFLARED_KEY=$(cat ${config.sops.secrets.homepage_cloudflared_key.path})" >> $out
     echo "HOMEPAGE_VAR_LATITUDE=$(cat ${config.sops.secrets.homepage_latitude.path})" >> $out
     echo "HOMEPAGE_VAR_LONGITUDE=$(cat ${config.sops.secrets.homepage_longitude.path})" >> $out
-    '';
+    echo "HOMEPAGE_VAR_MINIFLUX_KEY=" >> $out # Ensure the variable exists even if empty
+  '';
 
 in
 {
   services.homepage-dashboard = {
     enable = true;
     listenPort = 8082;
-    # Use the environment file we created above.
-    # The service will load this file when it starts.
-    environmentFile = envFile;
+    environmentFile = "${envFile}";
 
     # The rest of your configuration remains unchanged.
     # The {{PLACEHOLDER}} variables will be correctly substituted
