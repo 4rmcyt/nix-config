@@ -20,6 +20,14 @@
           "paste.example.com" = "http://localhost:8083";
           "kavita.example.com" = "http://localhost:5000";
           "microbin.example.com" = "http://localhost:8084";
+          "prowlarr.example.com" = "http://localhost:9696";
+          "radarr.example.com" = "http://localhost:7878";
+          "readarr.example.com" = "http://localhost:8787";
+          "sonarr.example.com" = "http://localhost:8989";
+          "lidarr.example.com" = "http://localhost:8686";
+          "bazarr.example.com" = "http://localhost:6767";
+          "jellyseerr.example.com" = "http://localhost:5055";
+          "sabnzbd.example.com" = "http://localhost:6336";
         };
       };
     };
