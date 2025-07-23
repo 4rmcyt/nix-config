@@ -52,8 +52,8 @@ in
       radarr = {};
       readarr = {};
       sonarr = {};
-      sabnzbd = {};
       transmission = {};
+      readarr-audiobook = {};
     };
 
     users = {
@@ -106,8 +106,8 @@ in
       radarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       readarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       sonarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      sabnzbd = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       transmission = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      readarr-audiobook = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
     };
   };
 
