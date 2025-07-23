@@ -124,13 +124,13 @@
             };
           }
           {
-            "Sabnzbd" = {
-              icon = "sabnzbd.png";
-              href = "https://sabnzbd.labhome.work/";
+            "Readarr-Audiobooks" = {
+              icon = "readarr-audiobooks.png";
+              href = "https://readarr-audiobooks.labhome.work/";
               widgets = [{
-                type = "sabnzbd";
-                url = "http://localhost:6336";
-                key = "{{HOMEPAGE_VAR_SABNZBD_KEY}}";
+                type = "readarr-audiobooks";
+                url = "http://localhost:9494";
+                key = "{{HOMEPAGE_VAR_READARR_AUDIOBOOKS_KEY}}";
               }];
             };
           }
