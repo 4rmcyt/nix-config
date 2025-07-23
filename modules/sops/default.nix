@@ -28,7 +28,8 @@
       microbin_admin_password = { sopsFile = ../../secrets/microbin.yaml; key = "microbin_admin_password"; owner = "microbin"; };
       paperless_admin_password = { sopsFile = ../../secrets/paperless.yaml; key = "paperless_admin_password"; owner = "paperless"; };
       radicale_users = { sopsFile = ../../secrets/radicale_users.txt; owner = "radicale"; group = "radicale"; mode = "0440"; format = "binary"; };
-
+      kavita_token_key_file = { sopsFile = ../../secrets/kavita.yaml; key = "tokenKeyFile"; owner = "kavita"; group = "kavita"; mode = "0400"; format = "binary"; };
+      
       # --- Database Passwords (from postgres.yaml) ---
       hass_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "hass_db_password"; };
       miniflux_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "miniflux_db_password"; };
@@ -37,30 +38,6 @@
 
       # --- Homepage Widget Credentials (from homepage.yaml) ---
       homepage_secrets = { sopsFile = ../../secrets/homepage.yaml; key = ""; };
-      # homepage_hass_key = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_hass_key"; };
-      # homepage_jellyseerr_key = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_jellyseerr_key"; };
-      # homepage_lidarr_key     = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_lidarr_key"; };
-      # homepage_prowlarr_key   = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_prowlarr_key"; };
-      # homepage_radarr_key     = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_radarr_key"; };
-      # homepage_readarr_key    = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_readarr_key"; };
-      # homepage_sonarr_key     = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_sonarr_key"; };
-      # homepage_bazarr_key     = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_bazarr_key"; };
-      # homepage_paperless_key  = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_paperless_key"; };
-      # homepage_miniflux_key   = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_miniflux_key"; };
-      # homepage_tailscale_key         = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_tailscale_key"; };
-      # homepage_tailscale_device_id   = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_tailscale_device_id"; };
-      # homepage_cloudflared_account_id = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_cloudflared_account_id"; };
-      # homepage_cloudflared_key        = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_cloudflared_key"; };
-      # homepage_cloudflared_tunnel_id  = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_cloudflared_tunnel_id"; };
-      # homepage_nextdns_profile_id = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_nextdns_profile_id"; };
-      # homepage_nextdns_key        = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_nextdns_key"; };
-      # homepage_grafana_key        = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_grafana_key"; };
-      # homepage_jellyfin_key       = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_jellyfin_key"; };
-      # homepage_audiobookshelf_key = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_audiobookshelf_key"; };
-      # homepage_kavita_key         = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_kavita_key"; };
-      # homepage_latitude  = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_latitude"; };
-      # homepage_longitude = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_longitude"; };
-      # homepage_grafana_admin_password = { sopsFile = ../../secrets/homepage.yaml; key = "homepage_grafana_admin_password"; };
     };
   };
 }

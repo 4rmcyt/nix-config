@@ -129,6 +129,7 @@ in
     "d /data/media/usenet 0775 zeev media -"
     "d /data/Downloads 0775 zeev users -"
 
+    
     # /data/media and its subdirectories (library, torrents, usenet)
     # should be writable by root/zeev and the 'media' group
     "d /data/media 0775 root media -"
@@ -148,7 +149,8 @@ in
     "d /data/media/.state/nixarr/jellyfin/config 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/cache 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/log 0755 jellyfin jellyfin -"
-    
+    "d /data/media/.state/nixarr/audiobookshelf/metadata 0755 jellyfin jellyfin -"
+
     "d /data/media/.state/nixarr/lidarr 0775 lidarr lidarr -"
     "d /data/media/.state/nixarr/prowlarr 0775 prowlarr prowlarr -"
     "d /data/media/.state/nixarr/radarr 0775 radarr radarr -"
@@ -167,6 +169,7 @@ in
     "d /var/lib/miniflux 0775 miniflux miniflux -" # Standard data dir for miniflux
     "d /var/lib/microbin 0775 microbin microbin -" # Standard data dir for microbin
 
+    "d /var/lib/kavita 0775 kavita kavita -" # Standard data dir for kavita
     "d /var/lib/transmission 0775 transmission transmission -" # Standard data dir for transmission
     "d /data/.secret 0700 zeev media -" # Keep tight permissions for secrets directory
   ];
