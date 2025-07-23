@@ -16,7 +16,7 @@
           "miniflux.example.com" = "http://localhost:8086";
           "transmission.example.com" = "http://localhost:9091";
           "cal.example.com" = "http://localhost:5232";
-          "audiobookshelf.example.com" = "http://localhost:8085";
+          "audiobookshelf.example.com" = "http://localhost:9292";
           "paste.example.com" = "http://localhost:8083";
           "kavita.example.com" = "http://localhost:5000";
           "microbin.example.com" = "http://localhost:8084";
