@@ -15,9 +15,7 @@
       signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
     };
 
-    ssh = {
-      startAgent = true;
-    };
+    ssh.startAgent = true;  
 
     fzf = {
       enable = true;
