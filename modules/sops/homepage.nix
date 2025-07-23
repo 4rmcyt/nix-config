@@ -6,6 +6,7 @@ let
     key = "HOMEPAGE_VAR_${name}";
     owner = homepage-dashboard;
     group = homepage-dashboard;
+    sopsFile = ../secrets/homepage.yaml;
   };
 in
 {
@@ -35,31 +36,31 @@ in
     # This one doesn't fit the pattern, so we define it manually
     grafana_admin_password = {
       key = "HOMEPAGE_VAR_GRAFANA_ADMIN_PASSWORD";
-      owner = config.services.homepage-dashboard.user;
-      group = config.services.homepage-dashboard.group;
+      owner = homepage-dashboard;
+      group = homepage-dashboard;
     };
   };
 
   # All the homepage secrets are in a single YAML file
-  sops.secrets."homepage_jellyfin_key".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_audiobookshelf_key".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_sonarr_key".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_radarr_key".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_prowlarr_key".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_bazarr_key".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_jellyseerr_key".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_lidarr_key".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_readarr_key".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_readarr_audiobooks_key".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_paperless_key".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_kavita_key".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."grafana_admin_password".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_hass_key".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_tailscale_device_id".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_tailscale_key".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_cloudflared_account_id".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_cloudflared_tunnel_id".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_cloudflared_key".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_latitude".sopsFile = ../secrets/homepage.yaml;
-  sops.secrets."homepage_longitude".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_jellyfin_key".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_audiobookshelf_key".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_sonarr_key".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_radarr_key".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_prowlarr_key".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_bazarr_key".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_jellyseerr_key".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_lidarr_key".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_readarr_key".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_readarr_audiobooks_key".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_paperless_key".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_kavita_key".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."grafana_admin_password".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_hass_key".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_tailscale_device_id".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_tailscale_key".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_cloudflared_account_id".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_cloudflared_tunnel_id".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_cloudflared_key".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_latitude".sopsFile = ../secrets/homepage.yaml;
+  # sops.secrets."homepage_longitude".sopsFile = ../secrets/homepage.yaml;
 }
