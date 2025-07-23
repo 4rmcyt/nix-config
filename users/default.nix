@@ -121,15 +121,13 @@ in
     "d /data/media/comics 0775 zeev media -"
     "d /data/media/manga 0775 zeev media -"
     "d /data/media/torrents 0775 zeev media -"
-    "d /data/media/usenet 0775 zeev media -"
     "d /data/Downloads 0775 zeev media -"
 
     
     # /data/media and its subdirectories (library, torrents, usenet)
     # should be writable by root/zeev and the 'media' group
     "d /data/media 0775 zeev media -"
-    "d /data/media/library 0775 zeev media -"
-    "d /data/media/usenet 0775 zeev media -"
+
 
     # /data/media/.state and /data/media/.state/nixarr need to be writable by root and the 'media' group
     "d /data/media/.state 0775 root media -"
