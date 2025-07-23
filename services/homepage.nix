@@ -3,8 +3,6 @@
 { config, pkgs, lib, ... }:
 
 let
-  # Create an environment file by running a shell command during the Nix build.
-  # This command reads the content of each secret file and writes it to a new file.
   envFile = pkgs.runCommand "homepage-env" {} ''
     echo "HOMEPAGE_VAR_JELLYFIN_KEY=$(cat ${config.sops.secrets.homepage_jellyfin_key.path})" > $out
     echo "HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY=$(cat ${config.sops.secrets.homepage_audiobookshelf_key.path})" >> $out
@@ -27,7 +25,7 @@ let
     echo "HOMEPAGE_VAR_CLOUDFLARED_KEY=$(cat ${config.sops.secrets.homepage_cloudflared_key.path})" >> $out
     echo "HOMEPAGE_VAR_LATITUDE=$(cat ${config.sops.secrets.homepage_latitude.path})" >> $out
     echo "HOMEPAGE_VAR_LONGITUDE=$(cat ${config.sops.secrets.homepage_longitude.path})" >> $out
-  '';
+    '';
 
 in
 {
