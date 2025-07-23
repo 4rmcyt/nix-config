@@ -367,6 +367,6 @@ in
     Environment = [  
       "HOMEPAGE_ALLOWED_HOSTS=localhost,127.0.0.1,192.168.1.165,home.labhome.work"  
     ];  
-    EnvironmentFile = "/etc/homepage.env";  
+    EnvironmentFile = lib.mkForce  "/etc/homepage.env"; 
   };  
 }
