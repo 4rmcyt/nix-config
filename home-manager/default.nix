@@ -5,6 +5,8 @@
     nixfmt-rfc-style
     gnupg
     meslo-lgs-nf
+    nix-zsh-completions
+    zsh-completions
   ];
 
   programs = {
@@ -37,11 +39,12 @@
       enable = true;
       syntaxHighlighting.enable = true;
       autosuggestion.enable = true;
+      enableCompletion = true;
+
       programs.zsh.initExtra = "source ~/.p10k.zsh";
       initContent = ''
-        if [[ -r "''${XDG_CACHE_HOME:-''$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-          source "''${XDG_CACHE_HOME:-''$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-        fi
+        PROMPT="''${purple}%n%\@$HOST%{$reset_color%} in ''${limegreen}%~%{$reset_color%}\$(virtualenv_prompt_info)\$(ruby_prompt_info)\$vcs_info_msg_0_''${orange} λ%{$reset_color%} "
+        zsh --info-right | source /dev/stdin
       '';
       plugins = [
         {
@@ -55,7 +58,7 @@
           file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";                         
         }
       ];
-      oh-my-zsh = {
+      ohMyZsh = {
         enable = true;
         theme = "powerlevel10k/powerlevel10k";
         plugins = [
