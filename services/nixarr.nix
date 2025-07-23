@@ -38,7 +38,7 @@
     vpn = {
       enable = true;
       wgConf = "/data/.secret/wg.conf";
-      accessibleFrom = [ "127.0.0.1" ]; # Or a more specific subnet
+      accessibleFrom = [ "0.0.0.0" ]; # Or a more specific subnet
       vpnTestService = {
         port = 58403;
         enable = true;
