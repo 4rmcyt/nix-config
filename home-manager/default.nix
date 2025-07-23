@@ -58,8 +58,8 @@
       enableSyntaxHighlighting = true;
       histSize = 10000;
       promptInit = ''
-        if [[ -r "${config.home.homeDirectory}/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-        source "${config.home.homeDirectory}/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+        if [[ -r "''${XDG_CACHE_HOME:-''$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+        source "''${XDG_CACHE_HOME:-''$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
         fi
       '';
       plugins = [
