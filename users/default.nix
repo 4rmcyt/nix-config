@@ -113,7 +113,7 @@ in
   };
 
   # Correct placement for systemd.tmpfiles.rules - it's a top-level option.
-  ssystemd.tmpfiles.rules = [
+  systemd.tmpfiles.rules = [
     # Top-level /data directory and its children that are shared
     # Ensure /data is writable by root and the 'media' group
     "d /data 0775 root media -"
