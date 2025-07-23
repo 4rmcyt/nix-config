@@ -53,7 +53,7 @@
       messageLevel = "debug";
       extraSettings = {
         rpc-whitelist-enabled = false;
-        rpc-bind-address = "0.0.0.0";
+        rpc-bind-address = "127.0.0.1";
         download-dir = "/data/Downloads";
         # script-torrent-added-enabled = true;
         # script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
