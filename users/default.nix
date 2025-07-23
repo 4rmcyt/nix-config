@@ -145,6 +145,9 @@ in
     "d /data/media/.state/nixarr/radarr 0755 radarr radarr -"
     "d /data/media/.state/nixarr/readarr 0755 readarr readarr -"
     "d /data/media/.state/nixarr/sonarr 0755 sonarr sonarr -"
+    
+    "d /data/media/.state/nixarr/jellyseerr/logs 0755 jellyseerr jellyseerr -"
+
 
     # Specific directories for other services
     "d /var/lib/miniflux 0750 miniflux miniflux -" # Standard data dir for miniflux
