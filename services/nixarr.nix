@@ -45,6 +45,7 @@
       wgConf = "/data/.secret/wg.conf";
       accessibleFrom = [ "192.168.0.0/16" ]; # Or a more specific subnet
       vpnTestService = {
+        port = 58403;
         enable = true;
         };
     };
