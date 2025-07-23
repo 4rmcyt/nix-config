@@ -26,11 +26,6 @@
     '';
   };
 
-  util-nixarr = {
-    upnp.enable = true;
-    cross-seed.enable = true;
-  };
-
   nixarr = {
     
     enable = true;
