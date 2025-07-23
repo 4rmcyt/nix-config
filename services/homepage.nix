@@ -3,7 +3,30 @@
 {  
   services.homepage-dashboard = {  
     enable = true;  
-    listenPort = 8082;  
+    listenPort = 8082;
+    secrets = {
+      "HOMEPAGE_VAR_JELLYFIN_KEY" = config.sops.secrets.homepage_jellyfin_key.path;
+      "HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY" = config.sops.secrets.homepage_audiobookshelf_key.path;
+      "HOMEPAGE_VAR_SONARR_KEY" = config.sops.secrets.homepage_sonarr_key.path;
+      "HOMEPAGE_VAR_RADARR_KEY" = config.sops.secrets.homepage_radarr_key.path;
+      "HOMEPAGE_VAR_PROWLARR_KEY" = config.sops.secrets.homepage_prowlarr_key.path;
+      "HOMEPAGE_VAR_BAZARR_KEY" = config.sops.secrets.homepage_bazarr_key.path;
+      "HOMEPAGE_VAR_JELLYSEERR_KEY" = config.sops.secrets.homepage_jellyseerr_key.path;
+      "HOMEPAGE_VAR_LIDARR_KEY" = config.sops.secrets.homepage_lidarr_key.path;
+      "HOMEPAGE_VAR_READARR_KEY" = config.sops.secrets.homepage_readarr_key.path;
+      "HOMEPAGE_VAR_READARR_AUDIOBOOKS_KEY" = config.sops.secrets.homepage_readarr_audiobooks_key.path;
+      "HOMEPAGE_VAR_PAPERLESS_KEY" = config.sops.secrets.homepage_paperless_key.path;
+      "HOMEPAGE_VAR_KAVITA_KEY" = config.sops.secrets.homepage_kavita_key.path;
+      "HOMEPAGE_VAR_GRAFANA_ADMIN_PASSWORD" = config.sops.secrets.grafana_admin_password.path;
+      "HOMEPAGE_VAR_HASS_KEY" = config.sops.secrets.homepage_hass_key.path;
+      "HOMEPAGE_VAR_TAILSCALE_DEVICE_ID" = config.sops.secrets.homepage_tailscale_device_id.path;
+      "HOMEPAGE_VAR_TAILSCALE_KEY" = config.sops.secrets.homepage_tailscale_key.path;
+      "HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID" = config.sops.secrets.homepage_cloudflared_account_id.path;
+      "HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID" = config.sops.secrets.homepage_cloudflared_tunnel_id.path;
+      "HOMEPAGE_VAR_CLOUDFLARED_KEY" = config.sops.secrets.homepage_cloudflared_key.path;
+      "HOMEPAGE_VAR_LATITUDE" = config.sops.secrets.homepage_latitude.path;
+      "HOMEPAGE_VAR_LONGITUDE" = config.sops.secrets.homepage_longitude.path;
+    };
     services = [  
       {  
         "Media" = [  

@@ -37,7 +37,26 @@
       
 
       # --- Homepage Widget Credentials (from homepage.yaml) ---
-       homepage_secrets = { sopsFile = ../../secrets/homepage.yaml; owner = "homepage-dashboard"; group = "homepage-dashboard"; };
+      homepage_jellyseerr_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_JELLYSEERR_KEY"; };
+      homepage_lidarr_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_LIDARR_KEY"; };
+      homepage_prowlarr_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_PROWLARR_KEY"; };
+      homepage_radarr_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_RADARR_KEY"; };
+      homepage_readarr_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_READARR_KEY"; };
+      homepage_readarr_audiobooks_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_READARR_AUDIOBOOKS_KEY"; };Í
+      homepage_sonarr_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_SONARR_KEY"; };
+      homepage_bazarr_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_BAZARR_KEY"; };
+      homepage_paperless_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_PAPERLESS_KEY"; };
+      homepage_tailscale_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_TAILSCALE_KEY"; };
+      homepage_tailscale_device_id = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_TAILSCALE_DEVICE_ID"; };
+      homepage_cloudflared_account_id = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID"; };
+      homepage_cloudflared_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_CLOUDFLARED_KEY"; };
+      homepage_cloudflared_tunnel_id = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID"; };
+      homepage_jellyfin_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_JELLYFIN_KEY"; };
+      homepage_audiobookshelf_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY"; };
+      homepage_kavita_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_KAVITA_KEY"; };
+      homepage_latitude = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_LATITUDE"; };
+      homepage_longitude = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_LONGITUDE"; };
+      homepage_hass_key = { sopsFile = ../../secrets/homepage.yaml; key = "HOMEPAGE_VAR_HASS_KEY"; };
     };
   };
 }
