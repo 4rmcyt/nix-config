@@ -361,4 +361,9 @@
       }
     ];
   };
+  systemd.services.homepage-dashboard.serviceConfig = {
+    Environment = [
+      "HOMEPAGE_ALLOWED_HOSTS=localhost,127.0.0.1,192.168.1.165,home.labhome.work"
+    ];
+  };
 }
