@@ -36,10 +36,6 @@
         8787  # Readarr
         9494  # Readarr-audiobook
 
-
-
-
-
         # Content management
         8083  # Microbin
         8086  # Miniflux
@@ -73,12 +69,14 @@
         7359  # Jellyfin discovery
       ];
       
+      trustedInterfaces = [ "tailscale0" ];
       
-
-      boot.kernel.sysctl = {
-        "net.core.default_qdisc" = "fq";
-        "net.ipv4.tcp_congestion_control" = "bbr";
-      };
+      logReversePathDrops = true;
     };
+  };
+
+  boot.kernel.sysctl = {
+    "net.core.default_qdisc" = "fq";
+    "net.ipv4.tcp_congestion_control" = "bbr";
   };
 }
