@@ -48,6 +48,7 @@
       privateTrackers.cross-seed.enable = true;
       extraSettings = {
         rpc-whitelist-enabled = false;
+        rpc-bind-address = "0.0.0.0";
         download-dir = "/data/Downloads";
         # script-torrent-added-enabled = true;
         # script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
