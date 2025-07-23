@@ -54,15 +54,27 @@
           src = pkgs.zsh-powerlevel10k;                                                     
           file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";                         
         }
+        {
+          name = "zsh-history-substring-search";
+          src = pkgs.zsh-history-substring-search;
+          file = "share/zsh-history-substring-search/zsh-history-substring-search.zsh";
+        }
+        {
+          name = "zsh-you-should-use";
+          src = pkgs.zsh-you-should-use;
+          file = "share/zsh-you-should-use/zsh-you-should-use.plugin.zsh";
+        }
+        {
+          name = "nix-zsh-completions";
+          src = pkgs.nix-zsh-completions;
+          file = "share/zsh/site-functions/_nix";
+        }
       ];
       oh-my-zsh = {
         enable = true;
         plugins = [
           "git"
           "sudo"
-          "nix-zsh-completions"
-          "zsh-history-substring-search"
-          "zsh-you-should-use"
           "direnv"
         ];
       };
