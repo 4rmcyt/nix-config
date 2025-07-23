@@ -1,4 +1,3 @@
-# In your postgresql.nix
 { config, pkgs, ... }:
 
 {
@@ -12,8 +11,6 @@
       host    all             all             ::1/128                 scram-sha-256
     '';
 
-    # The declarative NixOS way to manage users and databases.
-    # This replaces your initialScript and the custom systemd service.
     ensureUsers = [
       {
         name = "keycloak";
@@ -35,4 +32,20 @@
       "hass"
     ];
   };
+  systemd.services.postgresql-setup-passwords = {
+  description = "Set initial PostgreSQL user passwords from sops";
+  after = [ "postgresql.service" "sops.service" ];
+  wants = [ "postgresql.service" "sops.service" ];
+  wantedBy = [ "multi-user.target" ];
+  serviceConfig = {
+    Type = "oneshot";
+    User = "postgres";
+  };
+  # This script now strips any trailing newlines from the secret files
+  script = ''
+    ${pkgs.postgresql_15}/bin/psql -c "ALTER USER keycloak WITH PASSWORD '$(tr -d '\\n' < ${config.sops.secrets.keycloak_db_password.path})';"
+    ${pkgs.postgresql_15}/bin/psql -c "ALTER USER hass WITH PASSWORD '$(tr -d '\\n' < ${config.sops.secrets.hass_db_password.path})';"
+    ${pkgs.postgresql_15}/bin/psql -c "ALTER USER miniflux WITH PASSWORD '$(tr -d '\\n' < ${config.sops.secrets.miniflux_db_password.path})';"
+  '';
+};
 }
