@@ -126,7 +126,7 @@
           {
             "Readarr-Audiobooks" = {
               icon = "readarr-audiobooks.png";
-              href = "https://readarr-audiobooks.labhome.work/";
+              href = "https://readarr-audiobook.labhome.work/";
               widgets = [{
                 type = "readarr-audiobooks";
                 url = "http://localhost:9494";
