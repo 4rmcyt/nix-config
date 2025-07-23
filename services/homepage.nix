@@ -18,7 +18,7 @@
               widgets = [{
                 type = "jellyfin";
                 url = "http://localhost:8096";
-                key = "MTc1MzI0Mzg5OTUwN2M2YmRjZmU5LWI1YzktNDMwMi1iNDAzLTlhMzY0NDdjMzdiYQ==";
+                key = "ebfcdfcac9d94b6e81bffc574214260a";
               }];
             };
           }
@@ -30,7 +30,7 @@
               widgets = [{
                 type = "audiobookshelf";
                 url = "http://localhost:9292";
-                key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlJZCI6ImNkMjUwZDE4LTg3ZmEtNGRkMC1iNDc0LTQ0ZDFlYzliN2Y5MCIsIm5hbWUiOiJob21lcGFnZSIsInR5cGUiOiJhcGkiLCJpYXQiOjE3NTMyNDY4OTB9.ZciPaGs_zxUF7axHQTk0eSelSEvLoF7OO8f2";
+                key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlJZCI6ImUxYzAzN2NiLTY2M2MtNGY2Mi1iOTk4LTViZGIwYjhiOTljYyIsIm5hbWUiOiJob21lcGFnZSIsInR5cGUiOiJhcGkiLCJpYXQiOjE3NTMyOTYzMzh9.cckxz-MEjRafFnes7cFOglkB5Sx96S9RtBBOusOVR0k";
               }];
             };
           }
