@@ -123,6 +123,17 @@
               }];
             };
           }
+          {
+            "Sabnzbd" = {
+              icon = "sabnzbd.png";
+              href = "https://sabnzbd.labhome.work/";
+              widgets = [{
+                type = "sabnzbd";
+                url = "http://localhost:6336";
+                key = "{{HOMEPAGE_VAR_SABNZBD_KEY}}";
+              }];
+            };
+          }
         ];
       }
       {
