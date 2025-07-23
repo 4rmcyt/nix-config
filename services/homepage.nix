@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 let
   homepageSecretsDecryptedPath = config.sops.secrets.homepage_secrets.path;
-  homepageSecrets = pkgs.lib.fromYaml (builtins.readFile homepageSecretsDecryptedPath); # Corrected: Use pkgs.lib.fromYaml
+  homepageSecrets = lib.formats.yaml.parse (builtins.readFile homepageSecretsDecryptedPath); # Corrected: Use lib.formats.yaml.parse
   homepageEnvVars = lib.mapAttrsToList (name: value:
     "HOMEPAGE_VAR_${lib.toUpper name}=${value}"
   ) homepageSecrets;
