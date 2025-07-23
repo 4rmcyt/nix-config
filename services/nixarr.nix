@@ -26,7 +26,10 @@
     '';
   };
 
-  util-nixarr.upnp.enable = true;
+  util-nixarr = {
+    upnp.enable = true;
+    cross-seed.enable = true;
+  };
 
   nixarr = {
     
@@ -40,6 +43,10 @@
     vpn = {
       enable = true;
       wgConf = "/data/.secret/wg.conf";
+      accessibleFrom = [ "192.168.0.0/16" ]; # Or a more specific subnet
+      vpnTestService = {
+        enable = true;
+        };
     };
 
     transmission = {
@@ -47,6 +54,7 @@
       peerPort = 63998;
       flood.enable = false;
       privateTrackers.cross-seed.enable = true;
+      messageLevel = "debug";
       extraSettings = {
         rpc-whitelist-enabled = false;
         rpc-bind-address = "0.0.0.0";
