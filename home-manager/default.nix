@@ -7,11 +7,6 @@
     meslo-lgs-nf
   ];
 
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;  
-  };
-
   programs = {
     git = {
       enable = true;
