@@ -140,21 +140,21 @@ in
     "d /data/media/.state/nixarr/jellyfin/cache 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/log 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyseerr 0775 jellyseerr jellyseerr -"
-    "d /data/media/.state/nixarr/lidarr 0755 lidarr lidarr -"
-    "d /data/media/.state/nixarr/prowlarr 0755 prowlarr prowlarr -"
-    "d /data/media/.state/nixarr/radarr 0755 radarr radarr -"
-    "d /data/media/.state/nixarr/readarr 0755 readarr readarr -"
-    "d /data/media/.state/nixarr/sonarr 0755 sonarr sonarr -"
+    "d /data/media/.state/nixarr/lidarr 0775 lidarr lidarr -"
+    "d /data/media/.state/nixarr/prowlarr 0775 prowlarr prowlarr -"
+    "d /data/media/.state/nixarr/radarr 0775 radarr radarr -"
+    "d /data/media/.state/nixarr/readarr 0775 readarr readarr -"
+    "d /data/media/.state/nixarr/sonarr 0775 sonarr sonarr -"
     
     "d /data/media/.state/nixarr/jellyseerr/db 0775 jellyseerr jellyseerr -" # New line for 'db'
     "d /data/media/.state/nixarr/jellyseerr/logs 0755 jellyseerr jellyseerr -" # For 'logs'
 
     # Specific directories for other services
-    "d /var/lib/miniflux 0750 miniflux miniflux -" # Standard data dir for miniflux
-    "d /var/lib/microbin 0750 microbin microbin -" # Standard data dir for microbin
+    "d /var/lib/miniflux 0775 miniflux miniflux -" # Standard data dir for miniflux
+    "d /var/lib/microbin 0775 microbin microbin -" # Standard data dir for microbin
 
-    "d /data/media/.state/nixarr/sabnzbd 0755 sabnzbd sabnzbd -"
-    "d /var/lib/transmission 0755 transmission transmission -" # Standard data dir for transmission
+    "d /data/media/.state/nixarr/sabnzbd 0775 sabnzbd sabnzbd -"
+    "d /var/lib/transmission 0775 transmission transmission -" # Standard data dir for transmission
 
     "d /data/.secret 0700 zeev media -" # Keep tight permissions for secrets directory
   ];
