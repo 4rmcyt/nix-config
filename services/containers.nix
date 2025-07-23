@@ -17,10 +17,10 @@
           startScript = pkgs.writeShellScript "start-tplink-living-room" ''
             #!${pkgs.bash}/bin/bash
             set -euo pipefail
-            
+
             # Read all credentials from the single JSON file
             CREDS_JSON=$(cat /run/credentials/podman-tplink-exporter-living-room.service/tplink_living_room_creds)
-            
+
             IP=$(echo "$CREDS_JSON" | ${pkgs.jq}/bin/jq -r .ip)
             USER=$(echo "$CREDS_JSON" | ${pkgs.jq}/bin/jq -r .user)
             PASSWORD=$(echo "$CREDS_JSON" | ${pkgs.jq}/bin/jq -r .password)
@@ -29,7 +29,7 @@
             # We create it on the fly.
             CONFIG_FILE=$(mktemp)
             trap 'rm -f "$CONFIG_FILE"' EXIT
-            
+
             cat > "$CONFIG_FILE" <<EOF
             devices:
               "$IP": "living-room"
@@ -65,16 +65,16 @@
           startScript = pkgs.writeShellScript "start-tplink-office" ''
             #!${pkgs.bash}/bin/bash
             set -euo pipefail
-            
+
             CREDS_JSON=$(cat /run/credentials/podman-tplink-exporter-office.service/tplink_office_creds)
-            
+
             IP=$(echo "$CREDS_JSON" | ${pkgs.jq}/bin/jq -r .ip)
             USER=$(echo "$CREDS_JSON" | ${pkgs.jq}/bin/jq -r .user)
             PASSWORD=$(echo "$CREDS_JSON" | ${pkgs.jq}/bin/jq -r .password)
 
             CONFIG_FILE=$(mktemp)
             trap 'rm -f "$CONFIG_FILE"' EXIT
-            
+
             cat > "$CONFIG_FILE" <<EOF
             devices:
               "$IP": "office"
