@@ -6,7 +6,9 @@
     gnupg
     meslo-lgs-nf
     nix-zsh-completions
-    zsh-completions
+    zsh-history-substring-search
+    zsh-you-should-use
+    zsh-powerlevel10k
   ];
 
   programs = {
@@ -55,15 +57,12 @@
       ];
       oh-my-zsh = {
         enable = true;
-        theme = "powerlevel10k/powerlevel10k";
         plugins = [
           "git"
           "sudo"
-          "zsh-completions"
+          "nix-zsh-completions"
           "zsh-history-substring-search"
-          "zsh-autosuggestions"
-          "zsh-syntax-highlighting"
-          "you-should-use"
+          "zsh-you-should-use"
           "direnv"
         ];
       };
