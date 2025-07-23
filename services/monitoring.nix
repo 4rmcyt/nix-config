@@ -89,13 +89,12 @@
       {
         name = "System Dashboard";
         type = "file";
-        options.path = "/var/lib/grafana/dashboards/system.json";
+        options.path = "/etc/grafana/dashboards/system.json";
         options.foldersFromFilesStructure = true;
       }
     ];
   };
 
-  # This replaces the systemd.tmpfiles and environment.etc entries for Grafana.
   environment.etc."grafana/dashboards/system.json".text = builtins.toJSON {
     dashboard = {
       id = null;
