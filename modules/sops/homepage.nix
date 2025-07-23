@@ -4,8 +4,8 @@ let
   # Helper function to create a secret owned by the homepage-dashboard user
   mkSecret = name: {
     key = "HOMEPAGE_VAR_${name}";
-    owner = homepage-dashboard;
-    group = homepage-dashboard;
+    owner = "homepage-dashboard";
+    group = "homepage-dashboard";
     sopsFile = ../secrets/homepage.yaml;
   };
 in
@@ -36,8 +36,8 @@ in
     # This one doesn't fit the pattern, so we define it manually
     grafana_admin_password = {
       key = "HOMEPAGE_VAR_GRAFANA_ADMIN_PASSWORD";
-      owner = homepage-dashboard;
-      group = homepage-dashboard;
+      owner = "homepage-dashboard";
+      group = "homepage-dashboard";
     };
   };
 
