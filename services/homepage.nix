@@ -7,33 +7,6 @@
     enable = true;
     listenPort = 8082;
 
-    # All environment variables, including secrets, are defined here as strings.
-    environment = {
-      HOMEPAGE_ALLOWED_HOSTS = "localhost,127.0.0.1,192.168.1.165,home.labhome.work";
-      HOMEPAGE_VAR_JELLYSEERR_KEY = "MTc1MzI0Mzg5OTUwN2M2YmRjZmU5LWI1YzktNDMwMi1iNDAzLTlhMzY0NDdjMzdiYQ==";
-      HOMEPAGE_VAR_LIDARR_KEY = "64667f73a2874bcc9b2cd64827ae06a6";
-      HOMEPAGE_VAR_PROWLARR_KEY = "9d24bc9a25174e9cab035094b085c13c";
-      HOMEPAGE_VAR_RADARR_KEY = "035416a4da9f4dbd8cd74783b92a607d";
-      HOMEPAGE_VAR_READARR_KEY = "ff9911f318764d23a06635cca79e1e7a";
-      HOMEPAGE_VAR_READARR_AUDIOBOOKS_KEY = "5aad134f8e714f30bd4d98cbbb6cafd1";
-      HOMEPAGE_VAR_SONARR_KEY = "96661495dcac4fbb90e7b01ede2f1b36";
-      HOMEPAGE_VAR_BAZARR_KEY = "ec02b57b195afb25c73b89df7802af82";
-      HOMEPAGE_VAR_PAPERLESS_KEY = "77e2a8e18afcaa64a204441fe1c5c6a3a232e3d8";
-      HOMEPAGE_VAR_MINIFLUX_KEY = ""; # Set to empty string from null
-      HOMEPAGE_VAR_TAILSCALE_KEY = "tskey-api-kcY19LgP3m11CNTRL-G369y5gJfz8T82PxZ5GH19AvFC1wvHVS1";
-      HOMEPAGE_VAR_TAILSCALE_DEVICE_ID = "nXJkpdBaD611CNTRL";
-      HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID = "8239dd1bb0d0bfedf13673a195df59cf";
-      HOMEPAGE_VAR_CLOUDFLARED_KEY = "yMAEOHdD1sDxrw9tLbu-QRKmn2SftHVx2Q8Cj3j9";
-      HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID = "f7876e26-87a8-4bdd-9798-3986b0f7cebc";
-      HOMEPAGE_VAR_GRAFANA_ADMIN_PASSWORD = "Septuagint@1990";
-      HOMEPAGE_VAR_JELLYFIN_KEY = "MTc1MzI0Mzg5OTUwN2M2YmRjZmU5LWI1YzktNDMwMi1iNDAzLTlhMzY0NDdjMzdiYQ==";
-      HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlJZCI6ImNkMjUwZDE4LTg3ZmEtNGRkMC1iNDc0LTQ0ZDFlYzliN2Y5MCIsIm5hbWUiOiJob21lcGFnZSIsInR5cGUiOiJhcGkiLCJpYXQiOjE3NTMyNDY4OTB9.ZciPaGs_zxUF7axHQTk0eSelSEvLoF7OO8f2";
-      HOMEPAGE_VAR_KAVITA_KEY = "vdi6CWjzI1zSxFovJnwhO4wWQcbWErSWqhZ9N7OhSc71Ahv5bEL7vkU1K6QwJ600gL7jZ2HDALC3jODa3B4OtQ==";
-      HOMEPAGE_VAR_LATITUDE = "51.043674";
-      HOMEPAGE_VAR_LONGITUDE = "-114.09521";
-      HOMEPAGE_VAR_HASS_KEY = "eeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkNjVmNDg4OWRiODE0MTFjYWU5YjBiZDAxZDM5NjEwMiIsImlhdCI6MTc1MzEyNzI3OCwiZXhwIjoyMDY4NDg3Mjc4fQ.GlLvDuYh8DctiNa6O00zUzRFJw9n6SycmcuPbK8yjjM";
-    };
-
     services = [
       {
         "Media" = [
@@ -45,7 +18,7 @@
               widgets = [{
                 type = "jellyfin";
                 url = "http://localhost:8096";
-                key = "{{HOMEPAGE_VAR_JELLYFIN_KEY}}";
+                key = "MTc1MzI0Mzg5OTUwN2M2YmRjZmU5LWI1YzktNDMwMi1iNDAzLTlhMzY0NDdjMzdiYQ==";
               }];
             };
           }
@@ -57,7 +30,7 @@
               widgets = [{
                 type = "audiobookshelf";
                 url = "http://localhost:9292";
-                key = "{{HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY}}";
+                key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlJZCI6ImNkMjUwZDE4LTg3ZmEtNGRkMC1iNDc0LTQ0ZDFlYzliN2Y5MCIsIm5hbWUiOiJob21lcGFnZSIsInR5cGUiOiJhcGkiLCJpYXQiOjE3NTMyNDY4OTB9.ZciPaGs_zxUF7axHQTk0eSelSEvLoF7OO8f2";
               }];
             };
           }
@@ -72,7 +45,7 @@
               widgets = [{
                 type = "sonarr";
                 url = "http://localhost:8989";
-                key = "{{HOMEPAGE_VAR_SONARR_KEY}}";
+                key = "96661495dcac4fbb90e7b01ede2f1b36";
               }];
             };
           }
@@ -83,7 +56,7 @@
               widgets = [{
                 type = "radarr";
                 url = "http://localhost:7878";
-                key = "{{HOMEPAGE_VAR_RADARR_KEY}}";
+                key = "035416a4da9f4dbd8cd74783b92a607d";
               }];
             };
           }
@@ -104,7 +77,7 @@
               widgets = [{
                 type = "prowlarr";
                 url = "http://localhost:9696";
-                key = "{{HOMEPAGE_VAR_PROWLARR_KEY}}";
+                key = "9d24bc9a25174e9cab035094b085c13c";
               }];
             };
           }
@@ -115,7 +88,7 @@
               widgets = [{
                 type = "bazarr";
                 url = "http://localhost:6767";
-                key = "{{HOMEPAGE_VAR_BAZARR_KEY}}";
+                key = "ec02b57b195afb25c73b89df7802af82";
               }];
             };
           }
@@ -126,7 +99,7 @@
               widgets = [{
                 type = "jellyseerr";
                 url = "http://localhost:5055/";
-                key = "{{HOMEPAGE_VAR_JELLYSEERR_KEY}}";
+                key = "MTc1MzI0Mzg5OTUwN2M2YmRjZmU5LWI1YzktNDMwMi1iNDAzLTlhMzY0NDdjMzdiYQ==";
               }];
             };
           }
@@ -137,7 +110,7 @@
               widgets = [{
                 type = "lidarr";
                 url = "http://localhost:8686";
-                key = "{{HOMEPAGE_VAR_LIDARR_KEY}}";
+                key = "64667f73a2874bcc9b2cd64827ae06a6";
               }];
             };
           }
@@ -148,7 +121,7 @@
               widgets = [{
                 type = "readarr";
                 url = "http://localhost:8787";
-                key = "{{HOMEPAGE_VAR_READARR_KEY}}";
+                key = "ff9911f318764d23a06635cca79e1e7a";
               }];
             };
           }
@@ -159,7 +132,7 @@
               widgets = [{
                 type = "readarr";
                 url = "http://localhost:9494";
-                key = "{{HOMEPAGE_VAR_READARR_AUDIOBOOKS_KEY}}";
+                key = "5aad134f8e714f30bd4d98cbbb6cafd1";
               }];
             };
           }
@@ -175,7 +148,7 @@
               widgets = [{
                 type = "paperless";
                 url = "http://localhost:8888";
-                key = "{{HOMEPAGE_VAR_PAPERLESS_KEY}}";
+                key = "77e2a8e18afcaa64a204441fe1c5c6a3a232e3d8";
               }];
             };
           }
@@ -187,7 +160,7 @@
               widgets = [{
                 type = "kavita";
                 url = "http://localhost:5000";
-                key = "{{HOMEPAGE_VAR_KAVITA_KEY}}";
+                key = "vdi6CWjzI1zSxFovJnwhO4wWQcbWErSWqhZ9N7OhSc71Ahv5bEL7vkU1K6QwJ600gL7jZ2HDALC3jODa3B4OtQ==";
               }];
             };
           }
@@ -210,7 +183,7 @@
               widgets = [{
                 type = "miniflux";
                 url = "http://localhost:8086";
-                key = "{{HOMEPAGE_VAR_MINIFLUX_KEY}}";
+                key = "";
               }];
             };
           }
@@ -234,7 +207,7 @@
                 type = "grafana";
                 url = "http://localhost:3000";
                 username = "admin";
-                password = "{{HOMEPAGE_VAR_GRAFANA_ADMIN_PASSWORD}}";
+                password = "Septuagint@1990";
               }];
             };
           }
@@ -264,7 +237,7 @@
               widgets = [{
                 type = "homeassistant";
                 url = "http://localhost:8123";
-                key = "{{HOMEPAGE_VAR_HASS_KEY}}";
+                key = "eeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkNjVmNDg4OWRiODE0MTFjYWU5YjBiZDAxZDM5NjEwMiIsImlhdCI6MTc1MzEyNzI3OCwiZXhwIjoyMDY4NDg3Mjc4fQ.GlLvDuYh8DctiNa6O00zUzRFJw9n6SycmcuPbK8yjjM";
               }];
             };
           }
@@ -293,8 +266,8 @@
               icon = "tailscale";
               widgets = [{
                 type = "tailscale";
-                deviceid = "{{HOMEPAGE_VAR_TAILSCALE_DEVICE_ID}}";
-                key = "{{HOMEPAGE_VAR_TAILSCALE_KEY}}";
+                deviceid = "nXJkpdBaD611CNTRL";
+                key = "tskey-api-kcY19LgP3m11CNTRL-G369y5gJfz8T82PxZ5GH19AvFC1wvHVS1";
               }];
             };
           }
@@ -305,9 +278,9 @@
               icon = "cloudflare-zero-trust";
               widgets = [{
                 type = "cloudflared";
-                accountid = "{{HOMEPAGE_VAR_CLOUDFLARED_ACCOUNT_ID}}";
-                tunnelid = "{{HOMEPAGE_VAR_CLOUDFLARED_TUNNEL_ID}}";
-                key = "{{HOMEPAGE_VAR_CLOUDFLARED_KEY}}";
+                accountid = "8239dd1bb0d0bfedf13673a195df59cf";
+                tunnelid = "f7876e26-87a8-4bdd-9798-3986b0f7cebc";
+                key = "yMAEOHdD1sDxrw9tLbu-QRKmn2SftHVx2Q8Cj3j9";
               }];
             };
           }
@@ -339,8 +312,8 @@
         openmeteo = {
           label = "Calgary";
           timezone = "America/Edmonton";
-          latitude = "{{HOMEPAGE_VAR_LATITUDE}}";
-          longitude = "{{HOMEPAGE_VAR_LONGITUDE}}";
+          latitude = "51.043674";
+          longitude = "-114.09521";
           units = "metric";
         };
       }
