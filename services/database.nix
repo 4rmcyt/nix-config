@@ -17,16 +17,15 @@
     ensureUsers = [
       {
         name = "keycloak";
-        # This correctly reads the *content* of the secret file.
-        passwordFile = config.sops.secrets.keycloak_db_password.path;
+        ensureDBOwnership = true;
       }
       {
         name = "miniflux";
-        passwordFile = config.sops.secrets.miniflux_db_password.path;
+        ensureDBOwnership = true;
       }
       {
         name = "hass";
-        passwordFile = config.sops.secrets.hass_db_password.path;
+        ensureDBOwnership = true;
       }
     ];
 
