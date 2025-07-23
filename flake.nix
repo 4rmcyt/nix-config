@@ -85,6 +85,7 @@
           ./services/home-assistant.nix
           ./services/keycloak.nix
           ./services/nixarr.nix
+          ./services/kavita.nix
 
           ./scripts/wg-sync.nix
 
