@@ -16,7 +16,6 @@
     };
 
     ssh = {
-      enable = true;
       startAgent = true;
     };
 
