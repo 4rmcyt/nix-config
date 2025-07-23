@@ -19,7 +19,7 @@
       BASE_URL = "https://rss.example.com";
       CREATE_ADMIN = 0;
       LISTEN_ADDR = "localhost:8086";
-      DATABASE_URL = lib.mkForce "postgres://miniflux:$(cat ${config.sops.secrets.miniflux_db_password.path})@localhost/miniflux?sslmode=disable";
+      # DATABASE_URL = lib.mkForce "postgres://miniflux:$(cat ${config.sops.secrets.miniflux_db_password.path})@localhost/miniflux?sslmode=disable";
       # OAUTH2_PROVIDER = "oidc";
       # OAUTH2_CLIENT_ID = "miniflux";
       # OAUTH2_REDIRECT_URL = "https://rss.example.com/oauth2/oidc/callback";
