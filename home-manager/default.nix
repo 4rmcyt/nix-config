@@ -1,22 +1,11 @@
 { pkgs, inputs, ... }:
-let
-    configThemeNormal = ./dots/nvim/p10k-config/p10k.zsh;
-in    
 {
-  imports = [
-    inputs.home-manager.nixosModules.home-manager
-    inputs.sops-nix.nixosModules.sops
-  ];
-
-  home.username = "zeev";
-  home.homeDirectory = "/home/zeev";
-
   home.packages = with pkgs; [
     git
     nixfmt-rfc-style
-    gnupg meslo-lgs-nf
+    gnupg
+    meslo-lgs-nf
   ];
-  
 
   programs.gnupg.agent = {
     enable = true;
@@ -26,7 +15,6 @@ in
   };
 
   programs = {
-    home-manager.enable = true;
     git = {
       enable = true;
       userName = "4rmcyt";
@@ -70,13 +58,12 @@ in
       enableSyntaxHighlighting = true;
       histSize = 10000;
       promptInit = ''
-        if [[ -r "''${XDG_CACHE_HOME:-''$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-        source "''${XDG_CACHE_HOME:-''$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+        if [[ -r "${config.home.homeDirectory}/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+        source "${config.home.homeDirectory}/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
         fi
       '';
       plugins = [
         {
-
           name = "powerlevel10k";
           src = pkgs.zsh-powerlevel10k;
           file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";

@@ -19,7 +19,7 @@
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
       warn-dirty = false;
-      cores = 0;
+      cores = 4;
       show-trace = true;
       download-buffer-size = 10737418240; # 10 GiB
       max-jobs = 4;
@@ -96,7 +96,7 @@
   
   systemd.services.nextdns-activate = {
     script = ''
-      /run/current-system/sw/bin/nextdns activate
+      ${pkgs.nextdns}/bin/nextdns activate
     '';
     after = [ "nextdns.service" ];
     wantedBy = [ "multi-user.target" ];
