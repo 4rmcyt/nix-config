@@ -43,6 +43,17 @@ in
       grafana = { };
       cloudflared = { };
       tailscale = { };
+      audiobookshelf = {};
+      bazarr = {};
+      jellyfin = {};
+      jellyseerr = {};
+      lidarr = {};
+      prowlarr = {};
+      radarr = {};
+      readarr = {};
+      sonarr = {};
+      sabnzbd = {};
+      transmission = {};
     };
 
     users = {
@@ -62,59 +73,88 @@ in
       };
 
       # Define all system users for your services
-      git = {
-        isSystemUser = true;
-        group = "git";
-      };
-      keycloak = {
-        isSystemUser = true;
-        group = "keycloak";
-      };
-      homepage-dashboard = {
-        isSystemUser = true;
-        group = "homepage-dashboard";
-      };
-      nextcloud = {
-        isSystemUser = true;
-        group = "nextcloud";
-      };
-      microbin = {
-        isSystemUser = true;
-        group = "microbin";
-      };
-      paperless = {
-        isSystemUser = true;
-        group = "paperless";
-      };
-      miniflux = {
-        isSystemUser = true;
-        group = "miniflux";
-      };
-      hass = {
-        isSystemUser = true;
-        group = "hass";
-      };
-      radicale = {
-        isSystemUser = true;
-        group = "radicale";
-      };
-      mosquitto = {
-        isSystemUser = true;
-        group = "mosquitto";
-      };
-      grafana = {
-        isSystemUser = true;
-        group = "grafana";
-      };
-      cloudflared = {
-        isSystemUser = true;
-        group = "cloudflared";
-      };
-      tailscale = {
-        isSystemUser = true;
-        group = "tailscale";
-      };
+      git = { isSystemUser = true; group = "git"; };
+      keycloak = { isSystemUser = true; group = "keycloak"; };
+      homepage-dashboard = { isSystemUser = true; group = "homepage-dashboard"; };
+      nextcloud = { isSystemUser = true; group = "nextcloud"; };
+      microbin = { isSystemUser = true; group = "microbin"; };
+      paperless = { isSystemUser = true; group = "paperless"; };
+      miniflux = { isSystemUser = true; group = "miniflux"; };
+      hass = { isSystemUser = true; group = "hass"; };
+      radicale = { isSystemUser = true; group = "radicale"; };
+      mosquitto = { isSystemUser = true; group = "mosquitto"; };
+      grafana = { isSystemUser = true; group = "grafana"; };
+      cloudflared = { isSystemUser = true; group = "cloudflared"; };
+      tailscale = { isSystemUser = true; group = "tailscale"; };
 
+      audiobookshelf = { isSystemUser = true; group = "audiobookshelf"; };
+      bazarr = { isSystemUser = true; group = "bazarr"; };
+      jellyfin = { isSystemUser = true; group = "jellyfin"; };
+      jellyseerr = { isSystemUser = true; group = "jellyseerr"; };
+      lidarr = { isSystemUser = true; group = "lidarr"; };
+      prowlarr = { isSystemUser = true; group = "prowlarr"; };
+      radarr = { isSystemUser = true; group = "radarr"; };
+      readarr = { isSystemUser = true; group = "readarr"; };
+      sonarr = { isSystemUser = true; group = "sonarr"; };
+      sabnzbd = { isSystemUser = true; group = "sabnzbd"; };
+      transmission = {
+        isSystemUser = true;
+        group = "transmission";
+        # Correct placement for extraGroups specific to 'transmission' user
+        extraGroups = [ "users" "media" ]; # Added "media" as it might need access to /data/media paths
+      };
     };
   };
+
+  # Correct placement for systemd.tmpfiles.rules - it's a top-level option.
+  systemd.tmpfiles.rules = [
+    # Ensure /data exists and is owned by zeev. It seems you manage /data manually,
+    # but tmpfiles can ensure it's always there with correct permissions.
+    "d /data 0755 zeev root -" # Current: drwxr-xr-x 1 zeev root
+    "d /data/Downloads 0775 zeev users -" # Current: drwxr-xr-x 1 zeev users. Give group write access.
+
+    "d /data/media 0775 root media -" # Current: drwxrwxr-x 1 root media. Keep this.
+    "d /data/media/library 0775 zeev media -" # Current: drwxrwxr-x 1 zeev media. Keep this.
+    "d /data/media/torrents 0775 zeev media -" # Current: drwxr-xr-x 1 zeev media. Give group write.
+    "d /data/media/usenet 0775 zeev media -" # Current: drwxr-xr-x 1 zeev media. Give group write.
+
+    # /data/media/.state is the root of the problem for CHDIR errors.
+    # It's currently `zeev:root` and `drwxr-xr-x`. This needs to be more permissive.
+    # I recommend making it `root:media` with `0775` so any service in `media` group can create subdirectories.
+    "d /data/media/.state 0775 root media -"
+    "d /data/media/.state/nixarr 0775 root media -"
+
+    # Specific Nixarr Service Directories (users/groups now explicitly defined)
+    "d /data/media/.state/nixarr/audiobookshelf 0755 audiobookshelf audiobookshelf -"
+    "d /data/media/.state/nixarr/bazarr 0755 bazarr bazarr -"
+    "d /data/media/.state/nixarr/jellyfin 0755 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyfin/data 0755 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyfin/config 0755 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyfin/cache 0755 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyfin/log 0755 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyseerr 0755 jellyseerr jellyseerr -"
+    "d /data/media/.state/nixarr/lidarr 0755 lidarr lidarr -"
+    "d /data/media/.state/nixarr/prowlarr 0755 prowlarr prowlarr -"
+    "d /data/media/.state/nixarr/radarr 0755 radarr radarr -"
+    "d /data/media/.state/nixarr/readarr 0755 readarr readarr -"
+    "d /data/media/.state/nixarr/sonarr 0755 sonarr sonarr -"
+
+    "d /var/lib/miniflux 0750 miniflux miniflux -" # Common location for miniflux data/DB
+
+    "d /data/media/.state/nixarr/sabnzbd 0755 sabnzbd sabnzbd -"
+    # Add more specific SABnzbd subdirectories if needed by the service config, e.g.:
+    # "d /data/media/.state/nixarr/sabnzbd/downloads/complete 0775 sabnzbd media -"
+    # "d /data/media/.state/nixarr/sabnzbd/downloads/incomplete 0775 sabnzbd media -"
+    # "d /data/media/.state/nixarr/sabnzbd/config 0755 sabnzbd sabnzbd -"
+
+    "d /var/lib/transmission 0755 transmission transmission -" # Transmission's internal state/config
+
+    # For `/data/.secret`:
+    # `0700 zeev media` means only `zeev` (owner) has access. `media` group has no access.
+    # If a service (running as a system user, possibly in `media` group) needs to read `wg.conf` in there,
+    # then the `.secret` directory or the `wg.conf` file itself needs to be group-readable (e.g., 0750 or 0440).
+    # Since VPN services are typically run by their own system users or root,
+    # and the error wasn't about VPN, we'll keep it as 0700 for now.
+    "d /data/.secret 0700 zeev media -"
+  ];
 }
