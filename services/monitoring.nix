@@ -59,7 +59,6 @@
 
   services.grafana = {
     enable = true;
-    # The adminPasswordFile option has been moved to the correct location below.
     settings = {
       server = {
         http_port = 3000;
@@ -68,7 +67,7 @@
       };
       security = {
         admin_user = "admin";
-        admin_password = config.sops.secrets.grafana_admin_password.path;
+        admin_password_file = config.sops.secrets.grafana_admin_password.path;
       };
     };
 
