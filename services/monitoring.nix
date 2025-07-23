@@ -67,6 +67,7 @@
         root_url = "http://192.168.1.165:3000";
       };
       security = {
+        admin_user = "admin";
         admin_password = config.sops.secrets.grafana_admin_password.path;
       };
     };
