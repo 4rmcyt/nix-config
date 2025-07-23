@@ -1,9 +1,5 @@
 { config, pkgs, lib, ... }:  
-let
- toDotenv = attrs: lib.concatStringsSep "\n" (
-    lib.mapAttrsToList (name: value: "${name}=${toString value}") attrs
-  );
-in
+
 {  
   services.homepage-dashboard = {  
     enable = true;  
@@ -367,6 +363,6 @@ in
     Environment = [  
       "HOMEPAGE_ALLOWED_HOSTS=localhost,127.0.0.1,192.168.1.165,home.labhome.work"  
     ];  
-    EnvironmentFile = lib.mkForce  "/etc/homepage.env"; 
+    EnvironmentFile = config.sops.secrets.homepage_env.path;
   };  
 }
