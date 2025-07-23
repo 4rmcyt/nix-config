@@ -139,7 +139,7 @@ in
     "d /data/media/.state/nixarr/jellyfin/config 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/cache 0755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/log 0755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/jellyseerr 0755 jellyseerr jellyseerr -"
+    "d /data/media/.state/nixarr/jellyseerr 0775 jellyseerr jellyseerr -"
     "d /data/media/.state/nixarr/lidarr 0755 lidarr lidarr -"
     "d /data/media/.state/nixarr/prowlarr 0755 prowlarr prowlarr -"
     "d /data/media/.state/nixarr/radarr 0755 radarr radarr -"
