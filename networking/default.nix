@@ -19,7 +19,9 @@
 
         # Authentication
         8080  # Keycloak
+        9000  # Keycloak admin console
 
+    
         # Media services
         8096  # Jellyfin
         8920  # Jellyfin HTTPS
@@ -37,7 +39,9 @@
         9494  # Readarr-audiobook
 
         # Content management
-        8083  # Microbin
+        8084  # Microbin
+        8083  # Microbin Paste
+        
         8086  # Miniflux
         8888  # Paperless
         5232  # Radicale
