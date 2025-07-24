@@ -19,6 +19,8 @@
 
       # --- Containers Credentials ---
       containers_env = { sopsFile = ../../secrets/.env; owner = "root"; group = "root"; mode = "0400";  format = "dotenv"; };
+      tplink_living_room_env = { sopsFile = ../../secrets/tplink-living-room.env; owner = "root"; group = "root"; mode = "0400"; format = "dotenv"; };
+      tplink_office_env = { sopsFile = ../../secrets/tplink-office.env; owner = "root"; group = "root"; mode = "0400"; format = "dotenv"; };
 
 
       # --- Service Secrets ---
