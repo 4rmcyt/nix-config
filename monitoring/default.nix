@@ -115,13 +115,13 @@
       {
         name = "Nextdns monitoring";
         type = "file";
-        options.path = ./nextdns-dashboard.json; 
+        options.path = ./monitoring/nextdns-dashboard.json; 
         options.foldersFromFilesStructure = true;
       }
       {
         name = "Tplink Switch monitoring";
         type = "file";
-        options.path = ./tplink-switch-dashboard.json; 
+        options.path = ./monitoring/tplink-switch-dashboard.json; 
         options.foldersFromFilesStructure = true;
       }
     ];
