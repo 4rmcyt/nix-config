@@ -27,6 +27,7 @@
           "bazarr.labhome.work" = "http://localhost:6767";
           "jellyseerr.labhome.work" = "http://localhost:5055";
           "readarr-audiobook.labhome.work" = "http://localhost:9494";
+          "ollama.labhome.work" = "http://localhost:11434";
         };
       };
     };
