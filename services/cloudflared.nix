@@ -14,7 +14,7 @@
           "rss.labhome.work" = "http://localhost:8086";
           "hass.labhome.work" = "http://localhost:8123";
           "miniflux.labhome.work" = "http://localhost:8086";
-          "transmission.labhome.work" = "http://127.0.0.1:9091";
+          "transmission.labhome.work" = "http://192.168.1.165:9091";
           "cal.labhome.work" = "http://localhost:5232";
           "audiobookshelf.labhome.work" = "http://localhost:9292";
           "kavita.labhome.work" = "http://localhost:5000";
