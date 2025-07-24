@@ -14,7 +14,12 @@
       MICROBIN_PUBLIC_PATH = "https://paste.example.com";
       MICROBIN_EDITABLE = true;
       MICROBIN_HIGHLIGHTSYNTAX = true;
+      MICROBIN_GC_DAYS = 30;
       MICROBIN_TITLE = "Homeserver Pastebin";
+      MICROBIN_SHORT_PATH = "https://p.in";
+      MICROBIN_QR = true;
+      MICROBIN_ENCRYPTION_CLIENT_SIDE = true;
+      MICROBIN_ENCRYPTION_SERVER_SIDE = true;
       MICROBIN_ADMIN_USERNAME = "admin";
       MICROBIN_ADMIN_PASSWORD = config.sops.secrets.microbin_admin_password.path;
     };
