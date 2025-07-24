@@ -110,8 +110,8 @@
             --network=host \
             ghcr.io/raylas/nextdns-exporter:latest \
             -listen=:9790 \
-            -profile=$(cat ${config.sops.secrets.nextdns_profile_id.path}) \
-            -api-key=$(cat ${config.sops.secrets.nextdns_api_key.path})
+            -NEXTDNS_PROFILE=$(cat ${config.sops.secrets.nextdns_profile_id.path}) \
+            -NEXTDNS_API_KEY=$(cat ${config.sops.secrets.nextdns_api_key.path})
         '';
       };
     };
