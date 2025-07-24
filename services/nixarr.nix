@@ -46,6 +46,7 @@
       openTcpPorts = [
         58403
         63998
+        9091
       ];
       vpnTestService = {
         port = 58403;
