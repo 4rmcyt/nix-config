@@ -115,7 +115,7 @@
        {
         name = "Custom Dashboards";
         type = "file";
-        options.path = ./monitoring; # This points to the directory
+        options.path = ./.; # This points to the directory
         options.foldersFromFilesStructure = true;
       }
     ];
