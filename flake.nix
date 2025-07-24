@@ -89,7 +89,7 @@
 
           ./scripts/wg-sync.nix
 
-          ./services/containers.nix
+          ./containers
         ];
       };
     };

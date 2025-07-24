@@ -17,9 +17,9 @@
       nextdns_profile_id = { sopsFile = ../../secrets/nextdns.yaml; key = "nextdns_profile_id"; };
       nextdns_api_key = { sopsFile = ../../secrets/nextdns.yaml; key = "nextdns_api_key"; };
 
-      # --- Switch Credentials ---
-      tplink_living_room_creds = { sopsFile = ../../secrets/system.yaml; key = "tplink_living_room_creds"; owner = "root"; group = "root"; };
-      tplink_office_creds = { sopsFile = ../../secrets/system.yaml; key = "tplink_office_creds"; owner = "root"; group = "root"; };
+      # --- Containers Credentials ---
+      containers_env = { sopsFile = ../../secrets/.env; owner = root; group = root; mode = "0400"; };
+
 
       # --- Service Secrets ---
       keycloak_admin_password = { sopsFile = ../../secrets/keycloak.yaml; key = "keycloak_admin_password"; owner = "keycloak"; };
@@ -35,7 +35,7 @@
       hass_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "hass_db_password"; };
       miniflux_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "miniflux_db_password"; };
       keycloak_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "keycloak_db_password"; };
-      
+
     };
   };
 }
