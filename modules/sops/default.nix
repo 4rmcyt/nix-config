@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 
-{  
+{
   sops = {
     age.keyFile = "/var/lib/sops/age.key";
     defaultSopsFormat = "yaml";
@@ -28,12 +28,13 @@
       microbin_admin_password = { sopsFile = ../../secrets/microbin.yaml; key = "microbin_admin_password"; owner = "microbin"; };
       paperless_admin_password = { sopsFile = ../../secrets/paperless.yaml; key = "paperless_admin_password"; owner = "paperless"; };
       radicale_users = { sopsFile = ../../secrets/radicale_users.txt; owner = "radicale"; group = "radicale"; mode = "0440"; format = "binary"; };
-      kavita_token_key_file = { sopsFile = ../../secrets/kavita.yaml; key = "tokenKeyFile"; owner = "kavita"; group = "kavita"; };
+      kavita_token_key_file = { sopsFile = ../../secrets/kavita.yaml; key = "tokenKeyFile"; owner = "kavita"; group = "kavita"; mode = "0400"; format = "binary"; };
       
       # --- Database Passwords (from postgres.yaml) ---
       hass_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "hass_db_password"; };
       miniflux_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "miniflux_db_password"; };
       keycloak_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "keycloak_db_password"; };
+      
     };
   };
 }
