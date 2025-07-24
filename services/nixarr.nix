@@ -43,6 +43,10 @@
         "192.168.0.0/24"
         "127.0.0.1"
       ];
+      openTcpPorts = [
+        58403
+        63998
+      ];
       vpnTestService = {
         port = 58403;
         enable = true;
