@@ -60,7 +60,8 @@
         9100  # Node Exporter
         9266  # TP-Link living-room Exporter
         9267  # TP-Link office Exporter
-        9790  # Nextdns Exporter
+        9948  # Nextdns Exporter
+        
 
 
         # Database & Infrastructure
