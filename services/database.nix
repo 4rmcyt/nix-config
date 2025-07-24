@@ -11,30 +11,42 @@
       host    all             all             ::1/128                 scram-sha-256
     '';
 
-    initialScript = pkgs.writeText "initial-db-script" ''
-      CREATE ROLE keycloak WITH LOGIN;
-      CREATE DATABASE keycloak WITH OWNER keycloak;
-      CREATE ROLE miniflux WITH LOGIN;
-      CREATE DATABASE miniflux WITH OWNER miniflux;
-      CREATE ROLE hass WITH LOGIN;
-      CREATE DATABASE hass WITH OWNER hass;
-    '';
-  };
+    # Use ensureUsers to declaratively manage roles.
+    # This is idempotent and will run on every rebuild.
+    # We can set the password directly using the path from sops-nix.
+    ensureUsers = [
+      {
+        name = "keycloak";
+        # The passwordFile option handles setting the user's password securely.
+        passwordFile = config.sops.secrets.keycloak_db_password.path;
+      }
+      {
+        name = "hass";
+        passwordFile = config.sops.secrets.hass_db_password.path;
+      }
+      {
+        name = "miniflux";
+        passwordFile = config.sops.secrets.miniflux_db_password.path;
+      }
+    ];
+
+    # Use ensureDatabases to declaratively manage databases.
+    ensureDatabases = [
+      {
+        name = "keycloak";
+        owner = "keycloak";
+      }
+      {
+        name = "hass";
+        owner = "hass";
+      }
+      {
+        name = "miniflux";
+        owner = "miniflux";
+      }
+    ];
 
 
-  systemd.services.postgresql-setup-passwords = {
-    description = "Set initial PostgreSQL user passwords from sops";
-    after = [ "postgresql.service" "sops.service" ];
-    wants = [ "postgresql.service" "sops.service" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      User = "postgres";
-    };
-    script = ''
-      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER keycloak WITH PASSWORD '${config.sops.secrets.keycloak_db_password.path}';"
-      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER hass WITH PASSWORD '${config.sops.secrets.hass_db_password.path}';"
-      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER miniflux WITH PASSWORD '${config.sops.secrets.miniflux_db_password.path}';"
-    '';
   };
+
 }
