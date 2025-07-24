@@ -7,7 +7,7 @@
       image = "thelastguardian/tplinkexporter"; # Use the full sha256 digest
       autoStart = true;
       networks =  [ "host" ];
-      ports = [ "127.0.0.1:9266:9266" ];
+      ports = [ "127.0.0.1:9266:9717" ];
       environmentFiles = [ config.sops.secrets.tplink_living_room_env.path ];
     };
 
@@ -15,7 +15,7 @@
       image = "thelastguardian/tplinkexporter"; # Use the full sha256 digest
       autoStart = true;
       networks =  [ "host" ];
-      ports = [ "127.0.0.1:9267:9267" ];
+      ports = [ "127.0.0.1:9267:9717" ];
       environmentFiles = [ config.sops.secrets.tplink_office_env.path ];
     };
 
@@ -23,7 +23,7 @@
       image = "ghcr.io/raylas/nextdns-exporter:latest"; # Pin to a specific version, not :latest
       autoStart = true;
       networks =  [ "host" ];
-      ports = [ "127.0.0.1:9790:9790" ];
+      ports = [ "127.0.0.1:9948:9948" ];
       environmentFiles = [ config.sops.secrets.containers_env.path ];
     };
   };
