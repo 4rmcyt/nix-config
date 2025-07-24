@@ -1,8 +1,8 @@
 { config, pkgs, ... }:
 
 {
+  virtualisation.oci-containers.backend = "podman";
   virtualisation.oci-containers.containers = {
-    backend = "podman"; 
     tplink-exporter-living-room = {
       image = "thelastguardian/tplinkexporter"; # Use the full sha256 digest
       autoStart = true;
