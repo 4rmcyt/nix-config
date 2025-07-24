@@ -13,7 +13,6 @@
 
     # Use ensureUsers to declaratively manage roles. This is idempotent and
     # guarantees the roles exist before we try to set their passwords.
-    # Note that the password is NOT set here.
     ensureUsers = [
       { name = "keycloak"; }
       { name = "hass"; }
@@ -21,19 +20,12 @@
     ];
 
     # Use ensureDatabases to declaratively manage databases.
+    # This should be a list of strings. The owner is automatically
+    # set to a user with the same name as the database.
     ensureDatabases = [
-      {
-        name = "keycloak";
-        owner = "keycloak";
-      }
-      {
-        name = "hass";
-        owner = "hass";
-      }
-      {
-        name = "miniflux";
-        owner = "miniflux";
-      }
+      "keycloak"
+      "hass"
+      "miniflux"
     ];
   };
 
