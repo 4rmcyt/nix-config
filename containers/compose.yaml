@@ -1,0 +1,36 @@
+services:
+  tplink-living-room:
+    image: thelastguardian/tplinkexporter:sha-c8571d7
+    container_name: tplink-exporter-living-room
+    restart: always
+    network_mode: host
+    environment:
+      - TPLINK_USER=${LIVING_ROOM_USER}
+      - TPLINK_PASSWORD=${LIVING_ROOM_PASSWORD}
+      - TPLINK_DEVICES=${LIVING_ROOM_IP}
+    ports:
+      - '127.0.0.1:9266:9266'
+
+  tplink-office:
+    image: thelastguardian/tplinkexporter:sha-c8571d7
+    container_name: tplink-exporter-office
+    restart: always
+    network_mode: host
+    environment:
+      - TPLINK_USER=${OFFICE_USER}
+      - TPLINK_PASSWORD=${OFFICE_PASSWORD}
+      - TPLINK_DEVICES=${OFFICE_IP}
+    ports:
+      - '127.0.0.1:9267:9267'
+
+  nextdns:
+    image: ghcr.io/raylas/nextdns-exporter:latest
+    container_name: nextdns-exporter
+    restart: always
+    network_mode: host
+    command:
+      - NEXTDNS_PROFILE=${NEXTDNS_PROFILE_ID}
+      - NEXTDNS_API_KEY=${NEXTDNS_API_KEY}
+      - NEXTDNS_RESULT_WINDOW=-1m
+    ports:
+      - '127.0.0.1:9790:9790'  

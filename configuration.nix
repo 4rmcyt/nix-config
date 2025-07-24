@@ -38,11 +38,11 @@
   };
 
   environment.systemPackages = with pkgs; [
-    zsh git neovim direnv pass vim wget curl jq coreutils gawk gnugrep
+    zsh git neovim direnv pass vim wget curl jq coreutils gawk gnugrep podman podman-compose
     iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools
     apacheHttpd meslo-lgs-nf yamllint nix-index iotop
     tuptime smartmontools fzf ffmpeg nmap trash-cli zip unar unzip p7zip
-    calibre go nextdns nixfmt-rfc-style nil deploy-rs just nixpkgs-fmt tree git-crypt
+    calibre go nextdns nixfmt-rfc-style nil deploy-rs just nixpkgs-fmt tree git-crypt 
   ];
 
 
