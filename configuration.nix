@@ -39,7 +39,7 @@
 
   environment.systemPackages = with pkgs; [
     zsh git neovim direnv pass vim wget curl jq coreutils gawk gnugrep podman podman-compose
-    iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools ollama ollama-webui
+    iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools ollama
     apacheHttpd meslo-lgs-nf yamllint nix-index iotop
     tuptime smartmontools fzf ffmpeg nmap trash-cli zip unar unzip p7zip
     calibre go nextdns nixfmt-rfc-style nil deploy-rs just nixpkgs-fmt tree git-crypt 
@@ -80,6 +80,11 @@
         "phi3:mini" # Specify the model you want to pre-load
       ];
     };
+
+    open-webui = {
+      enable = true;
+      port = 11435; # Default port for Ollama WebUI
+    }
 
     nextdns = {
       enable = true;
