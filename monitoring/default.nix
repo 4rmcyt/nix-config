@@ -41,7 +41,7 @@
       {
         job_name = "nextdns-exporter";
         static_configs = [{
-          targets = [ "localhost:9790" ];
+          targets = [ "localhost:9948" ];
           labels = { instance = "homeserver"; };
         }];
       }
