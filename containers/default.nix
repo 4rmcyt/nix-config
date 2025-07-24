@@ -8,7 +8,7 @@
       autoStart = true;
       networks =  [ "host" ];
       ports = [ "127.0.0.1:9266:9266" ];
-      environmentFiles = [ config.sops.secrets.containers_env.path ];
+      environmentFiles = [ config.sops.secrets.tplink_living_room_env.path ];
     };
 
     tplink-exporter-office = {
@@ -16,7 +16,7 @@
       autoStart = true;
       networks =  [ "host" ];
       ports = [ "127.0.0.1:9267:9267" ];
-      environmentFiles = [ config.sops.secrets.containers_env.path ];
+      environmentFiles = [ config.sops.secrets.tplink_office_env.path ];
     };
 
     nextdns-exporter = {
