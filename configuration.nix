@@ -84,7 +84,7 @@
     open-webui = {
       enable = true;
       port = 11435; # Default port for Ollama WebUI
-    }
+    };
 
     nextdns = {
       enable = true;
