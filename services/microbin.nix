@@ -20,6 +20,8 @@
       MICROBIN_QR = true;
       MICROBIN_ENCRYPTION_CLIENT_SIDE = true;
       MICROBIN_ENCRYPTION_SERVER_SIDE = true;
+      MICROBIN_BASIC_AUTH_USERNAME = "microbin";
+      MICROBIN_BASIC_AUTH_PASSWORD = config.sops.secrets.microbin_user_password.path;
       MICROBIN_ADMIN_USERNAME = "admin";
       MICROBIN_ADMIN_PASSWORD = config.sops.secrets.microbin_admin_password.path;
     };
