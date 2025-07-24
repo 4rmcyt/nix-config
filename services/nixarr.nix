@@ -39,7 +39,9 @@
       enable = true;
       wgConf = "/data/.secret/wg.conf";
       accessibleFrom = [
-        "192.168.1.165"
+        "192.168.1.0/24"
+        "192.168.0.0/24"
+        "127.0.0.1"
       ];
       vpnTestService = {
         port = 58403;
@@ -53,7 +55,9 @@
       flood.enable = false;
       privateTrackers.cross-seed.enable = true;
       extraAllowedIps = [
-        "192.168.1.165"
+        "192.168.1.0/24"
+        "192.168.0.0/24"
+        "127.0.0.1"
       ];
       messageLevel = "debug";
       extraSettings = {
