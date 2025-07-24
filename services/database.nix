@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   services.postgresql = {
@@ -11,41 +11,30 @@
       host    all             all             ::1/128                 scram-sha-256
     '';
 
-    ensureUsers = [
-      {
-        name = "keycloak";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "miniflux";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "hass";
-        ensureDBOwnership = true;
-      }
-    ];
+    initialScript = pkgs.writeText "initial-db-script" ''
+      CREATE ROLE keycloak WITH LOGIN;
+      CREATE DATABASE keycloak WITH OWNER keycloak;
+      CREATE ROLE miniflux WITH LOGIN;
+      CREATE DATABASE miniflux WITH OWNER miniflux;
+      CREATE ROLE hass WITH LOGIN;
+      CREATE DATABASE hass WITH OWNER hass;
+    '';
+  };
 
-    ensureDatabases = [
-      "keycloak"
-      "miniflux"
-      "hass"
-    ];
-  };
+
   systemd.services.postgresql-setup-passwords = {
-  description = "Set initial PostgreSQL user passwords from sops";
-  after = [ "postgresql.service" "sops.service" ];
-  wants = [ "postgresql.service" "sops.service" ];
-  wantedBy = [ "multi-user.target" ];
-  serviceConfig = {
-    Type = "oneshot";
-    User = "postgres";
+    description = "Set initial PostgreSQL user passwords from sops";
+    after = [ "postgresql.service" "sops.service" ];
+    wants = [ "postgresql.service" "sops.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      User = "postgres";
+    };
+    script = ''
+      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER keycloak WITH PASSWORD '${config.sops.secrets.keycloak_db_password.path}';"
+      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER hass WITH PASSWORD '${config.sops.secrets.hass_db_password.path}';"
+      ${pkgs.postgresql_15}/bin/psql -c "ALTER USER miniflux WITH PASSWORD '${config.sops.secrets.miniflux_db_password.path}';"
+    '';
   };
-  # This script now strips any trailing newlines from the secret files
-  script = ''
-    ${pkgs.postgresql_15}/bin/psql -c "ALTER USER keycloak WITH PASSWORD '$(tr -d '\\n' < ${config.sops.secrets.keycloak_db_password.path})';"
-    ${pkgs.postgresql_15}/bin/psql -c "ALTER USER hass WITH PASSWORD '$(tr -d '\\n' < ${config.sops.secrets.hass_db_password.path})';"
-    ${pkgs.postgresql_15}/bin/psql -c "ALTER USER miniflux WITH PASSWORD '$(tr -d '\\n' < ${config.sops.secrets.miniflux_db_password.path})';"
-  '';
-};
 }
