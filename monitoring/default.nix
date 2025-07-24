@@ -25,6 +25,26 @@
           labels = { instance = "homeserver"; };
         }];
       }
+       {
+        job_name = "tplink-exporter";
+        static_configs = [
+          {
+            targets = [ "localhost:9266" ];
+            labels = { instance = "living-room"; };
+          }
+          {
+            targets = [ "localhost:9267" ];
+            labels = { instance = "office"; };
+          }
+        ];
+      }
+      {
+        job_name = "nextdns-exporter";
+        static_configs = [{
+          targets = [ "localhost:9790" ];
+          labels = { instance = "homeserver"; };
+        }];
+      }
     ];
 
     exporters = {
@@ -90,6 +110,18 @@
         name = "System Dashboard";
         type = "file";
         options.path = "/etc/grafana/dashboards/system.json";
+        options.foldersFromFilesStructure = true;
+      }
+      {
+        name = "Nextdns monitoring";
+        type = "file";
+        options.path = ./nextdns-dashboard.json; 
+        options.foldersFromFilesStructure = true;
+      }
+      {
+        name = "Tplink Switch monitoring";
+        type = "file";
+        options.path = ./tplink-switch-dashboard.json; 
         options.foldersFromFilesStructure = true;
       }
     ];
