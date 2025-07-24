@@ -75,16 +75,13 @@
     };
 
     ollama = {
-      enable = true;
+      enable = false;
       loadModels = [
         "phi3:mini" # Specify the model you want to pre-load
       ];
     };
 
-    open-webui = {
-      enable = true;
-      port = 11435; # Default port for Ollama WebUI
-    };
+
 
     nextdns = {
       enable = true;

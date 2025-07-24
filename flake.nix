@@ -67,6 +67,7 @@
           ./users
           ./modules/base
           ./modules/sops
+          ./monitoring
         
 
           # Services
@@ -76,7 +77,6 @@
           ./services/homepage.nix
           ./services/tailscale.nix
           ./services/cloudflared.nix
-          ./services/monitoring.nix
           ./services/miniflux.nix
           ./services/microbin.nix
           ./services/paperless.nix
