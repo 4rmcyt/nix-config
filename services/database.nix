@@ -53,4 +53,11 @@
     # This ensures the service is run on boot.
     wantedBy = [ "multi-user.target" ];
   };
+
+  # Add a dependency for the keycloak service to wait for the password setup.
+  # This ensures the database is fully ready before keycloak starts.
+  systemd.services.keycloak = {
+    after = [ "postgresql-setup-passwords.service" ];
+    requires = [ "postgresql-setup-passwords.service" ];
+  };
 }
