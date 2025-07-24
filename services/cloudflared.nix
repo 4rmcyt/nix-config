@@ -14,7 +14,7 @@
           "rss.example.com" = "http://localhost:8086";
           "hass.example.com" = "http://localhost:8123";
           "miniflux.example.com" = "http://localhost:8086";
-          "transmission.example.com" = "http://127.0.0.1:9091";
+          "transmission.example.com" = "http://192.168.1.165:9091";
           "cal.example.com" = "http://localhost:5232";
           "audiobookshelf.example.com" = "http://localhost:9292";
           "kavita.example.com" = "http://localhost:5000";
