@@ -38,6 +38,9 @@
     vpn = {
       enable = true;
       wgConf = "/data/.secret/wg.conf";
+      accessibleFrom = [
+        "192.168.1.165"
+      ];
       vpnTestService = {
         port = 58403;
         enable = true;
@@ -49,6 +52,9 @@
       peerPort = 63998;
       flood.enable = false;
       privateTrackers.cross-seed.enable = true;
+      extraAllowedIps = [
+        "192.168.1.165"
+      ];
       messageLevel = "debug";
       extraSettings = {
         rpc-whitelist-enabled = false;
