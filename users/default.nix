@@ -42,6 +42,7 @@ in
       grafana = { };
       cloudflared = { };
       tailscale = { };
+      kavita = { };
     # Groups for nixarr services - keep them defined here
       audiobookshelf = {};
       bazarr = {};
@@ -85,6 +86,7 @@ in
       grafana = { isSystemUser = true; group = "grafana"; };
       cloudflared = { isSystemUser = true; group = "cloudflared"; };
       tailscale = { isSystemUser = true; group = "tailscale"; };
+      kavita = { isSystemUser = true; group = "kavita"; };
 
       microbin = {
         isSystemUser = true;
