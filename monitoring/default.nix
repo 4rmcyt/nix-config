@@ -112,16 +112,10 @@
         options.path = "/etc/grafana/dashboards/system.json";
         options.foldersFromFilesStructure = true;
       }
-      {
-        name = "Nextdns monitoring";
+       {
+        name = "Custom Dashboards";
         type = "file";
-        options.path = ./monitoring/nextdns-dashboard.json; 
-        options.foldersFromFilesStructure = true;
-      }
-      {
-        name = "Tplink Switch monitoring";
-        type = "file";
-        options.path = ./monitoring/tplink-switch-dashboard.json; 
+        options.path = ./monitoring; # This points to the directory
         options.foldersFromFilesStructure = true;
       }
     ];
