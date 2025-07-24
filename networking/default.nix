@@ -46,6 +46,7 @@
         8888  # Paperless
         5232  # Radicale
         5000  # Kavita
+        11434 # Ollama WebUI
 
         # System services
         8082  # Homepage dashboard

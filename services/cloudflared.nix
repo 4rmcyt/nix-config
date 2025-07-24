@@ -27,6 +27,7 @@
           "bazarr.example.com" = "http://localhost:6767";
           "jellyseerr.example.com" = "http://localhost:5055";
           "readarr-audiobook.example.com" = "http://localhost:9494";
+          "ollama.example.com" = "http://localhost:11434";
         };
       };
     };

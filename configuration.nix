@@ -39,7 +39,7 @@
 
   environment.systemPackages = with pkgs; [
     zsh git neovim direnv pass vim wget curl jq coreutils gawk gnugrep podman podman-compose
-    iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools
+    iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools ollama ollama-webui
     apacheHttpd meslo-lgs-nf yamllint nix-index iotop
     tuptime smartmontools fzf ffmpeg nmap trash-cli zip unar unzip p7zip
     calibre go nextdns nixfmt-rfc-style nil deploy-rs just nixpkgs-fmt tree git-crypt 
@@ -72,6 +72,13 @@
           PermitTTY no
           X11Forwarding no
       '';
+    };
+
+    ollama = {
+      enable = true;
+      loadModels = [
+        "phi3:mini" # Specify the model you want to pre-load
+      ];
     };
 
     nextdns = {
