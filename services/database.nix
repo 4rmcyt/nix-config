@@ -13,11 +13,10 @@
 
     # Use ensureUsers to declaratively manage roles.
     # This is idempotent and will run on every rebuild.
-    # We can set the password directly using the path from sops-nix.
+    # The passwordFile option handles setting the user's password securely.
     ensureUsers = [
       {
         name = "keycloak";
-        # The passwordFile option handles setting the user's password securely.
         passwordFile = config.sops.secrets.keycloak_db_password.path;
       }
       {
@@ -45,8 +44,5 @@
         owner = "miniflux";
       }
     ];
-
-
   };
-
 }
