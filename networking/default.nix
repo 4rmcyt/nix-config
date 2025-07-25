@@ -37,7 +37,6 @@
         8686  # Lidarr
         8787  # Readarr
         9494  # Readarr-audiobook
-        18686 # Hearing Aid (Lidarr)
 
         # Content management
         8084  # Microbin
