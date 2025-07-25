@@ -11,7 +11,7 @@
         "${config.sops.secrets.tplink_living_room_ip.path}:/run/secrets/host:ro"
         "${config.sops.secrets.tplink_living_room_password.path}:/run/secrets/password:ro"
       ];
-      command = [
+      cmd = [
         "sh"
         "-c"
         ''
@@ -32,7 +32,7 @@
         "${config.sops.secrets.tplink_office_ip.path}:/run/secrets/host:ro"
         "${config.sops.secrets.tplink_office_password.path}:/run/secrets/password:ro"
       ];
-      command = [
+      cmd = [
         "sh"
         "-c"
         ''
