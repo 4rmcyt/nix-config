@@ -32,7 +32,7 @@
       
       # --- Database Passwords (from postgres.yaml) ---
       hass_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "hass_db_password"; };
-      miniflux_db_url = { sopsFile = ../../secrets/postgres.yaml; key = "DATABASE_URL"; };
+      miniflux_env = { sopsFile = ../../secrets/miniflux_env.yaml; key = "DATABASE_URL"; };
       keycloak_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "keycloak_db_password"; };
       paperless_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "paperless_db_password"; };
     };
