@@ -13,9 +13,8 @@
       configWritable = true;
       # This block has been rewritten to be more explicit and correct
       extraPackages = ps: [
-        ps.psycopg # Use the modern postgresql driver
+        ps.psycopg2
         ps.pyatv
-        psycopg2
       ];
       extraComponents = [
         "mqtt"
