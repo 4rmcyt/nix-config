@@ -13,6 +13,14 @@
       PAPERLESS_URL = "https://paperless.example.com";
       PAPERLESS_TIME_ZONE = "America/Edmonton";
       PAPERLESS_REDIS = "redis://localhost:6379/1";
+      PAPERLESS_OCR_LANGUAGE = "eng+heb+rus+ukr";
+      PAPERLESS_OCR_USER_ARGS = {
+
+        optimize = 1;
+
+        pdfa_image_compression = "lossless";
+
+      };
     };
   };
 
