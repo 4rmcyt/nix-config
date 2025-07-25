@@ -3,7 +3,7 @@
     {
       "name": "DS_PROMETHEUS",
       "label": "Prometheus",
-      "description": "",
+      "description": "Datasource for your prometheus insance",
       "type": "datasource",
       "pluginId": "prometheus",
       "pluginName": "Prometheus"
@@ -14,7 +14,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "7.0.3"
+      "version": "7.3.3"
     },
     {
       "type": "panel",
@@ -30,8 +30,8 @@
     },
     {
       "type": "panel",
-      "id": "stat",
-      "name": "Stat",
+      "id": "table",
+      "name": "Table",
       "version": ""
     }
   ],
@@ -49,10 +49,10 @@
     ]
   },
   "editable": true,
-  "gnetId": 12517,
+  "gnetId": 13760,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1592859405332,
+  "iteration": 1611301415359,
   "links": [],
   "panels": [
     {
@@ -60,28 +60,10 @@
       "fieldConfig": {
         "defaults": {
           "custom": {
-            "align": null
+            "align": null,
+            "filterable": false
           },
-          "mappings": [
-            {
-              "from": "",
-              "id": 0,
-              "operator": "",
-              "text": "UP",
-              "to": "",
-              "type": 1,
-              "value": "1"
-            },
-            {
-              "from": "",
-              "id": 1,
-              "operator": "",
-              "text": "DOWN",
-              "to": "",
-              "type": 1,
-              "value": "0"
-            }
-          ],
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -96,131 +78,168 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "port"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 73
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "host"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 115
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "description"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 231
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "job"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 121
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "link state"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 122
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "link speed"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 133
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 5,
-        "w": 24,
+        "h": 10,
+        "w": 13,
         "x": 0,
         "y": 0
       },
-      "id": 6,
+      "id": 2,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "vertical",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        }
+        "frameIndex": 5,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "port"
+          }
+        ]
       },
-      "pluginVersion": "7.0.3",
+      "pluginVersion": "7.3.3",
       "targets": [
         {
-          "expr": "tplinkexporter_portstats_state{host=\"$host\"}",
+          "expr": "tplink_sg_switch_port_description_info{host=\"$host\"}",
+          "instant": true,
           "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "port {{portnum}}",
+          "legendFormat": "",
           "refId": "A"
+        },
+        {
+          "expr": "tplink_sg_switch_port_linkState{host=\"$host\"} > 0",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "B"
+        },
+        {
+          "expr": "tplink_sg_switch_port_linkSpeed{host=\"$host\"} > 0",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "C"
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Port Status",
-      "transformations": [],
-      "type": "stat"
-    },
-    {
-      "datasource": "${DS_PROMETHEUS}",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "align": null
-          },
-          "mappings": [
-            {
-              "from": "",
-              "id": 0,
-              "operator": "",
-              "text": "1000MF",
-              "to": "",
-              "type": 1,
-              "value": "6"
+      "title": "Current link status",
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {}
+        },
+        {
+          "id": "seriesToRows",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": true,
+              "instance": true
             },
-            {
-              "from": "",
-              "id": 1,
-              "operator": "",
-              "text": "100MF",
-              "to": "",
-              "type": 1,
-              "value": "5"
+            "indexByName": {
+              "Time": 0,
+              "Value": 6,
+              "description": 4,
+              "host": 2,
+              "instance": 5,
+              "job": 1,
+              "port": 3,
+              "tplink_sg_switch_port_linkSpeed": 8,
+              "tplink_sg_switch_port_linkState": 7
             },
-            {
-              "from": "",
-              "id": 2,
-              "operator": "",
-              "text": "100MH",
-              "to": "",
-              "type": 1,
-              "value": "4"
+            "renameByName": {
+              "Time": "",
+              "tplink_sg_switch_port_linkSpeed": "link speed",
+              "tplink_sg_switch_port_linkState": "link state"
             }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
           }
         },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 24,
-        "x": 0,
-        "y": 5
-      },
-      "id": 7,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "vertical",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        }
-      },
-      "pluginVersion": "7.0.3",
-      "targets": [
         {
-          "expr": "tplinkexporter_portstats_linkstatus{host=\"$host\"}",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "port {{portnum}}",
-          "refId": "A"
+          "id": "seriesToColumns",
+          "options": {
+            "byField": "port"
+          }
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Port Status",
-      "transformations": [],
-      "type": "stat"
+      "type": "table"
     },
     {
       "aliasColors": {},
@@ -228,26 +247,28 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "${DS_PROMETHEUS}",
-      "description": "6 = 1000MF\n5 = 100MF\n4 = 100MH",
       "fieldConfig": {
         "defaults": {
           "custom": {}
         },
         "overrides": []
       },
-      "fill": 1,
+      "fill": 0,
       "fillGradient": 0,
       "gridPos": {
-        "h": 9,
-        "w": 24,
-        "x": 0,
-        "y": 10
+        "h": 10,
+        "w": 6,
+        "x": 13,
+        "y": 0
       },
       "hiddenSeries": false,
-      "id": 2,
+      "id": 6,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
         "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
         "max": false,
         "min": false,
         "show": true,
@@ -258,9 +279,120 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.3.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:855",
+          "alias": "/.*disabled/",
+          "transform": "negative-Y"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "tplink_sg_switch_port_linkState{host=\"$host\", tplink_sg_switch_port_linkState=\"enabled\"}",
+          "interval": "",
+          "legendFormat": "{{port}} enabled",
+          "refId": "A"
+        },
+        {
+          "expr": "tplink_sg_switch_port_linkState{host=\"$host\", tplink_sg_switch_port_linkState=\"disabled\"}",
+          "interval": "",
+          "legendFormat": "{{port}} disabled",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Port status",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:667",
+          "format": "short",
+          "label": "- disabled / + enabled",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:668",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DS_PROMETHEUS}",
+      "decimals": 2,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 10,
+        "w": 5,
+        "x": 19,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 13,
+      "legend": {
+        "avg": false,
+        "current": true,
+        "max": true,
+        "min": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.3.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -270,12 +402,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "tplinkexporter_portstats_linkstatus{host=\"$host\"} !=0",
-          "format": "time_series",
-          "instant": false,
+          "expr": "tplink_sg_collection_time",
           "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "port {{portnum}}",
+          "legendFormat": "Scrape time",
           "refId": "A"
         }
       ],
@@ -283,13 +412,12 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Port Link Status",
+      "title": "Collection time",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transformations": [],
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -300,6 +428,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:1192",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -308,6 +437,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:1193",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -322,11 +452,17 @@
       }
     },
     {
-      "aliasColors": {},
-      "bars": false,
+      "aliasColors": {
+        "port 1 TX": "light-yellow",
+        "port 7 TX": "light-red",
+        "port 8 RX": "orange",
+        "port 8 TX": "dark-orange"
+      },
+      "bars": true,
       "dashLength": 10,
       "dashes": false,
       "datasource": "${DS_PROMETHEUS}",
+      "decimals": 2,
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -337,132 +473,10 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 9,
+        "h": 10,
         "w": 24,
         "x": 0,
-        "y": 19
-      },
-      "hiddenSeries": false,
-      "id": 3,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "hideEmpty": false,
-        "hideZero": true,
-        "max": true,
-        "min": true,
-        "rightSide": true,
-        "show": true,
-        "sideWidth": null,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "repeat": null,
-      "repeatDirection": "v",
-      "seriesOverrides": [
-        {
-          "alias": "/TX.*/",
-          "stack": "A",
-          "transform": "negative-Y"
-        },
-        {
-          "alias": "/RX.*/",
-          "stack": "B"
-        }
-      ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "rate(tplinkexporter_portstats_rxgoodpkt{host=\"$host\"}[10s])",
-          "format": "time_series",
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "RX port {{portnum}}",
-          "refId": "A"
-        },
-        {
-          "expr": "rate(tplinkexporter_portstats_txgoodpkt{host=\"$host\"}[10s])",
-          "interval": "",
-          "legendFormat": "TX port {{portnum}}",
-          "refId": "B"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "good pkt counts",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "transformations": [],
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": false
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "${DS_PROMETHEUS}",
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 9,
-        "w": 24,
-        "x": 0,
-        "y": 28
+        "y": 10
       },
       "hiddenSeries": false,
       "id": 4,
@@ -470,13 +484,11 @@
         "alignAsTable": true,
         "avg": true,
         "current": true,
-        "hideEmpty": false,
+        "hideEmpty": true,
         "hideZero": true,
         "max": true,
-        "min": true,
-        "rightSide": true,
+        "min": false,
         "show": true,
-        "sideWidth": null,
         "total": false,
         "values": true
       },
@@ -484,22 +496,18 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "dataLinks": []
+        "alertThreshold": true
       },
       "percentage": false,
+      "pluginVersion": "7.3.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "repeatDirection": "v",
       "seriesOverrides": [
         {
-          "alias": "/TX.*/",
-          "stack": "A",
+          "$$hashKey": "object:439",
+          "alias": "/.*TX.*/",
           "transform": "negative-Y"
-        },
-        {
-          "alias": "/RX.*/",
-          "stack": "B"
         }
       ],
       "spaceLength": 10,
@@ -507,32 +515,44 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(tplinkexporter_portstats_rxbadpkt{host=\"$host\"}[10s])",
+          "expr": "irate(tplink_sg_switch_port_packet_counters_packets_total{host=\"$host\", type=\"rxGoodPkt\" }[10m])",
           "format": "time_series",
-          "instant": false,
           "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "RX port {{portnum}}",
+          "legendFormat": "port {{port}} RX",
           "refId": "A"
         },
         {
-          "expr": "rate(tplinkexporter_portstats_txbadpkt{host=\"$host\"}[10s])",
+          "expr": "irate(tplink_sg_switch_port_packet_counters_packets_total{host=\"$host\", type=\"txGoodPkt\" }[10m])",
+          "format": "time_series",
           "interval": "",
-          "legendFormat": "TX port {{portnum}}",
+          "legendFormat": "port {{port}} TX",
           "refId": "B"
+        },
+        {
+          "expr": "irate(tplink_sg_switch_port_packet_counters_packets_total{host=\"$host\", type=\"rxBadPkt\" }[10m])",
+          "format": "time_series",
+          "interval": "",
+          "legendFormat": "port {{port}} RX errors",
+          "refId": "C"
+        },
+        {
+          "expr": "irate(tplink_sg_switch_port_packet_counters_packets_total{host=\"$host\", type=\"txBadPkt\" }[10m])",
+          "format": "time_series",
+          "interval": "",
+          "legendFormat": "port {{port}} TX errors",
+          "refId": "D"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "bad pkt counts",
+      "title": "Port traffic (pps)",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transformations": [],
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -543,14 +563,16 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:331",
           "format": "short",
-          "label": null,
+          "label": "pps out (-) / in (+)",
           "logBase": 1,
           "max": null,
           "min": null,
           "show": true
         },
         {
+          "$$hashKey": "object:332",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -565,27 +587,48 @@
       }
     }
   ],
-  "schemaVersion": 25,
+  "schemaVersion": 26,
   "style": "dark",
   "tags": [],
   "templating": {
     "list": [
       {
-        "allValue": null,
-        "current": {},
-        "datasource": "${DS_PROMETHEUS}",
-        "definition": "label_values(tplinkexporter_portstats_state, host)",
+        "current": {
+          "selected": false,
+          "text": "Prometheus",
+          "value": "Prometheus"
+        },
+        "error": null,
         "hide": 0,
         "includeAll": false,
-        "label": "host",
+        "label": "datasource",
+        "multi": false,
+        "name": "DS_PROMETHEUS",
+        "options": [],
+        "query": "prometheus",
+        "queryValue": "",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "$DS_PROMETHEUS",
+        "definition": "label_values(tplink_sg_switch_port_description_info, host)",
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Host",
         "multi": false,
         "name": "host",
         "options": [],
-        "query": "label_values(tplinkexporter_portstats_state, host)",
+        "query": "label_values(tplink_sg_switch_port_description_info, host)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
-        "sort": 3,
+        "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
         "tagsQuery": "",
@@ -595,17 +638,13 @@
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-6h",
     "to": "now"
   },
-  "timepicker": {
-    "refresh_intervals": [
-      "10s"
-    ]
-  },
+  "timepicker": {},
   "timezone": "",
-  "title": "TPLink EasySmartSwitch Stats",
-  "uid": "6QJRBYmMz",
-  "version": 1,
-  "description": "https://github.com/thelastguardian/tplinkexporter\r\nPort stats from TPLink's EasySmart Switches"
+  "title": "TP-Link TL-SG10x",
+  "uid": "xqssffBMk",
+  "version": 7,
+  "description": "Dashboard to view port status and pps for TPLink TL-SG10x switches (e.g. TL-SG108E) collected via Prometheus with https://github.com/mad-ady/tl-sg-prometheus-exporter"
 }
