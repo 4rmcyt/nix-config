@@ -66,6 +66,7 @@
       ];
       messageLevel = "debug";
       extraSettings = {
+        umask = 2;
         rpc-whitelist-enabled = false;
         download-dir = "/data/Downloads";
         # script-torrent-added-enabled = true;
