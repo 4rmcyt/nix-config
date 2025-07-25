@@ -35,8 +35,7 @@
         6767  # Bazarr
         5055  # Jellyseerr
         8686  # Lidarr
-        8787  # Readarr
-        9494  # Readarr-audiobook
+
 
         # Content management
         8084  # Microbin

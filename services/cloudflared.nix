@@ -21,12 +21,10 @@
           "microbin.labhome.work" = "http://localhost:8084";
           "prowlarr.labhome.work" = "http://localhost:9696";
           "radarr.labhome.work" = "http://localhost:7878";
-          "readarr.labhome.work" = "http://localhost:8787";
           "sonarr.labhome.work" = "http://localhost:8989";
           "lidarr.labhome.work" = "http://localhost:8686";
           "bazarr.labhome.work" = "http://localhost:6767";
           "jellyseerr.labhome.work" = "http://localhost:5055";
-          "readarr-audiobook.labhome.work" = "http://localhost:9494";
           "ollama.labhome.work" = "http://localhost:11434";
         };
       };

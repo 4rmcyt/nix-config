@@ -31,8 +31,6 @@ let
     "lidarr"
     "prowlarr"
     "radarr"
-    "readarr"
-    "readarr-audiobook"
     "sonarr"
     "transmission"
   ];
@@ -175,10 +173,8 @@ in
     "d /data/media/.state/nixarr/lidarr 0775 lidarr lidarr -"
     "d /data/media/.state/nixarr/prowlarr 0775 prowlarr prowlarr -"
     "d /data/media/.state/nixarr/radarr 0775 radarr radarr -"
-    "d /data/media/.state/nixarr/readarr 0775 readarr readarr -"
     "d /data/media/.state/nixarr/sonarr 0775 sonarr sonarr -"
     "d /data/media/.state/nixarr/sabnzbd 0775 sabnzbd sabnzbd -"
-    "d /data/media/.state/nixarr/readarr-audiobook 0775 readarr-audiobook readarr-audiobook -"
     "d /data/media/.state/nixarr/bazarr 0775 bazarr bazarr -"
     "d /data/media/.state/nixarr/transmission 0775 transmission transmission -"
 
