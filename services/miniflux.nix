@@ -26,7 +26,7 @@
       # OAUTH2_USER_CREATION = "1";
       # DISABLE_LOCAL_AUTH = "false";
 
-      FETCH_YOUTUBE_WATCH_TIME = true;
+      # FETCH_YOUTUBE_WATCH_TIME = true;
 
     };
   };
