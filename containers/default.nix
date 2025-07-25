@@ -7,7 +7,7 @@
       image = "thelastguardian/tplinkexporter"; # Use the full sha256 digest
       autoStart = true;
       networks =  [ "host" ];
-      ports = [ "127.0.0.1:9266:9717" ];
+      ports = [ "127.0.0.1:9266:9266" ];
       environmentFiles = [ config.sops.secrets.tplink_living_room_env.path ];
     };
 
@@ -15,7 +15,7 @@
       image = "thelastguardian/tplinkexporter"; # Use the full sha256 digest
       autoStart = true;
       networks =  [ "host" ];
-      ports = [ "127.0.0.1:9267:9717" ];
+      ports = [ "127.0.0.1:9267:9266" ];
       environmentFiles = [ config.sops.secrets.tplink_office_env.path ];
     };
 
