@@ -7,10 +7,7 @@
 {
   services.miniflux = {
     enable = true;
-    adminCredentialsFile = builtins.toFile "miniflux-initial-credentials" ''
-      ADMIN_USERNAME="admin"
-      ADMIN_PASSWORD="12345678"
-    '';
+    adminCredentialsFile = config.sops.secrets.miniflux_credentials.path;
     config = {
       WORKER_POOL_SIZE = "5"; # number of background workers
       POLLING_FREQUENCY = "60"; # feed refresh interval in minutes
@@ -19,7 +16,7 @@
       BASE_URL = "https://rss.example.com";
       CREATE_ADMIN = 0;
       LISTEN_ADDR = "localhost:8086";
-      # DATABASE_URL = lib.mkForce "postgres://miniflux:$(cat ${config.sops.secrets.miniflux_db_password.path})@localhost/miniflux?sslmode=disable";
+      DATABASE_URL = "postgres://postgres:$(cat ${config.sops.secrets.miniflux_db_password.path})@localhost/miniflux?sslmode=disable"
       # OAUTH2_PROVIDER = "oidc";
       # OAUTH2_CLIENT_ID = "miniflux";
       # OAUTH2_REDIRECT_URL = "https://rss.example.com/oauth2/oidc/callback";

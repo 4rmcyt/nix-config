@@ -15,6 +15,7 @@
       extraPackages = ps: [
         ps.psycopg # Use the modern postgresql driver
         ps.pyatv
+        psycopg2
       ];
       extraComponents = [
         "mqtt"
@@ -40,6 +41,8 @@
           internal_url = "http://192.168.1.165:8123";
         };
 
+        config.recorder.db_url = "postgresql://@/hass";
+        
         http = {
           server_host = "0.0.0.0";
           server_port = 8123;
@@ -50,17 +53,6 @@
           ];
           ip_ban_enabled = true;
           login_attempts_threshold = 5;
-        };
-
-        recorder = {
-          include = {
-            domains = [
-              "switch"
-              "sensor"
-              "binary_sensor"
-            ];
-          };
-          purge_keep_days = 30;
         };
 
         tts = [
