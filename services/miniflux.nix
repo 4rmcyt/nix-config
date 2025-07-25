@@ -16,7 +16,7 @@
       BASE_URL = "https://rss.labhome.work";
       CREATE_ADMIN = 0;
       LISTEN_ADDR = "localhost:8086";
-      DATABASE_URL = lib.mkForce value "postgres://postgres:$(cat ${config.sops.secrets.miniflux_db_password.path})@localhost/miniflux?sslmode=disable";
+      DATABASE_URL = lib.mkForce "postgres://postgres:$(cat ${config.sops.secrets.miniflux_db_password.path})@localhost/miniflux?sslmode=disable";
       # OAUTH2_PROVIDER = "oidc";
       # OAUTH2_CLIENT_ID = "miniflux";
       # OAUTH2_REDIRECT_URL = "https://rss.labhome.work/oauth2/oidc/callback";
