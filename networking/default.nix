@@ -58,7 +58,7 @@
         3000  # Grafana
         9090  # Prometheus
         9100  # Node Exporter
-        9266  # TP-Link Exporter
+        8000  # TP-Link Exporter
         9948  # Nextdns Exporter
         
 

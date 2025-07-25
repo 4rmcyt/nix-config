@@ -5,7 +5,8 @@
    tl-sg-prometheus-exporter = {
       image = "ghcr.io/mad-ady/tl-sg-prometheus-exporter:latest";
       autoStart = true;
-      ports = [ "127.0.0.1:9266:8000" ];
+      networks =  [ "podman" ];
+      ports = [ "127.0.0.1:8000:8000" ];
       volumes = [
         "${config.sops.secrets.tplinkExporterConfig.path}:/app/config.yml:ro"
       ];
