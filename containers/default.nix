@@ -2,14 +2,14 @@
 {
   virtualisation.oci-containers.backend = "podman";
   virtualisation.oci-containers.containers = {
-    tplink-exporter-living-room = {
-      image = "thelastguardian/tplinkexporter";
-      networks =  [ "podman" ];
-      ports = [ "127.0.0.1:9266:9717" ];
-      cmd = [
-        "--host=192.168.1.101" "--username=admin" "--password=sw2_SeptuagintA"
-      ];
-    };
+    # tplink-exporter-living-room = {
+    #   image = "thelastguardian/tplinkexporter";
+    #   networks =  [ "podman" ];
+    #   ports = [ "127.0.0.1:9266:9717" ];
+    #   cmd = [
+    #     "--host=192.168.1.101" "--username=admin" "--password=sw2_SeptuagintA"
+    #   ];
+    # };
 
     tplink-exporter-office = {
       image = "thelastguardian/tplinkexporter";
