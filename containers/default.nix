@@ -7,7 +7,7 @@
       networks =  [ "host" ];
       ports = [ "127.0.0.1:9266:9266" ];
       cmd = [
-        "--host=192.168.1.101" "--user=admin" "--password=sw2_SeptuagintA"
+        "--host=192.168.1.101" "--username=admin" "--password=sw2_SeptuagintA"
       ];
     };
 
@@ -17,7 +17,7 @@
       networks =  [ "host" ];
       ports = [ "127.0.0.1:9267:9266" ];
       cmd = [
-        "--host=192.168.1.100" "--user=admin" "--password=sw1_SeptuagintA"
+        "--host=192.168.1.100" "--username=admin" "--password=sw1_SeptuagintA"
       ];
     };
 
