@@ -15,7 +15,6 @@
       BASE_URL = "https://rss.example.com";
       LISTEN_ADDR = "localhost:8086";
       DATABASE_URL = lib.mkForce "user=miniflux dbname=miniflux sslmode=disable host=/run/postgresql";
-      RUN_MIGRATIONS = 1;
       # DATABASE_URL = lib.mkForce "postgres://postgres:${config.sops.secrets.miniflux_db_password.path}@localhost/miniflux?sslmode=disable";
       # OAUTH2_PROVIDER = "oidc";
       # OAUTH2_CLIENT_ID = "miniflux";
