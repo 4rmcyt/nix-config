@@ -130,6 +130,7 @@ in
     "d /data/media/torrents 0775 zeev media -"
     "d /data/media/usenet 0775 zeev media -"
     "d /data/Downloads 0775 zeev users -"
+    "d /data/media 777 zeev users -"
 
     
     # /data/media and its subdirectories (library, torrents, usenet)

@@ -33,12 +33,19 @@
         }];
       }
       {
-        job_name = "tplink-exporter";
+        job_name = "tplink-cloudflared";
         static_configs = [{
-          targets = [ "localhost:8000" ];
+          targets = [ "localhost:60123" ];
           labels = { instance = "homeserver"; };
         }];
       }
+      # {
+      #   job_name = "ollama-exporter";
+      #   static_configs = [{
+      #     targets = [ "localhost:11434" ];
+      #     labels = { instance = "homeserver"; };
+      #   }];
+      # }
     ];
 
     exporters = {
