@@ -8,12 +8,16 @@
 {
   services.paperless = {
     enable = true;
+    package = pkgs.paperless-ngx.overrideAttrs (oldAttrs: {
+      doCheck = false;  
+    });
     port = 8888;
     address = "127.0.0.1";
     passwordFile = config.sops.secrets.paperless_admin_password.path;
     settings = {
       PAPERLESS_ADMIN_USER = "admin";
       PAPERLESS_PORT = 8888;
+      PAPERLESS_ADMIN_PASSWORD = config.sops.secrets.paperless_admin_password.path;
       PAPERLESS_ALLOWED_HOSTS = "paperless.example.com,localhost,127.0.0.1";
       PAPERLESS_URL = "https://paperless.example.com";
       PAPERLESS_TIME_ZONE = "America/Edmonton";
