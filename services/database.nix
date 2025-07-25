@@ -18,17 +18,15 @@
     ensureUsers = [
       {
         name = "keycloak";
-        # This correctly uses the content of the secret file for the password
-        passwordFile = config.sops.secrets.keycloak_db_password.path;
+        ensureDBOwnership = true;
       }
       {
         name = "miniflux";
-        passwordFile = config.sops.secrets.miniflux_db_password.path;
+        ensureDBOwnership = true;
       }
       {
         name = "paperless";
-        # Assuming you have this secret defined in sops.nix
-        passwordFile = config.sops.secrets.paperless_db_password.path;
+        ensureDBOwnership = true;
       }
     ];
 
