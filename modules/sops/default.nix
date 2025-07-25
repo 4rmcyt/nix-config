@@ -23,7 +23,6 @@
       # --- Service Secrets ---
       keycloak_admin_password = { sopsFile = ../../secrets/keycloak.yaml; key = "keycloak_admin_password"; owner = "keycloak"; };
       grafana_admin_password = { sopsFile = ../../secrets/grafana.yaml; key = "grafana_admin_password"; owner = "grafana"; };
-      miniflux_credentials = { sopsFile = ../../secrets/miniflux_credentials.yaml; key = "admin-creds"; owner = "miniflux"; };
       microbin_admin_password = { sopsFile = ../../secrets/microbin.yaml; key = "microbin_admin_password"; owner = "microbin"; };
       microbin_user_password = { sopsFile = ../../secrets/microbin.yaml; key = "microbin_user_password"; owner = "microbin"; };
       paperless_admin_password = { sopsFile = ../../secrets/paperless.yaml; key = "paperless_admin_password"; owner = "paperless"; };
