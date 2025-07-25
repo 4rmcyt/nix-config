@@ -65,10 +65,8 @@ in
       lidarr = {};
       prowlarr = {};
       radarr = {};
-      readarr = {};
       sonarr = {};
       transmission = {};
-      readarr-audiobook = {};
       cross-seed = {};
     };
 
@@ -121,10 +119,8 @@ in
       lidarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       prowlarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       radarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      readarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       sonarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       transmission = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      readarr-audiobook = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       cross-seed = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
     };
   };

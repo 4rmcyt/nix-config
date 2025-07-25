@@ -32,6 +32,10 @@
         name = "hass";
         ensureDBOwnership = true;
       }
+      {
+        name = "readarr";
+        ensureDBOwnership = true;
+      }
     ];
 
     # You can likely remove identMap unless you have specific needs for it.
