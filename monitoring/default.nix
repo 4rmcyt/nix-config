@@ -39,13 +39,13 @@
           labels = { instance = "office"; };
         }];
       }
-      {
-        job_name = "tplink-exporter-living-room";
-        static_configs = [{
-          targets = [ "localhost:9266" ];
-          labels = { instance = "living-room"; };
-        }];
-      }
+      # {
+      #   job_name = "tplink-exporter-living-room";
+      #   static_configs = [{
+      #     targets = [ "localhost:9266" ];
+      #     labels = { instance = "living-room"; };
+      #   }];
+      # }
     ];
 
     exporters = {
