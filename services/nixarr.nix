@@ -87,9 +87,7 @@
     lidarr.enable = true;
     prowlarr.enable = true;
     radarr.enable = true;
-    readarr.enable = true;
     sonarr.enable = true;
     jellyseerr.enable = true;
-    readarr-audiobook.enable = true;
   };
 }
