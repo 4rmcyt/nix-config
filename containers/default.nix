@@ -19,12 +19,6 @@
       ports = [ "127.0.0.1:9948:9948" ];
       environmentFiles = [ config.sops.secrets.containers_env.path ];
     };
-    hearing-aid = {
-      image = "blampe/lidarr:latest";
-      serviceName = "hearing-aid";
-      autoStart = true;
-      networks = [ "podman" ];
-      ports = [ "127.0.0.1:18686:18686" ];
-    };
+    
   };
 }
