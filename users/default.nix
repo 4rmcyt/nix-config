@@ -131,7 +131,7 @@ in
 
    systemd.services = lib.genAttrs servicesWithMediaAccess (serviceName: {
     serviceConfig = {
-      ReadWritePaths = [
+      BindPaths = [
         "/data/Downloads"
         "/data/media"
       ];
