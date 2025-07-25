@@ -14,7 +14,6 @@
       "paperless"
       "hass"
     ];
-
     ensureUsers = [
       {
         name = "keycloak";
@@ -30,10 +29,6 @@
       }
       {
         name = "hass";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "readarr";
         ensureDBOwnership = true;
       }
     ];
