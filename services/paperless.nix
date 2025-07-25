@@ -12,6 +12,12 @@
       PAPERLESS_ALLOWED_HOSTS = "paperless.labhome.work,localhost,127.0.0.1";
       PAPERLESS_URL = "https://paperless.labhome.work";
       PAPERLESS_TIME_ZONE = "America/Edmonton";
+      PAPERLESS_DBHOST= "localhost";
+      PAPERLESS_DBPORT = 5432;
+      PAPERLESS_DBNAME = "paperless";
+      PAPERLESS_DBUSER = "paperless";
+      PAPERLESS_DBPASS = config.sops.secrets.paperless_db_password.path;
+      PAPERLESS_DBENGINE = "postgresql";
       PAPERLESS_REDIS = "redis://localhost:6379/1";
       PAPERLESS_OCR_LANGUAGE = "eng+heb+rus+ukr";
       PAPERLESS_OCR_USER_ARGS = {
