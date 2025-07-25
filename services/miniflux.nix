@@ -17,6 +17,7 @@
       CREATE_ADMIN = 1;
       LISTEN_ADDR = "localhost:8086";
       DATABASE_URL = lib.mkForce "user=miniflux host=/run/postgresql dbname=miniflux password=${config.sops.secrets.miniflux_db_password.path} sslmode=disable";
+      RUN_MIGRATIONS = 1;
       # DATABASE_URL = lib.mkForce "postgres://postgres:${config.sops.secrets.miniflux_db_password.path}@localhost/miniflux?sslmode=disable";
       # OAUTH2_PROVIDER = "oidc";
       # OAUTH2_CLIENT_ID = "miniflux";
@@ -24,6 +25,18 @@
       # OAUTH2_OIDC_DISCOVERY_ENDPOINT = "https://keycloak.labhome.work/realms/master";
       # OAUTH2_USER_CREATION = "1";
       # DISABLE_LOCAL_AUTH = "false";
+
+      FETCH_YOUTUBE_WATCH_TIME = true;
+
     };
   };
+    systemd.services.miniflux = {
+      description = "Miniflux service";
+      wantedBy = [ "multi-user.target" ];
+      after = [
+        "network.target"
+        "postgresql.service"
+      ];
+      requires = [ "postgresql.service" ];
+    };
 }
