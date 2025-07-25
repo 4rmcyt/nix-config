@@ -19,7 +19,7 @@
 
       # --- Containers Credentials ---
       containers_env = { sopsFile = ../../secrets/.env; owner = "root"; group = "root"; mode = "0400";  format = "dotenv"; };
-      tplinkExporterConfig = { sopsFile = ../../secrets/tplink_exporter.yaml; key = "tplinkExporterConfig"; owner = "root"; group = "root"; mode = "0400"; format = "binary";};
+      tplinkExporterConfig = { sopsFile = ../../secrets/tplink_exporter.yaml; key = "tplinkExporterConfig"; owner = "root"; group = "root"; mode = "0400"; format = "yaml";};
       # --- Service Secrets ---
       keycloak_admin_password = { sopsFile = ../../secrets/keycloak.yaml; key = "keycloak_admin_password"; owner = "keycloak"; };
       grafana_admin_password = { sopsFile = ../../secrets/grafana.yaml; key = "grafana_admin_password"; owner = "grafana"; };
