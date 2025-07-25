@@ -7,7 +7,7 @@
       autoStart = true;
       ports = [ "127.0.0.1:9266:8000" ];
       volumes = [
-        "${tplinkExporterConfig}:/app/config.yml:ro"
+        "${config.sops.secrets.tplinkExporterConfig.path}:/app/config.yml:ro"
       ];
     };
 
