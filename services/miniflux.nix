@@ -7,10 +7,6 @@
 {
   services.miniflux = {
     enable = true;
-    adminCredentialsFile = "${config.sops.secrets.miniflux_credentials.path}";
-
-
-
     config = {
       WORKER_POOL_SIZE = "5"; # number of background workers
       POLLING_FREQUENCY = "60"; # feed refresh interval in minutes
