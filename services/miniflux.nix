@@ -14,7 +14,7 @@
       BATCH_SIZE = "100"; # number of feeds sent to queue each interval
       CLEANUP_ARCHIVE_READ_DAYS = "60"; # read items are removed after x days
       BASE_URL = "https://rss.labhome.work";
-      CREATE_ADMIN = 0;
+      CREATE_ADMIN = 1;
       LISTEN_ADDR = "localhost:8086";
       DATABASE_URL = lib.mkForce "user=miniflux host=/run/postgresql dbname=miniflux password=${config.sops.secrets.miniflux_db_password.path} sslmode=disable";
       # DATABASE_URL = lib.mkForce "postgres://postgres:${config.sops.secrets.miniflux_db_password.path}@localhost/miniflux?sslmode=disable";
