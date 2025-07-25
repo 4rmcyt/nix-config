@@ -7,7 +7,9 @@
       autoStart = true;
       networks =  [ "podman" ];
       ports = [ "127.0.0.1:8000:8000" ];
-      environmentFiles = [ config.sops.secrets.tplinkExporterConfig.path ];
+      volumes = [
+        "${config.sops.secrets.tplinkExporterConfig.path}:/app/config.yml:ro"
+      ];
     };
 
     nextdns-exporter = {
