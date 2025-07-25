@@ -3,10 +3,13 @@
 {
   services.paperless = {
     enable = true;
+    port = 8888;
+    address = "127.0.0.1";
     passwordFile = config.sops.secrets.paperless_admin_password.path;
     settings = {
       PAPERLESS_ADMIN_USER = "admin";
       PAPERLESS_PORT = 8888;
+      PAPERLESS_ALLOWED_HOSTS = "paperless.labhome.work,localhost,127.0.0.1";
       PAPERLESS_URL = "https://paperless.labhome.work";
       PAPERLESS_TIME_ZONE = "America/Edmonton";
       PAPERLESS_REDIS = "redis://localhost:6379/1";
