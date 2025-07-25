@@ -2,7 +2,7 @@ services.postgresql = {
   enable = true;
   package = pkgs.postgresql_15;
   ensureDatabases = [ "keycloak" "miniflux" "paperless" "hass" ];
-
+  
   ensureUsers = [
     {
       name = "keycloak";
