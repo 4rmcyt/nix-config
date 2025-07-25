@@ -14,6 +14,7 @@
       CLEANUP_ARCHIVE_READ_DAYS = "60"; # read items are removed after x days
       BASE_URL = "https://rss.labhome.work";
       LISTEN_ADDR = "localhost:8086";
+      CREATE_ADMIN = 1; # create an admin user on first run
       DATABASE_URL = lib.mkForce "user=miniflux dbname=miniflux sslmode=disable host=/run/postgresql";
       # DATABASE_URL = lib.mkForce "postgres://postgres:${config.sops.secrets.miniflux_db_password.path}@localhost/miniflux?sslmode=disable";
       # OAUTH2_PROVIDER = "oidc";
