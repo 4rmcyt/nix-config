@@ -12,12 +12,8 @@
         "${config.sops.secrets.tplink_living_room_password.path}:/run/secrets/password:ro"
       ];
       cmd = [
-        ''
-          exec /exporter \
-            --host=$(cat /run/secrets/host) \
-            --user=admin \
-            --password=$(cat /run/secrets/password)
-        ''
+        "-c"
+        "exec /exporter --host=$(cat /run/secrets/host) --user=admin --password=$(cat /run/secrets/password)"
       ];
     };
 
@@ -31,12 +27,8 @@
         "${config.sops.secrets.tplink_office_password.path}:/run/secrets/password:ro"
       ];
       cmd = [
-        ''
-          exec /exporter \
-            --host=$(cat /run/secrets/host) \
-            --user=admin \
-            --password=$(cat /run/secrets/password)
-        ''
+        "-c"
+        "exec /exporter --host=$(cat /run/secrets/host) --user=admin --password=$(cat /run/secrets/password)"
       ];
     };
 
