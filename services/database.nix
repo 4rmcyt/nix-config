@@ -28,6 +28,10 @@
         name = "paperless";
         ensureDBOwnership = true;
       }
+      {
+        name = "hass";
+        ensureDBOwnership = true;
+      }
     ];
 
     # You can likely remove identMap unless you have specific needs for it.
