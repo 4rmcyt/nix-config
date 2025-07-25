@@ -21,11 +21,12 @@ services.postgresql = {
   ];
 
   # You can likely remove identMap unless you have specific needs for it.
-  identMap = ''
-    # ArbitraryMapName systemUser DBUser
-      superuser_map      root      postgres
-      superuser_map      postgres  postgres
-    # Let other names login as themselves
-      superuser_map      /^(.*)$   \1
-  '';
-};
+    identMap = ''
+      # ArbitraryMapName systemUser DBUser
+        superuser_map      root      postgres
+        superuser_map      postgres  postgres
+      # Let other names login as themselves
+        superuser_map      /^(.*)$   \1
+    '';
+}
+
