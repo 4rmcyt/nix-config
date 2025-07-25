@@ -7,7 +7,7 @@
       networks =  [ "host" ];
       ports = [ "127.0.0.1:9266:9266" ];
       cmd = [
-        "--host=192.168.1.101 --user=admin --password=sw2_SeptuagintA"
+        "--host=192.168.1.101" "--user=admin" "--password=sw2_SeptuagintA"
       ];
     };
 
@@ -16,12 +16,8 @@
       autoStart = true;
       networks =  [ "host" ];
       ports = [ "127.0.0.1:9267:9266" ];
-      volumes = [
-        "${config.sops.secrets.tplink_office_ip.path}:/run/secrets/host:ro"
-        "${config.sops.secrets.tplink_office_password.path}:/run/secrets/password:ro"
-      ];
       cmd = [
-        "--host=192.168.1.100 --user=admin --password=sw1_SeptuagintA"
+        "--host=192.168.1.100" "--user=admin" "--password=sw1_SeptuagintA"
       ];
     };
 
