@@ -12,8 +12,6 @@
         "${config.sops.secrets.tplink_living_room_password.path}:/run/secrets/password:ro"
       ];
       cmd = [
-        "sh"
-        "-c"
         ''
           exec /exporter \
             --host=$(cat /run/secrets/host) \
@@ -33,8 +31,6 @@
         "${config.sops.secrets.tplink_office_password.path}:/run/secrets/password:ro"
       ];
       cmd = [
-        "sh"
-        "-c"
         ''
           exec /exporter \
             --host=$(cat /run/secrets/host) \
