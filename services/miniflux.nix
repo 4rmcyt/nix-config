@@ -7,6 +7,7 @@
 {
   services.miniflux = {
     enable = true;
+    adminCredentialsFile = "/etc/miniflux.env";
     config = {
       WORKER_POOL_SIZE = "5"; # number of background workers
       POLLING_FREQUENCY = "60"; # feed refresh interval in minutes
