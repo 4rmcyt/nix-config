@@ -1,5 +1,4 @@
 { config, pkgs, ... }:
-# The 'let' block is not needed for this solution
 {
   virtualisation.oci-containers.backend = "podman";
   virtualisation.oci-containers.containers = {
@@ -8,15 +7,14 @@
       autoStart = true;
       networks =  [ "host" ];
       ports = [ "127.0.0.1:9266:9266" ];
-      # 1. Mount the secret files into the container
       volumes = [
         "${config.sops.secrets.tplink_living_room_ip.path}:/run/secrets/host:ro"
         "${config.sops.secrets.tplink_living_room_password.path}:/run/secrets/password:ro"
       ];
-      # 2. Use a shell to read the file contents and execute the exporter
+      # 1. Override the entrypoint to be a shell
+      entrypoint = [ "/bin/sh" "-c" ];
+      # 2. The cmd now becomes the script for the shell to execute
       cmd = [
-        "/bin/sh"
-        "-c"
         "exec /usr/local/bin/tplinkexporter --host=$(cat /run/secrets/host) --user=admin --password=$(cat /run/secrets/password)"
       ];
     };
@@ -26,15 +24,14 @@
       autoStart = true;
       networks =  [ "host" ];
       ports = [ "127.0.0.1:9267:9266" ];
-      # 1. Mount the secret files (this was already correct)
       volumes = [
         "${config.sops.secrets.tplink_office_ip.path}:/run/secrets/host:ro"
         "${config.sops.secrets.tplink_office_password.path}:/run/secrets/password:ro"
       ];
-      # 2. Use a shell to read the file contents and execute the exporter
+      # 1. Override the entrypoint to be a shell
+      entrypoint = [ "/bin/sh" "-c" ];
+      # 2. The cmd now becomes the script for the shell to execute
       cmd = [
-        "/bin/sh"
-        "-c"
         "exec /usr/local/bin/tplinkexporter --host=$(cat /run/secrets/host) --user=admin --password=$(cat /run/secrets/password)"
       ];
     };
@@ -49,3 +46,4 @@
     };
   };
 }
+
