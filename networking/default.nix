@@ -44,6 +44,7 @@
         
         8086  # Miniflux
         8888  # Paperless
+        6379  # Redis (for Paperless)
         5232  # Radicale
         5000  # Kavita
         # 11434 # Ollama API
