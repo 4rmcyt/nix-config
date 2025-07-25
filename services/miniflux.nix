@@ -8,6 +8,13 @@
   services.miniflux = {
     enable = true;
     adminCredentialsFile = config.sops.secrets.miniflux_credentials.path;
+
+    database = {
+      user = "miniflux";
+      name = "miniflux";
+      passwordFile = config.sops.secrets.miniflux_db_password.path;
+    };
+
     config = {
       WORKER_POOL_SIZE = "5"; # number of background workers
       POLLING_FREQUENCY = "60"; # feed refresh interval in minutes
@@ -16,7 +23,7 @@
       BASE_URL = "https://rss.labhome.work";
       CREATE_ADMIN = 1;
       LISTEN_ADDR = "localhost:8086";
-      DATABASE_URL = lib.mkForce "user=miniflux host=/run/postgresql dbname=miniflux password=${config.sops.secrets.miniflux_db_password.path} sslmode=disable";
+      # DATABASE_URL = lib.mkForce "user=miniflux host=/run/postgresql dbname=miniflux password=${config.sops.secrets.miniflux_db_password.path} sslmode=disable";
       RUN_MIGRATIONS = 1;
       # DATABASE_URL = lib.mkForce "postgres://postgres:${config.sops.secrets.miniflux_db_password.path}@localhost/miniflux?sslmode=disable";
       # OAUTH2_PROVIDER = "oidc";
