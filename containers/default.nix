@@ -21,7 +21,7 @@
     };
     hearing-aid = {
       image = "blampe/lidarr:latest";
-      name = "hearing-aid";
+      serviceName = "hearing-aid";
       autoStart = true;
       networks = [ "podman" ];
       ports = [ "127.0.0.1:18686:18686" ];
