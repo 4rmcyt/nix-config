@@ -25,24 +25,25 @@
           labels = { instance = "homeserver"; };
         }];
       }
-       {
-        job_name = "tplink-exporter";
-        static_configs = [
-          {
-            targets = [ "localhost:9266" ];
-            labels = { instance = "living-room"; };
-          }
-          {
-            targets = [ "localhost:9267" ];
-            labels = { instance = "office"; };
-          }
-        ];
-      }
       {
         job_name = "nextdns-exporter";
         static_configs = [{
           targets = [ "localhost:9948" ];
           labels = { instance = "homeserver"; };
+        }];
+      }
+      {
+        job_name = "tplink-exporter-office";
+        static_configs = [{
+          targets = [ "localhost:9267" ];
+          labels = { instance = "office"; };
+        }];
+      }
+      {
+        job_name = "tplink-exporter-living-room";
+        static_configs = [{
+          targets = [ "localhost:9266" ];
+          labels = { instance = "living-room"; };
         }];
       }
     ];
