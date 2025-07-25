@@ -13,7 +13,6 @@
       BATCH_SIZE = "100"; # number of feeds sent to queue each interval
       CLEANUP_ARCHIVE_READ_DAYS = "60"; # read items are removed after x days
       BASE_URL = "https://rss.example.com";
-      CREATE_ADMIN = 1;
       LISTEN_ADDR = "localhost:8086";
       DATABASE_URL = lib.mkForce "user=miniflux dbname=miniflux sslmode=disable host=/run/postgresql";
       RUN_MIGRATIONS = 1;
