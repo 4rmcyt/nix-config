@@ -1,9 +1,9 @@
 { config, pkgs, ... }:
 let 
-  tplink_office_ip = builtins.readFile config.sops.secrets.tplink_office_ip.path;
-  tplink_living_room_ip = builtins.readFile config.sops.secrets.tplink_living_room_ip.path;
-  tplink_office_password = builtins.readFile config.sops.secrets.tplink_office_password.path;
-  tplink_living_room_password = builtins.readFile config.sops.secrets.tplink_living_room_password.path;
+  tplink_office_ip = config.sops.secrets.tplink_office_ip.path;
+  tplink_living_room_ip = config.sops.secrets.tplink_living_room_ip.path;
+  tplink_office_password = config.sops.secrets.tplink_office_password.path;
+  tplink_living_room_password = config.sops.secrets.tplink_living_room_password.path;
 in  
 {
   virtualisation.oci-containers.backend = "podman";
