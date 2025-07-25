@@ -33,19 +33,12 @@
         }];
       }
       {
-        job_name = "tplink-exporter-office";
+        job_name = "tplink-exporter";
         static_configs = [{
-          targets = [ "localhost:9267" ];
-          labels = { instance = "office"; };
+          targets = [ "localhost:8000" ];
+          labels = { instance = "homeserver"; };
         }];
       }
-      # {
-      #   job_name = "tplink-exporter-living-room";
-      #   static_configs = [{
-      #     targets = [ "localhost:9266" ];
-      #     labels = { instance = "living-room"; };
-      #   }];
-      # }
     ];
 
     exporters = {
