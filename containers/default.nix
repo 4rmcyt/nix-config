@@ -11,10 +11,11 @@
         "${config.sops.secrets.tplink_living_room_ip.path}:/run/secrets/host:ro"
         "${config.sops.secrets.tplink_living_room_password.path}:/run/secrets/password:ro"
       ];
-      # 1. Override the entrypoint to be a shell
-      entrypoint = [ "/bin/sh" "-c" ];
-      # 2. The cmd now becomes the script for the shell to execute
+      # 1. 'entrypoint' is now a single string.
+      entrypoint = "/bin/sh";
+      # 2. The arguments for the entrypoint ('-c' and the script) are now a list in 'cmd'.
       cmd = [
+        "-c"
         "exec /usr/local/bin/tplinkexporter --host=$(cat /run/secrets/host) --user=admin --password=$(cat /run/secrets/password)"
       ];
     };
@@ -28,10 +29,11 @@
         "${config.sops.secrets.tplink_office_ip.path}:/run/secrets/host:ro"
         "${config.sops.secrets.tplink_office_password.path}:/run/secrets/password:ro"
       ];
-      # 1. Override the entrypoint to be a shell
-      entrypoint = [ "/bin/sh" "-c" ];
-      # 2. The cmd now becomes the script for the shell to execute
+      # 1. 'entrypoint' is now a single string.
+      entrypoint = "/bin/sh";
+      # 2. The arguments for the entrypoint ('-c' and the script) are now a list in 'cmd'.
       cmd = [
+        "-c"
         "exec /usr/local/bin/tplinkexporter --host=$(cat /run/secrets/host) --user=admin --password=$(cat /run/secrets/password)"
       ];
     };
