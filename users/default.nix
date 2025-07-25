@@ -23,6 +23,20 @@ let
   ];
 
   server-keys = system-keys ++ user-keys;
+
+  servicesWithMediaAccess = [
+    "bazarr"
+    "cross-seed"
+    "jellyseerr"
+    "lidarr"
+    "prowlarr"
+    "radarr"
+    "readarr"
+    "readarr-audiobook"
+    "sonarr"
+    "transmission"
+  ];
+
 in
 {
   users = {
@@ -115,6 +129,15 @@ in
     };
   };
 
+   systemd.services = lib.genAttrs servicesWithMediaAccess (serviceName: {
+    serviceConfig = {
+      ReadWritePaths = [
+        "/data/Downloads"
+        "/data/media"
+      ];
+    };
+  });
+
   # Correct placement for systemd.tmpfiles.rules - it's a top-level option.
   systemd.tmpfiles.rules = [
     # Top-level /data directory and its children that are shared
@@ -130,7 +153,6 @@ in
     "d /data/media/torrents 0775 zeev media -"
     "d /data/media/usenet 0775 zeev media -"
     "d /data/Downloads 0775 zeev users -"
-    "d /data/media 770 zeev users -"
 
     
     # /data/media and its subdirectories (library, torrents, usenet)
