@@ -7,14 +7,18 @@
       image = "thelastguardian/tplinkexporter";
       networks =  [ "host" ];
       ports = [ "127.0.0.1:9266:9266" ];
+      volumes = [
+        "${config.sops.secrets.tplink_living_room_ip.path}:/run/secrets/host:ro"
+        "${config.sops.secrets.tplink_living_room_password.path}:/run/secrets/password:ro"
+      ];
       command = [
         "sh"
         "-c"
         ''
           exec /exporter \
-            --host=${config.sops.secrets.tplink_living_room.host} \
+            --host=$(cat /run/secrets/host) \
             --user=admin \
-            --password=${config.sops.secrets.tplink_living_room.password}
+            --password=$(cat /run/secrets/password)
         ''
       ];
     };
@@ -24,14 +28,18 @@
       autoStart = true;
       networks =  [ "host" ];
       ports = [ "127.0.0.1:9267:9266" ];
+      volumes = [
+        "${config.sops.secrets.tplink_office_ip.path}:/run/secrets/host:ro"
+        "${config.sops.secrets.tplink_office_password.path}:/run/secrets/password:ro"
+      ];
       command = [
         "sh"
         "-c"
         ''
           exec /exporter \
-            --host=${config.sops.secrets.tplink_office.host} \
+            --host=$(cat /run/secrets/host) \
             --user=admin \
-            --password=${config.sops.secrets.tplink_office.password}
+            --password=$(cat /run/secrets/password)
         ''
       ];
     };
