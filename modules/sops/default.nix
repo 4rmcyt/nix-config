@@ -19,12 +19,7 @@
 
       # --- Containers Credentials ---
       containers_env = { sopsFile = ../../secrets/.env; owner = "root"; group = "root"; mode = "0400";  format = "dotenv"; };
-      tplink_living_room_ip = { sopsFile = ../../secrets/tplink-living-room.yaml; key = "host"; owner = "root"; group = "root"; mode = "0400"; };
-      tplink_office_ip = { sopsFile = ../../secrets/tplink-office.yaml; key = "host"; owner = "root"; group = "root"; mode = "0400"; };
-      tplink_living_room_password = { sopsFile = ../../secrets/tplink-living-room.yaml; key = "password"; owner = "root"; group = "root"; mode = "0400";  };
-      tplink_office_password = { sopsFile = ../../secrets/tplink-office.yaml; key = "password"; owner = "root"; group = "root"; mode = "0400"; };
-
-
+      tplinkExporterConfig = { sopsFile = ../../secrets/tplink_exporter.yaml; owner = "root"; group = "root"; mode = "0400"; };
       # --- Service Secrets ---
       keycloak_admin_password = { sopsFile = ../../secrets/keycloak.yaml; key = "keycloak_admin_password"; owner = "keycloak"; };
       grafana_admin_password = { sopsFile = ../../secrets/grafana.yaml; key = "grafana_admin_password"; owner = "grafana"; };
