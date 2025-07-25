@@ -52,9 +52,7 @@
       in
       ''
         set -e
-        # 1. Create users and set their passwords in a single transaction.
-        # The DO blocks create the roles only if they don't already exist.
-        # The ALTER USER commands will then set/update the password.
+
         ${psql} -v ON_ERROR_STOP=1 <<-'EOSQL'
           -- For Keycloak
           DO $$
@@ -66,7 +64,6 @@
           $$;
           ALTER USER keycloak WITH PASSWORD '${config.sops.secrets.keycloak_db_password.path}';
 
-          -- For Home Assistant (hass)
           DO $$
           BEGIN
             IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'hass') THEN
@@ -75,6 +72,15 @@
           END
           $$;
           ALTER USER hass WITH PASSWORD '${config.sops.secrets.hass_db_password.path}';
+
+          DO $$
+          BEGIN
+            IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'paperless') THEN
+              CREATE ROLE paperless WITH LOGIN;
+            END IF;
+          END
+          $$;
+          ALTER USER paperless WITH PASSWORD '${config.sops.secrets.paperless_db_password.path}';
 
           -- For Miniflux
           DO $$
@@ -87,8 +93,7 @@
           ALTER USER miniflux WITH PASSWORD '${config.sops.secrets.miniflux_db_password.path}';
         EOSQL
 
-        # 2. Create databases if they don't exist.
-        # This logic is in shell functions for clarity.
+
         db_exists() {
           ${psql} -tA -d postgres -c "SELECT 1 FROM pg_database WHERE datname = '$1'" | grep -q 1
         }
