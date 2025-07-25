@@ -4,23 +4,40 @@
   virtualisation.oci-containers.backend = "podman";
   virtualisation.oci-containers.containers = {
     tplink-exporter-living-room = {
-      image = "thelastguardian/tplinkexporter"; # Use the full sha256 digest
-      autoStart = true;
+      image = "thelastguardian/tplinkexporter";
       networks =  [ "host" ];
       ports = [ "127.0.0.1:9266:9266" ];
-      environmentFiles = [ config.sops.secrets.tplink_living_room_env.path ];
+      command = [
+        "sh"
+        "-c"
+        ''
+          exec /exporter \
+            --host=${config.sops.secrets.tplink_living_room.host} \
+            --user=admin \
+            --password=${config.sops.secrets.tplink_living_room.password}
+        ''
+      ];
     };
 
     tplink-exporter-office = {
-      image = "thelastguardian/tplinkexporter"; # Use the full sha256 digest
+      image = "thelastguardian/tplinkexporter";
       autoStart = true;
       networks =  [ "host" ];
       ports = [ "127.0.0.1:9267:9266" ];
-      environmentFiles = [ config.sops.secrets.tplink_office_env.path ];
+      command = [
+        "sh"
+        "-c"
+        ''
+          exec /exporter \
+            --host=${config.sops.secrets.tplink_office.host} \
+            --user=admin \
+            --password=${config.sops.secrets.tplink_office.password}
+        ''
+      ];
     };
 
     nextdns-exporter = {
-      image = "ghcr.io/raylas/nextdns-exporter:latest"; # Pin to a specific version, not :latest
+      image = "ghcr.io/raylas/nextdns-exporter"; 
       autoStart = true;
       networks =  [ "host" ];
       ports = [ "127.0.0.1:9948:9948" ];
