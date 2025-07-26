@@ -2,15 +2,15 @@
 {
   virtualisation.oci-containers.backend = "podman";
   virtualisation.oci-containers.containers = {
-    tl-sg-prometheus-exporter = {
-      image = "ghcr.io/mad-ady/tl-sg-prometheus-exporter:main";
-      autoStart = true;
-      networks = [ "podman" ];
-      ports = [ "127.0.0.1:8000:8000" ];
-      volumes = [
-        "${config.sops.secrets.tplinkExporterConfig.path}:/app/config.yaml:ro"
-      ];
-    };
+    # tl-sg-prometheus-exporter = {
+    #   image = "ghcr.io/mad-ady/tl-sg-prometheus-exporter:main";
+    #   autoStart = true;
+    #   networks = [ "podman" ];
+    #   ports = [ "127.0.0.1:8000:8000" ];
+    #   volumes = [
+    #     "${config.sops.secrets.tplinkExporterConfig.path}:/app/config.yaml:ro"
+    #   ];
+    # };
 
     nextdns-exporter = {
       image = "ghcr.io/raylas/nextdns-exporter";
