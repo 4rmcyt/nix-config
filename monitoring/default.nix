@@ -1,6 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
+  
   services.prometheus = {
     enable = true;
     port = 9090;
@@ -32,20 +33,6 @@
           labels = { instance = "homeserver"; };
         }];
       }
-      {
-        job_name = "tplink-cloudflared";
-        static_configs = [{
-          targets = [ "localhost:60123" ];
-          labels = { instance = "homeserver"; };
-        }];
-      }
-      # {
-      #   job_name = "ollama-exporter";
-      #   static_configs = [{
-      #     targets = [ "localhost:11434" ];
-      #     labels = { instance = "homeserver"; };
-      #   }];
-      # }
     ];
 
     exporters = {
@@ -104,8 +91,6 @@
       }
     ];
 
-    # This is a cleaner way to provision dashboards.
-    # The Grafana module handles creating the necessary files and directories.
     provision.dashboards.settings.providers = [
       {
         name = "System Dashboard";
