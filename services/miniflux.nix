@@ -17,7 +17,6 @@
       BASE_URL = "https://rss.example.com";
       LISTEN_ADDR = "localhost:8086";
       DATABASE_MIGRATIONS = 1; # run database migrations on first run
-      DISABLE_LOCAL_AUTH = true;
     };
   };
    
