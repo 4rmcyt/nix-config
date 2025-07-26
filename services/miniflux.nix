@@ -17,6 +17,7 @@
       BASE_URL = "https://rss.example.com";
       LISTEN_ADDR = "localhost:8086";
       DATABASE_MIGRATIONS = 1; # run database migrations on first run
+      DATABASE_URL = lib.mkForce "user=miniflux dbname=miniflux sslmode=disable host=/run/postgresql";
     };
   };
    
