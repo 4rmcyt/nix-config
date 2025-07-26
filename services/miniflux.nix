@@ -18,6 +18,7 @@
       LISTEN_ADDR = "localhost:8086";
       CREATE_ADMIN = 1; # create an admin user on first run
       DATABASE_MIGRATIONS = 1; # run database migrations on first run
+      DISABLE_LOCAL_AUTH = true;
     };
   };
    
