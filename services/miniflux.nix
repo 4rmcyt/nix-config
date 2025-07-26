@@ -7,7 +7,7 @@
 {
   services.miniflux = {
     enable = true;
-    adminCredentialsFile = "/etc/miniflux.env";
+    adminCredentialsFile = config.miniflux_creds.path; # path to admin credentials file
     createDatabaseLocally = true; # create database on first run
     config = {
       WORKER_POOL_SIZE = "5"; # number of background workers
