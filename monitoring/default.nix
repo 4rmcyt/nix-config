@@ -6,7 +6,7 @@
     (final: prev: {
       cloudflare-prometheus-exporter = prev.cloudflare-prometheus-exporter.overridePythonAttrs (old: {
         postPatch = (old.postPatch or "") + ''
-          touch LICENSE.txt
+          cp LICENSE LICENSE.txt
         '';
       });
     })
