@@ -124,8 +124,8 @@ in
       sonarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       transmission = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       cross-seed = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      calibre-web = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      kavita = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      calibre-web = { isSystemUser = true; extraGroups = [ "users" "calibre-web" "media" ]; };
+      kavita = { isSystemUser = true; extraGroups = [ "users" "kavita" "media" ]; };
     };
   };
 
