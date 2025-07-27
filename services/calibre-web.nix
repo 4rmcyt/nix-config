@@ -24,13 +24,14 @@
       calibre-web = prev.calibre-web.overridePythonAttrs (old: {
         propagatedBuildInputs =
           # Remove the default (incompatible) unidecode package from the build inputs.
-          (lib.filter (p: p.pname or "" != "unidecode") old.propagatedBuildInputs)
+          # We also provide a default empty list in case propagatedBuildInputs doesn't exist.
+          (lib.filter (p: p.pname or "" != "unidecode") (old.propagatedBuildInputs or []))
           # Add the older, compatible version we defined above.
           ++ [ final.unidecode-old ];
       });
     })
   ];
-  
+
   services.calibre-web = {
     enable = true;
     listen = {
