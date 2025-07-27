@@ -41,7 +41,7 @@
     zsh git neovim direnv pass vim wget curl jq coreutils gawk gnugrep podman podman-compose
     iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools ollama dive
     apacheHttpd meslo-lgs-nf yamllint nix-index iotop podman-tui prometheus-cloudflare-exporter
-    tuptime smartmontools fzf ffmpeg nmap trash-cli zip unar unzip p7zip calibre
+    tuptime smartmontools fzf ffmpeg nmap trash-cli zip unar unzip p7zip
     go nextdns nixfmt-rfc-style nil deploy-rs just nixpkgs-fmt tree git-crypt python3Full
   ];
 
