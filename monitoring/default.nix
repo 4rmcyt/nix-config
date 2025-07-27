@@ -1,6 +1,10 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs,... }:
 
 {
+  imports = [
+    inputs.cloudflare-exporter.nixosModules.default
+  ];
+
   services.cloudflare-prometheus-exporter = {
     enable = true;
     tokenFile = config.sops.secrets.cloudflare_prometheus_exporter_token.path;
