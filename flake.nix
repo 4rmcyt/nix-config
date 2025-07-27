@@ -4,6 +4,7 @@
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixos-hardware.url = "github:nixos/nixos-hardware";
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -30,6 +31,18 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixvim.url = "github:nix-community/nixvim";
+
+    nix-ld = {
+      url = "github:Mic92/nix-ld";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Snowfall Lib
+    snowfall-lib = {
+      url = "github:snowfallorg/lib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs =
@@ -42,6 +55,7 @@
       nix-index-database,
       vscode-server,
       nixarr,
+      nix-ld,
       ...
     }@inputs:
     { 
@@ -55,6 +69,7 @@
           home-manager.nixosModules.home-manager
           nix-index-database.nixosModules.nix-index
           nixarr.nixosModules.default
+          nix-ld.nixosModules.nix-ld
           
 
           # Core system configuration files
