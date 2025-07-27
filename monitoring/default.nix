@@ -1,6 +1,13 @@
 { config, pkgs, lib, ... }:
 
 {
+  
+  cloudflare-prometheus-exporter = prev.cloudflare-prometheus-exporter.overridePythonAttrs (old: {
+        postPatch = ''
+          touch LICENSE.txt
+        '';
+      });
+      
   services.cloudflare-prometheus-exporter = {
     enable = true;
     tokenFile = config.sops.secrets.cloudflare_prometheus_exporter_token.path;
