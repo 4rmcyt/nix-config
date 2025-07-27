@@ -101,8 +101,6 @@ in
       grafana = { isSystemUser = true; group = "grafana"; };
       cloudflared = { isSystemUser = true; group = "cloudflared"; };
       tailscale = { isSystemUser = true; group = "tailscale"; };
-      kavita = { isSystemUser = true; group = "kavita"; };
-      calibre-web = { isSystemUser = true; group = "calibre-web"; };
 
       microbin = {
         isSystemUser = true;
@@ -127,6 +125,7 @@ in
       transmission = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       cross-seed = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       calibre-web = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      kavita = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
     };
   };
 
