@@ -13,7 +13,8 @@
         pname = "Unidecode";
         version = "1.3.8";
         src = prev.fetchPypi {
-          inherit pname version;
+          pname = "Unidecode";
+          version = "1.3.8";
           # This is the hash for Unidecode version 1.3.8
           hash = "sha256-g6INa29SHqg3oFVl2g5GUdCWRrp8qNOYVwYq25f3i+4=";
         };
