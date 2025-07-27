@@ -1,5 +1,23 @@
 {
   "nodes": {
+    "cloudflare-exporter": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1739107555,
+        "narHash": "sha256-QtRiVXL70Ode98mXhaekY5dGQT8/mmI9U70ILQ0nM40=",
+        "rev": "e01c37bf295512c7e5c52cbd38bb4321325ad01a",
+        "type": "tarball",
+        "url": "https://codeberg.org/api/v1/repos/marie/cloudflare-prometheus-exporter/archive/e01c37bf295512c7e5c52cbd38bb4321325ad01a.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://codeberg.org/marie/cloudflare-prometheus-exporter/archive/main.tar.gz"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -401,6 +419,7 @@
     },
     "root": {
       "inputs": {
+        "cloudflare-exporter": "cloudflare-exporter",
         "disko": "disko",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
