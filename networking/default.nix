@@ -35,6 +35,7 @@
         6767  # Bazarr
         5055  # Jellyseerr
         8686  # Lidarr
+        2468  # Cross-seed
 
 
         # Content management
