@@ -33,6 +33,9 @@ let
     "radarr"
     "sonarr"
     "transmission"
+    "audiobookshelf"
+    "jellyfin"
+    "kavita"
   ];
 
 in
