@@ -42,7 +42,7 @@
     iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools ollama dive
     apacheHttpd meslo-lgs-nf yamllint nix-index iotop podman-tui prometheus-cloudflare-exporter
     tuptime smartmontools fzf ffmpeg nmap trash-cli zip unar unzip p7zip calibre-web
-    go nextdns nixfmt-rfc-style nil deploy-rs just nixpkgs-fmt tree git-crypt 
+    go nextdns nixfmt-rfc-style nil deploy-rs just nixpkgs-fmt tree git-crypt python3Full
   ];
 
 
