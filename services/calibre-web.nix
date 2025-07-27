@@ -4,6 +4,7 @@
   lib,
   ...
 }:
+
 {
   services.calibre-web = {
     enable = true;
@@ -13,7 +14,6 @@
     };
     options = {
       enableBookConversion = true;
-      enableKepubify = true;
       calibreLibrary = "/data/media/books";
     };
   };
