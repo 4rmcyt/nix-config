@@ -16,7 +16,7 @@
           pname = "Unidecode";
           version = "1.3.8";
           # This is the hash for Unidecode version 1.3.8
-          hash = "sha256-g6INa29SHqg3oFVl2g5GUdCWRrp8qNOYVwYq25f3i+4=";
+          hash = "sha256-z9s0nUbtOHPs5Fhrlqp1JYcm4vqOwh1vAKWR2YgGwvQ=";
         };
       });
 
