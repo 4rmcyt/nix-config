@@ -13,7 +13,6 @@
       ip = "127.0.0.1";
     };
     options = {
-      enableUserManagement = true;
       enableBookConversion = true;
       enableKepubify = true;
       calibreLibrary = "/data/media/books";
