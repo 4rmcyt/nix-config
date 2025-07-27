@@ -13,7 +13,7 @@
       cloudflare_tunnel_credentials = { sopsFile = ../../secrets/cloudflare_tunnel_credentials.bin; owner = "cloudflared"; group = "cloudflared"; format = "binary"; };
       cloudflare_api_key = { sopsFile = ../../secrets/cloudflare.yaml; key = "cloudflare_api_key"; };
       cloudflare_zone_id = { sopsFile = ../../secrets/cloudflare.yaml; key = "cloudflare_zone_id"; };
-      cloudflare_prometheus_exporter_token = { sopsFile = ../../secrets/cloudflare.yaml; key = "cloudflare_prometheus_exporter_token"; ;
+      cloudflare_prometheus_exporter_token = { sopsFile = ../../secrets/cloudflare.yaml; key = "cloudflare_prometheus_exporter_token"; };
       tailscale_auth_key = { sopsFile = ../../secrets/tailscale.yaml; key = "tailscale_auth_key"; owner = "root"; };
       nextdns_profile_id = { sopsFile = ../../secrets/nextdns.yaml; key = "nextdns_profile_id"; };
       nextdns_api_key = { sopsFile = ../../secrets/nextdns.yaml; key = "nextdns_api_key"; };
