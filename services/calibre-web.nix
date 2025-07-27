@@ -7,7 +7,7 @@
 {
   services.calibre-web = {
     enable = true;
-    dataDir = "/data/media/books";
+    user = "admin";
     listen = {
       port = 8083;
       ip = "127.0.0.1";
@@ -15,6 +15,8 @@
     options = {
       enableUserManagement = true;
       enableBookConversion = true;
+      enableKepubify = true;
+      calibreLibrary = "/data/media/books";
     };
   };
 }
