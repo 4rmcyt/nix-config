@@ -1,19 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
-  
-  # nixpkgs.overlays = [
-  #   (final: prev: {
-  #     cloudflare-prometheus-exporter = prev.cloudflare-prometheus-exporter.overridePythonAttrs (old: {
-  #       postPatch = (old.postPatch or "") + ''
-  #         cp LICENSE LICENSE.txt
-  #       '';
-  #     });
-  #   })
-  # ];
-
-  nixpkgs.overlays = throw "--- SUCCESS: My monitoring.nix overlay is being applied! ---";
-  services.cloudflare-prometheus-exporter = {
+  services.cloudflare-exporter = {
     enable = true;
     tokenFile = config.sops.secrets.cloudflare_prometheus_exporter_token.path;
   };
