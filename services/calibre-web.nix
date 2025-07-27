@@ -8,27 +8,23 @@
 { 
    nixpkgs.overlays = [
     (final: prev: {
-      # 1. Define an older version of unidecode that calibre-web requires.
-      unidecode-old = prev.python3Packages.unidecode.overrideAttrs (old: {
-        pname = "Unidecode";
-        version = "1.3.8";
-        src = prev.fetchPypi {
-          pname = "Unidecode";
-          version = "1.3.8";
-          # This is the hash for Unidecode version 1.3.8
-          hash = "sha256-z9s0nUbtOHPs5Fhrlqp1JYcm4vqOwh1vAKWR2YgGwvQ=";
+      # Override the main python3's unidecode package.
+      # This ensures any package depending on it gets the correct version,
+      # preventing duplicate package conflicts.
+      python3Packages = prev.python3Packages.override {
+        overrides = self: super: {
+          unidecode = super.unidecode.overrideAttrs (old: {
+            pname = "Unidecode";
+            version = "1.3.8";
+            src = prev.fetchPypi {
+              pname = "Unidecode";
+              version = "1.3.8";
+              # This is the hash for Unidecode version 1.3.8
+              hash = "sha256-z9s0nUbtOHPs5Fhrlqp1JYcm4vqOwh1vAKWR2YgGwvQ=";
+            };
+          });
         };
-      });
-
-      # 2. Override the calibre-web package to use the older unidecode.
-      calibre-web = prev.calibre-web.overridePythonAttrs (old: {
-        propagatedBuildInputs =
-          # Remove the default (incompatible) unidecode package from the build inputs.
-          # We also provide a default empty list in case propagatedBuildInputs doesn't exist.
-          (lib.filter (p: p.pname or "" != "unidecode") (old.propagatedBuildInputs or []))
-          # Add the older, compatible version we defined above.
-          ++ [ final.unidecode-old ];
-      });
+      };
     })
   ];
 

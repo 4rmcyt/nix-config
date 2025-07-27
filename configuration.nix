@@ -96,7 +96,7 @@
       enableSSHSupport = true;
     };
     zsh.enable = true;
-    nix-ld.dev.enable = true;
+    nix-ld.dev.enable = false;
   };
 
   home-manager = {
