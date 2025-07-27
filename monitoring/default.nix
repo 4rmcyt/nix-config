@@ -1,6 +1,10 @@
 { config, pkgs, lib, ... }:
 
 {
+  services.cloudflare-prometheus-exporter = {
+    enable = true;
+    tokenFile = config.sops.secrets.cloudflare_prometheus_exporter_token.path;
+  };
   
   services.prometheus = {
     enable = true;
@@ -33,6 +37,14 @@
           labels = { instance = "homeserver"; };
         }];
       }
+      {
+        job_name = "cloudflare-exporter";
+        static_configs = [{
+          targets = [ "localhost:27196" ];
+          labels = { instance = "homeserver"; };
+        }];
+      }
+
     ];
 
     exporters = {
