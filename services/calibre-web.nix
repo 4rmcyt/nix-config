@@ -6,7 +6,7 @@
 }:
 
 { 
-  unixpkgs.overlays = [
+   nixpkgs.overlays = [
     (final: prev: {
       # 1. Define an older version of unidecode that calibre-web requires.
       unidecode-old = prev.python3Packages.unidecode.overrideAttrs (old: {
@@ -30,6 +30,7 @@
       });
     })
   ];
+  
   services.calibre-web = {
     enable = true;
     listen = {
