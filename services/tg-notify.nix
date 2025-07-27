@@ -5,11 +5,6 @@ let
   # cfg now refers to config.services.tg-notify
   cfg = config.services.tg-notify;
 
-  # The telegramCredentialsFile let binding is removed from here.
-  # The path to the credentials file will now come from cfg.credentialsFile.
-
-  # Define the tg-notify script as a shell script binary.
-  # This script now expects BOT_TOKEN and CHAT_ID to be set as environment variables.
   tg-notify = pkgs.writeShellScriptBin "tg-notify" ''
     #!${pkgs.bash}/bin/bash
 
@@ -114,7 +109,6 @@ in
     };
   };
 
-  # Configure the module based on options, also under the 'services' namespace
   config = lib.mkIf cfg.enable {
     # sops.secrets are now expected to be defined outside this module,
     # typically in configuration.nix or a dedicated sops module.
