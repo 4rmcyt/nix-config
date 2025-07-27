@@ -59,7 +59,7 @@ in
       cloudflared = { };
       tailscale = { };
       kavita = { };
-      calibre-web = { };
+      calibre-web = {};
     # Groups for nixarr services - keep them defined here
       audiobookshelf = {};
       bazarr = {};
