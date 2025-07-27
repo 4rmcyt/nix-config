@@ -43,10 +43,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-     cloudflare-exporter = {
-      url = "https://codeberg.org/marie/cloudflare-prometheus-exporter/archive/main.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
   };
 
@@ -75,7 +71,6 @@
           nix-index-database.nixosModules.nix-index
           nixarr.nixosModules.default
           nix-ld.nixosModules.nix-ld
-          inputs.cloudflare-exporter.nixosModules.default
           
 
           # Core system configuration files
