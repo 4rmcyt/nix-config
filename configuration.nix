@@ -45,9 +45,6 @@
     go nextdns nixfmt-rfc-style nil deploy-rs just nixpkgs-fmt tree git-crypt python3Full
   ];
 
-  programs.nix-ld.libraries = with pkgs; [
-    calibre-web
-  ];
 
   services = {
     openssh = {
