@@ -5,12 +5,6 @@
   ...
 }:
 {
-   services.calibre-web.package = pkgs.calibre-web.overrideAttrs ({ propagatedBuildInputs ? [ ], ... }: {
-    propagatedBuildInputs = propagatedBuildInputs ++ [
-      pkgs.python313Packages.unidecode
-    ];
-  });
-
   services.calibre-web = {
     enable = true;
     listen = {
