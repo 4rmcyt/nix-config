@@ -34,3 +34,7 @@
     allowedUDPPorts = [ config.services.tailscale.port ];
   };
 }
+
+# Generated new OAuth client
+# k3bSghrrmL11CNTRL
+# tskey-client-k3bSghrrmL11CNTRL-1dXRywBntC7rrhkHPVCGC7m6iv3VxqkXe
