@@ -36,6 +36,7 @@ let
     "audiobookshelf"
     "jellyfin"
     "kavita"
+    "calibre-web"
   ];
 
 in
@@ -58,6 +59,7 @@ in
       cloudflared = { };
       tailscale = { };
       kavita = { };
+      calibre-web = { };
     # Groups for nixarr services - keep them defined here
       audiobookshelf = {};
       bazarr = {};
@@ -100,6 +102,7 @@ in
       cloudflared = { isSystemUser = true; group = "cloudflared"; };
       tailscale = { isSystemUser = true; group = "tailscale"; };
       kavita = { isSystemUser = true; group = "kavita"; };
+      calibre-web = { isSystemUser = true; group = "calibre-web"; };
 
       microbin = {
         isSystemUser = true;
@@ -123,6 +126,7 @@ in
       sonarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       transmission = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
       cross-seed = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      calibre-web = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
     };
   };
 
