@@ -7,12 +7,14 @@
 {
   services.calibre-web = {
     enable = true;
-    libraryPath = "/data/media/books";
+    dataDir = "/data/media/books";
     listen = {
       port = 8083;
-      ip = "0.0.0.0"; # Listen on all interfaces
+      ip = "127.0.0.1";
     };
-    enableUploads = true;
-
+    options = {
+      enableUserManagement = true;
+      enableBookConversion = true;
+    };
   };
 }
