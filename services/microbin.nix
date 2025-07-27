@@ -10,7 +10,7 @@
     enable = true;
     settings = {
       MICROBIN_BIND = "127.0.0.1";
-      MICROBIN_PORT = "8083";
+      MICROBIN_PORT = "8084";
       MICROBIN_PUBLIC_PATH = "https://paste.labhome.work";
       MICROBIN_EDITABLE = true;
       MICROBIN_HIGHLIGHTSYNTAX = true;

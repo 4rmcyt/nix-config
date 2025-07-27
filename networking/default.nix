@@ -40,7 +40,7 @@
 
         # Content management
         8084  # Microbin
-        8083  # Microbin Paste
+        8083  # Calibre-Web
         
         8086  # Miniflux
         8888  # Paperless

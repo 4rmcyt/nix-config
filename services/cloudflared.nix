@@ -26,6 +26,7 @@
           "bazarr.labhome.work" = "http://localhost:6767";
           "jellyseerr.labhome.work" = "http://localhost:5055";
           "ollama.labhome.work" = "http://localhost:11434";
+          "calibre-web.labhome.work" = "http://localhost:8083";
         };
       };
     };
