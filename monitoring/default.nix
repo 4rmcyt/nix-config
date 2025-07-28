@@ -1,11 +1,8 @@
 { config, pkgs, lib, ... }:
 
 {
-  services.cloudflare-exporter = {
-    enable = true;
-    tokenFile = config.sops.secrets.cloudflare_prometheus_exporter_token.path;
-  };
   
+
   services.prometheus = {
     enable = true;
     port = 9090;
