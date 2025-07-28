@@ -10,6 +10,7 @@
       zeev_gpg_key = { sopsFile = ../../secrets/system.yaml; key = "gpg"; owner = "zeev"; mode = "0400"; };
       ssh_host_ed25519_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_ed25519_key"; owner = "root"; group = "root"; mode = "0600"; };
       ssh_host_rsa_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_rsa_key"; owner = "root"; group = "root"; mode = "0600"; };
+      restic_ssh_private_key = { sopsFile = ../../secrets/restic_key; owner = "root"; group = "root"; mode = "0600"; };
       cloudflare_tunnel_credentials = { sopsFile = ../../secrets/cloudflare_tunnel_credentials.bin; owner = "cloudflared"; group = "cloudflared"; format = "binary"; };
       cloudflare_api_key = { sopsFile = ../../secrets/cloudflare.yaml; key = "cloudflare_api_key"; };
       cloudflare_zone_id = { sopsFile = ../../secrets/cloudflare.yaml; key = "cloudflare_zone_id"; };
@@ -37,7 +38,6 @@
       paperless_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "paperless_db_password"; };
 
       restic-hetzner-password = { sopsFile = ../../secrets/restic-hetzner-password.yaml; key = "restic-hetzner-password"; owner = "restic"; group = "restic"; mode = "0400"; };
-      restic_ssh_private_key = { path = /var/lib/restic/.ssh/restic_key; owner = "restic"; group = "restic"; mode = "0600"; };
     };
   };
 }
