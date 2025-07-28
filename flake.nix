@@ -125,10 +125,12 @@
           ./services/nixarr.nix
           ./services/kavita.nix
           ./services/calibre-web.nix
+          
 
           ./scripts/wg-sync.nix
 
           ./containers
+          ./backup
         ];
       };
     };
