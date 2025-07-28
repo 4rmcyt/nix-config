@@ -14,30 +14,29 @@
     passwordFile = config.sops.secrets.restic-hetzner-password.path;
     repository = "sftp://homelab@u478963.your-storagebox.de/";
     timeConfig.OnCalendar = "daily";
+    prometheus.enable = true;
+    prometheus.exporters.restic.port = 9753;
     paths = [
       "/etc/nixos"
       "/var/lib/"
       "/home"
     ];
-    extraBackupArgs =
-      let
-        ignorePatterns = [
-          "/var/lib/systemd"
-          "/var/lib/containers"
-          "/var/lib/flatpak"
-          "/home/*/.local/share/Trash"
-          "/home/*/.cache"
-          "/home/*/Downloads"
-          "/home/*/.npm"
-          "/home/*/.local/share/containers"
-          ".cache"
-          ".tmp"
-          ".log"
-          ".Trash"
-        ];
-        ignoreFile = builtins.toFile "ignore" (foldl (a: b: a + "\n" + b) "" ignorePatterns);
-      in
-      [ "--exclude-file=${ignoreFile}" ];
+    extraBackupArgs = [
+      "--exclude-caches"
+      "--exclude-if-present .nobackup"
+      "--exclude-file=/var/lib/systemd"
+      "--exclude-file=/var/lib/containers"
+      "--exclude-file=/var/lib/flatpak"
+      "--exclude-file=/home/*/.local/share/Trash"
+      "--exclude-file=/home/*/.cache"
+      "--exclude-file=/home/*/Downloads"
+      "--exclude-file=/home/*/.npm"
+      "--exclude-file=/home/*/.local/share/containers"
+      "--exclude-file=.cache"
+      "--exclude-file=.tmp"
+      "--exclude-file=.log"
+      "--exclude-file=.Trash"
+    ];
     pruneOpts = [
       "--keep-daily 7"
       "--keep-weekly 4"

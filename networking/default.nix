@@ -64,7 +64,7 @@
         8000  # TP-Link Exporter
         9948  # Nextdns Exporter
         27196 # Cloudflare Exporter
-
+        9753  # Restic Exporter
 
         # Database & Infrastructure
         1883  # Mosquitto MQTT
