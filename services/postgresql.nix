@@ -33,10 +33,6 @@
       }
     ];
 
-    settings = {
-      shared_preload_libraries = "vectors.so";
-    };
-
     identMap = ''
       # ArbitraryMapName systemUser DBUser
         superuser_map      root      postgres
@@ -59,10 +55,11 @@
 
   };
 
-  # services.postgresqlBackup = {
-  #     enable = true;
-  #   };
-  # my.backups.paths = [config.services.postgresqlBackup.location];
+  services.postgresqlBackup = {
+    enable = true;
+    backupAll = true;
+    location = "/var/lib/postgresql/backup";
+  };
 
   users.users.postgresql = {
     isSystemUser = true;
