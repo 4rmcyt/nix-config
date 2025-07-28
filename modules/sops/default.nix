@@ -22,7 +22,7 @@
       containers_env = { sopsFile = ../../secrets/.env; owner = "root"; group = "root"; mode = "0400";  format = "dotenv"; };
       tplinkExporterConfig = { sopsFile = ../../secrets/tplink_exporter.yaml; key = ""; owner = "root"; group = "root"; mode = "0400"; format = "yaml"; };
       # --- Service Secrets ---
-      keycloak_admin_password = { sopsFile = ../../secrets/keycloak.yaml; key = "keycloak_admin_password"; owner = "keycloak"; };
+      # keycloak_admin_password = { sopsFile = ../../secrets/keycloak.yaml; key = "keycloak_admin_password"; owner = "keycloak"; };
       grafana_admin_password = { sopsFile = ../../secrets/grafana.yaml; key = "grafana_admin_password"; owner = "grafana"; };
       microbin_admin_password = { sopsFile = ../../secrets/microbin.yaml; key = "microbin_admin_password"; owner = "microbin"; };
       microbin_user_password = { sopsFile = ../../secrets/microbin.yaml; key = "microbin_user_password"; owner = "microbin"; };
