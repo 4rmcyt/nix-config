@@ -60,14 +60,6 @@
         ];
         port = 9100;
       };
-      restic = {
-        enable = true;
-        port = 9753;
-        extraFlags = [
-          "--restic.password-file=${config.sops.secrets.restic-hetzner-password.path}"
-          "--restic.repository=sftp://homelab@u478963.your-storagebox.de/"
-        ];
-      };
       # cloudflare = {
       #   enable = true;
       #   port = 27196;
