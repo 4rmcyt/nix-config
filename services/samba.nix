@@ -43,5 +43,5 @@
     group = "samba";
     extraGroups = [ "users" "media" ];
   };
-  users.groups.samba = {}
+  users.groups.samba = {};
 }
