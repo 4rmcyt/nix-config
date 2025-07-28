@@ -2,11 +2,10 @@
 
 {
   environment.systemPackages = [
-      pkgs.prometheus-cloudflare-exporter
-      pkgs.prometheus-node-exporter
-      pkgs.prometheus-nextdns-exporter
-      pkgs.grafana
-      pkgs.prometheus
+    pkgs.grafana
+    pkgs.prometheus
+    pkgs.prometheus-cloudflare-exporter
+    pkgs.prometheus-node-exporter
   ];
 
   services.prometheus = {
