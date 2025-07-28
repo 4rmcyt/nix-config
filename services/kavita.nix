@@ -30,9 +30,9 @@
   users.kavita = {
     isSystemUser = true;
     group = "kavita";
-    extraGroups = [ "users" "media" ];
+    extraGroups = [ "users" "media" "kavita" ];
   };
-  user.groups.kavita = { };
+  users.groups.kavita = { };
 
   systemd.tmpfiles.rules = [
     "d /var/lib/kavita 0755 kavita kavita -"
