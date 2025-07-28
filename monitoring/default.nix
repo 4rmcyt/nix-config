@@ -46,7 +46,13 @@
           labels = { instance = "homeserver"; };
         }];
       }
-
+      {
+        job_name = "restic-exporter";
+        static_configs = [{
+          targets = [ "localhost:9753" ];
+          labels = { instance = "homeserver"; };
+        }];
+      }
     ];
 
     exporters = {
