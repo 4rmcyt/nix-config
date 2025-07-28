@@ -12,7 +12,7 @@
   services.restic.backups.full = {
     initialize = true;
     passwordFile = config.sops.secrets.hetzner_password.path;
-    repository = "sftp://u478963@u478963.your-storagebox.de:23";
+    repository = "sftp://u478963@u478963.your-storagebox.de:23/server";
     runCheck = true;
     
     paths = [
