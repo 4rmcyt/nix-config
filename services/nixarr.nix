@@ -26,8 +26,7 @@
     '';
   };
 
-  nixarr = {
-    
+  nixarr = { 
     enable = true;
     mediaUsers = [ 
       "zeev"  
@@ -76,11 +75,6 @@
       };
     };
 
-    # sabnzbd = {
-    #   enable = true;
-    #   vpn.enable = true;
-    # };
-
     audiobookshelf.enable = true;
     jellyfin.enable = true;
     bazarr.enable = true;
@@ -90,4 +84,29 @@
     sonarr.enable = true;
     jellyseerr.enable = true;
   };
+
+  users.users = {
+    audiobookshelf = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    bazarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    jellyfin = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    jellyseerr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    lidarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    prowlarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    radarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    sonarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    transmission = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    cross-seed = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+  };
+  users.groups = {
+    audiobookshelf = {};
+    bazarr = {};
+    jellyfin = {};
+    jellyseerr = {};
+    lidarr = {};
+    prowlarr = {};
+    radarr = {};
+    sonarr = {};
+    transmission = {};
+    cross-seed = {};
+  };  
 }

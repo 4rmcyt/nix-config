@@ -60,17 +60,6 @@ in
       tailscale = { };
       kavita = { };
       calibre-web = {};
-    # Groups for nixarr services - keep them defined here
-      audiobookshelf = {};
-      bazarr = {};
-      jellyfin = {};
-      jellyseerr = {};
-      lidarr = {};
-      prowlarr = {};
-      radarr = {};
-      sonarr = {};
-      transmission = {};
-      cross-seed = {};
     };
 
     users = {
@@ -104,26 +93,16 @@ in
 
       microbin = {
         isSystemUser = true;
-        group = "microbin"; # Keep its primary group
-        extraGroups = [ "users" "media" ]; # Add to both 'users' and 'media' groups
+        group = "microbin";
+        extraGroups = [ "users" "media" ];
       };
-      # Samba:
       samba = {
         isSystemUser = true;
-        group = "samba"; # Keep its primary group
-        extraGroups = [ "users" "media" ]; # Add to both 'users' and 'media' groups
+        group = "samba";
+        extraGroups = [ "users" "media" ];
       };
 
-      audiobookshelf = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      bazarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      jellyfin = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      jellyseerr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      lidarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      prowlarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      radarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      sonarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      transmission = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-      cross-seed = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      
       calibre-web = { isSystemUser = true; extraGroups = [ "users" "calibre-web" "media" ]; };
       kavita = { isSystemUser = true; extraGroups = [ "users" "kavita" "media" ]; };
     };
@@ -138,10 +117,7 @@ in
     };
   });
 
-  # Correct placement for systemd.tmpfiles.rules - it's a top-level option.
   systemd.tmpfiles.rules = [
-    # Top-level /data directory and its children that are shared
-    # Ensure /data is writable by root and the 'media' group
     "d /data 0775 root media -"
     "d /data/media/movies 0775 zeev media -"
     "d /data/media/audiobooks 0775 zeev media -"
@@ -155,18 +131,15 @@ in
     "d /data/Downloads 0775 zeev users -"
 
     
-    # /data/media and its subdirectories (library, torrents, usenet)
-    # should be writable by root/zeev and the 'media' group
+ 
     "d /data/media 0775 root media -"
     "d /data/media/library 0775 zeev media -"
     "d /data/media/torrents 0775 zeev media -"
     "d /data/media/usenet 0775 zeev media -"
 
-    # /data/media/.state and /data/media/.state/nixarr need to be writable by root and the 'media' group
     "d /data/media/.state 0775 root media -"
     "d /data/media/.state/nixarr 0775 root media -"
 
-    # Individual service state directories under nixarr (keep as 0755 for isolation)
     "d /data/media/.state/nixarr/audiobookshelf 0775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/cross-seed 0775 cross-seed cross-seed -"
     "d /data/media/.state/nixarr/jellyfin 0755 jellyfin jellyfin -"
@@ -188,12 +161,11 @@ in
     "d /data/media/.state/nixarr/jellyseerr/db 0775 jellyseerr jellyseerr -" # New line for 'db'
     "d /data/media/.state/nixarr/jellyseerr/logs 0755 jellyseerr jellyseerr -" # For 'logs'
 
-    # Specific directories for other services
-    "d /var/lib/miniflux 0775 miniflux miniflux -" # Standard data dir for miniflux
-    "d /var/lib/microbin 0775 microbin microbin -" # Standard data dir for microbin
+    "d /var/lib/miniflux 0775 miniflux miniflux -"
+    "d /var/lib/microbin 0775 microbin microbin -"
 
-    "d /var/lib/kavita 0775 kavita kavita -" # Standard data dir for kavita
-    "d /var/lib/transmission 0775 transmission transmission -" # Standard data dir for transmission
-    "d /data/.secret 0700 zeev media -" # Keep tight permissions for secrets directory
+    "d /var/lib/kavita 0775 kavita kavita -"
+    "d /var/lib/transmission 0775 transmission transmission -"
+    "d /data/.secret 0700 zeev media -"
   ];
 }
