@@ -61,7 +61,7 @@
         }
         {
           type = "ed25519";
-          path = config.sops.secrets.restic_ssh_private_key.path;
+          path = config.sops.secrets.restic_private_key.path;
         }
       ];
       settings = {
