@@ -116,7 +116,6 @@ in
     radarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
     sonarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
     transmission = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    cross-seed = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
   };
   users.groups = {
     audiobookshelf = {};
@@ -128,7 +127,6 @@ in
     radarr = {};
     sonarr = {};
     transmission = {};
-    cross-seed = {};
   };
 
   systemd.services = lib.genAttrs servicesWithMediaAccess (serviceName: {
