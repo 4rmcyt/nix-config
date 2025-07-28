@@ -72,6 +72,7 @@ in
     transmission = {
       enable = true;
       peerPort = 63998;
+      vpn.enable = true;
       flood.enable = false;
       privateTrackers.cross-seed.enable = true;
       extraAllowedIps = [
