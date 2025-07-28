@@ -35,6 +35,8 @@
       hass_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "hass_db_password"; };
       keycloak_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "keycloak_db_password"; };
       paperless_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "paperless_db_password"; };
+
+      restic-hetzner-password = { sopsFile = ../../secrets/restic-hetzner-password.yaml; key = "restic-hetzner-password"; owner = "restic"; group = "restic"; mode = "0400"; };
     };
   };
 }
