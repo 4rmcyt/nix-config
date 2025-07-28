@@ -4,7 +4,7 @@
   ...
 }:
 { 
-  programs.ssh.knownHosts."u478963.your-storagebox.de" = {
+  programs.ssh.knownHosts = {
     "u478963.your-storagebox.de".publicKey =
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINqWND9TV1kHdHx5b1slLau2pLJhEsxGTm1nBqFKP6G9";
   };
