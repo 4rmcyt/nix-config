@@ -9,6 +9,13 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIICf9svRenC/PLKIL9nk6K/pxQgoiFC41wTNvoIncOxs";
   };
 
+  sops.secrets.restic_ssh_private_key = {
+    path = config.sops.secrets.restic_ssh_private_key.path; # Deploy as the default key for the restic user
+    owner = config.users.users.restic.name;
+    group = config.users.users.restic.group;
+    mode = "0600"; # SSH requires strict permissions
+  };
+
   services.restic.backups.full = {
     initialize = true;
     passwordFile = config.sops.secrets.restic-hetzner-password.path;
