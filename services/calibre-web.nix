@@ -5,8 +5,12 @@
   ...
 }:
 
-{ 
-  
+{
+  users.calibre-web = {
+    isSystemUser = true;
+    extraGroups = [ "users" "calibre-web" "media" ];
+  };
+  users.groups.calibre-web = {};
 
   nixpkgs.overlays = [
     (final: prev: {
