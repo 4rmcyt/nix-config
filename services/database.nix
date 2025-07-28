@@ -51,9 +51,9 @@
     '';
   };
 
-  user.users.postgresql = {
+  users.users.postgresql = {
     isSystemUser = true;
     group = "postgresql";
   };
-  user.groups.postgresql = {};
+  users.groups.postgresql = {};
 }

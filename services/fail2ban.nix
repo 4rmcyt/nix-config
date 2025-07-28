@@ -321,10 +321,10 @@
       '';
   };
 
-  user.users.fail2ban = {
+  users.users.fail2ban = {
     isSystemUser = true;
     group = "fail2ban";
   };
-  user.groups.fail2ban = {};
+  users.groups.fail2ban = {};
 
 }

@@ -104,11 +104,11 @@
       ];
     };
   };
-  user.users.hass = {
+  users.users.hass = {
     isSystemUser = true;
     group = "hass";
   };
-  user.user.mosquitto = {
+  users.users.mosquitto = {
     isSystemUser = true;
     group = "mosquitto";
   };
