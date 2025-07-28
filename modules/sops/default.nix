@@ -11,7 +11,7 @@
       ssh_host_ed25519_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_ed25519_key"; owner = "root"; group = "root"; mode = "0600"; };
       ssh_host_rsa_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_rsa_key"; owner = "root"; group = "root"; mode = "0600"; };
       restic_private_key = { sopsFile = ../../secrets/system.yaml; key = "restic_private_key"; owner = "root"; group = "root"; mode = "0600"; };
-      hetzner_password = { sopsFile = ../../secrets/system.yaml; key = "hetzner_password"; owner = "restic"; group = "restic"; mode = "0400"; };
+      hetzner_password = { sopsFile = ../../secrets/system.yaml; key = "hetzner_password"; owner = "zeev"; group = "zeev"; mode = "0400"; };
 
       
       
