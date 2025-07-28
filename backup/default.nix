@@ -14,7 +14,6 @@
     passwordFile = config.sops.secrets.restic-hetzner-password.path;
     repository = "sftp://homelab@u478963.your-storagebox.de/";
     timeConfig.OnCalendar = "daily";
-    prometheus.enable = true;
     paths = [
       "/etc/nixos"
       "/var/lib/"
