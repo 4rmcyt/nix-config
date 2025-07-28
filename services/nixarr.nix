@@ -70,21 +70,25 @@ in
     };
 
     transmission = {
+      package = pkgs.transmission_4;
       enable = true;
       peerPort = 63998;
       vpn.enable = true;
       flood.enable = false;
-      privateTrackers.cross-seed.enable = true;
+      privateTrackers.cross-seed.enable = false;
       extraAllowedIps = [
         "192.168.1.0/24"
         "192.168.0.0/24"
         "127.0.0.1"
       ];
-      messageLevel = "debug";
+      messageLevel = "info";
       extraSettings = {
         umask = 2;
+        download-queue-size = 10;
+        download-queue-enabled = true;
         rpc-whitelist-enabled = false;
         download-dir = "/data/Downloads";
+
         # script-torrent-added-enabled = true;
         # script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
         blocklist-enabled = true;
