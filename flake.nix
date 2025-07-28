@@ -112,7 +112,7 @@
           # Services
           ./services/fail2ban.nix
           ./services/yubikey.nix
-          ./services/database.nix
+          ./services/postgresql.nix
           ./services/homepage.nix
           ./services/tailscale.nix
           ./services/cloudflared.nix
@@ -122,7 +122,6 @@
           ./services/radicale.nix
           ./services/samba.nix
           ./services/home-assistant.nix
-          ./services/keycloak.nix
           ./services/nixarr.nix
           ./services/kavita.nix
           ./services/calibre-web.nix

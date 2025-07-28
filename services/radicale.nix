@@ -31,7 +31,7 @@
   systemd.tmpfiles.rules = [
     "d /var/lib/radicale/collections 0750 radicale radicale -"
   ];
-  users.radicale = {
+  users.users.radicale = {
     isSystemUser = true;
     group = "radicale";
     extraGroups = [ "users" ];

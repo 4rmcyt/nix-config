@@ -26,8 +26,8 @@
       ];
     };
   };
-  
-  users.kavita = {
+
+  users.users.kavita = {
     isSystemUser = true;
     group = "kavita";
     extraGroups = [ "users" "media" "kavita" ];

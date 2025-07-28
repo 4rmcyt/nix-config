@@ -6,26 +6,9 @@
 }:
 {
   environment.systemPackages = [
-      pkgs.vaultwarden-postgresql
-      pkgs.linkwarden
-    ];
-
-  users.vaultwarden = {
-    isSystemUser = true;
-    group = "vaultwarden";
-    extraGroups = [ "users"];
-  };
-  users.groups.vaultwarden = { };
-  
-  users.linkwarden = {
-    isSystemUser = true;
-    group = "linkwarden";
-    extraGroups = [ "users" ];
-  };
-  users.groups.linkwarden = { };
-
-
-
+    pkgs.vaultwarden
+    pkgs.linkwarden
+  ];
   config = lib.mkIf config.services.vaultwarden.enable {
     services.vaultwarden = {
       dbBackend = "postgresql";
@@ -48,4 +31,18 @@
       };
     }; 
   };
+
+  users.users.vaultwarden = {
+    isSystemUser = true;
+    group = "vaultwarden";
+    extraGroups = [ "users"];
+  };
+  users.groups.vaultwarden = { };
+  
+  users.users.linkwarden = {
+    isSystemUser = true;
+    group = "linkwarden";
+    extraGroups = [ "users" ];
+  };
+  users.groups.linkwarden = { };
 }
