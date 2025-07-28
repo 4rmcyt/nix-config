@@ -1,5 +1,6 @@
 { config, pkgs, ... }:
 {
+  environment.systemPackages = [ pkgs.cloudflared ];
   services.cloudflared = {
     enable = true;
     tunnels = {
@@ -33,4 +34,11 @@
       };
     };
   };
+
+  users.cloudflared = {
+    isSystemUser = true;
+    group = "cloudflared";
+    extraGroups = [ "users" ];
+  };
+  user.groups.cloudflared = {  };
 }

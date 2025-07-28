@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  # 1. Enable and configure the Radicale service
+  environment.systemPackages = [ pkgs.radicale ];
   services.radicale = {
     enable = true;
     settings = {
@@ -31,4 +31,10 @@
   systemd.tmpfiles.rules = [
     "d /var/lib/radicale/collections 0750 radicale radicale -"
   ];
+  users.radicale = {
+    isSystemUser = true;
+    group = "radicale";
+    extraGroups = [ "users" ];
+  };
+  users.groups.radicale = {};
 }

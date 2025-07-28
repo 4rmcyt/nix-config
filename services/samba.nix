@@ -1,6 +1,7 @@
 { config, pkgs, ... }:
 
-{
+{ 
+  environment.systemPackages = [ pkgs.samba ]; 
   services.samba = {
     enable = true;
     openFirewall = true;
@@ -37,4 +38,10 @@
       };
     };
   };
+  users.samba = {
+    isSystemUser = true;
+    group = "samba";
+    extraGroups = [ "users" "media" ];
+  };
+  users.groups.samba = {}
 }

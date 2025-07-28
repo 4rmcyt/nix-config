@@ -3,6 +3,10 @@
 {
   environment.systemPackages = [
       pkgs.prometheus-cloudflare-exporter
+      pkgs.prometheus-node-exporter
+      pkgs.prometheus-nextdns-exporter
+      pkgs.grafana
+      pkgs.prometheus
   ];
 
   services.prometheus = {
@@ -117,4 +121,16 @@
       }
     ];
   };
+
+  users.grafana = {
+    isSystemUser = true;
+    group = "grafana";
+    extraGroups = [ "users" ];
+  };
+  users.groups.grafana = {};
+
+  systemd.tmpfiles.rules = [
+    "d /var/lib/grafana 0755 grafana grafana -"
+    "d /var/lib/grafana/dashboards 0755 grafana grafana -"
+  ];
 }

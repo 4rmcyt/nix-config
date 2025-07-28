@@ -5,7 +5,9 @@
   ...
 }:
 
-{
+{ 
+  environment.systemPackages = [ pkgs.microbin ];
+
   services.microbin = {
     enable = true;
     settings = {
@@ -27,4 +29,17 @@
     };
   };
 
+  users.microbin = {
+    isSystemUser = true;
+    group = "microbin";
+    extraGroups = [ "users"];
+  };
+  users.groups.microbin = {};
+
+  systemd.tmpfiles.rules = [
+    "d /var/lib/microbin 0755 microbin microbin -"
+    "d /var/lib/microbin/data 0755 microbin microbin -"
+    "d /var/lib/microbin/config 0755 microbin microbin -"
+    "d /var/lib/microbin/logs 0755 microbin microbin -"
+  ];
 }

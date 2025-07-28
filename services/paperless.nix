@@ -5,7 +5,11 @@
   ...
 }:
 
-{
+{ 
+  environment.systemPackages = [
+    pkgs.paperless-ngx
+  ];
+
   services.paperless = {
     enable = true;
     package = pkgs.paperless-ngx.overrideAttrs (oldAttrs: {
@@ -42,4 +46,8 @@
     enable = true;
     port = 6379;
   };
+
+  user.users.paperless = { isSystemUser = true; group = "paperless"; };
+  user.groups.paperless = {};
+
 }

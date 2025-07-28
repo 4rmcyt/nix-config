@@ -4,7 +4,8 @@
   pkgs,
   ...
 }:
-{
+{ 
+  environment.systemPackages = [ pkgs.miniflux ]; 
   services.miniflux = {
     enable = true;
     adminCredentialsFile = config.sops.secrets.miniflux_creds.path; # path to admin credentials file
@@ -20,5 +21,18 @@
       DATABASE_URL = lib.mkForce "user=miniflux dbname=miniflux sslmode=disable host=/run/postgresql";
     };
   };
-   
-}
+
+  users.miniflux = {
+    isSystemUser = true;
+    group = "miniflux";
+    extraGroups = [ "users" ];
+  };
+  users.groups.miniflux = {};
+  
+  systemd.tmpfiles.rules = [
+    "d /var/lib/miniflux 0755 miniflux miniflux -"
+    "d /var/lib/miniflux/cache 0755 miniflux miniflux -"
+    "d /var/lib/miniflux/logs 0755 miniflux miniflux -"
+    "d /var/lib/miniflux/data 0755 miniflux miniflux -"
+  ];
+}  
