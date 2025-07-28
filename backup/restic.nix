@@ -10,7 +10,7 @@
   services.restic.backups.full = {
     initialize = true;
     passwordFile = config.sops.secrets.restic-hetzner-password.path;
-    repository = "sftp://<boxname>-<subN>@<boxname>.your-storagebox.de/"; 
+    repository = "sftp://homelab@u478963.your-storagebox.de/"; 
     timeConfig.OnCalendar = "daily";
     paths = [ "/etc/nixos" "/var/lib/" "/home" ];
     extraBackupArgs = let
