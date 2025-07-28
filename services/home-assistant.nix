@@ -112,6 +112,6 @@
     isSystemUser = true;
     group = "mosquitto";
   };
-  user.groups.mosquitto = {};
-  user.groups.hass = {};
+  users.groups.mosquitto = {};
+  users.groups.hass = {};
 }
