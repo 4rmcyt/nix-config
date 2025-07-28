@@ -9,8 +9,6 @@
   environment.systemPackages = with pkgs; [
     home-assistant
     mosquitto
-    psycopg2
-    pyatv
   ];
 
   services = {
