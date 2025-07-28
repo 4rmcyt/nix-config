@@ -15,7 +15,6 @@
     repository = "sftp://homelab@u478963.your-storagebox.de/";
     timeConfig.OnCalendar = "daily";
     prometheus.enable = true;
-    prometheus.exporters.restic.port = 9753;
     paths = [
       "/etc/nixos"
       "/var/lib/"

@@ -60,8 +60,14 @@
         ];
         port = 9100;
       };
-      
-    };
+      restic = {
+        enable = true;
+        port = 9753;
+      };
+      cloudflare = {
+        enable = true;
+        port = 27196;
+      };
 
     ruleFiles = [
       (pkgs.writeText "homeserver-alerts.yml" ''
