@@ -1,5 +1,11 @@
 { config, pkgs, ... }:
-{
+{ 
+  environment.systemPackages = [
+      pkgs.podman
+      pkgs.podman-compose
+      pkgs.podman-tui
+  ];
+
   virtualisation.oci-containers.backend = "podman";
   virtualisation.oci-containers.containers = {
     # tl-sg-prometheus-exporter = {

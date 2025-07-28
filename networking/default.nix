@@ -53,6 +53,7 @@
         # System services
         8082  # Homepage dashboard
         8123  # Home Assistant
+        8222  # Vaultwarden (Bitwarden)
 
 
         # Monitoring (from monitoring.nix)

@@ -1,7 +1,9 @@
 { config, pkgs, lib, ... }:
 
 {
-  
+  environment.systemPackages = [
+      pkgs.prometheus-cloudflare-exporter
+  ];
 
   services.prometheus = {
     enable = true;
