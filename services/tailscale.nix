@@ -34,7 +34,7 @@
     allowedUDPPorts = [ config.services.tailscale.port ];
   };
 
-  users.tailscale = {
+  users.users.tailscale = {
     isSystemUser = true;
     group = "tailscale";
     extraGroups = [ "networkmanager" "users" "tailscale" ];

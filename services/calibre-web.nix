@@ -40,7 +40,7 @@
     };
   };
   
-  users.calibre-web = {
+  users.users.calibre-web = {
     isSystemUser = true;
     extraGroups = [ "users" "calibre-web" "media" ];
   };

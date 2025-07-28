@@ -122,7 +122,7 @@
     ];
   };
 
-  users.grafana = {
+  users.users.grafana = {
     isSystemUser = true;
     group = "grafana";
     extraGroups = [ "users" ];

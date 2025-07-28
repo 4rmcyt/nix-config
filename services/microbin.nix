@@ -29,7 +29,7 @@
     };
   };
 
-  users.microbin = {
+  users.users.microbin = {
     isSystemUser = true;
     group = "microbin";
     extraGroups = [ "users"];

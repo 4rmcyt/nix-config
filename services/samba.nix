@@ -38,7 +38,7 @@
       };
     };
   };
-  users.samba = {
+  users.users.samba = {
     isSystemUser = true;
     group = "samba";
     extraGroups = [ "users" "media" ];

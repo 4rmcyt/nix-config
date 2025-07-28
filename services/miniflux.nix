@@ -22,7 +22,7 @@
     };
   };
 
-  users.miniflux = {
+  users.users.miniflux = {
     isSystemUser = true;
     group = "miniflux";
     extraGroups = [ "users" ];

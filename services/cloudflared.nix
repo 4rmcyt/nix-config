@@ -35,7 +35,7 @@
     };
   };
 
-  users.cloudflared = {
+  users.users.cloudflared = {
     isSystemUser = true;
     group = "cloudflared";
     extraGroups = [ "users" "cloudflared" ];

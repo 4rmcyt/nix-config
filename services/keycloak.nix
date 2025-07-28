@@ -54,7 +54,7 @@ in
     };
   };
 
-  users.keycloak = {
+  users.users.keycloak = {
     isSystemUser = true;
     group = "keycloak";
     extraGroups = [ "users" "keycloak" ];
