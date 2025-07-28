@@ -29,21 +29,7 @@ in
     # Define all groups for your services
     groups = {
       media = {};
-      samba = {};
       git = {};
-      keycloak = {};
-      homepage-dashboard = {};
-      microbin = {};
-      paperless = {};
-      miniflux = {};
-      hass = {};
-      radicale = {};
-      mosquitto = {};
-      grafana = {};
-      cloudflared = {};
-      tailscale = {};
-      kavita = {};
-      calibre-web = {};
     };
 
     users = {
@@ -62,82 +48,11 @@ in
         openssh.authorizedKeys.keys = server-keys;
       };
 
-      # Define all system users for your services
       git = { isSystemUser = true; group = "git"; };
-      keycloak = { isSystemUser = true; group = "keycloak"; };
-      homepage-dashboard = { isSystemUser = true; group = "homepage-dashboard"; };
-      paperless = { isSystemUser = true; group = "paperless"; };
-      miniflux = { isSystemUser = true; group = "miniflux"; };
-      hass = { isSystemUser = true; group = "hass"; };
-      radicale = { isSystemUser = true; group = "radicale"; };
-      mosquitto = { isSystemUser = true; group = "mosquitto"; };
-      grafana = { isSystemUser = true; group = "grafana"; };
-      cloudflared = { isSystemUser = true; group = "cloudflared"; };
-      tailscale = { isSystemUser = true; group = "tailscale"; };
-
-      microbin = {
-        isSystemUser = true;
-        group = "microbin";
-        extraGroups = [ "users" "media" ];
-      };
-      samba = {
-        isSystemUser = true;
-        group = "samba";
-        extraGroups = [ "users" "media" ];
-      };
-      
     };
   };
 
   systemd.tmpfiles.rules = [
-    "d /data 0775 root media -"
-    "d /data/media/movies 0775 zeev media -"
-    "d /data/media/audiobooks 0775 zeev media -"
-    "d /data/media/music 0775 zeev media -"
-    "d /data/media/shows 0775 zeev media -"
-    "d /data/media/books 0775 zeev media -"
-    "d /data/media/comics 0775 zeev media -"
-    "d /data/media/manga 0775 zeev media -"
-    "d /data/media/torrents 0775 zeev media -"
-    "d /data/media/usenet 0775 zeev media -"
-    "d /data/Downloads 0775 zeev users -"
-
-    
- 
-    "d /data/media 0775 root media -"
-    "d /data/media/library 0775 zeev media -"
-    "d /data/media/torrents 0775 zeev media -"
-    "d /data/media/usenet 0775 zeev media -"
-
-    "d /data/media/.state 0775 root media -"
-    "d /data/media/.state/nixarr 0775 root media -"
-
-    "d /data/media/.state/nixarr/audiobookshelf 0775 audiobookshelf audiobookshelf -"
-    "d /data/media/.state/nixarr/cross-seed 0775 cross-seed cross-seed -"
-    "d /data/media/.state/nixarr/jellyfin 0755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/jellyfin/data 0755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/jellyfin/config 0755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/jellyfin/cache 0755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/jellyfin/log 0755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/audiobookshelf/metadata 0755 jellyfin jellyfin -"
-
-    "d /data/media/.state/nixarr/lidarr 0775 lidarr lidarr -"
-    "d /data/media/.state/nixarr/prowlarr 0775 prowlarr prowlarr -"
-    "d /data/media/.state/nixarr/radarr 0775 radarr radarr -"
-    "d /data/media/.state/nixarr/sonarr 0775 sonarr sonarr -"
-    "d /data/media/.state/nixarr/sabnzbd 0775 sabnzbd sabnzbd -"
-    "d /data/media/.state/nixarr/bazarr 0775 bazarr bazarr -"
-    "d /data/media/.state/nixarr/transmission 0775 transmission transmission -"
-
-    "d /data/media/.state/nixarr/jellyseerr 0775 jellyseerr jellyseerr -"
-    "d /data/media/.state/nixarr/jellyseerr/db 0775 jellyseerr jellyseerr -" 
-    "d /data/media/.state/nixarr/jellyseerr/logs 0755 jellyseerr jellyseerr -"
-
-    "d /var/lib/miniflux 0775 miniflux miniflux -"
-    "d /var/lib/microbin 0775 microbin microbin -"
-
-    "d /var/lib/kavita 0775 kavita kavita -"
-    "d /var/lib/transmission 0775 transmission transmission -"
     "d /data/.secret 0700 zeev media -"
   ];
 }

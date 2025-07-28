@@ -16,7 +16,11 @@ let
 
   keycloak_theme = import ./theme.nix { inherit (pkgs) stdenv; };
 in
-{  
+{ 
+  environment.systemPackages = [
+    pkgs.keycloak
+  ];
+
   services.keycloak = {
     enable = true;
     initialAdminPassword = "23031986";
@@ -49,4 +53,11 @@ in
       "theme.email" = "keycloak";
     };
   };
+
+  users.keycloak = {
+    isSystemUser = true;
+    group = "keycloak";
+    extraGroups = [ "users" ];
+  };
+  user.groups.keycloak = {};
 }

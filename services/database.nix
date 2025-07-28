@@ -5,6 +5,12 @@
   ...
 }:
 {
+  environment.systemPackages = [
+    pkgs.postgresql_15
+    pkgs.postgresql_15-contrib
+    pkgs.postgresql_15-docs
+  ];
+
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_15;
@@ -44,4 +50,10 @@
         host all       all     ::1/128        trust
     '';
   };
+
+  user.users.postgresql = {
+    isSystemUser = true;
+    group = "postgresql";
+  };
+  user.groups.postgresql = {};
 }

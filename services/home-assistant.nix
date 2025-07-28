@@ -5,7 +5,14 @@
   ...
 }:
 
-{
+{ 
+  environment.systemPackages = with pkgs; [
+    home-assistant
+    mosquitto
+    psycopg2
+    pyatv
+  ];
+
   services = {
     home-assistant = {
       enable = true;
@@ -97,4 +104,14 @@
       ];
     };
   };
+  user.users.hass = {
+    isSystemUser = true;
+    group = "hass";
+  };
+  user.user.mosquitto = {
+    isSystemUser = true;
+    group = "mosquitto";
+  };
+  user.groups.mosquitto = {};
+  user.groups.hass = {};
 }

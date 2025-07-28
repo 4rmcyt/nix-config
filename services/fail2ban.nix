@@ -1,6 +1,12 @@
 { config, pkgs, ... }:
 
 {
+  environment.systemPackages = with pkgs; [
+    fail2ban
+    jq
+    curl
+  ];
+  
   services.fail2ban = {
     enable = true;
     maxretry = 5;
@@ -314,4 +320,11 @@
         name = cloudflare-token
       '';
   };
+
+  user.users.fail2ban = {
+    isSystemUser = true;
+    group = "fail2ban";
+  };
+  user.groups.fail2ban = {};
+
 }

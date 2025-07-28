@@ -6,11 +6,9 @@
 }:
 
 {
-  users.calibre-web = {
-    isSystemUser = true;
-    extraGroups = [ "users" "calibre-web" "media" ];
-  };
-  users.groups.calibre-web = {};
+  environment.systemPackages = [
+    pkgs.calibre-web
+  ];
 
   nixpkgs.overlays = [
     (final: prev: {
@@ -41,4 +39,10 @@
       calibreLibrary = "/data/media/books";
     };
   };
+  
+  users.calibre-web = {
+    isSystemUser = true;
+    extraGroups = [ "users" "calibre-web" "media" ];
+  };
+  users.groups.calibre-web = {};
 }
