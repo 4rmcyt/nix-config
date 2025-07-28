@@ -8,7 +8,6 @@
     initialize = true;
     passwordFile = config.sops.secrets.hetzner_password.path;
     repository = "sftp://u478963@u478963.your-storagebox.de:23/homelab/server/";
-    user = "zeev";
     runCheck = true;
     
     paths = [
