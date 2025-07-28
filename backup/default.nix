@@ -5,14 +5,14 @@
 }:
 {
   programs.ssh.knownHosts = {
-    "u478963.your-storagebox.de".publicKey =
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks";
+    "[u478963.your-storagebox.de]:23".publicKey =
+      " ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIICf9svRenC/PLKIL9nk6K/pxQgoiFC41wTNvoIncOxs";
   };
 
   services.restic.backups.full = {
     initialize = true;
     passwordFile = config.sops.secrets.restic-hetzner-password.path;
-    repository = "sftp://u478963@u478963.your-storagebox.de:23/homelab/server/";
+    repository = "sftp://u478963@u478963.your-storagebox.de/homelab/server/";
     runCheck = true;
     paths = [
       "/etc/nixos"
