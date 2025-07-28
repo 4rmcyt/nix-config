@@ -47,7 +47,7 @@
     port = 6379;
   };
 
-  user.users.paperless = { isSystemUser = true; group = "paperless"; };
-  user.groups.paperless = {};
+  users.users.paperless = { isSystemUser = true; group = "paperless"; };
+  users.groups.paperless = {};
 
 }

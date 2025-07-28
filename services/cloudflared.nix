@@ -38,7 +38,7 @@
   users.cloudflared = {
     isSystemUser = true;
     group = "cloudflared";
-    extraGroups = [ "users" ];
+    extraGroups = [ "users" "cloudflared" ];
   };
-  user.groups.cloudflared = {  };
+  users.groups.cloudflared = {  };
 }
