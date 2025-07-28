@@ -1,5 +1,21 @@
 # In ~/src/server/services/nixarr.nix
 { config, pkgs, ... }:
+let
+  servicesWithMediaAccess = [
+    "bazarr"
+    "cross-seed"
+    "jellyseerr"
+    "lidarr"
+    "prowlarr"
+    "radarr"
+    "sonarr"
+    "transmission"
+    "audiobookshelf"
+    "jellyfin"
+    "kavita"
+    "calibre-web"
+  ];
+in  
 {
    environment.etc."nixos/scripts/add-trackers.sh" = {
     mode = "0755";
@@ -108,5 +124,16 @@
     sonarr = {};
     transmission = {};
     cross-seed = {};
-  };  
+  };
+
+  systemd.services = lib.genAttrs servicesWithMediaAccess (serviceName: {
+    serviceConfig = {
+      BindPaths = [
+        "/data/Downloads"
+        "/data/media"
+      ];
+    };
+  });
+
+  systemd.tmpfiles.rules = [
 }

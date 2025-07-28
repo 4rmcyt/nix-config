@@ -10,8 +10,23 @@
       pkgs.linkwarden
     ];
 
+  users.vaultwarden = {
+    isSystemUser = true;
+    group = "vaultwarden";
+    extraGroups = [ "users"];
+  };
+  users.groups.vaultwarden = { };
+  
+  users.linkwarden = {
+    isSystemUser = true;
+    group = "linkwarden";
+    extraGroups = [ "users" ];
+  };
+  users.groups.linkwarden = { };
+
+
+
   config = lib.mkIf config.services.vaultwarden.enable {
-    # The service
     services.vaultwarden = {
       dbBackend = "postgresql";
       config = {
@@ -28,10 +43,8 @@
       package = mypkgs.linkwarden;
       settingsFile = config.sops.secrets.linkwarden_settings.path;
       settings = {
-        NEXT_PUBLIC_DISABLE_REGISTRATION = "false";
         VIRTUAL_PORT = "12522";
         VIRTUAL_HOST = "link.example.com";
-
       };
     }; 
   };

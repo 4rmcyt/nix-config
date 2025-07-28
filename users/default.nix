@@ -23,42 +23,26 @@ let
   ];
 
   server-keys = system-keys ++ user-keys;
-
-  servicesWithMediaAccess = [
-    "bazarr"
-    "cross-seed"
-    "jellyseerr"
-    "lidarr"
-    "prowlarr"
-    "radarr"
-    "sonarr"
-    "transmission"
-    "audiobookshelf"
-    "jellyfin"
-    "kavita"
-    "calibre-web"
-  ];
-
 in
 {
   users = {
     # Define all groups for your services
     groups = {
-      media = { };
-      samba = { };
-      git = { };
-      keycloak = { };
-      homepage-dashboard = { };
-      microbin = { };
-      paperless = { };
-      miniflux = { };
-      hass = { };
-      radicale = { };
-      mosquitto = { };
-      grafana = { };
-      cloudflared = { };
-      tailscale = { };
-      kavita = { };
+      media = {};
+      samba = {};
+      git = {};
+      keycloak = {};
+      homepage-dashboard = {};
+      microbin = {};
+      paperless = {};
+      miniflux = {};
+      hass = {};
+      radicale = {};
+      mosquitto = {};
+      grafana = {};
+      cloudflared = {};
+      tailscale = {};
+      kavita = {};
       calibre-web = {};
     };
 
@@ -101,21 +85,9 @@ in
         group = "samba";
         extraGroups = [ "users" "media" ];
       };
-
       
-      calibre-web = { isSystemUser = true; extraGroups = [ "users" "calibre-web" "media" ]; };
-      kavita = { isSystemUser = true; extraGroups = [ "users" "kavita" "media" ]; };
     };
   };
-
-   systemd.services = lib.genAttrs servicesWithMediaAccess (serviceName: {
-    serviceConfig = {
-      BindPaths = [
-        "/data/Downloads"
-        "/data/media"
-      ];
-    };
-  });
 
   systemd.tmpfiles.rules = [
     "d /data 0775 root media -"
@@ -158,8 +130,8 @@ in
     "d /data/media/.state/nixarr/transmission 0775 transmission transmission -"
 
     "d /data/media/.state/nixarr/jellyseerr 0775 jellyseerr jellyseerr -"
-    "d /data/media/.state/nixarr/jellyseerr/db 0775 jellyseerr jellyseerr -" # New line for 'db'
-    "d /data/media/.state/nixarr/jellyseerr/logs 0755 jellyseerr jellyseerr -" # For 'logs'
+    "d /data/media/.state/nixarr/jellyseerr/db 0775 jellyseerr jellyseerr -" 
+    "d /data/media/.state/nixarr/jellyseerr/logs 0755 jellyseerr jellyseerr -"
 
     "d /var/lib/miniflux 0775 miniflux miniflux -"
     "d /var/lib/microbin 0775 microbin microbin -"
