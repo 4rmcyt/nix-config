@@ -39,13 +39,13 @@
           labels = { instance = "homeserver"; };
         }];
       }
-      {
-        job_name = "cloudflare-exporter";
-        static_configs = [{
-          targets = [ "localhost:27196" ];
-          labels = { instance = "homeserver"; };
-        }];
-      }
+      # {
+      #   job_name = "cloudflare-exporter";
+      #   static_configs = [{
+      #     targets = [ "localhost:27196" ];
+      #     labels = { instance = "homeserver"; };
+      #   }];
+      # }
 
     ];
 
@@ -68,14 +68,14 @@
           "--restic.repository=sftp://homelab@u478963.your-storagebox.de/"
         ];
       };
-      cloudflare = {
-        enable = true;
-        port = 27196;
-        extraFlags = [
-          "--cloudflare.api-token=${config.sops.secrets.cloudflare_prometheus_exporter_token.path}"
-          "--cloudflare.zone-id=${config.sops.secrets.cloudflare_zone_id.path}"
-        ];
-      };
+      # cloudflare = {
+      #   enable = true;
+      #   port = 27196;
+      #   extraFlags = [
+      #     "--cloudflare.api-token=${config.sops.secrets.cloudflare_prometheus_exporter_token.path}"
+      #     "--cloudflare.zone-id=${config.sops.secrets.cloudflare_zone_id.path}"
+      #   ];
+      # };
     };
 
     ruleFiles = [
