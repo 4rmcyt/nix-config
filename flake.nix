@@ -125,7 +125,7 @@
           ./services/nixarr.nix
           ./services/kavita.nix
           ./services/calibre-web.nix
-          
+          ./services/shell.nix
 
           ./scripts/wg-sync.nix
 
