@@ -13,7 +13,7 @@
     initialize = true;
     passwordFile = config.sops.secrets.restic-hetzner-password.path;
     repository = "sftp://homelab@u478963.your-storagebox.de/";
-    timeConfig.OnCalendar = "daily";
+    runCheck = true;
     paths = [
       "/etc/nixos"
       "/var/lib/"
@@ -43,11 +43,11 @@
     ];
 
     timerConfig = {
-      # when to backup
       OnCalendar = "00:05";
       RandomizedDelaySec = "5h";
     };
   };
+
   users.users.restic = {
     isSystemUser = true;
     group = "restic";
