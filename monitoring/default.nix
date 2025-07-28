@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   environment.systemPackages = [
@@ -19,39 +24,59 @@
     scrapeConfigs = [
       {
         job_name = "node-exporter";
-        static_configs = [{
-          targets = [ "localhost:9100" ];
-          labels = { instance = "homeserver"; };
-        }];
+        static_configs = [
+          {
+            targets = [ "localhost:9100" ];
+            labels = {
+              instance = "homeserver";
+            };
+          }
+        ];
         scrape_interval = "2s";
       }
       {
         job_name = "prometheus";
-        static_configs = [{
-          targets = [ "localhost:9090" ];
-          labels = { instance = "homeserver"; };
-        }];
+        static_configs = [
+          {
+            targets = [ "localhost:9090" ];
+            labels = {
+              instance = "homeserver";
+            };
+          }
+        ];
       }
       {
         job_name = "nextdns-exporter";
-        static_configs = [{
-          targets = [ "localhost:9948" ];
-          labels = { instance = "homeserver"; };
-        }];
+        static_configs = [
+          {
+            targets = [ "localhost:9948" ];
+            labels = {
+              instance = "homeserver";
+            };
+          }
+        ];
       }
       {
         job_name = "cloudflare-exporter";
-        static_configs = [{
-          targets = [ "localhost:27196" ];
-          labels = { instance = "homeserver"; };
-        }];
+        static_configs = [
+          {
+            targets = [ "localhost:27196" ];
+            labels = {
+              instance = "homeserver";
+            };
+          }
+        ];
       }
       {
         job_name = "restic-exporter";
-        static_configs = [{
-          targets = [ "localhost:9753" ];
-          labels = { instance = "homeserver"; };
-        }];
+        static_configs = [
+          {
+            targets = [ "localhost:9753" ];
+            labels = {
+              instance = "homeserver";
+            };
+          }
+        ];
       }
     ];
 
@@ -59,9 +84,21 @@
       node = {
         enable = true;
         enabledCollectors = [
-          "systemd" "processes" "interrupts" "cpu" "diskstats"
-          "filesystem" "loadavg" "meminfo" "netdev" "netstat"
-          "stat" "time" "vmstat" "logind" "thermal_zone"
+          "systemd"
+          "processes"
+          "interrupts"
+          "cpu"
+          "diskstats"
+          "filesystem"
+          "loadavg"
+          "meminfo"
+          "netdev"
+          "netstat"
+          "stat"
+          "time"
+          "vmstat"
+          "logind"
+          "thermal_zone"
           "hwmon"
         ];
         port = 9100;
@@ -75,73 +112,74 @@
         port = 27196;
       };
 
-    ruleFiles = [
-      (pkgs.writeText "homeserver-alerts.yml" ''
-        groups:
-          - name: homeserver
-            rules:
-              - alert: HighCPUUsage
-                expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
-                for: 5m
-                labels:
-                  severity: warning
-                annotations:
-                  summary: "High CPU usage detected"
-      '')
-    ];
-  };
-
-  services.grafana = {
-    enable = true;
-    dataDir = "/var/lib/grafana";
-    settings = {
-      server = {
-        http_port = 3000;
-        http_addr = "0.0.0.0";
-        root_url = "http://192.168.1.165:3000";
-      };
-      security = {
-        admin_user = "admin";
-        admin_password_file = config.sops.secrets.grafana_admin_password.path;
-      };
+      ruleFiles = [
+        (pkgs.writeText "homeserver-alerts.yml" ''
+          groups:
+            - name: homeserver
+              rules:
+                - alert: HighCPUUsage
+                  expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+                  for: 5m
+                  labels:
+                    severity: warning
+                  annotations:
+                    summary: "High CPU usage detected"
+        '')
+      ];
     };
 
-    provision.enable = true;
-    provision.datasources.settings.datasources = [
-      {
-        name = "Prometheus";
-        type = "prometheus";
-        access = "proxy";
-        url = "http://localhost:9090";
-        isDefault = true;
-      }
-    ];
+    services.grafana = {
+      enable = true;
+      dataDir = "/var/lib/grafana";
+      settings = {
+        server = {
+          http_port = 3000;
+          http_addr = "0.0.0.0";
+          root_url = "http://192.168.1.165:3000";
+        };
+        security = {
+          admin_user = "admin";
+          admin_password_file = config.sops.secrets.grafana_admin_password.path;
+        };
+      };
 
-    provision.dashboards.settings.providers = [
-      {
-        name = "System Dashboard";
-        type = "file";
-        options.path = "/etc/grafana/dashboards/system.json";
-        options.foldersFromFilesStructure = true;
-      }
-       {
-        name = "Custom Dashboards";
-        type = "file";
-        options.path = ./.; 
-        options.foldersFromFilesStructure = true;
-      }
+      provision.enable = true;
+      provision.datasources.settings.datasources = [
+        {
+          name = "Prometheus";
+          type = "prometheus";
+          access = "proxy";
+          url = "http://localhost:9090";
+          isDefault = true;
+        }
+      ];
+
+      provision.dashboards.settings.providers = [
+        {
+          name = "System Dashboard";
+          type = "file";
+          options.path = "/etc/grafana/dashboards/system.json";
+          options.foldersFromFilesStructure = true;
+        }
+        {
+          name = "Custom Dashboards";
+          type = "file";
+          options.path = ./.;
+          options.foldersFromFilesStructure = true;
+        }
+      ];
+    };
+
+    users.users.grafana = {
+      isSystemUser = true;
+      group = "grafana";
+      extraGroups = [ "users" ];
+    };
+    users.groups.grafana = { };
+
+    systemd.tmpfiles.rules = [
+      "d /var/lib/grafana 0755 grafana grafana -"
+      "d /var/lib/grafana/dashboards 0755 grafana grafana -"
     ];
   };
-
-  users.users.grafana = {
-    isSystemUser = true;
-    group = "grafana";
-    extraGroups = [ "users" ];
-  };
-  users.groups.grafana = {};
-
-  systemd.tmpfiles.rules = [
-    "d /var/lib/grafana 0755 grafana grafana -"
-    "d /var/lib/grafana/dashboards 0755 grafana grafana -"
-  ];
 }
