@@ -7,7 +7,7 @@
 {
   services.postgresql = {
     enable = true;
-    package = pkgs.unstable.postgresql_16.withPackages (p: (lib.optional immich_enabled p.pgvecto-rs));
+    package = pkgs.postgresql_16;
     ensureDatabases = [
       "keycloak"
       "miniflux"
