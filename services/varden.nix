@@ -5,6 +5,11 @@
   ...
 }:
 {
+  environment.systemPackages = [
+      pkgs.vaultwarden-postgresql
+      pkgs.linkwarden
+    ];
+
   config = lib.mkIf config.services.vaultwarden.enable {
     # The service
     services.vaultwarden = {
@@ -18,12 +23,16 @@
         LOG_FILE = "/var/lib/bitwarden_rs/access.log";
       };
     };
+    services.linkwarden = {
+      enable = true;
+      package = mypkgs.linkwarden;
+      settingsFile = config.sops.secrets.linkwarden_settings.path;
+      settings = {
+        NEXT_PUBLIC_DISABLE_REGISTRATION = "false";
+        VIRTUAL_PORT = "12522";
+        VIRTUAL_HOST = "link.example.com";
 
-    # The CLI tool
-    environment.systemPackages = [
-      pkgs.vaultwarden-postgresql
-      pkgs.linkwarden
-    ];
-
+      };
+    }; 
   };
 }

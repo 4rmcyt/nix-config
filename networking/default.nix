@@ -54,6 +54,7 @@
         8082  # Homepage dashboard
         8123  # Home Assistant
         8222  # Vaultwarden (Bitwarden)
+        12522 # Linkwarden 
 
 
         # Monitoring (from monitoring.nix)
