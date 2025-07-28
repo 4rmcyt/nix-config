@@ -1,5 +1,5 @@
 # In ~/src/server/services/nixarr.nix
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let
   servicesWithMediaAccess = [
     "bazarr"
