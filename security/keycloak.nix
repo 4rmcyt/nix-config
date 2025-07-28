@@ -1,76 +1,63 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}: let
-  inherit (lib) mkIf mkOption mkEnableOption types;
-  cfg = config.my.authelia;
-  secret_config = {sopsFile = ../../secrets/authelia.yaml;};
-in {
-  options.my.authelia = {
-    enable = mkEnableOption "Enable Authelia";
-    domain = mkOption {
-      type = types.str;
-      default = "auth.eyen.ca";
+{ config, pkgs, ... }:
+
+let
+  keycloak_trusted_device_plugin = pkgs.stdenv.mkDerivation {
+    name = "keycloak-spi-trusted-device";
+    src = pkgs.fetchurl {
+      url = "https://github.com/wouterh-dev/keycloak-spi-trusted-device/releases/download/v0.0.2/keycloak-spi-trusted-device-0.0.2.jar";
+      sha256 = "e84f6e3f5b7ce4f33115b7080fb1671d91e00c629ed80ae7d97d8c1c9af62dcf";
     };
-    port = mkOption {
-      type = types.port;
-      default = 30557;
+    dontUnpack = true;
+    installPhase = ''
+      mkdir -p $out
+      cp $src $out/
+    '';
+  };
+
+  keycloak_theme = import ./theme.nix { inherit (pkgs) stdenv; };
+in
+{ 
+  environment.systemPackages = [
+    pkgs.keycloak
+  ];
+
+  services.keycloak = {
+    enable = true;
+    initialAdminPassword = "23031986";
+    database = {
+      createLocally = false;
+      host = "localhost";
+      port = 5432;
+      passwordFile = config.sops.secrets.keycloak_db_password.path;
     };
-    acme_host = mkOption {
-      type = types.str;
-      default = "eyen.ca";
+    themes = {
+      zeev = keycloak_theme;
+    };
+    plugins = [ keycloak_trusted_device_plugin ];
+    settings = {
+      hostname = "keycloak.labhome.work";
+      http-host = "0.0.0.0";
+      http-port = 8080;
+      hostname-strict-https = false;
+      proxy-headers = "xforwarded";
+      db = "postgres";
+      db-username = "keycloak";
+      log-level = "INFO";
+      log-console-output = "default";
+      http-enabled = true;
+
+      # Optionally set the default theme for login, account, admin, email:
+      "theme.login" = "keycloak";
+      "theme.account" = "keycloak";
+      "theme.admin" = "keycloak";
+      "theme.email" = "keycloak";
     };
   };
-  config = mkIf cfg.enable {
-    #my.postgresql.enable = true;
-    #services.postgresql = {
-    #  ensureDatabases = ["authelia-main"];
-    #  ensureUsers = [
-    #    {
-    #      name = "authelia-main";
-    #      ensureDBOwnership = true;
-    #    }
-    #  ];
-    #};
-    sops.secrets = {
-      "authelia/jwt_secret" = secret_config;
-      "authelia/session_secret" = secret_config;
-      "authelia/settings" = secret_config;
-    };
-    services.redis.servers.authelia-main = {
-      enable = true;
-    };
-    services.authelia.instances.main = {
-      enable = true;
-      secrets = {
-        sessionSecretFile = "";
-      };
-      settings = {
-        inherit (cfg) port;
-        storage.local.path = "/var/lib/authelia/db.sqlite3";
-        # copied from https://github.com/ibizaman/selfhostblocks/blob/3d3bc9dc389578d1a7f67bd3c8efdcfa2bf935e0/modules/blocks/authelia.nix#L226C1-L238C11
-        session = {
-          inherit (cfg) domain;
-          name = "authelia_session";
-          same_site = "lax";
-          expiration = "1h";
-          inactivity = "5m";
-          remember_me_duration = "1M";
-          redis = {
-            host = config.services.redis.servers.authelia-main.unixSocket;
-            port = 0;
-          };
-        };
-      };
-      settingsFiles = [
-        config.sops.secrets."authelia/settings".path
-      ];
-    };
-    services.nginx.virtualHosts.${cfg.domain} = {
-      useACMEHost = cfg.acme_host;
-      forceSSL = true;
-    };
+
+  users.users.keycloak = {
+    isSystemUser = true;
+    group = "keycloak";
+    extraGroups = [ "users" "keycloak" ];
   };
+  users.groups.keycloak = {};
 }
