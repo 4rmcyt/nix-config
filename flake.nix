@@ -110,7 +110,6 @@
         
 
           # Services
-          ./services/fail2ban.nix
           ./services/yubikey.nix
           ./services/postgresql.nix
           ./services/homepage.nix
