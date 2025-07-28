@@ -11,6 +11,10 @@
 
   services.restic.backups.full = {
     initialize = true;
+    user = "restic";
+    package = pkgs.writeShellScriptBin "restic" ''
+      exec /run/wrappers/bin/restic "$@"
+    '';
     passwordFile = config.sops.secrets.hetzner_password.path;
     repository = "sftp://u478963@u478963.your-storagebox.de:23/server";
     runCheck = true;
@@ -51,10 +55,15 @@
   };
 
   users.users.restic = {
-    isSystemUser = true;
-    group = "restic";
-    extraGroups = [ "users" "restic" ];
+    isNormalUser = true;
   };
-  users.groups.restic = {};
+  security.wrappers.restic = {
+    source = "${pkgs.restic.out}/bin/restic";
+    owner = "restic";
+    group = "users";
+    permissions = "u=rwx,g=,o=";
+    capabilities = "cap_dac_read_search=+ep";
+  };
+
   
 }
