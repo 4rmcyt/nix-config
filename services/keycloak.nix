@@ -57,7 +57,7 @@ in
   users.keycloak = {
     isSystemUser = true;
     group = "keycloak";
-    extraGroups = [ "users" ];
+    extraGroups = [ "users" "keycloak" ];
   };
-  user.groups.keycloak = {};
+  users.groups.keycloak = {};
 }
