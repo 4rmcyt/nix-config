@@ -37,7 +37,7 @@
       paperless_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "paperless_db_password"; };
 
       restic-hetzner-password = { sopsFile = ../../secrets/restic-hetzner-password.yaml; key = "restic-hetzner-password"; owner = "restic"; group = "restic"; mode = "0400"; };
-      restic_ssh_private_key = { sopsFile = ../../secrets/restic-ssh-private-key.yaml; owner = "restic"; group = "restic"; mode = "0600";};
+      restic_ssh_private_key = { sopsFile = ../../secrets/restic_key; owner = "restic"; group = "restic"; mode = "0600"; };
     };
   };
 }

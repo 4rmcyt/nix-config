@@ -6,7 +6,7 @@
 {
   programs.ssh.knownHosts = {
     "[u478963.your-storagebox.de]:23".publicKey =
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIICf9svRenC/PLKIL9nk6K/pxQgoiFC41wTNvoIncOxs";
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINqWND9TV1kHdHx5b1slLau2pLJhEsxGTm1nBqFKP6G9";
   };
 
   sops.secrets.restic_ssh_private_key = {
