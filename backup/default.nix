@@ -12,7 +12,7 @@
   services.restic.backups.full = {
     initialize = true;
     passwordFile = config.sops.secrets.restic-hetzner-password.path;
-    repository = "sftp://homelab@u478963.your-storagebox.de/";
+    repository = "sftp://u478963@u478963.your-storagebox.de:23/homelab/server/";
     runCheck = true;
     paths = [
       "/etc/nixos"
@@ -41,6 +41,7 @@
       "--keep-monthly 3"
       "--keep-yearly 1"
     ];
+    
 
     timerConfig = {
       OnCalendar = "00:05";
