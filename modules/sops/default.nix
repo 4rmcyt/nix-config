@@ -11,7 +11,8 @@
       ssh_host_ed25519_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_ed25519_key"; owner = "root"; group = "root"; mode = "0600"; };
       ssh_host_rsa_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_rsa_key"; owner = "root"; group = "root"; mode = "0600"; };
       restic_private_key = { sopsFile = ../../secrets/system.yaml; key = "restic_private_key"; owner = "root"; group = "root"; mode = "0600"; };
-      
+      hetzner_password = { sopsFile = ../../secrets/system.yaml; key = "hetzner_password"; owner = "restic"; group = "restic"; mode = "0400"; };
+
       
       
       cloudflare_tunnel_credentials = { sopsFile = ../../secrets/cloudflare_tunnel_credentials.bin; owner = "cloudflared"; group = "cloudflared"; format = "binary"; };
@@ -40,7 +41,6 @@
       keycloak_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "keycloak_db_password"; };
       paperless_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "paperless_db_password"; };
 
-      restic-hetzner-password = { sopsFile = ../../secrets/restic-hetzner-password.yaml; key = "restic-hetzner-password"; owner = "restic"; group = "restic"; mode = "0400"; };
     };
   };
 }
