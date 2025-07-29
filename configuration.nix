@@ -24,7 +24,6 @@
       download-buffer-size = 10737418240; # 10 GiB
       max-jobs = 4;
       substituters = [
-        "http://binarycache.example.com"
         "https://nix-community.cachix.org"
         "https://cache.nixos.org/"
       ];
