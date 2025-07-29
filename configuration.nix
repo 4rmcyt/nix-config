@@ -24,16 +24,7 @@
       show-trace = true;
       download-buffer-size = 10737418240; # 10 GiB
       max-jobs = 4;
-      substituters = [
-        "https://nix-community.cachix.org"
-        "https://cache.nixos.org/"
-        "https://4rmcyt.cachix.org"        
-      ];
-      trusted-public-keys = [
-        "4rmcyt.cachix.org-1:uKI766iybXD8uDBVexbc5BCYAfdBJ262ID4C+dl2hws="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      ];
-    };
+  
     registry.nixpkgs = {
       from = { id = "nixpkgs"; type = "indirect"; };
       flake = inputs.nixpkgs;
