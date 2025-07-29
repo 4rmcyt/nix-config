@@ -34,14 +34,13 @@
       trusted-public-keys = [
         "4rmcyt.cachix.org-1:uKI766iybXD8uDBVexbc5BCYAfdBJ262ID4C+dl2hws="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "nixpkgs-update.cachix.org-1:6y6Z2JdoL3APdu6/+Iy8eZX2ajf09e4EE9SnxSML1W8="
       ];
       auto-optimise-store = true;
       warn-dirty = false;
       cores = 4;
       show-trace = true;
-      download-buffer-size = 10737418240; # 10 GiB
+      download-buffer-size = 1073741824; # 1 GiB
       max-jobs = 4;
     };
   };
