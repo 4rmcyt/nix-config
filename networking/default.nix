@@ -21,7 +21,9 @@
         8080  # Keycloak
         9000  # Keycloak admin console
 
-    
+        # LLDAP
+        6360  # LLDAP (LDAP server)
+
         # Media services
         8096  # Jellyfin
         8920  # Jellyfin HTTPS
