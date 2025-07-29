@@ -25,7 +25,7 @@
       trusted-users = [
         "zeev"
       ];
-      substituters = [
+      trusted-substituters = [
         "https://4rmcyt.cachix.org"
         "https://nix-community.cachix.org"
         "https://nixpkgs-update.cachix.org"
