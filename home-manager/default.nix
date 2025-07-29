@@ -22,12 +22,6 @@
       download-buffer-size = 10737418240; # 10 GiB
       max-jobs = 4;
     };
-
-    nix-index = {
-      enable = true;
-      enableZshIntegration = true;
-    }; 
-
   };
 
   programs = {
