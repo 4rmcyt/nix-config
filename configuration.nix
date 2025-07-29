@@ -22,7 +22,6 @@
         "flakes"
       ];
       trusted-users = [
-        "root"
         "zeev"
       ];
       warn-dirty = false;
