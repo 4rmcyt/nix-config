@@ -29,7 +29,6 @@
         "https://4rmcyt.cachix.org"
         "https://nix-community.cachix.org"
         "https://nixpkgs-update.cachix.org"
-        "https://cache.nixos.org/"
       ];
       trusted-public-keys = [
         "4rmcyt.cachix.org-1:uKI766iybXD8uDBVexbc5BCYAfdBJ262ID4C+dl2hws="
