@@ -36,9 +36,9 @@
       kavita_token_key_file = { sopsFile = ../../secrets/kavita.yaml; key = "tokenKeyFile"; owner = "kavita"; group = "kavita"; };
       
       # --- Database Passwords (from postgres.yaml) ---
-      hass_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "hass_db_password"; };
-      keycloak_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "keycloak_db_password"; };
-      paperless_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "paperless_db_password"; };
+      hass_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "hass_db_password"; owner = "postgres"; };
+      keycloak_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "keycloak_db_password"; owner = "postgres"; };
+      paperless_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "paperless_db_password"; owner = "postgres"; };
 
     };
   };
