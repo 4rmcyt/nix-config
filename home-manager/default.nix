@@ -11,8 +11,8 @@
     zsh-powerlevel10k
   ];
 
-  nix = lib.mkDefault  {
-    package = pkgs.nixVersions.latest;
+  nix =  {
+    package = lib.mkDefault pkgs.nixVersions.latest;
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
       trusted-users = [ "root" "zeev" ];
