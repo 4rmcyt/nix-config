@@ -22,11 +22,7 @@
       download-buffer-size = 10737418240; # 10 GiB
       max-jobs = 4;
     };
-    registry.nixpkgs = {
-      from = { id = "nixpkgs"; type = "indirect"; };
-      flake = inputs.nixpkgs;
-    };
-    
+
   };
 
   programs = {
