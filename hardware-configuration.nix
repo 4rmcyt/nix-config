@@ -24,9 +24,6 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.loader.systemd-boot.configurationLimit = 10;
-
-  networking.useDHCP = lib.mkDefault false; # We use static IP in networking.nix
-
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
