@@ -26,10 +26,15 @@
         "zeev"
       ];
       extra-substituters = [
-        "https://4rmcyt.cachix.org"
+        "https://nix-community.cachix.org"
+        "https://nixpkgs-update.cachix.org"
+        "https://cache.nixos.org/"
       ];
       extra-trusted-public-keys = [
         "4rmcyt.cachix.org-1:uKI766iybXD8uDBVexbc5BCYAfdBJ262ID4C+dl2hws="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nixpkgs-update.cachix.org-1:6y6Z2JdoL3APdu6/+Iy8eZX2ajf09e4EE9SnxSML1W8="
       ];
       warn-dirty = false;
       cores = 4;
