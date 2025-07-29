@@ -66,6 +66,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixConfig = {
+      extra-substituters = [
+        "https://4rmcyt.cachix.org"
+      ];
+      extra-trusted-public-keys = [
+        "4rmcyt.cachix.org-1:uKI766iybXD8uDBVexbc5BCYAfdBJ262ID4C+dl2hws="
+      ];
+    };
 
   };
 
