@@ -11,7 +11,7 @@
     zsh-powerlevel10k
   ];
 
-  nix = {
+  nix = lib.mkDefault  {
     package = pkgs.nixVersions.latest;
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
