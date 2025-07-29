@@ -23,6 +23,11 @@
       max-jobs = 4;
     };
 
+    nix-index = {
+      enable = true;
+      enableZshIntegration = true;
+    }; 
+
   };
 
   programs = {
