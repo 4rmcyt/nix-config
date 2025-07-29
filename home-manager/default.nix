@@ -11,6 +11,24 @@
     zsh-powerlevel10k
   ];
 
+   nix = {
+    package = pkgs.nixVersions.latest;
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      trusted-users = [ "root" "zeev" ];
+      warn-dirty = false;
+      cores = 4;
+      show-trace = true;
+      download-buffer-size = 10737418240; # 10 GiB
+      max-jobs = 4;
+    };
+    registry.nixpkgs = {
+      from = { id = "nixpkgs"; type = "indirect"; };
+      flake = inputs.nixpkgs;
+    };
+    
+  };
+
   programs = {
     git = {
       enable = true;
