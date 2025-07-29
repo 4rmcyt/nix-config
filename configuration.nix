@@ -33,11 +33,6 @@
     };
   };
 
-  nix-index = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-
   security.sudo.execWheelOnly = true;
 
   boot.loader = {
@@ -152,6 +147,11 @@
     };
     zsh.enable = true;
     nix-ld.dev.enable = false;
+
+    nix-index = {
+      enable = true;
+      enableZshIntegration = true;
+    };
   };
 
   home-manager = {
