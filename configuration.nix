@@ -9,6 +9,7 @@
   imports = [
     ./hardware-configuration.nix
     ./users
+    ./networking
     ./modules/base
     ./modules/sops
   ];
