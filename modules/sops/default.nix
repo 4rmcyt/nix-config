@@ -37,8 +37,8 @@
       
       # --- Database Passwords (from postgres.yaml) ---
       hass_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "hass_db_password"; owner = "postgres"; };
-      keycloak_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "keycloak_db_password"; owner = "postgres"; };
-      paperless_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "paperless_db_password"; owner = "postgres"; };
+      keycloak_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "keycloak_db_password"; owner = "postgresql"; group = "postgresql"; };
+      paperless_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "paperless_db_password"; owner = "postgresql"; group = "postgresql"; };
 
     };
   };
