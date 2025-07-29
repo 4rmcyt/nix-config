@@ -14,7 +14,29 @@
     ./modules/sops
   ];
 
-  
+  nix = {
+    package = pkgs.nixVersions.latest;
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [
+        "root"
+        "zeev"
+      ];
+      warn-dirty = false;
+      cores = 4;
+      show-trace = true;
+      download-buffer-size = 10737418240; # 10 GiB
+      max-jobs = 4;
+    };
+  };
+
+  nix-index = {
+    enable = true;
+    enableZshIntegration = true;
+  };
 
   security.sudo.execWheelOnly = true;
 
@@ -24,13 +46,56 @@
   };
 
   environment.systemPackages = with pkgs; [
-    zsh git neovim direnv pass vim wget curl jq coreutils gawk gnugrep
-    iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools dive
-    apacheHttpd meslo-lgs-nf yamllint nix-index iotop cachix
-    tuptime smartmontools fzf ffmpeg nmap trash-cli zip unar unzip p7zip
-    go nextdns nixfmt-rfc-style nil deploy-rs just nixpkgs-fmt tree git-crypt python3Full
+    zsh
+    git
+    neovim
+    direnv
+    pass
+    vim
+    wget
+    curl
+    jq
+    coreutils
+    gawk
+    gnugrep
+    iproute2
+    mc
+    htop
+    btop
+    lsof
+    age
+    sops
+    ssh-to-age
+    openssh
+    wireguard-tools
+    dive
+    apacheHttpd
+    meslo-lgs-nf
+    yamllint
+    nix-index
+    iotop
+    cachix
+    tuptime
+    smartmontools
+    fzf
+    ffmpeg
+    nmap
+    trash-cli
+    zip
+    unar
+    unzip
+    p7zip
+    go
+    nextdns
+    nixfmt-rfc-style
+    nil
+    deploy-rs
+    just
+    nixpkgs-fmt
+    tree
+    git-crypt
+    python3Full
   ];
-
 
   services = {
     openssh = {
@@ -67,11 +132,15 @@
       ];
     };
 
-
-
     nextdns = {
       enable = true;
-      arguments = [ "-profile" "nextdns0" "-cache-size" "10MB" "--report-client-info" ];
+      arguments = [
+        "-profile"
+        "nextdns0"
+        "-cache-size"
+        "10MB"
+        "--report-client-info"
+      ];
     };
     vscode-server.enable = true;
   };
@@ -89,7 +158,6 @@
     extraSpecialArgs = { inherit inputs; };
     users.zeev = import ./home-manager;
   };
-  
-  
+
   system.stateVersion = "25.05";
 }
