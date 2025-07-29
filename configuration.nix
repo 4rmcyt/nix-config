@@ -114,13 +114,6 @@
     users.zeev = import ./home-manager;
   };
   
-  systemd.services.nextdns-activate = {
-    script = ''
-      ${pkgs.nextdns}/bin/nextdns activate
-    '';
-    after = [ "nextdns.service" ];
-    wantedBy = [ "multi-user.target" ];
-  };
   
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "25.05";
