@@ -23,11 +23,20 @@
       show-trace = true;
       download-buffer-size = 10737418240; # 10 GiB
       max-jobs = 4;
+      substituters = [
+        "http://binarycache.example.com"
+        "https://nix-community.cachix.org"
+        "https://cache.nixos.org/"
+      ];
+      trusted-public-keys = [
+        "4rmcyt.cachix.org-1:uKI766iybXD8uDBVexbc5BCYAfdBJ262ID4C+dl2hws="
+      ];
     };
     registry.nixpkgs = {
       from = { id = "nixpkgs"; type = "indirect"; };
       flake = inputs.nixpkgs;
     };
+    
   };
 
   security.sudo.execWheelOnly = true;
@@ -40,7 +49,7 @@
   environment.systemPackages = with pkgs; [
     zsh git neovim direnv pass vim wget curl jq coreutils gawk gnugrep
     iproute2 mc htop btop lsof age sops ssh-to-age openssh wireguard-tools dive
-    apacheHttpd meslo-lgs-nf yamllint nix-index iotop 
+    apacheHttpd meslo-lgs-nf yamllint nix-index iotop cachix
     tuptime smartmontools fzf ffmpeg nmap trash-cli zip unar unzip p7zip
     go nextdns nixfmt-rfc-style nil deploy-rs just nixpkgs-fmt tree git-crypt python3Full
   ];
