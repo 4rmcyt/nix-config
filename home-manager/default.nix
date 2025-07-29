@@ -11,19 +11,6 @@
     zsh-powerlevel10k
   ];
 
-  nix =  {
-    package = lib.mkDefault pkgs.nixVersions.latest;
-    settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "root" "zeev" ];
-      warn-dirty = false;
-      cores = 4;
-      show-trace = true;
-      download-buffer-size = 10737418240; # 10 GiB
-      max-jobs = 4;
-    };
-  };
-
   programs = {
     git = {
       enable = true;
@@ -62,10 +49,10 @@
           src = pkgs.zsh-powerlevel10k;
           file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
         }
-        {                                                                                   
-          name = "powerlevel10k";                                                           
-          src = pkgs.zsh-powerlevel10k;                                                     
-          file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";                         
+        {
+          name = "powerlevel10k";
+          src = pkgs.zsh-powerlevel10k;
+          file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
         }
         {
           name = "zsh-history-substring-search";
@@ -91,12 +78,6 @@
           "direnv"
         ];
       };
-    };
-
-    
-    nix-index = {
-      enable = true;
-      enableZshIntegration = true;
     };
 
     direnv = {
