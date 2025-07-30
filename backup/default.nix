@@ -90,7 +90,7 @@
 
       before_backup = [
         "echo Starting a backup job."
-        "${pkgs.iputils}/bin/ping -q -c 1 192.168.1.254 > /dev/null || exit 75"; 
+        "${pkgs.iputils}/bin/ping -q -c 1 192.168.1.254 > /dev/null || exit 75" 
       ];
       after_backup = [
         "echo Backup created."
