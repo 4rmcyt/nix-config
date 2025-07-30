@@ -81,8 +81,12 @@
     configurations = {
       # The name here becomes the .yaml filename in /etc/borgmatic.d/
       local-server-backup = {
-        repository = "/var/lib/borgmatic/${config.networking.hostName}";
-        # Add the hook to initialize the repository
+        # 'repository' must be nested under 'location'
+        location = {
+          repositories = [ "/var/lib/borgmatic/${config.networking.hostName}" ];
+        };
+        
+        # 'before' hook is correctly nested under 'hooks'
         hooks = {
           before = [
             "borg init --encryption=repokey-blake2"
