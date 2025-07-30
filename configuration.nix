@@ -108,7 +108,7 @@
         }
         {
           type = "ed25519";
-          path = config.sops.borg_ssh_key.path;
+          path = config.sops.secrets.borg_ssh_key.path;
         }
       ];
       settings = {
