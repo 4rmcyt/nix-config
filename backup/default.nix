@@ -52,8 +52,8 @@ let
       "/home/*/.local/share/Trash"
       "/home/*/.local/share/containers"
     ];
-    encryption_passcommand = "${pkgs.coreutils}/bin/cat" + ${config.sops.secrets.borgmatic_encryption_pass.path};
-    ssh_command = "ssh -i" + ${config.sops.secrets.borg_ssh_key.path};
+    encryption_passcommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.borgmatic_encryption_pass.path}";
+    ssh_command = "ssh -i ${config.sops.secrets.borg_ssh_key.path}";
     keep_hourly = 6;
     keep_daily = 7;
     keep_weekly = 4;
