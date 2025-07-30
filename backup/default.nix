@@ -11,7 +11,6 @@
     compression = "zstd";
     backupAll = true; # Backup all databases
     location = "/var/lib/postgres-backup/dump.sql";
-    startAt = "*-*-* 01:15:00"; # Run daily at 01:15 AM
   };
 
   services.borgmatic = {
