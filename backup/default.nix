@@ -39,7 +39,7 @@
           "/data/media/"
 
         ];
-    settings = {
+
         repositories = [ "ssh://uu478963@u478963.your-storagebox.de:23//media/backup/main-backup" ];
 
         exclude_patterns = [
@@ -69,8 +69,8 @@
           "/home/*/.local/share/containers"
         ];
       };
-
-      storage = {
+    settings = {
+        storage = {
         compression = "zstd,1";
         borg_rsh = "ssh -o 'StrictHostKeyChecking=no' -i /home/zeev/.ssh/zeev";
         encryption_passcommand = "echo";
