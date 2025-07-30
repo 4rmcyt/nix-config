@@ -132,4 +132,10 @@
       # };
     };
   };
+  users.users.borgmatic = {
+    isSystemUser = true;
+    group = "borgmatic";
+    extraGroups = [ "users" ];
+  };
+  users.groups.borgmatic = {};
 }
