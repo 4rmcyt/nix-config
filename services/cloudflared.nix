@@ -30,6 +30,7 @@
           "calibre-web.labhome.work" = "http://localhost:8083";
           "vault.labhome.work" = "http://localhost:8222";
           "link.labhome.work" = "http://localhost:12522";
+          "kuma.labhome.work" = "http://localhost:3001";
         };
       };
     };
