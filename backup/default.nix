@@ -88,17 +88,31 @@
       keep_monthly = 12;
       keep_yearly = 3;
 
-      # Hooks
-      before_backup = [
-        "echo Starting a backup job."
-        "${pkgs.iputils}/bin/ping -q -c 1 192.168.1.254 > /dev/null || exit 75"
-      ];
-      after_backup = [
-        "echo Backup created."
-      ];
-      on_error = [
-        "echo Error while creating a backup."
-      ];
+      hooks = {
+        commands = [
+          {
+            name = "Ping Gateway";
+            when = "before create";
+            command = "${pkgs.iputils}/bin/ping -q -c 1 192.168.1.254 > /dev/null || exit 75";
+            on_error = "fail";
+          }
+          {
+            name = "Start Message";
+            when = "before create";
+            command = "echo Starting a backup job.";
+          }
+          {
+            name = "Finish Message";
+            when = "after create";
+            command = "echo Backup created.";
+          }
+          {
+            name = "Error Message";
+            when = "on error";
+            command = "echo Error while creating a backup.";
+          }
+        ];
+      };
 
       # Consistency Checks
       checks = [
@@ -137,5 +151,5 @@
     group = "borgmatic";
     extraGroups = [ "users" ];
   };
-  users.groups.borgmatic = {};
+  users.groups.borgmatic = { };
 }
