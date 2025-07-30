@@ -134,55 +134,58 @@ in
       BindPaths = [
         "/data/Downloads"
         "/data/media"
+        "/data/media/.state"
       ];
     };
   });
 
   systemd.tmpfiles.rules = [
-    "d /data 0775 root media -"
-    "d /data/media/movies 0775 zeev media -"
-    "d /data/media/audiobooks 0775 zeev media -"
-    "d /data/media/music 0775 zeev media -"
-    "d /data/media/shows 0775 zeev media -"
-    "d /data/media/books 0775 zeev media -"
-    "d /data/media/comics 0775 zeev media -"
-    "d /data/media/manga 0775 zeev media -"
-    "d /data/media/torrents 0775 zeev media -"
-    "d /data/media/usenet 0775 zeev media -"
-    "d /data/Downloads 0775 zeev users -"
+    "d /data 775 root media -"
+    "d /data/media/movies 775 zeev media -"
+    "d /data/media/audiobooks 775 zeev media -"
+    "d /data/media/music 775 zeev media -"
+    "d /data/media/shows 775 zeev media -"
+    "d /data/media/books 775 zeev media -"
+    "d /data/media/comics 775 zeev media -"
+    "d /data/media/manga 775 zeev media -"
+    "d /data/media/torrents 775 zeev media -"
+    "d /data/media/usenet 775 zeev media -"
+    "d /data/Downloads 775 zeev users -"
 
     
  
-    "d /data/media 0775 root media -"
-    "d /data/media/library 0775 zeev media -"
-    "d /data/media/torrents 0775 zeev media -"
-    "d /data/media/usenet 0775 zeev media -"
+    "d /data/media 775 root media -"
+    "d /data/media/library 775 zeev media -"
+    "d /data/media/torrents 775 zeev media -"
+    "d /data/media/usenet 775 zeev media -"
 
-    "d /data/media/.state 0775 root media -"
-    "d /data/media/.state/nixarr 0775 root media -"
+    "d /data/media/.state 775 root media -"
+    "d /data/media/.state/nixarr 775 root media -"
 
-    "d /data/media/.state/nixarr/audiobookshelf 0775 audiobookshelf audiobookshelf -"
-    "d /data/media/.state/nixarr/cross-seed 0775 cross-seed cross-seed -"
-    "d /data/media/.state/nixarr/jellyfin 0755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/jellyfin/data 0755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/jellyfin/config 0755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/jellyfin/cache 0755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/jellyfin/log 0755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/audiobookshelf/metadata 0755 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/audiobookshelf 775 audiobookshelf audiobookshelf -"
+    "d /data/media/.state/nixarr/cross-seed 775 cross-seed cross-seed -"
+    "d /data/media/.state/nixarr/jellyfin 755 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyfin/data 755 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyfin/config 755 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyfin/cache 775 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyfin/log 775 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyseerr 775 jellyseerr jellyseerr -"
+    "d /data/media/.state/nixarr/jellyseerr/db 775 jellyseerr jellyseerr -"
+    "d /data/media/.state/nixarr/jellyseerr/logs 775 jellyseerr jellyseerr -"
+    "d /data/media/.state/nixarr/audiobookshelf/metadata 775 audiobookshelf audiobookshelf -"
+    "d /data/media/.state/nixarr/audiobookshelf/config 775 audiobookshelf audiobookshelf -"
 
-    "d /data/media/.state/nixarr/lidarr 0775 lidarr lidarr -"
-    "d /data/media/.state/nixarr/prowlarr 0775 prowlarr prowlarr -"
-    "d /data/media/.state/nixarr/radarr 0775 radarr radarr -"
-    "d /data/media/.state/nixarr/sonarr 0775 sonarr sonarr -"
-    "d /data/media/.state/nixarr/sabnzbd 0775 sabnzbd sabnzbd -"
-    "d /data/media/.state/nixarr/bazarr 0775 bazarr bazarr -"
-    "d /data/media/.state/nixarr/transmission 0775 transmission transmission -"
 
-    "d /data/media/.state/nixarr/jellyseerr 0775 jellyseerr jellyseerr -"
-    "d /data/media/.state/nixarr/jellyseerr/db 0775 jellyseerr jellyseerr -" 
-    "d /data/media/.state/nixarr/jellyseerr/logs 0755 jellyseerr jellyseerr -"
 
-    "d /var/lib/transmission 0775 transmission transmission -"
+    "d /data/media/.state/nixarr/lidarr 775 lidarr lidarr -"
+    "d /data/media/.state/nixarr/prowlarr 775 prowlarr prowlarr -"
+    "d /data/media/.state/nixarr/radarr 775 radarr radarr -"
+    "d /data/media/.state/nixarr/sonarr 775 sonarr sonarr -"
+    "d /data/media/.state/nixarr/sabnzbd 775 sabnzbd sabnzbd -"
+    "d /data/media/.state/nixarr/bazarr 775 bazarr bazarr -"
+    "d /data/media/.state/nixarr/transmission 775 transmission transmission -"
+
+   "d /var/lib/transmission 775 transmission transmission -"
 
   ];
 }
