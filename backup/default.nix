@@ -1,7 +1,8 @@
-{ pkgs,
+{
+  pkgs,
   config,
   lib,
-   }:
+}:
 {
 
   services.borgmatic = {
@@ -88,7 +89,7 @@
 
       # Hooks
       before_backup = [
-       "echo Starting a backup job."
+        "echo Starting a backup job."
         "${pkgs.iputils}/bin/ping -q -c 1 192.168.1.254 > /dev/null || exit 75"
       ];
       after_backup = [
@@ -120,14 +121,14 @@
       check_last = 3;
 
       # Notifications
-      uptime_kuma = {
-        push_url = "http://uptime-kuma.heimdall.technet/api/push/nDXOzelHhZ";
-        states = [
-          #"start"
-          "finish"
-          "fail"
-        ];
-      };
+      # uptime_kuma = {
+      #   push_url = "http://kuma.example.com/api/push/nDXOzelHhZ";
+      #   states = [
+      #     #"start"
+      #     "finish"
+      #     "fail"
+      #   ];
+      # };
     };
   };
 }
