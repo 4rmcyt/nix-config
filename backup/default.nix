@@ -10,7 +10,7 @@
     enable = true;
     compression = "zstd";
     backupAll = true; # Backup all databases
-    location = "/home/zeev/backup/postgres-backup/dump.sql";
+    location = "/var/lib/postgres-backup/dump.sql";
     startAt = "*-*-* 01:15:00"; # Run daily at 01:15 AM
   };
 
@@ -73,7 +73,8 @@
         storage = {
         compression = "zstd,1";
         borg_rsh = "ssh -o 'StrictHostKeyChecking=no' -i /home/zeev/.ssh/zeev";
-        encryption_passcommand = "echo";
+        encryption_passcommand = config.sops.secrets.borgmatic_encryption_pass.path;
+        };
       };
 
       retention = {

@@ -40,6 +40,8 @@
       keycloak_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "keycloak_db_password"; owner = "postgresql"; group = "postgresql"; };
       paperless_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "paperless_db_password"; owner = "postgresql"; group = "postgresql"; };
 
+      #Backup Secrets
+      borgmatic_encryption_pass = { sopsFile = ../../secrets/borgmatic.yaml; key = "borgmatic_encryption_pass"; };
     };
   };
 }
