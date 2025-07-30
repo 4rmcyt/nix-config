@@ -180,7 +180,7 @@ let
         path = "/var/lib/borgmatic/${config.networking.hostName}";
       }
     ];
-  } 
+  }; 
 in
 
 {
