@@ -140,27 +140,21 @@ in
   });
 
   systemd.tmpfiles.rules = [
-    "d /data 775 root media -"
-    "d /data/media/movies 775 zeev media -"
-    "d /data/media/audiobooks 775 zeev media -"
-    "d /data/media/music 775 zeev media -"
-    "d /data/media/shows 775 zeev media -"
-    "d /data/media/books 775 zeev media -"
-    "d /data/media/comics 775 zeev media -"
-    "d /data/media/manga 775 zeev media -"
-    "d /data/media/torrents 775 zeev media -"
-    "d /data/media/usenet 775 zeev media -"
-    "d /data/Downloads 775 zeev users -"
+    "d /data 770 root media -"
+    "d /data/media/movies 770 zeev media -"
+    "d /data/media/audiobooks 770 zeev media -"
+    "d /data/media/music 770 zeev media -"
+    "d /data/media/shows 770 zeev media -"
+    "d /data/media/books 770 zeev media -"
+    "d /data/media/comics 770 zeev media -"
+    "d /data/media/manga 770 zeev media -"
+    "d /data/media/torrents 770 zeev media -"
+    "d /data/media/usenet 770 zeev media -"
+    "d /data/Downloads 770 zeev users -"
 
-    
- 
-    "d /data/media 775 root media -"
-    "d /data/media/library 775 zeev media -"
-    "d /data/media/torrents 775 zeev media -"
-    "d /data/media/usenet 775 zeev media -"
 
-    "d /data/media/.state 775 root media -"
-    "d /data/media/.state/nixarr 775 root media -"
+    "d /data/media/.state 770 root media -"
+    "d /data/media/.state/nixarr 770 root media -"
 
     "d /data/media/.state/nixarr/audiobookshelf 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/cross-seed 775 cross-seed cross-seed -"
@@ -174,9 +168,6 @@ in
     "d /data/media/.state/nixarr/jellyseerr/logs 775 jellyseerr jellyseerr -"
     "d /data/media/.state/nixarr/audiobookshelf/metadata 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/audiobookshelf/config 775 audiobookshelf audiobookshelf -"
-
-
-
     "d /data/media/.state/nixarr/lidarr 775 lidarr lidarr -"
     "d /data/media/.state/nixarr/prowlarr 775 prowlarr prowlarr -"
     "d /data/media/.state/nixarr/radarr 775 radarr radarr -"
