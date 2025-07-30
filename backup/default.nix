@@ -6,13 +6,6 @@
 }:
 {
 
-  environment.systemPackages = with pkgs; [
-    borgmatic
-    borgbackup-monitor
-    postgresql 
-  ];
-
-
   services.postgresqlBackup = {
     enable = true;
     compression = "zstd";
