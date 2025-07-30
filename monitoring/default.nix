@@ -127,6 +127,14 @@
       }
     ];
   };
+  services.uptime_kuma =  {
+    enable = true;
+    settings = {
+      port = 3001;
+      bind_address = "127.0.0.1";
+    };
+  };
+
 
   users.users.grafana = {
     isSystemUser = true;

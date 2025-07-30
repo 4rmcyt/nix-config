@@ -63,10 +63,10 @@
         3000  # Grafana
         9090  # Prometheus
         9100  # Node Exporter
-        8000  # TP-Link Exporter
-        9948  # Nextdns Exporter
+        # 8000  # TP-Link Exporter
+        # 9948  # Nextdns Exporter
         27196 # Cloudflare Exporter
-        9753  # Restic Exporter
+        3001  # Uptime Kuma
 
         # Database & Infrastructure
         1883  # Mosquitto MQTT
