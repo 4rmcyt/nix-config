@@ -88,30 +88,18 @@
       keep_monthly = 12;
       keep_yearly = 3;
 
-      hooks = {
-        before_backup = [
-          {
-            command = "echo Starting a backup job.";
-          }
-          {
-            # Note: on_error can be set per-command.
-            # Borgmatic default is to continue on error, so we must specify 'fail'.
-            command = "${pkgs.iputils}/bin/ping -q -c 1 192.168.1.254 > /dev/null || exit 75";
-            on_error = "fail";
-          }
-        ];
-        after_backup = [
-          {
-            command = "echo Backup created.";
-          }
-        ];
-        on_error = [
-          {
-            command = "echo Error while creating a backup.";
-          }
-        ];
-      };
+      before_backup = [
+        "echo Starting a backup job."
+        "${pkgs.iputils}/bin/ping -q -c 1 192.168.1.254 > /dev/null || exit 75";
+      ];
+      after_backup = [
+        "echo Backup created."
+      ];
+      on_error = [
+        "echo Error while creating a backup."
+      ];
 
+      
       # Consistency Checks
       checks = [
         {
