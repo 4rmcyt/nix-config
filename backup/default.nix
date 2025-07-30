@@ -5,6 +5,7 @@
   ...
 }:
 {
+
   environment.systemPackages = with pkgs; [
     borgmatic
     borgbackup-monitor
@@ -91,14 +92,18 @@
         }];
       };
     };
-
-    # Configure the systemd timer for borgmatic.
-    systemdTimer = {
-      OnCalendar = "daily";
-      Persistent = true;
-    };
   };
-
+  # Configure the systemd timer for borgmatic.
+  systemd.timers.borgmatic = {
+      enable = true;
+      wantedBy = ["timers.target"];
+      timerConfig = {
+        Unit = "borgmatic.service";
+        OnCalendar = "daily";
+        Persistent = true;
+        RandomizedDelaySec = "3h";
+      };
+  };
   systemd.tmpfiles.rules = [
     "d /var/lib/postgres-backup 750 postgres postgres -"
   ];
