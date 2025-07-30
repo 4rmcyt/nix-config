@@ -72,7 +72,7 @@
       };
 
       consistency = {
-        checks = ["repository", "archives"];
+        checks = ["repository" "archives"];
         check_last = 10;
       };
     };
