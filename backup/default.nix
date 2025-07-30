@@ -87,7 +87,8 @@
       keep_weekly = 4;
       keep_monthly = 12;
       keep_yearly = 3;
-
+      
+      # Hooks
       before_backup = [
         "echo Starting a backup job."
         "${pkgs.iputils}/bin/ping -q -c 1 192.168.1.254 > /dev/null || exit 75" 
