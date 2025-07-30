@@ -127,7 +127,7 @@
       }
     ];
   };
-  services.uptime_kuma =  {
+  services.uptime-kuma =  {
     enable = true;
     settings = {
       port = 3001;
