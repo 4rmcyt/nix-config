@@ -30,6 +30,7 @@
           "calibre-web.example.com" = "http://localhost:8083";
           "vault.example.com" = "http://localhost:8222";
           "link.example.com" = "http://localhost:12522";
+          "kuma.example.com" = "http://localhost:3001";
         };
       };
     };
