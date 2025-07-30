@@ -1,135 +1,133 @@
-{
-  pkgs,
+{ pkgs,
   config,
   lib,
-  ...
-}:
-let
-  yamlFormat = pkgs.formats.yaml { };
-  borgmatic-config = {
-    source_directories = [
-      "/home/zeev"
-      "/var/log"
-      "/var/lib/postgres-backup" # Include the directory where the dump will be.
-      "/var/lib/home-assistant"
-      "/var/lib/kavita"
-      "/var/lib/miniflux"
-      "/var/lib/mosquitto"
-      "/var/lib/paperless"
-      "/var/lib/prometheus2"
-      "/var/lib/radicale"
-      "/var/lib/sops"
-      "/var/lib/calibre-web"
-      "/var/lib/grafana"
-      "/var/lib/microbin"
-      "/var/lib/homepage-dashboard"
-      "/var/lib/nixos"
-      "/data/.secret"
-      "/data/media/.state"
-      "/etc"
-    ];
-    exclude_patterns = [
-      # Home directory excludes
-      "/home/zeev/Downloads"
-      "/home/zeev/backups"
-      "/home/zeev/.cache"
-      "/home/zeev/.npm/_cacache"
-      "*/node_modules"
-      "*/venv"
-      "*/.venv"
-
-      # General system excludes
-      "/var/lib/systemd"
-      "/var/lib/containers"
-      "/var/lib/flatpak"
-      "/var/lib/docker"
-      "/var/lib/Podman"
-
-      # Wildcard excludes
-      "*/.Trash"
-      "*/Cache"
-      "*/cache2"
-      "/home/*/.local/share/Trash"
-      "/home/*/.local/share/containers"
-    ];
-    encryption_passcommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.borgmatic_encryption_pass.path}";
-    ssh_command = "ssh -i ${config.sops.secrets.borg_ssh_key.path}";
-    keep_hourly = 6;
-    keep_daily = 7;
-    keep_weekly = 4;
-    keep_monthly = 6;
-    keep_yearly = 1;
-
-    checks = [
-      {
-        name = "repository";
-        frequency = "always";
-      }
-      {
-        name = "archives";
-        frequency = "always";
-      }
-      {
-        name = "data";
-        frequency = "always";
-      }
-      {
-        name = "extract";
-        frequency = "always";
-      }
-    ];
-    check_last = 3;
-  };
-
-  srv-borgbackup-config = {
-    repositories = [
-      {
-        label = "On Disk Backup";
-        path = "/var/lib/borgmatic/backup/${config.networking.hostName}";
-      }
-      {
-        label = "Hetzner Server Backup";
-        path = "ssh://u478963@u478963.your-storagebox.de:23/backup/${config.networking.hostName}";
-      }
-    ];
-    
-    hooks = {
-      # Runs before the 'create' action. Replaces 'before_backup'.
-      before_command = [
-        "echo Starting a backup job."
-        "${pkgs.iputils}/bin/ping -q -c 1 10.100.100.5 > /dev/null || exit 75"
-      ];
-      # Runs after the 'create' action. Replaces 'after_backup'.
-      after_command = [
-        "echo Backup created."
-      ];
-      # Runs on any error.
-      on_command = [
-        "echo Error while creating a backup."
-      ];
-      };
-    };
-in
-
+   }:
 {
-  services.postgresqlBackup = {
-    enable = true;
-    compression = "zstd";
-    backupAll = true;
-    location = "/var/lib/postgres-backup/dump.sql";
-  };
 
   services.borgmatic = {
     enable = true;
+    settings = {
+      # Sources
+      source_directories = [
+        "/home/zeev"
+        "/var/log"
+        "/var/lib/postgres-backup" # Include the directory where the dump will be.
+        "/var/lib/home-assistant"
+        "/var/lib/kavita"
+        "/var/lib/miniflux"
+        "/var/lib/mosquitto"
+        "/var/lib/paperless"
+        "/var/lib/prometheus2"
+        "/var/lib/radicale"
+        "/var/lib/sops"
+        "/var/lib/calibre-web"
+        "/var/lib/grafana"
+        "/var/lib/microbin"
+        "/var/lib/homepage-dashboard"
+        "/var/lib/nixos"
+        "/data/.secret"
+        "/data/media/.state"
+        "/etc"
+      ];
+      # Excludes
+      exclude_patterns = [
+        # Home directory excludes
+        "/home/zeev/Downloads"
+        "/home/zeev/backups"
+        "/home/zeev/.cache"
+        "/home/zeev/.npm/_cacache"
+        "*/node_modules"
+        "*/venv"
+        "*/.venv"
 
+        # General system excludes
+        "/var/lib/systemd"
+        "/var/lib/containers"
+        "/var/lib/flatpak"
+        "/var/lib/docker"
+        "/var/lib/Podman"
+
+        # Wildcard excludes
+        "*/.Trash"
+        "*/Cache"
+        "*/cache2"
+        "/home/*/.local/share/Trash"
+        "/home/*/.local/share/containers"
+      ];
+      exclude_if_present = [
+        ".nobackup"
+        ".stversions"
+        ".thumbnails"
+      ];
+
+      # Repositories
+      repositories = [
+        {
+          label = "On Disk Backup";
+          path = "/var/lib/borgmatic/backup/${config.networking.hostName}";
+        }
+        {
+          label = "Hetzner Server Backup";
+          path = "ssh://u478963@u478963.your-storagebox.de:23/backup/${config.networking.hostName}";
+        }
+      ];
+      encryption_passcommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.borgmatic_encryption_pass.path}";
+      ssh_command = "ssh -i ${config.sops.secrets.borg_ssh_key.path}";
+
+      # Backup Settings
+      compression = "zstd";
+      archive_name_format = "backup-{now}";
+      relocated_repo_access_is_ok = true;
+
+      # Retention
+      keep_hourly = 24;
+      keep_daily = 7;
+      keep_weekly = 4;
+      keep_monthly = 12;
+      keep_yearly = 3;
+
+      # Hooks
+      before_backup = [
+       "echo Starting a backup job."
+        "${pkgs.iputils}/bin/ping -q -c 1 192.168.1.254 > /dev/null || exit 75"
+      ];
+      after_backup = [
+        "echo Backup created."
+      ];
+      on_error = [
+        "echo Error while creating a backup."
+      ];
+
+      # Consistency Checks
+      checks = [
+        {
+          name = "repository";
+          frequency = "always";
+        }
+        {
+          name = "archives";
+          frequency = "always";
+        }
+        {
+          name = "data";
+          frequency = "always";
+        }
+        {
+          name = "extract";
+          frequency = "always";
+        }
+      ];
+      check_last = 3;
+
+      # Notifications
+      uptime_kuma = {
+        push_url = "http://uptime-kuma.heimdall.technet/api/push/nDXOzelHhZ";
+        states = [
+          #"start"
+          "finish"
+          "fail"
+        ];
+      };
+    };
   };
-  environment.etc."borgmatic/base/borgmatic_base.yaml".source =
-    yamlFormat.generate "borgmatic_base.yaml" borgmatic-config;
-  environment.etc."borgmatic.d/srv-borgbackup.yaml".source =
-    yamlFormat.generate "srv-borgbackup.yaml" srv-borgbackup-config;
-
-  systemd.tmpfiles.rules = [
-    "d /var/lib/borgmatic/backup 750 borgmatic borgmatic -"
-
-  ];
 }
