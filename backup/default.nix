@@ -5,8 +5,6 @@
   ...
 }:
 {
-
-
   environment.systemPackages = with pkgs; [
     borgmatic
     borgbackup-monitor
@@ -101,8 +99,6 @@
     };
   };
 
-  # This rule is still useful to ensure the postgres dump directory exists
-  # with the correct permissions, as required by services.postgresqlBackup.
   systemd.tmpfiles.rules = [
     "d /var/lib/postgres-backup 750 postgres postgres -"
   ];
