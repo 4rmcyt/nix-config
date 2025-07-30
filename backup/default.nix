@@ -33,8 +33,6 @@ let
       "/home/zeev/Downloads"
       "/home/zeev/backups"
       "/home/zeev/.cache"
-      "/home/zeev/.config/Slack/logs"
-      "/home/zeev/.config/Code/CachedData"
       "/home/zeev/.npm/_cacache"
       "*/node_modules"
       "*/venv"
@@ -100,4 +98,8 @@ in
     yamlFormat.generate "borgmatic_base.yaml" borgmatic-config;
   environment.etc."borgmatic.d/srv-borgbackup.yaml".source =
     yamlFormat.generate "srv-borgbackup.yaml" srv-borgbackup-config;
+
+  systemd.tmpfiles.rules = [
+    "d /var/lib/borgmatic/homeserver 750 borgmatic borgmatic -"
+  ];
 }
