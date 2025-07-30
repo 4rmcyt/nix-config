@@ -42,6 +42,7 @@
 
       #Backup Secrets
       borgmatic_encryption_pass = { sopsFile = ../../secrets/borgmatic.yaml; key = "borgmatic_encryption_pass"; };
+      borg_ssh_key = { sopsFile = ../../secrets/borg_key; };
     };
   };
 }
