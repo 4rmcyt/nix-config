@@ -80,6 +80,7 @@ let
     ];
     check_last = 3;
   };
+
   srv-borgbackup-config = {
     repositories = [
       {
@@ -91,25 +92,23 @@ let
         path = "ssh://u478963@u478963.your-storagebox.de:23/backup/${config.networking.hostName}";
       }
     ];
+    
     hooks = {
-      before_backup = {
-        commands = [
-          "echo Starting a backup job."
-          "${pkgs.iputils}/bin/ping -q -c 1 10.100.100.5 > /dev/null || exit 75"
-        ];
-      };
-      after_backup = {
-        commands = [
-          "echo Backup created."
-        ];
-      };
-      on_error = {
-        commands = [
-          "echo Error while creating a backup."
-        ];
+      # Runs before the 'create' action. Replaces 'before_backup'.
+      before_command = [
+        "echo Starting a backup job."
+        "${pkgs.iputils}/bin/ping -q -c 1 10.100.100.5 > /dev/null || exit 75"
+      ];
+      # Runs after the 'create' action. Replaces 'after_backup'.
+      after_command = [
+        "echo Backup created."
+      ];
+      # Runs on any error.
+      on_command = [
+        "echo Error while creating a backup."
+      ];
       };
     };
-  };
 in
 
 {
