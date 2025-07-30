@@ -106,6 +106,10 @@
           bits = 4096;
           path = config.sops.secrets.ssh_host_rsa_key.path;
         }
+        {
+          type = "ed25519";
+          path = config.sops.borg_ssh_key.path;
+        }
       ];
       settings = {
         PermitRootLogin = "no";
