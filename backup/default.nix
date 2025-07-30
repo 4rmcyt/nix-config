@@ -52,8 +52,8 @@ let
       "/home/*/.local/share/Trash"
       "/home/*/.local/share/containers"
     ];
-    encryption_passcommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.borgmatic_encryption_pass.path}";
-    ssh_command = "ssh -i ${config.sops.secrets.borg_ssh_key.path}";
+    encryption_passcommand = "${pkgs.coreutils}/bin/cat" + ${config.sops.secrets.borgmatic_encryption_pass.path};
+    ssh_command = "ssh -i" + ${config.sops.secrets.borg_ssh_key.path};
     keep_hourly = 6;
     keep_daily = 7;
     keep_weekly = 4;
@@ -63,27 +63,44 @@ let
     checks = [
       {
         name = "repository";
-        frequency = "1 month";
+        frequency = "always";
       }
       {
         name = "archives";
-        frequency = "1 month";
+        frequency = "always";
+      }
+      {
+        name = "data";
+        frequency = "always";
+      }
+      {
+        name = "extract";
+        frequency = "always";
       }
     ];
-    check_last = 10;
+    check_last = 3;
   };
   srv-borgbackup-config = {
     repositories = [
       {
-        label = "Hetzner Server Backup";
+        label = "On Disk Backup";
         path = "/var/lib/borgmatic/${config.networking.hostName}";
       }
+      {
+        label = "Hetzner Server Backup";
+        path = "ssh://u478963@u478963.your-storagebox.de:23/backup/${config.networking.hostName}";
+      }
     ];
-   hooks = {
-      before_backup = [
-        "borg init --encryption=repokey-blake2"
-      ];
-    };  
+    before_backup = [
+      "echo Starting a backup job."
+      "ping -q -c 1 10.100.100.5 > /dev/null || exit 75"
+    ];
+    after_backup = [
+      "echo Backup created."
+    ];
+    on_error = [
+      "echo Error while creating a backup."
+    ];
   };
 in
 
