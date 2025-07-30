@@ -84,7 +84,7 @@ let
     repositories = [
       {
         label = "On Disk Backup";
-        path = "/var/lib/borgmatic/${config.networking.hostName}";
+        path = "/var/lib/borgmatic/backup/${config.networking.hostName}";
       }
       {
         label = "Hetzner Server Backup";
@@ -122,13 +122,6 @@ in
     yamlFormat.generate "srv-borgbackup.yaml" srv-borgbackup-config;
 
   systemd.tmpfiles.rules = [
-    "d /var/lib/borgmatic/homeserver 750 borgmatic borgmatic -"
-    "d /var/lib/borgmatic/homeserver/cache 750 borgmatic borgmatic -"
-    "d /var/lib/borgmatic/homeserver/logs 750 borgmatic borgmatic -"
-    "d /var/lib/borgmatic/homeserver/data 750 borgmatic borgmatic -"
-    "d /var/lib/borgmatic/homeserver/archives 750 borgmatic borgmatic -"
-    "d /var/lib/borgmatic/homeserver/repositories 750 borgmatic borgmatic -"
-    "d /var/lib/borgmatic/homeserver/backup 750 borgmatic borgmatic -"
-    "d /var/lib/borgmatic/homeserver/tmp 750 borgmatic borgmatic -"
+    "d /var/lib/borgmatic/backup 750 borgmatic borgmatic -"
   ];
 }
