@@ -5,7 +5,7 @@
   ...
 }:
 
-{ 
+{
   environment.systemPackages = with pkgs; [
     home-assistant
     mosquitto
@@ -45,7 +45,7 @@
         };
 
         config.recorder.db_url = "postgresql://@/hass";
-        
+
         http = {
           server_host = "0.0.0.0";
           server_port = 8123;
@@ -86,17 +86,13 @@
       };
     };
 
-    mosquitto = {
+    services.mosquitto = {
       enable = true;
       listeners = [
         {
-          # This allows anonymous connections on this listener
+          acl = [ "pattern readwrite #" ];
+          omitPasswordAuth = true;
           settings.allow_anonymous = true;
-          users = {
-            root = {
-              acl = [ "readwrite #" ];
-            };
-          };
         }
       ];
     };
@@ -109,6 +105,6 @@
     isSystemUser = true;
     group = "mosquitto";
   };
-  users.groups.mosquitto = {};
-  users.groups.hass = {};
+  users.groups.mosquitto = { };
+  users.groups.hass = { };
 }
