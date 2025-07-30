@@ -16,8 +16,7 @@
 
   services.borgmatic = {
     enable = true;
-    settings = {
-      location = {
+    location = {
         source_directories = [
           "/home/zeev"
           "/var/log"
@@ -40,7 +39,7 @@
           "/data/media/"
 
         ];
-
+    settings = {
         repositories = [ "ssh://uu478963@u478963.your-storagebox.de:23//media/backup/main-backup" ];
 
         exclude_patterns = [
