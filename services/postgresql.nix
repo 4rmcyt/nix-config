@@ -32,13 +32,7 @@
         ensureDBOwnership = true;
       }
     ];
-
-  };
-
-  services.postgresqlBackup = {
-    enable = true;
-    backupAll = true;
-    location = "/var/lib/postgresql/backup";
+    #TODO: Authentication settings
   };
 
   users.users.postgresql = {
