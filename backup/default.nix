@@ -15,8 +15,10 @@
 
   services.postgresqlBackup = {
     enable = true;
-    location = "/var/lib/postgres-backup/dump.sql";
-    startAt = "off";
+    compression = "zstd";
+    backupAll = true; # Backup all databases
+    location = "/home/zeev/backup/postgres-backup/dump.sql";
+    startAt = "*-*-* 01:15:00"; # Run daily at 01:15 AM
   };
 
   services.borgmatic = {
@@ -27,6 +29,23 @@
           "/home/zeev"
           "/var/log"
           "/var/lib/postgres-backup" # Include the directory where the dump will be.
+          "/var/lib/home-assistant"
+          "/var/lib/kavita"
+          "/var/lib/miniflux"
+          "/var/lib/mosquitto"
+          "/var/lib/paperless"
+          "/var/lib/prometheus2"
+          "/var/lib/radicale"
+          "/var/lib/sops"
+          "/var/lib/calibre-web"
+          "/var/lib/grafana"
+          "/var/lib/microbin"
+          "/var/lib/homepage-dashboard"
+          "/var/lib/nixos"
+          "/data/.secret"
+          "/data/media/.state"
+          "/data/media/"
+
         ];
 
         repositories = [ "ssh://uu478963@u478963.your-storagebox.de:23//media/backup/main-backup" ];
