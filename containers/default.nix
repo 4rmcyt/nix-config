@@ -7,6 +7,7 @@
   ];
 
   virtualisation.oci-containers.backend = "podman";
+  virtualisation.oci-containers.user = "podman:podman";
   virtualisation.oci-containers.containers = {
     # tl-sg-prometheus-exporter = {
     #   image = "ghcr.io/mad-ady/tl-sg-prometheus-exporter:main";
@@ -27,4 +28,10 @@
     };
     
   };
+  users.users.podman = {
+    isSystemUser = true;
+    group = "podman";
+    extraGroups = [ "users" "podman" ];
+  };
+  users.groups.podman = {  };
 }
