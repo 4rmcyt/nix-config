@@ -35,3 +35,11 @@
   #   paths = ["/var/lib/lldap/" "/var/lib/private/lldap"];
   # };
 }
+
+settings = {
+        storage = {
+        compression = "zstd,1";
+        borg_rsh = "ssh -o 'StrictHostKeyChecking=no' -i /home/zeev/.ssh/zeev";
+        encryption_passcommand = config.sops.secrets.borgmatic_encryption_pass.path;
+        };
+      };

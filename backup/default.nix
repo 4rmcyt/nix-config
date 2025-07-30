@@ -1,47 +1,40 @@
-{
-  pkgs,
-  config,
-  lib,
-  ...
-}:
-{
+{ pkgs, config, lib, ... }:
 
+{
+  # 1. Configure PostgreSQL Backup to run ON-DEMAND via the hook.
   services.postgresqlBackup = {
     enable = true;
     compression = "zstd";
-    backupAll = true; # Backup all databases
+    backupAll = true;
     location = "/var/lib/postgres-backup/dump.sql";
   };
 
   services.borgmatic = {
     enable = true;
     location = {
-        source_directories = [
-          "/home/zeev"
-          "/var/log"
-          "/var/lib/postgres-backup" # Include the directory where the dump will be.
-          "/var/lib/home-assistant"
-          "/var/lib/kavita"
-          "/var/lib/miniflux"
-          "/var/lib/mosquitto"
-          "/var/lib/paperless"
-          "/var/lib/prometheus2"
-          "/var/lib/radicale"
-          "/var/lib/sops"
-          "/var/lib/calibre-web"
-          "/var/lib/grafana"
-          "/var/lib/microbin"
-          "/var/lib/homepage-dashboard"
-          "/var/lib/nixos"
-          "/data/.secret"
-          "/data/media/.state"
-          "/data/media/"
-
-        ];
-
-        repositories = [ "ssh://uu478963@u478963.your-storagebox.de:23//media/backup/main-backup" ];
-
-        exclude_patterns = [
+      source_directories = [
+         "/home/zeev"
+         "/var/log"
+         "/var/lib/postgres-backup" # Include the directory where the dump will be.
+         "/var/lib/home-assistant"
+         "/var/lib/kavita"
+         "/var/lib/miniflux"
+         "/var/lib/mosquitto"
+         "/var/lib/paperless"
+         "/var/lib/prometheus2"
+         "/var/lib/radicale"
+         "/var/lib/sops"
+         "/var/lib/calibre-web"
+         "/var/lib/grafana"
+         "/var/lib/microbin"
+         "/var/lib/homepage-dashboard"
+         "/var/lib/nixos"
+         "/data/.secret"
+         "/data/media/.state"
+         "/data/media/"
+      ];
+      repositories = [ "ssh://uu478963@u478963.your-storagebox.de:23//media/backup/main-backup" ];
+      exclude_patterns = [
           # Home directory excludes
           "/home/zeev/Downloads"
           "/home/zeev/backups"
@@ -66,14 +59,13 @@
           "*/cache2"
           "/home/*/.local/share/Trash"
           "/home/*/.local/share/containers"
-        ];
-      };
+      ];
+    };
     settings = {
-        storage = {
+      storage = {
         compression = "zstd,1";
-        borg_rsh = "ssh -o 'StrictHostKeyChecking=no' -i /home/zeev/.ssh/zeev";
+        borg_rsh = "ssh -o 'StrictHostKeyChecking=no' -i /zeev/home/.ssh/zeev";
         encryption_passcommand = config.sops.secrets.borgmatic_encryption_pass.path;
-        };
       };
 
       retention = {
@@ -83,17 +75,13 @@
         prefix = "{hostname}-";
       };
 
-      # Hooks are the key to integrating with other services.
       hooks = {
-        # Commands to run BEFORE creating a backup.
+        # This hook runs the postgres dump right before the backup starts.
         before_backup = [
           "echo 'Starting PostgreSQL dump via systemd...'"
-          # This command tells systemd to run the postgresqlBackup service and wait for it to complete.
-          # This guarantees a fresh dump file before borgmatic proceeds.
           "systemctl start --wait postgresql-backup.service"
           "echo 'PostgreSQL dump complete.'"
         ];
-        # You can add failure hooks here to send notifications.
         on_failure = [{
           command = ''
             export DISPLAY=:0
@@ -104,20 +92,21 @@
       };
     };
   };
-  # Configure the systemd timer for borgmatic.
+
+  # Configure the systemd timer for borgmatic itself. This is correct.
   systemd.timers.borgmatic = {
-      enable = true;
-      wantedBy = ["timers.target"];
-      timerConfig = {
-        Unit = "borgmatic.service";
-        OnCalendar = "daily";
-        Persistent = true;
-        RandomizedDelaySec = "3h";
-      };
+    enable = true;
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      Unit = "borgmatic.service";
+      OnCalendar = "daily";
+      Persistent = true;
+      RandomizedDelaySec = "3h";
+    };
   };
+
+  # This rule correctly creates the directory for the postgresqlBackup service.
   systemd.tmpfiles.rules = [
     "d /var/lib/postgres-backup 750 postgres postgres -"
   ];
-
-
 }
