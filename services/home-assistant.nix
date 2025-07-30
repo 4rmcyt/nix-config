@@ -86,7 +86,7 @@
       };
     };
 
-    services.mosquitto = {
+    mosquitto = {
       enable = true;
       listeners = [
         {
