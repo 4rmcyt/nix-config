@@ -91,16 +91,24 @@ let
         path = "ssh://u478963@u478963.your-storagebox.de:23/backup/${config.networking.hostName}";
       }
     ];
-    before_backup = [
-      "echo Starting a backup job."
-      "ping -q -c 1 10.100.100.5 > /dev/null || exit 75"
-    ];
-    after_backup = [
-      "echo Backup created."
-    ];
-    on_error = [
-      "echo Error while creating a backup."
-    ];
+    hooks = {
+      before_backup = {
+        commands = [
+          "echo Starting a backup job."
+          "${pkgs.iputils}/bin/ping -q -c 1 10.100.100.5 > /dev/null || exit 75"
+        ];
+      };
+      after_backup = {
+        commands = [
+          "echo Backup created."
+        ];
+      };
+      on_error = {
+        commands = [
+          "echo Error while creating a backup."
+        ];
+      };
+    };
   };
 in
 
@@ -123,5 +131,6 @@ in
 
   systemd.tmpfiles.rules = [
     "d /var/lib/borgmatic/backup 750 borgmatic borgmatic -"
+
   ];
 }
