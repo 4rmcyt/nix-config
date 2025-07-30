@@ -52,10 +52,10 @@
 #         ];
 #       };
 #     };
-    
+
 #     settings = {
 #       exclude_patterns = [
-      
+
 #     ];
 #       storage = {
 #         compression = "zstd,1";
@@ -108,30 +108,35 @@
 #   ];
 # }
 
-{ pkgs, config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   yamlFormat = pkgs.formats.yaml { };
   borgmatic-config = {
-    source_directories = [ 
-    "/home/zeev"
-          "/var/log"
-          "/var/lib/postgres-backup" # Include the directory where the dump will be.
-          "/var/lib/home-assistant"
-          "/var/lib/kavita"
-          "/var/lib/miniflux"
-          "/var/lib/mosquitto"
-          "/var/lib/paperless"
-          "/var/lib/prometheus2"
-          "/var/lib/radicale"
-          "/var/lib/sops"
-          "/var/lib/calibre-web"
-          "/var/lib/grafana"
-          "/var/lib/microbin"
-          "/var/lib/homepage-dashboard"
-          "/var/lib/nixos"
-          "/data/.secret"
-          "/data/media/.state"
-          "/etc"
+    source_directories = [
+      "/home/zeev"
+      "/var/log"
+      "/var/lib/postgres-backup" # Include the directory where the dump will be.
+      "/var/lib/home-assistant"
+      "/var/lib/kavita"
+      "/var/lib/miniflux"
+      "/var/lib/mosquitto"
+      "/var/lib/paperless"
+      "/var/lib/prometheus2"
+      "/var/lib/radicale"
+      "/var/lib/sops"
+      "/var/lib/calibre-web"
+      "/var/lib/grafana"
+      "/var/lib/microbin"
+      "/var/lib/homepage-dashboard"
+      "/var/lib/nixos"
+      "/data/.secret"
+      "/data/media/.state"
+      "/etc"
     ];
     exclude_patterns = [
       # Home directory excludes
@@ -168,8 +173,14 @@ let
     keep_yearly = 1;
 
     checks = [
-      { name = "repository"; frequency = "1 month"; }
-      { name = "archives"; frequency = "1 month"; }
+      {
+        name = "repository";
+        frequency = "1 month";
+      }
+      {
+        name = "archives";
+        frequency = "1 month";
+      }
     ];
     check_last = 10;
   };
@@ -180,7 +191,7 @@ let
         path = "/var/lib/borgmatic/${config.networking.hostName}";
       }
     ];
-  }; 
+  };
 in
 
 {
