@@ -25,6 +25,7 @@
   users.users.lldap = {
     isSystemUser = true;
     group = "lldap";
+    extraGroups = [ "users" ];
   };
   users.groups.lldap = { };
 
