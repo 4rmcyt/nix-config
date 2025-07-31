@@ -144,8 +144,8 @@ in
         "/data/media/torrents"
         "/data/media/usenet"
         "/data/media/audiobooks"
-        "/data/media/radarr"
-        "/data/media/tv-sonarr"
+        "/data/Downloads/radarr"
+        "/data/Downloads/tv-sonarr"
         "/data/media/.state"
         "/data/media/torrents/.incomplete"
       ];
