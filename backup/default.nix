@@ -85,22 +85,20 @@
       keep_weekly = 4;
       keep_monthly = 12;
       keep_yearly = 3;
+      
+      # Hooks
+      before_backup = [
+        "echo Starting a backup job."
+        "${pkgs.iputils}/bin/ping -q -c 1 192.168.1.254 > /dev/null || exit 75" 
+      ];
+      after_backup = [
+        "echo Backup created."
+      ];
+      on_error = [
+        "echo Error while creating a backup."
+      ];
 
-      hooks = {
-        commands = {
-          before_create = [
-            "echo Starting a backup job."
-            "${pkgs.iputils}/bin/ping -q -c 1 192.168.1.254 > /dev/null || exit 75"
-          ];
-          after_create = [
-            "echo Backup created."
-          ];
-          on_error = [
-            "echo Error while creating a backup."
-          ];
-        };
-      };
-
+      
       # Consistency Checks
       checks = [
         {
