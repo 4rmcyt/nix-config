@@ -74,7 +74,7 @@
         }
       ];
       encryption_passcommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.borgmatic_encryption_pass.path}";
-      ssh_command = "ssh -i ${config.sops.secrets.borg_ssh_key.path} -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/var/lib/borgmatic/known_hosts";
+      ssh_command = "ssh -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=~/.ssh/known_hosts -o StrictHostKeyChecking=yes -i ${config.sops.secrets.borg_ssh_key.path} ";
       # Backup Settings
       compression = "zstd";
       archive_name_format = "backup-{now}";
@@ -138,7 +138,7 @@
     extraGroups = [ "users" ];
   };
   users.groups.borgmatic = { };
-  
+
   systemd.tmpfiles.rules = [
     "d /var/lib/borgmatic/backup 0750 borgmatic borgmatic -   -"
   ];
