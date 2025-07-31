@@ -41,7 +41,7 @@
 
       #Backup Secrets
       borgmatic_encryption_pass = { sopsFile = ../../secrets/borgmatic.yaml; key = "borgmatic_encryption_pass"; owner = "borgmatic"; group = "borgmatic"; mode = "0400"; };
-      borg_ssh_key = { sopsFile = ../../secrets/system.yaml; key = "borg_private_key"; owner = "borgmatic"; group = "borgmatic"; mode = "0400"; };
+      borg_private_key = { sopsFile = ../../secrets/system.yaml; key = "borg_private_key"; owner = "borgmatic"; group = "borgmatic"; };
     };
   };
 }
