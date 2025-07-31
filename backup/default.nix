@@ -72,7 +72,7 @@
         }
         {
           label = "Backup Server";
-          path = "ssh://u478963@u478963.your-storagebox.de:23/./borg/hostname/${config.networking.hostName}";
+          path = "ssh://u478963@u478963.your-storagebox.de:23/./borg/${config.networking.hostName}";
         }
       ];
       encryption_passcommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.borgmatic_encryption_pass.path}";
@@ -145,7 +145,7 @@
   users.groups.borgmatic = { };
 
   systemd.tmpfiles.rules = [
-    "D /data/backup/borg/homeserver 770 borgmatic borgmatic - -"
+    "D /data/backup/borg/homeserver 770 borgmatic users - -"
     "D /var/lib/borgmatic 770 borgmatic borgmatic - -"
     "D /var/lib/borgmatic/backup 770 borgmatic borgmatic - -"
     "D /var/lib/borgmatic/log 770 borgmatic borgmatic - -"
