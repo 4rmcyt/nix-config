@@ -134,15 +134,6 @@
       # };
     };
   };
-  users.users.borgmatic = {
-    isSystemUser = true;
-    group = "borgmatic";
-    extraGroups = [
-      "users"
-      "media"
-    ];
-  };
-  users.groups.borgmatic = { };
 
   systemd.tmpfiles.rules = [
     "D /data/backup/borg/homeserver 770 root users - -"
