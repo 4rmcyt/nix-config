@@ -140,6 +140,6 @@ in
   users.groups.borgmatic = { };
 
   systemd.tmpfiles.rules = [
-    "dR /data/backup/borg/ 770 borgmatic borgmatic -   -"
+     "d /data/backup/borg/${config.networking.hostName} 770 borgmatic borgmatic - -"
   ];
 }
