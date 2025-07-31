@@ -136,7 +136,7 @@ in
   users.users.borgmatic = {
     isSystemUser = true;
     group = "borgmatic";
-    extraGroups = [ "users" ];
+    extraGroups = [ "users" "media" ];
   };
   users.groups.borgmatic = { };
 
