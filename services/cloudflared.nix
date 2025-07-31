@@ -31,6 +31,7 @@
           "vault.labhome.work" = "http://localhost:8222";
           "link.labhome.work" = "http://localhost:12522";
           "kuma.labhome.work" = "http://localhost:3001";
+          "lldap.labhome.work" = "http://localhost:6360";
         };
       };
     };

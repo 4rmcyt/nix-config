@@ -9,7 +9,7 @@
   services.lldap = {
     enable = true;
     settings = {
-      http_url = "https://labhome.work";
+      http_url = "https://lldap.labhome.work";
       http_host = "127.0.0.1";
       ldap_base_dn = "dc=labhome,dc=work";
       ldaps_options.enabled = true;
