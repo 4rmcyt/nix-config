@@ -20,8 +20,8 @@
       LLDAP_ADMIN_PASSWORD = config.sops.secrets.lldap_admin_password.path;
       LLDAP_JWT_SECRET = config.sops.secrets.lldap_jwt_secret.path;
       LLDAP_LDAPS_OPTIONS__ENABLED = "true";
-      LLDAP_LDAPS_OPTIONS__CERT_FILE = "/var/lib/acme/${cfg.domainName}/cert.pem";
-      LLDAP_LDAPS_OPTIONS__KEY_FILE = "/var/lib/acme/${cfg.domainName}/key.pem";
+      LLDAP_LDAPS_OPTIONS__CERT_FILE = config.sops.secrets.lldap_cert.path;
+      LLDAP_LDAPS_OPTIONS__KEY_FILE = config.sops.secrets.lldap_key.path;
 
     };
   };
