@@ -18,7 +18,6 @@
     #     "${config.sops.secrets.tplinkExporterConfig.path}:/app/config.yaml:ro"
     #   ];
     # };
-
     nextdns-exporter = {
       image = "ghcr.io/raylas/nextdns-exporter";
       user = "podman:podman";
@@ -35,4 +34,6 @@
     extraGroups = [ "users" "podman" ];
   };
   users.groups.podman = {  };
+  users.extraGroups.podman.members = [ "zeev" "uptime-kuma" "podman" ]; 
+
 }
