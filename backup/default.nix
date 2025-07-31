@@ -133,9 +133,10 @@
     };
   };
   systemd.services.borgmatic = {
-  serviceConfig = {
-    ReadWritePaths = [ "/data/backup/borg" ];
-    TimeoutStartSec = "0";
+    serviceConfig = {
+      ReadWritePaths = [ "/data/backup/borg" ];
+      TimeoutStartSec = "0";
+    };
   };
   systemd.tmpfiles.rules = [
     "D /data/backup/borg/homeserver 770 root users - -"
