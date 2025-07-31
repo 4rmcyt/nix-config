@@ -1,11 +1,9 @@
-# Borgmatic
-#
-# This handles backing up my server's docker files to my laptop and to my backup server
-#
-
-{ config,
+{
+  config,
   pkgs,
-  lib, ... }:
+  lib,
+  ...
+}:
 {
   services.postgresqlBackup = {
     enable = true;
@@ -15,6 +13,13 @@
   };
   services.borgmatic = {
     enable = true;
+    serviceConfig = {
+      # Grant write access to the repository path
+      ReadWritePaths = [ "/data/backup/borg" ];
+
+      # Disable the default 90-second service timeout
+      ßTimeoutStartSec = "0";
+    };
     settings = {
       # Sources
       source_directories = [
@@ -40,24 +45,24 @@
       ];
       # Excludes
       exclude_patterns = [
-          "/home/zeev/Downloads"
-          "/home/zeev/backups"
-          "/home/zeev/.cache"
-          "/home/zeev/.npm/_cacache"
-          "*/node_modules"
-          "*/venv"
-          "*/.venv"
-          "/var/lib/systemd"
-          "/var/lib/containers"
-          "/var/lib/flatpak"
-          "/var/lib/docker"
-          "/var/lib/Podman"
-          "*/.Trash"
-          "*/Cache"
-          "*/cache2"
-          "/home/*/.local/share/Trash"
-          "/home/*/.local/share/containers"
-        ];
+        "/home/zeev/Downloads"
+        "/home/zeev/backups"
+        "/home/zeev/.cache"
+        "/home/zeev/.npm/_cacache"
+        "*/node_modules"
+        "*/venv"
+        "*/.venv"
+        "/var/lib/systemd"
+        "/var/lib/containers"
+        "/var/lib/flatpak"
+        "/var/lib/docker"
+        "/var/lib/Podman"
+        "*/.Trash"
+        "*/Cache"
+        "*/cache2"
+        "/home/*/.local/share/Trash"
+        "/home/*/.local/share/containers"
+      ];
       exclude_if_present = [
         ".nobackup"
         ".stversions"
@@ -134,14 +139,6 @@
       # };
     };
   };
-
-  systemd.services = lib.genAttrs borgmatic (serviceName: {
-    serviceConfig = {
-      BindPaths = [
-        "/data/backup/borg"
-      ];
-    };
-  });
 
   systemd.tmpfiles.rules = [
     "D /data/backup/borg/homeserver 770 root users - -"
