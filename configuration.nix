@@ -155,6 +155,13 @@
 
     smartd = {
       enable = true;
+      defaults.autodetected = "-a -o on -S on -s (S/../.././02|L/../../6/03) -n standby,q";
+      devices = [
+      {
+        nvme = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315";
+        sata = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345";
+      }
+    ];
     };
   };
 
