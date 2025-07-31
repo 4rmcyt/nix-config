@@ -23,6 +23,8 @@
 
         # LDAP
         6360  # LDAP (LDAP server)
+        3890  # LDAP (LDAP server, non-SSL)
+        17170  # LDAP (LDAP server, non-SSL, for testing)
 
         # Media services
         8096  # Jellyfin
