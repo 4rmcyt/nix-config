@@ -11,7 +11,7 @@
       ssh_host_ed25519_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_ed25519_key"; owner = "root"; group = "root"; mode = "0600"; };
       ssh_host_rsa_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_rsa_key"; owner = "root"; group = "root"; mode = "0600"; };
       hetzner_password = { sopsFile = ../../secrets/system.yaml; key = "hetzner_password"; mode = "0400"; };
-      knownHosts = { sopsFile = ../../secrets/known_hosts; key = ""; owner = "root"; group = "borgmatic"; mode = "0640"; };
+      knownHosts = { sopsFile = ../../secrets/known_hosts; owner = "root"; group = "borgmatic"; mode = "0640"; format = "binary"; };
 
       cloudflare_tunnel_credentials = { sopsFile = ../../secrets/cloudflare_tunnel_credentials.bin; owner = "cloudflared"; group = "cloudflared"; format = "binary"; };
       cloudflare_api_key = { sopsFile = ../../secrets/cloudflare.yaml; key = "cloudflare_api_key"; };
