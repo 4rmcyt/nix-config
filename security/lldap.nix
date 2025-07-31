@@ -17,7 +17,7 @@
       ldap_user_email = "redacted@example.com"; 
     };
     environment = {
-      LLDAP_JWT_SECRET_FILE = "/run/lldap/lldap_jwt_secret";
+      LLDAP_JWT_SECRET_FILE = "/run/lldap/jwt_secret_file";
       LLDAP_LDAP_USER_PASS_FILE = "/run/lldap/lldap_user_password";
       LLDAP_LDAPS_OPTIONS__ENABLED = "true";
       LLDAP_LDAPS_OPTIONS__CERT_FILE = config.sops.secrets.lldap_cert.path;
