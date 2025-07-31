@@ -8,7 +8,8 @@
 
   services.borgmatic = {
     enable = true;
-    settings = {
+    configuration = {
+      server = {
         source_directories = [
           "/home/zeev"
           "/var/log"
@@ -30,20 +31,7 @@
           "/data/media/.state"
           "/etc"
         ];
-
-        repositories = [
-          {
-            path = "ssh://u478963@u478963.your-storagebox.de:23/./borg/hostname/${config.networking.hostName}";
-            label = "remote";
-          }
-          {
-            path = "/data/backup/borg";
-            label = "hdd";
-          }
-        ];
-
-        extraConfig = {
-          eexclude_patterns = [
+        exclude_patterns = [
             "/home/zeev/Downloads"
             "/home/zeev/backups"
             "/home/zeev/.cache"
@@ -61,9 +49,22 @@
             "*/cache2"
             "/home/*/.local/share/Trash"
             "/home/*/.local/share/containers"
-          ];
-        };
+        ];
+        
+        repositories = [
+          {
+            path = "ssh://u478963@u478963.your-storagebox.de:23/./borg/hostname/${config.networking.hostName}";
+            label = "remote";
+          }
+          {
+            path = "/data/backup/borg";
+            label = "hdd";
+          }
+        ];
 
+      }
+    };
+    settings = {
       storage = {
         encryptionPasscommand = "${pkgs.coreutils}/bin/cat $${config.sops.secrets.borgmatic_encryption_pass.path}";
         extraConfig = {

@@ -21,8 +21,8 @@
         8080  # Keycloak
         9000  # Keycloak admin console
 
-        # LLDAP
-        6360  # LLDAP (LDAP server)
+        # LDAP
+        6360  # LDAP (LDAP server)
 
         # Media services
         8096  # Jellyfin
@@ -57,7 +57,6 @@
         8123  # Home Assistant
         8222  # Vaultwarden (Bitwarden)
         12522 # Linkwarden 
-
 
         # Monitoring (from monitoring.nix)
         3000  # Grafana
