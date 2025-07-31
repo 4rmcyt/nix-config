@@ -74,8 +74,7 @@
         }
       ];
       encryption_passcommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.borgmatic_encryption_pass.path}";
-      ssh_command = "ssh -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=~/.ssh/known_hosts -o StrictHostKeyChecking=yes -i ${config.sops.secrets.borg_ssh_key.path} ";
-      # Backup Settings
+      ssh_command = "ssh -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=${config.sops.secrets.knownHosts.path} -o StrictHostKeyChecking=yes -i ${config.sops.secrets.borg_ssh_key.path} ";
       compression = "zstd";
       archive_name_format = "backup-{now}";
       relocated_repo_access_is_ok = true;
