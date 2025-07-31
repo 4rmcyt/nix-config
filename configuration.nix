@@ -92,6 +92,7 @@
     git-crypt
     python3Full
     borgbackup
+    smartmontools
   ];
 
   services = {
