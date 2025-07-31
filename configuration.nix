@@ -161,7 +161,7 @@
 
     smartd = {
       enable = true;
-      defaults.autodetected = "-a -o on -S on -s (S/../.././02|L/../../6/03) -n standby,q";
+      defaults.autodetected = "-a -o on -s (S/../.././02|L/../../7/04)";
       devices = [
         {
           device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315";
