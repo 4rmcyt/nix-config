@@ -42,6 +42,11 @@
       #Backup Secrets
       borgmatic_encryption_pass = { sopsFile = ../../secrets/borgmatic.yaml; key = "borgmatic_encryption_pass"; owner = "root"; group = "users"; mode = "0400"; };
       borg_private_key = { sopsFile = ../../secrets/system.yaml; key = "borg_private_key"; owner = "root"; group = "users"; };
-    };
+
+
+      # --- LLDAP Secrets ---
+      lldap_admin_password = { sopsFile = ../../secrets/lldap_secrets.yaml; key = "lldap_initial_admin_password"; owner = "lldap"; group = "lldap"; mode = "0400"; };
+      lldap_jwt_secret = { sopsFile = ../../secrets/lldap_secrets.yaml; key = "lldap_jwt_secret"; owner = "lldap"; group = "lldap"; mode = "0400"; };
+      lldap_db_password = { sopsFile = ../../secrets/lldap_secrets.yaml; key = "lldap_db_password"; owner = "postgres"; group = "postgres"; mode = "0400"; };
   };
 }
