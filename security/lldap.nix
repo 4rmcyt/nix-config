@@ -13,7 +13,7 @@
       http_host = "127.0.0.1";
       ldap_base_dn = "dc=labhome,dc=work";
       ldaps_options.enabled = true;
-      database_url = "postgres://lldap:${config.sops.secrets.lldap_db_password.path}?host=/run/postgresql";
+      database_url = "postgresql:///lldap?host=/run/postgresql";
       ldap_user_email = "redacted@example.com"; 
     };
     environment = {
