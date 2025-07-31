@@ -123,14 +123,14 @@
       check_last = 3;
 
       # Notifications
-      uptime_kuma = {
-        push_url = "https://kuma.example.com/api/push/borgmatic";
-        states = [
-          "start"
-          "finish"
-          "fail"
-        ];
-      };
+      # uptime_kuma = {
+      #   push_url = "https://kuma.example.com/api/push/borgmatic";
+      #   states = [
+      #     "start"
+      #     "finish"
+      #     "fail"
+      #   ];
+      # };
     };
   };
   users.users.borgmatic = {
