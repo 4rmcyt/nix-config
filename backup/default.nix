@@ -49,7 +49,6 @@
             }
           ];
 
-          excludeHomeManagerSymlinks = true;
 
           extraConfig = {
             eexclude_patterns = [
