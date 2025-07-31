@@ -9,7 +9,6 @@
   services.borgmatic = {
     enable = true;
     settings = {
-      location = {
         source_directories = [
           "/home/zeev"
           "/var/log"
@@ -64,7 +63,6 @@
             "/home/*/.local/share/containers"
           ];
         };
-      };
 
       storage = {
         encryptionPasscommand = "${pkgs.coreutils}/bin/cat $${config.sops.secrets.borgmatic_encryption_pass.path}";
