@@ -80,7 +80,7 @@
 
       # Backup Settings
       compression = "lz4";
-      archive_name_format = "backup-{now}";
+      archive_name_format = "backup-${now}";
       relocated_repo_access_is_ok = true;
 
       # Retention
@@ -134,6 +134,14 @@
       # };
     };
   };
+
+  systemd.services = lib.genAttrs borgmatic (serviceName: {
+    serviceConfig = {
+      BindPaths = [
+        "/data/backup/borg"
+      ];
+    };
+  });
 
   systemd.tmpfiles.rules = [
     "D /data/backup/borg/homeserver 770 root users - -"
