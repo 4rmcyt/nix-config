@@ -76,7 +76,7 @@
         }
       ];
       encryption_passcommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.borgmatic_encryption_pass.path}";
-      ssh_command = "ssh -i " + ${config.sops.secrets.borg_private_key.path};
+      ssh_command = "ssh -i " + config.sops.secrets.borg_private_key.path;
 
       # Backup Settings
       compression = "lz4";
