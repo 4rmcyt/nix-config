@@ -13,10 +13,6 @@
   };
   services.borgmatic = {
     enable = true;
-    serviceConfig = {
-      ReadWritePaths = [ "/data/backup/borg" ];
-      TimeoutStartSec = "0";
-    };
     settings = {
       # Sources
       source_directories = [
@@ -136,7 +132,11 @@
       # };
     };
   };
-
+  systemd.services.borgmatic = {
+  serviceConfig = {
+    ReadWritePaths = [ "/data/backup/borg" ];
+    TimeoutStartSec = "0";
+  };
   systemd.tmpfiles.rules = [
     "D /data/backup/borg/homeserver 770 root users - -"
     "D /var/lib/borgmatic 770 root users - -"
