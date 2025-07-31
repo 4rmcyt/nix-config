@@ -4,6 +4,13 @@
   lib,
   ...
 }:
+let
+  prepareEnvScript = pkgs.writeShellScript "prepare-borgmatic-env" ''
+    mkdir -p /root/.ssh
+    ${pkgs.openssh}/bin/ssh-keyscan -p 23 u478963.your-storagebox.de >> /root/.ssh/known_hosts
+    chmod 600 /root/.ssh/known_hosts
+  '';
+in
 {
 
   services.borgmatic = {
@@ -56,12 +63,7 @@
         "/home/*/.local/share/Trash"
         "/home/*/.local/share/containers"
       ];
-      exclude_if_present = [
-        ".nobackup"
-        ".stversions"
-        ".thumbnails"
-      ];
-
+      
       # Repositories
       repositories = [
         {
