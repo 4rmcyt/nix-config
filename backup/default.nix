@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
 
   services.borgmatic = {
@@ -35,7 +40,7 @@
 
           repositories = [
             {
-              path = "ssh://u478963@u478963.your-storagebox.de:23/./borg/${osConfig.networking.hostName}";
+              path = "ssh://u478963@u478963.your-storagebox.de:23/./borg/hostname/${config.networking.hostName}";
               label = "remote";
             }
             {
