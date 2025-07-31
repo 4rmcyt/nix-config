@@ -155,8 +155,3 @@ in
   ];
 }
 
-
-sudo -u borgmatic -- \
-  env BORG_PASSPHRASE=$(cat /run/secrets/borgmatic_encryption_pass) \
-  BORG_RSH="ssh -i /run/secrets/borg_private_key -o UserKnownHostsFile=/run/secrets/knownHosts" \
-  borg init --encryption=repokey -r ssh://u478963@u478963.your-storagebox.de:23/./borg/hostname/homeserver
