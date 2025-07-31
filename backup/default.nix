@@ -74,7 +74,6 @@
         }
       ];
       encryption_passcommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.borgmatic_encryption_pass.path}";
-      ssh_command = "ssh -p 23 -i  ${config.sops.secrets.borg_ssh_key.path} ";
       compression = "zstd";
       archive_name_format = "backup-{now:%Y-%m-%dT%H:%M:%S.%f}";
       relocated_repo_access_is_ok = true;
