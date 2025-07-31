@@ -5,7 +5,8 @@
       pkgs.podman-compose
       pkgs.podman-tui
   ];
-
+  
+  virtualisation.podman.enable = true;
   virtualisation.oci-containers.backend = "podman";
   virtualisation.oci-containers.containers = {
     # tl-sg-prometheus-exporter = {
