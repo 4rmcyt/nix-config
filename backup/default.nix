@@ -146,9 +146,9 @@
 
   systemd.tmpfiles.rules = [
     "D /data/backup/borg/homeserver 770 borgmatic users - -"
-    "D /var/lib/borgmatic 770 borgmatic borgmatic - -"
-    "D /var/lib/borgmatic/backup 770 borgmatic borgmatic - -"
-    "D /var/lib/borgmatic/log 770 borgmatic borgmatic - -"
-    "D /var/lib/borgmatic/cache 770 borgmatic borgmatic - -"
+    "D /var/lib/borgmatic 770 borgmatic users - -"
+    "D /var/lib/borgmatic/backup 770 borgmatic users - -"
+    "D /var/lib/borgmatic/log 770 borgmatic users - -"
+    "D /var/lib/borgmatic/cache 770 borgmatic users - -"
   ];
 }
