@@ -8,7 +8,7 @@
 
   services.borgmatic = {
     enable = true;
-    configuration = {
+    configurations = {
       server = {
         source_directories = [
           "/home/zeev"
