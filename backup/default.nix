@@ -61,46 +61,45 @@
             label = "hdd";
           }
         ];
+        storage = {
+          encryptionPasscommand = "${pkgs.coreutils}/bin/cat $${config.sops.secrets.borgmatic_encryption_pass.path}";
+          extraConfig = {
+            ssh_command = "ssh -i ${config.sops.secrets.borg_private_key.path}";
+            compression = "zstd";
+          };
+        };
+
+        retention = {
+          keepHourly = 12;
+          keepDaily = 14;
+          keepWeekly = 8;
+          keepMonthly = 6;
+          keepYearly = 3;
+        };
+
+        # consistency = {
+        #   checks = [
+        #     {
+        #       name = "repository";
+        #       frequency = "2 weeks";
+        #     }
+        #     {
+        #       name = "archives";
+        #       frequency = "6 weeks";
+        #     }
+        #     #{
+        #     #  name = "data";
+        #     #  frequency = "12 weeks";
+        #     #}
+        #     {
+        #       name = "extract";
+        #       frequency = "12 weeks";
+        #     }
+        #   ];
+        # };
 
       };
     };
-
-    storage = {
-      encryptionPasscommand = "${pkgs.coreutils}/bin/cat $${config.sops.secrets.borgmatic_encryption_pass.path}";
-      extraConfig = {
-        ssh_command = "ssh -i ${config.sops.secrets.borg_private_key.path}";
-        compression = "zstd";
-      };
-    };
-
-    retention = {
-      keepHourly = 12;
-      keepDaily = 14;
-      keepWeekly = 8;
-      keepMonthly = 6;
-      keepYearly = 3;
-    };
-
-    # consistency = {
-    #   checks = [
-    #     {
-    #       name = "repository";
-    #       frequency = "2 weeks";
-    #     }
-    #     {
-    #       name = "archives";
-    #       frequency = "6 weeks";
-    #     }
-    #     #{
-    #     #  name = "data";
-    #     #  frequency = "12 weeks";
-    #     #}
-    #     {
-    #       name = "extract";
-    #       frequency = "12 weeks";
-    #     }
-    #   ];
-    # };
   };
 
   users.users.borgmatic = {
