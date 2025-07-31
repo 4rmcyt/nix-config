@@ -152,6 +152,10 @@
       ];
     };
     vscode-server.enable = true;
+
+    smartd = {
+      enable = true;
+    };
   };
 
   programs = {
