@@ -17,8 +17,8 @@
       ldap_user_email = "redacted@example.com"; 
     };
     environment = {
-      LLDAP_ADMIN_PASSWORD_FILE = config.sops.secrets.lldap_admin_password.path;
-      LLDAP_JWT_SECRET_FILE = config.sops.secrets.lldap_jwt_secret.path;
+      LLDAP_ADMIN_PASSWORD = config.sops.secrets.lldap_admin_password.path;
+      LLDAP_JWT_SECRET = config.sops.secrets.lldap_jwt_secret.path;
     };
   };
 }
