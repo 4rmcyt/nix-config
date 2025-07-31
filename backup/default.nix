@@ -24,7 +24,6 @@
         "/var/lib/miniflux"
         "/var/lib/mosquitto"
         "/var/lib/paperless"
-        "/var/lib/prometheus2"
         "/var/lib/radicale"
         "/var/lib/sops"
         "/var/lib/calibre-web"
