@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  osConfig,
-  ...
-}:
+{ config, pkgs, lib, ... }:
 {
 
   services.borgmatic = {
