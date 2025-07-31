@@ -45,8 +45,8 @@
 
 
       # --- LLDAP Secrets ---
-      lldap_admin_password = { sopsFile = ../../secrets/lldap_secrets.yaml; key = "lldap_admin_password"; };
-      lldap_jwt_secret = { sopsFile = ../../secrets/lldap_secrets.yaml; key = "lldap_jwt_secret"; owner = "lldap"; group = "lldap"; mode = "0400"; };
+      lldap_user_password = { sopsFile = ../../secrets/lldap_secrets.yaml; key = "lldap_admin_password"; };
+      jwt_secret_file = { sopsFile = ../../secrets/lldap_secrets.yaml; key = "lldap_jwt_secret"; owner = "lldap"; group = "lldap"; mode = "0400"; };
       lldap_db_password = { sopsFile = ../../secrets/lldap_secrets.yaml; key = "lldap_db_password"; owner = "postgres"; group = "postgres"; mode = "0400"; };
       lldap_cert = { sopsFile = ../../secrets/cert.pem; owner = "lldap"; group = "lldap"; mode = "0440"; format = "binary"; };
       lldap_key = { sopsFile = ../../secrets/key.pem; owner = "lldap"; group = "lldap"; mode = "0440"; format = "binary"; };
