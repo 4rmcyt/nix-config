@@ -80,7 +80,7 @@
 
       # Backup Settings
       compression = "lz4";
-      archive_name_format = "backup-${now}";
+      archive_name_format = "backup-{now}";
       relocated_repo_access_is_ok = true;
 
       # Retention
