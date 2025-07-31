@@ -14,11 +14,8 @@
   services.borgmatic = {
     enable = true;
     serviceConfig = {
-      # Grant write access to the repository path
       ReadWritePaths = [ "/data/backup/borg" ];
-
-      # Disable the default 90-second service timeout
-      ßTimeoutStartSec = "0";
+      TimeoutStartSec = "0";
     };
     settings = {
       # Sources
