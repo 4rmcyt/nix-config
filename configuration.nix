@@ -93,6 +93,7 @@
     python3Full
     borgbackup
     smartmontools
+    openssl
   ];
 
   services = {
