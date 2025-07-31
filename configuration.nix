@@ -91,6 +91,7 @@
     tree
     git-crypt
     python3Full
+    borg
   ];
 
   services = {
