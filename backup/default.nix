@@ -101,26 +101,26 @@ in
       ];
 
       
-      # Consistency Checks
-      checks = [
-        {
-          name = "repository";
-          frequency = "always";
-        }
-        {
-          name = "archives";
-          frequency = "always";
-        }
-        {
-          name = "data";
-          frequency = "always";
-        }
-        {
-          name = "extract";
-          frequency = "always";
-        }
-      ];
-      check_last = 3;
+      # # Consistency Checks
+      # checks = [
+      #   {
+      #     name = "repository";
+      #     frequency = "always";
+      #   }
+      #   {
+      #     name = "archives";
+      #     frequency = "always";
+      #   }
+      #   {
+      #     name = "data";
+      #     frequency = "always";
+      #   }
+      #   {
+      #     name = "extract";
+      #     frequency = "always";
+      #   }
+      # ];
+      # check_last = 3;
 
       # Notifications
       # uptime_kuma = {
