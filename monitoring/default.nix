@@ -141,7 +141,14 @@
     group = "grafana";
     extraGroups = [ "users" ];
   };
+  users.users.uptime-kuma = {
+    isSystemUser = true;
+    group = "uptime-kuma";
+    extraGroups = [ "users" "podman"];
+  };
   users.groups.grafana = {};
+  users.groups.uptime-kuma = {};
+
 
   systemd.tmpfiles.rules = [
     "d /var/lib/grafana 0755 grafana grafana -"
