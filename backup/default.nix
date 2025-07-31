@@ -8,9 +8,7 @@
 
   services.borgmatic = {
     enable = true;
-
-    backups = {
-      peasec = {
+    settings = {
         location = {
           source_directories = [
             "/home/zeev"
