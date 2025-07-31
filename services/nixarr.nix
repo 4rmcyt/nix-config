@@ -134,7 +134,20 @@ in
       BindPaths = [
         "/data/Downloads"
         "/data/media"
+        "/data/media/movies"
+        "/data/media/audiobooks"
+        "/data/media/music"
+        "/data/media/shows"
+        "/data/media/books"
+        "/data/media/comics"
+        "/data/media/manga"
+        "/data/media/torrents"
+        "/data/media/usenet"
+        "/data/media/audiobooks"
+        "/data/media/radarr"
+        "/data/media/tv-sonarr"
         "/data/media/.state"
+        "/data/media/torrents/.incomplete"
       ];
     };
   });
