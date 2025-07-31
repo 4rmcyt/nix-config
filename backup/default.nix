@@ -8,10 +8,6 @@
 
   services.borgmatic = {
     enable = true;
-  };
-
-  programs.borgmatic = {
-    enable = true;
 
     backups = {
       peasec = {
@@ -48,7 +44,6 @@
               label = "hdd";
             }
           ];
-
 
           extraConfig = {
             eexclude_patterns = [
