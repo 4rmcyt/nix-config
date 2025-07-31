@@ -41,8 +41,8 @@
       paperless_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "paperless_db_password"; owner = "postgresql"; group = "postgresql"; };
 
       #Backup Secrets
-      borgmatic_encryption_pass = { sopsFile = ../../secrets/borgmatic.yaml; key = "borgmatic_encryption_pass"; };
-      borg_ssh_key = { sopsFile = ../../secrets/system.yaml; key = "borg_private_key";};
+      borgmatic_encryption_pass = { sopsFile = ../../secrets/borgmatic.yaml; key = "borgmatic_encryption_pass"; owner = "borgmatic"; group = "borgmatic"; mode = "0400"; };
+      borg_ssh_key = { sopsFile = ../../secrets/system.yaml; key = "borg_private_key"; owner = "borgmatic"; group = "borgmatic"; mode = "0400"; };
     };
   };
 }
