@@ -68,7 +68,7 @@ in
       repositories = [
         {
           label = "On Disk Backup";
-          path = "/var/lib/borgmatic/backup/${config.networking.hostName}";
+          path = "/data/backup/borg/${config.networking.hostName}";
         }
         {
           label = "Hetzner Server Backup";
