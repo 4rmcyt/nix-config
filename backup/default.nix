@@ -32,25 +32,25 @@
           "/etc"
         ];
         exclude_patterns = [
-            "/home/zeev/Downloads"
-            "/home/zeev/backups"
-            "/home/zeev/.cache"
-            "/home/zeev/.npm/_cacache"
-            "*/node_modules"
-            "*/venv"
-            "*/.venv"
-            "/var/lib/systemd"
-            "/var/lib/containers"
-            "/var/lib/flatpak"
-            "/var/lib/docker"
-            "/var/lib/Podman"
-            "*/.Trash"
-            "*/Cache"
-            "*/cache2"
-            "/home/*/.local/share/Trash"
-            "/home/*/.local/share/containers"
+          "/home/zeev/Downloads"
+          "/home/zeev/backups"
+          "/home/zeev/.cache"
+          "/home/zeev/.npm/_cacache"
+          "*/node_modules"
+          "*/venv"
+          "*/.venv"
+          "/var/lib/systemd"
+          "/var/lib/containers"
+          "/var/lib/flatpak"
+          "/var/lib/docker"
+          "/var/lib/Podman"
+          "*/.Trash"
+          "*/Cache"
+          "*/cache2"
+          "/home/*/.local/share/Trash"
+          "/home/*/.local/share/containers"
         ];
-        
+
         repositories = [
           {
             path = "ssh://u478963@u478963.your-storagebox.de:23/./borg/hostname/${config.networking.hostName}";
@@ -62,7 +62,7 @@
           }
         ];
 
-      }
+      };
     };
     settings = {
       storage = {
