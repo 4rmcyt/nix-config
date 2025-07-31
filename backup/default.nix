@@ -141,10 +141,10 @@ in
   users.groups.borgmatic = { };
 
   systemd.tmpfiles.rules = [
-     "d /data/backup/borg/${config.networking.hostName} 770 borgmatic borgmatic - -"
-     "d /var/lib/borgmatic 770 borgmatic borgmatic - -"
-     "d /var/lib/borgmatic/backup 770 borgmatic borgmatic - -"
-     "d /var/lib/borgmatic/log 770 borgmatic borgmatic - -"
-     "d /var/lib/borgmatic/cache 770 borgmatic borgmatic - -"
+     "D /data/backup/borg/${config.networking.hostName} 770 borgmatic borgmatic - -"
+     "D /var/lib/borgmatic 770 borgmatic borgmatic - -"
+     "D /var/lib/borgmatic/backup 770 borgmatic borgmatic - -"
+     "D /var/lib/borgmatic/log 770 borgmatic borgmatic - -"
+     "D /var/lib/borgmatic/cache 770 borgmatic borgmatic - -"
   ];
 }
