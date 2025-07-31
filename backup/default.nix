@@ -140,6 +140,6 @@ in
   users.groups.borgmatic = { };
 
   systemd.tmpfiles.rules = [
-    "dR /var/lib/borgmatic/backup 770 borgmatic borgmatic -   -"
+    "dR /data/backup/borg/ 770 borgmatic borgmatic -   -"
   ];
 }
