@@ -14,7 +14,7 @@
       ldap_port = 3890;
       http_port = 17170;
       ldaps_port = 6360;
-      ldap_user_dn = "cn=admin,dc=labhome,dc=work";
+      ldap_user_dn = "admin";
       ldap_base_dn = "dc=labhome,dc=work";
       ldaps_options.enabled = true;
       database_url = "postgresql:///lldap?host=/run/postgresql";
