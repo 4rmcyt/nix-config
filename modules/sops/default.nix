@@ -11,7 +11,7 @@
       ssh_host_ed25519_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_ed25519_key"; owner = "root"; group = "root"; mode = "0600"; };
       ssh_host_rsa_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_rsa_key"; owner = "root"; group = "root"; mode = "0600"; };
       hetzner_password = { sopsFile = ../../secrets/system.yaml; key = "hetzner_password"; mode = "0400"; };
-      knownHosts = { sopsFile = ../../secrets/known_hosts; owner = "root"; group = "borgmatic"; mode = "0640"; format = "binary"; };
+      knownHosts = { sopsFile = ../../secrets/known_hosts; owner = "root"; group = "users"; mode = "0640"; format = "binary"; };
 
       cloudflare_tunnel_credentials = { sopsFile = ../../secrets/cloudflare_tunnel_credentials.bin; owner = "cloudflared"; group = "cloudflared"; format = "binary"; };
       cloudflare_api_key = { sopsFile = ../../secrets/cloudflare.yaml; key = "cloudflare_api_key"; };
@@ -40,8 +40,8 @@
       paperless_db_password = { sopsFile = ../../secrets/postgres.yaml; key = "paperless_db_password"; owner = "postgresql"; group = "postgresql"; };
 
       #Backup Secrets
-      borgmatic_encryption_pass = { sopsFile = ../../secrets/borgmatic.yaml; key = "borgmatic_encryption_pass"; owner = "borgmatic"; group = "borgmatic"; mode = "0400"; };
-      borg_private_key = { sopsFile = ../../secrets/system.yaml; key = "borg_private_key"; owner = "borgmatic"; group = "borgmatic"; };
+      borgmatic_encryption_pass = { sopsFile = ../../secrets/borgmatic.yaml; key = "borgmatic_encryption_pass"; owner = "root"; group = "users"; mode = "0400"; };
+      borg_private_key = { sopsFile = ../../secrets/system.yaml; key = "borg_private_key"; owner = "root"; group = "users"; };
     };
   };
 }
