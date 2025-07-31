@@ -15,6 +15,7 @@
       http_port = 17170;
       ldaps_port = 6360;
       ldap_user_dn = "admin";
+      ldap_base_dn = "dc=example,dc=com";
       ldaps_options.enabled = true;
       database_url = "postgresql:///lldap?host=/run/postgresql";
       ldap_user_email = "4rmcyt@gmail.com";
