@@ -20,7 +20,7 @@
 
     nextdns-exporter = {
       image = "ghcr.io/raylas/nextdns-exporter";
-      user = "podman:podman";
+      podman.user = "podman:podman";
       autoStart = true;
       networks = [ "podman" ];
       ports = [ "127.0.0.1:9948:9948" ];
