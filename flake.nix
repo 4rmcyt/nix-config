@@ -122,6 +122,7 @@
           ./services/calibre-web.nix
 
           ./scripts/wg-sync.nix
+          ./security/lldap.nix
 
           ./containers
           ./backup
