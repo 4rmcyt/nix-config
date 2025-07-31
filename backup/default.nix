@@ -141,6 +141,6 @@
   users.groups.borgmatic = { };
 
   systemd.tmpfiles.rules = [
-    "d /var/lib/borgmatic/backup 770 borgmatic borgmatic -   -"
+    "dR /var/lib/borgmatic/backup 770 borgmatic borgmatic -   -"
   ];
 }
