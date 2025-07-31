@@ -10,7 +10,7 @@
     enable = true;
     settings = {
       http_url = "https://lldap.example.com";
-      http_host = "127.0.0.1";
+      http_host = "0.0.0.0";
       ldap_base_dn = "dc=labhome,dc=work";
       ldaps_options.enabled = true;
       database_url = "postgresql:///lldap?host=/run/postgresql";
