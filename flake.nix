@@ -114,7 +114,7 @@
           # ./modules/isko
           ./modules/users
           ./modules/base
-          ./modules/sops
+          # ./modules/sops
           ./modules/monitoring
           ./modules/containers
           ./modules/backup
@@ -140,8 +140,6 @@
           ./modules/services/nixarr.nix
           ./modules/services/kavita.nix
           ./modules/services/calibre-web.nix
-
-          ./backup
         ];
       };
     };
