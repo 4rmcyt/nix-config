@@ -29,6 +29,23 @@
     };
   };
 
+  services.nginx.virtualHosts."microbin.labhome.work" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:8084";
+      proxyWebsockets = true;
+      proxyHeaders = {
+        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+        "X-Forwarded-Proto" = "https";
+      };
+    };
+  };
+
+  networking.firewall.allowedTCPPorts = [
+    8084 # Microbin
+  ];
   users.users.microbin = {
     isSystemUser = true;
     group = "microbin";

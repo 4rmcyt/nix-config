@@ -40,6 +40,10 @@
     #TODO: Authentication settings
   };
 
+  networking.firewall.allowedTCPPorts = [
+    5432 # PostgreSQL
+  ];
+  
   users.users.postgresql = {
     isSystemUser = true;
     group = "postgresql";

@@ -1,6 +1,5 @@
 { config, pkgs, ... }:
 {
-  environment.systemPackages = [ pkgs.cloudflared ];
   services.cloudflared = {
     enable = true;
     tunnels = {
@@ -8,11 +7,9 @@
         credentialsFile = config.sops.secrets.cloudflare_tunnel_credentials.path;
         default = "http_status:404";
         ingress = {
-          "keycloak.labhome.work" = "http://localhost:8080";
           "jellyfin.labhome.work" = "http://localhost:8096";
           "paperless.labhome.work" = "http://localhost:8888";
           "home.labhome.work" = "http://localhost:8082";
-          "rss.labhome.work" = "http://localhost:8086";
           "hass.labhome.work" = "http://localhost:8123";
           "miniflux.labhome.work" = "http://localhost:8086";
           "transmission.labhome.work" = "http://192.168.1.165:9091";
@@ -31,7 +28,7 @@
           "vault.labhome.work" = "http://localhost:8222";
           "link.labhome.work" = "http://localhost:12522";
           "kuma.labhome.work" = "http://localhost:3001";
-          "lldap.labhome.work" = "http://localhost:17170";
+          "auth.labhome.work" = "http://localhost:8080";
         };
       };
     };
@@ -40,7 +37,7 @@
   users.users.cloudflared = {
     isSystemUser = true;
     group = "cloudflared";
-    extraGroups = [ "users" "cloudflared" ];
+    extraGroups = [ "users" ];
   };
   users.groups.cloudflared = {  };
 }

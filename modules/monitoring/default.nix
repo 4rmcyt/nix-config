@@ -54,8 +54,8 @@
         enable = true;
         enabledCollectors = [
           "systemd" "processes" "interrupts" "cpu" "diskstats"
-          "filesystem" "loadavg" "meminfo" "netdev" "netstat"
-          "stat" "time" "vmstat" "logind" "thermal_zone"
+          "meminfo" "netdev" "netstat" "btrfs"
+          "stat" "time" "thermal_zone"
           "hwmon"
         ];
         port = 9100;

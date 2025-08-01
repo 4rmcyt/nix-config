@@ -39,7 +39,22 @@
       calibreLibrary = "/data/media/books";
     };
   };
-  
+  services.nginx.virtualHosts."calibre-web.labhome.work" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:8083";
+      proxyWebsockets = true;
+      proxyHeaders = {
+        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+        "X-Forwarded-Proto" = "https";
+      };
+    };
+  };
+  networking.firewall.allowedTCPPorts = [
+    8083 # Calibre-Web
+  ];
   users.users.calibre-web = {
     isSystemUser = true;
     extraGroups = [ "users" "calibre-web" "media" ];

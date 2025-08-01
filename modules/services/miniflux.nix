@@ -4,8 +4,8 @@
   pkgs,
   ...
 }:
-{ 
-  environment.systemPackages = [ pkgs.miniflux ]; 
+{
+  environment.systemPackages = [ pkgs.miniflux ];
   services.miniflux = {
     enable = true;
     adminCredentialsFile = config.sops.secrets.miniflux_creds.path; # path to admin credentials file
@@ -15,24 +15,41 @@
       POLLING_FREQUENCY = "60"; # feed refresh interval in minutes
       BATCH_SIZE = "100"; # number of feeds sent to queue each interval
       CLEANUP_ARCHIVE_READ_DAYS = "60"; # read items are removed after x days
-      BASE_URL = "https://rss.labhome.work";
+      BASE_URL = "https://miniflux.labhome.work";
       LISTEN_ADDR = "localhost:8086";
       DATABASE_MIGRATIONS = 1; # run database migrations on first run
       DATABASE_URL = lib.mkForce "user=miniflux dbname=miniflux sslmode=disable host=/run/postgresql";
     };
   };
 
+  services.nginx.virtualHosts."miniflux.labhome.work" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:8086";
+      proxyWebsockets = true;
+      proxyHeaders = {
+        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+        "X-Forwarded-Proto" = "https";
+      };
+    };
+  };
+  networking.firewall.allowedTCPPorts = [
+    8086 # Miniflux
+  ];
+
   users.users.miniflux = {
     isSystemUser = true;
     group = "miniflux";
     extraGroups = [ "users" ];
   };
-  users.groups.miniflux = {};
-  
+  users.groups.miniflux = { };
+
   systemd.tmpfiles.rules = [
     "d /var/lib/miniflux 0755 miniflux miniflux -"
     "d /var/lib/miniflux/cache 0755 miniflux miniflux -"
     "d /var/lib/miniflux/logs 0755 miniflux miniflux -"
     "d /var/lib/miniflux/data 0755 miniflux miniflux -"
   ];
-}  
+}

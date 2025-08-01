@@ -1,233 +1,192 @@
 { config, pkgs, ... }:
-
 {
   services.nginx = {
     enable = true;
-    proxyWebsockets = true;
-    commonHttpConfig = ''
-      proxy_set_header Host $host;
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header X-Forwarded-Proto $scheme;
-    '';
-
+    group = "nginx";
+    recommendedGzipSettings = true;
+    recommendedOptimisation = true;
+    recommendedProxySettings = true;
+    recommendedTlsSettings = true;
+    statusPage = true;
     virtualHosts = {
-      "_" = {
-        default = true;
-        listen = [ { addr = "0.0.0.0"; port = 80; } ];
-        serverName = "_";
-        return = 301 "https://$host$request_uri";
-      };
-
-      
       "auth.labhome.work" = {
         forceSSL = true;
         enableACME = true;
+        http2 = true;
         locations."/" = {
-          proxy_pass = "http://localhost:4180";
-          proxy_pass_request_body = "off";
-          proxy_set_header Content-Length "" };
-      };
-
- 
-      "keycloak.labhome.work" = {
-        forceSSL = true;
-        enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:8080";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+          proxyPass = "http://localhost:4180";
+        };
       };
 
       "jellyfin.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:8096";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:8096";
+        };
       };
-
       "paperless.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:8888";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:8888";
+        };
       };
-
       "home.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:8082";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:8082";
+        };
       };
-
-      "rss.labhome.work" = {
-        forceSSL = true;
-        enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:8086";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
-      };
-
       "hass.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:8123";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:8123";
+        };
       };
-
-      "miniflux.labhome.work" = {
-        forceSSL = true;
-        enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:8086";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
-      };
-
       "transmission.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://192.168.1.165:9091";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://192.168.1.165:9091";
+        };
       };
-
       "cal.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:5232";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:5232";
+        };
       };
-
       "audiobookshelf.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:9292";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:9292";
+        };
       };
-
       "kavita.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:5000";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:5000";
+        };
       };
-
       "microbin.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:8084";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:8084";
+        };
       };
-
       "prowlarr.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:9696";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:9696";
+        };
       };
-
       "radarr.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:7878";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:7878";
+        };
       };
-
       "sonarr.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:8989";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:8989";
+        };
       };
-
       "lidarr.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:8686";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:8686";
+        };
       };
-
       "bazarr.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:6767";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:6767";
+        };
       };
-
       "jellyseerr.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:5055";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:5055";
+        };
       };
-
       "ollama.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:11434";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:11434";
+        };
       };
-
       "calibre-web.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:8083";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:8083";
+        };
       };
-
       "vault.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:8222";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:8222";
+        };
       };
-
       "link.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:12522";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:12522";
+        };
       };
-
       "kuma.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:3001";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
-      };
-
-
-      "auth.labhome.work" = {
-        forceSSL = true;
-        enableACME = true;
-        extraConfig = "auth_request /_auth;";
-        locations."/".proxyPass = "http://localhost:9000";
-        locations."/_auth" = { internal = true; proxy_pass = "https://auth.labhome.work"; };
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:3001";
+        };
       };
     };
   };
   users.users.nginx = {
     isSystemUser = true;
-    group = "nginx";
-    extraGroups = [ "users" "nginx" "acme" ];
+    group = "acme";
+    extraGroups = [
+      "users"
+      "acme"
+    ];
   };
-  users.groups.nginx = {};
+  users.groups.acme = { };
 }

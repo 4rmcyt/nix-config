@@ -393,6 +393,19 @@
     ];
   };
 
+  services.nginx.virtualHosts."home.labhome.work" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:8082";
+    };
+  };
+
+  networking.firewall.allowedTCPPorts = [
+    8082 # Homepage Dashboard
+  ];
+  
   users.users.homepage-dashboard = { isSystemUser = true; group = "homepage-dashboard"; };
   users.groups.homepage-dashboard = { };
 }

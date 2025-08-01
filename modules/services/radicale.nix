@@ -26,8 +26,21 @@
       };
     };
   };
-
-
+  services.nginx.virtualHosts."cal.labhome.work" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:5232";
+      proxyWebsockets = true;
+      proxyHeaders = {
+        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+        "X-Forwarded-Proto" = "https";
+      };
+    };
+  };
+  networking.firewall.allowedTCPPorts = [ 5232 ];
+  
   systemd.tmpfiles.rules = [
     "d /var/lib/radicale/collections 0750 radicale radicale -"
   ];

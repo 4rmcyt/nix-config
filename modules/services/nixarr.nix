@@ -12,8 +12,6 @@ let
     "transmission"
     "audiobookshelf"
     "jellyfin"
-    "kavita"
-    "calibre-web"
   ];
 in  
 {
@@ -105,6 +103,148 @@ in
     sonarr.enable = true;
     jellyseerr.enable = true;
   };
+
+  services.nginx = {
+    virtualHosts = {
+      "audiobookshelf.labhome.work" = {
+        forceSSL = true;
+        enableACME = true;
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:9292";
+          proxyWebsockets = true;
+          proxyHeaders = {
+            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+            "X-Forwarded-Proto" = "https";
+          };
+        };
+      };
+      "jellyfin.labhome.work" = {
+        forceSSL = true;
+        enableACME = true;
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:8096";
+          proxyWebsockets = true;
+          proxyHeaders = {
+            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+            "X-Forwarded-Proto" = "https";
+          };
+        };
+      };
+      "bazarr.labhome.work" = {
+        forceSSL = true;
+        enableACME = true;
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:6767";
+          proxyWebsockets = true;
+          proxyHeaders = {
+            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+            "X-Forwarded-Proto" = "https";
+          };
+        };
+      };
+      "lidarr.labhome.work" = {
+        forceSSL = true;
+        enableACME = true;
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:8686";
+          proxyWebsockets = true;
+          proxyHeaders = {
+            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+            "X-Forwarded-Proto" = "https";
+          };
+        };
+      };
+      "prowlarr.labhome.work" = {
+        forceSSL = true;
+        enableACME = true;
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:9696";
+          proxyWebsockets = true;
+          proxyHeaders = {
+            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+            "X-Forwarded-Proto" = "https";
+          };
+        };
+      };
+      "radarr.labhome.work" = {
+        forceSSL = true;
+        enableACME = true;   
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:7878";
+          proxyWebsockets = true;
+          proxyHeaders = {
+            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+            "X-Forwarded-Proto" = "https";
+          };
+        };
+      };
+      "sonarr.labhome.work" = {
+        forceSSL = true;
+        enableACME = true;
+        http2 = true;       
+        locations."/" = {
+          proxyPass = "http://localhost:8989";
+          proxyWebsockets = true;
+          proxyHeaders = {
+            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+            "X-Forwarded-Proto" = "https";
+          };
+        };
+      };
+      "jellyseerr.labhome.work" = {
+        forceSSL = true;
+        enableACME = true;
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:5055";
+          proxyWebsockets = true;
+          proxyHeaders = {
+            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+            "X-Forwarded-Proto" = "https";
+          };
+        };
+      };
+      "transmission.labhome.work" = {
+        forceSSL = true;
+        enableACME = true;
+        http2 = true;
+        locations."/" = {
+          proxyPass = "http://localhost:9091";
+          proxyWebsockets = true;
+          proxyHeaders = {
+            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+            "X-Forwarded-Proto" = "https";
+          };
+        };
+      };
+    };
+  };
+
+  networking.firewall.allowedTCPPorts = [
+    9292 # Audiobookshelf
+    8096 # Jellyfin
+    8920 # Jellyfin HTTPS
+    6767 # Bazarr
+    8686 # Lidarr
+    9696 # Prowlarr
+    7878 # Radarr
+    8989 # Sonarr
+    5055 # Jellyseerr
+    9091 # Transmission web UI
+    63998 # Transmission peer port
+  ];
+
+  networking.firewall.allowedUDPPorts = [
+    63998 # Transmission peer port
+    1900 # Jellyfin DLNA
+    7359 # Jellyfin discovery
+  ];
 
   users.users = {
     audiobookshelf = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
