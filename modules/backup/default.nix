@@ -7,14 +7,14 @@
 {
   sops.secrets = {
     borg_private_key = {
-      sopsFile = ../../secrets/borgmatic_secrets.yaml;
+      sopsFile = ../../secrets/system.yaml;
       key = "borg_private_key";
       owner = "root";
       group = "users";
       mode = "0400";
     };
     borgmatic_encryption_pass = {
-      sopsFile = ../../secrets/borgmatic_secrets.yaml;
+      sopsFile = ../../secrets/borgmatic.yaml;
       key = "borgmatic_encryption_pass";
       owner = "root";
       group = "users";
