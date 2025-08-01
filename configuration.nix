@@ -18,7 +18,6 @@
     ssh_host_ed25519_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_ed25519_key"; owner = config.users.users.root.name;  group = config.users.groups.root.name; mode = "0600"; };
     ssh_host_rsa_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_rsa_key"; owner = config.users.users.root.name; group = config.users.groups.root.name; mode = "0600"; };
     borg_private_key = { sopsFile = ../../secrets/system.yaml; key = "borg_private_key"; owner = config.users.users.root.name; group = config.users.groups.root.name; };
-    hetzner_password = { sopsFile = ../../secrets/system.yaml; key = "hetzner_password"; mode = "0400"; };
   };
 
   services = {
