@@ -142,7 +142,12 @@
         ];
       };
     };
-
+    
+  sops.defaults = {
+    age = {
+      keyFile = "/var/lib/sops/age.key";
+    };
+  };
   nixConfig = {
     extra-substituters = [
       "https://nix-community.cachix.org"

@@ -43,8 +43,10 @@
         host = "localhost";
       };
       email = {
-        from = "noreply@example.com";
-        host = "smtp.example.com"; # Replace with your SMTP provider
+        from = "admin@example.com";
+        host = "smtp.gmail.com";
+        use_tls = true;
+        port = 587; 
       };
         disable_startup_analytics = true;
         avatars = "initials";
