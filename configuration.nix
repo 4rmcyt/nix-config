@@ -11,103 +11,16 @@
     ./modules/users
     ./modules/network/base.nix
     ./modules/base
-    ./modules/sops
   ];
 
-  nix = {
-    package = pkgs.nixVersions.latest;
-
-    settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-      trusted-users = [
-        "zeev"
-      ];
-      auto-optimise-store = true;
-      warn-dirty = false;
-      cores = 4;
-      show-trace = true;
-      download-buffer-size = 1073741824; # 1 GiB
-      max-jobs = 4;
-    };
-  };
-
-  security.sudo.execWheelOnly = true;
-
-  boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
-  };
-
-  environment.systemPackages = with pkgs; [
-    zsh
-    git
-    neovim
-    direnv
-    pass
-    vim
-    wget
-    curl
-    jq
-    coreutils
-    gawk
-    gnugrep
-    iproute2
-    mc
-    htop
-    btop
-    lsof
-    age
-    sops
-    ssh-to-age
-    openssh
-    wireguard-tools
-    dive
-    apacheHttpd
-    meslo-lgs-nf
-    yamllint
-    nix-index
-    iotop
-    cachix
-    tuptime
-    smartmontools
-    fzf
-    ffmpeg
-    nmap
-    trash-cli
-    zip
-    unar
-    unzip
-    p7zip
-    go
-    nextdns
-    nixfmt-rfc-style
-    nil
-    deploy-rs
-    just
-    nixpkgs-fmt
-    tree
-    git-crypt
-    python3Full
-    borgbackup
-    smartmontools
-    openssl
-    fwupd
-  ];
-  sops = {
-    age = {
-      keyFile = "/var/lib/sops/age.key";
-    };
-    secrets = {
-      ssh_host_ed25519_key = { owner = config.users.users.sops.name; };
-      ssh_host_rsa_key = { owner = config.users.users.sops.name; };
-    };
+  sops.secrets = {
+    ssh_host_ed25519_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_ed25519_key"; owner = config.users.users.root.name;  group = config.users.groups.root.name; mode = "0600"; };
+    ssh_host_rsa_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_rsa_key"; owner = config.users.users.root.name; group = config.users.groups.root.name; mode = "0600"; };
+    borg_private_key = { sopsFile = ../../secrets/system.yaml; key = "borg_private_key"; owner = config.users.users.root.name; group = config.users.groups.root.name; };
+    hetzner_password = { sopsFile = ../../secrets/system.yaml; key = "hetzner_password"; mode = "0400"; };
   };
 
   services = {
-    
     openssh = {
       enable = true;
       hostKeys = [
@@ -160,31 +73,8 @@
       ];
     };
 
-    nextdns = {
-      enable = true;
-      arguments = [
-        "-profile"
-        "2bffa2"
-        "-cache-size"
-        "10MB"
-        "--report-client-info"
-      ];
-    };
+    
     vscode-server.enable = true;
-  };
-
-  programs = {
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
-    zsh.enable = true;
-    nix-ld.dev.enable = false;
-
-    nix-index = {
-      enable = true;
-      enableZshIntegration = true;
-    };
   };
   system.stateVersion = "25.05";
 }

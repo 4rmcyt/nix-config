@@ -111,35 +111,15 @@
           ./hardware-configuration.nix
 
           # Core system configuration
-          # ./modules/isko
           ./modules/users
           ./modules/base
-          # ./modules/sops
           ./modules/monitoring
           ./modules/containers
           ./modules/backup
-          ./modules/email
-          ./modules/database/postgresql
-          ./modules/security/authentik.nix
-          ./modules/security/fail2ban.nix
-          ./modules/network/base.nix
-          ./modules/network/acme.nix
-          ./modules/network/nginx.nix
-          ./modules/network/tailscale.nix
-          ./modules/network/cloudflared.nix
-
-          # Services
-          ./modules/services/yubikey.nix
-          ./modules/services/homepage.nix
-          ./modules/services/miniflux.nix
-          ./modules/services/microbin.nix
-          ./modules/services/paperless.nix
-          ./modules/services/radicale.nix
-          ./modules/services/samba.nix
-          ./modules/services/home-assistant.nix
-          ./modules/services/nixarr.nix
-          ./modules/services/kavita.nix
-          ./modules/services/calibre-web.nix
+          ./modules/database
+          ./modules/security
+          ./modules/networking
+          ./modules/services
         ];
       };
     };

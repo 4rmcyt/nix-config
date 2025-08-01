@@ -47,6 +47,8 @@
         "/var/lib/microbin"
         "/var/lib/homepage-dashboard"
         "/var/lib/nixos"
+        "/var/lib/authentik"
+        "/var/lib/uptime-kuma"
         "/data/.secret"
         "/data/media/.state"
         "/etc"

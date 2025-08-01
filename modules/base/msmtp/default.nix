@@ -1,12 +1,9 @@
 { config, ... }:
 {
  sops.secrets = {
-    msmtp_gmail_password = {
-      sopsFile = ../../secrets/msmtp-gmail.yaml;
+    gmail_password = {
+      sopsFile = ../../secrets/gmail_conf.yaml;
       key = "gmail_password";
-      owner = config.users.users.msmtp.name;
-      group = config.users.groups.msmtp.name;
-      mode = "0400";
     };
   };
 
@@ -39,8 +36,8 @@
       default = {
         host = "smtp.gmail.com";
         auth = "on";
-        passwordeval = "cat ${config.sops.secrets.msmtp_gmail_password.path}";
-        user ="4rmcyt@gmail.com";
+        passwordeval = "cat ${config.sops.secrets.gmail_password.path}";
+        user = "4rmcyt@gmail.com";
         from = "4rmcyt@gmail.com";
       };
     };

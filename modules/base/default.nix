@@ -1,58 +1,64 @@
-
-{ config, pkgs, lib, ... }:
-
+{ lib, config, ... }:
 {
-  time = {
-    timeZone = "America/Edmonton";  # Change this to your timezone
-  };
+  imports = [
+    ./auto_upgrade
+    ./system
+    ./msmtp
+  ];
 
-  services.timesyncd = {
-    enable = true;
-    servers = [
-      "0.nixos.pool.ntp.org"
-      "1.nixos.pool.ntp.org"
-      "2.nixos.pool.ntp.org"
-      "3.nixos.pool.ntp.org"
-    ];
-  };
-
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
-
-  security = {
-    pam.loginLimits = [
-      { domain = "*"; type = "soft"; item = "nofile"; value = "1024"; }
-      { domain = "*"; type = "hard"; item = "nofile"; value = "4096"; }
-    ];
-
-    auditd.enable = true;
-    audit.enable = true;
-    protectKernelImage = true;
-    lockKernelModules = false; 
-  };
-
-  services.haveged.enable = true;
-
-  nix = {
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 10d";
-    };
-
-    optimise = {
-      automatic = true;
-      dates = ["weekly"];
-    };
-  };
+  environment.systemPackages = with pkgs; [
+    zsh
+    git
+    neovim
+    direnv
+    pass
+    vim
+    wget
+    curl
+    jq
+    coreutils
+    gawk
+    gnugrep
+    iproute2
+    mc
+    htop
+    btop
+    lsof
+    age
+    sops
+    ssh-to-age
+    openssh
+    wireguard-tools
+    dive
+    apacheHttpd
+    meslo-lgs-nf
+    yamllint
+    nix-index
+    iotop
+    cachix
+    tuptime
+    smartmontools
+    fzf
+    ffmpeg
+    nmap
+    trash-cli
+    zip
+    unar
+    unzip
+    p7zip
+    go
+    nextdns
+    nixfmt-rfc-style
+    nil
+    deploy-rs
+    just
+    nixpkgs-fmt
+    tree
+    git-crypt
+    python3Full
+    borgbackup
+    smartmontools
+    openssl
+    fwupd
+  ];
 }

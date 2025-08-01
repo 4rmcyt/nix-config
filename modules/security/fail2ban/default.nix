@@ -239,9 +239,13 @@ in
     };
   };
 
-  users.users.fail2ban.isSystemUser = true;
-  users.groups.fail2ban = {};
-
+  users.users.fail2ban = {
+    isSystemUser = true;
+    group = "fail2ban";
+    description = "Fail2Ban user for banning IPs";
+  };
+  users.groups.fail2ban = { };
+  
   services.fail2ban = {
     enable = true;
     extraPackages = [
