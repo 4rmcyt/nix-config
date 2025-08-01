@@ -108,7 +108,6 @@
           ./modules/users
           ./modules/base
           ./modules/sops
-          ./modules/security
           ./modules/monitoring
           ./modules/containers
           ./modules/database/postgresql
