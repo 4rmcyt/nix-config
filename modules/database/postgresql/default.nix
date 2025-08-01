@@ -9,17 +9,12 @@
     enable = true;
     package = pkgs.postgresql_16;
     ensureDatabases = [
-      "keycloak"
       "miniflux"
       "paperless"
       "hass"
       "authentik"
     ];
     ensureUsers = [
-      {
-        name = "keycloak";
-        ensureDBOwnership = true;
-      }
       {
         name = "miniflux";
         ensureDBOwnership = true;
