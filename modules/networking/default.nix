@@ -1,10 +1,10 @@
 { lib, config, ... }:
 {
   imports = [
-    ./acme.nix
-    ./base.nix
-    ./cloudflared.nix
-    ./nginx.nix
-    ./tailscale.nix
+    ./acme
+    ./base
+    ./cloudflared
+    ./nginx
+    ./tailscale
   ];
 }  
