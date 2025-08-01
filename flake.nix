@@ -60,7 +60,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Snowfall Lib
+    inputs.authentik-nix = {
+      url = "github:nix-community/authentik-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     snowfall-lib = {
       url = "github:snowfallorg/lib";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -78,6 +82,7 @@
       vscode-server,
       nixarr,
       nix-ld,
+      authentik-nix,
       ...
     }@inputs:
     {
@@ -92,6 +97,7 @@
           nix-index-database.nixosModules.nix-index
           nixarr.nixosModules.default
           nix-ld.nixosModules.nix-ld
+          authentik-nix.nixosModules.authentik
 
           # Core system configuration files
           ./configuration.nix
@@ -130,14 +136,14 @@
       };
     };
 
-    nixConfig = {
-      extra-substituters = [
-        "https://nix-community.cachix.org"
-        "https://4rmcyt.cachix.org"
-      ];
-      extra-trusted-public-keys = [
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "4rmcyt.cachix.org-1:uKI766iybXD8uDBVexbc5BCYAfdBJ262ID4C+dl2hws="
-      ];
+  nixConfig = {
+    extra-substituters = [
+      "https://nix-community.cachix.org"
+      "https://4rmcyt.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "4rmcyt.cachix.org-1:uKI766iybXD8uDBVexbc5BCYAfdBJ262ID4C+dl2hws="
+    ];
   };
 }
