@@ -110,6 +110,8 @@
           ./modules/sops
           ./modules/monitoring
           ./modules/containers
+          ./modules/backup
+          ./modules/email
           ./modules/database/postgresql
           ./modules/security/authentik.nix
           ./modules/security/fail2ban.nix

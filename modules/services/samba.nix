@@ -38,6 +38,11 @@
       };
     };
   };
+
+  networking.firewall.allowedTCPPorts = [
+    139  # Samba NetBIOS Session Service
+    445  # Samba SMB over TCP
+  ];
   users.users.samba = {
     isSystemUser = true;
     group = "samba";

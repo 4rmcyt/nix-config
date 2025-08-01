@@ -36,13 +36,22 @@
     };
   };
 
-  services.nginx.virtualHosts."authentik.example.com" = {
+  sservices.nginx.virtualHosts."authentik.example.com" = {
     forceSSL = true;
     enableACME = true;
-    locations."/".proxyPass = "http://127.0.0.1:9000";
+    http2 = true;
+
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:9000";
+    };
   };
 
- 
+  networking.firewall.allowedTCPPorts = [
+    9000  # Authentik
+    8080  # Authentik Outpost Proxy
+    9100  # Authentik Metrics
+  ];
+  
   sops.secrets = {
     authentik_secret_key = {
       owner = config.users.users.authentik.name;
