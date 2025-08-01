@@ -36,8 +36,6 @@
   sops.secrets.authentik = {
     sopsFile = ../../secrets/postgresql.yaml;
     key = "authentik_db_password";
-    owner = config.users.users.postgresql.name;
-    group = config.users.groups.postgresql.name;
     mode = "0400";
   };
   sops.secrets.grafana = {

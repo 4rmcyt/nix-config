@@ -17,13 +17,6 @@
       group = config.users.groups.authentik.name;
       mode = "0400";
     };
-    authentik_db_password = {
-      sopsFile = ../../secrets/authentik.yaml;
-      key = "authentik_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
-      mode = "0400";
-    };
     authentik_env = {
       sopsFile = ../../secrets/authentik_env.yaml;
       owner = config.users.users.authentik.name;
