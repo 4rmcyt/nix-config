@@ -1,6 +1,6 @@
 {
   description = "NixOS configuration for homeserver";
-
+  sops.defaultSopsFile = "/var/lib/sops/age.key";
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -143,7 +143,7 @@
       };
     };
 
-  sops.defaultSopsFile = "/var/lib/sops/age.key";
+  
   
   
   nixConfig = {
