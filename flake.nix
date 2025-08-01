@@ -88,7 +88,6 @@
       nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; }; # This is used inside the modules themselves
-        sops.age.keyFile = "/var/lib/sops/age.key";
         modules = [
           vscode-server.nixosModules.default
           disko.nixosModules.disko
@@ -140,6 +139,7 @@
           
           ./backup
         ];
+        sops.age.keyFile = "/var/lib/sops/age.key";
       };
     };
 
