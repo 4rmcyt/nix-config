@@ -6,6 +6,14 @@
     pkgs.podman-tui
   ];
 
+  sops.secrets.containers_env = {
+    sopsFile = ../../secrets/.env;
+    owner = "root";
+    group = "root";
+    mode = "0400";
+    format = "dotenv";
+  };
+  
   virtualisation.podman.enable = true;
   virtualisation.oci-containers.backend = "podman";
   virtualisation.oci-containers.containers = {

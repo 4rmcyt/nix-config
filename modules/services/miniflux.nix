@@ -5,6 +5,42 @@
   ...
 }:
 {
+  sops.secrets = {
+    # --- Miniflux Secrets ---
+    miniflux_creds = {
+      sopsFile = ../../secrets/miniflux.yaml;
+      key = "miniflux_creds";
+      owner = "miniflux";
+      group = "miniflux";
+      mode = "0400";
+    };
+  };
+
+  users.users.miniflux = {
+    isSystemUser = true;
+    group = "miniflux";
+    extraGroups = [ "users" ];
+  };
+  users.groups.miniflux = { };
+
+  networking.firewall.allowedTCPPorts = [
+    8086 # Miniflux
+  ];
+
+  services.nginx.virtualHosts."miniflux.labhome.work" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:8086";
+      proxyWebsockets = true;
+      proxyHeaders = {
+        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+        "X-Forwarded-Proto" = "https";
+      };
+    };
+  };
+
   environment.systemPackages = [ pkgs.miniflux ];
   services.miniflux = {
     enable = true;
@@ -21,30 +57,6 @@
       DATABASE_URL = lib.mkForce "user=miniflux dbname=miniflux sslmode=disable host=/run/postgresql";
     };
   };
-
-  services.nginx.virtualHosts."miniflux.labhome.work" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
-    locations."/" = {
-      proxyPass = "http://localhost:8086";
-      proxyWebsockets = true;
-      proxyHeaders = {
-        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-        "X-Forwarded-Proto" = "https";
-      };
-    };
-  };
-  networking.firewall.allowedTCPPorts = [
-    8086 # Miniflux
-  ];
-
-  users.users.miniflux = {
-    isSystemUser = true;
-    group = "miniflux";
-    extraGroups = [ "users" ];
-  };
-  users.groups.miniflux = { };
 
   systemd.tmpfiles.rules = [
     "d /var/lib/miniflux 0755 miniflux miniflux -"

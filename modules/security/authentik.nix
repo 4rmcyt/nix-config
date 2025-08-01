@@ -1,6 +1,36 @@
 { config, pkgs, ... }:
 
 {
+  sops.secrets = {
+      # --- Authentik Secrets ---
+      authentik_secret_key = { sopsFile = ../../secrets/authentik.yaml; key = "authentik_secret_key"; owner = "authentik"; group = "authentik"; mode = "0400"; };
+      authentik_outpost_token = { sopsFile = ../../secrets/authentik.yaml; key = "authentik_outpost_token"; owner = "authentik"; group = "authentik"; mode = "0400"; };
+      authentik_db_password = { sopsFile = ../../secrets/authentik.yaml; key = "authentik_db_password"; owner = "authentik"; group = "authentik"; mode = "0400"; };
+  };
+
+  
+  users.users.authentik = {
+    isSystemUser = true;
+    group = "authentik";
+    extraGroups = [ "users" ];
+  };
+  users.groups.authentik = { };
+  
+  networking.firewall.allowedTCPPorts = [
+    9000  # Authentik
+    8080  # Authentik Outpost Proxy
+    9100  # Authentik Metrics
+  ];
+
+  services.nginx.virtualHosts."authentik.labhome.work" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:9000";
+    };
+  };
+
   services.authentik = {
     enable = true;
     domain = "https://authentik.labhome.work";
@@ -36,37 +66,5 @@
     };
   };
 
-  sservices.nginx.virtualHosts."authentik.labhome.work" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:9000";
-    };
-  };
-
-  networking.firewall.allowedTCPPorts = [
-    9000  # Authentik
-    8080  # Authentik Outpost Proxy
-    9100  # Authentik Metrics
-  ];
-
-  users.users.authentik = {
-    isSystemUser = true;
-    group = "authentik";
-    extraGroups = [ "users" ];
-  };
-  users.groups.authentik = { };
-
   
-
-  sops.secrets = {
-    authentik_secret_key = {
-      owner = config.users.users.authentik.name;
-    };
-
-    authentik_outpost_token = {
-      owner = config.users.users.authentik.name;
-    };
-  };
 }

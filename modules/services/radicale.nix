@@ -1,6 +1,37 @@
 { config, pkgs, ... }:
 
-{
+{ 
+  sops.secrets.radicale_users = {
+    sopsFile = ../../secrets/radicale_users.txt;
+    owner = "radicale";
+    group = "radicale";
+    mode = "0440";
+    format = "binary";
+  };
+
+  users.users.radicale = {
+    isSystemUser = true;
+    group = "radicale";
+    extraGroups = [ "users" ];
+  };
+  users.groups.radicale = {};
+
+  networking.firewall.allowedTCPPorts = [ 5232 ];
+  
+  services.nginx.virtualHosts."cal.labhome.work" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:5232";
+      proxyWebsockets = true;
+      proxyHeaders = {
+        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+        "X-Forwarded-Proto" = "https";
+      };
+    };
+  };
+
   environment.systemPackages = [ pkgs.radicale ];
   services.radicale = {
     enable = true;
@@ -26,28 +57,8 @@
       };
     };
   };
-  services.nginx.virtualHosts."cal.labhome.work" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
-    locations."/" = {
-      proxyPass = "http://localhost:5232";
-      proxyWebsockets = true;
-      proxyHeaders = {
-        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-        "X-Forwarded-Proto" = "https";
-      };
-    };
-  };
-  networking.firewall.allowedTCPPorts = [ 5232 ];
-  
+    
   systemd.tmpfiles.rules = [
     "d /var/lib/radicale/collections 0750 radicale radicale -"
   ];
-  users.users.radicale = {
-    isSystemUser = true;
-    group = "radicale";
-    extraGroups = [ "users" ];
-  };
-  users.groups.radicale = {};
 }

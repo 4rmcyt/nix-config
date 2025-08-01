@@ -6,9 +6,49 @@
 }:
 
 { 
-  environment.systemPackages = [
-    pkgs.paperless-ngx
+  sops.secrets = {
+    # --- Paperless Secrets ---
+    paperless_admin_password = {
+      sopsFile = ../../secrets/paperless_secrets.yaml;
+      key = "paperless_admin_password";
+      owner = "paperless";
+      group = "paperless";
+      mode = "0400";
+    };
+    paperless_db_password = {
+      sopsFile = ../../secrets/paperless_secrets.yaml;
+      key = "paperless_db_password";
+      owner = "paperless";
+      group = "paperless";
+      mode = "0400";
+    };
+  };
+
+  users.users.paperless = {
+    isSystemUser = true;
+    group = "paperless";
+    extraGroups = [ "users" ];
+  };
+  users.groups.paperless = { };
+
+  networking.firewall.allowedTCPPorts = [
+    8888 # Paperless
+    6379 # Redis (for Paperless)
   ];
+
+  services.nginx.virtualHosts."paperless.labhome.work" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:8888";
+      proxyWebsockets = true;
+      proxyHeaders = {
+        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+        "X-Forwarded-Proto" = "https";
+      };
+    };
+  };
 
   services.paperless = {
     enable = true;
@@ -41,32 +81,9 @@
       };
     };
   };
-
-  services.nginx.virtualHosts."paperless.labhome.work" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
-    locations."/" = {
-      proxyPass = "http://localhost:8888";
-      proxyWebsockets = true;
-      proxyHeaders = {
-        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-        "X-Forwarded-Proto" = "https";
-      };
-    };
-  };
-
-  networking.firewall.allowedTCPPorts = [
-    8888 # Paperless
-    6379 # Redis (for Paperless)
-  ];
-  
+   
   services.redis.servers.paperless = {
     enable = true;
     port = 6379;
-  };
-
-  users.users.paperless = { isSystemUser = true; group = "paperless"; };
-  users.groups.paperless = {};
-
+  };  
 }

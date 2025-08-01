@@ -6,6 +6,16 @@
 }:
 
 {
+
+  sops.secrets = {
+    grafana_admin_password = {
+      sopsFile = ../../secrets/grafana.yaml;
+      key = "grafana_admin_password";
+      owner = "grafana";
+      group = "grafana";
+      mode = "0400";
+    };
+
   environment.systemPackages = [
     pkgs.grafana
     pkgs.prometheus

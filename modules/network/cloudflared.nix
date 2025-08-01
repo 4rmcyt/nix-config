@@ -1,5 +1,23 @@
 { config, pkgs, ... }:
 {
+
+  sops.secrets = {
+    cloudflare_tunnel_credentials = {
+      sopsFile = ../../secrets/cloudflare_tunnel_credentials.yaml;
+      key = "credentials";
+      owner = "cloudflared";
+      group = "cloudflared";
+      mode = "0400";
+    };
+  };
+
+  users.users.cloudflared = {
+    isSystemUser = true;
+    group = "cloudflared";
+    extraGroups = [ "users" ];
+  };
+  users.groups.cloudflared = {  };
+  
   services.cloudflared = {
     enable = true;
     tunnels = {
@@ -33,11 +51,4 @@
       };
     };
   };
-
-  users.users.cloudflared = {
-    isSystemUser = true;
-    group = "cloudflared";
-    extraGroups = [ "users" ];
-  };
-  users.groups.cloudflared = {  };
 }
