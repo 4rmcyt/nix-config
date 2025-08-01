@@ -26,7 +26,7 @@
         locations."/" = {
           proxy_pass = "http://localhost:4180";
           proxy_pass_request_body = "off";
-          proxy_set_header Content-Length ""; };
+          proxy_set_header Content-Length "" };
       };
 
  
