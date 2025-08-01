@@ -139,8 +139,10 @@
           
           ./backup
         ];
-        sops.age.keyFile = "/var/lib/sops/age.key";
-      };
+        sopsConfig = {
+          sops.age.keyFile = "/var/lib/sops/age.key";
+          sops.defaultSopsFormat = "yaml";
+        };
     };
 
   
