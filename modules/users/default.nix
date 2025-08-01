@@ -25,6 +25,11 @@ let
   server-keys = system-keys ++ user-keys;
 in
 {
+  sops.secrets.zeev_password = {
+    sopsFile = ../../secrets/common.yaml;
+    neededForUsers = true;
+  };
+ 
   users = {
     groups = {
       media = {};

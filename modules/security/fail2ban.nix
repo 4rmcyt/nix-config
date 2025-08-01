@@ -1,11 +1,16 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
 
-  cloudflare-ips-v4 = pkgs.runCommand "cloudflare-ips-v4" {} ''
+  cloudflare-ips-v4 = pkgs.runCommand "cloudflare-ips-v4" { } ''
     ${pkgs.curl}/bin/curl -s "https://www.cloudflare.com/ips-v4" -o $out
   '';
-  cloudflare-ips-v6 = pkgs.runCommand "cloudflare-ips-v6" {} ''
+  cloudflare-ips-v6 = pkgs.runCommand "cloudflare-ips-v6" { } ''
     ${pkgs.curl}/bin/curl -s "https://www.cloudflare.com/ips-v6" -o $out
   '';
 
@@ -19,30 +24,71 @@ let
       "192.168.0.0/16"
     ];
 
-
   jailDefinitions = {
     # name = { unit = "systemd-unit"; filter = "filter-name"; settings... }
-    ssh = { unit = "sshd.service"; maxretry = 3; bantime = "1h"; };
-    homeassistant = { unit = "home-assistant.service"; };
-    keycloak = { unit = "keycloak.service"; maxretry = 3; bantime = "2h"; };
-    jellyfin = { unit = "jellyfin.service"; };
-    audiobookshelf = { unit = "audiobookshelf.service"; };
-    microbin = { unit = "microbin.service"; };
-    paperless = { unit = "paperless.service"; };
-    samba = { unit = "smbd.service"; };
-    radicale = { unit = "radicale.service"; };
-    homepage = { unit = "homepage.service"; };
-    cloudflared = { unit = "cloudflared.service"; };
-    miniflux = { unit = "miniflux.service"; };
-    yubikey = { unit = "yubikey.service"; };
-    kavita = { unit = "kavita.service"; };
-    transmission = { unit = "transmission.service"; };
-    tailscale = { unit = "tailscaled.service"; };
-    nginx = { unit = "nginx.service"; filter = "nginx-http-auth"; };
-    authentik = { unit = "authentik-server.service"; };
-    changedetection-io = { unit = "changedetection-io.service"; };
+    ssh = {
+      unit = "sshd.service";
+      maxretry = 3;
+      bantime = "1h";
+    };
+    homeassistant = {
+      unit = "home-assistant.service";
+    };
+    keycloak = {
+      unit = "keycloak.service";
+      maxretry = 3;
+      bantime = "2h";
+    };
+    jellyfin = {
+      unit = "jellyfin.service";
+    };
+    audiobookshelf = {
+      unit = "audiobookshelf.service";
+    };
+    microbin = {
+      unit = "microbin.service";
+    };
+    paperless = {
+      unit = "paperless.service";
+    };
+    samba = {
+      unit = "smbd.service";
+    };
+    radicale = {
+      unit = "radicale.service";
+    };
+    homepage = {
+      unit = "homepage.service";
+    };
+    cloudflared = {
+      unit = "cloudflared.service";
+    };
+    miniflux = {
+      unit = "miniflux.service";
+    };
+    yubikey = {
+      unit = "yubikey.service";
+    };
+    kavita = {
+      unit = "kavita.service";
+    };
+    transmission = {
+      unit = "transmission.service";
+    };
+    tailscale = {
+      unit = "tailscaled.service";
+    };
+    nginx = {
+      unit = "nginx.service";
+      filter = "nginx-http-auth";
+    };
+    authentik = {
+      unit = "authentik-server.service";
+    };
+    changedetection-io = {
+      unit = "changedetection-io.service";
+    };
   };
-
 
   filterDefinitions = {
     homeassistant = ''
@@ -51,7 +97,7 @@ let
                   Invalid authentication.*from <HOST>
       ignoreregex =
     '';
-    
+
     jellyfin = ''
       [Definition]
       failregex = Authentication request for .* has been denied \(IP: <HOST>\)
@@ -148,7 +194,6 @@ let
 
   };
 
-
   cloudflareAction =
     let
       notes = "Fail2Ban-${config.networking.hostName}";
@@ -183,46 +228,64 @@ let
 
 in
 {
+  sops.secrets = {
+    cloudflare_zone_id = {
+      sopsFile = ../../secrets/cloudflare.yaml;
+      key = "cloudflare_zone_id";
+    };
+    cloudflare_api_key = {
+      sopsFile = ../../secrets/cloudflare.yaml;
+      key = "cloudflare_api_key";
+    };
+  };
+
+  users.users.fail2ban.isSystemUser = true;
+  users.groups.fail2ban = {};
+
   services.fail2ban = {
     enable = true;
-    extraPackages = [ pkgs.curl pkgs.jq ];
+    extraPackages = [
+      pkgs.curl
+      pkgs.jq
+    ];
     ignoreIP = ignoredIPs;
 
     jails = lib.mapAttrs (
       name: jailDef:
-        let
-          defaults = {
-            enabled = true;
-            backend = "systemd";
-            maxretry = 5;
-            findtime = "10m";
-            bantime = "1h";
-            action = "cloudflare-token";
-            filter = name; 
-          };
-          settings = defaults // jailDef;
-        in
-        {
-          inherit (settings) enabled action backend maxretry findtime bantime;
-          journalmatch = "_SYSTEMD_UNIT=${settings.unit}";
-          filter = settings.filter;
-        }
+      let
+        defaults = {
+          enabled = true;
+          backend = "systemd";
+          maxretry = 5;
+          findtime = "10m";
+          bantime = "1h";
+          action = "cloudflare-token";
+          filter = name;
+        };
+        settings = defaults // jailDef;
+      in
+      {
+        inherit (settings)
+          enabled
+          action
+          backend
+          maxretry
+          findtime
+          bantime
+          ;
+        journalmatch = "_SYSTEMD_UNIT=${settings.unit}";
+        filter = settings.filter;
+      }
     ) jailDefinitions;
   };
 
-
   environment.etc =
-    lib.mapAttrs' (
-      name: text: {
-        name = "fail2ban/filter.d/${name}.conf";
-        value.text = text;
-      }
-    ) filterDefinitions
+    lib.mapAttrs' (name: text: {
+      name = "fail2ban/filter.d/${name}.conf";
+      value.text = text;
+    }) filterDefinitions
     // {
       "fail2ban/action.d/cloudflare-token.conf".text = cloudflareAction;
     };
 
- 
-  users.users.fail2ban.isSystemUser = true;
-  users.groups.fail2ban = {};
 }

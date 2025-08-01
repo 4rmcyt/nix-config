@@ -4,7 +4,47 @@
   lib,
   ...
 }:
-{ 
+{
+  sops.secrets = {
+    # --- Kavita Secrets ---
+    kavita_token_key_file = {
+      sopsFile = ../../secrets/kavita_secrets.yaml;
+      key = "kavita_token_key_file";
+      owner = "kavita";
+      group = "kavita";
+      mode = "0400";
+    };
+  };
+
+  users.users.kavita = {
+    isSystemUser = true;
+    group = "kavita";
+    extraGroups = [
+      "users"
+      "media"
+      "kavita"
+    ];
+  };
+  users.groups.kavita = { };
+
+  networking.firewall.allowedTCPPorts = [
+    5000 # Kavita
+  ];
+
+  services.nginx.virtualHosts."kavita.example.com" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:5000";
+      proxyWebsockets = true;
+      proxyHeaders = {
+        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+        "X-Forwarded-Proto" = "https";
+      };
+    };
+  };
+
   environment.systemPackages = [
     pkgs.kavita
   ];
@@ -26,31 +66,6 @@
       ];
     };
   };
-
-  users.users.kavita = {
-    isSystemUser = true;
-    group = "kavita";
-    extraGroups = [ "users" "media" "kavita" ];
-  };
-  users.groups.kavita = { };
-
-  services.nginx.virtualHosts."kavita.example.com" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
-    locations."/" = {
-      proxyPass = "http://localhost:5000";
-      proxyWebsockets = true;
-      proxyHeaders = {
-        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-        "X-Forwarded-Proto" = "https";
-      };
-    };
-  };
-  
-  networking.firewall.allowedTCPPorts = [
-    5000 # Kavita
-  ];
 
   systemd.tmpfiles.rules = [
     "d /var/lib/kavita 0755 kavita kavita -"

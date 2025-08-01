@@ -6,6 +6,51 @@
 }:
 
 {
+
+  sops.secrets = {
+    # --- Home Assistant Secrets ---
+    home_assistant_db_password = {
+      sopsFile = ../../secrets/hass_secrets.yaml;
+      key = "home_assistant_db_password";
+      owner = "postgres";
+      group = "postgres";
+      mode = "0400";
+    };
+  };
+
+  users.users.hass = {
+    isSystemUser = true;
+    group = "hass";
+  };
+  users.users.mosquitto = {
+    isSystemUser = true;
+    group = "mosquitto";
+  };
+  users.groups.mosquitto = { };
+  users.groups.hass = { };
+
+  networking.firewall.allowedTCPPorts = [
+    8123 # Home Assistant
+    1883 # MQTT
+  ];
+  networking.firewall.allowedUDPPorts = [
+    1883 # MQTT
+  ];
+
+  services.nginx.virtualHosts."hass.example.com" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:8123";
+      proxyWebsockets = true;
+      proxyHeaders = {
+        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+        "X-Forwarded-Proto" = "https";
+      };
+    };
+  };
+
   environment.systemPackages = with pkgs; [
     home-assistant
     mosquitto
@@ -97,34 +142,4 @@
       ];
     };
   };
-
-  services.nginx.virtualHosts."hass.example.com" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
-    locations."/" = {
-      proxyPass = "http://localhost:8123";
-      proxyWebsockets = true;
-      proxyHeaders = {
-        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-        "X-Forwarded-Proto" = "https";
-      };
-    };
-  };
-
-  networking.firewall.allowedTCPPorts = [
-    8123 # Home Assistant
-    1883 # MQTT
-  ];
-
-  users.users.hass = {
-    isSystemUser = true;
-    group = "hass";
-  };
-  users.users.mosquitto = {
-    isSystemUser = true;
-    group = "mosquitto";
-  };
-  users.groups.mosquitto = { };
-  users.groups.hass = { };
 }

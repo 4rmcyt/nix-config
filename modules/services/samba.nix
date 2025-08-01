@@ -1,22 +1,38 @@
 { config, pkgs, ... }:
 
-{ 
-  environment.systemPackages = [ pkgs.samba ]; 
+{
+
+  users.users.samba = {
+    isSystemUser = true;
+    group = "samba";
+    extraGroups = [
+      "users"
+      "media"
+    ];
+  };
+
+  users.groups.samba = { };
+
+  networking.firewall.allowedTCPPorts = [
+    139 # Samba NetBIOS Session Service
+    445 # Samba SMB over TCP
+  ];
+
   services.samba = {
     enable = true;
     openFirewall = true;
-    
+
     settings = {
       global = {
         workgroup = "WORKGROUP";
-        "server string" = "NixOS Samba Server";  # Fixed: quoted attribute name
-        "netbios name" = "homeserver";           # Fixed: quoted attribute name
+        "server string" = "NixOS Samba Server"; # Fixed: quoted attribute name
+        "netbios name" = "homeserver"; # Fixed: quoted attribute name
         security = "user";
         "map to guest" = "bad user";
       };
-      
+
       media = {
-        path = "/home/zeev/media";
+        path = "/data/media";
         browseable = "yes";
         "read only" = "no";
         "guest ok" = "no";
@@ -25,9 +41,9 @@
         "force user" = "zeev";
         "force group" = "users";
       };
-      
+
       downloads = {
-        path = "/home/zeev/downloads";
+        path = "/data/Downloads";
         browseable = "yes";
         "read only" = "no";
         "guest ok" = "no";
@@ -38,15 +54,4 @@
       };
     };
   };
-
-  networking.firewall.allowedTCPPorts = [
-    139  # Samba NetBIOS Session Service
-    445  # Samba SMB over TCP
-  ];
-  users.users.samba = {
-    isSystemUser = true;
-    group = "samba";
-    extraGroups = [ "users" "media" ];
-  };
-  users.groups.samba = {};
 }

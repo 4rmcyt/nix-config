@@ -2,6 +2,29 @@
 { config, pkgs, lib, ... }:
 
 {
+  sops.secrets = {
+    tailscale_auth_key = {
+      sopsFile = ../../secrets/tailscale.yaml;
+      key = "tailscale_auth_key";
+      owner = "root";
+      group = "root";
+      mode = "0400";
+    };
+  };
+  
+  users.users.tailscale = {
+    isSystemUser = true;
+    group = "tailscale";
+    extraGroups = [ "networkmanager" "users" "tailscale" ];
+  };
+  users.groups.tailscale = { };
+
+  networking.firewall = {
+    trustedInterfaces = [ "tailscale0" ];
+    allowedUDPPorts = [ config.services.tailscale.port ];
+  };
+
+
   environment.systemPackages = [ pkgs.tailscale ];
   services.tailscale = {
     enable = true;
@@ -29,18 +52,9 @@
     '';
   };
 
-  networking.firewall = {
-    trustedInterfaces = [ "tailscale0" ];
-    allowedUDPPorts = [ config.services.tailscale.port ];
-  };
-
   
-  users.users.tailscale = {
-    isSystemUser = true;
-    group = "tailscale";
-    extraGroups = [ "networkmanager" "users" "tailscale" ];
-  };
-  users.groups.tailscale = { };
+  
+  
 }
 
 # Generated new OAuth client

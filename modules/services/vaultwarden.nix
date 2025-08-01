@@ -5,36 +5,12 @@
   ...
 }:
 {
-
-  services.vaultwarden = {
-    dbBackend = "postgresql";
-    config = {
-      ROCKET_ADDRESS = "127.0.0.1";
-      ROCKET_PORT = 8222;
-      DOMAIN = "https://vault.example.com";
-      SIGNUPS_ALLOWED = true;
-      ADMIN_TOKEN = "$argon2id$v=19$m=65540,t=3,p=4$...";
-      LOG_FILE = "/var/lib/bitwarden_rs/access.log";
-    };
+  sops.secrets.vaultwarden = {
+    sopsFile = ../../secrets/vaultwarden.yaml;
+    owner = "vaultwarden";
+    group = "vaultwarden";
+    mode = "0400";
   };
-
-  services.nginx.virtualHosts."vault.example.com" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
-    locations."/" = {
-      proxyPass = "http://localhost:8222";
-      proxyWebsockets = true;
-      proxyHeaders = {
-        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-        "X-Forwarded-Proto" = "https";
-      };
-    };
-  };
-
-  networking.firewall.allowedTCPPorts = [
-    8222 # Vaultwarden
-  ];
 
   users.users.vaultwarden = {
     isSystemUser = true;
@@ -43,4 +19,38 @@
   };
   users.groups.vaultwarden = { };
 
+  networking.firewall.allowedTCPPorts = [
+    8222 # Vaultwarden
+  ];
+
+  services.nginx.virtualHosts."vault.example.com" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
+      proxyWebsockets = true;
+    };
+  };
+
+  services.vaultwarden = {
+    dbBackend = "postgresql";
+    bitwarden-directory-connector-cli.domain = "https://vault.example.com";
+    vaultwarden.backupDir = "/var/lib/vaultwarden/backup";
+
+    config = {
+      ROCKET_ADDRESS = "127.0.0.1";
+      ROCKET_PORT = 8222;
+      ROCKET_LOG = "critical";
+      DOMAIN = "https://vault.example.com";
+      SIGNUPS_ALLOWED = true;
+      LOG_FILE = "/var/lib/vaultwarden/logs/access.log";
+
+      SMTP_HOST = "127.0.0.1";
+      SMTP_PORT = 25;
+      SMTP_SSL = false;
+      SMTP_FROM = "vaultwarden@example.com";
+      SMTP_FROM_NAME = "example.com Vaultwarden server";
+    };
+  };
 }

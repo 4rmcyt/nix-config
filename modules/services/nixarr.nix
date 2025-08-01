@@ -15,94 +15,115 @@ let
   ];
 in  
 {
-   environment.etc."nixos/scripts/add-trackers.sh" = {
-    mode = "0755";
-    text = ''
-      #!${pkgs.stdenv.shell}
 
-      TRANSMISSION_REMOTE="${pkgs.transmission}/bin/transmission-remote"
-      WGET="${pkgs.wget}/bin/wget"
-      SED="${pkgs.gnused}/bin/sed"
-      WC="${pkgs.coreutils}/bin/wc"
-
-      TRACKERLIST="/tmp/trackers.list"
-      trap "rm -f $TRACKERLIST" EXIT
-
-      $WGET https://newtrackon.com/api/stable -O "$TRACKERLIST"
-      $WGET https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt -O - >> "$TRACKERLIST"
-
-      $SED -i '/^$/d' "$TRACKERLIST"
-      echo "[+] Got $($WC -l < "$TRACKERLIST") trackers"
-
-      while IFS= read -r TRACKER; do
-        "$TRANSMISSION_REMOTE" -t all -td "$TRACKER"
-      done < "$TRACKERLIST"
-    '';
+   sops.secrets = {
+    # --- Nixarr Secrets ---
+    audiobookshelf_token_key_file = {
+      sopsFile = ../../secrets/nixarr_secrets.yaml;
+      key = "audiobookshelf_token_key_file";
+      owner = "audiobookshelf";
+      group = "audiobookshelf";
+      mode = "0400";
+    }; 
+    jellyfin_token_key_file = {
+      sopsFile = ../../secrets/nixarr_secrets.yaml; 
+      key = "jellyfin_token_key_file";
+      owner = "jellyfin";
+      group = "jellyfin";
+      mode = "0400";
+    };
+    jellyseerr_token_key_file = {
+      sopsFile = ../../secrets/nixarr_secrets.yaml;
+      key = "jellyseerr_token_key_file";
+      owner = "jellyseerr";
+      group = "jellyseerr";
+      mode = "0400";
+    };
+    lidarr_token_key_file = {
+      sopsFile = ../../secrets/nixarr_secrets.yaml;
+      key = "lidarr_token_key_file";
+      owner = "lidarr";
+      group = "lidarr";
+      mode = "0400";
+    };
+    prowlarr_token_key_file = {
+      sopsFile = ../../secrets/nixarr_secrets.yaml;
+      key = "prowlarr_token_key_file";  
+      owner = "prowlarr";   
+      group = "prowlarr";
+      mode = "0400";
+    };
+    radarr_token_key_file = {
+      sopsFile = ../../secrets/nixarr_secrets.yaml;
+      key = "radarr_token_key_file";
+      owner = "radarr";
+      group = "radarr";
+      mode = "0400";
+    };
+    sonarr_token_key_file = {
+      sopsFile = ../../secrets/nixarr_secrets.yaml;
+      key = "sonarr_token_key_file";
+      owner = "sonarr";
+      group = "sonarr";
+      mode = "0400";
+    };
+    transmission_token_key_file = {
+      sopsFile = ../../secrets/nixarr_secrets.yaml;
+      key = "transmission_token_key_file";
+      owner = "transmission";
+      group = "transmission";
+      mode = "0400";
+    };
+    bazarr_token_key_file = {
+      sopsFile = ../../secrets/nixarr_secrets.yaml;
+      key = "bazarr_token_key_file";
+      owner = "bazarr";
+      group = "bazarr";
+      mode = "0400";
+    };
+  };
+  users.users = {
+    audiobookshelf = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    bazarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    jellyfin = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    jellyseerr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    lidarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    prowlarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    radarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    sonarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    transmission = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+  };
+  users.groups = {
+    audiobookshelf = {};
+    bazarr = {};
+    jellyfin = {};
+    jellyseerr = {};
+    lidarr = {};
+    prowlarr = {};
+    radarr = {};
+    sonarr = {};
+    transmission = {};
   };
 
-  nixarr = { 
-    enable = true;
-    mediaUsers = [ 
-      "zeev"  
-       ];
-    mediaDir = "/data/media";
-    stateDir = "/data/media/.state/nixarr";
+  networking.firewall.allowedTCPPorts = [
+    9292 # Audiobookshelf
+    8096 # Jellyfin
+    8920 # Jellyfin HTTPS
+    6767 # Bazarr
+    8686 # Lidarr
+    9696 # Prowlarr
+    7878 # Radarr
+    8989 # Sonarr
+    5055 # Jellyseerr
+    9091 # Transmission web UI
+    63998 # Transmission peer port
+  ];
 
-    vpn = {
-      enable = true;
-      wgConf = "/data/.secret/wg.conf";
-      # accessibleFrom = [
-      #   "192.168.1.0/24"
-      #   "192.168.0.0/24"
-      #   "127.0.0.1"
-      # ];
-      openTcpPorts = [
-        58403
-        63998
-        9091
-      ];
-      vpnTestService = {
-        port = 58403;
-        enable = true;
-        };
-    };
-
-    transmission = {
-      package = pkgs.transmission_4;
-      enable = true;
-      peerPort = 63998;
-      vpn.enable = true;
-      flood.enable = false;
-      privateTrackers.cross-seed.enable = false;
-      extraAllowedIps = [
-        "192.168.1.0/24"
-        "192.168.0.0/24"
-        "127.0.0.1"
-      ];
-      messageLevel = "info";
-      extraSettings = {
-        umask = 2;
-        download-queue-size = 10;
-        download-queue-enabled = true;
-        rpc-whitelist-enabled = false;
-        download-dir = "/data/Downloads";
-
-        # script-torrent-added-enabled = true;
-        # script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
-        blocklist-enabled = true;
-        blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
-      };
-    };
-
-    audiobookshelf.enable = true;
-    jellyfin.enable = true;
-    bazarr.enable = true;
-    lidarr.enable = true;
-    prowlarr.enable = true;
-    radarr.enable = true;
-    sonarr.enable = true;
-    jellyseerr.enable = true;
-  };
+  networking.firewall.allowedUDPPorts = [
+    63998 # Transmission peer port
+    1900 # Jellyfin DLNA
+    7359 # Jellyfin discovery
+  ];
 
   services.nginx = {
     virtualHosts = {
@@ -226,47 +247,93 @@ in
     };
   };
 
-  networking.firewall.allowedTCPPorts = [
-    9292 # Audiobookshelf
-    8096 # Jellyfin
-    8920 # Jellyfin HTTPS
-    6767 # Bazarr
-    8686 # Lidarr
-    9696 # Prowlarr
-    7878 # Radarr
-    8989 # Sonarr
-    5055 # Jellyseerr
-    9091 # Transmission web UI
-    63998 # Transmission peer port
-  ];
+  environment.etc."nixos/scripts/add-trackers.sh" = {
+    mode = "0755";
+    text = ''
+      #!${pkgs.stdenv.shell}
 
-  networking.firewall.allowedUDPPorts = [
-    63998 # Transmission peer port
-    1900 # Jellyfin DLNA
-    7359 # Jellyfin discovery
-  ];
+      TRANSMISSION_REMOTE="${pkgs.transmission}/bin/transmission-remote"
+      WGET="${pkgs.wget}/bin/wget"
+      SED="${pkgs.gnused}/bin/sed"
+      WC="${pkgs.coreutils}/bin/wc"
 
-  users.users = {
-    audiobookshelf = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    bazarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    jellyfin = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    jellyseerr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    lidarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    prowlarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    radarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    sonarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    transmission = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+      TRACKERLIST="/tmp/trackers.list"
+      trap "rm -f $TRACKERLIST" EXIT
+
+      $WGET https://newtrackon.com/api/stable -O "$TRACKERLIST"
+      $WGET https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt -O - >> "$TRACKERLIST"
+
+      $SED -i '/^$/d' "$TRACKERLIST"
+      echo "[+] Got $($WC -l < "$TRACKERLIST") trackers"
+
+      while IFS= read -r TRACKER; do
+        "$TRANSMISSION_REMOTE" -t all -td "$TRACKER"
+      done < "$TRACKERLIST"
+    '';
   };
-  users.groups = {
-    audiobookshelf = {};
-    bazarr = {};
-    jellyfin = {};
-    jellyseerr = {};
-    lidarr = {};
-    prowlarr = {};
-    radarr = {};
-    sonarr = {};
-    transmission = {};
+
+  nixarr = { 
+    enable = true;
+    mediaUsers = [ 
+      "zeev"  
+       ];
+    mediaDir = "/data/media";
+    stateDir = "/data/media/.state/nixarr";
+
+    vpn = {
+      enable = true;
+      wgConf = "/data/.secret/wg.conf";
+      # accessibleFrom = [
+      #   "192.168.1.0/24"
+      #   "192.168.0.0/24"
+      #   "127.0.0.1"
+      # ];
+      openTcpPorts = [
+        58403
+        63998
+        9091
+      ];
+      vpnTestService = {
+        port = 58403;
+        enable = true;
+        };
+    };
+
+    transmission = {
+      package = pkgs.transmission_4;
+      enable = true;
+      peerPort = 63998;
+      vpn.enable = true;
+      flood.enable = false;
+      privateTrackers.cross-seed.enable = false;
+      extraAllowedIps = [
+        "192.168.1.0/24"
+        "192.168.0.0/24"
+        "127.0.0.1"
+      ];
+      messageLevel = "info";
+      extraSettings = {
+        umask = 2;
+        download-queue-size = 10;
+        download-queue-enabled = true;
+        rpc-whitelist-enabled = false;
+        download-dir = "/data/Downloads";
+
+        # script-torrent-added-enabled = true;
+        # script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
+        blocklist-enabled = true;
+        blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
+      };
+    };
+
+    audiobookshelf.enable = true;
+    jellyfin.enable = true;
+    bazarr.enable = true;
+    lidarr.enable = true;
+    prowlarr.enable = true;
+    radarr.enable = true;
+    sonarr.enable = true;
+    jellyseerr.enable = true;
   };
 
   systemd.services = lib.genAttrs servicesWithMediaAccess (serviceName: {

@@ -1,36 +1,48 @@
 { config, ... }:
 {
-  # Extract secret
-  sops.secrets."msmtp/gmail" = { };
+ sops.secrets = {
+    msmtp_gmail_password = {
+      sopsFile = ../../secrets/msmtp-gmail.yaml;
+      key = "gmail_password";
+      owner = config.users.users.msmtp.name;
+      group = config.users.groups.msmtp.name;
+      mode = "0400";
+    };
+  };
 
+  users.users.msmtp = {
+    isSystemUser = true;
+    group = "msmtp";
+    description = "msmtp user for sending emails";
+  };
+  users.groups.msmtp = {};
+  
+  networking.firewall.allowedTCPPorts = [ 587 ]; # SMTP over SSL
+
+   environment.etc."aliases" = {
+    text = ''
+      default: admin@example.com
+    '';
+    mode = "0644";
+  };
   programs.msmtp = {
     enable = true;
     setSendmail = true;
     defaults = {
       aliases = "/etc/aliases";
-      port = 465;
+      port = 587;
+      tls = true;
+      tls_certcheck = true; # Enabled by default, but good to be explicit
       tls_trust_file = "/etc/ssl/certs/ca-certificates.crt";
-      tls = "on";
-      auth = "login";
-      tls_starttls = "off";
     };
     accounts = {
       default = {
         host = "smtp.gmail.com";
-        passwordeval = "cat ${config.sops.secrets."msmtp/gmail".path}";
-        user = config.hostSpec.email;
-        from = "${config.hostSpec.username}@${config.hostSpec.hostName}.org";
+        auth = "on";
+        passwordeval = "cat ${config.sops.secrets.msmtp_gmail_password.path}";
+        user ="redacted@example.com";
+        from = "redacted@example.com";
       };
-    };
-  };
-
-  # Re-direct all mail to root to primary user's email
-  environment.etc = {
-    "aliases" = {
-      text = ''
-        root: ${config.hostSpec.email}
-      '';
-      mode = "0644";
     };
   };
 }

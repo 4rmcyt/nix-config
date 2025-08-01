@@ -96,8 +96,18 @@
     openssl
     fwupd
   ];
+  sops = {
+    age = {
+      keyFile = "/var/lib/sops/age.key";
+    };
+    secrets = {
+      ssh_host_ed25519_key = { owner = config.users.users.sops.name; };
+      ssh_host_rsa_key = { owner = config.users.users.sops.name; };
+    };
+  };
 
   services = {
+    
     openssh = {
       enable = true;
       hostKeys = [
