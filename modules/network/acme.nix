@@ -14,6 +14,8 @@
 
     postRun = "systemctl reload nginx.service";
   };
+
+  
   users.users.acme = {
     isSystemUser = true;
     group = "acme";

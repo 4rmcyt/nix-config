@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   environment.systemPackages = [
@@ -19,25 +24,37 @@
     scrapeConfigs = [
       {
         job_name = "node-exporter";
-        static_configs = [{
-          targets = [ "localhost:9100" ];
-          labels = { instance = "homeserver"; };
-        }];
+        static_configs = [
+          {
+            targets = [ "localhost:9100" ];
+            labels = {
+              instance = "homeserver";
+            };
+          }
+        ];
         scrape_interval = "2s";
       }
       {
         job_name = "prometheus";
-        static_configs = [{
-          targets = [ "localhost:9090" ];
-          labels = { instance = "homeserver"; };
-        }];
+        static_configs = [
+          {
+            targets = [ "localhost:9090" ];
+            labels = {
+              instance = "homeserver";
+            };
+          }
+        ];
       }
       {
         job_name = "nextdns-exporter";
-        static_configs = [{
-          targets = [ "localhost:9948" ];
-          labels = { instance = "homeserver"; };
-        }];
+        static_configs = [
+          {
+            targets = [ "localhost:9948" ];
+            labels = {
+              instance = "homeserver";
+            };
+          }
+        ];
       }
       # {
       #   job_name = "cloudflare-exporter";
@@ -53,9 +70,18 @@
       node = {
         enable = true;
         enabledCollectors = [
-          "systemd" "processes" "interrupts" "cpu" "diskstats"
-          "meminfo" "netdev" "netstat" "btrfs"
-          "stat" "time" "thermal_zone"
+          "systemd"
+          "processes"
+          "interrupts"
+          "cpu"
+          "diskstats"
+          "meminfo"
+          "netdev"
+          "netstat"
+          "btrfs"
+          "stat"
+          "time"
+          "thermal_zone"
           "hwmon"
         ];
         port = 9100;
@@ -119,15 +145,15 @@
         options.path = "/etc/grafana/dashboards/system.json";
         options.foldersFromFilesStructure = true;
       }
-       {
+      {
         name = "Custom Dashboards";
         type = "file";
-        options.path = ./.; 
+        options.path = ./.;
         options.foldersFromFilesStructure = true;
       }
     ];
   };
-  services.uptime-kuma =  {
+  services.uptime-kuma = {
     enable = true;
     settings = {
       port = "3001";
@@ -135,6 +161,55 @@
     };
   };
 
+  services.nginx.virtualHosts."grafana.labhome.work" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:3000";
+      proxyWebsockets = true;
+      proxyHeaders = {
+        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+        "X-Forwarded-Proto" = "https";
+      };
+    };
+  };
+
+  services.nginx.virtualHosts."prometheus.labhome.work" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:9090";
+      proxyWebsockets = true;
+      proxyHeaders = {
+        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+        "X-Forwarded-Proto" = "https";
+      };
+    };
+  };
+
+  services.nginx.virtualHosts."uptime-kuma.labhome.work" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:3001";
+      proxyWebsockets = true;
+      proxyHeaders = {
+        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+        "X-Forwarded-Proto" = "https";
+      };
+    };
+  };
+
+  networking.firewall.allowedTCPPorts = [
+    3000 # Grafana
+    9090 # Prometheus
+    9100 # Node Exporter
+    9948 # NextDNS Exporter
+    3001 # Uptime Kuma
+  ];
 
   users.users.grafana = {
     isSystemUser = true;
@@ -144,11 +219,13 @@
   users.users.uptime-kuma = {
     isSystemUser = true;
     group = "uptime-kuma";
-    extraGroups = [ "users" "podman"];
+    extraGroups = [
+      "users"
+      "podman"
+    ];
   };
-  users.groups.grafana = {};
-  users.groups.uptime-kuma = {};
-
+  users.groups.grafana = { };
+  users.groups.uptime-kuma = { };
 
   systemd.tmpfiles.rules = [
     "d /var/lib/grafana 0755 grafana grafana -"
