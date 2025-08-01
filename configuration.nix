@@ -8,8 +8,8 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./users
-    ./networking
+    ./modules/users
+    ./modules/network/base.nix
     ./modules/base
     ./modules/sops
   ];
@@ -94,6 +94,7 @@
     borgbackup
     smartmontools
     openssl
+    fwupd
   ];
 
   services = {
@@ -192,7 +193,7 @@
 
   home-manager = {
     extraSpecialArgs = { inherit inputs; };
-    users.zeev = import ./home-manager;
+    users.zeev = import ./modules/home-manager;
   };
 
   system.stateVersion = "25.05";
