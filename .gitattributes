@@ -1,1 +1,1 @@
-services/homepage.nix filter=git-crypt diff=git-crypt
+services/homepage/default.nix filter=git-crypt diff=git-crypt

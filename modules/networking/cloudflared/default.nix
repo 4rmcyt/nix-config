@@ -3,11 +3,12 @@
 
   sops.secrets = {
     cloudflare_tunnel_credentials = {
-      sopsFile = ../../secrets/cloudflare_tunnel_credentials.yaml;
+      sopsFile = ../../secrets/cloudflare_tunnel_credentials.bin;
       key = "credentials";
-      owner = "cloudflared";
-      group = "cloudflared";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
       mode = "0400";
+      format = "binary";
     };
   };
 
