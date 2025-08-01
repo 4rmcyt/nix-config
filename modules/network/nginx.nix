@@ -8,7 +8,8 @@
       "acme"
     ];
   };
-  users.groups.acme = { };
+  users.groups.nginx = { };
+
   networking.firewall = {
     allowedTCPPorts = [ 80 443 ];
   };
