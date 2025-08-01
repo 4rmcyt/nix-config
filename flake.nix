@@ -97,6 +97,7 @@
           nix-index-database.nixosModules.nix-index
           nixarr.nixosModules.default
           nix-ld.nixosModules.nix-ld
+          inputs.authentik-nix.nixosModules.default
 
           # Core system configuration files
           ./configuration.nix
