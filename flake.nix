@@ -90,15 +90,16 @@
         modules = [
           vscode-server.nixosModules.default
           disko.nixosModules.disko
-          sops-nix.nixosModule
-          {
-            age.keyFile = "/var/lib/sops/age.key";
-            defaultSopsFormat = "yaml";
-          }
           home-manager.nixosModules.home-manager
           {
-            extraSpecialArgs = { inherit inputs; };
-            users.zeev = import ./modules/home-manager;
+            home-manager.useGlobalPkgs = true;
+            home-manager.extraSpecialArgs = { inherit inputs; };
+            home-manager.users.zeev = import ./modules/home-manager;
+          }
+          sops-nix.nixosModules.sops
+          {
+            sops.age.keyFile = "/var/lib/sops/age.key";
+            sops.defaultSopsFormat = "yaml";
           }
           nix-index-database.nixosModules.nix-index
           nixarr.nixosModules.default
