@@ -20,6 +20,62 @@
     borg_private_key = { sopsFile = ../../secrets/system.yaml; key = "borg_private_key"; owner = config.users.users.root.name; group = config.users.groups.root.name; };
   };
 
+  environment.systemPackages = with pkgs; [
+    zsh
+    git
+    neovim
+    direnv
+    pass
+    vim
+    wget
+    curl
+    jq
+    coreutils
+    gawk
+    gnugrep
+    iproute2
+    mc
+    htop
+    btop
+    lsof
+    age
+    sops
+    ssh-to-age
+    openssh
+    wireguard-tools
+    dive
+    apacheHttpd
+    meslo-lgs-nf
+    yamllint
+    nix-index
+    iotop
+    cachix
+    tuptime
+    smartmontools
+    fzf
+    ffmpeg
+    nmap
+    trash-cli
+    zip
+    unar
+    unzip
+    p7zip
+    go
+    nextdns
+    nixfmt-rfc-style
+    nil
+    deploy-rs
+    just
+    nixpkgs-fmt
+    tree
+    git-crypt
+    python3Full
+    borgbackup
+    smartmontools
+    openssl
+    fwupd
+  ];
+  
   services = {
     openssh = {
       enable = true;
