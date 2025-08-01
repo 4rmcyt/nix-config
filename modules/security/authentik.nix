@@ -40,7 +40,6 @@
     forceSSL = true;
     enableACME = true;
     http2 = true;
-
     locations."/" = {
       proxyPass = "http://127.0.0.1:9000";
     };
@@ -51,7 +50,16 @@
     8080  # Authentik Outpost Proxy
     9100  # Authentik Metrics
   ];
+
+  users.users.authentik = {
+    isSystemUser = true;
+    group = "authentik";
+    extraGroups = [ "users" ];
+  };
+  users.groups.authentik = { };
+
   
+
   sops.secrets = {
     authentik_secret_key = {
       owner = config.users.users.authentik.name;
