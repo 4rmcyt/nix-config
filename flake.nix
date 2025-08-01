@@ -2,7 +2,6 @@
   description = "NixOS configuration for homeserver";
   inputs = {
     sops.age.keyFile = "/var/lib/sops/age.key";
-    sops.defaultSopsFormat = "yaml";
 
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -95,7 +94,15 @@
           vscode-server.nixosModules.default
           disko.nixosModules.disko
           sops-nix.nixosModules.sops
+          {
+            age.keyFile = "/var/lib/sops/age.key";
+            defaultSopsFormat = "yaml";
+          }
           home-manager.nixosModules.home-manager
+          {
+            extraSpecialArgs = { inherit inputs; };
+            users.zeev = import ./modules/home-manager;
+          }
           nix-index-database.nixosModules.nix-index
           nixarr.nixosModules.default
           nix-ld.nixosModules.nix-ld
