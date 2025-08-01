@@ -143,15 +143,10 @@
           ./modules/services/kavita.nix
           ./modules/services/calibre-web.nix
 
-
-          
           ./backup
         ];
       };
     };
-
-  
-  
   nixConfig = {
     extra-substituters = [
       "https://nix-community.cachix.org"
