@@ -104,33 +104,39 @@
           ./hardware-configuration.nix
 
           # Core system configuration
-          # ./disko
-          ./networking
-          ./users
+          # ./modules/isko
+          ./modules/users
           ./modules/base
           ./modules/sops
-          ./monitoring
+          ./modules/security
+          ./modules/monitoring
+          ./modules/containers
+          ./modules/database/postgresql
+          ./modules/security/authentik.nix
+          ./modules/security/fail2ban.nix
+          ./modules/network/base.nix
+          ./modules/network/acme.nix
+          ./modules/network/nginx.nix
+          ./modules/network/tailscale.nix
+          ./modules/network/cloudflared.nix
 
           # Services
-          ./services/yubikey.nix
-          ./services/postgresql.nix
-          ./services/homepage.nix
-          ./services/tailscale.nix
-          ./services/cloudflared.nix
-          ./services/miniflux.nix
-          ./services/microbin.nix
-          ./services/paperless.nix
-          ./services/radicale.nix
-          ./services/samba.nix
-          ./services/home-assistant.nix
-          ./services/nixarr.nix
-          ./services/kavita.nix
-          ./services/calibre-web.nix
+          ./modules/services/yubikey.nix
+          ./modules/services/homepage.nix
+          ./modules/services/tailscale.nix
+          ./modules/services/cloudflared.nix
+          ./modules/services/miniflux.nix
+          ./modules/services/microbin.nix
+          ./modules/services/paperless.nix
+          ./modules/services/radicale.nix
+          ./modules/services/samba.nix
+          ./modules/services/home-assistant.nix
+          ./modules/services/nixarr.nix
+          ./modules/services/kavita.nix
+          ./modules/services/calibre-web.nix
 
-          ./scripts/wg-sync.nix
-          ./security/lldap.nix
 
-          ./containers
+          
           ./backup
         ];
       };

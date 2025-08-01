@@ -22,6 +22,10 @@
   boot.extraModulePackages = [ ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernel.sysctl = {
+    "net.core.default_qdisc" = "fq";
+    "net.ipv4.tcp_congestion_control" = "bbr";
+  };
 
   boot.loader.systemd-boot.configurationLimit = 10;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

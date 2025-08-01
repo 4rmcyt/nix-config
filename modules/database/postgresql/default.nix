@@ -13,7 +13,7 @@
       "miniflux"
       "paperless"
       "hass"
-      "lldap"
+      "authentik"
     ];
     ensureUsers = [
       {
@@ -33,7 +33,7 @@
         ensureDBOwnership = true;
       }
       {
-        name = "lldap";
+        name = "authentik";
         ensureDBOwnership = true;
       }
     ];
