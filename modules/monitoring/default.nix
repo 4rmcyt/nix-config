@@ -15,6 +15,83 @@
       group = "grafana";
       mode = "0400";
     };
+  };
+
+  users.users = {
+    grafana = {
+      isSystemUser = true;
+      group = "grafana";
+      extraGroups = [ "users" ];
+    };
+    uptime-kuma = {
+      isSystemUser = true;
+      group = "uptime-kuma";
+      extraGroups = [ "users" "podman" ];
+    };
+
+    prometheus = {
+      isSystemUser = true;
+      group = "prometheus";
+      extraGroups = [ "users" ];
+    };
+
+  };
+
+  users.groups = {
+    grafana = { };
+    uptime-kuma = { };
+    prometheus = { };
+  };
+
+   networking.firewall.allowedTCPPorts = [
+    3000 # Grafana
+    9090 # Prometheus
+    9100 # Node Exporter
+    9948 # NextDNS Exporter
+    3001 # Uptime Kuma
+  ];
+
+  services.nginx.virtualHosts."grafana.example.com" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:3000";
+      proxyWebsockets = true;
+      proxyHeaders = {
+        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+        "X-Forwarded-Proto" = "https";
+      };
+    };
+  };
+
+  services.nginx.virtualHosts."prometheus.example.com" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:9090";
+      proxyWebsockets = true;
+      proxyHeaders = {
+        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+        "X-Forwarded-Proto" = "https";
+      };
+    };
+  };
+
+  services.nginx.virtualHosts."uptime-kuma.example.com" = {
+    forceSSL = true;
+    enableACME = true;
+    http2 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:3001";
+      proxyWebsockets = true;
+      proxyHeaders = {
+        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
+        "X-Forwarded-Proto" = "https";
+      };
+    };
+  };
 
   environment.systemPackages = [
     pkgs.grafana
@@ -163,6 +240,7 @@
       }
     ];
   };
+
   services.uptime-kuma = {
     enable = true;
     settings = {
@@ -171,74 +249,10 @@
     };
   };
 
-  services.nginx.virtualHosts."grafana.example.com" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
-    locations."/" = {
-      proxyPass = "http://localhost:3000";
-      proxyWebsockets = true;
-      proxyHeaders = {
-        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-        "X-Forwarded-Proto" = "https";
-      };
-    };
-  };
-
-  services.nginx.virtualHosts."prometheus.example.com" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
-    locations."/" = {
-      proxyPass = "http://localhost:9090";
-      proxyWebsockets = true;
-      proxyHeaders = {
-        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-        "X-Forwarded-Proto" = "https";
-      };
-    };
-  };
-
-  services.nginx.virtualHosts."uptime-kuma.example.com" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
-    locations."/" = {
-      proxyPass = "http://localhost:3001";
-      proxyWebsockets = true;
-      proxyHeaders = {
-        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-        "X-Forwarded-Proto" = "https";
-      };
-    };
-  };
-
-  networking.firewall.allowedTCPPorts = [
-    3000 # Grafana
-    9090 # Prometheus
-    9100 # Node Exporter
-    9948 # NextDNS Exporter
-    3001 # Uptime Kuma
-  ];
-
-  users.users.grafana = {
-    isSystemUser = true;
-    group = "grafana";
-    extraGroups = [ "users" ];
-  };
-  users.users.uptime-kuma = {
-    isSystemUser = true;
-    group = "uptime-kuma";
-    extraGroups = [
-      "users"
-      "podman"
-    ];
-  };
-  users.groups.grafana = { };
-  users.groups.uptime-kuma = { };
-
   systemd.tmpfiles.rules = [
     "d /var/lib/grafana 0755 grafana grafana -"
     "d /var/lib/grafana/dashboards 0755 grafana grafana -"
   ];
 }
+
+
