@@ -1,6 +1,9 @@
 {
   description = "NixOS configuration for homeserver";
   inputs = {
+    sops.age.keyFile = "/var/lib/sops/age.key";
+    sops.defaultSopsFormat = "yaml";
+
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:nixos/nixos-hardware";
@@ -139,10 +142,6 @@
           
           ./backup
         ];
-        sopsConfig = {
-          sops.age.keyFile = "/var/lib/sops/age.key";
-          sops.defaultSopsFormat = "yaml";
-        };
       };
     };
 
