@@ -131,7 +131,6 @@
           # Services
           ./modules/services/yubikey.nix
           ./modules/services/homepage.nix
-          ./modules/services/cloudflared.nix
           ./modules/services/miniflux.nix
           ./modules/services/microbin.nix
           ./modules/services/paperless.nix
