@@ -90,7 +90,7 @@
         modules = [
           vscode-server.nixosModules.default
           disko.nixosModules.disko
-          sops-nix.nixosModules.sops
+          sops-nix.nixosModule
           {
             age.keyFile = "/var/lib/sops/age.key";
             defaultSopsFormat = "yaml";
