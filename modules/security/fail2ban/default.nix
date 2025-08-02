@@ -9,11 +9,11 @@
 
   sops.secrets = {
     cloudflare_zone_id = {
-      sopsFile = ../../secrets/cloudflare.yaml;
+      sopsFile = ../../../secrets/cloudflare.yaml;
       key = "cloudflare_zone_id";
     };
     cloudflare_api_key = {
-      sopsFile = ../../secrets/cloudflare.yaml;
+      sopsFile = ../../../secrets/cloudflare.yaml;
       key = "cloudflare_api_key";
     };
   };

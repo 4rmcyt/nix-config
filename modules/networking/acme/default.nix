@@ -3,7 +3,7 @@
 {
   sops.secrets = {
     cloudflare_api_token = {
-      sopsFile = ../../secrets/cloudflare.yaml;
+      sopsFile = ../../../secrets/cloudflare.yaml;
       key = "cloudflare_api_key";
     };
   };
