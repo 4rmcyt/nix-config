@@ -3,7 +3,7 @@
 
   sops.secrets = {
     cloudflare_tunnel_credentials = {
-      sopsFile = ../../secrets/cloudflare_tunnel_credentials.bin;
+      sopsFile = ../../../secrets/cloudflare_tunnel_credentials.bin;
       key = "credentials";
       owner = config.users.users.cloudflared.name;
       group = config.users.groups.cloudflared.name;
