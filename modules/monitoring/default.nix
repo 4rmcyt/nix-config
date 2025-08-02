@@ -15,6 +15,12 @@
       group = config.users.groups.grafana.name;
       mode = "0400";
     };
+    # You will need to create this secret file and add your NextDNS API key
+    nextdns_api_key = {
+      sopsFile = ../../secrets/nextdns.yaml;
+      key = "nextdns_api_key";
+      owner = config.users.users.prometheus.name;
+    };
   };
 
   users.users = {
@@ -31,13 +37,11 @@
         "podman"
       ];
     };
-
     prometheus = {
       isSystemUser = true;
       group = "prometheus";
       extraGroups = [ "users" ];
     };
-
   };
 
   users.groups = {
@@ -82,18 +86,36 @@
         forceSSL = true;
         enableACME = true;
         locations."/grafana/" = {
-          proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}";
+          # FIX: Added trailing slash to correctly handle the subpath
+          proxyPass = "http://localhost:3000/";
           proxyWebsockets = true;
-          recommendedProxySettings = true;
         };
       };
     };
+  };
+
   environment.systemPackages = [
     pkgs.grafana
     pkgs.prometheus
-    pkgs.prometheus-cloudflare-exporter
     pkgs.prometheus-node-exporter
+    # FIX: Added the exporter package to the system
+    pkgs.nextdns-exporter
   ];
+
+  # FIX: Added systemd service for the NextDNS exporter
+  systemd.services.nextdns-exporter = {
+    description = "NextDNS Prometheus Exporter";
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      ExecStart = ''
+        ${pkgs.nextdns-exporter}/bin/nextdns-exporter \
+          -listen-address "127.0.0.1:9948" \
+          -api-key-file "${config.sops.secrets.nextdns_api_key.path}"
+      '';
+      Restart = "on-failure";
+      User = config.users.users.prometheus.name;
+    };
+  };
 
   services.prometheus = {
     enable = true;
@@ -106,46 +128,27 @@
     scrapeConfigs = [
       {
         job_name = "node-exporter";
-        static_configs = [
-          {
-            targets = [ "localhost:9100" ];
-            labels = {
-              instance = "homeserver";
-            };
-          }
-        ];
+        static_configs = [{
+          targets = [ "localhost:9100" ];
+          labels = { instance = "homeserver"; };
+        }];
         scrape_interval = "2s";
       }
       {
         job_name = "prometheus";
-        static_configs = [
-          {
-            targets = [ "localhost:9090" ];
-            labels = {
-              instance = "homeserver";
-            };
-          }
-        ];
+        static_configs = [{
+          targets = [ "localhost:9090" ];
+          labels = { instance = "homeserver"; };
+        }];
       }
       {
         job_name = "nextdns-exporter";
-        static_configs = [
-          {
-            targets = [ "localhost:9948" ];
-            labels = {
-              instance = "homeserver";
-            };
-          }
-        ];
+        static_configs = [{
+          # FIX: This target will now work because the service is defined
+          targets = [ "localhost:9948" ];
+          labels = { instance = "homeserver"; };
+        }];
       }
-      # {
-      #   job_name = "cloudflare-exporter";
-      #   static_configs = [{
-      #     targets = [ "localhost:27196" ];
-      #     labels = { instance = "homeserver"; };
-      #   }];
-      # }
-
     ];
 
     exporters = {
@@ -168,14 +171,6 @@
         ];
         port = 9100;
       };
-      # cloudflare = {
-      #   enable = true;
-      #   port = 27196;
-      #   extraFlags = [
-      #     "--cloudflare.api-token=${config.sops.secrets.cloudflare_prometheus_exporter_token.path}"
-      #     "--cloudflare.zone-id=${config.sops.secrets.cloudflare_zone_id.path}"
-      #   ];
-      # };
     };
 
     ruleFiles = [
@@ -189,25 +184,28 @@
                 labels:
                   severity: warning
                 annotations:
-                  summary: "High CPU usage detected"
+                  summary: "High CPU usage detected on {{ $labels.instance }}"
       '')
     ];
   };
 
   services.grafana = {
     enable = true;
-    dataDir = "/var/lib/grafana";
     settings = {
       server = {
         http_port = 3000;
-        http_addr = "0.0.0.0";
-        root_url = "http://192.168.1.165:3000";
+        # BEST PRACTICE: Bind to localhost as it's behind a proxy
+        http_addr = "127.0.0.1";
+        # FIX: Set root_url to the public-facing URL and subpath
+        root_url = "https://grafana.example.com/grafana";
+        # FIX: Tell Grafana it's being served from a subpath
+        serve_from_sub_path = true;
       };
       database = {
         type = "postgres";
         host = "/run/postgresql";
         user = "grafana";
-        password = config.sops.secrets.grafana_admin_password.path;
+        password = config.sops.secrets.grafana_db_password.path;
       };
       security = {
         admin_user = "admin";
@@ -216,15 +214,13 @@
     };
 
     provision.enable = true;
-    provision.datasources.settings.datasources = [
-      {
-        name = "Prometheus";
-        type = "prometheus";
-        access = "proxy";
-        url = "http://localhost:9090";
-        isDefault = true;
-      }
-    ];
+    provision.datasources.settings.datasources = [{
+      name = "Prometheus";
+      type = "prometheus";
+      access = "proxy";
+      url = "http://localhost:9090";
+      isDefault = true;
+    }];
 
     provision.dashboards.settings.providers = [
       {
@@ -236,7 +232,9 @@
       {
         name = "Custom Dashboards";
         type = "file";
-        options.path = ./.;
+        # FIX: Point to a dedicated 'dashboards' subdirectory
+        # You must create this folder next to your .nix file
+        options.path = ./dashboards;
         options.foldersFromFilesStructure = true;
       }
     ];
@@ -250,8 +248,6 @@
     };
   };
 
-  systemd.tmpfiles.rules = [
-    "d /var/lib/grafana 0755 grafana grafana -"
-    "d /var/lib/grafana/dashboards 0755 grafana grafana -"
-  ];
+  # REMOVED: Redundant systemd.tmpfiles.rules.
+  # The Grafana module handles its own directory creation.
 }
