@@ -6,48 +6,51 @@
 }:
 { 
   sops.secrets.postgres = {
-    sopsFile = ../../secrets/postgresql.yaml;
+    sopsFile = ../../../secrets/postgresql.yaml;
     key = "postgres_password";
     owner = config.users.users.postgresql.name;
     group = config.users.groups.postgresql.name;
     mode = "0400";
   };
   sops.secrets.miniflux = {
-    sopsFile = ../../secrets/postgresql.yaml;
+    sopsFile = ../../../secrets/postgresql.yaml;
     key = "miniflux_db_password";
     owner = config.users.users.postgresql.name;
     group = config.users.groups.postgresql.name;
     mode = "0400";
   };
   sops.secrets.paperless = {
-    sopsFile = ../../secrets/postgresql.yaml;
+    sopsFile = ../../../secrets/postgresql.yaml;
     key = "paperless_db_password";
     owner = config.users.users.postgresql.name;
     group = config.users.groups.postgresql.name;
     mode = "0400";
   };
   sops.secrets.hass = {
-    sopsFile = ../../secrets/postgresql.yaml;
+    sopsFile = ../../../secrets/postgresql.yaml;
     key = "hass_db_password";
     owner = config.users.users.postgresql.name;
     group = config.users.groups.postgresql.name;
     mode = "0400";
   };
   sops.secrets.authentik = {
-    sopsFile = ../../secrets/postgresql.yaml;
+    sopsFile = ../../../secrets/postgresql.yaml;
     key = "authentik_db_password";
     mode = "0400";
   };
   sops.secrets.grafana = {
-    sopsFile = ../../secrets/postgresql.yaml;
+    sopsFile = ../../../secrets/postgresql.yaml;
     key = "grafana_db_password";
     owner = config.users.users.postgresql.name;
     group = config.users.groups.postgresql.name;
     mode = "0400";
   };
-  sops.secrets.linkwarden = {
-    sopsFile = ../../secrets/postgresql.yaml;
-    key = "linkwarden_db_password";
+  sops.secrets.vaultwarden = {
+    sopsFile = ../../../secrets/postgresql.yaml;
+    key = "vaultwarden_db_password";
+    owner = config.users.users.postgresql.name;
+    group = config.users.groups.postgresql.name;
+    mode = "0400";
   };
 
   users.users.postgresql = {
@@ -110,7 +113,7 @@
       DECLARE pwdGrafana TEXT;
       DECLARE pwdMiniflux TEXT;
       DECLARE pwdPaperless TEXT;
-      DECLARE pwdLinkwarden TEXT;
+      DECLARE pwdVaultwarden TEXT;
       BEGIN
         pwdPostgresql := trim(both from replace(pg_read_file('${config.sops.secrets.postgres.path}'), E'\n', '''));
         pwdAuthentik := trim(both from replace(pg_read_file('${config.sops.secrets.authentik.path}'), E'\n', '''));
@@ -118,14 +121,14 @@
         pwdGrafana := trim(both from replace(pg_read_file('${config.sops.secrets.grafana.path}'), E'\n', '''));
         pwdPaperless := trim(both from replace(pg_read_file('${config.sops.secrets.paperless.path}'), E'\n', '''));
         pwdMiniflux := trim(both from replace(pg_read_file('${config.sops.secrets.miniflux.path}'), E'\n', '''));
-        pwdLinkwarden := trim(both from replace(pg_read_file('${config.sops.secrets.linkwarden.path}'), E'\n', '''));
+        pwdVaultwarden := trim(both from replace(pg_read_file('${config.sops.secrets.vaultwarden.path}'), E'\n', '''));
         EXECUTE format('ALTER USER admin PASSWORD '''%s''';', pwdPostgresql);
         EXECUTE format('ALTER USER authentik PASSWORD '''%s''';', pwdAuthentik);
         EXECUTE format('ALTER USER hass PASSWORD '''%s''';', pwdHass);
         EXECUTE format('ALTER USER grafana PASSWORD '''%s''';', pwdGrafana);
         EXECUTE format('ALTER USER paperless PASSWORD '''%s''';', pwdPaperless);
         EXECUTE format('ALTER USER miniflux PASSWORD '''%s''';', pwdMiniflux);
-        EXECUTE format('ALTER USER linkwarden PASSWORD '''%s''';', pwdLinkwarden);
+        EXECUTE format('ALTER USER vaultwarden PASSWORD '''%s''';', pwdVaultwarden);
       END $$;
     EOF
   '';
