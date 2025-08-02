@@ -35,12 +35,6 @@ let
       maxretry = 3;
       bantime = "1h";
     };
-    radicale = {
-      unit = "radicale.service";
-      maxretry = 3;
-      bantime = "1h";
-    };
-
     tailscale = {
       unit = "tailscaled.service";
       maxretry = 3;
