@@ -80,7 +80,7 @@
       PAPERLESS_DBUSER = "paperless";
       PAPERLESS_DBPASS = config.sops.secrets.paperless_db_password.path;
       PAPERLESS_DBENGINE = "postgresql";
-      PAPERLESS_REDIS = "redis://redis:${config.sops.secrets.redis_password.content}@/run/redis";
+      PAPERLESS_REDIS = "redis://redis:${config.sops.secrets.redis_password.path}@/run/redis";
       PAPERLESS_REDIS_PREFIX = "paperless";
       PAPERLESS_OCR_LANGUAGE = "eng+heb+rus+ukr";
       PAPERLESS_OCR_USER_ARGS = {
