@@ -6,14 +6,6 @@
 }:
 { 
   sops.secrets = {
-    sops.secrets.postgres = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "postgres_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
-      mode = "0400";
-    };
-  
     postgres = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "postgres_password";
@@ -47,14 +39,14 @@
       key = "authentik_db_password";
       mode = "0400";
     };
-    secrets.grafana = {
+    grafana = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "grafana_db_password";
       owner = config.users.users.postgresql.name;
       group = config.users.groups.postgresql.name;
       mode = "0400";
     };
-    secrets.vaultwarden = {
+    vaultwarden = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "vaultwarden_db_password";
       owner = config.users.users.postgresql.name;
