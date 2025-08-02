@@ -69,7 +69,7 @@
       "hass"
       "authentik"
       "grafana"
-      "linkwarden"
+      "vaultwarden"
     ];
     ensureUsers = [
       {
