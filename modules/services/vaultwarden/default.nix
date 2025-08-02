@@ -5,10 +5,17 @@
   ...
 }:
 {
-  sops.secrets.vaultwarden = {
+  sops.secrets.vaultwarden_admin_token = {
     sopsFile = ../../secrets/vaultwarden.yaml;
+    key = "vaultwarden_admin_token";
     owner = "vaultwarden";
     group = "vaultwarden";
+    mode = "0400";
+  };
+
+  sops.secrets.vaultwarden_db_password = {
+    sopsFile = ../../secrets/postgresql.yaml;
+    key = "vaultwarden_db_password";
     mode = "0400";
   };
 
@@ -44,6 +51,8 @@
       ROCKET_LOG = "critical";
       DOMAIN = "https://vault.example.com";
       SIGNUPS_ALLOWED = true;
+      ADMIN_TOKEN = config.sops.secrets.vaultwarden_admin_token.path;
+      DATABASE_URL = "postgresql://vaultwarden:${config.sops.secrets.vaultwarden_db_password.path}@/run/postgresql/vaultwarden?sslmode=disable";
       LOG_FILE = "/var/lib/vaultwarden/logs/access.log";
 
       # SMTP_HOST = "127.0.0.1";
