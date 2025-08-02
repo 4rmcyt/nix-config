@@ -8,7 +8,7 @@
 {
 
   sops.secrets = {
-    sops.secrets.grafana_admin_password = {
+    grafana_admin_password = {
       sopsFile = ../../secrets/grafana.yaml;
       key = "grafana_admin_password";
       owner = config.users.users.grafana.name;
