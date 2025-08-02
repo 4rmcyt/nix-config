@@ -48,9 +48,6 @@
   sops.secrets.linkwarden = {
     sopsFile = ../../secrets/postgresql.yaml;
     key = "linkwarden_db_password";
-    owner = config.users.users.postgresql.name;
-    group = config.users.groups.postgresql.name;
-    mode = "0400";
   };
 
   users.users.postgresql = {
