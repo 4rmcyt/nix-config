@@ -34,6 +34,13 @@
     forceSSL = true;
     enableACME = true;
     http2 = true;
+    recommendedGzipSettings = true;
+    recommendedOptimisation = true;
+    recommendedProxySettings = true;
+    recommendedTlsSettings = true;
+    recommendedProxyHeaders = true;
+    recommendedProxyHeadersForWebsockets = true;
+    recommendedSecurityHeaders = true;
     locations."/" = {
       proxyWebsockets = true;
       proxyPass = "http://127.0.0.1:8000";

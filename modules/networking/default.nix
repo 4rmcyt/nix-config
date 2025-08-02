@@ -4,7 +4,7 @@
     ./acme
     ./base
     ./cloudflared
-    ./nginx
+    # ./nginx
     ./tailscale
   ];
 }  
