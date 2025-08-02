@@ -14,6 +14,35 @@
     ./modules/base
   ];
 
+  nix = {
+    package = pkgs.nixVersions.latest;
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [
+        "zeev"
+      ];
+      auto-optimise-store = true;
+      warn-dirty = false;
+      cores = 4;
+      show-trace = true;
+      download-buffer-size = 1073741824; # 1 GiB
+      max-jobs = 4;
+    };
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 10d";
+    };
+
+    optimise = {
+      automatic = true;
+      dates = ["weekly"];
+    };
+  };
+
   sops.secrets = {
     ssh_host_ed25519_key = {
       sopsFile = ../../secrets/system.yaml;
@@ -140,6 +169,33 @@
     };
 
     vscode-server.enable = true;
+    services.nextdns = {
+      enable = true;
+      arguments = [
+        "-profile"
+        "2bffa2"
+        "-cache-size"
+        "10MB"
+        "--report-client-info"
+      ];
+  };
+
+  security.sudo.execWheelOnly = true;
+
+  programs = {
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+    zsh.enable = true;
+    nix-ld.dev.enable = false;
+
+    nix-index = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+  };
+    
   };
   system.stateVersion = "25.05";
 }
