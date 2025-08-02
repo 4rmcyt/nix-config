@@ -211,7 +211,7 @@
       host = "/run/postgresql";
       user = "grafana";
       # Note: Consider using a separate DB password (see recommendations)
-      password = config.sops.secrets.grafana_db_password.path;
+      passwordFile = config.sops.secrets.grafana_db_password.path;
     };
     security = {
       admin_user = "admin";
