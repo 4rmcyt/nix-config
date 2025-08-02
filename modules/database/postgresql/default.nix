@@ -37,6 +37,8 @@
     authentik = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "authentik_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
       mode = "0400";
     };
     grafana = {
@@ -60,6 +62,10 @@
   };
   users.groups.postgresql = { };
 
+  networking.firewall.allowedTCPPorts = [
+    5432 # PostgreSQL
+  ];
+
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_16;
@@ -79,22 +85,17 @@
       { name = "grafana"; ensureDBOwnership = true; }
       { name = "vaultwarden"; ensureDBOwnership = true; }
     ];
-    #TODO: Authentication settings
-  };
 
-  networking.firewall.allowedTCPPorts = [
-    5432 # PostgreSQL
-  ];
 
-  authentication = pkgs.lib.mkOverride 10 ''
+    authentication = pkgs.lib.mkOverride 10 ''
       # Allow local users to connect via sockets without a password
       "local all all peer"
       # Require a password for network connections from localhost (both IPv4 and IPv6)
       "host  all all 127.0.0.1/32 scram-sha-256"
       "host  all all ::1/128      scram-sha-256"
-  '';
+    '';
 
-  initialScript = pkgs.writeText "backend-initScript" ''
+    initialScript = pkgs.writeText "backend-initScript" ''
       CREATE ROLE authentik WITH LOGIN PASSWORD '${config.sops.secrets.authentik.path}' CREATEDB;
       CREATE DATABASE authentik;
       GRANT ALL PRIVILEGES ON DATABASE authentik TO authentik;
@@ -119,4 +120,5 @@
       CREATE DATABASE vaultwarden;
       GRANT ALL PRIVILEGES ON DATABASE vaultwarden TO vaultwarden;
   '';
+  };
 }
