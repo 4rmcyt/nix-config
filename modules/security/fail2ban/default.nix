@@ -30,32 +30,6 @@ let
       maxretry = 3;
       bantime = "1h";
     };
-    homeassistant = {
-      unit = "home-assistant.service";
-      maxretry = 3;
-      bantime = "1h";
-    };
-
-    jellyfin = {
-      unit = "jellyfin.service";
-      maxretry = 3;
-      bantime = "1h";
-    };
-    audiobookshelf = {
-      unit = "audiobookshelf.service";
-      maxretry = 3;
-      bantime = "1h";
-    };
-    microbin = {
-      unit = "microbin.service";
-      maxretry = 3;
-      bantime = "1h";
-    };
-    paperless = {
-      unit = "paperless.service";
-      maxretry = 3;
-      bantime = "1h";
-    };
     samba = {
       unit = "smbd.service";
       maxretry = 3;
@@ -68,26 +42,6 @@ let
     };
     homepage = {
       unit = "homepage.service";
-      maxretry = 3;
-      bantime = "1h";
-    };
-    cloudflared = {
-      unit = "cloudflared.service";
-      maxretry = 3;
-      bantime = "1h";
-    };
-    miniflux = {
-      unit = "miniflux.service";
-      maxretry = 3;
-      bantime = "1h";
-    };
-    kavita = {
-      unit = "kavita.service";
-      maxretry = 3;
-      bantime = "1h";
-    };
-    transmission = {
-      unit = "transmission.service";
       maxretry = 3;
       bantime = "1h";
     };
