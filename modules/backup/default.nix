@@ -9,15 +9,15 @@
     borg_private_key = {
       sopsFile = ../../secrets/system.yaml;
       key = "borg_private_key";
-      owner = "root";
-      group = "users";
+      owner = config.users.users.root.name;
+      group = config.users.groups.root.name;
       mode = "0400";
     };
     borgmatic_encryption_pass = {
       sopsFile = ../../secrets/borgmatic.yaml;
       key = "borgmatic_encryption_pass";
-      owner = "root";
-      group = "users";
+      owner = config.users.users.root.name;
+      group = config.users.groups.root.name;
       mode = "0400";
     };
   };  

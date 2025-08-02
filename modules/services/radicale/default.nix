@@ -2,9 +2,9 @@
 
 {
   sops.secrets.radicale_users = {
-    sopsFile = ../../secrets/radicale_users.txt;
-    owner = "radicale";
-    group = "radicale";
+    sopsFile = ../../../secrets/radicale_users.txt;
+    owner = config.users.users.radicale.name;
+    group = config.users.groups.radicale.name;
     mode = "0440";
     format = "binary";
   };

@@ -11,8 +11,8 @@
     grafana_admin_password = {
       sopsFile = ../../secrets/grafana.yaml;
       key = "grafana_admin_password";
-      owner = "grafana";
-      group = "grafana";
+      owner = config.users.users.grafana.name;
+      group = config.users.groups.grafana.name;
       mode = "0400";
     };
   };

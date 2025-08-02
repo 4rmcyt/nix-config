@@ -8,18 +8,11 @@
 {
   sops.secrets = {
     # --- Microbin Secrets ---
-    microbin_user_password = {
-      sopsFile = ../../secrets/microbin.yaml;
-      key = "microbin_user_password";
-      owner = "microbin";
-      group = "microbin";
-      mode = "0400";
-    };
     microbin_admin_password = {
-      sopsFile = ../../secrets/microbin.yaml;
+      sopsFile = ../../../secrets/microbin.yaml;
       key = "microbin_admin_password";
-      owner = "microbin";
-      group = "microbin";
+      owner = config.users.users.microbin.name;
+      group = config.users.groups.microbin.name;
       mode = "0400";
     };
   };
@@ -50,7 +43,7 @@
       };
     };
   };
-  
+
   environment.systemPackages = [ pkgs.microbin ];
 
   services.microbin = {
