@@ -5,6 +5,8 @@
     cloudflare_api_token = {
       sopsFile = ../../../secrets/cloudflare.yaml;
       key = "cloudflare_api_key";
+      group = config.users.groups.acme.name;
+      mode = "0440";
     };
   };
 
@@ -29,4 +31,4 @@
   };
 
 }
-CLOUDFLARE_EMAIL,CLOUDFLARE_API_KEY, CLOUDFLARE_DNS_API_TOKEN,CLOUDFLARE_ZONE_API_TOKEN
+# CLOUDFLARE_EMAIL,CLOUDFLARE_API_KEY, CLOUDFLARE_DNS_API_TOKEN,CLOUDFLARE_ZONE_API_TOKEN
