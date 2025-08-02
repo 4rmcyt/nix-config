@@ -62,7 +62,6 @@
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_16;
-    dataDir = "/var/lib/postgresql/data";
     ensureDatabases = [
       "miniflux"
       "paperless"
