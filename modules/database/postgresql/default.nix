@@ -94,7 +94,7 @@
       "host  all all ::1/128      scram-sha-256"
   '';
 
-   initialScript = pkgs.writeText "backend-initScript" ''
+  initialScript = pkgs.writeText "backend-initScript" ''
       DO $$
       DECLARE pwdAuthentik TEXT;
       DECLARE pwdHass TEXT;
