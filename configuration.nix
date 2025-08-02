@@ -17,7 +17,6 @@
   sops.secrets = {
     ssh_host_ed25519_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_ed25519_key"; owner = config.users.users.root.name;  group = config.users.groups.root.name; mode = "0600"; };
     ssh_host_rsa_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_rsa_key"; owner = config.users.users.root.name; group = config.users.groups.root.name; mode = "0600"; };
-    borg_private_key = { sopsFile = ../../secrets/system.yaml; key = "borg_private_key"; owner = config.users.users.root.name; group = config.users.groups.root.name; };
   };
 
   environment.systemPackages = with pkgs; [
@@ -75,7 +74,7 @@
     openssl
     fwupd
   ];
-  
+
   services = {
     openssh = {
       enable = true;
@@ -88,10 +87,6 @@
           type = "rsa";
           bits = 4096;
           path = config.sops.secrets.ssh_host_rsa_key.path;
-        }
-        {
-          type = "ed25519";
-          path = config.sops.secrets.borg_private_key.path;
         }
       ];
       settings = {
