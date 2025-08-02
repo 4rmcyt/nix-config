@@ -15,9 +15,24 @@
   ];
 
   sops.secrets = {
-    ssh_host_ed25519_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_ed25519_key"; owner = config.users.users.root.name;  group = config.users.groups.root.name; mode = "0600"; };
-    ssh_host_rsa_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_rsa_key"; owner = config.users.users.root.name; group = config.users.groups.root.name; mode = "0600"; };
+    ssh_host_ed25519_key = {
+      sopsFile = ../../secrets/system.yaml;
+      key = "ssh_host_ed25519_key";
+      owner = config.users.users.root.name;
+      group = config.users.groups.root.name;
+      mode = "0600";
+    };
+    ssh_host_rsa_key = {
+      sopsFile = ../../secrets/system.yaml;
+      key = "ssh_host_rsa_key";
+      owner = config.users.users.root.name;
+      group = config.users.groups.root.name;
+      mode = "0600";
+    };
   };
+
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
 
   environment.systemPackages = with pkgs; [
     zsh
@@ -124,7 +139,6 @@
       ];
     };
 
-    
     vscode-server.enable = true;
   };
   system.stateVersion = "25.05";
