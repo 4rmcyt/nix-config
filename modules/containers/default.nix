@@ -13,7 +13,36 @@
     mode = "0400";
     format = "dotenv";
   };
-  
+
+  users.users.podman = {
+    isSystemUser = true;
+    group = "podman";
+    extraGroups = [
+      "users"
+      "podman"
+    ];
+  };
+  users.groups.podman = { };
+
+  users.extraGroups.podman.members = [
+    "zeev"
+    "uptime-kuma"
+    "podman"
+  ];
+
+  networking.firewall.allowedTCPPorts = [
+    # Podman
+    2375 # Podman API (insecure, for local use only)
+    2376 # Podman API (secure, for local use only)
+    9948 # NextDNS Exporter
+    9000 # Portainer
+  ];
+  networking.firewall.allowedUDPPorts = [
+    # Podman
+    2375 # Podman API (insecure, for local use only)
+    2376 # Podman API (secure, for local use only)
+  ];
+
   virtualisation.podman.enable = true;
   virtualisation.oci-containers.backend = "podman";
   virtualisation.oci-containers.containers = {
@@ -42,32 +71,4 @@
       environmentFiles = [ config.sops.secrets.containers_env.path ];
     };
   };
-
-  networking.firewall.allowedTCPPorts = [
-    # Podman
-    2375 # Podman API (insecure, for local use only)
-    2376 # Podman API (secure, for local use only)
-    9948 # NextDNS Exporter
-    9000 # Portainer
-  ];
-  networking.firewall.allowedUDPPorts = [
-    # Podman
-    2375 # Podman API (insecure, for local use only)
-    2376 # Podman API (secure, for local use only)
-  ];
-  users.users.podman = {
-    isSystemUser = true;
-    group = "podman";
-    extraGroups = [
-      "users"
-      "podman"
-    ];
-  };
-  users.groups.podman = { };
-  users.extraGroups.podman.members = [
-    "zeev"
-    "uptime-kuma"
-    "podman"
-  ];
-
 }

@@ -5,7 +5,7 @@
   ...
 }:
 
-{ 
+{
   sops.secrets = {
     # --- Paperless Secrets ---
     paperless_admin_password = {
@@ -36,33 +36,31 @@
     6379 # Redis (for Paperless)
   ];
 
-  services.nginx.virtualHosts."paperless.labhome.work" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
+  services.nginx = {
+    enable = true;
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    recommendedProxyHeaders = true;
-    recommendedProxyHeadersForWebsockets = true;
-    recommendedSecurityHeaders = true;
-    locations."/" = {
-      proxyPass = "http://localhost:8888";
-      proxyWebsockets = true;
+    virtualHosts."paperless.labhome.work" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://localhost:8888";
+        proxyWebsockets = true;
+      };
     };
   };
-
   services.paperless = {
     enable = true;
     package = pkgs.paperless-ngx.overrideAttrs (oldAttrs: {
-      doCheck = false;  
+      doCheck = false;
     });
     port = 8888;
     address = "127.0.0.1";
     passwordFile = config.sops.secrets.paperless_admin_password.path;
     settings = {
-       PAPERLESS_CONSUMER_IGNORE_PATTERN = [
+      PAPERLESS_CONSUMER_IGNORE_PATTERN = [
         ".DS_STORE/*"
         "desktop.ini"
       ];
@@ -84,9 +82,9 @@
       };
     };
   };
-   
+
   services.redis.servers.paperless = {
     enable = true;
     port = 6379;
-  };  
+  };
 }

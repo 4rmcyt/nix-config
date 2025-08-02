@@ -10,7 +10,7 @@
       mode = "0400";
       format = "binary";
     };
-    
+
     gmail_password = {
       sopsFile = ../../secrets/gmail_conf.yaml;
       key = "gmail_password";
@@ -29,23 +29,21 @@
     9300 # Prometheus Metrics
   ];
 
-  services.nginx.virtualHosts."authentik.labhome.work" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
+  services.nginx = {
+    enable = true;
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    recommendedProxyHeaders = true;
-    recommendedProxyHeadersForWebsockets = true;
-    recommendedSecurityHeaders = true;
-    locations."/" = {
-      proxyWebsockets = true;
-      proxyPass = "https://127.0.0.1:9000";
+    virtualHosts."authentik.labhome.work" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyWebsockets = true;
+        proxyPass = "https://127.0.0.1:9000";
+      };
     };
   };
-
   services.authentik = {
     enable = true;
     environmentFile = config.sops.secrets.authentik_env.path;

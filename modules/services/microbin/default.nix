@@ -35,23 +35,22 @@
     8084 # Microbin
   ];
 
-  services.nginx.virtualHosts."microbin.labhome.work" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
+  services.nginx = {
+    enable = true;
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    recommendedProxyHeaders = true;
-    recommendedProxyHeadersForWebsockets = true;
-    recommendedSecurityHeaders = true;
-    locations."/" = {
-      proxyPass = "http://localhost:8084";
-      proxyWebsockets = true;
+    virtualHosts."microbin.labhome.work" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://localhost:8084";
+        proxyWebsockets = true;
+      };
     };
   };
-
+  
   environment.systemPackages = [ pkgs.microbin ];
 
   services.microbin = {

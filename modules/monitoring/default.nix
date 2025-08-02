@@ -26,7 +26,10 @@
     uptime-kuma = {
       isSystemUser = true;
       group = "uptime-kuma";
-      extraGroups = [ "users" "podman" ];
+      extraGroups = [
+        "users"
+        "podman"
+      ];
     };
 
     prometheus = {
@@ -43,7 +46,7 @@
     prometheus = { };
   };
 
-   networking.firewall.allowedTCPPorts = [
+  networking.firewall.allowedTCPPorts = [
     3000 # Grafana
     9090 # Prometheus
     9100 # Node Exporter
@@ -68,37 +71,29 @@
     };
   };
 
-  services.nginx.virtualHosts."prometheus.labhome.work" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
+  services.nginx = {
+    enable = true;
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    recommendedProxyHeaders = true;
-    recommendedProxyHeadersForWebsockets = true;
-    recommendedSecurityHeaders = true;
-    locations."/" = {
-      proxyPass = "http://localhost:9090";
-      proxyWebsockets = true;
-    };
-  };
-
-  services.nginx.virtualHosts."uptime-kuma.labhome.work" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
-    recommendedProxyHeaders = true;
-    recommendedProxyHeadersForWebsockets = true;
-    recommendedSecurityHeaders = true;
-    locations."/" = {
-      proxyPass = "http://localhost:3001";
-      proxyWebsockets = true;
+    virtualHosts = {
+      "prometheus.labhome.work" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          proxyPass = "http://localhost:9090";
+          proxyWebsockets = true;
+        };
+      };
+      "uptime-kuma.labhome.work" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          proxyPass = "http://localhost:3001";
+          proxyWebsockets = true;
+        };
+      };
     };
   };
 
@@ -263,5 +258,3 @@
     "d /var/lib/grafana/dashboards 0755 grafana grafana -"
   ];
 }
-
-
