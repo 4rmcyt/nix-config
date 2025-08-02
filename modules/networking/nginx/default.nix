@@ -21,9 +21,7 @@
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    recommendedProxyHeaders = true;
-    recommendedProxyHeadersForWebsockets = true;
-    recommendedSecurityHeaders = true;
+    
     statusPage = true;
   };
 }
