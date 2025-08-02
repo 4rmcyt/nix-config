@@ -25,7 +25,6 @@ let
     ];
 
   jailDefinitions = {
-    # name = { unit = "systemd-unit"; filter = "filter-name"; settings... }
     ssh = {
       unit = "sshd.service";
       maxretry = 3;
@@ -33,60 +32,74 @@ let
     };
     homeassistant = {
       unit = "home-assistant.service";
-    };
-    keycloak = {
-      unit = "keycloak.service";
       maxretry = 3;
-      bantime = "2h";
+      bantime = "1h";
     };
+
     jellyfin = {
       unit = "jellyfin.service";
+      maxretry = 3;
+      bantime = "1h";
     };
     audiobookshelf = {
       unit = "audiobookshelf.service";
+      maxretry = 3;
+      bantime = "1h";
     };
     microbin = {
       unit = "microbin.service";
+      maxretry = 3;
+      bantime = "1h";
     };
     paperless = {
       unit = "paperless.service";
+      maxretry = 3;
+      bantime = "1h";
     };
     samba = {
       unit = "smbd.service";
+      maxretry = 3;
+      bantime = "1h";
     };
     radicale = {
       unit = "radicale.service";
+      maxretry = 3;
+      bantime = "1h";
     };
     homepage = {
       unit = "homepage.service";
+      maxretry = 3;
+      bantime = "1h";
     };
     cloudflared = {
       unit = "cloudflared.service";
+      maxretry = 3;
+      bantime = "1h";
     };
     miniflux = {
       unit = "miniflux.service";
-    };
-    yubikey = {
-      unit = "yubikey.service";
+      maxretry = 3;
+      bantime = "1h";
     };
     kavita = {
       unit = "kavita.service";
+      maxretry = 3;
+      bantime = "1h";
     };
     transmission = {
       unit = "transmission.service";
+      maxretry = 3;
+      bantime = "1h";
     };
     tailscale = {
       unit = "tailscaled.service";
-    };
-    nginx = {
-      unit = "nginx.service";
-      filter = "nginx-http-auth";
+      maxretry = 3;
+      bantime = "1h";
     };
     authentik = {
       unit = "authentik-server.service";
-    };
-    changedetection-io = {
-      unit = "changedetection-io.service";
+      maxretry = 3;
+      bantime = "1h";  
     };
   };
 
@@ -97,7 +110,6 @@ let
                   Invalid authentication.*from <HOST>
       ignoreregex =
     '';
-
     jellyfin = ''
       [Definition]
       failregex = Authentication request for .* has been denied \(IP: <HOST>\)
@@ -110,23 +122,9 @@ let
                   Invalid credentials.*ip=<HOST>
       ignoreregex =
     '';
-    nginx-http-auth = ''
-      [Definition]
-      failregex = no user/password was provided for basic authentication.*client: <HOST>
-                  user .* was not found in.*client: <HOST>
-                  user .* password mismatch.*client: <HOST>
-      ignoreregex =
-    '';
     authentik = ''
       [Definition]
       failregex = event=login_failed.*user_identifier='.*'.*ip_address=<HOST>
-      ignoreregex =
-    '';
-    changedetection-io = ''
-      [Definition]
-      # This is a generic filter; changedetection.io does not have a standard auth failure log message.
-      # You may need to adjust this if you find a specific pattern in your logs.
-      failregex = Failed login.*<HOST>
       ignoreregex =
     '';
     tailscale = ''
@@ -164,11 +162,6 @@ let
     jellyseerr = ''
       [Definition]
       failregex = Failed to authenticate.*<HOST>
-      ignoreregex =
-    '';
-    ollama = ''
-      [Definition]
-      failregex = API key validation failed.*ip=<HOST>
       ignoreregex =
     '';
     calibre-web = ''
