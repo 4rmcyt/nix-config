@@ -1,4 +1,3 @@
-# /etc/nixos/services/homepage.nix
 
 {
   config,
