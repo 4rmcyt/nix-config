@@ -7,7 +7,7 @@
       sopsFile = ../../../secrets/authentik_env;
       owner = config.users.users.authentik.name;
       group = config.users.groups.authentik.name;
-      mode = "0400";
+      mode = "0600";
       format = "binary";
     };
 
@@ -16,7 +16,7 @@
       key = "gmail_password";
       owner = config.users.users.authentik.name;
       group = config.users.groups.authentik.name;
-      mode = "0400";
+      mode = "0600";
     };
   };
 
