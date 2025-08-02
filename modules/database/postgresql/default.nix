@@ -98,7 +98,7 @@
 
     authentication = pkgs.lib.mkOverride 10 ''
       # Allow local users to connect via sockets without a password
-      local sameuser  all     peer        map=superuser_map
+      local sameuser  all     peer        trust
       # Require a password for network connections from localhost (both IPv4 and IPv6)
       host  all all 127.0.0.1/32 scram-sha-256
       host  all all ::1/128      scram-sha-256
