@@ -39,7 +39,7 @@
 
     optimise = {
       automatic = true;
-      dates = ["weekly"];
+      dates = [ "weekly" ];
     };
   };
 
@@ -135,7 +135,9 @@
       ];
       settings = {
         PermitRootLogin = "no";
-        PasswordAuthentication = true;
+        # SECURITY FIX: Changed to false
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
       };
       extraConfig = ''
         Match user git
@@ -163,12 +165,11 @@
 
     ollama = {
       enable = false;
-      loadModels = [
-        "phi3:mini" # Specify the model you want to pre-load
-      ];
+      loadModels = [ "phi3:mini" ];
     };
 
     vscode-server.enable = true;
+
     nextdns = {
       enable = true;
       arguments = [
@@ -178,23 +179,25 @@
         "10MB"
         "--report-client-info"
       ];
+    };
   };
 
-  
-};
   security.sudo.execWheelOnly = true;
+
   programs = {
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
     };
     zsh.enable = true;
-    nix-ld.dev.enable = false;
+
+    nix-ld.enable = false;
 
     nix-index = {
       enable = true;
       enableZshIntegration = true;
     };
-  }; 
+  };
+
   system.stateVersion = "25.05";
 }
