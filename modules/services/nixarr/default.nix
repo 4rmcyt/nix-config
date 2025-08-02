@@ -1,5 +1,10 @@
 # In ~/src/server/services/nixarr.nix
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   servicesWithMediaAccess = [
     "bazarr"
@@ -13,10 +18,10 @@ let
     "audiobookshelf"
     "jellyfin"
   ];
-in  
+in
 {
 
-   sops.secrets = {
+  sops.secrets = {
     # --- Nixarr Secrets ---
     audiobookshelf_token_key_file = {
       sopsFile = ../../secrets/nixarr_secrets.yaml;
@@ -24,9 +29,9 @@ in
       owner = "audiobookshelf";
       group = "audiobookshelf";
       mode = "0400";
-    }; 
+    };
     jellyfin_token_key_file = {
-      sopsFile = ../../secrets/nixarr_secrets.yaml; 
+      sopsFile = ../../secrets/nixarr_secrets.yaml;
       key = "jellyfin_token_key_file";
       owner = "jellyfin";
       group = "jellyfin";
@@ -48,8 +53,8 @@ in
     };
     prowlarr_token_key_file = {
       sopsFile = ../../secrets/nixarr_secrets.yaml;
-      key = "prowlarr_token_key_file";  
-      owner = "prowlarr";   
+      key = "prowlarr_token_key_file";
+      owner = "prowlarr";
       group = "prowlarr";
       mode = "0400";
     };
@@ -83,26 +88,80 @@ in
     };
   };
   users.users = {
-    audiobookshelf = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    bazarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    jellyfin = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    jellyseerr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    lidarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    prowlarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    radarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    sonarr = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
-    transmission = { isSystemUser = true; extraGroups = [ "users" "media" ]; };
+    audiobookshelf = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    bazarr = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    jellyfin = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    jellyseerr = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    lidarr = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    prowlarr = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    radarr = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    sonarr = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    transmission = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
   };
   users.groups = {
-    audiobookshelf = {};
-    bazarr = {};
-    jellyfin = {};
-    jellyseerr = {};
-    lidarr = {};
-    prowlarr = {};
-    radarr = {};
-    sonarr = {};
-    transmission = {};
+    audiobookshelf = { };
+    bazarr = { };
+    jellyfin = { };
+    jellyseerr = { };
+    lidarr = { };
+    prowlarr = { };
+    radarr = { };
+    sonarr = { };
+    transmission = { };
   };
 
   networking.firewall.allowedTCPPorts = [
@@ -152,7 +211,6 @@ in
         locations."/" = {
           proxyPass = "http://localhost:6767";
           proxyWebsockets = true;
-          };
         };
       };
       "lidarr.example.com" = {
@@ -175,7 +233,7 @@ in
       };
       "radarr.example.com" = {
         forceSSL = true;
-        enableACME = true;   
+        enableACME = true;
         http2 = true;
         locations."/" = {
           proxyPass = "http://localhost:7878";
@@ -185,7 +243,7 @@ in
       "sonarr.example.com" = {
         forceSSL = true;
         enableACME = true;
-        http2 = true;       
+        http2 = true;
         locations."/" = {
           proxyPass = "http://localhost:8989";
           proxyWebsockets = true;
@@ -210,7 +268,7 @@ in
         };
       };
     };
-  
+  };
 
   environment.etc."nixos/scripts/add-trackers.sh" = {
     mode = "0755";
@@ -237,11 +295,11 @@ in
     '';
   };
 
-  nixarr = { 
+  nixarr = {
     enable = true;
-    mediaUsers = [ 
-      "zeev"  
-       ];
+    mediaUsers = [
+      "zeev"
+    ];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
 
@@ -261,7 +319,7 @@ in
       vpnTestService = {
         port = 58403;
         enable = true;
-        };
+      };
     };
 
     transmission = {
@@ -337,7 +395,6 @@ in
     "d /data/media/usenet 770 zeev media -"
     "d /data/Downloads 770 zeev users -"
 
-
     "d /data/media/.state 770 root media -"
     "d /data/media/.state/nixarr 770 root media -"
 
@@ -361,7 +418,7 @@ in
     "d /data/media/.state/nixarr/bazarr 775 bazarr bazarr -"
     "d /data/media/.state/nixarr/transmission 775 transmission transmission -"
 
-   "d /var/lib/transmission 775 transmission transmission -"
+    "d /var/lib/transmission 775 transmission transmission -"
 
   ];
 }
