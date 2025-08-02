@@ -4,11 +4,11 @@
   sops.secrets = {
     # --- Authentik Secrets ---
     authentik_env = {
-      sopsFile = ../../../secrets/authentik_env;
+      sopsFile = ../../../secrets/authentik.env;
       owner = config.users.users.authentik.name;
       group = config.users.groups.authentik.name;
       mode = "0600";
-      format = "binary";
+      format = "dotenv";
     };
 
     authentik_gmail_password = lib.mkDefault {
@@ -30,6 +30,8 @@
   networking.firewall.allowedTCPPorts = [
     9000 # Authentik
     9300 # Prometheus Metrics
+    3389 # LDAP
+    6636 # LDAPS
   ];
 
   services.nginx = {
