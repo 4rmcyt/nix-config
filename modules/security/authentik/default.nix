@@ -11,7 +11,7 @@
       format = "binary";
     };
 
-    gmail_password = {
+    gmail_password = lib.mkDefault {
       sopsFile = ../../../secrets/authentik.yaml;
       key = "gmail_password";
       owner = config.users.users.authentik.name;
