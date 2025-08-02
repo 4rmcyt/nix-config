@@ -86,8 +86,15 @@
     5432 # PostgreSQL
   ];
 
-  systemd.services.postgresql.postStart = ''
-    sudo -u ${config.services.postgresql.user} ${config.services.postgresql.package}/bin/psql -tA <<'EOF'  
+  authentication = pkgs.lib.mkOverride 10 ''
+      # Allow local users to connect via sockets without a password
+      "local all all peer"
+      # Require a password for network connections from localhost (both IPv4 and IPv6)
+      "host  all all 127.0.0.1/32 scram-sha-256"
+      "host  all all ::1/128      scram-sha-256"
+  '';
+
+   initialScript = pkgs.writeText "backend-initScript" ''
       DO $$
       DECLARE pwdAuthentik TEXT;
       DECLARE pwdHass TEXT;
