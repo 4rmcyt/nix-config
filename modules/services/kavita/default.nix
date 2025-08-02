@@ -8,10 +8,10 @@
   sops.secrets = {
     # --- Kavita Secrets ---
     kavita_token_key_file = {
-      sopsFile = ../../secrets/kavita_secrets.yaml;
+      sopsFile = ../../../secrets/kavita_secrets.yaml;
       key = "kavita_token_key_file";
-      owner = "kavita";
-      group = "kavita";
+      owner = config.users.users.kavita.name;
+      group = config.users.groups.kavita.name;
       mode = "0400";
     };
   };

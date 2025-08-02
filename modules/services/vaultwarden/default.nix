@@ -6,15 +6,15 @@
 }:
 {
   sops.secrets.vaultwarden_admin_token = {
-    sopsFile = ../../secrets/vaultwarden.yaml;
+    sopsFile = ../../../secrets/vaultwarden.yaml;
     key = "vaultwarden_admin_token";
-    owner = "vaultwarden";
-    group = "vaultwarden";
+    owner = config.users.users.vaultwarden.name;
+    group = config.users.groups.vaultwarden.name;
     mode = "0400";
   };
 
   sops.secrets.vaultwarden_db_password = {
-    sopsFile = ../../secrets/postgresql.yaml;
+    sopsFile = ../../../secrets/postgresql.yaml;
     key = "vaultwarden_db_password";
     mode = "0400";
   };

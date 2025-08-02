@@ -10,10 +10,10 @@
   sops.secrets = {
     # --- Home Assistant Secrets ---
     home_assistant_db_password = {
-      sopsFile = ../../secrets/hass_secrets.yaml;
+      sopsFile = ../../../secrets/hass_secrets.yaml;
       key = "home_assistant_db_password";
-      owner = "postgres";
-      group = "postgres";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
       mode = "0400";
     };
   };

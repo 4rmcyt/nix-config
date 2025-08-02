@@ -8,10 +8,10 @@
   sops.secrets = {
     # --- Miniflux Secrets ---
     miniflux_creds = {
-      sopsFile = ../../secrets/miniflux.yaml;
+      sopsFile = ../../../secrets/miniflux.yaml;
       key = "miniflux_creds";
-      owner = "miniflux";
-      group = "miniflux";
+      owner = config.users.users.miniflux.name;
+      group = config.users.groups.miniflux.name;
       mode = "0400";
     };
   };

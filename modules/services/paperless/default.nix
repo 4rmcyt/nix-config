@@ -9,17 +9,17 @@
   sops.secrets = {
     # --- Paperless Secrets ---
     paperless_admin_password = {
-      sopsFile = ../../secrets/paperless_secrets.yaml;
+      sopsFile = ../../../secrets/paperless_secrets.yaml;
       key = "paperless_admin_password";
-      owner = "paperless";
-      group = "paperless";
+      owner = config.users.users.paperless.name;
+      group = config.users.groups.paperless.name;
       mode = "0400";
     };
     paperless_db_password = {
-      sopsFile = ../../secrets/paperless_secrets.yaml;
+      sopsFile = ../../../secrets/postgresql.yaml;
       key = "paperless_db_password";
-      owner = "paperless";
-      group = "paperless";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
       mode = "0400";
     };
   };
