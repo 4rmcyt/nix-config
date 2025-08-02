@@ -43,22 +43,8 @@
     };
   };
 
-  sops.secrets = {
-    ssh_host_ed25519_key = {
-      sopsFile = ../../secrets/system.yaml;
-      key = "ssh_host_ed25519_key";
-      owner = config.users.users.root.name;
-      group = config.users.groups.root.name;
-      mode = "0600";
-    };
-    ssh_host_rsa_key = {
-      sopsFile = ../../secrets/system.yaml;
-      key = "ssh_host_rsa_key";
-      owner = config.users.users.root.name;
-      group = config.users.groups.root.name;
-      mode = "0600";
-    };
-  };
+    ssh_host_ed25519_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_ed25519_key"; owner = "root"; group = "root"; mode = "0600"; };
+    ssh_host_rsa_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_rsa_key"; owner = "root"; group = "root"; mode = "0600"; };
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -119,7 +105,7 @@
     fwupd
   ];
 
-  services = {
+   services = {
     openssh = {
       enable = true;
       hostKeys = [
@@ -135,9 +121,7 @@
       ];
       settings = {
         PermitRootLogin = "no";
-        # SECURITY FIX: Changed to false
-        PasswordAuthentication = false;
-        KbdInteractiveAuthentication = false;
+        PasswordAuthentication = true;
       };
       extraConfig = ''
         Match user git
