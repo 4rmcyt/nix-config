@@ -169,7 +169,7 @@
     };
 
     vscode-server.enable = true;
-    services.nextdns = {
+    nextdns = {
       enable = true;
       arguments = [
         "-profile"
