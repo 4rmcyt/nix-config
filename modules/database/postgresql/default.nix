@@ -5,53 +5,53 @@
   ...
 }:
 { 
-  # sops.secrets.postgres = {
-  #   sopsFile = ../../../secrets/postgresql.yaml;
-  #   key = "postgres_password";
-  #   owner = config.users.users.postgresql.name;
-  #   group = config.users.groups.postgresql.name;
-  #   mode = "0400";
-  # };
-  # sops.secrets.miniflux = {
-  #   sopsFile = ../../../secrets/postgresql.yaml;
-  #   key = "miniflux_db_password";
-  #   owner = config.users.users.postgresql.name;
-  #   group = config.users.groups.postgresql.name;
-  #   mode = "0400";
-  # };
-  # sops.secrets.paperless = {
-  #   sopsFile = ../../../secrets/postgresql.yaml;
-  #   key = "paperless_db_password";
-  #   owner = config.users.users.postgresql.name;
-  #   group = config.users.groups.postgresql.name;
-  #   mode = "0400";
-  # };
-  # sops.secrets.hass = {
-  #   sopsFile = ../../../secrets/postgresql.yaml;
-  #   key = "hass_db_password";
-  #   owner = config.users.users.postgresql.name;
-  #   group = config.users.groups.postgresql.name;
-  #   mode = "0400";
-  # };
-  # sops.secrets.authentik = {
-  #   sopsFile = ../../../secrets/postgresql.yaml;
-  #   key = "authentik_db_password";
-  #   mode = "0400";
-  # };
-  # sops.secrets.grafana = {
-  #   sopsFile = ../../../secrets/postgresql.yaml;
-  #   key = "grafana_db_password";
-  #   owner = config.users.users.postgresql.name;
-  #   group = config.users.groups.postgresql.name;
-  #   mode = "0400";
-  # };
-  # sops.secrets.vaultwarden = {
-  #   sopsFile = ../../../secrets/postgresql.yaml;
-  #   key = "vaultwarden_db_password";
-  #   owner = config.users.users.postgresql.name;
-  #   group = config.users.groups.postgresql.name;
-  #   mode = "0400";
-  # };
+  sops.secrets.postgres = {
+    sopsFile = ../../../secrets/postgresql.yaml;
+    key = "postgres_password";
+    owner = config.users.users.postgresql.name;
+    group = config.users.groups.postgresql.name;
+    mode = "0400";
+  };
+  sops.secrets.miniflux = {
+    sopsFile = ../../../secrets/postgresql.yaml;
+    key = "miniflux_db_password";
+    owner = config.users.users.postgresql.name;
+    group = config.users.groups.postgresql.name;
+    mode = "0400";
+  };
+  sops.secrets.paperless = {
+    sopsFile = ../../../secrets/postgresql.yaml;
+    key = "paperless_db_password";
+    owner = config.users.users.postgresql.name;
+    group = config.users.groups.postgresql.name;
+    mode = "0400";
+  };
+  sops.secrets.hass = {
+    sopsFile = ../../../secrets/postgresql.yaml;
+    key = "hass_db_password";
+    owner = config.users.users.postgresql.name;
+    group = config.users.groups.postgresql.name;
+    mode = "0400";
+  };
+  sops.secrets.authentik = {
+    sopsFile = ../../../secrets/postgresql.yaml;
+    key = "authentik_db_password";
+    mode = "0400";
+  };
+  sops.secrets.grafana = {
+    sopsFile = ../../../secrets/postgresql.yaml;
+    key = "grafana_db_password";
+    owner = config.users.users.postgresql.name;
+    group = config.users.groups.postgresql.name;
+    mode = "0400";
+  };
+  sops.secrets.vaultwarden = {
+    sopsFile = ../../../secrets/postgresql.yaml;
+    key = "vaultwarden_db_password";
+    owner = config.users.users.postgresql.name;
+    group = config.users.groups.postgresql.name;
+    mode = "0400";
+  };
 
   users.users.postgresql = {
     isSystemUser = true;
