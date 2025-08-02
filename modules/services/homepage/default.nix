@@ -323,10 +323,10 @@
       {
         "Infrastructure & Security" = [
           {
-            "Keycloak" = {
-              href = "https://keycloak.labhome.work";
+            "Authentik" = {
+              href = "https://auth.labhome.work";
               description = "Identity & Access Management";
-              icon = "keycloak";
+              icon = "authentik";
             };
           }
           {
@@ -368,13 +368,6 @@
                   key = "yMAEOHdD1sDxrw9tLbu-QRKmn2SftHVx2Q8Cj3j9";
                 }
               ];
-            };
-          }
-          {
-            "LLDAP" = {
-              href = "https://lldap.labhome.work";
-              description = "LDAP Administration";
-              icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/openldap.svg";
             };
           }
         ];
