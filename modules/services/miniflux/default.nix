@@ -33,7 +33,6 @@
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    recommendedProxyHeaders = true;
     virtualHosts."miniflux.labhome.work" = {
       forceSSL = true;
       enableACME = true;

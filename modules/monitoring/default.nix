@@ -54,45 +54,36 @@
     3001 # Uptime Kuma
   ];
 
-  services.nginx.virtualHosts."grafana.labhome.work" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
-    recommendedProxyHeaders = true;
-    recommendedProxyHeadersForWebsockets = true;
-    recommendedSecurityHeaders = true;
-    locations."/" = {
-      proxyPass = "http://localhost:3000";
-      proxyWebsockets = true;
-    };
-  };
-
   services.nginx = {
     enable = true;
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    virtualHosts = {
-      "prometheus.labhome.work" = {
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://localhost:9090";
-          proxyWebsockets = true;
-        };
+  };
+  virtualHosts = {
+    "prometheus.labhome.work" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://localhost:9090";
+        proxyWebsockets = true;
       };
-      "uptime-kuma.labhome.work" = {
-        forceSSL = true;
-        enableACME = true;
-        locations."/" = {
-          proxyPass = "http://localhost:3001";
-          proxyWebsockets = true;
-        };
+    };
+    "uptime-kuma.labhome.work" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://localhost:3001";
+        proxyWebsockets = true;
+      };
+    };
+    "grafana.labhome.work" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://localhost:3000";
+        proxyWebsockets = true;
       };
     };
   };

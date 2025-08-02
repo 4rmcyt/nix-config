@@ -29,22 +29,7 @@
       requirepass = config.sops.secrets.redis_password.path; # Use a secure password
     };
   };
-  services.nginx.virtualHosts."redis.labhome.work" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
-    recommendedProxyHeaders = true;
-    recommendedProxyHeadersForWebsockets = true;
-    recommendedSecurityHeaders = true;
-    locations."/" = {
-      proxyPass = "http://localhost:6379";
-      proxyWebsockets = true;
-    };
-  };
+  
   networking.firewall.allowedTCPPorts = [
     6379 # Redis
   ];
