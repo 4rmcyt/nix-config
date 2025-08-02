@@ -11,7 +11,7 @@
       format = "binary";
     };
 
-    gmail_password = lib.mkDefault {
+    authentik_gmail_password = lib.mkDefault {
       sopsFile = ../../../secrets/authentik.yaml;
       key = "gmail_password";
       owner = config.users.users.authentik.name;
@@ -61,7 +61,7 @@
         host = "smtp.gmail.com";
         port = 587;
         username = "4rmcyt@gmail.com";
-        passwordeval = "cat ${config.sops.secrets.gmail_password.path}";
+        passwordeval = "cat ${config.sops.secrets.authentik_gmail_password.path}";
         use_tls = true;
         use_ssl = false;
         from = "4rmcyt@gmail.com";
