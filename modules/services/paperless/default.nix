@@ -9,7 +9,7 @@
   sops.secrets = {
     # --- Paperless Secrets ---
     paperless_admin_password = {
-      sopsFile = ../../../secrets/paperless_secrets.yaml;
+      sopsFile = ../../../secrets/paperless.yaml;
       key = "paperless_admin_password";
       owner = config.users.users.paperless.name;
       group = config.users.groups.paperless.name;
