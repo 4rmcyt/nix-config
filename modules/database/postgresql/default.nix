@@ -38,13 +38,13 @@
     key = "authentik_db_password";
     mode = "0400";
   };
-  sops.secrets.grafana = {
-    sopsFile = ../../../secrets/postgresql.yaml;
-    key = "grafana_db_password";
-    owner = config.users.users.postgresql.name;
-    group = config.users.groups.postgresql.name;
-    mode = "0400";
-  };
+  # sops.secrets.grafana = {
+  #   sopsFile = ../../../secrets/postgresql.yaml;
+  #   key = "grafana_db_password";
+  #   owner = config.users.users.postgresql.name;
+  #   group = config.users.groups.postgresql.name;
+  #   mode = "0400";
+  # };
   sops.secrets.vaultwarden = {
     sopsFile = ../../../secrets/postgresql.yaml;
     key = "vaultwarden_db_password";
@@ -119,7 +119,6 @@
         pwdPaperless := trim(both from replace(pg_read_file('${config.sops.secrets.paperless.path}'), E'\n', '''));
         pwdMiniflux := trim(both from replace(pg_read_file('${config.sops.secrets.miniflux.path}'), E'\n', '''));
         pwdVaultwarden := trim(both from replace(pg_read_file('${config.sops.secrets.vaultwarden.path}'), E'\n', '''));
-        EXECUTE format('ALTER USER admin PASSWORD '''%s''';', pwdPostgresql);
         EXECUTE format('ALTER USER authentik PASSWORD '''%s''';', pwdAuthentik);
         EXECUTE format('ALTER USER hass PASSWORD '''%s''';', pwdHass);
         EXECUTE format('ALTER USER grafana PASSWORD '''%s''';', pwdGrafana);
