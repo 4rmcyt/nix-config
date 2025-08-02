@@ -28,8 +28,8 @@
     enableACME = true;
     http2 = true;
     locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
       proxyWebsockets = true;
+      proxyPass = "http://127.0.0.1:8000";
     };
   };
 
@@ -46,11 +46,11 @@
       SIGNUPS_ALLOWED = true;
       LOG_FILE = "/var/lib/vaultwarden/logs/access.log";
 
-      SMTP_HOST = "127.0.0.1";
-      SMTP_PORT = 25;
-      SMTP_SSL = false;
-      SMTP_FROM = "vaultwarden@example.com";
-      SMTP_FROM_NAME = "example.com Vaultwarden server";
+      # SMTP_HOST = "127.0.0.1";
+      # SMTP_PORT = 25;
+      # SMTP_SSL = false;
+      # SMTP_FROM = "vaultwarden@example.com";
+      # SMTP_FROM_NAME = "example.com Vaultwarden server";
     };
   };
 }

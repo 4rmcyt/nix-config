@@ -33,7 +33,6 @@
       # Sources
       source_directories = [
         "/home/zeev"
-        "/var/log"
         "/var/lib/postgres-backup"
         "/var/lib/home-assistant"
         "/var/lib/kavita"
@@ -49,6 +48,7 @@
         "/var/lib/nixos"
         "/var/lib/authentik"
         "/var/lib/uptime-kuma"
+        "/var/lib/vaultwarden/backup"
         "/data/.secret"
         "/data/media/.state"
         "/etc"
