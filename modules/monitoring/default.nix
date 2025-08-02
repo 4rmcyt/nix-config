@@ -15,13 +15,6 @@
       group = config.users.groups.grafana.name;
       mode = "0400";
     };
-    nextdns_api_key = {
-      sopsFile = ../../secrets/nextdns.yaml;
-      key = "nextdns_api_key";
-      owner = config.users.users.prometheus.name;
-      group = config.users.groups.prometheus.name;
-      mode = "0400";
-    };
     grafana_db_password = {
       sopsFile = ../../secrets/postgresql.yaml;
       key = "grafana_db_password";
