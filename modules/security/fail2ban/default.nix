@@ -30,11 +30,7 @@ let
       maxretry = 3;
       bantime = "1h";
     };
-    samba = {
-      unit = "smbd.service";
-      maxretry = 3;
-      bantime = "1h";
-    };
+
     tailscale = {
       unit = "tailscaled.service";
       maxretry = 3;
