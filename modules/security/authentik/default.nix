@@ -4,7 +4,7 @@
   sops.secrets = {
     # --- Authentik Secrets ---
     authentik_env = {
-      sopsFile = ../../secrets/authentik_env.yaml;
+      sopsFile = ../../../secrets/authentik_env.yaml;
       owner = config.users.users.authentik.name;
       group = config.users.groups.authentik.name;
       mode = "0400";
