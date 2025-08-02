@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 
-{ 
+{
   sops.secrets.radicale_users = {
     sopsFile = ../../secrets/radicale_users.txt;
     owner = "radicale";
@@ -14,10 +14,10 @@
     group = "radicale";
     extraGroups = [ "users" ];
   };
-  users.groups.radicale = {};
+  users.groups.radicale = { };
 
   networking.firewall.allowedTCPPorts = [ 5232 ];
-  
+
   services.nginx.virtualHosts."cal.labhome.work" = {
     forceSSL = true;
     enableACME = true;
@@ -25,10 +25,6 @@
     locations."/" = {
       proxyPass = "http://localhost:5232";
       proxyWebsockets = true;
-      proxyHeaders = {
-        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-        "X-Forwarded-Proto" = "https";
-      };
     };
   };
 
@@ -50,14 +46,14 @@
         filesystem_folder = "/var/lib/radicale/collections";
       };
 
-      web = {};
+      web = { };
 
       logging = {
         level = "info";
       };
     };
   };
-    
+
   systemd.tmpfiles.rules = [
     "d /var/lib/radicale/collections 0750 radicale radicale -"
   ];
