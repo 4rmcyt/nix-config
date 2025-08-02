@@ -103,32 +103,32 @@
     5432 # PostgreSQL
   ];
 
-  # systemd.services.postgresql.postStart = ''
-  #   $PSQL -tA <<'EOF'
-  #     DO $$
-  #     DECLARE pwdPostgresql TEXT;
-  #     DECLARE pwdAuthentik TEXT;
-  #     DECLARE pwdHass TEXT;
-  #     DECLARE pwdGrafana TEXT;
-  #     DECLARE pwdMiniflux TEXT;
-  #     DECLARE pwdPaperless TEXT;
-  #     DECLARE pwdVaultwarden TEXT;
-  #     BEGIN
-  #       pwdPostgresql := trim(both from replace(pg_read_file('${config.sops.secrets.postgres.path}'), E'\n', '''));
-  #       pwdAuthentik := trim(both from replace(pg_read_file('${config.sops.secrets.authentik.path}'), E'\n', '''));
-  #       pwdHass := trim(both from replace(pg_read_file('${config.sops.secrets.hass.path}'), E'\n', '''));
-  #       pwdGrafana := trim(both from replace(pg_read_file('${config.sops.secrets.grafana.path}'), E'\n', '''));
-  #       pwdPaperless := trim(both from replace(pg_read_file('${config.sops.secrets.paperless.path}'), E'\n', '''));
-  #       pwdMiniflux := trim(both from replace(pg_read_file('${config.sops.secrets.miniflux.path}'), E'\n', '''));
-  #       pwdVaultwarden := trim(both from replace(pg_read_file('${config.sops.secrets.vaultwarden.path}'), E'\n', '''));
-  #       EXECUTE format('ALTER USER admin PASSWORD '''%s''';', pwdPostgresql);
-  #       EXECUTE format('ALTER USER authentik PASSWORD '''%s''';', pwdAuthentik);
-  #       EXECUTE format('ALTER USER hass PASSWORD '''%s''';', pwdHass);
-  #       EXECUTE format('ALTER USER grafana PASSWORD '''%s''';', pwdGrafana);
-  #       EXECUTE format('ALTER USER paperless PASSWORD '''%s''';', pwdPaperless);
-  #       EXECUTE format('ALTER USER miniflux PASSWORD '''%s''';', pwdMiniflux);
-  #       EXECUTE format('ALTER USER vaultwarden PASSWORD '''%s''';', pwdVaultwarden);
-  #     END $$;
-  #   EOF
-  # '';
+  systemd.services.postgresql.postStart = ''
+    $PSQL -tA <<'EOF'
+      DO $$
+      DECLARE pwdPostgresql TEXT;
+      DECLARE pwdAuthentik TEXT;
+      DECLARE pwdHass TEXT;
+      DECLARE pwdGrafana TEXT;
+      DECLARE pwdMiniflux TEXT;
+      DECLARE pwdPaperless TEXT;
+      DECLARE pwdVaultwarden TEXT;
+      BEGIN
+        pwdPostgresql := trim(both from replace(pg_read_file('${config.sops.secrets.postgres.path}'), E'\n', '''));
+        pwdAuthentik := trim(both from replace(pg_read_file('${config.sops.secrets.authentik.path}'), E'\n', '''));
+        pwdHass := trim(both from replace(pg_read_file('${config.sops.secrets.hass.path}'), E'\n', '''));
+        pwdGrafana := trim(both from replace(pg_read_file('${config.sops.secrets.grafana.path}'), E'\n', '''));
+        pwdPaperless := trim(both from replace(pg_read_file('${config.sops.secrets.paperless.path}'), E'\n', '''));
+        pwdMiniflux := trim(both from replace(pg_read_file('${config.sops.secrets.miniflux.path}'), E'\n', '''));
+        pwdVaultwarden := trim(both from replace(pg_read_file('${config.sops.secrets.vaultwarden.path}'), E'\n', '''));
+        EXECUTE format('ALTER USER admin PASSWORD '''%s''';', pwdPostgresql);
+        EXECUTE format('ALTER USER authentik PASSWORD '''%s''';', pwdAuthentik);
+        EXECUTE format('ALTER USER hass PASSWORD '''%s''';', pwdHass);
+        EXECUTE format('ALTER USER grafana PASSWORD '''%s''';', pwdGrafana);
+        EXECUTE format('ALTER USER paperless PASSWORD '''%s''';', pwdPaperless);
+        EXECUTE format('ALTER USER miniflux PASSWORD '''%s''';', pwdMiniflux);
+        EXECUTE format('ALTER USER vaultwarden PASSWORD '''%s''';', pwdVaultwarden);
+      END $$;
+    EOF
+  '';
 }
