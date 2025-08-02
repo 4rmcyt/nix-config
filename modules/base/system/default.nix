@@ -3,35 +3,6 @@
 
 {
   
-  nix = {
-    package = pkgs.nixVersions.latest;
-    settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-      trusted-users = [
-        "zeev"
-      ];
-      auto-optimise-store = true;
-      warn-dirty = false;
-      cores = 4;
-      show-trace = true;
-      download-buffer-size = 1073741824; # 1 GiB
-      max-jobs = 4;
-    };
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 10d";
-    };
-
-    optimise = {
-      automatic = true;
-      dates = ["weekly"];
-    };
-  };
-
   time = {
     timeZone = "America/Edmonton";  # Change this to your timezone
   };
@@ -72,30 +43,5 @@
   };
 
   services.haveged.enable = true;
-  services.nextdns = {
-      enable = true;
-      arguments = [
-        "-profile"
-        "nextdns0"
-        "-cache-size"
-        "10MB"
-        "--report-client-info"
-      ];
-  };
-
-  security.sudo.execWheelOnly = true;
-
-  programs = {
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
-    zsh.enable = true;
-    nix-ld.dev.enable = false;
-
-    nix-index = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-  };
+  
 }
