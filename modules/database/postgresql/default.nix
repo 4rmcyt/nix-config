@@ -69,7 +69,6 @@
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_16;
-    passwordFile = config.sops.secrets.postgres.path;
     ensureDatabases = [
       "miniflux"
       "paperless"
