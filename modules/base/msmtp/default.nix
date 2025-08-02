@@ -4,6 +4,9 @@
     gmail_password = {
       sopsFile = ../../secrets/gmail_conf.yaml;
       key = "gmail_password";
+      owner = config.users.users.msmtp.name;
+      group = config.users.groups.msmtp.name;
+      mode = "0400";
     };
   };
 
