@@ -22,6 +22,13 @@
       group = config.users.groups.postgresql.name;
       mode = "0400";
     };
+    redis_password = {
+      sopsFile = ../../../secrets/redis.yaml;
+      key = "redis_password";
+      owner = config.users.users.redis.name;
+      group = config.users.groups.redis.name;
+      mode = "0400";
+    };
   };
 
   users.users.paperless = {
@@ -33,7 +40,6 @@
 
   networking.firewall.allowedTCPPorts = [
     8888 # Paperless
-    6379 # Redis (for Paperless)
   ];
 
   services.nginx = {
@@ -74,7 +80,8 @@
       PAPERLESS_DBUSER = "paperless";
       PAPERLESS_DBPASS = config.sops.secrets.paperless_db_password.path;
       PAPERLESS_DBENGINE = "postgresql";
-      PAPERLESS_REDIS = "redis://localhost:6379/1";
+      PAPERLESS_REDIS = "redis://redis:${config.sops.secrets.redis_password.content}@/run/redis";
+      PAPERLESS_REDIS_PREFIX = "paperless";
       PAPERLESS_OCR_LANGUAGE = "eng+heb+rus+ukr";
       PAPERLESS_OCR_USER_ARGS = {
         optimize = 1;
@@ -83,8 +90,5 @@
     };
   };
 
-  services.redis.servers.paperless = {
-    enable = true;
-    port = 6379;
-  };
+
 }

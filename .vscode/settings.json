@@ -1,7 +1,8 @@
 {
     "sops.configPath": "./.sops.yaml",
-    "sops.defaults.ageKeyFile": "/var/lib/sops/age.key",
+    "sops.defaults.ageKeyFile": "/home/zeev/.secrets/sops/age.key",
     "sops.binPath": "/run/current-system/sw/bin/sops",
     "git.enableCommitSigning": true,
-    "github.gitProtocol": "ssh"
+    "github.gitProtocol": "ssh",
+    "sops.beta": true
 }
