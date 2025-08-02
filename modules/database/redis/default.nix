@@ -29,7 +29,7 @@
   services.redis = {
     servers.redis = {
       enable = true;
-      requirepass = config.sops.secrets.redis_password.path;
+      requirePass = config.sops.secrets.redis_password.path;
     };
   };
 }
