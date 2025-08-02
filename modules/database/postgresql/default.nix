@@ -38,13 +38,13 @@
     key = "authentik_db_password";
     mode = "0400";
   };
-  # sops.secrets.grafana = {
-  #   sopsFile = ../../../secrets/postgresql.yaml;
-  #   key = "grafana_db_password";
-  #   owner = config.users.users.postgresql.name;
-  #   group = config.users.groups.postgresql.name;
-  #   mode = "0400";
-  # };
+  sops.secrets.grafana = {
+    sopsFile = ../../../secrets/postgresql.yaml;
+    key = "grafana_db_password";
+    owner = config.users.users.postgresql.name;
+    group = config.users.groups.postgresql.name;
+    mode = "0400";
+  };
   sops.secrets.vaultwarden = {
     sopsFile = ../../../secrets/postgresql.yaml;
     key = "vaultwarden_db_password";
