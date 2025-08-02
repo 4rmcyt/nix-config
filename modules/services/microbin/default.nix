@@ -42,10 +42,6 @@
     locations."/" = {
       proxyPass = "http://localhost:8084";
       proxyWebsockets = true;
-      proxyHeaders = {
-        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-        "X-Forwarded-Proto" = "https";
-      };
     };
   };
 

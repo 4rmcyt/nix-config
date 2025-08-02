@@ -58,10 +58,6 @@
     locations."/" = {
       proxyPass = "http://localhost:3000";
       proxyWebsockets = true;
-      proxyHeaders = {
-        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-        "X-Forwarded-Proto" = "https";
-      };
     };
   };
 
@@ -72,10 +68,6 @@
     locations."/" = {
       proxyPass = "http://localhost:9090";
       proxyWebsockets = true;
-      proxyHeaders = {
-        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-        "X-Forwarded-Proto" = "https";
-      };
     };
   };
 
@@ -86,10 +78,6 @@
     locations."/" = {
       proxyPass = "http://localhost:3001";
       proxyWebsockets = true;
-      proxyHeaders = {
-        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-        "X-Forwarded-Proto" = "https";
-      };
     };
   };
 
