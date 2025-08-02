@@ -6,14 +6,22 @@
 }:
 {
   sops.secrets = {
-    # --- Miniflux Secrets ---
     miniflux_creds = {
       sopsFile = ../../../secrets/miniflux.yaml;
       key = "miniflux_admin_password";
+    };
+    miniflux_creds = {
       owner = config.users.users.miniflux.name;
       group = config.users.groups.miniflux.name;
       mode = "0400";
+      content = "admin:${config.sops.secrets.miniflux_admin_password}";
     };
+    miniflux_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "miniflux_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
   };
 
   users.users.miniflux = {
@@ -56,7 +64,7 @@
       BASE_URL = "https://miniflux.labhome.work";
       LISTEN_ADDR = "localhost:8086";
       DATABASE_MIGRATIONS = 1; # run database migrations on first run
-      DATABASE_URL = lib.mkForce "user=miniflux dbname=miniflux sslmode=disable host=/run/postgresql";
+      DATABASE_URL = lib.mkForce "user=miniflux password=${config.sops.secrets.miniflux_db_password.content} dbname=miniflux sslmode=disable host=/run/postgresql";
     };
   };
 
