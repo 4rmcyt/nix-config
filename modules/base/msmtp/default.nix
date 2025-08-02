@@ -2,7 +2,7 @@
 {
  sops.secrets = {
     msmtp_gmail_password = lib.mkDefault {
-      sopsFile = ../../secrets/gmail_conf.yaml;
+      sopsFile = ../../../secrets/gmail_conf.yaml;
       key = "gmail_password";
       owner = config.users.users.msmtp.name;
       group = config.users.groups.msmtp.name;
