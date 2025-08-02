@@ -22,6 +22,7 @@
       owner = config.users.users.postgresql.name;
       group = config.users.groups.postgresql.name;
       mode = "0400";
+    };
   };
 
   users.users.miniflux = {
