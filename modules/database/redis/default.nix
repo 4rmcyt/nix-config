@@ -5,7 +5,7 @@
   ...
 }:
 
-{ 
+{
   sops.secrets = {
     redis_password = {
       sopsFile = ../../../secrets/redis.yaml;
@@ -29,6 +29,7 @@
   services.redis = {
     enable = true;
     "redis" = {
-        requirepass = config.sops.secrets.redis_password.path; # Use a secure password
+      requirepass = config.sops.secrets.redis_password.path;
     };
+  };
 }
