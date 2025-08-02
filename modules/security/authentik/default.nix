@@ -4,7 +4,7 @@
   sops.secrets = {
     # --- Authentik Secrets ---
     authentik_env = {
-      sopsFile = ../../secrets/authentik_env;
+      sopsFile = ../../../secrets/authentik_env;
       owner = config.users.users.authentik.name;
       group = config.users.groups.authentik.name;
       mode = "0400";
@@ -12,7 +12,7 @@
     };
 
     gmail_password = {
-      sopsFile = ../../secrets/gmail_conf.yaml;
+      sopsFile = ../../../secrets/gmail_conf.yaml;
       key = "gmail_password";
     };
   };
