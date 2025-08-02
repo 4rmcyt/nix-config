@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, pkgs, ... }:
 {
  sops.secrets = {
     gmail_password = lib.mkDefault {
