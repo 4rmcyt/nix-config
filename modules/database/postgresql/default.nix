@@ -106,7 +106,6 @@
   systemd.services.postgresql.postStart = ''
     $PSQL -tA <<'EOF'
       DO $$
-      DECLARE pwdPostgresql TEXT;
       DECLARE pwdAuthentik TEXT;
       DECLARE pwdHass TEXT;
       DECLARE pwdGrafana TEXT;
@@ -114,7 +113,6 @@
       DECLARE pwdPaperless TEXT;
       DECLARE pwdVaultwarden TEXT;
       BEGIN
-        pwdPostgresql := trim(both from replace(pg_read_file('${config.sops.secrets.postgres.path}'), E'\n', '''));
         pwdAuthentik := trim(both from replace(pg_read_file('${config.sops.secrets.authentik.path}'), E'\n', '''));
         pwdHass := trim(both from replace(pg_read_file('${config.sops.secrets.hass.path}'), E'\n', '''));
         pwdGrafana := trim(both from replace(pg_read_file('${config.sops.secrets.grafana.path}'), E'\n', '''));
