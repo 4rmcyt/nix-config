@@ -81,13 +81,13 @@
       "grafana.labhome.work" = {
         forceSSL = true;
         enableACME = true;
-        locations."/" = {
-          proxyPass = "http://localhost:3000";
+        locations."/grafana/" = {
+          proxyPass = "http://${toString config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}";
           proxyWebsockets = true;
+          recommendedProxySettings = true;
         };
       };
     };
-  };
   environment.systemPackages = [
     pkgs.grafana
     pkgs.prometheus
@@ -202,6 +202,12 @@
         http_port = 3000;
         http_addr = "0.0.0.0";
         root_url = "http://192.168.1.165:3000";
+      };
+      database = {
+        type = "postgres";
+        host = "/run/postgresql";
+        user = "grafana";
+        password = config.sops.secrets.grafana_admin_password.path;
       };
       security = {
         admin_user = "admin";
