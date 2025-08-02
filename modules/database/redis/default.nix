@@ -33,13 +33,9 @@
     forceSSL = true;
     enableACME = true;
     http2 = true;
-
     locations."/" = {
       proxyPass = "http://localhost:6379";
-      proxyHeaders = {
-        "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-        "X-Forwarded-Proto" = "https";
-      };
+      proxyWebsockets = true;
     };
   };
   networking.firewall.allowedTCPPorts = [
