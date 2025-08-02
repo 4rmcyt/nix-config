@@ -95,27 +95,28 @@
   '';
 
   initialScript = pkgs.writeText "backend-initScript" ''
-      DO $$
-      DECLARE pwdAuthentik TEXT;
-      DECLARE pwdHass TEXT;
-      DECLARE pwdGrafana TEXT;
-      DECLARE pwdMiniflux TEXT;
-      DECLARE pwdPaperless TEXT;
-      DECLARE pwdVaultwarden TEXT;
-      BEGIN
-        pwdAuthentik := trim(both from replace(pg_read_file('${config.sops.secrets.authentik.path}'), E'\n', '''));
-        pwdHass := trim(both from replace(pg_read_file('${config.sops.secrets.hass.path}'), E'\n', '''));
-        pwdGrafana := trim(both from replace(pg_read_file('${config.sops.secrets.grafana.path}'), E'\n', '''));
-        pwdPaperless := trim(both from replace(pg_read_file('${config.sops.secrets.paperless.path}'), E'\n', '''));
-        pwdMiniflux := trim(both from replace(pg_read_file('${config.sops.secrets.miniflux.path}'), E'\n', '''));
-        pwdVaultwarden := trim(both from replace(pg_read_file('${config.sops.secrets.vaultwarden.path}'), E'\n', '''));
-        EXECUTE format('ALTER USER authentik PASSWORD '''%s''';', pwdAuthentik);
-        EXECUTE format('ALTER USER hass PASSWORD '''%s''';', pwdHass);
-        EXECUTE format('ALTER USER grafana PASSWORD '''%s''';', pwdGrafana);
-        EXECUTE format('ALTER USER paperless PASSWORD '''%s''';', pwdPaperless);
-        EXECUTE format('ALTER USER miniflux PASSWORD '''%s''';', pwdMiniflux);
-        EXECUTE format('ALTER USER vaultwarden PASSWORD '''%s''';', pwdVaultwarden);
-      END $$;
-    EOF
+      CREATE ROLE authentik WITH LOGIN PASSWORD '${config.sops.secrets.authentik.path}' CREATEDB;
+      CREATE DATABASE authentik;
+      GRANT ALL PRIVILEGES ON DATABASE authentik TO authentik;
+
+      CREATE ROLE hass WITH LOGIN PASSWORD '${config.sops.secrets.hass.path}' CREATEDB;
+      CREATE DATABASE hass;
+      GRANT ALL PRIVILEGES ON DATABASE hass TO hass;
+
+      CREATE ROLE grafana WITH LOGIN PASSWORD '${config.sops.secrets.grafana.path}' CREATEDB;
+      CREATE DATABASE grafana;
+      GRANT ALL PRIVILEGES ON DATABASE grafana TO grafana;  
+
+      CREATE ROLE paperless WITH LOGIN PASSWORD '${config.sops.secrets.paperless.path}' CREATEDB;
+      CREATE DATABASE paperless;
+      GRANT ALL PRIVILEGES ON DATABASE paperless TO paperless;
+
+      CREATE ROLE miniflux WITH LOGIN PASSWORD '${config.sops.secrets.miniflux.path}' CREATEDB;
+      CREATE DATABASE miniflux;
+      GRANT ALL PRIVILEGES ON DATABASE miniflux TO miniflux;
+
+      CREATE ROLE vaultwarden WITH LOGIN PASSWORD '${config.sops.secrets.vaultwarden.path}' CREATEDB;
+      CREATE DATABASE vaultwarden;
+      GRANT ALL PRIVILEGES ON DATABASE vaultwarden TO vaultwarden;
   '';
 }
