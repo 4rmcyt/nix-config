@@ -40,6 +40,13 @@
     forceSSL = true;
     enableACME = true;
     http2 = true;
+    recommendedGzipSettings = true;
+    recommendedOptimisation = true;
+    recommendedProxySettings = true;
+    recommendedTlsSettings = true;
+    recommendedProxyHeaders = true;
+    recommendedProxyHeadersForWebsockets = true;
+    recommendedSecurityHeaders = true;
     locations."/" = {
       proxyPass = "http://localhost:8888";
       proxyWebsockets = true;
