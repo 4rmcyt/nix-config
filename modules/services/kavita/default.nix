@@ -9,7 +9,7 @@
     # --- Kavita Secrets ---
     kavita_token_key_file = {
       sopsFile = ../../../secrets/kavita.yaml;
-      key = "kavita_token_key_file";
+      key = "tokenKeyFile";
       owner = config.users.users.kavita.name;
       group = config.users.groups.kavita.name;
       mode = "0400";
