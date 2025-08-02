@@ -37,23 +37,22 @@
     1883 # MQTT
   ];
 
-  services.nginx.virtualHosts."hass.example.com" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
+  services.nginx = {
+    enable = true;
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    recommendedProxyHeaders = true;
-    recommendedProxyHeadersForWebsockets = true;
-    recommendedSecurityHeaders = true;
-    locations."/" = {
-      proxyPass = "http://localhost:8123";
-      proxyWebsockets = true;
+    virtualHosts."hass.example.com" = {
+      forceSSL = true;
+      enableACME = true;
+
+      locations."/" = {
+        proxyPass = "http://localhost:8123";
+        proxyWebsockets = true;
+      };
     };
   };
-
   environment.systemPackages = with pkgs; [
     home-assistant
     mosquitto

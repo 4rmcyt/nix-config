@@ -5,34 +5,36 @@
   ...
 }:
 
-{ 
+{
   users.users.calibre-web = {
     isSystemUser = true;
-    extraGroups = [ "users" "calibre-web" "media" ];
+    extraGroups = [
+      "users"
+      "calibre-web"
+      "media"
+    ];
   };
-  users.groups.calibre-web = {};
+  users.groups.calibre-web = { };
 
   networking.firewall.allowedTCPPorts = [
     8083 # Calibre-Web
   ];
 
-  services.nginx.virtualHosts."calibre-web.example.com" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
+  services.nginx = {
+    enable = true;
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    recommendedProxyHeaders = true;
-    recommendedProxyHeadersForWebsockets = true;
-    recommendedSecurityHeaders = true;
-    locations."/" = {
-      proxyPass = "http://localhost:8083";
-      proxyWebsockets = true;
+    virtualHosts."calibre-web.example.com" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://localhost:8083";
+        proxyWebsockets = true;
+      };
     };
   };
-
   environment.systemPackages = [
     pkgs.calibre-web
   ];

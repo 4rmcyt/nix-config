@@ -18,23 +18,21 @@
 
   networking.firewall.allowedTCPPorts = [ 5232 ];
 
-  services.nginx.virtualHosts."cal.example.com" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
+  services.nginx = {
+    enable = true;
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    recommendedProxyHeaders = true;
-    recommendedProxyHeadersForWebsockets = true;
-    recommendedSecurityHeaders = true;
-    locations."/" = {
-      proxyPass = "http://localhost:5232";
-      proxyWebsockets = true;
+    virtualHosts."cal.example.com" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://localhost:5232";
+        proxyWebsockets = true;
+      };
     };
   };
-
   environment.systemPackages = [ pkgs.radicale ];
   services.radicale = {
     enable = true;

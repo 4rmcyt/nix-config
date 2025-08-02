@@ -30,23 +30,21 @@
     8222 # Vaultwarden
   ];
 
-  services.nginx.virtualHosts."vault.example.com" = {
-    forceSSL = true;
-    enableACME = true;
-    http2 = true;
+  services.nginx = {
+    enable = true;
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    recommendedProxyHeaders = true;
-    recommendedProxyHeadersForWebsockets = true;
-    recommendedSecurityHeaders = true;
-    locations."/" = {
-      proxyWebsockets = true;
-      proxyPass = "http://127.0.0.1:8000";
+    virtualHosts."vault.example.com" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyWebsockets = true;
+        proxyPass = "http://127.0.0.1:8000";
+      };
     };
   };
-
   services.vaultwarden = {
     dbBackend = "postgresql";
     bitwarden-directory-connector-cli.domain = "https://vault.example.com";
