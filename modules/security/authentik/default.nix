@@ -12,8 +12,11 @@
     };
 
     gmail_password = {
-      sopsFile = ../../../secrets/gmail_conf.yaml;
+      sopsFile = ../../../secrets/authentik.yaml;
       key = "gmail_password";
+      owner = config.users.users.authentik.name;
+      group = config.users.groups.authentik.name;
+      mode = "0400";
     };
   };
 
