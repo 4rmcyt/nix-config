@@ -15,11 +15,19 @@
       group = config.users.groups.grafana.name;
       mode = "0400";
     };
-    # You will need to create this secret file and add your NextDNS API key
     nextdns_api_key = {
       sopsFile = ../../secrets/nextdns.yaml;
       key = "nextdns_api_key";
       owner = config.users.users.prometheus.name;
+      group = config.users.groups.prometheus.name;
+      mode = "0400";
+    };
+    grafana_db_password = {
+      sopsFile = ../../secrets/postgresql.yaml;
+      key = "grafana_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
     };
   };
 
@@ -94,29 +102,6 @@
     };
   };
 
-  environment.systemPackages = [
-    pkgs.grafana
-    pkgs.prometheus
-    pkgs.prometheus-node-exporter
-    # FIX: Added the exporter package to the system
-    pkgs.nextdns-exporter
-  ];
-
-  # FIX: Added systemd service for the NextDNS exporter
-  systemd.services.nextdns-exporter = {
-    description = "NextDNS Prometheus Exporter";
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      ExecStart = ''
-        ${pkgs.nextdns-exporter}/bin/nextdns-exporter \
-          -listen-address "127.0.0.1:9948" \
-          -api-key-file "${config.sops.secrets.nextdns_api_key.path}"
-      '';
-      Restart = "on-failure";
-      User = config.users.users.prometheus.name;
-    };
-  };
-
   services.prometheus = {
     enable = true;
     port = 9090;
@@ -128,27 +113,46 @@
     scrapeConfigs = [
       {
         job_name = "node-exporter";
-        static_configs = [{
-          targets = [ "localhost:9100" ];
-          labels = { instance = "homeserver"; };
-        }];
+        static_configs = [
+          {
+            targets = [ "localhost:9100" ];
+            labels = {
+              instance = "homeserver";
+            };
+          }
+        ];
         scrape_interval = "2s";
       }
       {
         job_name = "prometheus";
-        static_configs = [{
-          targets = [ "localhost:9090" ];
-          labels = { instance = "homeserver"; };
-        }];
+        static_configs = [
+          {
+            targets = [ "localhost:9090" ];
+            labels = {
+              instance = "homeserver";
+            };
+          }
+        ];
       }
       {
         job_name = "nextdns-exporter";
-        static_configs = [{
-          # FIX: This target will now work because the service is defined
-          targets = [ "localhost:9948" ];
-          labels = { instance = "homeserver"; };
-        }];
+        static_configs = [
+          {
+            targets = [ "localhost:9948" ];
+            labels = {
+              instance = "homeserver";
+            };
+          }
+        ];
       }
+      # {
+      #   job_name = "cloudflare-exporter";
+      #   static_configs = [{
+      #     targets = [ "localhost:27196" ];
+      #     labels = { instance = "homeserver"; };
+      #   }];
+      # }
+
     ];
 
     exporters = {
@@ -171,6 +175,14 @@
         ];
         port = 9100;
       };
+      # cloudflare = {
+      #   enable = true;
+      #   port = 27196;
+      #   extraFlags = [
+      #     "--cloudflare.api-token=${config.sops.secrets.cloudflare_prometheus_exporter_token.path}"
+      #     "--cloudflare.zone-id=${config.sops.secrets.cloudflare_zone_id.path}"
+      #   ];
+      # };
     };
 
     ruleFiles = [
@@ -184,43 +196,46 @@
                 labels:
                   severity: warning
                 annotations:
-                  summary: "High CPU usage detected on {{ $labels.instance }}"
+                  summary: "High CPU usage detected"
       '')
     ];
   };
 
   services.grafana = {
-    enable = true;
-    settings = {
-      server = {
-        http_port = 3000;
-        # BEST PRACTICE: Bind to localhost as it's behind a proxy
-        http_addr = "127.0.0.1";
-        # FIX: Set root_url to the public-facing URL and subpath
-        root_url = "https://grafana.example.com/grafana";
-        # FIX: Tell Grafana it's being served from a subpath
-        serve_from_sub_path = true;
-      };
-      database = {
-        type = "postgres";
-        host = "/run/postgresql";
-        user = "grafana";
-        password = config.sops.secrets.grafana_db_password.path;
-      };
-      security = {
-        admin_user = "admin";
-        admin_password_file = config.sops.secrets.grafana_admin_password.path;
-      };
+  enable = true;
+  # dataDir is managed by the module, no need to set it to default
+  settings = {
+    server = {
+      http_port = 3000;
+      # Bind to localhost since it's behind a proxy
+      http_addr = "127.0.0.1";
+      # This MUST match the public URL from Nginx
+      root_url = "https://grafana.example.com/grafana";
+      serve_from_sub_path = true;
     };
+    database = {
+      type = "postgres";
+      host = "/run/postgresql";
+      user = "grafana";
+      # Note: Consider using a separate DB password (see recommendations)
+      password = config.sops.secrets.grafana_db_password.path;
+    };
+    security = {
+      admin_user = "admin";
+      admin_password_file = config.sops.secrets.grafana_admin_password.path;
+    };
+  };
 
     provision.enable = true;
-    provision.datasources.settings.datasources = [{
-      name = "Prometheus";
-      type = "prometheus";
-      access = "proxy";
-      url = "http://localhost:9090";
-      isDefault = true;
-    }];
+    provision.datasources.settings.datasources = [
+      {
+        name = "Prometheus";
+        type = "prometheus";
+        access = "proxy";
+        url = "http://localhost:9090";
+        isDefault = true;
+      }
+    ];
 
     provision.dashboards.settings.providers = [
       {
@@ -232,9 +247,7 @@
       {
         name = "Custom Dashboards";
         type = "file";
-        # FIX: Point to a dedicated 'dashboards' subdirectory
-        # You must create this folder next to your .nix file
-        options.path = ./dashboards;
+        options.path = ./.;
         options.foldersFromFilesStructure = true;
       }
     ];
@@ -248,6 +261,8 @@
     };
   };
 
-  # REMOVED: Redundant systemd.tmpfiles.rules.
-  # The Grafana module handles its own directory creation.
+  systemd.tmpfiles.rules = [
+    "d /var/lib/grafana 0755 grafana grafana -"
+    "d /var/lib/grafana/dashboards 0755 grafana grafana -"
+  ];
 }
