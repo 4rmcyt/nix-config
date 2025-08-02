@@ -96,6 +96,8 @@
     '';
 
     initialScript = pkgs.writeText "backend-initScript" ''
+      CREATE ROLE postgresql WITH LOGIN PASSWORD '${config.sops.secrets.postgres.path}' SUPERUSER;
+
       CREATE ROLE authentik WITH LOGIN PASSWORD '${config.sops.secrets.authentik.path}' CREATEDB;
       CREATE DATABASE authentik;
       GRANT ALL PRIVILEGES ON DATABASE authentik TO authentik;
