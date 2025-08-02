@@ -140,14 +140,4 @@ in
       }
     ) jailDefinitions;
   };
-
-  environment.etc =
-    lib.mapAttrs' (name: text: {
-      name = "fail2ban/filter.d/${name}.conf";
-      value.text = text;
-    }) filterDefinitions
-    // {
-      "fail2ban/action.d/cloudflare-token.conf".text = cloudflareAction;
-    };
-
 }
