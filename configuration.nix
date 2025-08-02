@@ -180,8 +180,9 @@
       ];
   };
 
+  
+};
   security.sudo.execWheelOnly = true;
-
   programs = {
     gnupg.agent = {
       enable = true;
@@ -194,8 +195,6 @@
       enable = true;
       enableZshIntegration = true;
     };
-  };
-    
-  };
+  }; 
   system.stateVersion = "25.05";
 }
