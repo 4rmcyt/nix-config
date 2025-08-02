@@ -1,7 +1,7 @@
 { config, ... }:
 {
  sops.secrets = {
-    gmail_password = {
+    gmail_password = lib.mkForce {
       sopsFile = ../../secrets/gmail_conf.yaml;
       key = "gmail_password";
       owner = config.users.users.msmtp.name;
