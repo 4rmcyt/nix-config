@@ -88,18 +88,16 @@
     ];
     
     identMap = ''
-      "postgres" "postgres"
-      "miniflux" "miniflux"
-      "paperless" "paperless"
-      "hass" "hass"
-      "authentik" "authentik"
-      "grafana" "grafana"
-      "vaultwarden" "vaultwarden"
+    # ArbitraryMapName systemUser DBUser
+       superuser_map      root      postgres
+       superuser_map      postgres  postgres
+       # Let other names login as themselves
+       superuser_map      /^(.*)$   \1
     '';
 
     authentication = pkgs.lib.mkOverride 10 ''
       # Allow local users to connect via sockets without a password
-      local sameuser  all     peer        trust
+      local all       all     trust
       # Require a password for network connections from localhost (both IPv4 and IPv6)
       host  all all 127.0.0.1/32 scram-sha-256
       host  all all ::1/128      scram-sha-256
