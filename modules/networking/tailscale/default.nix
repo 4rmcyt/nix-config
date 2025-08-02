@@ -4,7 +4,7 @@
 {
   sops.secrets = {
     tailscale_auth_key = {
-      sopsFile = ../../secrets/tailscale.yaml;
+      sopsFile = ../../../secrets/tailscale.yaml;
       key = "tailscale_auth_key";
       owner = "root";
       group = "root";
