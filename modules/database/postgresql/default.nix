@@ -5,54 +5,63 @@
   ...
 }:
 { 
-  sops.secrets.postgres = {
-    sopsFile = ../../../secrets/postgresql.yaml;
-    key = "postgres_password";
-    owner = config.users.users.postgresql.name;
-    group = config.users.groups.postgresql.name;
-    mode = "0400";
+  sops.secrets = {
+    sops.secrets.postgres = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "postgres_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+  
+    postgres = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "postgres_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+    miniflux = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "miniflux_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+    paperless = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "paperless_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+    hass = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "hass_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+    authentik = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "authentik_db_password";
+      mode = "0400";
+    };
+    secrets.grafana = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "grafana_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+    secrets.vaultwarden = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "vaultwarden_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
   };
-  sops.secrets.miniflux = {
-    sopsFile = ../../../secrets/postgresql.yaml;
-    key = "miniflux_db_password";
-    owner = config.users.users.postgresql.name;
-    group = config.users.groups.postgresql.name;
-    mode = "0400";
-  };
-  sops.secrets.paperless = {
-    sopsFile = ../../../secrets/postgresql.yaml;
-    key = "paperless_db_password";
-    owner = config.users.users.postgresql.name;
-    group = config.users.groups.postgresql.name;
-    mode = "0400";
-  };
-  sops.secrets.hass = {
-    sopsFile = ../../../secrets/postgresql.yaml;
-    key = "hass_db_password";
-    owner = config.users.users.postgresql.name;
-    group = config.users.groups.postgresql.name;
-    mode = "0400";
-  };
-  sops.secrets.authentik = {
-    sopsFile = ../../../secrets/postgresql.yaml;
-    key = "authentik_db_password";
-    mode = "0400";
-  };
-  sops.secrets.grafana = {
-    sopsFile = ../../../secrets/postgresql.yaml;
-    key = "grafana_db_password";
-    owner = config.users.users.postgresql.name;
-    group = config.users.groups.postgresql.name;
-    mode = "0400";
-  };
-  sops.secrets.vaultwarden = {
-    sopsFile = ../../../secrets/postgresql.yaml;
-    key = "vaultwarden_db_password";
-    owner = config.users.users.postgresql.name;
-    group = config.users.groups.postgresql.name;
-    mode = "0400";
-  };
-
   users.users.postgresql = {
     isSystemUser = true;
     group = "postgresql";
@@ -70,31 +79,13 @@
       "grafana"
       "vaultwarden"
     ];
-    ensureUsers = [
-      {
-        name = "miniflux";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "paperless";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "hass";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "authentik";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "grafana";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "vaultwarden";
-        ensureDBOwnership = true;
-      }
+   ensureUsers = [
+      { name = "miniflux"; ensureDBOwnership = true; }
+      { name = "paperless"; ensureDBOwnership = true; }
+      { name = "hass"; ensureDBOwnership = true; }
+      { name = "authentik"; ensureDBOwnership = true; }
+      { name = "grafana"; ensureDBOwnership = true; }
+      { name = "vaultwarden"; ensureDBOwnership = true; }
     ];
     #TODO: Authentication settings
   };
@@ -104,7 +95,7 @@
   ];
 
   systemd.services.postgresql.postStart = ''
-    $PSQL -tA <<'EOF'
+    sudo -u ${config.services.postgresql.user} ${config.services.postgresql.package}/bin/psql -tA <<'EOF'  
       DO $$
       DECLARE pwdAuthentik TEXT;
       DECLARE pwdHass TEXT;
