@@ -8,13 +8,11 @@
   sops.secrets = {
     miniflux_creds = {
       sopsFile = ../../../secrets/miniflux.yaml;
-      key = "miniflux_admin_password";
-    };
-    miniflux_creds = {
+      key = "miniflux_admin_creds";
       owner = config.users.users.miniflux.name;
       group = config.users.groups.miniflux.name;
       mode = "0400";
-      content = "admin:${config.sops.secrets.miniflux_admin_password}";
+      
     };
     miniflux_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
@@ -65,7 +63,7 @@
       BASE_URL = "https://miniflux.example.com";
       LISTEN_ADDR = "localhost:8086";
       DATABASE_MIGRATIONS = 1; # run database migrations on first run
-      DATABASE_URL = lib.mkForce "user=miniflux password=${config.sops.secrets.miniflux_db_password.content} dbname=miniflux sslmode=disable host=/run/postgresql";
+      DATABASE_URL = lib.mkForce "user=miniflux password=${config.sops.secrets.miniflux_db_password.path} dbname=miniflux sslmode=disable host=/run/postgresql";
     };
   };
 
