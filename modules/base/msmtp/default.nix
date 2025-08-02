@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 {
  sops.secrets = {
-    gmail_password = lib.mkDefault {
+    msmtp_gmail_password = lib.mkDefault {
       sopsFile = ../../secrets/gmail_conf.yaml;
       key = "gmail_password";
       owner = config.users.users.msmtp.name;
@@ -39,7 +39,7 @@
       default = {
         host = "smtp.gmail.com";
         auth = "on";
-        passwordeval = "cat ${config.sops.secrets.gmail_password.path}";
+        passwordeval = "cat ${config.sops.secrets.msmtp_gmail_password.path}";
         user = "redacted@example.com";
         from = "redacted@example.com";
       };
