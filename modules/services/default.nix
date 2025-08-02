@@ -10,7 +10,7 @@
     ./nixarr
     ./kavita
     ./calibre-web
-    ./vaultwarden
+    # ./vaultwarden
     # ./linkwarden
   ];
 }
