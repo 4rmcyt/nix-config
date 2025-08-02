@@ -134,10 +134,6 @@ in
         locations."/" = {
           proxyPass = "http://localhost:9292";
           proxyWebsockets = true;
-          proxyHeaders = {
-            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-            "X-Forwarded-Proto" = "https";
-          };
         };
       };
       "jellyfin.labhome.work" = {
@@ -147,10 +143,6 @@ in
         locations."/" = {
           proxyPass = "http://localhost:8096";
           proxyWebsockets = true;
-          proxyHeaders = {
-            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-            "X-Forwarded-Proto" = "https";
-          };
         };
       };
       "bazarr.labhome.work" = {
@@ -160,9 +152,6 @@ in
         locations."/" = {
           proxyPass = "http://localhost:6767";
           proxyWebsockets = true;
-          proxyHeaders = {
-            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-            "X-Forwarded-Proto" = "https";
           };
         };
       };
@@ -173,10 +162,6 @@ in
         locations."/" = {
           proxyPass = "http://localhost:8686";
           proxyWebsockets = true;
-          proxyHeaders = {
-            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-            "X-Forwarded-Proto" = "https";
-          };
         };
       };
       "prowlarr.labhome.work" = {
@@ -186,10 +171,6 @@ in
         locations."/" = {
           proxyPass = "http://localhost:9696";
           proxyWebsockets = true;
-          proxyHeaders = {
-            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-            "X-Forwarded-Proto" = "https";
-          };
         };
       };
       "radarr.labhome.work" = {
@@ -199,10 +180,6 @@ in
         locations."/" = {
           proxyPass = "http://localhost:7878";
           proxyWebsockets = true;
-          proxyHeaders = {
-            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-            "X-Forwarded-Proto" = "https";
-          };
         };
       };
       "sonarr.labhome.work" = {
@@ -212,10 +189,6 @@ in
         locations."/" = {
           proxyPass = "http://localhost:8989";
           proxyWebsockets = true;
-          proxyHeaders = {
-            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-            "X-Forwarded-Proto" = "https";
-          };
         };
       };
       "jellyseerr.labhome.work" = {
@@ -225,10 +198,6 @@ in
         locations."/" = {
           proxyPass = "http://localhost:5055";
           proxyWebsockets = true;
-          proxyHeaders = {
-            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-            "X-Forwarded-Proto" = "https";
-          };
         };
       };
       "transmission.labhome.work" = {
@@ -238,14 +207,10 @@ in
         locations."/" = {
           proxyPass = "http://localhost:9091";
           proxyWebsockets = true;
-          proxyHeaders = {
-            "X-Forwarded-For" = "$proxy_add_x_forwarded_for";
-            "X-Forwarded-Proto" = "https";
-          };
         };
       };
     };
-  };
+  
 
   environment.etc."nixos/scripts/add-trackers.sh" = {
     mode = "0755";
