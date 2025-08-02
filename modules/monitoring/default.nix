@@ -60,34 +60,34 @@
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-  };
-  virtualHosts = {
-    "prometheus.example.com" = {
-      forceSSL = true;
-      enableACME = true;
-      locations."/" = {
-        proxyPass = "http://localhost:9090";
-        proxyWebsockets = true;
-      };
-    };
-    "uptime-kuma.example.com" = {
-      forceSSL = true;
-      enableACME = true;
-      locations."/" = {
-        proxyPass = "http://localhost:3001";
-        proxyWebsockets = true;
-      };
-    };
-    "grafana.example.com" = {
-      forceSSL = true;
-      enableACME = true;
-      locations."/" = {
-        proxyPass = "http://localhost:3000";
-        proxyWebsockets = true;
-      };
-    };
-  };
 
+    virtualHosts = {
+      "prometheus.example.com" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          proxyPass = "http://localhost:9090";
+          proxyWebsockets = true;
+        };
+      };
+      "uptime-kuma.example.com" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          proxyPass = "http://localhost:3001";
+          proxyWebsockets = true;
+        };
+      };
+      "grafana.example.com" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          proxyPass = "http://localhost:3000";
+          proxyWebsockets = true;
+        };
+      };
+    };
+  };
   environment.systemPackages = [
     pkgs.grafana
     pkgs.prometheus
