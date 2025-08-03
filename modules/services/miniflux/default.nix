@@ -1,3 +1,5 @@
+nix
+# modules/services/miniflux/default.nix
 {
   config,
   lib,
@@ -11,8 +13,7 @@
       key = "miniflux_admin_creds";
       owner = config.users.users.miniflux.name;
       group = config.users.groups.miniflux.name;
-      mode = "0400";
-      
+      mode = "0400"; # Or 0440 if miniflux user is in the group
     };
     miniflux_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
@@ -34,36 +35,38 @@
     8086 # Miniflux
   ];
 
-  services.nginx = {
-    enable = true;
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
-    virtualHosts."miniflux.example.com" = {
-      forceSSL = true;
-      enableACME = true;
-      locations."/" = {
-        proxyPass = "http://localhost:8086";
-        proxyWebsockets = true;
-      };
-    };
-  };
-
   environment.systemPackages = [ pkgs.miniflux ];
+
   services.miniflux = {
     enable = true;
-    adminCredentialsFile = config.sops.secrets.miniflux_creds.path; # path to admin credentials file
-    createDatabaseLocally = true; # create database on first run
+    # Remove or comment out this line:
+    # adminCredentialsFile = config.sops.secrets.miniflux_creds.path;
+
     config = {
-      WORKER_POOL_SIZE = "5"; # number of background workers
-      POLLING_FREQUENCY = "60"; # feed refresh interval in minutes
-      BATCH_SIZE = "100"; # number of feeds sent to queue each interval
-      CLEANUP_ARCHIVE_READ_DAYS = "60"; # read items are removed after x days
+      WORKER_POOL_SIZE = "5";
+      POLLING_FREQUENCY = "60";
+      BATCH_SIZE = "100";
+      CLEANUP_ARCHIVE_READ_DAYS = "60";
       BASE_URL = "https://miniflux.example.com";
       LISTEN_ADDR = "localhost:8086";
-      DATABASE_MIGRATIONS = 1; # run database migrations on first run
+      DATABASE_MIGRATIONS = 1;
       DATABASE_URL = lib.mkForce "user=miniflux password=${config.sops.secrets.miniflux_db_password.path} dbname=miniflux sslmode=disable host=/run/postgresql";
+
+      # Add this to set environment variables from the decrypted secret
+      environmentVariables = let
+        # Read the decrypted secret content
+        minifluxCreds = builtins.readFile config.sops.secrets.miniflux_creds.path;
+        # Split the content by ":" to get username and password
+        credsList = lib.splitString ":" minifluxCreds;
+        username = lib.elemAt credsList 0;
+        password = lib.elemAt credsList 1;
+      in {
+        ADMIN_USERNAME = username;
+        ADMIN_PASSWORD = password;
+        # Include other environment variables if needed, like DATABASE_URL, etc.
+        # Note: DATABASE_URL is already set in 'config', but if you prefer
+        # environment variables for everything, you could move it here.
+      };
     };
   };
 
