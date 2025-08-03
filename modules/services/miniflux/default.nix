@@ -1,5 +1,3 @@
-nix
-# modules/services/miniflux/default.nix
 {
   config,
   lib,
