@@ -22,7 +22,13 @@
     nixos-hardware.url = "github:nixos/nixos-hardware";
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
     flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
-    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    
+    nix-darwin.url = {
+      url = "github:LnL7/nix-darwin";
+      inputs.flake-compat.follows = "flake-compat";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -117,7 +123,7 @@
     }@inputs:
     {
       darwinConfigurations = {
-        macbook =  nix-darwin.nixpkgs.lib.darwinSystem {
+       macbook = nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           specialArgs = {
             username = "vk";
