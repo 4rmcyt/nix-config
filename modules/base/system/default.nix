@@ -45,7 +45,7 @@
       enable = true;
       extraArgs = "--keep-since 7d --keep 5";
     };
-    flake = "/home/${username}/src/server";
+    flake = "/home/${username}/src/nixos-config";
   };
 
   environment.systemPackages = with pkgs; [

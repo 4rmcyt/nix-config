@@ -115,6 +115,7 @@
       ...
     }@inputs:
      let
+      username = "zeev";
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
@@ -174,14 +175,4 @@
 
       };
     };
-  nixConfig = {
-    extra-substituters = [
-      "https://nix-community.cachix.org"
-      "https://4rmcyt.cachix.org"
-    ];
-    extra-trusted-public-keys = [
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      "4rmcyt.cachix.org-1:uKI766iybXD8uDBVexbc5BCYAfdBJ262ID4C+dl2hws="
-    ];
-  };
 }
