@@ -100,12 +100,21 @@
     };
   };
 
-  outputs =
-    inputs:
-    let
-      lib = nixpkgs.lib;
-    in
+ outputs =
     {
+      self,
+      nixpkgs,
+      darwin,
+      sops-nix,
+      vscode-server,
+      disko,
+      home-manager,
+      nix-index-database,
+      nixarr,
+      nix-ld,
+      authentik-nix,
+      ...
+    }@inputs:
       darwinConfigurations = {
         macbook = nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
