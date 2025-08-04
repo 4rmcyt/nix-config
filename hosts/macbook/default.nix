@@ -5,7 +5,6 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/users/vk.nix
-    ../../modules/darwin
   ];
 
   nix = {
