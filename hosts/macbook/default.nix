@@ -13,11 +13,10 @@
     ../../modules/iterm2
   ];
 
-  # This configuration is now handled in the flake's `mkDarwinSystem` helper.
-  # You can safely REMOVE the nix-homebrew block from this file.
-
-  sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
-  sops.defaultSopsFormat = "yaml";
+  sops = {
+    age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
+    defaultSopsFormat = "yaml";
+  };
 
   nix = {
     package = pkgs.nixVersions.latest;
@@ -26,7 +25,7 @@
       trusted-users = [ "vk" ];
       auto-optimise-store = true;
       warn-dirty = false;
-      cores = lib.systems.cpuCoreCount; # Use lib to get core count dynamically
+      cores = lib.systems.cpuCoreCount;
       max-jobs = lib.systems.cpuCoreCount;
       show-trace = true;
       download-buffer-size = 1073741824; # 1 GiB
