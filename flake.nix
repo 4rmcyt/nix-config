@@ -25,7 +25,6 @@
     
     nix-darwin.url = {
       url = "github:LnL7/nix-darwin";
-      inputs.flake-compat.follows = "flake-compat";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
