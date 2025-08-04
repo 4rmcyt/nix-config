@@ -89,7 +89,7 @@
           };
 
         mkDarwinSystem = { system ? "aarch64-darwin", host, username, modules }:
-          (inputs.darwin.lib.darwinSystem {
+          inputs.darwin.lib.darwinSystem { # <-- No parenthesis needed
             inherit system;
             specialArgs = { inherit inputs host username; } // {
               homebrew-core = inputs.homebrew-core;
@@ -119,7 +119,7 @@
                 };
               }
             ] ++ modules;
-          });
+          };
       };
     in
     {
