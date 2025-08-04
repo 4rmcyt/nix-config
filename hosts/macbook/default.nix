@@ -254,7 +254,7 @@
 
     programs.gnupg.agent = {
       enable = true;
-      pinentryPackage = pkgs.pinentry-mac;
+      pinentryPackage = pkgs.pinentry_mac;
       enableSSHSupport = true;
     };
 
