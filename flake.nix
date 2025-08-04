@@ -160,7 +160,16 @@
         modules = [ ./hosts/desktop ];
         specialArgs = {
             host = "desktop";
-            inherit self inputs username;
+            inherit self inputs;
+        };
+
+      };
+      nixosConfigurations.server = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [ ./hosts/server ];
+        specialArgs = {
+            host = "server";
+            inherit self inputs;
         };
 
       };
