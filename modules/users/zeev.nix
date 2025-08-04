@@ -40,7 +40,6 @@ in
       zeev = {
         isNormalUser = true;
         description = "zeev";
-        shell = pkgs.zsh;
         extraGroups = [
           "networkmanager"
           "wheel"
