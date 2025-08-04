@@ -137,7 +137,7 @@
       DSDontWriteNetworkStores = true;
       DSDontWriteUSBStores = true;
     };
-    SoftwareUpdate = {
+    "com.apple.SoftwareUpdate" = {
       AutomaticCheckEnabled = true;
       ScheduleFrequency = 1;
       AutomaticDownload = 0;
