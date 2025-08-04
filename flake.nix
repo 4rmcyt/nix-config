@@ -116,6 +116,7 @@
     }@inputs:
     let
       system = "x86_64-linux";
+      darwinSystem = "aarch64-darwin";
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
@@ -159,7 +160,37 @@
           host = "desktop";
           inherit self inputs;
         };
-
+      };
+      darwinConfigurations.macbook = darwin.lib.darwinSystem {
+        system = darwinSystem;
+        specialArgs = {
+          username = "vk";
+          host = "macbook";
+          inherit self inputs;
+        };
+        modules = [
+          ./hosts/macbook
+          nix-homebrew.darwinModules.nix-homebrew
+          {
+            nix-homebrew = {
+              enable = true;
+              enableRosetta = true; # Only for Apple Silicon
+              user = "vk";
+              taps = {
+                "homebrew/homebrew-core" = homebrew-core;
+                "homebrew/homebrew-cask" = homebrew-cask;
+                "homebrew/homebrew-bundle" = homebrew-bundle;
+              };
+              mutableTaps = false;
+            };
+          }
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.extraSpecialArgs = { inherit inputs; };
+            home-manager.users.vk = import ./modules/home-manager;
+          }
+        ];
       };
     };
 }
