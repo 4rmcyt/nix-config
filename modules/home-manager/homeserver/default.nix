@@ -47,7 +47,7 @@
     nix-output-monitor
     nvd
   ];
-
+  
   programs = {
     git = {
       enable = true;
@@ -87,6 +87,7 @@
         marker = "#EBCB8B";
       };
     };
+    
     zsh = {
       enable = true;
       syntaxHighlighting.enable = true;
