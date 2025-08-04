@@ -124,9 +124,12 @@
       lib = nixpkgs.lib;
     in
     {
-      nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.server = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit inputs; }; # This is used inside the modules themselves
+        specialArgs = {
+            host = "server";
+            inherit self inputs;
+        };
         modules = [
           vscode-server.nixosModules.default
           disko.nixosModules.disko
@@ -161,15 +164,6 @@
         modules = [ ./hosts/desktop ];
         specialArgs = {
             host = "desktop";
-            inherit self inputs;
-        };
-
-      };
-      nixosConfigurations.server = nixpkgs.lib.nixosSystem {
-        inherit system;
-        modules = [ ./hosts/server ];
-        specialArgs = {
-            host = "server";
             inherit self inputs;
         };
 
