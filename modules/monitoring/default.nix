@@ -69,6 +69,8 @@
     virtualHosts = {
       "prometheus.labhome.work" = {
         forceSSL = true;
+        sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
         enableACME = true;
         locations."/" = {
           proxyPass = "http://localhost:9090";
@@ -77,6 +79,8 @@
       };
       "uptime-kuma.labhome.work" = {
         forceSSL = true;
+        sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
         enableACME = true;
         locations."/" = {
           proxyPass = "http://localhost:3001";
@@ -85,6 +89,8 @@
       };
       "grafana.labhome.work" = {
         forceSSL = true;
+        sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
         enableACME = true;
         locations."/grafana/" = {
           # FIX: Added trailing slash to correctly handle the subpath
