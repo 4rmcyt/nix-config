@@ -1,6 +1,10 @@
-{ pkgs, lib, username, ... }:
 {
-
+  pkgs,
+  lib,
+  username,
+  ...
+}:
+{
 
   imports = [
     ../../modules/users/vk.nix
@@ -25,7 +29,7 @@
     };
     gc = {
       automatic = true;
-      interval.Day = 7;  # Use interval instead of dates for nix-darwin
+      interval.Day = 7; # Use interval instead of dates for nix-darwin
       options = "--delete-older-than 10d";
     };
 
@@ -168,8 +172,8 @@
 
   nixpkgs.config.allowUnfree = true;
   programs.zsh.enable = true;
-  # programs.nix-index.enable = true; # Remove this - not available in nix-darwin
-  system.stateVersion = 4; # Fix state version for nix-darwin
+  programs.nix-index.enable = true;
+  system.stateVersion = 4; 
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   fonts = {
@@ -183,74 +187,75 @@
   # Fix defaults structure - needs to be under system
   system.defaults = {
     CustomUserPreferences = {
-        "com.apple.AdLib" = {
-          allowApplePersonalizedAdvertising = false;
-        };
-        "com.apple.controlcenter" = {
-          BatteryShowPercentage = true;
-        };
-        "com.apple.desktopservices" = {
-          DSDontWriteNetworkStores = true;
-          DSDontWriteUSBStores = true;
-        };
-        "com.apple.finder" = {
-          _FXSortFoldersFirst = true;
-          FXDefaultSearchScope = "SCcf"; 
-          ShowExternalHardDrivesOnDesktop = true;
-          ShowHardDrivesOnDesktop = false;
-          ShowMountedServersOnDesktop = true;
-          ShowRemovableMediaOnDesktop = true;
-        };
-        "com.apple.ImageCapture".disableHotPlug = true;
-        "com.apple.screencapture" = {
-          location = "~/Pictures/Screenshots";
-          type = "png";
-        };
-        "com.apple.SoftwareUpdate" = {
-          AutomaticCheckEnabled = true;
-          ScheduleFrequency = 1;
-          AutomaticDownload = 0;
-          CriticalUpdateInstall = 1;
-        };
-        "com.apple.TimeMachine".DoNotOfferNewDisksForBackup = true;
-        "com.apple.commerce".AutoUpdate = true;
-  };
-  NSGlobalDomain = {
-        AppleICUForce24HourTime = true;
-        AppleInterfaceStyle = "Dark";
-        AppleInterfaceStyleSwitchesAutomatically = false;
-        AppleMeasurementUnits = "Centimeters";
-        AppleMetricUnits = 1;
-        AppleTemperatureUnit = "Celsius";
-        InitialKeyRepeat = 15;
-        KeyRepeat = 2;
-        NSAutomaticCapitalizationEnabled = false;
-        NSAutomaticDashSubstitutionEnabled = false;
-        NSAutomaticPeriodSubstitutionEnabled = false;
-        NSAutomaticQuoteSubstitutionEnabled = false;
-        NSAutomaticSpellingCorrectionEnabled = true;
-        NSNavPanelExpandedStateForSaveMode = true;
-        NSNavPanelExpandedStateForSaveMode2 = true;
-  };
-  SoftwareUpdate = {
-    AutomaticallyInstallMacOSUpdates = false;
-  };
-  finder = {
-        _FXShowPosixPathInTitle = true;
-        FXEnableExtensionChangeWarning = false;
-        FXPreferredViewStyle = "Nlsv";
-        AppleShowAllExtensions = true;
-        AppleShowAllFiles = true;
-        QuitMenuItem = true;
-        ShowPathbar = true;
-        ShowStatusBar = true;
-  };
-  menuExtraClock = {
-    ShowAMPM = false;
-    ShowDate = 1; # Always
-    ShowSeconds = false;
-    Show24Hour = true;
-  };
+      "com.apple.AdLib" = {
+        allowApplePersonalizedAdvertising = false;
+      };
+      "com.apple.controlcenter" = {
+        BatteryShowPercentage = true;
+      };
+      "com.apple.desktopservices" = {
+        DSDontWriteNetworkStores = true;
+        DSDontWriteUSBStores = true;
+      };
+      "com.apple.finder" = {
+        _FXSortFoldersFirst = true;
+        FXDefaultSearchScope = "SCcf";
+        ShowExternalHardDrivesOnDesktop = true;
+        ShowHardDrivesOnDesktop = false;
+        ShowMountedServersOnDesktop = true;
+        ShowRemovableMediaOnDesktop = true;
+      };
+      "com.apple.ImageCapture".disableHotPlug = true;
+      "com.apple.screencapture" = {
+        location = "~/Pictures/Screenshots";
+        type = "png";
+      };
+      "com.apple.SoftwareUpdate" = {
+        AutomaticCheckEnabled = true;
+        ScheduleFrequency = 1;
+        AutomaticDownload = 0;
+        CriticalUpdateInstall = 1;
+      };
+      "com.apple.TimeMachine".DoNotOfferNewDisksForBackup = true;
+      "com.apple.commerce".AutoUpdate = true;
+    };
+    NSGlobalDomain = {
+      AppleICUForce24HourTime = true;
+      AppleInterfaceStyle = "Dark";
+      AppleInterfaceStyleSwitchesAutomatically = false;
+      AppleMeasurementUnits = "Centimeters";
+      AppleMetricUnits = 1;
+      AppleTemperatureUnit = "Celsius";
+      InitialKeyRepeat = 15;
+      KeyRepeat = 2;
+      NSAutomaticCapitalizationEnabled = false;
+      NSAutomaticDashSubstitutionEnabled = false;
+      NSAutomaticPeriodSubstitutionEnabled = false;
+      NSAutomaticQuoteSubstitutionEnabled = false;
+      NSAutomaticSpellingCorrectionEnabled = true;
+      NSNavPanelExpandedStateForSaveMode = true;
+      NSNavPanelExpandedStateForSaveMode2 = true;
+    };
+    SoftwareUpdate = {
+      AutomaticallyInstallMacOSUpdates = false;
+    };
+    finder = {
+      _FXShowPosixPathInTitle = true;
+      FXEnableExtensionChangeWarning = false;
+      FXPreferredViewStyle = "Nlsv";
+      AppleShowAllExtensions = true;
+      AppleShowAllFiles = true;
+      QuitMenuItem = true;
+      ShowPathbar = true;
+      ShowStatusBar = true;
+    };
+    menuExtraClock = {
+      ShowAMPM = false;
+      ShowDate = 1; # Always
+      ShowSeconds = false;
+      Show24Hour = true;
+    };
 
-  security.pam.enableSudoTouchId = true;
+    security.pam.enableSudoTouchId = true;
+  };
 }
