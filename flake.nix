@@ -141,75 +141,79 @@
     self,
     ... 
 }@inputs:
-  let
-    lib = nixpkgs.lib;
-    darwinSystem = "aarch64-darwin";
-  in
-  flake-utils.lib.eachDefaultSystem (system: {
-  }) // {
-    darwinConfigurations = lib.optionalAttrs (builtins.currentSystem == "aarch64-darwin") {
-      macbook = darwin.lib.darwinSystem {
-        system = darwinSystem;
-        specialArgs = {
-          username = "vk";
-          host = "macbook";
-          inherit self inputs;
-        };
-        modules = [
-          ./hosts/macbook
-          nix-homebrew.darwinModules.nix-homebrew
-          {
-            nix-homebrew = {
-              enable = true;
-              enableRosetta = true;
-              user = "vk";
-              taps = {
-                "homebrew/homebrew-core" = homebrew-core;
-                "homebrew/homebrew-cask" = homebrew-cask;
-                "homebrew/homebrew-bundle" = homebrew-bundle;
-              };
-              mutableTaps = false;
+let
+  lib = nixpkgs.lib;
+  
+  # Define systems
+  supportedSystems = [ "aarch64-darwin" "x86_64-linux" ];
+  
+  # Helper function to generate per-system outputs
+  forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+in
+{
+  # Darwin configurations (only for macOS)
+  darwinConfigurations = {
+    macbook = darwin.lib.darwinSystem {
+      system = "aarch64-darwin";
+      specialArgs = {
+        username = "vk";
+        host = "macbook";
+        inherit self inputs;
+      };
+      modules = [
+        ./hosts/macbook
+        nix-homebrew.darwinModules.nix-homebrew
+        {
+          nix-homebrew = {
+            enable = true;
+            enableRosetta = true;
+            user = "vk";
+            taps = {
+              "homebrew/homebrew-core" = homebrew-core;
+              "homebrew/homebrew-cask" = homebrew-cask;
+              "homebrew/homebrew-bundle" = homebrew-bundle;
             };
-          }
-          sops-nix.darwinModules.sops
-          {
-            sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
-            sops.defaultSopsFormat = "yaml";
-          }
-        ];
-      };
-    };
-    
-    # Only evaluate NixOS configs when needed
-    nixosConfigurations = {
-      homeserver = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = {
-          host = "homeserver";
-          username = "zeev";
-          inherit self inputs;
-        };
-        modules = [
-          ./hosts/homeserver # This should contain everything
-          vscode-server.nixosModules.default
-          disko.nixosModules.disko
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.extraSpecialArgs = { inherit inputs; };
-            home-manager.users.zeev = import ./modules/home-manager;
-          }
-          sops-nix.nixosModules.sops
-          {
-            sops.age.keyFile = "/var/lib/sops/age.key";
-            sops.defaultSopsFormat = "yaml";
-          }
-          nix-index-database.nixosModules.nix-index
-          nixarr.nixosModules.default
-          nix-ld.nixosModules.nix-ld
-          inputs.authentik-nix.nixosModules.default
-        ];
-      };
+            mutableTaps = false;
+          };
+        }
+        sops-nix.darwinModules.sops
+        {
+          sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
+          sops.defaultSopsFormat = "yaml";
+        }
+      ];
     };
   };
-}
+  
+  # NixOS configurations (only for Linux)
+  nixosConfigurations = {
+    homeserver = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = {
+        host = "homeserver";
+        username = "zeev";
+        inherit self inputs;
+      };
+      modules = [
+        ./hosts/homeserver
+        vscode-server.nixosModules.default
+        disko.nixosModules.disko
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.users.zeev = import ./modules/home-manager;
+        }
+        sops-nix.nixosModules.sops
+        {
+          sops.age.keyFile = "/var/lib/sops/age.key";
+          sops.defaultSopsFormat = "yaml";
+        }
+        nix-index-database.nixosModules.nix-index
+        nixarr.nixosModules.default
+        nix-ld.nixosModules.nix-ld
+        inputs.authentik-nix.nixosModules.default
+      ];
+    };
+  };
+};
