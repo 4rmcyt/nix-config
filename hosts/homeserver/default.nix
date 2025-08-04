@@ -33,7 +33,6 @@
       trusted-users = [
         "zeev"
       ];
-      optimise.automatic = true;
       warn-dirty = false;
       cores = 4;
       show-trace = true;
