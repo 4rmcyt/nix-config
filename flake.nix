@@ -1,5 +1,5 @@
 {
-  description = "NixOS configuration for homeserver";
+  description = "NixOS configuration";
 
   nixConfig = {
     extra-substituters = [
@@ -17,122 +17,142 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:nixos/nixos-hardware";
-    disko.url = "github:nix-community/disko";
-    sops-nix.url = "github:Mic92/sops-nix";
-    agenix.url = "github:ryantm/agenix";
-    home-manager.url = "github:nix-community/home-manager";
-    darwin.url = "github:LnL7/nix-darwin/master";
-    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
-    homebrew-bundle = { url = "github:homebrew/homebrew-bundle"; flake = false; };
-    homebrew-core = { url = "github:homebrew/homebrew-core"; flake = false; };
-    homebrew-cask = { url = "github:homebrew/homebrew-cask"; flake = false; };
-    hyprland.url = "github:hyprwm/Hyprland";
-    hypr-contrib.url = "github:hyprwm/contrib";
-    hyprpicker.url = "github:hyprwm/hyprpicker";
-    hyprlock.url = "github:hyprwm/hyprlock";
-    waybar.url = "github:Alexays/Waybar";
-    nix-ld.url = "github:Mic92/nix-ld";
-    nixvim.url = "github:nix-community/nixvim";
-    nix-index-database.url = "github:nix-community/nix-index-database";
-    nixos-generators.url = "github:nix-community/nixos-generators";
-    vscode-server.url = "github:nix-community/nixos-vscode-server";
-    flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
-    nixarr.url = "github:rasmus-kirk/nixarr";
-    authentik-nix.url = "github:nix-community/authentik-nix";
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
+    flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
+    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprland.url = "github:hyprwm/Hyprland";
+
+    hypr-contrib = {
+      url = "github:hyprwm/contrib";
+      inputs.nixpkgs.follows = "hyprland/nixpkgs";
+    };
+
+    hyprpicker = {
+      url = "github:hyprwm/hyprpicker";
+      inputs.nixpkgs.follows = "hyprland/nixpkgs";
+    };
+
+    hyprlock = {
+      url = "github:hyprwm/hyprlock";
+      inputs = {
+        hyprgraphics.follows = "hyprland/hyprgraphics";
+        hyprlang.follows = "hyprland/hyprlang";
+        hyprutils.follows = "hyprland/hyprutils";
+        nixpkgs.follows = "hyprland/nixpkgs";
+        systems.follows = "hyprland/systems";
+      };
+    };
+
+    waybar.url = "github:Alexays/Waybar";
     nix-gaming.url = "github:fufexan/nix-gaming";
-    snowfall-lib.url = "github:snowfallorg/lib";
-    
-    # Ensure all inputs that depend on nixpkgs use the same one
-    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
-    agenix.inputs.nixpkgs.follows = "nixpkgs";
-    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
-    nixvim.inputs.nixpkgs.follows = "nixpkgs";
-    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
-    nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
-    vscode-server.inputs.nixpkgs.follows = "nixpkgs";
-    nixarr.inputs.nixpkgs.follows = "nixpkgs";
-    authentik-nix.inputs.nixpkgs.follows = "nixpkgs";
-    nix-gaming.inputs.nixpkgs.follows = "nixpkgs";
-    snowfall-lib.inputs.nixpkgs.follows = "nixpkgs";
+
+    darwin = {
+      url = "github:LnL7/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
+    nixarr = {
+      url = "github:rasmus-kirk/nixarr";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixvim.url = "github:nix-community/nixvim";
+
+    nix-ld = {
+      url = "github:Mic92/nix-ld";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    authentik-nix = {
+      url = "github:nix-community/authentik-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    snowfall-lib = {
+      url = "github:snowfallorg/lib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs:
+  outputs =
+    inputs:
     let
-      lib = {
-        mkNixosSystem = { system ? "x86_64-linux", host, username, modules }:
-          nixpkgs.lib.nixosSystem {
-            inherit system;
-            specialArgs = { inherit inputs host username; };
-            modules = [
-              inputs.disko.nixosModules.disko
-              inputs.sops-nix.nixosModules.sops
-              inputs.home-manager.nixosModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.extraSpecialArgs = { inherit inputs host username; };
-              }
-              inputs.nix-index-database.nixosModules.nix-index
-              inputs.vscode-server.nixosModules.default
-              inputs.nixarr.nixosModules.default
-              inputs.nix-ld.nixosModules.nix-ld
-              inputs.authentik-nix.nixosModules.default
-            ] ++ modules;
-          };
-
-        mkDarwinSystem = { system ? "aarch64-darwin", host, username, modules }:
-          inputs.darwin.lib.darwinSystem {
-            inherit system;
-            specialArgs = { inherit inputs host username; } // {
-              homebrew-core = inputs.homebrew-core;
-              homebrew-cask = inputs.homebrew-cask;
-              homebrew-bundle = inputs.homebrew-bundle;
-            };
-            modules = [
-              inputs.sops-nix.darwinModules.sops
-              inputs.nix-homebrew.darwinModules.nix-homebrew
-              {
-                nix-homebrew = {
-                  enable = true;
-                  enableRosetta = true;
-                  user = username;
-                  taps = {
-                    "homebrew/homebrew-core" = inputs.homebrew-core;
-                    "homebrew/homebrew-cask" = inputs.homebrew-cask;
-                    "homebrew/homebrew-bundle" = inputs.homebrew-bundle;
-                  };
-                  mutableTaps = false;
-                  brewCommand = "${inputs.nix-homebrew.packages.${system}.brew}/bin/brew";
-                };
-              }
-            ] ++ modules;
-          };
-      };
+      lib = nixpkgs.lib;
     in
     {
-      nixosConfigurations = {
-        homeserver = lib.mkNixosSystem {
-          host = "homeserver";
-          username = "zeev";
+      darwinConfigurations = {
+        macbook = nix-darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          specialArgs = {
+            username = "vk";
+            host = "macbook";
+            inherit inputs;
+          };
           modules = [
-            ./hosts/homeserver
-            { home-manager.users.zeev = import ./modules/home-manager; }
+            ./hosts/macbook
+            inputs.nix-homebrew.darwinModules.nix-homebrew
+            {
+              nix-homebrew = {
+                enable = true;
+                enableRosetta = true;
+                user = "vk";
+              };
+            }
+            inputs.sops-nix.darwinModules.sops
           ];
         };
       };
 
-      darwinConfigurations = {
-        macbook = lib.mkDarwinSystem {
-          system = "aarch64-darwin";
-          host = "macbook";
-          username = "vk";
-          modules = [ ./hosts/macbook ];
+      nixosConfigurations = {
+        homeserver = lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            host = "homeserver";
+            username = "zeev";
+            inherit inputs;
+          };
+          modules = [
+            ./hosts/homeserver
+            inputs.vscode-server.nixosModules.default
+            inputs.disko.nixosModules.disko
+            inputs.home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.extraSpecialArgs = { inherit inputs; };
+              home-manager.users.zeev = import ./modules/home-manager;
+            }
+            inputs.sops-nix.nixosModules.sops
+            inputs.nix-index-database.nixosModules.nix-index
+            inputs.nixarr.nixosModules.default
+            inputs.nix-ld.nixosModules.nix-ld
+            inputs.authentik-nix.nixosModules.default
+          ];
         };
       };
     };
