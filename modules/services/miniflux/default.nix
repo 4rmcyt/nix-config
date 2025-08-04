@@ -6,13 +6,6 @@
 }:
 {
   sops.secrets = {
-    miniflux_admin_password = {
-      sopsFile = ../../../secrets/miniflux.yaml;
-      key = "miniflux_admin_pass";
-      owner = config.users.users.miniflux.name;
-      group = config.users.groups.miniflux.name;
-      mode = "0400";
-    };
     miniflux_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "miniflux_db_password";
