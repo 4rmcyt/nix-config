@@ -110,6 +110,9 @@
     smartmontools
     openssl
     fwupd
+    nh
+    nix-output-monitor
+    nvd
   ];
 
    services = {
