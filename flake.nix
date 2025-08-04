@@ -2,16 +2,16 @@
   description = "NixOS configuration for homeserver";
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
-    
+
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    
+
     nixos-hardware.url = "github:nixos/nixos-hardware";
-    
+
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
     flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
 
     hyprland.url = "github:hyprwm/Hyprland";
-    
+
     hypr-contrib = {
       url = "github:hyprwm/contrib";
       inputs.nixpkgs.follows = "hyprland/nixpkgs";
@@ -34,9 +34,9 @@
     };
 
     waybar.url = "github:Alexays/Waybar";
-    
-    nix-gaming.url = "github:fufexan/nix-gaming"; 
-    
+
+    nix-gaming.url = "github:fufexan/nix-gaming";
+
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -114,7 +114,7 @@
       authentik-nix,
       ...
     }@inputs:
-     let
+    let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
@@ -126,12 +126,12 @@
       nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {
-            host = "homeserver";
-            username = "zeev";
-            inherit self inputs;
+          host = "homeserver";
+          username = "zeev";
+          inherit self inputs;
         };
         modules = [
-          ./hosts/homeserver
+          ./hosts/homeserver # This should contain everything
           vscode-server.nixosModules.default
           disko.nixosModules.disko
           home-manager.nixosModules.home-manager
@@ -149,20 +149,15 @@
           nixarr.nixosModules.default
           nix-ld.nixosModules.nix-ld
           inputs.authentik-nix.nixosModules.default
-
-
-          # Core system configuration
-          ./modules/users
-          ./modules/base
-          ./modules/backup
         ];
       };
       nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [ ./hosts/desktop ];
         specialArgs = {
-            host = "desktop";
-            inherit self inputs;
+          username = "zeev";
+          host = "desktop";
+          inherit self inputs;
         };
 
       };

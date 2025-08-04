@@ -111,7 +111,6 @@
     smartmontools
     openssl
     fwupd
-    nh
   ];
 
    services = {
