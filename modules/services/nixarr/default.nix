@@ -266,7 +266,9 @@ in
       enable = true;
       peerPort = 63998;
       vpn.enable = true;
-      flood.enable = false;
+      flood.enable = true;
+      openFirewall = true;
+      uiPort = 9091;
       extraAllowedIps = [
         "192.168.1.0/24"
         "192.168.0.0/24"
