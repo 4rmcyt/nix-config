@@ -24,6 +24,7 @@
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
+    
     flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
 
     agenix = {
