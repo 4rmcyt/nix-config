@@ -163,11 +163,8 @@
     font-awesome
   ];
 
-  # --- Correctly Structured Blocks ---
-  # These were previously inside 'system.defaults', which was incorrect.
 
   system.defaults = {
-    # Settings for macOS GUI applications
     finder = {
       _FXShowPosixPathInTitle = true;
       FXEnableExtensionChangeWarning = false;
@@ -257,26 +254,7 @@
     signing.key = "129B4C451BE08617E579CF8A625FD6A8899D566D";
   };
 
-  programs.fzf = {
-    enable = true;
-    enableZshIntegration = true;
-    colors = {
-      fg = "#D8DEE9";
-      bg = "#2E3440";
-      hl = "#A3BE8C";
-      "fg+" = "#D8DEE9";
-      "bg+" = "#434C5E";
-      "hl+" = "#A3BE8C";
-      pointer = "#BF616A";
-      info = "#4C566A";
-      spinner = "#4C566A";
-      header = "#4C566A";
-      prompt = "#81A1C1";
-      marker = "#EBCB8B";
-    };
-  };
 
-  # I combined the two zsh blocks for clarity
   programs.zsh = {
     enable = true;
     syntaxHighlighting.enable = true;
