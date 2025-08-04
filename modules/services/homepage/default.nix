@@ -227,7 +227,7 @@
           }
           {
             "Miniflux" = {
-              href = "https://rss.labhome.work";
+              href = "https://miniflux.labhome.work";
               description = "RSS Reader";
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/miniflux.svg";
               widgets = [
