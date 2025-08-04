@@ -115,10 +115,8 @@
     };
   };
 
-  # This structure defines the configurations at the top level, which is
-  # the standard and correct way to structure a multi-system flake.
-  outputs =
-    { self, ... }@inputs:
+  # This simplified function signature is more standard and should resolve the evaluation error.
+  outputs = inputs:
     let
       lib = inputs.nixpkgs.lib;
     in
