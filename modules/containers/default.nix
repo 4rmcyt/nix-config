@@ -67,7 +67,11 @@
       image = "portainer/portainer-ce:alpine-sts";
       autoStart = true;
       networks = [ "podman" ];
-      ports = [ "127.0.0.1:9444:9443" "127.0.0.1:9001:9000" ];
+      privileged = true;
+      volumes = [
+        "portainer_data:/data"
+      ];
+      ports = [ "127.0.0.1:9444:9443" ];
       environmentFiles = [ config.sops.secrets.containers_env.path ];
     };
   };
