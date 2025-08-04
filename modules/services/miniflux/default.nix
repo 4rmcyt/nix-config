@@ -58,7 +58,7 @@
       BATCH_SIZE = "100"; # number of feeds sent to queue each interval
       CREATE_ADMIN = "true"; # create admin user on first run
       ADMIN_USERNAME = 1; # admin username
-      ADMIN_PASSWORD = config.sops.secrets.miniflux_creds.path; 
+      ADMIN_PASSWORD = config.sops.secrets.miniflux_admin_password.path; 
       CLEANUP_ARCHIVE_READ_DAYS = "60"; # read items are removed after x days
       BASE_URL = "https://miniflux.labhome.work";
       LISTEN_ADDR = "localhost:8086";
