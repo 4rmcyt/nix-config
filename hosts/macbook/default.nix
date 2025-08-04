@@ -1,9 +1,8 @@
-{ pkgs, lib, username, ... }:
+{ pkgs, lib, pkgs, username, ... }:
 {
 
 
   imports = [
-    ./hardware-configuration.nix
     ../../modules/users/vk.nix
   ];
 
@@ -35,6 +34,8 @@
       dates = [ "weekly" ];
     };
   };
+
+  services.nix-daemon.enable = true;
 
   homebrew = {
     enable = true;
@@ -150,7 +151,19 @@
     srecord
     minipro
     pwgen
+    nh
+    nix-output-monitor
+    nvd
+    plistwatch
+    m-cli
   ];
+
+  variables = {
+    EDITOR = "nvim";
+    SHELL = "${pkgs.zsh}/bin/zsh";
+    SYSTEMD_EDITOR = "nvim";
+    VISUAL = "nvim";
+  };
 
   nixpkgs.config.allowUnfree = true;
   programs.zsh.enable = true;
@@ -164,6 +177,77 @@
       font-awesome
       fira-code
     ];
+  };
+
+  defaults ={
+    CustomUserPreferences = {
+        "com.apple.AdLib" = {
+          allowApplePersonalizedAdvertising = false;
+        };
+        "com.apple.controlcenter" = {
+          BatteryShowPercentage = true;
+        };
+        "com.apple.desktopservices" = {
+          DSDontWriteNetworkStores = true;
+          DSDontWriteUSBStores = true;
+        };
+        "com.apple.finder" = {
+          _FXSortFoldersFirst = true;
+          FXDefaultSearchScope = "SCcf"; 
+          ShowExternalHardDrivesOnDesktop = true;
+          ShowHardDrivesOnDesktop = false;
+          ShowMountedServersOnDesktop = true;
+          ShowRemovableMediaOnDesktop = true;
+        };
+        "com.apple.ImageCapture".disableHotPlug = true;
+        "com.apple.screencapture" = {
+          location = "~/Pictures/Screenshots";
+          type = "png";
+        };
+        "com.apple.SoftwareUpdate" = {
+          AutomaticCheckEnabled = true;
+          ScheduleFrequency = 1;
+          AutomaticDownload = 0;
+          CriticalUpdateInstall = 1;
+        };
+        "com.apple.TimeMachine".DoNotOfferNewDisksForBackup = true;
+        "com.apple.commerce".AutoUpdate = true;
+  };
+  NSGlobalDomain = {
+        AppleICUForce24HourTime = true;
+        AppleInterfaceStyle = "Dark";
+        AppleInterfaceStyleSwitchesAutomatically = false;
+        AppleMeasurementUnits = "Centimeters";
+        AppleMetricUnits = 1;
+        AppleTemperatureUnit = "Celsius";
+        InitialKeyRepeat = 15;
+        KeyRepeat = 2;
+        NSAutomaticCapitalizationEnabled = false;
+        NSAutomaticDashSubstitutionEnabled = false;
+        NSAutomaticPeriodSubstitutionEnabled = false;
+        NSAutomaticQuoteSubstitutionEnabled = false;
+        NSAutomaticSpellingCorrectionEnabled = true;
+        NSNavPanelExpandedStateForSaveMode = true;
+        NSNavPanelExpandedStateForSaveMode2 = true;
+  };
+  SoftwareUpdate = {
+    AutomaticallyInstallMacOSUpdates = false;
+  };
+  finder = {
+        _FXShowPosixPathInTitle = true;
+        FXEnableExtensionChangeWarning = false;
+        FXPreferredViewStyle = "Nlsv";
+        AppleShowAllExtensions = true;
+        AppleShowAllFiles = true;
+        QuitMenuItem = true;
+        ShowPathbar = true;
+        ShowStatusBar = true;
+  };
+  menuExtraClock = {
+    ShowAMPM = false;
+    ShowDate = 1; # Always
+    ShowSeconds = false;
+    Show24Hour = true;
   };
 
   users.users.vk = {
