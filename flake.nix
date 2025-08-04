@@ -117,7 +117,6 @@
       homebrew-bundle,
       homebrew-core,
       homebrew-cask,
-      inputs,
       flake-compat,
       hyprland,
       hypr-contrib,   
