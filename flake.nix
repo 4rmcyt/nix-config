@@ -115,7 +115,6 @@
       ...
     }@inputs:
      let
-      username = "zeev";
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
@@ -124,13 +123,15 @@
       lib = nixpkgs.lib;
     in
     {
-      nixosConfigurations.server = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {
-            host = "server";
+            host = "homeserver";
+            username = "zeev";
             inherit self inputs;
         };
         modules = [
+          ./hosts/homeserver
           vscode-server.nixosModules.default
           disko.nixosModules.disko
           home-manager.nixosModules.home-manager
@@ -149,9 +150,6 @@
           nix-ld.nixosModules.nix-ld
           inputs.authentik-nix.nixosModules.default
 
-          # Core system configuration files
-          ./configuration.nix
-          ./hardware-configuration.nix
 
           # Core system configuration
           ./modules/users
