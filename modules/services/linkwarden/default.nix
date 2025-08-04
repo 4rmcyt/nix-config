@@ -26,6 +26,8 @@
 
   service.nginx.virtualHosts."link.example.com" = {
     forceSSL = true;
+    sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+    sslCertificateKey = "/var/lib/acme/example.com/key.pem";
     enableACME = true;
     http2 = true;
     locations."/" = {

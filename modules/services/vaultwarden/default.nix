@@ -38,6 +38,8 @@
     recommendedTlsSettings = true;
     virtualHosts."vault.example.com" = {
       forceSSL = true;
+      sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+      sslCertificateKey = "/var/lib/acme/example.com/key.pem";
       enableACME = true;
       locations."/" = {
         proxyWebsockets = true;

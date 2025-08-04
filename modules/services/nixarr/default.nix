@@ -126,6 +126,8 @@ in
     virtualHosts = {
       "audiobookshelf.example.com" = {
         forceSSL = true;
+        sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/example.com/key.pem";
         enableACME = true;
 
         locations."/" = {
@@ -135,6 +137,8 @@ in
       };
       "jellyfin.example.com" = {
         forceSSL = true;
+        sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/example.com/key.pem";
         enableACME = true;
         locations."/" = {
           proxyPass = "http://localhost:8096";
@@ -143,6 +147,8 @@ in
       };
       "bazarr.example.com" = {
         forceSSL = true;
+        sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/example.com/key.pem";
         enableACME = true;
         locations."/" = {
           proxyPass = "http://localhost:6767";
@@ -151,6 +157,8 @@ in
       };
       "lidarr.example.com" = {
         forceSSL = true;
+        sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/example.com/key.pem";
         enableACME = true;
         locations."/" = {
           proxyPass = "http://localhost:8686";
@@ -159,6 +167,8 @@ in
       };
       "prowlarr.example.com" = {
         forceSSL = true;
+        sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/example.com/key.pem";
         enableACME = true;
         locations."/" = {
           proxyPass = "http://localhost:9696";
@@ -167,6 +177,8 @@ in
       };
       "radarr.example.com" = {
         forceSSL = true;
+        sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/example.com/key.pem";
         enableACME = true;
         locations."/" = {
           proxyPass = "http://localhost:7878";
@@ -175,6 +187,8 @@ in
       };
       "sonarr.example.com" = {
         forceSSL = true;
+        sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/example.com/key.pem";
         enableACME = true;
         locations."/" = {
           proxyPass = "http://localhost:8989";
@@ -183,6 +197,8 @@ in
       };
       "jellyseerr.example.com" = {
         forceSSL = true;
+        sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/example.com/key.pem";
         enableACME = true;
         http2 = true;
         locations."/" = {
@@ -192,6 +208,8 @@ in
       };
       "transmission.example.com" = {
         forceSSL = true;
+        sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/example.com/key.pem";
         enableACME = true;
         locations."/" = {
           proxyPass = "http://localhost:9091";
