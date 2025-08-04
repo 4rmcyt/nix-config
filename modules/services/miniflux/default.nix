@@ -54,7 +54,7 @@
   services.miniflux = {
     enable = true;
     adminCredentialsFile = config.sops.secrets.miniflux_creds.path; # path to admin credentials file
-    createDatabaseLocally = true; # create database on first run
+    createDatabaseLocally = false; # create database on first run
     config = {
       WORKER_POOL_SIZE = "5"; # number of background workers
       POLLING_FREQUENCY = "60"; # feed refresh interval in minutes
