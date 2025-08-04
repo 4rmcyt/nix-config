@@ -71,7 +71,7 @@
       volumes = [
         "portainer_data:/data"
       ];
-      ports = [ "127.0.0.1:9444:9443" ];
+      ports = [ "9444:9443" ];
     };
   };
 }
