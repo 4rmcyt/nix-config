@@ -146,10 +146,6 @@
               };
             }
             inputs.sops-nix.darwinModules.sops
-            {
-              sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
-              sops.defaultSopsFormat = "yaml";
-            }
           ];
         };
       };
@@ -173,10 +169,6 @@
               home-manager.users.zeev = import ./modules/home-manager;
             }
             inputs.sops-nix.nixosModules.sops
-            {
-              sops.age.keyFile = "/var/lib/sops/age.key";
-              sops.defaultSopsFormat = "yaml";
-            }
             inputs.nix-index-database.nixosModules.nix-index
             inputs.nixarr.nixosModules.default
             inputs.nix-ld.nixosModules.nix-ld
