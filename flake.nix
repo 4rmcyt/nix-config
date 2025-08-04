@@ -197,6 +197,11 @@
               mutableTaps = false;
             };
           }
+          sops-nix.darwinModules.sops
+          {
+            sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
+            sops.defaultSopsFormat = "yaml";
+          }
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
