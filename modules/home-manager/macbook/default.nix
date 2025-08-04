@@ -84,7 +84,13 @@
   };
   
   programs = {
-   
+    git = {
+      enable = true;
+      userName = "volodymyr.kondratenko@datos.live";
+      userEmail = "volodymyr.kondratenko@datos.live";
+      signing.key = "129B4C451BE08617E579CF8A625FD6A8899D566D";
+    };
+    
     fzf = {
       enable = true;
       enableZshIntegration = true;

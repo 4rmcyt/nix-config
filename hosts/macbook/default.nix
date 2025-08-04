@@ -100,13 +100,6 @@
   ];
 
   programs = {
-    git = {
-      enable = true;
-      userName = "vk";
-      userEmail = "vk@example.com";
-      signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
-    };
-
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
