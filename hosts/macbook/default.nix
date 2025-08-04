@@ -160,8 +160,7 @@
   programs.nix-index.enable = true;
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = 4;
-  # This is set by the flake, no need to set it here.
-  # nixpkgs.hostPlatform = "aarch64-darwin";
+ 
 
   fonts.packages = with pkgs; [
     (nerdfonts.override { fonts = [ "FiraCode" "Hack" ]; })
