@@ -44,6 +44,7 @@
     nmap
     wireguard-tools
     pinentry-tty
+    nixfmt-tree
   ];
 
   services.nextdns = {
