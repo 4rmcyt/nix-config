@@ -3,11 +3,11 @@
 {
   sops.secrets = {
     cloudflare_acme_credentials = {
-      sopsFile = ../../../secrets/cloudflare_acme_credentials.yaml;
+      sopsFile = ../../../secrets/cloudflare_acme_credentials.env;
       owner = config.users.users.acme.name;
       group = config.users.groups.acme.name;
       mode = "0400";
-      format = "yaml";
+      format = "dotenv";
     };
   };
 
