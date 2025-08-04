@@ -48,6 +48,7 @@
       cleanup = "zap";
       upgrade = true;
     };
+    brewPrefix = "/opt/homebrew/bin";
     taps = [
       "amar1729/formulae"
     ];
@@ -55,34 +56,37 @@
       no_quarantine = true;
     };
     casks = [
-      "alt-tab"
       "displaylink"
-      "docker-desktop"
-      "emclient"
-      "fbreader"
-      "font-hack-nerd-font"
-      "google-chrome"
-      "linearmouse"
-      "logitech-g-hub"
       "meetingbar"
       "pycharm-ce"
-      "raycast"
-      "sublime-text"
       "yubico-authenticator"
+      "linearmouse"
+      "logitech-g-hub"
+      "fbreader"
+      "alt-tab"
+      "docker-desktop"
+      "google-chrome"
+      "font-hack-nerd-font"
+      "emclient"
+      "sublime-text"
+      "raycast"
     ];
     brews = [
-      "browserpass"
       "curl"
-      "gnutls"
       "go"
-      "libgcrypt"
-      "libusb"
-      "p11-kit"
-      "pinentry"
+      "browserpass"
       "python"
+      "pinentry"
+      "pinentry-mac"
+      "libusb"
+      "gnupg"
+      "libgcrypt"
+      "p11-kit"
+      "gnutls"
       "unbound"
     ];
-    masApps = { };
+    masApps = {
+    };
   };
 
 
@@ -99,7 +103,6 @@
     nix-index.enable = true;
     gnupg.agent = {
       enable = true;
-      pinentryPackage = pkgs.pinentry_mac;
       enableSSHSupport = true;
     };
     nh = {

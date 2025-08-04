@@ -114,7 +114,6 @@
       syntaxHighlighting.enable = true;
       autosuggestion.enable = true;
       enableCompletion = true;
-      # This file must be created by you, e.g. by running 'p10k configure'
       initExtra = "source ~/.p10k.zsh";
       plugins = [
         {
