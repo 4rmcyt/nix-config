@@ -33,7 +33,7 @@
         "vk"
         "@admin"
       ];
-      auto-optimise-store = true;
+      optimise.automatic = true;
       warn-dirty = false;
       cores = 4;
       show-trace = true;

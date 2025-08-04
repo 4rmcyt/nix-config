@@ -33,7 +33,7 @@
       trusted-users = [
         "zeev"
       ];
-      auto-optimise-store = true;
+      optimise.automatic = true;
       warn-dirty = false;
       cores = 4;
       show-trace = true;
