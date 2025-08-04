@@ -187,7 +187,7 @@
           {
             nix-homebrew = {
               enable = true;
-              enableRosetta = true; # Only for Apple Silicon
+              enableRosetta = true;
               user = "vk";
               taps = {
                 "homebrew/homebrew-core" = homebrew-core;
@@ -201,13 +201,6 @@
           {
             sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
             sops.defaultSopsFormat = "yaml";
-          }
-          home-manager.darwinModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = { inherit inputs; };
-            home-manager.users.vk = import ./modules/home-manager/vk.nix;
           }
         ];
       };
