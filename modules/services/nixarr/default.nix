@@ -267,7 +267,6 @@ in
       peerPort = 63998;
       vpn.enable = true;
       flood.enable = false;
-      privateTrackers.cross-seed.enable = false;
       extraAllowedIps = [
         "192.168.1.0/24"
         "192.168.0.0/24"
