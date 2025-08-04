@@ -116,65 +116,101 @@
   };
 
   # This simplified function signature is more standard and should resolve the evaluation error.
-  outputs = inputs:
+   outputs = { self, nixpkgs, ... }@inputs:
     let
-      lib = nixpkgs.lib;
+      # Define a local lib to hold our helper functions
+      lib = {
+        # Helper function to build a NixOS system.
+        # It takes the host-specific details and adds all the common modules.
+        mkNixosSystem = {
+          system ? "x86_64-linux",
+          host,
+          username,
+          modules,
+        }:
+          nixpkgs.lib.nixosSystem {
+            inherit system;
+            specialArgs = { inherit inputs host username; };
+            modules = [
+              # Common modules for all NixOS hosts
+              inputs.disko.nixosModules.disko
+              inputs.sops-nix.nixosModules.sops
+              inputs.home-manager.nixosModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.extraSpecialArgs = { inherit inputs host username; };
+              }
+              inputs.nix-index-database.nixosModules.nix-index
+              inputs.vscode-server.nixosModules.default
+              inputs.nixarr.nixosModules.default
+              inputs.nix-ld.nixosModules.nix-ld
+              inputs.authentik-nix.nixosModules.default
+
+              # Host-specific modules passed into the function
+            ] ++ modules;
+          };
+
+        # Helper function to build a Darwin (macOS) system.
+        mkDarwinSystem = {
+          system ? "aarch64-darwin",
+          host,
+          username,
+          modules,
+        }:
+          inputs.darwin.lib.darwinSystem {
+            inherit system;
+            specialArgs = { inherit inputs host username; };
+            modules = [
+              # Common modules for all Darwin hosts
+              inputs.sops-nix.darwinModules.sops
+              inputs.home-manager.darwinModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.extraSpecialArgs = { inherit inputs host username; };
+              }
+              inputs.nix-homebrew.darwinModules.nix-homebrew
+              {
+                nix-homebrew = {
+                  enable = true;
+                  enableRosetta = true; # For Apple Silicon
+                  user = username;
+                  taps = {
+                    "homebrew/homebrew-core" = inputs.homebrew-core;
+                    "homebrew/homebrew-cask" = inputs.homebrew-cask;
+                    "homebrew/homebrew-bundle" = inputs.homebrew-bundle;
+                  };
+                  mutableTaps = false;
+                };
+              }
+
+              # Host-specific modules passed into the function
+            ] ++ modules;
+          };
+      };
     in
     {
-      darwinConfigurations = {
-        macbook = lib.darwinSystem {
-          system = "aarch64-darwin";
-          specialArgs = {
-            username = "vk";
-            host = "macbook";
-            inherit inputs;
-          };
+      # --- NixOS Configurations ---
+      nixosConfigurations = {
+        homeserver = lib.mkNixosSystem {
+          host = "homeserver";
+          username = "zeev";
           modules = [
-            ./hosts/macbook
-            inputs.nix-homebrew.darwinModules.nix-homebrew
-            {
-              nix-homebrew = {
-                enable = true;
-                enableRosetta = true;
-                user = "vk";
-                taps = {
-                  "homebrew/homebrew-core" = inputs.homebrew-core;
-                  "homebrew/homebrew-cask" = inputs.homebrew-cask;
-                  "homebrew/homebrew-bundle" = inputs.homebrew-bundle;
-                };
-                mutableTaps = false;
-              };
-            }
-            inputs.sops-nix.darwinModules.sops
+            ./hosts/homeserver
+            # Import the user-specific home-manager config
+            { home-manager.users.zeev = import ./modules/home-manager; }
           ];
         };
       };
 
-      nixosConfigurations = {
-        homeserver = lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            host = "homeserver";
-            username = "zeev";
-            inherit inputs;
-          };
-          modules = [
-            ./hosts/homeserver
-            inputs.vscode-server.nixosModules.default
-            inputs.disko.nixosModules.disko
-            inputs.home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.extraSpecialArgs = { inherit inputs; };
-              home-manager.users.zeev = import ./modules/home-manager;
-            }
-            inputs.sops-nix.nixosModules.sops
-            inputs.nix-index-database.nixosModules.nix-index
-            inputs.nixarr.nixosModules.default
-            inputs.nix-ld.nixosModules.nix-ld
-            inputs.authentik-nix.nixosModules.default
-          ];
+      # --- Darwin (macOS) Configurations ---
+      darwinConfigurations = {
+        macbook = lib.mkDarwinSystem {
+          system = "aarch64-darwin";
+          host = "macbook";
+          username = "vk";
+          modules = [ ./hosts/macbook ];
         };
       };
     };
 }
+
