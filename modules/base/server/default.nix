@@ -43,6 +43,7 @@
     cachix
     nmap
     wireguard-tools
+    pinentry-tty
   ];
 
   services.nextdns = {
@@ -55,6 +56,11 @@
   programs = {
     nix-ld.enable = false; # Set to false, as per original config
     nix-index.enable = true; # Enable the daemon system-wide
+    gnupg.agent = {
+      enable = true;
+      pinentryPackage = pkgs.pinentry-tty;
+      enableSSHSupport = true;
+    };
   };
   security.sudo.execWheelOnly = true;
 
