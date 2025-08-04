@@ -20,6 +20,14 @@
       group = config.users.groups.postgresql.name;
       mode = "0400";
     };
+    miniflux_admin_creds = {
+      sopsFile = ../../../secrets/miniflux.env;
+      key = "miniflux_admin_creds";
+      owner = config.users.users.miniflux.name;
+      group = config.users.groups.miniflux.name;
+      mode = "0600";
+      format = "dotenv";
+    };
   };
 
   users.users.miniflux = {
@@ -52,13 +60,14 @@
   environment.systemPackages = [ pkgs.miniflux ];
   services.miniflux = {
     enable = true;
+    adminCredentialsFile = config.sops.secrets.miniflux_admin_creds.path; # path to admin credentials file
     config = {
       WORKER_POOL_SIZE = "5"; # number of background workers
       POLLING_FREQUENCY = "60"; # feed refresh interval in minutes
       BATCH_SIZE = "100"; # number of feeds sent to queue each interval
-      CREATE_ADMIN = "true"; # create admin user on first run
-      ADMIN_USERNAME = 1; # admin username
-      ADMIN_PASSWORD = config.sops.secrets.miniflux_admin_password.path; 
+      CREATE_ADMIN = 1; # create admin user on first run
+      # ADMIN_USERNAME = "admin"; # admin username
+      # ADMIN_PASSWORD = config.sops.secrets.miniflux_admin_password.path; 
       CLEANUP_ARCHIVE_READ_DAYS = "60"; # read items are removed after x days
       BASE_URL = "https://miniflux.example.com";
       LISTEN_ADDR = "localhost:8086";
