@@ -1,4 +1,4 @@
-{ pkgs, lib, pkgs, username, ... }:
+{ pkgs, lib, username, ... }:
 {
 
 
@@ -152,7 +152,7 @@
     minipro
     pwgen
   ];
-  
+
   nixpkgs.config.allowUnfree = true;
   programs.zsh.enable = true;
   programs.nix-index.enable = true;
