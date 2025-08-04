@@ -131,14 +131,6 @@
           };
           modules = [
             ./hosts/macbook
-            inputs.nix-homebrew.darwinModules.nix-homebrew
-            {
-              nix-homebrew = {
-                enable = true;
-                enableRosetta = true;
-                user = "vk";
-              };
-            }
             inputs.sops-nix.darwinModules.sops
           ];
         };
