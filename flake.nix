@@ -196,7 +196,6 @@
           username = "zeev";
           modules = [
             ./hosts/homeserver
-            # Import the user-specific home-manager config
             { home-manager.users.zeev = import ./modules/home-manager; }
           ];
         };
