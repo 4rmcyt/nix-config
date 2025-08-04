@@ -141,7 +141,6 @@
 
       gnupg.agent = {
         enable = true;
-        pinentryPackage = pkgs.pinentry_mac;
         enableSSHSupport = true;
       };
     };
