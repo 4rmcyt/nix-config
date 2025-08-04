@@ -120,7 +120,7 @@
       syntaxHighlighting.enable = true;
       autosuggestion.enable = true;
       enableCompletion = true;
-      initExtra = "source ~/.p10k.zsh";
+      initContent = "source ~/.p10k.zsh";
       plugins = [
         {
           name = "powerlevel10k";

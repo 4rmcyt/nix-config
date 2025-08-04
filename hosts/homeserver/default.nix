@@ -42,6 +42,7 @@
     };
     optimise = {
       automatic = true;
+      dates = [ "weekly" ];
     };
   };
 

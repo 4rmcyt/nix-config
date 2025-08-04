@@ -40,9 +40,6 @@
       download-buffer-size = 1073741824; # 1 GiB
       max-jobs = 4;
     };
-    gc = {
-      automatic = true;
-    };
   };
 
   # Homebrew is a system-level integration
