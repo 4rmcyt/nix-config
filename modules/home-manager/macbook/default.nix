@@ -90,6 +90,11 @@
       userEmail = "volodymyr.kondratenko@datos.live";
       signing.key = "129B4C451BE08617E579CF8A625FD6A8899D566D";
     };
+   
+    nix-index = {
+      enable = true;
+      enableZshIntegration = true;
+    };
     
     fzf = {
       enable = true;

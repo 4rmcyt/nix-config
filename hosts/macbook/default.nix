@@ -24,7 +24,11 @@
         "flakes"
       ];
       # Merged trusted-users from both files
-      trusted-users = [ "root" "vk" "@admin" ];
+      trusted-users = [
+        "root"
+        "vk"
+        "@admin"
+      ];
       auto-optimise-store = true;
       warn-dirty = false;
       cores = 4;
@@ -89,7 +93,6 @@
     };
   };
 
-
   nixpkgs.config.allowUnfree = true;
   nixpkgs.hostPlatform = "aarch64-darwin";
 
@@ -106,12 +109,6 @@
     };
 
     zsh.enable = true;
-
-    nix-index = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-
   };
 
   security.pam.enableSudoTouchId = true;
