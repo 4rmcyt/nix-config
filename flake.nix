@@ -20,7 +20,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     nixos-hardware.url = "github:nixos/nixos-hardware";
-    nixpkgs-darwin.url = "github:nixos/nixpkgs-darwin";
     disko.url = "github:nix-community/disko";
     sops-nix.url = "github:Mic92/sops-nix";
     agenix.url = "github:ryantm/agenix";
@@ -46,8 +45,8 @@
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
     nix-gaming.url = "github:fufexan/nix-gaming";
     snowfall-lib.url = "github:snowfallorg/lib";
-    # Ensure all inputs that depend on nixpkgs use the same one
     
+    # Ensure all inputs that depend on nixpkgs use the same one
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -62,7 +61,6 @@
     authentik-nix.inputs.nixpkgs.follows = "nixpkgs";
     nix-gaming.inputs.nixpkgs.follows = "nixpkgs";
     snowfall-lib.inputs.nixpkgs.follows = "nixpkgs";
-    
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
@@ -89,14 +87,13 @@
           };
 
         mkDarwinSystem = { system ? "aarch64-darwin", host, username, modules }:
-          inputs.darwin.lib.darwinSystem { # <-- No parenthesis needed
+          inputs.darwin.lib.darwinSystem {
             inherit system;
             specialArgs = { inherit inputs host username; } // {
               homebrew-core = inputs.homebrew-core;
               homebrew-cask = inputs.homebrew-cask;
               homebrew-bundle = inputs.homebrew-bundle;
             };
-
             modules = [
               inputs.sops-nix.darwinModules.sops
               inputs.nix-homebrew.darwinModules.nix-homebrew
@@ -111,6 +108,7 @@
                     "homebrew/homebrew-bundle" = inputs.homebrew-bundle;
                   };
                   mutableTaps = false;
+                  brewCommand = "${inputs.nix-homebrew.packages.${system}.brew}/bin/brew";
                 };
               }
             ] ++ modules;
@@ -139,4 +137,3 @@
       };
     };
 }
-
