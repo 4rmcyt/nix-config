@@ -88,7 +88,6 @@
     iotop
     cachix
     tuptime
-    smartmontools
     fzf
     ffmpeg
     nmap
