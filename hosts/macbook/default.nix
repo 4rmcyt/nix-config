@@ -27,12 +27,6 @@
       download-buffer-size = 1073741824; # 1 GiB
       max-jobs = 4;
     };
-    
-    gc = {
-      automatic = true;
-      interval.Day = 7; # Use interval instead of dates for nix-darwin
-      options = "--delete-older-than 10d";
-    };
 
     optimise = {
       automatic = true;
@@ -262,6 +256,14 @@
       pinentryPackage = pkgs.pinentry-mac;
       enableSSHSupport = true;
     };
+
+    programs. nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 10d --keep 3";
+      flake = "/Users/vk/.config/nixos-config";
+    };
+
     security.pam.enableSudoTouchId = true;
   };
 }

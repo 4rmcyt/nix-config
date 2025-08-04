@@ -37,12 +37,6 @@
       download-buffer-size = 1073741824; # 1 GiB
       max-jobs = 4;
     };
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 10d";
-    };
-
     optimise = {
       automatic = true;
       dates = [ "weekly" ];
@@ -190,6 +184,13 @@
     nix-index = {
       enable = true;
       enableZshIntegration = true;
+    };
+
+    nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 10d --keep 3";
+      flake = "/home/zeev/src/nixos-config";
     };
   };
 
