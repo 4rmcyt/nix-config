@@ -40,7 +40,6 @@
       forceSSL = true;
       sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
       sslCertificateKey = "/var/lib/acme/example.com/key.pem";
-      enableACME = true;
       locations."/" = {
         proxyWebsockets = true;
         proxyPass = "http://127.0.0.1:8000";
