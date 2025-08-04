@@ -114,6 +114,14 @@
       authentik-nix,
       ...
     }@inputs:
+     let
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      lib = nixpkgs.lib;
+    in
     {
       nixosConfigurations.homeserver = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -144,14 +152,17 @@
           # Core system configuration
           ./modules/users
           ./modules/base
-          ./modules/monitoring
-          ./modules/containers
           ./modules/backup
-          ./modules/database
-          ./modules/security
-          ./modules/networking
-          ./modules/services
         ];
+      };
+      nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [ ./hosts/desktop ];
+        specialArgs = {
+            host = "desktop";
+            inherit self inputs username;
+        };
+
       };
     };
   nixConfig = {
