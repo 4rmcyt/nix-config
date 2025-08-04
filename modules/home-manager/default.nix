@@ -50,11 +50,6 @@
           file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
         }
         {
-          name = "powerlevel10k";
-          src = pkgs.zsh-powerlevel10k;
-          file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
-        }
-        {
           name = "zsh-history-substring-search";
           src = pkgs.zsh-history-substring-search;
           file = "share/zsh-history-substring-search/zsh-history-substring-search.zsh";
