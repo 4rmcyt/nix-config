@@ -119,7 +119,7 @@
       homebrew-cask,
       flake-compat,
       hyprland,
-      hypr-contrib,   
+      hypr-contrib,
       ...
     }@inputs:
     let
