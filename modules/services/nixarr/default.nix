@@ -197,6 +197,15 @@ in
           proxyWebsockets = true;
         };
       };
+      # "transmission.labhome.work" = {
+      #   forceSSL = true;
+      #   sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+      #   sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+      #   locations."/" = {
+      #     proxyPass = "http://localhost:9091";
+      #     proxyWebsockets = true;
+      #   };
+      # };
     };
   };
 
