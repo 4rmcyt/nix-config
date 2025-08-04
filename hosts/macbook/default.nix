@@ -101,7 +101,15 @@
 
   programs = {
     nix-index.enable = true;
-    
+
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+      pinentryPackage = pkgs.pinentry_mac;
+      key = "129B4C451BE08617E579CF8A625FD6A8899D566D";
+
+    };
+
     nh = {
       enable = true;
       clean.enable = true;

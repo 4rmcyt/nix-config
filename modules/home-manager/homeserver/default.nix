@@ -132,11 +132,6 @@
       enable = true;
       enableZshIntegration = true;
     };
-
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
   };
 
   home.stateVersion = "25.05";
