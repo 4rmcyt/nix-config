@@ -8,6 +8,7 @@
 
   imports = [
     ../../modules/users/vk.nix
+    ../../modules/iterm2
   ];
 
   sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
