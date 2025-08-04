@@ -279,6 +279,70 @@
       flake = "/Users/vk/.config/nixos-config";
     };
 
+    programs = {
+    git = {
+      enable = true;
+      userName = "volodymyr.kondratenko@datos.live";
+      userEmail = "volodymyr.kondratenko@datos.live";
+      signing.key = "129B4C451BE08617E579CF8A625FD6A8899D566D";
+    };
+
+    fzf = {
+      enable = true;
+      enableZshIntegration = true;
+      colors = {
+        fg = "#D8DEE9";
+        bg = "#2E3440";
+        hl = "#A3BE8C";
+        "fg+" = "#D8DEE9";
+        "bg+" = "#434C5E";
+        "hl+" = "#A3BE8C";
+        pointer = "#BF616A";
+        info = "#4C566A";
+        spinner = "#4C566A";
+        header = "#4C566A";
+        prompt = "#81A1C1";
+        marker = "#EBCB8B";
+      };
+    };
+    zsh = {
+      enable = true;
+      syntaxHighlighting.enable = true;
+      autosuggestion.enable = true;
+      enableCompletion = true;
+      initContent = "source ~/.p10k.zsh";
+      plugins = [
+        {
+          name = "powerlevel10k";
+          src = pkgs.zsh-powerlevel10k;
+          file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
+        }
+        {
+          name = "zsh-history-substring-search";
+          src = pkgs.zsh-history-substring-search;
+          file = "share/zsh-history-substring-search/zsh-history-substring-search.zsh";
+        }
+        {
+          name = "zsh-you-should-use";
+          src = pkgs.zsh-you-should-use;
+          file = "share/zsh-you-should-use/zsh-you-should-use.plugin.zsh";
+        }
+        {
+          name = "nix-zsh-completions";
+          src = pkgs.nix-zsh-completions;
+          file = "share/zsh/site-functions/_nix";
+        }
+      ];
+      oh-my-zsh = {
+        enable = true;
+        plugins = [
+          "git"
+          "sudo"
+          "direnv"
+        ];
+      };
+    };
+
     security.pam.enableSudoTouchId = true;
   };
 }
