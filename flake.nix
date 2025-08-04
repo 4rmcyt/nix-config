@@ -10,10 +10,10 @@
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
     flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
 
-    agenix-darwin = {
+    agenix = {
       url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs-darwin";
-    };  
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     hyprland.url = "github:hyprwm/Hyprland";
 
