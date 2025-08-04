@@ -2,11 +2,12 @@
 
 {
   sops.secrets = {
-    cloudflare_api_token = {
-      sopsFile = ../../../secrets/cloudflare.yaml;
-      key = "cloudflare_api_key";
+    cloudflare_acme_credentials = {
+      sopsFile = ../../../secrets/cloudflare_acme_credentials.yaml;
+      owner = config.users.users.acme.name;
       group = config.users.groups.acme.name;
-      mode = "0440";
+      mode = "0400";
+      format = "yaml";
     };
   };
 
@@ -26,7 +27,7 @@
     domain = "*.labhome.work";
     extraDomainNames = [ "labhome.work" ];
     dnsProvider = "cloudflare";
-    credentialsFile = config.sops.secrets.cloudflare_api_token.path;
+    credentialsFile = config.sops.secrets.cloudflare_acme_credentials.path;
     postRun = "systemctl reload nginx.service";
   };
 
