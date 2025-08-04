@@ -77,9 +77,7 @@
       "browserpass"
       "python"
       "pinentry"
-      "pinentry-mac"
       "libusb"
-      "gnupg"
       "libgcrypt"
       "p11-kit"
       "gnutls"
@@ -138,7 +136,6 @@
     git-crypt
     gpgme
     wget
-    docker
     just
     cargo
     firefox
@@ -155,7 +152,6 @@
     srecord
     minipro
     pwgen
-    nh
     nix-output-monitor
     nvd
     plistwatch
@@ -316,11 +312,6 @@
             name = "zsh-you-should-use";
             src = pkgs.zsh-you-should-use;
             file = "share/zsh-you-should-use/zsh-you-should-use.plugin.zsh";
-          }
-          {
-            name = "nix-zsh-completions";
-            src = pkgs.nix-zsh-completions;
-            file = "share/zsh/site-functions/_nix";
           }
         ];
         oh-my-zsh = {
