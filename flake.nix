@@ -1,5 +1,5 @@
 {
-  description = "NixOS configuration";
+  description = "NixOS configuration for homeserver";
 
   nixConfig = {
     extra-substituters = [
@@ -146,27 +146,7 @@
           modules = [
             ./hosts/macbook
             nix-homebrew.darwinModules.nix-homebrew
-            # For better organization, you could move this inline block
-            # into a file like ./hosts/macbook/homebrew.nix
-            {
-              nix-homebrew = {
-                enable = true;
-                enableRosetta = true;
-                user = "vk";
-                taps = {
-                  "homebrew/homebrew-core" = homebrew-core;
-                  "homebrew/homebrew-cask" = homebrew-cask;
-                  "homebrew/homebrew-bundle" = homebrew-bundle;
-                };
-                mutableTaps = false;
-              };
-            }
             sops-nix.darwinModules.sops
-            # This block could be moved into ./hosts/macbook/sops.nix
-            {
-              sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
-              sops.defaultSopsFormat = "yaml";
-            }
           ];
         };
       };
@@ -191,11 +171,6 @@
               home-manager.users.zeev = import ./modules/home-manager;
             }
             sops-nix.nixosModules.sops
-            # This block could be moved into ./hosts/homeserver/sops.nix
-            {
-              sops.age.keyFile = "/var/lib/sops/age.key";
-              sops.defaultSopsFormat = "yaml";
-            }
             nix-index-database.nixosModules.nix-index
             nixarr.nixosModules.default
             nix-ld.nixosModules.nix-ld

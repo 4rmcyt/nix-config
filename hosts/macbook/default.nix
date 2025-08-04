@@ -10,6 +10,9 @@
     ../../modules/users/vk.nix
   ];
 
+  sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
+  sops.defaultSopsFormat = "yaml";
+
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
@@ -32,6 +35,18 @@
       automatic = true;
       dates = [ "weekly" ];
     };
+  };
+
+  nix-homebrew = {
+    enable = true;
+    enableRosetta = true;
+    user = "vk";
+    taps = {
+      "homebrew/homebrew-core" = homebrew-core;
+      "homebrew/homebrew-cask" = homebrew-cask;
+      "homebrew/homebrew-bundle" = homebrew-bundle;
+    };
+    mutableTaps = false;
   };
 
   services.nix-daemon.enable = true;
@@ -168,7 +183,7 @@
   nixpkgs.config.allowUnfree = true;
   programs.zsh.enable = true;
   programs.nix-index.enable = true;
-  system.stateVersion = 4; 
+  system.stateVersion = 4;
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   fonts = {
@@ -257,7 +272,7 @@
       enableSSHSupport = true;
     };
 
-    programs. nh = {
+    programs.nh = {
       enable = true;
       clean.enable = true;
       clean.extraArgs = "--keep-since 10d --keep 3";
