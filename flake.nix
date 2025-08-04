@@ -117,7 +117,7 @@
     }@inputs:
     {
       darwinConfigurations = {
-        macbook =  nix-darwin.lib.darwinSystem {
+        macbook =  nix-darwin.nixpkgs.lib.darwinSystem {
           system = "aarch64-darwin";
           specialArgs = {
             username = "vk";
