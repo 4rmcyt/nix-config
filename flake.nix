@@ -52,6 +52,9 @@
 
     waybar.url = "github:Alexays/Waybar";
     nix-gaming.url = "github:fufexan/nix-gaming";
+    # It is recommended to pin this input to a specific commit for reproducibility
+    # instead of tracking the 'master' branch. You can do this by running:
+    # nix flake lock --update-input darwin
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -114,7 +117,7 @@
 
   outputs =
     {
-      flake-utils,
+      self,
       nixpkgs,
       darwin,
       nix-homebrew,
@@ -129,17 +132,8 @@
       nixarr,
       nix-ld,
       authentik-nix,
-      self,
       ...
     }@inputs:
-    let
-      lib = nixpkgs.lib;
-      supportedSystems = [
-        "aarch64-darwin"
-        "x86_64-linux"
-      ];
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-    in
     {
       darwinConfigurations = {
         macbook = darwin.lib.darwinSystem {
@@ -152,6 +146,8 @@
           modules = [
             ./hosts/macbook
             nix-homebrew.darwinModules.nix-homebrew
+            # For better organization, you could move this inline block
+            # into a file like ./hosts/macbook/homebrew.nix
             {
               nix-homebrew = {
                 enable = true;
@@ -166,6 +162,7 @@
               };
             }
             sops-nix.darwinModules.sops
+            # This block could be moved into ./hosts/macbook/sops.nix
             {
               sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
               sops.defaultSopsFormat = "yaml";
@@ -174,7 +171,6 @@
         };
       };
 
-      # NixOS configurations (only for Linux)
       nixosConfigurations = {
         homeserver = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -188,12 +184,14 @@
             vscode-server.nixosModules.default
             disko.nixosModules.disko
             home-manager.nixosModules.home-manager
+            # This block could be moved into ./hosts/homeserver/home-manager.nix
             {
               home-manager.useGlobalPkgs = true;
               home-manager.extraSpecialArgs = { inherit inputs; };
               home-manager.users.zeev = import ./modules/home-manager;
             }
             sops-nix.nixosModules.sops
+            # This block could be moved into ./hosts/homeserver/sops.nix
             {
               sops.age.keyFile = "/var/lib/sops/age.key";
               sops.defaultSopsFormat = "yaml";
