@@ -10,7 +10,6 @@
 {
   imports = [
     ../../modules/users/vk.nix
-    ../../modules/iterm2
   ];
 
   sops = {
