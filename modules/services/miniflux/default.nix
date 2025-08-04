@@ -72,7 +72,7 @@
       BASE_URL = "https://miniflux.example.com";
       LISTEN_ADDR = "localhost:8086";
       DATABASE_MIGRATIONS = 1; 
-      DATABASE_URL = lib.mkForce "postgres://miniflux:${config.sops.secrets.miniflux_db_password.path}@/run/postgresql/miniflux?sslmode=disable";
+      DATABASE_URL = lib.mkForce "postgres://miniflux:${config.sops.secrets.miniflux_db_password.path}@/run/postgresql?sslmode=disable";
     };
   };
 
