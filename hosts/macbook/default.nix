@@ -35,10 +35,10 @@
         "@admin"
       ]; 
       warn-dirty = false;
-      cores = 4;
+      cores = 0;
       show-trace = true;
       download-buffer-size = 1073741824; # 1 GiB
-      max-jobs = 4;
+      max-jobs = "auto";
     };
   };
 
