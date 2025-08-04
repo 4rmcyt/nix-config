@@ -146,5 +146,4 @@
       };
     };
   };
-  security.pam.enableSudoTouchId = true;
 }
