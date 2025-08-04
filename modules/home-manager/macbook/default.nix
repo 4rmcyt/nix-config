@@ -1,5 +1,3 @@
-# ./modules/home-manager/vk-mac.nix
-
 { pkgs, ... }:
 
 {
