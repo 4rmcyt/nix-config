@@ -22,6 +22,7 @@
   # System-wide Nix settings
   nix = {
     package = pkgs.nixVersions.latest;
+    optimise.automatic = true;
     settings = {
       experimental-features = [
         "nix-command"
@@ -32,8 +33,7 @@
         "root"
         "vk"
         "@admin"
-      ];
-      optimise.automatic = true;
+      ]; 
       warn-dirty = false;
       cores = 4;
       show-trace = true;
