@@ -111,7 +111,6 @@
     zsh.enable = true;
   };
 
-  security.pam.enableSudoTouchId = true;
 
   system.defaults = {
     finder = {
@@ -175,5 +174,6 @@
     };
   };
 
+  security.pam.enableSudoTouchId = true;
   system.stateVersion = 25.05;
 }
