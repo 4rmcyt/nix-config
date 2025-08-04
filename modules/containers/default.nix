@@ -64,7 +64,7 @@
       environmentFiles = [ config.sops.secrets.containers_env.path ];
     };
     portainer = {
-      image = "ghcr.io/portainer/portainer-ce:latest";
+      image = "portainer/portainer-ce:alpine-sts";
       autoStart = true;
       networks = [ "podman" ];
       ports = [ "127.0.0.1:9000:9000" ];
