@@ -59,7 +59,6 @@
     vscode-server.inputs.nixpkgs.follows = "nixpkgs";
     nixarr.inputs.nixpkgs.follows = "nixpkgs";
     authentik-nix.inputs.nixpkgs.follows = "nixpkgs";
-    linkwarden.inputs.nixpkgs.follows = "nixpkgs";
     nix-gaming.inputs.nixpkgs.follows = "nixpkgs";
     snowfall-lib.inputs.nixpkgs.follows = "nixpkgs";
     
