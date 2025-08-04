@@ -111,7 +111,7 @@
     zsh.enable = true;
   };
 
-  system.defaults = {
+  system.defaults.CustomUserPreferences = {
     "com.apple.finder" = {
       _FXShowPosixPathInTitle = true;
       _FXSortFoldersFirst = true;
