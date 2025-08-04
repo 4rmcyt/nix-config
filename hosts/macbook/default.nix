@@ -34,10 +34,8 @@
     optimise.automatic = true;
   };
 
-  # This enables the daemon for multi-user builds.
   services.nix-daemon.enable = true;
 
-  # Declarative Homebrew package management via nix-darwin
   homebrew = {
     enable = true;
     onActivation = {
@@ -50,7 +48,7 @@
     casks = [
       "alt-tab"
       "displaylink"
-      "docker" # docker-desktop is now just 'docker'
+      "docker"
       "emclient"
       "fbreader"
       "font-hack-nerd-font"
@@ -80,7 +78,6 @@
     masApps = { };
   };
 
-  # Nix-managed packages available in the system profile
   environment.systemPackages = with pkgs; [
     age
     age-plugin-yubikey
@@ -189,7 +186,6 @@
       ShowSeconds = false;
       Show24Hour = true;
     };
-    # Settings for system-wide preferences
     NSGlobalDomain = {
       AppleICUForce24HourTime = true;
       AppleInterfaceStyle = "Dark";

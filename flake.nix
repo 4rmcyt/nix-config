@@ -17,122 +17,62 @@
   };
 
   inputs = {
-    flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
     nixos-hardware.url = "github:nixos/nixos-hardware";
-    linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
-    flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
+    disko.url = "github:nix-community/disko";
+    sops-nix.url = "github:Mic92/sops-nix";
+    agenix.url = "github:ryantm/agenix";
+    home-manager.url = "github:nix-community/home-manager";
+    darwin.url = "github:LnL7/nix-darwin/master";
+    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    homebrew-bundle = { url = "github:homebrew/homebrew-bundle"; flake = false; };
+    homebrew-core = { url = "github:homebrew/homebrew-core"; flake = false; };
+    homebrew-cask = { url = "github:homebrew/homebrew-cask"; flake = false; };
     hyprland.url = "github:hyprwm/Hyprland";
-
-    hypr-contrib = {
-      url = "github:hyprwm/contrib";
-      inputs.nixpkgs.follows = "hyprland/nixpkgs";
-    };
-
-    hyprpicker = {
-      url = "github:hyprwm/hyprpicker";
-      inputs.nixpkgs.follows = "hyprland/nixpkgs";
-    };
-
-    hyprlock = {
-      url = "github:hyprwm/hyprlock";
-      inputs = {
-        hyprgraphics.follows = "hyprland/hyprgraphics";
-        hyprlang.follows = "hyprland/hyprlang";
-        hyprutils.follows = "hyprland/hyprutils";
-        nixpkgs.follows = "hyprland/nixpkgs";
-        systems.follows = "hyprland/systems";
-      };
-    };
-
+    hypr-contrib.url = "github:hyprwm/contrib";
+    hyprpicker.url = "github:hyprwm/hyprpicker";
+    hyprlock.url = "github:hyprwm/hyprlock";
     waybar.url = "github:Alexays/Waybar";
-    nix-gaming.url = "github:fufexan/nix-gaming";
-    # It is recommended to pin this input to a specific commit for reproducibility
-    # instead of tracking the 'master' branch. You can do this by running:
-    # nix flake lock --update-input darwin
-    darwin = {
-      url = "github:LnL7/nix-darwin/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-homebrew = {
-      url = "github:zhaofengli-wip/nix-homebrew";
-    };
-    homebrew-bundle = {
-      url = "github:homebrew/homebrew-bundle";
-      flake = false;
-    };
-    homebrew-core = {
-      url = "github:homebrew/homebrew-core";
-      flake = false;
-    };
-    homebrew-cask = {
-      url = "github:homebrew/homebrew-cask";
-      flake = false;
-    };
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-index-database = {
-      url = "github:nix-community/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    vscode-server.url = "github:nix-community/nixos-vscode-server";
-    nixarr = {
-      url = "github:rasmus-kirk/nixarr";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nix-ld.url = "github:Mic92/nix-ld";
     nixvim.url = "github:nix-community/nixvim";
-
-    nix-ld = {
-      url = "github:Mic92/nix-ld";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    authentik-nix = {
-      url = "github:nix-community/authentik-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    snowfall-lib = {
-      url = "github:snowfallorg/lib";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nix-index-database.url = "github:nix-community/nix-index-database";
+    nixos-generators.url = "github:nix-community/nixos-generators";
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
+    flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
+    nixarr.url = "github:rasmus-kirk/nixarr";
+    authentik-nix.url = "github:nix-community/authentik-nix";
+    linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
+    nix-gaming.url = "github:fufexan/nix-gaming";
+    snowfall-lib.url = "github:snowfallorg/lib";
+    # Ensure all inputs that depend on nixpkgs use the same one
+    
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
+    darwin.inputs.nixpkgs.follows = "nixpkgs";
+    agenix.inputs.nixpkgs.follows = "nixpkgs";
+    nix-ld.inputs.nixpkgs.follows = "nixpkgs";
+    nixvim.inputs.nixpkgs.follows = "nixpkgs";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
+    vscode-server.inputs.nixpkgs.follows = "nixpkgs";
+    nixarr.inputs.nixpkgs.follows = "nixpkgs";
+    authentik-nix.inputs.nixpkgs.follows = "nixpkgs";
+    linkwarden.inputs.nixpkgs.follows = "nixpkgs";
+    nix-gaming.inputs.nixpkgs.follows = "nixpkgs";
+    snowfall-lib.inputs.nixpkgs.follows = "nixpkgs";
+    
   };
 
-  # This simplified function signature is more standard and should resolve the evaluation error.
-   outputs = { self, nixpkgs, ... }@inputs:
+  outputs = { self, nixpkgs, ... }@inputs:
     let
-      # Define a local lib to hold our helper functions
       lib = {
-        # Helper function to build a NixOS system.
-        # It takes the host-specific details and adds all the common modules.
-        mkNixosSystem = {
-          system ? "x86_64-linux",
-          host,
-          username,
-          modules,
-        }:
+        mkNixosSystem = { system ? "x86_64-linux", host, username, modules }:
           nixpkgs.lib.nixosSystem {
             inherit system;
             specialArgs = { inherit inputs host username; };
             modules = [
-              # Common modules for all NixOS hosts
               inputs.disko.nixosModules.disko
               inputs.sops-nix.nixosModules.sops
               inputs.home-manager.nixosModules.home-manager
@@ -145,23 +85,19 @@
               inputs.nixarr.nixosModules.default
               inputs.nix-ld.nixosModules.nix-ld
               inputs.authentik-nix.nixosModules.default
-
-              # Host-specific modules passed into the function
             ] ++ modules;
           };
 
-        # Helper function to build a Darwin (macOS) system.
-        mkDarwinSystem = {
-          system ? "aarch64-darwin",
-          host,
-          username,
-          modules,
-        }:
-          inputs.darwin.lib.darwinSystem {
+        mkDarwinSystem = { system ? "aarch64-darwin", host, username, modules }:
+          (inputs.darwin.lib.darwinSystem {
             inherit system;
-            specialArgs = { inherit inputs host username; };
+            specialArgs = { inherit inputs host username; } // {
+              homebrew-core = inputs.homebrew-core;
+              homebrew-cask = inputs.homebrew-cask;
+              homebrew-bundle = inputs.homebrew-bundle;
+            };
+
             modules = [
-              # Common modules for all Darwin hosts
               inputs.sops-nix.darwinModules.sops
               inputs.home-manager.darwinModules.home-manager
               {
@@ -172,7 +108,7 @@
               {
                 nix-homebrew = {
                   enable = true;
-                  enableRosetta = true; # For Apple Silicon
+                  enableRosetta = true;
                   user = username;
                   taps = {
                     "homebrew/homebrew-core" = inputs.homebrew-core;
@@ -182,14 +118,11 @@
                   mutableTaps = false;
                 };
               }
-
-              # Host-specific modules passed into the function
             ] ++ modules;
-          };
+          }).system;
       };
     in
     {
-      # --- NixOS Configurations ---
       nixosConfigurations = {
         homeserver = lib.mkNixosSystem {
           host = "homeserver";
@@ -201,7 +134,6 @@
         };
       };
 
-      # --- Darwin (macOS) Configurations ---
       darwinConfigurations = {
         macbook = lib.mkDarwinSystem {
           system = "aarch64-darwin";
