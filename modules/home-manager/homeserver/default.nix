@@ -56,10 +56,6 @@
       signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
     };
 
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
     
     nix-index.enable = true;
     nh = {
@@ -135,6 +131,11 @@
     direnv = {
       enable = true;
       enableZshIntegration = true;
+    };
+
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
     };
   };
 
