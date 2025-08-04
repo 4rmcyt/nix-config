@@ -15,6 +15,10 @@
   sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
   sops.defaultSopsFormat = "yaml";
 
+  system.primaryUser = "vk";
+  environment.shellInit = ''
+    ulimit -n 2048
+  '';
   # System-wide Nix settings
   nix = {
     package = pkgs.nixVersions.latest;
@@ -38,11 +42,12 @@
     };
     gc = {
       automatic = true;
-      dates = "weekly";
+      interval = "weekly";
     };
   };
 
-  services.nix-daemon.enable = true;
+
+  system.primaryUser 
 
   # Homebrew is a system-level integration
   homebrew = {
