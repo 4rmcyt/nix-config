@@ -72,7 +72,6 @@
         "portainer_data:/data"
       ];
       ports = [ "127.0.0.1:9444:9443" ];
-      environmentFiles = [ config.sops.secrets.containers_env.path ];
     };
   };
 }
