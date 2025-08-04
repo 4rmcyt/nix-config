@@ -2,13 +2,50 @@
 {
   home.packages = with pkgs; [
     git
-    nixfmt-rfc-style
     gnupg
-    meslo-lgs-nf
     nix-zsh-completions
     zsh-history-substring-search
     zsh-you-should-use
     zsh-powerlevel10k
+    # Shell & Editor
+    zsh
+    neovim
+    vim
+    meslo-lgs-nf
+    # Dev tools
+    direnv
+    go
+    python3Full
+    deploy-rs
+    just
+    nixfmt-rfc-style
+    nixpkgs-fmt
+    nil
+    # User Utils
+    pass
+    jq
+    mc
+    age
+    sops
+    ssh-to-age
+    openssh
+    dive
+    yamllint
+    nix-index
+    fzf
+    ffmpeg
+    trash-cli
+    zip
+    unar
+    unzip
+    p7zip
+    tree
+    git-crypt
+    borgbackup
+    nextdns # CLI tool for user
+    nh
+    nix-output-monitor
+    nvd
   ];
 
   programs = {
@@ -17,6 +54,26 @@
       userName = "4rmcyt";
       userEmail = "4rmcyt@gmail.com";
       signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
+    };
+
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+    
+    nix-index.enable = true;
+    nh = {
+      enable = true;
+      clean = {
+        enable = true;
+        extraArgs = "--keep-since 10d --keep 3";
+      };
+      flake = "/home/zeev/src/nixos-config";
+    };
+    
+    nixfmt-rfc-style = {
+      enable = true;
+      formatOnSave = true;
     };
 
     fzf = {

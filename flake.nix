@@ -59,11 +59,6 @@
     waybar.url = "github:Alexays/Waybar";
     nix-gaming.url = "github:fufexan/nix-gaming";
 
-    darwin = {
-      url = "github:LnL7/nix-darwin/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -132,6 +127,13 @@
           modules = [
             ./hosts/macbook
             inputs.sops-nix.darwinModules.sops
+            inputs.home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit inputs; };
+              home-manager.users.vk = import ./modules/home-manager/macbook;
+            }
           ];
         };
       };
@@ -152,7 +154,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.extraSpecialArgs = { inherit inputs; };
-              home-manager.users.zeev = import ./modules/home-manager;
+              home-manager.users.zeev = import ./modules/home-manager/homeserver;
             }
             inputs.sops-nix.nixosModules.sops
             inputs.nix-index-database.nixosModules.nix-index
