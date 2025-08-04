@@ -112,6 +112,15 @@
       nixarr,
       nix-ld,
       authentik-nix,
+      darwin,
+      nix-homebrew,
+      homebrew-bundle,
+      homebrew-core,
+      homebrew-cask,
+      inputs,
+      flake-compat,
+      hyprland,
+      hypr-contrib,   
       ...
     }@inputs:
     let
