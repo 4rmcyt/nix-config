@@ -6,13 +6,12 @@
 }:
 {
   sops.secrets = {
-    miniflux_creds = {
+    miniflux_admin_password = {
       sopsFile = ../../../secrets/miniflux.yaml;
-      key = "miniflux_admin_creds";
+      key = "miniflux_admin_pass";
       owner = config.users.users.miniflux.name;
       group = config.users.groups.miniflux.name;
       mode = "0400";
-      
     };
     miniflux_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
@@ -53,17 +52,18 @@
   environment.systemPackages = [ pkgs.miniflux ];
   services.miniflux = {
     enable = true;
-    adminCredentialsFile = config.sops.secrets.miniflux_creds.path; # path to admin credentials file
-    createDatabaseLocally = false; # create database on first run
     config = {
       WORKER_POOL_SIZE = "5"; # number of background workers
       POLLING_FREQUENCY = "60"; # feed refresh interval in minutes
       BATCH_SIZE = "100"; # number of feeds sent to queue each interval
+      CREATE_ADMIN = "true"; # create admin user on first run
+      ADMIN_USERNAME = 1; # admin username
+      ADMIN_PASSWORD = config.sops.secrets.miniflux_creds.path; 
       CLEANUP_ARCHIVE_READ_DAYS = "60"; # read items are removed after x days
       BASE_URL = "https://miniflux.example.com";
       LISTEN_ADDR = "localhost:8086";
-      DATABASE_MIGRATIONS = 1; # run database migrations on first run
-      DATABASE_URL = lib.mkForce "user=miniflux password=${config.sops.secrets.miniflux_db_password.path} dbname=miniflux sslmode=disable host=/run/postgresql";
+      DATABASE_MIGRATIONS = 1; 
+      DATABASE_URL = lib.mkForce "postgres://miniflux:${config.sops.secrets.miniflux_db_password.path}@/run/postgresql/miniflux?sslmode=disable";
     };
   };
 
