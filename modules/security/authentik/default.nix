@@ -46,7 +46,7 @@
       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
       locations."/" = {
         proxyWebsockets = true;
-        proxyPass = "https://127.0.0.1:9000";
+        proxyPass = "http://127.0.0.1:9000";
       };
     };
   };
