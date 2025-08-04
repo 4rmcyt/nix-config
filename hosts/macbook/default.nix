@@ -13,6 +13,7 @@
   sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
   sops.defaultSopsFormat = "yaml";
 
+  # Nix settings
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
@@ -20,9 +21,7 @@
         "nix-command"
         "flakes"
       ];
-      trusted-users = [
-        "vk"
-      ];
+      trusted-users = [ "root" "vk" ]; # 'root' is usually needed as well
       auto-optimise-store = true;
       warn-dirty = false;
       cores = 4;
@@ -31,14 +30,16 @@
       max-jobs = 4;
     };
 
-    optimise = {
+    # Replaced deprecated 'optimise' with 'gc'
+    gc = {
       automatic = true;
-      dates = [ "weekly" ];
+      dates = "weekly";
     };
   };
 
   services.nix-daemon.enable = true;
 
+  # Homebrew integration
   homebrew = {
     enable = true;
     onActivation = {
@@ -46,7 +47,7 @@
       cleanup = "zap";
       upgrade = true;
     };
-    brewPrefix = "/opt/homebrew/bin";
+    # 'brewPrefix' is not a valid option and has been removed.
     taps = [
       "amar1729/formulae"
     ];
@@ -54,109 +55,107 @@
       no_quarantine = true;
     };
     casks = [
+      "alt-tab"
       "displaylink"
-      "meetingbar"
-      "pycharm-ce"
-      "yubico-authenticator"
+      "docker-desktop"
+      "emclient"
+      "fbreader"
+      "font-hack-nerd-font"
+      "google-chrome"
       "linearmouse"
       "logitech-g-hub"
-      "fbreader"
-      "alt-tab"
-      "docker-desktop"
-      "google-chrome"
-      "font-hack-nerd-font"
-      "emclient"
-      "sublime-text"
+      "meetingbar"
+      "pycharm-ce"
       "raycast"
+      "sublime-text"
+      "yubico-authenticator"
     ];
     brews = [
-      "curl"
-      "go"
       "browserpass"
-      "python"
-      "pinentry"
-      "libusb"
-      "libgcrypt"
-      "p11-kit"
+      "curl"
       "gnutls"
+      "go"
+      "libgcrypt"
+      "libusb"
+      "p11-kit"
+      "pinentry"
+      "python"
       "unbound"
     ];
-    masApps = {
-    };
+    masApps = { };
   };
 
-  # The settings moved from your flake.nix
+  # System-wide packages available in the environment
   environment.systemPackages = with pkgs; [
-    mas
-    fzf
-    pet
-    direnv
-    git
-    pyenv
-    gh
-    tenv
-    delta
-    jq
-    yq
-    pandoc
-    lorri
-    btop
-    tree
-    jetbrains-mono
-    neofetch
-    nixfmt-rfc-style
-    opentofu
+    # Removed duplicates for 'git-crypt' and 'age-plugin-yubikey'
+    age
     age-plugin-yubikey
-    yubikey-manager
-    tailscale
-    jellyfin-media-player
-    dbeaver-bin
-    slack
-    telegram-desktop
-    iterm2
-    the-unarchiver
     appcleaner
-    vscode
-    wireguard-tools
-    zoom-us
-    youtube-music
-    neovim
-    pinentry-tty
+    bison
+    btop
+    cargo
+    dbeaver-bin
+    delta
     deploy-rs
-    git-crypt
-    pass
-    mc
-    nixos-generators
+    direnv
     fd
-    yubico-piv-tool
-    yubikey-personalization
-    pcsc-tools
+    firefox
+    flex
+    fzf
+    fontforge
+    gh
+    git
     git-crypt
     gpgme
-    wget
+    iterm2
+    jellyfin-media-player
+    jetbrains-mono
+    jq
     just
-    cargo
-    firefox
-    sops
-    age
-    ssh-to-age
-    age-plugin-yubikey
-    pipx
-    poetry
-    bison
-    flex
-    fontforge
-    utm
-    srecord
-    minipro
-    pwgen
-    nix-output-monitor
-    nvd
-    plistwatch
+    lorri
     m-cli
+    mas
+    mc
+    minipro
+    neofetch
+    neovim
+    nix-output-monitor
+    nixos-generators
+    nixfmt-rfc-style
+    nvd
+    opentofu
+    pandoc
+    pass
+    pcsc-tools
+    pet
+    pinentry-tty
+    pipx
+    plistwatch
+    poetry
+    pwgen
+    pyenv
+    sops
+    srecord
+    slack
+    ssh-to-age
+    tailscale
+    telegram-desktop
+    tenv
+    the-unarchiver
+    tree
+    utm
+    vscode
+    wget
+    wireguard-tools
+    yq
+    yubico-piv-tool
+    yubikey-manager
+    yubikey-personalization
+    youtube-music
+    zoom-us
   ];
 
-  # Fix variables to environment.variables
+  # Environment variables
   environment.variables = {
     EDITOR = "nvim";
     SHELL = "${pkgs.zsh}/bin/zsh";
@@ -164,23 +163,29 @@
     VISUAL = "nvim";
   };
 
+  # Nixpkgs configuration
   nixpkgs.config.allowUnfree = true;
-  programs.nix-index.enable = true;
   nixpkgs.hostPlatform = "aarch64-darwin";
 
-  fonts = {
-    packages = with pkgs; [
-      material-design-icons
-      font-awesome
-      fira-code
-    ];
-  };
+  # Font configuration
+  fonts.packages = with pkgs; [
+    material-design-icons
+    font-awesome
+    fira-code
+  ];
+
+  # Programs configuration
   programs = {
+    nix-index.enable = true;
+
     git = {
       enable = true;
       userName = "volodymyr.kondratenko@datos.live";
       userEmail = "volodymyr.kondratenko@datos.live";
-      signing.key = "129B4C451BE08617E579CF8A625FD6A8899D566D";
+      signing = {
+        key = "129B4C451BE08617E579CF8A625FD6A8899D566D";
+        signByDefault = true;
+      };
     };
 
     zsh = {
@@ -188,6 +193,7 @@
       syntaxHighlighting.enable = true;
       autosuggestion.enable = true;
       enableCompletion = true;
+      # This file must be created by the user, e.g. by running 'p10k configure'
       initContent = "source ~/.p10k.zsh";
       plugins = [
         {
@@ -216,93 +222,96 @@
       };
     };
 
-    # Fix defaults structure - needs to be under system
-    system.defaults = {
-      CustomUserPreferences = {
-        "com.apple.AdLib" = {
-          allowApplePersonalizedAdvertising = false;
-        };
-        "com.apple.controlcenter" = {
-          BatteryShowPercentage = true;
-        };
-        "com.apple.desktopservices" = {
-          DSDontWriteNetworkStores = true;
-          DSDontWriteUSBStores = true;
-        };
-        "com.apple.finder" = {
-          _FXSortFoldersFirst = true;
-          FXDefaultSearchScope = "SCcf";
-          ShowExternalHardDrivesOnDesktop = true;
-          ShowHardDrivesOnDesktop = false;
-          ShowMountedServersOnDesktop = true;
-          ShowRemovableMediaOnDesktop = true;
-        };
-        "com.apple.ImageCapture".disableHotPlug = true;
-        "com.apple.screencapture" = {
-          location = "~/Pictures/Screenshots";
-          type = "png";
-        };
-        "com.apple.SoftwareUpdate" = {
-          AutomaticCheckEnabled = true;
-          ScheduleFrequency = 1;
-          AutomaticDownload = 0;
-          CriticalUpdateInstall = 1;
-        };
-        "com.apple.TimeMachine".DoNotOfferNewDisksForBackup = true;
-        "com.apple.commerce".AutoUpdate = true;
-      };
-      NSGlobalDomain = {
-        AppleICUForce24HourTime = true;
-        AppleInterfaceStyle = "Dark";
-        AppleInterfaceStyleSwitchesAutomatically = false;
-        AppleMeasurementUnits = "Centimeters";
-        AppleMetricUnits = 1;
-        AppleTemperatureUnit = "Celsius";
-        InitialKeyRepeat = 15;
-        KeyRepeat = 2;
-        NSAutomaticCapitalizationEnabled = false;
-        NSAutomaticDashSubstitutionEnabled = false;
-        NSAutomaticPeriodSubstitutionEnabled = false;
-        NSAutomaticQuoteSubstitutionEnabled = false;
-        NSAutomaticSpellingCorrectionEnabled = true;
-        NSNavPanelExpandedStateForSaveMode = true;
-        NSNavPanelExpandedStateForSaveMode2 = true;
-      };
-      SoftwareUpdate = {
-        AutomaticallyInstallMacOSUpdates = false;
-      };
-      finder = {
-        _FXShowPosixPathInTitle = true;
-        FXEnableExtensionChangeWarning = false;
-        FXPreferredViewStyle = "Nlsv";
-        AppleShowAllExtensions = true;
-        AppleShowAllFiles = true;
-        QuitMenuItem = true;
-        ShowPathbar = true;
-        ShowStatusBar = true;
-      };
-      menuExtraClock = {
-        ShowAMPM = false;
-        ShowDate = 1; # Always
-        ShowSeconds = false;
-        Show24Hour = true;
-      };
+    gnupg.agent = {
+      enable = true;
+      pinentryPackage = pkgs.pinentry_mac;
+      enableSSHSupport = true;
+    };
 
-      programs.gnupg.agent = {
-        enable = true;
-        pinentryPackage = pkgs.pinentry_mac;
-        enableSSHSupport = true;
-      };
-
-      programs.nh = {
-        enable = true;
-        clean.enable = true;
-        clean.extraArgs = "--keep-since 10d --keep 3";
-        flake = "/Users/vk/.config/nixos-config";
-      };
-
-      security.pam.enableSudoTouchId = true;
+    nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 10d --keep 3";
+      flake = "/Users/vk/.config/nixos-config";
     };
   };
+
+  # Security settings
+  security.pam.enableSudoTouchId = true;
+
+  # macOS specific settings
+  system.defaults = {
+    # Settings for specific application domains
+    finder = {
+      _FXShowPosixPathInTitle = true;
+      _FXSortFoldersFirst = true;
+      AppleShowAllExtensions = true;
+      AppleShowAllFiles = true;
+      FXDefaultSearchScope = "SCcf";
+      FXEnableExtensionChangeWarning = false;
+      FXPreferredViewStyle = "Nlsv";
+      QuitMenuItem = true;
+      ShowExternalHardDrivesOnDesktop = true;
+      ShowHardDrivesOnDesktop = false;
+      ShowMountedServersOnDesktop = true;
+      ShowPathbar = true;
+      ShowRemovableMediaOnDesktop = true;
+      ShowStatusBar = true;
+    };
+
+    screencapture = {
+      location = "~/Pictures/Screenshots";
+      type = "png";
+    };
+
+    desktopservices = {
+      DSDontWriteNetworkStores = true;
+      DSDontWriteUSBStores = true;
+    };
+
+    SoftwareUpdate = {
+      AutomaticCheckEnabled = true;
+      ScheduleFrequency = 1;
+      AutomaticDownload = 0;
+      CriticalUpdateInstall = 1;
+      AutomaticallyInstallMacOSUpdates = false;
+    };
+
+    commerce.AutoUpdate = true;
+
+    menuExtraClock = {
+      ShowAMPM = false;
+      ShowDate = 1; # Always
+      ShowSeconds = false;
+      Show24Hour = true;
+    };
+
+    # Using domain names as keys
+    "com.apple.AdLib".allowApplePersonalizedAdvertising = false;
+    "com.apple.controlcenter".BatteryShowPercentage = true;
+    "com.apple.ImageCapture".disableHotPlug = true;
+    "com.apple.TimeMachine".DoNotOfferNewDisksForBackup = true;
+
+    # Global domain settings
+    NSGlobalDomain = {
+      AppleICUForce24HourTime = true;
+      AppleInterfaceStyle = "Dark";
+      AppleInterfaceStyleSwitchesAutomatically = false;
+      AppleMeasurementUnits = "Centimeters";
+      AppleMetricUnits = 1;
+      AppleTemperatureUnit = "Celsius";
+      InitialKeyRepeat = 15;
+      KeyRepeat = 2;
+      NSAutomaticCapitalizationEnabled = false;
+      NSAutomaticDashSubstitutionEnabled = false;
+      NSAutomaticPeriodSubstitutionEnabled = false;
+      NSAutomaticQuoteSubstitutionEnabled = false;
+      NSAutomaticSpellingCorrectionEnabled = true;
+      NSNavPanelExpandedStateForSaveMode = true;
+      NSNavPanelExpandedStateForSaveMode2 = true;
+    };
+  };
+
+  # Used by nix-darwin
   system.stateVersion = 25.05;
 }
