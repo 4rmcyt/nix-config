@@ -1,5 +1,5 @@
 {
-  description = "NixOS configuration";
+  description = "NixOS configuration for homeserver";
 
   nixConfig = {
     extra-substituters = [
@@ -115,76 +115,77 @@
     };
   };
 
-  outputs = inputs:
-    let
-      # A convenience alias for the nixpkgs library
-      lib = inputs.nixpkgs.lib;
-    in
-    {
-      darwinConfigurations = {
-        macbook = inputs.darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
-          specialArgs = {
-            username = "vk";
-            host = "macbook";
-            # Pass all inputs down to modules
-            inherit inputs;
-          };
-          modules = [
-            ./hosts/macbook
-            inputs.nix-homebrew.darwinModules.nix-homebrew
-            {
-              nix-homebrew = {
-                enable = true;
-                enableRosetta = true;
-                user = "vk";
-                taps = {
-                  "homebrew/homebrew-core" = inputs.homebrew-core;
-                  "homebrew/homebrew-cask" = inputs.homebrew-cask;
-                  "homebrew/homebrew-bundle" = inputs.homebrew-bundle;
+  outputs =
+    { self, ... }@inputs:
+    inputs.flake-utils.lib.eachSystem [ "aarch64-darwin" "x86_64-linux" ] (
+      system:
+      let
+        lib = inputs.nixpkgs.lib;
+      in
+      {
+        darwinConfigurations = lib.optionalAttrs (system == "aarch64-darwin") {
+          macbook = inputs.darwin.lib.darwinSystem {
+            inherit system;
+            specialArgs = {
+              username = "vk";
+              host = "macbook";
+              inherit inputs;
+            };
+            modules = [
+              ./hosts/macbook
+              inputs.nix-homebrew.darwinModules.nix-homebrew
+              {
+                nix-homebrew = {
+                  enable = true;
+                  enableRosetta = true;
+                  user = "vk";
+                  taps = {
+                    "homebrew/homebrew-core" = inputs.homebrew-core;
+                    "homebrew/homebrew-cask" = inputs.homebrew-cask;
+                    "homebrew/homebrew-bundle" = inputs.homebrew-bundle;
+                  };
+                  mutableTaps = false;
                 };
-                mutableTaps = false;
-              };
-            }
-            inputs.sops-nix.darwinModules.sops
-            {
-              sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
-              sops.defaultSopsFormat = "yaml";
-            }
-          ];
-        };
-      };
-
-      nixosConfigurations = {
-        homeserver = lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            host = "homeserver";
-            username = "zeev";
-            # Pass all inputs down to modules
-            inherit inputs;
+              }
+              inputs.sops-nix.darwinModules.sops
+              {
+                sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
+                sops.defaultSopsFormat = "yaml";
+              }
+            ];
           };
-          modules = [
-            ./hosts/homeserver
-            inputs.vscode-server.nixosModules.default
-            inputs.disko.nixosModules.disko
-            inputs.home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.extraSpecialArgs = { inherit inputs; };
-              home-manager.users.zeev = import ./modules/home-manager;
-            }
-            inputs.sops-nix.nixosModules.sops
-            {
-              sops.age.keyFile = "/var/lib/sops/age.key";
-              sops.defaultSopsFormat = "yaml";
-            }
-            inputs.nix-index-database.nixosModules.nix-index
-            inputs.nixarr.nixosModules.default
-            inputs.nix-ld.nixosModules.nix-ld
-            inputs.authentik-nix.nixosModules.default
-          ];
         };
-      };
-    };
+
+        nixosConfigurations = lib.optionalAttrs (system == "x86_64-linux") {
+          homeserver = lib.nixosSystem {
+            inherit system;
+            specialArgs = {
+              host = "homeserver";
+              username = "zeev";
+              inherit inputs;
+            };
+            modules = [
+              ./hosts/homeserver
+              inputs.vscode-server.nixosModules.default
+              inputs.disko.nixosModules.disko
+              inputs.home-manager.nixosModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.extraSpecialArgs = { inherit inputs; };
+                home-manager.users.zeev = import ./modules/home-manager;
+              }
+              inputs.sops-nix.nixosModules.sops
+              {
+                sops.age.keyFile = "/var/lib/sops/age.key";
+                sops.defaultSopsFormat = "yaml";
+              }
+              inputs.nix-index-database.nixosModules.nix-index
+              inputs.nixarr.nixosModules.default
+              inputs.nix-ld.nixosModules.nix-ld
+              inputs.authentik-nix.nixosModules.default
+            ];
+          };
+        };
+      }
+    );
 }
