@@ -146,9 +146,7 @@
     darwinSystem = "aarch64-darwin";
   in
   flake-utils.lib.eachDefaultSystem (system: {
-    # System-specific outputs
   }) // {
-    # Global outputs like nixosConfigurations
     darwinConfigurations = lib.optionalAttrs (builtins.currentSystem == "aarch64-darwin") {
       macbook = darwin.lib.darwinSystem {
         system = darwinSystem;
