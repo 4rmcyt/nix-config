@@ -117,86 +117,86 @@ in
     7359 # Jellyfin discovery
   ];
 
-  services.nginx = {
-    enable = true;        
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
-    virtualHosts = {
-      "audiobookshelf.labhome.work" = {
-        forceSSL = true;
-        sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
-        sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
-        locations."/" = {
-          proxyPass = "http://localhost:9292";
-          proxyWebsockets = true;
-        };
-      };
-      "jellyfin.labhome.work" = {
-        forceSSL = true;
-        sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
-        sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
-        locations."/" = {
-          proxyPass = "http://localhost:8096";
-          proxyWebsockets = true;
-        };
-      };
-      "bazarr.labhome.work" = {
-        forceSSL = true;
-        sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
-        sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
-        locations."/" = {
-          proxyPass = "http://localhost:6767";
-          proxyWebsockets = true;
-        };
-      };
-      "lidarr.labhome.work" = {
-        forceSSL = true;
-        sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
-        sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
-        locations."/" = {
-          proxyPass = "http://localhost:8686";
-          proxyWebsockets = true;
-        };
-      };
-      "prowlarr.labhome.work" = {
-        forceSSL = true;
-        sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
-        sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
-        locations."/" = {
-          proxyPass = "http://localhost:9696";
-          proxyWebsockets = true;
-        };
-      };
-      "radarr.labhome.work" = {
-        forceSSL = true;
-        sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
-        sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
-        locations."/" = {
-          proxyPass = "http://localhost:7878";
-          proxyWebsockets = true;
-        };
-      };
-      "sonarr.labhome.work" = {
-        forceSSL = true;
-        sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
-        sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
-        locations."/" = {
-          proxyPass = "http://localhost:8989";
-          proxyWebsockets = true;
-        };
-      };
-      "jellyseerr.labhome.work" = {
-        forceSSL = true;
-        sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
-        sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
-        http2 = true;
-        locations."/" = {
-          proxyPass = "http://localhost:5055";
-          proxyWebsockets = true;
-        };
-      };
+  # services.nginx = {
+  #   enable = true;        
+  #   recommendedGzipSettings = true;
+  #   recommendedOptimisation = true;
+  #   recommendedProxySettings = true;
+  #   recommendedTlsSettings = true;
+  #   virtualHosts = {
+  #     "audiobookshelf.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:9292";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "jellyfin.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:8096";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "bazarr.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:6767";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "lidarr.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:8686";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "prowlarr.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:9696";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "radarr.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:7878";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "sonarr.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:8989";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "jellyseerr.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       http2 = true;
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:5055";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
       # "transmission.labhome.work" = {
       #   forceSSL = true;
       #   sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
@@ -206,8 +206,8 @@ in
       #     proxyWebsockets = true;
       #   };
       # };
-    };
-  };
+  #   };
+  # };
 
   environment.etc."nixos/scripts/add-trackers.sh" = {
     mode = "0755";
