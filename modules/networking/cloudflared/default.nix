@@ -48,7 +48,7 @@
           "link.labhome.work" = "http://localhost:12522";
           "kuma.labhome.work" = "http://localhost:3001";
           "auth.labhome.work" = "http://localhost:8080";
-          "portainer.labhome.work" = "http://localhost:9443";
+          "portainer.labhome.work" = "http://localhost:9444";
         };
       };
     };
