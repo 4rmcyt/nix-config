@@ -1,28 +1,41 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, pkgs, username, ... }:
 {
-  system.primaryUser = "vk";
-  environment.shellInit = ''
-    ulimit -n 2048
-  '';
-  # The settings you added
 
-  nix.settings = {
-    trusted-users = [
-      "root"
-      "vk"
-    ];
-    experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
-    warn-dirty = false;
-  };
-  nix.gc = {
-    automatic = lib.mkDefault true;
-    options = lib.mkDefault "--delete-older-than 1w";
-  };
 
-  nix.optimise.automatic = true;
+  imports = [
+    ./hardware-configuration.nix
+    ../../modules/users/vk.nix
+    ../../modules/darwin
+  ];
+
+  nix = {
+    package = pkgs.nixVersions.latest;
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [
+        "vk"
+      ];
+      auto-optimise-store = true;
+      warn-dirty = false;
+      cores = 4;
+      show-trace = true;
+      download-buffer-size = 1073741824; # 1 GiB
+      max-jobs = 4;
+    };
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 10d";
+    };
+
+    optimise = {
+      automatic = true;
+      dates = [ "weekly" ];
+    };
+  };
 
   homebrew = {
     enable = true;
@@ -139,7 +152,7 @@
     minipro
     pwgen
   ];
-  nix.package = pkgs.nix;
+  
   nixpkgs.config.allowUnfree = true;
   programs.zsh.enable = true;
   programs.nix-index.enable = true;

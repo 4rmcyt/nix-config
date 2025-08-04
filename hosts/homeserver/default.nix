@@ -9,7 +9,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/users
+    ../../modules/users/zeev.nix
     ../../modules/networking
     ../../modules/services
     ../../modules/base
