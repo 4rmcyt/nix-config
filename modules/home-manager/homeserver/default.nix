@@ -46,6 +46,7 @@
     nh
     nix-output-monitor
     nvd
+    pinentry-tty
   ];
   
   programs = {
