@@ -2,10 +2,41 @@
   description = "NixOS configuration for homeserver";
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
+    
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    
     nixos-hardware.url = "github:nixos/nixos-hardware";
+    
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
     flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
+
+    hyprland.url = "github:hyprwm/Hyprland";
+    
+    hypr-contrib = {
+      url = "github:hyprwm/contrib";
+      inputs.nixpkgs.follows = "hyprland/nixpkgs";
+    };
+
+    hyprpicker = {
+      url = "github:hyprwm/hyprpicker";
+      inputs.nixpkgs.follows = "hyprland/nixpkgs";
+    };
+
+    hyprlock = {
+      url = "github:hyprwm/hyprlock";
+      inputs = {
+        hyprgraphics.follows = "hyprland/hyprgraphics";
+        hyprlang.follows = "hyprland/hyprlang";
+        hyprutils.follows = "hyprland/hyprutils";
+        nixpkgs.follows = "hyprland/nixpkgs";
+        systems.follows = "hyprland/systems";
+      };
+    };
+
+    waybar.url = "github:Alexays/Waybar";
+    
+    nix-gaming.url = "github:fufexan/nix-gaming"; 
+    
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
