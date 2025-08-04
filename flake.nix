@@ -100,7 +100,7 @@
     };
   };
 
- outputs =
+  outputs =
     {
       self,
       nixpkgs,
@@ -115,6 +115,7 @@
       authentik-nix,
       ...
     }@inputs:
+    {
       darwinConfigurations = {
         macbook = nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
