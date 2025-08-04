@@ -205,8 +205,9 @@
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit inputs; };
-            home-manager.users.vk = import ./modules/home-manager;
+            home-manager.users.vk = import ./modules/home-manager/vk.nix;
           }
         ];
       };

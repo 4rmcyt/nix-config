@@ -1,4 +1,4 @@
-{ pkgs, lib, pkgs, username, ... }:
+{ pkgs, lib, username, ... }:
 {
 
 
@@ -25,7 +25,7 @@
     };
     gc = {
       automatic = true;
-      dates = "weekly";
+      interval.Day = 7;  # Use interval instead of dates for nix-darwin
       options = "--delete-older-than 10d";
     };
 
@@ -158,7 +158,8 @@
     m-cli
   ];
 
-  variables = {
+  # Fix variables to environment.variables
+  environment.variables = {
     EDITOR = "nvim";
     SHELL = "${pkgs.zsh}/bin/zsh";
     SYSTEMD_EDITOR = "nvim";
@@ -167,8 +168,8 @@
 
   nixpkgs.config.allowUnfree = true;
   programs.zsh.enable = true;
-  programs.nix-index.enable = true;
-  system.stateVersion = 5;
+  # programs.nix-index.enable = true; # Remove this - not available in nix-darwin
+  system.stateVersion = 4; # Fix state version for nix-darwin
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   fonts = {
@@ -179,7 +180,8 @@
     ];
   };
 
-  defaults ={
+  # Fix defaults structure - needs to be under system
+  system.defaults = {
     CustomUserPreferences = {
         "com.apple.AdLib" = {
           allowApplePersonalizedAdvertising = false;
@@ -250,8 +252,5 @@
     Show24Hour = true;
   };
 
-  users.users.vk = {
-    name = "vk";
-    home = "/Users/vk";
-  };
+  security.pam.enableSudoTouchId = true;
 }
