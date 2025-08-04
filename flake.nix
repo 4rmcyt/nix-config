@@ -118,11 +118,11 @@
   # This simplified function signature is more standard and should resolve the evaluation error.
   outputs = inputs:
     let
-      lib = inputs.nixpkgs.lib;
+      lib = nixpkgs.lib;
     in
     {
       darwinConfigurations = {
-        macbook = inputs.darwin.lib.darwinSystem {
+        macbook = lib.darwinSystem {
           system = "aarch64-darwin";
           specialArgs = {
             username = "vk";
