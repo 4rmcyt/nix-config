@@ -104,7 +104,7 @@
     {
       self,
       nixpkgs,
-      darwin,
+      nix-darwin,
       sops-nix,
       vscode-server,
       disko,
@@ -117,7 +117,7 @@
     }@inputs:
     {
       darwinConfigurations = {
-        macbook = nix-darwin.lib.darwinSystem {
+        macbook =  nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           specialArgs = {
             username = "vk";
