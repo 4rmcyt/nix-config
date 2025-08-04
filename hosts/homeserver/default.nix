@@ -182,7 +182,7 @@
     };
     zsh.enable = true;
 
-    nix-ld.enable = false;
+    nix-ld.enable = true;
 
     nix-index = {
       enable = true;

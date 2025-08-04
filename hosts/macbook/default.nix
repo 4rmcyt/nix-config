@@ -100,19 +100,27 @@
   ];
 
   programs = {
-    nix-index.enable = true;
-
+    git = {
+      enable = true;
+      userName = "vk";
+      userEmail = "vk@example.com";
+      signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
+    };
+    
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
     };
 
-    nh = {
+    zsh.enable = true;
+
+    nix-ld.enable = false;
+
+    nix-index = {
       enable = true;
-      clean.enable = true;
-      clean.extraArgs = "--keep-since 10d --keep 3";
-      flake = "/Users/vk/.config/nixos-config";
+      enableZshIntegration = true;
     };
+
   };
 
   security.pam.enableSudoTouchId = true;
