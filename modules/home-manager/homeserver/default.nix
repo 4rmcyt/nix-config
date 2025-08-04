@@ -67,10 +67,7 @@
       flake = "/home/zeev/src/nixos-config";
     };
     
-    nixfmt-rfc-style = {
-      enable = true;
-      formatOnSave = true;
-    };
+
 
     fzf = {
       enable = true;
