@@ -46,9 +46,6 @@
     };
   };
 
-
-  system.primaryUser 
-
   # Homebrew is a system-level integration
   homebrew = {
     enable = true;
