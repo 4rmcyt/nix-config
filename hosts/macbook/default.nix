@@ -42,7 +42,6 @@
     };
     gc = {
       automatic = true;
-      interval = "weekly";
     };
   };
 
