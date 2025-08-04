@@ -1,4 +1,3 @@
-# inspiration: https://github.com/mateusauler/nixos-config
 {
   sopsKeyPath ? "gpg/key",
   sopsPasswdPath ? "gpg/passwd",
@@ -11,7 +10,6 @@ let
   getSecretKeyIDs = "$(${pkgs.gnupg}/bin/gpg --list-secret-keys --keyid-format LONG | ${pkgs.gawk}/bin/awk '/sec/{if (match($0, /([0-9A-F]{16,})/, m)) print m[1]}')";
 in
 {
-  # Change to user's sops file if not main key
   sops.secrets."${sopsKeyPath}" = {
     owner = config.hostSpec.username;
     sopsFile = ../../../secrets/shared.yaml;

@@ -255,7 +255,12 @@
       ShowSeconds = false;
       Show24Hour = true;
     };
-
+    
+    programs.gnupg.agent = {
+      enable = true;
+      pinentryPackage = pkgs.pinentry-mac;
+      enableSSHSupport = true;
+    };
     security.pam.enableSudoTouchId = true;
   };
 }
