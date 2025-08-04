@@ -20,6 +20,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     nixos-hardware.url = "github:nixos/nixos-hardware";
+    nixpkgs-darwin.url = "github:nixos/nixpkgs-darwin";
     disko.url = "github:nix-community/disko";
     sops-nix.url = "github:Mic92/sops-nix";
     agenix.url = "github:ryantm/agenix";
@@ -98,11 +99,6 @@
 
             modules = [
               inputs.sops-nix.darwinModules.sops
-              inputs.home-manager.darwinModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.extraSpecialArgs = { inherit inputs host username; };
-              }
               inputs.nix-homebrew.darwinModules.nix-homebrew
               {
                 nix-homebrew = {
