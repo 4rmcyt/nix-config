@@ -27,6 +27,7 @@
       download-buffer-size = 1073741824; # 1 GiB
       max-jobs = 4;
     };
+    
     gc = {
       automatic = true;
       interval.Day = 7; # Use interval instead of dates for nix-darwin
@@ -255,7 +256,7 @@
       ShowSeconds = false;
       Show24Hour = true;
     };
-    
+
     programs.gnupg.agent = {
       enable = true;
       pinentryPackage = pkgs.pinentry-mac;
