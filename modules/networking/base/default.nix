@@ -38,6 +38,7 @@
 
         # Database & Infrastructure
         5432 # PostgreSQL (if needed externally)
+        9091
 
       ];
 
