@@ -55,7 +55,6 @@
 
   # System-wide programs and security
   programs = {
-    nix-ld.enable = false; # Set to false, as per original config
     nix-index.enable = true; # Enable the daemon system-wide
     gnupg.agent = {
       enable = true;
