@@ -66,37 +66,37 @@
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
 
-    virtualHosts = {
-      "prometheus.example.com" = {
-        forceSSL = true;
-        sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
-        sslCertificateKey = "/var/lib/acme/example.com/key.pem";
-        locations."/" = {
-          proxyPass = "http://localhost:9090";
-          proxyWebsockets = true;
-        };
-      };
-      "uptime-kuma.example.com" = {
-        forceSSL = true;
-        sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
-        sslCertificateKey = "/var/lib/acme/example.com/key.pem";
-        locations."/" = {
-          proxyPass = "http://localhost:3001";
-          proxyWebsockets = true;
-        };
-      };
-      "grafana.example.com" = {
-        forceSSL = true;
-        sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
-        sslCertificateKey = "/var/lib/acme/example.com/key.pem";
-        locations."/grafana/" = {
-          # FIX: Added trailing slash to correctly handle the subpath
-          proxyPass = "http://localhost:3000/";
-          proxyWebsockets = true;
-        };
-      };
-    };
-  };
+  #   virtualHosts = {
+  #     "prometheus.example.com" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/example.com/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:9090";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "uptime-kuma.example.com" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/example.com/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:3001";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "grafana.example.com" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/example.com/key.pem";
+  #       locations."/grafana/" = {
+  #         # FIX: Added trailing slash to correctly handle the subpath
+  #         proxyPass = "http://localhost:3000/";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #   };
+  # };
 
   services.prometheus = {
     enable = true;
