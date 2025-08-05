@@ -274,10 +274,7 @@
     };
   };
 
-  services.prometheus-cloudflare-exporter = {
-    enable = true;
-    tokenFile = config.sops.secrets.cloudflare_prometheus_exporter_token.path;
-  };
+
 
   systemd.tmpfiles.rules = [
     "d /var/lib/grafana 0755 grafana grafana -"
