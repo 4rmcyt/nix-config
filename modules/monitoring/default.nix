@@ -220,12 +220,6 @@
 
     provision.dashboards.settings.providers = [
       {
-        name = "System Dashboard";
-        type = "file";
-        options.path = "/etc/grafana/dashboards/system.json";
-        options.foldersFromFilesStructure = true;
-      }
-      {
         name = "Custom Dashboards";
         type = "file";
         options.path = ./.;
