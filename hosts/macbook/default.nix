@@ -89,6 +89,7 @@
       "p11-kit"
       "gnutls"
       "unbound"
+      "tailscale"
     ];
     masApps = {
     };

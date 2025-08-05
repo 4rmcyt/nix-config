@@ -56,7 +56,6 @@
     srecord
     slack
     ssh-to-age
-    tailscale
     tenv
     the-unarchiver
     tree
