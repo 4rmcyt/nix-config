@@ -2,14 +2,10 @@
   config,
   pkgs,
   lib,
-  inputs,
   ...
 }:
 
 {
-  imports = [
-    inputs.cloudflare-exporter.nixosModules.default
-  ];
 
   sops.secrets = {
     grafana_admin_password = {
