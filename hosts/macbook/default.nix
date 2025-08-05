@@ -74,6 +74,7 @@
       "emclient"
       "sublime-text"
       "raycast"
+      "telegram-desktop"
     ];
     brews = [
       "curl"

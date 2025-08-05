@@ -57,7 +57,6 @@
     slack
     ssh-to-age
     tailscale
-    telegram-desktop
     tenv
     the-unarchiver
     tree
