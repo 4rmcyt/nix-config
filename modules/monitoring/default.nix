@@ -25,8 +25,8 @@
     cloudflare_prometheus_exporter_token = {
       sopsFile = ../../secrets/cloudflare-prometheus-exporter.yaml;
       key = "cloudflare_prometheus_exporter_token";
-      owner = config.users.users.cloudflare-prometheus-exporter.name;
-      group = config.users.groups.cloudflare-prometheus-exporter.name;
+      owner = config.users.users.prometheus.name;
+      group = config.users.groups.prometheus.name;
       mode = "0400";
     };
   };
@@ -50,18 +50,12 @@
       group = "prometheus";
       extraGroups = [ "users" ];
     };
-    prometheus-cloudflare-exporter = {
-      isSystemUser = true;
-      group = "prometheus-cloudflare-exporter";
-      extraGroups = [ "users" ];
-    };
   };
 
   users.groups = {
     grafana = { };
     uptime-kuma = { };
     prometheus = { };
-    prometheus-cloudflare-exporter = { };
   };
 
   networking.firewall.allowedTCPPorts = [
