@@ -213,7 +213,6 @@
       type = "postgres";
       host = "/run/postgresql";
       user = "grafana";
-      # Note: Consider using a separate DB password (see recommendations)
       passwordFile = config.sops.secrets.grafana_db_password.path;
     };
     security = {
@@ -237,7 +236,7 @@
       {
         name = "System Dashboard";
         type = "file";
-        options.path = "/etc/grafana/dashboards/system.json";
+        options.path = "./dashboards";
         options.foldersFromFilesStructure = true;
       }
       {
