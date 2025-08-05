@@ -225,10 +225,10 @@
         options.path = "/etc/grafana/dashboards/system.json";
         options.foldersFromFilesStructure = true;
       }
-       {
+      {
         name = "Custom Dashboards";
         type = "file";
-        options.path = ./.; 
+        options.path = ./.;
         options.foldersFromFilesStructure = true;
       }
     ];
@@ -242,4 +242,8 @@
     };
   };
 
+  systemd.tmpfiles.rules = [
+    "d /var/lib/grafana 0755 grafana grafana -"
+    "d /var/lib/grafana/dashboards 0755 grafana grafana -"
+  ];
 }
