@@ -75,6 +75,7 @@
       "sublime-text"
       "raycast"
       "jellyfin-media-player"
+      "telegram-desktop"
     ];
     brews = [
       "curl"

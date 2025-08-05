@@ -27,7 +27,6 @@
     gpgme
     iterm2
     jetbrains-mono
-    telegram-desktop
     jq
     just
     lorri
