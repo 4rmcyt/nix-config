@@ -65,6 +65,7 @@
     grafana = { };
     uptime-kuma = { };
     prometheus = { };
+    cloudflare-prometheus-exporter = { };
   };
 
   networking.firewall.allowedTCPPorts = [
