@@ -22,10 +22,10 @@
     nixos-hardware.url = "github:nixos/nixos-hardware";
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
     flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
-    
+
     nix-darwin.url = "github:LnL7/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    
+
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -140,7 +140,8 @@
           ];
         };
       };
-      darwinConfigurations.macbook = nix-darwin.lib.darwinSystem {
+      darwinConfigurations = {
+        macbook = nix-darwin.lib.darwinSystem {
           specialArgs = {
             username = "vk";
             host = "macbook";
@@ -149,7 +150,7 @@
           modules = [
             ./hosts/macbook
             {
-            nixpkgs.hostPlatform = "aarch64-darwin";
+              nixpkgs.hostPlatform = "aarch64-darwin";
             }
             inputs.sops-nix.darwinModules.sops
             inputs.home-manager.darwinModules.home-manager
@@ -161,5 +162,6 @@
             }
           ];
         };
+      };
     };
 }
