@@ -59,10 +59,6 @@
     waybar.url = "github:Alexays/Waybar";
     nix-gaming.url = "github:fufexan/nix-gaming";
 
-    cloudflare-exporter = {
-      url = "https://codeberg.org/marie/cloudflare-prometheus-exporter/archive/main.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
