@@ -56,6 +56,7 @@
     9090 # Prometheus
     9100 # Node Exporter
     9948 # NextDNS Exporter
+    9187 # PostgreSQL Exporter
     3001 # Uptime Kuma
   ];
 
@@ -141,6 +142,17 @@
           }
         ];
       }
+      {
+        job_name = "postgres-exporter";
+        static_configs = [
+          {
+            targets = [ "localhost:9187" ];
+            labels = {
+              instance = "homeserver";
+            };
+          }
+        ];
+      }
       # {
       #   job_name = "cloudflare-exporter";
       #   static_configs = [{
@@ -171,6 +183,13 @@
         ];
         port = 9100;
       };
+
+      postgres = {
+        enable = true;
+        listenAddress = "127.0.0.1";
+        port = 9187;
+      };
+
       # cloudflare = {
       #   enable = true;
       #   port = 27196;
