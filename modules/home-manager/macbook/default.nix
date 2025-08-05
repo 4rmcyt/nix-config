@@ -15,7 +15,6 @@
     dbeaver-bin
     delta
     deploy-rs
-    direnv
     fd
     firefox
     flex
