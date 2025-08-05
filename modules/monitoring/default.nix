@@ -270,7 +270,7 @@
 
   services.cloudflare-prometheus-exporter = {
     enable = true;
-    tokenFile = config.age.secrets.cloudflare_prometheus_exporter_token.path;
+    tokenFile = config.sops.secrets.cloudflare_prometheus_exporter_token.path;
   };
 
   systemd.tmpfiles.rules = [
