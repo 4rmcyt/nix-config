@@ -2,10 +2,14 @@
   config,
   pkgs,
   lib,
+  inputs,
   ...
 }:
 
 {
+  imports = [
+    inputs.cloudflare-exporter.nixosModules.default
+  ];
 
   sops.secrets = {
     grafana_admin_password = {
@@ -20,6 +24,13 @@
       key = "grafana_db_password";
       owner = config.users.users.postgresql.name;
       group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+    cloudflare_prometheus_exporter_token = {
+      sopsFile = ../../secrets/cloudflare-prometheus-exporter.yaml;
+      key = "cloudflare_prometheus_exporter_token";
+      owner = config.users.users.cloudflare-prometheus-exporter.name;
+      group = config.users.groups.cloudflare-prometheus-exporter.name;
       mode = "0400";
     };
   };
@@ -58,6 +69,7 @@
     9948 # NextDNS Exporter
     9187 # PostgreSQL Exporter
     3001 # Uptime Kuma
+    27196 # Cloudflare Exporter
   ];
 
   services.nginx = {
@@ -153,13 +165,13 @@
           }
         ];
       }
-      # {
-      #   job_name = "cloudflare-exporter";
-      #   static_configs = [{
-      #     targets = [ "localhost:27196" ];
-      #     labels = { instance = "homeserver"; };
-      #   }];
-      # }
+      {
+        job_name = "cloudflare-exporter";
+        static_configs = [{
+          targets = [ "localhost:27196" ];
+          labels = { instance = "homeserver"; };
+        }];
+      }
 
     ];
 
@@ -167,14 +179,10 @@
       node = {
         enable = true;
         enabledCollectors = [
-          "systemd"
-          "processes"
-          "interrupts"
+          "smartctl"
           "cpu"
           "diskstats"
           "meminfo"
-          "netdev"
-          "netstat"
           "btrfs"
           "stat"
           "time"
@@ -253,6 +261,11 @@
       port = "3001";
       bind_address = "127.0.0.1";
     };
+  };
+
+  services.cloudflare-prometheus-exporter = {
+    enable = true;
+    tokenFile = config.age.secrets.cloudflare_prometheus_exporter_token.path;
   };
 
   systemd.tmpfiles.rules = [
