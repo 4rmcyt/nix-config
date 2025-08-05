@@ -23,6 +23,12 @@
   sops.age.keyFile = "/var/lib/sops/age.key";
   sops.defaultSopsFormat = "yaml";
 
+  nixpkgs.hostPlatform = {
+    gcc.arch = "skylake";
+    gcc.tune = "skylake";
+    system = "x86_64-linux";
+  }
+
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {

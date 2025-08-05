@@ -28,7 +28,8 @@
         "nix-command"
         "flakes"
       ];
-      # Merged trusted-users from both files
+      fallback = true; # Fallback to the latest stable version of Nix
+      
       trusted-users = [
         "root"
         "vk"
