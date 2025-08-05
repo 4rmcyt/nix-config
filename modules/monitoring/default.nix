@@ -54,9 +54,9 @@
       group = "prometheus";
       extraGroups = [ "users" ];
     };
-    "cloudflare-prometheus-exporter" = {
+    cloudflare-exporter = {
       isSystemUser = true;
-      group = "cloudflare-prometheus-exporter";
+      group = "cloudflare-exporter";
       extraGroups = [ "users" ];
     };
   };
@@ -65,7 +65,7 @@
     grafana = { };
     uptime-kuma = { };
     prometheus = { };
-    cloudflare-prometheus-exporter = { };
+    cloudflare-exporter = { };
   };
 
   networking.firewall.allowedTCPPorts = [
@@ -269,7 +269,7 @@
     };
   };
 
-  services.cloudflare-prometheus-exporter = {
+  services.cloudflare-exporter = {
     enable = true;
     tokenFile = config.sops.secrets.cloudflare_prometheus_exporter_token.path;
   };
