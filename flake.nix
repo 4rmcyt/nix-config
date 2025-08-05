@@ -21,10 +21,10 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:nixos/nixos-hardware";
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
-    flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
 
     nix-darwin.url = "github:LnL7/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    
     mac-app-util.url = "github:hraban/mac-app-util";
     mac-app-util.inputs.nixpkgs.follows = "nixpkgs";
 
