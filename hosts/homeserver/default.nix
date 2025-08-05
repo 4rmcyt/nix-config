@@ -32,7 +32,8 @@
         "nix-command"
         "flakes"
       ];
-      system-features = [ "gccarch-skylake" "gcctune-skylake" "big-parallel" "kvm" ];
+      fallback = true;
+      # system-features = [ "gccarch-aarch64-darwin" "gcctune-skylake" "big-parallel" "kvm" ];
       trusted-users = [
         "zeev"
       ];
@@ -48,11 +49,6 @@
     };
   };
 
-  # nixpkgs.hostPlatform = {
-  #   gcc.arch = "skylake";
-  #   gcc.tune = "skylake";
-  #   system = "x86_64-linux";
-  # };
 
   sops.secrets = {
     ssh_host_ed25519_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_ed25519_key"; owner = "root"; group = "root"; mode = "0600"; };
