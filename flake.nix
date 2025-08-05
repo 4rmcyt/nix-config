@@ -2,7 +2,6 @@
   description = "NixOS configuration";
 
   nixConfig = {
-    download-buffer-size = 1024 * 1024 * 1024; # 1 GiB
     extra-substituters = [
       "https://nix-community.cachix.org"
       "https://nix-gaming.cachix.org"
