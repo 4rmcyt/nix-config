@@ -30,7 +30,7 @@
         "flakes"
       ];
       fallback = true; # Fallback to the latest stable version of Nix
-      system-features = [ "gccarch-skylake" "gcctune-skylake" "big-parallel" "kvm" ];
+      system-features = ["big-parallel"  ];
       trusted-users = [
         "root"
         "vk"
