@@ -23,10 +23,8 @@
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
     flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
     
-    nix-darwin = {
-      url = "github:LnL7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nix-darwin.url = "github:LnL7/nix-darwin/master";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     
     agenix = {
       url = "github:ryantm/agenix";
@@ -116,9 +114,7 @@
       ...
     }@inputs:
     {
-      darwinConfigurations = {
-       macbook = nix-darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
+      darwinConfigurations.macbook = nix-darwin.lib.darwinSystem {
           specialArgs = {
             username = "vk";
             host = "macbook";
@@ -126,6 +122,9 @@
           };
           modules = [
             ./hosts/macbook
+            {
+            nixpkgs.hostPlatform = "aarch64-darwin";
+            }
             inputs.sops-nix.darwinModules.sops
             inputs.home-manager.darwinModules.home-manager
             {
@@ -136,7 +135,6 @@
             }
           ];
         };
-      };
 
       nixosConfigurations = {
         homeserver = nixpkgs.lib.nixosSystem {
