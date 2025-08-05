@@ -114,28 +114,6 @@
       ...
     }@inputs:
     {
-      darwinConfigurations.macbook = nix-darwin.lib.darwinSystem {
-          specialArgs = {
-            username = "vk";
-            host = "macbook";
-            inherit inputs;
-          };
-          modules = [
-            ./hosts/macbook
-            {
-            nixpkgs.hostPlatform = "aarch64-darwin";
-            }
-            inputs.sops-nix.darwinModules.sops
-            inputs.home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit inputs; };
-              home-manager.users.vk = import ./modules/home-manager/macbook;
-            }
-          ];
-        };
-
       nixosConfigurations = {
         homeserver = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -162,5 +140,26 @@
           ];
         };
       };
+      darwinConfigurations.macbook = nix-darwin.lib.darwinSystem {
+          specialArgs = {
+            username = "vk";
+            host = "macbook";
+            inherit inputs;
+          };
+          modules = [
+            ./hosts/macbook
+            {
+            nixpkgs.hostPlatform = "aarch64-darwin";
+            }
+            inputs.sops-nix.darwinModules.sops
+            inputs.home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit inputs; };
+              home-manager.users.vk = import ./modules/home-manager/macbook;
+            }
+          ];
+        };
     };
 }
