@@ -54,6 +54,11 @@
       group = "prometheus";
       extraGroups = [ "users" ];
     };
+    "cloudflare-prometheus-exporter" = {
+      isSystemUser = true;
+      group = "cloudflare-prometheus-exporter";
+      extraGroups = [ "users" ];
+    };
   };
 
   users.groups = {
