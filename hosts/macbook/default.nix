@@ -115,8 +115,6 @@
 
   system.defaults.CustomUserPreferences = {
     "com.apple.finder" = {
-      _FXShowPosixPathInTitle = true;
-      _FXSortFoldersFirst = true;
       AppleShowAllExtensions = true;
       AppleShowAllFiles = true;
       FXDefaultSearchScope = "SCcf";
