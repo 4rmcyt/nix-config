@@ -50,9 +50,9 @@
       group = "prometheus";
       extraGroups = [ "users" ];
     };
-    cloudflare-exporter = {
+    prometheus-cloudflare-exporter = {
       isSystemUser = true;
-      group = "cloudflare-exporter";
+      group = "prometheus-cloudflare-exporter";
       extraGroups = [ "users" ];
     };
   };
@@ -61,7 +61,7 @@
     grafana = { };
     uptime-kuma = { };
     prometheus = { };
-    cloudflare-exporter = { };
+    prometheus-cloudflare-exporter = { };
   };
 
   networking.firewall.allowedTCPPorts = [
@@ -71,7 +71,7 @@
     9948 # NextDNS Exporter
     9187 # PostgreSQL Exporter
     3001 # Uptime Kuma
-    27196 # Cloudflare Exporter
+    8081 # Cloudflare Exporter
   ];
 
   services.nginx = {
@@ -170,7 +170,7 @@
       {
         job_name = "cloudflare-exporter";
         static_configs = [{
-          targets = [ "localhost:27196" ];
+          targets = [ "localhost:8081" ];
           labels = { instance = "homeserver"; };
         }];
       }
@@ -265,7 +265,7 @@
     };
   };
 
-  services.cloudflare-exporter = {
+  services.prometheus-cloudflare-exporter = {
     enable = true;
     tokenFile = config.sops.secrets.cloudflare_prometheus_exporter_token.path;
   };
