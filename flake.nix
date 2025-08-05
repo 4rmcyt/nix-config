@@ -17,9 +17,7 @@
   };
 
   inputs = {
-    flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixos-hardware.url = "github:nixos/nixos-hardware";
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
 
     nix-darwin.url = "github:LnL7/nix-darwin/master";
