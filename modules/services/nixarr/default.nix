@@ -280,6 +280,8 @@ in
         download-queue-size = 10;
         download-queue-enabled = true;
         rpc-whitelist-enabled = false;
+        rpc-enabled = true;
+        rpc-port = 9091;
         download-dir = "/data/Downloads";
 
         # script-torrent-added-enabled = true;
