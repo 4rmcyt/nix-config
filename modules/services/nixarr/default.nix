@@ -280,7 +280,7 @@ in
         download-queue-size = 10;
         download-queue-enabled = true;
         rpc-whitelist-enabled = false;
-        rpc-bind-address = "127.0.0.1";
+        rpc-bind-address = "0.0.0.0";
         rpc-enabled = true;
         rpc-port = 9091;
         download-dir = "/data/Downloads";
