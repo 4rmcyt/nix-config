@@ -18,6 +18,7 @@ in
   users.users.vk = {
     name = "vk";
     home = "/Users/vk";
+    shell = pkgs.zsh;
     openssh.authorizedKeys.keys = user-keys;
   };
 
