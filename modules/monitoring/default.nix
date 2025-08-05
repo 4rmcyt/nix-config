@@ -234,12 +234,6 @@
 
     provision.dashboards.settings.providers = [
       {
-        name = "System Dashboard";
-        type = "file";
-        options.path = "./dashboards";
-        options.foldersFromFilesStructure = true;
-      }
-      {
         name = "Custom Dashboards";
         type = "file";
         options.path = ./.;
@@ -256,8 +250,4 @@
     };
   };
 
-  systemd.tmpfiles.rules = [
-    "d /var/lib/grafana 0755 grafana grafana -"
-    "d /var/lib/grafana/dashboards 0755 grafana grafana -"
-  ];
 }
