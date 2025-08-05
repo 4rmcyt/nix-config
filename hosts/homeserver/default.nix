@@ -23,11 +23,7 @@
   sops.age.keyFile = "/var/lib/sops/age.key";
   sops.defaultSopsFormat = "yaml";
 
-  nixpkgs.hostPlatform = {
-    gcc.arch = "skylake";
-    gcc.tune = "skylake";
-    system = "x86_64-linux";
-  }
+  
 
   nix = {
     package = pkgs.nixVersions.latest;
@@ -50,6 +46,12 @@
       dates = [ "weekly" ];
     };
   };
+
+  nixpkgs.hostPlatform = {
+    gcc.arch = "skylake";
+    gcc.tune = "skylake";
+    system = "x86_64-linux";
+  }
 
   sops.secrets = {
     ssh_host_ed25519_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_ed25519_key"; owner = "root"; group = "root"; mode = "0600"; };

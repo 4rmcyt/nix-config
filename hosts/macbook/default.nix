@@ -15,6 +15,7 @@
   sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
   sops.defaultSopsFormat = "yaml";
 
+  
   system.primaryUser = "vk";
   environment.shellInit = ''
     ulimit -n 2048
@@ -29,7 +30,7 @@
         "flakes"
       ];
       fallback = true; # Fallback to the latest stable version of Nix
-      
+
       trusted-users = [
         "root"
         "vk"
