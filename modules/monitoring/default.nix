@@ -71,7 +71,6 @@
   environment.systemPackages = with pkgs; [
     prometheus-node-exporter
     prometheus-postgres-exporter
-    prometheus-cloudflare-exporter
     grafana
     uptime-kuma
     prometheus-cloudflare-exporter
