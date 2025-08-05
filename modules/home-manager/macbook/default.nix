@@ -40,7 +40,6 @@
     nixos-generators
     nixfmt-rfc-style
     nvd
-    opentofu
     pandoc
     pass
     pcsc-tools
