@@ -66,37 +66,37 @@
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
 
-  #   virtualHosts = {
-  #     "prometheus.example.com" = {
-  #       forceSSL = true;
-  #       sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
-  #       sslCertificateKey = "/var/lib/acme/example.com/key.pem";
-  #       locations."/" = {
-  #         proxyPass = "http://localhost:9090";
-  #         proxyWebsockets = true;
-  #       };
-  #     };
-  #     "uptime-kuma.example.com" = {
-  #       forceSSL = true;
-  #       sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
-  #       sslCertificateKey = "/var/lib/acme/example.com/key.pem";
-  #       locations."/" = {
-  #         proxyPass = "http://localhost:3001";
-  #         proxyWebsockets = true;
-  #       };
-  #     };
-  #     "grafana.example.com" = {
-  #       forceSSL = true;
-  #       sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
-  #       sslCertificateKey = "/var/lib/acme/example.com/key.pem";
-  #       locations."/grafana/" = {
-  #         # FIX: Added trailing slash to correctly handle the subpath
-  #         proxyPass = "http://localhost:3000/";
-  #         proxyWebsockets = true;
-  #       };
-  #     };
-  #   };
-  # };
+    virtualHosts = {
+      "prometheus.example.com" = {
+        forceSSL = true;
+        sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/example.com/key.pem";
+        locations."/" = {
+          proxyPass = "http://localhost:9090";
+          proxyWebsockets = true;
+        };
+      };
+      "uptime-kuma.example.com" = {
+        forceSSL = true;
+        sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/example.com/key.pem";
+        locations."/" = {
+          proxyPass = "http://localhost:3001";
+          proxyWebsockets = true;
+        };
+      };
+      "grafana.example.com" = {
+        forceSSL = true;
+        sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+        sslCertificateKey = "/var/lib/acme/example.com/key.pem";
+        locations."/grafana/" = {
+          # FIX: Added trailing slash to correctly handle the subpath
+          proxyPass = "http://localhost:3000/";
+          proxyWebsockets = true;
+        };
+      };
+    };
+  };
 
   services.prometheus = {
     enable = true;
@@ -198,45 +198,37 @@
   };
 
   services.grafana = {
-  enable = true;
-  # dataDir is managed by the module, no need to set it to default
-  settings = {
-    server = {
-      http_port = 3000;
-      # Bind to localhost since it's behind a proxy
-      http_addr = "127.0.0.1";
-      # This MUST match the public URL from Nginx
-      root_url = "https://grafana.example.com/grafana";
-      serve_from_sub_path = true;
+    enable = true;
+    dataDir = "/var/lib/grafana";
+    settings = {
+      server = {
+        http_port = 3000;
+        http_addr = "0.0.0.0";
+        root_url = "http://192.168.1.165:3000";
+      };
+      database = {
+        type = "postgres";
+        host = "/run/postgresql";
+        user = "grafana";
+        passwordFile = config.sops.secrets.grafana_db_password.path;
+      };
+      security = {
+        admin_user = "admin";
+        admin_password_file = config.sops.secrets.grafana_admin_password.path;
+      };
     };
-    database = {
-      type = "postgres";
-      host = "/run/postgresql";
-      user = "grafana";
-      passwordFile = config.sops.secrets.grafana_db_password.path;
-    };
-    security = {
-      admin_user = "admin";
-      admin_password_file = config.sops.secrets.grafana_admin_password.path;
-    };
-  };
-
-    provision.enable = true;
-    provision.datasources.settings.datasources = [
-      {
-        name = "Prometheus";
-        type = "prometheus";
-        access = "proxy";
-        url = "http://localhost:9090";
-        isDefault = true;
-      }
-    ];
 
     provision.dashboards.settings.providers = [
       {
+        name = "System Dashboard";
+        type = "file";
+        options.path = "/etc/grafana/dashboards/system.json";
+        options.foldersFromFilesStructure = true;
+      }
+       {
         name = "Custom Dashboards";
         type = "file";
-        options.path = ./.;
+        options.path = ./.; 
         options.foldersFromFilesStructure = true;
       }
     ];
