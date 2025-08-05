@@ -95,7 +95,8 @@
     masApps = {
     };
   };
-
+  
+  ids.gids.nixbld = 350;
   nixpkgs.config.allowUnfree = true;
   nixpkgs.hostPlatform = "aarch64-darwin";
 
