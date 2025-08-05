@@ -40,6 +40,7 @@ in
       zeev = {
         isNormalUser = true;
         description = "zeev";
+        
         extraGroups = [
           "networkmanager"
           "wheel"
@@ -54,6 +55,9 @@ in
       git = { isSystemUser = true; group = "git"; };
     };
   };
+
+  programs.zsh.enable = true;
+
 
   systemd.tmpfiles.rules = [
     "d /data/.secret 0700 zeev media -"
