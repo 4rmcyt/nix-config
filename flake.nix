@@ -25,6 +25,8 @@
 
     nix-darwin.url = "github:LnL7/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    mac-app-util.url = "github:hraban/mac-app-util";
+    mac-app-util.inputs.nixpkgs.follows = "nixpkgs";
 
     agenix = {
       url = "github:ryantm/agenix";
@@ -110,57 +112,65 @@
       nix-index-database,
       nixarr,
       nix-ld,
+      mac-app-util,
       authentik-nix,
       ...
     }@inputs:
     {
+
       nixosConfigurations = {
         homeserver = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = {
-            host = "homeserver";
-            username = "zeev";
-            inherit inputs;
-          };
           modules = [
-            ./hosts/homeserver
-            inputs.vscode-server.nixosModules.default
-            inputs.disko.nixosModules.disko
-            inputs.home-manager.nixosModules.home-manager
             {
-              home-manager.useGlobalPkgs = true;
-              home-manager.extraSpecialArgs = { inherit inputs; };
-              home-manager.users.zeev = import ./modules/home-manager/homeserver;
+              imports = [ ./hosts/homeserver ];
+              _module.args.self = self;
             }
-            inputs.sops-nix.nixosModules.sops
-            inputs.nix-index-database.nixosModules.nix-index
-            inputs.nixarr.nixosModules.default
-            inputs.nix-ld.nixosModules.nix-ld
-            inputs.authentik-nix.nixosModules.default
-          ];
-        };
-      };
-      darwinConfigurations = {
-        macbook = nix-darwin.lib.darwinSystem {
-          specialArgs = {
-            username = "vk";
-            host = "macbook";
-            inherit inputs;
-          };
-          modules = [
-            ./hosts/macbook
-            {
-              nixpkgs.hostPlatform = "aarch64-darwin";
-            }
-            inputs.sops-nix.darwinModules.sops
-            inputs.home-manager.darwinModules.home-manager
+            home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit inputs; };
-              home-manager.users.vk = import ./modules/home-manager/macbook;
+              home-manager.users.zeev = {
+                imports = [
+                  ./modules/home-manager/homeserver
+                ];
+                _module.args.self = self;
+                _module.args.host = "homeserver";
+                _module.args.inputs = inputs;
+              };
             }
           ];
+        };
+
+        darwinConfigurations = {
+          macbook = nix-darwin.lib.darwinSystem {
+            system = "aarch64-darwin";
+            modules = [
+              mac-app-util.darwinModules.default
+              {
+                imports = [
+                  ./hosts/macbook
+                ];
+                _module.args.self = self;
+              }
+              inputs.sops-nix.darwinModules.sops
+              inputs.home-manager.darwinModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                users.users.vk = {
+                  ignoreShellProgramCheck = true;
+                  home = "/Users/vk";
+                };
+                home-manager.users.rounak = {
+                  imports = [
+                    mac-app-util.homeManagerModules.default
+                    ./modules/home-manager/macbook
+                  ];
+                };
+              }
+            ];
+          };
         };
       };
     };
