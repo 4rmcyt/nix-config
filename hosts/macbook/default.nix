@@ -74,7 +74,7 @@
       "emclient"
       "sublime-text"
       "raycast"
-      "telegram-desktop"
+      "jellyfin-media-player"
     ];
     brews = [
       "curl"

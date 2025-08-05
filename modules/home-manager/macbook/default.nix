@@ -26,8 +26,8 @@
     git-crypt
     gpgme
     iterm2
-    jellyfin-media-player
     jetbrains-mono
+    telegram-desktop
     jq
     just
     lorri
