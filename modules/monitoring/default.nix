@@ -184,10 +184,15 @@
       node = {
         enable = true;
         enabledCollectors = [
-          "smartctl"
+          "systemd"
+          "processes"
+          "interrupts"
           "cpu"
+          "smartctl"
           "diskstats"
           "meminfo"
+          "netdev"
+          "netstat"
           "btrfs"
           "stat"
           "time"
