@@ -245,15 +245,15 @@ in
     vpn = {
       enable = true;
       wgConf = "/data/.secret/wg.conf";
-      # accessibleFrom = [
-      #   "192.168.1.0/24"
-      #   "192.168.0.0/24"
-      #   "127.0.0.1"
-      # ];
+      accessibleFrom = [
+        "192.168.1.0/24"
+        "192.168.0.0/24"
+        "127.0.0.1"
+      ];
       openTcpPorts = [
         58403
         63998
-        # 9091
+        9091
       ];
       # vpnTestService = {
       #   port = 58403;
