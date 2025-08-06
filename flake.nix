@@ -20,6 +20,9 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
 
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+    systems.url = "github:nix-systems/default";
+
     nix-darwin.url = "github:LnL7/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -112,35 +115,80 @@
       linkwarden,
       authentik-nix,
       nixos-needsreboot,
+      treefmt-nix,
       ...
     }@inputs:
+    let
+      systems = [
+        "x86_64-linux"
+        "aarch64-darwin"
+      ];
+
+      eachSystem = f: nixpkgs.lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
+      treefmtEval = eachSystem (pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
+
+      forAllSystems = nixpkgs.lib.genAttrs systems;
+
+      commonNixOSModules = [
+        sops-nix.nixosModules.sops
+        home-manager.nixosModules.home-manager
+        nix-index-database.nixosModules.nix-index
+      ];
+
+      commonDarwinModules = [
+        sops-nix.darwinModules.sops
+        home-manager.darwinModules.home-manager
+        nix-index-database.darwinModules.nix-index
+      ];
+
+      nixosHomeManagerConfig = user: host: {
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.users.${user} = {
+          imports = [
+            ./modules/home-manager/${host}
+            nixvim.homeModules.default
+          ];
+          _module.args = {
+            inherit self inputs;
+            host = host;
+          };
+        };
+      };
+
+      darwinHomeManagerConfig = user: host: {
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.users.${user} = {
+          imports = [
+            ./modules/home-manager/${host}
+            mac-app-util.homeManagerModules.default
+            nixvim.homeModules.default
+          ];
+          _module.args = {
+            inherit self inputs;
+            host = host;
+          };
+        };
+      };
+    in
     {
+
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+      checks = forAllSystems (pkgs: {
+        formatting = treefmtEval.${pkgs.system}.config.build.check self;
+      });
+
       darwinConfigurations = {
         macbook = nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
-          modules = [
+          modules = commonDarwinModules ++ [
             mac-app-util.darwinModules.default
             {
               imports = [ ./hosts/macbook ];
               _module.args.self = self;
             }
-            sops-nix.darwinModules.sops
-            nix-index-database.darwinModules.nix-index
-            home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.vk = {
-                imports = [
-                  ./modules/home-manager/macbook
-                  mac-app-util.homeManagerModules.default
-                  nixvim.homeModules.default
-                ];
-                _module.args.self = self;
-                _module.args.host = "macbook";
-                _module.args.inputs = inputs;
-              };
-            }
+            (darwinHomeManagerConfig "vk" "macbook")
           ];
         };
       };
@@ -148,30 +196,16 @@
       nixosConfigurations = {
         homeserver = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          modules = [
+          modules = commonNixOSModules ++ [
             {
               imports = [ ./hosts/homeserver ];
               _module.args.self = self;
             }
+            (nixosHomeManagerConfig "zeev" "homeserver")
+            # Специфичные модули для homeserver
             nixarr.nixosModules.default
             authentik-nix.nixosModules.default
-            nix-index-database.nixosModules.nix-index
-            sops-nix.nixosModules.sops
             vscode-server.nixosModules.default
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.zeev = {
-                imports = [
-                  ./modules/home-manager/homeserver
-                  nixvim.homeModules.default
-                ];
-                _module.args.self = self;
-                _module.args.host = "homeserver";
-                _module.args.inputs = inputs;
-              };
-            }
           ];
         };
       };

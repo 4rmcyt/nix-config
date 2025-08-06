@@ -156,15 +156,11 @@
       WebKitJavaEnabled = false;
       WebKitJavaScriptCanOpenWindowsAutomatically = false;
       "com.apple.Safari.ContentPageGroupIdentifier.WebKit2TabsToLinks" = true;
-      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" =
-        true;
-      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2BackspaceKeyNavigationEnabled" =
-        false;
+      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" = true;
+      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2BackspaceKeyNavigationEnabled" = false;
       "com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabled" = false;
-      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabledForLocalFiles" =
-        false;
-      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaScriptCanOpenWindowsAutomatically" =
-        false;
+      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabledForLocalFiles" = false;
+      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaScriptCanOpenWindowsAutomatically" = false;
     };
     "com.apple.mail" = {
       DisableInlineAttachmentViewing = true;
