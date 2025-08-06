@@ -93,5 +93,14 @@
         };
       };
     };
+
+    swap = {
+      zfs_swap = {
+        type = "swap";
+        zfs_pool = "rpool";
+        size = "16G";
+
+      };
+    };
   };
 }
