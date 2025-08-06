@@ -14,7 +14,6 @@
     "nvme"
     "usb_storage"
     "usbhid"
-    "sd_mod"
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -42,8 +41,13 @@
     vaapiIntel
     vaapiVdpau
     intel-compute-runtime
+    intel-ocl
     libvdpau-va-gl
   ];
+
+  hardware.opengl = {
+    enable = true;
+  };
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
   services.fwupd.enable = true;

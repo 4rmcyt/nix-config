@@ -299,6 +299,12 @@ in
     jellyseerr.enable = true;
   };
 
+  environment.systemPackages = [
+    pkgs.jellyfin
+    pkgs.jellyfin-web
+    pkgs.jellyfin-ffmpeg
+  ];
+
   systemd.services = lib.genAttrs servicesWithMediaAccess (serviceName: {
     serviceConfig = {
       BindPaths = [
