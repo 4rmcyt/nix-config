@@ -115,7 +115,37 @@
       authentik-nix,
       ...
     }@inputs:
-    { 
+    {     
+      darwinConfigurations = {
+        macbook = nix-darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          modules = [
+            mac-app-util.darwinModules.default
+            {
+              imports = [ ./hosts/macbook ];
+              _module.args.self = self;
+            }
+            sops-nix.darwinModules.sops
+            nix-index-database.darwinModules.nix-index
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.vk = {
+                imports = [
+                  ./modules/home-manager/macbook
+                  mac-app-util.homeManagerModules.default
+                  nixvim.homeModules.default
+                ];
+                _module.args.self = self;
+                _module.args.host = "macbook";
+                _module.args.inputs = inputs;
+              };
+            }
+          ];
+        };
+      };
+
       nixosConfigurations = {
         homeserver = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -140,36 +170,6 @@
                 ];
                 _module.args.self = self;
                 _module.args.host = "homeserver";
-                _module.args.inputs = inputs;
-              };
-            }
-          ];
-        };
-      };
-
-      darwinConfigurations = {
-        macbook = nix-darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
-          modules = [
-            mac-app-util.darwinModules.default
-            {
-              imports = [ ./hosts/macbook ];
-              _module.args.self = self;
-            }
-            sops-nix.darwinModules.sops
-            nix-index-database.darwinModules.nix-index
-            home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.vk = {
-                imports = [
-                  ./modules/home-manager/macbook
-                  mac-app-util.homeManagerModules.default
-                  nixvim.homeModules.default
-                ];
-                _module.args.self = self;
-                _module.args.host = "macbook";
                 _module.args.inputs = inputs;
               };
             }
