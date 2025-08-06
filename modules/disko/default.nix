@@ -16,22 +16,14 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                # Corrected: Removed the invalid "/boot" string from this list
                 mountOptions = [ "fmask=0137" "dmask=0027" ];
               };
             };
             root = {
               size = "100%";
               content = {
-                type = "btrfs";
-                extraArgs = [ "-f" ];
-                subvolumes = {
-                  "/@root" = { mountpoint = "/"; mountOptions = [ "compress=zstd" "noatime" ]; };
-                  "/@home" = { mountpoint = "/home"; mountOptions = [ "compress=zstd" "noatime" ]; };
-                  "/@nix" = { mountpoint = "/nix"; mountOptions = [ "compress=zstd" "noatime" ]; };
-                  "/@log" = { mountpoint = "/var/log"; mountOptions = [ "compress=zstd" "noatime" ]; };
-                  "/@swap" = { mountpoint = "/.swapvol"; mountOptions = [ "noatime" ]; };
-                };
+                type = "zfs";
+                pool = "rpool";
               };
             };
           };
@@ -47,18 +39,53 @@
             data = {
               size = "100%";
               content = {
-                type = "btrfs";
-                extraArgs = [ "-f" ];
-                subvolumes = {
-                  "/@data" = { mountpoint = "/data"; mountOptions = [ "compress=zstd" "noatime" ]; };
-                };
+                type = "zfs";
+                pool = "dpool"; 
               };
             };
           };
         };
       };
     };
-  };
 
-  swapDevices = [{ device = "/.swapvol/swapfile"; size = 16384; }];
+    zpool = {
+      rpool = {
+        type = "zpool";
+        rootFsOptions = {
+          compression = "zstd";
+          atime = "off";
+        };
+        datasets = {
+          "root" = { type = "zfs_fs"; mountpoint = "/"; };
+          "home" = { type = "zfs_fs"; mountpoint = "/home"; };
+          "nix" = {
+            type = "zfs_fs";
+            mountpoint = "/nix";
+            options."com.sun:auto-snapshot" = "false";
+          };
+          "var/log" = { type = "zfs_fs"; mountpoint = "/var/log"; };
+        };
+      };
+
+      dpool = {
+        type = "zpool";
+        rootFsOptions = {
+          compression = "zstd";
+          atime = "off";
+        };
+        datasets = {
+          "data" = { type = "zfs_fs"; mountpoint = "/data"; };
+        };
+      };
+    };
+
+    swap = {
+      zfs_swap = {
+        type = "swap";
+        zfs_pool = "rpool";
+        size = "16G";
+
+      };
+    };
+  };
 }
