@@ -48,7 +48,7 @@
     nvd
     pinentry-tty
   ];
-  
+
   programs = {
     git = {
       enable = true;
@@ -57,7 +57,13 @@
       signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
     };
 
-    
+    programs.nixvim = {
+      enable = true;
+
+      colorschemes.catppuccin.enable = true;
+      plugins.lualine.enable = true;
+    };
+
     nix-index.enable = true;
     nh = {
       enable = true;
@@ -67,8 +73,6 @@
       };
       flake = "/home/zeev/src/nixos-config";
     };
-    
-
 
     fzf = {
       enable = true;
@@ -88,7 +92,7 @@
         marker = "#EBCB8B";
       };
     };
-    
+
     zsh = {
       enable = true;
       syntaxHighlighting.enable = true;
@@ -132,6 +136,6 @@
       enableZshIntegration = true;
     };
   };
-  
+
   home.stateVersion = "25.05";
 }
