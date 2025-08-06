@@ -136,6 +136,7 @@
               home-manager.users.zeev = {
                 imports = [
                   ./modules/home-manager/homeserver
+                  inputs.nixvim.home-managerModules.default
                 ];
                 _module.args.self = self;
                 _module.args.host = "homeserver";
