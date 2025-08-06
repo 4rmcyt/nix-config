@@ -124,6 +124,7 @@
               _module.args.self = self;
             }
             nixarr.nixosModules.default
+            authentik-nix.nixosModules.default
             nix-index-database.nixosModules.nix-index
             home-manager.nixosModules.home-manager
             {
