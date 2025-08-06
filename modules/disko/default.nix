@@ -16,23 +16,16 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                mountOptions = [
-                  "fmask=0137"
-                  "dmask=0027"
-                ];
+                mountOptions = [ "fmask=0137" "dmask=0027" ];
               };
             };
             root = {
               size = "100%";
-              content = {
-                type = "zfs";
-                pool = "rpool";
-              };
+              content = { type = "zfs"; pool = "rpool"; };
             };
           };
         };
       };
-
       sata = {
         device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345";
         type = "disk";
@@ -41,10 +34,7 @@
           partitions = {
             data = {
               size = "100%";
-              content = {
-                type = "zfs";
-                pool = "dpool";
-              };
+              content = { type = "zfs"; pool = "dpool"; };
             };
           };
         };
@@ -54,42 +44,42 @@
     zpool = {
       rpool = {
         type = "zpool";
+        options.ashift = "12";
         rootFsOptions = {
           compression = "zstd";
           atime = "off";
+          xattr = "sa";
+          acltype = "posixacl";
         };
         datasets = {
-          "root" = {
-            type = "zfs_fs";
-            mountpoint = "/";
-          };
-          "home" = {
-            type = "zfs_fs";
-            mountpoint = "/home";
-          };
+          "root" = { type = "zfs_fs"; mountpoint = "/"; };
+          "home" = { type = "zfs_fs"; mountpoint = "/home"; };
           "nix" = {
             type = "zfs_fs";
             mountpoint = "/nix";
             options."com.sun:auto-snapshot" = "false";
           };
-          "var/log" = {
+          "var/log" = { type = "zfs_fs"; mountpoint = "/var/log"; };
+          "var/lib" = { type = "zfs_fs"; mountpoint = "/var/lib"; };
+          "reserved" = {
             type = "zfs_fs";
-            mountpoint = "/var/log";
+            mountpoint = "none";
+            options.reservation = "5G";
           };
         };
       };
 
       dpool = {
         type = "zpool";
+        options.ashift = "12";
         rootFsOptions = {
           compression = "zstd";
           atime = "off";
+          xattr = "sa";
+          acltype = "posixacl";
         };
         datasets = {
-          "data" = {
-            type = "zfs_fs";
-            mountpoint = "/data";
-          };
+          "data" = { type = "zfs_fs"; mountpoint = "/data"; };
         };
       };
     };
@@ -99,7 +89,6 @@
         type = "swap";
         zfs_pool = "rpool";
         size = "16G";
-
       };
     };
   };
