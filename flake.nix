@@ -135,7 +135,7 @@
               home-manager.users.zeev = {
                 imports = [
                   ./modules/home-manager/homeserver
-                  inputs.nixvim.homeManagerModules.default
+                  inputs.nixvim.homeModules.default
                 ];
                 _module.args.self = self;
                 _module.args.host = "homeserver";
@@ -169,6 +169,7 @@
                 home-manager.users.vk = {
                   imports = [
                     mac-app-util.homeManagerModules.default
+                    inputs.nixvim.homeModules.default
                     ./modules/home-manager/macbook
                   ];
                 };
