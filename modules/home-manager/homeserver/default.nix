@@ -47,6 +47,8 @@
     nix-output-monitor
     nvd
     pinentry-tty
+    pciutils
+    python3full
   ];
 
   programs = {
