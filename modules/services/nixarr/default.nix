@@ -1,4 +1,3 @@
-# In ~/src/server/services/nixarr.nix
 {
   config,
   pkgs,

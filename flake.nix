@@ -115,7 +115,6 @@
       ...
     }@inputs:
     {
-
       nixosConfigurations = {
         homeserver = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -124,6 +123,7 @@
               imports = [ ./hosts/homeserver ];
               _module.args.self = self;
             }
+            nixarr.nixosModules.default
             nix-index-database.nixosModules.nix-index
             home-manager.nixosModules.home-manager
             {
