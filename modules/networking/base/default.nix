@@ -21,11 +21,8 @@
         80 # HTTP
         443 # HTTPS
 
-  
-
         # 11434 # Ollama API
         # 11435 # Ollama WebUI
-
 
         # Monitoring (from monitoring.nix)
         3000 # Grafana
@@ -48,5 +45,5 @@
 
       logReversePathDrops = true;
     };
-  };  
+  };
 }

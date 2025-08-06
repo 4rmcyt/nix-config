@@ -171,10 +171,14 @@
       }
       {
         job_name = "cloudflare-exporter";
-        static_configs = [{
-          targets = [ "localhost:8081" ];
-          labels = { instance = "homeserver"; };
-        }];
+        static_configs = [
+          {
+            targets = [ "localhost:8081" ];
+            labels = {
+              instance = "homeserver";
+            };
+          }
+        ];
       }
 
     ];
@@ -271,8 +275,6 @@
       bind_address = "127.0.0.1";
     };
   };
-
-
 
   systemd.tmpfiles.rules = [
     "d /var/lib/grafana 0755 grafana grafana -"

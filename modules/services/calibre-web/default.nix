@@ -36,9 +36,7 @@
       };
     };
   };
-  environment.systemPackages = [
-    pkgs.calibre-web
-  ];
+  environment.systemPackages = [ pkgs.calibre-web ];
 
   nixpkgs.overlays = [
     (final: prev: {

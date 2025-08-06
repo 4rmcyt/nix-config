@@ -4,4 +4,4 @@
     ./postgresql
     ./redis
   ];
-}  
+}

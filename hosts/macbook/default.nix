@@ -8,14 +8,11 @@
 }:
 {
   # Import the user definition
-  imports = [
-    ../../modules/users/vk.nix
-  ];
+  imports = [ ../../modules/users/vk.nix ];
 
   sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
   sops.defaultSopsFormat = "yaml";
 
-  
   system.primaryUser = "vk";
   environment.shellInit = ''
     ulimit -n 2048
@@ -30,12 +27,12 @@
         "flakes"
       ];
       fallback = true; # Fallback to the latest stable version of Nix
-      system-features = ["big-parallel"  ];
+      system-features = [ "big-parallel" ];
       trusted-users = [
         "root"
         "vk"
         "@admin"
-      ]; 
+      ];
       warn-dirty = false;
       cores = 0;
       show-trace = true;
@@ -53,9 +50,7 @@
       upgrade = true;
     };
     brewPrefix = "/opt/homebrew/bin";
-    taps = [
-      "amar1729/formulae"
-    ];
+    taps = [ "amar1729/formulae" ];
     caskArgs = {
       no_quarantine = true;
     };
@@ -92,10 +87,9 @@
       "unbound"
       "tailscale"
     ];
-    masApps = {
-    };
+    masApps = { };
   };
-  
+
   ids.gids.nixbld = 350;
   nixpkgs.config.allowUnfree = true;
   nixpkgs.hostPlatform = "aarch64-darwin";
@@ -162,11 +156,15 @@
       WebKitJavaEnabled = false;
       WebKitJavaScriptCanOpenWindowsAutomatically = false;
       "com.apple.Safari.ContentPageGroupIdentifier.WebKit2TabsToLinks" = true;
-      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" = true;
-      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2BackspaceKeyNavigationEnabled" = false;
+      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" =
+        true;
+      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2BackspaceKeyNavigationEnabled" =
+        false;
       "com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabled" = false;
-      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabledForLocalFiles" = false;
-      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaScriptCanOpenWindowsAutomatically" = false;
+      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabledForLocalFiles" =
+        false;
+      "com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaScriptCanOpenWindowsAutomatically" =
+        false;
     };
     "com.apple.mail" = {
       DisableInlineAttachmentViewing = true;

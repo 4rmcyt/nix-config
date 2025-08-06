@@ -47,9 +47,7 @@
       };
     };
   };
-  environment.systemPackages = [
-    pkgs.kavita
-  ];
+  environment.systemPackages = [ pkgs.kavita ];
 
   services.kavita = {
     enable = true;
@@ -59,12 +57,8 @@
         Theme = "dracula";
       };
       Libraries = [
-        {
-          Path = "/data/media/comics";
-        }
-        {
-          Path = "/data/media/manga";
-        }
+        { Path = "/data/media/comics"; }
+        { Path = "/data/media/manga"; }
       ];
     };
   };

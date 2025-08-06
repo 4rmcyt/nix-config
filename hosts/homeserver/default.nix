@@ -23,8 +23,6 @@
   sops.age.keyFile = "/var/lib/sops/age.key";
   sops.defaultSopsFormat = "yaml";
 
-  
-
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
@@ -34,9 +32,7 @@
       ];
       fallback = true;
       # system-features = [ "gccarch-aarch64-darwin" "gcctune-skylake" "big-parallel" "kvm" ];
-      trusted-users = [
-        "zeev"
-      ];
+      trusted-users = [ "zeev" ];
       warn-dirty = false;
       cores = 4;
       show-trace = true;
@@ -49,10 +45,21 @@
     };
   };
 
-
   sops.secrets = {
-    ssh_host_ed25519_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_ed25519_key"; owner = "root"; group = "root"; mode = "0600"; };
-    ssh_host_rsa_key = { sopsFile = ../../secrets/system.yaml; key = "ssh_host_rsa_key"; owner = "root"; group = "root"; mode = "0600"; };
+    ssh_host_ed25519_key = {
+      sopsFile = ../../secrets/system.yaml;
+      key = "ssh_host_ed25519_key";
+      owner = "root";
+      group = "root";
+      mode = "0600";
+    };
+    ssh_host_rsa_key = {
+      sopsFile = ../../secrets/system.yaml;
+      key = "ssh_host_rsa_key";
+      owner = "root";
+      group = "root";
+      mode = "0600";
+    };
   };
 
   boot.loader.systemd-boot.enable = true;
@@ -114,9 +121,10 @@
     fwupd
     nh
     nix-output-monitor
+    shfmt
   ];
 
-   services = {
+  services = {
     openssh = {
       enable = true;
       hostKeys = [

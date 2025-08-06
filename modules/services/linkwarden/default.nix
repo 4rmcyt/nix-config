@@ -6,11 +6,37 @@
 }:
 {
   sops.secrets = {
-    linkwarden_settings = { sopsFile = ../../secrets/linkwarden.yaml; key = "linkwarden_settings"; owner = "linkwarden"; group = "linkwarden"; mode = "0400"; };
-    linkwarden_db_password = { sopsFile = ../../secrets/postgresql.yaml; key = "linkwarden_db_password"; mode = "0400"; };
-    linkwarden_authentik_client_secret = { sopsFile = ../../secrets/linkwarden.yaml; key = "linkwarden_authentik_client_secret"; owner = "linkwarden"; group = "linkwarden"; mode = "0400"; };
-    linkwarden_password = { sopsFile = ../../secrets/linkwarden.yaml; key = "linkwarden_password"; owner = "linkwarden"; group = "linkwarden"; mode = "0400"; };
-    linkwarden_email_password = { sopsFile = ../../secrets/gmail_conf.yaml; key = "gmail_password"; mode = "0400"; };
+    linkwarden_settings = {
+      sopsFile = ../../secrets/linkwarden.yaml;
+      key = "linkwarden_settings";
+      owner = "linkwarden";
+      group = "linkwarden";
+      mode = "0400";
+    };
+    linkwarden_db_password = {
+      sopsFile = ../../secrets/postgresql.yaml;
+      key = "linkwarden_db_password";
+      mode = "0400";
+    };
+    linkwarden_authentik_client_secret = {
+      sopsFile = ../../secrets/linkwarden.yaml;
+      key = "linkwarden_authentik_client_secret";
+      owner = "linkwarden";
+      group = "linkwarden";
+      mode = "0400";
+    };
+    linkwarden_password = {
+      sopsFile = ../../secrets/linkwarden.yaml;
+      key = "linkwarden_password";
+      owner = "linkwarden";
+      group = "linkwarden";
+      mode = "0400";
+    };
+    linkwarden_email_password = {
+      sopsFile = ../../secrets/gmail_conf.yaml;
+      key = "gmail_password";
+      mode = "0400";
+    };
   };
 
   users.users.linkwarden = {
@@ -41,11 +67,12 @@
       NEXTAUTH_URL = "http://localhost:12522/api/v1/auth";
       NEXTAUTH_SECRET = config.sops.secrets.linkwarden_password.path;
       # Authentik Settings
-      NEXT_PUBLIC_AUTHENTIK_ENABLED = true;      
+      NEXT_PUBLIC_AUTHENTIK_ENABLED = true;
       AUTHENTIK_CUSTOM_NAME = "Linkwarden";
       AUTHENTIK_ISSUER = "http://auth.labhome.work";
       AUTHENTIK_CLIENT_ID = "linkwarden";
-      AUTHENTIK_CLIENT_SECRET = config.sops.secrets.linkwarden_authentik_client_secret.path;
+      AUTHENTIK_CLIENT_SECRET =
+        config.sops.secrets.linkwarden_authentik_client_secret.path;
       DATABASE_URL = "postgresql://linkwarden:${config.sops.secrets.linkwarden_db_password.path}@/run/postgresql/linkwarden?sslmode=disable";
 
       # SMTP Settings
@@ -54,7 +81,7 @@
       EMAIL_SERVER = "smtp.gmail.com";
       EMAIL_PORT = "587";
       EMAIL_USERNAME = "4rmcyt@gmail.com";
-      EMAIL_PASSWORD = config.sops.secrets..path;
+      EMAIL_PASSWORD = config.sops.secrets.path;
       BASE_URL = "http://link.labhome.work";
     };
   };

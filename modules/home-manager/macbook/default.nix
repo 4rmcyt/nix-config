@@ -75,7 +75,7 @@
     SYSTEMD_EDITOR = "nvim";
     VISUAL = "nvim";
   };
-  
+
   programs = {
     git = {
       enable = true;
@@ -83,7 +83,7 @@
       userEmail = "volodymyr.kondratenko@datos.live";
       signing.key = "129B4C451BE08617E579CF8A625FD6A8899D566D";
     };
-   
+
     nix-index = {
       enable = true;
       enableZshIntegration = true;
@@ -107,7 +107,7 @@
         marker = "#EBCB8B";
       };
     };
-    
+
     zsh = {
       enable = true;
       syntaxHighlighting.enable = true;

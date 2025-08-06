@@ -16,7 +16,10 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                mountOptions = [ "fmask=0137" "dmask=0027" ];
+                mountOptions = [
+                  "fmask=0137"
+                  "dmask=0027"
+                ];
               };
             };
             root = {
@@ -29,7 +32,7 @@
           };
         };
       };
-      
+
       sata = {
         device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345";
         type = "disk";
@@ -40,7 +43,7 @@
               size = "100%";
               content = {
                 type = "zfs";
-                pool = "dpool"; 
+                pool = "dpool";
               };
             };
           };
@@ -56,14 +59,23 @@
           atime = "off";
         };
         datasets = {
-          "root" = { type = "zfs_fs"; mountpoint = "/"; };
-          "home" = { type = "zfs_fs"; mountpoint = "/home"; };
+          "root" = {
+            type = "zfs_fs";
+            mountpoint = "/";
+          };
+          "home" = {
+            type = "zfs_fs";
+            mountpoint = "/home";
+          };
           "nix" = {
             type = "zfs_fs";
             mountpoint = "/nix";
             options."com.sun:auto-snapshot" = "false";
           };
-          "var/log" = { type = "zfs_fs"; mountpoint = "/var/log"; };
+          "var/log" = {
+            type = "zfs_fs";
+            mountpoint = "/var/log";
+          };
         };
       };
 
@@ -74,7 +86,10 @@
           atime = "off";
         };
         datasets = {
-          "data" = { type = "zfs_fs"; mountpoint = "/data"; };
+          "data" = {
+            type = "zfs_fs";
+            mountpoint = "/data";
+          };
         };
       };
     };

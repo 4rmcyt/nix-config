@@ -20,7 +20,7 @@
       group = config.users.groups.root.name;
       mode = "0400";
     };
-  };  
+  };
   services.postgresqlBackup = {
     enable = true;
     compression = "zstd";
@@ -110,12 +110,8 @@
         "echo Starting a backup job."
         "${pkgs.iputils}/bin/ping -q -c 1 192.168.1.165 > /dev/null || exit 75"
       ];
-      after_backup = [
-        "echo Backup created."
-      ];
-      on_error = [
-        "echo Error while creating a backup."
-      ];
+      after_backup = [ "echo Backup created." ];
+      on_error = [ "echo Error while creating a backup." ];
 
       # Consistency Checks
       checks = [

@@ -29,10 +29,9 @@
   boot.loader.systemd-boot.editor = false;
   boot.loader.timeout = 3;
 
-
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  
+
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = with pkgs; [
     intel-media-driver
@@ -49,12 +48,8 @@
     enable = true;
     defaults.autodetected = "-a -o on -s (S/../.././02|L/../../7/04)";
     devices = [
-      {
-        device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315";
-      }
-      {
-        device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345";
-      }
+      { device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315"; }
+      { device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345"; }
     ];
   };
 
@@ -62,7 +57,10 @@
     "/boot" = {
       device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part1";
       fsType = "vfat";
-      options = [ "fmask=0137" "dmask=0027" ];
+      options = [
+        "fmask=0137"
+        "dmask=0027"
+      ];
     };
   };
 

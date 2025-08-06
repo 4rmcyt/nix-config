@@ -1,10 +1,15 @@
-
-{ config, pkgs, lib, username, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  username,
+  ...
+}:
 
 {
-  
+
   time = {
-    timeZone = "America/Edmonton";  # Change this to your timezone
+    timeZone = "America/Edmonton"; # Change this to your timezone
   };
 
   services.timesyncd = {
@@ -32,16 +37,26 @@
 
   security = {
     pam.loginLimits = [
-      { domain = "*"; type = "soft"; item = "nofile"; value = "1024"; }
-      { domain = "*"; type = "hard"; item = "nofile"; value = "4096"; }
+      {
+        domain = "*";
+        type = "soft";
+        item = "nofile";
+        value = "1024";
+      }
+      {
+        domain = "*";
+        type = "hard";
+        item = "nofile";
+        value = "4096";
+      }
     ];
 
     auditd.enable = true;
     audit.enable = true;
     protectKernelImage = true;
-    lockKernelModules = false; 
+    lockKernelModules = false;
   };
 
   services.haveged.enable = true;
-  
+
 }

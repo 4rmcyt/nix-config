@@ -1,6 +1,11 @@
-{ config, lib, pkgs, ... }:
 {
- sops.secrets = {
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  sops.secrets = {
     msmtp_gmail_password = lib.mkDefault {
       sopsFile = ../../../secrets/gmail_conf.yaml;
       key = "gmail_password";
@@ -15,11 +20,11 @@
     group = "msmtp";
     description = "msmtp user for sending emails";
   };
-  users.groups.msmtp = {};
-  
+  users.groups.msmtp = { };
+
   networking.firewall.allowedTCPPorts = [ 587 ]; # SMTP over SSL
 
-   environment.etc."aliases" = {
+  environment.etc."aliases" = {
     text = ''
       default: admin@labhome.work
     '';

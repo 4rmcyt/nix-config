@@ -1,5 +1,9 @@
-
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   sops.secrets = {
@@ -11,11 +15,15 @@
       mode = "0400";
     };
   };
-  
+
   users.users.tailscale = {
     isSystemUser = true;
     group = "tailscale";
-    extraGroups = [ "networkmanager" "users" "tailscale" ];
+    extraGroups = [
+      "networkmanager"
+      "users"
+      "tailscale"
+    ];
   };
   users.groups.tailscale = { };
 
@@ -24,17 +32,22 @@
     allowedUDPPorts = [ config.services.tailscale.port ];
   };
 
-
   environment.systemPackages = [ pkgs.tailscale ];
   services.tailscale = {
     enable = true;
-    useRoutingFeatures = "both"; 
+    useRoutingFeatures = "both";
   };
 
   systemd.services.tailscale-autoconnect = {
     description = "Automatic connection to Tailscale";
-    after = [ "network-pre.target" "tailscale.service" ];
-    wants = [ "network-pre.target" "tailscale.service" ];
+    after = [
+      "network-pre.target"
+      "tailscale.service"
+    ];
+    wants = [
+      "network-pre.target"
+      "tailscale.service"
+    ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig.Type = "oneshot";
     script = with pkgs; ''
@@ -52,9 +65,6 @@
     '';
   };
 
-  
-  
-  
 }
 
 # Generated new OAuth client

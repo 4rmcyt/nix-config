@@ -1,4 +1,3 @@
-
 {
   config,
   pkgs,
@@ -35,9 +34,7 @@
     };
   };
 
-  environment.systemPackages = [
-    pkgs.homepage-dashboard
-  ];
+  environment.systemPackages = [ pkgs.homepage-dashboard ];
 
   services.homepage-dashboard = {
     enable = true;
@@ -426,12 +423,14 @@
               {
                 "name" = "Admin Console";
                 "href" = "https://dash.cloudflare.com/8239dd1bb0d0bfedf13673a195df59cf/home";
-                "icon" = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/cloudflare.svg";
+                "icon" =
+                  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/cloudflare.svg";
               }
               {
                 "name" = "ACL Editor";
                 "href" = "https://login.tailscale.com/admin/acls";
-                "icon" = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tailscale-light.svg";
+                "icon" =
+                  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tailscale-light.svg";
               }
             ];
           }
@@ -440,7 +439,8 @@
               {
                 "name" = "GitHub Server Config";
                 "href" = "https://github.com/your-username/server-config";
-                "icon" = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/github-light.svg";
+                "icon" =
+                  "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/github-light.svg";
               }
             ];
           }
