@@ -123,6 +123,7 @@
     nix-output-monitor
     shfmt
     powertop
+    zfs
   ];
 
   services = {
