@@ -124,7 +124,7 @@
         "aarch64-darwin"
       ];
 
-      eachSystem = f: nixpkgs.lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
+      eachSystem = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
       treefmtEval = eachSystem (pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
 
       forAllSystems = nixpkgs.lib.genAttrs systems;
@@ -175,9 +175,6 @@
     {
 
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
-      checks = forAllSystems (pkgs: {
-        formatting = treefmtEval.${pkgs.system}.config.build.check self;
-      });
 
       darwinConfigurations = {
         macbook = nix-darwin.lib.darwinSystem {
@@ -202,7 +199,6 @@
               _module.args.self = self;
             }
             (nixosHomeManagerConfig "zeev" "homeserver")
-            # Специфичные модули для homeserver
             nixarr.nixosModules.default
             authentik-nix.nixosModules.default
             vscode-server.nixosModules.default
