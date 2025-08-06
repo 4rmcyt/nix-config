@@ -61,11 +61,11 @@
       BATCH_SIZE = "100"; # number of feeds sent to queue each interval
       CREATE_ADMIN = 1; # create admin user on first run
       # ADMIN_USERNAME = "admin"; # admin username
-      # ADMIN_PASSWORD = config.sops.secrets.miniflux_admin_password.path; 
+      # ADMIN_PASSWORD = config.sops.secrets.miniflux_admin_password.path;
       CLEANUP_ARCHIVE_READ_DAYS = "60"; # read items are removed after x days
       BASE_URL = "https://miniflux.example.com";
       LISTEN_ADDR = "localhost:8086";
-      DATABASE_MIGRATIONS = 1; 
+      DATABASE_MIGRATIONS = 1;
       DATABASE_URL = lib.mkForce "user=miniflux password=${config.sops.secrets.miniflux_db_password.path} dbname=miniflux sslmode=disable host=/run/postgresql";
     };
   };

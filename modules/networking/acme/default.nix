@@ -14,9 +14,6 @@
   users.users.acme = {
     isSystemUser = true;
     group = "acme";
-    extraGroups = [
-      "acme"
-    ];
   };
   users.groups.acme = { };
 

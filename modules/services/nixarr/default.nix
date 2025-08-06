@@ -117,7 +117,7 @@ in
   ];
 
   # services.nginx = {
-  #   enable = true;        
+  #   enable = true;
   #   recommendedGzipSettings = true;
   #   recommendedOptimisation = true;
   #   recommendedProxySettings = true;
@@ -196,15 +196,15 @@ in
   #         proxyWebsockets = true;
   #       };
   #     };
-      # "transmission.example.com" = {
-      #   forceSSL = true;
-      #   sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
-      #   sslCertificateKey = "/var/lib/acme/example.com/key.pem";
-      #   locations."/" = {
-      #     proxyPass = "http://localhost:9091";
-      #     proxyWebsockets = true;
-      #   };
-      # };
+  # "transmission.example.com" = {
+  #   forceSSL = true;
+  #   sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
+  #   sslCertificateKey = "/var/lib/acme/example.com/key.pem";
+  #   locations."/" = {
+  #     proxyPass = "http://localhost:9091";
+  #     proxyWebsockets = true;
+  #   };
+  # };
   #   };
   # };
 
@@ -235,9 +235,7 @@ in
 
   nixarr = {
     enable = true;
-    mediaUsers = [
-      "zeev"
-    ];
+    mediaUsers = [ "zeev" ];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
 

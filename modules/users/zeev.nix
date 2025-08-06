@@ -29,11 +29,11 @@ in
     sopsFile = ../../secrets/common.yaml;
     neededForUsers = true;
   };
- 
+
   users = {
     groups = {
-      media = {};
-      git = {};
+      media = { };
+      git = { };
     };
 
     users = {
@@ -52,14 +52,14 @@ in
         openssh.authorizedKeys.keys = server-keys;
       };
 
-      git = { isSystemUser = true; group = "git"; };
+      git = {
+        isSystemUser = true;
+        group = "git";
+      };
     };
   };
 
   programs.zsh.enable = true;
 
-
-  systemd.tmpfiles.rules = [
-    "d /data/.secret 0700 zeev media -"
-  ];
+  systemd.tmpfiles.rules = [ "d /data/.secret 0700 zeev media -" ];
 }

@@ -7,4 +7,4 @@
     # ./nginx
     ./tailscale
   ];
-}  
+}

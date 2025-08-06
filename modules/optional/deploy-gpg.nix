@@ -40,7 +40,9 @@ in
               secretKeyId=${getSecretKeyIDs}
               for key in ''${secretKeyId[@]}
               do
-                cat "${config.sops.secrets."${sopsPasswdPath}".path}" | ${pkgs.gnupg}/bin/gpg --batch --passphrase-fd 0 --pinentry-mode loopback --edit-key $key passwd quit
+                cat "${
+                  config.sops.secrets."${sopsPasswdPath}".path
+                }" | ${pkgs.gnupg}/bin/gpg --batch --passphrase-fd 0 --pinentry-mode loopback --edit-key $key passwd quit
               done
             fi
           fi

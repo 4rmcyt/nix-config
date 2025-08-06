@@ -4,7 +4,7 @@
   lib,
   ...
 }:
-{ 
+{
   sops.secrets = {
     postgres = {
       sopsFile = ../../../secrets/postgresql.yaml;
@@ -77,21 +77,39 @@
       "grafana"
       "vaultwarden"
     ];
-   ensureUsers = [
-      { name = "miniflux"; ensureDBOwnership = true; }
-      { name = "paperless"; ensureDBOwnership = true; }
-      { name = "hass"; ensureDBOwnership = true; }
-      { name = "authentik"; ensureDBOwnership = true; }
-      { name = "grafana"; ensureDBOwnership = true; }
-      { name = "vaultwarden"; ensureDBOwnership = true; }
+    ensureUsers = [
+      {
+        name = "miniflux";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "paperless";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "hass";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "authentik";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "grafana";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "vaultwarden";
+        ensureDBOwnership = true;
+      }
     ];
-    
+
     identMap = ''
-    # ArbitraryMapName systemUser DBUser
-       superuser_map      root      postgres
-       superuser_map      postgres  postgres
-       # Let other names login as themselves
-       superuser_map      /^(.*)$   \1
+      # ArbitraryMapName systemUser DBUser
+         superuser_map      root      postgres
+         superuser_map      postgres  postgres
+         # Let other names login as themselves
+         superuser_map      /^(.*)$   \1
     '';
 
     authentication = pkgs.lib.mkOverride 10 ''
@@ -128,6 +146,6 @@
       CREATE ROLE vaultwarden WITH LOGIN PASSWORD '${config.sops.secrets.vaultwarden.path}' CREATEDB;
       CREATE DATABASE vaultwarden;
       GRANT ALL PRIVILEGES ON DATABASE vaultwarden TO vaultwarden;
-  '';
+    '';
   };
 }

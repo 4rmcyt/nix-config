@@ -10,7 +10,10 @@
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       trusted-users = [ "zeev" ];
       auto-optimise-store = true;
       warn-dirty = false;
@@ -49,7 +52,13 @@
 
   services.nextdns = {
     enable = true;
-    arguments = [ "-profile" "nextdns0" "-cache-size" "10MB" "--report-client-info" ];
+    arguments = [
+      "-profile"
+      "nextdns0"
+      "-cache-size"
+      "10MB"
+      "--report-client-info"
+    ];
   };
   services.vscode-server.enable = true;
 

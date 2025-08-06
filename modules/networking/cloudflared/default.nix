@@ -17,8 +17,8 @@
     group = "cloudflared";
     extraGroups = [ "users" ];
   };
-  users.groups.cloudflared = {  };
-  
+  users.groups.cloudflared = { };
+
   services.cloudflared = {
     enable = true;
     tunnels = {

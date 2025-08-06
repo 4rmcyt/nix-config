@@ -1,5 +1,5 @@
 { config, pkgs, ... }:
-{ 
+{
   users.users.nginx = {
     isSystemUser = true;
     group = "acme";
@@ -11,9 +11,12 @@
   users.groups.nginx = { };
 
   networking.firewall = {
-    allowedTCPPorts = [ 80 443 ];
+    allowedTCPPorts = [
+      80
+      443
+    ];
   };
-  
+
   services.nginx = {
     enable = true;
     group = "nginx";
@@ -21,7 +24,7 @@
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    
+
     statusPage = true;
   };
 }
