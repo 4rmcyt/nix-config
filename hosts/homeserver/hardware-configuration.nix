@@ -18,7 +18,10 @@
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelModules = [ "kvm-intel" "cpufreq_stats" ];
+  boot.kernelModules = [
+    "kvm-intel"
+    "cpufreq_stats"
+  ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernel.sysctl = {
