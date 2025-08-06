@@ -137,8 +137,6 @@
               };
               home-manager.users.zeev = {
                 imports = [
-                  ./modules/home-manager/homeserver
-                  inputs.home-manager.nixosModules.home-manager
                   inputs.nixvim.nixosModules.nixvim
                 ];
               };
