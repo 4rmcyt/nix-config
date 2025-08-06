@@ -115,7 +115,7 @@
       ...
     }@inputs:
     {
-      nixosConfigurations = {
+        nixosConfigurations = {
         homeserver = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
@@ -144,38 +144,39 @@
             }
           ];
         };
+    };
 
-        darwinConfigurations = {
-          macbook = nix-darwin.lib.darwinSystem {
-            system = "aarch64-darwin";
-            modules = [
-              mac-app-util.darwinModules.default
-              {
+    # starting point of a user-level Nix installation on an aarch64 macOS system
+    darwinConfigurations = {
+        macbook = nix-darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          modules = [
+            mac-app-util.darwinModules.default
+            {
+              imports = [
+                ./hosts/macbook
+              ];
+              _module.args.self = self;
+            }
+            inputs.sops-nix.darwinModules.sops
+            nix-index-database.darwinModules.nix-index
+            inputs.home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              users.users.vk = {
+                ignoreShellProgramCheck = true;
+                home = "/modules/users/vk";
+              };
+              home-manager.users.vk = {
                 imports = [
-                  ./hosts/macbook
+                  mac-app-util.homeManagerModules.default
+                  inputs.nixvim.homeModules.default
+                  ./modules/home-manager/macbook
                 ];
-                _module.args.self = self;
-              }
-              inputs.sops-nix.darwinModules.sops
-              nix-index-database.darwinModules.nix-index
-              inputs.home-manager.darwinModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                users.users.vk = {
-                  ignoreShellProgramCheck = true;
-                  home = "/modules/users/vk";
-                };
-                home-manager.users.vk = {
-                  imports = [
-                    mac-app-util.homeManagerModules.default
-                    inputs.nixvim.homeModules.default
-                    ./modules/home-manager/macbook
-                  ];
-                };
-              }
-            ];
-          };
+              };
+            }
+          ];
         };
       };
     };
