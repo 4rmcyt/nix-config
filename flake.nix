@@ -19,6 +19,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
+    flake-schemas.url = github:DeterminateSystems/flake-schemas;
 
     nix-darwin.url = "github:LnL7/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
