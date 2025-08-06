@@ -173,6 +173,9 @@
                   inputs.nixvim.homeModules.default
                   ./modules/home-manager/macbook
                 ];
+                _module.args.self = self;
+                _module.args.host = "macbook";
+                _module.args.inputs = inputs;
               };
             }
           ];
