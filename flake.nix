@@ -22,9 +22,11 @@
 
     nix-darwin.url = "github:LnL7/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    
+
     mac-app-util.url = "github:hraban/mac-app-util";
     mac-app-util.inputs.nixpkgs.follows = "nixpkgs";
+
+    nixos-needsreboot.url = "https://flakehub.com/f/thefossguy/nixos-needsreboot/*.tar.gz";
 
     agenix = {
       url = "github:ryantm/agenix";
@@ -113,9 +115,10 @@
       mac-app-util,
       linkwarden,
       authentik-nix,
+      nixos-needsreboot,
       ...
     }@inputs:
-    {     
+    {
       darwinConfigurations = {
         macbook = nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
