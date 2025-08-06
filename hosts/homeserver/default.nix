@@ -124,6 +124,7 @@
     shfmt
     powertop
     zfs
+    lm_sensors
   ];
 
   services = {
