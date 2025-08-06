@@ -109,8 +109,8 @@
       home-manager,
       nix-index-database,
       nixarr,
-      nix-ld,
       mac-app-util,
+      linkwarden,
       authentik-nix,
       ...
     }@inputs:
