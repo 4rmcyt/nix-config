@@ -71,8 +71,7 @@
       AUTHENTIK_CUSTOM_NAME = "Linkwarden";
       AUTHENTIK_ISSUER = "http://auth.example.com";
       AUTHENTIK_CLIENT_ID = "linkwarden";
-      AUTHENTIK_CLIENT_SECRET =
-        config.sops.secrets.linkwarden_authentik_client_secret.path;
+      AUTHENTIK_CLIENT_SECRET = config.sops.secrets.linkwarden_authentik_client_secret.path;
       DATABASE_URL = "postgresql://linkwarden:${config.sops.secrets.linkwarden_db_password.path}@/run/postgresql/linkwarden?sslmode=disable";
 
       # SMTP Settings
