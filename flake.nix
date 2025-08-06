@@ -126,6 +126,7 @@
             nixarr.nixosModules.default
             authentik-nix.nixosModules.default
             nix-index-database.nixosModules.nix-index
+            vscode-server.nixosModules.default
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
