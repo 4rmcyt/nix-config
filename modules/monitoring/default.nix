@@ -119,9 +119,11 @@
     enable = true;
     port = 9090;
     globalConfig = {
-      scrape_interval = "5s";
-      evaluation_interval = "5s";
+      scrape_interval = "15s";
+      evaluation_interval = "15s";
     };
+
+    retentionTime = "30d";
 
     scrapeConfigs = [
       {

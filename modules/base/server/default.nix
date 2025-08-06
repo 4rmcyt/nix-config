@@ -13,6 +13,8 @@
       experimental-features = [
         "nix-command"
         "flakes"
+        "auto-allocate-uids"
+        "cgroups"
       ];
       trusted-users = [ "zeev" ];
       auto-optimise-store = true;
@@ -21,6 +23,11 @@
       show-trace = true;
       download-buffer-size = 1073741824; # 1 GiB
       max-jobs = 4;
+
+      builders-use-substitutes = true;
+      log-lines = 25;
+      keep-derivations = true;
+      keep-outputs = true;
     };
     optimise.automatic = true;
   };
