@@ -132,12 +132,10 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              users.users.zeev = {
-                home = "/modules/users/zeev";
-              };
               home-manager.users.zeev = {
                 imports = [
                   inputs.nixvim.nixosModules.nixvim
+                  ./modules/users/zeev  # Import the user module here instead
                 ];
               };
             }
