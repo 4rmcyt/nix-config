@@ -115,7 +115,7 @@
       ...
     }@inputs:
     {
-        nixosConfigurations = {
+      nixosConfigurations = {
         homeserver = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
@@ -144,10 +144,9 @@
             }
           ];
         };
-    };
+      };
 
-    # starting point of a user-level Nix installation on an aarch64 macOS system
-    darwinConfigurations = {
+      darwinConfigurations = {
         macbook = nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           modules = [
