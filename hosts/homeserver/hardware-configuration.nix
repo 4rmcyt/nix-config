@@ -83,7 +83,7 @@
   };
 
   services.zfs.autoScrub.enable = true;
-  
+
   fileSystems = {
     "/boot" = {
       device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part1";

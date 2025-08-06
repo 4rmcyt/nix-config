@@ -16,12 +16,18 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                mountOptions = [ "fmask=0137" "dmask=0027" ];
+                mountOptions = [
+                  "fmask=0137"
+                  "dmask=0027"
+                ];
               };
             };
             root = {
               size = "100%";
-              content = { type = "zfs"; pool = "rpool"; };
+              content = {
+                type = "zfs";
+                pool = "rpool";
+              };
             };
           };
         };
@@ -34,7 +40,10 @@
           partitions = {
             data = {
               size = "100%";
-              content = { type = "zfs"; pool = "dpool"; };
+              content = {
+                type = "zfs";
+                pool = "dpool";
+              };
             };
           };
         };
@@ -52,15 +61,27 @@
           acltype = "posixacl";
         };
         datasets = {
-          "root" = { type = "zfs_fs"; mountpoint = "/"; };
-          "home" = { type = "zfs_fs"; mountpoint = "/home"; };
+          "root" = {
+            type = "zfs_fs";
+            mountpoint = "/";
+          };
+          "home" = {
+            type = "zfs_fs";
+            mountpoint = "/home";
+          };
           "nix" = {
             type = "zfs_fs";
             mountpoint = "/nix";
             options."com.sun:auto-snapshot" = "false";
           };
-          "var/log" = { type = "zfs_fs"; mountpoint = "/var/log"; };
-          "var/lib" = { type = "zfs_fs"; mountpoint = "/var/lib"; };
+          "var/log" = {
+            type = "zfs_fs";
+            mountpoint = "/var/log";
+          };
+          "var/lib" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib";
+          };
           "reserved" = {
             type = "zfs_fs";
             mountpoint = "none";
@@ -79,7 +100,10 @@
           acltype = "posixacl";
         };
         datasets = {
-          "data" = { type = "zfs_fs"; mountpoint = "/data"; };
+          "data" = {
+            type = "zfs_fs";
+            mountpoint = "/data";
+          };
         };
       };
     };
