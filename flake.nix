@@ -128,7 +128,7 @@
             nix-index-database.nixosModules.nix-index
             sops-nix.nixosModules.sops
             vscode-server.nixosModules.default
-            nixvim.nixosModules.default
+            inputs.nixvim.homeModules.nixvim
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
