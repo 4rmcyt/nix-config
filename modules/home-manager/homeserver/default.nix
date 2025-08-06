@@ -63,16 +63,6 @@
       plugins.lualine.enable = true;
     };
 
-    nix-index.enable = true;
-    nh = {
-      enable = true;
-      clean = {
-        enable = true;
-        extraArgs = "--keep-since 10d --keep 3";
-      };
-      flake = "/home/zeev/src/nixos-config";
-    };
-
     fzf = {
       enable = true;
       enableZshIntegration = true;
