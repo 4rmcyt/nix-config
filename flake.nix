@@ -124,6 +124,7 @@
               imports = [ ./hosts/homeserver ];
               _module.args.self = self;
             }
+            nix-index-database.nixosModules.nix-index
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
@@ -152,15 +153,16 @@
                 _module.args.self = self;
               }
               inputs.sops-nix.darwinModules.sops
+              nix-index-database.darwinModules.nix-index
               inputs.home-manager.darwinModules.home-manager
               {
                 home-manager.useGlobalPkgs = true;
                 home-manager.useUserPackages = true;
                 users.users.vk = {
                   ignoreShellProgramCheck = true;
-                  home = "/Users/vk";
+                  home = "/modules/users/vk";
                 };
-                home-manager.users.rounak = {
+                home-manager.users.vk = {
                   imports = [
                     mac-app-util.homeManagerModules.default
                     ./modules/home-manager/macbook
