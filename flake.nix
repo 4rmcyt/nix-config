@@ -128,11 +128,11 @@
             nix-index-database.nixosModules.nix-index
             sops-nix.nixosModules.sops
             vscode-server.nixosModules.default
+            nixvim.nixosModules.default
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              inputs.nixvim.homeModules.nixvim
               home-manager.users.zeev = {
                 imports = [
                   ./modules/home-manager/homeserver
