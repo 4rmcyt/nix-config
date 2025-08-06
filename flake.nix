@@ -108,6 +108,7 @@
       disko,
       home-manager,
       nix-index-database,
+      nixvim,
       nixarr,
       mac-app-util,
       linkwarden,
@@ -135,7 +136,7 @@
               home-manager.users.zeev = {
                 imports = [
                   ./modules/home-manager/homeserver
-                  inputs.nixvim.homeModules.default
+                  nixvim.homeModules.default
                 ];
                 _module.args.self = self;
                 _module.args.host = "homeserver";
@@ -152,26 +153,20 @@
           modules = [
             mac-app-util.darwinModules.default
             {
-              imports = [
-                ./hosts/macbook
-              ];
+              imports = [ ./hosts/macbook ];
               _module.args.self = self;
             }
-            inputs.sops-nix.darwinModules.sops
+            sops-nix.darwinModules.sops
             nix-index-database.darwinModules.nix-index
-            inputs.home-manager.darwinModules.home-manager
+            home-manager.darwinModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              users.users.vk = {
-                ignoreShellProgramCheck = true;
-                home = "/modules/users/vk";
-              };
               home-manager.users.vk = {
                 imports = [
-                  mac-app-util.homeManagerModules.default
-                  inputs.nixvim.homeModules.default
                   ./modules/home-manager/macbook
+                  mac-app-util.homeManagerModules.default
+                  nixvim.homeModules.default
                 ];
                 _module.args.self = self;
                 _module.args.host = "macbook";
