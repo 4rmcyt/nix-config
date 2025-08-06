@@ -221,7 +221,7 @@
         "Productivity Tools" = [
           {
             "Microbin" = {
-              href = "https://paste.labhome.work";
+              href = "https://microbin.labhome.work";
               description = "Pastebin Service";
               icon = "microbin";
             };
@@ -290,20 +290,6 @@
                   type = "uptimekuma";
                   url = "http://localhost:3001";
                   slug = "homeserver";
-                }
-              ];
-            };
-          }
-          {
-            "Portainer" = {
-              href = "https://portainer.labhome.work";
-              description = "Container Management";
-              icon = "portainer";
-              widgets = [
-                {
-                  type = "portainer";
-                  url = "http://localhost:9443";
-                  key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJlOGFmM2RhMzY2N2I0ZDVlYWViYzc4Y2FhOGZmNGU4YiIsImlhdCI6MTc1MzM4MzA1MiwiZXhwIjoyMDY4NzQzMDUyfQ.S4p_4-V2weR99zTtvSAtrB-9yTze9_yQCut1Q50Uuu4";
                 }
               ];
             };

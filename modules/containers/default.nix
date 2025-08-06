@@ -35,8 +35,6 @@
     2375 # Podman API (insecure, for local use only)
     2376 # Podman API (secure, for local use only)
     9948 # NextDNS Exporter
-    9444 # Portainer
-    9001 # Portainer
   ];
   networking.firewall.allowedUDPPorts = [
     # Podman
@@ -62,16 +60,6 @@
       networks = [ "podman" ];
       ports = [ "127.0.0.1:9948:9948" ];
       environmentFiles = [ config.sops.secrets.containers_env.path ];
-    };
-    portainer = {
-      image = "portainer/portainer-ce:alpine-sts";
-      autoStart = true;
-      networks = [ "podman" ];
-      privileged = true;
-      volumes = [
-        "portainer_data:/data"
-      ];
-      ports = [ "9444:9443" ];
     };
   };
 }
