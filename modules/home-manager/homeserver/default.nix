@@ -48,7 +48,7 @@
     nvd
     pinentry-tty
     pciutils
-    python3full
+    python3Full
   ];
 
   programs = {
