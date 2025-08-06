@@ -12,14 +12,18 @@
   boot.initrd.availableKernelModules = [
     "xhci_pci"
     "nvme"
+    "ahci"
     "usb_storage"
     "usbhid"
   ];
 
+  boot.supportedFilesystems = [ "zfs" ];
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelModules = [
     "kvm-intel"
     "cpufreq_stats"
+    "coretemp"
+    "fuse"
   ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
