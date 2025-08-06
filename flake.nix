@@ -132,7 +132,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              nixvim.home-managerModules.default
+              inputs.nixvim.homeModules.nixvim
               home-manager.users.zeev = {
                 imports = [
                   ./modules/home-manager/homeserver
@@ -157,7 +157,7 @@
                 _module.args.self = self;
               }
               inputs.sops-nix.darwinModules.sops
-              nix-index-database.darwinModules.nix-index
+              inputs.nixvim.nixDarwinModules.nixvim
               inputs.home-manager.darwinModules.home-manager
               {
                 home-manager.useGlobalPkgs = true;
