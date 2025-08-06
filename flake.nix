@@ -132,6 +132,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              nixvim.home-managerModules.default
               home-manager.users.zeev = {
                 imports = [
                   ./modules/home-manager/homeserver
