@@ -40,10 +40,10 @@
 
       ];
 
-      extraCommands = ''
-        iptables -A nixos-fw -p tcp --dport 9090 -s 192.168.1.0/24 -j ACCEPT
-        iptables -A nixos-fw -p tcp --dport 3000 -s 192.168.1.0/24 -j ACCEPT
-      '';
+      # extraCommands = ''
+      #   iptables -A nixos-fw -p tcp --dport 9090 -s 192.168.1.0/24 -j ACCEPT
+      #   iptables -A nixos-fw -p tcp --dport 3000 -s 192.168.1.0/24 -j ACCEPT
+      # '';
 
       trustedInterfaces = [ "tailscale0" ];
 
