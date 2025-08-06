@@ -58,5 +58,12 @@
   };
 
   services.haveged.enable = true;
-
+  systemd.services.power-tune = {
+    description = "Power Management tunings";
+    wantedBy = [ "multi-user.target" ];
+    script = ''
+      ${pkgs.powertop}/bin/powertop --auto-tune
+    '';
+    serviceConfig.Type = "oneshot";
+  };
 }
