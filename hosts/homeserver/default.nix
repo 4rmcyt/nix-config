@@ -122,6 +122,7 @@
     nh
     nix-output-monitor
     shfmt
+    powertop
   ];
 
   services = {
