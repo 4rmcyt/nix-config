@@ -107,6 +107,7 @@
     tree
     git-crypt
     python3Full
+    pciutils
     borgbackup
     smartmontools
     openssl
