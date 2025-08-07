@@ -40,10 +40,45 @@
 
       ];
 
+      # rejectPackets = true;
+
+      # # Rate limiting for SSH
       # extraCommands = ''
-      #   iptables -A nixos-fw -p tcp --dport 9090 -s 192.168.1.0/24 -j ACCEPT
-      #   iptables -A nixos-fw -p tcp --dport 3000 -s 192.168.1.0/24 -j ACCEPT
+      #   # Rate limit SSH connections
+      #   iptables -A nixos-fw -p tcp --dport 22 -m conntrack --ctstate NEW -m recent --set --name SSH
+      #   iptables -A nixos-fw -p tcp --dport 22 -m conntrack --ctstate NEW -m recent --update --seconds 60 --hitcount 4 --name SSH -j DROP
+
+      #   # Block common attack ports
+      #   iptables -A nixos-fw -p tcp --dport 23 -j DROP  # Telnet
+      #   iptables -A nixos-fw -p tcp --dport 135 -j DROP # RPC
+      #   iptables -A nixos-fw -p tcp --dport 445 -j DROP # SMB
       # '';
+
+      # kernel.sysctl = {
+      #   # IP Spoofing protection
+      #   "net.ipv4.conf.default.rp_filter" = 1;
+      #   "net.ipv4.conf.all.rp_filter" = 1;
+
+      #   # IP redirects
+      #   "net.ipv4.conf.all.accept_redirects" = 0;
+      #   "net.ipv6.conf.all.accept_redirects" = 0;
+      #   "net.ipv4.conf.all.send_redirects" = 0;
+
+      #   # Source packet routing
+      #   "net.ipv4.conf.all.accept_source_route" = 0;
+      #   "net.ipv6.conf.all.accept_source_route" = 0;
+
+      #   # Log Martians
+      #   "net.ipv4.conf.all.log_martians" = 1;
+
+      #   # ICMP
+      #   "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
+      #   "net.ipv4.icmp_ignore_bogus_error_responses" = 1;
+
+      #   # TCP hardening
+      #   "net.ipv4.tcp_syncookies" = 1;
+      #   "net.ipv4.tcp_rfc1337" = 1;
+      # };
 
       trustedInterfaces = [ "tailscale0" ];
 
