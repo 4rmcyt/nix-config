@@ -128,6 +128,7 @@
     lm_sensors
     nixfmt-tree
     nix-inspect
+    nvd
   ];
 
   services = {
