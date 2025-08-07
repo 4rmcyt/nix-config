@@ -205,3 +205,124 @@
     };
   };
 }
+
+
+# {
+#   disko.devices = {
+#     disk = {
+#       # Add proper disk identification and validation
+#       main = {
+#         type = "disk";
+#         device = "/dev/disk/by-id/nvme-specific-identifier";  # Use specific IDs
+#         content = {
+#           type = "gpt";
+#           partitions = {
+#             ESP = {
+#               size = "1G";
+#               type = "EF00";
+#               content = {
+#                 type = "filesystem";
+#                 format = "vfat";
+#                 mountpoint = "/boot";
+#                 mountOptions = [
+#                   "defaults"
+#                   "umask=0077"    # Secure boot partition
+#                   "dmask=0077"
+#                   "fmask=0177"
+#                   "nodev"
+#                   "nosuid"
+#                   "noexec"
+#                 ];
+#               };
+#             };
+            
+#             # Add swap partition with encryption
+#             swap = {
+#               size = "8G";
+#               content = {
+#                 type = "swap";
+#                 randomEncryption = true;  # Encrypt swap
+#                 priority = 100;
+#               };
+#             };
+            
+#             zfs = {
+#               size = "100%";
+#               content = {
+#                 type = "zfs";
+#                 pool = "rpool";
+#               };
+#             };
+#           };
+#         };
+#       };
+#     };
+    
+#     zpool = {
+#       rpool = {
+#         type = "zpool";
+#         # Add ZFS security options
+#         options = {
+#           ashift = "12";
+#           autotrim = "on";
+#         };
+        
+#         # Root dataset with encryption
+#         rootFsOptions = {
+#           encryption = "aes-256-gcm";
+#           keyformat = "passphrase";
+#           keylocation = "prompt";
+          
+#           # Security options
+#           acltype = "posixacl";
+#           compression = "zstd";
+#           dnodesize = "auto";
+#           normalization = "formD";
+#           relatime = "on";
+#           xattr = "sa";
+          
+#           # Performance options
+#           recordsize = "1M";
+#           primarycache = "all";
+#           secondarycache = "all";
+#         };
+        
+#         datasets = {
+#           # System datasets
+#           "root" = {
+#             type = "zfs_fs";
+#             mountpoint = "/";
+#             options = {
+#               mountpoint = "/";
+#               # Security: no setuid on root
+#               setuid = "off";
+#               devices = "off";
+#             };
+#           };
+          
+#           "home" = {
+#             type = "zfs_fs";
+#             mountpoint = "/home";
+#             options = {
+#               mountpoint = "/home";
+#               setuid = "off";  # No setuid in home
+#               exec = "on";     # Allow execution in home
+#             };
+#           };
+          
+#           # Separate dataset for var with stricter options
+#           "var" = {
+#             type = "zfs_fs";
+#             mountpoint = "/var";
+#             options = {
+#               mountpoint = "/var";
+#               setuid = "off";
+#               devices = "off";
+#               exec = "off";    # No execution in /var
+#             };
+#           };
+#         };
+#       };
+#     };
+#   };
+# }
