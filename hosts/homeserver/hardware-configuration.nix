@@ -79,12 +79,17 @@
   boot.kernelParams = [
     "nohibernate"
     "zfs.zfs_arc_max=8589934592"
-    "intel_iommu=on" # Enable IOMMU
-    "iommu=pt" # Passthrough mode
-    "spectre_v2=on" # Spectre v2 mitigation
-    "spec_store_bypass_disable=on" # Speculative store bypass
-    "tsx=off" # Disable TSX
-    "tsx_async_abort=full,nosmt" # TSX async abort mitigation
+
+    # Intel security features
+    "intel_iommu=on"
+    "iommu=pt"
+
+    # CPU security (remove duplicates)
+    "spectre_v2=on"
+    "spec_store_bypass_disable=on"
+    "tsx=off"
+    "tsx_async_abort=full,nosmt"
+
     # Memory protection
     "slab_nomerge"
     "init_on_alloc=1"
@@ -93,8 +98,6 @@
 
     # CPU security
     "pti=on"
-    "spectre_v2=on"
-    "spec_store_bypass_disable=on"
 
     # Kernel hardening
     "vsyscall=none"
@@ -102,10 +105,6 @@
     "oops=panic"
     "module.sig_enforce=1"
     "lockdown=confidentiality"
-
-    # Disable legacy features
-    "nohibernate"
-    "nosmt" # Disable SMT if not needed for security
   ];
   # Blacklist vulnerable modules
   blacklistedKernelModules = [
@@ -202,6 +201,7 @@
 
   hardware.bluetooth.enable = false;
   hardware.pulseaudio.enable = false;
+  hardware.i2c.enable = true;
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
   services.fwupd.enable = true;
@@ -288,6 +288,12 @@
       options = [
         "fmask=0137"
         "dmask=0027"
+        # "fmask=0077" # More restrictive than current 0137
+        # "dmask=0077" # More restrictive than current 0027
+        # "nodev" # No device files
+        # "nosuid" # No setuid binaries
+        # "noexec" # No executable files (except kernel/initrd)
+        # "relatime" # Better performance than default
       ];
     };
 
