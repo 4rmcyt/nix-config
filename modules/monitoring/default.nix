@@ -98,13 +98,21 @@
     retentionTime = "30d";
     globalConfig.scrape_interval = "1m";
     scrapeConfigs = [
-      {
+     {
         job_name = "prometheus";
-        static_configs = [ { targets = [ "localhost:9090" ]; } ];
+        static_configs = [{ targets = [ "localhost:9090" ]; }];
       }
       {
-        job_name = "cloudflare";
-        static_configs = [ { targets = [ "localhost:8081" ]; } ];
+        job_name = "node-exporter";
+        static_configs = [{ targets = [ "localhost:9100" ]; }];
+      }
+      {
+        job_name = "postgres-exporter";
+        static_configs = [{ targets = [ "localhost:9187" ]; }];
+      }
+      {
+        job_name = "cloudflare-exporter";
+        static_configs = [{ targets = [ "localhost:8081" ]; }];
       }
     ];
 
@@ -121,11 +129,9 @@
           "time"
           "thermal_zone"
         ];
-        scrapeConfig.enable = true;
       };
       postgres = {
         enable = true;
-        scrapeConfig.enable = true;
       };
     };
     ruleFiles = [ ./alerts/homeserver.yml ]; # It's better to manage rules in a separate file
