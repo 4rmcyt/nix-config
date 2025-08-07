@@ -77,6 +77,43 @@
       "grafana"
       "vaultwarden"
     ];
+
+    #   settings = {
+    #   # Connection limits
+    #   max_connections = 50;
+    #   shared_buffers = "256MB";
+    #   effective_cache_size = "1GB";
+
+    #   # Security settings
+    #   ssl = true;
+    #   ssl_cert_file = "/var/lib/postgresql/server.crt";
+    #   ssl_key_file = "/var/lib/postgresql/server.key";
+
+    #   # Logging for security
+    #   log_statement = "mod";  # Log modifications
+    #   log_min_duration_statement = 1000;  # Log slow queries
+    #   log_connections = true;
+    #   log_disconnections = true;
+    #   log_checkpoints = true;
+
+    #   # Authentication
+    #   password_encryption = "scram-sha-256";
+
+    #   # Performance and security
+    #   shared_preload_libraries = [ "pg_stat_statements" ];
+    #   track_activity_query_size = 2048;
+    # };
+
+    # # Host-based authentication
+    # authentication = pkgs.lib.mkOverride 10 ''
+    #   # Local connections
+    #   local all all peer
+
+    #   # Network connections (restrict to local network)
+    #   host all all 127.0.0.1/32 scram-sha-256
+    #   host all all ::1/128 scram-sha-256
+    #   host all all 192.168.1.0/24 scram-sha-256
+    # '';
     ensureUsers = [
       {
         name = "miniflux";
@@ -148,4 +185,24 @@
       GRANT ALL PRIVILEGES ON DATABASE vaultwarden TO vaultwarden;
     '';
   };
+
+  # systemd.services.postgresql.serviceConfig = {
+  #   # Resource limits
+  #   MemoryMax = "2G";
+  #   CPUQuota = "150%";
+
+  #   # Security hardening
+  #   NoNewPrivileges = true;
+  #   PrivateTmp = true;
+  #   ProtectHome = true;
+  #   ProtectSystem = "strict";
+  #   ReadWritePaths = [ "/var/lib/postgresql" ];
+
+  #   # Network restrictions
+  #   RestrictAddressFamilies = [
+  #     "AF_INET"
+  #     "AF_INET6"
+  #     "AF_UNIX"
+  #   ];
+  # };
 }

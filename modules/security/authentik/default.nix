@@ -60,6 +60,8 @@
     environmentFile = config.sops.secrets.authentik_env.path;
     createDatabase = false;
     settings = {
+      log_level = "warning"; # Reduce log verbosity
+      session_duration = "hours=1";
       postgresql = {
         user = "authentik";
         name = "authentik";
@@ -77,5 +79,24 @@
       disable_startup_analytics = true;
       avatars = "initials";
     };
+
+    # systemd.services.authentik = {
+    #   serviceConfig = {
+    #     # Resource limits
+    #     MemoryMax = "1G";
+    #     CPUQuota = "100%";
+
+    #     # Security hardening
+    #     NoNewPrivileges = true;
+    #     PrivateTmp = true;
+    #     ProtectHome = true;
+    #     ProtectSystem = "strict";
+    #     ReadWritePaths = [ "/var/lib/authentik" ];
+
+    #     # Capabilities
+    #     CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" ];
+    #     AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
+    #   };
+    # };
   };
 }

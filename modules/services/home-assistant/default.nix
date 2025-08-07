@@ -60,6 +60,13 @@
 
   services = {
     home-assistant = {
+      # name = "Home";
+      # latitude = "!secret latitude";  # Use secrets
+      # longitude = "!secret longitude"; # Use secrets
+      # elevation = "!secret elevation"; # Use secrets
+      # auth_mfa_modules = [ "totp" ];
+      # internal_url = "http://localhost:8123";
+      # external_url = "https://ha.yourdomain.com";
       enable = true;
       configDir = "/var/lib/home-assistant";
       configWritable = true;
@@ -144,4 +151,23 @@
       ];
     };
   };
+  # systemd.services.home-assistant.serviceConfig = {
+  #   # Resource limits
+  #   MemoryMax = "2G";
+  #   CPUQuota = "150%";
+
+  #   # Security hardening
+  #   NoNewPrivileges = true;
+  #   PrivateTmp = true;
+  #   ProtectHome = true;
+  #   ProtectSystem = "strict";
+  #   ReadWritePaths = [ "/var/lib/hass" ];
+
+  #   # Network restrictions
+  #   RestrictAddressFamilies = [
+  #     "AF_INET"
+  #     "AF_INET6"
+  #     "AF_UNIX"
+  #   ];
+  # };
 }
