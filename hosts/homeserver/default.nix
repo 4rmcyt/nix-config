@@ -117,6 +117,7 @@
     pciutils
     borgbackup
     smartmontools
+    nix-fast-build
     openssl
     fwupd
     nh

@@ -1,86 +1,47 @@
-{ pkgs, ... }:
+{ inputs, ... }:
 {
-  # Used to find the project root
-  projectRootFile = "flake.nix";
+  imports = [ inputs.treefmt-nix.flakeModule ];
+  perSystem =
+    { pkgs, ... }:
+    {
+      treefmt.projectRootFile = ".git/config";
+      treefmt.programs.shellcheck.enable = true;
 
-  # Files to exclude from formatting.
-  settings.global.excludes = [
-    # Generated files
-    "build/**"
-    "tools/**"
-
-    # Exclude non-Nix code for now.
-    "**/.editorconfig"
-    "**/.gitattributes"
-    "**/.gitignore"
-    "**/.clang-format"
-    "LICENSE"
-    "**/LICENSE"
-    "**/LICENSE.MIT"
-    "**/AUTHORS"
-    "*.c"
-    "*.h"
-    "*.cpp"
-    "*.hpp"
-    "*.ui"
-    "*.qml"
-    "*.pri"
-    "*.qrc"
-    "*.pro"
-    "*.png"
-    "*.jpg"
-    "*.svg"
-    "*.json"
-    "*.bin"
-    "*.ttf"
-    "*.md"
-    "*.xml"
-    "*.lbm"
-    "*.yml"
-    "*.conf"
-    "*.txt"
-    "*.sh"
-    "*.plist"
-    # spell-checker: disable-next-line
-    "qmarkdowntextedit/trans/**"
-    "*.pc.in"
-    "build_*"
-    "*.storyboard"
-    "ios/iTunesArtwork"
-    "ios/iTunesArtwork@2x"
-    "*.mm"
-    "*.icns"
-    "**/HUFFCODE"
-    "QCodeEditor/include/**"
-    "*.in"
-    "*.gradle"
-    "*.java"
-    "*.jar"
-    "*.properties"
-    "**/gradlew"
-    "application/create_app"
-  ];
-
-  programs.deadnix.enable = true;
-  programs.deno.enable = pkgs.hostPlatform.system != "riscv64-linux";
-  programs.mdsh.enable = true;
-  programs.nixfmt.enable = true;
-  programs.shellcheck.enable = pkgs.hostPlatform.system != "riscv64-linux";
-  programs.shfmt.enable = pkgs.hostPlatform.system != "riscv64-linux";
-  programs.yamlfmt.enable = true;
-
-  programs.treefmt.enable = true;
-  programs.treefmt.settings = {
-    nix = {
-      command = "nixfmt";
-      options = [
-        "-sv"
-        "-w"
-        "80"
+      treefmt.programs.nixfmt.enable = true;
+      treefmt.programs.nixfmt.package = pkgs.nixfmt-rfc-style;
+      treefmt.programs.deadnix.enable = true;
+      treefmt.settings.global.excludes = [
+        "*.png"
+        "*.jpeg"
+        "*.gitignore"
+        ".vscode/*"
+        "*.toml"
+        "*.clan-flake"
+        "*.code-workspace"
+        "*.pub"
+        "*.typed"
+        "*.age"
+        "*.list"
+        "*.desktop"
       ];
-      includes = [ "*.nix" ];
-      excludes = [ ];
+      treefmt.programs.prettier = {
+        enable = true;
+        includes = [
+          "*.cjs"
+          "*.css"
+          "*.html"
+          "*.js"
+          "*.json5"
+          "*.jsx"
+          "*.mdx"
+          "*.mjs"
+          "*.scss"
+          "*.ts"
+          "*.tsx"
+          "*.vue"
+          "*.yaml"
+          "*.yml"
+        ];
+      };
     };
-  };
-
 }
