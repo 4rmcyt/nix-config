@@ -193,6 +193,7 @@
           "processes"
           "interrupts"
           "cpu"
+          "zfs"
           "diskstats"
           "meminfo"
           "netdev"
