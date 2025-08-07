@@ -63,48 +63,77 @@
     "/" = {
       device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part2";
       fsType = "btrfs";
-      options = [ "subvol=@root" "compress=zstd" "noatime" ];
+      options = [
+        "subvol=@root"
+        "compress=zstd"
+        "noatime"
+      ];
     };
 
     "/boot" = {
       device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part1";
       fsType = "vfat";
-      options = [ "fmask=0137" "dmask=0027" ];
+      options = [
+        "fmask=0137"
+        "dmask=0027"
+      ];
     };
 
     "/home" = {
       device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part2";
       fsType = "btrfs";
-      options = [ "subvol=@home" "compress=zstd" "noatime" ];
+      options = [
+        "subvol=@home"
+        "compress=zstd"
+        "noatime"
+      ];
     };
 
     "/nix" = {
       device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part2";
       fsType = "btrfs";
-      options = [ "subvol=@nix" "compress=zstd" "noatime" ];
+      options = [
+        "subvol=@nix"
+        "compress=zstd"
+        "noatime"
+      ];
     };
 
     "/var/log" = {
       device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part2";
       fsType = "btrfs";
-      options = [ "subvol=@log" "compress=zstd" "noatime" ];
+      options = [
+        "subvol=@log"
+        "compress=zstd"
+        "noatime"
+      ];
     };
 
     "/.swapvol" = {
       device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315-part2";
       fsType = "btrfs";
-      options = [ "subvol=@swap" "noatime" ];
+      options = [
+        "subvol=@swap"
+        "noatime"
+      ];
     };
 
     "/data" = {
       device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345-part1";
       fsType = "btrfs";
-      options = [ "subvol=@data" "compress=zstd" "noatime" ];
+      options = [
+        "subvol=@data"
+        "compress=zstd"
+        "noatime"
+      ];
     };
   };
 
   swapDevices = [
-    { device = "/.swapvol/swapfile"; size = 16384; }
+    {
+      device = "/.swapvol/swapfile";
+      size = 16384;
+    }
   ];
 
   boot.loader.systemd-boot.editor = false; # Disable boot editor

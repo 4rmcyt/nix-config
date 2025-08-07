@@ -19,6 +19,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
+    nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
 
     treefmt-nix.url = "github:numtide/treefmt-nix";
     systems.url = "github:nix-systems/default";
@@ -197,12 +198,13 @@
         homeserver = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = commonNixOSModules ++ [
+            inputs.nixos-facter-modules.nixosModules.facter
+            { config.facter.reportPath = ./facter.json; }
             {
               imports = [ ./hosts/homeserver ];
               _module.args.self = self;
             }
             (nixosHomeManagerConfig "zeev" "homeserver")
-            # Специфичные модули для homeserver
             nixarr.nixosModules.default
             authentik-nix.nixosModules.default
             vscode-server.nixosModules.default
