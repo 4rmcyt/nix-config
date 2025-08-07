@@ -1,0 +1,39 @@
+# ./alerts/homeserver.yml
+groups:
+  - name: Host Alerts
+    rules:
+      - alert: HighCPUUsage
+        expr: avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100 < 20
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage has been over 80% for the last 5 minutes."
+
+      - alert: LowDiskSpace
+        expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100 < 15
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Low disk space on {{ $labels.instance }}"
+          description: "The root filesystem has less than 15% free space remaining."
+
+      - alert: ZfsPoolUnhealthy
+        expr: zfs_pool_health{pool!~"dpool|rpool"} != 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ZFS pool {{ $labels.pool }} is unhealthy on {{ $labels.instance }}"
+          description: "The ZFS pool '{{ $labels.pool }}' is in an unhealthy state. Immediate investigation is required."
+  
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service {{ $labels.job }} is down on {{ $labels.instance }}"
+          description: "The Prometheus job '{{ $labels.job }}' has been down for more than 1 minute."
