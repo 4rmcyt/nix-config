@@ -138,6 +138,7 @@
       };
     };
 
+    systemd-oomd.enable = true;
     # --- Other Services ---
     ollama.enable = false;
     vscode-server.enable = true;
