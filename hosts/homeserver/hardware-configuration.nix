@@ -9,6 +9,7 @@
 {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
+  hardware.enableRedistributableFirmware = lib.mkDefault true;
   # 1. Boot Loader Configuration
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -67,16 +68,11 @@
     "intel_iommu=on"
     "iommu=pt"
     "spec_store_bypass_disable=on"
-    "tsx=off"
-    "tsx_async_abort=full,nosmt"
 
     # Memory Security
     "init_on_alloc=1"
     "page_alloc.shuffle=1"
     "slab_nomerge"
-
-    # ZFS Performance
-    "zfs.zfs_arc_max=8589934592"
   ];
 
   # 3. Kernel Sysctl Settings (Hardening & Performance)
@@ -93,7 +89,6 @@
     "kernel.dmesg_restrict" = 1;
     "kernel.kptr_restrict" = 2;
     "kernel.unprivileged_bpf_disabled" = 1;
-    "kernel.unprivileged_userns_clone" = 0;
     "kernel.yama.ptrace_scope" = 1;
 
     # Memory Security
@@ -106,10 +101,6 @@
     "net.ipv4.conf.all.log_martians" = 1;
     "net.ipv4.conf.all.rp_filter" = 1;
     "net.ipv4.conf.all.send_redirects" = 0;
-    "net.ipv4.conf.default.accept_redirects" = 0;
-    "net.ipv4.conf.default.accept_source_route" = 0;
-    "net.ipv4.conf.default.rp_filter" = 1;
-    "net.ipv4.conf.default.send_redirects" = 0;
     "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
     "net.ipv4.icmp_ignore_bogus_error_responses" = 1;
     "net.ipv4.tcp_rfc1337" = 1;
@@ -127,6 +118,8 @@
     "vm.swappiness" = 1;
     "vm.vfs_cache_pressure" = 50;
   };
+  
+  boot.zfs.devNodes = "/dev/disk/by-id";
 
   # 4. Hardware Configuration
   hardware.graphics.enable = true;
@@ -154,6 +147,7 @@
     ];
   };
   services.zfs = {
+    arcMax = 10589934592; # 10 GB
     autoScrub.enable = true;
     autoScrub.interval = "monthly";
     autoScrub.pools = [
@@ -210,6 +204,7 @@
     "/var/lib/postgresql" = {
       device = "rpool/var/lib/postgresql";
       fsType = "zfs";
+      options = [ "zfsutil-recsize=16K" ];
     };
     "/var/lib/containers" = {
       device = "rpool/var/lib/containers";

@@ -154,47 +154,4 @@
       killUnconfinedConfinables = true;
     };
   };
-
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-
-  #   # Security: disable console access for non-root
-  #   useXkbConfig = false;
-
-  #   # Disable virtual console switching for security
-  #   # earlySetup = true;
-  # };
-
-  # # TTY security
-  # services.getty = {
-  #   greetingLine = "\\l";  # Don't show system info
-  #   helpLine = "";         # Don't show help
-
-  #   # Security: login timeout
-  #   extraArgs = [ "--timeout" "60" ];
-  # };
-
-  # # Virtual console security
-  # systemd.services."getty@tty1".serviceConfig = {
-  #   # Restart on failure but with limits
-  #   Restart = "always";
-  #   RestartSec = "30s";
-
-  #   # Security: limit login attempts
-  #   StartLimitInterval = "300s";
-  #   StartLimitBurst = 3;
-  # };
-
-  # # Disable unused TTYs for security
-  # systemd.targets.getty.wants = [
-  #   "getty@tty1.service"
-  #   # Comment out unused TTYs
-  #   # "getty@tty2.service"
-  #   # "getty@tty3.service"
-  #   # "getty@tty4.service"
-  #   # "getty@tty5.service"
-  #   # "getty@tty6.service"
-  # ];
-
 }
