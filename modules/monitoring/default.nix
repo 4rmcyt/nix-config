@@ -32,15 +32,15 @@
     grafana.isSystemUser = true;
     uptime-kuma.isSystemUser = true;
     prometheus.isSystemUser = true;
-    loki.isSystemUser = true;       # New user for Loki
-    promtail.isSystemUser = true;   # New user for Promtail
+    loki.isSystemUser = true; # New user for Loki
+    promtail.isSystemUser = true; # New user for Promtail
   };
   users.groups = {
-    grafana = {};
-    uptime-kuma = {};
-    prometheus = {};
-    loki = {};
-    promtail = {};
+    grafana = { };
+    uptime-kuma = { };
+    prometheus = { };
+    loki = { };
+    promtail = { };
   };
 
   # =================================================================
@@ -98,15 +98,30 @@
     retentionTime = "30d";
     globalConfig.scrape_interval = "1m";
     scrapeConfigs = [
-      { job_name = "prometheus"; static_configs = [{ targets = [ "localhost:9090" ]; }]; }
-      { job_name = "cloudflare"; static_configs = [{ targets = [ "localhost:8081" ]; }]; }
+      {
+        job_name = "prometheus";
+        static_configs = [ { targets = [ "localhost:9090" ]; } ];
+      }
+      {
+        job_name = "cloudflare";
+        static_configs = [ { targets = [ "localhost:8081" ]; } ];
+      }
     ];
 
     exporters = {
       node = {
         enable = true;
-        enabledCollectors = [ "systemd" "zfs" "diskstats" "meminfo" "netdev" "stat" "time" "thermal_zone" ];
-        scrapeConfig.enable = true; 
+        enabledCollectors = [
+          "systemd"
+          "zfs"
+          "diskstats"
+          "meminfo"
+          "netdev"
+          "stat"
+          "time"
+          "thermal_zone"
+        ];
+        scrapeConfig.enable = true;
       };
       postgres = {
         enable = true;
@@ -170,14 +185,16 @@
         cache_location = "/var/lib/loki/boltdb-shipper-cache";
         shared_store = "filesystem";
       };
-      schema_config.configs = [{
-        from = "2024-01-01";
-        store = "boltdb-shipper";
-        object_store = "filesystem";
-        schema = "v12";
-        index.prefix = "index_";
-        index.period = "24h";
-      }];
+      schema_config.configs = [
+        {
+          from = "2024-01-01";
+          store = "boltdb-shipper";
+          object_store = "filesystem";
+          schema = "v12";
+          index.prefix = "index_";
+          index.period = "24h";
+        }
+      ];
     };
   };
 
@@ -185,7 +202,7 @@
     enable = true;
     configuration = {
       server.http_listen_port = 0; # Promtail doesn't need to listen for connections
-      clients = [{ url = "http://localhost:3100/loki/api/v1/push"; }];
+      clients = [ { url = "http://localhost:3100/loki/api/v1/push"; } ];
       scrape_configs = [
         {
           job_name = "journal";
@@ -199,7 +216,7 @@
           };
           relabel_configs = [
             {
-              source_labels = ["__journal__systemd_unit"];
+              source_labels = [ "__journal__systemd_unit" ];
               target_label = "unit";
             }
           ];

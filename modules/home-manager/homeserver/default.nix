@@ -1,16 +1,71 @@
 { pkgs, inputs, ... }:
 {
-   home.packages = with pkgs; [
+  home.packages = with pkgs; [
     # Shell & Editor
-    zsh neovim vim meslo-lgs-nf
+    zsh
+    neovim
+    vim
+    meslo-lgs-nf
     # Dev tools
-    direnv go python3Full deploy-rs just nixfmt-rfc-style nixpkgs-fmt nil git-crypt nix-fast-build shfmt nixfmt-tree nix-inspect nix-diff
+    direnv
+    go
+    python3Full
+    deploy-rs
+    just
+    nixfmt-rfc-style
+    nixpkgs-fmt
+    nil
+    git-crypt
+    nix-fast-build
+    shfmt
+    nixfmt-tree
+    nix-inspect
+    nix-diff
     # User Utils
-    pass gnupg jq mc age sops ssh-to-age openssh dive yamllint nix-index fzf ffmpeg trash-cli zip unar unzip p7zip tree borgbackup nextdns nh nix-output-monitor nvd pinentry-tty
+    pass
+    gnupg
+    jq
+    mc
+    age
+    sops
+    ssh-to-age
+    openssh
+    dive
+    yamllint
+    nix-index
+    fzf
+    ffmpeg
+    trash-cli
+    zip
+    unar
+    unzip
+    p7zip
+    tree
+    borgbackup
+    nextdns
+    nh
+    nix-output-monitor
+    nvd
+    pinentry-tty
     # System & Network Tools
-    pciutils wget curl gawk gnugrep iproute2 htop btop lsof openssl powertop lm_sensors apacheHttpd iotop cachix tuptime nmap
+    pciutils
+    wget
+    curl
+    gawk
+    gnugrep
+    iproute2
+    htop
+    btop
+    lsof
+    openssl
+    powertop
+    lm_sensors
+    apacheHttpd
+    iotop
+    cachix
+    tuptime
+    nmap
   ];
-
 
   programs = {
     git = {
