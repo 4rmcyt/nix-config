@@ -26,7 +26,6 @@
 
   # Define filesystem support and ZFS settings for the initial ramdisk (initrd).
   boot.supportedFilesystems = [ "zfs" ];
-  boot.zfs.devNodes = "/dev/disk/by-id";
 
   # Define kernel modules needed early in the boot process.
   boot.initrd.availableKernelModules = [
