@@ -43,10 +43,26 @@
     apparmor.enable = true;
 
     auditd.enable = true;
-    audit.rules = [
+    security.audit.rules = [
+      # Base rules (from your config)
       "-w /etc/passwd -p wa -k identity"
       "-w /etc/group -p wa -k identity"
       "-w /etc/shadow -p wa -k identity"
+      "-w /etc/sudoers -p wa -k identity"
+
+      # Monitor time changes
+      "-a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change"
+      "-a always,exit -F arch=b64 -S clock_settime -k time-change"
+
+      # Monitor privileged command execution
+      "-a always,exit -F path=/usr/bin/sudo -F perm=x -F auid>=1000 -F auid!=-1 -k privileged-sudo"
+      "-a always,exit -F path=/usr/bin/passwd -F perm=x -F auid>=1000 -F auid!=-1 -k privileged-passwd"
+
+      # Monitor kernel module loading
+      "-w /sbin/insmod -p x -k modules"
+      "-w /sbin/rmmod -p x -k modules"
+      "-w /sbin/modprobe -p x -k modules"
+      "-a always,exit -F arch=b64 -S init_module -S delete_module -k modules"
     ];
 
 

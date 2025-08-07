@@ -290,7 +290,10 @@
     # Memory Security
     "init_on_alloc=1"
     "page_alloc.shuffle=1"
-    "slab_nomerge"
+
+    # AppArmor Security
+    "apparmor=1"
+    "security=apparmor"
   ];
 
   # Sysctl settings for hardening and performance tuning.
