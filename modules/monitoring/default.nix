@@ -160,7 +160,7 @@
         enable = true;
       };
     };
-    ruleFiles = [ ./alerts/homeserver.yml ]; # It's better to manage rules in a separate file
+    ruleFiles = [ ./alerts/homeserver.yml ]; 
   };
 
   # --- Grafana Visualization ---
