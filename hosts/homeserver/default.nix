@@ -278,21 +278,7 @@
     ForwardToSyslog=no
   '';
 
-  # Add logrotate for service logs
-  services.logrotate = {
-    enable = true;
-    settings = {
-      "/var/log/nginx/*.log" = {
-        frequency = "daily";
-        rotate = 30;
-        compress = true;
-        delaycompress = true;
-        missingok = true;
-        notifempty = true;
-        postrotate = "systemctl reload nginx";
-      };
-    };
-  };
+ 
 
   programs = {
     gnupg.agent = {
@@ -321,7 +307,6 @@
     # Audio services - disable for server
     pipewire.enable = false;
     pulseaudio.enable = false;
-    rtkit.enable = false;
 
     # Display services - disable for server
     xserver.enable = false;
