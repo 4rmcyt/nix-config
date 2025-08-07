@@ -212,23 +212,39 @@
     enable = true;
     configuration = {
       server.http_listen_port = 3100;
-      storage_config.boltdb_shipper = {
-        active_index_directory = "/var/lib/loki/boltdb-shipper-active";
-        cache_location = "/var/lib/loki/boltdb-shipper-cache";
+      storage_config = {
+      boltdb_shipper = {
+        active_index_directory = "/var/lib/loki/index"; # Directory for the index
         shared_store = "filesystem";
       };
-      schema_config.configs = [
-        {
-          from = "2024-01-01";
-          store = "boltdb-shipper";
-          object_store = "filesystem";
-          schema = "v12";
-          index.prefix = "index_";
-          index.period = "24h";
-        }
-      ];
+      filesystem = {
+        directory = "/var/lib/loki/chunks"; # Directory for log data
+      };
+    };
+
+    schema_config = {
+      configs = [{
+        from = "2024-01-01";
+        store = "boltdb-shipper";
+        object_store = "filesystem";
+        schema = "v12";
+        index = {
+          prefix = "loki_index_";
+          period = "24h";
+        };
+      }];
+    };
+
+    # This helps Loki manage its own data retention
+    compactor = {
+      working_directory = "/var/lib/loki/compactor";
+      shared_store = "filesystem";
+      retention_enabled = true;
+      retention_delete_delay = "2h";
+      delete_request_store = "filesystem";
     };
   };
+};
 
   services.promtail = {
     enable = true;
