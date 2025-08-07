@@ -143,7 +143,6 @@
   # 5. Power Management
   powerManagement.cpuFreqGovernor = lib.mkDefault "schedutil";
 
-
   # 6. Core System Services
   services.fwupd.enable = true;
   services.smartd = {
