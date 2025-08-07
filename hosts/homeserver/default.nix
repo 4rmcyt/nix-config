@@ -23,8 +23,13 @@
     ../../modules/security
   ];
 
-  # Note: A global 'allowUnfree' is convenient, but for stricter control,
-  # consider using overlays or package-specific permissions.
+
+  users.users.git = {
+    isSystemUser = true;
+    description = "Git user";
+  };
+  users.groups.git = { };
+
   nixpkgs.config.allowUnfree = true;
 
   # =================================================================
@@ -56,7 +61,7 @@
       dates = [ "weekly" ];
     };
   };
-
+  
   # =================================================================
   # 3. Secrets Management with Sops
   # =================================================================
