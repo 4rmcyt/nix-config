@@ -21,41 +21,7 @@
   };
 
   # =================================================================
-  # 2. Logrotate for Application-Specific Logs
-  # =================================================================
-  services.logrotate = {
-    enable = true;
-    settings = {
-      # This is correct for services that write to their own log files.
-      "/var/log/nginx/*.log" = {
-        frequency = "daily";
-        rotate = 30;
-        compress = true;
-        delaycompress = true;
-        missingok = true;
-        notifempty = true;
-        sharedscripts = true;
-        postrotate = "systemctl reload nginx || true";
-      };
-
-      # This is also correct for PostgreSQL's dedicated logs.
-      "/var/log/postgresql/*.log" = {
-        frequency = "daily";
-        rotate = 7;
-        compress = true;
-        delaycompress = true;
-        missingok = true;
-        notifempty = true;
-        copytruncate = true;
-      };
-
-      # The entry for "/var/log/messages" has been removed, as journald
-      # now handles all system log rotation natively.
-    };
-  };
-
-  # =================================================================
-  # 3. Custom Security Event Monitoring
+  # 2. Custom Security Event Monitoring
   # =================================================================
   systemd.services.security-monitor = {
     description = "Security Event Monitor";
