@@ -127,6 +127,7 @@
     zfs
     lm_sensors
     treefmt
+    nix-inspect
   ];
 
   services = {
