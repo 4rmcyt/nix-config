@@ -35,14 +35,11 @@
 
   security = {
     sudo.execWheelOnly = true;
-
     protectKernelImage = true;
     lockKernelModules = true;
     forcePageTableIsolation = true;
     virtualisation.flushL1DataCache = "always";
-
     apparmor.enable = true;
-
     auditd.enable = true;
     security.audit.rules = [
       # Base rules (from your config)

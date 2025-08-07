@@ -183,11 +183,8 @@
       enable = true;
       clean.enable = true;
       clean.extraArgs = "--keep-since 10d --keep 3";
-      # Note: This flake path is hardcoded.
       flake = "/home/zeev/src/nixos-config";
     };
   };
-
-  security.sudo.execWheelOnly = true;
   system.stateVersion = "25.05";
 }
