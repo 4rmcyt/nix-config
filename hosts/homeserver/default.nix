@@ -69,83 +69,11 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # environment.systemPackages = with pkgs; [
-  #   # Essential system tools only
-  #   zsh
-  #   git
-  #   neovim
-  #   vim
-  #   wget
-  #   curl
-  #   jq
-  #   coreutils
-  #   gawk
-  #   gnugrep
-  #   iproute2
-  #   htop
-  #   btop
-  #   lsof
-  #   age
-  #   sops
-  #   ssh-to-age
-  #   openssh
-
-  #   # Development tools (consider moving to user profile)
-  #   # direnv  # Move to user profile
-  #   # go      # Move to user profile
-  #   # python3Full  # Move to user profile
-
-  #   # Essential admin tools
-  #   mc
-  #   wireguard-tools
-  #   nixfmt-rfc-style
-  #   nil
-  #   tree
-  #   smartmontools
-  #   openssl
-  #   fwupd
-  #   nh
-  #   nix-output-monitor
-  #   powertop
-  #   lm_sensors
-
-  #   # Remove rarely used packages
-  #   # dive
-  #   # apacheHttpd
-  #   # meslo-lgs-nf
-  #   # yamllint
-  #   # iotop
-  #   # cachix
-  #   # tuptime
-  #   # fzf
-  #   # ffmpeg
-  #   # nmap
-  #   # trash-cli
-  #   # zip
-  #   # unar
-  #   # unzip
-  #   # p7zip
-  #   # deploy-rs
-  #   # just
-  #   # nixpkgs-fmt
-  #   # git-crypt
-  #   # pciutils
-  #   # borgbackup
-  #   # nix-fast-build
-  #   # shfmt
-  #   # zfs
-  #   # nixfmt-tree
-  #   # nix-inspect
-  #   # nvd
-  #   # nix-diff
-  # ];
-
   environment.systemPackages = with pkgs; [
+    # Essential system tools only
     zsh
     git
     neovim
-    direnv
-    pass
     vim
     wget
     curl
@@ -154,7 +82,6 @@
     gawk
     gnugrep
     iproute2
-    mc
     htop
     btop
     lsof
@@ -162,12 +89,25 @@
     sops
     ssh-to-age
     openssh
+
+    # Essential admin tools
+    mc
     wireguard-tools
+    nixfmt-rfc-style
+    nil
+    tree
+    smartmontools
+    openssl
+    fwupd
+    nh
+    nix-output-monitor
+    powertop
+    lm_sensors
+
     dive
     apacheHttpd
     meslo-lgs-nf
     yamllint
-    nix-index
     iotop
     cachix
     tuptime
@@ -179,28 +119,15 @@
     unar
     unzip
     p7zip
-    go
-    nextdns
-    nixfmt-rfc-style
-    nil
     deploy-rs
     just
     nixpkgs-fmt
-    tree
     git-crypt
-    python3Full
     pciutils
     borgbackup
-    smartmontools
     nix-fast-build
-    openssl
-    fwupd
-    nh
-    nix-output-monitor
     shfmt
-    powertop
     zfs
-    lm_sensors
     nixfmt-tree
     nix-inspect
     nvd
@@ -270,16 +197,6 @@
 
   security.sudo.execWheelOnly = true;
 
-  services.journald.extraConfig = ''
-    SystemMaxUse=500M
-    SystemMaxFileSize=50M
-    SystemMaxFiles=10
-    MaxRetentionSec=30day
-    ForwardToSyslog=no
-  '';
-
- 
-
   programs = {
     gnupg.agent = {
       enable = true;
@@ -304,26 +221,15 @@
 
   # Disable unnecessary services for server
   services = {
-    # Audio services - disable for server
     pipewire.enable = false;
     pulseaudio.enable = false;
-
-    # Display services - disable for server
     xserver.enable = false;
     displayManager.gdm.enable = false;
     desktopManager.gnome.enable = false;
-
-    # Bluetooth - disable for server
     blueman.enable = false;
-
-    # Location services - disable for server
     geoclue2.enable = false;
-
-    # Other unnecessary services
     avahi.enable = false; # mDNS discovery
     printing.enable = false; # CUPS printing
-
-    # Keep only essential services
     haveged.enable = true; # Already enabled - good
   };
 
