@@ -1,4 +1,3 @@
-# ./alerts/homeserver.yml
 groups:
   - name: Host Alerts
     rules:
