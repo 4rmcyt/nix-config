@@ -186,7 +186,6 @@
   boot.loader.systemd-boot.editor = false;
   boot.loader.timeout = 3;
 
-
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = with pkgs; [
     intel-media-driver
@@ -251,23 +250,25 @@
     };
   };
 
-
   services.zfs = {
     autoScrub = {
       enable = true;
-      interval = "monthly";  # Make interval explicit
-      pools = [ "rpool" "dpool" ];  # Specify pools explicitly
+      interval = "monthly"; # Make interval explicit
+      pools = [
+        "rpool"
+        "dpool"
+      ]; # Specify pools explicitly
     };
 
     # Add ZFS auto-snapshot
     autoSnapshot = {
       enable = true;
       flags = "-k -p --utc";
-      frequent = 8;     # Keep 8 15-minute snapshots
-      hourly = 24;      # Keep 24 hourly snapshots
-      daily = 7;        # Keep 7 daily snapshots
-      weekly = 4;       # Keep 4 weekly snapshots
-      monthly = 12;     # Keep 12 monthly snapshots
+      frequent = 8; # Keep 8 15-minute snapshots
+      hourly = 24; # Keep 24 hourly snapshots
+      daily = 7; # Keep 7 daily snapshots
+      weekly = 4; # Keep 4 weekly snapshots
+      monthly = 12; # Keep 12 monthly snapshots
     };
 
     # Add ZFS trim for SSDs
