@@ -41,7 +41,7 @@
     };
     prometheus = {
       isSystemUser = true;
-      description = "Prometheus user";
+      description = "Prometheus daemon user";
       group = "prometheus";
     };
     loki = {
@@ -51,7 +51,7 @@
     };
     promtail = {
       isSystemUser = true;
-      description = "Promtail user";
+      description = "Promtail service user";
       group = "promtail";
     };
   };
