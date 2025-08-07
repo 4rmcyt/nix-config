@@ -302,7 +302,7 @@
     "apparmor=1"
 
     # ZFS Performance Tuning
-    "zfs.zfs_arc_max=12884901888" 
+    "zfs.zfs_arc_max=12884901888"
   ];
 
   # Sysctl settings for hardening and performance tuning.
@@ -374,7 +374,6 @@
   # =================================================================
   services.fwupd.enable = true;
   systemd.oomd.enable = true;
-
 
   services.smartd = {
     enable = true;
