@@ -213,6 +213,14 @@
         "zfsutil-compression=on"
       ];
     };
+    "/var/lib/loki" = {
+      device = "rpool/var/lib/loki";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
 
     # Secondary data pool
     "/data" = {

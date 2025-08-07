@@ -155,6 +155,10 @@
             type = "zfs_fs";
             mountpoint = "/var/lib/nginx";
           };
+          "var/lib/loki" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/loki";
+          };
           "data/media/.state" = {
             type = "zfs_fs";
             mountpoint = "/data/media/.state";
