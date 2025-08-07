@@ -65,21 +65,6 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  pkgs.treefmt.withConfig {
-  runtimeInputs = [ pkgs.nixfmt-rfc-style ];
-
-  settings = {
-    # Log level for files treefmt won't format
-    on-unmatched = "info";
-
-    # Configure nixfmt for .nix files
-    formatter.nixfmt = {
-      command = "nixfmt";
-      includes = [ "*.nix" ];
-    };
-  };
-}
-
   environment.systemPackages = with pkgs; [
     zsh
     git
