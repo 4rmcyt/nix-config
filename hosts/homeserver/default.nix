@@ -314,5 +314,33 @@
     };
   };
 
+  systemd.coredump.enable = false; # Disable coredumps completely
+
+  # Disable unnecessary services for server
+  services = {
+    # Audio services - disable for server
+    pipewire.enable = false;
+    pulseaudio.enable = false;
+    rtkit.enable = false;
+
+    # Display services - disable for server
+    xserver.enable = false;
+    displayManager.gdm.enable = false;
+    desktopManager.gnome.enable = false;
+
+    # Bluetooth - disable for server
+    blueman.enable = false;
+
+    # Location services - disable for server
+    geoclue2.enable = false;
+
+    # Other unnecessary services
+    avahi.enable = false; # mDNS discovery
+    printing.enable = false; # CUPS printing
+
+    # Keep only essential services
+    haveged.enable = true; # Already enabled - good
+  };
+
   system.stateVersion = "25.05";
 }

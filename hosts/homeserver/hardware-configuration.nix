@@ -134,44 +134,54 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernel.sysctl = {
-    "net.core.default_qdisc" = "fq";
-    "net.ipv4.tcp_congestion_control" = "bbr";
-    "vm.swappiness" = 1; # Prefer ZFS ARC over swap
-    "vm.vfs_cache_pressure" = 50;
 
     # Memory security
     "vm.mmap_rnd_bits" = 32;
     "vm.mmap_rnd_compat_bits" = 16;
-
-    # Security: restrict access to kernel pointers
-    "kernel.kptr_restrict" = 2;
-    "kernel.dmesg_restrict" = 1;
-
-    # Security: restrict ptrace
-    "kernel.yama.ptrace_scope" = 1;
 
     # Performance: file system
     "fs.file-max" = 2097152;
     "fs.inotify.max_user_watches" = 524288;
     "fs.inotify.max_user_instances" = 256;
 
-    # Security: network stack hardening
-    "net.ipv4.conf.default.rp_filter" = 1;
-    "net.ipv4.conf.all.rp_filter" = 1;
-    "net.ipv4.conf.default.accept_source_route" = 0;
-    "net.ipv4.conf.all.accept_source_route" = 0;
-    "net.ipv4.conf.default.accept_redirects" = 0;
-    "net.ipv4.conf.all.accept_redirects" = 0;
-    "net.ipv4.conf.default.send_redirects" = 0;
-    "net.ipv4.conf.all.send_redirects" = 0;
+    # Security: kernel hardening
+    "kernel.dmesg_restrict" = 1;
+    "kernel.kptr_restrict" = 2;
+    "kernel.yama.ptrace_scope" = 1;
+    "kernel.unprivileged_bpf_disabled" = 1;
+    "kernel.unprivileged_userns_clone" = 0;
 
-    # Security: TCP hardening
+    # Security: network hardening
+    "net.ipv4.conf.all.rp_filter" = 1;
+    "net.ipv4.conf.default.rp_filter" = 1;
+    "net.ipv4.conf.all.accept_source_route" = 0;
+    "net.ipv4.conf.default.accept_source_route" = 0;
+    "net.ipv4.conf.all.accept_redirects" = 0;
+    "net.ipv4.conf.default.accept_redirects" = 0;
+    "net.ipv4.conf.all.send_redirects" = 0;
+    "net.ipv4.conf.default.send_redirects" = 0;
+    "net.ipv4.conf.all.log_martians" = 1;
+    "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
+    "net.ipv4.icmp_ignore_bogus_error_responses" = 1;
     "net.ipv4.tcp_syncookies" = 1;
     "net.ipv4.tcp_rfc1337" = 1;
-    "net.ipv4.tcp_fin_timeout" = 15;
-    "net.ipv4.tcp_keepalive_time" = 300;
-    "net.ipv4.tcp_keepalive_probes" = 5;
-    "net.ipv4.tcp_keepalive_intvl" = 15;
+
+    # Performance: server optimizations
+    "vm.swappiness" = 1;
+    "vm.vfs_cache_pressure" = 50;
+    "vm.dirty_ratio" = 15;
+    "vm.dirty_background_ratio" = 5;
+
+    # File system security
+    "fs.protected_hardlinks" = 1;
+    "fs.protected_symlinks" = 1;
+    "fs.suid_dumpable" = 0;
+
+    # Network performance
+    "net.core.default_qdisc" = "fq";
+    "net.ipv4.tcp_congestion_control" = "bbr";
+    "net.core.netdev_max_backlog" = 5000;
+    "net.ipv4.tcp_max_syn_backlog" = 8192;
   };
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.systemd-boot.editor = false;
@@ -189,6 +199,9 @@
     intel-ocl
     libvdpau-va-gl
   ];
+
+  hardware.bluetooth.enable = false;
+  hardware.pulseaudio.enable = false;
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
   services.fwupd.enable = true;
