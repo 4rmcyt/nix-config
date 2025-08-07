@@ -138,6 +138,40 @@
     "net.ipv4.tcp_congestion_control" = "bbr";
     "vm.swappiness" = 1; # Prefer ZFS ARC over swap
     "vm.vfs_cache_pressure" = 50;
+
+     # Memory security
+    "vm.mmap_rnd_bits" = 32;
+    "vm.mmap_rnd_compat_bits" = 16;
+    
+    # Security: restrict access to kernel pointers
+    "kernel.kptr_restrict" = 2;
+    "kernel.dmesg_restrict" = 1;
+    
+    # Security: restrict ptrace
+    "kernel.yama.ptrace_scope" = 1;
+    
+    # Performance: file system
+    "fs.file-max" = 2097152;
+    "fs.inotify.max_user_watches" = 524288;
+    "fs.inotify.max_user_instances" = 256;
+    
+    # Security: network stack hardening
+    "net.ipv4.conf.default.rp_filter" = 1;
+    "net.ipv4.conf.all.rp_filter" = 1;
+    "net.ipv4.conf.default.accept_source_route" = 0;
+    "net.ipv4.conf.all.accept_source_route" = 0;
+    "net.ipv4.conf.default.accept_redirects" = 0;
+    "net.ipv4.conf.all.accept_redirects" = 0;
+    "net.ipv4.conf.default.send_redirects" = 0;
+    "net.ipv4.conf.all.send_redirects" = 0;
+    
+    # Security: TCP hardening
+    "net.ipv4.tcp_syncookies" = 1;
+    "net.ipv4.tcp_rfc1337" = 1;
+    "net.ipv4.tcp_fin_timeout" = 15;
+    "net.ipv4.tcp_keepalive_time" = 300;
+    "net.ipv4.tcp_keepalive_probes" = 5;
+    "net.ipv4.tcp_keepalive_intvl" = 15;
   };
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.systemd-boot.editor = false;
