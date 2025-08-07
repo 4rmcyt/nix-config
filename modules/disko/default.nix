@@ -206,7 +206,6 @@
   };
 }
 
-
 # {
 #   disko.devices = {
 #     disk = {
@@ -235,7 +234,7 @@
 #                 ];
 #               };
 #             };
-            
+
 #             # Add swap partition with encryption
 #             swap = {
 #               size = "8G";
@@ -245,7 +244,7 @@
 #                 priority = 100;
 #               };
 #             };
-            
+
 #             zfs = {
 #               size = "100%";
 #               content = {
@@ -257,7 +256,7 @@
 #         };
 #       };
 #     };
-    
+
 #     zpool = {
 #       rpool = {
 #         type = "zpool";
@@ -266,13 +265,13 @@
 #           ashift = "12";
 #           autotrim = "on";
 #         };
-        
+
 #         # Root dataset with encryption
 #         rootFsOptions = {
 #           encryption = "aes-256-gcm";
 #           keyformat = "passphrase";
 #           keylocation = "prompt";
-          
+
 #           # Security options
 #           acltype = "posixacl";
 #           compression = "zstd";
@@ -280,13 +279,13 @@
 #           normalization = "formD";
 #           relatime = "on";
 #           xattr = "sa";
-          
+
 #           # Performance options
 #           recordsize = "1M";
 #           primarycache = "all";
 #           secondarycache = "all";
 #         };
-        
+
 #         datasets = {
 #           # System datasets
 #           "root" = {
@@ -299,7 +298,7 @@
 #               devices = "off";
 #             };
 #           };
-          
+
 #           "home" = {
 #             type = "zfs_fs";
 #             mountpoint = "/home";
@@ -309,7 +308,7 @@
 #               exec = "on";     # Allow execution in home
 #             };
 #           };
-          
+
 #           # Separate dataset for var with stricter options
 #           "var" = {
 #             type = "zfs_fs";
