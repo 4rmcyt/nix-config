@@ -18,7 +18,7 @@
   ];
 
   boot.supportedFilesystems = [ "zfs" ];
-  boot.kernelPackages = pkgs.linuxKernel.kernels.linux_zen;
+  boot.kernelPackages = pkgs.linuxKernel.packages.linux_zen;
   boot.kernelModules = [
     "kvm-intel"
     "cpufreq_stats"
@@ -49,9 +49,7 @@
     libvdpau-va-gl
   ];
 
-  hardware.opengl = {
-    enable = true;
-  };
+ 
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
   services.fwupd.enable = true;
