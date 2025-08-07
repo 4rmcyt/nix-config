@@ -9,198 +9,142 @@
 {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
-  #   boot = {
-  #   loader = {
-  #     systemd-boot = {
-  #       enable = true;
-  #       # Security: disable editing boot entries
-  #       editor = false;
-  #       configurationLimit = 10;  # Limit old generations
-  #     };
-  #     efi.canTouchEfiVariables = true;
-
-  #     # Secure boot timeout
-  #     timeout = 3;
-  #   };
-
-  #   # Kernel hardening
-  #   kernelParams = [
-  #     "slab_nomerge"
-  #     "init_on_alloc=1"
-  #     "init_on_free=1"
-  #     "page_alloc.shuffle=1"
-  #     "pti=on"
-  #     "vsyscall=none"
-  #     "debugfs=off"
-  #     "oops=panic"
-  #     "module.sig_enforce=1"
-  #     "lockdown=confidentiality"
-  #   ];
-
-  #   # Disable unnecessary kernel modules
-  #   blacklistedKernelModules = [
-  #     "dccp"
-  #     "sctp"
-  #     "rds"
-  #     "tipc"
-  #     "n-hdlc"
-  #     "ax25"
-  #     "netrom"
-  #     "x25"
-  #     "rose"
-  #     "decnet"
-  #     "econet"
-  #     "af_802154"
-  #     "ipx"
-  #     "appletalk"
-  #     "psnap"
-  #     "p8023"
-  #     "llc"
-  #     "p8022"
-  #   ];
-  # };
-
-  boot.initrd.availableKernelModules = [
-    "xhci_pci"
-    "nvme"
-    "ahci"
-    "usb_storage"
-    "usbhid"
-  ];
-
-  boot.supportedFilesystems = [ "zfs" ];
-  boot.kernelPackages = pkgs.linuxKernel.packages.linux_zen;
-  boot.kernelModules = [
-    "kvm-intel"
-    "cpufreq_stats"
-    "coretemp"
-    "fuse"
-  ];
-  boot.kernelParams = [
-    "nohibernate"
-    "zfs.zfs_arc_max=8589934592"
-
-    # Intel security features
-    "intel_iommu=on"
-    "iommu=pt"
-
-    # CPU security (remove duplicates)
-    "spectre_v2=on"
-    "spec_store_bypass_disable=on"
-    "tsx=off"
-    "tsx_async_abort=full,nosmt"
-
-    # Memory protection
-    "slab_nomerge"
-    "init_on_alloc=1"
-    "init_on_free=1"
-    "page_alloc.shuffle=1"
-
-    # CPU security
-    "pti=on"
-
-    # Kernel hardening
-    "vsyscall=none"
-    "debugfs=off"
-    "oops=panic"
-    "module.sig_enforce=1"
-    "lockdown=confidentiality"
-  ];
-  # Blacklist vulnerable modules
-  boot.blacklistedKernelModules = [
-    "dccp"
-    "sctp"
-    "rds"
-    "tipc"
-    "n-hdlc"
-    "ax25"
-    "netrom"
-    "x25"
-    "rose"
-    "decnet"
-    "econet"
-    "af_802154"
-    "ipx"
-    "appletalk"
-    "psnap"
-    "p8023"
-    "llc"
-    "p8022"
-    "bluetooth"
-    "btusb" # If not using Bluetooth
-    "uvcvideo" # If no webcam
-  ];
+  # 1. Boot Loader Configuration
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernel.sysctl = {
-
-    # Memory security
-    "vm.mmap_rnd_bits" = 32;
-    "vm.mmap_rnd_compat_bits" = 16;
-
-    # Performance: file system
-    "fs.file-max" = 2097152;
-    "fs.inotify.max_user_watches" = 524288;
-    "fs.inotify.max_user_instances" = 256;
-
-    # Security: kernel hardening
-    "kernel.dmesg_restrict" = 1;
-    "kernel.kptr_restrict" = 2;
-    "kernel.yama.ptrace_scope" = 1;
-    "kernel.unprivileged_bpf_disabled" = 1;
-    "kernel.unprivileged_userns_clone" = 0;
-
-    # Security: network hardening
-    "net.ipv4.conf.all.rp_filter" = 1;
-    "net.ipv4.conf.default.rp_filter" = 1;
-    "net.ipv4.conf.all.accept_source_route" = 0;
-    "net.ipv4.conf.default.accept_source_route" = 0;
-    "net.ipv4.conf.all.accept_redirects" = 0;
-    "net.ipv4.conf.default.accept_redirects" = 0;
-    "net.ipv4.conf.all.send_redirects" = 0;
-    "net.ipv4.conf.default.send_redirects" = 0;
-    "net.ipv4.conf.all.log_martians" = 1;
-    "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
-    "net.ipv4.icmp_ignore_bogus_error_responses" = 1;
-    "net.ipv4.tcp_syncookies" = 1;
-    "net.ipv4.tcp_rfc1337" = 1;
-
-    # Performance: server optimizations
-    "vm.swappiness" = 1;
-    "vm.vfs_cache_pressure" = 50;
-    "vm.dirty_ratio" = 15;
-    "vm.dirty_background_ratio" = 5;
-
-    # File system security
-    "fs.protected_hardlinks" = 1;
-    "fs.protected_symlinks" = 1;
-    "fs.suid_dumpable" = 0;
-
-    # Network performance
-    "net.core.default_qdisc" = "fq";
-    "net.ipv4.tcp_congestion_control" = "bbr";
-    "net.core.netdev_max_backlog" = 5000;
-    "net.ipv4.tcp_max_syn_backlog" = 8192;
-  };
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.systemd-boot.editor = false;
   boot.loader.timeout = 3;
 
-  hardware.graphics.enable = true;
-  hardware.graphics.extraPackages = with pkgs; [
-    intel-media-driver
-    intel-vaapi-driver
-    vaapiIntel
-    vaapiVdpau
-    intel-compute-runtime
-    intel-ocl
-    libvdpau-va-gl
+  # 2. Kernel & Initrd Configuration
+  boot.initrd.availableKernelModules = [
+    "ahci"
+    "nvme"
+    "usb_storage"
+    "usbhid"
+    "xhci_pci"
+  ];
+  boot.supportedFilesystems = [ "zfs" ];
+  boot.kernelPackages = pkgs.linuxKernel.packages.linux_zen;
+  boot.kernelModules = [
+    "coretemp"
+    "cpufreq_stats"
+    "fuse"
+    "kvm-intel"
+  ];
+  boot.blacklistedKernelModules = [
+    "af_802154"
+    "appletalk"
+    "ax25"
+    "btusb"
+    "dccp"
+    "decnet"
+    "econet"
+    "ipx"
+    "llc"
+    "n-hdlc"
+    "netrom"
+    "p8022"
+    "p8023"
+    "psnap"
+    "rds"
+    "rose"
+    "sctp"
+    "tipc"
+    "uvcvideo"
+    "x25"
+  ];
+  boot.kernelParams = [
+    # General Hardening
+    "debugfs=off"
+    "lockdown=confidentiality"
+    "module.sig_enforce=1"
+    "nohibernate"
+    "oops=panic"
+    "vsyscall=none"
+
+    # CPU Security Mitigations
+    "intel_iommu=on"
+    "iommu=pt"
+    "spec_store_bypass_disable=on"
+    "tsx=off"
+    "tsx_async_abort=full,nosmt"
+
+    # Memory Security
+    "init_on_alloc=1"
+    "page_alloc.shuffle=1"
+    "slab_nomerge"
+
+    # ZFS Performance
+    "zfs.zfs_arc_max=8589934592"
   ];
 
+  # 3. Kernel Sysctl Settings (Hardening & Performance)
+  boot.kernel.sysctl = {
+    # File System Security & Performance
+    "fs.file-max" = 2097152;
+    "fs.inotify.max_user_instances" = 256;
+    "fs.inotify.max_user_watches" = 524288;
+    "fs.protected_hardlinks" = 1;
+    "fs.protected_symlinks" = 1;
+    "fs.suid_dumpable" = 0;
+
+    # Kernel Hardening
+    "kernel.dmesg_restrict" = 1;
+    "kernel.kptr_restrict" = 2;
+    "kernel.unprivileged_bpf_disabled" = 1;
+    "kernel.unprivileged_userns_clone" = 0;
+    "kernel.yama.ptrace_scope" = 1;
+
+    # Memory Security
+    "vm.mmap_rnd_bits" = 32;
+    "vm.mmap_rnd_compat_bits" = 16;
+
+    # Network Hardening
+    "net.ipv4.conf.all.accept_redirects" = 0;
+    "net.ipv4.conf.all.accept_source_route" = 0;
+    "net.ipv4.conf.all.log_martians" = 1;
+    "net.ipv4.conf.all.rp_filter" = 1;
+    "net.ipv4.conf.all.send_redirects" = 0;
+    "net.ipv4.conf.default.accept_redirects" = 0;
+    "net.ipv4.conf.default.accept_source_route" = 0;
+    "net.ipv4.conf.default.rp_filter" = 1;
+    "net.ipv4.conf.default.send_redirects" = 0;
+    "net.ipv4.icmp_echo_ignore_broadcasts" = 1;
+    "net.ipv4.icmp_ignore_bogus_error_responses" = 1;
+    "net.ipv4.tcp_rfc1337" = 1;
+    "net.ipv4.tcp_syncookies" = 1;
+
+    # Network Performance
+    "net.core.default_qdisc" = "fq";
+    "net.core.netdev_max_backlog" = 5000;
+    "net.ipv4.tcp_congestion_control" = "bbr";
+    "net.ipv4.tcp_max_syn_backlog" = 8192;
+
+    # System Performance
+    "vm.dirty_background_ratio" = 5;
+    "vm.dirty_ratio" = 15;
+    "vm.swappiness" = 1;
+    "vm.vfs_cache_pressure" = 50;
+  };
+
+  # 4. Hardware Configuration
+  hardware.graphics.enable = true;
+  hardware.graphics.extraPackages = with pkgs; [
+    intel-compute-runtime
+    intel-media-driver
+    intel-ocl
+    libvdpau-va-gl
+    vaapiVdpau
+  ];
   hardware.bluetooth.enable = false;
   hardware.i2c.enable = true;
 
-  powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
+  # 5. Power Management
+  powerManagement.cpuFreqGovernor = lib.mkDefault "schedutil";
+
+
+  # 6. Core System Services
   services.fwupd.enable = true;
   services.smartd = {
     enable = true;
@@ -210,70 +154,44 @@
       { device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345"; }
     ];
   };
-
-  systemd.services.power-tune = {
-    description = "Power Management tunings";
-    wantedBy = [ "multi-user.target" ];
-    script = ''
-      ${pkgs.powertop}/bin/powertop --auto-tune
-    '';
-    serviceConfig.Type = "oneshot";
-  };
-
-  systemd.services.lm_sensors = {
-    description = "LM Sensors Service";
-    wantedBy = [ "multi-user.target" ];
-    script = ''
-      ${pkgs.lm_sensors}/bin/sensors-detect --auto
-    '';
-    serviceConfig.Type = "oneshot";
-  };
-
   services.zfs = {
-    autoScrub = {
-      enable = true;
-      interval = "monthly"; # Make interval explicit
-      pools = [
-        "rpool"
-        "dpool"
-      ]; # Specify pools explicitly
-    };
-
-    # Add ZFS auto-snapshot
+    autoScrub.enable = true;
+    autoScrub.interval = "monthly";
+    autoScrub.pools = [
+      "rpool"
+      "dpool"
+    ];
     autoSnapshot = {
       enable = true;
       flags = "-k -p --utc";
-      frequent = 8; # Keep 8 15-minute snapshots
-      hourly = 24; # Keep 24 hourly snapshots
-      daily = 7; # Keep 7 daily snapshots
-      weekly = 4; # Keep 4 weekly snapshots
-      monthly = 12; # Keep 12 monthly snapshots
+      frequent = 8;
+      hourly = 24;
+      daily = 7;
+      weekly = 4;
+      monthly = 12;
     };
-
-    # Add ZFS trim for SSDs
-    trim = {
-      enable = true;
-      interval = "weekly";
-    };
+    trim.enable = true;
+    trim.interval = "weekly";
   };
 
+  # 7. Custom Systemd Services
+  powerManagement.powertop.enable = true;
+  services.lm_sensors.enable = true;
+
+  # 8. Filesystems
   fileSystems = {
-    # The boot partition, which is a standard vfat filesystem.
     "/boot" = {
-      device = "/dev/disk/by-label/boot"; # Disko automatically labels the boot partition.
+      device = "/dev/disk/by-label/boot";
       fsType = "vfat";
       options = [
-        "fmask=0077" # More restrictive than current 0137
-        "dmask=0077" # More restrictive than current 0027
-        "nodev" # No device files
-        "nosuid" # No setuid binaries
-        "noexec" # No executable files (except kernel/initrd)
-        "relatime" # Better performance than default
+        "fmask=0077"
+        "dmask=0077"
+        "nodev"
+        "nosuid"
+        "noexec"
+        "relatime"
       ];
     };
-    # ZFS datasets from the 'rpool' (root pool).
-    # NixOS's ZFS integration automatically mounts datasets, but explicitly listing
-    # them here provides clarity and ensures the system knows about them.
     "/" = {
       device = "rpool/root";
       fsType = "zfs";
@@ -358,19 +276,12 @@
       device = "rpool/data/media/.state";
       fsType = "zfs";
     };
-
-    # ZFS dataset from the 'dpool' (data pool).
     "/data" = {
       device = "dpool/data";
       fsType = "zfs";
     };
   };
 
-  # Swap device configuration.
-  # Disko creates a ZFS volume (zvol) for swap on the root pool.
-  swapDevices = [
-    {
-      device = "/dev/zvol/rpool/zfs_swap";
-    }
-  ];
+  # 9. Swap
+  swapDevices = [ { device = "/dev/zvol/rpool/zfs_swap"; } ];
 }
