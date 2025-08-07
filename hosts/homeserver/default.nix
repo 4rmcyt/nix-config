@@ -24,7 +24,6 @@
     ../../modules/options
   ];
 
-
   users.users.git = {
     isSystemUser = true;
     description = "Git user";
@@ -62,7 +61,7 @@
       dates = [ "weekly" ];
     };
   };
-  
+
   # =================================================================
   # 3. Secrets Management with Sops
   # =================================================================

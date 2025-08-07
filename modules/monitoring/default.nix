@@ -34,7 +34,7 @@
       description = "Grafana user";
       group = "grafana";
     };
-    uptime-kuma = { 
+    uptime-kuma = {
       isSystemUser = true;
       description = "Uptime Kuma user";
       group = "uptime-kuma";
@@ -124,21 +124,21 @@
     retentionTime = "30d";
     globalConfig.scrape_interval = "1m";
     scrapeConfigs = [
-     {
+      {
         job_name = "prometheus";
-        static_configs = [{ targets = [ "localhost:9090" ]; }];
+        static_configs = [ { targets = [ "localhost:9090" ]; } ];
       }
       {
         job_name = "node-exporter";
-        static_configs = [{ targets = [ "localhost:9100" ]; }];
+        static_configs = [ { targets = [ "localhost:9100" ]; } ];
       }
       {
         job_name = "postgres-exporter";
-        static_configs = [{ targets = [ "localhost:9187" ]; }];
+        static_configs = [ { targets = [ "localhost:9187" ]; } ];
       }
       {
         job_name = "cloudflare-exporter";
-        static_configs = [{ targets = [ "localhost:8081" ]; }];
+        static_configs = [ { targets = [ "localhost:8081" ]; } ];
       }
     ];
 
@@ -160,7 +160,7 @@
         enable = true;
       };
     };
-    ruleFiles = [ ./alerts/homeserver.yaml ]; 
+    ruleFiles = [ ./alerts/homeserver.yaml ];
   };
 
   # --- Grafana Visualization ---
