@@ -31,27 +31,27 @@
   users.users = {
     grafana = {
       isSystemUser = true;
-      description = "Grafana Monitoring User";
+      description = "Grafana user";
       group = "grafana";
     };
     uptime-kuma = { 
       isSystemUser = true;
-      description = "Uptime Kuma Monitoring User";
+      description = "Uptime Kuma user";
       group = "uptime-kuma";
     };
     prometheus = {
       isSystemUser = true;
-      description = "Prometheus Monitoring User";
+      description = "Prometheus user";
       group = "prometheus";
     };
     loki = {
       isSystemUser = true;
-      description = "Loki Monitoring User";
+      description = "Loki user";
       group = "loki";
     };
     promtail = {
       isSystemUser = true;
-      description = "Promtail Monitoring User";
+      description = "Promtail user";
       group = "promtail";
     };
   };
