@@ -1,34 +1,32 @@
 { config, pkgs, ... }:
 {
-  # Comprehensive logging configuration
+  # =================================================================
+  # 1. Journald Configuration
+  # Using structured options for better readability and error-checking.
+  # =================================================================
   services.journald = {
+    storage = "persistent";
     extraConfig = ''
-      # Storage configuration
-      Storage=persistent
       SystemMaxUse=500M
       SystemMaxFileSize=50M
       SystemMaxFiles=10
       MaxRetentionSec=30day
-
-      # Security settings
       ForwardToSyslog=no
       ForwardToWall=yes
       MaxLevelWall=crit
-
-      # Rate limiting to prevent log spam
       RateLimitInterval=30s
       RateLimitBurst=10000
-
-      # Compression
       Compress=yes
     '';
   };
 
-  # System log rotation
+  # =================================================================
+  # 2. Logrotate for Application-Specific Logs
+  # =================================================================
   services.logrotate = {
     enable = true;
     settings = {
-      # Nginx logs
+      # This is correct for services that write to their own log files.
       "/var/log/nginx/*.log" = {
         frequency = "daily";
         rotate = 30;
@@ -40,7 +38,7 @@
         postrotate = "systemctl reload nginx || true";
       };
 
-      # PostgreSQL logs
+      # This is also correct for PostgreSQL's dedicated logs.
       "/var/log/postgresql/*.log" = {
         frequency = "daily";
         rotate = 7;
@@ -51,54 +49,46 @@
         copytruncate = true;
       };
 
-      # System logs
-      "/var/log/messages" = {
-        frequency = "weekly";
-        rotate = 4;
-        compress = true;
-        delaycompress = true;
-        missingok = true;
-        notifempty = true;
-      };
+      # The entry for "/var/log/messages" has been removed, as journald
+      # now handles all system log rotation natively.
     };
   };
 
-  # Security event monitoring
+  # =================================================================
+  # 3. Custom Security Event Monitoring
+  # =================================================================
   systemd.services.security-monitor = {
     description = "Security Event Monitor";
     serviceConfig = {
       Type = "oneshot";
       ExecStart = pkgs.writeShellScript "security-monitor" ''
+        # This script now focuses on detecting log patterns for failed access attempts.
+        # File integrity monitoring is left to the more robust 'auditd' system.
+
         # Check for failed login attempts
         FAILED_LOGINS=$(journalctl --since "1 hour ago" | grep -c "Failed password" || echo "0")
         if [ "$FAILED_LOGINS" -gt 10 ]; then
-          echo "WARNING: $FAILED_LOGINS failed login attempts in last hour" | \
+          echo "WARNING: $FAILED_LOGINS failed login attempts in the last hour" | \
             systemd-cat -t security-monitor -p warning
         fi
 
-        # Check for privilege escalation attempts
-        SUDO_FAILURES=$(journalctl --since "1 hour ago" | grep -c "sudo.*FAILED" || echo "0")
+        # Check for privilege escalation failures
+        SUDO_FAILURES=$(journalctl --since "1 hour ago" | grep -c "sudo.*authentication failure" || echo "0")
         if [ "$SUDO_FAILURES" -gt 5 ]; then
-          echo "WARNING: $SUDO_FAILURES sudo failures in last hour" | \
+          echo "WARNING: $SUDO_FAILURES sudo failures in the last hour" | \
             systemd-cat -t security-monitor -p warning
-        fi
-
-        # Check for system modification attempts
-        SYSTEM_CHANGES=$(journalctl --since "1 hour ago" | grep -c -E "(passwd|group|shadow|sudoers)" || echo "0")
-        if [ "$SYSTEM_CHANGES" -gt 0 ]; then
-          echo "INFO: $SYSTEM_CHANGES system file modifications in last hour" | \
-            systemd-cat -t security-monitor -p info
         fi
       '';
     };
   };
 
   systemd.timers.security-monitor = {
+    description = "Run security monitor script hourly";
     wantedBy = [ "timers.target" ];
     timerConfig = {
       OnCalendar = "hourly";
       Persistent = true;
-      RandomizedDelaySec = "300";
+      RandomizedDelaySec = "5m"; # Use 'm' for minutes for clarity
     };
   };
 }
