@@ -18,7 +18,7 @@
   ];
 
   boot.supportedFilesystems = [ "zfs" ];
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxKernel.kernels.linux_zen;
   boot.kernelModules = [
     "kvm-intel"
     "cpufreq_stats"
