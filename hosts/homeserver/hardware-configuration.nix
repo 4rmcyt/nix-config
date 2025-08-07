@@ -1,4 +1,3 @@
-# Re-ordered and Optimized hardware-config.nix
 {
   config,
   lib,
@@ -16,7 +15,6 @@
   # Enable firmware updates for devices like CPUs and SSDs.
   hardware.enableRedistributableFirmware = lib.mkDefault true;
 
-
   # =================================================================
   # 2. Boot & Filesystem Configuration
   # =================================================================
@@ -31,48 +29,209 @@
   boot.zfs.devNodes = "/dev/disk/by-id";
 
   # Define kernel modules needed early in the boot process.
-  boot.initrd.availableKernelModules = [ "ahci" "nvme" "usb_storage" "usbhid" "xhci_pci" ];
+  boot.initrd.availableKernelModules = [
+    "ahci"
+    "nvme"
+    "usb_storage"
+    "usbhid"
+    "xhci_pci"
+  ];
 
   # Mount points for all filesystems.
   fileSystems = {
     "/boot" = {
       device = "/dev/disk/by-label/boot";
       fsType = "vfat";
-      options = [ "fmask=0077" "dmask=0077" "nodev" "nosuid" "noexec" "relatime" ];
+      options = [
+        "fmask=0077"
+        "dmask=0077"
+        "nodev"
+        "nosuid"
+        "noexec"
+        "relatime"
+      ];
     };
 
     # Root and core ZFS datasets
-    "/" = { device = "rpool/root"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/home" = { device = "rpool/home"; fsType = "zfs"; options = [ "zfsutil-compression=on" ]; }; # atime can be useful on /home
-    "/nix" = { device = "rpool/nix"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
+    "/" = {
+      device = "rpool/root";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/home" = {
+      device = "rpool/home";
+      fsType = "zfs";
+      options = [ "zfsutil-compression=on" ];
+    }; # atime can be useful on /home
+    "/nix" = {
+      device = "rpool/nix";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
 
     # Log and service data datasets with performance optimizations
-    "/var/log" = { device = "rpool/var/log"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/acme" = { device = "rpool/var/lib/acme"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/authentik" = { device = "rpool/var/lib/authentik"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/containers" = { device = "rpool/var/lib/containers"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/grafana" = { device = "rpool/var/lib/grafana"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/home-assistant" = { device = "rpool/var/lib/home-assistant"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/ldap" = { device = "rpool/var/lib/ldap"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/microbin" = { device = "rpool/var/lib/microbin"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/nginx" = { device = "rpool/var/lib/nginx"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/paperless" = { device = "rpool/var/lib/paperless"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/postgres-backup" = { device = "rpool/var/lib/postgres-backup"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/postgresql" = { device = "rpool/var/lib/postgresql"; fsType = "zfs"; options = [ "zfsutil-recsize=16K" "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/prometheus2" = { device = "rpool/var/lib/prometheus2"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/redis-authentik" = { device = "rpool/var/lib/redis-authentik"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/redis-paperless" = { device = "rpool/var/lib/redis-paperless"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/redis-redis" = { device = "rpool/var/lib/redis-redis"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
-    "/var/lib/vaultwarden" = { device = "rpool/var/lib/vaultwarden"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
+    "/var/log" = {
+      device = "rpool/var/log";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/acme" = {
+      device = "rpool/var/lib/acme";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/authentik" = {
+      device = "rpool/var/lib/authentik";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/containers" = {
+      device = "rpool/var/lib/containers";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/grafana" = {
+      device = "rpool/var/lib/grafana";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/home-assistant" = {
+      device = "rpool/var/lib/home-assistant";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/ldap" = {
+      device = "rpool/var/lib/ldap";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/microbin" = {
+      device = "rpool/var/lib/microbin";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/nginx" = {
+      device = "rpool/var/lib/nginx";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/paperless" = {
+      device = "rpool/var/lib/paperless";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/postgres-backup" = {
+      device = "rpool/var/lib/postgres-backup";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/postgresql" = {
+      device = "rpool/var/lib/postgresql";
+      fsType = "zfs";
+      options = [
+        "zfsutil-recsize=16K"
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/prometheus2" = {
+      device = "rpool/var/lib/prometheus2";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/redis-authentik" = {
+      device = "rpool/var/lib/redis-authentik";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/redis-paperless" = {
+      device = "rpool/var/lib/redis-paperless";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/redis-redis" = {
+      device = "rpool/var/lib/redis-redis";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
+    "/var/lib/vaultwarden" = {
+      device = "rpool/var/lib/vaultwarden";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
 
     # Secondary data pool
-    "/data" = { device = "dpool/data"; fsType = "zfs"; options = [ "zfsutil-compression=on" ]; };
-    "/data/media/.state" = { device = "rpool/data/media/.state"; fsType = "zfs"; options = [ "zfsutil-atime=off" "zfsutil-compression=on" ]; };
+    "/data" = {
+      device = "dpool/data";
+      fsType = "zfs";
+      options = [ "zfsutil-compression=on" ];
+    };
+    "/data/media/.state" = {
+      device = "rpool/data/media/.state";
+      fsType = "zfs";
+      options = [
+        "zfsutil-atime=off"
+        "zfsutil-compression=on"
+      ];
+    };
   };
 
   # Swap on a ZFS ZVOL.
   swapDevices = [ { device = "/dev/zvol/rpool/zfs_swap"; } ];
-
 
   # =================================================================
   # 3. Kernel Configuration
@@ -81,26 +240,56 @@
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_zen;
 
   # Kernel modules to load at boot.
-  boot.kernelModules = [ "coretemp" "cpufreq_stats" "fuse" "kvm-intel" ];
+  boot.kernelModules = [
+    "coretemp"
+    "cpufreq_stats"
+    "fuse"
+    "kvm-intel"
+  ];
 
   # Unused modules to prevent from loading, reducing attack surface.
   boot.blacklistedKernelModules = [
-    "af_802154" "appletalk" "ax25" "btusb" "dccp" "decnet" "econet" "ipx"
-    "llc" "n-hdlc" "netrom" "p8022" "p8023" "psnap" "rds" "rose" "sctp"
-    "tipc" "uvcvideo" "x25"
+    "af_802154"
+    "appletalk"
+    "ax25"
+    "btusb"
+    "dccp"
+    "decnet"
+    "econet"
+    "ipx"
+    "llc"
+    "n-hdlc"
+    "netrom"
+    "p8022"
+    "p8023"
+    "psnap"
+    "rds"
+    "rose"
+    "sctp"
+    "tipc"
+    "uvcvideo"
+    "x25"
   ];
 
   # Kernel parameters for security and performance.
   boot.kernelParams = [
     # General Hardening
-    "debugfs=off" "lockdown=confidentiality" "module.sig_enforce=1"
-    "nohibernate" "oops=panic" "vsyscall=none"
+    "debugfs=off"
+    "lockdown=confidentiality"
+    "module.sig_enforce=1"
+    "nohibernate"
+    "oops=panic"
+    "vsyscall=none"
 
     # CPU Security Mitigations
-    "intel_iommu=on" "iommu=pt" "spec_store_bypass_disable=on"
+    "intel_iommu=on"
+    "iommu=pt"
+    "spec_store_bypass_disable=on"
 
     # Memory Security
-    "init_on_alloc=1" "page_alloc.shuffle=1" "slab_nomerge"
+    "init_on_alloc=1"
+    "page_alloc.shuffle=1"
+    "slab_nomerge"
   ];
 
   # Sysctl settings for hardening and performance tuning.
@@ -147,7 +336,6 @@
     "vm.vfs_cache_pressure" = 50;
   };
 
-
   # =================================================================
   # 4. Hardware & Power Management
   # =================================================================
@@ -165,7 +353,6 @@
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "schedutil";
   powerManagement.powertop.enable = true;
-
 
   # =================================================================
   # 5. System Services
@@ -186,7 +373,10 @@
     arcMax = 10589934592; # 10 GB
     autoScrub.enable = true;
     autoScrub.interval = "monthly";
-    autoScrub.pools = [ "rpool" "dpool" ];
+    autoScrub.pools = [
+      "rpool"
+      "dpool"
+    ];
     autoSnapshot.enable = true;
     autoSnapshot.flags = "-k -p --utc";
     autoSnapshot.frequent = 8;
