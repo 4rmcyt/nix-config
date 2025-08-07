@@ -29,11 +29,31 @@
   # Defining service users here is fine.
   # =================================================================
   users.users = {
-    grafana.isSystemUser = true;
-    uptime-kuma.isSystemUser = true;
-    prometheus.isSystemUser = true;
-    loki.isSystemUser = true; # New user for Loki
-    promtail.isSystemUser = true; # New user for Promtail
+    grafana = {
+      isSystemUser = true;
+      description = "Grafana Monitoring User";
+      group = "grafana";
+    };
+    uptime-kuma = { 
+      isSystemUser = true;
+      description = "Uptime Kuma Monitoring User";
+      group = "uptime-kuma";
+    };
+    prometheus = {
+      isSystemUser = true;
+      description = "Prometheus Monitoring User";
+      group = "prometheus";
+    };
+    loki = {
+      isSystemUser = true;
+      description = "Loki Monitoring User";
+      group = "loki";
+    };
+    promtail = {
+      isSystemUser = true;
+      description = "Promtail Monitoring User";
+      group = "promtail";
+    };
   };
   users.groups = {
     grafana = { };
