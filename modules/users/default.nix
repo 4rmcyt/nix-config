@@ -8,7 +8,7 @@
   # Global user security settings
   users.mutableUsers = false;
   users.defaultUserShell = pkgs.zsh;
-  
+
   # Security limits for all users
   security.pam.loginLimits = [
     {
