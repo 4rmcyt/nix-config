@@ -9,6 +9,57 @@
 {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
+  #   boot = {
+  #   loader = {
+  #     systemd-boot = {
+  #       enable = true;
+  #       # Security: disable editing boot entries
+  #       editor = false;
+  #       configurationLimit = 10;  # Limit old generations
+  #     };
+  #     efi.canTouchEfiVariables = true;
+
+  #     # Secure boot timeout
+  #     timeout = 3;
+  #   };
+
+  #   # Kernel hardening
+  #   kernelParams = [
+  #     "slab_nomerge"
+  #     "init_on_alloc=1"
+  #     "init_on_free=1"
+  #     "page_alloc.shuffle=1"
+  #     "pti=on"
+  #     "vsyscall=none"
+  #     "debugfs=off"
+  #     "oops=panic"
+  #     "module.sig_enforce=1"
+  #     "lockdown=confidentiality"
+  #   ];
+
+  #   # Disable unnecessary kernel modules
+  #   blacklistedKernelModules = [
+  #     "dccp"
+  #     "sctp"
+  #     "rds"
+  #     "tipc"
+  #     "n-hdlc"
+  #     "ax25"
+  #     "netrom"
+  #     "x25"
+  #     "rose"
+  #     "decnet"
+  #     "econet"
+  #     "af_802154"
+  #     "ipx"
+  #     "appletalk"
+  #     "psnap"
+  #     "p8023"
+  #     "llc"
+  #     "p8022"
+  #   ];
+  # };
+
   boot.initrd.availableKernelModules = [
     "xhci_pci"
     "nvme"
@@ -25,18 +76,29 @@
     "coretemp"
     "fuse"
   ];
-  boot.kernelParams = [ "nohibernate" ];
+  boot.kernelParams = [
+    "nohibernate"
+    "zfs.zfs_arc_max=8589934592"
+    "intel_iommu=on" # Enable IOMMU
+    "iommu=pt" # Passthrough mode
+    "spectre_v2=on" # Spectre v2 mitigation
+    "spec_store_bypass_disable=on" # Speculative store bypass
+    "tsx=off" # Disable TSX
+    "tsx_async_abort=full,nosmt" # TSX async abort mitigation
+  ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernel.sysctl = {
     "net.core.default_qdisc" = "fq";
     "net.ipv4.tcp_congestion_control" = "bbr";
+    "vm.swappiness" = 1; # Prefer ZFS ARC over swap
+    "vm.vfs_cache_pressure" = 50;
   };
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.systemd-boot.editor = false;
   boot.loader.timeout = 3;
 
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  enableRedistributableFirmware = true;
 
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = with pkgs; [
@@ -77,7 +139,54 @@
     serviceConfig.Type = "oneshot";
   };
 
+  systemd.services.temperature-monitor = {
+    description = "Monitor system temperatures";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "temp-monitor" ''
+        # Check CPU temperature
+        CPU_TEMP=$(${pkgs.lm_sensors}/bin/sensors | grep "Core 0" | awk '{print $3}' | sed 's/+//;s/°C//' | cut -d'.' -f1)
+        if [ "$CPU_TEMP" -gt 80 ]; then
+          echo "WARNING: CPU temperature is $CPU_TEMP°C" | ${pkgs.systemd}/bin/systemd-cat -t temp-monitor -p warning
+        fi
+      '';
+    };
+  };
+
+  systemd.timers.temperature-monitor = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "*:0/5"; # Every 5 minutes
+      Persistent = true;
+    };
+  };
+
   services.zfs.autoScrub.enable = true;
+
+  #   services.zfs = {
+  #   autoScrub = {
+  #     enable = true;
+  #     interval = "monthly";  # Make interval explicit
+  #     pools = [ "rpool" "dpool" ];  # Specify pools explicitly
+  #   };
+
+  #   # Add ZFS auto-snapshot
+  #   autoSnapshot = {
+  #     enable = true;
+  #     flags = "-k -p --utc";
+  #     frequent = 8;     # Keep 8 15-minute snapshots
+  #     hourly = 24;      # Keep 24 hourly snapshots
+  #     daily = 7;        # Keep 7 daily snapshots
+  #     weekly = 4;       # Keep 4 weekly snapshots
+  #     monthly = 12;     # Keep 12 monthly snapshots
+  #   };
+
+  #   # Add ZFS trim for SSDs
+  #   trim = {
+  #     enable = true;
+  #     interval = "weekly";
+  #   };
+  # };
 
   fileSystems = {
     # The boot partition, which is a standard vfat filesystem.
@@ -89,6 +198,18 @@
         "dmask=0027"
       ];
     };
+
+    #   "/boot" = {
+    #   device = "/dev/disk/by-label/boot";
+    #   fsType = "vfat";
+    #   options = [
+    #     "fmask=0077"    # Changed from 0137 - more restrictive
+    #     "dmask=0077"    # Changed from 0027 - more restrictive
+    #     "nodev"         # No device files
+    #     "nosuid"        # No setuid binaries
+    #     "noexec"        # No executable files (except kernel/initrd)
+    #   ];
+    # };
 
     # ZFS datasets from the 'rpool' (root pool).
     # NixOS's ZFS integration automatically mounts datasets, but explicitly listing
