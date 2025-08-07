@@ -198,7 +198,31 @@
   };
 
   security.sudo.execWheelOnly = true;
+  
+  services.journald.extraConfig = ''
+    SystemMaxUse=500M
+    SystemMaxFileSize=50M
+    SystemMaxFiles=10
+    MaxRetentionSec=30day
+    ForwardToSyslog=no
+  '';
 
+  # Add logrotate for service logs
+  services.logrotate = {
+    enable = true;
+    settings = {
+      "/var/log/nginx/*.log" = {
+        frequency = "daily";
+        rotate = 30;
+        compress = true;
+        delaycompress = true;
+        missingok = true;
+        notifempty = true;
+        postrotate = "systemctl reload nginx";
+      };
+    };
+  };
+  
   programs = {
     gnupg.agent = {
       enable = true;
