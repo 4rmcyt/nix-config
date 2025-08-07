@@ -4,20 +4,20 @@
   security.apparmor = {
     enable = true;
     killUnconfinedConfinables = true;
-    
+
     # Include additional profiles
     packages = with pkgs; [
       apparmor-profiles
       apparmor-utils
     ];
-    
+
     # Custom profiles for services
     profiles = {
       # Nginx profile
       "${pkgs.nginx}/bin/nginx" = {
         extraConfig = ''
           #include <tunables/global>
-          
+
           ${pkgs.nginx}/bin/nginx {
             #include <abstractions/base>
             #include <abstractions/nameservice>
@@ -46,12 +46,12 @@
           }
         '';
       };
-      
+
       # SSH profile
       "${pkgs.openssh}/bin/sshd" = {
         extraConfig = ''
           #include <tunables/global>
-          
+
           ${pkgs.openssh}/bin/sshd {
             #include <abstractions/base>
             #include <abstractions/nameservice>
@@ -86,24 +86,24 @@
       };
     };
   };
-  
+
   # Kernel security modules
   boot = {
     kernelModules = [ "apparmor" ];
-    
+
     kernelParams = [
       "apparmor=1"
       "security=apparmor"
       "lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
     ];
-    
+
     # Enable additional security features
     kernel.sysctl = {
       # AppArmor settings
       "kernel.apparmor_restrict_unprivileged_unconfined" = 1;
-      
+
       # Additional LSM settings
-      "kernel.yama.ptrace_scope" = 2;  # More restrictive
+      "kernel.yama.ptrace_scope" = 2; # More restrictive
     };
   };
 }

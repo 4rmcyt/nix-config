@@ -3,15 +3,15 @@
   # Grafana configuration for security monitoring
   services.grafana = {
     # Your existing grafana config...
-    
+
     provision = {
       enable = true;
-      
+
       datasources.settings = {
         apiVersion = 1;
         datasources = [
           # Your existing datasources...
-          
+
           {
             name = "Security Metrics";
             type = "marcusolsson-json-datasource";
@@ -25,7 +25,7 @@
           }
         ];
       };
-      
+
       dashboards.settings = {
         apiVersion = 1;
         providers = [
@@ -45,16 +45,16 @@
       };
     };
   };
-  
+
   # Install JSON datasource plugin
   environment.systemPackages = with pkgs; [
     (grafana.overrideAttrs (oldAttrs: {
-      buildInputs = oldAttrs.buildInputs or [] ++ [
+      buildInputs = oldAttrs.buildInputs or [ ] ++ [
         # Add JSON datasource plugin
       ];
     }))
   ];
-  
+
   # Create security dashboard
   systemd.services.grafana-security-dashboard = {
     description = "Create Grafana Security Dashboard";
@@ -66,7 +66,7 @@
       ExecStart = pkgs.writeShellScript "create-security-dashboard" ''
         # Create dashboard directory
         mkdir -p /var/lib/grafana/dashboards/security
-        
+
         # Create security dashboard JSON
         cat > /var/lib/grafana/dashboards/security/security-overview.json << 'EOF'
         {
@@ -178,11 +178,11 @@
           }
         }
         EOF
-        
+
         # Set ownership
         chown -R grafana:grafana /var/lib/grafana/dashboards
         chmod -R 644 /var/lib/grafana/dashboards/security/*.json
-        
+
         echo "Security dashboard created"
       '';
     };
