@@ -8,40 +8,43 @@
     certPath = "/var/lib/acme/example.com/fullchain.pem";
     keyPath = "/var/lib/acme/example.com/key.pem";
   };
-  
-  # =================================================================
-  # SOPS Secrets & User
-  # This part is already excellent.
-  # =================================================================
-  sops.secrets.cloudflare_acme_credentials = {
-      sopsFile = ../../../secrets/cloudflare_acme_credentials.env;
-      owner = config.users.users.acme.name;
-      group = config.users.groups.acme.name;
-      mode = "0400";
-      format = "dotenv";
-  };
-  
-  users.users.acme = {
-    isSystemUser = true;
-    group = "acme";
-  };
-  users.groups.acme = {};
 
-  # =================================================================
-  # ACME Certificate Configuration
-  # =================================================================
-  security.acme = {
-    acceptTerms = true;
-    defaults.email = "redacted@example.com";
+
+  config = { 
+    # =================================================================
+    # SOPS Secrets & User
+    # This part is already excellent.
+    # =================================================================
+    sops.secrets.cloudflare_acme_credentials = {
+        sopsFile = ../../../secrets/cloudflare_acme_credentials.env;
+        owner = config.users.users.acme.name;
+        group = config.users.groups.acme.name;
+        mode = "0400";
+        format = "dotenv";
+    };
     
-    certs."example.com" = {
-      domain = "*.example.com";
-      extraDomainNames = [ "example.com" ];
-      dnsProvider = "cloudflare";
-      credentialsFile = config.sops.secrets.cloudflare_acme_credentials.path;
-      keyType = "ec256";
-      group = "nginx";
-      postRun = "systemctl reload nginx.service";
+    users.users.acme = {
+      isSystemUser = true;
+      group = "acme";
+    };
+    users.groups.acme = {};
+
+    # =================================================================
+    # ACME Certificate Configuration
+    # =================================================================
+    security.acme = {
+      acceptTerms = true;
+      defaults.email = "redacted@example.com";
+      
+      certs."example.com" = {
+        domain = "*.example.com";
+        extraDomainNames = [ "example.com" ];
+        dnsProvider = "cloudflare";
+        credentialsFile = config.sops.secrets.cloudflare_acme_credentials.path;
+        keyType = "ec256";
+        group = "nginx";
+        postRun = "systemctl reload nginx.service";
+      };
     };
   };
 }
