@@ -22,7 +22,8 @@
 
   sops.age.keyFile = "/var/lib/sops/age.key";
   sops.defaultSopsFormat = "yaml";
-
+  nixpkgs.config.allowUnfree = true;
+  
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
@@ -30,8 +31,9 @@
         "nix-command"
         "flakes"
       ];
+      allowUnfree = true;
       fallback = true;
-      # system-features = [ "gccarch-aarch64-darwin" "gcctune-skylake" "big-parallel" "kvm" ];
+      system-features = [  "big-parallel" "kvm" ];
       trusted-users = [ "zeev" ];
       warn-dirty = false;
       cores = 4;
