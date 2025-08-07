@@ -49,8 +49,6 @@
     libvdpau-va-gl
   ];
 
- 
-
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
   services.fwupd.enable = true;
   services.smartd = {

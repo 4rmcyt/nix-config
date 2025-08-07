@@ -32,7 +32,10 @@
         "flakes"
       ];
       fallback = true;
-      system-features = [  "big-parallel" "kvm" ];
+      system-features = [
+        "big-parallel"
+        "kvm"
+      ];
       trusted-users = [ "zeev" ];
       warn-dirty = false;
       cores = 4;
