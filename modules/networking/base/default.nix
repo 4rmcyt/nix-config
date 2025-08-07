@@ -16,6 +16,28 @@
     firewall = {
       enable = true;
 
+      # Logging
+      logReversePathDrops = true;
+      logRefusedConnections = false; # Avoid log spam
+
+      extraCommands = ''
+        # Drop invalid packets
+        iptables -A nixos-fw -m conntrack --ctstate INVALID -j DROP
+
+        # Rate limit SSH
+        iptables -A nixos-fw -p tcp --dport 22 -m conntrack --ctstate NEW -m recent --set --name SSH
+        iptables -A nixos-fw -p tcp --dport 22 -m conntrack --ctstate NEW -m recent --update --seconds 60 --hitcount 4 --name SSH -j DROP
+
+        # Block common attack vectors
+        iptables -A nixos-fw -p tcp --tcp-flags ALL NONE -j DROP
+        iptables -A nixos-fw -p tcp --tcp-flags ALL ALL -j DROP
+        iptables -A nixos-fw -p tcp --tcp-flags ALL FIN,URG,PSH -j DROP
+        iptables -A nixos-fw -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP
+
+        # Geo-blocking (example for known bad actors)
+        # iptables -A nixos-fw -m geoip --src-cc CN,RU,KP -j DROP
+      '';
+
       allowedTCPPorts = [
         # Base services
         22 # SSH
@@ -81,8 +103,6 @@
       # };
 
       trustedInterfaces = [ "tailscale0" ];
-
-      logReversePathDrops = true;
     };
   };
 }
