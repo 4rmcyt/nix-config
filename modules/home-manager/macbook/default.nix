@@ -43,7 +43,6 @@
     pass
     pcsc-tools
     pet
-    pinentry-tty
     pipx
     plistwatch
     poetry
@@ -65,7 +64,6 @@
     yubikey-personalization
     youtube-music
     zoom-us
-    pinentry_mac
   ];
 
   # User-specific environment variables

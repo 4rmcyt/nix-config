@@ -71,14 +71,13 @@
       "raycast"
       "jellyfin-media-player"
       "telegram-desktop"
+      "gpg-suite"
     ];
     brews = [
       "curl"
       "go"
       "browserpass"
       "python"
-      "pinentry"
-      "pinentry-mac"
       "libusb"
       "gnupg"
       "libgcrypt"
