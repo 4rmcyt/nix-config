@@ -372,7 +372,6 @@
   # 5. System Services
   # =================================================================
   services.fwupd.enable = true;
-  services.lm_sensors.enable = true;
 
   services.smartd = {
     enable = true;
