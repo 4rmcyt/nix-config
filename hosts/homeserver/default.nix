@@ -21,6 +21,7 @@
     ../../modules/containers
     ../../modules/database
     ../../modules/security
+    ../../modules/options
   ];
 
 
