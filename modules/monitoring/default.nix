@@ -160,7 +160,7 @@
         enable = true;
       };
     };
-    ruleFiles = [ ./alerts/homeserver.yml ]; 
+    ruleFiles = [ ./alerts/homeserver.yaml ]; 
   };
 
   # --- Grafana Visualization ---
