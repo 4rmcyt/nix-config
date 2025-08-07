@@ -372,6 +372,8 @@
   # 5. System Services
   # =================================================================
   services.fwupd.enable = true;
+  systemd.oomd.enable = true;
+
 
   services.smartd = {
     enable = true;
