@@ -1,105 +1,16 @@
 { pkgs, inputs, ... }:
 {
-  home.packages = with pkgs; [
-    git
-    gnupg
-    nix-zsh-completions
-    zsh-history-substring-search
-    zsh-you-should-use
-    zsh-powerlevel10k
+   home.packages = with pkgs; [
     # Shell & Editor
-    zsh
-    neovim
-    vim
-    meslo-lgs-nf
+    zsh neovim vim meslo-lgs-nf
     # Dev tools
-    direnv
-    go
-    python3Full
-    deploy-rs
-    just
-    nixfmt-rfc-style
-    nixpkgs-fmt
-    nil
+    direnv go python3Full deploy-rs just nixfmt-rfc-style nixpkgs-fmt nil git-crypt nix-fast-build shfmt nixfmt-tree nix-inspect nix-diff
     # User Utils
-    pass
-    jq
-    mc
-    age
-    sops
-    ssh-to-age
-    openssh
-    dive
-    yamllint
-    nix-index
-    fzf
-    ffmpeg
-    trash-cli
-    zip
-    unar
-    unzip
-    p7zip
-    tree
-    git-crypt
-    borgbackup
-    nextdns # CLI tool for user
-    nh
-    nix-output-monitor
-    nvd
-    pinentry-tty
-    pciutils
-    python3Full
-    zsh
-    neovim
-    vim
-    wget
-    curl
-    jq
-    gawk
-    gnugrep
-    iproute2
-    htop
-    btop
-    lsof
-    age
-    sops
-    ssh-to-age
-    mc
-    nixfmt-rfc-style
-    nil
-    tree
-    openssl
-    nh
-    nix-output-monitor
-    powertop
-    lm_sensors
-    dive
-    apacheHttpd
-    meslo-lgs-nf
-    yamllint
-    iotop
-    cachix
-    tuptime
-    fzf
-    ffmpeg
-    nmap
-    trash-cli
-    zip
-    unar
-    unzip
-    p7zip
-    deploy-rs
-    just
-    nixpkgs-fmt
-    git-crypt
-    borgbackup
-    nix-fast-build
-    shfmt
-    nixfmt-tree
-    nix-inspect
-    nvd
-    nix-diff
+    pass gnupg jq mc age sops ssh-to-age openssh dive yamllint nix-index fzf ffmpeg trash-cli zip unar unzip p7zip tree borgbackup nextdns nh nix-output-monitor nvd pinentry-tty
+    # System & Network Tools
+    pciutils wget curl gawk gnugrep iproute2 htop btop lsof openssl powertop lm_sensors apacheHttpd iotop cachix tuptime nmap
   ];
+
 
   programs = {
     git = {
