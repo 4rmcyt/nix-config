@@ -47,64 +47,17 @@
 
   security = {
     pam.loginLimits = [
-      {
-        domain = "*";
-        type = "soft";
-        item = "nofile";
-        value = "1024";
-      }
-      {
-        domain = "*";
-        type = "hard";
-        item = "nofile";
-        value = "4096";
-      }
-      {
-        domain = "@users";
-        type = "soft";
-        item = "nproc";
-        value = "1024";
-      }
-      {
-        domain = "@users";
-        type = "hard";
-        item = "nproc";
-        value = "2048";
-      }
-      {
-        domain = "@users";
-        type = "soft";
-        item = "nofile";
-        value = "4096";
-      }
-      {
-        domain = "@users";
-        type = "hard";
-        item = "nofile";
-        value = "8192";
-      }
-
+      { domain = "@users"; type = "soft"; item = "nproc"; value = "1024"; }
+      { domain = "@users"; type = "hard"; item = "nproc"; value = "2048"; }
+      { domain = "@users"; type = "soft"; item = "nofile"; value = "4096"; }
+      { domain = "@users"; type = "hard"; item = "nofile"; value = "8192"; }
+      
       # Security: disable core dumps
-      {
-        domain = "*";
-        type = "hard";
-        item = "core";
-        value = "0";
-      }
-
+      { domain = "*"; type = "hard"; item = "core"; value = "0"; }
+      
       # Security: memory limits
-      {
-        domain = "@users";
-        type = "soft";
-        item = "memlock";
-        value = "64";
-      }
-      {
-        domain = "@users";
-        type = "hard";
-        item = "memlock";
-        value = "64";
-      }
+      { domain = "@users"; type = "soft"; item = "memlock"; value = "64"; }
+      { domain = "@users"; type = "hard"; item = "memlock"; value = "64"; }
     ];
 
     auditd.enable = true;
