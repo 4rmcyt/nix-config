@@ -49,6 +49,56 @@
     pinentry-tty
     pciutils
     python3Full
+    zsh
+    neovim
+    vim
+    wget
+    curl
+    jq
+    gawk
+    gnugrep
+    iproute2
+    htop
+    btop
+    lsof
+    age
+    sops
+    ssh-to-age
+    mc
+    nixfmt-rfc-style
+    nil
+    tree
+    openssl
+    nh
+    nix-output-monitor
+    powertop
+    lm_sensors
+    dive
+    apacheHttpd
+    meslo-lgs-nf
+    yamllint
+    iotop
+    cachix
+    tuptime
+    fzf
+    ffmpeg
+    nmap
+    trash-cli
+    zip
+    unar
+    unzip
+    p7zip
+    deploy-rs
+    just
+    nixpkgs-fmt
+    git-crypt
+    borgbackup
+    nix-fast-build
+    shfmt
+    nixfmt-tree
+    nix-inspect
+    nvd
+    nix-diff
   ];
 
   programs = {
