@@ -219,6 +219,7 @@
     '';
     serviceConfig.Type = "oneshot";
   };
+
   systemd.services.lm_sensors = {
     description = "LM Sensors Service";
     wantedBy = [ "multi-user.target" ];
@@ -226,28 +227,6 @@
       ${pkgs.lm_sensors}/bin/sensors-detect --auto
     '';
     serviceConfig.Type = "oneshot";
-  };
-
-  systemd.services.temperature-monitor = {
-    description = "Monitor system temperatures";
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = pkgs.writeShellScript "temp-monitor" ''
-        # Check CPU temperature
-        CPU_TEMP=$(${pkgs.lm_sensors}/bin/sensors | grep "Core 0" | awk '{print $3}' | sed 's/+//;s/°C//' | cut -d'.' -f1)
-        if [ "$CPU_TEMP" -gt 80 ]; then
-          echo "WARNING: CPU temperature is $CPU_TEMP°C" | ${pkgs.systemd}/bin/systemd-cat -t temp-monitor -p warning
-        fi
-      '';
-    };
-  };
-
-  systemd.timers.temperature-monitor = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "*:0/5"; # Every 5 minutes
-      Persistent = true;
-    };
   };
 
   services.zfs = {
@@ -391,8 +370,6 @@
   # Disko creates a ZFS volume (zvol) for swap on the root pool.
   swapDevices = [
     {
-      # The device path is derived from the pool name ('rpool') and the
-      # name you gave the swap device in the disko config ('zfs_swap').
       device = "/dev/zvol/rpool/zfs_swap";
     }
   ];
