@@ -33,7 +33,6 @@ in
   users = {
     groups = {
       media = { };
-      git = { };
     };
 
     users = {
