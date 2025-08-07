@@ -85,6 +85,51 @@
     "spec_store_bypass_disable=on" # Speculative store bypass
     "tsx=off" # Disable TSX
     "tsx_async_abort=full,nosmt" # TSX async abort mitigation
+    # Memory protection
+    "slab_nomerge"
+    "init_on_alloc=1"
+    "init_on_free=1"
+    "page_alloc.shuffle=1"
+
+    # CPU security
+    "pti=on"
+    "spectre_v2=on"
+    "spec_store_bypass_disable=on"
+
+    # Kernel hardening
+    "vsyscall=none"
+    "debugfs=off"
+    "oops=panic"
+    "module.sig_enforce=1"
+    "lockdown=confidentiality"
+
+    # Disable legacy features
+    "nohibernate"
+    "nosmt" # Disable SMT if not needed for security
+  ];
+  # Blacklist vulnerable modules
+  blacklistedKernelModules = [
+    "dccp"
+    "sctp"
+    "rds"
+    "tipc"
+    "n-hdlc"
+    "ax25"
+    "netrom"
+    "x25"
+    "rose"
+    "decnet"
+    "econet"
+    "af_802154"
+    "ipx"
+    "appletalk"
+    "psnap"
+    "p8023"
+    "llc"
+    "p8022"
+    "bluetooth"
+    "btusb" # If not using Bluetooth
+    "uvcvideo" # If no webcam
   ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
