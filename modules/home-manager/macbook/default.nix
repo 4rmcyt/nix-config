@@ -59,7 +59,6 @@
     utm
     vscode
     wget
-    wireguard-tools
     yq
     yubico-piv-tool
     yubikey-manager
