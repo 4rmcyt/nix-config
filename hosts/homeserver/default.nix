@@ -69,78 +69,76 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # environment.systemPackages = with pkgs; [
+  #   # Essential system tools only
+  #   zsh
+  #   git
+  #   neovim
+  #   vim
+  #   wget
+  #   curl
+  #   jq
+  #   coreutils
+  #   gawk
+  #   gnugrep
+  #   iproute2
+  #   htop
+  #   btop
+  #   lsof
+  #   age
+  #   sops
+  #   ssh-to-age
+  #   openssh
 
-# environment.systemPackages = with pkgs; [
-#   # Essential system tools only
-#   zsh
-#   git
-#   neovim
-#   vim
-#   wget
-#   curl
-#   jq
-#   coreutils
-#   gawk
-#   gnugrep
-#   iproute2
-#   htop
-#   btop
-#   lsof
-#   age
-#   sops
-#   ssh-to-age
-#   openssh
-  
-#   # Development tools (consider moving to user profile)
-#   # direnv  # Move to user profile
-#   # go      # Move to user profile
-#   # python3Full  # Move to user profile
-  
-#   # Essential admin tools
-#   mc
-#   wireguard-tools
-#   nixfmt-rfc-style
-#   nil
-#   tree
-#   smartmontools
-#   openssl
-#   fwupd
-#   nh
-#   nix-output-monitor
-#   powertop
-#   lm_sensors
-  
-#   # Remove rarely used packages
-#   # dive
-#   # apacheHttpd
-#   # meslo-lgs-nf
-#   # yamllint
-#   # iotop
-#   # cachix
-#   # tuptime
-#   # fzf
-#   # ffmpeg
-#   # nmap
-#   # trash-cli
-#   # zip
-#   # unar
-#   # unzip
-#   # p7zip
-#   # deploy-rs
-#   # just
-#   # nixpkgs-fmt
-#   # git-crypt
-#   # pciutils
-#   # borgbackup
-#   # nix-fast-build
-#   # shfmt
-#   # zfs
-#   # nixfmt-tree
-#   # nix-inspect
-#   # nvd
-#   # nix-diff
-# ];
+  #   # Development tools (consider moving to user profile)
+  #   # direnv  # Move to user profile
+  #   # go      # Move to user profile
+  #   # python3Full  # Move to user profile
 
+  #   # Essential admin tools
+  #   mc
+  #   wireguard-tools
+  #   nixfmt-rfc-style
+  #   nil
+  #   tree
+  #   smartmontools
+  #   openssl
+  #   fwupd
+  #   nh
+  #   nix-output-monitor
+  #   powertop
+  #   lm_sensors
+
+  #   # Remove rarely used packages
+  #   # dive
+  #   # apacheHttpd
+  #   # meslo-lgs-nf
+  #   # yamllint
+  #   # iotop
+  #   # cachix
+  #   # tuptime
+  #   # fzf
+  #   # ffmpeg
+  #   # nmap
+  #   # trash-cli
+  #   # zip
+  #   # unar
+  #   # unzip
+  #   # p7zip
+  #   # deploy-rs
+  #   # just
+  #   # nixpkgs-fmt
+  #   # git-crypt
+  #   # pciutils
+  #   # borgbackup
+  #   # nix-fast-build
+  #   # shfmt
+  #   # zfs
+  #   # nixfmt-tree
+  #   # nix-inspect
+  #   # nvd
+  #   # nix-diff
+  # ];
 
   environment.systemPackages = with pkgs; [
     zsh
@@ -271,7 +269,7 @@
   };
 
   security.sudo.execWheelOnly = true;
-  
+
   services.journald.extraConfig = ''
     SystemMaxUse=500M
     SystemMaxFileSize=50M
@@ -295,7 +293,7 @@
       };
     };
   };
-  
+
   programs = {
     gnupg.agent = {
       enable = true;

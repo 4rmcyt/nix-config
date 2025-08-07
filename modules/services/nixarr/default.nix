@@ -299,6 +299,55 @@ in
     jellyseerr.enable = true;
   };
 
+  # services.jellyfin = {
+  #   enable = true;
+  #   openFirewall = true; # DANGEROUS - opens to all interfaces
+
+  #   # Add proper configuration
+  #   dataDir = "/var/lib/jellyfin";
+  #   configDir = "/var/lib/jellyfin/config";
+  #   cacheDir = "/var/cache/jellyfin"; # Separate cache location
+
+  #   # Security improvements
+  #   user = "jellyfin";
+  #   group = "jellyfin";
+  # };
+
+  # # Add systemd security hardening
+  # systemd.services.jellyfin.serviceConfig = {
+  #   # Resource limits
+  #   MemoryMax = "4G";
+  #   CPUQuota = "200%"; # Allow 2 cores max
+
+  #   # Security hardening
+  #   NoNewPrivileges = true;
+  #   PrivateTmp = true;
+  #   ProtectHome = true;
+  #   ProtectSystem = "strict";
+  #   ReadWritePaths = [
+  #     "/var/lib/jellyfin"
+  #     "/var/cache/jellyfin"
+  #     "/data/media"
+  #   ];
+
+  #   # Network restrictions
+  #   RestrictAddressFamilies = [
+  #     "AF_INET"
+  #     "AF_INET6"
+  #   ];
+
+  #   # File system restrictions
+  #   ProtectKernelTunables = true;
+  #   ProtectKernelModules = true;
+  #   ProtectControlGroups = true;
+  # };
+
+  # # Proper firewall configuration instead of openFirewall = true
+  # networking.firewall = {
+  #   allowedTCPPorts = [ 8096 ]; # Only Jellyfin HTTP port
+  #   # Remove blanket firewall opening
+  # };
+
   environment.systemPackages = [
     pkgs.jellyfin
     pkgs.jellyfin-web
