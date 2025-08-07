@@ -41,7 +41,7 @@
     virtualisation.flushL1DataCache = "always";
     apparmor.enable = true;
     auditd.enable = true;
-    security.audit.rules = [
+    audit.rules = [
       # Base rules (from your config)
       "-w /etc/passwd -p wa -k identity"
       "-w /etc/group -p wa -k identity"
