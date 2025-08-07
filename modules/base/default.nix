@@ -4,5 +4,6 @@
     ./auto_upgrade
     ./system
     ./msmtp
+    ./logging
   ];
 }

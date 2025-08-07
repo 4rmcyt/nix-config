@@ -107,29 +107,29 @@
     "lockdown=confidentiality"
   ];
   # Blacklist vulnerable modules
-  # blacklistedKernelModules = [
-  #   "dccp"
-  #   "sctp"
-  #   "rds"
-  #   "tipc"
-  #   "n-hdlc"
-  #   "ax25"
-  #   "netrom"
-  #   "x25"
-  #   "rose"
-  #   "decnet"
-  #   "econet"
-  #   "af_802154"
-  #   "ipx"
-  #   "appletalk"
-  #   "psnap"
-  #   "p8023"
-  #   "llc"
-  #   "p8022"
-  #   "bluetooth"
-  #   "btusb" # If not using Bluetooth
-  #   "uvcvideo" # If no webcam
-  # ];
+  boot.blacklistedKernelModules = [
+    "dccp"
+    "sctp"
+    "rds"
+    "tipc"
+    "n-hdlc"
+    "ax25"
+    "netrom"
+    "x25"
+    "rose"
+    "decnet"
+    "econet"
+    "af_802154"
+    "ipx"
+    "appletalk"
+    "psnap"
+    "p8023"
+    "llc"
+    "p8022"
+    "bluetooth"
+    "btusb" # If not using Bluetooth
+    "uvcvideo" # If no webcam
+  ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernel.sysctl = {
@@ -251,32 +251,31 @@
     };
   };
 
-  services.zfs.autoScrub.enable = true;
 
-  #   services.zfs = {
-  #   autoScrub = {
-  #     enable = true;
-  #     interval = "monthly";  # Make interval explicit
-  #     pools = [ "rpool" "dpool" ];  # Specify pools explicitly
-  #   };
+  services.zfs = {
+    autoScrub = {
+      enable = true;
+      interval = "monthly";  # Make interval explicit
+      pools = [ "rpool" "dpool" ];  # Specify pools explicitly
+    };
 
-  #   # Add ZFS auto-snapshot
-  #   autoSnapshot = {
-  #     enable = true;
-  #     flags = "-k -p --utc";
-  #     frequent = 8;     # Keep 8 15-minute snapshots
-  #     hourly = 24;      # Keep 24 hourly snapshots
-  #     daily = 7;        # Keep 7 daily snapshots
-  #     weekly = 4;       # Keep 4 weekly snapshots
-  #     monthly = 12;     # Keep 12 monthly snapshots
-  #   };
+    # Add ZFS auto-snapshot
+    autoSnapshot = {
+      enable = true;
+      flags = "-k -p --utc";
+      frequent = 8;     # Keep 8 15-minute snapshots
+      hourly = 24;      # Keep 24 hourly snapshots
+      daily = 7;        # Keep 7 daily snapshots
+      weekly = 4;       # Keep 4 weekly snapshots
+      monthly = 12;     # Keep 12 monthly snapshots
+    };
 
-  #   # Add ZFS trim for SSDs
-  #   trim = {
-  #     enable = true;
-  #     interval = "weekly";
-  #   };
-  # };
+    # Add ZFS trim for SSDs
+    trim = {
+      enable = true;
+      interval = "weekly";
+    };
+  };
 
   fileSystems = {
     # The boot partition, which is a standard vfat filesystem.
@@ -284,29 +283,14 @@
       device = "/dev/disk/by-label/boot"; # Disko automatically labels the boot partition.
       fsType = "vfat";
       options = [
-        "fmask=0137"
-        "dmask=0027"
-        # "fmask=0077" # More restrictive than current 0137
-        # "dmask=0077" # More restrictive than current 0027
-        # "nodev" # No device files
-        # "nosuid" # No setuid binaries
-        # "noexec" # No executable files (except kernel/initrd)
-        # "relatime" # Better performance than default
+        "fmask=0077" # More restrictive than current 0137
+        "dmask=0077" # More restrictive than current 0027
+        "nodev" # No device files
+        "nosuid" # No setuid binaries
+        "noexec" # No executable files (except kernel/initrd)
+        "relatime" # Better performance than default
       ];
     };
-
-    #   "/boot" = {
-    #   device = "/dev/disk/by-label/boot";
-    #   fsType = "vfat";
-    #   options = [
-    #     "fmask=0077"    # Changed from 0137 - more restrictive
-    #     "dmask=0077"    # Changed from 0027 - more restrictive
-    #     "nodev"         # No device files
-    #     "nosuid"        # No setuid binaries
-    #     "noexec"        # No executable files (except kernel/initrd)
-    #   ];
-    # };
-
     # ZFS datasets from the 'rpool' (root pool).
     # NixOS's ZFS integration automatically mounts datasets, but explicitly listing
     # them here provides clarity and ensures the system knows about them.
