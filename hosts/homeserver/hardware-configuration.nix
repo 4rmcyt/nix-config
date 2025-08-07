@@ -302,6 +302,8 @@
     # AppArmor Security
     "apparmor=1"
     "security=apparmor"
+
+    "zfs.zfs_arc_max=12884901888" 
   ];
 
   # Sysctl settings for hardening and performance tuning.
@@ -385,7 +387,6 @@
   };
 
   services.zfs = {
-    arcMax = 10589934592; # 10 GB
     autoScrub.enable = true;
     autoScrub.interval = "monthly";
     autoScrub.pools = [
