@@ -257,6 +257,25 @@
         admin_user = "admin";
         admin_password_file = config.sops.secrets.grafana_admin_password.path;
       };
+      # Enable alerting
+      alerting = {
+        enabled = true;
+        execute_alerts = true;
+        error_or_timeout = "alerting";
+        nodata_or_nullvalues = "no_data";
+        concurrent_render_limit = 5;
+      };
+      
+      # SMTP for alert notifications (configure with your email)
+      smtp = {
+        enabled = true;
+        host = "localhost:587";
+        user = "grafana@yourdomain.com";
+        password = "$__file{/var/lib/grafana/smtp_password}";
+        from_address = "grafana@yourdomain.com";
+        from_name = "Grafana Security Alerts";
+        skip_verify = false;
+      };
     };
 
     provision.dashboards.settings.providers = [
@@ -281,4 +300,92 @@
     "d /var/lib/grafana 0755 grafana grafana -"
     "d /var/lib/grafana/dashboards 0755 grafana grafana -"
   ];
-}
+
+  # Alert notification webhook service
+  systemd.services.grafana-security-webhook = {
+    description = "Grafana Security Alert Webhook Handler";
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = pkgs.writeShellScript "security-webhook" ''
+        # Simple webhook listener for Grafana alerts
+        ${pkgs.netcat}/bin/nc -l -p 9093 -k -e ${pkgs.writeShellScript "handle-alert" ''
+          read -r request_line
+          while IFS= read -r header && [ "$header" != $'\r' ]; do
+            :
+          done
+          
+          # Read POST data
+          content_length=$(echo "$header" | grep -i "Content-Length:" | cut -d' ' -f2 | tr -d '\r')
+          if [ -n "$content_length" ] && [ "$content_length" -gt 0 ]; then
+            alert_data=$(head -c "$content_length")
+            
+            # Log alert to system journal
+            echo "SECURITY ALERT: $alert_data" | \
+              ${pkgs.systemd}/bin/systemd-cat -t grafana-security-alert -p warning
+            
+            # Send HTTP response
+            echo -e "HTTP/1.1 200 OK\r\nContent-Length: 2\r\n\r\nOK"
+          else
+            echo -e "HTTP/1.1 400 Bad Request\r\nContent-Length: 11\r\n\r\nBad Request"
+          fi
+        ''}
+      '';
+      
+      Restart = "always";
+      RestartSec = "10s";
+      
+      # Security settings
+      User = "grafana-webhook";
+      Group = "grafana-webhook";
+      PrivateTmp = true;
+      ProtectHome = true;
+      ProtectSystem = "strict";
+    };
+  };
+  
+  # Create webhook user
+  users.groups.grafana-webhook = {};
+  users.users.grafana-webhook = {
+    isSystemUser = true;
+    group = "grafana-webhook";
+    home = "/var/lib/grafana-webhook";
+    createHome = true;
+  };
+  
+  # Security incident response service
+  systemd.services.security-incident-response = {
+    description = "Security Incident Response Handler";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "incident-response" ''
+        # Check for critical security events
+        CRITICAL_EVENTS=0
+        
+        # Check for too many failed logins
+        FAILED_LOGINS=$(journalctl --since "1 hour ago" --no-pager | grep -i "failed.*password" | wc -l)
+        if [ "$FAILED_LOGINS" -gt 10 ]; then
+          echo "CRITICAL: $FAILED_LOGINS failed login attempts in last hour" | \
+            ${pkgs.systemd}/bin/systemd-cat -t security-incident -p crit
+          CRITICAL_EVENTS=$((CRITICAL_EVENTS + 1))
+        fi
+        
+        # Check for service failures
+        FAILED_SERVICES=$(systemctl --failed --no-legend | wc -l)
+        if [ "$FAILED_SERVICES" -gt 2 ]; then
+          echo "CRITICAL: $FAILED_SERVICES critical services have failed" | \
+            ${pkgs.systemd}/bin/systemd-cat -t security-incident -p crit
+          CRITICAL_EVENTS=$((CRITICAL_EVENTS + 1))
+        fi
+        
+        # Check disk space
+        ROOT_USAGE=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
+        if [ "$ROOT_USAGE" -gt 95 ]; then
+          echo "CRITICAL: Root filesystem is $ROOT_USAGE% full" | \
+            ${pkgs.systemd}/bin/systemd-cat -t security-incident -p crit
+          CRITICAL_EVENTS=$((CRITICAL_EVENTS + 1))
+        fi
+        
+        # If critical events detected, trigger additional security measures
+        if [ "$CRITICAL_EVENTS" -gt 0 ]; then
+          echo "Triggering enhanced security monitoring due to $CRITICAL_EVENTS critical events" | \
+            ${pkgs.systemd}/bin

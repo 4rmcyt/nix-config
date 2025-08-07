@@ -1,153 +1,46 @@
 { config, pkgs, ... }:
 {
-  # Network intrusion detection with Suricata
-  services.suricata = {
-    enable = true;
-    
-    settings = {
-      # Network interfaces
-      af-packet = [
-        {
-          interface = "enp3s0";  # Adjust to your interface
-          cluster-id = 99;
-          cluster-type = "cluster_flow";
-          defrag = true;
-        }
-      ];
-      
-      # Detection settings
-      detect = {
-        profile = "medium";
-        custom-values = {
-          toclient-groups = 3;
-          toserver-groups = 25;
-        };
-      };
-      
-      # Output configuration
-      outputs = [
-        {
-          eve-log = {
-            enabled = true;
-            filetype = "regular";
-            filename = "/var/log/suricata/eve.json";
-            
-            types = [
-              { alert = { tagged-packets = true; }; }
-              { http = { extended = true; }; }
-              { dns = { enabled = true; }; }
-              { tls = { extended = true; }; }
-              { ssh = { enabled = true; }; }
-              { smtp = { enabled = true; }; }
-              { flow = { enabled = true; }; }
-            ];
-          };
-        }
-        {
-          unified2-alert = {
-            enabled = false;
-          };
-        }
-      ];
-      
-      # Logging
-      logging = {
-        default-log-level = "notice";
-        outputs = [
-          {
-            console = {
-              enabled = true;
-            };
-          }
-          {
-            file = {
-              enabled = true;
-              level = "info";
-              filename = "/var/log/suricata/suricata.log";
-            };
-          }
-          {
-            syslog = {
-              enabled = true;
-              facility = "local5";
-              format = "[%i] <%d> -- ";
-            };
-          };
-        ];
-      };
-    };
-  };
-  
-  # Suricata rule management
-  systemd.services.suricata-update = {
-    description = "Update Suricata rules";
+  # Lightweight network monitoring using built-in tools
+  systemd.services.network-monitor = {
+    description = "Lightweight Network Security Monitor";
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = pkgs.writeShellScript "suricata-update" ''
-        # Update rules from various sources
-        ${pkgs.suricata}/bin/suricata-update update-sources
-        ${pkgs.suricata}/bin/suricata-update
+      ExecStart = pkgs.writeShellScript "network-monitor" ''
+        # Check for unusual network connections
+        EXTERNAL_CONNS=$(ss -tuln | grep -v '127.0.0.1\|::1' | wc -l)
+        if [ "$EXTERNAL_CONNS" -gt 50 ]; then
+          echo "INFO: $EXTERNAL_CONNS external network connections active" | \
+            ${pkgs.systemd}/bin/systemd-cat -t network-monitor -p info
+        fi
         
-        # Reload Suricata
-        ${pkgs.systemd}/bin/systemctl reload suricata
+        # Check for failed connection attempts in auth.log
+        if [ -f /var/log/auth.log ]; then
+          FAILED_SSH=$(grep "Failed password" /var/log/auth.log | tail -100 | grep "$(date '+%b %d')" | wc -l)
+          if [ "$FAILED_SSH" -gt 5 ]; then
+            echo "WARNING: $FAILED_SSH SSH login failures today" | \
+              ${pkgs.systemd}/bin/systemd-cat -t network-monitor -p warning
+          fi
+        fi
         
-        echo "Suricata rules updated" | \
-          ${pkgs.systemd}/bin/systemd-cat -t suricata-update -p info
+        # Check for unusual port activity
+        LISTENING_PORTS=$(ss -tln | awk 'NR>1 {print $4}' | cut -d: -f2 | sort -n | uniq | wc -l)
+        echo "INFO: $LISTENING_PORTS unique ports listening" | \
+          ${pkgs.systemd}/bin/systemd-cat -t network-monitor -p info
+        
+        # Monitor bandwidth usage (basic check)
+        RX_BYTES=$(cat /sys/class/net/*/statistics/rx_bytes 2>/dev/null | awk '{sum+=$1} END {print sum/1024/1024}')
+        TX_BYTES=$(cat /sys/class/net/*/statistics/tx_bytes 2>/dev/null | awk '{sum+=$1} END {print sum/1024/1024}')
+        echo "INFO: Network usage - RX: ${RX_BYTES}MB, TX: ${TX_BYTES}MB total" | \
+          ${pkgs.systemd}/bin/systemd-cat -t network-monitor -p info
       '';
     };
   };
   
-  systemd.timers.suricata-update = {
+  systemd.timers.network-monitor = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnCalendar = "daily";
+      OnCalendar = "*:0/15";  # Every 15 minutes
       Persistent = true;
-      RandomizedDelaySec = "2h";
-    };
-  };
-  
-  # Log analysis service
-  systemd.services.suricata-analyzer = {
-    description = "Analyze Suricata alerts";
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = pkgs.writeShellScript "suricata-analyzer" ''
-        LOG_FILE="/var/log/suricata/eve.json"
-        
-        if [ ! -f "$LOG_FILE" ]; then
-          echo "Suricata log file not found"
-          exit 0
-        fi
-        
-        # Check for recent alerts (last hour)
-        RECENT_ALERTS=$(jq -r 'select(.timestamp >= (now - 3600 | strftime("%Y-%m-%dT%H:%M:%S"))) | select(.event_type == "alert")' "$LOG_FILE" 2>/dev/null | wc -l)
-        
-        if [ "$RECENT_ALERTS" -gt 0 ]; then
-          echo "WARNING: $RECENT_ALERTS security alerts in the last hour" | \
-            ${pkgs.systemd}/bin/systemd-cat -t suricata-analyzer -p warning
-          
-          # Log top alert types
-          jq -r 'select(.timestamp >= (now - 3600 | strftime("%Y-%m-%dT%H:%M:%S"))) | select(.event_type == "alert") | .alert.signature' "$LOG_FILE" 2>/dev/null | sort | uniq -c | sort -rn | head -5 | \
-            ${pkgs.systemd}/bin/systemd-cat -t suricata-alerts -p info
-        fi
-        
-        # Check for suspicious connections
-        SUSPICIOUS_CONNS=$(jq -r 'select(.timestamp >= (now - 3600 | strftime("%Y-%m-%dT%H:%M:%S"))) | select(.event_type == "flow") | select(.flow.reason == "timeout")' "$LOG_FILE" 2>/dev/null | wc -l)
-        
-        if [ "$SUSPICIOUS_CONNS" -gt 100 ]; then
-          echo "WARNING: $SUSPICIOUS_CONNS suspicious network connections detected" | \
-            ${pkgs.systemd}/bin/systemd-cat -t suricata-analyzer -p warning
-        fi
-      '';
-    };
-  };
-  
-  systemd.timers.suricata-analyzer = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "hourly";
-      Persistent = true;
-      RandomizedDelaySec = "300";
     };
   };
 }
