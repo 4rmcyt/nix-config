@@ -300,8 +300,8 @@
 
     # AppArmor Security
     "apparmor=1"
-    "security=apparmor"
 
+    # ZFS Performance Tuning
     "zfs.zfs_arc_max=12884901888" 
   ];
 
