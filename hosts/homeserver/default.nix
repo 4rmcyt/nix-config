@@ -126,6 +126,7 @@
     powertop
     zfs
     lm_sensors
+    treefmt
   ];
 
   services = {
