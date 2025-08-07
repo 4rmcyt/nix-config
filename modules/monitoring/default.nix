@@ -97,14 +97,20 @@
     virtualHosts = {
       "prometheus.example.com" = {
         forceSSL = true;
+        sslCertificate = config.my.security.ssl.certPath;
+        sslCertificateKey = config.my.security.ssl.keyPath;
         locations."/".proxyPass = "http://localhost:9090";
       };
       "uptime-kuma.example.com" = {
         forceSSL = true;
+        sslCertificate = config.my.security.ssl.certPath;
+        sslCertificateKey = config.my.security.ssl.keyPath;
         locations."/".proxyPass = "http://localhost:3001";
       };
       "grafana.example.com" = {
         forceSSL = true;
+        sslCertificate = config.my.security.ssl.certPath;
+        sslCertificateKey = config.my.security.ssl.keyPath;
         extraConfig = "add_header Strict-Transport-Security \"max-age=31536000; includeSubDomains\" always;";
         locations."/".proxyPass = "http://localhost:3000/";
       };
