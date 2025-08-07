@@ -145,7 +145,6 @@
     lockKernelModules = true; # Changed: Enable kernel module locking
 
     # Add additional server security
-    allowUserNamespaces = false;
     forcePageTableIsolation = true;
     virtualisation.flushL1DataCache = "always";
 

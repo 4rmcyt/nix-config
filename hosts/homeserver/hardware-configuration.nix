@@ -107,29 +107,29 @@
     "lockdown=confidentiality"
   ];
   # Blacklist vulnerable modules
-  blacklistedKernelModules = [
-    "dccp"
-    "sctp"
-    "rds"
-    "tipc"
-    "n-hdlc"
-    "ax25"
-    "netrom"
-    "x25"
-    "rose"
-    "decnet"
-    "econet"
-    "af_802154"
-    "ipx"
-    "appletalk"
-    "psnap"
-    "p8023"
-    "llc"
-    "p8022"
-    "bluetooth"
-    "btusb" # If not using Bluetooth
-    "uvcvideo" # If no webcam
-  ];
+  # blacklistedKernelModules = [
+  #   "dccp"
+  #   "sctp"
+  #   "rds"
+  #   "tipc"
+  #   "n-hdlc"
+  #   "ax25"
+  #   "netrom"
+  #   "x25"
+  #   "rose"
+  #   "decnet"
+  #   "econet"
+  #   "af_802154"
+  #   "ipx"
+  #   "appletalk"
+  #   "psnap"
+  #   "p8023"
+  #   "llc"
+  #   "p8022"
+  #   "bluetooth"
+  #   "btusb" # If not using Bluetooth
+  #   "uvcvideo" # If no webcam
+  # ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernel.sysctl = {
@@ -186,7 +186,6 @@
   boot.loader.systemd-boot.editor = false;
   boot.loader.timeout = 3;
 
-  enableRedistributableFirmware = true;
 
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = with pkgs; [
@@ -200,7 +199,6 @@
   ];
 
   hardware.bluetooth.enable = false;
-  hardware.pulseaudio.enable = false;
   hardware.i2c.enable = true;
 
   powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
