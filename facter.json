@@ -221,6 +221,7 @@
       {
         "architecture": "x86_64",
         "vendor_name": "GenuineIntel",
+        "model_name": "Intel(R) Core(TM) i5-6500 CPU @ 3.20GHz",
         "family": 6,
         "model": 94,
         "stepping": 3,
@@ -359,17 +360,19 @@
           "gds",
           "spectre_v2_user"
         ],
+        "power_management": [
+          ""
+        ],
         "bogo": 6399,
         "cache": 6144,
         "units": 16,
         "physical_id": 0,
         "siblings": 4,
         "cores": 4,
-        "fpu": true,
-        "fpu_exception": true,
+        "fpu": false,
+        "fpu_exception": false,
         "cpuid_level": 22,
         "write_protect": false,
-        "tlb_size": 32764,
         "clflush_size": 64,
         "cache_alignment": 64,
         "address_sizes": {
