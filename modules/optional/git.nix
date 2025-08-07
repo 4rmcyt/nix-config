@@ -2,45 +2,52 @@
 {
   programs.git = {
     enable = true;
-    package = pkgs.gitFull;
-
-    config = {
-      user = {
-        name = config.hostSpec.handle;
-        email = config.hostSpec.email;
-        signingkey = config.hostSpec.publicGPGKey;
-      };
-      safe.directory = [ "/etc/nixos" ];
-      commit = {
-        gpgsign = true;
-      };
-
+    
+    # Don't set global config that might expose info
+    # userName = "Your Name";  # Move to user-specific config
+    # userEmail = "email@example.com";  # Move to user-specific config
+    
+    extraConfig = {
+      init.defaultBranch = "main";
+      
+      # Security settings
       core = {
-        whitespace = "error";
+        autocrlf = false;
+        safecrlf = false;
+        # Don't trust file modes from other systems
+        filemode = false;
       };
-      status = {
-        branch = true;
-        short = true;
-        showStash = true;
+      
+      # Security: verify commits
+      commit.gpgsign = true;
+      tag.gpgsign = true;
+      
+      # Security: strict SSL
+      http = {
+        sslverify = true;
+        cookiefile = "/dev/null";  # Disable cookie storage
       };
-      push = {
-        autoSetupRemote = true;
-        followTags = true;
+      
+      # Security: disable automatic credential storage
+      credential.helper = "";
+      
+      # Security: restrict protocols
+      protocol = {
+        allow = "never";
+        git.allow = "user";
+        http.allow = "user";
+        https.allow = "user";
+        ssh.allow = "user";
       };
-      pull = {
-        rebase = true;
-      };
-      rebase = {
-        autoStash = true;
-      };
-      url = {
-        "https://github.com/" = {
-          insteadOf = [
-            "gh:"
-            "github:"
-          ];
-        };
-      };
+      
+      # Privacy: disable telemetry
+      feature.manyFiles = false;
+      
+      # Security: GPG settings
+      gpg.program = "${pkgs.gnupg}/bin/gpg";
+      
+      # Disable potentially dangerous features
+      core.symlinks = false;
     };
   };
 }
