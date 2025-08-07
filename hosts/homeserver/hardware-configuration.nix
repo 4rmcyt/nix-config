@@ -245,6 +245,7 @@
     "cpufreq_stats"
     "fuse"
     "kvm-intel"
+    "iTCO_wdt"
   ];
 
   # Unused modules to prevent from loading, reducing attack surface.
@@ -334,6 +335,8 @@
     "vm.dirty_ratio" = 15;
     "vm.swappiness" = 1;
     "vm.vfs_cache_pressure" = 50;
+
+    "kernel.watchdog_thresh" = 60; # Set watchdog threshold to 10 seconds
   };
 
   # =================================================================
@@ -351,7 +354,7 @@
   hardware.bluetooth.enable = false;
   hardware.i2c.enable = true;
 
-  powerManagement.cpuFreqGovernor = lib.mkDefault "schedutil";
+  powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
   powerManagement.powertop.enable = true;
 
   # =================================================================
