@@ -200,7 +200,7 @@
   services.uptime-kuma = {
     enable = true;
     settings = {
-      port = 3001;
+      port = "3001";
       hostname = "127.0.0.1";
     };
   };
