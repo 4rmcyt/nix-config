@@ -211,7 +211,7 @@
   # =================================================================
   # In your monitoring.nix file
 
-  services.loki = {
+   services.loki = {
     enable = true;
     configuration = {
       server.http_listen_port = 3100;
@@ -226,12 +226,14 @@
             };
             replication_factor = 1;
           };
+          # MOVED: max_transfer_retries now lives under the lifecycler
+          max_transfer_retries = 0;
         };
         chunk_idle_period = "1h";
         max_chunk_age = "1h";
         chunk_target_size = 999999;
         chunk_retain_period = "30s";
-        max_transfer_retries = 0;
+        # REMOVED: max_transfer_retries was moved.
       };
 
       schema_config = {
@@ -252,7 +254,8 @@
           active_index_directory = "/var/lib/loki/boltdb-shipper-active";
           cache_location = "/var/lib/loki/boltdb-shipper-cache";
           cache_ttl = "24h";
-          shared_store = "filesystem";
+          # REMOVED: This is now inferred from the top-level object_store (filesystem).
+          # shared_store = "filesystem";
         };
 
         filesystem = {
@@ -263,11 +266,14 @@
       limits_config = {
         reject_old_samples = true;
         reject_old_samples_max_age = "168h";
-      };
-
-      chunk_store_config = {
+        # MOVED: max_look_back_period now lives under limits_config.
         max_look_back_period = "0s";
       };
+
+      # REMOVED: This block is no longer needed as the setting was moved.
+      # chunk_store_config = {
+      #   max_look_back_period = "0s";
+      # };
 
       table_manager = {
         retention_deletes_enabled = false;
@@ -276,7 +282,8 @@
 
       compactor = {
         working_directory = "/var/lib/loki";
-        shared_store = "filesystem";
+        # REMOVED: This is now inferred from the top-level object_store (filesystem).
+        # shared_store = "filesystem";
         compactor_ring = {
           kvstore = {
             store = "inmemory";
@@ -284,8 +291,8 @@
         };
       };
     };
-    # user, group, dataDir, extraFlags, (configFile)
   };
+
 
   
   services.promtail = {
