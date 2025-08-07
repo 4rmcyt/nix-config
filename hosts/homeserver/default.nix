@@ -129,6 +129,7 @@
     nixfmt-tree
     nix-inspect
     nvd
+    nix-diff
   ];
 
   services = {
