@@ -126,7 +126,7 @@
     powertop
     zfs
     lm_sensors
-    treefmt
+    nixfmt-tree
     nix-inspect
   ];
 
