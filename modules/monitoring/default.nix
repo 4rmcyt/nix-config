@@ -46,7 +46,7 @@
     };
     loki = {
       isSystemUser = true;
-      description = "Loki user";
+      description = "Loki Service User";
       group = "loki";
     };
     promtail = {
