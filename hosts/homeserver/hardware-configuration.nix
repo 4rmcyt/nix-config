@@ -390,4 +390,17 @@
     trim.enable = true;
     trim.interval = "weekly";
   };
+
+  services = {
+    pipewire.enable = false;
+    pulseaudio.enable = false;
+    xserver.enable = false;
+    displayManager.gdm.enable = false;
+    desktopManager.gnome.enable = false;
+    blueman.enable = false;
+    geoclue2.enable = false;
+    avahi.enable = false; # mDNS discovery
+    printing.enable = false; # CUPS printing
+  };
+  systemd.coredump.enable = false;
 }
