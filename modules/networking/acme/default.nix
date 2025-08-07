@@ -32,25 +32,25 @@
   #   acceptTerms = true;
   #   defaults = {
   #     email = "admin@yourdomain.com";  # Set your email
-      
+
   #     # Security: use DNS challenge for internal services
   #     dnsProvider = "cloudflare";  # Configure your DNS provider
   #     credentialsFile = config.sops.secrets.acme-credentials.path;
-      
+
   #     # Security settings
   #     keyType = "ec256";  # Use elliptic curve keys
   #     reloadServices = [ "nginx" ];
-      
+
   #     # Post-renewal hooks
   #     postRun = ''
   #       # Verify certificate
   #       ${pkgs.openssl}/bin/openssl x509 -in $RENEWED_LINEAGE/fullchain.pem -text -noout | grep -q "Issuer.*Let's Encrypt"
-        
+
   #       # Log renewal
   #       echo "Certificate renewed for $RENEWED_DOMAINS" | ${pkgs.systemd}/bin/systemd-cat -t acme-renewal
   #     '';
   #   };
-    
+
   #   certs = {
   #     "labhome.work" = {
   #       domain = "labhome.work";
@@ -60,7 +60,7 @@
   #         "ha.labhome.work"
   #         "grafana.labhome.work"
   #       ];
-        
+
   #       # Security: validate certificate
   #       postRun = ''
   #         # Check certificate validity
@@ -72,7 +72,7 @@
   #     };
   #   };
   # };
-  
+
   # # SOPS secret for ACME credentials
   # sops.secrets.acme-credentials = {
   #   sopsFile = ../../../secrets/certificates.yaml;
@@ -80,7 +80,7 @@
   #   group = "acme";
   #   mode = "0400";
   # };
-  
+
   # # Certificate monitoring
   # systemd.services.certificate-monitor = {
   #   description = "Certificate Expiry Monitor";
@@ -88,17 +88,17 @@
   #     Type = "oneshot";
   #     ExecStart = pkgs.writeShellScript "cert-monitor" ''
   #       CERT_DIR="/var/lib/acme"
-        
+
   #       for cert_path in "$CERT_DIR"/*/fullchain.pem; do
   #         if [ -f "$cert_path" ]; then
   #           domain=$(basename $(dirname "$cert_path"))
-            
+
   #           # Check expiry (30 days warning)
   #           if ! ${pkgs.openssl}/bin/openssl x509 -in "$cert_path" -checkend 2592000 -noout; then
   #             echo "WARNING: Certificate for $domain expires within 30 days" | \
   #               ${pkgs.systemd}/bin/systemd-cat -t cert-monitor -p warning
   #           fi
-            
+
   #           # Check if certificate is valid
   #           if ! ${pkgs.openssl}/bin/openssl x509 -in "$cert_path" -noout -checkend 0; then
   #             echo "CRITICAL: Certificate for $domain has expired" | \
@@ -109,7 +109,7 @@
   #     '';
   #   };
   # };
-  
+
   # systemd.timers.certificate-monitor = {
   #   wantedBy = [ "timers.target" ];
   #   timerConfig = {
