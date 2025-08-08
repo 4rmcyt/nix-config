@@ -26,7 +26,6 @@ in
                 format = "vfat";
                 mountpoint = "/boot";
                 mountOptions = [ "umask=0077" ];
-                bootable = true;
               };
             };
             root = {
@@ -65,50 +64,104 @@ in
         type = "zpool";
         rootFsOptions = zfsOptions;
         datasets = {
-          "root" = {
+          root = {
             type = "zfs_fs";
             mountpoint = "/";
           };
-          "home" = {
+          home = {
             type = "zfs_fs";
             mountpoint = "/home";
           };
-          "nix" = {
+          nix = {
             type = "zfs_fs";
             mountpoint = "/nix";
             options."com.sun:auto-snapshot" = "false";
           };
-          "var/log" = {
-            type = "zfs_fs";
-            mountpoint = "/var/log";
-          };
-
-          "var/lib" = {
+          var = {
             type = "zfs_fs";
             mountpoint = "none";
             children = {
-              "postgresql" = { type = "zfs_fs"; mountpoint = "/var/lib/postgresql"; };
-              "containers" = { type = "zfs_fs"; mountpoint = "/var/lib/containers"; };
-              "redis-authentik" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-authentik"; };
-              "redis-paperless" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-paperless"; };
-              "redis-redis" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-redis"; };
-              "postgres-backup" = { type = "zfs_fs"; mountpoint = "/var/lib/postgres-backup"; };
-              "paperless" = { type = "zfs_fs"; mountpoint = "/var/lib/paperless"; };
-              "home-assistant" = { type = "zfs_fs"; mountpoint = "/var/lib/home-assistant"; };
-              "microbin" = { type = "zfs_fs"; mountpoint = "/var/lib/microbin"; };
-              "ldap" = { type = "zfs_fs"; mountpoint = "/var/lib/ldap"; };
-              "authentik" = { type = "zfs_fs"; mountpoint = "/var/lib/authentik"; };
-              "vaultwarden" = { type = "zfs_fs"; mountpoint = "/var/lib/vaultwarden"; };
-              "grafana" = { type = "zfs_fs"; mountpoint = "/var/lib/grafana"; };
-              "prometheus2" = { type = "zfs_fs"; mountpoint = "/var/lib/prometheus2"; };
-              "acme" = { type = "zfs_fs"; mountpoint = "/var/lib/acme"; };
-              "nginx" = { type = "zfs_fs"; mountpoint = "/var/lib/nginx"; };
-              "loki" = { type = "zfs_fs"; mountpoint = "/var/lib/loki"; };
+              log = {
+                type = "zfs_fs";
+                mountpoint = "/var/log";
+              };
+              lib = {
+                type = "zfs_fs";
+                mountpoint = "none";
+                children = {
+                  postgresql = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/postgresql";
+                  };
+                  containers = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/containers";
+                  };
+                  redis-authentik = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/redis-authentik";
+                  };
+                  redis-paperless = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/redis-paperless";
+                  };
+                  redis-redis = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/redis-redis";
+                  };
+                  postgres-backup = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/postgres-backup";
+                  };
+                  paperless = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/paperless";
+                  };
+                  home-assistant = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/home-assistant";
+                  };
+                  microbin = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/microbin";
+                  };
+                  ldap = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/ldap";
+                  };
+                  authentik = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/authentik";
+                  };
+                  vaultwarden = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/vaultwarden";
+                  };
+                  grafana = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/grafana";
+                  };
+                  prometheus2 = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/prometheus2";
+                  };
+                  acme = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/acme";
+                  };
+                  nginx = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/nginx";
+                  };
+                  loki = {
+                    type = "zfs_fs";
+                    mountpoint = "/var/lib/loki";
+                  };
+                };
+              };
             };
           };
-
-          # ZFS swap (risky, but allowed if properly tuned)
-          "zfs_swap" = {
+          zfs_swap = {
             type = "zfs_volume";
             size = "16G";
             content = {
@@ -124,20 +177,13 @@ in
               "com.sun:auto-snapshot" = "false";
             };
           };
-        };
-      };
-
-      # Data pool (dpool) on the SATA drive
-      dpool = {
-        type = "zpool";
-        rootFsOptions = zfsOptions;
-        datasets = {
           "data" = {
             type = "zfs_fs";
-            mountpoint = "/data";
+            mountpoint = "none";
             children = {
               "media" = {
                 type = "zfs_fs";
+                mountpoint = "none";
                 children = {
                   ".state" = {
                     type = "zfs_fs";
@@ -146,6 +192,18 @@ in
                 };
               };
             };
+          };
+        };
+      };
+
+      # Data pool (dpool) on the larger SATA drive
+      dpool = {
+        type = "zpool";
+        rootFsOptions = zfsOptions;
+        datasets = {
+          data = {
+            type = "zfs_fs";
+            mountpoint = "/data";
           };
         };
       };
