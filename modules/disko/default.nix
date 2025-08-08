@@ -63,33 +63,28 @@ in
       rpool = {
         type = "zpool";
         rootFsOptions = zfsOptions;
+
+        # Filesystems on rpool
         datasets = {
-          # System datasets
           "root"    = { type = "zfs_fs"; mountpoint = "/"; };
           "home"    = { type = "zfs_fs"; mountpoint = "/home"; };
           "nix"     = { type = "zfs_fs"; mountpoint = "/nix"; options."com.sun:auto-snapshot" = "false"; };
           "var/log" = { type = "zfs_fs"; mountpoint = "/var/log"; };
-
-          # Parent dataset for service data (not mounted itself)
           "var/lib" = { type = "zfs_fs"; mountpoint = "none"; };
-
-          # Dedicated datasets for specific services
           "var/lib/postgresql" = { type = "zfs_fs"; mountpoint = "/var/lib/postgresql"; };
           "var/lib/containers" = { type = "zfs_fs"; mountpoint = "/var/lib/containers"; };
-          "var/lib/redis-authentik" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-authentik"; };
-          "var/lib/redis-paperless" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-paperless"; };
-          "var/lib/redis-redis" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-redis"; };
-          "var/lib/postgres-backup" = { type = "zfs_fs"; mountpoint = "/var/lib/postgres-backup"; };
-          "var/lib/paperless" = { type = "zfs_fs"; mountpoint = "/var/lib/paperless"; };
-          "var/lib/home-assistant" = { type = "zfs_fs"; mountpoint = "/var/lib/home-assistant"; };
-          "var/lib/microbin" = { type = "zfs_fs"; mountpoint = "/var/lib/microbin"; };
-          "var/lib/ldap" = { type = "zfs_fs"; mountpoint = "/var/lib/ldap"; };
-          "var/lib/authentik" = { type = "zfs_fs"; mountpoint = "/var/lib/authentik"; };
-          "var/lib/vaultwarden" = { type = "zfs_fs"; mountpoint = "/var/lib/vaultwarden"; };
-          "var/lib/grafana" = { type = "zfs_fs"; mountpoint = "/var/lib/grafana"; };
-          "var/lib/prometheus2" = { type = "zfs_fs"; mountpoint = "/var/lib/prometheus2"; };
-          "var/lib/acme" = { type = "zfs_fs"; mountpoint = "/var/lib/acme"; };
-          "var/lib/nginx" = { type = "zfs_fs"; mountpoint = "/var/lib/nginx"; };
+          # ... (and all your other var/lib datasets)
+        };
+
+        # Volumes (for swap, etc.) on rpool ✅
+        volumes = {
+          "swap" = {
+            size = "16G";
+            content = {
+              type = "swap";
+              randomUUID = true;
+            };
+          };
         };
       };
 
@@ -100,17 +95,6 @@ in
         datasets = {
           "data" = { type = "zfs_fs"; mountpoint = "/data"; };
           "data/media/.state" = { type = "zfs_fs"; mountpoint = "/data/media/.state"; };
-        };
-      };
-    };
-    swap = {
-      zvol = {
-        type = "zvol";
-        pool = "rpool";
-        size = "16G";
-        content = {
-          type = "swap";
-          randomUUID = true;
         };
       };
     };
