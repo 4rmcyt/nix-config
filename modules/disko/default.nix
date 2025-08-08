@@ -50,8 +50,8 @@
       # The 'system' zpool, built on the NVMe drive
       system = {
         type = "zpool";
-        # Links the pool to the physical partition on the NVMe drive
         devices = [ "/dev/disk/by-partlabel/zfs" ];
+        atime = "off";
 
         rootFsOptions = {
           mountpoint = "none";
@@ -68,7 +68,7 @@
           "root/var" = { type = "zfs_fs"; mountpoint = "/var"; };
           "root/var/log" = { type = "zfs_fs"; mountpoint = "/var/log"; };
           "root/var/lib" = { type = "zfs_fs"; mountpoint = "none"; };
-          "root/var/lib/postgresql" = { type = "zfs_fs"; mountpoint = "/var/lib/postgresql"; };
+          "root/var/lib/postgresql" = { type = "zfs_fs"; mountpoint = "/var/lib/postgresql"; options.recordsize = "16k"; };
           "root/var/lib/containers" = { type = "zfs_fs"; mountpoint = "/var/lib/containers"; };
           "root/var/lib/redis-authentik" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-authentik"; };
           "root/var/lib/redis-paperless" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-paperless"; };
@@ -107,18 +107,15 @@
         };
       };
 
-      # The 'data' zpool, built on the SATA drive
       data = {
         type = "zpool";
-        # Links the pool to the physical partition on the SATA drive
-        # disko automatically names the second zfs partition 'zfs-1'
         devices = [ "/dev/disk/by-partlabel/zfs-1" ];
-
         rootFsOptions = { canmount = "off"; };
-
+        atime = "off";
+        
         datasets = {
           "data" = { type = "zfs_fs"; mountpoint = "/data"; };
-          "data/media" = { type = "zfs_fs"; mountpoint = "/data/media"; };
+          "data/media" = { type = "zfs_fs"; mountpoint = "/data/media"; options.recordsize = "1M"; };
           "data/media/movies" = { type = "zfs_fs"; mountpoint = "/data/media/movies"; };
           "data/media/shows" = { type = "zfs_fs"; mountpoint = "/data/media/shows"; };
           "data/media/music" = { type = "zfs_fs"; mountpoint = "/data/media/music"; };
