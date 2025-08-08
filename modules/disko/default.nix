@@ -1,5 +1,13 @@
 { lib, ... }:
 
+let
+  zfsOptions = {
+    compression = "zstd";
+    atime = "off";
+    xattr = "sa";
+    acltype = "posixacl";
+  };
+in
 {
   disko.devices = {
     disk = {
@@ -17,12 +25,15 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                mountOptions = [ "fmask=0137" "dmask=0027" ];
+                mountOptions = [ "umask=0077" ];
               };
             };
             root = {
               size = "100%";
-              content = { type = "zfs"; pool = "rpool"; };
+              content = {
+                type = "zfs";
+                pool = "rpool";
+              };
             };
           };
         };
@@ -37,7 +48,10 @@
           partitions = {
             data = {
               size = "100%";
-              content = { type = "zfs"; pool = "dpool"; };
+              content = {
+                type = "zfs";
+                pool = "dpool";
+              };
             };
           };
         };
@@ -48,12 +62,7 @@
       # Root pool (rpool) on the fast NVMe drive
       rpool = {
         type = "zpool";
-        rootFsOptions = {
-          compression = "zstd";
-          atime = "off";
-          xattr = "sa";
-          acltype = "posixacl";
-        };
+        rootFsOptions = zfsOptions;
         datasets = {
           # System datasets
           "root"    = { type = "zfs_fs"; mountpoint = "/"; };
@@ -81,38 +90,27 @@
           "var/lib/prometheus2" = { type = "zfs_fs"; mountpoint = "/var/lib/prometheus2"; };
           "var/lib/acme" = { type = "zfs_fs"; mountpoint = "/var/lib/acme"; };
           "var/lib/nginx" = { type = "zfs_fs"; mountpoint = "/var/lib/nginx"; };
-          "data/media/.state" = { type = "zfs_fs"; mountpoint = "/data/media/.state"; };
-
-          # Safety net dataset for emergencies
-          "reserved" = {
-            type = "zfs_fs";
-            mountpoint = "none";
-            options.reservation = "10G";
-          };
-
-          "swap" = {
-            type = "zfs_fs";
-            options."org.zfs:zfs_vdev" = "off";
-            content = {
-              type = "swap";
-              size = "16G";
-              randomUUID = true;
-            };
-          };
         };
       };
 
       # Data pool (dpool) on the larger SATA drive
       dpool = {
         type = "zpool";
-        rootFsOptions = {
-          compression = "zstd";
-          atime = "off";
-          xattr = "sa";
-          acltype = "posixacl";
-        };
+        rootFsOptions = zfsOptions;
         datasets = {
           "data" = { type = "zfs_fs"; mountpoint = "/data"; };
+          "data/media/.state" = { type = "zfs_fs"; mountpoint = "/data/media/.state"; };
+        };
+      };
+    };
+    swap = {
+      zvol = {
+        type = "zvol";
+        pool = "rpool";
+        size = "16G";
+        content = {
+          type = "swap";
+          randomUUID = true;
         };
       };
     };
