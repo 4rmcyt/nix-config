@@ -9,7 +9,7 @@
           type = "gpt";
           partitions = {
             ESP = {
-              size = "512M"; # Increased from 64M
+              size = "1G";
               type = "EF00";
               content = {
                 type = "filesystem";
@@ -112,7 +112,7 @@
         devices = [ "/dev/disk/by-partlabel/zfs-1" ];
         rootFsOptions = { canmount = "off"; };
         atime = "off";
-        
+
         datasets = {
           "data" = { type = "zfs_fs"; mountpoint = "/data"; };
           "data/media" = { type = "zfs_fs"; mountpoint = "/data/media"; options.recordsize = "1M"; };
