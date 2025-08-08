@@ -19,6 +19,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    
 
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
@@ -135,6 +136,7 @@
       commonNixOSModules = [
         sops-nix.nixosModules.sops
         home-manager.nixosModules.home-manager
+        disko.nixosModules.disko
         nix-index-database.nixosModules.nix-index
       ];
 
