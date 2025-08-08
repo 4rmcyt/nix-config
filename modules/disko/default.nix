@@ -79,7 +79,7 @@ in
           };
           var = {
             type = "zfs_fs";
-            mountpoint = "none";
+            options.mountpoint = "none";
           };
           "var/log" = {
             type = "zfs_fs";
@@ -87,7 +87,7 @@ in
           };
           "var/lib" = {
             type = "zfs_fs";
-            mountpoint = "none";
+            options.mountpoint = "none";
           };
           "var/lib/postgresql" = {
             type = "zfs_fs";
