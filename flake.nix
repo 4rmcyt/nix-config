@@ -203,7 +203,10 @@
             inputs.nixos-facter-modules.nixosModules.facter
             { config.facter.reportPath = ./facter.json; }
             {
-              imports = [ ./hosts/homeserver ];
+              imports = [ 
+                ./hosts/homeserver 
+                ./modules/disko
+                ];
               _module.args.self = self;
             }
             (nixosHomeManagerConfig "zeev" "homeserver")
