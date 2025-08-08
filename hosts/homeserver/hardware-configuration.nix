@@ -227,13 +227,68 @@
       fsType = "zfs";
       options = [ "zfsutil-compression=on" ];
     };
+    "/data/media" = {
+      device = "dpool/data/media";
+      fsType = "zfs";
+      options = [ "zfsutil-compression=on" ];
+    };
+    "/data/media/movies" = {
+      device = "dpool/data/media/movies";
+      fsType = "zfs";
+      options = [ "zfsutil-compression=on" ];
+    };
+    "/data/media/shows" = {
+      device = "dpool/data/media/shows";
+      fsType = "zfs";
+      options = [ "zfsutil-compression=on" ];
+    };
+    "/data/media/music" = {
+      device = "dpool/data/media/music";
+      fsType = "zfs";
+      options = [ "zfsutil-compression=on" ];
+    };
+    "/data/media/audiobooks" = {
+      device = "dpool/data/media/audiobooks";
+      fsType = "zfs";
+      options = [ "zfsutil-compression=on" ];
+    };
+    "/data/media/books" = {
+      device = "dpool/data/media/books";
+      fsType = "zfs";
+      options = [ "zfsutil-compression=on" ];
+    };
+    "/data/media/comics" = {
+      device = "dpool/data/media/comics";
+      fsType = "zfs";
+      options = [ "zfsutil-compression=on" ];
+    };
+    "/data/media/manga" = {
+      device = "dpool/data/media/manga";
+      fsType = "zfs";
+      options = [ "zfsutil-compression=on" ];
+    };
+    "/data/media/torrents" = {
+      device = "dpool/data/media/torrents";
+      fsType = "zfs";
+      options = [ "zfsutil-compression=on" ];
+    };
+    "/data/media/usenet" = {
+      device = "dpool/data/media/usenet";
+      fsType = "zfs";
+      options = [ "zfsutil-compression=on" ];
+    };
     "/data/media/.state" = {
-      device = "rpool/data/media/.state";
+      device = "dpool/data/media/.state";
       fsType = "zfs";
       options = [
         "zfsutil-atime=off"
         "zfsutil-compression=on"
       ];
+    };
+    "/data/Downloads" = {
+      device = "dpool/data/Downloads";
+      fsType = "zfs";
+      options = [ "zfsutil-compression=on" ];
     };
   };
 

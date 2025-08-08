@@ -20,19 +20,6 @@
       logReversePathDrops = true;
       logRefusedConnections = false; # Avoid log spam
 
-      extraRules = ''
-        # Drop invalid packets
-        -m conntrack --ctstate INVALID -j DROP
-
-        # Block common TCP scan techniques
-        -p tcp --tcp-flags ALL NONE -j DROP
-        -p tcp --tcp-flags ALL ALL -j DROP
-
-        # Rate limit new SSH connections
-        -p tcp --dport 22 -m conntrack --ctstate NEW -m recent --set --name SSH
-        -p tcp --dport 22 -m conntrack --ctstate NEW -m recent --update --seconds 60 --hitcount 4 --name SSH -j DROP
-      '';
-
       allowedTCPPorts = [
         # Base services
         22 # SSH
