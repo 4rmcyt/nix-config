@@ -47,9 +47,6 @@
     zpool = {
       system = {
         type = "zpool";
-        devices = [ "/dev/disk/by-partlabel/zfs" ];
-        atime = "off";
-
         rootFsOptions = {
           mountpoint = "none";
           compression = "zstd";
@@ -106,9 +103,7 @@
 
       data = {
         type = "zpool";
-        devices = [ "/dev/disk/by-partlabel/zfs-1" ];
         rootFsOptions = { canmount = "off"; };
-        atime = "off";
         datasets = {
           "data" = { type = "zfs_fs"; mountpoint = "/data"; };
           "data/media" = { type = "zfs_fs"; mountpoint = "/data/media"; options.recordsize = "1M"; };
