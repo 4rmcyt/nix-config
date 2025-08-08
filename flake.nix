@@ -121,6 +121,7 @@
       authentik-nix,
       nixos-needsreboot,
       treefmt-nix,
+      nixpkgs-firefox-darwin,
       ...
     }@inputs:
     let
