@@ -64,6 +64,7 @@
     yubikey-personalization
     youtube-music
     zoom-us
+    firefox-bin
   ];
 
   # User-specific environment variables
