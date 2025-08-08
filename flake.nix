@@ -23,6 +23,7 @@
 
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
+    nixpkgs-firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
 
     treefmt-nix.url = "github:numtide/treefmt-nix";
     systems.url = "github:nix-systems/default";
@@ -164,6 +165,7 @@
       darwinHomeManagerConfig = user: host: {
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
+        nixpkgs.overlays = [ inputs.nixpkgs-firefox-darwin.overlay ];
         home-manager.users.${user} = {
           imports = [
             ./modules/home-manager/${host}
