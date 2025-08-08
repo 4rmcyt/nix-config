@@ -1,25 +1,15 @@
-{ lib, ... }:
-
-let
-  zfsOptions = {
-    compression = "zstd";
-    atime = "off";
-    xattr = "sa";
-    acltype = "posixacl";
-  };
-in
 {
   disko.devices = {
     disk = {
-      # NVMe drive for OS, services, and swap
+      # NVMe drive for the operating system
       nvme = {
-        device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315";
         type = "disk";
+        device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315";
         content = {
           type = "gpt";
           partitions = {
-            boot = {
-              size = "1G";
+            ESP = {
+              size = "512M"; # Increased from 64M
               type = "EF00";
               content = {
                 type = "filesystem";
@@ -28,139 +18,84 @@ in
                 mountOptions = [ "umask=0077" ];
               };
             };
-            root = {
+            zfs = {
               size = "100%";
               content = {
                 type = "zfs";
-                pool = "rpool";
+                pool = "system"; # Points this partition to the 'system' pool
               };
             };
           };
         };
       };
-
-      # SATA drive for additional data
+      # SATA drive for user data
       sata = {
-        device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345";
         type = "disk";
+        device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345";
         content = {
           type = "gpt";
           partitions = {
-            data = {
+            zfs = {
               size = "100%";
               content = {
                 type = "zfs";
-                pool = "dpool";
+                pool = "data"; # Points this partition to the 'data' pool
               };
             };
           };
         };
       };
     };
-
     zpool = {
-      # Root pool (rpool) on the fast NVMe drive
-      rpool = {
+      # The 'system' zpool, built on the NVMe drive
+      system = {
         type = "zpool";
-        rootFsOptions = zfsOptions;
+        # Links the pool to the physical partition on the NVMe drive
+        devices = [ "/dev/disk/by-partlabel/zfs" ];
+
+        rootFsOptions = {
+          mountpoint = "none";
+          compression = "zstd";
+          acltype = "posixacl";
+          xattr = "sa";
+        };
+        options.ashift = "12";
+
         datasets = {
-          root = {
+          "root" = { type = "zfs_fs"; mountpoint = "/"; };
+          "root/nix" = { type = "zfs_fs"; mountpoint = "/nix"; };
+          "root/home" = { type = "zfs_fs"; mountpoint = "/home"; };
+          "root/var" = { type = "zfs_fs"; mountpoint = "/var"; };
+          "root/var/log" = { type = "zfs_fs"; mountpoint = "/var/log"; };
+          "root/var/lib" = { type = "zfs_fs"; mountpoint = "none"; };
+          "root/var/lib/postgresql" = { type = "zfs_fs"; mountpoint = "/var/lib/postgresql"; };
+          "root/var/lib/containers" = { type = "zfs_fs"; mountpoint = "/var/lib/containers"; };
+          "root/var/lib/redis-authentik" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-authentik"; };
+          "root/var/lib/redis-paperless" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-paperless"; };
+          "root/var/lib/redis-redis" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-redis"; };
+          "root/var/lib/postgres-backup" = { type = "zfs_fs"; mountpoint = "/var/lib/postgres-backup"; };
+          "root/var/lib/paperless" = { type = "zfs_fs"; mountpoint = "/var/lib/paperless"; };
+          "root/var/lib/home-assistant" = { type = "zfs_fs"; mountpoint = "/var/lib/home-assistant"; };
+          "root/var/lib/microbin" = { type = "zfs_fs"; mountpoint = "/var/lib/microbin"; };
+          "root/var/lib/ldap" = { type = "zfs_fs"; mountpoint = "/var/lib/ldap"; };
+          "root/var/lib/authentik" = { type = "zfs_fs"; mountpoint = "/var/lib/authentik"; };
+          "root/var/lib/vaultwarden" = { type = "zfs_fs"; mountpoint = "/var/lib/vaultwarden"; };
+          "root/var/lib/grafana" = { type = "zfs_fs"; mountpoint = "/var/lib/grafana"; };
+          "root/var/lib/prometheus2" = { type = "zfs_fs"; mountpoint = "/var/lib/prometheus2"; };
+          "root/var/lib/acme" = { type = "zfs_fs"; mountpoint = "/var/lib/acme"; };
+          "root/var/lib/nginx" = { type = "zfs_fs"; mountpoint = "/var/lib/nginx"; };
+
+          "root/reserved" = {
             type = "zfs_fs";
-            mountpoint = "/";
+            mountpoint = "none";
+            options.reservation = "12G";
           };
-          home = {
-            type = "zfs_fs";
-            mountpoint = "/home";
-          };
-          nix = {
-            type = "zfs_fs";
-            mountpoint = "/nix";
-            options."com.sun:auto-snapshot" = "false";
-          };
-          var = {
-            type = "zfs_fs";
-            options.mountpoint = "none";
-          };
-          "var/log" = {
-            type = "zfs_fs";
-            mountpoint = "/var/log";
-          };
-          "var/lib" = {
-            type = "zfs_fs";
-            options.mountpoint = "none";
-          };
-          "var/lib/postgresql" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/postgresql";
-          };
-          "var/lib/containers" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/containers";
-          };
-          "var/lib/redis-authentik" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/redis-authentik";
-          };
-          "var/lib/redis-paperless" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/redis-paperless";
-          };
-          "var/lib/redis-redis" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/redis-redis";
-          };
-          "var/lib/postgres-backup" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/postgres-backup";
-          };
-          "var/lib/paperless" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/paperless";
-          };
-          "var/lib/home-assistant" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/home-assistant";
-          };
-          "var/lib/microbin" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/microbin";
-          };
-          "var/lib/ldap" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/ldap";
-          };
-          "var/lib/authentik" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/authentik";
-          };
-          "var/lib/vaultwarden" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/vaultwarden";
-          };
-          "var/lib/grafana" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/grafana";
-          };
-          "var/lib/prometheus2" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/prometheus2";
-          };
-          "var/lib/acme" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/acme";
-          };
-          "var/lib/nginx" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/nginx";
-          };
-          zfs_swap = {
+          "root/swap" = {
             type = "zfs_volume";
             size = "16G";
-            content = {
-              type = "swap";
-            };
+            content = { type = "swap"; };
             options = {
-              volblocksize = "4096";
+              volblocksize = "4k";
               compression = "zle";
               logbias = "throughput";
               sync = "always";
@@ -172,63 +107,29 @@ in
         };
       };
 
-      # Data pool (dpool) on the larger SATA drive
-      dpool = {
+      # The 'data' zpool, built on the SATA drive
+      data = {
         type = "zpool";
-        rootFsOptions = zfsOptions;
+        # Links the pool to the physical partition on the SATA drive
+        # disko automatically names the second zfs partition 'zfs-1'
+        devices = [ "/dev/disk/by-partlabel/zfs-1" ];
+
+        rootFsOptions = { canmount = "off"; };
+
         datasets = {
-          data = {
-            type = "zfs_fs";
-            mountpoint = "/data";
-          };
-          "data/media" = {
-            type = "zfs_fs";
-            mountpoint = "/data/media";
-          };
-          "data/media/movies" = {
-            type = "zfs_fs";
-            mountpoint = "/data/media/movies";
-          };
-          "data/media/shows" = {
-            type = "zfs_fs";
-            mountpoint = "/data/media/shows";
-          };
-          "data/media/music" = {
-            type = "zfs_fs";
-            mountpoint = "/data/media/music";
-          };
-          "data/media/audiobooks" = {
-            type = "zfs_fs";
-            mountpoint = "/data/media/audiobooks";
-          };
-          "data/media/books" = {
-            type = "zfs_fs";
-            mountpoint = "/data/media/books";
-          };
-          "data/media/comics" = {
-            type = "zfs_fs";
-            mountpoint = "/data/media/comics";
-          };
-          "data/media/manga" = {
-            type = "zfs_fs";
-            mountpoint = "/data/media/manga";
-          };
-          "data/media/torrents" = {
-            type = "zfs_fs";
-            mountpoint = "/data/media/torrents";
-          };
-          "data/media/usenet" = {
-            type = "zfs_fs";
-            mountpoint = "/data/media/usenet";
-          };
-          "data/media/.state" = {
-            type = "zfs_fs";
-            mountpoint = "/data/media/.state";
-          };
-          "data/Downloads" = {
-            type = "zfs_fs";
-            mountpoint = "/data/Downloads";
-          };
+          "data" = { type = "zfs_fs"; mountpoint = "/data"; };
+          "data/media" = { type = "zfs_fs"; mountpoint = "/data/media"; };
+          "data/media/movies" = { type = "zfs_fs"; mountpoint = "/data/media/movies"; };
+          "data/media/shows" = { type = "zfs_fs"; mountpoint = "/data/media/shows"; };
+          "data/media/music" = { type = "zfs_fs"; mountpoint = "/data/media/music"; };
+          "data/media/audiobooks" = { type = "zfs_fs"; mountpoint = "/data/media/audiobooks"; };
+          "data/media/books" = { type = "zfs_fs"; mountpoint = "/data/media/books"; };
+          "data/media/comics" = { type = "zfs_fs"; mountpoint = "/data/media/comics"; };
+          "data/media/manga" = { type = "zfs_fs"; mountpoint = "/data/media/manga"; };
+          "data/media/torrents" = { type = "zfs_fs"; mountpoint = "/data/media/torrents"; };
+          "data/media/usenet" = { type = "zfs_fs"; mountpoint = "/data/media/usenet"; };
+          "data/media/.state" = { type = "zfs_fs"; mountpoint = "/data/media/.state"; };
+          "data/Downloads" = { type = "zfs_fs"; mountpoint = "/data/Downloads"; };
         };
       };
     };
