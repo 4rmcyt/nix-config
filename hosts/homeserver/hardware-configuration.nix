@@ -36,265 +36,81 @@
     "xhci_pci"
   ];
 
-  # Mount points for all filesystems.
-  # fileSystems = {
-  #   "/boot" = {
-  #     device = "/dev/disk/by-label/boot";
-  #     fsType = "vfat";
-  #     options = [
-  #       "fmask=0077"
-  #       "dmask=0077"
-  #       "nodev"
-  #       "nosuid"
-  #       "noexec"
-  #       "relatime"
-  #     ];
-  #   };
+  fileSystems = {
+    "/" = {
+      device = "system/root";
+      fsType = "zfs";
+    };
 
-  #   # Root and core ZFS datasets
-  #   "/" = {
-  #     device = "rpool/root";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/home" = {
-  #     device = "rpool/home";
-  #     fsType = "zfs";
-  #     options = [ "zfsutil-compression=on" ];
-  #   }; # atime can be useful on /home
-  #   "/nix" = {
-  #     device = "rpool/nix";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
+    "/boot" = {
+      device = "/dev/disk/by-label/ESP";
+      fsType = "vfat";
+      options = [ "umask=0077" ];
+    };
 
-  #   # Log and service data datasets with performance optimizations
-  #   "/var/log" = {
-  #     device = "rpool/var/log";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/acme" = {
-  #     device = "rpool/var/lib/acme";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/authentik" = {
-  #     device = "rpool/var/lib/authentik";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/containers" = {
-  #     device = "rpool/var/lib/containers";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/grafana" = {
-  #     device = "rpool/var/lib/grafana";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/home-assistant" = {
-  #     device = "rpool/var/lib/home-assistant";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/ldap" = {
-  #     device = "rpool/var/lib/ldap";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/microbin" = {
-  #     device = "rpool/var/lib/microbin";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/nginx" = {
-  #     device = "rpool/var/lib/nginx";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/paperless" = {
-  #     device = "rpool/var/lib/paperless";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/postgres-backup" = {
-  #     device = "rpool/var/lib/postgres-backup";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/postgresql" = {
-  #     device = "rpool/var/lib/postgresql";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-recsize=16K"
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/prometheus2" = {
-  #     device = "rpool/var/lib/prometheus2";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/redis-authentik" = {
-  #     device = "rpool/var/lib/redis-authentik";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/redis-paperless" = {
-  #     device = "rpool/var/lib/redis-paperless";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/redis-redis" = {
-  #     device = "rpool/var/lib/redis-redis";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/vaultwarden" = {
-  #     device = "rpool/var/lib/vaultwarden";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/var/lib/loki" = {
-  #     device = "rpool/var/lib/loki";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
 
-  #   # Secondary data pool
-  #   "/data" = {
-  #     device = "dpool/data";
-  #     fsType = "zfs";
-  #     options = [ "zfsutil-compression=on" ];
-  #   };
-  #   "/data/media" = {
-  #     device = "dpool/data/media";
-  #     fsType = "zfs";
-  #     options = [ "zfsutil-compression=on" ];
-  #   };
-  #   "/data/media/movies" = {
-  #     device = "dpool/data/media/movies";
-  #     fsType = "zfs";
-  #     options = [ "zfsutil-compression=on" ];
-  #   };
-  #   "/data/media/shows" = {
-  #     device = "dpool/data/media/shows";
-  #     fsType = "zfs";
-  #     options = [ "zfsutil-compression=on" ];
-  #   };
-  #   "/data/media/music" = {
-  #     device = "dpool/data/media/music";
-  #     fsType = "zfs";
-  #     options = [ "zfsutil-compression=on" ];
-  #   };
-  #   "/data/media/audiobooks" = {
-  #     device = "dpool/data/media/audiobooks";
-  #     fsType = "zfs";
-  #     options = [ "zfsutil-compression=on" ];
-  #   };
-  #   "/data/media/books" = {
-  #     device = "dpool/data/media/books";
-  #     fsType = "zfs";
-  #     options = [ "zfsutil-compression=on" ];
-  #   };
-  #   "/data/media/comics" = {
-  #     device = "dpool/data/media/comics";
-  #     fsType = "zfs";
-  #     options = [ "zfsutil-compression=on" ];
-  #   };
-  #   "/data/media/manga" = {
-  #     device = "dpool/data/media/manga";
-  #     fsType = "zfs";
-  #     options = [ "zfsutil-compression=on" ];
-  #   };
-  #   "/data/media/torrents" = {
-  #     device = "dpool/data/media/torrents";
-  #     fsType = "zfs";
-  #     options = [ "zfsutil-compression=on" ];
-  #   };
-  #   "/data/media/usenet" = {
-  #     device = "dpool/data/media/usenet";
-  #     fsType = "zfs";
-  #     options = [ "zfsutil-compression=on" ];
-  #   };
-  #   "/data/media/.state" = {
-  #     device = "dpool/data/media/.state";
-  #     fsType = "zfs";
-  #     options = [
-  #       "zfsutil-atime=off"
-  #       "zfsutil-compression=on"
-  #     ];
-  #   };
-  #   "/data/Downloads" = {
-  #     device = "dpool/data/Downloads";
-  #     fsType = "zfs";
-  #     options = [ "zfsutil-compression=on" ];
-  #   };
-  # };
+    "/nix" = {
+      device = "system/root/nix";
+      fsType = "zfs";
+    };
 
-  # # Swap on a ZFS ZVOL.
-  # swapDevices = [ { device = "/dev/zvol/rpool/zfs_swap"; } ];
+    "/home" = {
+      device = "system/root/home";
+      fsType = "zfs";
+    };
 
+    "/var" = {
+      device = "system/root/var";
+      fsType = "zfs";
+    };
+
+    "/var/log" = {
+      device = "system/root/var/log";
+      fsType = "zfs";
+    };
+
+    # Mounts for your various services in /var/lib
+    "/var/lib/postgresql" = { device = "system/root/var/lib/postgresql"; fsType = "zfs"; };
+    "/var/lib/containers" = { device = "system/root/var/lib/containers"; fsType = "zfs"; };
+    "/var/lib/redis-authentik" = { device = "system/root/var/lib/redis-authentik"; fsType = "zfs"; };
+    "/var/lib/redis-paperless" = { device = "system/root/var/lib/redis-paperless"; fsType = "zfs"; };
+    "/var/lib/redis-redis" = { device = "system/root/var/lib/redis-redis"; fsType = "zfs"; };
+    "/var/lib/postgres-backup" = { device = "system/root/var/lib/postgres-backup"; fsType = "zfs"; };
+    "/var/lib/paperless" = { device = "system/root/var/lib/paperless"; fsType = "zfs"; };
+    "/var/lib/home-assistant" = { device = "system/root/var/lib/home-assistant"; fsType = "zfs"; };
+    "/var/lib/microbin" = { device = "system/root/var/lib/microbin"; fsType = "zfs"; };
+    "/var/lib/ldap" = { device = "system/root/var/lib/ldap"; fsType = "zfs"; };
+    "/var/lib/authentik" = { device = "system/root/var/lib/authentik"; fsType = "zfs"; };
+    "/var/lib/vaultwarden" = { device = "system/root/var/lib/vaultwarden"; fsType = "zfs"; };
+    "/var/lib/grafana" = { device = "system/root/var/lib/grafana"; fsType = "zfs"; };
+    "/var/lib/prometheus2" = { device = "system/root/var/lib/prometheus2"; fsType = "zfs"; };
+    "/var/lib/acme" = { device = "system/root/var/lib/acme"; fsType = "zfs"; };
+    "/var/lib/nginx" = { device = "system/root/var/lib/nginx"; fsType = "zfs"; };
+
+    # Mounts for your data pool
+    "/data" = {
+      device = "data/data";
+      fsType = "zfs";
+    };
+
+    "/data/media" = { device = "data/data/media"; fsType = "zfs"; };
+    "/data/media/movies" = { device = "data/data/media/movies"; fsType = "zfs"; };
+    "/data/media/shows" = { device = "data/data/media/shows"; fsType = "zfs"; };
+    "/data/media/music" = { device = "data/data/media/music"; fsType = "zfs"; };
+    "/data/media/audiobooks" = { device = "data/data/media/audiobooks"; fsType = "zfs"; };
+    "/data/media/books" = { device = "data/data/media/books"; fsType = "zfs"; };
+    "/data/media/comics" = { device = "data/data/media/comics"; fsType = "zfs"; };
+    "/data/media/manga" = { device = "data/data/media/manga"; fsType = "zfs"; };
+    "/data/media/torrents" = { device = "data/data/media/torrents"; fsType = "zfs"; };
+    "/data/media/usenet" = { device = "data/data/media/usenet"; fsType = "zfs"; };
+    "/data/media/.state" = { device = "data/data/media/.state"; fsType = "zfs"; };
+    "/data/Downloads" = { device = "data/data/Downloads"; fsType = "zfs"; };
+  };
+
+  # 3. Enable the swap device
+  swapDevices = [
+    { device = "/dev/zvol/system/root/swap"; }
+  ];
   # =================================================================
   # 3. Kernel Configuration
   # =================================================================
@@ -353,9 +169,6 @@
     "init_on_alloc=1"
     "page_alloc.shuffle=1"
 
-    # AppArmor Security
-    "apparmor=1"
-
     # ZFS Performance Tuning
     "zfs.zfs_arc_max=12884901888"
   ];
@@ -403,7 +216,7 @@
     "vm.swappiness" = 1;
     "vm.vfs_cache_pressure" = 50;
 
-    "kernel.watchdog_thresh" = 60; # Set watchdog threshold to 10 seconds
+    "kernel.watchdog_thresh" = 60; # Set watchdog threshold to 60 seconds
   };
 
   # =================================================================
@@ -443,8 +256,8 @@
     autoScrub.enable = true;
     autoScrub.interval = "monthly";
     autoScrub.pools = [
-      "rpool"
-      "dpool"
+      "system" # FIX: Was "rpool"
+      "data"   # FIX: Was "dpool"
     ];
     autoSnapshot.enable = false;
     trim.enable = true;
