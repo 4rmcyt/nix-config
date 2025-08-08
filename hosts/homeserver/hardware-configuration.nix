@@ -25,7 +25,7 @@
   boot.loader.timeout = 3;
 
   # Define filesystem support and ZFS settings for the initial ramdisk (initrd).
-  boot.supportedFilesystems = [ "zfs" ];
+  boot.supportedFilesystems = [ "vfat" "zfs" ];
 
   # Define kernel modules needed early in the boot process.
   boot.initrd.availableKernelModules = [
@@ -37,85 +37,41 @@
   ];
 
   fileSystems = {
+    # Mount the EFI System Partition (ESP) at /boot.
+    # This is a standard FAT32 partition for UEFI booting.
+    "/boot" = {
+      device = "/dev/disk/by-label/EFI"; # Using the label defined in disko
+      fsType = "vfat";
+      options = [ "defaults" "umask=0077" ];
+    };
+
+    
     "/" = {
-      device = "system/root";
+      device = "zroot/root";
       fsType = "zfs";
     };
 
-    "/boot" = {
-      device = "/dev/disk/by-label/ESP";
-      fsType = "vfat";
-      options = [ "umask=0077" ];
-    };
-
-
     "/nix" = {
-      device = "system/root/nix";
+      device = "zroot/nix";
       fsType = "zfs";
     };
 
     "/home" = {
-      device = "system/root/home";
+      device = "zroot/home";
       fsType = "zfs";
     };
 
-    "/var" = {
-      device = "system/root/var";
-      fsType = "zfs";
-    };
-
-    "/var/log" = {
-      device = "system/root/var/log";
-      fsType = "zfs";
-    };
-
-    # Mounts for your various services in /var/lib
-    "/var/lib/postgresql" = { device = "system/root/var/lib/postgresql"; fsType = "zfs"; };
-    "/var/lib/containers" = { device = "system/root/var/lib/containers"; fsType = "zfs"; };
-    "/var/lib/redis-authentik" = { device = "system/root/var/lib/redis-authentik"; fsType = "zfs"; };
-    "/var/lib/redis-paperless" = { device = "system/root/var/lib/redis-paperless"; fsType = "zfs"; };
-    "/var/lib/redis-redis" = { device = "system/root/var/lib/redis-redis"; fsType = "zfs"; };
-    "/var/lib/postgres-backup" = { device = "system/root/var/lib/postgres-backup"; fsType = "zfs"; };
-    "/var/lib/paperless" = { device = "system/root/var/lib/paperless"; fsType = "zfs"; };
-    "/var/lib/home-assistant" = { device = "system/root/var/lib/home-assistant"; fsType = "zfs"; };
-    "/var/lib/microbin" = { device = "system/root/var/lib/microbin"; fsType = "zfs"; };
-    "/var/lib/ldap" = { device = "system/root/var/lib/ldap"; fsType = "zfs"; };
-    "/var/lib/authentik" = { device = "system/root/var/lib/authentik"; fsType = "zfs"; };
-    "/var/lib/vaultwarden" = { device = "system/root/var/lib/vaultwarden"; fsType = "zfs"; };
-    "/var/lib/grafana" = { device = "system/root/var/lib/grafana"; fsType = "zfs"; };
-    "/var/lib/prometheus2" = { device = "system/root/var/lib/prometheus2"; fsType = "zfs"; };
-    "/var/lib/acme" = { device = "system/root/var/lib/acme"; fsType = "zfs"; };
-    "/var/lib/nginx" = { device = "system/root/var/lib/nginx"; fsType = "zfs"; };
-
-    # Mounts for your data pool
-    "/data" = {
-      device = "data/data";
-      fsType = "zfs";
-    };
-
-    "/data/media" = { device = "data/data/media"; fsType = "zfs"; };
-    "/data/media/movies" = { device = "data/data/media/movies"; fsType = "zfs"; };
-    "/data/media/shows" = { device = "data/data/media/shows"; fsType = "zfs"; };
-    "/data/media/music" = { device = "data/data/media/music"; fsType = "zfs"; };
-    "/data/media/audiobooks" = { device = "data/data/media/audiobooks"; fsType = "zfs"; };
-    "/data/media/books" = { device = "data/data/media/books"; fsType = "zfs"; };
-    "/data/media/comics" = { device = "data/data/media/comics"; fsType = "zfs"; };
-    "/data/media/manga" = { device = "data/data/media/manga"; fsType = "zfs"; };
-    "/data/media/torrents" = { device = "data/data/media/torrents"; fsType = "zfs"; };
-    "/data/media/usenet" = { device = "data/data/media/usenet"; fsType = "zfs"; };
-    "/data/media/.state" = { device = "data/data/media/.state"; fsType = "zfs"; };
-    "/data/Downloads" = { device = "data/data/Downloads"; fsType = "zfs"; };
-  };
-
-  # 3. Enable the swap device
-  swapDevices = [
-    { device = "/dev/zvol/system/root/swap"; }
-  ];
+  
   # =================================================================
   # 3. Kernel Configuration
   # =================================================================
   # Use the Zen kernel for desktop-oriented performance tuning.
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_zen;
+
+  boot.zfs = {
+    devNodes = "/dev/disk/by-id/";
+    forceImportAll = true;
+  };
 
   # Kernel modules to load at boot.
   boot.kernelModules = [
@@ -255,10 +211,6 @@
   services.zfs = {
     autoScrub.enable = true;
     autoScrub.interval = "monthly";
-    autoScrub.pools = [
-      "system" # FIX: Was "rpool"
-      "data"   # FIX: Was "dpool"
-    ];
     autoSnapshot.enable = false;
     trim.enable = true;
     trim.interval = "weekly";
