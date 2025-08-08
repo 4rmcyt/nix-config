@@ -1,7 +1,6 @@
 {
   disko.devices = {
     disk = {
-      # NVMe drive for the operating system
       nvme = {
         type = "disk";
         device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315";
@@ -22,13 +21,12 @@
               size = "100%";
               content = {
                 type = "zfs";
-                pool = "system"; # Points this partition to the 'system' pool
+                pool = "system";
               };
             };
           };
         };
       };
-      # SATA drive for user data
       sata = {
         type = "disk";
         device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345";
@@ -39,7 +37,7 @@
               size = "100%";
               content = {
                 type = "zfs";
-                pool = "data"; # Points this partition to the 'data' pool
+                pool = "data"; 
               };
             };
           };
@@ -47,7 +45,6 @@
       };
     };
     zpool = {
-      # The 'system' zpool, built on the NVMe drive
       system = {
         type = "zpool";
         devices = [ "/dev/disk/by-partlabel/zfs" ];
@@ -112,7 +109,6 @@
         devices = [ "/dev/disk/by-partlabel/zfs-1" ];
         rootFsOptions = { canmount = "off"; };
         atime = "off";
-
         datasets = {
           "data" = { type = "zfs_fs"; mountpoint = "/data"; };
           "data/media" = { type = "zfs_fs"; mountpoint = "/data/media"; options.recordsize = "1M"; };
