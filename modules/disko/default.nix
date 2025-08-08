@@ -74,16 +74,23 @@ in
           "var/lib/postgresql" = { type = "zfs_fs"; mountpoint = "/var/lib/postgresql"; };
           "var/lib/containers" = { type = "zfs_fs"; mountpoint = "/var/lib/containers"; };
           # ... (and all your other var/lib datasets)
-        };
 
-        # Volumes (for swap, etc.) on rpool ✅
-        volumes = {
+          # ✅ Correct ZFS Swap configuration based on Disko examples
           "swap" = {
-            size = "16G";
+            type = "zfs_fs";
+            mountpoint = "none";
             content = {
               type = "swap";
+              size = "16G";
               randomUUID = true;
             };
+          };
+
+          # Safety net dataset for emergencies
+          "reserved" = {
+            type = "zfs_fs";
+            mountpoint = "none";
+            options.reservation = "10G";
           };
         };
       };
