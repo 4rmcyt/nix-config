@@ -80,86 +80,78 @@ in
           var = {
             type = "zfs_fs";
             mountpoint = "none";
-            children = {
-              log = {
-                type = "zfs_fs";
-                mountpoint = "/var/log";
-              };
-              lib = {
-                type = "zfs_fs";
-                mountpoint = "none";
-                children = {
-                  postgresql = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/postgresql";
-                  };
-                  containers = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/containers";
-                  };
-                  redis-authentik = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/redis-authentik";
-                  };
-                  redis-paperless = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/redis-paperless";
-                  };
-                  redis-redis = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/redis-redis";
-                  };
-                  postgres-backup = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/postgres-backup";
-                  };
-                  paperless = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/paperless";
-                  };
-                  home-assistant = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/home-assistant";
-                  };
-                  microbin = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/microbin";
-                  };
-                  ldap = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/ldap";
-                  };
-                  authentik = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/authentik";
-                  };
-                  vaultwarden = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/vaultwarden";
-                  };
-                  grafana = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/grafana";
-                  };
-                  prometheus2 = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/prometheus2";
-                  };
-                  acme = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/acme";
-                  };
-                  nginx = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/nginx";
-                  };
-                  loki = {
-                    type = "zfs_fs";
-                    mountpoint = "/var/lib/loki";
-                  };
-                };
-              };
-            };
+          };
+          "var/log" = {
+            type = "zfs_fs";
+            mountpoint = "/var/log";
+          };
+          "var/lib" = {
+            type = "zfs_fs";
+            mountpoint = "none";
+          };
+          "var/lib/postgresql" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/postgresql";
+          };
+          "var/lib/containers" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/containers";
+          };
+          "var/lib/redis-authentik" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/redis-authentik";
+          };
+          "var/lib/redis-paperless" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/redis-paperless";
+          };
+          "var/lib/redis-redis" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/redis-redis";
+          };
+          "var/lib/postgres-backup" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/postgres-backup";
+          };
+          "var/lib/paperless" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/paperless";
+          };
+          "var/lib/home-assistant" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/home-assistant";
+          };
+          "var/lib/microbin" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/microbin";
+          };
+          "var/lib/ldap" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/ldap";
+          };
+          "var/lib/authentik" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/authentik";
+          };
+          "var/lib/vaultwarden" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/vaultwarden";
+          };
+          "var/lib/grafana" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/grafana";
+          };
+          "var/lib/prometheus2" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/prometheus2";
+          };
+          "var/lib/acme" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/acme";
+          };
+          "var/lib/nginx" = {
+            type = "zfs_fs";
+            mountpoint = "/var/lib/nginx";
           };
           zfs_swap = {
             type = "zfs_volume";
@@ -177,22 +169,6 @@ in
               "com.sun:auto-snapshot" = "false";
             };
           };
-          "data" = {
-            type = "zfs_fs";
-            mountpoint = "none";
-            children = {
-              "media" = {
-                type = "zfs_fs";
-                mountpoint = "none";
-                children = {
-                  ".state" = {
-                    type = "zfs_fs";
-                    mountpoint = "/data/media/.state";
-                  };
-                };
-              };
-            };
-          };
         };
       };
 
@@ -204,6 +180,54 @@ in
           data = {
             type = "zfs_fs";
             mountpoint = "/data";
+          };
+          "data/media" = {
+            type = "zfs_fs";
+            mountpoint = "/data/media";
+          };
+          "data/media/movies" = {
+            type = "zfs_fs";
+            mountpoint = "/data/media/movies";
+          };
+          "data/media/shows" = {
+            type = "zfs_fs";
+            mountpoint = "/data/media/shows";
+          };
+          "data/media/music" = {
+            type = "zfs_fs";
+            mountpoint = "/data/media/music";
+          };
+          "data/media/audiobooks" = {
+            type = "zfs_fs";
+            mountpoint = "/data/media/audiobooks";
+          };
+          "data/media/books" = {
+            type = "zfs_fs";
+            mountpoint = "/data/media/books";
+          };
+          "data/media/comics" = {
+            type = "zfs_fs";
+            mountpoint = "/data/media/comics";
+          };
+          "data/media/manga" = {
+            type = "zfs_fs";
+            mountpoint = "/data/media/manga";
+          };
+          "data/media/torrents" = {
+            type = "zfs_fs";
+            mountpoint = "/data/media/torrents";
+          };
+          "data/media/usenet" = {
+            type = "zfs_fs";
+            mountpoint = "/data/media/usenet";
+          };
+          "data/media/.state" = {
+            type = "zfs_fs";
+            mountpoint = "/data/media/.state";
+          };
+          "data/Downloads" = {
+            type = "zfs_fs";
+            mountpoint = "/data/Downloads";
           };
         };
       };
