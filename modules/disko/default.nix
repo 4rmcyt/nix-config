@@ -173,13 +173,20 @@ in
         };
       };
     };
-    zfs_vol = {
-      "rpool/swap" = {
-        size = "16G";
-        content = {
-          type = "swap";
-          randomUUID = true;
-        };
+    "rpool/swap" = {
+      type = "zfs_volume";
+      size = "16G"; # 16 GiB swap
+      content = {
+        type = "swap";
+      };
+      options = {
+        volblocksize = "4096";
+        compression = "zle";
+        logbias = "throughput";
+        sync = "always";
+        primarycache = "metadata";
+        secondarycache = "none";
+        "com.sun:auto-snapshot" = "false";
       };
     };
   };
