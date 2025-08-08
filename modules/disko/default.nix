@@ -155,6 +155,23 @@ in
             mountpoint = "/var/lib/nginx";
           };
         };
+        "swap" = {
+          type = "zfs_volume";
+          size = "16G"; # 16 GiB swap
+          content = {
+            type = "swap";
+          };
+          options = {
+            volblocksize = "4096";
+            compression = "zle";
+            logbias = "throughput";
+            sync = "always";
+            primarycache = "metadata";
+            secondarycache = "none";
+            "com.sun:auto-snapshot" = "false";
+          };
+        };
+
       };
 
       # Data pool (dpool) on the larger SATA drive
@@ -171,22 +188,6 @@ in
             mountpoint = "/data/media/.state";
           };
         };
-      };
-    };
-    "rpool/swap" = {
-      type = "zfs_volume";
-      size = "16G"; # 16 GiB swap
-      content = {
-        type = "swap";
-      };
-      options = {
-        volblocksize = "4096";
-        compression = "zle";
-        logbias = "throughput";
-        sync = "always";
-        primarycache = "metadata";
-        secondarycache = "none";
-        "com.sun:auto-snapshot" = "false";
       };
     };
   };
