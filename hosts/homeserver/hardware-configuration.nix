@@ -36,6 +36,7 @@
     "xhci_pci"
   ];
 
+  
   fileSystems = {
     # Mount the EFI System Partition (ESP) at /boot.
     # This is a standard FAT32 partition for UEFI booting.
@@ -45,23 +46,61 @@
       options = [ "defaults" "umask=0077" ];
     };
 
-    
+    # Mount the ZFS root dataset.
+    # The 'legacy' mountpoint in ZFS means it's managed by the OS fstab.
     "/" = {
       device = "zroot/root";
       fsType = "zfs";
     };
 
+    # Mount the /nix store from its own ZFS dataset.
     "/nix" = {
       device = "zroot/nix";
       fsType = "zfs";
     };
 
+    # Mount the /home directory.
     "/home" = {
       device = "zroot/home";
       fsType = "zfs";
     };
 
-  
+    # Mount the system log directory.
+    "/var/log" = {
+      device = "zroot/log";
+      fsType = "zfs";
+    };
+
+    # Mount the PostgreSQL data directory.
+    "/var/lib/postgresql" = {
+      device = "zroot/postgresql";
+      fsType = "zfs";
+    };
+
+    # Mount the directory for container storage.
+    "/var/lib/containers" = {
+      device = "zroot/containers";
+      fsType = "zfs";
+    };
+
+    # Mount the authentik data directory.
+    "/var/lib/authentik" = {
+      device = "zroot/authentik";
+      fsType = "zfs";
+    };
+
+    # Mount the vaultwarden data directory.
+    "/var/lib/vaultwarden" = {
+      device = "zroot/vaultwarden";
+      fsType = "zfs";
+    };
+
+    # Mount the general data directory.
+    "/data" = {
+      device = "zroot/data";
+      fsType = "zfs";
+    };
+  };
   # =================================================================
   # 3. Kernel Configuration
   # =================================================================
