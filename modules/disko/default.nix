@@ -11,7 +11,7 @@ in
 {
   disko.devices = {
     disk = {
-      # NVMe drive for OS and services
+      # NVMe drive for OS, services, and swap
       nvme = {
         device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315";
         type = "disk";
@@ -26,6 +26,7 @@ in
                 format = "vfat";
                 mountpoint = "/boot";
                 mountOptions = [ "umask=0077" ];
+                bootable = true;
               };
             };
             root = {
@@ -64,53 +65,88 @@ in
         type = "zpool";
         rootFsOptions = zfsOptions;
         datasets = {
-          "root"    = { type = "zfs_fs"; mountpoint = "/"; };
-          "home"    = { type = "zfs_fs"; mountpoint = "/home"; };
-          "nix"     = { type = "zfs_fs"; mountpoint = "/nix"; options."com.sun:auto-snapshot" = "false"; };
-          "var/log" = { type = "zfs_fs"; mountpoint = "/var/log"; };
-          "var/lib" = { type = "zfs_fs"; mountpoint = "none"; };
-          "var/lib/postgresql" = { type = "zfs_fs"; mountpoint = "/var/lib/postgresql"; };
-          "var/lib/containers" = { type = "zfs_fs"; mountpoint = "/var/lib/containers"; };
-          "var/lib/redis-authentik" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-authentik"; };
-          "var/lib/redis-paperless" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-paperless"; };
-          "var/lib/redis-redis" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-redis"; };
-          "var/lib/postgres-backup" = { type = "zfs_fs"; mountpoint = "/var/lib/postgres-backup"; };
-          "var/lib/paperless" = { type = "zfs_fs"; mountpoint = "/var/lib/paperless"; };
-          "var/lib/home-assistant" = { type = "zfs_fs"; mountpoint = "/var/lib/home-assistant"; };
-          "var/lib/microbin" = { type = "zfs_fs"; mountpoint = "/var/lib/microbin"; };
-          "var/lib/ldap" = { type = "zfs_fs"; mountpoint = "/var/lib/ldap"; };
-          "var/lib/authentik" = { type = "zfs_fs"; mountpoint = "/var/lib/authentik"; };
-          "var/lib/vaultwarden" = { type = "zfs_fs"; mountpoint = "/var/lib/vaultwarden"; };
-          "var/lib/grafana" = { type = "zfs_fs"; mountpoint = "/var/lib/grafana"; };
-          "var/lib/prometheus2" = { type = "zfs_fs"; mountpoint = "/var/lib/prometheus2"; };
-          "var/lib/acme" = { type = "zfs_fs"; mountpoint = "/var/lib/acme"; };
-          "var/lib/nginx" = { type = "zfs_fs"; mountpoint = "/var/lib/nginx"; };
-          "reserved" = {
+          "root" = {
+            type = "zfs_fs";
+            mountpoint = "/";
+          };
+          "home" = {
+            type = "zfs_fs";
+            mountpoint = "/home";
+          };
+          "nix" = {
+            type = "zfs_fs";
+            mountpoint = "/nix";
+            options."com.sun:auto-snapshot" = "false";
+          };
+          "var/log" = {
+            type = "zfs_fs";
+            mountpoint = "/var/log";
+          };
+
+          "var/lib" = {
             type = "zfs_fs";
             mountpoint = "none";
-            options.reservation = "10G";
+            children = {
+              "postgresql" = { type = "zfs_fs"; mountpoint = "/var/lib/postgresql"; };
+              "containers" = { type = "zfs_fs"; mountpoint = "/var/lib/containers"; };
+              "redis-authentik" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-authentik"; };
+              "redis-paperless" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-paperless"; };
+              "redis-redis" = { type = "zfs_fs"; mountpoint = "/var/lib/redis-redis"; };
+              "postgres-backup" = { type = "zfs_fs"; mountpoint = "/var/lib/postgres-backup"; };
+              "paperless" = { type = "zfs_fs"; mountpoint = "/var/lib/paperless"; };
+              "home-assistant" = { type = "zfs_fs"; mountpoint = "/var/lib/home-assistant"; };
+              "microbin" = { type = "zfs_fs"; mountpoint = "/var/lib/microbin"; };
+              "ldap" = { type = "zfs_fs"; mountpoint = "/var/lib/ldap"; };
+              "authentik" = { type = "zfs_fs"; mountpoint = "/var/lib/authentik"; };
+              "vaultwarden" = { type = "zfs_fs"; mountpoint = "/var/lib/vaultwarden"; };
+              "grafana" = { type = "zfs_fs"; mountpoint = "/var/lib/grafana"; };
+              "prometheus2" = { type = "zfs_fs"; mountpoint = "/var/lib/prometheus2"; };
+              "acme" = { type = "zfs_fs"; mountpoint = "/var/lib/acme"; };
+              "nginx" = { type = "zfs_fs"; mountpoint = "/var/lib/nginx"; };
+              "loki" = { type = "zfs_fs"; mountpoint = "/var/lib/loki"; };
+            };
+          };
+
+          # ZFS swap (risky, but allowed if properly tuned)
+          "zfs_swap" = {
+            type = "zfs_volume";
+            size = "16G";
+            content = {
+              type = "swap";
+            };
+            options = {
+              volblocksize = "4096";
+              compression = "zle";
+              logbias = "throughput";
+              sync = "always";
+              primarycache = "metadata";
+              secondarycache = "none";
+              "com.sun:auto-snapshot" = "false";
+            };
           };
         };
       };
 
-      # Data pool (dpool) on the larger SATA drive
+      # Data pool (dpool) on the SATA drive
       dpool = {
         type = "zpool";
         rootFsOptions = zfsOptions;
         datasets = {
-          "data" = { type = "zfs_fs"; mountpoint = "/data"; };
-          "data/media/.state" = { type = "zfs_fs"; mountpoint = "/data/media/.state"; };
-        };
-      };
-    };
-
-    # ✅ Define the ZFS Volume for swap here, as shown in the official example
-    zfs_vol = {
-      "rpool/swap" = {
-        size = "16G";
-        content = {
-          type = "swap";
-          randomUUID = true;
+          "data" = {
+            type = "zfs_fs";
+            mountpoint = "/data";
+            children = {
+              "media" = {
+                type = "zfs_fs";
+                children = {
+                  ".state" = {
+                    type = "zfs_fs";
+                    mountpoint = "/data/media/.state";
+                  };
+                };
+              };
+            };
+          };
         };
       };
     };
