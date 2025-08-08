@@ -21,20 +21,7 @@
               ];
             };
           };
-          luks = lib.mkIf cfg.zfs.root.encrypt {
-            size = "100%";
-            content = {
-              type = "luks";
-              name = "crypted1";
-              settings.allowDiscards = true;
-              passwordFile = "/tmp/secret.key";
-              content = {
-                type = "zfs";
-                pool = "zroot";
-              };
-            };
-          };
-          notluks = lib.mkIf (!cfg.zfs.root.encrypt) {
+          ZFS = {
             size = "100%";
             content = {
               type = "zfs";
@@ -44,33 +31,27 @@
         };
       };
     };
+
     two = {
       type = "disk";
       device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345";
       content = {
         type = "gpt";
         partitions = {
-          luks = {
+          DATA = {
             size = "100%";
             content = {
-              type = "luks";
-              name = "crypted2";
-              settings.allowDiscards = true;
-              passwordFile = "/tmp/secret.key";
-              content = {
-                type = "zfs";
-                pool = "zroot";
-              };
+              type = "zfs";
+              pool = "zroot";
             };
           };
         };
       };
     };
-  };
-  zpool = {
+
+    zpool = {
       zroot = {
         type = "zpool";
-        mode = mkIf cfg.zfs.root.mirror "mirror";
         rootFsOptions = {
           canmount = "off";
           checksum = "edonr";
@@ -95,15 +76,6 @@
             };
             type = "zfs_fs";
           };
-          # nixos-anywhere currently has issues with impermanence so agenix keys are lost during the install process.
-          # as such we give /etc/ssh its own zfs dataset rather than using impermanence to save the keys when we wipe the root directory on boot
-          # not needed if you don't use agenix or don't use nixos-anywhere to install
-          etcssh = {
-            type = "zfs_fs";
-            mountpoint = "/etc/ssh";
-            options."com.sun:auto-snapshot" = "false";
-            postCreateHook = "zfs snapshot zroot/etcssh@empty";
-          };          
           nix = {
             type = "zfs_fs";
             mountpoint = "/nix";
@@ -120,20 +92,17 @@
             options.mountpoint = "legacy";
             options."com.sun:auto-snapshot" = "false";
             mountpoint = "/";
-            postCreateHook = ''
-                zfs snapshot zroot/root@empty
-            '';
+          };
           home = {
             type = "zfs_fs";
             options."com.sun:auto-snapshot" = "false";
             mountpoint = "/home";
             postCreateHook = "zfs snapshot zroot/home@empty";
           };
-          var = {
+          log = {
             type = "zfs_fs";
             options."com.sun:auto-snapshot" = "false";
-            mountpoint = "/var";
-            postCreateHook = "zfs snapshot zroot/var@empty";
+            mountpoint = "/var/log";
           };
           postgresql = {
             type = "zfs_fs";
@@ -146,13 +115,11 @@
             type = "zfs_fs";
             options."com.sun:auto-snapshot" = "false";
             mountpoint = "/var/lib/containers";
-            postCreateHook = "zfs snapshot zroot/containers@empty";
           };
           authentik = {
             type = "zfs_fs";
             options."com.sun:auto-snapshot" = "false";
             mountpoint = "/var/lib/authentik";
-            postCreateHook = "zfs snapshot zroot/authentik@empty";
           };
           vaultwarden = {
             type = "zfs_fs";
@@ -164,10 +131,9 @@
             type = "zfs_fs";
             options."com.sun:auto-snapshot" = "false";
             mountpoint = "/data";
-            postCreateHook = "zfs snapshot zroot/data@empty";
           };
         };
       };
-    }
+    };
   };
 }

@@ -89,6 +89,7 @@
   # =================================================================
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  
 
   # =================================================================
   # 5. System Environment & Packages
