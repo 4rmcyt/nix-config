@@ -391,13 +391,7 @@
       "rpool"
       "dpool"
     ];
-    autoSnapshot.enable = true;
-    autoSnapshot.flags = "-k -p --utc";
-    autoSnapshot.frequent = 8;
-    autoSnapshot.hourly = 24;
-    autoSnapshot.daily = 7;
-    autoSnapshot.weekly = 4;
-    autoSnapshot.monthly = 12;
+    autoSnapshot.enable = false;
     trim.enable = true;
     trim.interval = "weekly";
   };

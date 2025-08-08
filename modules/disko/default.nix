@@ -87,7 +87,17 @@
           "reserved" = {
             type = "zfs_fs";
             mountpoint = "none";
-            options.reservation = "10G"; # Reserve 10GB of space
+            options.reservation = "10G";
+          };
+
+          "swap" = {
+            type = "zfs_fs";
+            options."org.zfs:zfs_vdev" = "off";
+            content = {
+              type = "swap";
+              size = "16G";
+              randomUUID = true;
+            };
           };
         };
       };
@@ -105,12 +115,6 @@
           "data" = { type = "zfs_fs"; mountpoint = "/data"; };
         };
       };
-    };
-
-    zfs_swap = {
-      type = "swap";
-      zfs_pool = "rpool";
-      size = "16G";
     };
   };
 }
