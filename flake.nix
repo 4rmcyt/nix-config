@@ -19,8 +19,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    cpu-microcodes.url = "github:platomav/CPUMicrocodes";
-    cpu-microcodes.inputs.nixpkgs.follows = "nixpkgs";
+    # cpu-microcodes.url = "github:platomav/CPUMicrocodes";
+    # cpu-microcodes.inputs.nixpkgs.follows = "nixpkgs";
 
     # NixOS-specific inputs
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
