@@ -1,36 +1,98 @@
-#! /run/current-system/sw/bin/bash
+#!/usr/bin/env bash
 
-ipaddress=$2
-hostname=$1
+set -euo pipefail
 
-eval $(op signin)
+# --- CONFIGURATION ---
+readonly INSTALLER_USER="nixos"
+readonly TARGET_USER="zeev"
+readonly TARGET_USER_GROUP="users"
+readonly REMOTE_HOSTNAME="192.168.1.165"
+readonly TARGET_HOST="${INSTALLER_USER}@${REMOTE_HOSTNAME}"
 
-# Create a temporary directory
-temp=$(mktemp -d)
+readonly NIX_FLAKE="github:4rmcyt/nix-configx#homeserver"
+# The SSH URL for your secrets repository.
+readonly SECRETS_GIT_REPO="git@github.com:4rmcyt/nix-secrets-repo.git"
+# The local path to the SSH key that can clone the secrets repo.
+readonly LOCAL_GIT_SSH_KEY="${HOME}/.ssh/id_github_deploy"
+# IMPORTANT: The local path to the private age key for the HOMESERVER.
+readonly LOCAL_HOMESERVER_AGE_KEY="${HOME}/.config/sops/age/keys.txt"
 
-# Function to cleanup temporary directory on exit
-cleanup() {
-  rm -rf "$temp"
-}
-trap cleanup EXIT
+readonly REMOTE_SOPS_KEY_PATH="/var/lib/sops/age.key"
+readonly REMOTE_SSH_DIR="/mnt/home/${TARGET_USER}/.ssh"
+readonly REMOTE_PGP_DIR="/mnt/home/${TARGET_USER}/.gnupg"
 
-# Create the directory where sshd expects to find the host keys
-install -d -m755 "$temp/etc/ssh/"
+# --- SCRIPT LOGIC ---
+echo "### Starting NixOS Installation for ${TARGET_HOST} ###"
+echo ">>> Using Git-based secrets workflow."
 
-# Obtain your private key for agenix from the password store and copy it to the temporary directory
-# also copy the key for the initrd shh server
-op read op:"//nix/$hostname/private key?ssh-format=openssh" > "$temp/etc/ssh/$hostname"
+# --- 1. Pre-flight Checks ---
+if ! command -v nixos-anywhere &> /dev/null; then echo "[ERROR] 'nixos-anywhere' not found."; exit 1; fi
+if [[ ! -f "${LOCAL_HOMESERVER_AGE_KEY}" ]]; then echo "[ERROR] Homeserver age key not found at: ${LOCAL_HOMESERVER_AGE_KEY}"; exit 1; fi
+if [[ ! -f "${LOCAL_GIT_SSH_KEY}" ]]; then echo "[ERROR] Git SSH deploy key not found at: ${LOCAL_GIT_SSH_KEY}"; exit 1; fi
+if ! ssh -o ConnectTimeout=5 "${TARGET_HOST}" "sudo -n true"; then
+    echo "[ERROR] Could not connect to ${TARGET_HOST} as user '${INSTALLER_USER}' or user lacks passwordless sudo."
+    exit 1
+fi
+echo ">>> All checks passed."
 
+# --- 2. Bootstrap Secrets ---
+echo ">>> Copying bootstrap secrets to remote..."
+scp -q "${LOCAL_HOMESERVER_AGE_KEY}" "${TARGET_HOST}:/tmp/age.key"
+scp -q "${LOCAL_GIT_SSH_KEY}" "${TARGET_HOST}:/tmp/git_deploy_key"
 
-# the initrd keys don't actually seem to work, but initrd secrets does need some kind of key, or it fails.
-# initrd ssh won't work, you will need to manually unlock encryption, then generate new keys.
-op read op:"//nix/initrd/private key?ssh-format=openssh" > "$temp/etc/ssh/initrd"
-# op read op:"//nix/$hostname-initrd/public key" > "$temp/etc/ssh/$hostname-initrd.pub"
+# --- 3. Main Remote Execution ---
+echo ">>> Starting remote setup..."
+ssh "${TARGET_HOST}" sudo /bin/bash <<EOF
+set -e
+nix-env -iA nixos.git nixos.sops nixos.openssh
 
-# Set the correct permissions so sshd will accept the key
-chmod 600 "$temp/etc/ssh/$hostname"
-chmod 600 "$temp/etc/ssh/initrd"
+mkdir -p /root/.ssh
+mv /tmp/git_deploy_key /root/.ssh/id_deploy
+chmod 600 /root/.ssh/id_deploy
+ssh-keyscan github.com >> /root/.ssh/known_hosts
 
-# Install NixOS to the host system with our secrets and encryption
-nix run github:numtide/nixos-anywhere -- --extra-files "$temp" --build-on-remote \
-  --disk-encryption-keys /tmp/secret.key <(op read op://nix/$hostname/encryption) --flake .#$hostname root@$ipaddress
+GIT_SSH_COMMAND="ssh -i /root/.ssh/id_deploy" git clone '${SECRETS_GIT_REPO}' /tmp/secrets
+
+export SOPS_AGE_KEY_FILE=/tmp/age.key
+
+mkdir -p "${REMOTE_SSH_DIR}" "${REMOTE_PGP_DIR}"
+
+# Decrypt all the secret files from your repo into their final destination.
+# NOTE: The '.enc' suffix is removed to match your file names managed by sops.
+sops -d /tmp/secrets/ssh/id_ed25519 > "${REMOTE_SSH_DIR}/id_ed25519"
+sops -d /tmp/secrets/ssh/id_rsa > "${REMOTE_SSH_DIR}/id_rsa"
+sops -d /tmp/secrets/ssh/authorized_keys > "${REMOTE_SSH_DIR}/authorized_keys"
+sops -d /tmp/secrets/ssh/zeev > "${REMOTE_SSH_DIR}/zeev"
+sops -d /tmp/secrets/gpg/all-gpg-keys.asc > "${REMOTE_PGP_DIR}/imported_keys.asc"
+
+# Move the master SOPS key to its final destination for the new NixOS system to use.
+mv /tmp/age.key "${REMOTE_SOPS_KEY_PATH}"
+
+# Set final ownership and permissions.
+chown -R root:root "$(dirname ${REMOTE_SOPS_KEY_PATH})"
+chmod 600 "${REMOTE_SOPS_KEY_PATH}"
+
+chown -R "${TARGET_USER}:${TARGET_USER_GROUP}" "${REMOTE_SSH_DIR}" "${REMOTE_PGP_DIR}"
+chmod 700 "${REMOTE_SSH_DIR}" "${REMOTE_PGP_DIR}"
+chmod 600 "${REMOTE_SSH_DIR}/id_ed25519"
+chmod 600 "${REMOTE_SSH_DIR}/id_rsa"
+# The 'zeev' file is assumed to be a private key. If it's a public key, change permissions to 644.
+chmod 600 "${REMOTE_SSH_DIR}/zeev"
+chmod 644 "${REMOTE_SSH_DIR}/authorized_keys"
+
+rm -rf /tmp/secrets
+EOF
+echo ">>> Remote setup finished successfully."
+
+# --- 4. Install NixOS ---
+echo "###
+### READY TO INSTALL NIXOS
+###"
+nixos-anywhere \
+    --flake "${NIX_FLAKE}" \
+    "$@" \
+    "${TARGET_HOST}"
+
+echo "###
+### NixOS installation command finished.
+###"
