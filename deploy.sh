@@ -13,9 +13,9 @@ readonly NIX_FLAKE="github:4rmcyt/nix-configx#homeserver"
 # The SSH URL for your secrets repository.
 readonly SECRETS_GIT_REPO="git@github.com:4rmcyt/nix-secrets-repo.git"
 # The local path to the SSH key that can clone the secrets repo.
-readonly LOCAL_GIT_SSH_KEY="${HOME}/.ssh/id_github_deploy"
+readonly LOCAL_GIT_SSH_KEY="${HOME}/.ssh/zeev"
 # IMPORTANT: The local path to the private age key for the HOMESERVER.
-readonly LOCAL_HOMESERVER_AGE_KEY="${HOME}/.config/sops/age/keys.txt"
+readonly LOCAL_HOMESERVER_AGE_KEY="${HOME}/.config/sops/age/age.key"
 
 readonly REMOTE_SOPS_KEY_PATH="/var/lib/sops/age.key"
 readonly REMOTE_SSH_DIR="/mnt/home/${TARGET_USER}/.ssh"
