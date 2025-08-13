@@ -54,6 +54,7 @@ scp -q "${LOCAL_GIT_SSH_KEY}" "${TARGET_HOST}:/tmp/git_deploy_key"
 
 # --- 4. Main Remote Execution ---
 echo ">>> Starting remote setup..."
+# shellcheck disable=SC2087
 ssh "${TARGET_HOST}" sudo bash <<EOF
 set -e
 nix-env -iA nixos.git nixos.sops nixos.openssh
