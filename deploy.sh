@@ -5,6 +5,7 @@ set -euo pipefail
 # --- CONFIGURATION ---
 readonly INSTALLER_USER="nixos"
 readonly TARGET_USER="zeev"
+readonly TARGET_USER_GROUP="users"
 readonly REMOTE_HOST="192.168.1.165"
 readonly HOSTNAME="homeserver"
 readonly TARGET_HOST="${INSTALLER_USER}@${REMOTE_HOST}"
@@ -68,6 +69,7 @@ GIT_SSH_COMMAND="ssh -i /root/.ssh/zeev" git clone '${SECRETS_GIT_REPO}' /tmp/se
 export SOPS_AGE_KEY_FILE=/tmp/age.key
 
 mkdir -p "$(dirname "${REMOTE_SOPS_KEY_PATH}")"
+mkdir -p "${REMOTE_SSH_DIR}"
 
 # Decrypt all the secret files from your repo into their final destination.
 # NOTE: The '.enc' suffix is removed to match your file names managed by sops.
@@ -84,6 +86,7 @@ chown -R root:root "$(dirname ${REMOTE_SOPS_KEY_PATH})"
 chmod 600 "${REMOTE_SOPS_KEY_PATH}"
 
 chown -R 1000:100 "${REMOTE_SSH_DIR}"
+chmod 700 "${REMOTE_SSH_DIR}"
 chmod 600 "${REMOTE_SSH_DIR}/id_ed25519"
 chmod 600 "${REMOTE_SSH_DIR}/id_rsa"
 # The 'zeev' file is assumed to be a private key. If it's a public key, change permissions to 644.
