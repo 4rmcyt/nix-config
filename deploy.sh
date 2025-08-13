@@ -97,8 +97,6 @@ echo "###
 ###"
 nixos-anywhere \
     --flake "${NIX_FLAKE}#${HOSTNAME}" \
-    --debug \
-    --show-trace \
     "$@" \
     "${TARGET_HOST}"
 echo "###
