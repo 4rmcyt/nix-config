@@ -9,7 +9,7 @@ readonly TARGET_USER_GROUP="users"
 readonly REMOTE_HOSTNAME="192.168.1.165"
 readonly TARGET_HOST="${INSTALLER_USER}@${REMOTE_HOSTNAME}"
 
-readonly NIX_FLAKE="github:4rmcyt/nix-configx#homeserver"
+readonly NIX_FLAKE="github:4rmcyt/nix-config#homeserver"
 # The SSH URL for your secrets repository.
 readonly SECRETS_GIT_REPO="git@github.com:4rmcyt/nix-secrets-repo.git"
 # The local path to the SSH key that can clone the secrets repo.
@@ -42,19 +42,21 @@ scp -q "${LOCAL_GIT_SSH_KEY}" "${TARGET_HOST}:/tmp/git_deploy_key"
 
 # --- 3. Main Remote Execution ---
 echo ">>> Starting remote setup..."
-ssh "${TARGET_HOST}" sudo /bin/bash <<EOF
+ssh "${TARGET_HOST}" sudo bash <<EOF
 set -e
 nix-env -iA nixos.git nixos.sops nixos.openssh
 
 mkdir -p /root/.ssh
-mv /tmp/git_deploy_key /root/.ssh/id_deploy
-chmod 600 /root/.ssh/id_deploy
+rm -rf /tmp/*
+mv /tmp/git_deploy_key /root/.ssh/zeev # <-- This is the corrected line
+chmod 600 /root/.ssh/zeev
 ssh-keyscan github.com >> /root/.ssh/known_hosts
 
-GIT_SSH_COMMAND="ssh -i /root/.ssh/id_deploy" git clone '${SECRETS_GIT_REPO}' /tmp/secrets
+GIT_SSH_COMMAND="ssh -i /root/.ssh/zeev" git clone '${SECRETS_GIT_REPO}' /tmp/secrets
 
 export SOPS_AGE_KEY_FILE=/tmp/age.key
 
+mkdir -p "$(dirname "${REMOTE_SOPS_KEY_PATH}")"
 mkdir -p "${REMOTE_SSH_DIR}" "${REMOTE_PGP_DIR}"
 
 # Decrypt all the secret files from your repo into their final destination.
@@ -72,7 +74,7 @@ mv /tmp/age.key "${REMOTE_SOPS_KEY_PATH}"
 chown -R root:root "$(dirname ${REMOTE_SOPS_KEY_PATH})"
 chmod 600 "${REMOTE_SOPS_KEY_PATH}"
 
-chown -R "${TARGET_USER}:${TARGET_USER_GROUP}" "${REMOTE_SSH_DIR}" "${REMOTE_PGP_DIR}"
+chown -R 1000:100 "${REMOTE_SSH_DIR}"
 chmod 700 "${REMOTE_SSH_DIR}" "${REMOTE_PGP_DIR}"
 chmod 600 "${REMOTE_SSH_DIR}/id_ed25519"
 chmod 600 "${REMOTE_SSH_DIR}/id_rsa"
