@@ -96,9 +96,10 @@ echo "###
 ###"
 nixos-anywhere \
     --flake "${NIX_FLAKE}" \
+    --debug \
+    --show-trace \
     "$@" \
     "${TARGET_HOST}"
-
 echo "###
 ### NixOS installation command finished.
 ###"
