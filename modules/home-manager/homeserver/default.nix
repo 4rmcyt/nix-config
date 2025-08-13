@@ -1,4 +1,8 @@
 { pkgs, inputs, lib,... }:
+let
+  gnupgphome = "${config.hostSpec.home}/.gnupg";
+  getSecretKeyIDs = "$(${pkgs.gnupg}/bin/gpg --list-secret-keys --keyid-format LONG | ${pkgs.gawk}/bin/awk '/sec/{if (match($0, /([0-9A-F]{16,})/, m)) print m[1]}')";
+in
 {
   home.packages = with pkgs; [
     # Shell & Editor
@@ -148,29 +152,43 @@
   # Activation Script to Import GPG Keys (Add this section)
   # =================================================================
 
-  sops.secrets.gpg-private-key = {
-    sopsFile = ../../../secrets/gpg/all-gpg-keys.asc.enc;
-    path = "${config.home.homeDirectory}/.gnupg/sops_imported_key.asc";
-    owner = config.home.username;
-    group = config.users.primaryGroup;
-  };
+  # sops.secrets.gpg-private-key = {
+  #   sopsFile = ../../../secrets/gpg/all-gpg-keys.asc.enc;
+  #   path = "${config.home.homeDirectory}/.gnupg/sops_imported_key.asc";
+  #   owner = config.home.username;
+  #   group = config.users.primaryGroup;
+  # };
 
-   home.activation.import-gpg-keys = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    # Get the path to the decrypted key from the sops-nix config above
-    key_file=${config.sops.secrets.gpg-private-key.path}
+  #  systemd.services.deploy-gpg = {
+  #   description = "Deploy a user's PGP key";
+  #   wantedBy = [ "multi-user.target" ];
+  #   after = [ "sops-nix.service" ];
+  #   serviceConfig = {
+  #     Type = "oneshot";
+  #     User = config.hostSpec.username;
+  #     ExecStart = "${pkgs.writeShellScript "deploy-gpg.sh" # bash
+  #       ''
+  #         if [ -s ${config.sops.secrets."${sopsKeyPath}".path} ]; then
+  #           mkdir -p ${gnupgphome} -m "0700"
+  #           ${pkgs.gnupg}/bin/gpg --pinentry-mode loopback --import ${
+  #             config.sops.secrets."${sopsKeyPath}".path
+  #           }
 
-    # Ensure the key file exists before trying to use it
-    if [ -f "$key_file" ]; then
-      # Get the key's fingerprint from the file itself
-      fingerprint=$(${pkgs.gnupg}/bin/gpg --show-keys --with-colons "$key_file" | ${pkgs.gawk}/bin/awk -F: '/^fpr/ { print $10 }')
-
-      # Check if the secret key is already in the user's keyring
-      if ! ${pkgs.gnupg}/bin/gpg --list-secret-keys "$fingerprint" >/dev/null 2>&1; then
-        echo "Importing GPG key $fingerprint..."
-        ${pkgs.gnupg}/bin/gpg --import "$key_file"
-      fi
-    fi
-  '';  
+  #           # Set passwd
+  #           if [ -s ${config.sops.secrets."${sopsPasswdPath}".path} ]; then
+  #             secretKeyId=${getSecretKeyIDs}
+  #             for key in ''${secretKeyId[@]}
+  #             do
+  #               cat "${
+  #                 config.sops.secrets."${sopsPasswdPath}".path
+  #               }" | ${pkgs.gnupg}/bin/gpg --batch --passphrase-fd 0 --pinentry-mode loopback --edit-key $key passwd quit
+  #             done
+  #           fi
+  #         fi
+  #       ''
+  #     }";
+  #   };
+  # };
 
   home.stateVersion = "25.05";
 }
