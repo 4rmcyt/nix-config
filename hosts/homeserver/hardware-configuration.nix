@@ -108,8 +108,7 @@
   # 3. Kernel Configuration
   # =================================================================
   # Use the Zen kernel for desktop-oriented performance tuning.
-  boot.kernelPackages = pkgs.linuxKernel.packages.linux_zen;
-
+  boot.kernelPackages = pkgs.zfs.latestCompatibleLinuxPackages.linux_zen;
   boot.zfs = {
     devNodes = "/dev/disk/by-id/";
     forceImportAll = true;
