@@ -1,9 +1,4 @@
-{ pkgs, inputs, ... }:
-let
-  gnupgphome = "${config.hostSpec.home}/.gnupg";
-  getSecretKeyIDs = "$(${pkgs.gnupg}/bin/gpg --list-secret-keys --keyid-format LONG | ${pkgs.gawk}/bin/awk '/sec/{if (match($0, /([0-9A-F]{16,})/, m)) print m[1]}')";
-in
-{
+{ pkgs, inputs, ... }: {
   home.packages = with pkgs; [
     # Shell & Editor
     zsh
