@@ -6,10 +6,11 @@ set -euo pipefail
 readonly INSTALLER_USER="nixos"
 readonly TARGET_USER="zeev"
 readonly TARGET_USER_GROUP="users"
-readonly REMOTE_HOSTNAME="192.168.1.165"
-readonly TARGET_HOST="${INSTALLER_USER}@${REMOTE_HOSTNAME}"
+readonly REMOTE_HOST="192.168.1.165"
+readonly HOSTNAME="homeserver"
+readonly TARGET_HOST="${INSTALLER_USER}@${REMOTE_HOST}"
 
-readonly NIX_FLAKE="github:4rmcyt/nix-config#homeserver"
+readonly NIX_FLAKE="github:4rmcyt/nix-config"
 # The SSH URL for your secrets repository.
 readonly SECRETS_GIT_REPO="git@github.com:4rmcyt/nix-secrets-repo.git"
 # The local path to the SSH key that can clone the secrets repo.
@@ -95,7 +96,7 @@ echo "###
 ### READY TO INSTALL NIXOS
 ###"
 nixos-anywhere \
-    --flake "${NIX_FLAKE}" \
+    --flake "${NIX_FLAKE}#${HOSTNAME}" \
     --debug \
     --show-trace \
     "$@" \
