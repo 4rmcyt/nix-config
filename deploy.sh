@@ -37,7 +37,6 @@ echo ">>> All checks passed."
 
 # --- 2. Bootstrap Secrets ---
 echo ">>> Copying bootstrap secrets to remote..."
-rm -rf /tmp/*
 scp -q "${LOCAL_HOMESERVER_AGE_KEY}" "${TARGET_HOST}:/tmp/age.key"
 scp -q "${LOCAL_GIT_SSH_KEY}" "${TARGET_HOST}:/tmp/git_deploy_key"
 
@@ -48,7 +47,7 @@ set -e
 nix-env -iA nixos.git nixos.sops nixos.openssh
 
 mkdir -p /root/.ssh
-rm -rf /tmp/*
+rm -rf /tmp/secrets
 mv /tmp/git_deploy_key /root/.ssh/zeev # <-- This is the corrected line
 chmod 600 /root/.ssh/zeev
 ssh-keyscan github.com >> /root/.ssh/known_hosts
