@@ -5,7 +5,6 @@ set -euo pipefail
 # --- CONFIGURATION ---
 readonly INSTALLER_USER="nixos"
 readonly TARGET_USER="zeev"
-readonly TARGET_USER_GROUP="users"
 readonly REMOTE_HOST="192.168.1.165"
 readonly HOSTNAME="homeserver"
 readonly TARGET_HOST="${INSTALLER_USER}@${REMOTE_HOST}"
