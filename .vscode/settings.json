@@ -4,5 +4,13 @@
     "sops.binPath": "/run/current-system/sw/bin/sops",
     "git.enableCommitSigning": true,
     "github.gitProtocol": "ssh",
-    "sops.beta": true
+    "sops.beta": true,
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+    "[shellscript]": {
+        "files.autoSave": "afterDelay",
+        "editor.defaultFormatter": "timonwong.shellcheck"
+    },
+    "[nix]": {
+        "editor.defaultFormatter": "brettm12345.nixfmt-vscode"
+    }
 }
