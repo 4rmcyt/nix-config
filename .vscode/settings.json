@@ -8,7 +8,7 @@
     "editor.defaultFormatter": "foxundermoon.shell-format",
     "[shellscript]": {
         "files.autoSave": "afterDelay",
-        "editor.defaultFormatter": "timonwong.shellcheck"
+        "editor.defaultFormatter": "mkhl.shfmt"
     },
     "[nix]": {
         "editor.defaultFormatter": "brettm12345.nixfmt-vscode"

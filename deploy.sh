@@ -27,9 +27,18 @@ echo "### Starting NixOS Installation for ${TARGET_HOST} ###"
 echo ">>> Using Git-based secrets workflow."
 
 # --- 1. Pre-flight Checks ---
-if ! command -v nixos-anywhere &> /dev/null; then echo "[ERROR] 'nixos-anywhere' not found."; exit 1; fi
-if [[ ! -f "${LOCAL_HOMESERVER_AGE_KEY}" ]]; then echo "[ERROR] Homeserver age key not found at: ${LOCAL_HOMESERVER_AGE_KEY}"; exit 1; fi
-if [[ ! -f "${LOCAL_GIT_SSH_KEY}" ]]; then echo "[ERROR] Git SSH deploy key not found at: ${LOCAL_GIT_SSH_KEY}"; exit 1; fi
+if ! command -v nixos-anywhere &>/dev/null; then
+    echo "[ERROR] 'nixos-anywhere' not found."
+    exit 1
+fi
+if [[ ! -f "${LOCAL_HOMESERVER_AGE_KEY}" ]]; then
+    echo "[ERROR] Homeserver age key not found at: ${LOCAL_HOMESERVER_AGE_KEY}"
+    exit 1
+fi
+if [[ ! -f "${LOCAL_GIT_SSH_KEY}" ]]; then
+    echo "[ERROR] Git SSH deploy key not found at: ${LOCAL_GIT_SSH_KEY}"
+    exit 1
+fi
 if ! ssh -o ConnectTimeout=5 "${TARGET_HOST}" "sudo -n true"; then
     echo "[ERROR] Could not connect to ${TARGET_HOST} as user '${INSTALLER_USER}' or user lacks passwordless sudo."
     exit 1
@@ -39,7 +48,6 @@ echo ">>> All checks passed."
 # --- 2. Clean Up Previous Run ---
 echo ">>> Cleaning up temporary files from previous runs on remote..."
 ssh "${TARGET_HOST}" "rm -rf /tmp/age.key /tmp/git_deploy_key /tmp/secrets"
-
 
 # --- 3. Bootstrap Secrets ---
 echo ">>> Copying bootstrap secrets to remote..."
