@@ -147,15 +147,30 @@
   # =================================================================
   # Activation Script to Import GPG Keys (Add this section)
   # =================================================================
-  home.activation.import-gpg-keys = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    # This script runs every time you switch home-manager generations.
-    # It checks if the key file exists before trying to import.
-    if [ -f "$HOME/.gnupg/imported_keys.asc" ]; then
-      echo "Importing GPG keys..."
-      # The '$DRY_RUN_CMD' ensures this doesn't run during a dry-run.
-      $DRY_RUN_CMD ${pkgs.gnupg}/bin/gpg --batch --import "$HOME/.gnupg/imported_keys.asc"
+
+  sops.secrets.gpg-private-key = {
+    sopsFile = ../../../secrets/gpg/all-gpg-keys.asc.enc;
+    path = "${config.home.homeDirectory}/.gnupg/sops_imported_key.asc";
+    owner = config.home.username;
+    group = config.users.primaryGroup;
+  };
+
+   home.activation.import-gpg-keys = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    # Get the path to the decrypted key from the sops-nix config above
+    key_file=${config.sops.secrets.gpg-private-key.path}
+
+    # Ensure the key file exists before trying to use it
+    if [ -f "$key_file" ]; then
+      # Get the key's fingerprint from the file itself
+      fingerprint=$(${pkgs.gnupg}/bin/gpg --show-keys --with-colons "$key_file" | ${pkgs.gawk}/bin/awk -F: '/^fpr/ { print $10 }')
+
+      # Check if the secret key is already in the user's keyring
+      if ! ${pkgs.gnupg}/bin/gpg --list-secret-keys "$fingerprint" >/dev/null 2>&1; then
+        echo "Importing GPG key $fingerprint..."
+        ${pkgs.gnupg}/bin/gpg --import "$key_file"
+      fi
     fi
-  '';
+  '';  
 
   home.stateVersion = "25.05";
 }
