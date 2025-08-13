@@ -143,47 +143,7 @@
     };
   };
 
-  # =================================================================
-  # Activation Script to Import GPG Keys (Add this section)
-  # =================================================================
-
-  # sops.secrets.gpg-private-key = {
-  #   sopsFile = ../../../secrets/gpg/all-gpg-keys.asc.enc;
-  #   path = "${config.home.homeDirectory}/.gnupg/sops_imported_key.asc";
-  #   owner = config.home.username;
-  #   group = config.users.primaryGroup;
-  # };
-
-  #  systemd.services.deploy-gpg = {
-  #   description = "Deploy a user's PGP key";
-  #   wantedBy = [ "multi-user.target" ];
-  #   after = [ "sops-nix.service" ];
-  #   serviceConfig = {
-  #     Type = "oneshot";
-  #     User = config.hostSpec.username;
-  #     ExecStart = "${pkgs.writeShellScript "deploy-gpg.sh" # bash
-  #       ''
-  #         if [ -s ${config.sops.secrets."${sopsKeyPath}".path} ]; then
-  #           mkdir -p ${gnupgphome} -m "0700"
-  #           ${pkgs.gnupg}/bin/gpg --pinentry-mode loopback --import ${
-  #             config.sops.secrets."${sopsKeyPath}".path
-  #           }
-
-  #           # Set passwd
-  #           if [ -s ${config.sops.secrets."${sopsPasswdPath}".path} ]; then
-  #             secretKeyId=${getSecretKeyIDs}
-  #             for key in ''${secretKeyId[@]}
-  #             do
-  #               cat "${
-  #                 config.sops.secrets."${sopsPasswdPath}".path
-  #               }" | ${pkgs.gnupg}/bin/gpg --batch --passphrase-fd 0 --pinentry-mode loopback --edit-key $key passwd quit
-  #             done
-  #           fi
-  #         fi
-  #       ''
-  #     }";
-  #   };
-  # };
+  
 
   home.stateVersion = "25.05";
 }
