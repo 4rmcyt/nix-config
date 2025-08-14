@@ -185,7 +185,7 @@
     serviceConfig = {
       User = "prometheus";
       ExecStart = ''
-        /run/cloudflare-exporter \
+        ${pkgs.prometheus-cloudflare-exporter}/bin/cloudflare-exporter \
           --addr "127.0.0.1:8081" \
           --token-file "${config.sops.secrets.cloudflare_prometheus_exporter_token.path}"
       '';
