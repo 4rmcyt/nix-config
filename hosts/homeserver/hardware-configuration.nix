@@ -48,7 +48,9 @@
   
 
   boot.zfs = {
-    forceImportAll = true;
+    enable = true; 
+  devNodes = "/dev/disk/by-id/";
+  forceImportAll = true;
   };
 
   # Kernel modules to load at boot.
