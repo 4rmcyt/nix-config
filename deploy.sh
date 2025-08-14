@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-
 git pull
 
 # --- CONFIGURATION ---
@@ -98,7 +97,7 @@ echo ">>> Remote setup finished successfully."
 echo "###
 ### READY TO INSTALL NIXOS
 ###"
-nixos-anywhere --build-on-remote \
+nixos-anywhere --build-on remote \
     --flake "${NIX_FLAKE}#${HOSTNAME}" \
     --impure \
     --show-trace \
