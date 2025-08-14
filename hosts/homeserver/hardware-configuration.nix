@@ -48,7 +48,7 @@
   
 
   boot.zfs = {
-    enable = true;
+    devNodes = "/dev/disk/by-id/";
     forceImportAll = true;
   };
 
