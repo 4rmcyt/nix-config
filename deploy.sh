@@ -98,7 +98,7 @@ echo "###
 nixos-anywhere --build-on-remote \
     --flake "${NIX_FLAKE}#${HOSTNAME}" \
     "$@" \
-    "${TARGET_HOST}"
+    "${TARGET_HOST}" --show-trace
 echo "###
 ### NixOS installation command finished.
 ###"
