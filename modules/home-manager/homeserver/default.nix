@@ -135,6 +135,7 @@
           "sudo"
           "direnv"
         ];
+        theme = "powerlevel10k";
       };
     };
 
