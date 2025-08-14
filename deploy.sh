@@ -95,7 +95,7 @@ echo ">>> Remote setup finished successfully."
 echo "###
 ### READY TO INSTALL NIXOS
 ###"
-nixos-anywhere \
+nixos-anywhere --build-on-remote \
     --flake "${NIX_FLAKE}#${HOSTNAME}" \
     "$@" \
     "${TARGET_HOST}"
