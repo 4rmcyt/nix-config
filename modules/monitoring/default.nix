@@ -147,7 +147,7 @@
     settings = {
       server = {
         http_port = 3000;
-        root_url = "https://grafana.labhome.work/";
+        root_url = "http://localhost:3000/";
       };
       database = {
         type = "postgres";
