@@ -64,10 +64,7 @@
   # =================================================================
   # 4. Hardware & Power Management
   # =================================================================
-  hardware.fancontrol.enable = true;
-  hardware.fancontrol.config = {
-    # Configure fan control settings here
-  };
+ 
 
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = with pkgs; [
