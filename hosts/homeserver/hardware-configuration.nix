@@ -63,7 +63,7 @@
   # =================================================================
   # 4. Hardware & Power Management
   # =================================================================
-
+  hardware.cpu.intel.updateMicrocode = true;
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = with pkgs; [
     intel-compute-runtime
