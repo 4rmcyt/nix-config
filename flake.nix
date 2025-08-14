@@ -19,8 +19,12 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # cpu-microcodes.url = "github:platomav/CPUMicrocodes";
-    # cpu-microcodes.inputs.nixpkgs.follows = "nixpkgs";
+    cpu-microcodes = {
+      url = "github:platomav/CPUMicrocodes";
+      flake = false;
+    };
+    ucodenix.url = "github:e-tho/ucodenix";
+    ucodenix.inputs.cpu-microcodes.follows = "cpu-microcodes";
 
     auto-cpufreq.url = "github:AdnanHodzic/auto-cpufreq";
     auto-cpufreq.inputs.nixpkgs.follows = "nixpkgs";
@@ -93,6 +97,7 @@
       nixos-needsreboot,
       treefmt-nix,
       auto-cpufreq,
+      ucodenix,
       ...
     }@inputs:
     let
