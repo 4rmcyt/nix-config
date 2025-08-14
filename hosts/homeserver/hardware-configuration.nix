@@ -14,6 +14,7 @@
 
   # Enable firmware updates for devices like CPUs and SSDs.
   hardware.enableRedistributableFirmware = lib.mkDefault true;
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   # =================================================================
   # 2. Boot & Filesystem Configuration
@@ -58,12 +59,11 @@
     "iTCO_wdt"
   ];
 
-  boot.kernelParams = [ "zfs.zfs_arc_max=12884901888" ];
+  boot.kernelParams = [ "zfs.zfs_arc_max=12884901888" "i915.enable_guc=2"];
 
   # =================================================================
   # 4. Hardware & Power Management
   # =================================================================
-  hardware.cpu.intel.updateMicrocode = true;
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = with pkgs; [
     intel-compute-runtime
@@ -113,10 +113,7 @@
     blueman.enable = false;
     geoclue2.enable = false;
     printing.enable = false; # CUPS printing
-    ucodenix = {
-      enable = true;
-      cpuModelId = "000906ED"; # Or config.facter.reportPath if specified
-    };
+    thermald.enable = lib.mkDefault true;
   };
   systemd.coredump.enable = false;
 }
