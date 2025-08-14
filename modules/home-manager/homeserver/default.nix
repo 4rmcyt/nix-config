@@ -75,10 +75,10 @@
       userEmail = "4rmcyt@gmail.com";
       signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
       extraConfig = {
-        gpg = {
-          format = "ssh";
-        };
+      gpg = {
+        format = "ssh";
       };
+    };
     };
 
     nixvim = {
