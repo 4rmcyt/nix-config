@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+
+git pull
+
 # --- CONFIGURATION ---
 readonly INSTALLER_USER="root"
 readonly TARGET_USER="zeev"
