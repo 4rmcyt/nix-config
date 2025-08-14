@@ -5,12 +5,15 @@
   users.users.nginx.extraGroups = [ "acme" ];
 
   # Open HTTP and HTTPS ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+  ];
 
   # Configure the Nginx service.
   services.nginx = {
     enable = true;
-    
+
     # These recommended settings are great for performance and security.
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
