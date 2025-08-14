@@ -104,6 +104,7 @@
     git
     statix
     cpuid
+    prometheus-cloudflare-exporter
   ];
 
   # =================================================================
