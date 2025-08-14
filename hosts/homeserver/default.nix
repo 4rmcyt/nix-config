@@ -101,7 +101,8 @@
     smartmontools
     fwupd
     pciutils
-    git # Often needed for Nix Flakes and system management
+    git
+    statix
   ];
 
   # =================================================================
