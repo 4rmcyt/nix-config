@@ -98,7 +98,6 @@
       treefmt-nix,
       auto-cpufreq,
       ucodenix,
-      facter,
       ...
     }@inputs:
     let
