@@ -59,6 +59,17 @@
     "iTCO_wdt"
   ];
 
+  fileSystems = {
+    "/boot" = {
+      device = "/dev/disk/by-label/EFI"; # Using the label defined in disko
+      fsType = "vfat";
+      options = [
+        "defaults"
+        "umask=0077"
+      ];
+    };
+  };
+
   boot.kernelParams = [ "zfs.zfs_arc_max=12884901888" ];
   # =================================================================
   # 4. Hardware & Power Management
