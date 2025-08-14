@@ -25,11 +25,13 @@
   boot.loader.systemd-boot.editor = false;
   boot.loader.timeout = 3;
 
-
-  
   # Define filesystem support and ZFS settings for the initial ramdisk (initrd).
-  boot.kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_stable.zfs_2_3;
-  boot.supportedFilesystems = [ "vfat" "zfs" ];
+  boot.kernelPackages = pkgs.linuxPackages_xanmod_stable;
+  boot.zfs.package = config.boot.kernelPackages.zfs_2_3;
+  boot.supportedFilesystems = [
+    "vfat"
+    "zfs"
+  ];
 
   # Define kernel modules needed early in the boot process.
   boot.initrd.availableKernelModules = [
@@ -40,12 +42,9 @@
     "xhci_pci"
   ];
 
-  
-
   # =================================================================
   # 3. Kernel Configuration
   # =================================================================
-  
 
   boot.zfs = {
     enable = true;
@@ -62,8 +61,7 @@
     "iTCO_wdt"
   ];
 
-
-  boot.kernelParams = [ "zfs.zfs_arc_max=12884901888" ]; 
+  boot.kernelParams = [ "zfs.zfs_arc_max=12884901888" ];
   # =================================================================
   # 4. Hardware & Power Management
   # =================================================================
