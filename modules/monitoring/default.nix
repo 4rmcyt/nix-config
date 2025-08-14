@@ -20,6 +20,7 @@
     };
     cloudflare_prometheus_exporter_token = {
       sopsFile = ../../secrets/cloudflare-prometheus-exporter.yaml;
+      key = "cloudflare_prometheus_exporter_token";
     };
   };
 
@@ -180,16 +181,17 @@
   # 6. Custom Systemd Services for Exporters
   # =================================================================
   systemd.services.cloudflare-exporter = {
-    description = "Cloudflare Prometheus Exporter";
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      User = "prometheus";
-      # Corrected ExecStart command
-      ExecStart = ''
-        ${pkgs.prometheus-cloudflare-exporter}/bin/cloudflare-exporter \
-          --listen "127.0.0.1:8081" \
-          --cf_api_token "${config.sops.secrets.cloudflare_prometheus_exporter_token.path}"
-      '';
-    };
+  description = "Cloudflare Prometheus Exporter";
+  wantedBy = [ "multi-user.target" ];
+  serviceConfig = {
+    User = "prometheus";
+    # Corrected ExecStart command
+    ExecStart = ''
+      ${pkgs.prometheus-cloudflare-exporter}/bin/cloudflare-exporter \
+        --listen "127.0.0.1:8081" \
+        --cf_api_token "${config.sops.secrets.cloudflare_prometheus_exporter_token.path}"
+    '';
   };
+};
 }
+
