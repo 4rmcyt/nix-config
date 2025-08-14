@@ -177,9 +177,9 @@
       enable = true;
       enableZshIntegration = true;
     };
-    # ssh = {
-    #   startAgent = true;
-    # };
+    gnupg = {
+      enable = true;
+    };
     nh = {
       enable = true;
       clean.enable = true;

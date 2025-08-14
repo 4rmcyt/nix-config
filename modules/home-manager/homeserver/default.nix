@@ -73,9 +73,6 @@
   };
 
   programs = {
-    gnupg = {
-      enable = true;
-    };
     git = {
       enable = true;
       userName = "4rmcyt";
