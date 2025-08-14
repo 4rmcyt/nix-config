@@ -179,16 +179,16 @@
   # =================================================================
   # 6. Custom Systemd Services for Exporters
   # =================================================================
-  systemd.services.cloudflare-exporter = {
-    description = "Cloudflare Prometheus Exporter";
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      User = "prometheus";
-      ExecStart = ''
-        ${pkgs.prometheus-cloudflare-exporter}/bin/cloudflare_exporter \
-          --addr "127.0.0.1:8081" \
-          --token-file "${config.sops.secrets.cloudflare_prometheus_exporter_token.path}"
-      '';
-    };
-  };
+  # systemd.services.cloudflare-exporter = {
+  #   description = "Cloudflare Prometheus Exporter";
+  #   wantedBy = [ "multi-user.target" ];
+  #   serviceConfig = {
+  #     User = "prometheus";
+  #     ExecStart = ''
+  #       ${pkgs.prometheus-cloudflare-exporter}/bin/cloudflare_exporter \
+  #         --addr "127.0.0.1:8081" \
+  #         --token-file "${config.sops.secrets.cloudflare_prometheus_exporter_token.path}"
+  #     '';
+  #   };
+  # };
 }
