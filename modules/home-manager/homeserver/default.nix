@@ -68,10 +68,9 @@
     nmap
     stress
     inteltool
-    intelmetool
     nvtopPackages.intel
     intel-gpu-tools
-    microcode-intel
+    intel-gpu-tools
   ];
 
   programs = {
