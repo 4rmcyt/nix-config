@@ -189,7 +189,7 @@
       ExecStart = ''
         ${pkgs.prometheus-cloudflare-exporter}/bin/cloudflare-exporter \
           --listen "127.0.0.1:8081" \
-          --cf_api_token "${config.sops.secrets.cloudflare_prometheus_exporter_token.path}"
+          --cf_api_token zRPFePg3TzQtbZPx9mWca7fyLwQEtEu6yQ9A0tQa
       '';
     };
   };
