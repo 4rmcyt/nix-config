@@ -22,6 +22,9 @@
     # cpu-microcodes.url = "github:platomav/CPUMicrocodes";
     # cpu-microcodes.inputs.nixpkgs.follows = "nixpkgs";
 
+    auto-cpufreq.url = "github:AdnanHodzic/auto-cpufreq";
+    auto-cpufreq.inputs.nixpkgs.follows = "nixpkgs";
+
     # NixOS-specific inputs
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
@@ -89,6 +92,7 @@
       authentik-nix,
       nixos-needsreboot,
       treefmt-nix,
+      auto-cpufreq,
       ...
     }@inputs:
     let
@@ -101,6 +105,7 @@
         home-manager.nixosModules.home-manager
         disko.nixosModules.disko
         nix-index-database.nixosModules.nix-index
+        auto-cpufreq.nixosModules.default
         inputs.nixos-facter-modules.nixosModules.facter
         { config.facter.reportPath = ./facter.json; }
       ];

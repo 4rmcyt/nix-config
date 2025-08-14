@@ -86,6 +86,7 @@
   # =================================================================
   services.fwupd.enable = true;
   systemd.oomd.enable = true;
+  services.auto-cpufreq.enable = true;
 
   services.smartd = {
     enable = true;
