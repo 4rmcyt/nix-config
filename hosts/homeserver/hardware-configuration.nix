@@ -54,7 +54,6 @@
   # Kernel modules to load at boot.
   boot.kernelModules = [
     "coretemp"
-    "cpufreq_stats"
     "fuse"
     "kvm-intel"
     "iTCO_wdt"
