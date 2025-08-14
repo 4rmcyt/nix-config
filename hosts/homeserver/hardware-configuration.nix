@@ -60,9 +60,15 @@
   ];
 
   boot.kernelParams = [ "zfs.zfs_arc_max=12884901888" ];
+
   # =================================================================
   # 4. Hardware & Power Management
   # =================================================================
+  hardware.fancontrol.enable = true;
+  hardware.fancontrol.config = {
+    # Configure fan control settings here
+  };
+
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = with pkgs; [
     intel-compute-runtime
@@ -75,6 +81,7 @@
   hardware.bluetooth.enable = false;
   hardware.i2c.enable = true;
 
+  powerManagement.enable = true;
   powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
   powerManagement.powertop.enable = true;
 
