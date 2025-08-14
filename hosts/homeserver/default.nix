@@ -177,7 +177,10 @@
       enable = true;
       enableZshIntegration = true;
     };
-    
+    ssh = {
+      enable = true;
+      startAgent = true;
+    };
     nh = {
       enable = true;
       clean.enable = true;

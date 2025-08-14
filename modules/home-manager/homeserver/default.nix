@@ -78,9 +78,9 @@
       userName = "4rmcyt";
       userEmail = "4rmcyt@gmail.com";
       extraConfig = {
-        commit.gpgsign = true; # forcing each commit to be gpg signed
+        commit.gpgsign = true;
         tag.gpgSign = true;
-        user.signingkey = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E"; # the uuid of your key that you got earlier
+        user.signingkey = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
       };
     };
 
