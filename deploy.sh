@@ -98,9 +98,8 @@ echo "###
 ### READY TO INSTALL NIXOS
 ###"
 nixos-anywhere --build-on remote \
-    --flake "${NIX_FLAKE}#${HOSTNAME}" \
-    --impure \
     --show-trace \
+    --flake "${NIX_FLAKE}#${HOSTNAME}" \
     "$@" \
     "${TARGET_HOST}"
 echo "###
