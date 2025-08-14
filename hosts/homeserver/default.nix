@@ -185,6 +185,21 @@
       clean.extraArgs = "--keep-since 10d --keep 3";
       flake = "/home/zeev/src/nixos-config";
     };
+    git = {
+      enable = true;
+      userName = "4rmcyt";
+      userEmail = "4rmcyt@gmail.com";
+      signing = {
+        key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com";
+        signByDefault = true;
+      };
+      extraConfig = {
+        gpg = {
+          format = "ssh";
+        };
+      };
+    };
+
   };
   system.stateVersion = "25.05";
 }
