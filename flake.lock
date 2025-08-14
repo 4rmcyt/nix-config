@@ -120,6 +120,22 @@
         "type": "github"
       }
     },
+    "cpu-microcodes": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1754087349,
+        "narHash": "sha256-wbzJEX3Gg7DZu1GNfTyMajOADiMahmKg7tl2w3DpNds=",
+        "owner": "platomav",
+        "repo": "CPUMicrocodes",
+        "rev": "4258581016fbf0dca81ec0a4d33327198a34776a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "platomav",
+        "repo": "CPUMicrocodes",
+        "type": "github"
+      }
+    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -508,11 +524,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1755071134,
-        "narHash": "sha256-4HK2kvyeAO/6kNKGanvP8mg4nEeDwke+d3eozz3QmOQ=",
+        "lastModified": 1755184403,
+        "narHash": "sha256-VI+ZPD/uIFjzYW8IcyvBgvwyDIvUe4/xh/kOHTbITX8=",
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "aa6a78f0a4e17c49ed4aff8b58c3f7ec7ef0408f",
+        "rev": "60d769a89908c29e19100059985db15a7b6bab6a",
         "type": "github"
       },
       "original": {
@@ -1453,6 +1469,7 @@
         "agenix": "agenix",
         "authentik-nix": "authentik-nix",
         "auto-cpufreq": "auto-cpufreq",
+        "cpu-microcodes": "cpu-microcodes",
         "disko": "disko",
         "home-manager": "home-manager_2",
         "hypr-contrib": "hypr-contrib",
@@ -1472,6 +1489,7 @@
         "sops-nix": "sops-nix",
         "systems": "systems_8",
         "treefmt-nix": "treefmt-nix",
+        "ucodenix": "ucodenix",
         "vscode-server": "vscode-server",
         "waybar": "waybar"
       }
@@ -1646,6 +1664,26 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "ucodenix": {
+      "inputs": {
+        "cpu-microcodes": [
+          "cpu-microcodes"
+        ]
+      },
+      "locked": {
+        "lastModified": 1754273604,
+        "narHash": "sha256-UOYeysPqCVO9jsu+gjGpWn+JvpPFO5hS9CChP049w6k=",
+        "owner": "e-tho",
+        "repo": "ucodenix",
+        "rev": "98c0b8ec151ee6495711d2dd902112b4f2a30ceb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "e-tho",
+        "repo": "ucodenix",
         "type": "github"
       }
     },
