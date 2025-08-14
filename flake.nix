@@ -98,6 +98,7 @@
       treefmt-nix,
       auto-cpufreq,
       ucodenix,
+      facter,
       ...
     }@inputs:
     let
@@ -111,7 +112,8 @@
         disko.nixosModules.disko
         nix-index-database.nixosModules.nix-index
         auto-cpufreq.nixosModules.default
-        inputs.nixos-facter-modules.nixosModules.facter
+        nixos-facter-modules.nixosModules.facter
+        ucodenix.nixosModules.default 
         { config.facter.reportPath = ./facter.json; }
       ];
 
