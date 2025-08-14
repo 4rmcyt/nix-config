@@ -65,7 +65,7 @@
   # 4. Environment Packages
   # =================================================================
   environment.systemPackages = with pkgs; [
-    prometheus-cloudflare-exporter
+    cloudflare-exporter
   ];
 
   # =================================================================
