@@ -1,26 +1,84 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 # This 'let' block defines our data and helper function.
 let
   # Step 1: Define a simple list of all the services we want to protect.
   # We only list the parts that are unique to each service.
   servicesToProtect = {
-    ssh = { filter = "sshd"; journalmatch = "_SYSTEMD_UNIT=sshd.service"; maxretry = 3; bantime = "1h"; };
-    homeassistant = { filter = "homeassistant"; journalmatch = "_SYSTEMD_UNIT=home-assistant.service"; };
-    keycloak = { filter = "keycloak"; journalmatch = "_SYSTEMD_UNIT=keycloak.service"; maxretry = 3; bantime = "2h"; };
-    jellyfin = { filter = "jellyfin"; journalmatch = "_SYSTEMD_UNIT=jellyfin.service"; bantime = "30m"; };
-    audiobookshelf = { filter = "audiobookshelf"; journalmatch = "_SYSTEMD_UNIT=audiobookshelf.service"; };
-    microbin = { filter = "microbin"; journalmatch = "_SYSTEMD_UNIT=microbin.service"; };
-    paperless = { filter = "paperless"; journalmatch = "_SYSTEMD_UNIT=paperless.service"; };
-    samba = { filter = "samba"; journalmatch = "_SYSTEMD_UNIT=smbd.service"; };
-    radicale = { filter = "radicale"; journalmatch = "_SYSTEMD_UNIT=radicale.service"; };
-    homepage = { filter = "homepage"; journalmatch = "_SYSTEMD_UNIT=homepage.service"; };
-    cloudflared = { filter = "cloudflared"; journalmatch = "_SYSTEMD_UNIT=cloudflared.service"; };
-    miniflux = { filter = "miniflux"; journalmatch = "_SYSTEMD_UNIT=miniflux.service"; };
-    yubikey = { filter = "yubikey"; journalmatch = "_SYSTEMD_UNIT=yubikey.service"; };
-    kavita = { filter = "kavita"; journalmatch = "_SYSTEMD_UNIT=kavita.service"; };
-    transmission = { filter = "transmission"; journalmatch = "_SYSTEMD_UNIT=transmission.service"; };
-    tailscale = { filter = "tailscale"; journalmatch = "_SYSTEMD_UNIT=tailscaled.service"; };
+    ssh = {
+      filter = "sshd";
+      journalmatch = "_SYSTEMD_UNIT=sshd.service";
+      maxretry = 3;
+      bantime = "1h";
+    };
+    homeassistant = {
+      filter = "homeassistant";
+      journalmatch = "_SYSTEMD_UNIT=home-assistant.service";
+    };
+    keycloak = {
+      filter = "keycloak";
+      journalmatch = "_SYSTEMD_UNIT=keycloak.service";
+      maxretry = 3;
+      bantime = "2h";
+    };
+    jellyfin = {
+      filter = "jellyfin";
+      journalmatch = "_SYSTEMD_UNIT=jellyfin.service";
+      bantime = "30m";
+    };
+    audiobookshelf = {
+      filter = "audiobookshelf";
+      journalmatch = "_SYSTEMD_UNIT=audiobookshelf.service";
+    };
+    microbin = {
+      filter = "microbin";
+      journalmatch = "_SYSTEMD_UNIT=microbin.service";
+    };
+    paperless = {
+      filter = "paperless";
+      journalmatch = "_SYSTEMD_UNIT=paperless.service";
+    };
+    samba = {
+      filter = "samba";
+      journalmatch = "_SYSTEMD_UNIT=smbd.service";
+    };
+    radicale = {
+      filter = "radicale";
+      journalmatch = "_SYSTEMD_UNIT=radicale.service";
+    };
+    homepage = {
+      filter = "homepage";
+      journalmatch = "_SYSTEMD_UNIT=homepage.service";
+    };
+    cloudflared = {
+      filter = "cloudflared";
+      journalmatch = "_SYSTEMD_UNIT=cloudflared.service";
+    };
+    miniflux = {
+      filter = "miniflux";
+      journalmatch = "_SYSTEMD_UNIT=miniflux.service";
+    };
+    yubikey = {
+      filter = "yubikey";
+      journalmatch = "_SYSTEMD_UNIT=yubikey.service";
+    };
+    kavita = {
+      filter = "kavita";
+      journalmatch = "_SYSTEMD_UNIT=kavita.service";
+    };
+    transmission = {
+      filter = "transmission";
+      journalmatch = "_SYSTEMD_UNIT=transmission.service";
+    };
+    tailscale = {
+      filter = "tailscale";
+      journalmatch = "_SYSTEMD_UNIT=tailscaled.service";
+    };
   };
 
   # A small helper function to build the jail configuration string.
@@ -49,7 +107,10 @@ in
     maxretry = 5; # A global default for any jail that doesn't specify its own.
 
     # These packages are needed for your custom Cloudflare action.
-    extraPackages = with pkgs; [ curl jq ];
+    extraPackages = with pkgs; [
+      curl
+      jq
+    ];
 
     # Your IP whitelist is correct and should be kept.
     ignoreIP = [
@@ -85,7 +146,7 @@ in
             -H "Authorization: Bearer $(cat ${apiKeyFile})" \
             -H "Content-Type: application/json" \
             --data '{"mode":"block","configuration":{"target":"ip","value":"<ip>"},"notes":"${notes}"}'
-        
+
         actionunban = id=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$(cat ${zoneIdFile})/firewall/access_rules/rules" \
             -H "Authorization: Bearer $(cat ${apiKeyFile})" \
             -H "Content-Type: application/json" \
@@ -93,7 +154,7 @@ in
             if [ -z "$id" ]; then exit 0; fi; \
             curl -s -X DELETE "https://api.cloudflare.com/client/v4/zones/$(cat ${zoneIdFile})/firewall/access_rules/rules/$id" \
                 -H "Authorization: Bearer $(cat ${apiKeyFile})"
-        
+
         [Init]
         name = cloudflare-token
       '';
