@@ -172,15 +172,14 @@
   # 7. System Programs & Security Settings
   # =================================================================
   programs = {
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
     zsh.enable = true;
     nix-index = {
       enable = true;
       enableZshIntegration = true;
     };
+    # ssh = {
+    #   startAgent = true;
+    # };
     nh = {
       enable = true;
       clean.enable = true;

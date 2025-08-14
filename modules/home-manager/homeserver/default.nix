@@ -63,22 +63,25 @@
     lm_sensors
     apacheHttpd
     iotop
-    cachix
     tuptime
-    nmap
-    stress
-    inteltool
-    nvtopPackages.intel
-    intel-gpu-tools
-    intel-gpu-tools
   ];
+
+  services.gpg-agent = {
+    enable = true;
+    defaultCacheTtl = 1800;
+    enableSshSupport = true;
+  };
 
   programs = {
     git = {
       enable = true;
       userName = "4rmcyt";
       userEmail = "4rmcyt@gmail.com";
-      signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
+      extraConfig = {
+        commit.gpgsign = true; # forcing each commit to be gpg signed
+        tag.gpgSign = true;
+        user.signingkey = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E"; # the uuid of your key that you got earlier
+      };
     };
 
     ssh = {
