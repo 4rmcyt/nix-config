@@ -21,6 +21,7 @@
     nixfmt-tree
     nix-inspect
     nix-diff
+    zsh-powerlevel10k
     # User Utils
     pass
     gnupg
