@@ -64,7 +64,9 @@
   # =================================================================
   # 4. Environment Packages
   # =================================================================
-  environment.systemPackages = [ ];
+  environment.systemPackages = [ 
+    prometheus-cloudflare-exporter
+  ];
 
   # =================================================================
   # 5. Services
@@ -118,10 +120,10 @@
         job_name = "postgres-exporter";
         static_configs = [ { targets = [ "localhost:9187" ]; } ];
       }
-      {
-        job_name = "cloudflare-exporter";
-        static_configs = [ { targets = [ "localhost:8081" ]; } ];
-      }
+      # {
+      #   job_name = "cloudflare-exporter";
+      #   static_configs = [ { targets = [ "localhost:8081" ]; } ];
+      # }
     ];
 
     exporters = {
