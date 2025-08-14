@@ -177,9 +177,7 @@
       enable = true;
       enableZshIntegration = true;
     };
-    gnupg = {
-      enable = true;
-    };
+    
     nh = {
       enable = true;
       clean.enable = true;
