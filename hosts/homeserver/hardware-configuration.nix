@@ -28,8 +28,7 @@
 
   
   # Define filesystem support and ZFS settings for the initial ramdisk (initrd).
-  boot.kernelPackages = pkgs.linuxPackages_xanmod_stable;
-  boot.extraModulePackages = with config.boot.kernelPackages; [ zfs ];
+  boot.kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_stable.zfs_2_3;
   boot.supportedFilesystems = [ "vfat" "zfs" ];
 
   # Define kernel modules needed early in the boot process.
