@@ -369,10 +369,10 @@ in
         "/data/media/torrents"
         "/data/media/usenet"
         "/data/media/audiobooks"
-        "/data/Downloads/radarr"
-        "/data/Downloads/tv-sonarr"
+        # "/data/Downloads/radarr"
+        # "/data/Downloads/tv-sonarr"
         "/data/media/.state"
-        "/data/media/torrents/.incomplete"
+        # "/data/media/torrents/.incomplete"
       ];
     };
   });
@@ -414,6 +414,8 @@ in
     "d /data/media/.state/nixarr/transmission 775 transmission transmission -"
 
     "d /var/lib/transmission 775 transmission transmission -"
+
+    "d /data/Downloads 775 zeev media -"
 
   ];
 }
