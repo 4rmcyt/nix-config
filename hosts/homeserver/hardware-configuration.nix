@@ -113,10 +113,10 @@
     blueman.enable = false;
     geoclue2.enable = false;
     printing.enable = false; # CUPS printing
-    ucodenix = {
-      enable = true;
-      cpuModelId = ./facter.json; # Or config.facter.reportPath if specified
-    };
+    # ucodenix = {
+    #   enable = true;
+    #   cpuModelId = ./facter.json; # Or config.facter.reportPath if specified
+    # };
 
   };
   systemd.coredump.enable = false;
