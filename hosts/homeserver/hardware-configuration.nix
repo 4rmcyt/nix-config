@@ -39,6 +39,7 @@
     "usb_storage"
     "usbhid"
     "xhci_pci"
+    "cpufreq_stats"
   ];
 
   # =================================================================
@@ -64,7 +65,6 @@
   # =================================================================
   # 4. Hardware & Power Management
   # =================================================================
- 
 
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = with pkgs; [
