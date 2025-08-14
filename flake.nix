@@ -101,6 +101,8 @@
         home-manager.nixosModules.home-manager
         disko.nixosModules.disko
         nix-index-database.nixosModules.nix-index
+        inputs.nixos-facter-modules.nixosModules.facter
+        { config.facter.reportPath = ./facter.json; }
       ];
 
       nixosHomeManagerConfig = user: host: {
