@@ -66,6 +66,12 @@
     cachix
     tuptime
     nmap
+    stress
+    inteltool
+    intelmetool
+    nvtopPackages.intel
+    intel-gpu-tools
+    microcode-intel
   ];
 
   programs = {
@@ -80,7 +86,7 @@
       enable = true;
       addKeysToAgent = "yes";
     };
-    
+
     nixvim = {
       enable = true;
       colorschemes.catppuccin.enable = true;
