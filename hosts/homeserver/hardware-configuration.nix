@@ -59,7 +59,10 @@
     "iTCO_wdt"
   ];
 
-  boot.kernelParams = [ "zfs.zfs_arc_max=12884901888" "i915.enable_guc=2"];
+  boot.kernelParams = [
+    "zfs.zfs_arc_max=12884901888"
+    "i915.enable_guc=2"
+  ];
 
   # =================================================================
   # 4. Hardware & Power Management
