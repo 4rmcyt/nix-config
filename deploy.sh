@@ -93,11 +93,6 @@ rm -rf /tmp/secrets
 EOF
 echo ">>> Remote setup finished successfully."
 
-# --- ADD THESE LINES TO PAUSE THE SCRIPT ---
-echo ">>> Paused for inspection. SSH into the host now. Press Enter here when you are done."
-read
-# --- End of new lines ---
-
 # --- 5. Install NixOS ---
 echo "###
 ### READY TO INSTALL NIXOS
