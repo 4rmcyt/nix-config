@@ -107,6 +107,7 @@
 
       commonNixOSModules = [
         sops-nix.nixosModules.sops
+        {sops.age.keyFile = "/var/lib/sops/age.key";}
         home-manager.nixosModules.home-manager
         disko.nixosModules.disko
         nix-index-database.nixosModules.nix-index
@@ -119,6 +120,10 @@
       nixosHomeManagerConfig = user: host: {
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
+        sops-nix.homeManagerModules.sops
+        {
+          sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+        }
         home-manager.users.${user} = {
           imports = [
             ./modules/home-manager/${host}
