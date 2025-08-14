@@ -111,8 +111,8 @@
         disko.nixosModules.disko
         nix-index-database.nixosModules.nix-index
         auto-cpufreq.nixosModules.default
-        input.nixos-facter-modules.nixosModules.facter
-        ucodenix.nixosModules.default 
+        ucodenix.nixosModules.default
+        inputs.nixos-facter-modules.nixosModules.facter
         { config.facter.reportPath = ./facter.json; }
       ];
 
