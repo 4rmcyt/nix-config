@@ -12,5 +12,6 @@
     },
     "[nix]": {
         "editor.defaultFormatter": "brettm12345.nixfmt-vscode"
-    }
+    },
+    "github.gitAuthentication": false
 }
