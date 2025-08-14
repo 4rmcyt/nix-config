@@ -146,7 +146,6 @@
           "sudo"
           "direnv"
         ];
-        theme = "zsh-powerlevel10k";
       };
     };
 
