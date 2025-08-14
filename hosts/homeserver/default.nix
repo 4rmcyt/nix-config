@@ -184,6 +184,5 @@
       clean.extraArgs = "--keep-since 10d --keep 3";
       flake = "/home/zeev/src/nixos-config";
     };
-  };
   system.stateVersion = "25.05";
 }

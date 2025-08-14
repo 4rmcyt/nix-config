@@ -74,13 +74,13 @@
       userName = "4rmcyt";
       userEmail = "4rmcyt@gmail.com";
       signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
+      extraConfig = {
+        gpg = {
+          format = "ssh";
+        };
+      };
     };
 
-    ssh = {
-      enable = true;
-      startAgent = true;
-      addKeysToAgent = "yes";
-    };
     nixvim = {
       enable = true;
       colorschemes.catppuccin.enable = true;
