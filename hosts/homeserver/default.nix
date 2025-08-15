@@ -209,7 +209,8 @@
       colorschemes.catppuccin.enable = true;
       plugins.lualine.enable = true;
     };
-    programs.ssh.startAgent = true;
+
+    ssh.startAgent = true;
 
     nh = {
       enable = true;
