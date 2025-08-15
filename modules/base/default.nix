@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ ... }:
 {
   imports = [
     ./auto_upgrade

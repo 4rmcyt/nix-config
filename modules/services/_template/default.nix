@@ -1,8 +1,6 @@
 # Template for secure service configuration
 {
   config,
-  pkgs,
-  lib,
   ...
 }:
 let
