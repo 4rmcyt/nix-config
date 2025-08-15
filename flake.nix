@@ -6,13 +6,13 @@
       "https://nix-community.cachix.org"
       "https://nix-gaming.cachix.org"
       "https://hyprland.cachix.org"
-      "https://4rmcyt.cachix.org"
+      "https://homeserver.cachix.org"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-      "4rmcyt.cachix.org-1:uKI766iybXD8uDBVexbc5BCYAfdBJ262ID4C+dl2hws="
+      "homeserver.cachix.org-1:0vStm6koDUwET/iWYhbKpsuVO4v3UgN3510zYH9YpZU="
     ];
   };
 
@@ -126,8 +126,8 @@
         home-manager.users.${user} = {
           imports = [
             ./modules/home-manager/${host}
-            nixvim.homeManagerModules.nixvim
-            sops-nix.homeManagerModules.sops
+            nixvim.homeModules.nixvim
+            sops-nix.homeModules.sops
           ];
           sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
           _module.args = {
