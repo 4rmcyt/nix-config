@@ -79,7 +79,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixvim.url = "github:nix-community/nixvim";
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -123,7 +126,7 @@
         home-manager.users.${user} = {
           imports = [
             ./modules/home-manager/${host}
-            nixvim.homeModules.default
+            nixvim.homeManagerModules.nixvim
             sops-nix.homeManagerModules.sops
           ];
           sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
