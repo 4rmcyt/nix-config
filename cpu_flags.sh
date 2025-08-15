@@ -5,7 +5,7 @@ grep "^flags" /proc/cpuinfo |
         uniq |
         sed 's/^.*: //' |
         tr ' ' '\n' |
-        while read line; do
+        while read -r line; do
                 echo -n "${line}: "
                 echo "$CPUFEATURES" |
                 grep "FEATURE_${line^^}" |
