@@ -114,17 +114,16 @@
       ];
 
       # This function generates the Home Manager configuration for a given user and host.
-      nixosHomeManagerConfig = user: host: {
+      nixosHomeManagerConfig = zeev: host: {
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
-        home-manager.users.${user} = {
+        home-manager.users.zeev = {
           imports = [
             ./modules/home-manager/${host}
-            # FIX: Use 'homeManagerModules' not 'homeModules'
-            nixvim.homeManagerModules.nixvim
+            nixvim.homeModules.nixvim
             sops-nix.homeManagerModules.sops
           ];
-          sops.age.keyFile = "/home/${user}/.config/sops/age/keys.txt";
+          sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
         };
       };
     in
