@@ -105,6 +105,9 @@
     statix
     cpuid
     prometheus-cloudflare-exporter
+    jellyfin-ffmpeg
+    libva-utils
+    intel-gpu-tools
   ];
 
   # =================================================================
