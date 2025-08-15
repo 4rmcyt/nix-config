@@ -30,7 +30,7 @@
     # NixOS-specific inputs
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
-    nixos-needsreboot.url = "https://flakehub.com/f/thefossguy/nixos-needsreboot/*.tar.gz";
+    nixos-needsreboot.url = "https://flakehub.com/f/wimpysworld/nixos-needsreboot/*.tar.gz";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     nixarr.url = "github:rasmus-kirk/nixarr";
     nixos-generators.url = "github:nix-community/nixos-generators";
@@ -113,6 +113,7 @@
         nix-index-database.nixosModules.nix-index
         auto-cpufreq.nixosModules.default
         nixvim.nixosModules.nixvim
+        nixos-needsreboot.nixosModules.nixos-needsreboot
         inputs.nixos-facter-modules.nixosModules.facter
         { config.facter.reportPath = ./facter.json; }
       ];
