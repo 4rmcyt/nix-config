@@ -1,5 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, nixvim, ... }:
 {
+  home.username = "zeev";
+  home.homeDirectory = "/home/zeev";
 
   home.packages = with pkgs; [
     # Shell & Editor
@@ -58,12 +60,6 @@
         gpg.format = "ssh";
         user.signingkey = "~/.ssh/zeev";
       };
-    };
-
-    nixvim = {
-      enable = true;
-      colorschemes.catppuccin.enable = true;
-      plugins.lualine.enable = true;
     };
 
     fzf = {

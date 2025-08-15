@@ -109,6 +109,7 @@
         disko.nixosModules.disko
         nix-index-database.nixosModules.nix-index
         auto-cpufreq.nixosModules.default
+        nixvim.nixosModules.nixvim
         inputs.nixos-facter-modules.nixosModules.facter
         { facter.reportPath = ./facter.json; }
       ];
@@ -119,7 +120,7 @@
         home-manager.users.${user} = {
           imports = [
             ./modules/home-manager/${host}
-            nixvim.homeModules.nixvim
+            ./modules/users/${user}
             sops-nix.homeManagerModules.sops
           ];
           sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";

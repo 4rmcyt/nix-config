@@ -9,7 +9,7 @@
   # =================================================================
   imports = [
     ./hardware-configuration.nix
-    ../../modules/users/zeev.nix
+    ../../modules/users/zeev
     ../../modules/networking
     ../../modules/services
     ../../modules/base
@@ -198,7 +198,11 @@
       enable = true;
       enableZshIntegration = true;
     };
-
+    nixvim = {
+      enable = true;
+      colorschemes.catppuccin.enable = true;
+      plugins.lualine.enable = true;
+    };
     ssh.startAgent = true;
 
     nh = {
