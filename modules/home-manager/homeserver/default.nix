@@ -1,7 +1,5 @@
 { pkgs, nixvim, ... }:
 {
-  home.username = "zeev";
-  home.homeDirectory = "/home/zeev";
 
   home.packages = with pkgs; [
     # Shell & Editor
@@ -61,6 +59,8 @@
         user.signingkey = "~/.ssh/zeev";
       };
     };
+
+    
 
     fzf = {
       enable = true;

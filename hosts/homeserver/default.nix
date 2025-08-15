@@ -9,7 +9,6 @@
   # =================================================================
   imports = [
     ./hardware-configuration.nix
-    ../../modules/users/zeev
     ../../modules/networking
     ../../modules/services
     ../../modules/base
