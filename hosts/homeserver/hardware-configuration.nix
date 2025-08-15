@@ -77,6 +77,7 @@
     intel-vaapi-driver
     jellyfin-ffmpeg
     libva-utils
+    intel_gpu_top
   ];
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "iHD";
