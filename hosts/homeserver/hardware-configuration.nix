@@ -72,8 +72,8 @@
     intel-compute-runtime
     intel-media-driver
     intel-ocl
-    intel-media-sdk
-    libvdpau-va-gl
+    intel-compute-runtime-legacy1
+    libva-vdpau-driver
     vaapiVdpau
     intel-vaapi-driver
   ];
