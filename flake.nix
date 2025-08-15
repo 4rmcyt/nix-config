@@ -113,7 +113,6 @@
         nix-index-database.nixosModules.nix-index
         auto-cpufreq.nixosModules.default
         nixvim.nixosModules.nixvim
-        nixos-needsreboot.nixosModules.nixos-needsreboot
         inputs.nixos-facter-modules.nixosModules.facter
         { config.facter.reportPath = ./facter.json; }
       ];
