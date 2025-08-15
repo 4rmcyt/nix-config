@@ -39,6 +39,7 @@ in
       extraGroups = [
         "users"
         "media"
+        "render"
       ];
     };
     jellyseerr = {
