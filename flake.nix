@@ -141,12 +141,8 @@
           };
 
           modules = commonNixOSModules ++ [
-            # Host-specific configuration file
             ./hosts/homeserver
-
-            # Generate the Home Manager config for this host
-            (nixosHomeManagerConfig "zeev" "homeserver")
-
+            (nixosHomeManagerConfig "zeev")
             # Host-specific service modules
             nixarr.nixosModules.default
             authentik-nix.nixosModules.default
