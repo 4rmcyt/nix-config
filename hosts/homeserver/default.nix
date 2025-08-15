@@ -106,6 +106,14 @@
     jellyfin-ffmpeg
     libva-utils
     intel-gpu-tools
+    ssh-to-age
+    gnupg
+    openssh
+    mc
+    age
+    sops
+    pinentry-tty
+    
   ];
 
   # =================================================================

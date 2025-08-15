@@ -24,13 +24,7 @@
     zsh-powerlevel10k
     # User Utils
     pass
-    gnupg
     jq
-    mc
-    age
-    sops
-    ssh-to-age
-    openssh
     dive
     yamllint
     nix-index
@@ -47,7 +41,7 @@
     nh
     nix-output-monitor
     nvd
-    pinentry-tty
+    
     # System & Network Tools
     pciutils
     wget
