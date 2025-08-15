@@ -1,9 +1,6 @@
 { pkgs, inputs, ... }:
 {
 
-  imports = [
-    ../../modules/users/zeev.nix
-  ];
   home.packages = with pkgs; [
     # Shell & Editor
     zsh
@@ -44,7 +41,7 @@
     nh
     nix-output-monitor
     nvd
-    
+
     # System & Network Tools
     tuptime
     home-manager
@@ -61,6 +58,12 @@
         gpg.format = "ssh";
         user.signingkey = "~/.ssh/zeev";
       };
+    };
+
+    nixvim = {
+      enable = true;
+      colorschemes.catppuccin.enable = true;
+      plugins.lualine.enable = true;
     };
 
     fzf = {
