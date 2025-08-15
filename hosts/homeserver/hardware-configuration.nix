@@ -73,16 +73,11 @@
     libva-vdpau-driver
     vaapiVdpau
     intel-vaapi-driver
+    intel-media-driver # For VAAPI (decoding/encoding)
+    intel-compute-runtime # For OpenCL (compute/filtering)
   ];
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "iHD";
-  };
-  hardware.opengl = {
-    enable = true;
-    extraPackages = with pkgs; [
-      intel-media-driver # For VAAPI (decoding/encoding)
-      intel-compute-runtime # For OpenCL (compute/filtering)
-    ];
   };
 
   hardware.bluetooth.enable = false;
