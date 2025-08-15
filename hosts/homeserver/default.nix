@@ -19,6 +19,7 @@
     ../../modules/database
     ../../modules/security
     ../../modules/options
+    ../../modules/users/zeev
   ];
 
   users.users.git = {
