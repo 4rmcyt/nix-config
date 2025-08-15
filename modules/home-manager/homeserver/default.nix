@@ -58,6 +58,7 @@
     apacheHttpd
     iotop
     tuptime
+    home-manager
   ];
 
   programs = {
