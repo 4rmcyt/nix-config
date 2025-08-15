@@ -182,6 +182,7 @@
     #   startAgent = true;
     # };
     gnupg.agent.enable = true;
+    gnupg.agent.enableSSHSupport = true;
     nh = {
       enable = true;
       clean.enable = true;
