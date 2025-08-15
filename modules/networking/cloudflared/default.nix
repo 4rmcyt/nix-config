@@ -48,7 +48,7 @@
           "link.example.com" = "http://localhost:12522";
           "kuma.example.com" = "http://localhost:3001";
           "auth.example.com" = "http://localhost:8080";
-          "portainer.example.com" = "http://localhost:9444";
+          "grafana.example.com" = "http://localhost:3000";
         };
       };
     };
