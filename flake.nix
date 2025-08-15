@@ -113,7 +113,7 @@
         { config.facter.reportPath = ./facter.json; }
       ];
 
-      nixosHomeManagerConfig = ${user}: host: {
+      nixosHomeManagerConfig = user: host: {
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
         home-manager.users.${user} = {
