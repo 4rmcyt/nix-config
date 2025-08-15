@@ -49,12 +49,10 @@
       ];
       trusted-users = [ "zeev" ];
       warn-dirty = false;
-      # 'max-jobs' defaults to 'cores', so only one is needed.
-      cores = 4;
+      cores = 8;
+      max-jobs = 8;
       show-trace = true;
-      # Note: 1 GiB buffer is very large and may consume excess RAM.
-      # The default is 8 MiB. Consider removing this unless you have benchmarked a benefit.
-      # download-buffer-size = 1073741824;
+      download-buffer-size = 1073741824;
     };
     optimise = {
       automatic = true;
@@ -176,6 +174,10 @@
   # =================================================================
   programs = {
     zsh.enable = true;
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
     nix-index = {
       enable = true;
       enableZshIntegration = true;

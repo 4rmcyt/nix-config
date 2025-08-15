@@ -145,12 +145,6 @@
   };
 
   services = {
-    gpg-agent = {
-      enable = true;
-      defaultCacheTtl = 1800;
-      enableSshSupport = true;
-      enableZshIntegration = true;
-    };
   };
   # =================================================================
   # Activation Script to Import GPG Keys (Add this section)
