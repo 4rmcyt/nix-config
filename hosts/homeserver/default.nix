@@ -31,9 +31,7 @@
   users.groups.git = { };
 
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.permittedInsecurePackages = [
-    "intel-media-sdk-23.2.2"
-  ];
+
   # =================================================================
   # 2. Nix Daemon Configuration
   # =================================================================
