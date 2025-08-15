@@ -181,6 +181,7 @@
     #   enable = true;
     #   startAgent = true;
     # };
+    gnupg.agent.enable = true;
     nh = {
       enable = true;
       clean.enable = true;
