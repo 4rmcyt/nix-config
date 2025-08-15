@@ -132,6 +132,13 @@
   # 6. System Services
   # =================================================================
   # This is the single, merged services block.
+  system.activationScripts = {
+    nixos-needsreboot = {
+      supportsDryActivation = true;
+      text = "${lib.getExe nixos-needsreboot.packages.${pkgs.system}.default} \"$systemConfig\" || true";
+    };
+  };
+
   services = {
     # --- SSH Server ---
     openssh = {
