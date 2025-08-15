@@ -113,7 +113,6 @@
         { config.facter.reportPath = ./facter.json; }
       ];
 
-      # This function generates the Home Manager configuration for a given user and host.
       nixosHomeManagerConfig = zeev: host: {
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
@@ -134,7 +133,6 @@
       nixosConfigurations = {
         homeserver = nixpkgs.lib.nixosSystem {
           inherit system;
-          # IMPROVEMENT: All special arguments are passed here for clarity
           specialArgs = {
             inherit self inputs;
             host = "homeserver";
@@ -142,7 +140,7 @@
 
           modules = commonNixOSModules ++ [
             ./hosts/homeserver
-            (nixosHomeManagerConfig "zeev")
+            (nixosHomeManagerConfig "zeev" "homeserver")
             # Host-specific service modules
             nixarr.nixosModules.default
             authentik-nix.nixosModules.default
