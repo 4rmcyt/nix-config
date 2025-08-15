@@ -286,7 +286,7 @@
                 {
                   type = "uptimekuma";
                   url = "http://localhost:3001";
-                  slug = "homeserver";
+                  slug = "uk1_pLhUFX0HLFMT4ABfzpj7U5-SiQ7lXtPG6jc7ZgVq";
                 }
               ];
             };
