@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }:
 
@@ -60,7 +59,7 @@
   };
   services.paperless = {
     enable = true;
-    package = pkgs.paperless-ngx.overrideAttrs (oldAttrs: {
+    package = pkgs.paperless-ngx.overrideAttrs (_oldAttrs: {
       doCheck = false;
     });
     port = 8888;

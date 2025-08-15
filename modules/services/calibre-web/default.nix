@@ -1,7 +1,5 @@
 {
-  config,
   pkgs,
-  lib,
   ...
 }:
 
@@ -39,10 +37,10 @@
   environment.systemPackages = [ pkgs.calibre-web ];
 
   nixpkgs.overlays = [
-    (final: prev: {
+    (_final: prev: {
       python3Packages = prev.python3Packages.override {
-        overrides = self: super: {
-          unidecode = super.unidecode.overrideAttrs (old: {
+        overrides = _self: super: {
+          unidecode = super.unidecode.overrideAttrs (_old: {
             pname = "Unidecode";
             version = "1.3.8";
             src = prev.fetchPypi {

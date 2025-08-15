@@ -91,7 +91,6 @@
       nixvim,
       nixarr,
       authentik-nix,
-      nixos-needsreboot,
       treefmt-nix,
       auto-cpufreq,
       systems,
@@ -99,7 +98,6 @@
     }@inputs:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
       eachSystem = f: nixpkgs.lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
       treefmtEval = eachSystem (pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
 

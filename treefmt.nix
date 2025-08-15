@@ -12,6 +12,7 @@
     "secrets/*"
     "*.png"
     "*.jpeg"
+    "*.yaml"
     "*.gitignore"
     ".vscode/*"
     "*.toml"

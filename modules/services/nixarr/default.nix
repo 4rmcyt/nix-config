@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   lib,
   ...
@@ -355,7 +354,7 @@ in
     pkgs.jellyfin-ffmpeg
   ];
 
-  systemd.services = lib.genAttrs servicesWithMediaAccess (serviceName: {
+  systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
     serviceConfig = {
       BindPaths = [
         "/data/Downloads"
