@@ -146,8 +146,8 @@
     enable = true;
     settings = {
       server = {
-        http_port = 3000;
-        root_url = "http://localhost:3000/";
+        http_port = 443;
+        root_url = "http://grafana.example.com";
       };
       database = {
         type = "postgres";
