@@ -60,12 +60,6 @@
       };
     };
 
-    nixvim = {
-      enable = true;
-      colorschemes.catppuccin.enable = true;
-      plugins.lualine.enable = true;
-    };
-
     fzf = {
       enable = true;
       enableZshIntegration = true;

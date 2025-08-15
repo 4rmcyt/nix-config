@@ -202,6 +202,12 @@
       enable = true;
       enableZshIntegration = true;
     };
+
+    nixvim = {
+      enable = true;
+      colorschemes.catppuccin.enable = true;
+      plugins.lualine.enable = true;
+    };
     # ssh = {
     #   enable = true;
     #   startAgent = true;
