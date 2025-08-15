@@ -10,6 +10,8 @@
     # Dev tools
     direnv
     go
+    gnupg
+    git
     python3Full
     deploy-rs
     just
@@ -22,6 +24,7 @@
     nix-inspect
     nix-diff
     zsh-powerlevel10k
+    helix
     # User Utils
     pass
     jq
@@ -59,8 +62,6 @@
         user.signingkey = "~/.ssh/zeev";
       };
     };
-
-    
 
     fzf = {
       enable = true;
@@ -124,9 +125,29 @@
       enableZshIntegration = true;
     };
 
+    helix = {
+      enable = true;
+      settings = {
+        theme = "autumn_night_transparent";
+        editor.cursor-shape = {
+          normal = "block";
+          insert = "bar";
+          select = "underline";
+        };
+      };
+      languages.language = [
+        {
+          name = "nix";
+          auto-format = true;
+          formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
+        }
+      ];
+    };
+
   };
 
   services = {
+    ssh-agent.enable = true;
   };
   # =================================================================
   # Activation Script to Import GPG Keys (Add this section)

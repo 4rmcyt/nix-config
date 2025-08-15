@@ -201,10 +201,7 @@
       colorschemes.catppuccin.enable = true;
       plugins.lualine.enable = true;
     };
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
+
     zsh.enable = true;
 
     nh = {
