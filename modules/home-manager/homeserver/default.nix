@@ -15,7 +15,6 @@
     nixfmt-rfc-style
     nixpkgs-fmt
     nil
-    git-crypt
     nix-fast-build
     shfmt
     nixfmt-tree
@@ -43,20 +42,6 @@
     nvd
     
     # System & Network Tools
-    pciutils
-    wget
-    curl
-    gawk
-    gnugrep
-    iproute2
-    htop
-    btop
-    lsof
-    openssl
-    powertop
-    lm_sensors
-    apacheHttpd
-    iotop
     tuptime
     home-manager
   ];

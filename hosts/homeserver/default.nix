@@ -113,7 +113,19 @@
     age
     sops
     pinentry-tty
-    
+    pciutils
+    wget
+    curl
+    gawk
+    gnugrep
+    iproute2
+    htop
+    btop
+    lsof
+    openssl
+    powertop
+    lm_sensors
+    git-crypt
   ];
 
   # =================================================================
