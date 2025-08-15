@@ -67,12 +67,7 @@
   ];
 
   programs = {
-    git = {
-      enable = true;
-      userName = "4rmcyt";
-      userEmail = "4rmcyt@gmail.com";
-      signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
-    };
+    
 
     nixvim = {
       enable = true;
