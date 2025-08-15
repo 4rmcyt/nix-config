@@ -191,8 +191,6 @@
   # 7. System Programs & Security Settings
   # =================================================================
   programs = {
-    zsh.enable = true;
-
     nix-index = {
       enable = true;
       enableZshIntegration = true;
@@ -202,7 +200,11 @@
       colorschemes.catppuccin.enable = true;
       plugins.lualine.enable = true;
     };
-    ssh.startAgent = true;
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+    zsh.enable = true;
 
     nh = {
       enable = true;
