@@ -127,7 +127,7 @@
           imports = [
             ./modules/home-manager/${host}
             nixvim.homeModules.nixvim
-            sops-nix.homeModules.sops
+            sops-nix.homeManagerModules.sops
           ];
           sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
           _module.args = {
