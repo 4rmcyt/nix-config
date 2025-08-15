@@ -250,7 +250,7 @@
         "Monitoring & Analytics" = [
           {
             "Grafana" = {
-              href = "http://192.168.1.165:3000";
+              href = "https://grafana.labhome.work";
               description = "Real-time System Dashboard";
               icon = "grafana";
               widgets = [
