@@ -66,6 +66,12 @@
       userName = "4rmcyt";
       userEmail = "4rmcyt@gmail.com";
       signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
+      extraConfig = {
+        # Sign all commits using ssh key
+        commit.gpgsign = true;
+        gpg.format = "ssh";
+        user.signingkey = "~/.ssh/zeev";
+      };
     };
 
     nixvim = {
