@@ -98,7 +98,6 @@
       nixos-needsreboot,
       treefmt-nix,
       auto-cpufreq,
-      ucodenix,
       ...
     }@inputs:
     let
