@@ -30,6 +30,7 @@
     # NixOS-specific inputs
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
+    nixos-needsreboot.url = "https://flakehub.com/f/thefossguy/nixos-needsreboot/*.tar.gz";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     nixarr.url = "github:rasmus-kirk/nixarr";
     nixos-generators.url = "github:nix-community/nixos-generators";
@@ -56,11 +57,7 @@
     treefmt-nix.url = "github:numtide/treefmt-nix";
     systems.url = "github:nix-systems/default";
 
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
+    # REMOVED: Unused 'agenix' input
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -94,6 +91,7 @@
       nixvim,
       nixarr,
       authentik-nix,
+      nixos-needsreboot,
       treefmt-nix,
       auto-cpufreq,
       ...
@@ -103,6 +101,7 @@
       pkgs = nixpkgs.legacyPackages.${system};
       treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
 
+      # This list contains modules common to all your NixOS systems.
       commonNixOSModules = [
         sops-nix.nixosModules.sops
         { sops.age.keyFile = "/var/lib/sops/age.key"; }
@@ -110,24 +109,22 @@
         disko.nixosModules.disko
         nix-index-database.nixosModules.nix-index
         auto-cpufreq.nixosModules.default
-        nixvim.nixosModules.nixvim
         inputs.nixos-facter-modules.nixosModules.facter
         { config.facter.reportPath = ./facter.json; }
       ];
 
+      # This function generates the Home Manager configuration for a given user and host.
       nixosHomeManagerConfig = user: host: {
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
         home-manager.users.${user} = {
           imports = [
             ./modules/home-manager/${host}
+            # FIX: Use 'homeManagerModules' not 'homeModules'
+            nixvim.homeManagerModules.nixvim
             sops-nix.homeManagerModules.sops
           ];
-          sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-          _module.args = {
-            inherit self inputs;
-            host = host;
-          };
+          sops.age.keyFile = "/home/${user}/.config/sops/age/keys.txt";
         };
       };
     in
@@ -138,20 +135,25 @@
       nixosConfigurations = {
         homeserver = nixpkgs.lib.nixosSystem {
           inherit system;
+          # IMPROVEMENT: All special arguments are passed here for clarity
+          specialArgs = {
+            inherit self inputs;
+            host = "homeserver";
+          };
+
           modules = commonNixOSModules ++ [
-            inputs.nixos-facter-modules.nixosModules.facter
-            { config.facter.reportPath = ./facter.json; }
-            {
-              imports = [
-                ./hosts/homeserver
-                ./modules/disko
-              ];
-              _module.args.self = self;
-            }
+            # Host-specific configuration file
+            ./hosts/homeserver
+
+            # Generate the Home Manager config for this host
             (nixosHomeManagerConfig "zeev" "homeserver")
+
+            # Host-specific service modules
             nixarr.nixosModules.default
             authentik-nix.nixosModules.default
             vscode-server.nixosModules.default
+
+            # CLEANUP: Removed redundant modules already in commonNixOSModules
           ];
         };
       };
