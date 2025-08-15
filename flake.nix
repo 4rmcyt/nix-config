@@ -113,10 +113,10 @@
         { config.facter.reportPath = ./facter.json; }
       ];
 
-      nixosHomeManagerConfig = zeev: host: {
+      nixosHomeManagerConfig = ${user}: host: {
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
-        home-manager.users.zeev = {
+        home-manager.users.${user} = {
           imports = [
             ./modules/home-manager/${host}
             nixvim.homeModules.nixvim
@@ -141,12 +141,9 @@
           modules = commonNixOSModules ++ [
             ./hosts/homeserver
             (nixosHomeManagerConfig "zeev" "homeserver")
-            # Host-specific service modules
             nixarr.nixosModules.default
             authentik-nix.nixosModules.default
             vscode-server.nixosModules.default
-
-            # CLEANUP: Removed redundant modules already in commonNixOSModules
           ];
         };
       };
