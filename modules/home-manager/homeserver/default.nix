@@ -1,5 +1,9 @@
 { pkgs, inputs, ... }:
 {
+
+  imports = [
+    ../../modules/users/zeev.nix
+  ];
   home.packages = with pkgs; [
     # Shell & Editor
     zsh
