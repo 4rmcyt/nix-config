@@ -30,7 +30,6 @@
     # NixOS-specific inputs
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
-    nixos-needsreboot.url = "https://flakehub.com/f/wimpysworld/nixos-needsreboot/*.tar.gz";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     nixarr.url = "github:rasmus-kirk/nixarr";
     nixos-generators.url = "github:nix-community/nixos-generators";
@@ -95,7 +94,6 @@
       nixvim,
       nixarr,
       authentik-nix,
-      nixos-needsreboot,
       treefmt-nix,
       auto-cpufreq,
       ...
