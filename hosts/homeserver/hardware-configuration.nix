@@ -75,6 +75,7 @@
     libva-vdpau-driver
     vaapiVdpau
     intel-vaapi-driver
+    jellyfin-ffmpeg
   ];
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "iHD";
