@@ -207,7 +207,7 @@
       plugins.lualine.enable = true;
     };
 
-    ssh.startAgent = true;
+    
 
     nh = {
       enable = true;
