@@ -1475,7 +1475,6 @@
         "sops-nix": "sops-nix",
         "systems": "systems_8",
         "treefmt-nix": "treefmt-nix",
-        "ucodenix": "ucodenix",
         "vscode-server": "vscode-server",
         "waybar": "waybar"
       }
@@ -1650,26 +1649,6 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
-        "type": "github"
-      }
-    },
-    "ucodenix": {
-      "inputs": {
-        "cpu-microcodes": [
-          "cpu-microcodes"
-        ]
-      },
-      "locked": {
-        "lastModified": 1754273604,
-        "narHash": "sha256-UOYeysPqCVO9jsu+gjGpWn+JvpPFO5hS9CChP049w6k=",
-        "owner": "e-tho",
-        "repo": "ucodenix",
-        "rev": "98c0b8ec151ee6495711d2dd902112b4f2a30ceb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "e-tho",
-        "repo": "ucodenix",
         "type": "github"
       }
     },
