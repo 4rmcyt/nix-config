@@ -1,47 +1,46 @@
-{ inputs, ... }:
+{ pkgs, ... }:
 {
-  imports = [ inputs.treefmt-nix.flakeModule ];
-  perSystem =
-    { pkgs, ... }:
-    {
-      treefmt.projectRootFile = "flake.nix";
-      treefmt.programs.shellcheck.enable = true;
 
-      treefmt.programs.nixfmt.enable = true;
-      treefmt.programs.nixfmt.package = pkgs.nixfmt-rfc-style;
-      treefmt.programs.deadnix.enable = true;
-      treefmt.settings.global.excludes = [
-        "*.png"
-        "*.jpeg"
-        "*.gitignore"
-        ".vscode/*"
-        "*.toml"
-        "*.clan-flake"
-        "*.code-workspace"
-        "*.pub"
-        "*.typed"
-        "*.age"
-        "*.list"
-        "*.desktop"
-      ];
-      treefmt.programs.prettier = {
-        enable = true;
-        includes = [
-          "*.cjs"
-          "*.css"
-          "*.html"
-          "*.js"
-          "*.json5"
-          "*.jsx"
-          "*.mdx"
-          "*.mjs"
-          "*.scss"
-          "*.ts"
-          "*.tsx"
-          "*.vue"
-          "*.yaml"
-          "*.yml"
-        ];
-      };
-    };
+  projectRootFile = "flake.nix";
+  programs.shellcheck.enable = true;
+
+  programs.nixfmt.enable = true;
+  programs.nixfmt.package = pkgs.nixfmt-rfc-style;
+  programs.deadnix.enable = true;
+  settings.global.excludes = [
+    # Add this line to exclude the third-party input
+    "secrets/*"
+    "*.png"
+    "*.jpeg"
+    "*.gitignore"
+    ".vscode/*"
+    "*.toml"
+    "*.clan-flake"
+    "*.code-workspace"
+    "*.pub"
+    "*.typed"
+    "*.age"
+    "*.list"
+    "*.desktop"
+  ];
+  programs.prettier = {
+    enable = true;
+    includes = [
+      "*.cjs"
+      "*.css"
+      "*.html"
+      "*.js"
+      "*.json5"
+      "*.jsx"
+      "*.mdx"
+      "*.mjs"
+      "*.scss"
+      "*.ts"
+      "*.tsx"
+      "*.vue"
+      "*.yaml"
+      "*.yml"
+    ];
+
+  };
 }

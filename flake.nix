@@ -94,12 +94,14 @@
       nixos-needsreboot,
       treefmt-nix,
       auto-cpufreq,
+      systems,
       ...
     }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
+      eachSystem = f: nixpkgs.lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
+      treefmtEval = eachSystem (pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
 
       # This list contains modules common to all your NixOS systems.
       commonNixOSModules = [
@@ -110,7 +112,7 @@
         nix-index-database.nixosModules.nix-index
         auto-cpufreq.nixosModules.default
         inputs.nixos-facter-modules.nixosModules.facter
-        { config.facter.reportPath = ./facter.json; }
+        { facter.reportPath = ./facter.json; }
       ];
 
       nixosHomeManagerConfig = user: host: {
@@ -127,8 +129,11 @@
       };
     in
     {
-      formatter.${system} = pkgs.nixfmt-tree;
-      checks.${system}.formatting = treefmtEval.config.build.check self;
+      formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
+      # for `nix flake check`
+      checks = eachSystem (pkgs: {
+        formatting = treefmtEval.${pkgs.system}.config.build.check self;
+      });
 
       nixosConfigurations = {
         homeserver = nixpkgs.lib.nixosSystem {
