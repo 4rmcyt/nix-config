@@ -146,7 +146,7 @@
     enable = true;
     settings = {
       server = {
-        http_port = 443;
+        http_port = 3000;
         root_url = "http://grafana.labhome.work";
       };
       database = {
