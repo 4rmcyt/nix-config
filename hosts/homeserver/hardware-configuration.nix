@@ -69,8 +69,6 @@
   # =================================================================
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = with pkgs; [
-    intel-compute-runtime
-    intel-media-driver
     intel-ocl
     libva-vdpau-driver
     vaapiVdpau
@@ -78,6 +76,13 @@
   ];
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "iHD";
+  };
+  hardware.opengl = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver # For VAAPI (decoding/encoding)
+      intel-compute-runtime # For OpenCL (compute/filtering)
+    ];
   };
 
   hardware.bluetooth.enable = false;
