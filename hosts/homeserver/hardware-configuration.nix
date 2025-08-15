@@ -72,12 +72,13 @@
     intel-compute-runtime
     intel-media-driver
     intel-ocl
-    intel-compute-runtime-legacy1
     libva-vdpau-driver
     vaapiVdpau
     intel-vaapi-driver
   ];
-  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "iHD";
+  };
 
   hardware.bluetooth.enable = false;
   hardware.i2c.enable = true;
