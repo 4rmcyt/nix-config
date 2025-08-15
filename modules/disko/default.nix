@@ -91,8 +91,10 @@
           # Where everything else lives, and is wiped on reboot by restoring a blank zfs snapshot.
           "root" = {
             type = "zfs_fs";
-            options.mountpoint = "legacy";
-            options."com.sun:auto-snapshot" = "false";
+            options = {
+              mountpoint = "legacy";
+              "com.sun:auto-snapshot" = "false";
+            };
             mountpoint = "/";
           };
           "home" = {
