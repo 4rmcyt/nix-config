@@ -283,6 +283,20 @@
         "type": "github"
       }
     },
+    "flake-schemas": {
+      "locked": {
+        "lastModified": 1721999734,
+        "narHash": "sha256-G5CxYeJVm4lcEtaO87LKzOsVnWeTcHGKbKxNamNWgOw=",
+        "rev": "0a5c42297d870156d9c57d8f99e476b738dcd982",
+        "revCount": 75,
+        "type": "tarball",
+        "url": "https://api.flakehub.com/f/pinned/DeterminateSystems/flake-schemas/0.1.5/0190ef2f-61e0-794b-ba14-e82f225e55e6/source.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://flakehub.com/f/DeterminateSystems/flake-schemas/%2A.tar.gz"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": [
@@ -1082,19 +1096,21 @@
     },
     "nixos-needsreboot": {
       "inputs": {
-        "nixpkgs": "nixpkgs_9"
+        "flake-schemas": "flake-schemas",
+        "nixpkgs": "nixpkgs_9",
+        "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1713748343,
-        "narHash": "sha256-0MpqqkkpTMiq5xgzSOqBZMLUfVhtfEfRXWZzt2tqRKI=",
-        "rev": "2969b8f4ee76818cc912045d43926e8cafa8d917",
-        "revCount": 21,
+        "lastModified": 1749729981,
+        "narHash": "sha256-PAWaPOfivq3Hg7bkRiWdl0HHV7qIRTfXDOXVxgZi3B4=",
+        "rev": "7d61968ee3e4e9233578785e40e482653053b704",
+        "revCount": 71,
         "type": "tarball",
-        "url": "https://api.flakehub.com/f/pinned/thefossguy/nixos-needsreboot/0.1.10/018f035d-2190-7595-b8ee-4cbfeeb2574e/source.tar.gz"
+        "url": "https://api.flakehub.com/f/pinned/wimpysworld/nixos-needsreboot/0.2.9/0197640e-475b-7fe3-8724-172ebd5fb0be/source.tar.gz"
       },
       "original": {
         "type": "tarball",
-        "url": "https://flakehub.com/f/thefossguy/nixos-needsreboot/%2A.tar.gz"
+        "url": "https://flakehub.com/f/wimpysworld/nixos-needsreboot/%2A.tar.gz"
       }
     },
     "nixpkgs": {
@@ -1319,16 +1335,17 @@
     },
     "nixpkgs_9": {
       "locked": {
-        "lastModified": 1712867921,
-        "narHash": "sha256-edTFV4KldkCMdViC/rmpJa7oLIU8SE/S35lh/ukC7bg=",
-        "rev": "51651a540816273b67bc4dedea2d37d116c5f7fe",
-        "revCount": 557634,
-        "type": "tarball",
-        "url": "https://api.flakehub.com/f/pinned/NixOS/nixpkgs/0.2311.557634%2Brev-51651a540816273b67bc4dedea2d37d116c5f7fe/018ed69f-a175-7ab0-bc05-651225022c5a/source.tar.gz"
+        "lastModified": 1749285348,
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "3e3afe5174c561dee0df6f2c2b2236990146329f",
+        "type": "github"
       },
       "original": {
-        "type": "tarball",
-        "url": "https://flakehub.com/f/NixOS/nixpkgs/%2A.tar.gz"
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
       }
     },
     "nixvim": {
@@ -1477,6 +1494,26 @@
         "treefmt-nix": "treefmt-nix",
         "vscode-server": "vscode-server",
         "waybar": "waybar"
+      }
+    },
+    "rust-overlay": {
+      "inputs": {
+        "nixpkgs": [
+          "nixos-needsreboot",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1749695868,
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "55f914d5228b5c8120e9e0f9698ed5b7214d09cd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
       }
     },
     "sops-nix": {
