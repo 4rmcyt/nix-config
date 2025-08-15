@@ -17,6 +17,7 @@
     ../../modules/services
     ../../modules/base
     # ../../modules/backup
+    ../../modules/disko
     ../../modules/monitoring
     ../../modules/containers
     ../../modules/database
