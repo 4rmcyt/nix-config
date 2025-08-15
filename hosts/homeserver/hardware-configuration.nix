@@ -127,6 +127,7 @@
     geoclue2.enable = false;
     printing.enable = false; # CUPS printing
     thermald.enable = lib.mkDefault true;
+    power-profiles-daemon.enable = true;
   };
   systemd.coredump.enable = false;
 }
