@@ -16,7 +16,7 @@
     ../../modules/networking
     ../../modules/services
     ../../modules/base
-    ../../modules/backup
+    # ../../modules/backup
     ../../modules/monitoring
     ../../modules/containers
     ../../modules/database
