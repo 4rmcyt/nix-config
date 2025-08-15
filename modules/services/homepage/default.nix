@@ -52,7 +52,7 @@
                 {
                   type = "jellyfin";
                   url = "http://localhost:8096";
-                  key = "ebfcdfcac9d94b6e81bffc574214260a";
+                  key = "f719b5e954e94eac9bcd62e43c47fed4";
                 }
               ];
             };
@@ -66,7 +66,7 @@
                 {
                   type = "audiobookshelf";
                   url = "http://localhost:9292";
-                  key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlJZCI6ImUxYzAzN2NiLTY2M2MtNGY2Mi1iOTk4LTViZGIwYjhiOTljYyIsIm5hbWUiOiJob21lcGFnZSIsInR5cGUiOiJhcGkiLCJpYXQiOjE3NTMyOTYzMzh9.cckxz-MEjRafFnes7cFOglkB5Sx96S9RtBBOusOVR0k";
+                  key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlJZCI6Ijk4ZWU0MDE1LWE5ZGQtNGY3ZS1hNjJiLWE0ZDMxMDkyODM0MCIsIm5hbWUiOiJIb21lcGFnZSIsInR5cGUiOiJhcGkiLCJpYXQiOjE3NTUyMTg3NzR9.OoImKplEpPhCVtIj-q_f9l6KjnnA0oKA_by2cOi2VaA";
                 }
               ];
             };
@@ -83,7 +83,7 @@
                 {
                   type = "sonarr";
                   url = "http://localhost:8989";
-                  key = "96661495dcac4fbb90e7b01ede2f1b36";
+                  key = "7b5a494ab305456181bed6fab7d25b51";
                 }
               ];
             };
@@ -96,7 +96,7 @@
                 {
                   type = "radarr";
                   url = "http://localhost:7878";
-                  key = "035416a4da9f4dbd8cd74783b92a607d";
+                  key = "47ebb17d25754575b43c654cc3af584e";
                 }
               ];
             };
@@ -121,7 +121,7 @@
                 {
                   type = "prowlarr";
                   url = "http://localhost:9696";
-                  key = "9d24bc9a25174e9cab035094b085c13c";
+                  key = "7979f362842a4bbaa1de2d39d238ae3d";
                 }
               ];
             };
@@ -134,7 +134,7 @@
                 {
                   type = "bazarr";
                   url = "http://localhost:6767";
-                  key = "ec02b57b195afb25c73b89df7802af82";
+                  key = "a5e3b4110b6a29d535099e678b02fc33";
                 }
               ];
             };
@@ -147,7 +147,7 @@
                 {
                   type = "jellyseerr";
                   url = "http://localhost:5055/";
-                  key = "MTc1MzI0Mzg5OTUwN2M2YmRjZmU5LWI1YzktNDMwMi1iNDAzLTlhMzY0NDdjMzdiYQ==";
+                  key = "MTc1NTE4NDcxODI2NDdjMDU0ODk0LTQ4YWQtNDFkMS1iMjFkLWI1OGNjYzdhZTNmYg==";
                 }
               ];
             };
@@ -160,7 +160,7 @@
                 {
                   type = "lidarr";
                   url = "http://localhost:8686";
-                  key = "64667f73a2874bcc9b2cd64827ae06a6";
+                  key = "1ab73c124aac4375b324a3014164781a";
                 }
               ];
             };
