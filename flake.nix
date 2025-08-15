@@ -120,7 +120,6 @@
         home-manager.users.${user} = {
           imports = [
             ./modules/home-manager/${host}
-            ./modules/users/${user}
             sops-nix.homeManagerModules.sops
           ];
           sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
@@ -144,6 +143,7 @@
 
           modules = commonNixOSModules ++ [
             ./hosts/homeserver
+            ./modules/users/zeev
             (nixosHomeManagerConfig "zeev" "homeserver")
             nixarr.nixosModules.default
             authentik-nix.nixosModules.default

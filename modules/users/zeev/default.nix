@@ -4,12 +4,9 @@
   ...
 }:
 
-let
-  zeev = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks redacted@example.com";
-in
 {
   sops.secrets.zeev_password = {
-    sopsFile = ../../secrets/common.yaml;
+    sopsFile = ../../../secrets/common.yaml;
     neededForUsers = true;
   };
 
@@ -47,5 +44,5 @@ in
 
   programs.zsh.enable = true;
 
-  systemd.tmpfiles.rules = [ "d /data/.secret 0700 zeev media -" ];
+  
 }
