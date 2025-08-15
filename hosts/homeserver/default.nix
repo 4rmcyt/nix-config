@@ -181,13 +181,7 @@
     #   enable = true;
     #   startAgent = true;
     # };
-    gnupg.agent.enable = true;
-    gnupg.agent.enableSSHSupport = true;
-    git = {
-      enable = true;
-      userName = "4rmcyt";
-      userEmail = "4rmcyt@gmail.com";
-    };
+
     nh = {
       enable = true;
       clean.enable = true;
