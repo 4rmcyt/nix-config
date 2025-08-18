@@ -75,7 +75,8 @@
       "hass"
       "authentik"
       "grafana"
-      "vaultwarden"
+      # "vaultwarden"
+      "linkwarden" 
     ];
 
     #   settings = {
@@ -139,6 +140,10 @@
         name = "vaultwarden";
         ensureDBOwnership = true;
       }
+      {
+        name = "linkwarden";
+        ensureDBOwnership = true;
+      }
     ];
 
     identMap = ''
@@ -157,33 +162,14 @@
       host  all all ::1/128      scram-sha-256
     '';
 
-    initialScript = pkgs.writeText "backend-initScript" ''
-      CREATE ROLE postgres WITH LOGIN PASSWORD '${config.sops.secrets.postgres.path}' SUPERUSER;
-
-      CREATE ROLE authentik WITH LOGIN PASSWORD '${config.sops.secrets.authentik.path}' CREATEDB;
-      CREATE DATABASE authentik;
-      GRANT ALL PRIVILEGES ON DATABASE authentik TO authentik;
-
-      CREATE ROLE hass WITH LOGIN PASSWORD '${config.sops.secrets.hass.path}' CREATEDB;
-      CREATE DATABASE hass;
-      GRANT ALL PRIVILEGES ON DATABASE hass TO hass;
-
-      CREATE ROLE grafana WITH LOGIN PASSWORD '${config.sops.secrets.grafana.path}' CREATEDB;
-      CREATE DATABASE grafana;
-      GRANT ALL PRIVILEGES ON DATABASE grafana TO grafana;  
-
-      CREATE ROLE paperless WITH LOGIN PASSWORD '${config.sops.secrets.paperless.path}' CREATEDB;
-      CREATE DATABASE paperless;
-      GRANT ALL PRIVILEGES ON DATABASE paperless TO paperless;
-
-      CREATE ROLE miniflux WITH LOGIN PASSWORD '${config.sops.secrets.miniflux.path}' CREATEDB;
-      CREATE DATABASE miniflux;
-      GRANT ALL PRIVILEGES ON DATABASE miniflux TO miniflux;
-
-      CREATE ROLE vaultwarden WITH LOGIN PASSWORD '${config.sops.secrets.vaultwarden.path}' CREATEDB;
-      CREATE DATABASE vaultwarden;
-      GRANT ALL PRIVILEGES ON DATABASE vaultwarden TO vaultwarden;
-    '';
+    initialScript = pkgs.writeText "postgresql-init-passwords" ''
+    ALTER ROLE miniflux WITH LOGIN PASSWORD '${config.sops.secrets.miniflux.path}';
+    ALTER ROLE paperless WITH LOGIN PASSWORD '${config.sops.secrets.paperless.path}';
+    ALTER ROLE hass WITH LOGIN PASSWORD '${config.sops.secrets.hass.path}';
+    ALTER ROLE authentik WITH LOGIN PASSWORD '${config.sops.secrets.authentik.path}';
+    ALTER ROLE grafana WITH LOGIN PASSWORD '${config.sops.secrets.grafana.path}';
+    ALTER ROLE vaultwarden WITH LOGIN PASSWORD '${config.sops.secrets.vaultwarden.path}';
+  '';
   };
 
   # systemd.services.postgresql.serviceConfig = {
