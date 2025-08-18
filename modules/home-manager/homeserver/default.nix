@@ -129,10 +129,19 @@
       enable = true;
       settings = {
         theme = "heisenberg";
-        editor.cursor-shape = {
-          normal = "block";
-          insert = "bar";
-          select = "underline";
+        editor = {
+          true-color = true;
+          line-number = "relative";
+          mouse = false;
+          cursorline = true;
+          bufferline = "multiple";
+          default-line-ending = "lf";
+          cursor-shape.insert = "bar";
+          cursor-shape.select = "underline";
+          lsp.display-inlay-hints = true;
+          lsp.display-messages = true;
+          file-picker.hidden = false;
+          file-picker.git-ignore = true;
         };
       };
       languages.language = [
