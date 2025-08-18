@@ -46,7 +46,7 @@
           "vault.labhome.work" = "http://localhost:8222";
           "link.labhome.work" = "http://localhost:12522";
           "kuma.labhome.work" = "http://localhost:3001";
-          "auth.labhome.work" = "http://localhost:8080";
+          "auth.labhome.work" = "http://localhost:9000";
           "grafana.labhome.work" = "http://localhost:3000";
         };
       };
