@@ -35,7 +35,6 @@
           "cal.labhome.work" = "http://localhost:5232";
           "audiobookshelf.labhome.work" = "http://localhost:9292";
           "kavita.labhome.work" = "http://localhost:5000";
-          "microbin.labhome.work" = "http://localhost:8084";
           "prowlarr.labhome.work" = "http://localhost:9696";
           "radarr.labhome.work" = "http://localhost:7878";
           "sonarr.labhome.work" = "http://localhost:8989";
