@@ -100,11 +100,11 @@
     "cpu-microcodes": {
       "flake": false,
       "locked": {
-        "lastModified": 1754087349,
-        "narHash": "sha256-wbzJEX3Gg7DZu1GNfTyMajOADiMahmKg7tl2w3DpNds=",
+        "lastModified": 1755530631,
+        "narHash": "sha256-UgxIj/P3GTrGJsL9l1AFWR9CTPOcedh7dHuOWliokjg=",
         "owner": "platomav",
         "repo": "CPUMicrocodes",
-        "rev": "4258581016fbf0dca81ec0a4d33327198a34776a",
+        "rev": "bd84791c6ee695a5ed1f92abf6fb90ce2e45f8a4",
         "type": "github"
       },
       "original": {
@@ -324,11 +324,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1755491080,
-        "narHash": "sha256-ib1Xi13NEalrFqQAHceRsb+6aIPANFuQq80SS/bY10M=",
+        "lastModified": 1755538029,
+        "narHash": "sha256-XVsragfuN8A/tMiPToejH7RofH15toeIGhlXraX+yBo=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "f8af2cbe386f9b96dd9efa57ab15a09377f38f4d",
+        "rev": "bf450a0844e80e6aa22652d3f3728f20cd974527",
         "type": "github"
       },
       "original": {
@@ -458,11 +458,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1755458331,
-        "narHash": "sha256-VzKflOdxS78WgxI6gmY0zkBKUa5MpytHI1PrKTWb23M=",
+        "lastModified": 1755531739,
+        "narHash": "sha256-TGFQdnGC1U2qg2Efjyk+94+aKxAkW5O+2IuKIsoQqzI=",
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "d8901786109dba6af3eac03c1e723f807ed0117a",
+        "rev": "1a0ed00f74f7cfcc3b7c4fd7e3bf0073c4973267",
         "type": "github"
       },
       "original": {
@@ -844,19 +844,20 @@
         "type": "github"
       }
     },
-    "linkwarden": {
+    "linkwarden-pr": {
+      "flake": false,
       "locked": {
-        "lastModified": 1727034034,
-        "narHash": "sha256-RqTJMUZO9ZGMPkUcph6m1C5jNUP2wFmmaEtcdGZH+Xg=",
-        "owner": "EricTheMagician",
+        "lastModified": 1753180371,
+        "narHash": "sha256-twrzVKa9ylf1Y2q29913bvYIPineFcblu/252FMnMvs=",
+        "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "f739886a8857da8ada85c8b35c3d7df5efb04d0b",
+        "rev": "f0809e9f3402644c0987842727cb1d3f93d2e4a6",
         "type": "github"
       },
       "original": {
-        "owner": "EricTheMagician",
-        "ref": "linkwarden",
+        "owner": "NixOS",
         "repo": "nixpkgs",
+        "rev": "f0809e9f3402644c0987842727cb1d3f93d2e4a6",
         "type": "github"
       }
     },
@@ -1395,7 +1396,7 @@
         "hyprland": "hyprland",
         "hyprlock": "hyprlock",
         "hyprpicker": "hyprpicker",
-        "linkwarden": "linkwarden",
+        "linkwarden-pr": "linkwarden-pr",
         "nix-gaming": "nix-gaming",
         "nix-index-database": "nix-index-database",
         "nix-ld": "nix-ld",
