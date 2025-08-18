@@ -6,7 +6,6 @@
 let
   servicesWithMediaAccess = [
     "bazarr"
-    "cross-seed"
     "jellyseerr"
     "lidarr"
     "prowlarr"
@@ -394,7 +393,6 @@ in
     "d /data/media/.state/nixarr 770 root media -"
 
     "d /data/media/.state/nixarr/audiobookshelf 775 audiobookshelf audiobookshelf -"
-    "d /data/media/.state/nixarr/cross-seed 775 cross-seed cross-seed -"
     "d /data/media/.state/nixarr/jellyfin 755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/data 755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/config 755 jellyfin jellyfin -"
