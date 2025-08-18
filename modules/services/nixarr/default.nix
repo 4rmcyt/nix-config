@@ -263,7 +263,7 @@ in
       enable = true;
       peerPort = 63998;
       vpn.enable = true;
-      flood.enable = true;
+      flood.enable = false;
       openFirewall = true;
       uiPort = 9091;
       extraAllowedIps = [
