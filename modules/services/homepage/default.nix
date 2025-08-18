@@ -230,7 +230,7 @@
                 {
                   type = "miniflux";
                   url = "http://localhost:8086";
-                  key = "34795359b01d1f80f17ecc6059a612f035c73612e786c377a973991190bb1621";
+                  key = "5c9cccaaa0e1335a2e0e5ac0ac9995d2c60eb9c3086287bfddc9f74e5537079f";
                 }
               ];
             };
