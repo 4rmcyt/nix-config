@@ -46,7 +46,7 @@
           "vault.example.com" = "http://localhost:8222";
           "link.example.com" = "http://localhost:12522";
           "kuma.example.com" = "http://localhost:3001";
-          "auth.example.com" = "http://localhost:8080";
+          "auth.example.com" = "http://localhost:9000";
           "grafana.example.com" = "http://localhost:3000";
         };
       };

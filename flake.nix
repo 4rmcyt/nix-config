@@ -144,6 +144,7 @@
           modules = commonNixOSModules ++ [
             ./hosts/homeserver
             ./modules/users/zeev
+            ./modules/disko
             (nixosHomeManagerConfig "zeev" "homeserver")
             nixarr.nixosModules.default
             authentik-nix.nixosModules.default
