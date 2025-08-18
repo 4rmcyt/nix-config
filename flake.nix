@@ -28,7 +28,10 @@
     auto-cpufreq.inputs.nixpkgs.follows = "nixpkgs";
 
     # NixOS-specific inputs
-    linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
+    linkwarden-pr = {
+      url = "github:NixOS/nixpkgs/f0809e9f3402644c0987842727cb1d3f93d2e4a6?shallow=1";
+      flake = false;
+    };
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
     nixos-needsreboot.url = "https://flakehub.com/f/thefossguy/nixos-needsreboot/*.tar.gz";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
@@ -110,6 +113,7 @@
         nix-index-database.nixosModules.nix-index
         auto-cpufreq.nixosModules.default
         nixvim.nixosModules.nixvim
+         "${inputs.linkwarden-pr}/nixos/modules/services/web-apps/linkwarden.nix"
         inputs.nixos-facter-modules.nixosModules.facter
         { facter.reportPath = ./facter.json; }
       ];

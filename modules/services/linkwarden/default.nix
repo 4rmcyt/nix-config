@@ -1,86 +1,104 @@
 {
   config,
+  lib,
   ...
 }:
+let
+  service = "linkwarden";
+  cfg = config.homelab.services.${service};
+  homelab = config.homelab;
+in
 {
-  sops.secrets = {
-    linkwarden_settings = {
-      sopsFile = ../../secrets/linkwarden.yaml;
-      key = "linkwarden_settings";
-      owner = "linkwarden";
-      group = "linkwarden";
-      mode = "0400";
+  options.homelab.services.${service} = {
+    enable = lib.mkEnableOption {
+      description = "Enable ${service}";
     };
-    linkwarden_db_password = {
-      sopsFile = ../../secrets/postgresql.yaml;
-      key = "linkwarden_db_password";
-      mode = "0400";
+    stateDir = lib.mkOption {
+      type = lib.types.path;
+      description = "Directory containing the persistent state data to back up";
+      default = "/var/lib/linkwarden";
     };
-    linkwarden_authentik_client_secret = {
-      sopsFile = ../../secrets/linkwarden.yaml;
-      key = "linkwarden_authentik_client_secret";
-      owner = "linkwarden";
-      group = "linkwarden";
-      mode = "0400";
+    url = lib.mkOption {
+      type = lib.types.str;
+      default = "${service}.${homelab.baseDomain}";
     };
-    linkwarden_password = {
-      sopsFile = ../../secrets/linkwarden.yaml;
-      key = "linkwarden_password";
-      owner = "linkwarden";
-      group = "linkwarden";
-      mode = "0400";
+    listenAddress = lib.mkOption {
+      type = lib.types.str;
+      default = "127.0.0.1";
     };
-    linkwarden_email_password = {
-      sopsFile = ../../secrets/gmail_conf.yaml;
-      key = "gmail_password";
-      mode = "0400";
+    listenPort = lib.mkOption {
+      type = lib.types.int;
+      default = 3010;
+    };
+    secretEnvironmentFile = lib.mkOption {
+      description = "File with secret environment variables, e.g. NEXTAUTH_SECRET and POSTGRES_PASSWORD";
+      type = with lib.types; nullOr path;
+      default = config.age.secrets.linkwardenEnv.path;
+      example = lib.literalExpression ''
+        pkgs.writeText "linkwarden-secret-environment" '''
+          NEXTAUTH_SECRET=<secret>
+          POSTGRES_PASSWORD=<pass>
+        '''
+      '';
+    };
+    database = {
+      port = lib.mkOption {
+        type = lib.types.int;
+        default = config.services.postgresql.settings.port;
+        description = "Port of the PostgreSQL database";
+      };
+    };
+    enableRegistration = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Allow user registration in Linkwarden";
+    };
+    homepage.name = lib.mkOption {
+      type = lib.types.str;
+      default = "Linkwarden";
+    };
+    homepage.description = lib.mkOption {
+      type = lib.types.str;
+      default = "Bookmark manager with web scraping support";
+    };
+    homepage.icon = lib.mkOption {
+      type = lib.types.str;
+      default = "linkwarden.png";
+    };
+    homepage.category = lib.mkOption {
+      type = lib.types.str;
+      default = "Services";
+    };
+    blackbox.targets = import ../../../lib/options/blackboxTargets.nix {
+      inherit lib;
+      defaultTargets =
+        let
+          blackbox = import ../../../lib/blackbox.nix { inherit lib; };
+        in
+        [
+          (blackbox.mkTcpTarget "${service}" "127.0.0.1:${toString cfg.listenPort}" "internal")
+          (blackbox.mkHttpTarget "${service}" "http://127.0.0.1:${toString cfg.listenPort}" "internal")
+          (blackbox.mkHttpTarget "${service}" "${cfg.url}" "external")
+        ];
     };
   };
+  config = lib.mkIf cfg.enable {
+    services.${service} = {
+      enable = true;
+      host = cfg.listenAddress;
+      port = cfg.listenPort;
+      database.port = cfg.database.port;
+      storageLocation = cfg.stateDir;
+      enableRegistration = cfg.enableRegistration;
+      # environment = { }; # https://docs.linkwarden.app/self-hosting/environment-variables
+      environmentFile = lib.mkIf (cfg.secretEnvironmentFile != null) cfg.secretEnvironmentFile; # Path to a file containing environment variables, for example for NEXTAUTH_SECRET=<secret>,   POSTGRES_PASSWORD=<pass>
+    };
 
-  users.users.linkwarden = {
-    isSystemUser = true;
-    group = "linkwarden";
-    extraGroups = [ "users" ];
-  };
-  users.groups.linkwarden = { };
-
-  networking.firewall.allowedTCPPorts = [
-    12522 # Linkwarden
-  ];
-
-  # service.nginx.virtualHosts."link.example.com" = {
-  #   forceSSL = true;
-  #   sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
-  #   sslCertificateKey = "/var/lib/acme/example.com/key.pem";
-  #   http2 = true;
-  #   locations."/" = {
-  #     proxyPass = "http://localhost:12522";
-  #     proxyWebsockets = true;
-  #   };
-  # };
-
-  services.linkwarden = {
-    enable = true;
-    settingsFile = config.sops.secrets.linkwarden_settings.path;
-    settings = {
-      NEXTAUTH_URL = "http://localhost:12522/api/v1/auth";
-      NEXTAUTH_SECRET = config.sops.secrets.linkwarden_password.path;
-      # Authentik Settings
-      NEXT_PUBLIC_AUTHENTIK_ENABLED = true;
-      AUTHENTIK_CUSTOM_NAME = "linkwarden";
-      AUTHENTIK_ISSUER = "http://auth.example.com";
-      AUTHENTIK_CLIENT_ID = "linkwarden";
-      AUTHENTIK_CLIENT_SECRET = config.sops.secrets.linkwarden_authentik_client_secret.path;
-      DATABASE_URL = "postgresql://linkwarden:${config.sops.secrets.linkwarden_db_password.path}@/run/postgresql/linkwarden?sslmode=disable";
-
-      # SMTP Settings
-      NEXT_PUBLIC_EMAIL_PROVIDER = "smtp";
-      EMAIL_FROM = "redacted@example.com";
-      EMAIL_SERVER = "smtp.gmail.com";
-      EMAIL_PORT = "587";
-      EMAIL_USERNAME = "redacted@example.com";
-      EMAIL_PASSWORD = config.sops.secrets.path;
-      BASE_URL = "http://link.example.com";
+    services.caddy.virtualHosts."${cfg.url}" = {
+      useACMEHost = homelab.baseDomain;
+      extraConfig = ''
+        reverse_proxy http://127.0.0.1:${toString cfg.listenPort}
+      '';
     };
   };
 }
