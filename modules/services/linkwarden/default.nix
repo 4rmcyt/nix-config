@@ -48,25 +48,26 @@
     12522 # Linkwarden
   ];
 
-  service.nginx.virtualHosts."link.labhome.work" = {
-    forceSSL = true;
-    sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
-    sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
-    http2 = true;
-    locations."/" = {
-      proxyPass = "http://localhost:12522";
-      proxyWebsockets = true;
-    };
-  };
+  # service.nginx.virtualHosts."link.labhome.work" = {
+  #   forceSSL = true;
+  #   sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #   sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #   http2 = true;
+  #   locations."/" = {
+  #     proxyPass = "http://localhost:12522";
+  #     proxyWebsockets = true;
+  #   };
+  # };
 
   services.linkwarden = {
     enable = true;
+    settingsFile = config.sops.secrets.linkwarden_settings.path;
     settings = {
       NEXTAUTH_URL = "http://localhost:12522/api/v1/auth";
       NEXTAUTH_SECRET = config.sops.secrets.linkwarden_password.path;
       # Authentik Settings
       NEXT_PUBLIC_AUTHENTIK_ENABLED = true;
-      AUTHENTIK_CUSTOM_NAME = "Linkwarden";
+      AUTHENTIK_CUSTOM_NAME = "linkwarden";
       AUTHENTIK_ISSUER = "http://auth.labhome.work";
       AUTHENTIK_CLIENT_ID = "linkwarden";
       AUTHENTIK_CLIENT_SECRET = config.sops.secrets.linkwarden_authentik_client_secret.path;

@@ -10,6 +10,6 @@
     ./kavita
     ./calibre-web
     # ./vaultwarden
-    ./linkwarden
+    # ./linkwarden
   ];
 }

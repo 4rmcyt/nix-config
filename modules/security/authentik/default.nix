@@ -84,17 +84,6 @@
     #     # Resource limits
     #     MemoryMax = "1G";
     #     CPUQuota = "100%";
-
-    #     # Security hardening
-    #     NoNewPrivileges = true;
-    #     PrivateTmp = true;
-    #     ProtectHome = true;
-    #     ProtectSystem = "strict";
-    #     ReadWritePaths = [ "/var/lib/authentik" ];
-
-    #     # Capabilities
-    #     CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" ];
-    #     AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
     #   };
     # };
   };
