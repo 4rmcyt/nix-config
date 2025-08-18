@@ -148,7 +148,7 @@
         ensureDBOwnership = true;
       }
       {
-        name = "wallabag";
+        name = "linkwarden";
         ensureDBOwnership = true;
       }
     ];
@@ -196,9 +196,9 @@
       CREATE DATABASE vaultwarden;
       GRANT ALL PRIVILEGES ON DATABASE vaultwarden TO vaultwarden;
 
-      CREATE ROLE wallabag WITH LOGIN PASSWORD '${config.sops.secrets.wallabag.path}' CREATEDB;
-      CREATE DATABASE wallabag;
-      GRANT ALL PRIVILEGES ON DATABASE wallabag TO wallabag;
+      CREATE ROLE linkwarden WITH LOGIN PASSWORD '${config.sops.secrets.linkwarden.path}' CREATEDB;
+      CREATE DATABASE linkwarden;
+      GRANT ALL PRIVILEGES ON DATABASE linkwarden TO linkwarden;
     '';
   };
 
