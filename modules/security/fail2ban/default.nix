@@ -35,10 +35,6 @@ let
       filter = "audiobookshelf";
       journalmatch = "_SYSTEMD_UNIT=audiobookshelf.service";
     };
-    microbin = {
-      filter = "microbin";
-      journalmatch = "_SYSTEMD_UNIT=microbin.service";
-    };
     paperless = {
       filter = "paperless";
       journalmatch = "_SYSTEMD_UNIT=paperless.service";

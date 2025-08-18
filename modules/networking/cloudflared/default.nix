@@ -35,7 +35,6 @@
           "cal.example.com" = "http://localhost:5232";
           "audiobookshelf.example.com" = "http://localhost:9292";
           "kavita.example.com" = "http://localhost:5000";
-          "microbin.example.com" = "http://localhost:8084";
           "prowlarr.example.com" = "http://localhost:9696";
           "radarr.example.com" = "http://localhost:7878";
           "sonarr.example.com" = "http://localhost:8989";

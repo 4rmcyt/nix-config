@@ -48,7 +48,6 @@
         "/var/lib/sops"
         "/var/lib/calibre-web"
         "/var/lib/grafana"
-        "/var/lib/microbin"
         "/var/lib/homepage-dashboard"
         "/var/lib/nixos"
         "/var/lib/authentik"

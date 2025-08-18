@@ -3,7 +3,6 @@
   imports = [
     ./homepage
     ./miniflux
-    ./microbin
     ./paperless
     ./radicale
     ./home-assistant
@@ -11,6 +10,6 @@
     ./kavita
     ./calibre-web
     # ./vaultwarden
-    # ./linkwarden
+    ./linkwarden
   ];
 }
