@@ -323,6 +323,11 @@
               href = "https://auth.labhome.work";
               description = "Identity & Access Management";
               icon = "authentik";
+              widget = {
+                type = "authentik";
+                url = "https://auth.labhome.work";
+                key = "VL3AR8dWq1VIVb4VIGdupq8bRMIQ32YoGzCrqnb7D6X3R6e2KPn1m6aWQjrz";
+              };
             };
           }
           {
