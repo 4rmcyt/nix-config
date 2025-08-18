@@ -121,7 +121,7 @@
           "authentik" = {
             type = "zfs_fs";
             options."com.sun:auto-snapshot" = "false";
-            mountpoint = "/var/lib/authentik";
+            mountpoint = "/var/lib/private/authentik";
           };
           "vaultwarden" = {
             type = "zfs_fs";
