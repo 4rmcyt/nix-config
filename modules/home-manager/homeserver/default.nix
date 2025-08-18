@@ -128,7 +128,7 @@
     helix = {
       enable = true;
       settings = {
-        theme = "carbon";
+        theme = "heisenberg";
         editor.cursor-shape = {
           normal = "block";
           insert = "bar";
