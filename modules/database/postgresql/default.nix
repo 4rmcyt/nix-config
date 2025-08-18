@@ -83,7 +83,7 @@
       "authentik"
       "grafana"
       "vaultwarden"
-      "wallabag"
+      "linkwarden"
     ];
 
     #   settings = {
