@@ -18,6 +18,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils?shallow=true";
 
     cpu-microcodes = {
       url = "github:platomav/CPUMicrocodes";
@@ -82,79 +83,114 @@
     };
   };
 
-  outputs =
-    {
-      self,
-      nixpkgs,
-      sops-nix,
-      vscode-server,
-      disko,
-      home-manager,
-      nix-index-database,
-      nixvim,
-      nixarr,
-      authentik-nix,
-      treefmt-nix,
-      auto-cpufreq,
-      systems,
-      ...
-    }@inputs:
+#   outputs =
+#     {
+#       self,
+#       nixpkgs,
+#       sops-nix,
+#       vscode-server,
+#       disko,
+#       home-manager,
+#       nix-index-database,
+#       nixvim,
+#       nixarr,
+#       authentik-nix,
+#       treefmt-nix,
+#       auto-cpufreq,
+#       systems,
+#       ...
+#     }@inputs:
+#     let
+#       system = "x86_64-linux";
+#       eachSystem = f: nixpkgs.lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
+#       treefmtEval = eachSystem (pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
+
+#       # This list contains modules common to all your NixOS systems.
+#       commonNixOSModules = [
+#         sops-nix.nixosModules.sops
+#         { sops.age.keyFile = "/var/lib/sops/age.key"; }
+#         home-manager.nixosModules.home-manager
+#         disko.nixosModules.disko
+#         nix-index-database.nixosModules.nix-index
+#         auto-cpufreq.nixosModules.default
+#          "${inputs.linkwarden-pr}/nixos/modules/services/web-apps/linkwarden.nix"
+#         inputs.nixos-facter-modules.nixosModules.facter
+#         { facter.reportPath = ./facter.json; }
+#       ];
+
+#       nixosHomeManagerConfig = user: host: {
+#         home-manager.useGlobalPkgs = true;
+#         home-manager.useUserPackages = true;
+#         home-manager.users.${user} = {
+#           imports = [
+#             ./modules/home-manager/${host}
+#             sops-nix.homeManagerModules.sops
+#           ];
+#           sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+#         };
+#       };
+#     in
+#     {
+#       formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
+#       # for `nix flake check`
+#       checks = eachSystem (pkgs: {
+#         formatting = treefmtEval.${pkgs.system}.config.build.check self;
+#       });
+
+#       nixosConfigurations = {
+#         homeserver = nixpkgs.lib.nixosSystem {
+#           inherit system;
+#           specialArgs = {
+#             inherit self inputs;
+#             host = "homeserver";
+#           };
+
+#           modules = commonNixOSModules ++ [
+#             ./hosts/nixos/homeserver
+#             ./modules/users/zeev
+#             ./modules/disko
+#             (nixosHomeManagerConfig "zeev" "homeserver")
+#             nixarr.nixosModules.default
+#             authentik-nix.nixosModules.default
+#             vscode-server.nixosModules.default
+#           ];
+#         };
+#       };
+#     };
+# }
+ outputs =
+    { flake-utils, nixpkgs, ... }@inputs:
     let
-      system = "x86_64-linux";
-      eachSystem = f: nixpkgs.lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
-      treefmtEval = eachSystem (pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
-
-      # This list contains modules common to all your NixOS systems.
-      commonNixOSModules = [
-        sops-nix.nixosModules.sops
-        { sops.age.keyFile = "/var/lib/sops/age.key"; }
-        home-manager.nixosModules.home-manager
-        disko.nixosModules.disko
-        nix-index-database.nixosModules.nix-index
-        auto-cpufreq.nixosModules.default
-        nixvim.nixosModules.nixvim
-         "${inputs.linkwarden-pr}/nixos/modules/services/web-apps/linkwarden.nix"
-        inputs.nixos-facter-modules.nixosModules.facter
-        { facter.reportPath = ./facter.json; }
-      ];
-
-      nixosHomeManagerConfig = user: host: {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        home-manager.users.${user} = {
-          imports = [
-            ./modules/home-manager/${host}
-            sops-nix.homeManagerModules.sops
-          ];
-          sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-        };
-      };
+      helpers = import ./flakeHelpers.nix inputs;
+      inherit (helpers) mkMerge mkNixos mkDarwin;
     in
-    {
-      formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
-      # for `nix flake check`
-      checks = eachSystem (pkgs: {
-        formatting = treefmtEval.${pkgs.system}.config.build.check self;
-      });
-
-      nixosConfigurations = {
-        homeserver = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit self inputs;
-            host = "homeserver";
+    mkMerge [
+      (flake-utils.lib.eachDefaultSystem (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          packages.default = pkgs.mkShell {
+            packages = [
+              pkgs.just
+              pkgs.nixos-rebuild-ng
+            ];
           };
+        }
+      ))
+      (mkNixos "homeserver" inputs.nixpkgs [
+        ./modules/notthebe.ee
+        ./homelab
+        inputs.home-manager.nixosModules.home-manager
+      ])
 
-          modules = commonNixOSModules ++ [
-            ./hosts/homeserver
-            ./modules/users/zeev
-            ./modules/disko
-            (nixosHomeManagerConfig "zeev" "homeserver")
-            nixarr.nixosModules.default
-            authentik-nix.nixosModules.default
-            vscode-server.nixosModules.default
-          ];
-        };
-      };
-    };
+      (mkDarwin "macbook" inputs.nixpkgs
+        [
+          dots/tmux
+          dots/kitty
+        ]
+        [ ]
+      )
+    ];
 }
