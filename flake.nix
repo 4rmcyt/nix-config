@@ -146,7 +146,7 @@
           };
 
           modules = commonNixOSModules ++ [
-            ./hosts/homeserver
+            ./hosts/nixos/homeserver
             ./modules/users/zeev
             ./modules/disko
             (nixosHomeManagerConfig "zeev" "homeserver")
