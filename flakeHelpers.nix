@@ -5,12 +5,13 @@ let
     home-manager.extraSpecialArgs = {
       inherit inputs;
     };
-    home-manager.users.zeev.imports = [
+    home-manager.users.notthebee.imports = [
+      inputs.agenix.homeManagerModules.default
       inputs.nix-index-database.homeModules.nix-index
-      ./users/zeev
-      sops-nix.homeManagerModules.sops
+      ./users/notthebee/dots.nix
+      ./users/notthebee/age.nix
     ] ++ extraImports;
-    sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+    home-manager.backupFileExtension = "bak";
     home-manager.useUserPackages = userPackages;
   };
 in
@@ -24,10 +25,11 @@ in
       };
       modules = [
         inputs.agenix.darwinModules.default
-        ./hosts/darwin/${machineHostname}
+        ./machines/darwin
+        ./machines/darwin/${machineHostname}
         inputs.home-manager-unstable.darwinModules.home-manager
         (nixpkgsVersion.lib.attrsets.recursiveUpdate (homeManagerCfg true extraHmModules) {
-          home-manager.users.vk.home.homeDirectory = nixpkgsVersion.lib.mkForce "/Users/vk";
+          home-manager.users.notthebee.home.homeDirectory = nixpkgsVersion.lib.mkForce "/Users/notthebee";
         })
       ];
     };
@@ -39,12 +41,15 @@ in
         inherit inputs;
       };
       modules = [
-        ./hosts/nixos/${machineHostname}
-        ./modules/users/zeev
-        auto-cpufreq.nixosModules.default
-         "${inputs.linkwarden-pr}/nixos/modules/services/web-apps/linkwarden.nix"
-        inputs.nixos-facter-modules.nixosModules.facter
-        { facter.reportPath = ./facter.json; }
+        ./homelab
+        ./machines/nixos/_common
+        ./machines/nixos/${machineHostname}
+        ./modules/email
+        ./modules/tg-notify
+        ./modules/auto-aspm
+        ./modules/mover
+        inputs.agenix.nixosModules.default
+        ./users/notthebee
         (homeManagerCfg false [ ])
       ] ++ extraModules;
     };
