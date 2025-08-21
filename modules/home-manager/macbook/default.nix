@@ -1,5 +1,9 @@
+# File: nixos-config/modules/home-manager/macbook/default.nix
 {
   pkgs,
+  lib,
+  config,
+  inputs,
   ...
 }:
 {
@@ -14,7 +18,6 @@
     ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDc3zaVdT+TBJdjBWbN2fwSricHc7yJFGPxB9PB2sR4mkCmv6FPBd8vGZ1pYLJWEqgPU0C76IWAiSpwRrYu4Da0JKyEITh69sT+ndufTsrXJwPPxFKsUnmm2XQE0O2M2dM3wx+sMnBxWc1AMlfkWDnpP2N1Rl33ridumzEAGvJGqrn/ScpHGSgEkpZwVAnO5U8S9EjuO0h+nUJUSfLJVcl/cLeqHuF5zE8mSxsrj1FjiymZSquOEVAwNOhbCLuFVsYSEb8qujFsD7M9Umd0qvPQwCY9zN/Hb37TrNebhJ32kjIOlrWO3fnreMetIVRtTC1/cvKnGV16S32/YGiIUb2zLTfxKp2bn2qvXgLwocKf/M56fobQ6LOt60dUG1y3QwRLI1uAQggzp2N3/shQRb89nCQ/Zq67h941U2Z/RnNx7Hzl6n9DHkiKmkvXQuld0DWgh6wwG775gR2wBZHgpqtLqoRhwFVrvwIL9UkrLL4PE9A5iBEmypWsCWUomi5St+k= vk@Volodymyr-Kondratenko-Mac.local
     ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com
   '';
-
   # --------------------------------------------------------------------------------
   # Home Manager Packages (User-Specific)
   # --------------------------------------------------------------------------------
@@ -43,6 +46,7 @@
     nixfmt-rfc-style
     nixos-anywhere
     nixos-generators
+
     nixpkgs-fmt
     pandoc
     pass
@@ -68,6 +72,7 @@
     curl
     delta
     fzf
+
     htop
     iterm2
     jq
@@ -94,18 +99,18 @@
     youtube-music
     zoom-us
   ];
-
   # --------------------------------------------------------------------------------
   # Fonts
   # --------------------------------------------------------------------------------
-  home.file.".config/fontconfig/fonts.conf".source = pkgs.makeFontsConf {
+  home.file.".config/fontconfig/fonts.conf".source = (
+    pkgs.makeFontsConf {
       fontDirectories = with pkgs; [
         fira-code
         font-awesome
         material-design-icons
       ];
-    };
-
+    }
+  );
   # --------------------------------------------------------------------------------
   # Program Configurations
   # --------------------------------------------------------------------------------
@@ -118,7 +123,6 @@
       nix-direnv.enable = true;
     };
     nix-index.enable = true;
-
     zoxide = {
       enable = true;
       enableZshIntegration = true;
@@ -142,7 +146,6 @@
       enable = true;
       homedir = "~/.gnupg";
     };
-
     gh = {
       enable = true;
       settings = {
@@ -150,12 +153,11 @@
         git_protocol = "ssh";
       };
     };
-
     git = {
-      enable = true;
-      settings = {
-        editor = "hx";
-        git_protocol = "ssh";
+      userName = "Volodymyr Kondratenko";
+      userEmail = "4rmcyt@gmail.com";
+      extraConfig = {
+        github.user = "4rmcyt";
       };
     };
     zsh = {
@@ -164,23 +166,28 @@
       autosuggestion.enable = true;
       enableCompletion = true;
       initContent = ''
-         autoload -Uz compinit && compinit
-         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-         if [ $(command -v fortune) ] && [ $UID != '0' ] && [[ $- == *i* ]] && [ $TERM != 'dumb' ]; then
-            ### Cowsay At Login ###
-            if [ $(command -v cowsay) ]; then
-                fortune -a fortunes wisdom | cowsay
-            else
-                fortune -a fortunes wisdom
-            fi
-          fi
+                 autoload -Uz compinit && compinit
+                 [[ !
+        -f ~/.p10k.zsh ]] || source ~/.p10k.zsh    
+                 if [ $(command -v fortune) ] && [ $UID != '0' ] && [[ $- == *i* ]] && [ $TERM != 'dumb' ];
+        then
+                    ### Cowsay At Login ###
+                    if [ $(command -v cowsay) ];
+        then
+                        fortune -a fortunes wisdom |
+        cowsay
+                    else
+                        fortune -a fortunes wisdom
+                    fi
+                fi
 
-        export PATH="$HOME/.pyenv:$PATH"
-        export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+                export PATH="$HOME/.pyenv:$PATH"
+                export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
-        eval "$(pyenv init --path)"
-        eval "$(pyenv init -)"
-        eval "$(pyenv virtualenv-init -)"
+                eval "$(pyenv init --path)"
+                eval "$(pyenv init -)"
+                eval 
+        "$(pyenv virtualenv-init -)" 
       '';
       antidote = {
         enable = true;
@@ -204,6 +211,7 @@
           "ohmyzsh/ohmyzsh path:plugins/z"
           "ohmyzsh/ohmyzsh path:plugins/zoxide"
           "ohmyzsh/ohmyzsh path:plugins/you-should-use"
+
           "ohmyzsh/ohmyzsh path:plugins/sudo"
           "ohmyzsh/ohmyzsh path:plugins/zsh-autosuggestions"
           "ohmyzsh/ohmyzsh path:plugins/zsh-history-substring-search"
@@ -217,8 +225,10 @@
 
           "romkatv/powerlevel10k"
         ];
+
       };
     };
+
   };
   # Copy the p10k config file into your home directory
   home.file.".p10k.zsh".source = ../../dots/zsh/.p10k.zsh;
