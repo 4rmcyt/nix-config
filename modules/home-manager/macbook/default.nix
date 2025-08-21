@@ -7,7 +7,6 @@
   ...
 }:
 {
-
   nixpkgs.config.allowUnfree = true; 
   home.stateVersion = "25.05";
   home.username = "vk";
