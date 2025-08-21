@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   sops.secrets = {
     # --- Paperless Secrets ---
     paperless_admin_password = {
@@ -32,9 +31,9 @@
   users.users.paperless = {
     isSystemUser = true;
     group = "paperless";
-    extraGroups = [ "users" ];
+    extraGroups = ["users"];
   };
-  users.groups.paperless = { };
+  users.groups.paperless = {};
 
   networking.firewall.allowedTCPPorts = [
     8888 # Paperless

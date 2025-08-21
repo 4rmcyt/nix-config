@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   sops.secrets = {
     # --- Home Assistant Secrets ---
     home_assistant_db_password = {
@@ -23,8 +22,8 @@
     isSystemUser = true;
     group = "mosquitto";
   };
-  users.groups.mosquitto = { };
-  users.groups.hass = { };
+  users.groups.mosquitto = {};
+  users.groups.hass = {};
 
   networking.firewall.allowedTCPPorts = [
     8123 # Home Assistant
@@ -116,17 +115,17 @@
           }
         ];
 
-        mqtt = { };
+        mqtt = {};
 
-        default_config = { };
+        default_config = {};
 
         frontend = {
           themes = "!include_dir_merge_named themes";
         };
 
-        shopping_list = { };
-        map = { };
-        system_health = { };
+        shopping_list = {};
+        map = {};
+        system_health = {};
 
         logger = {
           default = "info";
@@ -141,7 +140,7 @@
       enable = true;
       listeners = [
         {
-          acl = [ "pattern readwrite #" ];
+          acl = ["pattern readwrite #"];
           omitPasswordAuth = true;
           settings.allow_anonymous = true;
         }

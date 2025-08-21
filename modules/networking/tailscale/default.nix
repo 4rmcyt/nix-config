@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   sops.secrets = {
     tailscale_auth_key = {
       sopsFile = ../../../secrets/tailscale.yaml;
@@ -23,14 +22,14 @@
       "tailscale"
     ];
   };
-  users.groups.tailscale = { };
+  users.groups.tailscale = {};
 
   networking.firewall = {
-    trustedInterfaces = [ "tailscale0" ];
-    allowedUDPPorts = [ config.services.tailscale.port ];
+    trustedInterfaces = ["tailscale0"];
+    allowedUDPPorts = [config.services.tailscale.port];
   };
 
-  environment.systemPackages = [ pkgs.tailscale ];
+  environment.systemPackages = [pkgs.tailscale];
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "both";
@@ -46,7 +45,7 @@
       "network-pre.target"
       "tailscale.service"
     ];
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = ["multi-user.target"];
     serviceConfig.Type = "oneshot";
     script = with pkgs; ''
       # wait for tailscaled to settle
@@ -66,3 +65,4 @@
 # Generated new OAuth client
 # k3bSghrrmL11CNTRL
 # tskey-client-k3bSghrrmL11CNTRL-1dXRywBntC7rrhkHPVCGC7m6iv3VxqkXe
+

@@ -1,5 +1,4 @@
-{ lib, ... }:
-{
+{lib, ...}: {
   networking = {
     hostName = "homeserver";
     hostId = "0b8d0f5a";
@@ -38,7 +37,7 @@
       ];
 
       rejectPackets = true;
-      trustedInterfaces = [ "tailscale0" ];
+      trustedInterfaces = ["tailscale0"];
     };
   };
 }

@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   environment.systemPackages = [
     pkgs.podman
     pkgs.podman-compose
@@ -26,7 +25,7 @@
       "podman"
     ];
   };
-  users.groups.podman = { };
+  users.groups.podman = {};
 
   users.extraGroups.podman.members = [
     "zeev"
@@ -61,9 +60,9 @@
     nextdns-exporter = {
       image = "ghcr.io/raylas/nextdns-exporter";
       autoStart = true;
-      networks = [ "podman" ];
-      ports = [ "127.0.0.1:9948:9948" ];
-      environmentFiles = [ config.sops.secrets.containers_env.path ];
+      networks = ["podman"];
+      ports = ["127.0.0.1:9948:9948"];
+      environmentFiles = [config.sops.secrets.containers_env.path];
     };
   };
 }

@@ -2,8 +2,7 @@
   config,
   lib,
   ...
-}:
-{
+}: {
   sops.secrets = {
     # --- Authentik Secrets ---
     authentik_env = {
@@ -26,9 +25,9 @@
   users.users.authentik = {
     isSystemUser = true;
     group = "authentik";
-    extraGroups = [ "users" ];
+    extraGroups = ["users"];
   };
-  users.groups.authentik = { };
+  users.groups.authentik = {};
 
   networking.firewall.allowedTCPPorts = [
     9000 # Authentik
