@@ -7,7 +7,7 @@
   ...
 }:
 {
-  nixpkgs.config.allowUnfree = true; 
+  nixpkgs.config.allowUnfree = true;
   home.stateVersion = "25.05";
   home.username = "vk";
   home.homeDirectory = "/Users/vk";
@@ -64,6 +64,8 @@
     poetry
     pyenv
     python3Full
+    pyenv
+    (pyenv.withPlugins (plugins: [ plugins.pyenv-virtualenv ]))
     sops
     ssh-to-age
     tenv
