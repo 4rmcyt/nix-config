@@ -5,8 +5,7 @@
   ...
 }:
 {
-  home.packages = with pkgs;
-  [
+  home.packages = with pkgs; [
     # Shell & Editor
     zsh
     neovim
@@ -29,8 +28,8 @@
     nix-diff
     zsh-powerlevel10k
     helix
-   
-     # User Utils
+
+    # User Utils
     pass
     jq
     dive
