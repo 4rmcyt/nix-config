@@ -1,48 +1,142 @@
 # File: nixos-config/hosts/darwin/macbook/default.nix
-{ pkgs, ... }: {
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
+# Add 'inputs' here
+{
+  # --------------------------------------------------------------------------------
   # System & User Configuration
+  # --------------------------------------------------------------------------------
+
   networking.hostName = "macbook";
-  system.stateVersion = 4;
+  system.stateVersion = 5;
   nixpkgs.hostPlatform = "aarch64-darwin";
   nixpkgs.config.allowUnfree = true;
+
+  # ADD THIS BLOCK to use the custom Firefox
+  nixpkgs.overlays = [inputs.firefox-darwin.overlay];
 
   users.users.vk = {
     name = "vk";
     home = "/Users/vk";
   };
 
-  # Nix Configuration
-  nix = {
-    package = pkgs.nix;
-    settings = {
-      trusted-users = [ "root" "vk" ];
-      experimental-features = [ "nix-command" "flakes" ];
-      warn-dirty = false;
-    };
-    gc = {
-      automatic = true;
-      options = "--delete-older-than 1w";
-    };
-    optimise.automatic = true;
+  environment.shellInit = ''
+    ulimit -n 2048
+  '';
+
+  # --------------------------------------------------------------------------------
+  # Nix Configuration (System-Wide)
+  # --------------------------------------------------------------------------------
+  nix.package = pkgs.nix;
+
+  nix.settings = {
+    trusted-users = [
+      "root"
+      "vk"
+    ];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+    warn-dirty = false;
   };
 
-  # Homebrew Management
-  nix-homebrew = {
+  nix.gc = {
+    automatic = lib.mkDefault true;
+    options = lib.mkDefault "--delete-older-than 1w";
+  };
+
+  nix.optimise.automatic = true;
+
+  # --------------------------------------------------------------------------------
+  # Homebrew Management (System-Wide Integration)
+  # --------------------------------------------------------------------------------
+  homebrew = {
     enable = true;
-    user = "vk";
-    taps = {
-      "homebrew/homebrew-core" = inputs.homebrew-core;
-      "homebrew/homebrew-cask" = inputs.homebrew-cask;
+    onActivation = {
+      autoUpdate = true;
+      cleanup = "zap";
+      upgrade = true;
     };
+    brewPrefix = "/opt/homebrew/bin";
+    taps = ["amar1729/formulae"];
+    caskArgs = {
+      no_quarantine = true;
+    };
+
+    casks = [
+      "alt-tab"
+      "android-commandlinetools"
+      "android-platform-tools"
+      "discord"
+      "displaylink"
+      "docker-desktop"
+      "emclient"
+      "fbreader"
+      "font-hack-nerd-font"
+      "google-chrome"
+      "jellyfin-media-player"
+      "linearmouse"
+      "logitech-g-hub"
+      "meetingbar"
+      "obsidian"
+      "pycharm-ce"
+      "raycast"
+      "sublime-text"
+      "thunderbird"
+      "transmission-remote-gui"
+      "yubico-authenticator"
+    ];
+
+    brews = [
+      "adb-enhanced"
+      "brotli"
+      "ca-certificates"
+      "coreutils"
+      "emacs"
+      "gettext"
+      "gmp"
+      "gnutls"
+      "helix"
+      "libassuan"
+      "libevent"
+      "libgcrypt"
+      "libgpg-error"
+      "libidn2"
+      "libksba"
+      "libnghttp2"
+      "libssh2"
+      "libtasn1"
+      "libunistring"
+      "libusb"
+      "lz4"
+      "mpdecimal"
+      "nettle"
+      "npth"
+      "openssl@3"
+      "p11-kit"
+      "pcre2"
+      "pinentry"
+      "pinentry-mac"
+      "python@3.13"
+      "readline"
+      "ripgrep"
+      "rtmpdump"
+      "shfmt"
+      "sqlite"
+      "statix"
+      "tree-sitter"
+      "unbound"
+      "xz"
+      "zstd"
+    ];
+
+    masApps = {};
   };
 
-  # System-wide packages
-  environment.systemPackages = with pkgs; [
-    git
-    vim
-  ];
-
-  # Shells
-  programs.zsh.enable = true;
-  environment.shells = with pkgs; [ zsh ];
+  services.cachix-agent.enable = true;
 }

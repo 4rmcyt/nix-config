@@ -96,50 +96,45 @@
       flake = false;
     };
   };
-  outputs =
-    inputs@{ treefmt-nix, ... }:
+  outputs = inputs @ {treefmt-nix, ...}:
     inputs.flake-parts.lib.mkFlake
-      {
-        inherit inputs;
-      }
-      {
-        systems = [
-          "x86_64-linux"
-          "aarch64-darwin"
-        ];
-        imports = [ treefmt-nix.flakeModule ];
-        perSystem =
-          { pkgs, ... }:
-          {
-            devShells.default = import ./devshell.nix {
-              inherit pkgs;
-            };
-            treefmt = import ./treefmt.nix;
-          };
-
-        flake =
-          let
-            helpers = import ./flakeHelpers.nix inputs;
-            inherit (helpers) mkNixos mkDarwin;
-          in
-          {
-            nixosConfigurations = {
-              homeserver = mkNixos "homeserver" "x86_64-linux" [
-                ./hosts/nixos/homeserver
-                ./modules/users/zeev
-                ./modules/disko
-                inputs.nixarr.nixosModules.default
-
-                inputs.authentik-nix.nixosModules.default
-                inputs.vscode-server.nixosModules.default
-              ];
-            };
-            darwinConfigurations = {
-              macbook = mkDarwin "macbook" "aarch64-darwin" [
-                ./hosts/darwin/macbook
-                ./modules/users/vk
-              ];
-            };
-          };
+    {
+      inherit inputs;
+    }
+    {
+      systems = [
+        "x86_64-linux"
+        "aarch64-darwin"
+      ];
+      imports = [treefmt-nix.flakeModule];
+      perSystem = {pkgs, ...}: {
+        devShells.default = import ./devshell.nix {
+          inherit pkgs;
+        };
+        treefmt = import ./treefmt.nix;
       };
+
+      flake = let
+        helpers = import ./flakeHelpers.nix inputs;
+        inherit (helpers) mkNixos mkDarwin;
+      in {
+        nixosConfigurations = {
+          homeserver = mkNixos "homeserver" "x86_64-linux" [
+            ./hosts/nixos/homeserver
+            ./modules/users/zeev
+            ./modules/disko
+            inputs.nixarr.nixosModules.default
+
+            inputs.authentik-nix.nixosModules.default
+            inputs.vscode-server.nixosModules.default
+          ];
+        };
+        darwinConfigurations = {
+          macbook = mkDarwin "macbook" "aarch64-darwin" [
+            ./hosts/darwin/macbook
+            ./modules/users/vk
+          ];
+        };
+      };
+    };
 }
