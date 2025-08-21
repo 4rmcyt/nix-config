@@ -3,8 +3,7 @@
   pkgs,
   config,
   ...
-}:
-{
+}: {
   nixpkgs.config.allowUnfree = true;
   home.stateVersion = "25.05";
   home.username = "vk";
@@ -108,41 +107,6 @@
     zoom-us
   ];
 
-  # Homebrew Packages
-  homebrew = {
-    enable = true;
-    brews = [
-      "emacs"
-      "helix"
-      "ripgrep"
-      "statix"
-      "tree-sitter"
-    ];
-    casks = [
-      "alt-tab"
-      "android-commandlinetools"
-      "android-platform-tools"
-      "discord"
-      "displaylink"
-      "docker-desktop"
-      "emclient"
-      "fbreader"
-      "font-hack-nerd-font"
-      "google-chrome"
-      "jellyfin-media-player"
-      "linearmouse"
-      "logitech-g-hub"
-      "meetingbar"
-      "obsidian"
-      "pycharm-ce"
-      "raycast"
-      "sublime-text"
-      "thunderbird"
-      "transmission-remote-gui"
-      "yubico-authenticator"
-    ];
-  };
-
   # --------------------------------------------------------------------------------
   # Program Configurations
   # --------------------------------------------------------------------------------
@@ -158,7 +122,7 @@
       enable = true;
       enableZshIntegration = true;
       enableBashIntegration = true;
-      options = [ "--cmd cd" ];
+      options = ["--cmd cd"];
     };
 
     fzf = {
