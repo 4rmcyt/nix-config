@@ -844,20 +844,19 @@
         "type": "github"
       }
     },
-    "linkwarden-pr": {
-      "flake": false,
+    "linkwarden": {
       "locked": {
-        "lastModified": 1753180371,
-        "narHash": "sha256-twrzVKa9ylf1Y2q29913bvYIPineFcblu/252FMnMvs=",
-        "owner": "NixOS",
+        "lastModified": 1727034034,
+        "narHash": "sha256-RqTJMUZO9ZGMPkUcph6m1C5jNUP2wFmmaEtcdGZH+Xg=",
+        "owner": "EricTheMagician",
         "repo": "nixpkgs",
-        "rev": "f0809e9f3402644c0987842727cb1d3f93d2e4a6",
+        "rev": "f739886a8857da8ada85c8b35c3d7df5efb04d0b",
         "type": "github"
       },
       "original": {
-        "owner": "NixOS",
+        "owner": "EricTheMagician",
+        "ref": "linkwarden",
         "repo": "nixpkgs",
-        "rev": "f0809e9f3402644c0987842727cb1d3f93d2e4a6",
         "type": "github"
       }
     },
@@ -1396,7 +1395,7 @@
         "hyprland": "hyprland",
         "hyprlock": "hyprlock",
         "hyprpicker": "hyprpicker",
-        "linkwarden-pr": "linkwarden-pr",
+        "linkwarden": "linkwarden",
         "nix-gaming": "nix-gaming",
         "nix-index-database": "nix-index-database",
         "nix-ld": "nix-ld",
