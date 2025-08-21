@@ -137,4 +137,6 @@
 
     masApps = { };
   };
+
+  services.cachix-agent.enable = true;
 }
