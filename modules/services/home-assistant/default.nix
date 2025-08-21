@@ -3,9 +3,7 @@
   pkgs,
   ...
 }:
-
 {
-
   sops.secrets = {
     # --- Home Assistant Secrets ---
     home_assistant_db_password = {

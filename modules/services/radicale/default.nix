@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
-
+{
+  config,
+  pkgs,
+  ...
+}:
 {
   sops.secrets.radicale_users = {
     sopsFile = ../../../secrets/radicale_users.txt;

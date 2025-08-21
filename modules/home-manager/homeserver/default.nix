@@ -1,6 +1,9 @@
-{ pkgs, lib, ... }:
 {
-
+  pkgs,
+  lib,
+  ...
+}:
+{
   home.packages = with pkgs; [
     # Shell & Editor
     zsh
@@ -152,7 +155,6 @@
         }
       ];
     };
-
   };
 
   services = {

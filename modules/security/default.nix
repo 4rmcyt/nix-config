@@ -4,5 +4,4 @@
     ./authentik
     ./fail2ban
   ];
-
 }

@@ -3,7 +3,6 @@
   lib,
   ...
 }:
-
 {
   sops.secrets = {
     # --- Authentik Secrets ---

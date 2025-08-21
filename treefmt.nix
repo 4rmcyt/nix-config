@@ -1,6 +1,5 @@
 { pkgs, ... }:
 {
-
   projectRootFile = "flake.nix";
   programs = {
     nixfmt = {
@@ -12,9 +11,11 @@
     };
     alejandra = {
       package = pkgs.alejandra;
+      enable = true;
     };
     statix = {
       package = pkgs.statix;
+      enable = true;
     };
     shfmt = {
       enable = true;

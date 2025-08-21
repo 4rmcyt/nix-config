@@ -12,7 +12,7 @@
   services.blueman.enable = true;
 
   # Headset buttons with MPRIS proxy
-  systemd.user.services.mpris-proxy = lib.mkIf (mpris-proxy == true) {
+  systemd.user.services.mpris-proxy = lib.mkIf mpris-proxy {
     description = "Mpris proxy";
     after = [
       "network.target"

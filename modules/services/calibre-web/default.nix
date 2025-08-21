@@ -1,8 +1,4 @@
-{
-  pkgs,
-  ...
-}:
-
+{ pkgs, ... }:
 {
   users.users.calibre-web = {
     isSystemUser = true;

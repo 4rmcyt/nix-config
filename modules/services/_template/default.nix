@@ -1,8 +1,5 @@
 # Template for secure service configuration
-{
-  config,
-  ...
-}:
+{ config, ... }:
 let
   serviceName = "example";
   serviceUser = serviceName;
@@ -39,7 +36,7 @@ in
     passwordFile = config.sops.secrets."${serviceName}-password".path;
 
     # Data directory
-    dataDir = dataDir;
+    inherit dataDir;
     user = serviceUser;
     group = serviceGroup;
   };

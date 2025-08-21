@@ -1,10 +1,5 @@
+{ pkgs, ... }:
 {
-  pkgs,
-  ...
-}:
-
-{
-
   users.users.homepage-dashboard = {
     isSystemUser = true;
     group = "homepage-dashboard";

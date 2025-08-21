@@ -6,7 +6,7 @@
 let
   service = "linkwarden";
   cfg = config.homelab.services.${service};
-  homelab = config.homelab;
+  inherit (config) homelab;
 in
 {
   options.homelab.services.${service} = {
@@ -89,7 +89,7 @@ in
       port = cfg.listenPort;
       database.port = cfg.database.port;
       storageLocation = cfg.stateDir;
-      enableRegistration = cfg.enableRegistration;
+      inherit (cfg) enableRegistration;
       # environment = { }; # https://docs.linkwarden.app/self-hosting/environment-variables
       environmentFile = lib.mkIf (cfg.secretEnvironmentFile != null) cfg.secretEnvironmentFile; # Path to a file containing environment variables, for example for NEXTAUTH_SECRET=<secret>,   POSTGRES_PASSWORD=<pass>
     };
