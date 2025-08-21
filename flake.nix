@@ -95,7 +95,7 @@
 
       darwinConfigurations.macbook = mkDarwin "macbook" "aarch64-darwin" [
         ./hosts/darwin/macbook
-        ./modules/users/zeev
+        ./modules/users/vk
       ];
     } // (flake-utils.lib.eachDefaultSystem (system:
       let
