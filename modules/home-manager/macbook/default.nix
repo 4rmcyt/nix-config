@@ -272,15 +272,14 @@
           "ohmyzsh/ohmyzsh path:plugins/safe-paste"
           "ohmyzsh/ohmyzsh path:plugins/z"
           "ohmyzsh/ohmyzsh path:plugins/zoxide"
-          "ohmyzsh/ohmyzsh path:plugins/you-should-use"
           "ohmyzsh/ohmyzsh path:plugins/sudo"
-          "ohmyzsh/ohmyzsh path:plugins/pass"
 
           # Separate community plugins
           "zsh-users/zsh-completions"
           "zsh-users/zsh-autosuggestions"
           "zsh-users/zsh-history-substring-search"
           "zdharma-continuum/fast-syntax-highlighting"
+          "MichaelAquilina/zsh-you-should-use"
           "Aloxaf/fzf-tab"
 
           "romkatv/powerlevel10k"
