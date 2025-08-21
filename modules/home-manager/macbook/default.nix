@@ -1,4 +1,7 @@
-{ pkgs, lib, config, inputs, ... }:
+{
+  pkgs,
+  ...
+}:
 {
   home.stateVersion = "25.05";
   home.username = "vk";
@@ -95,15 +98,13 @@
   # --------------------------------------------------------------------------------
   # Fonts
   # --------------------------------------------------------------------------------
-  home.file.".config/fontconfig/fonts.conf".source = (
-    pkgs.makeFontsConf {
+  home.file.".config/fontconfig/fonts.conf".source = pkgs.makeFontsConf {
       fontDirectories = with pkgs; [
         fira-code
         font-awesome
         material-design-icons
       ];
-    }
-  );
+    };
 
   # --------------------------------------------------------------------------------
   # Program Configurations
@@ -164,7 +165,7 @@
       enableCompletion = true;
       initContent = ''
          autoload -Uz compinit && compinit
-         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh    
+         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
          if [ $(command -v fortune) ] && [ $UID != '0' ] && [[ $- == *i* ]] && [ $TERM != 'dumb' ]; then
             ### Cowsay At Login ###
             if [ $(command -v cowsay) ]; then
@@ -179,7 +180,7 @@
 
         eval "$(pyenv init --path)"
         eval "$(pyenv init -)"
-        eval "$(pyenv virtualenv-init -)" 
+        eval "$(pyenv virtualenv-init -)"
       '';
       antidote = {
         enable = true;
@@ -216,10 +217,8 @@
 
           "romkatv/powerlevel10k"
         ];
-
       };
     };
-
   };
   # Copy the p10k config file into your home directory
   home.file.".p10k.zsh".source = ../../dots/zsh/.p10k.zsh;
