@@ -252,10 +252,10 @@
       antidote = {
         enable = true;
         useFriendlyNames = true;
-       plugins = [
+        plugins = [
           "getantidote/use-omz"
 
-          # Standard Oh My Zsh plugins
+          # Oh My Zsh plugins (no duplicates)
           "ohmyzsh/ohmyzsh path:plugins/ansible"
           "ohmyzsh/ohmyzsh path:plugins/aws"
           "ohmyzsh/ohmyzsh path:plugins/bazel"
@@ -272,6 +272,7 @@
           "ohmyzsh/ohmyzsh path:plugins/safe-paste"
           "ohmyzsh/ohmyzsh path:plugins/z"
           "ohmyzsh/ohmyzsh path:plugins/zoxide"
+          "ohmyzsh/ohmyzsh path:plugins/you-should-use"
           "ohmyzsh/ohmyzsh path:plugins/sudo"
           "ohmyzsh/ohmyzsh path:plugins/pass"
 
@@ -281,7 +282,6 @@
           "zsh-users/zsh-history-substring-search"
           "zdharma-continuum/fast-syntax-highlighting"
           "Aloxaf/fzf-tab"
-          "you-should-use/you-should-use" # Corrected entry
 
           "romkatv/powerlevel10k"
         ];
