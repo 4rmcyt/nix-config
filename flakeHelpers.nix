@@ -12,14 +12,16 @@ let
         };
         modules = [
           inputs.sops-nix.nixosModules.sops
-          { sops.age.keyFile = "/var/lib/sops/age.key"; }
+          { sops.age.keyFile = "/var/lib/sops/age.key";
+          }
           inputs.home-manager.nixosModules.home-manager
           inputs.disko.nixosModules.disko
           inputs.nix-index-database.nixosModules.nix-index
           inputs.auto-cpufreq.nixosModules.default
           "${inputs.linkwarden-pr}/nixos/modules/services/web-apps/linkwarden.nix"
           inputs.nixos-facter-modules.nixosModules.facter
-          { facter.reportPath = ./facter.json; }
+          { facter.reportPath = ./facter.json;
+          }
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
@@ -43,9 +45,13 @@ let
             host = machineHostname;
           };
           modules = [
+            # Import the sops-nix darwin module
+            inputs.sops-nix.darwinModules.sops
             inputs.home-manager.darwinModules.home-manager
             inputs.mac-app-util.darwinModules.default
             {
+              # It's good practice to specify the system key file here
+              sops.age.keyFile = "/var/lib/sops/age.key";
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.vk = {
@@ -61,28 +67,6 @@ let
         };
       in
       darwinConfig // { type = "darwin-configuration"; };
-    mkOutputs =
-      {
-        nixosConfigurations,
-        darwinConfigurations,
-        treefmt-config,
-      }:
-      {
-        inherit nixosConfigurations darwinConfigurations;
-      }
-      // (inputs.flake-utils.lib.eachDefaultSystem (
-        system:
-        let
-          pkgs = inputs.nixpkgs.legacyPackages.${system};
-        in
-        {
-          formatter = inputs.treefmt-nix.lib.mkWrapper pkgs treefmt-config;
-          packages.default = pkgs.mkShell {
-            packages = [ pkgs.just ];
-          };
-
-        }
-      ));
   };
 in
 helpers
