@@ -1,4 +1,4 @@
-# nixos-config/modules/home-manager/macbook/default.nix
+# File: nixos-config/modules/home-manager/macbook/default.nix
 {
   pkgs,
   config,
@@ -48,7 +48,6 @@
 
     nix-diff
     nil
-    nixfmt-rfc-style
     nixos-anywhere
     nixos-generators
 
@@ -101,7 +100,6 @@
 
     tree
     wget
-    obsidian
     yamlfmt
     yubikey-agent
     yubikey-manager
@@ -110,7 +108,6 @@
     home-manager
 
     # Applications
-    jellyfin-media-player
     slack
     telegram-desktop
     youtube-music
@@ -226,7 +223,7 @@
         HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
 
-         zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+        zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
         zstyle ':completion:*' menu no
         zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
         zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
