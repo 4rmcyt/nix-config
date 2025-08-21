@@ -58,6 +58,7 @@
     vscode
     wireguard-tools
     yq
+    zsh-powerlevel10k
 
     # System & CLI Tools
     appcleaner
@@ -108,37 +109,120 @@
   # --------------------------------------------------------------------------------
   # Program Configurations
   # --------------------------------------------------------------------------------
-  programs.nix-index.enable = true;
 
-  programs.direnv = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-
-  programs.zsh = {
-    enable = true;
-    syntaxHighlighting.enable = true;
-    autosuggestion.enable = true;
-    enableCompletion = true;
-    initContent = ''
-      # Source Powerlevel10k configuration
-      [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
-    '';
-    oh-my-zsh = {
+  programs = {
+    direnv = {
       enable = true;
-      plugins = [
-        "git"
-        "sudo"
+      enableBashIntegration = true;
+      enableZshIntegration = true;
+      nix-direnv.enable = true;
+    };
+    nix-index.enable = true;
+
+    zoxide = {
+      enable = true;
+      enableZshIntegration = true;
+      enableBashIntegration = true;
+      options = [ "--cmd cd" ];
+    };
+
+    fzf = {
+      enable = true;
+      enableZshIntegration = true;
+      defaultOptions = [
+        "--height 40%"
+        "--layout=reverse"
+        "--info=inline"
+        "--border"
+        "--exact"
       ];
     };
-    plugins = [
-      {
-        name = "powerlevel10k";
-        src = pkgs.zsh-powerlevel10k;
-      }
-    ];
-  };
 
+    gpg = {
+      enable = true;
+      homedir = "~/.gnupg";
+    };
+
+    gh = {
+      enable = true;
+      settings = {
+        editor = "hx";
+        git_protocol = "ssh";
+      };
+    };
+
+    git = {
+      enable = true;
+      settings = {
+        editor = "hx";
+        git_protocol = "ssh";
+      };
+    };
+    zsh = {
+      enable = true;
+      syntaxHighlighting.enable = true;
+      autosuggestion.enable = true;
+      enableCompletion = true;
+      initContent = ''
+         autoload -Uz compinit && compinit
+         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+         
+        if [ $(command -v fortune) ] && [ $UID != '0' ] && [[ $- == *i* ]] && [ $TERM != 'dumb' ]; then
+            ### Cowsay At Login ###
+            if [ $(command -v cowsay) ]; then
+                fortune -a fortunes wisdom | cowsay
+            else
+                fortune -a fortunes wisdom
+            fi
+        fi
+
+        export PATH="$HOME/.pyenv:$PATH"
+        export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+
+        eval "$(pyenv init --path)"
+        eval "$(pyenv init -)"
+        eval "$(pyenv virtualenv-init -)" 
+      '';
+      antidote = {
+        enable = true;
+        plugins = [
+          "getantidote/use-omz"
+
+          "ohmyzsh/ohmyzsh path:plugins/ansible"
+          "ohmyzsh/ohmyzsh path:plugins/aws"
+          "ohmyzsh/ohmyzsh path:plugins/bazel"
+          "ohmyzsh/ohmyzsh path:plugins/brew"
+          "ohmyzsh/ohmyzsh path:plugins/command-not-found"
+          "ohmyzsh/ohmyzsh path:plugins/direnv"
+          "ohmyzsh/ohmyzsh path:plugins/docker"
+          "ohmyzsh/ohmyzsh path:plugins/git"
+          "ohmyzsh/ohmyzsh path:plugins/fzf"
+          "ohmyzsh/ohmyzsh path:plugins/poetry"
+          "ohmyzsh/ohmyzsh path:plugins/pyenv"
+          "ohmyzsh/ohmyzsh path:plugins/python"
+          "ohmyzsh/ohmyzsh path:plugins/rust"
+          "ohmyzsh/ohmyzsh path:plugins/safe-paste"
+          "ohmyzsh/ohmyzsh path:plugins/z"
+          "ohmyzsh/ohmyzsh path:plugins/zoxide"
+          "ohmyzsh/ohmyzsh path:plugins/you-should-use"
+          "ohmyzsh/ohmyzsh path:plugins/sudo"
+          "ohmyzsh/ohmyzsh path:plugins/zsh-autosuggestions"
+          "ohmyzsh/ohmyzsh path:plugins/zsh-history-substring-search"
+          "ohmyzsh/ohmyzsh path:plugins/sudo"
+          "ohmyzsh/ohmyzsh path:plugins/pass"
+
+          "zsh-users/zsh-autosuggestions"
+          "zsh-users/zsh-history-substring-search"
+          # "zdharma-continuum/fast-syntax-highlighting"
+          "Aloxaf/fzf-tab"
+
+          "romkatv/powerlevel10k"
+        ];
+
+      };
+    };
+
+  };
   # Copy the p10k config file into your home directory
   home.file.".p10k.zsh".source = ../../dots/zsh/.p10k.zsh;
 }
