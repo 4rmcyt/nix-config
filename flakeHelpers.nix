@@ -1,5 +1,7 @@
 inputs:
 let
+  # This configuration is now used for both NixOS and Darwin.
+  # It dynamically sets the sops key path based on the system.
   homeManagerCfg = user: host: system: {
     home-manager.useGlobalPkgs = true;
     home-manager.useUserPackages = true;
@@ -7,7 +9,10 @@ let
       imports = [
         ./modules/home-manager/${host}
         inputs.sops-nix.homeManagerModules.sops
-      ];
+      ] ++ (if system == "aarch64-darwin" || system == "x86_64-darwin" then
+        [ inputs.mac-app-util.homeManagerModules.default ]
+      else
+        [ ]);
       sops.age.keyFile =
         if system == "x86_64-linux" then
           "/home/${user}/.config/sops/age/keys.txt"
@@ -16,6 +21,7 @@ let
     };
   };
 
+  # Common modules for all NixOS systems
   commonNixosModules = [
     inputs.sops-nix.nixosModules.sops
     { sops.age.keyFile = "/var/lib/sops/age.key"; }
@@ -27,6 +33,13 @@ let
     inputs.nixos-facter-modules.nixosModules.facter
     { facter.reportPath = ./facter.json; }
   ];
+
+  # Common modules for all Darwin systems
+  commonDarwinModules = [
+    inputs.home-manager.darwinModules.home-manager
+    inputs.mac-app-util.darwinModules.default
+  ];
+
 in
 {
   mkNixos = machineHostname: nixpkgsVersion: extraModules: {
@@ -36,29 +49,23 @@ in
         inherit inputs;
         host = machineHostname;
       };
-      modules =
-        commonNixosModules
-        ++ [
-          (homeManagerCfg "zeev" machineHostname "x86_64-linux")
-        ]
-        ++ extraModules;
+      modules = commonNixosModules ++ [
+        (homeManagerCfg "zeev" machineHostname "x86_64-linux")
+      ] ++ extraModules;
     };
   };
 
-  mkDarwin = machineHostname: system: extraModules: {
-    darwinConfigurations.${machineHostname} = inputs.nix-darwin.lib.darwinSystem {
+  mkDarwin = machineHostname: system: extraModules:
+    inputs.nix-darwin.lib.darwinSystem {
       inherit system;
       specialArgs = {
         inherit inputs;
         host = machineHostname;
       };
-      modules = [
-        inputs.home-manager.darwinModules.home-manager
+      modules = commonDarwinModules ++ [
         (homeManagerCfg "zeev" machineHostname system)
-      ]
-      ++ extraModules;
+      ] ++ extraModules;
     };
-  };
 
   mkMerge = inputs.nixpkgs.lib.lists.foldl' (
     a: b: inputs.nixpkgs.lib.attrsets.recursiveUpdate a b
