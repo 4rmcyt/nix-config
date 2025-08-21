@@ -83,7 +83,7 @@
     yubico-piv-tool
     yubikey-manager
     yubikey-personalization
-
+    
     # Applications
     jellyfin-media-player
     slack
@@ -95,15 +95,13 @@
   # --------------------------------------------------------------------------------
   # Fonts
   # --------------------------------------------------------------------------------
-  home.file.".config/fontconfig/fonts.conf".source = (
-    pkgs.makeFontsConf {
-      fontDirectories = with pkgs; [
-        fira-code
-        font-awesome
-        material-design-icons
-      ];
-    }
-  );
+  home.file.".config/fontconfig/fonts.conf".source = (pkgs.makeFontsConf {
+    fontDirectories = with pkgs; [
+      fira-code
+      font-awesome
+      material-design-icons
+    ];
+  });
 
   # --------------------------------------------------------------------------------
   # Program Configurations
@@ -126,6 +124,7 @@
     '';
     oh-my-zsh = {
       enable = true;
+      theme = "powerlevel10k/powerlevel10k";
       plugins = [
         "git"
         "sudo"
@@ -140,5 +139,5 @@
   };
 
   # Copy the p10k config file into your home directory
-  home.file.".p10k.zsh".source = ../../dots/zsh/.p10k.zsh;
+  home.file.".p10k.zsh".source = ./dots/zsh/.p10k.zsh;
 }
