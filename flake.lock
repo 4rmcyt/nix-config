@@ -886,6 +886,23 @@
         "type": "github"
       }
     },
+    "inkwarden-pr": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1753180371,
+        "narHash": "sha256-twrzVKa9ylf1Y2q29913bvYIPineFcblu/252FMnMvs=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "f0809e9f3402644c0987842727cb1d3f93d2e4a6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "f0809e9f3402644c0987842727cb1d3f93d2e4a6",
+        "type": "github"
+      }
+    },
     "mac-app-util": {
       "inputs": {
         "cl-nix-lite": "cl-nix-lite",
@@ -1416,6 +1433,7 @@
         "hyprland": "hyprland",
         "hyprlock": "hyprlock",
         "hyprpicker": "hyprpicker",
+        "inkwarden-pr": "inkwarden-pr",
         "mac-app-util": "mac-app-util",
         "nix-darwin": "nix-darwin",
         "nix-gaming": "nix-gaming",
