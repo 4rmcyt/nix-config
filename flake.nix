@@ -24,17 +24,14 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     mac-app-util = {
       url = "github:hraban/mac-app-util";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     # Secrets Management
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -70,7 +67,6 @@
       url = "github:NixOS/nixpkgs/f0809e9f3402644c0987842727cb1d3f93d2e4a6?shallow=1";
       flake = false;
     };
-
     # Hyprland & Wayland
     hyprland.url = "github:hyprwm/Hyprland";
     hypr-contrib.url = "github:hyprwm/contrib";
@@ -81,12 +77,11 @@
     # Gaming
     nix-gaming.url = "github:fufexan/nix-gaming";
   };
-
   outputs =
     { self, flake-utils, ... }@inputs:
     let
       helpers = import ./flakeHelpers.nix inputs;
-      inherit (helpers) mkMerge mkNixos;
+      inherit (helpers) mkMerge mkNixos mkDarwin;
     in
     mkMerge [
       (flake-utils.lib.eachDefaultSystem (
@@ -101,6 +96,7 @@
               # Consider adding nixos-rebuild-ng if you use it
             ];
           };
+          formatter = inputs.treefmt-nix.lib.mkWrapper pkgs self.treefmt;
         }
       ))
       (mkNixos "homeserver" inputs.nixpkgs [
@@ -112,7 +108,7 @@
         inputs.vscode-server.nixosModules.default
       ])
       # Added MacBook configuration
-      (mkNixos "macbook" inputs.nixpkgs [
+      (mkDarwin "macbook" "aarch64-darwin" [
         ./hosts/macbook # You will need to create this directory and add your macbook's configuration.nix
         ./modules/users/zeev
         # Add any other modules specific to your MacBook here
