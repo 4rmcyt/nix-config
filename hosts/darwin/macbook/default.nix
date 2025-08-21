@@ -10,7 +10,7 @@
   # --------------------------------------------------------------------------------
   # System & User Configuration
   # --------------------------------------------------------------------------------
-  
+
   networking.hostName = "macbook";
   system.stateVersion = 5;
   nixpkgs.hostPlatform = "aarch64-darwin";

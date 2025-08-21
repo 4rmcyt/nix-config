@@ -1,9 +1,7 @@
 # File: nixos-config/modules/home-manager/macbook/default.nix
 {
   pkgs,
-  lib,
   config,
-  inputs,
   ...
 }:
 {
@@ -119,15 +117,13 @@
   # --------------------------------------------------------------------------------
   # Fonts
   # --------------------------------------------------------------------------------
-  home.file.".config/fontconfig/fonts.conf".source = (
-    pkgs.makeFontsConf {
+  home.file.".config/fontconfig/fonts.conf".source = pkgs.makeFontsConf {
       fontDirectories = with pkgs; [
         fira-code
         font-awesome
         material-design-icons
       ];
-    }
-  );
+    };
   # --------------------------------------------------------------------------------
   # Program Configurations
   # --------------------------------------------------------------------------------
@@ -193,7 +189,7 @@
         export PYENV_ROOT="$HOME/.pyenv"
         export PATH="$PYENV_ROOT/bin:$PATH"
         eval "$(pyenv init --path)"
-        
+
         export GPG_TTY=$(tty)
         if ! pgrep -x "gpg-agent" > /dev/null; then
             ${pkgs.gnupg}/bin/gpgconf --launch gpg-agent
@@ -279,9 +275,7 @@
 
           "romkatv/powerlevel10k"
         ];
-
       };
     };
-
   };
 }

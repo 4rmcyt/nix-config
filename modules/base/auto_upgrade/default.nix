@@ -1,5 +1,4 @@
-_:
-{
+_: {
   system.autoUpgrade = {
     enable = true;
     flake = "github:4rmcyt/server#homeserver";
