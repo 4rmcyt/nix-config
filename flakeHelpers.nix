@@ -12,14 +12,16 @@ let
         };
         modules = [
           inputs.sops-nix.nixosModules.sops
-          { sops.age.keyFile = "/var/lib/sops/age.key";
+          {
+            sops.age.keyFile = "/var/lib/sops/age.key";
           }
           inputs.home-manager.nixosModules.home-manager
           inputs.disko.nixosModules.disko
           inputs.nix-index-database.nixosModules.nix-index
           inputs.auto-cpufreq.nixosModules.default
           inputs.nixos-facter-modules.nixosModules.facter
-          { facter.reportPath = ./facter.json;
+          {
+            facter.reportPath = ./facter.json;
           }
           {
             home-manager.useGlobalPkgs = true;
@@ -32,7 +34,8 @@ let
               sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
             };
           }
-        ] ++ extraModules;
+        ]
+        ++ extraModules;
       };
     mkDarwin =
       machineHostname: system: extraModules:
@@ -62,7 +65,8 @@ let
                 sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt"; # Adjusted path for vk
               };
             }
-          ] ++ extraModules;
+          ]
+          ++ extraModules;
         };
       in
       darwinConfig // { type = "darwin-configuration"; };
