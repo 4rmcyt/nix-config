@@ -82,42 +82,30 @@
     let
       helpers = import ./flakeHelpers.nix inputs;
       inherit (helpers) mkNixos mkDarwin;
-      treefmt-config = import ./treefmt.nix {
-        pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
-      };
-      darwinSystems = [ "aarch64-darwin" "x86_64-darwin" ];
     in
     {
-      nixosConfigurations = (mkNixos "homeserver" inputs.nixpkgs [
+      nixosConfigurations.homeserver = mkNixos "homeserver" "x86_64-linux" [
         ./hosts/nixos/homeserver
         ./modules/users/zeev
         ./modules/disko
         inputs.nixarr.nixosModules.default
         inputs.authentik-nix.nixosModules.default
         inputs.vscode-server.nixosModules.default
-      ]).nixosConfigurations;
+      ];
 
-      darwinConfigurations = {
-        macbook = mkDarwin "macbook" "aarch64-darwin" [
-          ./hosts/darwin/macbook
-          ./modules/users/zeev
-          inputs.mac-app-util.darwinModules.default
-        ];
-      };
-
-      formatter = flake-utils.lib.eachDefaultSystem (system:
-        let pkgs = inputs.nixpkgs.legacyPackages.${system};
-        in inputs.treefmt-nix.lib.mkWrapper pkgs treefmt-config
-      );
-
-      packages = flake-utils.lib.eachDefaultSystem (system:
-        let pkgs = inputs.nixpkgs.legacyPackages.${system};
-        in {
-          default = pkgs.mkShell {
-            packages = [ pkgs.just ];
-          };
-        }
-      );
-
-    };
+      darwinConfigurations.macbook = mkDarwin "macbook" "aarch64-darwin" [
+        ./hosts/darwin/macbook
+        ./modules/users/zeev
+      ];
+    } // (flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = inputs.nixpkgs.legacyPackages.${system};
+        treefmt-config = import ./treefmt.nix { inherit pkgs; };
+      in
+      {
+        formatter = inputs.treefmt-nix.lib.mkWrapper pkgs treefmt-config;
+        packages.default = pkgs.mkShell {
+          packages = [ pkgs.just ];
+        };
+      }));
 }
