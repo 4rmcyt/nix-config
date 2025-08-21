@@ -65,7 +65,7 @@
     pyenv
     python3Full
     pyenv
-    (pyenv.withPlugins (plugins: [ plugins.pyenv-virtualenv ]))
+    virtualenv
     sops
     ssh-to-age
     tenv
