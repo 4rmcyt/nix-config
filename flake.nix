@@ -58,6 +58,10 @@
     systems.url = "github:nix-systems/default";
 
     # Services & Applications
+    firefox-darwin = {
+      url = "github:bandithedoge/nixpkgs-firefox-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixarr.url = "github:rasmus-kirk/nixarr";
     authentik-nix.url = "github:nix-community/authentik-nix";
     vscode-server.url = "github:nix-community/nixos-vscode-server";

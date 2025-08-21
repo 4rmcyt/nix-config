@@ -1,7 +1,9 @@
+# File: nixos-config/flakeHelpers.nix
 inputs:
 let
   helpers = {
-    mkNixos = machineHostname: system: extraModules:
+    mkNixos =
+      machineHostname: system: extraModules:
       inputs.nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
@@ -23,7 +25,7 @@ let
             home-manager.useUserPackages = true;
             home-manager.users.zeev = {
               imports = [
-                ./modules/home-manager/${machineHostname}
+                ./modules/home-manager/homeserver
                 inputs.sops-nix.homeManagerModules.sops
               ];
               sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
@@ -31,8 +33,8 @@ let
           }
         ] ++ extraModules;
       };
-
-    mkDarwin = machineHostname: system: extraModules:
+    mkDarwin =
+      machineHostname: system: extraModules:
       let
         darwinConfig = inputs.nix-darwin.lib.darwinSystem {
           inherit system;
@@ -46,24 +48,30 @@ let
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.zeev = {
+              home-manager.users.vk = {
                 imports = [
-                  ./modules/home-manager/${machineHostname}
+                  ./modules/home-manager/macbook # Correct path to the new HM config
                   inputs.sops-nix.homeManagerModules.sops
                   inputs.mac-app-util.homeManagerModules.default
                 ];
-                sops.age.keyFile = "/Users/zeev/.config/sops/age/keys.txt";
+                sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt"; # Adjusted path for vk
               };
             }
           ] ++ extraModules;
         };
       in
       darwinConfig // { type = "darwin-configuration"; };
-
-    mkOutputs = { nixosConfigurations, darwinConfigurations, treefmt-config }:
+    mkOutputs =
+      {
+        nixosConfigurations,
+        darwinConfigurations,
+        treefmt-config,
+      }:
       {
         inherit nixosConfigurations darwinConfigurations;
-      } // (inputs.flake-utils.lib.eachDefaultSystem (system:
+      }
+      // (inputs.flake-utils.lib.eachDefaultSystem (
+        system:
         let
           pkgs = inputs.nixpkgs.legacyPackages.${system};
         in
@@ -72,7 +80,9 @@ let
           packages.default = pkgs.mkShell {
             packages = [ pkgs.just ];
           };
-        }));
+
+        }
+      ));
   };
 in
 helpers
