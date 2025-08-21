@@ -77,14 +77,20 @@
     # Gaming
     nix-gaming.url = "github:fufexan/nix-gaming";
   };
-  outputs = inputs@{ self, treefmt-nix, ... }:
+  outputs =
+    inputs@{ treefmt-nix, ... }:
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [ "x86_64-linux", "aarch64-darwin" ];
+      systems = [
+        "x86_64-linux"
+        "aarch64-darwin"
+      ];
       imports = [ treefmt-nix.flakeModule ];
-      perSystem = { pkgs, ... }: {
-        devShells.default = import ./devshell.nix { inherit pkgs; };
-        treefmt = import ./treefmt.nix;
-      };
+      perSystem =
+        { pkgs, ... }:
+        {
+          devShells.default = import ./devshell.nix { inherit pkgs; };
+          treefmt = import ./treefmt.nix;
+        };
 
       flake =
         let

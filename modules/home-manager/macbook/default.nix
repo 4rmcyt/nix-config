@@ -15,8 +15,7 @@
   # --------------------------------------------------------------------------------
   # Home Manager Packages (User-Specific)
   # --------------------------------------------------------------------------------
-  home.packages = with pkgs;
-  [
+  home.packages = with pkgs; [
     # Dev Tools
     age
     age-plugin-yubikey
@@ -41,7 +40,7 @@
     nixfmt-rfc-style
     nixos-anywhere
     nixos-generators
-  
+
     nixpkgs-fmt
     pandoc
     pass
@@ -66,7 +65,7 @@
     curl
     delta
     fzf
-  
+
     htop
     iterm2
     jq
@@ -85,27 +84,29 @@
     yubico-piv-tool
     yubikey-manager
     yubikey-personalization
-    
+
     # Applications
     jellyfin-media-player
     slack
     telegram-desktop
     youtube-music
     zoom-us
- 
-   ];
+
+  ];
   # Note: 'firefox' is now managed by the system overlay
 
   # --------------------------------------------------------------------------------
   # Fonts
   # --------------------------------------------------------------------------------
-  home.file.".config/fontconfig/fonts.conf".source = (pkgs.makeFontsConf {
-    fontDirectories = with pkgs; [
-      fira-code
-      font-awesome
-      material-design-icons
-    ];
-  });
+  home.file.".config/fontconfig/fonts.conf".source = (
+    pkgs.makeFontsConf {
+      fontDirectories = with pkgs; [
+        fira-code
+        font-awesome
+        material-design-icons
+      ];
+    }
+  );
   # --------------------------------------------------------------------------------
   # Program Configurations
   # --------------------------------------------------------------------------------

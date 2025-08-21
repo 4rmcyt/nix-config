@@ -1,5 +1,10 @@
 # File: nixos-config/hosts/darwin/macbook/default.nix
-{ pkgs, lib, inputs, ... }: # Add 'inputs' here
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}: # Add 'inputs' here
 {
   # --------------------------------------------------------------------------------
   # System & User Configuration
@@ -26,8 +31,14 @@
   nixpkgs.config.allowUnfree = true;
 
   nix.settings = {
-    trusted-users = [ "root" "vk" ];
-    experimental-features = [ "nix-command" "flakes" ];
+    trusted-users = [
+      "root"
+      "vk"
+    ];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
     warn-dirty = false;
   };
 
@@ -50,7 +61,9 @@
     };
     brewPrefix = "/opt/homebrew/bin";
     taps = [ "amar1729/formulae" ];
-    caskArgs = { no_quarantine = true; };
+    caskArgs = {
+      no_quarantine = true;
+    };
 
     casks = [
       "alt-tab"
@@ -119,6 +132,6 @@
       "zstd"
     ];
 
-    masApps = {};
+    masApps = { };
   };
 }
