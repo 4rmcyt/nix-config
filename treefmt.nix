@@ -1,3 +1,4 @@
+# nixos-config/treefmt.nix
 { pkgs, ... }:
 {
   projectRootFile = "flake.nix";
@@ -7,10 +8,6 @@
       package = pkgs.nixfmt-rfc-style;
     };
     deadnix = {
-      enable = true;
-    };
-    alejandra = {
-      package = pkgs.alejandra;
       enable = true;
     };
     statix = {

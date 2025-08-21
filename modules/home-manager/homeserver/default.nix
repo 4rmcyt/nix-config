@@ -1,10 +1,12 @@
+# nixos-config/modules/home-manager/homeserver/default.nix
 {
   pkgs,
   lib,
   ...
 }:
 {
-  home.packages = with pkgs; [
+  home.packages = with pkgs;
+  [
     # Shell & Editor
     zsh
     neovim
@@ -19,7 +21,6 @@
     deploy-rs
     just
     nixfmt-rfc-style
-    nixpkgs-fmt
     nil
     nix-fast-build
     shfmt
@@ -28,7 +29,8 @@
     nix-diff
     zsh-powerlevel10k
     helix
-    # User Utils
+   
+     # User Utils
     pass
     jq
     dive
@@ -52,7 +54,6 @@
     tuptime
     home-manager
   ];
-
   programs = {
     git = {
       enable = true;
@@ -84,7 +85,6 @@
         marker = "#EBCB8B";
       };
     };
-
     zsh = {
       enable = true;
       syntaxHighlighting.enable = true;
@@ -127,7 +127,6 @@
       enable = true;
       enableZshIntegration = true;
     };
-
     helix = {
       enable = true;
       settings = {
@@ -156,7 +155,6 @@
       ];
     };
   };
-
   services = {
     ssh-agent.enable = true;
   };
@@ -172,6 +170,5 @@
   #     $DRY_RUN_CMD ${pkgs.gnupg}/bin/gpg --batch --import "$HOME/.gnupg/imported_keys.asc"
   #   fi
   # '';
-
   home.stateVersion = "25.05";
 }
