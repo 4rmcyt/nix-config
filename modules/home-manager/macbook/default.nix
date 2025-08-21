@@ -175,7 +175,7 @@
         github.user = "4rmcyt";
       };
     };
-     zsh = {
+    zsh = {
       enable = true;
       aliases = {
         ll = "ls -la";
