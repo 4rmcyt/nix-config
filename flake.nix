@@ -19,12 +19,15 @@
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     sops-nix = {
       url = "github:nix-community/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
 
     # System Utilities
     cpu-microcodes = {
@@ -52,6 +55,11 @@
     };
     systems = {
       url = "github:nix-systems/default";
+    };
+
+    mac-app-util = {
+      url = "github:hraban/mac-app-util";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Services & Applications
