@@ -9,7 +9,7 @@
   # =================================================================
   imports = [
     ./hardware-configuration.nix
-    ....//../modules/networking
+    ../../../modules/networking
     ../../../modules/services
     ../../../modules/base
     # ../../modules/backup
