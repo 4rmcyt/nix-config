@@ -95,15 +95,13 @@
   # --------------------------------------------------------------------------------
   # Fonts
   # --------------------------------------------------------------------------------
-  home.file.".config/fontconfig/fonts.conf".source = (
-    pkgs.makeFontsConf {
+  home.file.".config/fontconfig/fonts.conf".source = pkgs.makeFontsConf {
       fontDirectories = with pkgs; [
         fira-code
         font-awesome
         material-design-icons
       ];
-    }
-  );
+    };
 
   # --------------------------------------------------------------------------------
   # Program Configurations
