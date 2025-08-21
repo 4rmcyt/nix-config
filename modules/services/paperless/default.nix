@@ -3,7 +3,6 @@
   pkgs,
   ...
 }:
-
 {
   sops.secrets = {
     # --- Paperless Secrets ---
@@ -89,5 +88,4 @@
       };
     };
   };
-
 }

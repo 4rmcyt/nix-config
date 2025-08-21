@@ -1,4 +1,4 @@
-{ ... }:
+_:
 {
   # Allow Nginx to read the SSL certificates by adding its user to the 'acme' group.
   # The 'nginx' user is created automatically by the service module.

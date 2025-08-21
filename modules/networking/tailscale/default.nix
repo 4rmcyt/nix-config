@@ -3,7 +3,6 @@
   pkgs,
   ...
 }:
-
 {
   sops.secrets = {
     tailscale_auth_key = {
@@ -63,9 +62,7 @@
       ${tailscale}/bin/tailscale up --authkey file:${config.sops.secrets.tailscale_auth_key.path} --accept-routes
     '';
   };
-
 }
-
 # Generated new OAuth client
 # k3bSghrrmL11CNTRL
 # tskey-client-k3bSghrrmL11CNTRL-1dXRywBntC7rrhkHPVCGC7m6iv3VxqkXe

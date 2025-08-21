@@ -1,6 +1,5 @@
 { config, ... }:
 {
-
   sops.secrets = {
     cloudflare_tunnel_credentials = {
       sopsFile = ../../../secrets/cloudflare_tunnel_credentials.bin;

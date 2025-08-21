@@ -1,5 +1,4 @@
 { config, ... }:
-
 {
   # =================================================================
   # Set the value for our new system-wide SSL path options

@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 {
   # Some QoL audio applications
   environment.systemPackages = with pkgs; [

@@ -4,7 +4,6 @@
   lib,
   ...
 }:
-
 # This 'let' block defines our data and helper function.
 let
   # Step 1: Define a simple list of all the services we want to protect.
@@ -119,7 +118,7 @@ in
     # Step 2: Use a function to generate the entire 'jails' block automatically.
     # lib.mapAttrs iterates over our 'servicesToProtect' list and applies
     # our helper function to each one, creating the final configuration.
-    jails = lib.mapAttrs (_name: service: mkJailConfig service) servicesToProtect;
+    jails = lib.mapAttrs (_name: mkJailConfig) servicesToProtect;
   };
 
   # Your custom filter and action definitions are excellent and need no changes.

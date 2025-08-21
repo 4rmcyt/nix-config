@@ -182,7 +182,7 @@
 
       CREATE ROLE grafana WITH LOGIN PASSWORD '${config.sops.secrets.grafana.path}' CREATEDB;
       CREATE DATABASE grafana;
-      GRANT ALL PRIVILEGES ON DATABASE grafana TO grafana;  
+      GRANT ALL PRIVILEGES ON DATABASE grafana TO grafana;
 
       CREATE ROLE paperless WITH LOGIN PASSWORD '${config.sops.secrets.paperless.path}' CREATEDB;
       CREATE DATABASE paperless;

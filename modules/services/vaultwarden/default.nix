@@ -1,7 +1,4 @@
-{
-  config,
-  ...
-}:
+{ config, ... }:
 {
   sops.secrets.vaultwarden_admin_token = {
     sopsFile = ../../../secrets/vaultwarden.yaml;

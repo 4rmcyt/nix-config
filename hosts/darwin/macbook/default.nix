@@ -4,7 +4,8 @@
   lib,
   inputs,
   ...
-}: # Add 'inputs' here
+}:
+# Add 'inputs' here
 {
   # --------------------------------------------------------------------------------
   # System & User Configuration

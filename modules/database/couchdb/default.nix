@@ -10,7 +10,6 @@ let
   couchdb-pkg = (lib.getNixpkgs "couchdb-aarch64-nixpkgs").couchdb3;
 in
 lib.mkModule "obsidian-livesync" config {
-
   ### initial setup
   # set this temporarily and build:
   #services.couchdb.adminPass = "";

@@ -138,12 +138,12 @@
       hostKeys = [
         {
           type = "ed25519";
-          path = config.sops.secrets.ssh_host_ed25519_key.path;
+          inherit (config.sops.secrets.ssh_host_ed25519_key) path;
         }
         {
           type = "rsa";
           bits = 4096;
-          path = config.sops.secrets.ssh_host_rsa_key.path;
+          inherit (config.sops.secrets.ssh_host_rsa_key) path;
         }
       ];
       settings = {
