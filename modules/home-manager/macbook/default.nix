@@ -224,6 +224,12 @@
         bindkey '^[[B' history-substring-search-down # or '\eOB'
         HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
+        # Fix Home/End keys in iTerm2
+        bindkey '\e[H' beginning-of-line
+        bindkey '\e[F' end-of-line
+        bindkey '\e[1~' beginning-of-line
+        bindkey '\e[4~' end-of-line
+
 
          zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
         zstyle ':completion:*' menu no
