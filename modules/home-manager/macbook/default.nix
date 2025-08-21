@@ -8,7 +8,6 @@
   home.stateVersion = "25.05";
   home.username = "vk";
   home.homeDirectory = "/Users/vk";
-
   # --------------------------------------------------------------------------------
   # SSH Configuration
   # --------------------------------------------------------------------------------
@@ -17,7 +16,6 @@
     ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDc3zaVdT+TBJdjBWbN2fwSricHc7yJFGPxB9PB2sR4mkCmv6FPBd8vGZ1pYLJWEqgPU0C76IWAiSpwRrYu4Da0JKyEITh69sT+ndufTsrXJwPPxFKsUnmm2XQE0O2M2dM3wx+sMnBxWc1AMlfkWDnpP2N1Rl33ridumzEAGvJGqrn/ScpHGSgEkpZwVAnO5U8S9EjuO0h+nUJUSfLJVcl/cLeqHuF5zE8mSxsrj1FjiymZSquOEVAwNOhbCLuFVsYSEb8qujFsD7M9Umd0qvPQwCY9zN/Hb37TrNebhJ32kjIOlrWO3fnreMetIVRtTC1/cvKnGV16S32/YGiIUb2zLTfxKp2bn2qvXgLwocKf/M56fobQ6LOt60dUG1y3QwRLI1uAQggzp2N3/shQRb89nCQ/Zq67h941U2Z/RnNx7Hzl6n9DHkiKmkvXQuld0DWgh6wwG775gR2wBZHgpqtLqoRhwFVrvwIL9UkrLL4PE9A5iBEmypWsCWUomi5St+k= vk@Volodymyr-Kondratenko-Mac.local
     ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com
   '';
-
   # --------------------------------------------------------------------------------
   # Home Manager Packages (User-Specific)
   # --------------------------------------------------------------------------------
@@ -34,12 +32,14 @@
     docker
     fd
     flex
+    git
     git-crypt
     gh
     go
     gnupg
     gnugrep
     gnumake
+    darwin.cctools
     killall
     just
     lorri
@@ -49,6 +49,8 @@
     nixfmt-rfc-style
     nixos-anywhere
     nixos-generators
+
+    nixpkgs-fmt
     nixpkgs-lint
     pandoc
     openssl
@@ -59,6 +61,7 @@
     poetry
     pyenv
     python3Full
+    pyenv
     virtualenv
     sops
     ssh-to-age
@@ -77,6 +80,7 @@
     delta
     fzf
     write-good
+
     htop
     iterm2
     jq
@@ -94,22 +98,35 @@
     the-unarchiver
     tree
     wget
+    obsidian
     yamlfmt
     yubikey-agent
     yubikey-manager
     yubikey-personalization
     zsh-powerlevel10k
+    home-manager
 
     # Applications
+    jellyfin-media-player
     slack
     telegram-desktop
     youtube-music
     zoom-us
   ];
-
+  # --------------------------------------------------------------------------------
+  # Fonts
+  # --------------------------------------------------------------------------------
+  home.file.".config/fontconfig/fonts.conf".source = pkgs.makeFontsConf {
+    fontDirectories = with pkgs; [
+      fira-code
+      font-awesome
+      material-design-icons
+    ];
+  };
   # --------------------------------------------------------------------------------
   # Program Configurations
   # --------------------------------------------------------------------------------
+
   programs = {
     direnv = {
       enable = true;
@@ -166,6 +183,7 @@
         LESSCHARSET = "utf-8";
         PAGER = "less";
       };
+
       profileExtra = ''
         export PYENV_ROOT="$HOME/.pyenv"
         export PATH="$PYENV_ROOT/bin:$PATH"
@@ -188,12 +206,8 @@
           FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
         fi
       '';
-      initContent = ''
-        # iTerm2 Shell Integration
-        if [ -f "''${HOME}/.iterm2_shell_integration.zsh" ]; then
-          source "''${HOME}/.iterm2_shell_integration.zsh"
-        fi
 
+      initContent = ''
         autoload -Uz compinit && compinit
 
         bindkey -v
@@ -205,13 +219,6 @@
         bindkey '^[[A' history-substring-search-up # or '\eOA'
         bindkey '^[[B' history-substring-search-down # or '\eOB'
         HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
-
-        # Fix Home/End/Delete keys in iTerm2
-        bindkey '\e[H' beginning-of-line
-        bindkey '\e[F' end-of-line
-        bindkey '\e[1~' beginning-of-line
-        bindkey '\e[4~' end-of-line
-        bindkey '\e[3~' delete-char
 
         zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
         zstyle ':completion:*' menu no
@@ -231,6 +238,7 @@
             fi
         fi
       '';
+
       antidote = {
         enable = true;
         useFriendlyNames = true;
@@ -263,6 +271,7 @@
           "zdharma-continuum/fast-syntax-highlighting"
           "MichaelAquilina/zsh-you-should-use"
           "Aloxaf/fzf-tab"
+
           "romkatv/powerlevel10k"
         ];
       };
