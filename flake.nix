@@ -104,7 +104,7 @@
         }
       ))
       (mkNixos "homeserver" inputs.nixpkgs [
-        ./hosts/homeserver
+        ./hosts/nixos/homeserver
         ./modules/users/zeev
         ./modules/disko
         inputs.nixarr.nixosModules.default
