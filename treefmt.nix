@@ -1,11 +1,10 @@
 # nixos-config/treefmt.nix
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   projectRootFile = "flake.nix";
   programs = {
-    nixfmt = {
+    alejandra = {
       enable = true;
-      package = pkgs.nixfmt-rfc-style;
+      package = pkgs.alejandra;
     };
     deadnix = {
       enable = true;

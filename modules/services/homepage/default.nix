@@ -1,11 +1,10 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   users.users.homepage-dashboard = {
     isSystemUser = true;
     group = "homepage-dashboard";
-    extraGroups = [ "users" ];
+    extraGroups = ["users"];
   };
-  users.groups.homepage-dashboard = { };
+  users.groups.homepage-dashboard = {};
 
   networking.firewall.allowedTCPPorts = [
     8082 # Homepage Dashboard
@@ -27,7 +26,7 @@
     };
   };
 
-  environment.systemPackages = [ pkgs.homepage-dashboard ];
+  environment.systemPackages = [pkgs.homepage-dashboard];
 
   services.homepage-dashboard = {
     enable = true;
@@ -387,7 +386,7 @@
       {
         resources = {
           label = "storage";
-          disk = [ "/data" ];
+          disk = ["/data"];
         };
       }
       {

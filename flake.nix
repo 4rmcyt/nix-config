@@ -26,7 +26,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     blueprint.url = "github:numtide/blueprint";
-
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -70,12 +69,10 @@
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
     nixos-generators.url = "github:nix-community/nixos-generators";
-
-    inkwarden-pr = {
+    linkwarden-pr = {
       url = "github:NixOS/nixpkgs/f0809e9f3402644c0987842727cb1d3f93d2e4a6?shallow=1";
       flake = false;
     };
-
     # Hyprland & Wayland
     hyprland.url = "github:hyprwm/Hyprland";
     hypr-contrib.url = "github:hyprwm/contrib";
@@ -85,44 +82,59 @@
 
     # Gaming
     nix-gaming.url = "github:fufexan/nix-gaming";
+
+    # nix-homebrew
+    nix-homebrew = {
+      url = "github:zhaofengli/nix-homebrew";
+    };
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
   };
-  outputs =
-    inputs@{ treefmt-nix, ... }:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+  outputs = inputs @ {treefmt-nix, ...}:
+    inputs.flake-parts.lib.mkFlake
+    {
+      inherit inputs;
+    }
+    {
       systems = [
         "x86_64-linux"
         "aarch64-darwin"
       ];
-      imports = [ treefmt-nix.flakeModule ];
-      perSystem =
-        { pkgs, ... }:
-        {
-          devShells.default = import ./devshell.nix { inherit pkgs; };
-          treefmt = import ./treefmt.nix;
+      imports = [treefmt-nix.flakeModule];
+      perSystem = {pkgs, ...}: {
+        devShells.default = import ./devshell.nix {
+          inherit pkgs;
         };
+        treefmt = import ./treefmt.nix;
+      };
 
-      flake =
-        let
-          helpers = import ./flakeHelpers.nix inputs;
-          inherit (helpers) mkNixos mkDarwin;
-        in
-        {
-          nixosConfigurations = {
-            homeserver = mkNixos "homeserver" "x86_64-linux" [
-              ./hosts/nixos/homeserver
-              ./modules/users/zeev
-              ./modules/disko
-              inputs.nixarr.nixosModules.default
-              inputs.authentik-nix.nixosModules.default
-              inputs.vscode-server.nixosModules.default
-            ];
-          };
-          darwinConfigurations = {
-            macbook = mkDarwin "macbook" "aarch64-darwin" [
-              ./hosts/darwin/macbook
-              ./modules/users/vk
-            ];
-          };
+      flake = let
+        helpers = import ./flakeHelpers.nix inputs;
+        inherit (helpers) mkNixos mkDarwin;
+      in {
+        nixosConfigurations = {
+          homeserver = mkNixos "homeserver" "x86_64-linux" [
+            ./hosts/nixos/homeserver
+            ./modules/users/zeev
+            ./modules/disko
+            inputs.nixarr.nixosModules.default
+
+            inputs.authentik-nix.nixosModules.default
+            inputs.vscode-server.nixosModules.default
+          ];
         };
+        darwinConfigurations = {
+          macbook = mkDarwin "macbook" "aarch64-darwin" [
+            ./hosts/darwin/macbook
+            ./modules/users/vk
+          ];
+        };
+      };
     };
 }

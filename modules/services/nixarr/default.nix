@@ -2,8 +2,7 @@
   pkgs,
   lib,
   ...
-}:
-let
+}: let
   servicesWithMediaAccess = [
     "bazarr"
     "jellyseerr"
@@ -15,8 +14,7 @@ let
     "audiobookshelf"
     "jellyfin"
   ];
-in
-{
+in {
   users.users = {
     audiobookshelf = {
       isSystemUser = true;
@@ -84,15 +82,15 @@ in
     };
   };
   users.groups = {
-    audiobookshelf = { };
-    bazarr = { };
-    jellyfin = { };
-    jellyseerr = { };
-    lidarr = { };
-    prowlarr = { };
-    radarr = { };
-    sonarr = { };
-    transmission = { };
+    audiobookshelf = {};
+    bazarr = {};
+    jellyfin = {};
+    jellyseerr = {};
+    lidarr = {};
+    prowlarr = {};
+    radarr = {};
+    sonarr = {};
+    transmission = {};
   };
 
   networking.firewall.allowedTCPPorts = [
@@ -234,7 +232,7 @@ in
 
   nixarr = {
     enable = true;
-    mediaUsers = [ "zeev" ];
+    mediaUsers = ["zeev"];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
 

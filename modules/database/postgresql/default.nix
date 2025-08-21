@@ -3,8 +3,7 @@
   pkgs,
   lib,
   ...
-}:
-{
+}: {
   sops.secrets = {
     postgres = {
       sopsFile = ../../../secrets/postgresql.yaml;
@@ -67,7 +66,7 @@
     isSystemUser = true;
     group = "postgresql";
   };
-  users.groups.postgresql = { };
+  users.groups.postgresql = {};
 
   networking.firewall.allowedTCPPorts = [
     5432 # PostgreSQL

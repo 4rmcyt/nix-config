@@ -116,6 +116,23 @@
         "type": "github"
       }
     },
+    "brew-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1753461463,
+        "narHash": "sha256-kGc7pRH0diLzKmOHsEFA8sZ9NJpgT+tqxAMsuqNd5Po=",
+        "owner": "Homebrew",
+        "repo": "brew",
+        "rev": "4d14be89e99a45181c18e96a5f19a5b43343cc0f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Homebrew",
+        "ref": "4.5.13",
+        "repo": "brew",
+        "type": "github"
+      }
+    },
     "cl-nix-lite": {
       "locked": {
         "lastModified": 1728174978,
@@ -404,6 +421,38 @@
       "original": {
         "owner": "nix-community",
         "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "homebrew-cask": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1755816852,
+        "narHash": "sha256-n6xbDbvTI9OhIt85mYMnAhXlD9vZJvuT5T6emlJw6VE=",
+        "owner": "homebrew",
+        "repo": "homebrew-cask",
+        "rev": "08ee4108eb610dbe4b54bde5399afaf2f15bea07",
+        "type": "github"
+      },
+      "original": {
+        "owner": "homebrew",
+        "repo": "homebrew-cask",
+        "type": "github"
+      }
+    },
+    "homebrew-core": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1755813357,
+        "narHash": "sha256-B1ITmML+BMtAOmsCSHWUWSaGCQaCImkYAzzGbACj88A=",
+        "owner": "homebrew",
+        "repo": "homebrew-core",
+        "rev": "2976a796c1660edbb870dc8a376ea5ae9fbdd1dc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "homebrew",
+        "repo": "homebrew-core",
         "type": "github"
       }
     },
@@ -886,7 +935,7 @@
         "type": "github"
       }
     },
-    "inkwarden-pr": {
+    "linkwarden-pr": {
       "flake": false,
       "locked": {
         "lastModified": 1753180371,
@@ -989,6 +1038,24 @@
       "original": {
         "owner": "fufexan",
         "repo": "nix-gaming",
+        "type": "github"
+      }
+    },
+    "nix-homebrew": {
+      "inputs": {
+        "brew-src": "brew-src"
+      },
+      "locked": {
+        "lastModified": 1754250993,
+        "narHash": "sha256-MEin+qoQKtFC1b0f4tnQ+Z82BQWSCgh6Ef7rpmH9gig=",
+        "owner": "zhaofengli",
+        "repo": "nix-homebrew",
+        "rev": "314d057294e79bc2596972126b84c6f9f144499a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "zhaofengli",
+        "repo": "nix-homebrew",
         "type": "github"
       }
     },
@@ -1429,14 +1496,17 @@
         "firefox-darwin": "firefox-darwin",
         "flake-parts": "flake-parts_2",
         "home-manager": "home-manager",
+        "homebrew-cask": "homebrew-cask",
+        "homebrew-core": "homebrew-core",
         "hypr-contrib": "hypr-contrib",
         "hyprland": "hyprland",
         "hyprlock": "hyprlock",
         "hyprpicker": "hyprpicker",
-        "inkwarden-pr": "inkwarden-pr",
+        "linkwarden-pr": "linkwarden-pr",
         "mac-app-util": "mac-app-util",
         "nix-darwin": "nix-darwin",
         "nix-gaming": "nix-gaming",
+        "nix-homebrew": "nix-homebrew",
         "nix-index-database": "nix-index-database",
         "nixarr": "nixarr",
         "nixos-facter-modules": "nixos-facter-modules",
