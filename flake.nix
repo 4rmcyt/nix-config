@@ -27,6 +27,7 @@
 
     mac-app-util = {
       url = "github:hraban/mac-app-util";
+      
     };
 
     # Secrets Management
