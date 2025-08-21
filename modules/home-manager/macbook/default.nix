@@ -179,30 +179,15 @@
       autosuggestion.enable = true;
       enableCompletion = true;
       initContent = ''
-                 autoload -Uz compinit && compinit
-                 [[ !
-        -f ~/.p10k.zsh ]] || source ~/.p10k.zsh    
-                 if [ $(command -v fortune) ] && [ $UID != '0' ] && [[ $- == *i* ]] && [ $TERM != 'dumb' ];
-        then
-                    ### Cowsay At Login ###
-                    if [ $(command -v cowsay) ];
-        then
-                        fortune -a fortunes wisdom |
-        cowsay
-                    else
-                        fortune -a fortunes wisdom
-                    fi
-                fi
-
-                export PATH="$HOME/.pyenv:$PATH"
-                export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-
-                eval "$(pyenv init --path)"
-                eval "$(pyenv init -)"
-                eval 
-        "$(pyenv virtualenv-init -)" 
+        autoload -Uz compinit && compinit
+        [[ !-f ~/.p10k.zsh ]] || source ~/.p10k.zsh    
+        export PATH="$HOME/.pyenv:$PATH"
+        export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+        eval "$(pyenv init --path)"
+        eval "$(pyenv init -)"
+        eval "$(pyenv virtualenv-init -)" 
       '';
-      
+
       antidote = {
         enable = true;
         plugins = [
