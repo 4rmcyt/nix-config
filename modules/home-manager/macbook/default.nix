@@ -104,6 +104,7 @@
     yubikey-manager
     yubikey-personalization
     zsh-powerlevel10k
+    home-manager
 
     # Applications
     jellyfin-media-player
@@ -246,7 +247,7 @@
         eval "$(pyenv init -)"
         eval "$(pyenv virtualenv-init -)"
       '';
-  
+
       antidote = {
         enable = true;
         useFriendlyNames = true;
