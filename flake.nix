@@ -1,3 +1,4 @@
+# File: nixos-config/flake.nix
 {
   description = "A highly structured NixOS configuration";
   nixConfig = {
@@ -18,7 +19,6 @@
     # Core Flake Dependencies
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
-    flake-utils.url = "github:numtide/flake-utils"; # Kept for treefmtEval compatibility
     blueprint.url = "github:numtide/blueprint";
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
@@ -67,10 +67,6 @@
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
     nixos-generators.url = "github:nix-community/nixos-generators";
-    linkwarden-pr = {
-      url = "github:NixOS/nixpkgs/f0809e9f3402644c0987842727cb1d3f93d2e4a6?shallow=1";
-      flake = false;
-    };
     # Hyprland & Wayland
     hyprland.url = "github:hyprwm/Hyprland";
     hypr-contrib.url = "github:hyprwm/contrib";
@@ -81,65 +77,37 @@
     # Gaming
     nix-gaming.url = "github:fufexan/nix-gaming";
   };
-
-  outputs =
-    inputs@{
-      self,
-      nixpkgs,
-      flake-parts,
-      flake-utils,
-      treefmt-nix,
-      ...
-    }:
-    let
-      helpers = import ./flakeHelpers.nix inputs;
-      inherit (helpers) mkNixos mkDarwin;
-
-      supportedSystems = [
-        "x86_64-linux"
-        "aarch64-darwin"
-      ];
-
-      treefmtEval = flake-utils.lib.eachSystem supportedSystems (
-        system: treefmt-nix.lib.evalModule nixpkgs.legacyPackages.${system} ./treefmt.nix
-      );
-    in
-    flake-parts.lib.mkFlake { inherit self; } {
-      systems = supportedSystems;
-
-      perSystem =
-        {
-          config,
-          self',
-          inputs',
-          pkgs,
-          system,
-          ...
-        }:
-        {
-          devShells.default = import ./devshell.nix { inherit pkgs; };
-
-          formatter = treefmtEval.${system}.config.build.wrapper;
-        };
-
-      flake = {
-        nixosConfigurations = {
-          homeserver = mkNixos "homeserver" "x86_64-linux" [
-            ./hosts/nixos/homeserver
-            ./modules/users/zeev
-            ./modules/disko
-            inputs.nixarr.nixosModules.default
-            inputs.authentik-nix.nixosModules.default
-            inputs.vscode-server.nixosModules.default
-          ];
-        };
-
-        darwinConfigurations = {
-          macbook = mkDarwin "macbook" "aarch64-darwin" [
-            ./hosts/darwin/macbook
-            ./modules/users/vk
-          ];
-        };
+  outputs = inputs@{ self, treefmt-nix, ... }:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux", "aarch64-darwin" ];
+      imports = [ treefmt-nix.flakeModule ];
+      perSystem = { pkgs, ... }: {
+        devShells.default = import ./devshell.nix { inherit pkgs; };
+        treefmt = import ./treefmt.nix;
       };
+
+      flake =
+        let
+          helpers = import ./flakeHelpers.nix inputs;
+          inherit (helpers) mkNixos mkDarwin;
+        in
+        {
+          nixosConfigurations = {
+            homeserver = mkNixos "homeserver" "x86_64-linux" [
+              ./hosts/nixos/homeserver
+              ./modules/users/zeev
+              ./modules/disko
+              inputs.nixarr.nixosModules.default
+              inputs.authentik-nix.nixosModules.default
+              inputs.vscode-server.nixosModules.default
+            ];
+          };
+          darwinConfigurations = {
+            macbook = mkDarwin "macbook" "aarch64-darwin" [
+              ./hosts/darwin/macbook
+              ./modules/users/vk
+            ];
+          };
+        };
     };
 }
