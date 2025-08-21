@@ -82,6 +82,9 @@
     let
       helpers = import ./flakeHelpers.nix inputs;
       inherit (helpers) mkMerge mkNixos mkDarwin;
+      treefmt-config = import ./treefmt.nix {
+        pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
+      };
     in
     mkMerge [
       (flake-utils.lib.eachDefaultSystem (
@@ -93,10 +96,9 @@
           packages.default = pkgs.mkShell {
             packages = [
               pkgs.just
-              # Consider adding nixos-rebuild-ng if you use it
             ];
           };
-          formatter = inputs.treefmt-nix.lib.mkWrapper pkgs self.treefmt;
+          formatter = inputs.treefmt-nix.lib.mkWrapper pkgs treefmt-config;
         }
       ))
       (mkNixos "homeserver" inputs.nixpkgs [
@@ -107,11 +109,10 @@
         inputs.authentik-nix.nixosModules.default
         inputs.vscode-server.nixosModules.default
       ])
-      # Added MacBook configuration
       (mkDarwin "macbook" "aarch64-darwin" [
-        ./hosts/macbook # You will need to create this directory and add your macbook's configuration.nix
+        # Assuming you have this path created
+        ./hosts/darwin/macbook
         ./modules/users/zeev
-        # Add any other modules specific to your MacBook here
       ])
     ];
 }
