@@ -1,13 +1,59 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs, ... }:
+{
 
-pkgs.mkShell {
-  packages = [
-    pkgs.sops
-    pkgs.age
-    pkgs.git
-    pkgs.just
-    pkgs.nixfmt-rfc-style
-    pkgs.deadnix
-    pkgs.shfmt
+  projectRootFile = "flake.nix";
+  programs = {
+    nixfmt = {
+      enable = true;
+      package = pkgs.nixfmt-rfc-style;
+    };
+    deadnix = {
+      enable = true;
+    };
+    alejandra = {
+      package = pkgs.alejandra;
+    };
+    statix = {
+      package = pkgs.statix;
+    };
+    shfmt = {
+      enable = true;
+      package = pkgs.shfmt;
+    };
+  };
+  settings.global.excludes = [
+    "secrets/*"
+    "*.png"
+    "*.jpeg"
+    "*.yaml"
+    "*.gitignore"
+    ".vscode/*"
+    "*.toml"
+    "*.clan-flake"
+    "*.code-workspace"
+    "*.pub"
+    "*.typed"
+    "*.age"
+    "*.list"
+    "*.desktop"
   ];
+  programs.prettier = {
+    enable = true;
+    includes = [
+      "*.cjs"
+      "*.css"
+      "*.html"
+      "*.js"
+      "*.json5"
+      "*.jsx"
+      "*.mdx"
+      "*.mjs"
+      "*.scss"
+      "*.ts"
+      "*.tsx"
+      "*.vue"
+      "*.yaml"
+      "*.yml"
+    ];
+  };
 }
