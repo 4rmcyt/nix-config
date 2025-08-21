@@ -212,6 +212,11 @@
         fi
       '';
       initContent = ''
+        # iTerm2 Shell Integration
+        if [ -f "''${HOME}/.iterm2_shell_integration.zsh" ]; then
+          source "''${HOME}/.iterm2_shell_integration.zsh"
+        fi
+
         autoload -Uz compinit && compinit
 
         bindkey -v
@@ -229,7 +234,6 @@
         bindkey '\e[F' end-of-line
         bindkey '\e[1~' beginning-of-line
         bindkey '\e[4~' end-of-line
-
 
          zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
         zstyle ':completion:*' menu no
