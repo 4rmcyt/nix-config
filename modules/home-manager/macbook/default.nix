@@ -24,6 +24,7 @@
   home.packages = with pkgs; [
     # Dev Tools
     age
+    awscli2
     age-plugin-yubikey
     bison
     cargo
@@ -38,17 +39,23 @@
     gh
     go
     gnupg
-    gpgme
+    gnugrep
+    gnumake
+    darwin.cctools
+    killall
     just
     lorri
     neovim
+    nix-diff
     nil
     nixfmt-rfc-style
     nixos-anywhere
     nixos-generators
 
     nixpkgs-fmt
+    nixpkgs-lint
     pandoc
+    openssl
     pass
     pcsc-tools
     pinentry-tty
@@ -64,7 +71,7 @@
     vscode
     wireguard-tools
     yq
-    zsh-powerlevel10k
+    tmux
 
     # System & CLI Tools
     appcleaner
@@ -72,6 +79,7 @@
     curl
     delta
     fzf
+    write-good
 
     htop
     iterm2
@@ -81,6 +89,8 @@
     minipro
     neofetch
     nix-index
+    nix-info
+    nix-prefetch-scripts
     pet
     pwgen
     srecord
@@ -88,9 +98,12 @@
     the-unarchiver
     tree
     wget
-    yubico-piv-tool
+    obsidian
+    yamlfmt
+    yubikey-agent
     yubikey-manager
     yubikey-personalization
+    zsh-powerlevel10k
 
     # Applications
     jellyfin-media-player
@@ -144,7 +157,7 @@
 
     gpg = {
       enable = true;
-      homedir = "~/.gnupg";
+      homedir = "/Users/vk/.gnupg";
     };
     gh = {
       enable = true;
@@ -189,6 +202,7 @@
                 eval 
         "$(pyenv virtualenv-init -)" 
       '';
+      
       antidote = {
         enable = true;
         plugins = [
@@ -220,7 +234,7 @@
 
           "zsh-users/zsh-autosuggestions"
           "zsh-users/zsh-history-substring-search"
-          # "zdharma-continuum/fast-syntax-highlighting"
+          "zdharma-continuum/fast-syntax-highlighting"
           "Aloxaf/fzf-tab"
 
           "romkatv/powerlevel10k"
@@ -230,6 +244,4 @@
     };
 
   };
-  # Copy the p10k config file into your home directory
-  home.file.".p10k.zsh".source = ../../dots/zsh/.p10k.zsh;
 }
