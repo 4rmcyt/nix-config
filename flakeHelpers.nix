@@ -55,7 +55,6 @@ let
               # It's good practice to specify the system key file here
               sops.age.keyFile = "/var/lib/sops/age.key";
               home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
               home-manager.users.vk = {
                 imports = [
                   ./modules/home-manager/macbook # Correct path to the new HM config
