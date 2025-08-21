@@ -25,14 +25,19 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     mac-app-util = {
       url = "github:hraban/mac-app-util";
-      
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Secrets Management
     sops-nix = {
-      url = "github:nix-community/sops-nix";
+      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
