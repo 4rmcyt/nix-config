@@ -209,7 +209,6 @@
       '';
 
       initContent = ''
-        setopt funcnest=1000
         autoload -Uz compinit && compinit
 
         bindkey -v
