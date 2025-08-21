@@ -20,8 +20,7 @@
   # --------------------------------------------------------------------------------
   # Home Manager Packages (User-Specific)
   # --------------------------------------------------------------------------------
-  home.packages = with pkgs;
-  [
+  home.packages = with pkgs; [
     # Dev Tools
     age
     awscli2
@@ -46,7 +45,7 @@
     just
     lorri
     neovim
-  
+
     nix-diff
     nil
     nixfmt-rfc-style
@@ -72,7 +71,7 @@
     utm
     vscode
     wireguard-tools
-  
+
     yq
     tmux
 
@@ -99,7 +98,7 @@
     srecord
     tailscale
     the-unarchiver
-  
+
     tree
     wget
     obsidian
@@ -121,12 +120,11 @@
   # Fonts
   # --------------------------------------------------------------------------------
   home.file.".config/fontconfig/fonts.conf".source = pkgs.makeFontsConf {
-      fontDirectories = with pkgs;
-      [
-        fira-code
-        font-awesome
-        material-design-icons
-      ];
+    fontDirectories = with pkgs; [
+      fira-code
+      font-awesome
+      material-design-icons
+    ];
   };
   # --------------------------------------------------------------------------------
   # Program Configurations
@@ -226,7 +224,7 @@
         bindkey '^[[B' history-substring-search-down # or '\eOB'
         HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
-   
+
          zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
         zstyle ':completion:*' menu no
         zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
@@ -262,7 +260,7 @@
           "ohmyzsh/ohmyzsh path:plugins/brew"
           "ohmyzsh/ohmyzsh path:plugins/command-not-found"
           "ohmyzsh/ohmyzsh path:plugins/direnv"
-      
+
           "ohmyzsh/ohmyzsh path:plugins/docker"
           "ohmyzsh/ohmyzsh path:plugins/git"
           "ohmyzsh/ohmyzsh path:plugins/fzf"
@@ -272,8 +270,8 @@
           "ohmyzsh/ohmyzsh path:plugins/rust"
           "ohmyzsh/ohmyzsh path:plugins/safe-paste"
           "ohmyzsh/ohmyzsh path:plugins/z"
-       
-           "ohmyzsh/ohmyzsh path:plugins/zoxide"
+
+          "ohmyzsh/ohmyzsh path:plugins/zoxide"
           "ohmyzsh/ohmyzsh path:plugins/sudo"
 
           # Separate community plugins
@@ -285,8 +283,8 @@
           "Aloxaf/fzf-tab"
 
           "romkatv/powerlevel10k"
-  
-          ];
+
+        ];
       };
     };
   };
