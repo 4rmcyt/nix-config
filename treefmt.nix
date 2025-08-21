@@ -7,6 +7,8 @@
   programs.nixfmt.enable = true;
   programs.nixfmt.package = pkgs.nixfmt-rfc-style;
   programs.deadnix.enable = true;
+  programs.alejandra.package = pkgs.alejandra;
+  programs.statix.package = pkgs.statix;
   settings.global.excludes = [
     # Add this line to exclude the third-party input
     "secrets/*"

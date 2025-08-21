@@ -1,3 +1,4 @@
+# File: nixos-config/flake.nix
 {
   description = "NixOS configuration";
 
@@ -82,12 +83,23 @@
     nix-gaming.url = "github:fufexan/nix-gaming";
   };
   outputs =
-    { ... }@inputs:
+    {
+      self,
+      nixpkgs,
+      treefmt-nix,
+      flake-utils,
+      ...
+    }@inputs:
     let
       helpers = import ./flakeHelpers.nix inputs;
-      inherit (helpers) mkNixos mkDarwin mkOutputs;
+      inherit (helpers) mkNixos mkDarwin;
+
+      # Evaluate treefmt.nix as a module for each system
+      treefmtEval = flake-utils.lib.eachDefaultSystem (
+        system: treefmt-nix.lib.evalModule nixpkgs.legacyPackages.${system} ./treefmt.nix
+      );
     in
-    mkOutputs {
+    {
       nixosConfigurations = {
         homeserver = mkNixos "homeserver" "x86_64-linux" [
           ./hosts/nixos/homeserver
@@ -106,8 +118,18 @@
         ];
       };
 
-      treefmt-config = import ./treefmt.nix {
-        pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
-      };
-    };
+      formatter = flake-utils.lib.eachDefaultSystem (system: treefmtEval.${system}.config.build.wrapper);
+
+    }
+    // (flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      {
+        packages.default = pkgs.mkShell {
+          packages = [ pkgs.just ];
+        };
+      }
+    ));
 }
