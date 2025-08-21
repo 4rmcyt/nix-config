@@ -178,18 +178,78 @@
       syntaxHighlighting.enable = true;
       autosuggestion.enable = true;
       enableCompletion = true;
-      initContent = ''
-        autoload -Uz compinit && compinit
-        [[ !-f ~/.p10k.zsh ]] || source ~/.p10k.zsh    
-        export PATH="$HOME/.pyenv:$PATH"
-        export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-        eval "$(pyenv init --path)"
-        eval "$(pyenv init -)"
-        eval "$(pyenv virtualenv-init -)" 
+
+      sessionVariables = {
+        EDITOR = "nvim";
+        ALTERNATE_EDITOR = "${pkgs.vim}/vin/vi";
+        LC_CTYPE = "en_US.UTF-8";
+        LEDGER_COLOR = "true";
+        LESS = "-FRSXM";
+        LESSCHARSET = "utf-8";
+        PAGER = "less";
+      };
+
+      profileExtra = ''
+        export GPG_TTY=$(tty)
+        if ! pgrep -x "gpg-agent" > /dev/null; then
+            ${pkgs.gnupg}/bin/gpgconf --launch gpg-agent
+        fi
+
+        export PATH=/run/current-system/sw/bin:$HOME/.nix-profile/bin:$PATH
+        if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+            . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+        fi
+
+        [ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+        [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
+
+        if type brew &>/dev/null; then
+          FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+        fi
       '';
 
+      initContent = ''
+        autoload -Uz compinit && compinit
+
+        bindkey -v
+        bindkey '^f' autosuggest-accept
+        bindkey '^p' history-search-backward
+        bindkey '^n' history-search-forward
+        bindkey '^[w' kill-region
+
+        bindkey '^[[A' history-substring-search-up # or '\eOA'
+        bindkey '^[[B' history-substring-search-down # or '\eOB'
+        HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
+
+        zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+        zstyle ':completion:*' menu no
+        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+        zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+        zstyle ':completion:*:*:docker:*' option-stacking yes
+        zstyle ':completion:*:*:docker-*:*' option-stacking yes
+
+        [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+        if [ $(command -v fortune) ] && [ $UID != '0' ] && [[ $- == *i* ]] && [ $TERM != 'dumb' ]; then
+            ### Cowsay At Login ###
+            if [ $(command -v cowsay) ]; then
+                fortune -a fortunes wisdom | cowsay
+            else
+                fortune -a fortunes wisdom
+            fi
+        fi
+
+        export PATH="$HOME/.pyenv:$PATH"
+        export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+
+        eval "$(pyenv init --path)"
+        eval "$(pyenv init -)"
+        eval "$(pyenv virtualenv-init -)"
+      '';
+  
       antidote = {
         enable = true;
+        useFriendlyNames = true;
         plugins = [
           "getantidote/use-omz"
 
@@ -217,6 +277,7 @@
           "ohmyzsh/ohmyzsh path:plugins/sudo"
           "ohmyzsh/ohmyzsh path:plugins/pass"
 
+          "zsh-users/zsh-completions path:src kind:fpath"
           "zsh-users/zsh-autosuggestions"
           "zsh-users/zsh-history-substring-search"
           "zdharma-continuum/fast-syntax-highlighting"
