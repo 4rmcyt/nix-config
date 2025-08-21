@@ -13,6 +13,7 @@
   networking.hostName = "macbook";
   system.stateVersion = 5;
   nixpkgs.hostPlatform = "aarch64-darwin";
+  home-manager.useGlobalPkgs = true;
 
   # ADD THIS BLOCK to use the custom Firefox
   nixpkgs.overlays = [ inputs.firefox-darwin.overlay ];
