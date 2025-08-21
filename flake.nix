@@ -20,6 +20,12 @@
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    sops-nix = {
+      url = "github:nix-community/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+
     # System Utilities
     cpu-microcodes = {
       url = "github:platomav/CPUMicrocodes";
