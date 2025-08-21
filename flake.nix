@@ -67,6 +67,12 @@
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
     nixos-generators.url = "github:nix-community/nixos-generators";
+
+    inkwarden-pr = {
+      url = "github:NixOS/nixpkgs/f0809e9f3402644c0987842727cb1d3f93d2e4a6?shallow=1";
+      flake = false;
+    };
+
     # Hyprland & Wayland
     hyprland.url = "github:hyprwm/Hyprland";
     hypr-contrib.url = "github:hyprwm/contrib";
