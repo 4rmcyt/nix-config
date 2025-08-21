@@ -10,10 +10,11 @@
   # --------------------------------------------------------------------------------
   # System & User Configuration
   # --------------------------------------------------------------------------------
+  
   networking.hostName = "macbook";
   system.stateVersion = 5;
   nixpkgs.hostPlatform = "aarch64-darwin";
-  home-manager.useGlobalPkgs = true;
+  nixpkgs.config.allowUnfree = true;
 
   # ADD THIS BLOCK to use the custom Firefox
   nixpkgs.overlays = [ inputs.firefox-darwin.overlay ];
@@ -31,7 +32,6 @@
   # Nix Configuration (System-Wide)
   # --------------------------------------------------------------------------------
   nix.package = pkgs.nix;
-  nixpkgs.config.allowUnfree = true;
 
   nix.settings = {
     trusted-users = [

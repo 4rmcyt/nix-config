@@ -7,7 +7,7 @@
   ...
 }:
 {
-  
+  nixpkgs.config.allowUnfree = true;
   home.stateVersion = "25.05";
   home.username = "vk";
   home.homeDirectory = "/Users/vk";
@@ -179,9 +179,6 @@
     };
     zsh = {
       enable = true;
-      syntaxHighlighting.enable = true;
-      enableCompletion = true;
-
       sessionVariables = {
         EDITOR = "nvim";
         ALTERNATE_EDITOR = "${pkgs.vim}/vin/vi";
@@ -212,6 +209,7 @@
       '';
 
       initContent = ''
+        setopt funcnest=1000
         autoload -Uz compinit && compinit
 
         bindkey -v
@@ -241,13 +239,6 @@
                 fortune -a fortunes wisdom
             fi
         fi
-
-        export PATH="$HOME/.pyenv:$PATH"
-        export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-
-        eval "$(pyenv init --path)"
-        eval "$(pyenv init -)"
-        eval "$(pyenv virtualenv-init -)"
       '';
 
       antidote = {
