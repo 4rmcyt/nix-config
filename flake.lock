@@ -848,6 +848,7 @@
       }
     },
     "linkwarden-pr": {
+      "flake": false,
       "locked": {
         "lastModified": 1753180371,
         "narHash": "sha256-twrzVKa9ylf1Y2q29913bvYIPineFcblu/252FMnMvs=",
