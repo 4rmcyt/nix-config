@@ -17,15 +17,19 @@
   };
 
   inputs = {
-    flake-utils.url = "github:numtide/flake-utils";
+    # Core Flake Dependencies
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nix-darwin = {
-      url = "github:LnL7/nix-darwin/master";
+    flake-utils.url = "github:numtide/flake-utils";
+
+    # Secrets Management
+    sops-nix = {
+      url = "github:nix-community/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    sops-nix = {
-      url = "github:nix-community/sops-nix";
+    # Home Manager
+    home-manager = {
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -34,76 +38,34 @@
       url = "github:platomav/CPUMicrocodes";
       flake = false;
     };
-
     auto-cpufreq = {
       url = "github:AdnanHodzic/auto-cpufreq";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-index-database.url = "github:nix-community/nix-index-database";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+    systems.url = "github:nix-systems/default";
 
-    # NixOS-specific inputs
-
-    # NixOS-specific inputs
+    # Services & Applications
+    nixarr.url = "github:rasmus-kirk/nixarr";
+    authentik-nix.url = "github:nix-community/authentik-nix";
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
+    nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
+    nixos-generators.url = "github:nix-community/nixos-generators";
     linkwarden-pr = {
       url = "github:NixOS/nixpkgs/f0809e9f3402644c0987842727cb1d3f93d2e4a6?shallow=1";
       flake = false;
     };
-    nix-index-database = {
-      url = "github:nix-community/nix-index-database";
-    };
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-    };
-    systems = {
-      url = "github:nix-systems/default";
-    };
-
-    mac-app-util = {
-      url = "github:hraban/mac-app-util";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Services & Applications
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nixarr = {
-      url = "github:rasmus-kirk/nixarr";
-    };
-    authentik-nix = {
-      url = "github:nix-community/authentik-nix";
-    };
-    vscode-server = {
-      url = "github:nix-community/nixos-vscode-server";
-    };
-    nixos-facter-modules = {
-      url = "github:nix-community/nixos-facter-modules";
-    };
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
-    };
 
     # Hyprland & Wayland
-    hyprland = {
-      url = "github:hyprwm/Hyprland";
-    };
-    hypr-contrib = {
-      url = "github:hyprwm/contrib";
-    };
-    hyprpicker = {
-      url = "github:hyprwm/hyprpicker";
-    };
-    hyprlock = {
-      url = "github:hyprwm/hyprlock";
-    };
-    waybar = {
-      url = "github:Alexays/Waybar";
-    };
+    hyprland.url = "github:hyprwm/Hyprland";
+    hypr-contrib.url = "github:hyprwm/contrib";
+    hyprpicker.url = "github:hyprwm/hyprpicker";
+    hyprlock.url = "github:hyprwm/hyprlock";
+    waybar.url = "github:Alexays/Waybar";
 
     # Gaming
-    nix-gaming = {
-      url = "github:fufexan/nix-gaming";
-    };
+    nix-gaming.url = "github:fufexan/nix-gaming";
   };
 
   outputs =
@@ -134,6 +96,12 @@
         inputs.nixarr.nixosModules.default
         inputs.authentik-nix.nixosModules.default
         inputs.vscode-server.nixosModules.default
+      ])
+      # Added MacBook configuration
+      (mkNixos "macbook" inputs.nixpkgs [
+        ./hosts/macbook # You will need to create this directory and add your macbook's configuration.nix
+        ./modules/users/zeev
+        # Add any other modules specific to your MacBook here
       ])
     ];
 }
