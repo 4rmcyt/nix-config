@@ -95,13 +95,15 @@
   # --------------------------------------------------------------------------------
   # Fonts
   # --------------------------------------------------------------------------------
-  home.file.".config/fontconfig/fonts.conf".source = pkgs.makeFontsConf {
-    fontDirectories = with pkgs; [
-      fira-code
-      font-awesome
-      material-design-icons
-    ];
-  };
+  home.file.".config/fontconfig/fonts.conf".source = (
+    pkgs.makeFontsConf {
+      fontDirectories = with pkgs; [
+        fira-code
+        font-awesome
+        material-design-icons
+      ];
+    }
+  );
 
   # --------------------------------------------------------------------------------
   # Program Configurations
@@ -139,5 +141,5 @@
   };
 
   # Copy the p10k config file into your home directory
-  home.file.".p10k.zsh".source = ./dots/zsh/.p10k.zsh;
+  home.file.".p10k.zsh".source = ../../dots/zsh/.p10k.zsh;
 }
