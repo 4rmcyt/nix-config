@@ -36,9 +36,12 @@ in
         inherit inputs;
         host = machineHostname;
       };
-      modules = commonNixosModules ++ [
-        (homeManagerCfg "zeev" machineHostname "x86_64-linux")
-      ] ++ extraModules;
+      modules =
+        commonNixosModules
+        ++ [
+          (homeManagerCfg "zeev" machineHostname "x86_64-linux")
+        ]
+        ++ extraModules;
     };
   };
 
@@ -52,7 +55,8 @@ in
       modules = [
         inputs.home-manager.darwinModules.home-manager
         (homeManagerCfg "zeev" machineHostname system)
-      ] ++ extraModules;
+      ]
+      ++ extraModules;
     };
   };
 
