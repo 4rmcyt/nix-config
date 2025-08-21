@@ -6,8 +6,7 @@
     key = "vk_password";
   };
 
-  # This block now only defines the user and their password.
-  # All other settings are in Home Manager.
+
   users.users = {
     vk = {
       isNormalUser = true;
