@@ -173,7 +173,7 @@
             else
                 fortune -a fortunes wisdom
             fi
-        fi
+          fi
 
         export PATH="$HOME/.pyenv:$PATH"
         export PYENV_VIRTUALENV_DISABLE_PROMPT=1
