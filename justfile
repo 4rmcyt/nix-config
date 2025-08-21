@@ -10,7 +10,7 @@ build-darwin:
 
 # Deploy to the NixOS homeserver
 deploy-nixos:
-    ssh zeev@192.168.1.165 -- "cd ~/src/nixos-config && ssh-add ~/.ssh/zeev && git pull && sudo nixos-rebuild switch --flake .#homeserver"
+    ssh -t zeev@192.168.1.165 -- "cd ~/src/nixos-config && ssh-add ~/.ssh/zeev && git pull && sudo nixos-rebuild switch --flake .#homeserver"
 
 # Deploy to the Darwin MacBook
 deploy-darwin:
