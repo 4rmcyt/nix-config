@@ -1,5 +1,4 @@
-# File: nixos-config/modules/home-manager/macbook/default.nix
-{ pkgs, ... }:
+{ pkgs, lib, config, inputs, ... }:
 {
   home.stateVersion = "25.05";
   home.username = "vk";
@@ -165,9 +164,8 @@
       enableCompletion = true;
       initContent = ''
          autoload -Uz compinit && compinit
-         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-         
-        if [ $(command -v fortune) ] && [ $UID != '0' ] && [[ $- == *i* ]] && [ $TERM != 'dumb' ]; then
+         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh    
+         if [ $(command -v fortune) ] && [ $UID != '0' ] && [[ $- == *i* ]] && [ $TERM != 'dumb' ]; then
             ### Cowsay At Login ###
             if [ $(command -v cowsay) ]; then
                 fortune -a fortunes wisdom | cowsay
