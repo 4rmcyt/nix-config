@@ -1,7 +1,6 @@
 # File: nixos-config/flake.nix
 {
   description = "A highly structured NixOS configuration";
-
   nixConfig = {
     extra-substituters = [
       "https://nix-community.cachix.org"
@@ -18,23 +17,73 @@
       "macbookk.cachix.org-1:wKrGz8cPTb4rHjJzcpnJwcG905KgY5iIbJ4Daqgsvrc="
     ];
   };
-
   inputs = {
     # Core Flake Dependencies
-    nix-darwin.url = "github:LnL7/nix-darwin";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
-
+    blueprint.url = "github:numtide/blueprint";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    mac-app-util = {
+      url = "github:hraban/mac-app-util";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # Secrets Management
-    sops-nix.url = "github:Mic92/sops-nix";
-    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Home Manager
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # System Utilities
+    cpu-microcodes = {
+      url = "github:platomav/CPUMicrocodes";
+      flake = false;
+    };
+    auto-cpufreq = {
+      url = "github:AdnanHodzic/auto-cpufreq";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-index-database.url = "github:nix-community/nix-index-database";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+    systems.url = "github:nix-systems/default";
+
+    # Services & Applications
+    firefox-darwin = {
+      url = "github:bandithedoge/nixpkgs-firefox-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixarr.url = "github:rasmus-kirk/nixarr";
+    authentik-nix.url = "github:nix-community/authentik-nix";
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
+    nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
+    nixos-generators.url = "github:nix-community/nixos-generators";
+    linkwarden-pr = {
+      url = "github:NixOS/nixpkgs/f0809e9f3402644c0987842727cb1d3f93d2e4a6?shallow=1";
+      flake = false;
+    };
+    # Hyprland & Wayland
+    hyprland.url = "github:hyprwm/Hyprland";
+    hypr-contrib.url = "github:hyprwm/contrib";
+    hyprpicker.url = "github:hyprwm/hyprpicker";
+    hyprlock.url = "github:hyprwm/hyprlock";
+    waybar.url = "github:Alexays/Waybar";
+
+    # Gaming
+    nix-gaming.url = "github:fufexan/nix-gaming";
+
+    # nix-homebrew
     nix-homebrew = {
       url = "github:zhaofengli/nix-homebrew";
     };
@@ -47,22 +96,50 @@
       flake = false;
     };
   };
-
-  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, ... }:
-    let
-      helpers = import ./flakeHelpers.nix inputs;
-    in
-    {
-      darwinConfigurations = {
-        macbook = helpers.mkDarwin "macbook" "aarch64-darwin" [
-          ./hosts/darwin/macbook
-          home-manager.darwinModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.vk = import ./modules/home-manager/macbook;
-          }
+  outputs =
+    inputs@{ treefmt-nix, ... }:
+    inputs.flake-parts.lib.mkFlake
+      {
+        inherit inputs;
+      }
+      {
+        systems = [
+          "x86_64-linux"
+          "aarch64-darwin"
         ];
+        imports = [ treefmt-nix.flakeModule ];
+        perSystem =
+          { pkgs, ... }:
+          {
+            devShells.default = import ./devshell.nix {
+              inherit pkgs;
+            };
+            treefmt = import ./treefmt.nix;
+          };
+
+        flake =
+          let
+            helpers = import ./flakeHelpers.nix inputs;
+            inherit (helpers) mkNixos mkDarwin;
+          in
+          {
+            nixosConfigurations = {
+              homeserver = mkNixos "homeserver" "x86_64-linux" [
+                ./hosts/nixos/homeserver
+                ./modules/users/zeev
+                ./modules/disko
+                inputs.nixarr.nixosModules.default
+
+                inputs.authentik-nix.nixosModules.default
+                inputs.vscode-server.nixosModules.default
+              ];
+            };
+            darwinConfigurations = {
+              macbook = mkDarwin "macbook" "aarch64-darwin" [
+                ./hosts/darwin/macbook
+                ./modules/users/vk
+              ];
+            };
+          };
       };
-    };
 }
