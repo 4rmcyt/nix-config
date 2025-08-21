@@ -1,53 +1,32 @@
 # File: nixos-config/hosts/darwin/macbook/default.nix
-{
-  pkgs,
-  lib,
-  inputs,
-  ...
-}: {
-  # --------------------------------------------------------------------------------
+{ pkgs, ... }: {
   # System & User Configuration
-  # --------------------------------------------------------------------------------
-
   networking.hostName = "macbook";
-  system.stateVersion = 5;
+  system.stateVersion = 4;
   nixpkgs.hostPlatform = "aarch64-darwin";
   nixpkgs.config.allowUnfree = true;
 
-  # ADD THIS BLOCK to use the custom Firefox
-  nixpkgs.overlays = [inputs.firefox-darwin.overlay];
   users.users.vk = {
     name = "vk";
     home = "/Users/vk";
   };
-  environment.shellInit = ''
-    ulimit -n 2048
-  '';
-  # --------------------------------------------------------------------------------
-  # Nix Configuration (System-Wide)
-  # --------------------------------------------------------------------------------
-  nix.package = pkgs.nix;
-  nix.settings = {
-    trusted-users = [
-      "root"
-      "vk"
-    ];
-    experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
-    warn-dirty = false;
+
+  # Nix Configuration
+  nix = {
+    package = pkgs.nix;
+    settings = {
+      trusted-users = [ "root" "vk" ];
+      experimental-features = [ "nix-command" "flakes" ];
+      warn-dirty = false;
+    };
+    gc = {
+      automatic = true;
+      options = "--delete-older-than 1w";
+    };
+    optimise.automatic = true;
   };
 
-  nix.gc = {
-    automatic = lib.mkDefault true;
-    options = lib.mkDefault "--delete-older-than 1w";
-  };
-  nix.optimise.automatic = true;
-
-  # --------------------------------------------------------------------------------
-  # Homebrew Management (System-Wide Integration)
-  # --------------------------------------------------------------------------------
+  # Homebrew Management
   nix-homebrew = {
     enable = true;
     user = "vk";
@@ -56,4 +35,14 @@
       "homebrew/homebrew-cask" = inputs.homebrew-cask;
     };
   };
+
+  # System-wide packages
+  environment.systemPackages = with pkgs; [
+    git
+    vim
+  ];
+
+  # Shells
+  programs.zsh.enable = true;
+  environment.shells = with pkgs; [ zsh ];
 }

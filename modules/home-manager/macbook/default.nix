@@ -3,7 +3,8 @@
   pkgs,
   config,
   ...
-}: {
+}:
+{
   nixpkgs.config.allowUnfree = true;
   home.stateVersion = "25.05";
   home.username = "vk";
@@ -34,14 +35,12 @@
     docker
     fd
     flex
-    git
     git-crypt
     gh
     go
     gnupg
     gnugrep
     gnumake
-    darwin.cctools
     killall
     just
     lorri
@@ -61,7 +60,6 @@
     poetry
     pyenv
     python3Full
-    pyenv
     virtualenv
     sops
     ssh-to-age
@@ -102,7 +100,6 @@
     yubikey-manager
     yubikey-personalization
     zsh-powerlevel10k
-    home-manager
 
     # Applications
     slack
@@ -111,52 +108,15 @@
     zoom-us
   ];
 
-  # --------------------------------------------------------------------------------
   # Homebrew Packages
-  # --------------------------------------------------------------------------------
   homebrew = {
     enable = true;
     brews = [
-      "adb-enhanced"
-      "brotli"
-      "ca-certificates"
-      "coreutils"
       "emacs"
-      "gettext"
-      "gmp"
-      "gnutls"
       "helix"
-      "libassuan"
-      "libevent"
-      "libgcrypt"
-      "libgpg-error"
-      "libidn2"
-      "libksba"
-      "libnghttp2"
-      "libssh2"
-      "libtasn1"
-      "libunistring"
-      "libusb"
-      "lz4"
-      "mpdecimal"
-      "nettle"
-      "npth"
-      "openssl@3"
-      "p11-kit"
-      "pcre2"
-      "pinentry"
-      "pinentry-mac"
-      "python@3.13"
-      "readline"
       "ripgrep"
-      "rtmpdump"
-      "shfmt"
-      "sqlite"
       "statix"
       "tree-sitter"
-      "unbound"
-      "xz"
-      "zstd"
     ];
     casks = [
       "alt-tab"
@@ -184,17 +144,6 @@
   };
 
   # --------------------------------------------------------------------------------
-  # Fonts
-  # --------------------------------------------------------------------------------
-  home.file.".config/fontconfig/fonts.conf".source = pkgs.makeFontsConf {
-    fontDirectories = with pkgs; [
-      fira-code
-      font-awesome
-      material-design-icons
-    ];
-  };
-
-  # --------------------------------------------------------------------------------
   # Program Configurations
   # --------------------------------------------------------------------------------
   programs = {
@@ -209,7 +158,7 @@
       enable = true;
       enableZshIntegration = true;
       enableBashIntegration = true;
-      options = ["--cmd cd"];
+      options = [ "--cmd cd" ];
     };
 
     fzf = {
