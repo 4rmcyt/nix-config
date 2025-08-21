@@ -19,7 +19,6 @@ let
     inputs.disko.nixosModules.disko
     inputs.nix-index-database.nixosModules.nix-index
     inputs.auto-cpufreq.nixosModules.default
-    inputs.nixvim.nixosModules.nixvim
     "${inputs.linkwarden-pr}/nixos/modules/services/web-apps/linkwarden.nix"
     inputs.nixos-facter-modules.nixosModules.facter
     { facter.reportPath = ./facter.json; }
