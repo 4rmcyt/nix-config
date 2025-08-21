@@ -180,7 +180,6 @@
     zsh = {
       enable = true;
       syntaxHighlighting.enable = true;
-      autosuggestion.enable = true;
       enableCompletion = true;
 
       sessionVariables = {
