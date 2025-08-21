@@ -1,0 +1,1 @@
+/nix/store/n4iq66ccsfqa975sirz9kdyf1jx80x9c-home-manager-files/.p10k.zsh
