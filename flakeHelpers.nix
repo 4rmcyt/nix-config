@@ -25,11 +25,11 @@ let
           }
           {
             home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
             home-manager.users.zeev = {
               imports = [
                 ./modules/home-manager/homeserver
                 inputs.sops-nix.homeManagerModules.sops
+                inputs.mac-app-util.homeManagerModules.default
               ];
               sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
             };
@@ -54,12 +54,14 @@ let
             {
               # It's good practice to specify the system key file here
               sops.age.keyFile = "/var/lib/sops/age.key";
-              home-manager.useGlobalPkgs = true;
+              # home-manager.useGlobalPkgs = true;
               home-manager.users.vk = {
                 imports = [
-                  ./modules/home-manager/macbook # Correct path to the new HM config
+                  ./modules/home-manager/macbook
+                  {
+                    nixpkgs.config.allowUnfree = true;
+                  }
                   inputs.sops-nix.homeManagerModules.sops
-                  inputs.mac-app-util.homeManagerModules.default
                 ];
                 sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt"; # Adjusted path for vk
               };
