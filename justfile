@@ -6,15 +6,15 @@ build-nixos:
 
 # Build the Darwin configuration for the MacBook
 build-darwin:
-    nix build .#darwinConfigurations.macbook.system
+    nix build .#darwinConfigurations.macbook.system 
 
 # Deploy to the NixOS homeserver
 deploy-nixos:
-    ssh -t zeev@192.168.1.165 -- "cd ~/src/nixos-config && ssh-add ~/.ssh/zeev && git pull && sudo nixos-rebuild switch --flake .#homeserver"
+    ssh -t zeev@192.168.1.165 -- "cd ~/src/nixos-config && ssh-add ~/.ssh/zeev && git pull && sudo nixos-rebuild switch --flake .#homeserver" | cachix push homeserver
 
 # Deploy to the Darwin MacBook
 deploy-darwin:
-    sudo darwin-rebuild switch --flake .#macbook
+    sudo darwin-rebuild switch --flake .#macbook | cachix push homeserver
 
 # Format all code in the repository
 fmt:
