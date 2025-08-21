@@ -78,41 +78,46 @@
     nix-gaming.url = "github:fufexan/nix-gaming";
   };
   outputs =
-    { flake-utils, ... }@inputs:
+    { self, flake-utils, ... }@inputs:
     let
       helpers = import ./flakeHelpers.nix inputs;
-      inherit (helpers) mkMerge mkNixos mkDarwin;
+      inherit (helpers) mkNixos mkDarwin;
       treefmt-config = import ./treefmt.nix {
         pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
       };
+      darwinSystems = [ "aarch64-darwin" "x86_64-darwin" ];
     in
-    mkMerge [
-      (flake-utils.lib.eachDefaultSystem (
-        system:
-        let
-          pkgs = inputs.nixpkgs.legacyPackages.${system};
-        in
-        {
-          packages.default = pkgs.mkShell {
-            packages = [
-              pkgs.just
-            ];
-          };
-          formatter = inputs.treefmt-nix.lib.mkWrapper pkgs treefmt-config;
-        }
-      ))
-      (mkNixos "homeserver" inputs.nixpkgs [
+    {
+      nixosConfigurations = (mkNixos "homeserver" inputs.nixpkgs [
         ./hosts/nixos/homeserver
         ./modules/users/zeev
         ./modules/disko
         inputs.nixarr.nixosModules.default
         inputs.authentik-nix.nixosModules.default
         inputs.vscode-server.nixosModules.default
-      ])
-      (mkDarwin "macbook" "aarch64-darwin" [
-        # Assuming you have this path created
-        ./hosts/darwin/macbook
-        ./modules/users/zeev
-      ])
-    ];
+      ]).nixosConfigurations;
+
+      darwinConfigurations = {
+        macbook = mkDarwin "macbook" "aarch64-darwin" [
+          ./hosts/darwin/macbook
+          ./modules/users/zeev
+          inputs.mac-app-util.darwinModules.default
+        ];
+      };
+
+      formatter = flake-utils.lib.eachDefaultSystem (system:
+        let pkgs = inputs.nixpkgs.legacyPackages.${system};
+        in inputs.treefmt-nix.lib.mkWrapper pkgs treefmt-config
+      );
+
+      packages = flake-utils.lib.eachDefaultSystem (system:
+        let pkgs = inputs.nixpkgs.legacyPackages.${system};
+        in {
+          default = pkgs.mkShell {
+            packages = [ pkgs.just ];
+          };
+        }
+      );
+
+    };
 }
