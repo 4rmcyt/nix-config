@@ -113,7 +113,7 @@
         nix-index-database.nixosModules.nix-index
         auto-cpufreq.nixosModules.default
         nixvim.nixosModules.nixvim
-         "${inputs.linkwarden-pr}/nixos/modules/services/web-apps/linkwarden.nix"
+        "${inputs.linkwarden-pr}/nixos/modules/services/web-apps/linkwarden.nix"
         inputs.nixos-facter-modules.nixosModules.facter
         { facter.reportPath = ./facter.json; }
       ];
@@ -146,7 +146,7 @@
           };
 
           modules = commonNixOSModules ++ [
-            ./hosts/nixos/homeserver
+            ./hosts/homeserver
             ./modules/users/zeev
             ./modules/disko
             (nixosHomeManagerConfig "zeev" "homeserver")
