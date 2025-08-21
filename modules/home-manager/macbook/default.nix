@@ -83,7 +83,7 @@
     yubico-piv-tool
     yubikey-manager
     yubikey-personalization
-
+    
     # Applications
     jellyfin-media-player
     slack
@@ -95,15 +95,13 @@
   # --------------------------------------------------------------------------------
   # Fonts
   # --------------------------------------------------------------------------------
-  home.file.".config/fontconfig/fonts.conf".source = (
-    pkgs.makeFontsConf {
-      fontDirectories = with pkgs; [
-        fira-code
-        font-awesome
-        material-design-icons
-      ];
-    }
-  );
+  home.file.".config/fontconfig/fonts.conf".source = (pkgs.makeFontsConf {
+    fontDirectories = with pkgs; [
+      fira-code
+      font-awesome
+      material-design-icons
+    ];
+  });
 
   # --------------------------------------------------------------------------------
   # Program Configurations
@@ -120,7 +118,10 @@
     syntaxHighlighting.enable = true;
     autosuggestion.enable = true;
     enableCompletion = true;
-    initContent = "source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/p10k.zsh";
+    initContent = ''
+      # Source Powerlevel10k theme
+      source "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/p10k.zsh"
+    '';
     oh-my-zsh = {
       enable = true;
       plugins = [

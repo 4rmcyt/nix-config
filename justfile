@@ -1,12 +1,20 @@
 # justfile
 
-# Build the NixOS configuration for homeserver
-build:
+# Build the NixOS configuration for the homeserver
+build-nixos:
     nix build .#nixosConfigurations.homeserver.config.system.build.toplevel
 
-# Deploy to homeserver
-deploy:
-    nixos-rebuild switch --flake .#homeserver
+# Build the Darwin configuration for the MacBook
+build-darwin:
+    nix build .#darwinConfigurations.macbook.system
+
+# Deploy to the NixOS homeserver
+deploy-nixos:
+    ssh zeev@192.168.1.165 -- "cd ~/.config/nixos-config && git pull && sudo nixos-rebuild switch --flake .#homeserver"
+
+# Deploy to the Darwin MacBook
+deploy-darwin:
+    sudo darwin-rebuild switch --flake .#macbook
 
 # Format all code in the repository
 fmt:
