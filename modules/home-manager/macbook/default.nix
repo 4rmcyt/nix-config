@@ -95,13 +95,15 @@
   # --------------------------------------------------------------------------------
   # Fonts
   # --------------------------------------------------------------------------------
-  home.file.".config/fontconfig/fonts.conf".source = pkgs.makeFontsConf {
-    fontDirectories = with pkgs; [
-      fira-code
-      font-awesome
-      material-design-icons
-    ];
-  };
+  home.file.".config/fontconfig/fonts.conf".source = (
+    pkgs.makeFontsConf {
+      fontDirectories = with pkgs; [
+        fira-code
+        font-awesome
+        material-design-icons
+      ];
+    }
+  );
 
   # --------------------------------------------------------------------------------
   # Program Configurations
@@ -119,8 +121,8 @@
     autosuggestion.enable = true;
     enableCompletion = true;
     initContent = ''
-      # Source Powerlevel10k theme
-      source "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/p10k.zsh"
+      # Source Powerlevel10k configuration
+      [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
     '';
     oh-my-zsh = {
       enable = true;
