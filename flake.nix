@@ -78,7 +78,7 @@
     nix-gaming.url = "github:fufexan/nix-gaming";
   };
   outputs =
-    { self, flake-utils, ... }@inputs:
+    { flake-utils, ... }@inputs:
     let
       helpers = import ./flakeHelpers.nix inputs;
       inherit (helpers) mkMerge mkNixos mkDarwin;
