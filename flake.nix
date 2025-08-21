@@ -3,12 +3,14 @@
 
   nixConfig = {
     extra-substituters = [
+      "https://cachix.cachix.org"
       "https://nix-community.cachix.org"
       "https://nix-gaming.cachix.org"
       "https://hyprland.cachix.org"
       "https://homeserver.cachix.org"
     ];
     extra-trusted-public-keys = [
+      "cachix.cachix.org-1:eWNHQldwUO7G2VkjpnjDbWwy4KQ/HNxht7H4SSoMckM="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
@@ -17,144 +19,68 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils?shallow=true";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable?shallow=true";
 
-    cpu-microcodes = {
-      url = "github:platomav/CPUMicrocodes";
-      flake = false;
-    };
+    # System Utilities
+    auto-cpufreq.url = "github:AdnanHodzic/auto-cpufreq?shallow=true";
+    disko.url = "github:nix-community/disko?shallow=true";
+    nix-ld.url = "github:Mic92/nix-ld?shallow=true";
+    sops-nix.url = "github:Mic92/sops-nix?shallow=true";
+    nix-index-database.url = "github:nix-community/nix-index-database?shallow=true";
+    treefmt-nix.url = "github:numtide/treefmt-nix?shallow=true";
+    systems.url = "github:nix-systems/default?shallow=true";
 
-    auto-cpufreq.url = "github:AdnanHodzic/auto-cpufreq";
-    auto-cpufreq.inputs.nixpkgs.follows = "nixpkgs";
-
-    # NixOS-specific inputs
-    linkwarden-pr = {
-      url = "github:NixOS/nixpkgs/f0809e9f3402644c0987842727cb1d3f93d2e4a6?shallow=1";
-      flake = false;
-    };
-    nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
+    # Services & Applications
+    home-manager.url = "github:nix-community/home-manager/nixos-unstable?shallow=true";
+    nixvim.url = "github:nix-community/nixvim?shallow=true";
+    nixarr.url = "github:rasmus-kirk/nixarr?shallow=true";
+    authentik-nix.url = "github:nix-community/authentik-nix?shallow=true";
+    vscode-server.url = "github:nix-community/nixos-vscode-server?shallow=true";
+    nixos-facter-modules.url = "github:nix-community/nixos-facter-modules?shallow=true";
     nixos-needsreboot.url = "https://flakehub.com/f/thefossguy/nixos-needsreboot/*.tar.gz";
-    vscode-server.url = "github:nix-community/nixos-vscode-server";
-    nixarr.url = "github:rasmus-kirk/nixarr";
-    nixos-generators.url = "github:nix-community/nixos-generators";
-    authentik-nix.url = "github:nix-community/authentik-nix";
+    nixos-generators.url = "github:nix-community/nixos-generators?shallow=true";
+    linkwarden-pr.url = "github:NixOS/nixpkgs/f0809e9f3402644c0987842727cb1d3f93d2e4a6?shallow=true";
 
-    hyprland.url = "github:hyprwm/Hyprland";
-    hypr-contrib.url = "github:hyprwm/contrib";
-    hyprpicker.url = "github:hyprwm/hyprpicker";
-    hyprlock.url = "github:hyprwm/hyprlock";
-    waybar.url = "github:Alexays/Waybar";
-    nix-gaming.url = "github:fufexan/nix-gaming";
+    # Hyprland & Wayland
+    hyprland.url = "github:hyprwm/Hyprland?shallow=true";
+    hypr-contrib.url = "github:hyprwm/contrib?shallow=true";
+    hyprpicker.url = "github:hyprwm/hyprpicker?shallow=true";
+    hyprlock.url = "github:hyprwm/hyprlock?shallow=true";
+    waybar.url = "github:Alexays/Waybar?shallow=true";
 
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nix-ld = {
-      url = "github:Mic92/nix-ld";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Common inputs
-    treefmt-nix.url = "github:numtide/treefmt-nix";
-    systems.url = "github:nix-systems/default";
-
-    # REMOVED: Unused 'agenix' input
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nix-index-database = {
-      url = "github:nix-community/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # Gaming
+    nix-gaming.url = "github:fufexan/nix-gaming?shallow=true";
   };
 
   outputs =
-    {
-      self,
-      nixpkgs,
-      sops-nix,
-      vscode-server,
-      disko,
-      home-manager,
-      nix-index-database,
-      nixvim,
-      nixarr,
-      authentik-nix,
-      treefmt-nix,
-      auto-cpufreq,
-      systems,
-      ...
-    }@inputs:
+    { flake-utils, ... }@inputs:
     let
-      system = "x86_64-linux";
-      eachSystem = f: nixpkgs.lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
-      treefmtEval = eachSystem (pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
-
-      # This list contains modules common to all your NixOS systems.
-      commonNixOSModules = [
-        sops-nix.nixosModules.sops
-        { sops.age.keyFile = "/var/lib/sops/age.key"; }
-        home-manager.nixosModules.home-manager
-        disko.nixosModules.disko
-        nix-index-database.nixosModules.nix-index
-        auto-cpufreq.nixosModules.default
-        nixvim.nixosModules.nixvim
-        "${inputs.linkwarden-pr}/nixos/modules/services/web-apps/linkwarden.nix"
-        inputs.nixos-facter-modules.nixosModules.facter
-        { facter.reportPath = ./facter.json; }
-      ];
-
-      nixosHomeManagerConfig = user: host: {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        home-manager.users.${user} = {
-          imports = [
-            ./modules/home-manager/${host}
-            sops-nix.homeManagerModules.sops
-          ];
-          sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-        };
-      };
+      helpers = import ./flakeHelpers.nix inputs;
+      inherit (helpers) mkMerge mkNixos;
     in
-    {
-      formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
-      # for `nix flake check`
-      checks = eachSystem (pkgs: {
-        formatting = treefmtEval.${pkgs.system}.config.build.check self;
-      });
-
-      nixosConfigurations = {
-        homeserver = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit self inputs;
-            host = "homeserver";
+    mkMerge [
+      (flake-utils.lib.eachDefaultSystem (
+        system:
+        let
+          pkgs = inputs.nixpkgs.legacyPackages.${system};
+        in
+        {
+          packages.default = pkgs.mkShell {
+            packages = [
+              pkgs.just
+              # Consider adding nixos-rebuild-ng if you use it
+            ];
           };
-
-          modules = commonNixOSModules ++ [
-            ./hosts/homeserver
-            ./modules/users/zeev
-            ./modules/disko
-            (nixosHomeManagerConfig "zeev" "homeserver")
-            nixarr.nixosModules.default
-            authentik-nix.nixosModules.default
-            vscode-server.nixosModules.default
-          ];
-        };
-      };
-    };
+        }
+      ))
+      (mkNixos "homeserver" inputs.nixpkgs [
+        ./hosts/homeserver
+        ./modules/users/zeev
+        ./modules/disko
+        inputs.nixarr.nixosModules.default
+        inputs.authentik-nix.nixosModules.default
+        inputs.vscode-server.nixosModules.default
+      ])
+    ];
 }
