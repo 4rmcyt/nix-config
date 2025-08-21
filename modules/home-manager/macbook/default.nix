@@ -95,13 +95,15 @@
   # --------------------------------------------------------------------------------
   # Fonts
   # --------------------------------------------------------------------------------
-  home.file.".config/fontconfig/fonts.conf".source = pkgs.makeFontsConf {
+  home.file.".config/fontconfig/fonts.conf".source = (
+    pkgs.makeFontsConf {
       fontDirectories = with pkgs; [
         fira-code
         font-awesome
         material-design-icons
       ];
-    };
+    }
+  );
 
   # --------------------------------------------------------------------------------
   # Program Configurations
@@ -118,13 +120,12 @@
     syntaxHighlighting.enable = true;
     autosuggestion.enable = true;
     enableCompletion = true;
-    initExtra = "source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/p10k.zsh";
+    initContent = "source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/p10k.zsh";
     oh-my-zsh = {
       enable = true;
       plugins = [
         "git"
         "sudo"
-        "direnv"
       ];
     };
     plugins = [
