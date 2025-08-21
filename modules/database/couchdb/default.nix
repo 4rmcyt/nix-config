@@ -1,9 +1,8 @@
 # obsidian synchronization server using couchdb
 # https://github.com/vrtmrz/obsidian-livesync
-args@{
+{
   config,
   lib,
-  variables,
   ...
 }:
 let
