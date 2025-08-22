@@ -28,7 +28,7 @@
           "jellyfin.labhome.work" = "http://localhost:8096";
           "paperless.labhome.work" = "http://localhost:8888";
           "home.labhome.work" = "http://localhost:8082";
-          "hash.labhome.work" = "http://localhost:8123";
+          "hass.labhome.work" = "http://localhost:8123";
           "miniflux.labhome.work" = "http://localhost:8086";
           "transmission.labhome.work" = "http://192.168.1.165:9091";
           "cal.labhome.work" = "http://localhost:5232";

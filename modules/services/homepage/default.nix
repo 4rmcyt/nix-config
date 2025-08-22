@@ -290,13 +290,13 @@
         "Smart Home & IoT" = [
           {
             "Home Assistant" = {
-              href = "https://hash.labhome.work";
+              href = "https://hass.labhome.work";
               description = "Home Automation";
               icon = "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/home-assistant.svg";
               widgets = [
                 {
                   type = "homeassistant";
-                  url = "https://hash.labhome.work";
+                  url = "https://hass.labhome.work";
                   key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJlOGFmM2RhMzY2N2I0ZDVlYWViYzc4Y2FhOGZmNGU4YiIsImlhdCI6MTc1MzM4MzA1MiwiZXhwIjoyMDY4NzQzMDUyfQ.S4p_4-V2weR99zTtvSAtrB-9yTze9_yQCut1Q50Uuu4";
                 }
               ];

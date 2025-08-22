@@ -27,9 +27,9 @@
       group = config.users.groups.postgresql.name;
       mode = "0400";
     };
-    hash = {
+    hass = {
       sopsFile = ../../../secrets/postgresql.yaml;
-      key = "hash_db_password";
+      key = "hass_db_password";
       owner = config.users.users.postgresql.name;
       group = config.users.groups.postgresql.name;
       mode = "0400";
@@ -79,7 +79,7 @@
     ensureDatabases = [
       "miniflux"
       "paperless"
-      "hash"
+      "hass"
       "authentik"
       "grafana"
       "vaultwarden"
@@ -132,7 +132,7 @@
         ensureDBOwnership = true;
       }
       {
-        name = "hash";
+        name = "hass";
         ensureDBOwnership = true;
       }
       {
@@ -176,9 +176,9 @@
       CREATE DATABASE authentik;
       GRANT ALL PRIVILEGES ON DATABASE authentik TO authentik;
 
-      CREATE ROLE hash WITH LOGIN PASSWORD '${config.sops.secrets.hash.path}' CREATEDB;
-      CREATE DATABASE hash;
-      GRANT ALL PRIVILEGES ON DATABASE hash TO hash;
+      CREATE ROLE hass WITH LOGIN PASSWORD '${config.sops.secrets.hass.path}' CREATEDB;
+      CREATE DATABASE hass;
+      GRANT ALL PRIVILEGES ON DATABASE hass TO hass;
 
       CREATE ROLE grafana WITH LOGIN PASSWORD '${config.sops.secrets.grafana.path}' CREATEDB;
       CREATE DATABASE grafana;
