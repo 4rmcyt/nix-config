@@ -1,8 +1,3 @@
-[formatter.alejandra]
-command = "alejandra"
-includes = ["*.nix"]
-
-
 [formatter.deadnix]
 command = "deadnix"
 options = ["--edit"]
@@ -32,7 +27,8 @@ includes = ["*.rs"]
 
 [formatter.just]
 command = "just"
-includes = ["*.just"]
+options = ["--unstable", "--fmt", "--justfile",]
+includes = [".justfile",]
 
 
 [formatter.nixfmt-rfc-style]
