@@ -112,6 +112,7 @@
     yubikey-personalization
     zsh-powerlevel10k
     home-manager
+    statix
 
     # Applications
     jellyfin-media-player
