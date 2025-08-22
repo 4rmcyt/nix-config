@@ -53,7 +53,6 @@ inputs: let
             {
               # It's good practice to specify the system key file here
 
-              sops.age.keyFile = "/var/lib/sops/age.key";
               # home-manager.useGlobalPkgs = true;
               home-manager.users.vk = {
                 imports = [

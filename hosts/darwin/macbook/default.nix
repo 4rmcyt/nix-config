@@ -2,7 +2,6 @@
 {
   pkgs,
   lib,
-  inputs,
   config,
   ...
 }:
@@ -16,9 +15,6 @@
   system.stateVersion = 5;
   nixpkgs.hostPlatform = "aarch64-darwin";
   nixpkgs.config.allowUnfree = true;
-
-  # ADD THIS BLOCK to use the custom Firefox
-  nixpkgs.overlays = [inputs.firefox-darwin.overlay];
 
   users.users.vk = {
     name = "vk";
@@ -78,6 +74,7 @@
       "docker-desktop"
       "emclient"
       "fbreader"
+      "firefox"
       "font-hack-nerd-font"
       "google-chrome"
       "jellyfin-media-player"
@@ -137,22 +134,6 @@
     ];
 
     masApps = {};
-  };
-
-  programs = {
-    nix-index = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-
-    zsh.enable = true;
-
-    nh = {
-      enable = true;
-      clean.enable = true;
-      clean.extraArgs = "--keep-since 10d --keep 3";
-      flake = "/Users/vk/.config/nixos-config";
-    };
   };
 
   services.cachix-agent.enable = true;
