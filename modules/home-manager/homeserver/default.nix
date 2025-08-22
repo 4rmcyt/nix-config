@@ -55,6 +55,7 @@
       nvd
       zoxide
       pyenv
+      statix
       sudo
 
       # System & Network Tools
