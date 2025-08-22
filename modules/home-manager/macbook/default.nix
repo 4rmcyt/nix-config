@@ -107,6 +107,7 @@
       telegram-desktop
       youtube-music
       zoom-us
+      deadnix
     ];
     file.".config/fontconfig/fonts.conf".source = pkgs.makeFontsConf {
       fontDirectories = with pkgs; [

@@ -57,6 +57,7 @@
       pyenv
       statix
       sudo
+      deadnix
 
       # System & Network Tools
       tuptime
