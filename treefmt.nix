@@ -8,11 +8,6 @@
       package = pkgs.nixfmt-rfc-style;
       includes = [ "*.nix" ];
     };
-    autocorrect = {
-      enable = true;
-      package = pkgs.autocorrect;
-      includes = [ "*.nix" ];
-    };
     alejandra = {
       enable = true;
       package = pkgs.alejandra;
