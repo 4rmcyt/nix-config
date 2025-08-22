@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}:
+{ config, pkgs, ... }:
 {
   # =================================================================
   # 1. Imports & Global Settings
@@ -21,13 +17,11 @@
     ../../../modules/options
     ../../../modules/users/zeev
   ];
-
   users.users.git = {
     isSystemUser = true;
     description = "Git user";
   };
   users.groups.git = { };
-
   nixpkgs.config.allowUnfree = true;
 
   # =================================================================
@@ -57,26 +51,27 @@
       dates = [ "weekly" ];
     };
   };
-
   # =================================================================
   # 3. Secrets Management with Sops
   # =================================================================
-  sops.age.keyFile = "/var/lib/sops/age.key";
-  sops.defaultSopsFormat = "yaml";
-  sops.secrets = {
-    ssh_host_ed25519_key = {
-      sopsFile = ../../../secrets/system.yaml;
-      key = "ssh_host_ed25519_key";
-      owner = config.users.users.root.name;
-      group = config.users.groups.root.name;
-      mode = "0600";
-    };
-    ssh_host_rsa_key = {
-      sopsFile = ../../../secrets/system.yaml;
-      key = "ssh_host_rsa_key";
-      owner = config.users.users.root.name;
-      group = config.users.groups.root.name;
-      mode = "0600";
+  sops = {
+    age.keyFile = "/var/lib/sops/age.key";
+    defaultSopsFormat = "yaml";
+    secrets = {
+      ssh_host_ed25519_key = {
+        sopsFile = ../../../secrets/system.yaml;
+        key = "ssh_host_ed25519_key";
+        owner = config.users.users.root.name;
+        group = config.users.groups.root.name;
+        mode = "0600";
+      };
+      ssh_host_rsa_key = {
+        sopsFile = ../../../secrets/system.yaml;
+        key = "ssh_host_rsa_key";
+        owner = config.users.users.root.name;
+        group = config.users.groups.root.name;
+        mode = "0600";
+      };
     };
   };
 
@@ -89,48 +84,47 @@
   # =================================================================
   # 5. System Environment & Packages
   # =================================================================
-  environment.systemPackages = with pkgs; [
-    coreutils
-    zfs
-    openssh
-    wireguard-tools
-    smartmontools
-    fwupd
-    pciutils
-    git
-    statix
-    cpuid
-    prometheus-cloudflare-exporter
-    jellyfin-ffmpeg
-    libva-utils
-    intel-gpu-tools
-    ssh-to-age
-    gnupg
-    openssh
-    mc
-    age
-    sops
-    pinentry-tty
-    pciutils
-    wget
-    curl
-    gawk
-    gnugrep
-    iproute2
-    htop
-    btop
-    lsof
-    openssl
-    powertop
-    lm_sensors
-    git-crypt
-  ];
-
+  environment.systemPackages = with pkgs;
+    [
+      coreutils
+      zfs
+      openssh
+      wireguard-tools
+      smartmontools
+      fwupd
+      pciutils
+      git
+      statix
+      cpuid
+      prometheus-cloudflare-exporter
+      jellyfin-ffmpeg
+      libva-utils
+      intel-gpu-tools
+      ssh-to-age
+      gnupg
+      openssh
+      mc
+      age
+      sops
+      pinentry-tty
+      pciutils
+      wget
+      curl
+      gawk
+      gnugrep
+      iproute2
+      htop
+      btop
+      lsof
+      openssl
+      powertop
+      lm_sensors
+      git-crypt
+    ];
   # =================================================================
   # 6. System Services
   # =================================================================
   # This is the single, merged services block.
-
   services = {
     # --- SSH Server ---
     openssh = {
@@ -167,12 +161,11 @@
         "[u478963.your-storagebox.de]:23-ssh-ed25519".publicKey =
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIICf9svRenC/PLKIL9nk6K/pxQgoiFC41wTNvoIncOxs";
         "[u478963.your-storagebox.de]:23-ssh-rsa".publicKey =
-          " ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EB5p/5Hp3hGW1oHok+PIOH9Pbn7cnUiGmUEBrCVjnAw+HrKyN8bYVV0dIGllswYXwkG/+bgiBlE6IVIBAq+JwVWu1Sss3KarHY3OvFJUXZoZyRRg/Gc/+LRCE7lyKpwWQ70dbelGRyyJFH36eNv6ySXoUYtGkwlU5IVaHPApOxe4LHPZa/qhSRbPo2hwoh0orCtgejRebNtW5nlx00DNFgsvn8Svz2cIYLxsPVzKgUxs8Zxsxgn+Q/UvR7uq4AbAhyBMLxv7DjJ1pc7PJocuTno2Rw9uMZi1gkjbnmiOh6TTXIEWbnroyIhwc8555uto9melEUmWNQ+C+PwAK+MPw==";
+          " ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EB5p/5Hp3hGW1oHok+PIOH9Pbn7cnUiGmUEBrCVjnAw+HrKyN8bYVV0dIGllswYXwkG/+bgiBlE6IVIBAq+JwVWu1Sss3KarHY3OvFJUXZoZyRRg/Gc/+LRCE7lyKpwWQ70dbelGRyyJFH36eNv6ySXoUYtGkwlU5IVaHPApOxe4LHPZa/qhSRbPo2hwoh0orCtgejRebNtW5nlx00DNFgsvn8Svz2cIYLxsPVzKgUxs8Zxsxgn+Q/UvR7uq4AbAhyBMLxv7DjJ1pc7PJocuTno2Rw9uMZi1gkjbnmiOh6TTXIEWbnroyIhwc8555uto5melEUmWNQ+C+PwAK+MPw==";
         "[u478963.your-storagebox.de]:23-ecdsa-sha2-nistp521".publicKey =
           "AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBAGK0po6usux4Qv2d8zKZN1dDvbWjxKkGsx7XwFdSUCnF19Q8psHEUWR7C/LtSQ5crU/g+tQVRBtSgoUcE8T+FWp5wBxKvWG2X9gD+s9/4zRmDeSJR77W6gSA/+hpOZoSE+4KgNdnbYSNtbZH/dN74EG7GLb/gcIpbUUzPNXpfKl7mQitw==";
       };
     };
-
     # --- Other Services ---
     ollama.enable = false;
     vscode-server.enable = true;

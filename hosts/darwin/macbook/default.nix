@@ -1,16 +1,9 @@
-# File: nixos-config/hosts/darwin/macbook/default.nix
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}:
+{ pkgs, lib, config, ... }:
 # Add 'inputs' here
 {
   # --------------------------------------------------------------------------------
   # System & User Configuration
   # --------------------------------------------------------------------------------
-
   networking.hostName = "macbook";
   system.stateVersion = 5;
   nixpkgs.hostPlatform = "aarch64-darwin";
@@ -24,30 +17,28 @@
   environment.shellInit = ''
     ulimit -n 2048
   '';
-
   # --------------------------------------------------------------------------------
   # Nix Configuration (System-Wide)
   # --------------------------------------------------------------------------------
-  nix.package = pkgs.nix;
-
-  nix.settings = {
-    trusted-users = [
-      "root"
-      "vk"
-    ];
-    experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
-    warn-dirty = false;
+  nix = {
+    package = pkgs.nix;
+    settings = {
+      trusted-users = [
+        "root"
+        "vk"
+      ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      warn-dirty = false;
+    };
+    gc = {
+      automatic = lib.mkDefault true;
+      options = lib.mkDefault "--delete-older-than 1w";
+    };
+    optimise.automatic = true;
   };
-
-  nix.gc = {
-    automatic = lib.mkDefault true;
-    options = lib.mkDefault "--delete-older-than 1w";
-  };
-
-  nix.optimise.automatic = true;
 
   # --------------------------------------------------------------------------------
   # Homebrew Management (System-Wide Integration)
@@ -64,7 +55,6 @@
     caskArgs = {
       no_quarantine = true;
     };
-
     casks = [
       "alt-tab"
       "android-commandlinetools"
@@ -89,7 +79,6 @@
       "transmission-remote-gui"
       "yubico-authenticator"
     ];
-
     brews = [
       "adb-enhanced"
       "brotli"
@@ -132,7 +121,6 @@
       "xz"
       "zstd"
     ];
-
     masApps = { };
   };
 

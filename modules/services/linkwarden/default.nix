@@ -53,21 +53,23 @@ in
       default = false;
       description = "Allow user registration in Linkwarden";
     };
-    homepage.name = lib.mkOption {
-      type = lib.types.str;
-      default = "Linkwarden";
-    };
-    homepage.description = lib.mkOption {
-      type = lib.types.str;
-      default = "Bookmark manager with web scraping support";
-    };
-    homepage.icon = lib.mkOption {
-      type = lib.types.str;
-      default = "linkwarden.png";
-    };
-    homepage.category = lib.mkOption {
-      type = lib.types.str;
-      default = "Services";
+    homepage = {
+      name = lib.mkOption {
+        type = lib.types.str;
+        default = "Linkwarden";
+      };
+      description = lib.mkOption {
+        type = lib.types.str;
+        default = "Bookmark manager with web scraping support";
+      };
+      icon = lib.mkOption {
+        type = lib.types.str;
+        default = "linkwarden.png";
+      };
+      category = lib.mkOption {
+        type = lib.types.str;
+        default = "Services";
+      };
     };
     blackbox.targets = import ../../../lib/options/blackboxTargets.nix {
       inherit lib;
@@ -90,10 +92,11 @@ in
       database.port = cfg.database.port;
       storageLocation = cfg.stateDir;
       inherit (cfg) enableRegistration;
-      # environment = { }; # https://docs.linkwarden.app/self-hosting/environment-variables
-      environmentFile = lib.mkIf (cfg.secretEnvironmentFile != null) cfg.secretEnvironmentFile; # Path to a file containing environment variables, for example for NEXTAUTH_SECRET=<secret>,   POSTGRES_PASSWORD=<pass>
+      # environment = { };
+      # https://docs.linkwarden.app/self-hosting/environment-variables
+      environmentFile = lib.mkIf (cfg.secretEnvironmentFile != null) cfg.secretEnvironmentFile;
+      # Path to a file containing environment variables, for example for NEXTAUTH_SECRET=<secret>,   POSTGRES_PASSWORD=<pass>
     };
-
     services.caddy.virtualHosts."${cfg.url}" = {
       useACMEHost = homelab.baseDomain;
       extraConfig = ''
