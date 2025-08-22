@@ -129,6 +129,7 @@
 
     mosquito = {
       enable = true;
+      package = pkgs.mosquitto;
       listeners = [
         {
           acl = [ "pattern readwrite #" ];
