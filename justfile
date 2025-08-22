@@ -15,7 +15,9 @@ deploy-nixos:
 
 # Deploy to the Darwin MacBook
 deploy-darwin:
-    nix build .#darwinConfigurations.macbook.system && sudo ./result/bin/darwin-rebuild switch --flake .#macbook && nix path-info -r ./result | cachix push macbookk
+    nix build .#darwinConfigurations.macbook.system && \
+    sudo "$(pwd)/result/bin/darwin-rebuild" switch --flake .#macbook && \
+    nix path-info -r ./result | cachix push macbookk
 
 # Format all code in the repository
 fmt:
