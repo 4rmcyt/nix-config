@@ -3,7 +3,8 @@
   pkgs,
   config,
   ...
-}: {
+}:
+{
   nixpkgs.config.allowUnfree = true;
   home.stateVersion = "25.05";
   home.username = "vk";
@@ -145,7 +146,7 @@
       enable = true;
       enableZshIntegration = true;
       enableBashIntegration = true;
-      options = ["--cmd cd"];
+      options = [ "--cmd cd" ];
     };
 
     fzf = {

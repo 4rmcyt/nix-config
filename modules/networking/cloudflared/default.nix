@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   sops.secrets = {
     cloudflare_tunnel_credentials = {
       sopsFile = ../../../secrets/cloudflare_tunnel_credentials.bin;
@@ -13,9 +14,9 @@
   users.users.cloudflared = {
     isSystemUser = true;
     group = "cloudflared";
-    extraGroups = ["users"];
+    extraGroups = [ "users" ];
   };
-  users.groups.cloudflared = {};
+  users.groups.cloudflared = { };
 
   services.cloudflared = {
     enable = true;
@@ -27,7 +28,7 @@
           "jellyfin.labhome.work" = "http://localhost:8096";
           "paperless.labhome.work" = "http://localhost:8888";
           "home.labhome.work" = "http://localhost:8082";
-          "hass.labhome.work" = "http://localhost:8123";
+          "hash.labhome.work" = "http://localhost:8123";
           "miniflux.labhome.work" = "http://localhost:8086";
           "transmission.labhome.work" = "http://192.168.1.165:9091";
           "cal.labhome.work" = "http://localhost:5232";

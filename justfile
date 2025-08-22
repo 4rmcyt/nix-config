@@ -30,5 +30,3 @@ gc:
 
 push-cache:
     cachix push macbookk "$(nix-store -qR /run/current-system)"
-
-

@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # Some QoL audio applications
   environment.systemPackages = with pkgs; [
     # currently broken: https://github.com/NixOS/nixpkgs/issues/389656

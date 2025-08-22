@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   sops.secrets = {
     # --- Kavita Secrets ---
     kavita_token_key_file = {
@@ -23,7 +24,7 @@
       "kavita"
     ];
   };
-  users.groups.kavita = {};
+  users.groups.kavita = { };
 
   networking.firewall.allowedTCPPorts = [
     5000 # Kavita
@@ -45,7 +46,7 @@
       };
     };
   };
-  environment.systemPackages = [pkgs.kavita];
+  environment.systemPackages = [ pkgs.kavita ];
 
   services.kavita = {
     enable = true;
@@ -55,8 +56,8 @@
         Theme = "dracula";
       };
       Libraries = [
-        {Path = "/data/media/comics";}
-        {Path = "/data/media/manga";}
+        { Path = "/data/media/comics"; }
+        { Path = "/data/media/manga"; }
       ];
     };
   };

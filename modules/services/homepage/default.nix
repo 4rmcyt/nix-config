@@ -1,10 +1,11 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   users.users.homepage-dashboard = {
     isSystemUser = true;
     group = "homepage-dashboard";
-    extraGroups = ["users"];
+    extraGroups = [ "users" ];
   };
-  users.groups.homepage-dashboard = {};
+  users.groups.homepage-dashboard = { };
 
   networking.firewall.allowedTCPPorts = [
     8082 # Homepage Dashboard
@@ -26,7 +27,7 @@
     };
   };
 
-  environment.systemPackages = [pkgs.homepage-dashboard];
+  environment.systemPackages = [ pkgs.homepage-dashboard ];
 
   services.homepage-dashboard = {
     enable = true;
@@ -289,20 +290,20 @@
         "Smart Home & IoT" = [
           {
             "Home Assistant" = {
-              href = "https://hass.labhome.work";
+              href = "https://hash.labhome.work";
               description = "Home Automation";
               icon = "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/home-assistant.svg";
               widgets = [
                 {
                   type = "homeassistant";
-                  url = "https://hass.labhome.work";
+                  url = "https://hash.labhome.work";
                   key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJlOGFmM2RhMzY2N2I0ZDVlYWViYzc4Y2FhOGZmNGU4YiIsImlhdCI6MTc1MzM4MzA1MiwiZXhwIjoyMDY4NzQzMDUyfQ.S4p_4-V2weR99zTtvSAtrB-9yTze9_yQCut1Q50Uuu4";
                 }
               ];
             };
           }
           {
-            "Mosquitto MQTT" = {
+            "Mosquito MQTT" = {
               href = "http://192.168.1.165:1883";
               description = "MQTT Broker";
               icon = "mqtt";
@@ -320,7 +321,7 @@
               widget = {
                 type = "authentik";
                 url = "https://auth.labhome.work";
-                key = "VL3AR8dWq1VIVb4VIGdupq8bRMIQ32YoGzCrqnb7D6X3R6e2KPn1m6aWQjrz";
+                key = "VL3AR8dWq1VIVb4VIGdupq8bRMIQ32YoGzCrqnb7D6X3R6e2KOn1m6aWQjrz";
               };
             };
           }
@@ -386,7 +387,7 @@
       {
         resources = {
           label = "storage";
-          disk = ["/data"];
+          disk = [ "/data" ];
         };
       }
       {

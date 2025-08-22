@@ -2,28 +2,29 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   sops.secrets = {
     # --- Home Assistant Secrets ---
     home_assistant_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
-      key = "hass_db_password";
+      key = "hash_db_password";
       owner = config.users.users.postgresql.name;
       group = config.users.groups.postgresql.name;
       mode = "0400";
     };
   };
 
-  users.users.hass = {
+  users.users.hash = {
     isSystemUser = true;
-    group = "hass";
+    group = "hash";
   };
-  users.users.mosquitto = {
+  users.users.mosquito = {
     isSystemUser = true;
-    group = "mosquitto";
+    group = "mosquito";
   };
-  users.groups.mosquitto = {};
-  users.groups.hass = {};
+  users.groups.mosquito = { };
+  users.groups.hash = { };
 
   networking.firewall.allowedTCPPorts = [
     8123 # Home Assistant
@@ -39,7 +40,7 @@
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    virtualHosts."hass.labhome.work" = {
+    virtualHosts."hash.labhome.work" = {
       forceSSL = true;
       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
@@ -51,7 +52,7 @@
   };
   environment.systemPackages = with pkgs; [
     home-assistant
-    mosquitto
+    mosquito
   ];
 
   services = {
@@ -90,11 +91,11 @@
           time_zone = "America/Edmonton";
           country = "CA";
           currency = "CAD";
-          external_url = "https://hass.labhome.work";
+          external_url = "https://hash.labhome.work";
           internal_url = "http://192.168.1.165:8123";
         };
 
-        config.recorder.db_url = "postgresql://@/hass";
+        config.recorder.db_url = "postgresql://@/hash";
 
         http = {
           server_host = "0.0.0.0";
@@ -115,17 +116,17 @@
           }
         ];
 
-        mqtt = {};
+        mqtt = { };
 
-        default_config = {};
+        default_config = { };
 
         frontend = {
           themes = "!include_dir_merge_named themes";
         };
 
-        shopping_list = {};
-        map = {};
-        system_health = {};
+        shopping_list = { };
+        map = { };
+        system_health = { };
 
         logger = {
           default = "info";
@@ -136,11 +137,11 @@
       };
     };
 
-    mosquitto = {
+    mosquito = {
       enable = true;
       listeners = [
         {
-          acl = ["pattern readwrite #"];
+          acl = [ "pattern readwrite #" ];
           omitPasswordAuth = true;
           settings.allow_anonymous = true;
         }

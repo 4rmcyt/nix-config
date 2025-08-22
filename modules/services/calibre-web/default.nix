@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   users.users.calibre-web = {
     isSystemUser = true;
     extraGroups = [
@@ -7,7 +8,7 @@
       "media"
     ];
   };
-  users.groups.calibre-web = {};
+  users.groups.calibre-web = { };
 
   networking.firewall.allowedTCPPorts = [
     8083 # Calibre-Web
@@ -29,7 +30,7 @@
       };
     };
   };
-  environment.systemPackages = [pkgs.calibre-web];
+  environment.systemPackages = [ pkgs.calibre-web ];
 
   nixpkgs.overlays = [
     (_final: prev: {

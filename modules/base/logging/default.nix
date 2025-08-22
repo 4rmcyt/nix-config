@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # =================================================================
   # 1. Journald Configuration
   # Using structured options for better readability and error-checking.
@@ -49,7 +50,7 @@
 
   systemd.timers.security-monitor = {
     description = "Run security monitor script hourly";
-    wantedBy = ["timers.target"];
+    wantedBy = [ "timers.target" ];
     timerConfig = {
       OnCalendar = "hourly";
       Persistent = true;
