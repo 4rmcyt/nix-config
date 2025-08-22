@@ -127,7 +127,7 @@
       };
     };
 
-    mosquito = {
+     mosquitto = {
       enable = true;
       package = pkgs.mosquitto;
       listeners = [
