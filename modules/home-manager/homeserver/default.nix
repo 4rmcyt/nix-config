@@ -56,6 +56,7 @@
     nvd
     zoxide
     pyenv
+    sudo
 
     # System & Network Tools
     tuptime
@@ -238,16 +239,4 @@
   services = {
     ssh-agent.enable = true;
   };
-  # =================================================================
-  # Activation Script to Import GPG Keys (Add this section)
-  # =================================================================
-  # home.activation.import-gpg-keys = lib.hm.dag.entryAfter ["writeBoundary"] ''
-  #   # This script runs every time you switch home-manager generations.
-  #   # It checks if the key file exists before trying to import.
-  #   if [ -f "$HOME/.gnupg/imported_keys.asc" ]; then
-  #     echo "Importing GPG keys..."
-  #     # The '$DRY_RUN_CMD' ensures this doesn't run during a dry-run.
-  #     $DRY_RUN_CMD ${pkgs.gnupg}/bin/gpg --batch --import "$HOME/.gnupg/imported_keys.asc"
-  #   fi
-  # '';
 }

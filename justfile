@@ -34,3 +34,6 @@ push-cache:
 
 reboot-homeserver:
     ssh -t zeev@192.168.1.165 -- "sudo reboot now"
+
+smth:
+    ssh -t zeev@192.168.1.165 -- "export PATH=/run/current-system/sw/bin/:/nix/var/nix/profiles/default/bin:$HOME/.nix-profile/bin:/etc/profiles/per-user/$USER/bin:$PATH"
