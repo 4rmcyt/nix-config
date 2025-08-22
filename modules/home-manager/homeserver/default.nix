@@ -5,6 +5,12 @@
   ...
 }:
 {
+
+  nixpkgs.config.allowUnfree = true;
+  home.stateVersion = "25.05";
+  home.username = "zeev";
+  home.homeDirectory = "/home/zeev";
+
   home.packages = with pkgs; [
     # Shell & Editor
     zsh
@@ -249,5 +255,4 @@
   #     $DRY_RUN_CMD ${pkgs.gnupg}/bin/gpg --batch --import "$HOME/.gnupg/imported_keys.asc"
   #   fi
   # '';
-  home.stateVersion = "25.05";
 }
