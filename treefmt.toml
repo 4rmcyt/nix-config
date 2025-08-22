@@ -9,7 +9,6 @@ excludes = [
   "*.yaml",
   "*.gitignore",
   ".vscode/*",
-  "*.toml",
   "*.clan-flake",
   "*.code-workspace",
   "*.pub",
@@ -24,21 +23,28 @@ excludes = [
 
 [formatter.alejandra]
 command = "alejandra"
+includes = ["*.nix"]
+
+[formatter.nix]
+command = "nixfmt-rfc-style"
+includes = ["*.nix"]
 
 [formatter.deadnix]
 command = "deadnix"
+includes = ["*.nix"]
 
 [formatter.statix]
 command = "statix"
+includes = ["*.nix"]
 
 [formatter.shfmt]
 command = "shfmt"
+includes = ["*.sh"]
 
 [formatter.prettier]
 command = "prettier"
-
+includes = ["*.js", "*.ts", "*.json", "*.md", "*.css", "*.html"]
 
 [formatter.rust]
-command = "rustfmt"
 options = ["--edition", "2018"]
 includes = ["*.rs"]
