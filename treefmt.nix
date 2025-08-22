@@ -3,6 +3,15 @@
 {
   projectRootFile = "flake.nix";
   programs = {
+    nixfmt = {
+      enable = true;
+      package = pkgs.nixfmt-rfc-style;
+      includes = [ "*.nix" ];
+    };
+    autocorrect = {
+      enable = true;
+      package = pkgs.autocorrect;
+    };
     alejandra = {
       enable = true;
       package = pkgs.alejandra;
@@ -27,7 +36,25 @@
       enable = true;
       package = pkgs.rustfmt;
     };
+    yamlfmt = {
+      enable = true;
+      package = pkgs.yamlfmt;
+    };
+    toml-sort = {
+      enable = true;
+      package = pkgs.toml-sort;
+    };
+    typos = {
+      enable = true;
+      package = pkgs.typos;
+    };
+    dockfmt = {
+      enable = true;
+      package = pkgs.dockfmt;
+    };
+
   };
+
   settings.global.excludes = [
     "secrets/*"
     "*.png"
