@@ -48,6 +48,8 @@
     nh
     nix-output-monitor
     nvd
+    zoxide
+    pyenv
 
     # System & Network Tools
     tuptime
