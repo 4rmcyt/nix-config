@@ -1,5 +1,6 @@
 # nixos-config/treefmt.nix
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   projectRootFile = "flake.nix";
   programs = {
     alejandra = {
@@ -8,6 +9,7 @@
     };
     deadnix = {
       enable = true;
+      package = pkgs.deadnix;
     };
     statix = {
       package = pkgs.statix;
@@ -17,14 +19,19 @@
       enable = true;
       package = pkgs.shfmt;
     };
+    just = {
+      enable = true;
+      package = pkgs.just;
+    };
+    rustfmt = {
+      enable = true;
+      package = pkgs.rustfmt;
+    };
   };
   settings.global.excludes = [
     "secrets/*"
     "*.png"
     "*.jpeg"
-    "*.yaml"
-    "*.gitignore"
-    ".vscode/*"
     "*.toml"
     "*.clan-flake"
     "*.code-workspace"
