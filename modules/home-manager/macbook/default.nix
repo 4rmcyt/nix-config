@@ -52,6 +52,7 @@
     nixos-generators
 
     nh
+    just-lsp
     nixpkgs-fmt
     nixpkgs-lint
     pandoc
