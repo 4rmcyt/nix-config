@@ -30,3 +30,7 @@ gc:
 
 push-cache:
     cachix push macbookk "$(nix-store -qR /run/current-system)"
+
+
+reboot-homeserver:
+    ssh -t zeev@192.168.1.165 -- "sudo reboot now"
