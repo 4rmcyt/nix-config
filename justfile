@@ -1,19 +1,19 @@
 # justfile
 
 # Build the NixOS configuration for the homeserver
-build-nixos:
+build-homeserver:
     nix build .#nixosConfigurations.homeserver.config.system.build.toplevel
 
 # Build the Darwin configuration for the MacBook
-build-darwin:
+build-macbook:
     nix build .#darwinConfigurations.macbook.system | cachix push macbookk
 
 # Deploy to the NixOS homeserver
-deploy-nixos:
+deploy-homeserver:
     ssh -t zeev@192.168.1.165 -- "cd ~/src/nixos-config && ssh-add ~/.ssh/zeev && git pull && nix flake update && sudo nixos-rebuild switch --flake .#homeserver | cachix push homeserver"
 
 # Deploy to the Darwin MacBook
-deploy-darwin:
+deploy-macbook:
     nix flake update && sudo darwin-rebuild switch --flake .#macbook && cachix push macbookk "$(nix-store -qR /run/current-system)"
 
 # Format all code in the repository
@@ -28,5 +28,5 @@ update:
 gc:
     nix-collect-garbage -d
 
-push ache:
+push-cache:
     cachix push macbookk "$(nix-store -qR /run/current-system)"
