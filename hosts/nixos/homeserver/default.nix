@@ -1,4 +1,8 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  ...
+}:
 {
   # =================================================================
   # 1. Imports & Global Settings
@@ -84,43 +88,42 @@
   # =================================================================
   # 5. System Environment & Packages
   # =================================================================
-  environment.systemPackages = with pkgs;
-    [
-      coreutils
-      zfs
-      openssh
-      wireguard-tools
-      smartmontools
-      fwupd
-      pciutils
-      git
-      statix
-      cpuid
-      prometheus-cloudflare-exporter
-      jellyfin-ffmpeg
-      libva-utils
-      intel-gpu-tools
-      ssh-to-age
-      gnupg
-      openssh
-      mc
-      age
-      sops
-      pinentry-tty
-      pciutils
-      wget
-      curl
-      gawk
-      gnugrep
-      iproute2
-      htop
-      btop
-      lsof
-      openssl
-      powertop
-      lm_sensors
-      git-crypt
-    ];
+  environment.systemPackages = with pkgs; [
+    coreutils
+    zfs
+    openssh
+    wireguard-tools
+    smartmontools
+    fwupd
+    pciutils
+    git
+    statix
+    cpuid
+    prometheus-cloudflare-exporter
+    jellyfin-ffmpeg
+    libva-utils
+    intel-gpu-tools
+    ssh-to-age
+    gnupg
+    openssh
+    mc
+    age
+    sops
+    pinentry-tty
+    pciutils
+    wget
+    curl
+    gawk
+    gnugrep
+    iproute2
+    htop
+    btop
+    lsof
+    openssl
+    powertop
+    lm_sensors
+    git-crypt
+  ];
   # =================================================================
   # 6. System Services
   # =================================================================
