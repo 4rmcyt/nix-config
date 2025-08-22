@@ -1,4 +1,8 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  ...
+}:
 {
   sops.secrets = {
     # --- Home Assistant Secrets ---
@@ -10,32 +14,31 @@
       mode = "0400";
     };
   };
+
   users = {
     users = {
       hash = {
         isSystemUser = true;
         group = "hash";
       };
-      mosquito = {
+      mosquitto = {
         isSystemUser = true;
-        group = "mosquito";
+        group = "mosquitto";
       };
     };
     groups = {
-      mosquito = { };
+      mosquitto = { };
       hash = { };
     };
   };
 
-  networking.firewall = {
-    allowedTCPPorts = [
-      8123 # Home Assistant
-      1883 # MQTT
-    ];
-    allowedUDPPorts = [
-      1883 # MQTT
-    ];
-  };
+  networking.firewall.allowedTCPPorts = [
+    8123 # Home Assistant
+    1883 # MQTT
+  ];
+  networking.firewall.allowedUDPPorts = [
+    1883 # MQTT
+  ];
 
   services.nginx = {
     enable = true;
@@ -55,88 +58,94 @@
   };
   environment.systemPackages = with pkgs; [
     home-assistant
-    mosquito
+    mosquitto
   ];
-  services = {
-    home-assistant = {
-      enable = true;
-      configDir = "/var/lib/home-assistant";
-      configWritable = true;
-      extraPackages = ps: [
-        ps.psycopg2
-        ps.pyatv
-      ];
-      extraComponents = [
-        "mqtt"
-        "http"
-        "roku"
-        "alexa_devices"
-        "upnp"
-        "radio_browser"
-        "met"
-        "paperless_ngx"
-        "playstation_network"
-        "jellyfin"
-      ];
-      config = {
-        homeassistant = {
-          name = "Lab Home";
-          unit_system = "metric";
-          time_zone = "America/Edmonton";
-          country = "CA";
-          currency = "CAD";
-          external_url = "https://hash.labhome.work";
-          internal_url = "http://192.168.1.165:8123";
-        };
-        config.recorder.db_url = "postgresql://@/hash";
+  services.home-assistant = {
+    # name = "Home";
+    # latitude = "!secret latitude";  # Use secrets
+    # longitude = "!secret longitude";
+    # Use secrets
+    # elevation = "!secret elevation";
+    # Use secrets
+    # auth_mfa_modules = [ "totp" ];
+    # internal_url = "http://localhost:8123";
+    # external_url = "https://ha.yourdomain.com";
+    enable = true;
+    configDir = "/var/lib/home-assistant";
+    configWritable = true;
+    extraPackages = ps: [
+      ps.psycopg2
+      ps.pyatv
+    ];
+    extraComponents = [
+      "mqtt"
+      "http"
+      "roku"
+      "alexa_devices"
+      "upnp"
+      "radio_browser"
+      "met"
+      "paperless_ngx"
+      "playstation_network"
+      "jellyfin"
+    ];
+    config = {
+      homeassistant = {
+        name = "Lab Home";
+        unit_system = "metric";
+        time_zone = "America/Edmonton";
+        country = "CA";
+        currency = "CAD";
+        external_url = "https://hash.labhome.work";
+        internal_url = "http://192.168.1.165:8123";
+      };
+      recorder.db_url = "postgresql://@/hash";
 
-        http = {
-          server_host = "0.0.0.0";
-          server_port = 8123;
-          use_x_forwarded_for = true;
-          trusted_proxies = [
-            "127.0.0.1"
-            "192.168.1.165"
-          ];
-          ip_ban_enabled = true;
-          login_attempts_threshold = 5;
-        };
-
-        tts = [
-          {
-            platform = "google_translate";
-            language = "en";
-          }
+      http = {
+        server_host = "0.0.0.0";
+        server_port = 8123;
+        use_x_forwarded_for = true;
+        trusted_proxies = [
+          "127.0.0.1"
+          "192.168.1.165"
         ];
+        ip_ban_enabled = true;
+        login_attempts_threshold = 5;
+      };
 
-        mqtt = { };
+      tts = [
+        {
+          platform = "google_translate";
+          language = "en";
+        }
+      ];
 
-        default_config = { };
-        frontend = {
-          themes = "!include_dir_merge_named themes";
-        };
-        shopping_list = { };
-        map = { };
-        system_health = { };
-        logger = {
-          default = "info";
-          logs = {
-            "homeassistant.core" = "debug";
-          };
+      mqtt = { };
+
+      default_config = { };
+      frontend = {
+        themes = "!include_dir_merge_named themes";
+      };
+      shopping_list = { };
+      map = { };
+      system_health = { };
+      logger = {
+        default = "info";
+        logs = {
+          "homeassistant.core" = "debug";
         };
       };
     };
+  };
 
-     mosquitto = {
-      enable = true;
-      package = pkgs.mosquitto;
-      listeners = [
-        {
-          acl = [ "pattern readwrite #" ];
-          omitPasswordAuth = true;
-          settings.allow_anonymous = true;
-        }
-      ];
-    };
+  services.mosquitto = {
+    enable = true;
+    listeners = [
+      {
+        acl = [ "pattern readwrite #" ];
+        omitPasswordAuth = true;
+        settings.allow_anonymous = true;
+      }
+    ];
   };
 }
