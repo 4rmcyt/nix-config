@@ -3,7 +3,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   nixpkgs.config.allowUnfree = true;
   home.stateVersion = "25.05";
   home.username = "zeev";
@@ -32,7 +33,7 @@
     nix-diff
     zsh-powerlevel10k
     helix
-
+    rustfmt
     # User Utils
     pass
     jq

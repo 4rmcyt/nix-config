@@ -84,6 +84,7 @@
     delta
     fzf
     write-good
+    rustfmt
 
     htop
     iterm2
