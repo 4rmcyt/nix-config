@@ -3,7 +3,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   home.packages = with pkgs; [
     # Shell & Editor
     zsh
@@ -85,38 +86,116 @@
     };
     zsh = {
       enable = true;
-      syntaxHighlighting.enable = true;
-      autosuggestion.enable = true;
-      enableCompletion = true;
-      initContent = "source ~/.p10k.zsh";
-      plugins = [
-        {
-          name = "powerlevel10k";
-          src = pkgs.zsh-powerlevel10k;
-          file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
-        }
-        {
-          name = "zsh-history-substring-search";
-          src = pkgs.zsh-history-substring-search;
-          file = "share/zsh-history-substring-search/zsh-history-substring-search.zsh";
-        }
-        {
-          name = "zsh-you-should-use";
-          src = pkgs.zsh-you-should-use;
-          file = "share/zsh-you-should-use/zsh-you-should-use.plugin.zsh";
-        }
-        {
-          name = "nix-zsh-completions";
-          src = pkgs.nix-zsh-completions;
-          file = "share/zsh/site-functions/_nix";
-        }
-      ];
-      oh-my-zsh = {
+      shellAliases = {
+        ll = "ls -la";
+      };
+      sessionVariables = {
+        EDITOR = "nvim";
+        ALTERNATE_EDITOR = "${pkgs.vim}/vin/vi";
+        LC_CTYPE = "en_US.UTF-8";
+        LEDGER_COLOR = "true";
+        LESS = "-FRSXM";
+        LESSCHARSET = "utf-8";
+        PAGER = "less";
+      };
+      profileExtra = ''
+        export PYENV_ROOT="$HOME/.pyenv"
+        export PATH="$PYENV_ROOT/bin:$PATH"
+        eval "$(pyenv init --path)"
+
+        export GPG_TTY=$(tty)
+        if ! pgrep -x "gpg-agent" > /dev/null; then
+            ${pkgs.gnupg}/bin/gpgconf --launch gpg-agent
+        fi
+
+        export PATH=/run/current-system/sw/bin:$HOME/.nix-profile/bin:$PATH
+        if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+            . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+        fi
+
+        [ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+        [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
+
+        if type brew &>/dev/null; then
+          FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+        fi
+      '';
+      initContent = ''
+        # iTerm2 Shell Integration
+        if [ -f "''${HOME}/.iterm2_shell_integration.zsh" ]; then
+          source "''${HOME}/.iterm2_shell_integration.zsh"
+        fi
+
+        autoload -Uz compinit && compinit
+
+        bindkey -v
+        bindkey '^f' autosuggest-accept
+        bindkey '^p' history-search-backward
+        bindkey '^n' history-search-forward
+        bindkey '^[w' kill-region
+
+        bindkey '^[[A' history-substring-search-up # or '\eOA'
+        bindkey '^[[B' history-substring-search-down # or '\eOB'
+        HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
+
+        # Fix Home/End/Delete keys in iTerm2
+        bindkey '\e[H' beginning-of-line
+        bindkey '\e[F' end-of-line
+        bindkey '\e[1~' beginning-of-line
+        bindkey '\e[4~' end-of-line
+        bindkey '\e[3~' delete-char
+
+        zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+        zstyle ':completion:*' menu no
+        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+        zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+        zstyle ':completion:*:*:docker:*' option-stacking yes
+        zstyle ':completion:*:*:docker-*:*' option-stacking yes
+
+        [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+        if [ $(command -v fortune) ] && [ $UID != '0' ] && [[ $- == *i* ]] && [ $TERM != 'dumb' ]; then
+            ### Cowsay At Login ###
+            if [ $(command -v cowsay) ]; then
+                fortune -a fortunes wisdom | cowsay
+            else
+                fortune -a fortunes wisdom
+            fi
+        fi
+      '';
+      antidote = {
         enable = true;
+        useFriendlyNames = true;
         plugins = [
-          "git"
-          "sudo"
-          "direnv"
+          "getantidote/use-omz"
+
+          # Oh My Zsh plugins (no duplicates)
+          "ohmyzsh/ohmyzsh path:plugins/ansible"
+          "ohmyzsh/ohmyzsh path:plugins/aws"
+          "ohmyzsh/ohmyzsh path:plugins/bazel"
+          "ohmyzsh/ohmyzsh path:plugins/brew"
+          "ohmyzsh/ohmyzsh path:plugins/command-not-found"
+          "ohmyzsh/ohmyzsh path:plugins/direnv"
+          "ohmyzsh/ohmyzsh path:plugins/docker"
+          "ohmyzsh/ohmyzsh path:plugins/git"
+          "ohmyzsh/ohmyzsh path:plugins/fzf"
+          "ohmyzsh/ohmyzsh path:plugins/poetry"
+          "ohmyzsh/ohmyzsh path:plugins/pyenv"
+          "ohmyzsh/ohmyzsh path:plugins/python"
+          "ohmyzsh/ohmyzsh path:plugins/rust"
+          "ohmyzsh/ohmyzsh path:plugins/safe-paste"
+          "ohmyzsh/ohmyzsh path:plugins/z"
+          "ohmyzsh/ohmyzsh path:plugins/zoxide"
+          "ohmyzsh/ohmyzsh path:plugins/sudo"
+
+          # Separate community plugins
+          "zsh-users/zsh-completions"
+          "zsh-users/zsh-autosuggestions"
+          "zsh-users/zsh-history-substring-search"
+          "zdharma-continuum/fast-syntax-highlighting"
+          "MichaelAquilina/zsh-you-should-use"
+          "Aloxaf/fzf-tab"
+          "romkatv/powerlevel10k"
         ];
       };
     };

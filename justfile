@@ -10,8 +10,7 @@ build-darwin:
 
 # Deploy to the NixOS homeserver
 deploy-nixos:
-    ssh -t zeev@192.168.1.165 -- "cd ~/src/nixos-config && ssh-add ~/.ssh/zeev && git pull && sudo nixos-rebuild switch --flake .#homeserver" |
-    cachix push homeserver
+    ssh -t zeev@192.168.1.165 -- "cd ~/src/nixos-config && ssh-add ~/.ssh/zeev && git pull && sudo nixos-rebuild switch --flake .#homeserver | cachix push homeserver"
 
 # Deploy to the Darwin MacBook
 deploy-darwin:
@@ -29,5 +28,5 @@ update:
 gc:
     nix-collect-garbage -d
 
-push cache:
+push ache:
     cachix push macbookk "$(nix-store -qR /run/current-system)"
