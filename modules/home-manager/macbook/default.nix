@@ -3,7 +3,8 @@
   pkgs,
   config,
   ...
-}: {
+}:
+{
   nixpkgs.config.allowUnfree = true;
   home.stateVersion = "25.05";
   home.username = "vk";
@@ -142,7 +143,7 @@
       enable = true;
       enableZshIntegration = true;
       enableBashIntegration = true;
-      options = ["--cmd cd"];
+      options = [ "--cmd cd" ];
     };
 
     fzf = {
@@ -177,6 +178,9 @@
     };
     zsh = {
       enable = true;
+      shellAliases = {
+        ll = "ls -la";
+      };
       sessionVariables = {
         EDITOR = "nvim";
         ALTERNATE_EDITOR = "${pkgs.vim}/vin/vi";
