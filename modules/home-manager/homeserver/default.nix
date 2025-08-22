@@ -111,23 +111,6 @@
         export PYENV_ROOT="$HOME/.pyenv"
         export PATH="$PYENV_ROOT/bin:$PATH"
         eval "$(pyenv init --path)"
-
-        export GPG_TTY=$(tty)
-        if ! pgrep -x "gpg-agent" > /dev/null; then
-            ${pkgs.gnupg}/bin/gpgconf --launch gpg-agent
-        fi
-
-        export PATH=/run/current-system/sw/bin:$HOME/.nix-profile/bin:$PATH
-        if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-            . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
-        fi
-
-        [ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
-        [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
-
-        if type brew &>/dev/null; then
-          FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-        fi
       '';
       initContent = ''
         autoload -Uz compinit && compinit
