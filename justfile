@@ -14,7 +14,7 @@ deploy-nixos:
 
 # Deploy to the Darwin MacBook
 deploy-darwin:
-    sudo darwin-rebuild switch --flake .#macbook && cachix push macbookk "$(nix-store -qR /run/current-system)"
+    nix flake update && sudo darwin-rebuild switch --flake .#macbook && cachix push macbookk "$(nix-store -qR /run/current-system)"
 
 # Format all code in the repository
 fmt:
