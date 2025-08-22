@@ -14,25 +14,32 @@
       mode = "0400";
     };
   };
-
-  users.users.hash = {
-    isSystemUser = true;
-    group = "hash";
+  users = {
+    users = {
+      hash = {
+        isSystemUser = true;
+        group = "hash";
+      };
+      mosquito = {
+        isSystemUser = true;
+        group = "mosquito";
+      };
+    };
+    groups = {
+      mosquito = { };
+      hash = { };
+    };
   };
-  users.users.mosquito = {
-    isSystemUser = true;
-    group = "mosquito";
-  };
-  users.groups.mosquito = { };
-  users.groups.hash = { };
 
-  networking.firewall.allowedTCPPorts = [
-    8123 # Home Assistant
-    1883 # MQTT
-  ];
-  networking.firewall.allowedUDPPorts = [
-    1883 # MQTT
-  ];
+  networking.firewall = {
+    allowedTCPPorts = [
+      8123 # Home Assistant
+      1883 # MQTT
+    ];
+    allowedUDPPorts = [
+      1883 # MQTT
+    ];
+  };
 
   services.nginx = {
     enable = true;
@@ -54,16 +61,8 @@
     home-assistant
     mosquito
   ];
-
   services = {
     home-assistant = {
-      # name = "Home";
-      # latitude = "!secret latitude";  # Use secrets
-      # longitude = "!secret longitude"; # Use secrets
-      # elevation = "!secret elevation"; # Use secrets
-      # auth_mfa_modules = [ "totp" ];
-      # internal_url = "http://localhost:8123";
-      # external_url = "https://ha.yourdomain.com";
       enable = true;
       configDir = "/var/lib/home-assistant";
       configWritable = true;
@@ -83,7 +82,6 @@
         "playstation_network"
         "jellyfin"
       ];
-
       config = {
         homeassistant = {
           name = "Lab Home";
@@ -94,7 +92,6 @@
           external_url = "https://hash.example.com";
           internal_url = "http://192.168.1.165:8123";
         };
-
         config.recorder.db_url = "postgresql://@/hash";
 
         http = {
@@ -119,15 +116,12 @@
         mqtt = { };
 
         default_config = { };
-
         frontend = {
           themes = "!include_dir_merge_named themes";
         };
-
         shopping_list = { };
         map = { };
         system_health = { };
-
         logger = {
           default = "info";
           logs = {
@@ -148,23 +142,4 @@
       ];
     };
   };
-  # systemd.services.home-assistant.serviceConfig = {
-  #   # Resource limits
-  #   MemoryMax = "2G";
-  #   CPUQuota = "150%";
-
-  #   # Security hardening
-  #   NoNewPrivileges = true;
-  #   PrivateTmp = true;
-  #   ProtectHome = true;
-  #   ProtectSystem = "strict";
-  #   ReadWritePaths = [ "/var/lib/hass" ];
-
-  #   # Network restrictions
-  #   RestrictAddressFamilies = [
-  #     "AF_INET"
-  #     "AF_INET6"
-  #     "AF_UNIX"
-  #   ];
-  # };
 }
