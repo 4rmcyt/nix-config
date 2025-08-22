@@ -44,15 +44,10 @@
       enable = true;
       package = pkgs.toml-sort;
     };
-    typos = {
-      enable = true;
-      package = pkgs.typos;
-    };
     dockfmt = {
       enable = true;
       package = pkgs.dockfmt;
     };
-
   };
 
   settings.global.excludes = [

@@ -1,8 +1,8 @@
 keys:
-    - &homeserver_key age18pkk5washz5p8vl4tkemulvv8x23deaqwqqvfmwu7r7vwvjfwdqsg657vd
-    - &macbook_key age1h9kk9fktkn0t2yk7m89jxlf2atl0808ewn3j5updmq8knt0c84uqs24ew4
+  - &homeserver_key age18pkk5washz5p8vl4tkemulvv8x23deaqwqqvfmwu7r7vwvjfwdqsg657vd
+  - &macbook_key age1h9kk9fktkn0t2yk7m89jxlf2atl0808ewn3j5updmq8knt0c84uqs24ew4
 creation_rules:
-  - path_regex: 'secrets/.*'
+  - path_regex: "secrets/.*"
     key_groups:
       - age:
           - *homeserver_key

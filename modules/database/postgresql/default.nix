@@ -3,7 +3,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   sops.secrets = {
     postgres = {
       sopsFile = ../../../secrets/postgresql.yaml;
@@ -26,9 +27,9 @@
       group = config.users.groups.postgresql.name;
       mode = "0400";
     };
-    hass = {
+    hash = {
       sopsFile = ../../../secrets/postgresql.yaml;
-      key = "hass_db_password";
+      key = "hash_db_password";
       owner = config.users.users.postgresql.name;
       group = config.users.groups.postgresql.name;
       mode = "0400";
@@ -66,7 +67,7 @@
     isSystemUser = true;
     group = "postgresql";
   };
-  users.groups.postgresql = {};
+  users.groups.postgresql = { };
 
   networking.firewall.allowedTCPPorts = [
     5432 # PostgreSQL
@@ -78,7 +79,7 @@
     ensureDatabases = [
       "miniflux"
       "paperless"
-      "hass"
+      "hash"
       "authentik"
       "grafana"
       "vaultwarden"
@@ -131,7 +132,7 @@
         ensureDBOwnership = true;
       }
       {
-        name = "hass";
+        name = "hash";
         ensureDBOwnership = true;
       }
       {
@@ -175,9 +176,9 @@
       CREATE DATABASE authentik;
       GRANT ALL PRIVILEGES ON DATABASE authentik TO authentik;
 
-      CREATE ROLE hass WITH LOGIN PASSWORD '${config.sops.secrets.hass.path}' CREATEDB;
-      CREATE DATABASE hass;
-      GRANT ALL PRIVILEGES ON DATABASE hass TO hass;
+      CREATE ROLE hash WITH LOGIN PASSWORD '${config.sops.secrets.hash.path}' CREATEDB;
+      CREATE DATABASE hash;
+      GRANT ALL PRIVILEGES ON DATABASE hash TO hash;
 
       CREATE ROLE grafana WITH LOGIN PASSWORD '${config.sops.secrets.grafana.path}' CREATEDB;
       CREATE DATABASE grafana;

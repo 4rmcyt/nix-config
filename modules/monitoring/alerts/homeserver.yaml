@@ -9,7 +9,6 @@ groups:
         annotations:
           summary: "High CPU usage on {{ $labels.instance }}"
           description: "CPU usage has been over 80% for the last 5 minutes."
-
       - alert: LowDiskSpace
         expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100 < 15
         for: 10m
@@ -18,7 +17,6 @@ groups:
         annotations:
           summary: "Low disk space on {{ $labels.instance }}"
           description: "The root filesystem has less than 15% free space remaining."
-
       - alert: ZfsPoolUnhealthy
         expr: zfs_pool_health{pool!~"dpool|rpool"} != 0
         for: 0m
@@ -27,7 +25,6 @@ groups:
         annotations:
           summary: "ZFS pool {{ $labels.pool }} is unhealthy on {{ $labels.instance }}"
           description: "The ZFS pool '{{ $labels.pool }}' is in an unhealthy state. Immediate investigation is required."
-  
       - alert: ServiceDown
         expr: up == 0
         for: 1m

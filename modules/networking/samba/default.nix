@@ -8,7 +8,7 @@ _: {
     ];
   };
 
-  users.groups.samba = {};
+  users.groups.samba = { };
 
   networking.firewall.allowedTCPPorts = [
     139 # Samba NetBIOS Session Service
@@ -30,7 +30,7 @@ _: {
 
       media = {
         path = "/data/media";
-        browseable = "yes";
+        browsable = "yes";
         "read only" = "no";
         "guest ok" = "no";
         "create mask" = "0644";
@@ -41,7 +41,7 @@ _: {
 
       downloads = {
         path = "/data/Downloads";
-        browseable = "yes";
+        browsable = "yes";
         "read only" = "no";
         "guest ok" = "no";
         "create mask" = "0644";
