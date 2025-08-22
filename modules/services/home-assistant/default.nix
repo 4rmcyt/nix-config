@@ -56,10 +56,7 @@
       };
     };
   };
-  environment.systemPackages = with pkgs; [
-    home-assistant
-    mosquitto
-  ];
+
   services.home-assistant = {
     # name = "Home";
     # latitude = "!secret latitude";  # Use secrets
