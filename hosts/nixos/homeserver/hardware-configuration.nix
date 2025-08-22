@@ -1,4 +1,10 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}:
 {
   # =================================================================
   # 1. Imports & Global Settings
@@ -11,15 +17,14 @@
     cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     graphics = {
       enable = true;
-      extraPackages = with pkgs;
-        [
-          intel-ocl
-          libva-vdpau-driver
-          vaapiVdpau
-          intel-vaapi-driver
-          intel-media-driver # For VAAPI (decoding/encoding)
-          intel-compute-runtime # For OpenCL (compute/filtering)
-        ];
+      extraPackages = with pkgs; [
+        intel-ocl
+        libva-vdpau-driver
+        vaapiVdpau
+        intel-vaapi-driver
+        intel-media-driver # For VAAPI (decoding/encoding)
+        intel-compute-runtime # For OpenCL (compute/filtering)
+      ];
     };
     bluetooth.enable = false;
     i2c.enable = true;
