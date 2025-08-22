@@ -138,5 +138,21 @@
     masApps = {};
   };
 
+  programs = {
+    nix-index = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+
+    zsh.enable = true;
+
+    nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 10d --keep 3";
+      flake = "/Users/vk/.config/nixos-config";
+    };
+  };
+
   services.cachix-agent.enable = true;
 }

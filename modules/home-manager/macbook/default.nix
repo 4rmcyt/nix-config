@@ -3,8 +3,7 @@
   pkgs,
   config,
   ...
-}:
-{
+}: {
   nixpkgs.config.allowUnfree = true;
   home.stateVersion = "25.05";
   home.username = "vk";
@@ -52,6 +51,7 @@
     nixos-anywhere
     nixos-generators
 
+    nh
     nixpkgs-fmt
     nixpkgs-lint
     pandoc
@@ -143,7 +143,7 @@
       enable = true;
       enableZshIntegration = true;
       enableBashIntegration = true;
-      options = [ "--cmd cd" ];
+      options = ["--cmd cd"];
     };
 
     fzf = {
