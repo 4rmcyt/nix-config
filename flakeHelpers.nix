@@ -24,7 +24,6 @@ let
             facter.reportPath = ./facter.json;
           }
           {
-            home-manager.useGlobalPkgs = true;
             home-manager.users.zeev = {
               imports = [
                 ./modules/home-manager/homeserver
@@ -55,7 +54,6 @@ let
             {
               # It's good practice to specify the system key file here
 
-              # home-manager.useGlobalPkgs = true;
               home-manager.users.vk = {
                 imports = [
                   ./modules/home-manager/macbook
