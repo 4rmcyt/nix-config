@@ -177,9 +177,6 @@
     };
     zsh = {
       enable = true;
-      aliases = {
-        ll = "ls -la";
-      };
       sessionVariables = {
         EDITOR = "nvim";
         ALTERNATE_EDITOR = "${pkgs.vim}/vin/vi";
