@@ -1,0 +1,55 @@
+root = "flake.nix"
+
+[global]
+# Excludes a list of files and patterns from being formatted.
+excludes = [
+  "secrets/*",
+  "*.png",
+  "*.jpeg",
+  "*.yaml",
+  "*.gitignore",
+  ".vscode/*",
+  "*.toml",
+  "*.clan-flake",
+  "*.code-workspace",
+  "*.pub",
+  "*.typed",
+  "*.age",
+  "*.list",
+  "*.desktop",
+]
+
+# The 'programs' section from your Nix file is translated into individual
+# 'formatter' tables in TOML.
+
+[formatter.alejandra]
+command = "alejandra"
+
+[formatter.deadnix]
+command = "deadnix"
+
+[formatter.statix]
+command = "statix"
+
+[formatter.shfmt]
+command = "shfmt"
+
+[formatter.prettier]
+command = "prettier"
+# Includes a list of file extensions and patterns to format with Prettier.
+includes = [
+  "*.cjs",
+  "*.css",
+  "*.html",
+  "*.js",
+  "*.json5",
+  "*.jsx",
+  "*.mdx",
+  "*.mjs",
+  "*.scss",
+  "*.ts",
+  "*.tsx",
+  "*.vue",
+  "*.yaml",
+  "*.yml",
+]
