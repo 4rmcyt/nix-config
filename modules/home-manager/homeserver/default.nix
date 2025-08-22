@@ -6,61 +6,62 @@
 }:
 {
   nixpkgs.config.allowUnfree = true;
-  home.stateVersion = "25.05";
-  home.username = "zeev";
-  home.homeDirectory = "/home/zeev";
+  home = {
+    stateVersion = "25.05";
+    username = "zeev";
+    homeDirectory = "/home/zeev";
+    packages = with pkgs; [
+      # Shell & Editor
+      zsh
+      neovim
+      vim
+      meslo-lgs-nf
+      # Dev tools
+      direnv
+      go
+      gnupg
+      git
+      python3Full
+      deploy-rs
+      just
+      nixfmt-rfc-style
+      nil
+      nix-fast-build
+      shfmt
+      nixfmt-tree
+      nix-inspect
+      nix-diff
+      zsh-powerlevel10k
+      helix
+      rustfmt
+      # User Utils
+      pass
+      jq
+      dive
+      yamllint
+      nix-index
+      fzf
+      ffmpeg
+      trash-cli
+      zip
+      unar
+      unzip
+      p7zip
+      tree
+      borgbackup
+      nextdns
+      nh
+      nix-output-monitor
+      nvd
+      zoxide
+      pyenv
+      sudo
 
-  home.packages = with pkgs; [
-    # Shell & Editor
-    zsh
-    neovim
-    vim
-    meslo-lgs-nf
-    # Dev tools
-    direnv
-    go
-    gnupg
-    git
-    python3Full
-    deploy-rs
-    just
-    nixfmt-rfc-style
-    nil
-    nix-fast-build
-    shfmt
-    nixfmt-tree
-    nix-inspect
-    nix-diff
-    zsh-powerlevel10k
-    helix
-    rustfmt
-    # User Utils
-    pass
-    jq
-    dive
-    yamllint
-    nix-index
-    fzf
-    ffmpeg
-    trash-cli
-    zip
-    unar
-    unzip
-    p7zip
-    tree
-    borgbackup
-    nextdns
-    nh
-    nix-output-monitor
-    nvd
-    zoxide
-    pyenv
-    sudo
-
-    # System & Network Tools
-    tuptime
-    home-manager
-  ];
+      # System & Network Tools
+      tuptime
+      home-manager
+    ];
+  };
   programs = {
     git = {
       enable = true;

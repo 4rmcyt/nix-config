@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}:
+{ config, pkgs, ... }:
 {
   # =================================================================
   # 1. SOPS Secrets
@@ -21,7 +17,6 @@
       key = "cloudflare_prometheus_exporter_token";
     };
   };
-
   # =================================================================
   # 2. Users and Groups
   # =================================================================
@@ -59,122 +54,120 @@
     3001 # Uptime Kuma
     8081 # Cloudflare Exporter
   ];
-
   # =================================================================
   # 5. Services
   # =================================================================
-  # services.nginx = {
-  #   enable = true;
-  #   recommendedGzipSettings = true;
-  #   recommendedOptimisation = true;
-  #   recommendedProxySettings = true;
-  #   recommendedTlsSettings = true;
+  services = {
+    # services.nginx = {
+    #   enable = true;
+    #   recommendedGzipSettings = true;
+    #   recommendedOptimisation = true;
+    #   recommendedProxySettings = true;
+    #   recommendedTlsSettings = true;
 
-  #   virtualHosts = {
-  #     "prometheus.labhome.work" = {
-  #       forceSSL = true;
-  #       sslCertificate = config.my.security.ssl.certPath;
-  #       sslCertificateKey = config.my.security.ssl.keyPath;
-  #       locations."/".proxyPass = "http://localhost:9090";
-  #     };
-  #     "uptime-kuma.labhome.work" = {
-  #       forceSSL = true;
-  #       sslCertificate = config.my.security.ssl.certPath;
-  #       sslCertificateKey = config.my.security.ssl.keyPath;
-  #       locations."/".proxyPass = "http://localhost:3001";
-  #     };
-  #     "grafana.labhome.work" = {
-  #       forceSSL = true;
-  #       sslCertificate = config.my.security.ssl.certPath;
-  #       sslCertificateKey = config.my.security.ssl.keyPath;
-  #       extraConfig = "add_header Strict-Transport-Security \"max-age=31536000; includeSubDomains\" always;";
-  #       locations."/".proxyPass = "http://localhost:3000/";
-  #     };
-  #   };
-  # };
+    #   virtualHosts = {
+    #     "prometheus.labhome.work" = {
+    #       forceSSL = true;
+    #       sslCertificate = config.my.security.ssl.certPath;
+    #       sslCertificateKey = config.my.security.ssl.keyPath;
+    #       locations."/".proxyPass = "http://localhost:9090";
+    #     };
+    #     "uptime-kuma.labhome.work" = {
+    #       forceSSL = true;
+    #       sslCertificate = config.my.security.ssl.certPath;
+    #       sslCertificateKey = config.my.security.ssl.keyPath;
+    #       locations."/".proxyPass = "http://localhost:3001";
+    #     };
+    #     "grafana.labhome.work" = {
+    #       forceSSL = true;
+    #       sslCertificate = config.my.security.ssl.certPath;
+    #       sslCertificateKey = config.my.security.ssl.keyPath;
+    #       extraConfig = "add_header Strict-Transport-Security \"max-age=31536000; includeSubDomains\" always;";
+    #       locations."/".proxyPass = "http://localhost:3000/";
+    #     };
+    #   };
+    # };
 
-  # --- Prometheus Monitoring Stack ---
-  services.prometheus = {
-    enable = true;
-    port = 9090;
-    retentionTime = "30d";
-    globalConfig.scrape_interval = "1m";
-    scrapeConfigs = [
-      {
-        job_name = "prometheus";
-        static_configs = [ { targets = [ "localhost:9090" ]; } ];
-      }
-      {
-        job_name = "node-exporter";
-        static_configs = [ { targets = [ "localhost:9100" ]; } ];
-      }
-      {
-        job_name = "postgres-exporter";
-        static_configs = [ { targets = [ "localhost:9187" ]; } ];
-      }
-      {
-        job_name = "cloudflare-exporter";
-        static_configs = [ { targets = [ "localhost:8081" ]; } ];
-      }
-    ];
-
-    exporters = {
-      node = {
-        enable = true;
-        enabledCollectors = [
-          "systemd"
-          "zfs"
-          "diskstats"
-          "meminfo"
-          "netdev"
-          "stat"
-          "time"
-          "thermal_zone"
-        ];
+    # --- Prometheus Monitoring Stack ---
+    prometheus = {
+      enable = true;
+      port = 9090;
+      retentionTime = "30d";
+      globalConfig.scrape_interval = "1m";
+      scrapeConfigs = [
+        {
+          job_name = "prometheus";
+          static_configs = [ { targets = [ "localhost:9090" ]; } ];
+        }
+        {
+          job_name = "node-exporter";
+          static_configs = [ { targets = [ "localhost:9100" ]; } ];
+        }
+        {
+          job_name = "postgres-exporter";
+          static_configs = [ { targets = [ "localhost:9187" ]; } ];
+        }
+        {
+          job_name = "cloudflare-exporter";
+          static_configs = [ { targets = [ "localhost:8081" ]; } ];
+        }
+      ];
+      exporters = {
+        node = {
+          enable = true;
+          enabledCollectors = [
+            "systemd"
+            "zfs"
+            "diskstats"
+            "meminfo"
+            "netdev"
+            "stat"
+            "time"
+            "thermal_zone"
+          ];
+        };
+        postgres = {
+          enable = true;
+        };
       };
-      postgres = {
-        enable = true;
+      ruleFiles = [ ./alerts/homeserver.yaml ];
+    };
+
+    # --- Grafana Visualization ---
+    grafana = {
+      enable = true;
+      settings = {
+        server = {
+          http_port = 3000;
+          root_url = "http://grafana.labhome.work";
+        };
+        database = {
+          type = "postgres";
+          host = "/run/postgresql";
+          user = "grafana";
+          passwordFile = config.sops.secrets.grafana_db_password.path;
+        };
+        security.admin_password_file = config.sops.secrets.grafana_admin_password.path;
+      };
+      provision.datasources.settings.datasources = [
+        {
+          name = "Prometheus";
+          type = "prometheus";
+          access = "proxy";
+          url = "http://localhost:9090";
+          isDefault = true;
+        }
+      ];
+    };
+    # --- Uptime Kuma ---
+    uptime-kuma = {
+      enable = true;
+      settings = {
+        port = "3001";
+        hostname = "127.0.0.1";
       };
     };
-    ruleFiles = [ ./alerts/homeserver.yaml ];
   };
-
-  # --- Grafana Visualization ---
-  services.grafana = {
-    enable = true;
-    settings = {
-      server = {
-        http_port = 3000;
-        root_url = "http://grafana.labhome.work";
-      };
-      database = {
-        type = "postgres";
-        host = "/run/postgresql";
-        user = "grafana";
-        passwordFile = config.sops.secrets.grafana_db_password.path;
-      };
-      security.admin_password_file = config.sops.secrets.grafana_admin_password.path;
-    };
-    provision.datasources.settings.datasources = [
-      {
-        name = "Prometheus";
-        type = "prometheus";
-        access = "proxy";
-        url = "http://localhost:9090";
-        isDefault = true;
-      }
-    ];
-  };
-
-  # --- Uptime Kuma ---
-  services.uptime-kuma = {
-    enable = true;
-    settings = {
-      port = "3001";
-      hostname = "127.0.0.1";
-    };
-  };
-
   # =================================================================
   # 6. Custom Systemd Services for Exporters
   # =================================================================

@@ -6,135 +6,121 @@
 }:
 {
   nixpkgs.config.allowUnfree = true;
-  home.stateVersion = "25.05";
-  home.username = "vk";
-  home.homeDirectory = "/Users/vk";
-  # --------------------------------------------------------------------------------
-  # SSH Configuration
-  # --------------------------------------------------------------------------------
-  home.file.".ssh/authorized_keys".text = ''
-    ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAokdbrMinZjhDnVLnrXOjNn9SvzsPdlP6P3T9hAtGG8 vk@Volodymyr-Kondratenko-Mac.local
-    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDc3zaVdT+TBJdjBWbN2fwSricHc7yJFGPxB9PB2sR4mkCmv6FPBd8vGZ1pYLJWEqgPU0C76IWAiSpwRrYu4Da0JKyEITh69sT+ndufTsrXJwPPxFKsUnmm2XQE0O2M2dM3wx+sMnBxWc1AMlfkWDnpP2N1Rl33ridumzEAGvJGqrn/ScpHGSgEkpZwVAnO5U8S9EjuO0h+nUJUSfLJVcl/cLeqHuF5zE8mSxsrj1FjiymZSquOEVAwNOhbCLuFVsYSEb8qujFsD7M9Umd0qvPQwCY9zN/Hb37TrNebhJ32kjIOlrWO3fnreMetIVRtTC1/cvKnGV16S32/YGiIUb2zLTfxKp2bn2qvXgLwocKf/M56fobQ6LOt60dUG1y3QwRLI1uAQggzp2N3/shQRb89nCQ/Zq67h941U2Z/RnNx7Hzl6n9DHkiKmkvXQuld0DWgh6wwG775gR2wBZHgpqtLqoRhwFVrvwIL9UkrLL4PE9A5iBEmypWsCWUomi5St+k= vk@Volodymyr-Kondratenko-Mac.local
-    ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com
-  '';
-  # --------------------------------------------------------------------------------
-  # Home Manager Packages (User-Specific)
-  # --------------------------------------------------------------------------------
-  home.packages = with pkgs; [
-    # Dev Tools
-    age
-    awscli2
-    age-plugin-yubikey
-    bison
-    cargo
-    dbeaver-bin
-    deploy-rs
-    direnv
-    docker
-    fd
-    flex
-    git
-    git-crypt
-    gh
-    go
-    gnupg
-    gnugrep
-    gnumake
-    darwin.cctools
-    killall
-    just
-    lorri
-    neovim
-
-    nix-diff
-    nil
-    nixfmt-rfc-style
-    nixos-anywhere
-    nixos-generators
-
-    nh
-    just-lsp
-    nixpkgs-fmt
-    nixpkgs-lint
-    pandoc
-    openssl
-    pass
-    pcsc-tools
-    pinentry-tty
-    pipx
-    poetry
-    pyenv
-    python3Full
-    pyenv
-    virtualenv
-    sops
-    ssh-to-age
-    tenv
-    treefmt
-    utm
-    vscode
-    wireguard-tools
-
-    yq
-    tmux
-
-    # System & CLI Tools
-    appcleaner
-    btop
-    curl
-    delta
-    fzf
-    write-good
-    rustfmt
-
-    htop
-    iterm2
-    jq
-    mas
-    mc
-    minipro
-    neofetch
-    nix-index
-    nix-info
-    nix-prefetch-scripts
-    pet
-    pwgen
-    srecord
-    tailscale
-    the-unarchiver
-
-    tree
-    wget
-    obsidian
-    yamlfmt
-    yubikey-agent
-    yubikey-manager
-    yubikey-personalization
-    zsh-powerlevel10k
-    home-manager
-    statix
-
-    # Applications
-    jellyfin-media-player
-    slack
-    telegram-desktop
-    youtube-music
-    zoom-us
-  ];
-  # --------------------------------------------------------------------------------
-  # Fonts
-  # --------------------------------------------------------------------------------
-  home.file.".config/fontconfig/fonts.conf".source = pkgs.makeFontsConf {
-    fontDirectories = with pkgs; [
-      fira-code
-      font-awesome
-      material-design-icons
-    ];
+  home = {
+    stateVersion = "25.05";
+    username = "vk";
+    homeDirectory = "/Users/vk";
+    file.".ssh/authorized_keys".text = ''
+      ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAokdbrMinZjhDnVLnrXOjNn9SvzsPdlP6P3T9hAtGG8 vk@Volodymyr-Kondratenko-Mac.local
+      ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDc3zaVdT+TBJdjBWbN2fwSricHc7yJFGPxB9PB2sR4mkCmv6FPBd8vGZ1pYLJWEqgPU0C76IWAiSpwRrYu4Da0JKyEITh69sT+ndufTsrXJwPPxFKsUnmm2XQE0O2M2dM3wx+sMnBxWc1AMlfkWDnpP2N1Rl33ridumzEAGvJGqrn/ScpHGSgEkpZwVAnO5U8S9EjuO0h+nUJUSfLJVcl/cLeqHuF5zE8mSxsrj1FjiymZSquOEVAwNOhbCLuFVsYSEb8qujFsD7M9Umd0qvPQwCY9zN/Hb37TrNebhJ32kjIOlrWO3fnreMetIVRtTC1/cvKnGV16S32/YGiIUb2zLTfxKp2bn2qvXgLwocKf/M56fobQ6LOt60dUG1y3QwRLI1uAQggzp2N3/shQRb89nCQ/Zq67h941U2Z/RnNx7Hzl6n9DHkiKmkvXQuld0DWgh6wwG775gR2wBZHgpqtLqoRhwFVrvwIL9UkrLL4PE9A5iBEmypWsCWUomi5St+k= vk@Volodymyr-Kondratenko-Mac.local
+      ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks 4rmcyt@gmail.com
+    '';
+    packages = with pkgs;
+      [
+        # Dev Tools
+        age
+        awscli2
+        age-plugin-yubikey
+        bison
+        cargo
+        dbeaver-bin
+        deploy-rs
+        direnv
+        docker
+        fd
+        flex
+        git
+        git-crypt
+        gh
+        go
+        gnupg
+        gnugrep
+        gnumake
+        darwin.cctools
+        killall
+        just
+        lorri
+        neovim
+        nix-diff
+        nil
+        nixfmt-rfc-style
+        nixos-anywhere
+        nixos-generators
+        nh
+        just-lsp
+        nixpkgs-fmt
+        nixpkgs-lint
+        pandoc
+        openssl
+        pass
+        pcsc-tools
+        pinentry-tty
+        pipx
+        poetry
+        pyenv
+        python3Full
+        pyenv
+        virtualenv
+        sops
+        ssh-to-age
+        tenv
+        treefmt
+        utm
+        vscode
+        wireguard-tools
+        yq
+        tmux
+        # System & CLI Tools
+        appcleaner
+        btop
+        curl
+        delta
+        fzf
+        write-good
+        rustfmt
+        htop
+        iterm2
+        jq
+        mas
+        mc
+        minipro
+        neofetch
+        nix-index
+        nix-info
+        nix-prefetch-scripts
+        pet
+        pwgen
+        srecord
+        tailscale
+        the-unarchiver
+        tree
+        wget
+        obsidian
+        yamlfmt
+        yubikey-agent
+        yubikey-manager
+        yubikey-personalization
+        zsh-powerlevel10k
+        home-manager
+        # Applications
+        jellyfin-media-player
+        slack
+        telegram-desktop
+        youtube-music
+        zoom-us
+      ];
+    file.".config/fontconfig/fonts.conf".source = pkgs.makeFontsConf {
+      fontDirectories = with pkgs;
+        [
+          fira-code
+          font-awesome
+          material-design-icons
+        ];
+    };
   };
   # --------------------------------------------------------------------------------
   # Program Configurations
   # --------------------------------------------------------------------------------
-
   programs = {
     direnv = {
       enable = true;
