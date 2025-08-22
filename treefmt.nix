@@ -11,42 +11,59 @@
     autocorrect = {
       enable = true;
       package = pkgs.autocorrect;
+      includes = [ "*.nix" ];
     };
     alejandra = {
       enable = true;
       package = pkgs.alejandra;
+      includes = [ "*.nix" ];
     };
     deadnix = {
       enable = true;
       package = pkgs.deadnix;
+      includes = [ "*.nix" ];
     };
     statix = {
       package = pkgs.statix;
       enable = true;
+      includes = [ "*.nix" ];
     };
     shfmt = {
       enable = true;
       package = pkgs.shfmt;
+      includes = ["*.sh", "*.bash", "*.envrc", "*.envrc.*"]
     };
     just = {
       enable = true;
       package = pkgs.just;
+      options = ["--unstable", "--fmt", "--justfile",];
+      includes = [".justfile",];
     };
     rustfmt = {
       enable = true;
       package = pkgs.rustfmt;
+      includes = ["*.rs"]
     };
     yamlfmt = {
       enable = true;
       package = pkgs.yamlfmt;
+      includes = ["*.yaml", "*.yml"];
     };
     toml-sort = {
       enable = true;
       package = pkgs.toml-sort;
+      includes = ["*.toml"];
     };
     dockfmt = {
       enable = true;
       package = pkgs.dockfmt;
+      includes = ["*.Dockerfile", "docker-compose.yml"];
+    };
+    cmake = {
+      enable = true;
+      package = pkgs.cmake-format;
+      includes = ["**/*.cmake", "**/CMakeLists.txt"];
+      options = ["--in-place"];
     };
   };
 
@@ -65,6 +82,7 @@
   ];
   programs.prettier = {
     enable = true;
+    options = ["--write"]
     includes = [
       "*.cjs"
       "*.css"
