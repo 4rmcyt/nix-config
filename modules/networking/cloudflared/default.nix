@@ -28,7 +28,7 @@
           "jellyfin.example.com" = "http://localhost:8096";
           "paperless.example.com" = "http://localhost:8888";
           "home.example.com" = "http://localhost:8082";
-          "hash.example.com" = "http://localhost:8123";
+          "hass.example.com" = "http://localhost:8123";
           "miniflux.example.com" = "http://localhost:8086";
           "transmission.example.com" = "http://192.168.1.165:9091";
           "cal.example.com" = "http://localhost:5232";

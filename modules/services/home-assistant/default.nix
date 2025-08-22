@@ -8,7 +8,7 @@
     # --- Home Assistant Secrets ---
     home_assistant_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
-      key = "hash_db_password";
+      key = "hass_db_password";
       owner = config.users.users.postgresql.name;
       group = config.users.groups.postgresql.name;
       mode = "0400";
@@ -17,9 +17,9 @@
 
   users = {
     users = {
-      hash = {
+      hass = {
         isSystemUser = true;
-        group = "hash";
+        group = "hass";
       };
       mosquitto = {
         isSystemUser = true;
@@ -28,7 +28,7 @@
     };
     groups = {
       mosquitto = { };
-      hash = { };
+      hass = { };
     };
   };
 
@@ -46,7 +46,7 @@
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    virtualHosts."hash.example.com" = {
+    virtualHosts."hass.example.com" = {
       forceSSL = true;
       sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
       sslCertificateKey = "/var/lib/acme/example.com/key.pem";
@@ -93,10 +93,10 @@
         time_zone = "America/Edmonton";
         country = "CA";
         currency = "CAD";
-        external_url = "https://hash.example.com";
+        external_url = "https://hass.example.com";
         internal_url = "http://192.168.1.165:8123";
       };
-      recorder.db_url = "postgresql://@/hash";
+      recorder.db_url = "postgresql://@/hass";
 
       http = {
         server_host = "0.0.0.0";
