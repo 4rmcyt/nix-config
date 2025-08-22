@@ -6,7 +6,7 @@ build-nixos:
 
 # Build the Darwin configuration for the MacBook
 build-darwin:
-    nix build .#darwinConfigurations.macbook.system
+    nix build .#darwinConfigurations.macbook.system | cachix push macbookk
 
 # Deploy to the NixOS homeserver
 deploy-nixos:
@@ -15,9 +15,7 @@ deploy-nixos:
 
 # Deploy to the Darwin MacBook
 deploy-darwin:
-    nix build .#darwinConfigurations.macbook.system && \
-    sudo "$(pwd)/result/bin/darwin-rebuild" switch --flake .#macbook && \
-    nix path-info -r ./result | cachix push macbook
+    sudo darwin-rebuild switch --flake .#macbook && cachix push macbookk "$(nix-store -qR /run/current-system)"
 
 # Format all code in the repository
 fmt:
@@ -30,3 +28,6 @@ update:
 # Run garbage collection
 gc:
     nix-collect-garbage -d
+
+push cache:
+    cachix push macbookk "$(nix-store -qR /run/current-system)"
