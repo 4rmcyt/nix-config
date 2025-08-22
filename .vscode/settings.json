@@ -5,7 +5,7 @@
     "git.enableCommitSigning": true,
     "github.gitProtocol": "ssh",
     "sops.beta": true,
-    "editor.defaultFormatter": "foxundermoon.shell-format",
+    "editor.defaultFormatter": "ibecker.treefmt-vscode",
     "[shellscript]": {
         "files.autoSave": "afterDelay",
         "editor.defaultFormatter": "mkhl.shfmt"
