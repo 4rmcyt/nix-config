@@ -53,3 +53,7 @@ includes = [
   "*.yaml",
   "*.yml",
 ]
+[formatter.rust]
+command = "rustfmt"
+options = ["--edition", "2018"]
+includes = ["*.rs"]
