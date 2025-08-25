@@ -91,6 +91,7 @@ in
     };
     flaresolverr = {
       isSystemUser = true;
+      group = "flaresolverr";
       extraGroups = [
         "users"
         "media"
@@ -315,7 +316,7 @@ in
     jellyseerr.enable = true;
     recyclarr = {
       enable = true;
-      configFile = "./recyclarr.yaml";
+      configFile = ./recyclarr.yaml;
     };
   };
 
