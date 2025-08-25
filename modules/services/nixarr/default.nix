@@ -82,6 +82,20 @@ in
         "media"
       ];
     };
+    recyclarr = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    flaresolverr = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
   };
   users.groups = {
     audiobookshelf = { };
@@ -93,6 +107,8 @@ in
     radarr = { };
     sonarr = { };
     transmission = { };
+    recyclarr = { };
+    flaresolverr = { };
   };
 
   networking.firewall.allowedTCPPorts = [
@@ -107,6 +123,7 @@ in
     5055 # Jellyseerr
     9091 # Transmission web UI
     63998 # Transmission peer port
+    8191 # FlareSolverr
   ];
 
   networking.firewall.allowedUDPPorts = [
@@ -356,7 +373,7 @@ in
     pkgs.jellyfin-web
     pkgs.jellyfin-ffmpeg
   ];
-
+  
   systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
     serviceConfig = {
       BindPaths = [
@@ -379,7 +396,10 @@ in
       ];
     };
   });
-
+  services.flaresolverr = {
+      enable = true;
+      port = 8191; # Default port is usually 8191
+  };
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
     "d /data/media/movies 770 zeev media -"
