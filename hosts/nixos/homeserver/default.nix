@@ -123,6 +123,7 @@
     powertop
     lm_sensors
     git-crypt
+    prettier
   ];
   # =================================================================
   # 6. System Services
