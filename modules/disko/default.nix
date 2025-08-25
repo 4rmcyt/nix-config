@@ -115,7 +115,10 @@
           };
           "containers" = {
             type = "zfs_fs";
-            options."com.sun:auto-snapshot" = "false";
+            options = {
+              acltype = "posixacl";
+              "com.sun:auto-snapshot" = "false";
+            };
             mountpoint = "/var/lib/containers";
           };
           "authentik" = {
