@@ -10,7 +10,7 @@
     hostName = "homeserver";
     hostId = "0b8d0f5a";
     networkmanager.enable = true;
-    useNetworkd = false;
+    useDHCP = true;
     enableIPv6 = false;
 
     firewall = {
