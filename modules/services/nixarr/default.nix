@@ -1,499 +1,422 @@
 {
-  sonarr = {
-    series = {
-      base_url = "http://localhost:8989";
-      api_key = "7b5a494ab305456181bed6fab7d25b51";
-      quality_definition = {
-        type = "series";
-      };
-      delete_old_custom_formats = true;
-      replace_existing_custom_formats = true;
-      quality_profiles = [
-        {
-          name = "All";
-          reset_unmatched_scores = {
-            enabled = true;
-          };
-          upgrade = {
-            allowed = true;
-            until_quality = "UHD-STREAM";
-            until_score = 150;
-          };
-          min_format_score = 0;
-          quality_sort = "top";
-          qualities = [
-            {
-              name = "UHD-STREAM";
-              qualities = [
-                "WEBDL-2160p"
-                "Bluray-2160p"
-              ];
-            }
-            {
-              name = "HD-STREAM";
-              qualities = [
-                "WEBDL-1080p"
-                "Bluray-1080p"
-              ];
-            }
-            {
-              name = "OTHER";
-              qualities = [
-                "WEBRip-2160p"
-                "HDTV-2160p"
-                "WEBRip-1080p"
-                "HDTV-1080p"
-                "WEBDL-720p"
-                "Bluray-720p"
-                "WEBRip-720p"
-                "HDTV-720p"
-                "Bluray-576p"
-                "WEBDL-480p"
-                "Bluray-480p"
-                "WEBRip-480p"
-                "DVD"
-                "SDTV"
-              ];
-            }
-          ];
-          custom_formats = [
-            # Wanted
-            {
-              trash_ids = [
-                # Miscellaneous
-                "290078c8b266272a5cc8e251b5e2eb0b" # 1080p
-                "1bef6c151fa35093015b0bfef18279e5" # 2160p
-                "cddfb4e32db82151d97352b8e37c648" # x264
-                "c9eafd50846d299b862ca9bb6ea91950" # x265
-                # Audio Formats
-                "4232a509ce60c4e208d13825b7c06264" # DD+ ATMOS
-                # Audio Channels
-                "3fbafa924f361e66fbc6187af82dfa85" # 5.1 Surround
-                "9fb6d778592c293467437593ef394bf1" # 6.1 Surround
-                "204c8c3e7315bb0ea81332774fa888d6" # 7.1 Surround
-                # HDR Formats
-                "6d0d8de7b57e35518ac0308b0ddf404e" # DV
-                "7878c33f1963fefb3d6c8657d46c2f0a" # DV HDR10
-                "2b239ed870daba8126a53bd5dc8dc1c8" # DV HDR10+
-                "1f733af03141f068a540eec352589a89" # DV HLG
-                "27954b0a80aab882522a88a4d9eae1cd" # DV SDR
-                # HDR Optional
-                "385e9e8581d33133c3961bdcdeffb7b4" # DV HDR10+ Boost
-              ];
-              assign_scores_to = [
-                {
-                  name = "All";
-                  score = 25;
-                }
-              ];
-            }
-            {
-              trash_ids = [
-                # Miscellaneous
-                "c99279ee27a154c2f20d1d505cc99e25" # 720p
-                # HDR Formats
-                "3e2c4e748b64a1a1118e0ea3f4cf6875" # HDR
-                "bb019e1cd00f304f80971c965de064dc" # HDR (undefined)
-                "3497799d29a085e2ac2df9d468413c94" # HDR10
-                "a3d82cbef5039f8d295478d28a887159" # HDR10+
-                # Audio Formats
-                "63487786a8b01b7f20dd2bc90dd4a477" # DD+
-                # Audio Channels
-                "42cba7e38c7947a6d1d0a62580ee6d62" # 3.0 Sound
-                "1895195e84767de180653914ce207245" # 4.0 Sound
-              ];
-              assign_scores_to = [
-                {
-                  name = "Any";
-                  score = 20;
-                }
-              ];
-            }
-            {
-              trash_ids = [
-                # Audio Formats
-                "dbe00161b08a25ac6154c55f95e6318d" # DD
-                # Audio Channels
-                "834e534f103938853ffced4203b53e72" # 2.0 Stereo
-                # HQ Source Groups
-                "d6819cba26b1a6508138d25fb5e32293" # HD Bluray Tier 01
-                "e6258996055b9fbab7e9cb2f75819294" # WEB Tier 01
-              ];
-              assign_scores_to = [
-                {
-                  name = "All";
-                  score = 15;
-                }
-              ];
-            }
-            {
-              trash_ids = [
-                # Audio Formats
-                "28f6ef16d61e2d1adfce3156ed8257e3" # Opus
-                # Audio Channels
-                "bd6dd5e043aa27ff4696a08d011c7d96" # 1.0 Mono
-                # HQ Source Groups
-                "c2216b7b8aa545dc1ce8388c618f8d57" # HD Bluray Tier 02
-                "58790d4e2fdcd9733aa7ae68ba2bb503" # WEB Tier 02
-              ];
-              assign_scores_to = [
-                {
-                  name = "All";
-                  score = 10;
-                }
-              ];
-            }
-            {
-              trash_ids = [
-                # Audio Formats
-                "a50b8a0c62274a7c38b09a9619ba9d86" # AAC
-                # General Streaming Services
-                "d660701077794679fd59e8bdf4ce3a29" # AMZN
-                "f67c9ca88f463a48346062e8ad07713f" # ATVP
-                "77a7b25585c18af08f60b1547bb9b4fb" # CC
-                "36b72f59f4ea20aad9316f475f2d9fbb" # DCU
-                "89358767a60cc28783cdc3d0be9388a4" # DSNP
-                "7a235133c87f7da4c8cccceca7e3c7a6" # HBO
-                "a880d6abc21e7c16884f3ae393f84179" # HMAX
-                "f6cce30f1733d5c8194222a7507909bb" # HULU
-                "0ac24a2a68a9700bcb7eeca8e5cd644c" # iT
-                "81d1fbf600e2540cee87f3a23f9d3c1c" # MAX
-                "d34870697c9db575f17700212167be23" # NF
-                "1656adc6d7bb2c8cca6acfb6592db421" # PCOK
-                "c67a75ae4a1715f2bb4d492755ba4195" # PMTP
-                "ae58039e1319178e6be73caab5c42166" # SHO
-                "1efe8da11bfd74fbbcd4d8117ddb9213" # STAN
-                "9623c5c9cac8e939c1b9aedd32f640bf" # SYFY
-                # Anime Optional
-                "418f50b10f1907201b6cfdf881f467b7" # Anime Dual Audio
-                "026d5aadd1a6b4e550b134cb6c72b3ca" # Uncensored
-                # [No Category]
-                "e0c1a67f23908a55b6ae9834e8ed6727" # Single Episode
-                # HQ Source Groups
-                "d0c516558625b04b363fa6c5c2c7cfd4" # WEB Scene
-                "d84935abd3f8556dcd51d4f27e22d0a6" # WEB Tier 03
-                # Miscellaneous
-                "1b3994c551cbb92a2c781af061f4ab44" # Scene
-                # Optional Streaming Services
-                "43b3cf48cb385cd3eac608ee6bca7f09" # UHD Streaming Boost
-              ];
-              assign_scores_to = [
-                {
-                  name = "All";
-                  score = 5;
-                }
-              ];
-            }
-            {
-              trash_ids = [
-                # Miscellaneous
-                "eb3d5cc0a2be0db205fb823640db6a3c" # Repack v2
-                "44e7c4de10ae50265753082e5dc76047" # Repack v3
-                "ec8fa7296b64e8cd390a1600981f3923" # Repack/Proper
-              ];
-              assign_scores_to = [ { name = "All"; } ];
-            }
-            {
-              trash_ids = [
-                # Miscellaneous
-                "82d40da2bc6923f41e14394075dd4b03" # No-RlsGroup
-                "7ba05c6e0e14e793538174c679126996" # MULTi
-                "e1a997ddb54e3ecbfe06341ad323c458" # Obfuscated
-                "06d66ab109d4d2eddb2794d21526d140" # Retags
-                "9b64dff695c2115facf1b6ea59c9bd07" # x265 (no HDR/DV)
-                # [No Category]
-                "4a20cfb76b5f92a8ca22b894b32e71be" # Multi-Episode
-              ];
-              assign_scores_to = [
-                {
-                  name = "All";
-                  score = -5;
-                }
-              ];
-            }
-            {
-              trash_ids = [
-                # HDR Formats
-                "17e889ce13117940092308f48b48b45b" # HLG
-                "2a7e3be05d3861d6df7171ec74cad727" # PQ
-                # HDR Optional
-                "ef4963043b0987f8485bc9106f16db38" # DV (Disk)
-                "9b27ab6498ec0f31a3353992e19434ca" # DV (WEBDL)
-                "2016d1676f5ee13a5b7257ff86ac9a93" # SDR
-                # Language profiles
-                "ae575f95ab639ba5d15f663bf019e3e8" # Language: Not Original
-                # Miscellaneous
-                "1bd69272e23c5e6c5b1d6c8a36fce95e" # HFR
-                "3bc5f395426614e155e585a2f056cdf1" # Season Pack
-                "32b367365729d530ca1c124a0b180c64" # Bad Dual Groups
-                "5ab46ff851b76c337e13e81a4353875f" # INTERNAL
-                # Unwanted
-                "85c61753df5da1fb2aab6f2a47426b09" # BR-DISK
-                "fbcb31d8dabd2a319072b84fc0b7249c" # Extras
-                "e2315f990da2e2cbfc9fa5b7a6fcfe48" # LQ (Release Title)
-                "23297a736ca77c0fc8e70f8edd7ee56c" # Upscaled
-              ];
-              assign_scores_to = [
-                {
-                  name = "All";
-                  score = -10000;
-                }
-              ];
-            }
-          ];
-        }
+  pkgs,
+  lib,
+  ...
+}:
+let
+  servicesWithMediaAccess = [
+    "bazarr"
+    "jellyseerr"
+    "lidarr"
+    "prowlarr"
+    "radarr"
+    "sonarr"
+    "transmission"
+    "audiobookshelf"
+    "jellyfin"
+  ];
+in
+{
+  users.users = {
+    audiobookshelf = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
       ];
+    };
+    bazarr = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    jellyfin = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+        "render"
+      ];
+    };
+    jellyseerr = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    lidarr = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    prowlarr = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    radarr = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    sonarr = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    transmission = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+  };
+  users.groups = {
+    audiobookshelf = { };
+    bazarr = { };
+    jellyfin = { };
+    jellyseerr = { };
+    lidarr = { };
+    prowlarr = { };
+    radarr = { };
+    sonarr = { };
+    transmission = { };
+  };
+
+  networking.firewall.allowedTCPPorts = [
+    9292 # Audiobookshelf
+    8096 # Jellyfin
+    8920 # Jellyfin HTTPS
+    6767 # Bazarr
+    8686 # Lidarr
+    9696 # Prowlarr
+    7878 # Radarr
+    8989 # Sonarr
+    5055 # Jellyseerr
+    9091 # Transmission web UI
+    63998 # Transmission peer port
+  ];
+
+  networking.firewall.allowedUDPPorts = [
+    63998 # Transmission peer port
+    1900 # Jellyfin DLNA
+    7359 # Jellyfin discovery
+  ];
+
+  # services.nginx = {
+  #   enable = true;
+  #   recommendedGzipSettings = true;
+  #   recommendedOptimisation = true;
+  #   recommendedProxySettings = true;
+  #   recommendedTlsSettings = true;
+  #   virtualHosts = {
+  #     "audiobookshelf.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:9292";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "jellyfin.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:8096";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "bazarr.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:6767";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "lidarr.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:8686";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "prowlarr.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:9696";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "radarr.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:7878";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "sonarr.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:8989";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  #     "jellyseerr.labhome.work" = {
+  #       forceSSL = true;
+  #       sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #       sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #       http2 = true;
+  #       locations."/" = {
+  #         proxyPass = "http://localhost:5055";
+  #         proxyWebsockets = true;
+  #       };
+  #     };
+  # "transmission.labhome.work" = {
+  #   forceSSL = true;
+  #   sslCertificate = "/var/lib/acme/labhome.work/fullchain.pem";
+  #   sslCertificateKey = "/var/lib/acme/labhome.work/key.pem";
+  #   locations."/" = {
+  #     proxyPass = "http://localhost:9091";
+  #     proxyWebsockets = true;
+  #   };
+  # };
+  #   };
+  # };
+
+  environment.etc."nixos/scripts/add-trackers.sh" = {
+    mode = "0755";
+    text = ''
+      #!${pkgs.stdenv.shell}
+
+      TRANSMISSION_REMOTE="${pkgs.transmission}/bin/transmission-remote"
+      WGET="${pkgs.wget}/bin/wget"
+      SED="${pkgs.gnused}/bin/sed"
+      WC="${pkgs.coreutils}/bin/wc"
+
+      TRACKERLIST="/tmp/trackers.list"
+      trap "rm -f $TRACKERLIST" EXIT
+
+      $WGET https://newtrackon.com/api/stable -O "$TRACKERLIST"
+      $WGET https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt -O - >> "$TRACKERLIST"
+
+      $SED -i '/^$/d' "$TRACKERLIST"
+      echo "[+] Got $($WC -l < "$TRACKERLIST") trackers"
+
+      while IFS= read -r TRACKER; do
+        "$TRANSMISSION_REMOTE" -t all -td "$TRACKER"
+      done < "$TRACKERLIST"
+    '';
+  };
+
+  nixarr = {
+    enable = true;
+    mediaUsers = [ "zeev" ];
+    mediaDir = "/data/media";
+    stateDir = "/data/media/.state/nixarr";
+
+    vpn = {
+      enable = true;
+      wgConf = "/data/.secret/wg.conf";
+      # accessibleFrom = [
+      #   "192.168.1.0/24"
+      #   "192.168.0.0/24"
+      #   "127.0.0.1"
+      # ];
+      openTcpPorts = [
+        58403
+        63998
+        9091
+      ];
+      # vpnTestService = {
+      #   port = 58403;
+      #   enable = true;
+      # };
+    };
+
+    transmission = {
+      package = pkgs.transmission_4;
+      enable = true;
+      peerPort = 63998;
+      vpn.enable = true;
+      flood.enable = false;
+      openFirewall = true;
+      uiPort = 9091;
+      extraAllowedIps = [
+        "192.168.1.0/24"
+        "192.168.0.0/24"
+        "127.0.0.1"
+      ];
+      messageLevel = "info";
+      extraSettings = {
+        umask = 2;
+        download-queue-size = 10;
+        download-queue-enabled = true;
+        rpc-whitelist-enabled = false;
+        rpc-bind-address = "0.0.0.0";
+        rpc-enabled = true;
+        rpc-port = 9091;
+        download-dir = "/data/Downloads";
+
+        # script-torrent-added-enabled = true;
+        # script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
+        blocklist-enabled = true;
+        blocklist-url = "https://github.com/Naunter/BT_BlockLists/raw/master/bt_blocklists.gz";
+      };
+    };
+
+    audiobookshelf.enable = true;
+    jellyfin.enable = true;
+    bazarr.enable = true;
+    lidarr.enable = true;
+    prowlarr.enable = true;
+    radarr.enable = true;
+    sonarr.enable = true;
+    jellyseerr.enable = true;
+    recyclarr = {
+      enable = true;
+      configFile = "./recyclarr.yaml";
     };
   };
 
-  radarr = {
-    movies = {
-      base_url = "http://localhost:7878";
-      api_key = "47ebb17d25754575b43c654cc3af584e";
-      quality_definition = {
-        type = "movie";
-      };
-      delete_old_custom_formats = true;
-      replace_existing_custom_formats = true;
-      quality_profiles = [ { name = "All"; } ];
-      min_format_score = 0;
-      reset_unmatched_scores = {
-        enabled = true;
-      };
-      upgrade = {
-        allowed = true;
-        until_quality = "UHD-STREAM";
-        until_score = 150;
-      };
-      score_set = "default";
-      quality_sort = "top";
-      qualities = [
-        {
-          name = "UHD-STREAM";
-          qualities = [
-            "WEBDL-2160p"
-            "Bluray-2160p"
-          ];
-        }
-        {
-          name = "HD-STREAM";
-          qualities = [
-            "WEBDL-1080p"
-            "Bluray-1080p"
-          ];
-        }
-        {
-          name = "OTHER";
-          qualities = [
-            "WEBRip-2160p"
-            "HDTV-2160p"
-            "WEBRip-1080p"
-            "HDTV-1080p"
-            "Bluray-720p"
-            "WEBDL-720p"
-            "HDTV-720p"
-            "Bluray-576p"
-            "Bluray-480p"
-            "WEBDL-480p"
-            "WEBRip-480p"
-            "SDTV"
-            "DVD"
-            "DVD-R"
-          ];
-        }
-      ];
-      custom_formats = [
-        {
-          trash_ids = [
-            # Miscellaneous
-            "820b09bb9acbfde9c35c71e0e565dad8" # 1080p
-            "fb392fb0d61a010ae38e49ceaa24a1ef" # 2160p
-            "2899d84dc9372de3408e6d8cc18e9666" # x264
-            "9170d55c319f4fe40da8711ba9d8050d" # x265
-            # Audio Formats
-            "1af239278386be2919e1bcee0bde047e" # DD+ ATMOS
-            # Audio Channels
-            "77ff61788dfe1097194fd8743d7b4524" # 5.1 Surround
-            "6fd7b090c3f7317502ab3b63cc7f51e3" # 6.1 Surround
-            "e77382bcfeba57cb83744c9c5449b401" # 7.1 Surround
-            # HDR Formats
-            "58d6a88f13e2db7f5059c41047876f00" # DV
-            "e23edd2482476e595fb990b12e7c609c" # DV HDR10
-            "c53085ddbd027d9624b320627748612f" # DV HDR10+
-            "55d53828b9d81cbe20b02efd00aa0efd" # DV HLG
-            "a3e19f8f627608af0211acd02bf89735" # DV SDR
-            # HDR Optional
-            "55a5b50cb416dea5a50c4955896217ab" # DV HDR10+ Boost
-            # Movie Versions
-            "eecf3a857724171f968a66cb5719e152" # IMAX
-            "9f6cbff8cfe4ebbc1bde14c7b7bec0de" # IMAX Enhanced
-            # Unwanted
-            "ed38b889b31be83fda192888e2286d83" # BR-DISK
-            "e6886871085226c3da1830830146846c" # Generated Dynamic HDR
-            "90a6f9a284dff5103f6346090e6280c8" # LQ
-            "e204b80c87be9497a8a6eaff48f72905" # LQ (Release Title)
-            "b8cd450cbfa689c0259a01d9e29ba3d6" # 3D
-          ];
-          assign_scores_to = [
-            {
-              name = "All";
-              score = 25;
-            }
-          ];
-        }
-        {
-          trash_ids = [
-            # Miscellaneous
-            "b2be17d608fc88818940cd1833b0b24c" # 720p
-            # HDR Formats
-            "e61e28db95d22bedcadf030b8f156d96" # HDR
-            "2a4d9069cc1fe3242ff9bdaebed239bb" # HDR (undefined)
-            "dfb86d5941bc9075d6af23b09c2aeecd" # HDR10
-            "b974a6cd08c1066250f1f177d7aa1225" # HDR10+
-            # Audio Formats
-            "185f1dd7264c4562b9022d963ac37424" # DD+
-            # Audio Channels
-            "205125755c411c3b8622ca3175d27b37" # 3.0 Sound
-            "373b58bd188fc00c817bd8c7470ea285" # 4.0 Sound
-          ];
-          assign_scores_to = [
-            {
-              name = "All";
-              score = 20;
-            }
-          ];
-        }
-        {
-          trash_ids = [
-            # Audio Formats
-            "c2998bd0d90ed5621d8df281e839436e" # DD
-            # Audio Channels
-            "89dac1be53d5268a7e10a19d3c896826" # 2.0 Sound
-            # HQ Source Groups
-            "ed27ebfef2f323e964fb1f61391bcb35" # HD Bluray Tier 01
-            "4d74ac4c4db0b64bff6ce0cffef99bf0" # UHD Bluray Tier 01
-            "c20f169ef63c5f40c2def54abaf4438e" # WEB Tier 01
-          ];
-          assign_scores_to = [
-            {
-              name = "All";
-              score = 15;
-            }
-          ];
-        }
-        {
-          trash_ids = [
-            # Audio Formats
-            "a061e2e700f81932daf888599f8a8273" # Opus
-            # Audio Channels
-            "b124be9b146540f8e62f98fe32e49a2a" # 1.0 Mono
-            # HQ Source Groups
-            "c20c8647f2746a1f4c4262b0fbbeeeae" # HD Bluray Tier 02
-            "a58f517a70193f8e578056642178419d" # UHD Bluray Tier 02
-            "403816d65392c79236dcb6dd591aeda4" # WEB Tier 02
-          ];
-          assign_scores_to = [
-            {
-              name = "All";
-              score = 10;
-            }
-          ];
-        }
-        {
-          trash_ids = [
-            # Audio Formats
-            "240770601cc226190c367ef59aba7463" # AAC
-            # General Streaming Services
-            "b3b3a6ac74ecbd56bcdbefa4799fb9df" # AMZN
-            "40e9380490e748672c2522eaaeb692f7" # ATVP
-            "cc5e51a9e85a6296ceefe097a77f12f4" # BCORE
-            "16622a6911d1ab5d5b8b713d5b0036d4" # CRiT
-            "84272245b2988854bfb76a16e60baea5" # DSNP
-            "509e5f41146e278f9eab1ddaceb34515" # HBO
-            "5763d1b0ce84aff3b21038eea8e9b8ad" # HMAX
-            "526d445d4c16214309f0fd2b3be18a89" # HULU
-            "e0ec9672be6cac914ffad34a6b077209" # iT
-            "2a6039655313bf5dab1e43523b62c374" # MA
-            "6a061313d22e51e0f25b7cd4dc065233" # MAX
-            "170b1d363bd8516fbf3a3eb05d4faff6" # NF
-            "c9fd353f8f5f1baf56dc601c4cb29920" # PCOK
-            "e36a0ba1bc902b26ee40818a1d59b8bd" # PMTP
-            "c2863d2a50c9acad1fb50e53ece60817" # STAN
-            # Anime Optional
-            "4a3b087eea2ce012fcc1ce319259a3be" # Anime Dual Audio
-            "064af5f084a0a24458cc8ecd3220f93f" # Uncensored
-            # HQ Source Groups
-            "5608c71bcebba0a5e666223bae8c9227" # HD Bluray Tier 03
-            "e71939fae578037e7aed3ee219bbe7c1" # UHD Bluray Tier 03
-            "af94e0fe497124d1f9ce732069ec8c3b" # WEB Tier 03
-            # Miscellaneous
-            "f537cf427b64c38c8e36298f657e4828" # Scene
-          ];
-          assign_scores_to = [
-            {
-              name = "All";
-              score = 5;
-            }
-          ];
-        }
-        {
-          trash_ids = [
-            # Miscellaneous
-            "e7718d7a3ce595f289bfee26adc178f5" # Repack/Proper
-            "ae43b294509409a6a13919dedd4764c4" # Repack2
-            "5caaaa1c08c1742aa4342d8c4cc463f2" # Repack3
-          ];
-          assign_scores_to = [ { name = "All"; } ];
-        }
-        {
-          trash_ids = [
-            # Miscellaneous
-            "4b900e171accbfb172729b63323ea8ca" # MULTi
-            "ae9b7c9ebde1f3bd336a8cbd1ec4c5e5" # No-RlsGroup
-            "7357cf5161efbf8c4d5d0c30b4815ee2" # Obfuscated
-            "5c44f52a8714fdd79bb4d98e2673be1f" # Retags
-            "839bea857ed2c0a8e084f3cbdbd65ecb" # x265 (no HDR/DV)
-          ];
-          assign_scores_to = [
-            {
-              name = "All";
-              score = -5;
-            }
-          ];
-        }
-        {
-          trash_ids = [
-            # HDR Formats
-            "9364dd386c9b4a1100dde8264690add7" # HLG
-            "08d6d8834ad9ec87b1dc7ec8148e7a1f" # PQ
-            # HDR Optional
-            "f700d29429c023a5734505e77daeaea7" # DV (Disk)
-            "923b6abef9b17f937fab56cfcf89e1f1" # DV (WEBDL)
-            "9c38ebb7384dada637be8899efa68e6f" # SDR
-            # Language profiles
-            "d6e9318c875905d6cfb5bee961afcea9" # Language: Not Original
-            # Miscellaneous
-            "73613461ac2cea99d52c4cd6e177ab82" # HFR
-            "182fa1c42a2468f8488e6dcf75a81b81" # INTERNAL
-            "b6832f586342ef70d9c128d40c07b872" # Bad Dual Groups
-            "cc444569854e9de0b084ab2b8b1532b2" # Black and White Editions
-            # Unwanted
-            "b8cd450cbfa689c0259a01d9e29ba3d6" # 3D
-            "ed38b889b31be83fda192888e2286d83" # BR-DISK
-            "0a3f082873eb454bde444150b70253cc" # Extras
-            "e6886871085226c3da1830830146846c" # Generated Dynamic HDR
-            "e204b80c87be9497a8a6eaff48f72905" # LQ (Release Title)
-            "712d74cd88bceb883ee32f773656b1f5" # Sing-Along Versions
-            "bfd8eb01832d646a0a89c4deb46f8564" # Upscaled
-          ];
-          assign_scores_to = [
-            {
-              name = "All";
-              score = -1000;
-            }
-          ];
-        }
+  # services.jellyfin = {
+  #   enable = true;
+  #   openFirewall = true; # DANGEROUS - opens to all interfaces
+
+  #   # Add proper configuration
+  #   dataDir = "/var/lib/jellyfin";
+  #   configDir = "/var/lib/jellyfin/config";
+  #   cacheDir = "/var/cache/jellyfin"; # Separate cache location
+
+  #   # Security improvements
+  #   user = "jellyfin";
+  #   group = "jellyfin";
+  # };
+
+  # # Add systemd security hardening
+  # systemd.services.jellyfin.serviceConfig = {
+  #   # Resource limits
+  #   MemoryMax = "4G";
+  #   CPUQuota = "200%"; # Allow 2 cores max
+
+  #   # Security hardening
+  #   NoNewPrivileges = true;
+  #   PrivateTmp = true;
+  #   ProtectHome = true;
+  #   ProtectSystem = "strict";
+  #   ReadWritePaths = [
+  #     "/var/lib/jellyfin"
+  #     "/var/cache/jellyfin"
+  #     "/data/media"
+  #   ];
+
+  #   # Network restrictions
+  #   RestrictAddressFamilies = [
+  #     "AF_INET"
+  #     "AF_INET6"
+  #   ];
+
+  #   # File system restrictions
+  #   ProtectKernelTunables = true;
+  #   ProtectKernelModules = true;
+  #   ProtectControlGroups = true;
+  # };
+
+  # # Proper firewall configuration instead of openFirewall = true
+  # networking.firewall = {
+  #   allowedTCPPorts = [ 8096 ]; # Only Jellyfin HTTP port
+  #   # Remove blanket firewall opening
+  # };
+
+  environment.systemPackages = [
+    pkgs.jellyfin
+    pkgs.jellyfin-web
+    pkgs.jellyfin-ffmpeg
+  ];
+
+  systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
+    serviceConfig = {
+      BindPaths = [
+        "/data/Downloads"
+        "/data/media"
+        "/data/media/movies"
+        "/data/media/audiobooks"
+        "/data/media/music"
+        "/data/media/shows"
+        "/data/media/books"
+        "/data/media/comics"
+        "/data/media/manga"
+        "/data/media/torrents"
+        "/data/media/usenet"
+        "/data/media/audiobooks"
+        # "/data/Downloads/radarr"
+        # "/data/Downloads/tv-sonarr"
+        "/data/media/.state"
+        # "/data/media/torrents/.incomplete"
       ];
     };
-  };
+  });
+
+  systemd.tmpfiles.rules = [
+    "d /data 770 root media -"
+    "d /data/media/movies 770 zeev media -"
+    "d /data/media/audiobooks 770 zeev media -"
+    "d /data/media/music 770 zeev media -"
+    "d /data/media/shows 770 zeev media -"
+    "d /data/media/books 770 zeev media -"
+    "d /data/media/comics 770 zeev media -"
+    "d /data/media/manga 770 zeev media -"
+    "d /data/media/torrents 770 zeev media -"
+    "d /data/media/usenet 770 zeev media -"
+    "d /data/Downloads 770 zeev users -"
+
+    "d /data/media/.state 770 root media -"
+    "d /data/media/.state/nixarr 770 root media -"
+
+    "d /data/media/.state/nixarr/audiobookshelf 775 audiobookshelf audiobookshelf -"
+    "d /data/media/.state/nixarr/jellyfin 755 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyfin/data 755 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyfin/config 755 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyfin/cache 775 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyfin/log 775 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyseerr 775 jellyseerr jellyseerr -"
+    "d /data/media/.state/nixarr/jellyseerr/db 775 jellyseerr jellyseerr -"
+    "d /data/media/.state/nixarr/jellyseerr/logs 775 jellyseerr jellyseerr -"
+    "d /data/media/.state/nixarr/audiobookshelf/metadata 775 audiobookshelf audiobookshelf -"
+    "d /data/media/.state/nixarr/audiobookshelf/config 775 audiobookshelf audiobookshelf -"
+    "d /data/media/.state/nixarr/lidarr 775 lidarr lidarr -"
+    "d /data/media/.state/nixarr/prowlarr 775 prowlarr prowlarr -"
+    "d /data/media/.state/nixarr/radarr 775 radarr radarr -"
+    "d /data/media/.state/nixarr/sonarr 775 sonarr sonarr -"
+    "d /data/media/.state/nixarr/sabnzbd 775 sabnzbd sabnzbd -"
+    "d /data/media/.state/nixarr/bazarr 775 bazarr bazarr -"
+    "d /data/media/.state/nixarr/transmission 775 transmission transmission -"
+
+    "d /var/lib/transmission 775 transmission transmission -"
+
+    "d /data/Downloads 775 zeev media -"
+  ];
 }
