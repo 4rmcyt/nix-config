@@ -62,7 +62,7 @@
       containers = {
         lazylibrarian = {
           image = "lscr.io/linuxserver/lazylibrarian:latest";
-          autostart = true;
+          autoStart = true;
           networks = [ "podman" ];
           ports = [ "127.0.0.1:5299:5299/tcp" ];
           environment = {
