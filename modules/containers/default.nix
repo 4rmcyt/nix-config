@@ -8,6 +8,7 @@
     pkgs.podman
     pkgs.podman-compose
     pkgs.podman-tui
+    pkgs.docker-compose
   ];
 
   sops.secrets.containers_env = {
@@ -50,7 +51,11 @@
   };
 
   virtualisation = {
-    podman.enable = true;
+    podman = {
+      enable = true;
+      dockerCompat = true;
+      defaultNetwork.settings.dns_enabled = true;
+    };
     oci-containers = {
       backend = "podman";
       containers = {
