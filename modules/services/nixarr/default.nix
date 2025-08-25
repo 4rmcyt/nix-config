@@ -373,7 +373,7 @@ in
     pkgs.jellyfin-web
     pkgs.jellyfin-ffmpeg
   ];
-  
+
   systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
     serviceConfig = {
       BindPaths = [
@@ -397,8 +397,8 @@ in
     };
   });
   services.flaresolverr = {
-      enable = true;
-      port = 8191; # Default port is usually 8191
+    enable = true;
+    port = 8191; # Default port is usually 8191
   };
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
