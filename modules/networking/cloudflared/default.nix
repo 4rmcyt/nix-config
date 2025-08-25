@@ -50,6 +50,7 @@
           "kuma.example.com" = "http://localhost:3001";
           "auth.example.com" = "http://localhost:9000";
           "grafana.example.com" = "http://localhost:3000";
+          "lazylibrarian.example.com" = "http://localhost:5299";
         };
       };
     };
