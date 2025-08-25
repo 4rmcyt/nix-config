@@ -68,9 +68,9 @@
         #     "${config.sops.secrets.tplinkExporterConfig.path}:/app/config.yaml:ro"
         #   ];
         # };
+
         nextdns-exporter = {
           image = "ghcr.io/raylas/nextdns-exporter";
-          podman.user = "podman";
           autoStart = true;
           networks = [ "podman" ];
           ports = [ "127.0.0.1:9948:9948" ];
