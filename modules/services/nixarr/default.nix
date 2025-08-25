@@ -14,6 +14,7 @@ let
     "transmission"
     "audiobookshelf"
     "jellyfin"
+    "sabnzbd"
   ];
 in
 {
@@ -97,6 +98,13 @@ in
         "media"
       ];
     };
+    sabnzbd = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
   };
   users.groups = {
     audiobookshelf = { };
@@ -110,6 +118,7 @@ in
     transmission = { };
     recyclarr = { };
     flaresolverr = { };
+    sabnzbd = { };
   };
 
   networking.firewall.allowedTCPPorts = [
@@ -125,6 +134,7 @@ in
     9091 # Transmission web UI
     63998 # Transmission peer port
     8191 # FlareSolverr
+    6336 # Sabnzbd
   ];
 
   networking.firewall.allowedUDPPorts = [
@@ -314,6 +324,16 @@ in
     radarr.enable = true;
     sonarr.enable = true;
     jellyseerr.enable = true;
+    sabnzbd = {
+      enable = true;
+      vpn.enable = true;
+      whitelistRanges = [
+        "192.168.1.0/24"
+        "192.168.0.0/24"
+        "127.0.0.1"
+      ];
+      stateDir = "/data/Downloads";
+    };
     recyclarr = {
       enable = true;
       configFile = ./recyclarr.yaml;
