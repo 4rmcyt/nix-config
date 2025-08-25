@@ -1,5 +1,7 @@
-{ pkgs, config, ... }: 
+{ ... }:
+
 {
+
   users.users.samba = {
     isSystemUser = true;
     group = "samba";
@@ -31,7 +33,7 @@
 
       media = {
         path = "/data/media";
-        browsable = "yes";
+        browseable = "yes";
         "read only" = "no";
         "guest ok" = "no";
         "create mask" = "0644";
@@ -42,7 +44,7 @@
 
       downloads = {
         path = "/data/Downloads";
-        browsable = "yes";
+        browseable = "yes";
         "read only" = "no";
         "guest ok" = "no";
         "create mask" = "0644";
