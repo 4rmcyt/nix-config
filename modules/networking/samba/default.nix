@@ -1,4 +1,5 @@
-_: {
+{ pkgs, config, ... }: 
+{
   users.users.samba = {
     isSystemUser = true;
     group = "samba";
