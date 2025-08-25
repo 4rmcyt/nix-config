@@ -67,8 +67,8 @@
           ports = [ "127.0.0.1:5299:5299/tcp" ];
           environment = {
             DOCKER_MODS = "linuxserver/mods:universal-calibre|linuxserver/mods:lazylibrarian-ffmpeg";
-            PUID = "${builtins.toString config.users.users.media.uid}";
-            PGID = "${builtins.toString config.users.groups.media.gid}";
+            PUID = "100000";
+            PGID = "65536";
             TZ = "America/Edmonton";
           };
           volumes = [

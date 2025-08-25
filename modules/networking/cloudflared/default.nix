@@ -50,6 +50,7 @@
           "kuma.labhome.work" = "http://localhost:3001";
           "auth.labhome.work" = "http://localhost:9000";
           "grafana.labhome.work" = "http://localhost:3000";
+          "lazylibrarian.labhome.work" = "http://localhost:5299";
         };
       };
     };
