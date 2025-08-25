@@ -81,6 +81,7 @@
   ];
   programs.prettier = {
     enable = true;
+    package = pkgs.prettier;
     includes = [
       "*.cjs"
       "*.css"
@@ -96,6 +97,8 @@
       "*.vue"
       "*.yaml"
       "*.yml"
+      "*.json"
+      "*.yaml"
     ];
   };
 }
