@@ -1,4 +1,4 @@
-{ lib, ... }:
+_:
 {
   networking = {
     hostName = "homeserver";
