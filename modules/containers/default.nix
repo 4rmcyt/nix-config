@@ -42,6 +42,7 @@
       2375 # Podman API (insecure, for local use only)
       2376 # Podman API (secure, for local use only)
       9948 # NextDNS Exporter
+      5299 # Lazylibrarian
     ];
     allowedUDPPorts = [
       # Podman
@@ -59,21 +60,28 @@
     oci-containers = {
       backend = "podman";
       containers = {
-        # tl-sg-prometheus-exporter = {
-        #   image = "ghcr.io/mad-ady/tl-sg-prometheus-exporter:main";
-        #   autoStart = true;
-        #   networks = [ "podman" ];
-        #   ports = [ "127.0.0.1:8000:8000" ];
-        #   volumes = [
-        #     "${config.sops.secrets.tplinkExporterConfig.path}:/app/config.yaml:ro"
-        #   ];
-        # };
-
+        lazylibrarian = {
+          image = "lscr.io/linuxserver/lazylibrarian:latest";
+          environment = {
+            DOCKER_MODS = "linuxserver/mods:universal-calibre|linuxserver/mods:lazylibrarian-ffmpeg";
+            PUID = "${builtins.toString config.users.users.media.uid}";
+            PGID = "${builtins.toString config.users.groups.media.gid}";
+            TZ = "America/Edmonton";
+          };
+          autostart = true;
+          networks = [ "podman" ];
+          ports = [ "127.0.0.1:5299:5299/tcp" ];
+          volumes = [
+            "/data/media/.state/lazylibrarian/data:/config:rw"
+            "/data/Downloads:/downloads:rw"
+            "/data/media/books:/books:rw"
+          ];
+        };
         nextdns-exporter = {
           image = "ghcr.io/raylas/nextdns-exporter";
           autoStart = true;
           networks = [ "podman" ];
-          ports = [ "127.0.0.1:9948:9948" ];
+          ports = [ "127.0.0.1:9948:9948/tcp" ];
           environmentFiles = [ config.sops.secrets.containers_env.path ];
         };
       };
