@@ -62,15 +62,15 @@
       containers = {
         lazylibrarian = {
           image = "lscr.io/linuxserver/lazylibrarian:latest";
+          autostart = true;
+          networks = [ "podman" ];
+          ports = [ "127.0.0.1:5299:5299/tcp" ];
           environment = {
             DOCKER_MODS = "linuxserver/mods:universal-calibre|linuxserver/mods:lazylibrarian-ffmpeg";
             PUID = "${builtins.toString config.users.users.media.uid}";
             PGID = "${builtins.toString config.users.groups.media.gid}";
             TZ = "America/Edmonton";
           };
-          autostart = true;
-          networks = [ "podman" ];
-          ports = [ "127.0.0.1:5299:5299/tcp" ];
           volumes = [
             "/data/media/.state/lazylibrarian/data:/config:rw"
             "/data/Downloads:/downloads:rw"
