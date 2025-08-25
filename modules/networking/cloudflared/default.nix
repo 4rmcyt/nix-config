@@ -1,4 +1,7 @@
-{ config, pkgs, ... }:
+{
+  config,
+  ...
+}:
 {
   sops.secrets = {
     cloudflare_tunnel_credentials = {
