@@ -13,12 +13,24 @@ let
         modules = [
           {
             nixpkgs.overlays = [
-              (final: prev: {
-                # Import stable nixpkgs for python packages
-                inherit (import inputs.nixpkgs-stable { inherit system; config.allowUnfree = true; })
-                  docutils
-                  python3Packages;
-              })
+              (final: prev: 
+                let 
+                  stable = import inputs.nixpkgs-stable { 
+                    inherit system; 
+                    config.allowUnfree = true; 
+                  };
+                in {
+                  docutils = stable.docutils;
+                  
+                  python3Packages = prev.python3Packages // {
+                    docutils = stable.python3Packages.docutils;
+                    nltk = prev.python3Packages.nltk.overrideAttrs (oldAttrs: {
+                      passthru = (oldAttrs.passthru or {}) // {
+                        data = stable.python3Packages.nltk.data or null;
+                      };
+                    });
+                  };
+                })
             ];
           }
           inputs.sops-nix.nixosModules.sops
