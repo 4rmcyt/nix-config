@@ -113,6 +113,16 @@
               inherit pkgs;
             };
             treefmt = import ./treefmt.nix;
+            checks =
+              let
+                allTests = import ./tests { inherit pkgs; };
+              in
+              {
+                homeserver =
+                  if system == "x86_64-linux" then allTests.homeserverTest else pkgs.runCommand "noop" { } "";
+                macbook =
+                  if system == "aarch64-darwin" then allTests.macbookTestScript else pkgs.runCommand "noop" { } "";
+              };
           };
 
         flake =
