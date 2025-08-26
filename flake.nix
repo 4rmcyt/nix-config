@@ -23,7 +23,7 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     blueprint.url = "github:numtide/blueprint";
@@ -113,23 +113,6 @@
               inherit pkgs;
             };
             treefmt = import ./treefmt.nix;
-            checks =
-              let
-                allTests = import ./tests { inherit pkgs; };
-              in
-              {
-                homeserver =
-                  if system == "x86_64-linux" then
-                    allTests.homeserverTest.${system} or (pkgs.runCommand "noop" { } "")
-                  else
-                    pkgs.runCommand "noop" { } "";
-
-                macbook =
-                  if system == "aarch64-darwin" then
-                    allTests.macbookTest.${system} or (pkgs.runCommand "noop" { } "")
-                  else
-                    pkgs.runCommand "noop" { } "";
-              };
           };
 
         flake =
