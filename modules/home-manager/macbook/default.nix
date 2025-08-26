@@ -83,7 +83,6 @@
       mas
       mc
       minipro
-      neofetch
       nix-index
       nix-info
       nix-prefetch-scripts
