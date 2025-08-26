@@ -119,9 +119,16 @@
               in
               {
                 homeserver =
-                  if system == "x86_64-linux" then allTests.homeserverTest else pkgs.runCommand "noop" { } "";
+                  if system == "x86_64-linux" then
+                    allTests.homeserverTest.${system} or (pkgs.runCommand "noop" { } "")
+                  else
+                    pkgs.runCommand "noop" { } "";
+
                 macbook =
-                  if system == "aarch64-darwin" then allTests.macbookTestScript else pkgs.runCommand "noop" { } "";
+                  if system == "aarch64-darwin" then
+                    allTests.macbookTest.${system} or (pkgs.runCommand "noop" { } "")
+                  else
+                    pkgs.runCommand "noop" { } "";
               };
           };
 
