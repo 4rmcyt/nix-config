@@ -92,6 +92,20 @@
   services.fwupd.enable = true;
   systemd.oomd.enable = true;
 
+  nixpkgs.overlays = [
+    (final: prev: {
+      # This overlay downgrades urwid to a version compatible with auto-cpufreq
+      python313Packages.urwid = prev.python313Packages.urwid.overrideAttrs (old: rec {
+        version = "2.6.10";
+        src = prev.fetchPypi {
+          pname = "urwid";
+          inherit version;
+          hash = "sha256-Godoa1ZgA2YlX2DwZhYZRFlfTJR1kACZTYNLZKzNpOI=";
+        };
+      });
+    })
+  ];
+
 
   programs.auto-cpufreq.enable = true;
   programs.auto-cpufreq.settings = {
