@@ -1,5 +1,4 @@
-_:
-{
+_: {
   users.users.samba = {
     isSystemUser = true;
     group = "samba";
