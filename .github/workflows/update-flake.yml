@@ -1,47 +1,29 @@
-name: Update Flake
+name: update-flake-lock
 on:
-  schedule:
-    - cron: '0 0 * * 0'
   workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'
 
 jobs:
-  update:
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            cache: homeserver
-            config: nixosConfigurations.homeserver
-          - os: macos-latest
-            cache: macbookk
-            config: darwinConfigurations.macbook
-    
-    runs-on: ${{ matrix.os }}
+  update-flake-lock:
+    runs-on: ubuntu-latest
+    environment: production
     steps:
-      - uses: actions/checkout@v4 
-      
-      # Use Determinate Systems installer for better macOS support
-      - uses: DeterminateSystems/nix-installer-action@v9
-        if: matrix.os == 'macos-latest'
-      - uses: cachix/install-nix-action@v25
-        if: matrix.os == 'ubuntu-latest'
-      
-      - uses: cachix/cachix-action@v14
+      - name: Access private repository
+        uses: webfactory/ssh-agent@master
         with:
-          name: ${{ matrix.cache }}
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-      
-      - name: Update flake
-        run: nix flake update
-      
-      - name: Test build
-        run: nix build --accept-flake-config .#${{ matrix.config }}.config.system.build.toplevel
-      
-      - name: Create PR
-        if: matrix.os == 'ubuntu-latest'  # Only create one PR
-        uses: peter-evans/create-pull-request@v5
+          ssh-private-key: ${{ secrets.GH_PRIVATE_KEY }}
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v12
+      - id: update
+        uses: DeterminateSystems/update-flake-lock@v23
         with:
-          title: "chore: update flake inputs"
-          commit-message: "chore: update flake inputs"
-          branch: update-flake
-          delete-branch: true
+          commit-msg: "chore(flake.lock): update"
+          pr-title: "chore(flake.lock): update"
+          pr-labels: auto-merge
+          token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Merge
+        run: gh pr merge --auto "${{ steps.update.outputs.pull-request-number }}" --rebase
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        if: ${{ steps.update.outputs.pull-request-number != '' }}
