@@ -21,6 +21,7 @@
       go
       gnupg
       git
+      gh
       python311
       deploy-rs
       just

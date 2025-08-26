@@ -96,11 +96,11 @@
     (final: prev: {
       # This overlay downgrades urwid to a version compatible with auto-cpufreq
       python313Packages.urwid = prev.python313Packages.urwid.overrideAttrs (old: rec {
-        version = "2.6.10";
+        version = "2.6.16";
         src = prev.fetchPypi {
           pname = "urwid";
           inherit version;
-          hash = "sha256-Godoa1ZgA2YlX2DwZhYZRFlfTJR1kACZTYNLZKzNpOI=";
+          hash = "sha256-93ad239939e44c385e64aa00027878b9e5c486d59e855ec8ab5b1e1adcdb32a2";
         };
       });
     })

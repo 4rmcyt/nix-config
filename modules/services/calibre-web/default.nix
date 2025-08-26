@@ -32,23 +32,7 @@
   };
   environment.systemPackages = [ pkgs.calibre-web ];
 
-  nixpkgs.overlays = [
-    (final: prev: {
-      python3 = prev.python3.override {
-        packageOverrides = self: super: {
-          unidecode = super.unidecode.overrideAttrs (old: {
-            pname = "Unidecode";
-            version = "1.3.8";
-            src = prev.fetchPypi {
-              pname = "Unidecode";
-              version = "1.3.8";
-              hash = "sha256-z9s0nUbtOHPs5Fhrlqp1JYcm4vqOwh1vAKWR2YgGwvQ=";
-            };
-          });
-        };
-      };
-    })
-  ];
+  
 
   services.calibre-web = {
     enable = true;
