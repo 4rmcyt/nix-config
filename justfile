@@ -1,32 +1,26 @@
-# justfile
-
-# Build the NixOS configuration for the homeserver
-build-homeserver:
-    nix build .#nixosConfigurations.homeserver.config.system.build.toplevel
-
-# Build the Darwin configuration for the MacBook
-build-macbook:
-    nix build .#darwinConfigurations.macbook.system | cachix push macbookk
-
-# Deploy to the NixOS homeserver
+# Deploy to homeserver
 deploy-homeserver:
-    ssh -t zeev@192.168.1.165 -- "cd ~/src/nixos-config && ssh-add ~/.ssh/zeev && git pull && nix flake update && sudo nixos-rebuild switch --flake .#homeserver | cachix push homeserver"
+    ./deploy.sh homeserver
 
-# Deploy to the Darwin MacBook
+# Deploy to macbook  
 deploy-macbook:
-    nix flake update && sudo darwin-rebuild switch --flake .#macbook && cachix push macbookk "$(nix-store -qR /run/current-system)"
+    ./deploy.sh macbook
 
-# Format all code in the repository
-fmt:
-    nix fmt
-
-# Update flake inputs
+# Update flake and test both systems
 update:
     nix flake update
+    nix build .#nixosConfigurations.homeserver.config.system.build.toplevel
+    nix build .#darwinConfigurations.macbook.config.system.build.toplevel
 
-# Run garbage collection
-gc:
-    nix-collect-garbage -d
+# Push to both caches
+push-caches:
+    nix build .#nixosConfigurations.homeserver.config.system.build.toplevel | cachix push homeserver
+    nix build .#darwinConfigurations.macbook.config.system.build.toplevel | cachix push macbookk
 
-push-cache:
-    cachix push macbookk "$(nix-store -qR /run/current-system)"
+# Format all nix files
+fmt:
+    nixfmt **/*.nix
+
+# Check for dead code
+check:
+    deadnix .
