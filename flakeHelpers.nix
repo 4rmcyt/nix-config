@@ -11,7 +11,7 @@ let
           host = machineHostname;
         };
         modules = [
-          {
+           {
             nixpkgs.overlays = [
               (final: prev: 
                 let 
@@ -20,16 +20,10 @@ let
                     config.allowUnfree = true; 
                   };
                 in {
+                  # Используем stable python3 и все его пакеты
+                  python3 = stable.python3;
+                  python3Packages = stable.python3Packages;
                   docutils = stable.docutils;
-                  
-                  python3Packages = prev.python3Packages // {
-                    docutils = stable.python3Packages.docutils;
-                    nltk = prev.python3Packages.nltk.overrideAttrs (oldAttrs: {
-                      passthru = (oldAttrs.passthru or {}) // {
-                        data = stable.python3Packages.nltk.data or null;
-                      };
-                    });
-                  };
                 })
             ];
           }
