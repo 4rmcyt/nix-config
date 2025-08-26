@@ -24,3 +24,17 @@ fmt:
 # Check for dead code
 check:
     deadnix .
+
+# Run all tests  
+test:  
+    nix flake check  
+    just test-homeserver  
+    just test-macbook  
+  
+# Test homeserver configuration  
+test-homeserver:  
+    nix build .#checks.x86_64-linux.homeserver-tests  
+  
+# Test macbook configuration    
+test-macbook:  
+    nix build .#checks.aarch64-darwin.macbook-tests    
