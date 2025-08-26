@@ -42,6 +42,7 @@
     };
     options = {
       enableBookConversion = true;
+      enableBookUploading = true;
       calibreLibrary = "/data/media/books";
     };
   };
