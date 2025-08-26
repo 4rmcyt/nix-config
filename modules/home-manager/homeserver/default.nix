@@ -22,7 +22,6 @@
       gnupg
       git
       gh
-      python311
       deploy-rs
       just
       nixfmt-rfc-style
