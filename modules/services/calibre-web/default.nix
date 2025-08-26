@@ -1,11 +1,14 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  ...
+}:
 {
   # CRITICAL FIX: Set primary group explicitly
   users.users.calibre-web = {
     isSystemUser = true;
-    group = "calibre-web";  # This was missing - primary group
+    group = "calibre-web"; # This was missing - primary group
     extraGroups = [
-      "media"  # Remove "users" and "calibre-web" from extraGroups
+      "media" # Remove "users" and "calibre-web" from extraGroups
     ];
   };
   users.groups.calibre-web = { };
@@ -26,14 +29,14 @@
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    
+
     virtualHosts."calibre-web.example.com" = {
       forceSSL = true;
       sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
       sslCertificateKey = "/var/lib/acme/example.com/key.pem";
-      
+
       locations."/" = {
-        proxyPass = "http://127.0.0.1:8083";  # Use 127.0.0.1 instead of localhost
+        proxyPass = "http://127.0.0.1:8083"; # Use 127.0.0.1 instead of localhost
         proxyWebsockets = true;
         extraConfig = ''
           proxy_set_header Host $host;
@@ -64,6 +67,6 @@
 
   # Optional: Add calibre for book conversion tools
   environment.systemPackages = with pkgs; [
-    calibre  # Provides ebook-convert and other conversion tools
+    calibre # Provides ebook-convert and other conversion tools
   ];
 }
