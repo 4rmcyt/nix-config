@@ -11,6 +11,13 @@ let
           host = machineHostname;
         };
         modules = [
+          {
+          nixpkgs.overlays = [
+            (final: prev: {
+              docutils = prev.python3Packages.docutils;
+            })
+          ];
+        }
           inputs.sops-nix.nixosModules.sops
           {
             sops.age.keyFile = "/var/lib/sops/age.key";
