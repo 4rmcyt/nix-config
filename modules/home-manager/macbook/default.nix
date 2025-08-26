@@ -57,7 +57,7 @@
       pipx
       poetry
       pyenv
-      python3full
+      python3Full
       pyenv
       virtualenv
       sops
