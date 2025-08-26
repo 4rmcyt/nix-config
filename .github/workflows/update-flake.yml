@@ -19,7 +19,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4 
+      
+      # Use Determinate Systems installer for better macOS support
+      - uses: DeterminateSystems/nix-installer-action@v9
+        if: matrix.os == 'macos-latest'
       - uses: cachix/install-nix-action@v25
+        if: matrix.os == 'ubuntu-latest'
+      
       - uses: cachix/cachix-action@v14
         with:
           name: ${{ matrix.cache }}
@@ -29,7 +35,7 @@ jobs:
         run: nix flake update
       
       - name: Test build
-        run: nix build .#${{ matrix.config }}.config.system.build.toplevel
+        run: nix build --accept-flake-config .#${{ matrix.config }}.config.system.build.toplevel
       
       - name: Create PR
         if: matrix.os == 'ubuntu-latest'  # Only create one PR
