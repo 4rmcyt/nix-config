@@ -92,13 +92,6 @@
   services.fwupd.enable = true;
   systemd.oomd.enable = true;
 
-  nixpkgs.overlays = [
-    (_final: prev: {
-      auto-cpufreq = prev.auto-cpufreq.override {
-        python3 = prev.python311;
-      };
-    })
-  ];
 
   programs.auto-cpufreq.enable = true;
   programs.auto-cpufreq.settings = {
