@@ -12,12 +12,15 @@ let
         };
         modules = [
           {
-          nixpkgs.overlays = [
-            (final: prev: {
-              docutils = prev.python3Packages.docutils;
-            })
-          ];
-        }
+            nixpkgs.overlays = [
+              (final: prev: {
+                # Import stable nixpkgs for python packages
+                inherit (import inputs.nixpkgs-stable { inherit system; config.allowUnfree = true; })
+                  docutils
+                  python3Packages;
+              })
+            ];
+          }
           inputs.sops-nix.nixosModules.sops
           {
             sops.age.keyFile = "/var/lib/sops/age.key";
