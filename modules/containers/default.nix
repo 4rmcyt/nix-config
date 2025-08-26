@@ -43,6 +43,7 @@
       2376 # Podman API (secure, for local use only)
       9948 # NextDNS Exporter
       5299 # Lazylibrarian
+      8191 # FlareSolverr
     ];
     allowedUDPPorts = [
       # Podman
@@ -76,6 +77,15 @@
             "/data/Downloads:/downloads:rw"
             "/data/media/books:/books:rw"
           ];
+        };
+        flaresolverr = {
+          image = "ghcr.io/flaresolverr/flaresolverr:latest";
+          autoStart = true;
+          ports = [ "127.0.0.1:8191:8191/tcp" ];
+          environment = {
+            LOG_LEVEL = "info";
+            TZ = "America/Edmonton";
+          };
         };
         nextdns-exporter = {
           image = "ghcr.io/raylas/nextdns-exporter";

@@ -89,14 +89,6 @@ in
         "media"
       ];
     };
-    flaresolverr = {
-      isSystemUser = true;
-      group = "flaresolverr";
-      extraGroups = [
-        "users"
-        "media"
-      ];
-    };
   };
   users.groups = {
     audiobookshelf = { };
@@ -109,7 +101,6 @@ in
     sonarr = { };
     transmission = { };
     recyclarr = { };
-    flaresolverr = { };
   };
 
   networking.firewall.allowedTCPPorts = [
@@ -124,7 +115,6 @@ in
     5055 # Jellyseerr
     9091 # Transmission web UI
     63998 # Transmission peer port
-    8191 # FlareSolverr
   ];
 
   networking.firewall.allowedUDPPorts = [
@@ -397,10 +387,6 @@ in
       ];
     };
   });
-  services.flaresolverr = {
-    enable = true;
-    port = 8191; # Default port is usually 8191
-  };
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
     "d /data/media/movies 770 zeev media -"
