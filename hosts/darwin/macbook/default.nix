@@ -125,6 +125,7 @@
       "unbound"
       "xz"
       "zstd"
+      "mkvtoolnix"
     ];
     masApps = { };
   };
