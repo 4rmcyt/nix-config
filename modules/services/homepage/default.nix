@@ -160,12 +160,12 @@
           }
           {
             "Tdarr" = {
-              href = "http://192.168.1.165:8265";
+              href = "https://tdarr.labhome.work/";
               description = "Automated Transcoding";
               icon = "tdarr";
               widget = {
                 type = "tdarr";
-                url = "http://192.168.1.165:8265";
+                url = "http://localhost:8266";
                 key = "tdarrapikey"; # optional
               };
             };
