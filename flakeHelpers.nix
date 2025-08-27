@@ -11,22 +11,6 @@ let
           host = machineHostname;
         };
         modules = [
-           {
-            nixpkgs.overlays = [
-              (final: prev: 
-                let 
-                  stable = import inputs.nixpkgs-stable { 
-                    inherit system; 
-                    config.allowUnfree = true; 
-                  };
-                in {
-                  # Используем stable python3 и все его пакеты
-                  python3 = stable.python3;
-                  python3Packages = stable.python3Packages;
-                  docutils = stable.docutils;
-                })
-            ];
-          }
           inputs.sops-nix.nixosModules.sops
           {
             sops.age.keyFile = "/var/lib/sops/age.key";
