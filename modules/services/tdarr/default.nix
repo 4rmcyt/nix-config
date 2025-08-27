@@ -9,7 +9,7 @@
         "users"
         "media"
       ];
-      groups.podman = { };
+      groups.tdarr = { };
     };
   };
 
@@ -21,4 +21,10 @@
     mediaDir = "/data/media";
     cacheDir = "/data/media/transcode-cache";
   };
+
+  systemd.tmpfiles.rules = [
+    "d /data/media/transcode-cache 775 tdarr media -"
+    "d /var/lib/tdarr/logs 775 tdarr tdarr -"
+    "d /var/lib/tdarr/configs 775 tdarr tdarr -"
+  ];
 }

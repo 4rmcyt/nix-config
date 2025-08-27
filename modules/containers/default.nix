@@ -91,7 +91,7 @@
             "serverPort" = "8266";
           };
         };
-        
+
         nextdns-exporter = {
           image = "ghcr.io/raylas/nextdns-exporter";
           autoStart = true;
@@ -102,4 +102,10 @@
       };
     };
   };
+
+  systemd.tmpfiles.rules = [
+    "d /data/media/transcode-cache 775 podman media -"
+    "d /var/lib/tdarr/logs 775 podman podman -"
+    "d /var/lib/tdarr/configs 775 podman podman -"
+  ];
 }
