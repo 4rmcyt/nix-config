@@ -12,7 +12,6 @@
   networking.hostName = "macbook";
   system.stateVersion = 5;
   nixpkgs.hostPlatform = "aarch64-darwin";
-  nixpkgs.config.allowUnfree = true;
 
   users.users.vk = {
     name = "vk";
