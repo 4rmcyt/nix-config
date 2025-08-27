@@ -298,7 +298,7 @@
                 {
                   type = "uptimekuma";
                   url = "http://localhost:3001";
-                  slug = "uk1_pLhUFX0HLFMT4ABfzpj7U5-SiQ7lXtPG6jc7ZgVq";
+                  slug = "uk2_RbFIXIYfAeYVk-okhvOQBqw3IjnHB0zjzz4mkYfw";
                 }
               ];
             };
