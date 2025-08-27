@@ -53,9 +53,6 @@ let
             inputs.mac-app-util.darwinModules.default
             inputs.nix-homebrew.darwinModules.nix-homebrew
             {
-              # It's good practice to specify the system key file here
-
-              # home-manager.useGlobalPkgs = true;
               home-manager.users.vk = {
                 imports = [
                   ./modules/home-manager/macbook
