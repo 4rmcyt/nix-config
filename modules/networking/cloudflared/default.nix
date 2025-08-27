@@ -48,6 +48,7 @@
           "auth.labhome.work" = "http://localhost:9000";
           "grafana.labhome.work" = "http://localhost:3000";
           "lazylibrarian.labhome.work" = "http://localhost:5299";
+          "tdarr.labhome.work" = "http://localhost:8265";
         };
       };
     };
