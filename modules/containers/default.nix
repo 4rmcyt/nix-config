@@ -61,23 +61,6 @@
     oci-containers = {
       backend = "podman";
       containers = {
-        lazylibrarian = {
-          image = "lscr.io/linuxserver/lazylibrarian:latest";
-          autoStart = true;
-          networks = [ "podman" ];
-          ports = [ "127.0.0.1:5299:5299/tcp" ];
-          environment = {
-            DOCKER_MODS = "linuxserver/mods:universal-calibre|linuxserver/mods:lazylibrarian-ffmpeg";
-            PUID = "100000";
-            PGID = "65536";
-            TZ = "America/Edmonton";
-          };
-          volumes = [
-            "/data/media/.state/lazylibrarian/data:/config:rw"
-            "/data/Downloads:/downloads:rw"
-            "/data/media/books:/books:rw"
-          ];
-        };
         flaresolverr = {
           image = "ghcr.io/flaresolverr/flaresolverr:latest";
           autoStart = true;
