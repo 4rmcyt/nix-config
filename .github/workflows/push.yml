@@ -3,7 +3,6 @@ on:
   workflow_dispatch:
   push:
   pull_request_review:
-
 jobs:
   lint:
     runs-on: ubuntu-latest

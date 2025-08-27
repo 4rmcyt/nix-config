@@ -1,11 +1,14 @@
 { pkgs, ... }:
-
 pkgs.writeShellApplication {
   name = "macbook-post-rebuild-tests";
-  runtimeInputs = with pkgs; [ coreutils gnugrep procps ]; # Dependencies for the script
+  runtimeInputs = with pkgs; [
+    coreutils
+    gnugrep
+    procps
+  ]; # Dependencies for the script
   text = ''
     #!/usr/bin/env bash
-    
+
     # Color codes for output
     GREEN='\033[0;32m'
     RED='\033[0;31m'
@@ -33,7 +36,7 @@ pkgs.writeShellApplication {
     run_test "Homebrew formula 'ripgrep' is installed" "brew list --formula | grep -q 'ripgrep'"
     run_test "Application 'Docker' exists in /Applications" "[ -d '/Applications/Docker.app' ]"
     run_test "GitHub CLI is authenticated" "gh auth status &> /dev/null"
-    
+
     echo -e "\n--- 🔒 Security and Agent Tests ---"
     run_test "GPG Agent is running" "pgrep -x 'gpg-agent' &> /dev/null"
   '';

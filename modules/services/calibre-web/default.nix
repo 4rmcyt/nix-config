@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 {
   # CRITICAL FIX: Set primary group explicitly
   users.users.calibre-web = {

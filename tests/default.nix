@@ -1,5 +1,4 @@
 { pkgs, ... }:
-
 {
   # This test runs in a VM, suitable for NixOS
   homeserverTest = import ./homeserver.nix { inherit pkgs; };

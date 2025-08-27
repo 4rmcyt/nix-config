@@ -1,5 +1,4 @@
 { pkgs }:
-
 let
   homeserver = import ../hosts/nixos/homeserver {
     # Mock inputs if needed, for example:
@@ -8,17 +7,19 @@ let
 in
 pkgs.nixosTest {
   name = "homeserver-comprehensive-tests";
-  nodes.machine = { pkgs, ... }: {
-    imports = homeserver.modules;
-    # Add host entries to simulate DNS resolution inside the VM
-    networking.extraHosts = ''
-      127.0.0.1 jellyfin.example.com
-      127.0.0.1 paperless.example.com
-      127.0.0.1 hass.example.com
-      127.0.0.1 auth.example.com
-      127.0.0.1 home.example.com
-    '';
-  };
+  nodes.machine =
+    { ... }:
+    {
+      imports = homeserver.modules;
+      # Add host entries to simulate DNS resolution inside the VM
+      networking.extraHosts = ''
+        127.0.0.1 jellyfin.example.com
+        127.0.0.1 paperless.example.com
+        127.0.0.1 hass.example.com
+        127.0.0.1 auth.example.com
+        127.0.0.1 home.example.com
+      '';
+    };
 
   testScript = ''
     start_all();
