@@ -217,13 +217,6 @@
               ];
             };
           }
-          {
-            "Lazylibrarian" = {
-              href = "https://lazylibrarian.labhome.work";
-              description = "Ebook Management";
-              icon = "lazylibrarian";
-            };
-          }
         ];
       }
       {
