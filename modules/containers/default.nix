@@ -44,6 +44,8 @@
       9948 # NextDNS Exporter
       5299 # Lazylibrarian
       8191 # FlareSolverr
+      8265 # Tdarr Web UI
+      8266 # Tdarr Server
     ];
     allowedUDPPorts = [
       # Podman
@@ -70,6 +72,26 @@
             TZ = "America/Edmonton";
           };
         };
+
+        tdarr-node = {
+          image = "ghcr.io/haveagitgat/tdarr_node:latest";
+          autoStart = true;
+          volumes = [
+            "/data/media:/media"
+            "/data/media/transcode-cache:/temp"
+            "/var/lib/tdarr/configs:/app/configs"
+            "/var/lib/tdarr/logs:/app/logs"
+          ];
+          extraOptions = [
+            "--device=/dev/dri:/dev/dri"
+          ];
+          environment = {
+            "nodeName" = "homeserver-node";
+            "serverIP" = "127.0.0.1";
+            "serverPort" = "8266";
+          };
+        };
+        
         nextdns-exporter = {
           image = "ghcr.io/raylas/nextdns-exporter";
           autoStart = true;
