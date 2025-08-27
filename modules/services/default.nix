@@ -9,6 +9,7 @@
     ./nixarr
     ./kavita
     ./calibre-web
+    ./tdarr
     # ./vaultwarden
     # ./linkwarden
   ];
