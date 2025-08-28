@@ -30,7 +30,7 @@
     wslConf = {
       automount.root = "/mnt";
       interop.appendWindowsPath = false;
-      network.generateHosts = false;
+      network.generateHosts = true;
     };
   };
 
