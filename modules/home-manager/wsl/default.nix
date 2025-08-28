@@ -55,6 +55,7 @@
       pwgen
       tmux
       zsh-powerlevel10k
+      nerd-fonts.hack
     ];
   };
   
