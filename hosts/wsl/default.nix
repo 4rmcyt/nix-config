@@ -40,6 +40,7 @@
     };
   };
 
+  home-manager.backupFileExtension = "backup";
   # System Configuration
   system.stateVersion = "25.05";
 

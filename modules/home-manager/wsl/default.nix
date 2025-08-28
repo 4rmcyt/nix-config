@@ -227,6 +227,4 @@
     mimeApps.enable = true;
   };
   
-  home-manager.backupFileExtension = "backup";
-
 }
