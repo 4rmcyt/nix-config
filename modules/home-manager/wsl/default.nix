@@ -56,6 +56,7 @@
       nvd
       pyenv
       sudo
+      docker
       
       # Security & Crypto
       gnupg
@@ -123,6 +124,7 @@
       };
     };
     zsh = {
+      enable = true;
       enable = true;
       shellAliases = {
         ll = "ls -la";
