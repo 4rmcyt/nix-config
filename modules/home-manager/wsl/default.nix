@@ -61,8 +61,8 @@
   programs = {
     git = {
       enable = true;
-      userName = "zeev";
-      userEmail = "zeev@example.com"; # Update with your email
+      userName = "4rmcyt";
+      userEmail = "4rmcyt@gmail.com"; # Update with your email
       extraConfig = {
         init.defaultBranch = "main";
         push.autoSetupRemote = true;
@@ -90,7 +90,7 @@
       };
 
       sessionVariables = {
-        EDITOR = "nvim";
+        EDITOR = "helix";
         ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi";
         LC_CTYPE = "en_US.UTF-8";
         LESS = "-FRSXM";
@@ -113,7 +113,7 @@
         [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
       '';
 
-      initExtra = ''
+      initContent = ''
         autoload -Uz compinit && compinit
 
         bindkey -v
@@ -122,11 +122,11 @@
         bindkey '^n' history-search-forward
         bindkey '^[w' kill-region
 
-        bindkey '^[[A' history-substring-search-up
-        bindkey '^[[B' history-substring-search-down
+        bindkey '^[[A' history-substring-search-up # or '\eOA'
+        bindkey '^[[B' history-substring-search-down # or '\eOB'
         HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
-        # Fix Home/End/Delete keys
+        # Fix Home/End/Delete keys in iTerm2
         bindkey '\e[H' beginning-of-line
         bindkey '\e[F' end-of-line
         bindkey '\e[1~' beginning-of-line
@@ -137,29 +137,46 @@
         zstyle ':completion:*' menu no
         zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
         zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+        zstyle ':completion:*:*:docker:*' option-stacking yes
+        zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-      '';
 
+        if [ $(command -v fortune) ] && [ $UID != '0' ] && [[ $- == *i* ]] && [ $TERM != 'dumb' ]; then
+            ### Cowsay At Login ###
+            if [ $(command -v cowsay) ]; then
+                fortune -a fortunes wisdom | cowsay
+            else
+                fortune -a fortunes wisdom
+            fi
+        fi
+      '';
       antidote = {
         enable = true;
         useFriendlyNames = true;
         plugins = [
           "getantidote/use-omz"
 
-          # Oh My Zsh plugins
+          # Oh My Zsh plugins (no duplicates)
+          "ohmyzsh/ohmyzsh path:plugins/ansible"
+          "ohmyzsh/ohmyzsh path:plugins/aws"
+          "ohmyzsh/ohmyzsh path:plugins/bazel"
+          "ohmyzsh/ohmyzsh path:plugins/brew"
           "ohmyzsh/ohmyzsh path:plugins/command-not-found"
           "ohmyzsh/ohmyzsh path:plugins/direnv"
           "ohmyzsh/ohmyzsh path:plugins/docker"
           "ohmyzsh/ohmyzsh path:plugins/git"
           "ohmyzsh/ohmyzsh path:plugins/fzf"
+          "ohmyzsh/ohmyzsh path:plugins/poetry"
+          "ohmyzsh/ohmyzsh path:plugins/pyenv"
+          "ohmyzsh/ohmyzsh path:plugins/python"
           "ohmyzsh/ohmyzsh path:plugins/rust"
           "ohmyzsh/ohmyzsh path:plugins/safe-paste"
           "ohmyzsh/ohmyzsh path:plugins/z"
           "ohmyzsh/ohmyzsh path:plugins/zoxide"
           "ohmyzsh/ohmyzsh path:plugins/sudo"
 
-          # Community plugins
+          # Separate community plugins
           "zsh-users/zsh-completions"
           "zsh-users/zsh-autosuggestions"
           "zsh-users/zsh-history-substring-search"
