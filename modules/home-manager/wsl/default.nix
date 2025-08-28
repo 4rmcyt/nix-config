@@ -153,27 +153,7 @@
         PAGER = "less";
       };
       
-      profileExtra = ''
-        export GPG_TTY=$(tty)
-        if ! pgrep -x "gpg-agent" > /dev/null; then
-            ${pkgs.gnupg}/bin/gpgconf --launch gpg-agent
-        fi
-
-        export PYENV_ROOT="$HOME/.pyenv"
-        export PATH="$PYENV_ROOT/bin:$PATH"
-        eval "$(pyenv init --path)"
-        
-        export PATH=/run/current-system/sw/bin:$HOME/.nix-profile/bin:$PATH
-        if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-            . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
-        fi
-
-        [ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
-        [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
-      '';
-      
-      # CHANGE THIS: initContent -> initExtra
-      initExtra = ''
+      initContent = ''
         autoload -Uz compinit && compinit
 
         bindkey -v
@@ -182,11 +162,11 @@
         bindkey '^n' history-search-forward
         bindkey '^[w' kill-region
 
-        bindkey '^[[A' history-substring-search-up
-        bindkey '^[[B' history-substring-search-down
+        bindkey '^[[A' history-substring-search-up # or '\eOA'
+        bindkey '^[[B' history-substring-search-down # or '\eOB'
         HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
-        # Fix Home/End/Delete keys
+        # Fix Home/End/Delete keys in iTerm2
         bindkey '\e[H' beginning-of-line
         bindkey '\e[F' end-of-line
         bindkey '\e[1~' beginning-of-line
@@ -202,12 +182,12 @@
 
         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-        # Check if commands exist before using them
-        if command -v fortune >/dev/null 2>&1 && [ $UID != '0' ] && [[ $- == *i* ]] && [ "$TERM" != 'dumb' ]; then
-            if command -v cowsay >/dev/null 2>&1; then
-                fortune -a | cowsay 2>/dev/null || true
+        if [ $(command -v fortune) ] && [ $UID != '0' ] && [[ $- == *i* ]] && [ $TERM != 'dumb' ]; then
+            ### Cowsay At Login ###
+            if [ $(command -v cowsay) ]; then
+                fortune -a fortunes wisdom | cowsay
             else
-                fortune -a 2>/dev/null || true
+                fortune -a fortunes wisdom
             fi
         fi
       '';
