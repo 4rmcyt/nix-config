@@ -102,11 +102,6 @@
             ${pkgs.gnupg}/bin/gpgconf --launch gpg-agent
         fi
 
-        export PATH=/run/current-system/sw/bin:$HOME/.nix-profile/bin:$PATH
-        if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-            . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
-        fi
-
         [ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
         [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
       '';
@@ -123,13 +118,6 @@
         bindkey '^[[A' history-substring-search-up # or '\eOA'
         bindkey '^[[B' history-substring-search-down # or '\eOB'
         HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
-
-        # Fix Home/End/Delete keys in iTerm2
-        bindkey '\e[H' beginning-of-line
-        bindkey '\e[F' end-of-line
-        bindkey '\e[1~' beginning-of-line
-        bindkey '\e[4~' end-of-line
-        bindkey '\e[3~' delete-char
 
         zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
         zstyle ':completion:*' menu no
