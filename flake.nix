@@ -130,9 +130,12 @@
                 ./modules/users/zeev
                 ./modules/disko
                 inputs.nixarr.nixosModules.default
-
                 inputs.authentik-nix.nixosModules.default
                 inputs.vscode-server.nixosModules.default
+              ];
+              wsl = mkNixos "wsl" "x86_64-linux" [
+                ./hosts/wsl
+                inputs.nixos-wsl.nixosModules.wsl
               ];
             };
             darwinConfigurations = {

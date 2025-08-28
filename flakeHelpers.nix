@@ -14,6 +14,9 @@ let
           inputs.sops-nix.nixosModules.sops
           {
             sops.age.keyFile = "/var/lib/sops/age.key";
+             if machineHostname == "wsl" 
+             then "/home/zeev/.config/sops/age/keys.txt"
+             else "/var/lib/sops/age.key";
           }
           inputs.home-manager.nixosModules.home-manager
           inputs.disko.nixosModules.disko
@@ -27,7 +30,9 @@ let
             home-manager.useGlobalPkgs = true;
             home-manager.users.zeev = {
               imports = [
-                ./modules/home-manager/homeserver
+                (if machineHostname == "wsl" 
+                 then ./modules/home-manager/wsl
+                 else ./modules/home-manager/homeserver)
                 inputs.sops-nix.homeManagerModules.sops
                 inputs.mac-app-util.homeManagerModules.default
               ];

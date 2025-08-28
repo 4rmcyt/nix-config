@@ -13,9 +13,13 @@ macbook)
   echo "Deploying to Darwin macbook..."
   darwin-rebuild switch --flake .#macbook | cachix push macbookk
   ;;
+wsl)
+  echo "Deploying to WSL2..."
+  sudo nixos-rebuild switch --flake .#wsl
+  ;;
 *)
   echo "Unknown host: $HOST"
-  echo "Usage: $0 [homeserver|macbook]"
+  echo "Usage: $0 [homeserver|macbook|wsl]"
   exit 1
   ;;
 esac
