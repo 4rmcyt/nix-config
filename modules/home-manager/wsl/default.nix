@@ -78,13 +78,10 @@
 
     zsh = {
       enable = true;
-
       shellAliases = {
         ll = "ls -la";
-        la = "ls -la";
         ".." = "cd ..";
         "..." = "cd ../..";
-        rebuild = "sudo nixos-rebuild switch --flake .#wsl";
       };
 
       sessionVariables = {
