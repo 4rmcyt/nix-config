@@ -1,4 +1,4 @@
-# File: nixos-config/flakeHelpers.nix  
+# File: nixos-config/flakeHelpers.nix
 inputs:
 let
   helpers = {

@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   ...
 }:
 {
@@ -34,20 +33,20 @@
       zoxide
       statix
       deadnix
-      
+
       # Security & Crypto
       gnupg
       pinentry-tty
-      
+
       # GUI applications - these will get Start Menu shortcuts
       ghostty
       obsidian
       firefox
       vscode
-      
+
       # WSL-specific tools
       wslu # WSL utilities
-      
+
       # Additional packages from macbook config
       btop
       htop
@@ -57,7 +56,7 @@
       zsh-powerlevel10k
     ];
   };
-  
+
   programs = {
     git = {
       enable = true;

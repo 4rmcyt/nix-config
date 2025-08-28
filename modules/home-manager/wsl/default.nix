@@ -14,7 +14,7 @@
       neovim
       vim
       helix
-      
+
       # Dev tools
       direnv
       git
@@ -31,7 +31,7 @@
       shfmt
       rustfmt
       cachix
-      
+
       # User Utils
       jq
       nix-index
@@ -57,20 +57,20 @@
       pyenv
       sudo
       docker
-      
+
       # Security & Crypto
       gnupg
       pinentry-tty
-      
+
       # GUI applications - these will get Start Menu shortcuts
       ghostty
       obsidian
       firefox
       vscode
-      
+
       # WSL-specific tools
       wslu
-      
+
       # System & Monitoring Tools
       btop
       htop
@@ -80,19 +80,19 @@
       tuptime
       home-manager
       mc
-      
+
       # Add these for fun terminal stuff
       fortune
       cowsay
-      
+
       # Fonts & Themes
       zsh-powerlevel10k
       nerd-fonts.hack
       meslo-lgs-nf
     ];
   };
-  
-   programs = {
+
+  programs = {
     git = {
       enable = true;
       userName = "4rmcyt";
