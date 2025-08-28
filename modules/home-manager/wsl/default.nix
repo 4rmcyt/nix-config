@@ -80,6 +80,10 @@
       home-manager
       mc
       
+      # Add these for fun terminal stuff
+      fortune
+      cowsay
+      
       # Fonts & Themes
       zsh-powerlevel10k
       nerd-fonts.hack
@@ -96,9 +100,9 @@
         init.defaultBranch = "main";
         push.autoSetupRemote = true;
         pull.rebase = true;
-        # Fix line ending issues
         core.autocrlf = "input";
         core.eol = "lf";
+        core.safecrlf = true;
       };
     };
 
@@ -128,24 +132,48 @@
 
     zsh = {
       enable = true;
+      enableCompletion = true;
+      autosuggestion.enable = true;
+      syntaxHighlighting.enable = true;
+      
       shellAliases = {
         ll = "ls -la";
+        ".." = "cd ..";
+        "..." = "cd ../..";
+        rebuild = "sudo nixos-rebuild switch --flake .#wsl";
       };
+      
       sessionVariables = {
         EDITOR = "nvim";
-        ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi"; # Fixed typo
+        ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi";
         LC_CTYPE = "en_US.UTF-8";
         LEDGER_COLOR = "true";
         LESS = "-FRSXM";
         LESSCHARSET = "utf-8";
         PAGER = "less";
       };
+      
       profileExtra = ''
+        export GPG_TTY=$(tty)
+        if ! pgrep -x "gpg-agent" > /dev/null; then
+            ${pkgs.gnupg}/bin/gpgconf --launch gpg-agent
+        fi
+
         export PYENV_ROOT="$HOME/.pyenv"
         export PATH="$PYENV_ROOT/bin:$PATH"
         eval "$(pyenv init --path)"
+        
+        export PATH=/run/current-system/sw/bin:$HOME/.nix-profile/bin:$PATH
+        if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+            . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+        fi
+
+        [ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+        [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
       '';
-      initExtra = '' # Changed from initContent
+      
+      # CHANGE THIS: initContent -> initExtra
+      initExtra = ''
         autoload -Uz compinit && compinit
 
         bindkey -v
@@ -174,15 +202,16 @@
 
         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-        if [ $(command -v fortune) ] && [ $UID != '0' ] && [[ $- == *i* ]] && [ $TERM != 'dumb' ]; then
-            ### Cowsay At Login ###
-            if [ $(command -v cowsay) ]; then
-                fortune -a fortunes wisdom | cowsay
+        # Check if commands exist before using them
+        if command -v fortune >/dev/null 2>&1 && [ $UID != '0' ] && [[ $- == *i* ]] && [ "$TERM" != 'dumb' ]; then
+            if command -v cowsay >/dev/null 2>&1; then
+                fortune -a | cowsay 2>/dev/null || true
             else
-                fortune -a fortunes wisdom
+                fortune -a 2>/dev/null || true
             fi
         fi
       '';
+      
       antidote = {
         enable = true;
         useFriendlyNames = true;
@@ -190,18 +219,11 @@
           "getantidote/use-omz"
 
           # Oh My Zsh plugins
-          "ohmyzsh/ohmyzsh path:plugins/ansible"
-          "ohmyzsh/ohmyzsh path:plugins/aws"
-          "ohmyzsh/ohmyzsh path:plugins/bazel"
-          "ohmyzsh/ohmyzsh path:plugins/brew"
           "ohmyzsh/ohmyzsh path:plugins/command-not-found"
           "ohmyzsh/ohmyzsh path:plugins/direnv"
           "ohmyzsh/ohmyzsh path:plugins/docker"
           "ohmyzsh/ohmyzsh path:plugins/git"
           "ohmyzsh/ohmyzsh path:plugins/fzf"
-          "ohmyzsh/ohmyzsh path:plugins/poetry"
-          "ohmyzsh/ohmyzsh path:plugins/pyenv"
-          "ohmyzsh/ohmyzsh path:plugins/python"
           "ohmyzsh/ohmyzsh path:plugins/rust"
           "ohmyzsh/ohmyzsh path:plugins/safe-paste"
           "ohmyzsh/ohmyzsh path:plugins/z"
@@ -223,6 +245,13 @@
     direnv = {
       enable = true;
       enableZshIntegration = true;
+      nix-direnv.enable = true;
+    };
+
+    zoxide = {
+      enable = true;
+      enableZshIntegration = true;
+      options = [ "--cmd cd" ];
     };
 
     helix = {
@@ -256,5 +285,11 @@
 
   services = {
     ssh-agent.enable = true;
+  };
+
+  # Enable XDG for desktop files
+  xdg = {
+    enable = true;
+    mimeApps.enable = true;
   };
 }
