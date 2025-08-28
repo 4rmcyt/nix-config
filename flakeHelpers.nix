@@ -1,4 +1,4 @@
-# File: nixos-config/flakeHelpers.nix
+# File: nixos-config/flakeHelpers.nix  
 inputs:
 let
   helpers = {
@@ -12,12 +12,6 @@ let
         };
         modules = [
           inputs.sops-nix.nixosModules.sops
-          {
-            sops.age.keyFile = "/var/lib/sops/age.key";
-             if machineHostname == "wsl" 
-             then "/home/zeev/.config/sops/age/keys.txt"
-             else "/var/lib/sops/age.key";
-          }
           inputs.home-manager.nixosModules.home-manager
           inputs.disko.nixosModules.disko
           inputs.nix-index-database.nixosModules.nix-index
@@ -30,9 +24,6 @@ let
             home-manager.useGlobalPkgs = true;
             home-manager.users.zeev = {
               imports = [
-                (if machineHostname == "wsl" 
-                 then ./modules/home-manager/wsl
-                 else ./modules/home-manager/homeserver)
                 inputs.sops-nix.homeManagerModules.sops
                 inputs.mac-app-util.homeManagerModules.default
               ];
@@ -52,7 +43,6 @@ let
             host = machineHostname;
           };
           modules = [
-            # Import the sops-nix darwin module
             inputs.sops-nix.darwinModules.sops
             inputs.home-manager.darwinModules.home-manager
             inputs.mac-app-util.darwinModules.default
@@ -60,13 +50,12 @@ let
             {
               home-manager.users.vk = {
                 imports = [
-                  ./modules/home-manager/macbook
                   {
                     nixpkgs.config.allowUnfree = true;
                   }
                   inputs.sops-nix.homeManagerModules.sops
                 ];
-                sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt"; # Adjusted path for vk
+                sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
               };
             }
           ]

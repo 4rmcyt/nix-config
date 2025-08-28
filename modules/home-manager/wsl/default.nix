@@ -2,9 +2,16 @@
 {
   pkgs,
   lib,
+  inputs,
   ...
 }:
 {
+
+  sops = {
+    age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+    defaultSopsFormat = "yaml";
+  };
+  
   home = {
     stateVersion = "25.05";
     username = "zeev";
@@ -69,7 +76,7 @@
       enableCompletion = true;
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
-      
+
       shellAliases = {
         ll = "ls -l";
         la = "ls -la";
@@ -77,14 +84,14 @@
         "..." = "cd ../..";
         rebuild = "sudo nixos-rebuild switch --flake .#wsl";
       };
-      
+
       initExtra = ''
         # PowerLevel10k
         source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
-        
+
         # Load p10k config if it exists
         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-        
+
         # WSL-specific configurations
         export BROWSER="wslview"
         export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
