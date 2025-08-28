@@ -13,27 +13,49 @@
       zsh
       neovim
       vim
-      cachix
+      helix
+      
       # Dev tools
       direnv
       git
       gh
+      go
+      deploy-rs
       just
       nixfmt-rfc-style
+      nixfmt-tree
       nil
+      nix-fast-build
+      nix-inspect
+      nix-diff
       shfmt
-      helix
       rustfmt
+      cachix
+      
       # User Utils
       jq
       nix-index
       fzf
       zip
       unzip
+      unar
+      p7zip
       tree
       zoxide
       statix
       deadnix
+      pass
+      dive
+      yamllint
+      ffmpeg
+      trash-cli
+      borgbackup
+      nextdns
+      nh
+      nix-output-monitor
+      nvd
+      pyenv
+      sudo
       
       # Security & Crypto
       gnupg
@@ -46,82 +68,36 @@
       vscode
       
       # WSL-specific tools
-      wslu # WSL utilities
+      wslu
       
-      # Additional packages from macbook config
+      # System & Monitoring Tools
       btop
       htop
       delta
       pwgen
       tmux
-      zsh-powerlevel10k
-      nerd-fonts.hack
-
-      zsh
-      neovim
-      vim
-      meslo-lgs-nf
-      # Dev tools
-      direnv
-      go
-      gnupg
-      git
-      gh
-      deploy-rs
-      just
-      nixfmt-rfc-style
-      nil
-      nix-fast-build
-      shfmt
-      nixfmt-tree
-      nix-inspect
-      nix-diff
-      zsh-powerlevel10k
-      helix
-      rustfmt
-      # User Utils
-      pass
-      jq
-      dive
-      yamllint
-      nix-index
-      fzf
-      ffmpeg
-      trash-cli
-      zip
-      unar
-      unzip
-      p7zip
-      tree
-      borgbackup
-      nextdns
-      nh
-      nix-output-monitor
-      nvd
-      zoxide
-      pyenv
-      statix
-      sudo
-      deadnix
-
-      # System & Network Tools
       tuptime
       home-manager
+      
+      # Fonts & Themes
+      zsh-powerlevel10k
+      nerd-fonts.hack
+      meslo-lgs-nf
     ];
   };
   
   programs = {
     git = {
-    enable = true;
-    userName = "4rmcyt";
-    userEmail = "4rmcyt@gmail.com";
-    extraConfig = {
-      init.defaultBranch = "main";
-      push.autoSetupRemote = true;
-      pull.rebase = true;
-      # Fix line ending issues
-      core.autocrlf = "input";
-      core.eol = "lf";
+      enable = true;
+      userName = "4rmcyt";
+      userEmail = "4rmcyt@gmail.com";
+      extraConfig = {
+        init.defaultBranch = "main";
+        push.autoSetupRemote = true;
+        pull.rebase = true;
+        # Fix line ending issues
+        core.autocrlf = "input";
+        core.eol = "lf";
       };
     };
 
@@ -148,6 +124,7 @@
         marker = "#EBCB8B";
       };
     };
+
     zsh = {
       enable = true;
       shellAliases = {
@@ -155,7 +132,7 @@
       };
       sessionVariables = {
         EDITOR = "nvim";
-        ALTERNATE_EDITOR = "${pkgs.vim}/vin/vi";
+        ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi"; # Fixed typo
         LC_CTYPE = "en_US.UTF-8";
         LEDGER_COLOR = "true";
         LESS = "-FRSXM";
@@ -167,7 +144,7 @@
         export PATH="$PYENV_ROOT/bin:$PATH"
         eval "$(pyenv init --path)"
       '';
-      initContent = ''
+      initExtra = '' # Changed from initContent
         autoload -Uz compinit && compinit
 
         bindkey -v
@@ -176,11 +153,11 @@
         bindkey '^n' history-search-forward
         bindkey '^[w' kill-region
 
-        bindkey '^[[A' history-substring-search-up # or '\eOA'
-        bindkey '^[[B' history-substring-search-down # or '\eOB'
+        bindkey '^[[A' history-substring-search-up
+        bindkey '^[[B' history-substring-search-down
         HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
-        # Fix Home/End/Delete keys in iTerm2
+        # Fix Home/End/Delete keys
         bindkey '\e[H' beginning-of-line
         bindkey '\e[F' end-of-line
         bindkey '\e[1~' beginning-of-line
@@ -211,7 +188,7 @@
         plugins = [
           "getantidote/use-omz"
 
-          # Oh My Zsh plugins (no duplicates)
+          # Oh My Zsh plugins
           "ohmyzsh/ohmyzsh path:plugins/ansible"
           "ohmyzsh/ohmyzsh path:plugins/aws"
           "ohmyzsh/ohmyzsh path:plugins/bazel"
@@ -230,7 +207,7 @@
           "ohmyzsh/ohmyzsh path:plugins/zoxide"
           "ohmyzsh/ohmyzsh path:plugins/sudo"
 
-          # Separate community plugins
+          # Community plugins
           "zsh-users/zsh-completions"
           "zsh-users/zsh-autosuggestions"
           "zsh-users/zsh-history-substring-search"
@@ -246,6 +223,7 @@
       enable = true;
       enableZshIntegration = true;
     };
+
     helix = {
       enable = true;
       settings = {
@@ -274,6 +252,7 @@
       ];
     };
   };
+
   services = {
     ssh-agent.enable = true;
   };
