@@ -61,13 +61,16 @@
   
   programs = {
     git = {
-      enable = true;
-      userName = "4rmcyt";
-      userEmail = "4rmcyt@gmail.com"; # Update with your email
-      extraConfig = {
-        init.defaultBranch = "main";
-        push.autoSetupRemote = true;
-        pull.rebase = true;
+    enable = true;
+    userName = "4rmcyt";
+    userEmail = "4rmcyt@gmail.com";
+    extraConfig = {
+      init.defaultBranch = "main";
+      push.autoSetupRemote = true;
+      pull.rebase = true;
+      # Fix line ending issues
+      core.autocrlf = "input";
+      core.eol = "lf";
       };
     };
 
