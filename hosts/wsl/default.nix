@@ -27,7 +27,7 @@
     defaultUser = "zeev";
     startMenuLaunchers = true;
     useWindowsDriver = true;
-    # WSL-specific settings
+    # Let WSL handle networking completely
     wslConf = {
       automount.root = "/mnt";
       interop.appendWindowsPath = false;
@@ -38,7 +38,6 @@
 
   # System Configuration
   system.stateVersion = "25.05";
-  networking.hostName = "nixos-wsl";
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -71,7 +70,23 @@
     rsync
     unzip
     zip
+    wslu
   ];
+
+  # Disable all NixOS networking and let WSL handle it
+  networking = {
+    hostName = "nixos-wsl";
+    networkmanager.enable = false;
+    useNetworkd = false;
+    useDHCP = false;
+    dhcpcd.enable = false;
+    wireless.enable = false;
+    # Don't manage interfaces
+    interfaces = {};
+  };
+
+  systemd.network.enable = false;
+  services.resolved.enable = false;
 
   # Enable services
   services = {
