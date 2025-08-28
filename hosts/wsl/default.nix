@@ -31,7 +31,6 @@
     defaultUser = "zeev";
     startMenuLaunchers = true;
     useWindowsDriver = true;
-    # WSL-specific settings
     wslConf = {
       automount.root = "/mnt";
       interop.appendWindowsPath = false;
@@ -42,7 +41,6 @@
 
   # System Configuration
   system.stateVersion = "25.05";
-  networking.hostName = "nixos-wsl";
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
