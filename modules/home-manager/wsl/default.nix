@@ -13,6 +13,7 @@
       zsh
       neovim
       vim
+      cachix
       # Dev tools
       direnv
       git
