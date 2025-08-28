@@ -79,23 +79,43 @@
       homedir = "/home/zeev/.gnupg";
     };
 
+    fzf = {
+      enable = true;
+      enableZshIntegration = true;
+      colors = {
+        fg = "#D8DEE9";
+        bg = "#2E3440";
+        hl = "#A3BE8C";
+        "fg+" = "#D8DEE9";
+        "bg+" = "#434C5E";
+        "hl+" = "#A3BE8C";
+        pointer = "#BF616A";
+        info = "#4C566A";
+        spinner = "#4C566A";
+        header = "#4C566A";
+        prompt = "#81A1C1";
+        marker = "#EBCB8B";
+      };
+    };
     zsh = {
       enable = true;
       shellAliases = {
         ll = "ls -la";
-        ".." = "cd ..";
-        "..." = "cd ../..";
       };
-
       sessionVariables = {
-        EDITOR = "helix";
-        ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi";
+        EDITOR = "nvim";
+        ALTERNATE_EDITOR = "${pkgs.vim}/vin/vi";
         LC_CTYPE = "en_US.UTF-8";
+        LEDGER_COLOR = "true";
         LESS = "-FRSXM";
         LESSCHARSET = "utf-8";
         PAGER = "less";
       };
-
+      profileExtra = ''
+        export PYENV_ROOT="$HOME/.pyenv"
+        export PATH="$PYENV_ROOT/bin:$PATH"
+        eval "$(pyenv init --path)"
+      '';
       initContent = ''
         autoload -Uz compinit && compinit
 
@@ -108,6 +128,13 @@
         bindkey '^[[A' history-substring-search-up # or '\eOA'
         bindkey '^[[B' history-substring-search-down # or '\eOB'
         HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
+
+        # Fix Home/End/Delete keys in iTerm2
+        bindkey '\e[H' beginning-of-line
+        bindkey '\e[F' end-of-line
+        bindkey '\e[1~' beginning-of-line
+        bindkey '\e[4~' end-of-line
+        bindkey '\e[3~' delete-char
 
         zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
         zstyle ':completion:*' menu no
@@ -167,42 +194,36 @@
     direnv = {
       enable = true;
       enableZshIntegration = true;
-      nix-direnv.enable = true;
     };
-
-    fzf = {
-      enable = true;
-      enableZshIntegration = true;
-      defaultOptions = [
-        "--height 40%"
-        "--layout=reverse"
-        "--info=inline"
-        "--border"
-        "--exact"
-      ];
-    };
-
-    zoxide = {
-      enable = true;
-      enableZshIntegration = true;
-      options = [ "--cmd cd" ];
-    };
-
-    gh = {
+    helix = {
       enable = true;
       settings = {
-        editor = "nvim";
-        git_protocol = "ssh";
+        theme = "heisenberg";
+        editor = {
+          true-color = true;
+          line-number = "relative";
+          mouse = false;
+          cursorline = true;
+          bufferline = "multiple";
+          default-line-ending = "lf";
+          cursor-shape.insert = "bar";
+          cursor-shape.select = "underline";
+          lsp.display-inlay-hints = true;
+          lsp.display-messages = true;
+          file-picker.hidden = false;
+          file-picker.git-ignore = true;
+        };
       };
+      languages.language = [
+        {
+          name = "nix";
+          auto-format = true;
+          formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
+        }
+      ];
     };
-
-    nix-index.enable = true;
   };
-
-  # Enable XDG for desktop files
-  xdg = {
-    enable = true;
-    mimeApps.enable = true;
+  services = {
+    ssh-agent.enable = true;
   };
-  
 }
