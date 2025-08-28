@@ -88,11 +88,9 @@
     rsync
     unzip
     zip
-<<<<<<< HEAD
     wslu
   ];
 
-  # Disable all NixOS networking and let WSL handle it
   networking = {
     hostName = "nixos-wsl";
     networkmanager.enable = false;
@@ -107,10 +105,6 @@
   systemd.network.enable = false;
   services.resolved.enable = false;
 
-=======
-  ];
-
->>>>>>> 0717247 (Refactor configuration files and formatting settings)
   # Enable services
   services = {
     openssh = {
