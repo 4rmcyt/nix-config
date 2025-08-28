@@ -125,7 +125,6 @@
                     imports = [
                       ./modules/home-manager/homeserver
                       inputs.sops-nix.homeManagerModules.sops
-                      inputs.mac-app-util.homeManagerModules.default
                     ];
                     sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   };

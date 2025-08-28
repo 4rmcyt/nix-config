@@ -37,6 +37,7 @@
       ghostty
       # WSL-specific tools
       wslu # WSL utilities
+      home-manager
     ];
   };
 
