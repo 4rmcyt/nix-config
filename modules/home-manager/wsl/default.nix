@@ -78,6 +78,7 @@
       tmux
       tuptime
       home-manager
+      mc
       
       # Fonts & Themes
       zsh-powerlevel10k
