@@ -76,6 +76,14 @@
     unzip
     zip
     wslu
+
+    coreutils 
+    gnugrep    
+    gawk      
+    gnused       
+    findutils    
+    util-linux
+    mc  
   ];
 
   networking = {
