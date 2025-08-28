@@ -15,6 +15,12 @@
     defaultSopsFormat = "yaml";
   };
 
+  users.users.git = {
+    isSystemUser = true;
+    description = "Git user";
+  };
+  users.groups.git = { };
+
   # WSL Configuration
   wsl = {
     enable = true;
