@@ -7,10 +7,7 @@
 {
   imports = [
     inputs.nixos-wsl.nixosModules.wsl
-<<<<<<< HEAD
-=======
     inputs.vscode-server.nixosModules.default
->>>>>>> 0717247 (Refactor configuration files and formatting settings)
     ../../modules/users/zeev
   ];
 
@@ -25,23 +22,16 @@
   };
   users.groups.git = { };
 
-<<<<<<< HEAD
-=======
   # VSCode Server Configuration
   services.vscode-server.enable = true;
 
->>>>>>> 0717247 (Refactor configuration files and formatting settings)
   # WSL Configuration
   wsl = {
     enable = true;
     defaultUser = "zeev";
     startMenuLaunchers = true;
     useWindowsDriver = true;
-<<<<<<< HEAD
-    # Let WSL handle networking completely
-=======
     # WSL-specific settings
->>>>>>> 0717247 (Refactor configuration files and formatting settings)
     wslConf = {
       automount.root = "/mnt";
       interop.appendWindowsPath = false;
@@ -52,10 +42,7 @@
 
   # System Configuration
   system.stateVersion = "25.05";
-<<<<<<< HEAD
-=======
   networking.hostName = "nixos-wsl";
->>>>>>> 0717247 (Refactor configuration files and formatting settings)
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
