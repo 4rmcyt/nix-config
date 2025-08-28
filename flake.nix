@@ -1,4 +1,3 @@
-# File: nixos-config/flake.nix
 {
   description = "A highly structured NixOS configuration";
   nixConfig = {
@@ -17,6 +16,7 @@
       "macbookk.cachix.org-1:wKrGz8cPTb4rHjJzcpnJwcG905KgY5iIbJ4Daqgsvrc="
     ];
   };
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
@@ -24,12 +24,10 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -38,19 +36,14 @@
       url = "github:hraban/mac-app-util";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Secrets Management
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # Home Manager
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # System Utilities
     cpu-microcodes = {
       url = "github:platomav/CPUMicrocodes";
       flake = false;
@@ -62,8 +55,6 @@
     nix-index-database.url = "github:nix-community/nix-index-database";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     systems.url = "github:nix-systems/default";
-
-    # Services & Applications
     nixpkgs-firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
     nixarr.url = "github:rasmus-kirk/nixarr";
     authentik-nix.url = "github:nix-community/authentik-nix";
@@ -74,17 +65,12 @@
       url = "github:NixOS/nixpkgs/f0809e9f3402644c0987842727cb1d3f93d2e4a6?shallow=1";
       flake = false;
     };
-    # Hyprland & Wayland
     hyprland.url = "github:hyprwm/Hyprland";
     hypr-contrib.url = "github:hyprwm/contrib";
     hyprpicker.url = "github:hyprwm/hyprpicker";
     hyprlock.url = "github:hyprwm/hyprlock";
     waybar.url = "github:Alexays/Waybar";
-
-    # Gaming
     nix-gaming.url = "github:fufexan/nix-gaming";
-
-    # nix-homebrew
     nix-homebrew = {
       url = "github:zhaofengli/nix-homebrew";
     };
@@ -97,6 +83,7 @@
       flake = false;
     };
   };
+
   outputs =
     inputs@{ treefmt-nix, ... }:
     inputs.flake-parts.lib.mkFlake
@@ -132,16 +119,50 @@
                 inputs.nixarr.nixosModules.default
                 inputs.authentik-nix.nixosModules.default
                 inputs.vscode-server.nixosModules.default
+                {
+                  sops.age.keyFile = "/var/lib/sops/age.key";
+                  home-manager.users.zeev = {
+                    imports = [
+                      ./modules/home-manager/homeserver
+                      inputs.sops-nix.homeManagerModules.sops
+                      inputs.mac-app-util.homeManagerModules.default
+                    ];
+                    sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+                  };
+                }
               ];
+
               wsl = mkNixos "wsl" "x86_64-linux" [
                 ./hosts/wsl
-                inputs.nixos-wsl.nixosModules.wsl
+                {
+                  sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+                  home-manager.users.zeev = {
+                    imports = [
+                      ./modules/home-manager/wsl
+                      inputs.sops-nix.homeManagerModules.sops
+                    ];
+                  };
+                }
               ];
             };
+
             darwinConfigurations = {
               macbook = mkDarwin "macbook" "aarch64-darwin" [
                 ./hosts/darwin/macbook
                 ./modules/users/vk
+                {
+                  sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
+                  home-manager.users.vk = {
+                    imports = [
+                      ./modules/home-manager/macbook
+                      {
+                        nixpkgs.config.allowUnfree = true;
+                      }
+                      inputs.sops-nix.homeManagerModules.sops
+                    ];
+                    sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
+                  };
+                }
               ];
             };
           };

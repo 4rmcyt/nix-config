@@ -10,6 +10,11 @@
     ../../modules/users/zeev
   ];
 
+  sops = {
+    age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+    defaultSopsFormat = "yaml";
+  };
+
   # WSL Configuration
   wsl = {
     enable = true;
@@ -81,10 +86,4 @@
   };
 
   programs.zsh.enable = true;
-
-  # Secrets management
-  sops = {
-    age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-    defaultSopsFormat = "yaml";
-  };
 }
