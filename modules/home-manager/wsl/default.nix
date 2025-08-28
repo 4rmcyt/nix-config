@@ -4,6 +4,7 @@
   ...
 }:
 {
+  i18n.inputMethod.enabled = null;
   home = {
     stateVersion = "25.05";
     username = "zeev";
