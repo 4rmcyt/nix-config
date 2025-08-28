@@ -21,7 +21,7 @@
     defaultUser = "zeev";
     startMenuLaunchers = true;
     nativeSystemd = true;
-    
+
     # WSL-specific settings
     wslConf = {
       automount.root = "/mnt";
@@ -33,7 +33,7 @@
   # System Configuration
   system.stateVersion = "25.05";
   networking.hostName = "nixos-wsl";
-  
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -77,13 +77,5 @@
       };
     };
   };
-
-  # User configuration
-  users.users.zeev = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "docker" ];
-    shell = pkgs.zsh;
-  };
-
   programs.zsh.enable = true;
 }
