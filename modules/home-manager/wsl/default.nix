@@ -4,7 +4,6 @@
   ...
 }:
 {
-  i18n.inputMethod.enabled = null;
   home = {
     stateVersion = "25.05";
     username = "zeev";
@@ -38,10 +37,10 @@
       ghostty
       # WSL-specific tools
       wslu # WSL utilities
-      home-manager
+      obsidian
     ];
   };
-
+  
   programs = {
     git = {
       enable = true;
