@@ -31,6 +31,7 @@
       automount.root = "/mnt";
       interop.appendWindowsPath = false;
       network.generateHosts = true;
+      network.generateResolvConf = true;
     };
   };
 
