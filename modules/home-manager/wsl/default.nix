@@ -56,6 +56,57 @@
       tmux
       zsh-powerlevel10k
       nerd-fonts.hack
+
+      zsh
+      neovim
+      vim
+      meslo-lgs-nf
+      # Dev tools
+      direnv
+      go
+      gnupg
+      git
+      gh
+      deploy-rs
+      just
+      nixfmt-rfc-style
+      nil
+      nix-fast-build
+      shfmt
+      nixfmt-tree
+      nix-inspect
+      nix-diff
+      zsh-powerlevel10k
+      helix
+      rustfmt
+      # User Utils
+      pass
+      jq
+      dive
+      yamllint
+      nix-index
+      fzf
+      ffmpeg
+      trash-cli
+      zip
+      unar
+      unzip
+      p7zip
+      tree
+      borgbackup
+      nextdns
+      nh
+      nix-output-monitor
+      nvd
+      zoxide
+      pyenv
+      statix
+      sudo
+      deadnix
+
+      # System & Network Tools
+      tuptime
+      home-manager
     ];
   };
   
