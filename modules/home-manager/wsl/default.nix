@@ -33,6 +33,7 @@
       zoxide
       statix
       deadnix
+      ghostty
       # WSL-specific tools
       wslu # WSL utilities
     ];
