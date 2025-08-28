@@ -30,7 +30,7 @@
   wsl = {
     enable = true;
     defaultUser = "zeev";
-     = true;
+    startMenuLaunchers = true;
     useWindowsDriver = true;
     wslConf = {
       automount.root = "/mnt";
