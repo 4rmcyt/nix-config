@@ -6,16 +6,22 @@ deploy-homeserver:
 deploy-macbook:
     ./deploy.sh macbook
 
-# Update flake and test both systems
+# Deploy to WSL
+deploy-wsl:
+    ./deploy.sh wsl
+
+# Update flake and test all systems
 update:
     nix flake update
     nix build .#nixosConfigurations.homeserver.config.system.build.toplevel
     nix build .#darwinConfigurations.macbook.config.system.build.toplevel
+    nix build .#nixosConfigurations.wsl.config.system.build.toplevel
 
-# Push to both caches
+# Push to all caches
 push-caches:
     nix build .#nixosConfigurations.homeserver.config.system.build.toplevel | cachix push homeserver
     nix build .#darwinConfigurations.macbook.config.system.build.toplevel | cachix push macbookk
+    nix build .#nixosConfigurations.wsl.config.system.build.toplevel | cachix push homeserver
 
 # Format all nix files
 fmt:
@@ -29,7 +35,8 @@ check:
 test:  
     nix flake check  
     just test-homeserver  
-    just test-macbook  
+    just test-macbook
+    just test-wsl
   
 # Test homeserver configuration  
 test-homeserver:  
@@ -39,19 +46,22 @@ test-homeserver:
 test-macbook:  
     nix build .#checks.aarch64-darwin.macbook-tests
 
+# Test WSL configuration
+test-wsl:
+    nix build .#nixosConfigurations.wsl.config.system.build.toplevel
 
 build-iso $host:
-	just copy {{ host }}; ssh {{ host }} "nix-shell -p nixos-generators.out --run 'nixos-generate -c /etc/nixos/machines/installer/default.nix -f install-iso -I nixpkgs=channel:unstable'"
+    just copy {{ host }}; ssh {{ host }} "nix-shell -p nixos-generators.out --run 'nixos-generate -c /etc/nixos/machines/installer/default.nix -f install-iso -I nixpkgs=channel:unstable'"
   
 
 dry-run $host:
-	nixos-rebuild-ng dry-activate --flake .#{{host}} --target-host {{host}} --build-host {{host}} --fast --use-remote-sudo
+    nixos-rebuild-ng dry-activate --flake .#{{host}} --target-host {{host}} --build-host {{host}} --fast --use-remote-sudo
 
 deploy $host: (copy host)
-	nixos-rebuild-ng switch --flake .#{{host}} --target-host {{host}} --build-host {{host}} --fast --use-remote-sudo
+    nixos-rebuild-ng switch --flake .#{{host}} --target-host {{host}} --build-host {{host}} --fast --use-remote-sudo
 
 check-clean:
-	if [ -n "$(git status --porcelain)" ]; then echo -e "\e[31merror\e[0m: git tree is dirty. Refusing to copy configuration." >&2; exit 1; fi
+    if [ -n "$(git status --porcelain)" ]; then echo -e "\e[31merror\e[0m: git tree is dirty. Refusing to copy configuration." >&2; exit 1; fi
 
 copy $host: check-clean
-	rsync -ax --delete --rsync-path="sudo rsync" ./ {{host}}:/etc/nixos/    
+    rsync -ax --delete --rsync-path="sudo rsync" ./ {{host}}:/etc/nixos/
