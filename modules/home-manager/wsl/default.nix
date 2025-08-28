@@ -96,16 +96,6 @@
         PAGER = "less";
       };
 
-      profileExtra = ''
-        export GPG_TTY=$(tty)
-        if ! pgrep -x "gpg-agent" > /dev/null; then
-            ${pkgs.gnupg}/bin/gpgconf --launch gpg-agent
-        fi
-
-        [ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
-        [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
-      '';
-
       initContent = ''
         autoload -Uz compinit && compinit
 
