@@ -125,9 +125,6 @@
     };
     zsh = {
       enable = true;
-      shellAliases = {
-        ll = "ls -la";
-      };
       sessionVariables = {
         EDITOR = "nvim";
         ALTERNATE_EDITOR = "${pkgs.vim}/vin/vi";
@@ -138,10 +135,16 @@
         PAGER = "less";
       };
 
+      profileExtra = ''
+        export PYENV_ROOT="$HOME/.pyenv"
+        export PATH="$PYENV_ROOT/bin:$PATH"
+        eval "$(pyenv init --path)"
+      '';
+
       initContent = ''
         autoload -Uz compinit && compinit
 
-        bindkey -v
+        bindkey '-v'
         bindkey '^f' autosuggest-accept
         bindkey '^p' history-search-backward
         bindkey '^n' history-search-forward
