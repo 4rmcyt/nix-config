@@ -38,6 +38,7 @@
       # WSL-specific tools
       wslu # WSL utilities
       obsidian
+      home-manager
     ];
   };
   
