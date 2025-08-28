@@ -26,8 +26,6 @@
     enable = true;
     defaultUser = "zeev";
     startMenuLaunchers = true;
-    nativeSystemd = true;
-
     # WSL-specific settings
     wslConf = {
       automount.root = "/mnt";
