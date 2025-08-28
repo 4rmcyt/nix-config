@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   inputs,
   ...
 }:
@@ -77,13 +76,13 @@
     zip
     wslu
 
-    coreutils 
-    gnugrep    
-    gawk      
-    gnused       
-    findutils    
+    coreutils
+    gnugrep
+    gawk
+    gnused
+    findutils
     util-linux
-    mc  
+    mc
   ];
 
   networking = {
@@ -94,7 +93,7 @@
     dhcpcd.enable = false;
     wireless.enable = false;
     # Don't manage interfaces
-    interfaces = {};
+    interfaces = { };
   };
 
   systemd.network.enable = false;

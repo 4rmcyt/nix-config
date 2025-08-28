@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-
+_:
 {
   user = {
     users.tdarr = {
