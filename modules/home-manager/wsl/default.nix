@@ -125,7 +125,6 @@
     };
     zsh = {
       enable = true;
-      enable = true;
       shellAliases = {
         ll = "ls -la";
       };
