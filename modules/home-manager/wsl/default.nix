@@ -63,13 +63,6 @@
       pinentry-tty
 
       # GUI applications - these will get Start Menu shortcuts
-      ghostty
-      obsidian
-      firefox
-      vscode
-
-      # WSL-specific tools
-      wslu
 
       # System & Monitoring Tools
       btop
@@ -81,7 +74,6 @@
       home-manager
       mc
 
-      # Add these for fun terminal stuff
       fortune
       cowsay
 
