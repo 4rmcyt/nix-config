@@ -14,7 +14,7 @@
       neovim
       vim
       helix
-
+      
       # Dev tools
       direnv
       git
@@ -31,7 +31,7 @@
       shfmt
       rustfmt
       cachix
-
+      
       # User Utils
       jq
       nix-index
@@ -56,14 +56,20 @@
       nvd
       pyenv
       sudo
-      docker
-
+      
       # Security & Crypto
       gnupg
       pinentry-tty
-
+      
       # GUI applications - these will get Start Menu shortcuts
-
+      ghostty
+      obsidian
+      firefox
+      vscode
+      
+      # WSL-specific tools
+      wslu
+      
       # System & Monitoring Tools
       btop
       htop
@@ -73,28 +79,36 @@
       tuptime
       home-manager
       mc
-
+      
+      # Add these for fun terminal stuff
       fortune
       cowsay
-
+      
       # Fonts & Themes
       zsh-powerlevel10k
       nerd-fonts.hack
       meslo-lgs-nf
     ];
   };
-
+  
   programs = {
     git = {
       enable = true;
       userName = "4rmcyt";
       userEmail = "4rmcyt@gmail.com";
-      signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
       extraConfig = {
-        commit.gpgsign = true;
-        gpg.format = "ssh";
-        user.signingkey = "~/.ssh/zeev";
+        init.defaultBranch = "main";
+        push.autoSetupRemote = true;
+        pull.rebase = true;
+        core.autocrlf = "input";
+        core.eol = "lf";
+        core.safecrlf = true;
       };
+    };
+
+    gpg = {
+      enable = true;
+      homedir = "/home/zeev/.gnupg";
     };
 
     fzf = {
@@ -115,28 +129,34 @@
         marker = "#EBCB8B";
       };
     };
+
     zsh = {
       enable = true;
+      enableCompletion = true;
+      autosuggestion.enable = true;
+      syntaxHighlighting.enable = true;
+      
+      shellAliases = {
+        ll = "ls -la";
+        ".." = "cd ..";
+        "..." = "cd ../..";
+        rebuild = "sudo nixos-rebuild switch --flake .#wsl";
+      };
+      
       sessionVariables = {
         EDITOR = "nvim";
-        ALTERNATE_EDITOR = "${pkgs.vim}/vin/vi";
+        ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi";
         LC_CTYPE = "en_US.UTF-8";
         LEDGER_COLOR = "true";
         LESS = "-FRSXM";
         LESSCHARSET = "utf-8";
         PAGER = "less";
       };
-
-      profileExtra = ''
-        export PYENV_ROOT="$HOME/.pyenv"
-        export PATH="$PYENV_ROOT/bin:$PATH"
-        eval "$(pyenv init --path)"
-      '';
-
+      
       initContent = ''
         autoload -Uz compinit && compinit
 
-        bindkey '-v'
+        bindkey -v
         bindkey '^f' autosuggest-accept
         bindkey '^p' history-search-backward
         bindkey '^n' history-search-forward
@@ -171,32 +191,26 @@
             fi
         fi
       '';
+      
       antidote = {
         enable = true;
         useFriendlyNames = true;
         plugins = [
           "getantidote/use-omz"
 
-          # Oh My Zsh plugins (no duplicates)
-          "ohmyzsh/ohmyzsh path:plugins/ansible"
-          "ohmyzsh/ohmyzsh path:plugins/aws"
-          "ohmyzsh/ohmyzsh path:plugins/bazel"
-          "ohmyzsh/ohmyzsh path:plugins/brew"
+          # Oh My Zsh plugins
           "ohmyzsh/ohmyzsh path:plugins/command-not-found"
           "ohmyzsh/ohmyzsh path:plugins/direnv"
           "ohmyzsh/ohmyzsh path:plugins/docker"
           "ohmyzsh/ohmyzsh path:plugins/git"
           "ohmyzsh/ohmyzsh path:plugins/fzf"
-          "ohmyzsh/ohmyzsh path:plugins/poetry"
-          "ohmyzsh/ohmyzsh path:plugins/pyenv"
-          "ohmyzsh/ohmyzsh path:plugins/python"
           "ohmyzsh/ohmyzsh path:plugins/rust"
           "ohmyzsh/ohmyzsh path:plugins/safe-paste"
           "ohmyzsh/ohmyzsh path:plugins/z"
           "ohmyzsh/ohmyzsh path:plugins/zoxide"
           "ohmyzsh/ohmyzsh path:plugins/sudo"
 
-          # Separate community plugins
+          # Community plugins
           "zsh-users/zsh-completions"
           "zsh-users/zsh-autosuggestions"
           "zsh-users/zsh-history-substring-search"
@@ -211,7 +225,15 @@
     direnv = {
       enable = true;
       enableZshIntegration = true;
+      nix-direnv.enable = true;
     };
+
+    zoxide = {
+      enable = true;
+      enableZshIntegration = true;
+      options = [ "--cmd cd" ];
+    };
+
     helix = {
       enable = true;
       settings = {
@@ -240,7 +262,14 @@
       ];
     };
   };
+
   services = {
     ssh-agent.enable = true;
+  };
+
+  # Enable XDG for desktop files
+  xdg = {
+    enable = true;
+    mimeApps.enable = true;
   };
 }
