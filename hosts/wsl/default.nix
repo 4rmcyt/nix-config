@@ -74,7 +74,6 @@
     rsync
     unzip
     zip
-    wslu
 
     coreutils
     gnugrep

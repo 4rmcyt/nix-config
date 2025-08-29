@@ -45,7 +45,6 @@ let
           modules = [
             inputs.sops-nix.darwinModules.sops
             inputs.home-manager.darwinModules.home-manager
-            inputs.mac-app-util.darwinModules.default
             inputs.nix-homebrew.darwinModules.nix-homebrew
             {
               home-manager.users.vk = {
