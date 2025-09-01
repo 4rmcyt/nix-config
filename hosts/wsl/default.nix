@@ -108,20 +108,43 @@
     libGLU
   ];
 
-   time.timeZone = "America/Edmonton";
-
-  environment.variables = {
-    CUDA_PATH = "${pkgs.cudatoolkit}";
-    CUDA_ROOT = "${pkgs.cudatoolkit}";
-    LD_LIBRARY_PATH = "/usr/lib/wsl/lib:${pkgs.cudatoolkit}/lib:${pkgs.linuxPackages.nvidia_x11}/lib";
-    EXTRA_LDFLAGS = "-L/usr/lib/wsl/lib -L${pkgs.cudatoolkit}/lib -L${pkgs.linuxPackages.nvidia_x11}/lib";
-    EXTRA_CCFLAGS = "-I${pkgs.cudatoolkit}/include";
-    NVIDIA_DRIVER_PATH = "/usr/lib/wsl/lib";
-  };
+  time.timeZone = "America/Edmonton";
 
   environment.etc."ld.so.conf.d/wsl-nvidia.conf".text = ''
     /usr/lib/wsl/lib
   '';
+
+  # Create symlinks for NVIDIA libraries in a location NixOS can manage
+  system.activationScripts.nvidia-wsl = ''
+    if [ -d "/usr/lib/wsl/lib" ]; then
+      mkdir -p /run/nvidia-wsl
+      for lib in /usr/lib/wsl/lib/libnvidia-*.so*; do
+        if [ -f "$lib" ]; then
+          ln -sf "$lib" "/run/nvidia-wsl/$(basename "$lib")"
+        fi
+      done
+      # Create the missing libnvidia-ml.so symlink (nvidia-smi needs this)
+      if [ -f "/usr/lib/wsl/lib/libnvidia-ml.so.1" ]; then
+        ln -sf "/usr/lib/wsl/lib/libnvidia-ml.so.1" "/run/nvidia-wsl/libnvidia-ml.so"
+      fi
+      echo "NVIDIA WSL libraries linked successfully"
+    fi
+  '';
+
+  # Add WSL NVIDIA library path to system library path
+  environment.sessionVariables = {
+    LD_LIBRARY_PATH = "/usr/lib/wsl/lib:/run/nvidia-wsl:\${LD_LIBRARY_PATH}";
+  };
+
+  environment.variables = {
+    CUDA_PATH = "${pkgs.cudatoolkit}";
+    CUDA_ROOT = "${pkgs.cudatoolkit}";
+    # Include the runtime NVIDIA library path
+    LD_LIBRARY_PATH = "/usr/lib/wsl/lib:/run/nvidia-wsl:${pkgs.cudatoolkit}/lib:${pkgs.linuxPackages.nvidia_x11}/lib";
+    EXTRA_LDFLAGS = "-L/usr/lib/wsl/lib -L/run/nvidia-wsl -L${pkgs.cudatoolkit}/lib -L${pkgs.linuxPackages.nvidia_x11}/lib";
+    EXTRA_CCFLAGS = "-I${pkgs.cudatoolkit}/include";
+    NVIDIA_DRIVER_PATH = "/usr/lib/wsl/lib";
+  };
 
   networking = {
     hostName = "nixos-wsl";
