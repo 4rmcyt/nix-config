@@ -93,7 +93,6 @@
           };
           volumes = [
             "/data/media:/media"
-            "/data/media/transcode-cache:/temp"
             "/var/lib/tdarr/configs:/app/configs"
             "/var/lib/tdarr/logs:/app/logs"
             "/var/lib/tdarr/data/server:/app/server"
@@ -115,7 +114,8 @@
   };
 
   systemd.tmpfiles.rules = [
-    "d /data/media/transcode-cache 775 podman media -"
+    "d /var/lib/tdarr/data/cache 775 podman podman -"
+    "d /var/lib/tdarr/data/server 775 podman podman -"
     "d /var/lib/tdarr/logs 775 podman podman -"
     "d /var/lib/tdarr/configs 775 podman podman -"
   ];
