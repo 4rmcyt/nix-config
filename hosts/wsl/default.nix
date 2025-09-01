@@ -114,9 +114,8 @@
     /usr/lib/wsl/lib
   '';
   environment.sessionVariables = {
-    LD_LIBRARY_PATH = "/usr/lib/wsl/lib:${pkgs.cudatoolkit}/lib:${pkgs.linuxPackages.nvidia_x11}/lib:\${LD_LIBRARY_PATH}";
+    LD_LIBRARY_PATH = "/usr/lib/wsl/lib";
   };
-
   environment.variables = {
     CUDA_PATH = "${pkgs.cudatoolkit}";
     CUDA_ROOT = "${pkgs.cudatoolkit}";
