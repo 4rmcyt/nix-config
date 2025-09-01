@@ -48,7 +48,10 @@
   system.stateVersion = "25.05";
 
   # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    cudaSupport = true;
+  };
 
   # NVIDIA CUDA Support for WSL
   hardware.nvidia = {

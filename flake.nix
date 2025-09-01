@@ -22,6 +22,11 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # nixpkgs-cuda = {
+    #   url = "github:NixOS/nixpkgs/nixos-unstable";
+    #   config.cudaSupport = true;
+    #   config.allowUnfree = true;
+    # };
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
