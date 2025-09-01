@@ -72,6 +72,25 @@
             TZ = "America/Edmonton";
           };
         };
+        
+        tdarr-server = {
+          image = "ghcr.io/haveagitgat/tdarr:latest";
+          autoStart = true;
+          ports = [ "127.0.0.1:8265:8265/tcp" "127.0.0.1:8266:8266/tcp" ];
+          volumes = [
+            "/data/media:/media"
+            "/data/media/transcode-cache:/temp"
+            "/var/lib/tdarr/configs:/app/configs"
+            "/var/lib/tdarr/logs:/app/logs"
+          ];
+          environment = {
+            "serverIP" = "0.0.0.0";
+            "serverPort" = "8266";
+            "webUIPort" = "8265";
+            "internalNode" = "true";
+            "nodeName" = "homeserver-internal-node";
+          };
+        };
 
         tdarr-node = {
           image = "ghcr.io/haveagitgat/tdarr_node:latest";
