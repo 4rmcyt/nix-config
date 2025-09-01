@@ -68,7 +68,6 @@
     enable32Bit = true;
   };
 
-  # Nix Configuration
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
@@ -88,7 +87,6 @@
     };
   };
 
-  # Essential packages for WSL
   environment.systemPackages = with pkgs; [
     git
     vim
@@ -97,7 +95,6 @@
     rsync
     unzip
     zip
-
     coreutils
     gnugrep
     gawk
@@ -105,8 +102,6 @@
     findutils
     util-linux
     mc
-
-    # CUDA packages
     cudatoolkit
     linuxPackages.nvidia_x11
     libGL
@@ -115,7 +110,6 @@
 
    time.timeZone = "America/Edmonton";
 
-  # CUDA Environment Variables
   environment.variables = {
     CUDA_PATH = "${pkgs.cudatoolkit}";
     CUDA_ROOT = "${pkgs.cudatoolkit}";
