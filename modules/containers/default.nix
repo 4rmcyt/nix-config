@@ -74,7 +74,7 @@
         };
 
         tdarr-server = {
-          image = "ghcr.io/haveagitgat/tdarr:latest";
+          image = "ghcr.io/haveagitgat/tdarr:2.46.01"; # Use specific version
           autoStart = true;
           ports = [
             "127.0.0.1:8265:8265/tcp"
@@ -95,7 +95,7 @@
         };
 
         tdarr-node = {
-          image = "ghcr.io/haveagitgat/tdarr_node:latest";
+          image = "ghcr.io/haveagitgat/tdarr_node:2.46.01"; # Use matching version
           autoStart = true;
           volumes = [
             "/data/media:/media"
