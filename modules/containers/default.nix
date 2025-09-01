@@ -72,11 +72,14 @@
             TZ = "America/Edmonton";
           };
         };
-        
+
         tdarr-server = {
           image = "ghcr.io/haveagitgat/tdarr:latest";
           autoStart = true;
-          ports = [ "127.0.0.1:8265:8265/tcp" "127.0.0.1:8266:8266/tcp" ];
+          ports = [
+            "127.0.0.1:8265:8265/tcp"
+            "127.0.0.1:8266:8266/tcp"
+          ];
           volumes = [
             "/data/media:/media"
             "/data/media/transcode-cache:/temp"
@@ -87,8 +90,7 @@
             "serverIP" = "0.0.0.0";
             "serverPort" = "8266";
             "webUIPort" = "8265";
-            "internalNode" = "true";
-            "nodeName" = "homeserver-internal-node";
+            "internalNode" = "false"; # Disable internal node
           };
         };
 
@@ -103,6 +105,7 @@
           ];
           extraOptions = [
             "--device=/dev/dri:/dev/dri"
+            "--network=host" # Use host networking
           ];
           environment = {
             "nodeName" = "homeserver-node";
