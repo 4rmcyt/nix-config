@@ -75,8 +75,8 @@
         tdarr = {
          image = "ghcr.io/haveagitgat/tdarr";
          ports = [
-          "4213:8265"
-          "4214:8266"
+          "127.0.0.1:8265:8265"
+          "127.0.0.1:8266:8266"
         ];
         autoStart = true;
         environment = {
