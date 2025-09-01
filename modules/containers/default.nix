@@ -73,36 +73,36 @@
           };
         };
         tdarr = {
-         image = "ghcr.io/haveagitgat/tdarr";
-         ports = [
-          "127.0.0.1:8265:8265"
-          "127.0.0.1:8266:8266"
-        ];
-        autoStart = true;
-        environment = {
-          PUID = "1000";
-          PGID = "100";
-          serverIP = "0.0.0.0";
-          serverPort = "8266";
-          webUIPort = "8265";
-          internalNode = "true";
-          inContainer = "true";
-          ffmpegVersion = "7";
-          nodeName = "drumknott";
-          TZ = "America/Edmonton";
+          image = "ghcr.io/haveagitgat/tdarr:latest";
+          ports = [
+            "127.0.0.1:8265:8265"
+            "127.0.0.1:8266:8266"
+          ];
+          autoStart = true;
+          environment = {
+            PUID = "1000";
+            PGID = "100";
+            serverIP = "0.0.0.0";
+            serverPort = "8266";
+            webUIPort = "8265";
+            internalNode = "true";
+            inContainer = "true";
+            ffmpegVersion = "7";
+            nodeName = "drumknott";
+            TZ = "America/Edmonton";
+          };
+          volumes = [
+            "/data/media:/media"
+            "/data/media/transcode-cache:/temp"
+            "/var/lib/tdarr/configs:/app/configs"
+            "/var/lib/tdarr/logs:/app/logs"
+            "/var/lib/tdarr/data/server:/app/server"
+            "/var/lib/tdarr/data/cache:/temp"
+          ];
+          extraOptions = [
+            "--device=/dev/dri:/dev/dri"
+          ];
         };
-        volumes = [
-          "/data/media:/media"
-          "/data/media/transcode-cache:/temp"
-          "/var/lib/tdarr/configs:/app/configs"
-          "/var/lib/tdarr/logs:/app/logs"
-          "/var/lib/tdarr/data/server:/app/server"
-          "/var/lib/tdarr/data/cache:/temp"
-        ];
-        extraOptions = [
-          "--device=/dev/dri:/dev/dri"
-        ];
-       };
         nextdns-exporter = {
           image = "ghcr.io/raylas/nextdns-exporter";
           autoStart = true;
