@@ -9,9 +9,9 @@ pkgs.mkShell {
   buildInputs = with pkgs; [
     # CUDA development tools
     cudatoolkit
-    cuda_cccl
-    cuda_cudart
-    cuda_nvcc
+    cudaPackages.cuda_cccl
+    cudaPackages.cuda_cudart
+    cudaPackages.cuda_nvcc
     
     # Development tools
     gcc
@@ -25,9 +25,9 @@ pkgs.mkShell {
     python3Packages.torch-bin  
     python3Packages.opencv4 
     
-    # Other useful tools
-    nsight-compute
-    nvidia-driver
+    # Graphics libraries
+    libGL
+    libGLU
   ];
 
   shellHook = ''
@@ -35,7 +35,7 @@ pkgs.mkShell {
     export LD_LIBRARY_PATH="/usr/lib/wsl/lib:${pkgs.cudatoolkit}/lib:$LD_LIBRARY_PATH"
     echo "CUDA development environment loaded"
     echo "CUDA Path: $CUDA_PATH"
-    echo "NVIDIA Driver: $(nvidia-smi --query-gpu=driver_version --format=csv,noheader,nounits)"
+    echo "NVIDIA Driver: $(nvidia-smi --query-gpu=driver_version --format=csv,noheader,nounits 2>/dev/null || echo 'Not available')"
     nvcc --version
   '';
 }
