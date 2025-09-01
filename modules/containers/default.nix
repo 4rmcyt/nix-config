@@ -72,48 +72,37 @@
             TZ = "America/Edmonton";
           };
         };
-
-        tdarr-server = {
-          image = "ghcr.io/haveagitgat/tdarr:2.46.01"; # Use specific version
-          autoStart = true;
-          ports = [
-            "127.0.0.1:8265:8265/tcp"
-            "127.0.0.1:8266:8266/tcp"
-          ];
-          volumes = [
-            "/data/media:/media"
-            "/data/media/transcode-cache:/temp"
-            "/var/lib/tdarr/configs:/app/configs"
-            "/var/lib/tdarr/logs:/app/logs"
-          ];
-          environment = {
-            "serverIP" = "0.0.0.0";
-            "serverPort" = "8266";
-            "webUIPort" = "8265";
-            "internalNode" = "false"; # Disable internal node
-          };
+        tdarr = {
+         image = "ghcr.io/haveagitgat/tdarr";
+         ports = [
+          "4213:8265"
+          "4214:8266"
+        ];
+        autoStart = true;
+        environment = {
+          PUID = "1000";
+          PGID = "100";
+          serverIP = "0.0.0.0";
+          serverPort = "8266";
+          webUIPort = "8265";
+          internalNode = "true";
+          inContainer = "true";
+          ffmpegVersion = "7";
+          nodeName = "drumknott";
+          TZ = "America/Edmonton";
         };
-
-        tdarr-node = {
-          image = "ghcr.io/haveagitgat/tdarr_node:2.46.01"; # Use matching version
-          autoStart = true;
-          volumes = [
-            "/data/media:/media"
-            "/data/media/transcode-cache:/temp"
-            "/var/lib/tdarr/configs:/app/configs"
-            "/var/lib/tdarr/logs:/app/logs"
-          ];
-          extraOptions = [
-            "--device=/dev/dri:/dev/dri"
-            "--network=host" # Use host networking
-          ];
-          environment = {
-            "nodeName" = "homeserver-node";
-            "serverIP" = "127.0.0.1";
-            "serverPort" = "8266";
-          };
-        };
-
+        volumes = [
+          "/data/media:/media"
+          "/data/media/transcode-cache:/temp"
+          "/var/lib/tdarr/configs:/app/configs"
+          "/var/lib/tdarr/logs:/app/logs"
+          "/var/lib/tdarr/data/server:/app/server"
+          "/var/lib/tdarr/data/cache:/temp"
+        ];
+        extraOptions = [
+          "--device=/dev/dri:/dev/dri"
+        ];
+       }
         nextdns-exporter = {
           image = "ghcr.io/raylas/nextdns-exporter";
           autoStart = true;
