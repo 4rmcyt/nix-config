@@ -116,9 +116,9 @@
   };
 
   systemd.tmpfiles.rules = [
-    "d /var/lib/tdarr/data/cache 775 podman users -"
-    "d /var/lib/tdarr/data/server 775 podman users -"
-    "d /var/lib/tdarr/logs 775 podman users -"
-    "d /var/lib/tdarr/configs 775 podman users -"
+    "d /var/lib/tdarr/data/cache 775 root media -"
+    "d /var/lib/tdarr/data/server 775 root media -"
+    "d /var/lib/tdarr/logs 775 root media -"
+    "d /var/lib/tdarr/configs 775 root media -"
   ];
 }
