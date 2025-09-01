@@ -76,9 +76,9 @@
         tdarr = {
           image = "ghcr.io/haveagitgat/tdarr:latest";
           ports = [
-            "127.0.0.1:8265:8265"
-            "127.0.0.1:8266:8266"
-            "127.0.0.1:8267:8267"
+            "8265:8265"
+            "8266:8266"
+            "8267:8267"
           ];
           autoStart = true;
           environment = {
@@ -90,7 +90,7 @@
             internalNode = "true";
             inContainer = "true";
             ffmpegVersion = "7";
-            nodeName = "drumknott";
+            nodeName = "homeserver";
             TZ = "America/Edmonton";
           };
           volumes = [
