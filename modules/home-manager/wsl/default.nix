@@ -230,8 +230,6 @@
       options = [ "--cmd cd" ];
     };
 
-    nix-ld.enable = true;
-
     helix = {
       enable = true;
       settings = {
