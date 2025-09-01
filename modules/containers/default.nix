@@ -82,7 +82,7 @@
           ];
           autoStart = true;
           environment = {
-            serverIP = "127.0.0.1";
+            serverIP = "0.0.0.0";
             serverPort = "8266";
             webUIPort = "8265";
             internalNode = "true";
