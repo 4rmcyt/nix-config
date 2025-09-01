@@ -46,6 +46,7 @@
       8191 # FlareSolverr
       8265 # Tdarr Web UI
       8266 # Tdarr Server
+      8267 # Tdarr Node
     ];
     allowedUDPPorts = [
       # Podman
@@ -77,6 +78,7 @@
           ports = [
             "127.0.0.1:8265:8265"
             "127.0.0.1:8266:8266"
+            "127.0.0.1:8267:8267"
           ];
           autoStart = true;
           environment = {
@@ -114,9 +116,9 @@
   };
 
   systemd.tmpfiles.rules = [
-    "d /var/lib/tdarr/data/cache 775 podman podman -"
-    "d /var/lib/tdarr/data/server 775 podman podman -"
-    "d /var/lib/tdarr/logs 775 podman podman -"
-    "d /var/lib/tdarr/configs 775 podman podman -"
+    "d /var/lib/tdarr/data/cache 775 podman users -"
+    "d /var/lib/tdarr/data/server 775 podman users -"
+    "d /var/lib/tdarr/logs 775 podman users -"
+    "d /var/lib/tdarr/configs 775 podman users -"
   ];
 }
