@@ -12,5 +12,5 @@ pkgs.mkShell {
     pkgs.shfmt
     pkgs.cachix
     pkgs.nixos-rebuild-ng
-  ];
+  ]; 
 }
