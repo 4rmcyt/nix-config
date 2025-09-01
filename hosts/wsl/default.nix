@@ -106,6 +106,7 @@
     linuxPackages.nvidia_x11
     libGL
     libGLU
+    nixos-rebuild
   ];
 
   time.timeZone = "America/Edmonton";
