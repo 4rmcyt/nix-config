@@ -113,10 +113,15 @@
   environment.variables = {
     CUDA_PATH = "${pkgs.cudatoolkit}";
     CUDA_ROOT = "${pkgs.cudatoolkit}";
-    LD_LIBRARY_PATH = "/usr/lib/wsl/lib:${pkgs.linuxPackages.nvidia_x11}/lib";
-    EXTRA_LDFLAGS = "-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib";
-    EXTRA_CCFLAGS = "-I/usr/include";
+    LD_LIBRARY_PATH = "/usr/lib/wsl/lib:${pkgs.cudatoolkit}/lib:${pkgs.linuxPackages.nvidia_x11}/lib";
+    EXTRA_LDFLAGS = "-L/usr/lib/wsl/lib -L${pkgs.cudatoolkit}/lib -L${pkgs.linuxPackages.nvidia_x11}/lib";
+    EXTRA_CCFLAGS = "-I${pkgs.cudatoolkit}/include";
+    NVIDIA_DRIVER_PATH = "/usr/lib/wsl/lib";
   };
+
+  environment.etc."ld.so.conf.d/wsl-nvidia.conf".text = ''
+    /usr/lib/wsl/lib
+  '';
 
   networking = {
     hostName = "nixos-wsl";
