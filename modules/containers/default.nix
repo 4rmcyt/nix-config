@@ -84,7 +84,7 @@
           environment = {
             PUID = "1000";
             PGID = "100";
-            serverIP = "0.0.0.0";
+            serverIP = "127.0.0.1";
             serverPort = "8266";
             webUIPort = "8265";
             internalNode = "true";
