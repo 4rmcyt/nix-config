@@ -103,6 +103,7 @@
     util-linux
     mc
     cudatoolkit
+    cudaPackages.visual_studio_integration
     linuxPackages.nvidia_x11
     libGL
     libGLU
