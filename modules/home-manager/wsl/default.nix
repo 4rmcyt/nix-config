@@ -14,7 +14,7 @@
       neovim
       vim
       helix
-      
+
       # Dev tools
       direnv
       git
@@ -31,7 +31,7 @@
       shfmt
       rustfmt
       cachix
-      
+
       # User Utils
       jq
       nix-index
@@ -56,20 +56,20 @@
       nvd
       pyenv
       sudo
-      
+
       # Security & Crypto
       gnupg
       pinentry-tty
-      
+
       # GUI applications - these will get Start Menu shortcuts
       ghostty
       obsidian
       firefox
       vscode
-      
+
       # WSL-specific tools
       wslu
-      
+
       # System & Monitoring Tools
       btop
       htop
@@ -79,18 +79,18 @@
       tuptime
       home-manager
       mc
-      
+
       # Add these for fun terminal stuff
       fortune
       cowsay
-      
+
       # Fonts & Themes
       zsh-powerlevel10k
       nerd-fonts.hack
       meslo-lgs-nf
     ];
   };
-  
+
   programs = {
     git = {
       enable = true;
@@ -135,14 +135,14 @@
       enableCompletion = true;
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
-      
+
       shellAliases = {
         ll = "ls -la";
         ".." = "cd ..";
         "..." = "cd ../..";
         rebuild = "sudo nixos-rebuild switch --flake .#wsl";
       };
-      
+
       sessionVariables = {
         EDITOR = "nvim";
         ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi";
@@ -152,7 +152,7 @@
         LESSCHARSET = "utf-8";
         PAGER = "less";
       };
-      
+
       initContent = ''
         autoload -Uz compinit && compinit
 
@@ -191,7 +191,7 @@
             fi
         fi
       '';
-      
+
       antidote = {
         enable = true;
         useFriendlyNames = true;
