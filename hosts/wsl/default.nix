@@ -62,10 +62,7 @@
     nvidiaSettings = false;
     package = pkgs.linuxPackages.nvidia_x11;
   };
-
   services.xserver.videoDrivers = [ "nvidia" ];
-
-  # Enable CUDA
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
