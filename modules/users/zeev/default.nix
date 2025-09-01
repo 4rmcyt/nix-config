@@ -44,6 +44,7 @@ in
           "docker"
           "media"
           "samba"
+          "video"
         ];
         hashedPasswordFile = config.sops.secrets.zeev_password.path;
         openssh.authorizedKeys.keys = server-keys;

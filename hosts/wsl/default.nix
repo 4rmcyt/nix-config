@@ -39,12 +39,34 @@
     };
   };
 
+  # Allow loading NVIDIA driver
+  boot.kernelModules = [ "nvidia" ];
+  boot.extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
+
   home-manager.backupFileExtension = "backup";
   # System Configuration
   system.stateVersion = "25.05";
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+
+  # NVIDIA CUDA Support for WSL
+  hardware.nvidia = {
+    modesetting.enable = true;
+    powerManagement.enable = false;
+    powerManagement.finegrained = false;
+    open = false;
+    nvidiaSettings = false;
+    package = pkgs.linuxPackages.nvidia_x11;
+  };
+
+  services.xserver.videoDrivers = [ "nvidia" ];
+
+  # Enable CUDA
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
 
   # Nix Configuration
   nix = {
@@ -82,7 +104,25 @@
     findutils
     util-linux
     mc
+
+    # CUDA packages
+    cudatoolkit
+    cudnn
+    linuxPackages.nvidia_x11
+    libGL
+    libGLU
   ];
+
+   time.timeZone = "America/Edmonton";
+
+  # CUDA Environment Variables
+  environment.variables = {
+    CUDA_PATH = "${pkgs.cudatoolkit}";
+    CUDA_ROOT = "${pkgs.cudatoolkit}";
+    LD_LIBRARY_PATH = "/usr/lib/wsl/lib:${pkgs.linuxPackages.nvidia_x11}/lib";
+    EXTRA_LDFLAGS = "-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib";
+    EXTRA_CCFLAGS = "-I/usr/include";
+  };
 
   networking = {
     hostName = "nixos-wsl";
