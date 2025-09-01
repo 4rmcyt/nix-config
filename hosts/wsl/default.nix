@@ -107,7 +107,6 @@
 
     # CUDA packages
     cudatoolkit
-    cudnn
     linuxPackages.nvidia_x11
     libGL
     libGLU
