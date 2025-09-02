@@ -48,7 +48,7 @@
   boot.zfs = {
     devNodes = "/dev/disk/by-id/";
     forceImportAll = true;
-    package = pkg.zfs_cachyos;
+    package = pkgs.zfs_cachyos;
   };
 
   # Kernel modules to load at boot.
