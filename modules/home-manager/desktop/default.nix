@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   inputs,
   ...
@@ -16,12 +15,12 @@
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
-    
+
     history = {
       size = 10000;
       path = "${config.xdg.dataHome}/zsh/history";
     };
-    
+
     shellAliases = {
       ll = "ls -l";
       la = "ls -la";
@@ -50,26 +49,26 @@
       gd = "git diff";
       tb = "nc termbin.com 9999";
     };
-    
+
     initExtra = ''
       # Custom prompt
       autoload -U colors && colors
       PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
-      
+
       # Auto cd
       setopt autocd
-      
+
       # Better history
       setopt histignorealldups sharehistory
-      
+
       # Use vim bindings
       bindkey -v
-      
+
       # Better completion
       zstyle ':completion:*' menu select
       zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
       zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
-      
+
       # Load environment if it exists
       if [ -f ~/.env ]; then
         source ~/.env
@@ -84,11 +83,11 @@
     settings = {
       # Dual 4K monitor setup
       monitor = [
-        "DP-1,3840x2160@60,0x0,1.5"      # Left monitor at 1.5 scale
-        "DP-2,3840x2160@60,2560x0,1.5"   # Right monitor at 1.5 scale
-        ",preferred,auto,auto"            # Fallback for other monitors
+        "DP-1,3840x2160@60,0x0,1.5" # Left monitor at 1.5 scale
+        "DP-2,3840x2160@60,2560x0,1.5" # Right monitor at 1.5 scale
+        ",preferred,auto,auto" # Fallback for other monitors
       ];
-      
+
       # Environment variables for NVIDIA
       env = [
         "LIBVA_DRIVER_NAME,nvidia"
@@ -97,7 +96,7 @@
         "__GLX_VENDOR_LIBRARY_NAME,nvidia"
         "WLR_NO_HARDWARE_CURSORS,1"
       ];
-      
+
       exec-once = [
         "waybar"
         "swww init"
@@ -105,7 +104,7 @@
         "nm-applet --indicator"
         "blueman-applet"
       ];
-      
+
       general = {
         gaps_in = 5;
         gaps_out = 20;
@@ -115,7 +114,7 @@
         layout = "dwindle";
         allow_tearing = false;
       };
-      
+
       decoration = {
         rounding = 10;
         blur = {
@@ -129,7 +128,7 @@
         shadow_render_power = 3;
         "col.shadow" = "rgba(1a1a1aee)";
       };
-      
+
       animations = {
         enabled = true;
         bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
@@ -142,13 +141,13 @@
           "workspaces, 1, 6, default"
         ];
       };
-      
+
       input = {
         kb_layout = "us";
         follow_mouse = 1;
         sensitivity = 0;
       };
-      
+
       # Workspaces for dual monitor setup
       workspace = [
         "1, monitor:DP-1"
@@ -162,18 +161,18 @@
         "9, monitor:DP-2"
         "10, monitor:DP-2"
       ];
-      
+
       bind = [
         "SUPER, Q, exec, kitty"
         "SUPER, C, killactive,"
         "SUPER, M, exit,"
-        "SUPER, E, exec, thunar"  # Changed from dolphin to thunar (GTK file manager)
+        "SUPER, E, exec, thunar" # Changed from dolphin to thunar (GTK file manager)
         "SUPER, V, togglefloating,"
         "SUPER, R, exec, wofi --show drun"
         "SUPER, P, pseudo,"
         "SUPER, J, togglesplit,"
         "SUPER, F, fullscreen,"
-        
+
         # Move focus
         "SUPER, left, movefocus, l"
         "SUPER, right, movefocus, r"
@@ -183,7 +182,7 @@
         "SUPER, L, movefocus, r"
         "SUPER, K, movefocus, u"
         "SUPER, J, movefocus, d"
-        
+
         # Move windows
         "SUPER SHIFT, left, movewindow, l"
         "SUPER SHIFT, right, movewindow, r"
@@ -193,7 +192,7 @@
         "SUPER SHIFT, L, movewindow, r"
         "SUPER SHIFT, K, movewindow, u"
         "SUPER SHIFT, J, movewindow, d"
-        
+
         # Switch workspaces
         "SUPER, 1, workspace, 1"
         "SUPER, 2, workspace, 2"
@@ -205,7 +204,7 @@
         "SUPER, 8, workspace, 8"
         "SUPER, 9, workspace, 9"
         "SUPER, 0, workspace, 10"
-        
+
         # Move active window to workspace
         "SUPER SHIFT, 1, movetoworkspace, 1"
         "SUPER SHIFT, 2, movetoworkspace, 2"
@@ -217,15 +216,15 @@
         "SUPER SHIFT, 8, movetoworkspace, 8"
         "SUPER SHIFT, 9, movetoworkspace, 9"
         "SUPER SHIFT, 0, movetoworkspace, 10"
-        
+
         # Move window to monitor
         "SUPER CTRL, left, movecurrentworkspacetomonitor, l"
         "SUPER CTRL, right, movecurrentworkspacetomonitor, r"
-        
+
         # Screenshot
         ", Print, exec, grim -g \"$(slurp)\" - | wl-copy"
         "SHIFT, Print, exec, grim - | wl-copy"
-        
+
         # Media keys
         ", XF86AudioRaiseVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ +5%"
         ", XF86AudioLowerVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -5%"
@@ -235,12 +234,12 @@
         ", XF86AudioNext, exec, playerctl next"
         ", XF86AudioPrev, exec, playerctl previous"
       ];
-      
+
       bindm = [
         "SUPER, mouse:272, movewindow"
         "SUPER, mouse:273, resizewindow"
       ];
-      
+
       # Window rules for gaming
       windowrulev2 = [
         "immediate, class:^(steam_app).*"
@@ -296,12 +295,26 @@
         position = "top";
         height = 34;
         spacing = 4;
-        output = [ "DP-1" "DP-2" ];
-        
-        modules-left = [ "hyprland/workspaces" "hyprland/mode" ];
+        output = [
+          "DP-1"
+          "DP-2"
+        ];
+
+        modules-left = [
+          "hyprland/workspaces"
+          "hyprland/mode"
+        ];
         modules-center = [ "hyprland/window" ];
-        modules-right = [ "pulseaudio" "network" "cpu" "memory" "temperature" "clock" "tray" ];
-        
+        modules-right = [
+          "pulseaudio"
+          "network"
+          "cpu"
+          "memory"
+          "temperature"
+          "clock"
+          "tray"
+        ];
+
         "hyprland/workspaces" = {
           disable-scroll = true;
           all-outputs = false;
@@ -319,32 +332,36 @@
             "10" = "10";
           };
         };
-        
+
         "hyprland/window" = {
           max-length = 50;
         };
-        
+
         clock = {
           tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
           format-alt = "{:%Y-%m-%d}";
           format = "{:%H:%M}";
         };
-        
+
         cpu = {
           format = "{usage}% ";
           tooltip = false;
         };
-        
+
         memory = {
           format = "{}% ";
         };
-        
+
         temperature = {
           critical-threshold = 80;
           format = "{temperatureC}°C {icon}";
-          format-icons = ["" "" ""];
+          format-icons = [
+            ""
+            ""
+            ""
+          ];
         };
-        
+
         network = {
           format-wifi = "{essid} ({signalStrength}%) ";
           format-ethernet = "{ipaddr}/{cidr} ";
@@ -352,7 +369,7 @@
           format-linked = "{ifname} (No IP) ";
           format-disconnected = "Disconnected ⚠";
         };
-        
+
         pulseaudio = {
           format = "{volume}% {icon} {format_source}";
           format-bluetooth = "{volume}% {icon} {format_source}";
@@ -367,7 +384,11 @@
             phone = "";
             portable = "";
             car = "";
-            default = ["" "" ""];
+            default = [
+              ""
+              ""
+              ""
+            ];
           };
           on-click = "pavucontrol";
         };
@@ -382,14 +403,14 @@
     lutris
     heroic
     discord
-    
+
     # Development
     vscode
-    
+
     # Media
     vlc
     spotify
-    
+
     # Utilities
     htop
     neofetch
@@ -397,14 +418,14 @@
     unzip
     wget
     curl
-    
+
     # GUI applications
     firefox
-    thunar  # Lightweight file manager instead of dolphin
-    
+    thunar # Lightweight file manager instead of dolphin
+
     # System monitoring
     nvtopPackages.nvidia
-    
+
     # Network
     networkmanagerapplet
     blueman

@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   pkgs,
   inputs,
@@ -24,27 +23,30 @@
   };
 
   # Gaming packages
-  environment.systemPackages = with pkgs; [
-    # Gaming utilities
-    lutris
-    heroic
-    bottles
-    wine
-    winetricks
-    
-    # Performance tools
-    inputs.chaotic.packages.${pkgs.system}.gamescope or gamescope
-    mangohud
-    gamemode
-    
-    # Controllers
-    xboxdrv
-    
-    # From nix-gaming (if available)
-  ] ++ lib.optionals (inputs ? nix-gaming) [
-    inputs.nix-gaming.packages.${pkgs.system}.wine-ge
-    inputs.nix-gaming.packages.${pkgs.system}.proton-ge
-  ];
+  environment.systemPackages =
+    with pkgs;
+    [
+      # Gaming utilities
+      lutris
+      heroic
+      bottles
+      wine
+      winetricks
+
+      # Performance tools
+      inputs.chaotic.packages.${pkgs.system}.gamescope or gamescope
+      mangohud
+      gamemode
+
+      # Controllers
+      xboxdrv
+
+      # From nix-gaming (if available)
+    ]
+    ++ lib.optionals (inputs ? nix-gaming) [
+      inputs.nix-gaming.packages.${pkgs.system}.wine-ge
+      inputs.nix-gaming.packages.${pkgs.system}.proton-ge
+    ];
 
   # Enable 32-bit support for games
   hardware.graphics.enable32Bit = true;
@@ -55,12 +57,12 @@
     renice=10
     ioprio=7
     inhibit_screensaver=1
-    
+
     [gpu]
     apply_gpu_optimisations=accept-responsibility
     gpu_device=0
     nvidia_performance_level=high
-    
+
     [custom]
     start=${pkgs.libnotify}/bin/notify-send "GameMode started"
     end=${pkgs.libnotify}/bin/notify-send "GameMode ended"
