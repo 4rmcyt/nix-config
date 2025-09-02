@@ -9,7 +9,6 @@
     ../../modules/hyprland
     ../../modules/gaming
     ../../modules/users/zeev
-    inputs.chaotic.nixosModules.default
   ];
 
   boot = {

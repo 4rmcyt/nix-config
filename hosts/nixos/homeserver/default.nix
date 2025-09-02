@@ -9,7 +9,6 @@
   # =================================================================
   imports = [
     ./hardware-configuration.nix
-    inputs.chaotic.nixosModules.default
     ../../../modules/networking
     ../../../modules/services
     ../../../modules/base
