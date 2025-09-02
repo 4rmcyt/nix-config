@@ -17,6 +17,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
@@ -148,7 +149,7 @@
                   };
                 }
               ];
-              
+
               wsl = mkNixos "wsl" "x86_64-linux" [
                 ./hosts/wsl
                 ./modules/users/zeev
