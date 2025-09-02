@@ -130,8 +130,8 @@
     lm_sensors
     git-crypt
     prettier
-    inputs.chaotic.packages.${pkgs.system}.helix_git
-    inputs.chaotic.packages.${pkgs.system}.nyxUtils
+    helix_git
+    nyxUtils
   ];
   # =================================================================
   # 6. System Services

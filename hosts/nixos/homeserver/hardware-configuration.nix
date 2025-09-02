@@ -26,7 +26,7 @@
   boot.loader.timeout = 3;
 
   # Define filesystem support and ZFS settings for the initial ramdisk (initrd).
-  boot.kernelPackages = pkgs.linuxPackages_xanmod_stable;
+  boot.kernelPackages = pkgs.linuxPackages_cachyos;
   boot.supportedFilesystems = [
     "vfat"
     "zfs"
@@ -48,7 +48,7 @@
   boot.zfs = {
     devNodes = "/dev/disk/by-id/";
     forceImportAll = true;
-    package = inputs.chaotic.packages.${pkgs.system}.zfs_cachyos;
+    package = pkg.zfs_cachyos;
   };
 
   # Kernel modules to load at boot.
