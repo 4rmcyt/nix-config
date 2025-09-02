@@ -67,6 +67,7 @@
     tailscale
     helix_git
     telegram-desktop_git
+    jellyfin-media-player
   ];
 
   # AMD CPU optimizations
