@@ -215,21 +215,6 @@
               ];
             };
           }
-          {
-            "Calibre-Web" = {
-              href = "https://calibre-web.labhome.work";
-              description = "Ebook Management";
-              icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/calibre-web.svg";
-              widgets = [
-                {
-                  type = "calibreweb";
-                  url = "http://localhost:8083";
-                  username = "admin";
-                  password = "Septuagint@1990";
-                }
-              ];
-            };
-          }
         ];
       }
       {
