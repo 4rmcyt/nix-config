@@ -167,7 +167,7 @@
         "SUPER, Q, exec, kitty"
         "SUPER, C, killactive,"
         "SUPER, M, exit,"
-        "SUPER, E, exec, dolphin"
+        "SUPER, E, exec, thunar"  # Changed from dolphin to thunar (GTK file manager)
         "SUPER, V, togglefloating,"
         "SUPER, R, exec, wofi --show drun"
         "SUPER, P, pseudo,"
@@ -375,7 +375,7 @@
     };
   };
 
-  # Gaming applications and general packages
+  # Gaming applications and general packages (no duplicates)
   home.packages = with pkgs; [
     # Gaming
     steam
@@ -385,7 +385,6 @@
     
     # Development
     vscode
-    git
     
     # Media
     vlc
@@ -401,7 +400,7 @@
     
     # GUI applications
     firefox
-    dolphin
+    thunar  # Lightweight file manager instead of dolphin
     
     # System monitoring
     nvtopPackages.nvidia
@@ -411,7 +410,7 @@
     blueman
   ];
 
-  # Git configuration
+  # Git configuration (removed duplicate from packages)
   programs.git = {
     enable = true;
     userName = "4rmcyt";

@@ -13,22 +13,26 @@
     ../../modules/users/zeev
   ];
 
-  # Boot configuration
+  # Boot configuration with CachyOS kernel
   boot = {
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    kernelPackages = pkgs.linuxPackages_6_12;
+    kernelPackages = pkgs.linuxPackages_cachyos;
   };
 
-  # Networking
+  # Networking with WiFi support
   networking = {
     hostName = "desktop";
     hostId = "8425e349"; # Generate with: head -c 8 /etc/machine-id
     networkmanager.enable = true;
+    wireless.enable = false; # Disabled because we use NetworkManager
     firewall.enable = true;
   };
+
+  # Tailscale
+  services.tailscale.enable = true;
 
   # Time zone and locale
   time.timeZone = "America/Edmonton";
@@ -61,6 +65,7 @@
     htop
     neofetch
     nvtopPackages.nvidia
+    tailscale
   ];
 
   # AMD CPU optimizations
