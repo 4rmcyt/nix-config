@@ -21,7 +21,6 @@
 
   chaotic = {
     mesa-git.enable = true;
-    scx.enable = true;
   };
 
   # Networking with WiFi support
@@ -35,6 +34,7 @@
 
   # Tailscale
   services.tailscale.enable = true;
+  services.scx.enable = true; 
 
   # Time zone and locale
   time.timeZone = "America/Edmonton";
