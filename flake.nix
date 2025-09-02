@@ -123,9 +123,6 @@
                 inputs.nixarr.nixosModules.default
                 inputs.authentik-nix.nixosModules.default
                 inputs.vscode-server.nixosModules.default
-                inputs.chaotic.nixosModules.nyx-cache
-                inputs.chaotic.nixosModules.nyx-overlay
-                inputs.chaotic.nixosModules.nyx-registry
                 {
                   sops.age.keyFile = "/var/lib/sops/age.key";
                   home-manager.users.zeev = {
@@ -141,9 +138,6 @@
               desktop = mkNixos "desktop" "x86_64-linux" [
                 ./hosts/desktop
                 ./modules/users/zeev
-                inputs.chaotic.nixosModules.nyx-cache
-                inputs.chaotic.nixosModules.nyx-overlay
-                inputs.chaotic.nixosModules.nyx-registry
                 {
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   home-manager.users.zeev = {
