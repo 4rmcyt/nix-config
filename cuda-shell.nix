@@ -1,10 +1,11 @@
-{ pkgs ? import <nixpkgs> { 
-  config = { 
-    allowUnfree = true; 
-    cudaSupport = true; 
-  }; 
-}}:
-
+{
+  pkgs ? import <nixpkgs> {
+    config = {
+      allowUnfree = true;
+      cudaSupport = true;
+    };
+  },
+}:
 pkgs.mkShell {
   buildInputs = with pkgs; [
     # CUDA development tools
@@ -12,19 +13,19 @@ pkgs.mkShell {
     cudaPackages.cuda_cccl
     cudaPackages.cuda_cudart
     cudaPackages.cuda_nvcc
-    
+
     # Development tools
     gcc
     cmake
     pkg-config
-    
+
     # Python with CUDA packages
     python3
     python3Packages.pip
     python3Packages.numpy
-    python3Packages.torch-bin  
-    python3Packages.opencv4 
-    
+    python3Packages.torch-bin
+    python3Packages.opencv4
+
     # Graphics libraries
     libGL
     libGLU

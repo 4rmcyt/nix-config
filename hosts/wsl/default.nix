@@ -76,7 +76,7 @@
         "flakes"
       ];
       trusted-users = [ "zeev" ];
-      download-buffer-size = 1073741824; 
+      download-buffer-size = 1073741824;
       warn-dirty = false;
       auto-optimise-store = true;
     };
