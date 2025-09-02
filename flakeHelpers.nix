@@ -25,7 +25,7 @@ let
         ]
         ++ extraModules;
       };
-    
+
     mkDarwin =
       machineHostname: system: extraModules:
       let
