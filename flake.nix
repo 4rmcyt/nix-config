@@ -133,7 +133,22 @@
                   };
                 }
               ];
-
+              
+              desktop = mkNixos "desktop" "x86_64-linux" [
+                ./hosts/desktop
+                ./modules/users/zeev
+                {
+                  sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+                  home-manager.users.zeev = {
+                    imports = [
+                      ./modules/home-manager/desktop
+                      inputs.sops-nix.homeManagerModules.sops
+                    ];
+                    sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+                  };
+                }
+              ];
+              
               wsl = mkNixos "wsl" "x86_64-linux" [
                 ./hosts/wsl
                 ./modules/users/zeev
