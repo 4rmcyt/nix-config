@@ -1,6 +1,4 @@
 {
-  config,
-  lib,
   pkgs,
   inputs,
   ...
@@ -68,7 +66,7 @@
     neofetch
     nvtopPackages.nvidia
     tailscale
-    
+
     # Chaotic Nyx packages
     inputs.chaotic.packages.${pkgs.system}.helix_git
     inputs.chaotic.packages.${pkgs.system}.nyxUtils

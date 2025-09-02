@@ -134,7 +134,7 @@
                   };
                 }
               ];
-              
+
               desktop = mkNixos "desktop" "x86_64-linux" [
                 ./hosts/desktop
                 ./modules/users/zeev
