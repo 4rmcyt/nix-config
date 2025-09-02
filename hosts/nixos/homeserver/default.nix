@@ -30,7 +30,6 @@
 
   chaotic = {
     mesa-git.enable = false; # Disable for headless server
-    scx.enable = true; # Enable sched-ext schedulers for better server performance
   };
 
   # =================================================================
@@ -138,6 +137,7 @@
   # =================================================================
   # This is the single, merged services block.
   services = {
+    scx.enable = true; 
     # --- SSH Server ---
     openssh = {
       enable = true;
