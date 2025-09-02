@@ -15,7 +15,6 @@ let
           inputs.disko.nixosModules.disko
           inputs.nix-index-database.nixosModules.nix-index
           inputs.chaotic.nixosModules.default
-          inputs.chaotic.homeManagerModules.default
           {
             home-manager = {
               useGlobalPkgs = true;
