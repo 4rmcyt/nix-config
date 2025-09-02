@@ -65,3 +65,13 @@ check-clean:
 
 copy $host: check-clean
     rsync -ax --delete --rsync-path="sudo rsync" ./ {{host}}:/etc/nixos/
+
+
+deploy-desktop:
+    ./deploy.sh desktop
+
+# ...existing code...
+
+# Test desktop configuration
+test-desktop:
+    nix build .#nixosConfigurations.desktop.config.system.build.toplevel
