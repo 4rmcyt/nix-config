@@ -14,9 +14,7 @@ let
           inputs.home-manager.nixosModules.home-manager
           inputs.disko.nixosModules.disko
           inputs.nix-index-database.nixosModules.nix-index
-          inputs.chaotic.nixosModules.nyx-cache
-          inputs.chaotic.nixosModules.nyx-overlay
-          inputs.chaotic.nixosModules.nyx-registry
+          inputs.chaotic.nixosModules.default
           inputs.chaotic.homeManagerModules.default
           {
             home-manager = {
