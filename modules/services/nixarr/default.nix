@@ -83,7 +83,7 @@ in
         "users"
         "media"
       ];
-    }
+    };
     transmission = {
       isSystemUser = true;
       extraGroups = [
