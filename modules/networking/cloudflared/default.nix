@@ -41,7 +41,6 @@
           "bazarr.example.com" = "http://localhost:6767";
           "jellyseerr.example.com" = "http://localhost:5055";
           "ollama.example.com" = "http://localhost:11434";
-          "calibre-web.example.com" = "http://localhost:8083";
           "vault.example.com" = "http://localhost:8222";
           "link.example.com" = "http://localhost:12522";
           "kuma.example.com" = "http://localhost:3001";
