@@ -48,6 +48,7 @@
   boot.zfs = {
     devNodes = "/dev/disk/by-id/";
     forceImportAll = true;
+    package = inputs.chaotic.packages.${pkgs.system}.zfs_cachyos;
   };
 
   # Kernel modules to load at boot.

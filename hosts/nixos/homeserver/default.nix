@@ -9,6 +9,7 @@
   # =================================================================
   imports = [
     ./hardware-configuration.nix
+    inputs.chaotic.nixosModules.default
     ../../../modules/networking
     ../../../modules/services
     ../../../modules/base
@@ -27,6 +28,11 @@
   };
   users.groups.git = { };
   nixpkgs.config.allowUnfree = true;
+
+  chaotic = {
+    mesa-git.enable = false; # Disable for headless server
+    scx.enable = true; # Enable sched-ext schedulers for better server performance
+  };
 
   # =================================================================
   # 2. Nix Daemon Configuration
@@ -125,6 +131,8 @@
     lm_sensors
     git-crypt
     prettier
+    inputs.chaotic.packages.${pkgs.system}.helix_git
+    inputs.chaotic.packages.${pkgs.system}.nyxUtils
   ];
   # =================================================================
   # 6. System Services
