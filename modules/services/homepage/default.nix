@@ -159,17 +159,30 @@
             };
           }
           {
-            "Tdarr" = {
-              href = "https://tdarr.labhome.work/";
-              description = "Automated Transcoding";
-              icon = "tdarr";
-              widget = {
-                type = "tdarr";
-                url = "http://localhost:8266";
-                key = "tdarrapikey"; # optional
-              };
+            "Readarr" = {
+              icon = "readarr.png";
+              href = "https://readarr.labhome.work/";
+              widgets = [
+                {
+                  type = "readarr";
+                  url = "http://localhost:8787";
+                  key = "readarrapikey"; # optional
+                }
+              ];
             };
           }
+          # {
+          #   "Tdarr" = {
+          #     href = "https://tdarr.labhome.work/";
+          #     description = "Automated Transcoding";
+          #     icon = "tdarr";
+          #     widget = {
+          #       type = "tdarr";
+          #       url = "http://localhost:8266";
+          #       key = "tdarrapikey"; # optional
+          #     };
+          #   };
+          # }
         ];
       }
       {
