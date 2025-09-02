@@ -129,6 +129,7 @@
                     imports = [
                       ./modules/home-manager/homeserver
                       inputs.sops-nix.homeManagerModules.sops
+                      inputs.chaotic.homeManagerModules.default
                     ];
                     sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   };
@@ -143,6 +144,7 @@
                   home-manager.users.zeev = {
                     imports = [
                       ./modules/home-manager/desktop
+                      inputs.chaotic.homeManagerModules.default
                       inputs.sops-nix.homeManagerModules.sops
                     ];
                     sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
