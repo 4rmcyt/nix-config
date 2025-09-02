@@ -10,6 +10,7 @@ let
     "lidarr"
     "prowlarr"
     "radarr"
+    "readarr"
     "sonarr"
     "transmission"
     "audiobookshelf"
@@ -76,6 +77,13 @@ in
         "media"
       ];
     };
+    readarr = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    }
     transmission = {
       isSystemUser = true;
       extraGroups = [
@@ -101,6 +109,7 @@ in
     radarr = { };
     sonarr = { };
     transmission = { };
+    readarr = { };
     recyclarr = { };
   };
 
@@ -113,6 +122,7 @@ in
     9696 # Prowlarr
     7878 # Radarr
     8989 # Sonarr
+    8787 # Readarr
     5055 # Jellyseerr
     9091 # Transmission web UI
     63998 # Transmission peer port
@@ -305,6 +315,7 @@ in
     radarr.enable = true;
     sonarr.enable = true;
     jellyseerr.enable = true;
+    readarr.enable = true;
     recyclarr = {
       enable = true;
       configFile = ./recyclarr.yaml;
