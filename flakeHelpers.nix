@@ -1,4 +1,3 @@
-# File: nixos-config/flakeHelpers.nix
 inputs:
 let
   helpers = {
@@ -15,25 +14,18 @@ let
           inputs.home-manager.nixosModules.home-manager
           inputs.disko.nixosModules.disko
           inputs.nix-index-database.nixosModules.nix-index
-          inputs.auto-cpufreq.nixosModules.default
-          inputs.nixos-facter-modules.nixosModules.facter
           inputs.chaotic.nixosModules.default
           {
-            facter.reportPath = ./facter.json;
-          }
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.users.zeev = {
-              imports = [
-                inputs.sops-nix.homeManagerModules.sops
-                inputs.mac-app-util.homeManagerModules.default
-              ];
-              sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              extraSpecialArgs = { inherit inputs; };
             };
           }
         ]
         ++ extraModules;
       };
+    
     mkDarwin =
       machineHostname: system: extraModules:
       let
@@ -44,18 +36,13 @@ let
             host = machineHostname;
           };
           modules = [
-            inputs.sops-nix.darwinModules.sops
             inputs.home-manager.darwinModules.home-manager
-            inputs.nix-homebrew.darwinModules.nix-homebrew
+            inputs.mac-app-util.darwinModules.default
             {
-              home-manager.users.vk = {
-                imports = [
-                  {
-                    nixpkgs.config.allowUnfree = true;
-                  }
-                  inputs.sops-nix.homeManagerModules.sops
-                ];
-                sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                extraSpecialArgs = { inherit inputs; };
               };
             }
           ]
