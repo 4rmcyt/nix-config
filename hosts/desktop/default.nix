@@ -65,11 +65,8 @@
     neofetch
     nvtopPackages.nvidia
     tailscale
-
-    # Chaotic Nyx packages
-    inputs.chaotic.packages.${pkgs.system}.helix_git
-    inputs.chaotic.packages.${pkgs.system}.nyxUtils
-    inputs.chaotic.packages.${pkgs.system}.telegram-desktop_git
+    helix_git
+    telegram-desktop_git
   ];
 
   # AMD CPU optimizations

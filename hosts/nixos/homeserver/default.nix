@@ -130,7 +130,6 @@
     git-crypt
     prettier
     helix_git
-    nyxUtils
   ];
   # =================================================================
   # 6. System Services
