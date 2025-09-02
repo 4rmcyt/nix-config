@@ -38,6 +38,7 @@ in
         "users"
         "media"
         "render"
+        "video"
       ];
     };
     jellyseerr = {
