@@ -33,7 +33,7 @@
     winetricks
     
     # Performance tools
-    gamescope
+    inputs.chaotic.packages.${pkgs.system}.gamescope or gamescope
     mangohud
     gamemode
     

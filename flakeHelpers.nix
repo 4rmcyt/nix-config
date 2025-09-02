@@ -17,6 +17,7 @@ let
           inputs.nix-index-database.nixosModules.nix-index
           inputs.auto-cpufreq.nixosModules.default
           inputs.nixos-facter-modules.nixosModules.facter
+          inputs.chaotic.nixosModules.default
           {
             facter.reportPath = ./facter.json;
           }

@@ -3,6 +3,7 @@
   lib,
   pkgs,
   modulesPath,
+  inputs,
   ...
 }:
 {
@@ -26,12 +27,13 @@
   ];
   boot.extraModulePackages = [ ];
 
-  # ZFS configuration
+  # ZFS configuration with CachyOS ZFS
   boot = {
     supportedFilesystems = [ "zfs" ];
     zfs = {
       requestEncryptionCredentials = true;
       forceImportRoot = false;
+      package = inputs.chaotic.packages.${pkgs.system}.zfs_cachyos;
     };
     kernelParams = [
       "nvidia-drm.modeset=1"
