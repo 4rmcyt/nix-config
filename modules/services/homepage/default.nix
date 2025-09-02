@@ -166,7 +166,7 @@
                 {
                   type = "readarr";
                   url = "http://localhost:8787";
-                  key = "readarrapikey"; # optional
+                  key = "acf29f1a3a74402b8fdeaa7308164145"; # optional
                 }
               ];
             };
