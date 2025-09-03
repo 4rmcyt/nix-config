@@ -107,7 +107,9 @@
     libGL
     libGLU
     nixos-rebuild
+    lan-mouse_git
   ];
+
 
   time.timeZone = "America/Edmonton";
 
@@ -146,6 +148,10 @@
         PasswordAuthentication = false;
         PermitRootLogin = "no";
       };
+    };
+    lan-mouse = {
+      enable = true;
+      package = pkgs.lan-mouse_git;
     };
   };
   programs.zsh.enable = true;
