@@ -58,6 +58,7 @@
   };
   services.paperless = {
     enable = true;
+    domain = "paperless.example.com";
     package = pkgs.paperless-ngx.overrideAttrs (_oldAttrs: {
       doCheck = false;
     });
