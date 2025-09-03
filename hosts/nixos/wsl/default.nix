@@ -7,8 +7,8 @@
   imports = [
     inputs.nixos-wsl.nixosModules.wsl
     inputs.vscode-server.nixosModules.default
-    ../../modules/users/zeev
-    ../../modules/base
+    ../../../../modules/users/zeev
+    ../../../../modules/base
   ];
 
   sops = {
