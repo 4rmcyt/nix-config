@@ -149,10 +149,6 @@
         PermitRootLogin = "no";
       };
     };
-    lan-mouse = {
-      enable = true;
-      package = pkgs.lan-mouse_git;
-    };
   };
   programs.zsh.enable = true;
   programs.nix-ld.enable = true;
