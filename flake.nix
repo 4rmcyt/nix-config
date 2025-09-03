@@ -140,7 +140,7 @@
               ];
 
               desktop = mkNixos "desktop" "x86_64-linux" [
-                ./hosts/desktop
+                ./hosts/nixos/desktop
                 ./modules/users/zeev
                 {
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
@@ -156,7 +156,7 @@
               ];
 
               wsl = mkNixos "wsl" "x86_64-linux" [
-                ./hosts/wsl
+                ./hosts/nixos/wsl
                 ./modules/users/zeev
                 {
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
