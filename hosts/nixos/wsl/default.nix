@@ -87,6 +87,10 @@
     };
   };
 
+   networking.firewall.allowedTCPPorts = [
+    4242 # Kavita
+  ];
+
   environment.systemPackages = with pkgs; [
     git
     vim
