@@ -58,6 +58,7 @@
   };
   services.paperless = {
     enable = true;
+    domain = "paperless.labhome.work";
     package = pkgs.paperless-ngx.overrideAttrs (_oldAttrs: {
       doCheck = false;
     });
