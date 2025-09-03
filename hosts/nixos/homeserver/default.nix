@@ -9,17 +9,17 @@
   # =================================================================
   imports = [
     ./hardware-configuration.nix
-    ../../../../modules/networking
-    ../../../../modules/services
-    ../../../../modules/base
+    ../../../modules/networking
+    ../../../modules/services
+    ../../../modules/base
     # ../../modules/backup
-    ../../../../modules/disko
-    ../../../../modules/monitoring
-    ../../../../modules/containers
-    ../../../../modules/database
-    ../../../../modules/security
-    ../../../../modules/options
-    ../../../../modules/users/zeev
+    ../../../modules/disko
+    ../../../modules/monitoring
+    ../../../modules/containers
+    ../../../modules/database
+    ../../../modules/security
+    ../../../modules/options
+    ../../../modules/users/zeev
   ];
   users.users.git = {
     isSystemUser = true;
