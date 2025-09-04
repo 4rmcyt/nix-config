@@ -1,28 +1,40 @@
-name: update-flake-lock
+name: "build"
+
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 3 * * *"
+  push:
+    branches:
+      - master
+    tags:
+      - flake.lock
+  pull_request: {}
+  workflow_call: {}
+
 jobs:
-  update-flake-lock:
+  build:
+    name: Build
     runs-on: ubuntu-latest
-    environment: production
     steps:
-      - name: Access private repository
-        uses: webfactory/ssh-agent@master
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          ssh-private-key: ${{ secrets.GH_PRIVATE_KEY }}
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v12
-      - id: update
-        uses: DeterminateSystems/update-flake-lock@v23
+          fetch-depth: 0
+
+      - uses: cachix/install-nix-action@v31
         with:
-          commit-msg: "chore(flake.lock): update"
-          pr-title: "chore(flake.lock): update"
-          pr-labels: auto-merge
-          token: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Merge
-        run: gh pr merge --auto "${{ steps.update.outputs.pull-request-number }}" --rebase
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        if: ${{ steps.update.outputs.pull-request-number != '' }}
+          extra_nix_config: "access-tokens = github.com=${{ github.token }}"
+
+      - name: Update flake
+        run: |
+          nix_bin=$(which nix)
+          nix flake update
+
+      - name: Upload flake.lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: flake.lock
+          path: flake.lock
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: flake.lock
