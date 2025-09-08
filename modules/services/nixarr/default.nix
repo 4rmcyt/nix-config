@@ -333,7 +333,7 @@ in
     headphones = {
       enable = true;
       port = 8181;
-      dataDir = "/data/media/.state/headphones";
+      dataDir = "/data/media/music";
       };
   };
 
