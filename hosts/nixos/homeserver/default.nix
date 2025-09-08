@@ -130,6 +130,7 @@
     git-crypt
     prettier
     helix_git
+    auto-cpufreq
   ];
   # =================================================================
   # 6. System Services
