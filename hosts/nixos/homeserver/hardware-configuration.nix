@@ -93,13 +93,13 @@
   services.fwupd.enable = true;
   systemd.oomd.enable = true;
 
-  programs.auto-cpufreq.enable = true;
-  programs.auto-cpufreq.settings = {
-    charger = {
-      governor = "performance";
-      turbo = "auto";
-    };
-  };
+  # programs.auto-cpufreq.enable = true;
+  # programs.auto-cpufreq.settings = {
+  #   charger = {
+  #     governor = "performance";
+  #     turbo = "auto";
+  #   };
+  # };
 
   services.smartd = {
     enable = true;
