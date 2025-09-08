@@ -64,6 +64,13 @@
               ];
             };
           }
+          {
+            "Headphones" = {
+              href = "https://headphones.labhome.work";
+              description = "Music Library Management";
+              icon = "headphones";
+            };
+          }
         ];
       }
       {

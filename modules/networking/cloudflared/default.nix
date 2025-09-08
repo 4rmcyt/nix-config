@@ -49,6 +49,7 @@
           "lazylibrarian.labhome.work" = "http://localhost:5299";
           "tdarr.labhome.work" = "http://localhost:8265";
           "readarr.labhome.work" = "http://localhost:8787";
+          "headphones.labhome.work" = "http://localhost:8181";
         };
       };
     };
