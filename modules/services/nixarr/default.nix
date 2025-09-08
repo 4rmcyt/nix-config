@@ -15,6 +15,7 @@ let
     "transmission"
     "audiobookshelf"
     "jellyfin"
+    "headphones"
   ];
 in
 {
@@ -98,6 +99,13 @@ in
         "media"
       ];
     };
+    headphones = {
+      isSystemUser = true;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
   };
   users.groups = {
     audiobookshelf = { };
@@ -111,6 +119,7 @@ in
     transmission = { };
     readarr = { };
     recyclarr = { };
+    headphones = { };
   };
 
   networking.firewall.allowedTCPPorts = [
@@ -126,6 +135,7 @@ in
     5055 # Jellyseerr
     9091 # Transmission web UI
     63998 # Transmission peer port
+    8181 # Headphones    
   ];
 
   networking.firewall.allowedUDPPorts = [
@@ -320,6 +330,11 @@ in
       enable = true;
       configFile = ./recyclarr.yaml;
     };
+    headphones = {
+      enable = true;
+      port = 8181;
+      dataDir = "/data/media/.state/headphones";
+      };
   };
 
   # services.jellyfin = {
@@ -432,6 +447,7 @@ in
     "d /data/media/.state/nixarr/sonarr 775 sonarr sonarr -"
     "d /data/media/.state/nixarr/sabnzbd 775 sabnzbd sabnzbd -"
     "d /data/media/.state/nixarr/bazarr 775 bazarr bazarr -"
+    "d /data/media/.state/headphones 775 headphones headphones -"
     "d /data/media/.state/nixarr/transmission 775 transmission transmission -"
 
     "d /var/lib/transmission 775 transmission transmission -"
