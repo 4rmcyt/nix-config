@@ -15,7 +15,7 @@ let
     "transmission"
     "audiobookshelf"
     "jellyfin"
-    "headphones"
+    # "headphones"
   ];
 in
 {
@@ -99,13 +99,13 @@ in
         "media"
       ];
     };
-    headphones = {
-      isSystemUser = true;
-      extraGroups = [
-        "users"
-        "media"
-      ];
-    };
+    # headphones = {
+    #   isSystemUser = true;
+    #   extraGroups = [
+    #     "users"
+    #     "media"
+    #   ];
+    # };
   };
   users.groups = {
     audiobookshelf = { };
@@ -119,7 +119,7 @@ in
     transmission = { };
     readarr = { };
     recyclarr = { };
-    headphones = { };
+    # headphones = { };
   };
 
   networking.firewall.allowedTCPPorts = [
@@ -135,7 +135,7 @@ in
     5055 # Jellyseerr
     9091 # Transmission web UI
     63998 # Transmission peer port
-    8181 # Headphones    
+    # 8181 # Headphones    
   ];
 
   networking.firewall.allowedUDPPorts = [
@@ -338,11 +338,11 @@ in
     };
   };
 
-  services.headphones = {
-      enable = true;
-      port = 8181;
-      dataDir = "/data/media/";
-  };
+  # services.headphones = {
+  #     enable = true;
+  #     port = 8181;
+  #     dataDir = "/data/media/";
+  # };
 
   systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
     serviceConfig = {
@@ -359,8 +359,9 @@ in
         "/data/media/torrents"
         "/data/media/usenet"
         "/data/media/audiobooks"
-        # "/data/Downloads/radarr"
-        # "/data/Downloads/tv-sonarr"
+        "/data/Downloads/radarr"
+        "/data/Downloads/lidarr"
+        "/data/Downloads/tv-sonarr"
         "/data/media/.state"
         # "/data/media/torrents/.incomplete"
       ];
