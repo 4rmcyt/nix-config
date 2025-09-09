@@ -204,11 +204,11 @@
 
     auto-cpufreq.enable = true;
     auto-cpufreq.settings = {
-    charger = {
-      governor = "performance";
-      turbo = "auto";
+      charger = {
+        governor = "performance";
+        turbo = "auto";
+      };
     };
-  };
 
     zsh.enable = true;
 
