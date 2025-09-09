@@ -134,6 +134,7 @@
       enable = true;
       shellAliases = {
         ll = "ls -la";
+        mc = "mc --nosubshell";
         ".." = "cd ..";
         "..." = "cd ../..";
         rebuild = "sudo nixos-rebuild switch --flake .#wsl";

@@ -98,6 +98,7 @@
       enable = true;
       shellAliases = {
         ll = "ls -la";
+        mc = "mc --nosubshell";
       };
       sessionVariables = {
         EDITOR = "nvim";

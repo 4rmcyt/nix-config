@@ -24,6 +24,7 @@
     shellAliases = {
       ll = "ls -l";
       la = "ls -la";
+      mc = "mc --nosubshell";
       ".." = "cd ..";
       "..." = "cd ../..";
       grep = "grep --color=auto";
