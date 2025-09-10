@@ -124,11 +124,6 @@
     open = false;
     nvidiaSettings = true;
   };
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-  };
 
   system.stateVersion = "25.05";
 }
