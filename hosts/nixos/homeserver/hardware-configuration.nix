@@ -9,7 +9,11 @@
   # =================================================================
   # 1. Imports & Global Settings
   # =================================================================
-  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+  imports = [ 
+    (modulesPath + "/installer/scan/not-detected.nix")
+    ../../../modules/disko/desktop
+  ];
+  
 
   # Enable firmware updates for devices like CPUs and SSDs.
   hardware.enableRedistributableFirmware = lib.mkDefault true;
