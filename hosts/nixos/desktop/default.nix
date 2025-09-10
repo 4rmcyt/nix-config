@@ -5,6 +5,7 @@
     ../../../../modules/hyprland
     ../../../../modules/gaming
     ../../../../modules/users/zeev
+    ../../../modules/disko/desktop
   ];
 
   boot = {
