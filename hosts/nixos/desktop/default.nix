@@ -22,6 +22,16 @@
     shell = pkgs.bash;
   };
 
+  services.greetd = {
+  enable = true;
+  settings = {
+    default_session = {
+      command = "Hyprland";
+      user = "greeter";
+    };
+  };
+};
+
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.permittedInsecurePackages = [
     "qtwebengine-5.15.19" # Replace with the specific version
