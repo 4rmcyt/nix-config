@@ -29,12 +29,11 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
+    kernelPackages = inputs.chaotic.packages.${pkgs.system}.linuxPackages_cachyos;
   };
 
   chaotic = {
     mesa-git.enable = true;
-    scx.enable = true;
-    scx.package = inputs.chaotic.packages.${pkgs.system}.scx or pkgs.scx;
   };
   # Networking with WiFi support
   networking = {
