@@ -122,7 +122,7 @@
               homeserver = mkNixos "homeserver" "x86_64-linux" [
                 ./hosts/nixos/homeserver
                 ./modules/users/zeev
-                ./modules/disko
+                ./modules/disko/homeserver
                 inputs.nixarr.nixosModules.default
                 inputs.authentik-nix.nixosModules.default
                 inputs.vscode-server.nixosModules.default
@@ -142,6 +142,7 @@
               desktop = mkNixos "desktop" "x86_64-linux" [
                 ./hosts/nixos/desktop
                 ./modules/users/zeev
+                ./modules/disko/desktop
                 {
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   home-manager.users.zeev = {
