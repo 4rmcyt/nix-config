@@ -45,14 +45,6 @@
     ];
   };
 
-  networking.wireless = {
-    enable = true;
-    networks = {
-      "Upsidedown" = {
-        psk = "23031986";
-      };
-    };
-  };
 
   services.smartd = {
     enable = true;
