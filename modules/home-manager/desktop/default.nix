@@ -398,7 +398,6 @@
 
     # GUI applications
     firefox
-    thunar # Lightweight file manager instead of dolphin
 
     # System monitoring
     nvtopPackages.nvidia
