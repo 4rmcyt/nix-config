@@ -381,7 +381,7 @@
     # Development
     vscode
     # Media
-    vlc
+    vlc-qt6
     # Utilities
     htop
     neofetch
@@ -393,7 +393,6 @@
     # GUI applications
     firefox
     kdePackages.dolphin
-    # System monitoring
     nvtopPackages.nvidia
 
     # Network
