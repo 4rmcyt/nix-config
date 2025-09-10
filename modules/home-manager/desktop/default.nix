@@ -75,7 +75,8 @@
       ];
 
       exec-once = [
-        "waybar"
+        "nwg-panel"
+        "nwg-dock-hyprland"
         "swww-daemon"
         "mako"
         "nm-applet --indicator"
@@ -143,7 +144,7 @@
         "SUPER, M, exit,"
         "SUPER, E, exec, dolphin"
         "SUPER, V, togglefloating,"
-        "SUPER, R, exec, wofi --show drun"
+        "SUPER, R, exec, nwg-drawer"
         "SUPER, P, pseudo,"
         "SUPER, J, togglesplit,"
         "SUPER, F, fullscreen,"
@@ -208,6 +209,12 @@
         ", XF86AudioPause, exec, playerctl play-pause"
         ", XF86AudioNext, exec, playerctl next"
         ", XF86AudioPrev, exec, playerctl previous"
+
+        # nwg-shell keybindings
+        "SUPER, D, exec, nwg-drawer"
+        "SUPER SHIFT, R, exec, nwg-menu"
+        "SUPER SHIFT, D, exec, nwg-displays"
+        "SUPER SHIFT, A, exec, azote"
       ];
 
       bindm = [
@@ -226,165 +233,81 @@
   };
 
   # Terminal
- programs.kitty = {
-  enable = true;
-  settings = {
-    shell = "zsh";
-    window_padding_width = 10;
-    scrollback_lines = 10000;
-    show_hyperlink_targets = "yes";
-    enable_audio_bell = false;
-    url_style = "none";
-    underline_hyperlinks = "never";
-    copy_on_select = "clipboard";
-  };
-};
-
-
-  # Application launcher
-  programs.wofi = {
+  programs.kitty = {
     enable = true;
     settings = {
-      width = 800;
-      height = 600;
-      location = "center";
-      show = "drun";
-      prompt = "Search...";
-      filter_rate = 100;
-      allow_markup = true;
-      no_actions = true;
-      halign = "fill";
-      orientation = "vertical";
-      content_halign = "fill";
-      insensitive = true;
-      allow_images = true;
-      image_size = 48;
-      gtk_dark = true;
+      shell = "zsh";
+      window_padding_width = 10;
+      scrollback_lines = 10000;
+      show_hyperlink_targets = "yes";
+      enable_audio_bell = false;
+      url_style = "none";
+      underline_hyperlinks = "never";
+      copy_on_select = "clipboard";
     };
   };
 
-  # Waybar for dual monitors
-  programs.waybar = {
-    enable = true;
-    settings = {
-      mainBar = {
-        layer = "top";
-        position = "top";
-        height = 34;
-        spacing = 4;
-        
+  # nwg-shell components configuration
+  xdg.configFile = {
+    "nwg-panel/config".text = ''
+      [
+        {
+          "name": "panel-top",
+          "output": "",
+          "layer": "top", 
+          "position": "top",
+          "controls": "right",
+          "width": "auto",
+          "height": 30,
+          "homogeneous": true,
+          "margin-top": 0,
+          "margin-bottom": 0,
+          "padding-horizontal": 0,
+          "padding-vertical": 0,
+          "spacing": 4,
+          "items-padding": 4,
+          "icons": "",
+          "css-name": "panel-top",
+          "modules-left": ["hyprland-workspaces", "hyprland-window"],
+          "modules-center": ["clock"],
+          "modules-right": ["brightness", "battery", "network", "bluetooth", "volume", "tray"]
+        }
+      ]
+    '';
 
-        modules-left = [
-          "hyprland/workspaces"
-        ];
-        modules-center = [ "hyprland/window" ];
-        modules-right = [
-          "pulseaudio"
-          "network"
-          "cpu"
-          "memory"
-          "temperature"
-          "clock"
-          "tray"
-        ];
+    "nwg-drawer/drawer.css".text = ''
+      window {
+        background-color: rgba(12, 12, 12, 0.95);
+        color: #eeeeee;
+      }
 
-        "hyprland/workspaces" = {
-          disable-scroll = true;
-          all-outputs = true;  # Change to true
-          format = "{icon}";
-          format-icons = {
-            "1" = "1";
-            "2" = "2";
-            "3" = "3";
-            "4" = "4";
-            "5" = "5";
-            "6" = "6";
-            "7" = "7";
-            "8" = "8";
-            "9" = "9";
-            "10" = "10";
-          };
-        };
+      button {
+        background: none;
+        border: none;
+        color: #eeeeee;
+      }
 
-        "hyprland/window" = {
-          max-length = 50;
-        };
-
-        clock = {
-          tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-          format-alt = "{:%Y-%m-%d}";
-          format = "{:%H:%M}";
-        };
-
-        cpu = {
-          format = "{usage}% ";
-          tooltip = false;
-        };
-
-        memory = {
-          format = "{}% ";
-        };
-
-        temperature = {
-          critical-threshold = 80;
-          format = "{temperatureC}°C {icon}";
-          format-icons = [
-            ""
-            ""
-            ""
-          ];
-        };
-
-        network = {
-          format-wifi = "{essid} ({signalStrength}%) ";
-          format-ethernet = "{ipaddr}/{cidr} ";
-          tooltip-format = "{ifname} via {gwaddr} ";
-          format-linked = "{ifname} (No IP) ";
-          format-disconnected = "Disconnected ⚠";
-        };
-
-        pulseaudio = {
-          format = "{volume}% {icon} {format_source}";
-          format-bluetooth = "{volume}% {icon} {format_source}";
-          format-bluetooth-muted = " {icon} {format_source}";
-          format-muted = " {format_source}";
-          format-source = "{volume}% ";
-          format-source-muted = "";
-          format-icons = {
-            headphone = "";
-            hands-free = "";
-            headset = "";
-            phone = "";
-            portable = "";
-            car = "";
-            default = [
-              ""
-              ""
-              ""
-            ];
-          };
-          on-click = "pavucontrol";
-        };
-      };
-    };
+      button:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    '';
   };
 
-  # Remove duplicates - these are already in system packages
   home.packages = with pkgs; [
     # Gaming
     steam
     discord
     lutris
-    
+
     # Development
     vscode
-    
+
     # GUI applications
     firefox
     kdePackages.dolphin
     nvtopPackages.nvidia
     jellyfin-media-player
-    
+
     # Wayland utilities
     grim
     slurp
@@ -392,7 +315,7 @@
     mako
     playerctl
     pavucontrol
-    
+
     # Fonts
     nerd-fonts.fira-code
   ];

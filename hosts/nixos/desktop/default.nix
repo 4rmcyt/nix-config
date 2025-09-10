@@ -22,8 +22,6 @@
     shell = pkgs.bash;
   };
 
-
-
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.permittedInsecurePackages = [
     "qtwebengine-5.15.19" # Replace with the specific version
@@ -127,5 +125,8 @@
     open = false;
     nvidiaSettings = true;
   };
+  # Enable home-manager backup for conflicting files
+  home-manager.backupFileExtension = "backup";
+
   system.stateVersion = "25.05";
 }
