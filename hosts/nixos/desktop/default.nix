@@ -9,6 +9,18 @@
     ../../../modules/base
   ];
 
+  # Add the missing git group
+  users.groups.git = { };
+  users.users.git = {
+    isSystemUser = true;
+    group = "git";
+    home = "/var/lib/git";
+    createHome = true;
+    shell = pkgs.bash;
+  };
+
+  nixpkgs.config.allowUnfree = true;
+
   boot = {
     loader = {
       systemd-boot.enable = true;
@@ -24,7 +36,7 @@
   # Networking with WiFi support
   networking = {
     hostName = "desktop";
-    hostId = "e134040f"; # Generate with: head -c 8 /etc/machine-id
+    hostId = "e134040f";
     networkmanager.enable = true;
     wireless.enable = false; 
     firewall.enable = true;
@@ -49,7 +61,6 @@
   };
 
   security.rtkit.enable = true;
-
   services.openssh.enable = true;
 
   environment.systemPackages = with pkgs; [
@@ -68,8 +79,17 @@
     jellyfin-media-player
   ];
 
-  # AMD CPU optimizations
-  boot.kernelModules = [ "kvm-amd" ];
+  # Nix settings
+  nix = {
+    package = pkgs.nixVersions.latest;
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [ "zeev" ];
+    };
+  };
 
   system.stateVersion = "25.05";
 }
