@@ -144,7 +144,8 @@
                 ./modules/users/zeev
                 ./modules/disko/desktop
                 # inputs.nixos-facter-modules.nixosModules.facter
-                inputs.nix-gaming.nixosModules.default
+                inputs.nix-gaming.nixosModules.steamCompat
+                inputs.nix-gaming.nixosModules.platformOptimizations
                 {
                   # config.facter.reportPath = ./hosts/nixos/desktop/facter.json;
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
