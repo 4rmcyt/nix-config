@@ -398,7 +398,7 @@
 
     # GUI applications
     firefox
-
+    dolphin
     # System monitoring
     nvtopPackages.nvidia
 
