@@ -380,8 +380,6 @@
     discord
     # Development
     vscode
-    # Media
-    vlc-qt6
     # Utilities
     htop
     neofetch
@@ -394,7 +392,8 @@
     firefox
     kdePackages.dolphin
     nvtopPackages.nvidia
-
+    jellyfin-media-player
+    
     # Network
     networkmanagerapplet
     blueman
