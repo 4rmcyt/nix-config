@@ -116,9 +116,6 @@
       dates = [ "weekly" ];
     };
   };
-  system.stateVersion = "25.05";
-
-  # NVIDIA Configuration
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     modesetting.enable = true;
@@ -133,4 +130,6 @@
     driSupport = true;
     driSupport32Bit = true;
   };
+
+  system.stateVersion = "25.05";
 }
