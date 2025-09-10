@@ -30,7 +30,7 @@
     WLR_DRM_DEVICES = "/dev/dri/card1:/dev/dri/card0";
   };
 
-  # Display manager
+  # Display manager - ONLY ONE INSTANCE
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
@@ -45,10 +45,6 @@
     kitty
   ];
 
-  services.displayManager.sddm = {
-    enable = true;
-    wayland.enable = true;
-  };
   # System fonts only
   fonts.packages = with pkgs; [
     noto-fonts
