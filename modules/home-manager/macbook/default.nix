@@ -109,7 +109,7 @@
         [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
       '';
 
-      initExtra = ''
+      initContent = ''
         autoload -Uz compinit && compinit
 
         bindkey -v
