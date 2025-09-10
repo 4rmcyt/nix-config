@@ -146,7 +146,7 @@
                 # inputs.nixos-facter-modules.nixosModules.facter
                 inputs.nix-gaming.nixosModules.pipewireLowLatency
                 inputs.nix-gaming.nixosModules.platformOptimizations
-                inputs.chaotic.nixosModules.default
+                
                 {
                   # config.facter.reportPath = ./hosts/nixos/desktop/facter.json;
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
