@@ -11,7 +11,9 @@
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
     gamescopeSession.enable = true;
+    platformOptimizations.enable = true;
   };
+  
 
   # GameMode
   programs.gamemode.enable = true;
@@ -35,7 +37,6 @@
     ]
     ++ lib.optionals (inputs ? nix-gaming) [
       inputs.nix-gaming.packages.${pkgs.system}.wine-ge
-      inputs.nix-gaming.packages.${pkgs.system}.proton-ge
     ];
 
   # Enable 32-bit support for games
