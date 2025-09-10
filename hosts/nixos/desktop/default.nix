@@ -20,6 +20,9 @@
   };
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.permittedInsecurePackages = [
+    "qtwebengine-5.15.19" # Replace with the specific version
+  ];
 
   boot = {
     loader = {
@@ -61,7 +64,7 @@
 
   security.rtkit.enable = true;
   services.openssh.enable = true;
-
+  
   environment.systemPackages = with pkgs; [
     vim
     wget
