@@ -52,6 +52,6 @@
     noto-fonts-emoji
     liberation_ttf
     font-awesome
-    (nerdfonts.override { fonts = [ "FiraCode" ]; })
+    nerd-fonts.fira-code
   ];
 }
