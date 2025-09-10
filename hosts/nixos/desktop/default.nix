@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -34,7 +34,7 @@
   chaotic = {
     mesa-git.enable = true;
     scx.enable = true;
-    scx.package = inputs.pkgs.scx;
+    scx.package = inputs.chaotic.packages.${pkgs.system}.scx or pkgs.scx;
   };
   # Networking with WiFi support
   networking = {
