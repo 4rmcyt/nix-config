@@ -48,6 +48,15 @@
     ];
   };
 
+  networking.wireless = {
+    enable = true;
+    networks = {
+      "Upsidedown" = {
+        psk = "23031986";
+      };
+    };
+  };
+
   services.smartd = {
     enable = true;
     defaults.autodetected = "-a -o on -s (S/../.././02|L/../../7/04)";
@@ -98,10 +107,8 @@
     LIBVA_DRIVER_NAME = "nvidia";
   };
 
-  # Enables DHCP on each ethernet and wireless interface
   networking.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  # Fixed: Use Intel microcode instead of AMD
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
