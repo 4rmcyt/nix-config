@@ -124,6 +124,5 @@
     open = false;
     nvidiaSettings = true;
   };
-
   system.stateVersion = "25.05";
 }
