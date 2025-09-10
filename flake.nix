@@ -76,7 +76,6 @@
     hypr-contrib.url = "github:hyprwm/contrib";
     hyprpicker.url = "github:hyprwm/hyprpicker";
     hyprlock.url = "github:hyprwm/hyprlock";
-    waybar.url = "github:Alexays/Waybar";
     nix-gaming.url = "github:fufexan/nix-gaming";
     nix-homebrew = {
       url = "github:zhaofengli/nix-homebrew";

@@ -36,18 +36,23 @@
     wayland.enable = true;
   };
 
-  # Only system-level essential packages
+  # nwg-shell components only
   environment.systemPackages = with pkgs; [
     brightnessctl
     networkmanagerapplet
-    waybar
-    wofi
     kitty
+    # Complete nwg-shell suite
     nwg-panel
     nwg-drawer
-    nwg-dock-hyprland # Specific dock for Hyprland
+    nwg-dock-hyprland
     nwg-look
     nwg-displays
+    nwg-launchers
+    nwg-menu
+    nwg-bar
+    nwg-wrapper
+    # Optional nwg components
+    autotiling # automatic tiling for better window management
   ];
 
   # System fonts only
