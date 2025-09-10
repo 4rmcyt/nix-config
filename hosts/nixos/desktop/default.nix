@@ -35,6 +35,8 @@
     mesa-git.enable = true;
   };
 
+  services.scx.enable = true;
+
   # Networking with WiFi support
   networking = {
     hostName = "desktop";
