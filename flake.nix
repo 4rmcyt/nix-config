@@ -126,7 +126,6 @@
                 inputs.nixarr.nixosModules.default
                 inputs.authentik-nix.nixosModules.default
                 inputs.vscode-server.nixosModules.default
-                inputs.nixos-facter-modules.nixosModules.default
                 { 
                   sops.age.keyFile = "/var/lib/sops/age.key";
                   home-manager.users.zeev = {
