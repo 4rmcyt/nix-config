@@ -146,6 +146,7 @@
                 ./modules/disko/desktop
                 inputs.nixos-facter-modules.nixosModules.default
                 {
+                  config.facter.reportPath = ./hosts/nixos/desktop/facter.json;
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   home-manager.users.zeev = {
                     imports = [
