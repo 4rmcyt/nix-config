@@ -61,7 +61,7 @@
               reservation = "10G";
             };
           };
-          
+
           # Root filesystem - ephemeral
           "root" = {
             type = "zfs_fs";
@@ -72,7 +72,7 @@
             mountpoint = "/";
             postCreateHook = "zfs snapshot zroot/root@blank";
           };
-          
+
           # Nix store
           "nix" = {
             type = "zfs_fs";
@@ -83,7 +83,7 @@
               "com.sun:auto-snapshot" = "false";
             };
           };
-          
+
           # Home directories - persistent
           "home" = {
             type = "zfs_fs";
@@ -92,7 +92,7 @@
               "com.sun:auto-snapshot" = "true";
             };
           };
-          
+
           # System logs
           "log" = {
             type = "zfs_fs";
@@ -101,7 +101,7 @@
               "com.sun:auto-snapshot" = "false";
             };
           };
-          
+
           # Gaming data (Steam, etc.)
           "games" = {
             type = "zfs_fs";
@@ -111,7 +111,7 @@
               "com.sun:auto-snapshot" = "false";
             };
           };
-          
+
           # VM/Container storage
           "vms" = {
             type = "zfs_fs";

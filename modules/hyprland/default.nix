@@ -41,8 +41,8 @@
 
   # Only system-level essential packages
   environment.systemPackages = with pkgs; [
-    brightnessctl  # Needs system permissions
-    networkmanagerapplet  # System network management
+    brightnessctl # Needs system permissions
+    networkmanagerapplet # System network management
   ];
 
   # System fonts only

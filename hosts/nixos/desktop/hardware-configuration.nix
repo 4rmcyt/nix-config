@@ -3,7 +3,6 @@
   lib,
   pkgs,
   modulesPath,
-  inputs,
   ...
 }:
 {
@@ -18,12 +17,12 @@
     "sd_mod"
   ];
   boot.initrd.kernelModules = [ ];
-  
+
   boot.kernelModules = [
     "kvm-amd"
     "nvidia"
     "nvidia_modeset"
-    "nvidia_uvm" 
+    "nvidia_uvm"
     "nvidia_drm"
   ];
 
@@ -48,7 +47,7 @@
       { device = "/dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NS0W101791N"; }
     ];
   };
-  
+
   swapDevices = [ ];
 
   # NVIDIA Hardware Configuration
