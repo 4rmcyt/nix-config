@@ -28,9 +28,7 @@
   users.groups.git = { };
   nixpkgs.config.allowUnfree = true;
 
-  chaotic = {
-    mesa-git.enable = false; # Disable for headless server
-  };
+
 
   # =================================================================
   # 2. Nix Daemon Configuration
