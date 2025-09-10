@@ -27,7 +27,7 @@
     "nvidia_drm"
   ];
 
-  boot.kernelPackages = pkgs.linuxPackages_cachyos.cachyOverride { mArch = "ZEN4"; };
+  boot.kernelPackages = pkgs.linuxPackages_cachyos-gcc.cachyOverride { mArch = "ZEN4"; };
   boot = {
     supportedFilesystems = [ "zfs" ];
     kernelParams = [
