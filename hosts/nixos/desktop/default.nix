@@ -26,7 +26,7 @@
     hostName = "desktop";
     hostId = "e134040f"; # Generate with: head -c 8 /etc/machine-id
     networkmanager.enable = true;
-    wireless.enable = false; # Disabled because we use NetworkManager
+    wireless.enable = true; 
     firewall.enable = true;
   };
 
