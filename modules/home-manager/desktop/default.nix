@@ -60,9 +60,9 @@
     settings = {
       # Dual 4K monitor setup
       monitor = [
-        "DP-1,3840x2160@60,0x0,1.5" # Left monitor at 1.5 scale
-        "DP-2,3840x2160@60,2560x0,1.5" # Right monitor at 1.5 scale
-        ",preferred,auto,auto" # Fallback for other monitors
+        "DP-1,3840x2160@60,0x0,1.5"
+        "DP-2,3840x2160@60,2560x0,1.5"
+        ",preferred,auto,auto"
       ];
 
       # Environment variables for NVIDIA
@@ -76,7 +76,7 @@
 
       exec-once = [
         "waybar"
-        "swww init"
+        "swww-daemon"
         "mako"
         "nm-applet --indicator"
         "blueman-applet"
@@ -98,7 +98,6 @@
           enabled = true;
           size = 3;
           passes = 1;
-          new_optimizations = true;
         };
         drop_shadow = true;
         shadow_range = 4;
@@ -125,7 +124,6 @@
         sensitivity = 0;
       };
 
-      # Workspaces for dual monitor setup
       workspace = [
         "1, monitor:DP-1"
         "2, monitor:DP-1"
@@ -217,7 +215,6 @@
         "SUPER, mouse:273, resizewindow"
       ];
 
-      # Window rules for gaming
       windowrulev2 = [
         "immediate, class:^(steam_app).*"
         "fullscreen, class:^(steam_app).*"
@@ -231,7 +228,7 @@
   # Terminal
   programs.kitty = {
     enable = true;
-    themeFile = "Dracula"; # Changed from theme to themeFile
+    theme = "Dracula";
     settings = {
       font_family = "Fira Code Nerd Font";
       font_size = 12;
@@ -279,11 +276,10 @@
 
         modules-left = [
           "hyprland/workspaces"
-          "hyprland/mode"
         ];
         modules-center = [ "hyprland/window" ];
         modules-right = [
-          "wireplumber"
+          "pulseaudio"
           "network"
           "cpu"
           "memory"
@@ -347,7 +343,7 @@
           format-disconnected = "Disconnected ⚠";
         };
 
-        wireplumber = {
+        pulseaudio = {
           format = "{volume}% {icon} {format_source}";
           format-bluetooth = "{volume}% {icon} {format_source}";
           format-bluetooth-muted = " {icon} {format_source}";
@@ -373,46 +369,34 @@
     };
   };
 
-  # Gaming applications and general packages (no duplicates)
+  # Remove duplicates - these are already in system packages
   home.packages = with pkgs; [
     # Gaming
     steam
     discord
+    lutris
+    
     # Development
     vscode
-    # Utilities
-    htop
-    neofetch
-    tree
-    unzip
-    wget
-    curl
-
+    
     # GUI applications
     firefox
     kdePackages.dolphin
     nvtopPackages.nvidia
     jellyfin-media-player
-
-    # Network
-    networkmanagerapplet
-    blueman
-
-    waybar
-    wofi
-    swww
+    
+    # Wayland utilities
     grim
     slurp
     wl-clipboard
     mako
     playerctl
     pavucontrol
-    kitty
+    
     # Fonts
-    nerd-fonts.fira-code # For kitty terminal font
+    nerd-fonts.fira-code
   ];
 
-  # Git configuration (removed duplicate from packages)
   programs.git = {
     enable = true;
     userName = "4rmcyt";
