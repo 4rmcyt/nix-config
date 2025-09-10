@@ -13,7 +13,7 @@
     ../../../modules/services
     ../../../modules/base
     # ../../modules/backup
-    ../../../modules/disko
+    ../../../modules/disko/homeserver
     ../../../modules/monitoring
     ../../../modules/containers
     ../../../modules/database
