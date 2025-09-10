@@ -43,6 +43,11 @@
     waybar
     wofi
     kitty
+    nwg-panel
+    nwg-drawer
+    nwg-dock-hyprland # Specific dock for Hyprland
+    nwg-look
+    nwg-displays
   ];
 
   # System fonts only
