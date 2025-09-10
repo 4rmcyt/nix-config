@@ -143,7 +143,7 @@
                 ./hosts/nixos/desktop
                 ./modules/users/zeev
                 ./modules/disko/desktop
-                inputs.nixos-facter-modules.nixosModules.default
+                inputs.nixos-facter-modules.nixosModules.facter
                 {
                   config.facter.reportPath = ./hosts/nixos/desktop/facter.json;
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
