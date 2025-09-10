@@ -23,28 +23,23 @@
     "kvm-amd"
     "nvidia"
     "nvidia_modeset"
-    "nvidia_uvm"
+    "nvidia_uvm" 
     "nvidia_drm"
   ];
 
-  # Consolidated ZFS configuration
+  # ZFS configuration - fix the forceImport issue
   boot = {
     supportedFilesystems = [ "zfs" ];
-    zfs = {
-      devNodes = "/dev/disk/by-id/";
-      forceImportAll = true;
-      requestEncryptionCredentials = true;
-      forceImportRoot = false;
-      package = inputs.chaotic.packages.${pkgs.system}.zfs_cachyos;
-    };
-    # Consolidated kernel parameters
     kernelParams = [
       "zfs.zfs_arc_max=12884901888"
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
     ];
+    zfs = {
+      forceImportRoot = true;
+      forceImportAll = true;
+    };
   };
-
 
   services.smartd = {
     enable = true;
@@ -66,7 +61,7 @@
       modesetting.enable = true;
       powerManagement.enable = false;
       powerManagement.finegrained = false;
-      open = false; # Use proprietary driver
+      open = false;
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
     };
@@ -78,14 +73,9 @@
       enable = true;
       interval = "weekly";
     };
-    autoSnapshot = {
+    trim = {
       enable = true;
-      flags = "-k -p --utc";
-      frequent = 4;
-      hourly = 24;
-      daily = 7;
-      weekly = 4;
-      monthly = 12;
+      interval = "weekly";
     };
   };
 
@@ -97,7 +87,7 @@
   };
 
   networking.useDHCP = lib.mkDefault true;
-
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.enableRedistributableFirmware = lib.mkDefault true;
 }
