@@ -13,7 +13,6 @@
     gamescopeSession.enable = true;
     platformOptimizations.enable = true;
   };
-  
 
   # Gaming packages
   environment.systemPackages =

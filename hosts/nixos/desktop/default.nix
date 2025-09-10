@@ -1,9 +1,12 @@
-{ pkgs, inputs, ... }:
+{
+  pkgs,
+  ...
+}:
 {
   imports = [
     ./hardware-configuration.nix
     ../../../modules/hyprland
-    ../../../modules/gaming  
+    ../../../modules/gaming
     ../../../modules/users/zeev
     ../../../modules/disko/desktop
     ../../../modules/base
@@ -30,7 +33,6 @@
       efi.canTouchEfiVariables = true;
     };
   };
-  
 
   # chaotic.mesa-git.enable = true;
 
@@ -41,7 +43,7 @@
     hostName = "desktop";
     hostId = "e134040f";
     networkmanager.enable = true;
-    wireless.enable = false; 
+    wireless.enable = false;
     firewall.enable = true;
   };
 
@@ -70,7 +72,7 @@
 
   security.rtkit.enable = true;
   services.openssh.enable = true;
-  
+
   environment.systemPackages = with pkgs; [
     vim
     wget

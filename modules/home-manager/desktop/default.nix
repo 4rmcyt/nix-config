@@ -25,7 +25,7 @@
       ll = "ls -l";
       la = "ls -la";
       mc = "mc --nosubshell";
-    };  
+    };
 
     initContent = ''
       # Custom prompt
@@ -231,7 +231,7 @@
   # Terminal
   programs.kitty = {
     enable = true;
-    themeFile = "Dracula";  # Changed from theme to themeFile
+    themeFile = "Dracula"; # Changed from theme to themeFile
     settings = {
       font_family = "Fira Code Nerd Font";
       font_size = 12;
@@ -409,7 +409,7 @@
     pavucontrol
     kitty
     # Fonts
-    nerd-fonts.fira-code  # For kitty terminal font
+    nerd-fonts.fira-code # For kitty terminal font
   ];
 
   # Git configuration (removed duplicate from packages)
