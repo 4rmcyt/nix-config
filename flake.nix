@@ -126,11 +126,13 @@
                 inputs.nixarr.nixosModules.default
                 inputs.authentik-nix.nixosModules.default
                 inputs.vscode-server.nixosModules.default
+                inputs.nixos-facter-modules.nixosModules.facter
                 {
                   sops.age.keyFile = "/var/lib/sops/age.key";
                   home-manager.users.zeev = {
                     imports = [
                       ./modules/home-manager/homeserver
+                      config.facter.reportPath = "./hosts/nixos/homeserver/facter.json";
                       inputs.sops-nix.homeManagerModules.sops
                       inputs.chaotic.homeManagerModules.default
                     ];
@@ -143,7 +145,9 @@
                 ./hosts/nixos/desktop
                 ./modules/users/zeev
                 ./modules/disko/desktop
+                inputs.nixos-facter-modules.nixosModules.facter
                 {
+                  
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   home-manager.users.zeev = {
                     imports = [
