@@ -390,10 +390,11 @@
 
     # GUI applications
     firefox
+    kdePackages.qtwebengine
     kdePackages.dolphin
     nvtopPackages.nvidia
     jellyfin-media-player
-    
+
     # Network
     networkmanagerapplet
     blueman
