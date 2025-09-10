@@ -25,6 +25,7 @@
       ll = "ls -l";
       la = "ls -la";
       mc = "mc --nosubshell";
+    };  
 
     initExtra = ''
       # Custom prompt
@@ -414,6 +415,5 @@
     userEmail = "4rmcyt@gmail.com";
   };
 
-  # Enable home-manager
   programs.home-manager.enable = true;
 }
