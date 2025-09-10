@@ -143,7 +143,7 @@
         "SUPER, Q, exec, kitty"
         "SUPER, C, killactive,"
         "SUPER, M, exit,"
-        "SUPER, E, exec, thunar" # Changed from dolphin to thunar (GTK file manager)
+        "SUPER, E, exec, dolphin"
         "SUPER, V, togglefloating,"
         "SUPER, R, exec, wofi --show drun"
         "SUPER, P, pseudo,"
