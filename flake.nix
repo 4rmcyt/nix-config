@@ -127,12 +127,12 @@
                 inputs.authentik-nix.nixosModules.default
                 inputs.vscode-server.nixosModules.default
                 inputs.nixos-facter-modules.nixosModules.facter
-                {
+                { 
+                  config.facter.reportPath = "./hosts/nixos/homeserver/facter.json";
                   sops.age.keyFile = "/var/lib/sops/age.key";
                   home-manager.users.zeev = {
                     imports = [
                       ./modules/home-manager/homeserver
-                      config.facter.reportPath = "./hosts/nixos/homeserver/facter.json";
                       inputs.sops-nix.homeManagerModules.sops
                       inputs.chaotic.homeManagerModules.default
                     ];
