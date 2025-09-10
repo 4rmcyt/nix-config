@@ -33,8 +33,9 @@
 
   chaotic = {
     mesa-git.enable = true;
+    scx.enable = true;
+    scx.package = inputs.chaotic.packages.${pkgs.system}.scx;
   };
-
   # Networking with WiFi support
   networking = {
     hostName = "desktop";
