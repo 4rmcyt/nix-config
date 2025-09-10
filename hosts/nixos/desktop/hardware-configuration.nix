@@ -28,7 +28,18 @@
     "nvidia_uvm"
     "nvidia_drm"
   ];
-  boot.extraModulePackages = [ ];
+  
+  boot.zfs = {
+    devNodes = "/dev/disk/by-id/";
+    forceImportAll = true;
+    package = pkgs.zfs_cachyos;
+  };
+
+  boot.kernelParams = [
+    "zfs.zfs_arc_max=12884901888"
+    "i915.enable_guc=2"
+  ];
+
 
   # ZFS configuration with CachyOS ZFS
   boot = {
@@ -44,26 +55,14 @@
     ];
   };
 
-  # ZFS filesystems
-  fileSystems."/" = {
-    device = "rpool/root";
-    fsType = "zfs";
-  };
 
-  fileSystems."/home" = {
-    device = "rpool/home";
-    fsType = "zfs";
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/XXXX-XXXX"; # Replace with your actual UUID
-    fsType = "vfat";
-    options = [
-      "fmask=0077"
-      "dmask=0077"
+  services.smartd = {
+    enable = true;
+    defaults.autodetected = "-a -o on -s (S/../.././02|L/../../7/04)";
+    devices = [
+      { device = "/dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NS0W101791N"; }
     ];
   };
-
   swapDevices = [ ];
 
   # NVIDIA Hardware Configuration
