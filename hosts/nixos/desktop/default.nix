@@ -95,9 +95,22 @@
         "nix-command"
         "flakes"
       ];
+      fallback = true;
+      system-features = [
+        "big-parallel"
+        "kvm"
+      ];
       trusted-users = [ "zeev" ];
+      warn-dirty = false;
+      cores = 6;
+      max-jobs = 6;
+      show-trace = true;
+      download-buffer-size = 1073741824;
+    };
+    optimise = {
+      automatic = true;
+      dates = [ "weekly" ];
     };
   };
-
   system.stateVersion = "25.05";
 }
