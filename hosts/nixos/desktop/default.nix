@@ -22,7 +22,7 @@
   # Networking with WiFi support
   networking = {
     hostName = "desktop";
-    hostId = "8425e349"; # Generate with: head -c 8 /etc/machine-id
+    hostId = "e134040f"; # Generate with: head -c 8 /etc/machine-id
     networkmanager.enable = true;
     wireless.enable = false; # Disabled because we use NetworkManager
     firewall.enable = true;
