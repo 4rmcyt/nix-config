@@ -25,31 +25,6 @@
       ll = "ls -l";
       la = "ls -la";
       mc = "mc --nosubshell";
-      ".." = "cd ..";
-      "..." = "cd ../..";
-      grep = "grep --color=auto";
-      nixos-rebuild = "sudo nixos-rebuild";
-      nrs = "sudo nixos-rebuild switch";
-      nrt = "sudo nixos-rebuild test";
-      nrb = "sudo nixos-rebuild boot";
-      nfu = "nix flake update";
-      nfc = "nix flake check";
-      nfmt = "nixfmt";
-      gc = "nix-collect-garbage -d";
-      gca = "sudo nix-collect-garbage -d";
-      q = "exit";
-      c = "clear";
-      h = "history";
-      j = "just";
-      g = "git";
-      gs = "git status";
-      ga = "git add";
-      gc = "git commit";
-      gp = "git push";
-      gl = "git log --oneline";
-      gd = "git diff";
-      tb = "nc termbin.com 9999";
-    };
 
     initExtra = ''
       # Custom prompt
