@@ -400,17 +400,18 @@
     networkmanagerapplet
     blueman
 
-    waybar  # Already enabled in programs but package needed for exec-once
-    swww    # For wallpaper management (referenced in exec-once)
-    mako    # For notifications (referenced in exec-once)
-    grim    # For screenshots (referenced in keybinds)
-    slurp   # For screenshot selection (referenced in keybinds)
-    wl-clipboard  # For clipboard management (referenced in keybinds)
-    playerctl     # For media key controls (referenced in keybinds)
-    pavucontrol   # For audio control (referenced in waybar)
-    
+    waybar
+    wofi
+    swww
+    grim
+    slurp
+    wl-clipboard
+    mako
+    playerctl
+    pavucontrol
+    kitty
     # Fonts
-    fira-code-nerdfont  # For kitty terminal font
+    nerd-fonts.fira-code  # For kitty terminal font
   ];
 
   # Git configuration (removed duplicate from packages)
