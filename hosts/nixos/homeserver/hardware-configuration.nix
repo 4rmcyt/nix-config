@@ -93,8 +93,6 @@
   services.fwupd.enable = true;
   systemd.oomd.enable = true;
 
-  
-
   services.smartd = {
     enable = true;
     defaults.autodetected = "-a -o on -s (S/../.././02|L/../../7/04)";

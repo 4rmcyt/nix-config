@@ -88,7 +88,7 @@
     };
   };
 
-   networking.firewall.allowedTCPPorts = [
+  networking.firewall.allowedTCPPorts = [
     4242 # Kavita
   ];
 
@@ -114,7 +114,6 @@
     nixos-rebuild
     lan-mouse_git
   ];
-
 
   time.timeZone = "America/Edmonton";
 
