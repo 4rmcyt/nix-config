@@ -30,7 +30,7 @@
       efi.canTouchEfiVariables = true;
     };
   };
-
+  
   chaotic = {
     mesa-git.enable = true;
   };
