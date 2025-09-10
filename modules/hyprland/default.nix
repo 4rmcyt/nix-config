@@ -29,12 +29,11 @@
     WLR_DRM_DEVICES = "/dev/dri/card1:/dev/dri/card0";
   };
 
-  # Display manager
-  services.tuigreet = {
+  services.greetd = {
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+        command = "Hyprland";
         user = "greeter";
       };
     };
