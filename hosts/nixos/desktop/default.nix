@@ -31,13 +31,6 @@
     };
   };
 
-  chaotic = {
-    mesa-git.enable = true;
-    scx = {
-      enable = true;
-      scheduler = "scx_bpfland"; # or whatever scheduler your homeserver uses
-    };
-  };
 
   # Networking with WiFi support
   networking = {
