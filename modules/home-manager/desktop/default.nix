@@ -377,17 +377,11 @@
   home.packages = with pkgs; [
     # Gaming
     steam
-    lutris
-    heroic
     discord
-
     # Development
     vscode
-
     # Media
     vlc
-    spotify
-
     # Utilities
     htop
     neofetch
@@ -398,7 +392,7 @@
 
     # GUI applications
     firefox
-    dolphin
+    kdePackages.dolphin
     # System monitoring
     nvtopPackages.nvidia
 
