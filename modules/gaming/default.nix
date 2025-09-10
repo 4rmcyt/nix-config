@@ -32,11 +32,6 @@
       inputs.chaotic.packages.${pkgs.system}.gamescope or gamescope
       mangohud
       gamemode
-
-      # Controllers
-      xboxdrv
-
-      # From nix-gaming (if available)
     ]
     ++ lib.optionals (inputs ? nix-gaming) [
       inputs.nix-gaming.packages.${pkgs.system}.wine-ge
