@@ -283,7 +283,7 @@
         ];
         modules-center = [ "hyprland/window" ];
         modules-right = [
-          "pulseaudio"
+          "wireplumber"
           "network"
           "cpu"
           "memory"
@@ -347,7 +347,7 @@
           format-disconnected = "Disconnected ⚠";
         };
 
-        pulseaudio = {
+        wireplumber = {
           format = "{volume}% {icon} {format_source}";
           format-bluetooth = "{volume}% {icon} {format_source}";
           format-bluetooth-muted = " {icon} {format_source}";
