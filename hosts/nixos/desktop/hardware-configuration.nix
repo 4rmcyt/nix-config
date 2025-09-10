@@ -7,8 +7,11 @@
   ...
 }:
 {
-  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
-
+  imports = [ 
+    (modulesPath + "/installer/scan/not-detected.nix")
+    ../../../modules/disko/desktop.nix
+  ];
+  
   boot.initrd.availableKernelModules = [
     "nvme"
     "xhci_pci"

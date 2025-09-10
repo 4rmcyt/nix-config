@@ -9,10 +9,7 @@
   # =================================================================
   # 1. Imports & Global Settings
   # =================================================================
-  imports = [ 
-    (modulesPath + "/installer/scan/not-detected.nix")
-    ../../../modules/disko/desktop
-  ];
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
   
 
   # Enable firmware updates for devices like CPUs and SSDs.
