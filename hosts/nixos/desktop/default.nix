@@ -33,9 +33,8 @@
 
   chaotic = {
     mesa-git.enable = true;
-    linux-cachyos.enable = true;
   };
-  
+
   # Networking with WiFi support
   networking = {
     hostName = "desktop";
