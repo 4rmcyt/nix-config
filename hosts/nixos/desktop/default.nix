@@ -6,6 +6,7 @@
     ../../../modules/gaming  
     ../../../modules/users/zeev
     ../../../modules/disko/desktop
+    ../../../modules/base
   ];
 
   boot = {
