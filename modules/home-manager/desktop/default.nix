@@ -231,7 +231,7 @@
   # Terminal
   programs.kitty = {
     enable = true;
-    theme = "Dracula";
+    themeFile = "Dracula";  # Changed from theme to themeFile
     settings = {
       font_family = "Fira Code Nerd Font";
       font_size = 12;
