@@ -193,7 +193,13 @@
         "SUPER SHIFT, 9, movetoworkspace, 9"
         "SUPER SHIFT, 0, movetoworkspace, 10"
 
-        # Move window to monitor
+        # Move window to monitor (individual windows)
+        "SUPER ALT, left, movewindow, mon:DP-1"
+        "SUPER ALT, right, movewindow, mon:DP-2"
+        "SUPER ALT, H, movewindow, mon:DP-1"
+        "SUPER ALT, L, movewindow, mon:DP-2"
+        
+        # Move entire workspace to monitor
         "SUPER CTRL, left, movecurrentworkspacetomonitor, l"
         "SUPER CTRL, right, movecurrentworkspacetomonitor, r"
 
