@@ -21,6 +21,7 @@
     "sd_mod"
   ];
   boot.initrd.kernelModules = [ ];
+  
   boot.kernelModules = [
     "kvm-amd"
     "nvidia"
@@ -28,33 +29,24 @@
     "nvidia_uvm"
     "nvidia_drm"
   ];
-  
-  boot.zfs = {
-    devNodes = "/dev/disk/by-id/";
-    forceImportAll = true;
-    package = pkgs.zfs_cachyos;
-  };
 
-  boot.kernelParams = [
-    "zfs.zfs_arc_max=12884901888"
-    "i915.enable_guc=2"
-  ];
-
-
-  # ZFS configuration with CachyOS ZFS
+  # Consolidated ZFS configuration
   boot = {
     supportedFilesystems = [ "zfs" ];
     zfs = {
+      devNodes = "/dev/disk/by-id/";
+      forceImportAll = true;
       requestEncryptionCredentials = true;
       forceImportRoot = false;
       package = inputs.chaotic.packages.${pkgs.system}.zfs_cachyos;
     };
+    # Consolidated kernel parameters
     kernelParams = [
+      "zfs.zfs_arc_max=12884901888"
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
     ];
   };
-
 
   services.smartd = {
     enable = true;
@@ -63,6 +55,7 @@
       { device = "/dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NS0W101791N"; }
     ];
   };
+  
   swapDevices = [ ];
 
   # NVIDIA Hardware Configuration
@@ -109,5 +102,6 @@
   networking.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  # Fixed: Use Intel microcode instead of AMD
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
