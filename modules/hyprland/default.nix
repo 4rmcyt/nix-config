@@ -39,31 +39,19 @@
     };
   };
 
-  # Essential packages for Hyprland
+  # Only system-level essential packages
   environment.systemPackages = with pkgs; [
-    waybar
-    wofi
-    swww
-    grim
-    slurp
-    wl-clipboard
-    mako
-    brightnessctl
-    playerctl
-    kitty
-    pavucontrol
-    networkmanagerapplet
+    brightnessctl  # Needs system permissions
+    networkmanagerapplet  # System network management
   ];
 
-  # Fonts
+  # System fonts only
   fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-emoji
     liberation_ttf
-    fira-code
-    fira-code-symbols
     font-awesome
-    nerdfonts
+    nerd-fonts.fira-code
   ];
 }
