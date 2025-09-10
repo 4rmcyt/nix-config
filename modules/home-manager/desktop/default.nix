@@ -226,17 +226,20 @@
   };
 
   # Terminal
-  programs.kitty = {
-    enable = true;
-    theme = "Dracula";
-    settings = {
-    font_family = "Fira Code Nerd Font";
-    font_size = 12;
-    cursor_shape = "beam";
-    cursor_blink_interval = 0;
-    background_opacity = "0.9";
+ programs.kitty = {
+  enable = true;
+  settings = {
+    shell = "zsh";
+    window_padding_width = 10;
+    scrollback_lines = 10000;
+    show_hyperlink_targets = "yes";
+    enable_audio_bell = false;
+    url_style = "none";
+    underline_hyperlinks = "never";
+    copy_on_select = "clipboard";
   };
-  };
+};
+
 
   # Application launcher
   programs.wofi = {

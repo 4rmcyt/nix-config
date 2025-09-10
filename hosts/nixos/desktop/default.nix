@@ -91,6 +91,7 @@
     jellyfin-media-player
     direnv
     btop
+    nixfmt
   ];
 
   # Nix settings
