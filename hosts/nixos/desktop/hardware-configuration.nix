@@ -27,7 +27,7 @@
     "nvidia_drm"
   ];
 
-
+  boot.kernelPackages = pkgs.linuxPackages_cachyos;
   boot = {
     supportedFilesystems = [ "zfs" ];
     kernelParams = [
