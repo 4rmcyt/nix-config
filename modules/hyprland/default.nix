@@ -45,6 +45,10 @@
     kitty
   ];
 
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+  };
   # System fonts only
   fonts.packages = with pkgs; [
     noto-fonts
