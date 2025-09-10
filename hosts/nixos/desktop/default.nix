@@ -31,7 +31,6 @@
     };
   };
   
-  boot.kernelPackages = pkgs.linuxPackages_cachyos.cachyOverride { mArch = "ZEN4"; };
 
   # chaotic.mesa-git.enable = true;
 
