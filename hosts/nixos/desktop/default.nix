@@ -22,15 +22,7 @@
     shell = pkgs.bash;
   };
 
-  services.greetd = {
-  enable = true;
-  settings = {
-    default_session = {
-      command = "Hyprland";
-      user = "greeter";
-    };
-  };
-};
+
 
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.permittedInsecurePackages = [
