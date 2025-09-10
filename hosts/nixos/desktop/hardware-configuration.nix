@@ -27,7 +27,7 @@
     "nvidia_drm"
   ];
 
-  boot.kernelPackages = pkgs.linuxPackages_cachyos;
+  boot.kernelPackages = inputs.chaotic.packages.${pkgs.system}.linuxPackages_cachyos;
 
   boot = {
     supportedFilesystems = [ "zfs" ];
