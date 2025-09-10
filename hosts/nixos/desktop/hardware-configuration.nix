@@ -27,7 +27,8 @@
     "nvidia_drm"
   ];
 
-  # ZFS configuration - fix the forceImport issue
+  boot.kernelPackages = pkgs.linuxPackages_cachyos;
+
   boot = {
     supportedFilesystems = [ "zfs" ];
     kernelParams = [
