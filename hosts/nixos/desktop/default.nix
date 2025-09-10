@@ -33,7 +33,7 @@
   
   boot.kernelPackages = pkgs.linuxPackages_cachyos.cachyOverride { mArch = "ZEN4"; };
 
-  chaotic.mesa-git.enable = true;
+  # chaotic.mesa-git.enable = true;
 
   services.scx.enable = true;
 
