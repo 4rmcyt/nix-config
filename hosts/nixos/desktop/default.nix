@@ -31,6 +31,9 @@
     };
   };
 
+  chaotic = {
+    mesa-git.enable = true;
+  };
 
   # Networking with WiFi support
   networking = {
@@ -43,6 +46,7 @@
 
   # Tailscale
   services.tailscale.enable = true;
+  services.scx.enable = true;
 
   # Time zone and locale
   time.timeZone = "America/Edmonton";
