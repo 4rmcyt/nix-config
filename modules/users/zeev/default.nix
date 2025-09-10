@@ -48,6 +48,7 @@ in
           "video"
           "podman"
           "input"
+          "gamemode"
         ];
         hashedPasswordFile = config.sops.secrets.zeev_password.path;
         openssh.authorizedKeys.keys = server-keys;
