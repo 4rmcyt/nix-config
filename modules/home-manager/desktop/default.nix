@@ -269,10 +269,7 @@
         position = "top";
         height = 34;
         spacing = 4;
-        output = [
-          "DP-1"
-          "DP-2"
-        ];
+        
 
         modules-left = [
           "hyprland/workspaces"
