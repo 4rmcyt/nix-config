@@ -48,7 +48,6 @@
 
   # Tailscale
   services.tailscale.enable = true;
-  services.scx.enable = true;
 
   # Time zone and locale
   time.timeZone = "America/Edmonton";
