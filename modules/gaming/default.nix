@@ -16,11 +16,6 @@
   # GameMode
   programs.gamemode.enable = true;
 
-  # Mangohud
-  programs.mangohud = {
-    enable = true;
-    enableSessionWide = true;
-  };
 
   # Gaming packages
   environment.systemPackages =
