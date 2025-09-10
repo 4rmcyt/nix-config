@@ -89,6 +89,8 @@
     helix_git
     telegram-desktop_git
     jellyfin-media-player
+    direnv
+    btop
   ];
 
   # Nix settings
