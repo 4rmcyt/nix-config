@@ -9,7 +9,7 @@
   home.homeDirectory = "/home/zeev";
   home.stateVersion = "25.05";
 
-  # ZSH Configuration (exactly same as homeserver)
+  # ZSH Configuration (same as before)
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -53,193 +53,7 @@
     '';
   };
 
-  # Hyprland configuration for dual 4K monitors
-  wayland.windowManager.hyprland = {
-    enable = true;
-    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
-    settings = {
-      # Dual 4K monitor setup
-      monitor = [
-        "DP-1,3840x2160@60,0x0,1.5"
-        "DP-2,3840x2160@60,2560x0,1.5"
-        ",preferred,auto,auto"
-      ];
-
-      # Environment variables for NVIDIA
-      env = [
-        "LIBVA_DRIVER_NAME,nvidia"
-        "XDG_SESSION_TYPE,wayland"
-        "GBM_BACKEND,nvidia-drm"
-        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-        "WLR_NO_HARDWARE_CURSORS,1"
-      ];
-
-      exec-once = [
-        "nwg-panel"
-        "nwg-dock-hyprland"
-        "swww-daemon"
-        "mako"
-        "nm-applet --indicator"
-        "blueman-applet"
-      ];
-
-      general = {
-        gaps_in = 5;
-        gaps_out = 20;
-        border_size = 2;
-        "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-        "col.inactive_border" = "rgba(595959aa)";
-        layout = "dwindle";
-        allow_tearing = false;
-      };
-
-      decoration = {
-        rounding = 10;
-        blur = {
-          enabled = true;
-          size = 3;
-          passes = 1;
-        };
-        # drop_shadow = true;
-        # shadow_range = 4;
-        # shadow_render_power = 3;
-        # col.shadow = "rgba(1a1a1aee)";
-      };
-
-      animations = {
-        enabled = true;
-        bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
-        animation = [
-          "windows, 1, 7, myBezier"
-          "windowsOut, 1, 7, default, popin 80%"
-          "border, 1, 10, default"
-          "borderangle, 1, 8, default"
-          "fade, 1, 7, default"
-          "workspaces, 1, 6, default"
-        ];
-      };
-
-      input = {
-        kb_layout = "us";
-        follow_mouse = 1;
-        sensitivity = 0;
-        numlock_by_default = true;
-      };
-
-      workspace = [
-        "1, monitor:DP-1"
-        "2, monitor:DP-1"
-        "3, monitor:DP-1"
-        "4, monitor:DP-1"
-        "5, monitor:DP-1"
-        "6, monitor:DP-2"
-        "7, monitor:DP-2"
-        "8, monitor:DP-2"
-        "9, monitor:DP-2"
-        "10, monitor:DP-2"
-      ];
-
-      bind = [
-        "SUPER, Q, exec, kitty"
-        "SUPER, C, killactive,"
-        "SUPER, M, exit,"
-        "SUPER, E, exec, dolphin"
-        "SUPER, V, togglefloating,"
-        "SUPER, R, exec, nwg-drawer"
-        "SUPER, P, pseudo,"
-        "SUPER, J, togglesplit,"
-        "SUPER, F, fullscreen,"
-
-        # Move focus
-        "SUPER, left, movefocus, l"
-        "SUPER, right, movefocus, r"
-        "SUPER, up, movefocus, u"
-        "SUPER, down, movefocus, d"
-        "SUPER, H, movefocus, l"
-        "SUPER, L, movefocus, r"
-        "SUPER, K, movefocus, u"
-        "SUPER, J, movefocus, d"
-
-        # Move windows
-        "SUPER SHIFT, left, movewindow, l"
-        "SUPER SHIFT, right, movewindow, r"
-        "SUPER SHIFT, up, movewindow, u"
-        "SUPER SHIFT, down, movewindow, d"
-        "SUPER SHIFT, H, movewindow, l"
-        "SUPER SHIFT, L, movewindow, r"
-        "SUPER SHIFT, K, movewindow, u"
-        "SUPER SHIFT, J, movewindow, d"
-
-        # Switch workspaces
-        "SUPER, 1, workspace, 1"
-        "SUPER, 2, workspace, 2"
-        "SUPER, 3, workspace, 3"
-        "SUPER, 4, workspace, 4"
-        "SUPER, 5, workspace, 5"
-        "SUPER, 6, workspace, 6"
-        "SUPER, 7, workspace, 7"
-        "SUPER, 8, workspace, 8"
-        "SUPER, 9, workspace, 9"
-        "SUPER, 0, workspace, 10"
-
-        # Move active window to workspace
-        "SUPER SHIFT, 1, movetoworkspace, 1"
-        "SUPER SHIFT, 2, movetoworkspace, 2"
-        "SUPER SHIFT, 3, movetoworkspace, 3"
-        "SUPER SHIFT, 4, movetoworkspace, 4"
-        "SUPER SHIFT, 5, movetoworkspace, 5"
-        "SUPER SHIFT, 6, movetoworkspace, 6"
-        "SUPER SHIFT, 7, movetoworkspace, 7"
-        "SUPER SHIFT, 8, movetoworkspace, 8"
-        "SUPER SHIFT, 9, movetoworkspace, 9"
-        "SUPER SHIFT, 0, movetoworkspace, 10"
-
-        # Move window to monitor (individual windows)
-        "SUPER ALT, left, movewindow, mon:DP-1"
-        "SUPER ALT, right, movewindow, mon:DP-2"
-        "SUPER ALT, H, movewindow, mon:DP-1"
-        "SUPER ALT, L, movewindow, mon:DP-2"
-
-        # Move entire workspace to monitor
-        "SUPER CTRL, left, movecurrentworkspacetomonitor, l"
-        "SUPER CTRL, right, movecurrentworkspacetomonitor, r"
-
-        # Screenshot
-        ", Print, exec, grim -g \"$(slurp)\" - | wl-copy"
-        "SHIFT, Print, exec, grim - | wl-copy"
-
-        # Media keys
-        ", XF86AudioRaiseVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ +5%"
-        ", XF86AudioLowerVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -5%"
-        ", XF86AudioMute, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle"
-        ", XF86AudioPlay, exec, playerctl play-pause"
-        ", XF86AudioPause, exec, playerctl play-pause"
-        ", XF86AudioNext, exec, playerctl next"
-        ", XF86AudioPrev, exec, playerctl previous"
-
-        # nwg-shell keybindings
-        "SUPER, D, exec, nwg-drawer"
-        "SUPER SHIFT, R, exec, nwg-menu"
-        "SUPER SHIFT, D, exec, nwg-displays"
-        "SUPER SHIFT, A, exec, azote"
-      ];
-
-      bindm = [
-        "SUPER, mouse:272, movewindow"
-        "SUPER, mouse:273, resizewindow"
-      ];
-
-      windowrulev2 = [
-        "immediate, class:^(steam_app).*"
-        "fullscreen, class:^(steam_app).*"
-        "workspace 5, class:^(steam)$"
-        "workspace 6, class:^(lutris)$"
-        "workspace 6, class:^(heroic)$"
-      ];
-    };
-  };
-
-  # Terminal
+  # Terminal - Using Konsole (KDE's terminal) as default but keep Kitty available
   programs.kitty = {
     enable = true;
     settings = {
@@ -251,53 +65,9 @@
       url_style = "none";
       underline_hyperlinks = "never";
       copy_on_select = "clipboard";
+      # KDE integration
+      confirm_os_window_close = 0;
     };
-  };
-
-  # nwg-shell components configuration
-  xdg.configFile = {
-    "nwg-panel/config".text = ''
-      [
-        {
-          "name": "panel-top",
-          "output": "",
-          "layer": "top", 
-          "position": "top",
-          "controls": "right",
-          "width": "auto",
-          "height": 30,
-          "homogeneous": true,
-          "margin-top": 0,
-          "margin-bottom": 0,
-          "padding-horizontal": 0,
-          "padding-vertical": 0,
-          "spacing": 4,
-          "items-padding": 4,
-          "icons": "",
-          "css-name": "panel-top",
-          "modules-left": ["hyprland-workspaces", "hyprland-window"],
-          "modules-center": ["clock"],
-          "modules-right": ["brightness", "battery", "network", "bluetooth", "volume", "tray"]
-        }
-      ]
-    '';
-
-    "nwg-drawer/drawer.css".text = ''
-      window {
-        background-color: rgba(12, 12, 12, 0.95);
-        color: #eeeeee;
-      }
-
-      button {
-        background: none;
-        border: none;
-        color: #eeeeee;
-      }
-
-      button:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-    '';
   };
 
   home.packages = with pkgs; [
@@ -315,17 +85,52 @@
     nvtopPackages.nvidia
     jellyfin-media-player
 
-    # Wayland utilities
+    # KDE-specific utilities  
+    kdePackages.konsole
+    kdePackages.kate
+    kdePackages.ark
+    kdePackages.okular
+    kdePackages.gwenview
+    kdePackages.spectacle
+    kdePackages.kcalc
+    kdePackages.kfind
+    kdePackages.filelight
+
+    # System utilities
     grim
     slurp
     wl-clipboard
-    mako
     playerctl
     pavucontrol
 
     # Fonts
     nerd-fonts.fira-code
+
+    # Icon themes and packages for KDE
+    papirus-icon-theme
+    breeze-icons
+    oxygen-icons5
   ];
+
+  # Configure KDE/Qt applications
+  qt = {
+    enable = true;
+    platformTheme.name = "kde";
+    style.name = "breeze";
+  };
+
+  # GTK configuration for better theme consistency
+  gtk = {
+    enable = true;
+    iconTheme = {
+      name = "Papirus";
+      package = pkgs.papirus-icon-theme;
+    };
+    theme = {
+      name = "Breeze";
+      package = pkgs.kdePackages.breeze-gtk;
+    };
+  };
 
   programs.git = {
     enable = true;
