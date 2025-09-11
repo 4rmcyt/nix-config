@@ -28,8 +28,6 @@
   users.groups.git = { };
   nixpkgs.config.allowUnfree = true;
 
-
-
   # =================================================================
   # 2. Nix Daemon Configuration
   # =================================================================
@@ -102,7 +100,6 @@
     statix
     cpuid
     prometheus-cloudflare-exporter
-    python3Full
     jellyfin-ffmpeg
     libva-utils
     intel-gpu-tools
@@ -129,6 +126,7 @@
     prettier
     helix_git
     auto-cpufreq
+    cachix
   ];
   # =================================================================
   # 6. System Services
