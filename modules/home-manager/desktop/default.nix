@@ -215,6 +215,8 @@
 
     # Fonts
     nerd-fonts.fira-code
+
+    mc
   ];
 
   # Configure Qt for Plasma 6
