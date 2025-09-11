@@ -104,7 +104,6 @@
     btop
     nixfmt
     displaylink
-    yubikey-personalization-gui
     yubikey-manager-qt
     yubikey-manager
     yubioath-flutter
@@ -135,7 +134,7 @@
       dates = [ "weekly" ];
     };
   };
-  
+
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     modesetting.enable = true;
