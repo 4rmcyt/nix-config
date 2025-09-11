@@ -136,6 +136,16 @@
       };
     };
 
+    auto-cpufreq = {
+      enable = true;
+      settings = {
+        charger = {
+          governor = "performance";
+          turbo = "auto";
+        };
+      };
+    };
+
     direnv = {
       enable = true;
       enableZshIntegration = true;
