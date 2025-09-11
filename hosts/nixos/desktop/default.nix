@@ -135,13 +135,15 @@
       dates = [ "weekly" ];
     };
   };
-    auto-cpufreq.enable = true;
-    auto-cpufreq.settings = {
+  programs.auto-cpufreq = {
+    enable = true;
+    settings = {
       charger = {
         governor = "performance";
         turbo = "auto";
       };
     };
+  };
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     modesetting.enable = true;
