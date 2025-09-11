@@ -95,18 +95,26 @@
     kdePackages.kfind
     kdePackages.filelight
     kdePackages.partitionmanager
+    kdePackages.discover
+    kdePackages.kcharselect # Tool to select and copy special characters from all installed fonts
+    kdePackages.ksystemlog
+    kdePackages.kclock
+    kdePackages.sddm-kcm
+    papirus-icon-theme
+    kdePackages.breeze-icons
+    kdiff3
+    kdePackages.isoimagewriter
+    kdePackages.kdeconnect
+    hardinfo2
 
     # Wayland utilities
     wl-clipboard
     playerctl
     pavucontrol
+    wayland-utils
 
     # Fonts
     nerd-fonts.fira-code
-
-    # Icon themes for KDE Plasma 6
-    papirus-icon-theme
-    kdePackages.breeze-icons
   ];
 
   # Configure Qt for Plasma 6
