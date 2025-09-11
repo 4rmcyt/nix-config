@@ -194,7 +194,6 @@
     kdePackages.dolphin
     nvtopPackages.nvidia
     jellyfin-media-player
-    displaylink
 
     # KDE Plasma 6 specific utilities
     kdePackages.konsole
