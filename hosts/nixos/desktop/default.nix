@@ -5,6 +5,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ../../../modules/hyprland
     ../../../modules/gaming
     ../../../modules/users/zeev
     ../../../modules/disko/desktop
@@ -33,26 +34,9 @@
     };
   };
 
+  # chaotic.mesa-git.enable = true;
+
   services.scx.enable = true;
-
-  # Enable X11 and KDE Plasma
-  services.xserver = {
-    enable = true;
-    videoDrivers = [ "nvidia" ];
-    
-    # Display manager and desktop environment
-    displayManager.sddm.enable = true;
-    desktopManager.plasma5.enable = true;
-    
-    # Configure keyboard
-    xkb = {
-      layout = "us";
-      variant = "";
-    };
-  };
-
-  # KDE Plasma 6 (latest) - comment out plasma5 above and uncomment below if you want Plasma 6
-  # services.desktopManager.plasma6.enable = true;
 
   # Networking with WiFi support
   networking = {
@@ -70,7 +54,20 @@
   time.timeZone = "America/Edmonton";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  # Audio - PipeWire with KDE integration
+  services.desktopManager.plasma6.enable = true;
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+  };
+
+  # XDG portal for Plasma 6
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      kdePackages.xdg-desktop-portal-kde
+    ];
+  };
+  # Audio
   services.pulseaudio.enable = false;
   services.pipewire = {
     enable = true;
@@ -78,7 +75,9 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     lowLatency = {
+      # enable this module
       enable = true;
+      # defaults (no need to be set unless modified)
       quantum = 64;
       rate = 48000;
     };
@@ -87,105 +86,24 @@
   security.rtkit.enable = true;
   services.openssh.enable = true;
 
-  # Enable printing support
-  services.printing.enable = true;
-
-  # Enable bluetooth
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
-
   environment.systemPackages = with pkgs; [
-    # Basic tools
     vim
     wget
     curl
     git
+    firefox
+    discord
     htop
     neofetch
     nvtopPackages.nvidia
     tailscale
     helix_git
+    telegram-desktop_git
+    jellyfin-media-player
     direnv
     btop
     nixfmt
-
-    # KDE Applications and tools
-    kdePackages.kate
-    kdePackages.konsole
-    kdePackages.dolphin
-    kdePackages.ark
-    kdePackages.okular
-    kdePackages.gwenview
-    kdePackages.spectacle
-    kdePackages.krunner
-    kdePackages.systemsettings
-    kdePackages.plasma-workspace
-    kdePackages.plasma-desktop
-    kdePackages.kwin
-    kdePackages.breeze
-    kdePackages.breeze-gtk
-    kdePackages.oxygen
-    kdePackages.kinfocenter
-    kdePackages.plasma-pa
-    kdePackages.plasma-nm
-    kdePackages.bluedevil
-    kdePackages.powerdevil
-    kdePackages.kscreen
-    kdePackages.plasma-workspace-wallpapers
-
-    # Additional KDE utilities
-    kdePackages.kcalc
-    kdePackages.kcharselect
-    kdePackages.kcolorchooser
-    kdePackages.kruler
-    kdePackages.kfind
-    kdePackages.filelight
-    
-    # GUI Applications
-    firefox
-    discord
-    telegram-desktop_git
-    jellyfin-media-player
-    vscode
-    steam
-    lutris
-
-    # Multimedia
-    vlc
-    gimp
-    inkscape
-
-    # System utilities
-    gparted
-    firefox
-    chromium
-    thunderbird
-    libreoffice-qt6-fresh
   ];
-
-  # Fonts
-  fonts.packages = with pkgs; [
-    noto-fonts
-    noto-fonts-cjk-sans
-    noto-fonts-emoji
-    liberation_ttf
-    fira-code
-    fira-code-symbols
-    font-awesome
-    nerd-fonts.fira-code
-    dejavu_fonts
-    ubuntu_font_family
-  ];
-
-  # Enable some additional services for better KDE experience
-  services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
-  
-  # Configure Qt and GTK themes
-  qt = {
-    enable = true;
-    platformTheme = "kde";
-    style = "breeze";
-  };
 
   # Nix settings
   nix = {
@@ -212,17 +130,14 @@
       dates = [ "weekly" ];
     };
   };
-
-  # NVIDIA configuration
+  services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;
     powerManagement.finegrained = false;
     open = false;
     nvidiaSettings = true;
-    package = pkgs.linuxPackages.nvidiaPackages.stable;
   };
-
   # Enable home-manager backup for conflicting files
   home-manager.backupFileExtension = "backup";
 

@@ -9,7 +9,7 @@
   home.homeDirectory = "/home/zeev";
   home.stateVersion = "25.05";
 
-  # ZSH Configuration (same as before)
+  # ZSH Configuration
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -65,7 +65,6 @@
       url_style = "none";
       underline_hyperlinks = "never";
       copy_on_select = "clipboard";
-      # KDE integration
       confirm_os_window_close = 0;
     };
   };
@@ -85,7 +84,7 @@
     nvtopPackages.nvidia
     jellyfin-media-player
 
-    # KDE-specific utilities  
+    # KDE Plasma 6 specific utilities
     kdePackages.konsole
     kdePackages.kate
     kdePackages.ark
@@ -95,10 +94,9 @@
     kdePackages.kcalc
     kdePackages.kfind
     kdePackages.filelight
+    kdePackages.partitionmanager
 
-    # System utilities
-    grim
-    slurp
+    # Wayland utilities
     wl-clipboard
     playerctl
     pavucontrol
@@ -106,20 +104,19 @@
     # Fonts
     nerd-fonts.fira-code
 
-    # Icon themes and packages for KDE
+    # Icon themes for KDE Plasma 6
     papirus-icon-theme
-    breeze-icons
-    oxygen-icons5
+    kdePackages.breeze-icons
   ];
 
-  # Configure KDE/Qt applications
+  # Configure Qt for Plasma 6
   qt = {
     enable = true;
     platformTheme.name = "kde";
     style.name = "breeze";
   };
 
-  # GTK configuration for better theme consistency
+  # GTK configuration for better theme consistency with Plasma 6
   gtk = {
     enable = true;
     iconTheme = {
