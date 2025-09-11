@@ -195,7 +195,6 @@
     nvtopPackages.nvidia
     jellyfin-media-player
 
-    # KDE Plasma 6 specific utilities
     kdePackages.konsole
     kdePackages.kate
     kdePackages.ark
@@ -207,7 +206,7 @@
     kdePackages.filelight
     kdePackages.partitionmanager
     kdePackages.discover
-    kdePackages.kcharselect # Tool to select and copy special characters from all installed fonts
+    kdePackages.kcharselect
     kdePackages.ksystemlog
     kdePackages.kclock
     kdePackages.sddm-kcm
