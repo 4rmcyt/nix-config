@@ -215,7 +215,6 @@
     kdePackages.breeze-icons
     kdiff3
     kdePackages.isoimagewriter
-    kdePackages.kdeconnect
     hardinfo2
 
     # Wayland utilities
