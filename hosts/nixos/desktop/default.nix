@@ -103,6 +103,7 @@
     direnv
     btop
     nixfmt
+    displaylink
   ];
 
   # Nix settings
