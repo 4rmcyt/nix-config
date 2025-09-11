@@ -104,6 +104,10 @@
     btop
     nixfmt
     displaylink
+    yubikey-personalization-gui
+    yubikey-manager-qt
+    yubikey-manager
+    yubioath-flutter
   ];
 
   # Nix settings
