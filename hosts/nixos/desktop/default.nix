@@ -104,7 +104,6 @@
     btop
     nixfmt
     displaylink
-    yubikey-manager-qt
     yubikey-manager
     yubioath-flutter
   ];
