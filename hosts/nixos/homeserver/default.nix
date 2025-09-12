@@ -29,8 +29,8 @@
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.packageOverrides = pkgs: {
     python3 = pkgs.python3.override {
-      packageOverrides = pySelf: pySuper: {
-        pyrate-limiter = pySuper.pyrate-limiter.overridePythonAttrs (oldAttrs: {
+      packageOverrides = _pySelf: pySuper: {
+        pyrate-limiter = pySuper.pyrate-limiter.overridePythonAttrs (_oldAttrs: {
           doCheck = false; # Skip tests
         });
       };
