@@ -45,6 +45,9 @@
 
   # Tailscale
   services.tailscale.enable = true;
+  services.hercules-ci-agent.package =
+    let inherit (pkgs.stdenv.hostPlatform) system;
+    in inputs.hercules-ci-agent.package.${system}.hercules-ci-agent-nix_2_4;
 
   # Time zone and locale
   time.timeZone = "America/Edmonton";

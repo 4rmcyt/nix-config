@@ -22,6 +22,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    hercules-ci-agent.url = "github:hercules-ci/hercules-ci-agent/stable";
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";

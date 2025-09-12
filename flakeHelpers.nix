@@ -17,6 +17,7 @@ let
           inputs.chaotic.nixosModules.nyx-cache
           inputs.chaotic.nixosModules.nyx-overlay
           inputs.chaotic.nixosModules.nyx-registry
+          inputs.hercules-ci-agent.nixosModules.agent-service
           # inputs.lix-module.nixosModules.default
           {
             home-manager = {
