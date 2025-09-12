@@ -31,7 +31,7 @@
     python3 = pkgs.python3.override {
       packageOverrides = pySelf: pySuper: {
         pyrate-limiter = pySuper.pyrate-limiter.overridePythonAttrs (oldAttrs: {
-          doCheck = false;  # Skip tests
+          doCheck = false; # Skip tests
         });
       };
     };

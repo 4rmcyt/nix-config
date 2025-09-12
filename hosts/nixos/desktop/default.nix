@@ -109,6 +109,7 @@
     yubioath-flutter
     cachix
     chromium
+    fwupd
   ];
 
   # Nix settings
