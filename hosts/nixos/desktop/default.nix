@@ -110,6 +110,7 @@
     cachix
     chromium
     fwupd
+    nix-fast-build
   ];
 
   # Nix settings
