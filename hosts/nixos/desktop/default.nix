@@ -108,6 +108,7 @@
     chromium
     fwupd
     nix-fast-build
+    nom
   ];
 
   # Nix settings
