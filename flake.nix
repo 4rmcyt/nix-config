@@ -192,9 +192,6 @@
                   home-manager.users.vk = {
                     imports = [
                       ./modules/home-manager/macbook
-                      {
-                        nixpkgs.config.allowUnfree = true;
-                      }
                       inputs.sops-nix.homeManagerModules.sops
                     ];
                     sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
