@@ -2,7 +2,6 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../../modules/hyprland
     ../../../modules/gaming
     ../../../modules/users/zeev
     ../../../modules/disko/desktop
