@@ -1,6 +1,9 @@
-{ "4rmcyt": 
-    { "kind": "CachixCache"
-    , "authToken": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI4M2MzODgwYi0yYjAyLTQ1MzEtYjgwNy05Yzc5N2YzMzQ5NTgiLCJzY29wZXMiOiJjYWNoZSJ9.ioTcvNoGiND7kWWV84jotQfnjGN-OQyvRil-v6lEBQ0"
-    , "publicKeys": ["4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="]
-    }
+{
+  "4rmcyt": {
+    "kind": "CachixCache",
+    "authToken": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI4M2MzODgwYi0yYjAyLTQ1MzEtYjgwNy05Yzc5N2YzMzQ5NTgiLCJzY29wZXMiOiJjYWNoZSJ9.ioTcvNoGiND7kWWV84jotQfnjGN-OQyvRil-v6lEBQ0",
+    "publicKeys": [
+      "4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="
+    ]
+  }
 }
