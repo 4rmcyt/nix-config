@@ -165,6 +165,8 @@
     open = false;
     nvidiaSettings = true;
   };
+
+  services.fwupd.enable = true;
   # Enable home-manager backup for conflicting files
   home-manager.backupFileExtension = "backup";
 
