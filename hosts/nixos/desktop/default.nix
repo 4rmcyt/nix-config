@@ -93,8 +93,8 @@
     neofetch
     nvtopPackages.nvidia
     tailscale
-    helix_git
-    telegram-desktop_git
+    helix
+    telegram-desktop
     jellyfin-media-player
     direnv
     btop
