@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -32,7 +32,7 @@
 
   # chaotic.mesa-git.enable = true;
 
-  # services.scx.enable = true;
+  services.scx.enable = true;
 
   # Networking with WiFi support
   networking = {
@@ -46,8 +46,10 @@
   # Tailscale
   services.tailscale.enable = true;
   services.hercules-ci-agent.package =
-    let inherit (pkgs.stdenv.hostPlatform) system;
-    in inputs.hercules-ci-agent.package.${system}.hercules-ci-agent-nix_2_4;
+    let
+      inherit (pkgs.stdenv.hostPlatform) system;
+    in
+    inputs.hercules-ci-agent.package.${system}.hercules-ci-agent-nix_2_4;
 
   # Time zone and locale
   time.timeZone = "America/Edmonton";
