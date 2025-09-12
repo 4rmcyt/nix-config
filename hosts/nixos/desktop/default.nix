@@ -108,7 +108,7 @@
     chromium
     fwupd
     nix-fast-build
-    nom
+    nix-output-monitor
   ];
 
   # Nix settings
