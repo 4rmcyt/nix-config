@@ -64,9 +64,7 @@ in
   programs.zsh.enable = true;
 
   home-manager.users.zeev = {
-    # nwg-shell components are handled by the hyprland module
     home.packages = with pkgs; [
-      # User-specific packages go here
     ];
   };
 }
