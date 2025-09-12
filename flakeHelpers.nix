@@ -29,30 +29,30 @@ let
         ++ extraModules;
       };
 
-    mkDarwin =
-      machineHostname: system: extraModules:
-      let
-        darwinConfig = inputs.nix-darwin.lib.darwinSystem {
-          inherit system;
-          specialArgs = {
-            inherit inputs;
-            host = machineHostname;
-          };
-          modules = [
-            inputs.home-manager.darwinModules.home-manager
-            inputs.mac-app-util.darwinModules.default
-            {
-              home-manager = {
-                useGlobalPkgs = false;
-                useUserPackages = true;
-                extraSpecialArgs = { inherit inputs; };
-              };
-            }
-          ]
-          ++ extraModules;
-        };
-      in
-      darwinConfig // { type = "darwin-configuration"; };
+    # mkDarwin =
+    #   machineHostname: system: extraModules:
+    #   let
+    #     darwinConfig = inputs.nix-darwin.lib.darwinSystem {
+    #       inherit system;
+    #       specialArgs = {
+    #         inherit inputs;
+    #         host = machineHostname;
+    #       };
+    #       modules = [
+    #         inputs.home-manager.darwinModules.home-manager
+    #         inputs.mac-app-util.darwinModules.default
+    #         {
+    #           home-manager = {
+    #             useGlobalPkgs = false;
+    #             useUserPackages = true;
+    #             extraSpecialArgs = { inherit inputs; };
+    #           };
+    #         }
+    #       ]
+    #       ++ extraModules;
+    #     };
+    #   in
+    #   darwinConfig // { type = "darwin-configuration"; };
   };
 in
 helpers

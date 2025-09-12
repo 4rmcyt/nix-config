@@ -55,10 +55,10 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    mac-app-util = {
-      url = "github:hraban/mac-app-util";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # mac-app-util = {
+    #   url = "github:hraban/mac-app-util";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -78,7 +78,7 @@
     nix-index-database.url = "github:nix-community/nix-index-database";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     systems.url = "github:nix-systems/default";
-    nixpkgs-firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
+    # nixpkgs-firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
     nixarr.url = "github:rasmus-kirk/nixarr";
     authentik-nix.url = "github:nix-community/authentik-nix";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
@@ -86,17 +86,17 @@
     nixos-generators.url = "github:nix-community/nixos-generators";
 
     nix-gaming.url = "github:fufexan/nix-gaming";
-    nix-homebrew = {
-      url = "github:zhaofengli/nix-homebrew";
-    };
-    homebrew-core = {
-      url = "github:homebrew/homebrew-core";
-      flake = false;
-    };
-    homebrew-cask = {
-      url = "github:homebrew/homebrew-cask";
-      flake = false;
-    };
+    # nix-homebrew = {
+    #   url = "github:zhaofengli/nix-homebrew";
+    # };
+    # homebrew-core = {
+    #   url = "github:homebrew/homebrew-core";
+    #   flake = false;
+    # };
+    # homebrew-cask = {
+    #   url = "github:homebrew/homebrew-cask";
+    #   flake = false;
+    # };
   };
 
   outputs =
