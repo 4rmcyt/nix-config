@@ -80,14 +80,7 @@
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
     nixos-generators.url = "github:nix-community/nixos-generators";
-    linkwarden-pr = {
-      url = "github:NixOS/nixpkgs/f0809e9f3402644c0987842727cb1d3f93d2e4a6?shallow=1";
-      flake = false;
-    };
-    hyprland.url = "github:hyprwm/Hyprland";
-    hypr-contrib.url = "github:hyprwm/contrib";
-    hyprpicker.url = "github:hyprwm/hyprpicker";
-    hyprlock.url = "github:hyprwm/hyprlock";
+
     nix-gaming.url = "github:fufexan/nix-gaming";
     nix-homebrew = {
       url = "github:zhaofengli/nix-homebrew";
