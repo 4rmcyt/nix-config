@@ -111,6 +111,7 @@
     fwupd
     nix-fast-build
     nix-output-monitor
+    zoxide
   ];
 
   # Nix settings
