@@ -102,10 +102,13 @@
     jellyfin-media-player
     direnv
     btop
+    just
+    just-lsp
     nixfmt
     yubikey-manager
     yubioath-flutter
     cachix
+    chromium
   ];
 
   # Nix settings
