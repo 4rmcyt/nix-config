@@ -27,6 +27,19 @@
   };
   users.groups.git = { };
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.packageOverrides = pkgs: {
+    python3Packages = pkgs.python3Packages // {
+      pyrate-limiter = pkgs.python3Packages.pyrate-limiter.overridePythonAttrs (oldAttrs: rec {
+        version = "3.8.0";  # Use older version
+        src = pkgs.fetchPypi {
+          pname = "pyrate-limiter";
+          inherit version;
+          hash = "sha256-XXXXX";  # You'll need to get the correct hash
+        };
+        doCheck = false;
+      });
+    };
+  };
 
   # =================================================================
   # 2. Nix Daemon Configuration
