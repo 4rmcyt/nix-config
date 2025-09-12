@@ -90,6 +90,8 @@
     firefox
     discord
     htop
+    toml-sort
+    rustfmt
     neofetch
     nvtopPackages.nvidia
     tailscale
@@ -101,6 +103,13 @@
     just
     just-lsp
     nixfmt
+    treefmt
+    nixfmt-rfc-style
+    statix
+    alejandra
+    deadnix
+    shfmt
+    nixos-rebuild-ng
     yubikey-manager
     yubioath-flutter
     cachix
