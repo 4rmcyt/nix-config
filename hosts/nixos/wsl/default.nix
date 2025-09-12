@@ -29,7 +29,6 @@
   #   let inherit (pkgs.stdenv.hostPlatform) system;
   #   in inputs.hercules-ci-agent.package.${system}.hercules-ci-agent-nix_2_4;
 
-
   services.hercules-ci-agent.enable = true;
   # services.hercules-ci-agent.concurrentTasks = 4; # Number of jobs to run
 

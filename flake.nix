@@ -100,10 +100,7 @@
   };
 
   outputs =
-    inputs@{
-      treefmt-nix,
-      ...
-    }:
+    inputs@{ treefmt-nix, ... }:
     inputs.flake-parts.lib.mkFlake
       {
         inherit inputs;
