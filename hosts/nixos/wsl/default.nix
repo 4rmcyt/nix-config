@@ -24,6 +24,9 @@
 
   # VSCode Server Configuration
   services.vscode-server.enable = true;
+  services.hercules-ci-agent.package =
+    let inherit (pkgs.stdenv.hostPlatform) system;
+    in inputs.hercules-ci-agent.package.${system}.hercules-ci-agent-nix_2_4;
 
   # WSL Configuration
   wsl = {
