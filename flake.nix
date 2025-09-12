@@ -43,7 +43,6 @@
     #   inputs.nixpkgs.follows = "nixpkgs";
     #   inputs.lix.follows = "lix";
     # };
-
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -154,6 +153,7 @@
                 # inputs.nixos-facter-modules.nixosModules.facter
                 inputs.nix-gaming.nixosModules.pipewireLowLatency
                 inputs.nix-gaming.nixosModules.platformOptimizations
+                inputs.hercules-ci-agent.nixosModules.agent-service
 
                 {
                   # config.facter.reportPath = ./hosts/nixos/desktop/facter.json;
@@ -178,6 +178,7 @@
                     imports = [
                       ./modules/home-manager/wsl
                       inputs.sops-nix.homeManagerModules.sops
+                      inputs.hercules-ci-agent.nixosModules.agent-service
                     ];
                   };
                 }
