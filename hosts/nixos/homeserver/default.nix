@@ -133,7 +133,7 @@
   # =================================================================
   # This is the single, merged services block.
   services = {
-    scx.enable = true;
+    # scx.enable = true;
     # --- SSH Server ---
     openssh = {
       enable = true;
