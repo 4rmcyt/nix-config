@@ -123,7 +123,7 @@
         flake =
           let
             helpers = import ./flakeHelpers.nix inputs;
-            inherit (helpers) mkNixos mkDarwin;
+            inherit (helpers) mkNixos;
           in
           {
             nixosConfigurations = {
