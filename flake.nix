@@ -185,22 +185,22 @@
               ];
             };
 
-            darwinConfigurations = {
-              macbook = mkDarwin "macbook" "aarch64-darwin" [
-                ./hosts/darwin/macbook
-                ./modules/users/vk
-                {
-                  sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
-                  home-manager.users.vk = {
-                    imports = [
-                      ./modules/home-manager/macbook
-                      inputs.sops-nix.homeManagerModules.sops
-                    ];
-                    sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
-                  };
-                }
-              ];
-            };
+            # darwinConfigurations = {
+            #   macbook = mkDarwin "macbook" "aarch64-darwin" [
+            #     ./hosts/darwin/macbook
+            #     ./modules/users/vk
+            #     {
+            #       sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
+            #       home-manager.users.vk = {
+            #         imports = [
+            #           ./modules/home-manager/macbook
+            #           inputs.sops-nix.homeManagerModules.sops
+            #         ];
+            #         sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
+            #       };
+            #     }
+            #   ];
+            # };
           };
       };
 }
