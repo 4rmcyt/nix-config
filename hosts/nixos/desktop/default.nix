@@ -114,6 +114,7 @@
     nix-fast-build
     nix-output-monitor
     zoxide
+    hercules-ci-agent
   ];
 
   # Nix settings
@@ -172,6 +173,8 @@
     nvidiaSettings = true;
   };
 
+
+  services.hercules-ci-agent.enable = true;
   services.fwupd.enable = true;
   # Enable home-manager backup for conflicting files
   home-manager.backupFileExtension = "backup";
