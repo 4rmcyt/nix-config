@@ -19,7 +19,7 @@ let
           inputs.chaotic.nixosModules.nyx-registry
           {
             home-manager = {
-              useGlobalPkgs = true;
+              useGlobalPkgs = false;
               useUserPackages = true;
               extraSpecialArgs = { inherit inputs; };
             };
@@ -42,7 +42,7 @@ let
             inputs.mac-app-util.darwinModules.default
             {
               home-manager = {
-                useGlobalPkgs = true;
+                useGlobalPkgs = false;
                 useUserPackages = true;
                 extraSpecialArgs = { inherit inputs; };
               };
