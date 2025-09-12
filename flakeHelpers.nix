@@ -17,7 +17,7 @@ let
           inputs.chaotic.nixosModules.nyx-cache
           inputs.chaotic.nixosModules.nyx-overlay
           inputs.chaotic.nixosModules.nyx-registry
-          inputs.lix-module.nixosModules.default
+          # inputs.lix-module.nixosModules.default
           {
             home-manager = {
               useGlobalPkgs = true;
