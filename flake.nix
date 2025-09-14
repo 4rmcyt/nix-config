@@ -23,10 +23,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
-    hercules-ci-agent = {
-      url = "github:hercules-ci/hercules-ci-agent";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -154,7 +150,6 @@
                 # inputs.nixos-facter-modules.nixosModules.facter
                 inputs.nix-gaming.nixosModules.pipewireLowLatency
                 inputs.nix-gaming.nixosModules.platformOptimizations
-                inputs.hercules-ci-agent.nixosModules.agent-service
                 {
                   # config.facter.reportPath = ./hosts/nixos/desktop/facter.json;
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
@@ -172,7 +167,6 @@
               wsl = mkNixos "wsl" "x86_64-linux" [
                 ./hosts/nixos/wsl
                 ./modules/users/zeev
-                inputs.hercules-ci-agent.nixosModules.agent-service
                 {
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   home-manager.users.zeev = {
