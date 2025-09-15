@@ -121,6 +121,9 @@
     powertop
     nvidia-vaapi-driver
     libva-utils
+    nvd
+    nix-diff
+    auto-cpufreq
   ];
 
   # Nix settings
