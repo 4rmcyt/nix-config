@@ -2,10 +2,9 @@
   description = "A highly structured NixOS configuration";
   nixConfig = {
     extra-substituters = [
-      " https://aseipp-nix-cache.freetls.fastly.net"
+      "https://aseipp-nix-cache.freetls.fastly.net"
       "https://nix-community.cachix.org"
       "https://nix-gaming.cachix.org"
-      "https://hyprland.cachix.org"
       "https://homeserver.cachix.org"
       "https://chaotic-nyx.cachix.org"
       "https://4rmcyt.cachix.org"
