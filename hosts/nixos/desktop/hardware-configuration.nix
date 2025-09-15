@@ -34,10 +34,45 @@
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
       "usbcore.quirks=0bda:0411:b"
+      "net.core.default_qdisc=fq"
+      "net.ipv4.tcp_congestion_control=bbr"
     ];
     zfs = {
       forceImportRoot = true;
       forceImportAll = true;
+    };
+    kernel.sysctl = {
+      # TCP Buffer sizes
+      "net.core.rmem_default" = 262144;
+      "net.core.rmem_max" = 16777216;
+      "net.core.wmem_default" = 262144;
+      "net.core.wmem_max" = 16777216;
+      "net.ipv4.tcp_rmem" = "4096 65536 16777216";
+      "net.ipv4.tcp_wmem" = "4096 65536 16777216";
+
+      # Network queue and backlog
+      "net.core.netdev_max_backlog" = 5000;
+      "net.core.netdev_budget" = 600;
+
+      # TCP optimizations
+      "net.ipv4.tcp_window_scaling" = 1;
+      "net.ipv4.tcp_timestamps" = 1;
+      "net.ipv4.tcp_sack" = 1;
+      "net.ipv4.tcp_fack" = 1;
+      "net.ipv4.tcp_low_latency" = 1;
+      "net.ipv4.tcp_fastopen" = 3;
+
+      # Reduce TIME_WAIT sockets
+      "net.ipv4.tcp_fin_timeout" = 15;
+      "net.ipv4.tcp_tw_reuse" = 1;
+
+      # Increase local port range
+      "net.ipv4.ip_local_port_range" = "1024 65535";
+
+      # Gaming optimizations
+      "net.ipv4.tcp_no_delay" = 1;
+      "net.core.busy_read" = 50;
+      "net.core.busy_poll" = 50;
     };
   };
 
