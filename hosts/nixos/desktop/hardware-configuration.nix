@@ -33,6 +33,7 @@
       "zfs.zfs_arc_max=12884901888"
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
+      "usbcore.quirks=0bda:0411:b"
     ];
     zfs = {
       forceImportRoot = true;
