@@ -23,10 +23,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
-    nix-darwin = {
-      url = "github:LnL7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    
     # nixpkgs-cuda = {
     #   url = "github:NixOS/nixpkgs/nixos-unstable";
     #   config.cudaSupport = true;
@@ -51,10 +48,6 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # mac-app-util = {
-    #   url = "github:hraban/mac-app-util";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -82,17 +75,6 @@
     nixos-generators.url = "github:nix-community/nixos-generators";
 
     nix-gaming.url = "github:fufexan/nix-gaming";
-    # nix-homebrew = {
-    #   url = "github:zhaofengli/nix-homebrew";
-    # };
-    # homebrew-core = {
-    #   url = "github:homebrew/homebrew-core";
-    #   flake = false;
-    # };
-    # homebrew-cask = {
-    #   url = "github:homebrew/homebrew-cask";
-    #   flake = false;
-    # };
   };
 
   outputs =
@@ -178,23 +160,6 @@
                 }
               ];
             };
-
-            # darwinConfigurations = {
-            #   macbook = mkDarwin "macbook" "aarch64-darwin" [
-            #     ./hosts/darwin/macbook
-            #     ./modules/users/vk
-            #     {
-            #       sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
-            #       home-manager.users.vk = {
-            #         imports = [
-            #           ./modules/home-manager/macbook
-            #           inputs.sops-nix.homeManagerModules.sops
-            #         ];
-            #         sops.age.keyFile = "/Users/vk/.config/sops/age/keys.txt";
-            #       };
-            #     }
-            #   ];
-            # };
           };
       };
 }
