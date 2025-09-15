@@ -185,7 +185,7 @@
   services.hercules-ci-agent.enable = true;
   services.fwupd.enable = true;
   # Enable home-manager backup for conflicting files
-  home-manager.backupFileExtension = "backup";
+  home-manager.backupFileExtension = "hm-backup";
 
   system.stateVersion = "25.05";
 }
