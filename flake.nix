@@ -23,7 +23,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
-    
+
     # nixpkgs-cuda = {
     #   url = "github:NixOS/nixpkgs/nixos-unstable";
     #   config.cudaSupport = true;
