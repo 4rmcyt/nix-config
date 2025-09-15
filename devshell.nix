@@ -3,14 +3,17 @@
 }:
 pkgs.mkShell {
   packages = [
-    pkgs.sops
-    pkgs.age
-    pkgs.git
-    pkgs.just
-    pkgs.nixfmt-rfc-style
-    pkgs.deadnix
-    pkgs.shfmt
-    pkgs.cachix
-    pkgs.nixos-rebuild-ng
+# Existing packages
+    sops
+    
+    # Add missing formatters
+    cmake-format
+    nodePackages.prettier
+    rustfmt
+    
+    # Other useful tools for your nix config
+    nixfmt-rfc-style
+    deadnix
+    statix
   ];
 }

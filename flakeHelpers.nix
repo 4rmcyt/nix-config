@@ -20,7 +20,7 @@ let
           # inputs.lix-module.nixosModules.default
           {
             home-manager = {
-              useGlobalPkgs = true;
+              useGlobalPkgs = false;
               useUserPackages = true;
               extraSpecialArgs = { inherit inputs; };
             };
