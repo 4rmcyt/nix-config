@@ -8,7 +8,6 @@
     ../../../modules/base
   ];
 
-  # Add the missing git group
   users.groups.git = { };
   users.users.git = {
     isSystemUser = true;
@@ -17,11 +16,6 @@
     createHome = true;
     shell = pkgs.bash;
   };
-
-  nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.permittedInsecurePackages = [
-    "qtwebengine-5.15.19" # Replace with the specific version
-  ];
 
   boot = {
     loader = {

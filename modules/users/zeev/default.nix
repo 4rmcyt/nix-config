@@ -63,8 +63,4 @@ in
 
   programs.zsh.enable = true;
 
-  home-manager.users.zeev = {
-    home.packages = with pkgs; [
-    ];
-  };
 }
