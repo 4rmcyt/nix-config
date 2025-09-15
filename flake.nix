@@ -23,11 +23,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
-    nixpkgs-cuda = {
-      url = "github:NixOS/nixpkgs/nixos-unstable";
-      config.cudaSupport = true;
-      config.allowUnfree = true;
-    };
 
     # lix = {
     #   url = "https://git.lix.systems/lix-project/lix/archive/main.tar.gz";
@@ -128,7 +123,7 @@
                 ./hosts/nixos/desktop
                 ./modules/users/zeev
                 ./modules/disko/desktop
-                # inputs.nixos-facter-modules.nixosModules.facter
+                inputs.nixos-facter-modules.nixosModules.facter
                 inputs.nix-gaming.nixosModules.pipewireLowLatency
                 inputs.nix-gaming.nixosModules.platformOptimizations
                 {
