@@ -130,6 +130,8 @@
                   # config.facter.reportPath = ./hosts/nixos/desktop/facter.json;
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   home-manager.users.zeev = {
+                    useGlobalPkgs = true;
+                    useUserPackages = true;
                     imports = [
                       ./modules/home-manager/desktop
                       inputs.chaotic.homeManagerModules.default
