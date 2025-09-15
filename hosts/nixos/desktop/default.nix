@@ -124,6 +124,7 @@
     nvd
     nix-diff
     auto-cpufreq
+    cmake-format
   ];
 
   # Nix settings
