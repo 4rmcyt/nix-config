@@ -124,6 +124,7 @@
                 ./modules/users/zeev
                 ./modules/disko/desktop
                 inputs.nixos-facter-modules.nixosModules.facter
+                { config.facter.reportPath = ./hosts/nixos/desktop/facter.json; }
                 inputs.nix-gaming.nixosModules.pipewireLowLatency
                 inputs.nix-gaming.nixosModules.platformOptimizations
                 {
