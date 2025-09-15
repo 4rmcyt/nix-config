@@ -128,16 +128,15 @@
                 inputs.nix-gaming.nixosModules.pipewireLowLatency
                 inputs.nix-gaming.nixosModules.platformOptimizations
                 {
-                  # Move nixpkgs config here to avoid the warning
                   nixpkgs.config = {
-                    allowUnfree = true;
-                    permittedInsecurePackages = [
-                      "qtwebengine-5.15.19"
-                    ];
-                  };
+                        allowUnfree = true;
+                        permittedInsecurePackages = [
+                          "qtwebengine-5.15.19"
+                        ];
+                      };
                   
                   # config.facter.reportPath = ./hosts/nixos/desktop/facter.json;
-                  sops.age.keyFile = "/var/lib/sops/age.key";
+                  sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   home-manager = {
                     useGlobalPkgs = false;
                     useUserPackages = true;
@@ -148,6 +147,12 @@
                         inputs.chaotic.homeManagerModules.default
                         inputs.sops-nix.homeManagerModules.sops
                       ];
+                      nixpkgs.config = {
+                        allowUnfree = true;
+                        permittedInsecurePackages = [
+                          "qtwebengine-5.15.19"
+                        ];
+                      };
                       sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                     };
                   };
