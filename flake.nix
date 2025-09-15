@@ -22,12 +22,12 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-
-    # nixpkgs-cuda = {
-    #   url = "github:NixOS/nixpkgs/nixos-unstable";
-    #   config.cudaSupport = true;
-    #   config.allowUnfree = true;
-    # };
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    nixpkgs-cuda = {
+      url = "github:NixOS/nixpkgs/nixos-unstable";
+      config.cudaSupport = true;
+      config.allowUnfree = true;
+    };
 
     # lix = {
     #   url = "https://git.lix.systems/lix-project/lix/archive/main.tar.gz";
