@@ -63,7 +63,6 @@
       "net.ipv4.tcp_fastopen" = 3;
 
       # Reduce TIME_WAIT sockets
-      "net.ipv4.tcp_fin_timeout" = 15;
       "net.ipv4.tcp_tw_reuse" = 1;
 
       # Increase local port range
