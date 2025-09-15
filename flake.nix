@@ -1,5 +1,6 @@
 {
   description = "A highly structured NixOS configuration";
+
   nixConfig = {
     extra-substituters = [
       "https://aseipp-nix-cache.freetls.fastly.net"
@@ -9,7 +10,6 @@
       "https://chaotic-nyx.cachix.org"
       "https://4rmcyt.cachix.org"
     ];
-
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
@@ -20,55 +20,55 @@
   };
 
   inputs = {
+    # Core inputs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    systems.url = "github:nix-systems/default";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    # lix = {
-    #   url = "https://git.lix.systems/lix-project/lix/archive/main.tar.gz";
-    #   flake = false;
-    # };
-
-    # lix-module = {
-    #   url = "https://git.lix.systems/lix-project/nixos-module/archive/main.tar.gz";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    #   inputs.lix.follows = "lix";
-    # };
-    nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL/main";
+    # NixOS modules
+    home-manager = {
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Security & secrets
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    cpu-microcodes = {
-      url = "github:platomav/CPUMicrocodes";
-      flake = false;
-    };
+
+    # Performance & hardware
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     auto-cpufreq = {
       url = "github:AdnanHodzic/auto-cpufreq";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-index-database.url = "github:nix-community/nix-index-database";
-    treefmt-nix.url = "github:numtide/treefmt-nix";
-    systems.url = "github:nix-systems/default";
-    # nixpkgs-firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
+    nix-gaming.url = "github:fufexan/nix-gaming";
+
+    # Services & applications
     nixarr.url = "github:rasmus-kirk/nixarr";
     authentik-nix.url = "github:nix-community/authentik-nix";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
-    nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
-    nixos-generators.url = "github:nix-community/nixos-generators";
 
-    nix-gaming.url = "github:fufexan/nix-gaming";
+    # Development tools
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+    nix-index-database.url = "github:nix-community/nix-index-database";
+    nixos-generators.url = "github:nix-community/nixos-generators";
+    nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
+
+    # Non-flake inputs
+    cpu-microcodes = {
+      url = "github:platomav/CPUMicrocodes";
+      flake = false;
+    };
   };
 
   outputs =
@@ -78,19 +78,14 @@
         inherit inputs;
       }
       {
-        systems = [
-          "x86_64-linux"
-          # "aarch64-darwin"
-        ];
+        systems = import inputs.systems;
+        
         imports = [ treefmt-nix.flakeModule ];
-        perSystem =
-          { pkgs, ... }:
-          {
-            devShells.default = import ./devshell.nix {
-              inherit pkgs;
-            };
-            treefmt = import ./treefmt.nix;
-          };
+        
+        perSystem = { pkgs, ... }: {
+          devShells.default = import ./devshell.nix { inherit pkgs; };
+          treefmt = import ./treefmt.nix;
+        };
 
         flake =
           let
@@ -114,7 +109,7 @@
                     backupFileExtension = "hm-backup";
                     users.zeev = {
                       imports = [
-                        ./modules/home-manager/desktop
+                        ./modules/home-manager/homeserver  # Fixed: was using desktop
                         inputs.chaotic.homeManagerModules.default
                         inputs.sops-nix.homeManagerModules.sops
                       ];
@@ -132,6 +127,14 @@
                 inputs.nix-gaming.nixosModules.pipewireLowLatency
                 inputs.nix-gaming.nixosModules.platformOptimizations
                 {
+                  # Move nixpkgs config here to avoid the warning
+                  nixpkgs.config = {
+                    allowUnfree = true;
+                    permittedInsecurePackages = [
+                      "qtwebengine-5.15.19"
+                    ];
+                  };
+                  
                   # config.facter.reportPath = ./hosts/nixos/desktop/facter.json;
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   home-manager = {
@@ -153,16 +156,19 @@
               wsl = mkNixos "wsl" "x86_64-linux" [
                 ./hosts/nixos/wsl
                 ./modules/users/zeev
+                inputs.nixos-wsl.nixosModules.wsl  # Add WSL module
                 {
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   home-manager = {
                     useGlobalPkgs = true;
                     useUserPackages = true;
+                    backupFileExtension = "hm-backup";  # Add consistent backup extension
                     users.zeev = {
                       imports = [
                         ./modules/home-manager/wsl
                         inputs.sops-nix.homeManagerModules.sops
                       ];
+                      sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";  # Add sops key
                     };
                   };
                 }
