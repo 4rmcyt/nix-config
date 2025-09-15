@@ -139,7 +139,7 @@
                   # config.facter.reportPath = ./hosts/nixos/desktop/facter.json;
                   sops.age.keyFile = "/var/lib/sops/age.key";
                   home-manager = {
-                    useGlobalPkgs = true;
+                    useGlobalPkgs = false;
                     useUserPackages = true;
                     backupFileExtension = "hm-backup";
                     users.zeev = {
