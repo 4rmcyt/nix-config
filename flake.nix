@@ -108,15 +108,18 @@
                 inputs.vscode-server.nixosModules.default
                 {
                   sops.age.keyFile = "/var/lib/sops/age.key";
-                  home-manager.users.zeev = {
+                  home-manager = {
                     useGlobalPkgs = true;
                     useUserPackages = true;
-                    imports = [
-                      ./modules/home-manager/homeserver
-                      inputs.sops-nix.homeManagerModules.sops
-                      inputs.chaotic.homeManagerModules.default
-                    ];
-                    sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+                    backupFileExtension = "hm-backup";
+                    users.zeev = {
+                      imports = [
+                        ./modules/home-manager/desktop
+                        inputs.chaotic.homeManagerModules.default
+                        inputs.sops-nix.homeManagerModules.sops
+                      ];
+                      sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+                    };
                   };
                 }
               ];
@@ -131,15 +134,18 @@
                 {
                   # config.facter.reportPath = ./hosts/nixos/desktop/facter.json;
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-                  home-manager.users.zeev = {
+                  home-manager = {
                     useGlobalPkgs = true;
                     useUserPackages = true;
-                    imports = [
-                      ./modules/home-manager/desktop
-                      inputs.chaotic.homeManagerModules.default
-                      inputs.sops-nix.homeManagerModules.sops
-                    ];
-                    sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+                    backupFileExtension = "hm-backup";
+                    users.zeev = {
+                      imports = [
+                        ./modules/home-manager/desktop
+                        inputs.chaotic.homeManagerModules.default
+                        inputs.sops-nix.homeManagerModules.sops
+                      ];
+                      sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+                    };
                   };
                 }
               ];
@@ -149,13 +155,15 @@
                 ./modules/users/zeev
                 {
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-                  home-manager.users.zeev = {
+                  home-manager = {
                     useGlobalPkgs = true;
                     useUserPackages = true;
-                    imports = [
-                      ./modules/home-manager/wsl
-                      inputs.sops-nix.homeManagerModules.sops
-                    ];
+                    users.zeev = {
+                      imports = [
+                        ./modules/home-manager/wsl
+                        inputs.sops-nix.homeManagerModules.sops
+                      ];
+                    };
                   };
                 }
               ];

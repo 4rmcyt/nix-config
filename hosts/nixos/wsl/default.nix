@@ -25,7 +25,7 @@
 
   # VSCode Server Configuration
   services.vscode-server.enable = true;
- 
+
   # WSL Configuration
   wsl = {
     enable = true;

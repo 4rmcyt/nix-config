@@ -28,7 +28,7 @@
     ];
 
     kernelPackages = pkgs.linuxPackages_cachyos-gcc.cachyOverride { mArch = "ZEN4"; };
-    
+
     supportedFilesystems = [ "zfs" ];
     kernelParams = [
       "zfs.zfs_arc_max=12884901888"
