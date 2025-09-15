@@ -121,6 +121,7 @@
     powertop
     nvidia-vaapi-driver
     libva-utils
+    ryzen-monitor-ng
   ];
 
   # Nix settings
