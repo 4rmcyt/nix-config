@@ -109,6 +109,8 @@
                 {
                   sops.age.keyFile = "/var/lib/sops/age.key";
                   home-manager.users.zeev = {
+                    useGlobalPkgs = true;
+                    useUserPackages = true;
                     imports = [
                       ./modules/home-manager/homeserver
                       inputs.sops-nix.homeManagerModules.sops
@@ -148,6 +150,8 @@
                 {
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   home-manager.users.zeev = {
+                    useGlobalPkgs = true;
+                    useUserPackages = true;
                     imports = [
                       ./modules/home-manager/wsl
                       inputs.sops-nix.homeManagerModules.sops
