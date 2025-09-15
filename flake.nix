@@ -137,7 +137,7 @@
                   };
                   
                   # config.facter.reportPath = ./hosts/nixos/desktop/facter.json;
-                  sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+                  sops.age.keyFile = "/var/lib/sops/age.key"
                   home-manager = {
                     useGlobalPkgs = true;
                     useUserPackages = true;
