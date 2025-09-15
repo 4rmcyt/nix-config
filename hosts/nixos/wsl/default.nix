@@ -25,13 +25,7 @@
 
   # VSCode Server Configuration
   services.vscode-server.enable = true;
-  # services.hercules-ci-agent.package =
-  #   let inherit (pkgs.stdenv.hostPlatform) system;
-  #   in inputs.hercules-ci-agent.package.${system}.hercules-ci-agent-nix_2_4;
-
-  services.hercules-ci-agent.enable = true;
-  # services.hercules-ci-agent.concurrentTasks = 4; # Number of jobs to run
-
+ 
   # WSL Configuration
   wsl = {
     enable = true;
@@ -120,7 +114,6 @@
     libGLU
     nixos-rebuild
     lan-mouse_git
-    hercules-ci-agent
   ];
 
   time.timeZone = "America/Edmonton";
