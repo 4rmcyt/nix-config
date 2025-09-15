@@ -118,7 +118,9 @@
     nix-fast-build
     nix-output-monitor
     zoxide
-    hercules-ci-agent
+    powertop
+    nvidia-vaapi-driver
+    libva-utils
   ];
 
   # Nix settings
