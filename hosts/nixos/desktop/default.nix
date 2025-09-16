@@ -117,9 +117,6 @@
     nvd
     nix-diff
     auto-cpufreq
-    cmake-format
-    deadnix
-    prettier
   ];
 
   # Nix settings
@@ -169,6 +166,17 @@
   #     RestartSec = 5; # Wait 5 seconds before restarting
   #   };
   # };
+  
+  services.auto-cpufreq = {
+    enable = true;
+    settings = {
+      charger = {
+        governor = "performance";
+        turbo = "auto";
+      };
+    };
+  };
+  services.power-profiles-daemon.enable = false;
 
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {

@@ -2,18 +2,25 @@
   pkgs ? import <nixpkgs> { },
 }:
 pkgs.mkShell {
-  packages = [
-    # Existing packages
+  packages = with pkgs; [
+    # SOPS for secrets management
     sops
 
-    # Add missing formatters
+    # Code formatters
     cmake-format
-    nodePackages.prettier
+    nodePackages.prettier  # This is the correct way to get prettier
     rustfmt
-
-    # Other useful tools for your nix config
     nixfmt-rfc-style
     deadnix
     statix
+    yamlfmt
+    toml-sort
+    shfmt
+    just
+    dockfmt
+    alejandra
+    
+    # Development tools
+    nix-diff
   ];
 }
