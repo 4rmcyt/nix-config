@@ -137,6 +137,21 @@
     helix_git
     auto-cpufreq
     cachix
+
+    sops
+  cmake-format
+  nodePackages.prettier
+  rustfmt
+  nixfmt-rfc-style
+  deadnix
+  statix
+  yamlfmt
+  toml-sort
+  shfmt
+  just
+  dockfmt
+  alejandra
+  nix-diff
   ];
   # =================================================================
   # 6. System Services
