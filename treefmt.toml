@@ -1,6 +1,13 @@
+[formatter.nixfmt]
+command = "nixfmt"
+includes = ["*.nix"]
+
+[formatter.alejandra]
+command = "alejandra"
+includes = ["*.nix"]
+
 [formatter.deadnix]
 command = "deadnix"
-options = ["--edit"]
 includes = ["*.nix"]
 
 [formatter.statix]
@@ -9,31 +16,57 @@ includes = ["*.nix"]
 
 [formatter.shfmt]
 command = "shfmt"
-excludes = []
 includes = ["*.sh", "*.bash", "*.envrc", "*.envrc.*"]
-options = ["-s", "-w", "-i", "2"]
-
-
-[formatter.prettier]
-command = "prettier"
-options = ["--write"]
-includes = ["webpage/**/*.vue", "webpage/**/*.js", "*.md", "*.yaml", "*.yml"]
-
-
-[formatter.rust]
-options = ["--edition", "2018"]
-includes = ["*.rs"]
-
 
 [formatter.just]
 command = "just"
-options = ["--unstable", "--fmt", "--justfile",]
-includes = [".justfile",]
+includes = [".justfile"]
 
+[formatter.rustfmt]
+command = "rustfmt"
+includes = ["*.rs"]
 
-[formatter.nixfmt-rfc-style]
-command = "nixfmt"
-excludes = []
-includes = ["*.nix"]
-options = []
+[formatter.yamlfmt]
+command = "yamlfmt"
+includes = ["*.yaml", "*.yml"]
 
+[formatter.toml-sort]
+command = "toml-sort"
+includes = ["*.toml"]
+
+[formatter.dockfmt]
+command = "dockfmt"
+includes = ["*.Dockerfile", "docker-compose.yml"]
+
+[formatter.prettier]
+command = "prettier"
+includes = [
+    "*.cjs",
+    "*.css", 
+    "*.html",
+    "*.js",
+    "*.json5",
+    "*.jsx",
+    "*.mdx",
+    "*.mjs",
+    "*.scss",
+    "*.ts",
+    "*.tsx",
+    "*.vue",
+    "*.json"
+]
+
+[global]
+excludes = [
+    "secrets/*",
+    "*.png",
+    "*.jpeg", 
+    "*.toml",
+    "*.clan-flake",
+    "*.code-workspace",
+    "*.pub",
+    "*.typed",
+    "*.age",
+    "*.list",
+    "*.desktop"
+]
