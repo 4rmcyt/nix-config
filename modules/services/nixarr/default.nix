@@ -239,7 +239,7 @@ in
   environment.systemPackages = [
     pkgs.jellyfin
     pkgs.jellyfin-web
-    pkgs.jellyfin-ffmpeg
+    pkgs.ffmpeg
   ];
 
   environment.etc."nixos/scripts/add-trackers.sh" = {
