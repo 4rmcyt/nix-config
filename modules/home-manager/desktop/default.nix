@@ -82,7 +82,7 @@
         mc = "mc --nosubshell";
       };
       sessionVariables = {
-        EDITOR = "nvim";
+        EDITOR = "hx";
         ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi"; # Fixed typo: vin -> bin
         LC_CTYPE = "en_US.UTF-8";
         LEDGER_COLOR = "true";
