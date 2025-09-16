@@ -80,10 +80,12 @@
       {
         systems = import inputs.systems;
         imports = [ treefmt-nix.flakeModule ];
-        perSystem = { pkgs, ... }: {
-          devShells.default = import ./devshell.nix { inherit pkgs; };
-          treefmt = import ./treefmt.nix;
-        };
+        perSystem =
+          { pkgs, ... }:
+          {
+            devShells.default = import ./devshell.nix { inherit pkgs; };
+            treefmt = import ./treefmt.nix;
+          };
 
         flake =
           let
@@ -107,7 +109,7 @@
                     backupFileExtension = "hm-backup";
                     users.zeev = {
                       imports = [
-                        ./modules/home-manager/homeserver  # Fixed: was using desktop
+                        ./modules/home-manager/homeserver # Fixed: was using desktop
                         inputs.chaotic.homeManagerModules.default
                         inputs.sops-nix.homeManagerModules.sops
                       ];
@@ -127,12 +129,12 @@
                 inputs.nix-gaming.nixosModules.platformOptimizations
                 {
                   nixpkgs.config = {
-                        allowUnfree = true;
-                        permittedInsecurePackages = [
-                          "qtwebengine-5.15.19"
-                        ];
-                      };
-                  
+                    allowUnfree = true;
+                    permittedInsecurePackages = [
+                      "qtwebengine-5.15.19"
+                    ];
+                  };
+
                   # config.facter.reportPath = ./hosts/nixos/desktop/facter.json;
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   home-manager = {
@@ -160,19 +162,19 @@
               wsl = mkNixos "wsl" "x86_64-linux" [
                 ./hosts/nixos/wsl
                 ./modules/users/zeev
-                inputs.nixos-wsl.nixosModules.wsl  # Add WSL module
+                inputs.nixos-wsl.nixosModules.wsl # Add WSL module
                 {
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   home-manager = {
                     useGlobalPkgs = true;
                     useUserPackages = true;
-                    backupFileExtension = "hm-backup";  # Add consistent backup extension
+                    backupFileExtension = "hm-backup"; # Add consistent backup extension
                     users.zeev = {
                       imports = [
                         ./modules/home-manager/wsl
                         inputs.sops-nix.homeManagerModules.sops
                       ];
-                      sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";  # Add sops key
+                      sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt"; # Add sops key
                     };
                   };
                 }
