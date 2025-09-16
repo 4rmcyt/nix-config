@@ -116,19 +116,19 @@
     nixos-rebuild
     lan-mouse_git
     sops
-  cmake-format
-  nodePackages.prettier
-  rustfmt
-  nixfmt-rfc-style
-  deadnix
-  statix
-  yamlfmt
-  toml-sort
-  shfmt
-  just
-  dockfmt
-  alejandra
-  nix-diff
+    cmake-format
+    nodePackages.prettier
+    rustfmt
+    nixfmt-rfc-style
+    deadnix
+    statix
+    yamlfmt
+    toml-sort
+    shfmt
+    just
+    dockfmt
+    alejandra
+    nix-diff
   ];
 
   time.timeZone = "America/Edmonton";
