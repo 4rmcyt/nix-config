@@ -43,7 +43,6 @@
   nix = {
     settings = {
       substituters = [
-        "https://aseipp-nix-cache.freetls.fastly.net"
         "https://cache.nixos.org/"
         "https://nix-community.cachix.org"
         "https://homeserver.cachix.org"
