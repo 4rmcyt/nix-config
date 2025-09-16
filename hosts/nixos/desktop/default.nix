@@ -122,8 +122,9 @@
   # Nix settings
   nix = {
     package = pkgs.nixVersions.latest;
-    binaryCaches = [ "https://aseipp-nix-cache.freetls.fastly.net" ];
+    
     settings = {
+      substituters = [ "https://aseipp-nix-cache.freetls.fastly.net" ];
       experimental-features = [
         "nix-command"
         "flakes"

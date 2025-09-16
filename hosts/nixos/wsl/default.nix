@@ -71,6 +71,7 @@
   };
 
   nix = {
+    substituters = [ "https://aseipp-nix-cache.freetls.fastly.net" ];
     package = pkgs.nixVersions.latest;
     settings = {
       experimental-features = [
