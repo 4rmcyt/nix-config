@@ -126,6 +126,7 @@
     zoxide
     powertop
     nvidia-vaapi-driver
+    age
 
     # Devshell packages
     sops
