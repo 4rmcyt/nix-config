@@ -24,11 +24,6 @@
     };
   };
 
-  # chaotic.mesa-git.enable = true;
-
-  # services.scx.enable = true;
-
-  # Networking with WiFi support
   networking = {
     hostName = "desktop";
     hostId = "e134040f";
@@ -37,17 +32,50 @@
     firewall.enable = true;
   };
 
-  # Tailscale
-  services.tailscale.enable = true;
-
   # Time zone and locale
   time.timeZone = "America/Edmonton";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  services.desktopManager.plasma6.enable = true;
-  services.displayManager.sddm = {
-    enable = true;
-    wayland.enable = true;
+  # Group ALL services together
+  services = {
+    tailscale.enable = true;
+    
+    desktopManager.plasma6.enable = true;
+    displayManager.sddm = {
+      enable = true;
+      wayland.enable = true;
+    };
+
+    pulseaudio.enable = false;
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      lowLatency = {
+        enable = true;
+        quantum = 64;
+        rate = 48000;
+      };
+    };
+
+    openssh.enable = true;
+    
+    auto-cpufreq = {
+      enable = true;
+      settings = {
+        charger = {
+          governor = "performance";
+          turbo = "auto";
+        };
+      };
+    };
+    
+    power-profiles-daemon.enable = false;
+    
+    xserver.videoDrivers = [ "nvidia" ];
+    
+    fwupd.enable = true;
   };
 
   # XDG portal for Plasma 6
@@ -57,24 +85,8 @@
       kdePackages.xdg-desktop-portal-kde
     ];
   };
-  # Audio
-  services.pulseaudio.enable = false;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    lowLatency = {
-      # enable this module
-      enable = true;
-      # defaults (no need to be set unless modified)
-      quantum = 64;
-      rate = 48000;
-    };
-  };
 
   security.rtkit.enable = true;
-  services.openssh.enable = true;
 
   environment.systemPackages = with pkgs; [
     vim
@@ -130,7 +142,22 @@
     package = pkgs.nixVersions.latest;
 
     settings = {
-      substituters = [ "https://aseipp-nix-cache.freetls.fastly.net" ];
+      substituters = [ 
+        "https://aseipp-nix-cache.freetls.fastly.net"
+        "https://cache.nixos.org/"
+        "https://nix-community.cachix.org"
+        "https://nix-gaming.cachix.org"
+        "https://homeserver.cachix.org"
+        "https://chaotic-nyx.cachix.org"
+        "https://4rmcyt.cachix.org"
+      ];
+      trusted-public-keys = [
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+        "homeserver.cachix.org-1:0vStm6koDUwET/iWYhbKpsuVO4v3UgN3510zYH9YpZU="
+        "4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="
+        "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
+      ];
       experimental-features = [
         "nix-command"
         "flakes"
@@ -153,39 +180,6 @@
     };
   };
 
-  # systemd.services.displaylink-server = {
-  #   enable = true;
-  #   # Ensure it starts after udev has done its work
-  #   requires = [ "systemd-udevd.service" ];
-  #   after = [ "systemd-udevd.service" ];
-  #   wantedBy = [ "multi-user.target" ]; # Start at boot
-  #   # *** THIS IS THE CRITICAL 'serviceConfig' BLOCK ***
-  #   serviceConfig = {
-  #     Type = "simple"; # Or "forking" if it forks (simple is common for daemons)
-  #     # The ExecStart path points to the DisplayLinkManager binary provided by the package
-  #     ExecStart = "${pkgs.displaylink}/bin/DisplayLinkManager";
-  #     # User and Group to run the service as (root is common for this type of daemon)
-  #     User = "root";
-  #     Group = "root";
-  #     # Environment variables that the service itself might need
-  #     # Environment = [ "DISPLAY=:0" ]; # Might be needed in some cases, but generally not for this
-  #     Restart = "on-failure";
-  #     RestartSec = 5; # Wait 5 seconds before restarting
-  #   };
-  # };
-
-  services.auto-cpufreq = {
-    enable = true;
-    settings = {
-      charger = {
-        governor = "performance";
-        turbo = "auto";
-      };
-    };
-  };
-  services.power-profiles-daemon.enable = false;
-
-  services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;
@@ -194,7 +188,6 @@
     nvidiaSettings = true;
   };
 
-  services.fwupd.enable = true;
   # Enable home-manager backup for conflicting files
   home-manager.backupFileExtension = "hm-backup";
 
