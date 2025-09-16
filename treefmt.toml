@@ -10,10 +10,6 @@ includes = ["*.nix"]
 command = "deadnix"
 includes = ["*.nix"]
 
-[formatter.statix]
-command = "statix"
-includes = ["*.nix"]
-
 [formatter.shfmt]
 command = "shfmt"
 includes = ["*.sh", "*.bash", "*.envrc", "*.envrc.*"]

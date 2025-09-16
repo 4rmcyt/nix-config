@@ -4,9 +4,44 @@
   ...
 }:
 {
-  home.username = "zeev";
-  home.homeDirectory = "/home/zeev";
-  home.stateVersion = "25.05";
+  # Group ALL home attributes together
+  home = {
+    username = "zeev";
+    homeDirectory = "/home/zeev";
+    stateVersion = "25.05";
+    packages = with pkgs; [
+      # Gaming
+      steam
+      discord
+      lutris
+
+      # Development
+      vscode
+
+      # GUI applications
+      firefox
+      kdePackages.dolphin
+      nvtopPackages.nvidia
+      jellyfin-media-player
+
+      kdePackages.konsole
+      kdePackages.kate
+      kdePackages.ark
+      kdePackages.okular
+      kdePackages.gwenview
+      kdePackages.spectacle
+      kdePackages.kcalc
+      kdePackages.kfind
+      kdePackages.filelight
+      kdePackages.partitionmanager
+      kdePackages.discover
+      kdePackages.kcharselect
+      kdePackages.ksystemlog
+      kdePackages.kclock
+      kdePackages.sddm-kcm
+      papirus-icon-theme
+    ];
+  };
 
   # ZSH Configuration
   programs = {
@@ -178,54 +213,6 @@
     };
   };
 
-  home.packages = with pkgs; [
-    # Gaming
-    steam
-    discord
-    lutris
-
-    # Development
-    vscode
-
-    # GUI applications
-    firefox
-    kdePackages.dolphin
-    nvtopPackages.nvidia
-    jellyfin-media-player
-
-    kdePackages.konsole
-    kdePackages.kate
-    kdePackages.ark
-    kdePackages.okular
-    kdePackages.gwenview
-    kdePackages.spectacle
-    kdePackages.kcalc
-    kdePackages.kfind
-    kdePackages.filelight
-    kdePackages.partitionmanager
-    kdePackages.discover
-    kdePackages.kcharselect
-    kdePackages.ksystemlog
-    kdePackages.kclock
-    kdePackages.sddm-kcm
-    papirus-icon-theme
-    kdePackages.breeze-icons
-    kdiff3
-    kdePackages.isoimagewriter
-    hardinfo2
-
-    # Wayland utilities
-    wl-clipboard
-    playerctl
-    pavucontrol
-    wayland-utils
-
-    # Fonts
-    nerd-fonts.fira-code
-
-    mc
-  ];
-
   # Configure Qt for Plasma 6
   qt = {
     enable = true;
@@ -245,6 +232,4 @@
       package = pkgs.kdePackages.breeze-gtk;
     };
   };
-
-  programs.home-manager.enable = true;
 }
