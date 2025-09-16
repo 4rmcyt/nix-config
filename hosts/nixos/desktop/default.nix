@@ -102,7 +102,6 @@
     nixfmt-rfc-style
     statix
     alejandra
-    deadnix
     shfmt
     nixos-rebuild-ng
     yubikey-manager
@@ -120,9 +119,10 @@
     nix-diff
     auto-cpufreq
     cmake-format
-    rust
-    rustfmt
     deadnix
+    rust
+    nixfmt-rfc-style
+
   ];
 
   # Nix settings

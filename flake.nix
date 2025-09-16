@@ -79,9 +79,7 @@
       }
       {
         systems = import inputs.systems;
-        
         imports = [ treefmt-nix.flakeModule ];
-        
         perSystem = { pkgs, ... }: {
           devShells.default = import ./devshell.nix { inherit pkgs; };
           treefmt = import ./treefmt.nix;
