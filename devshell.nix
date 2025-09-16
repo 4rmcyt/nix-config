@@ -8,7 +8,7 @@ pkgs.mkShell {
 
     # Code formatters
     cmake-format
-    nodePackages.prettier  # This is the correct way to get prettier
+    nodePackages.prettier # This is the correct way to get prettier
     rustfmt
     nixfmt-rfc-style
     deadnix
@@ -19,7 +19,7 @@ pkgs.mkShell {
     just
     dockfmt
     alejandra
-    
+
     # Development tools
     nix-diff
   ];

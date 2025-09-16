@@ -78,57 +78,57 @@
 
   environment.systemPackages = with pkgs; [
     vim
-  wget
-  curl
-  git
-  firefox
-  discord
-  htop
-  toml-sort
-  rustfmt
-  neofetch
-  nvtopPackages.nvidia
-  tailscale
-  helix
-  telegram-desktop
-  jellyfin-media-player
-  direnv
-  btop
-  just
-  just-lsp
-  nixfmt
-  treefmt
-  nixfmt-rfc-style
-  statix
-  alejandra
-  shfmt
-  nixos-rebuild-ng
-  yubikey-manager
-  yubioath-flutter
-  cachix
-  chromium
-  fwupd
-  nix-fast-build
-  nix-output-monitor
-  zoxide
-  powertop
-  nvidia-vaapi-driver
+    wget
+    curl
+    git
+    firefox
+    discord
+    htop
+    toml-sort
+    rustfmt
+    neofetch
+    nvtopPackages.nvidia
+    tailscale
+    helix
+    telegram-desktop
+    jellyfin-media-player
+    direnv
+    btop
+    just
+    just-lsp
+    nixfmt
+    treefmt
+    nixfmt-rfc-style
+    statix
+    alejandra
+    shfmt
+    nixos-rebuild-ng
+    yubikey-manager
+    yubioath-flutter
+    cachix
+    chromium
+    fwupd
+    nix-fast-build
+    nix-output-monitor
+    zoxide
+    powertop
+    nvidia-vaapi-driver
 
-  # Devshell packages
-  sops
-  cmake-format
-  nodePackages.prettier
-  deadnix
-  yamlfmt
-  dockfmt
-  nix-diff
-  dockerfile-language-server-nodejs
+    # Devshell packages
+    sops
+    cmake-format
+    nodePackages.prettier
+    deadnix
+    yamlfmt
+    dockfmt
+    nix-diff
+    dockerfile-language-server-nodejs
   ];
 
   # Nix settings
   nix = {
     package = pkgs.nixVersions.latest;
-    
+
     settings = {
       substituters = [ "https://aseipp-nix-cache.freetls.fastly.net" ];
       experimental-features = [
@@ -173,7 +173,7 @@
   #     RestartSec = 5; # Wait 5 seconds before restarting
   #   };
   # };
-  
+
   services.auto-cpufreq = {
     enable = true;
     settings = {
