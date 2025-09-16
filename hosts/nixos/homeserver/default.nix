@@ -25,7 +25,7 @@
     isSystemUser = true;
     description = "Git user";
   };
-  users.groups.git = { };
+  users.groups.git = { }; # Added missing semicolon
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.packageOverrides = pkgs: {
     python3 = pkgs.python3.override {
@@ -42,7 +42,7 @@
   # =================================================================
   nix = {
     settings = {
-      substituters = [ 
+      substituters = [
         "https://aseipp-nix-cache.freetls.fastly.net"
         "https://cache.nixos.org/"
         "https://nix-community.cachix.org"
@@ -56,8 +56,6 @@
         "4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="
         "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
       ];
-    package = pkgs.nixVersions.latest;
-    settings = {
       experimental-features = [
         "nix-command"
         "flakes"
@@ -74,6 +72,7 @@
       show-trace = true;
       download-buffer-size = 1073741824;
     };
+    package = pkgs.nixVersions.latest;
     optimise = {
       automatic = true;
       dates = [ "weekly" ];
