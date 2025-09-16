@@ -120,9 +120,6 @@
     auto-cpufreq
     cmake-format
     deadnix
-    rust
-    nixfmt-rfc-style
-
   ];
 
   # Nix settings
