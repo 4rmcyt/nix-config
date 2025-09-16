@@ -100,6 +100,8 @@
                 inputs.nixarr.nixosModules.default
                 inputs.authentik-nix.nixosModules.default
                 inputs.vscode-server.nixosModules.default
+                inputs.nixos-facter-modules.nixosModules.facter
+                { config.facter.reportPath = ./hosts/nixos/homeserver/facter.json; }
                 {
                   sops.age.keyFile = "/var/lib/sops/age.key";
                   home-manager = {
@@ -108,8 +110,7 @@
                     backupFileExtension = "hm-backup";
                     users.zeev = {
                       imports = [
-                        ./modules/home-manager/homeserver # Fixed: was using desktop
-                        inputs.chaotic.homeManagerModules.default
+                        ./modules/home-manager/homeserver
                         inputs.sops-nix.homeManagerModules.sops
                       ];
                       sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
