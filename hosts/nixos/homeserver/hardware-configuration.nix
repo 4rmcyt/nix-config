@@ -26,7 +26,7 @@
   boot.loader.timeout = 3;
 
   # Define filesystem support and ZFS settings for the initial ramdisk (initrd).
-  boot.kernelPackages = pkgs.linuxPackages_cachyos;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.supportedFilesystems = [
     "vfat"
     "zfs"
