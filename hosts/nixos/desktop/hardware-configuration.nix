@@ -16,6 +16,10 @@
       "usbhid"
       "usb_storage"
       "sd_mod"
+      "amdgpu"
+      "r8169"
+      "mt7921e"
+      "btusb"
     ];
     initrd.kernelModules = [ ];
 
@@ -25,6 +29,13 @@
       "nvidia_modeset"
       "nvidia_uvm"
       "nvidia_drm"
+      "amdgpu"
+      "r8169"
+      "mt7921e"
+      "k10temp"
+      "snd_hda_intel"
+      "snd-usb-audio"
+      "btusb"
     ];
 
     kernelPackages = pkgs.linuxPackages_cachyos-gcc.cachyOverride { mArch = "ZEN4"; };
