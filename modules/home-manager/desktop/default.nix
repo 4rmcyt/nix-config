@@ -48,7 +48,7 @@
       };
       sessionVariables = {
         EDITOR = "nvim";
-        ALTERNATE_EDITOR = "${pkgs.vim}/vin/vi";
+        ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi"; # Fixed typo: vin -> bin
         LC_CTYPE = "en_US.UTF-8";
         LEDGER_COLOR = "true";
         LESS = "-FRSXM";
