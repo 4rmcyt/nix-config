@@ -37,6 +37,7 @@
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    agenix.url = "github:ryantm/agenix";
 
     # Security & secrets
     sops-nix = {
@@ -101,6 +102,7 @@
                 inputs.authentik-nix.nixosModules.default
                 inputs.vscode-server.nixosModules.default
                 inputs.nixos-facter-modules.nixosModules.facter
+                inputs.agenix.nixosModules.default
                 { config.facter.reportPath = ./hosts/nixos/homeserver/facter.json; }
                 {
                   sops.age.keyFile = "/var/lib/sops/age.key";
@@ -112,6 +114,7 @@
                       imports = [
                         ./modules/home-manager/homeserver
                         inputs.sops-nix.homeManagerModules.sops
+                        inputs.agenix.homeManagerModules.agenix
                       ];
                       sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                     };
@@ -125,6 +128,7 @@
                 ./modules/disko/desktop
                 inputs.nixos-facter-modules.nixosModules.facter
                 { config.facter.reportPath = ./hosts/nixos/desktop/facter.json; }
+                inputs.agenix.nixosModules.default
                 inputs.nix-gaming.nixosModules.pipewireLowLatency
                 inputs.nix-gaming.nixosModules.platformOptimizations
                 {
@@ -146,6 +150,7 @@
                         ./modules/home-manager/desktop
                         inputs.chaotic.homeManagerModules.default
                         inputs.sops-nix.homeManagerModules.sops
+                        inputs.agenix.homeManagerModules.agenix
                       ];
                       nixpkgs.config = {
                         allowUnfree = true;
@@ -162,7 +167,8 @@
               wsl = mkNixos "wsl" "x86_64-linux" [
                 ./hosts/nixos/wsl
                 ./modules/users/zeev
-                inputs.nixos-wsl.nixosModules.wsl # Add WSL module
+                inputs.nixos-wsl.nixosModules.wsl
+                inputs.agenix.nixosModules.default
                 {
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   home-manager = {
@@ -173,6 +179,7 @@
                       imports = [
                         ./modules/home-manager/wsl
                         inputs.sops-nix.homeManagerModules.sops
+                        inputs.agenix.homeManagerModules.agenix
                       ];
                       sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt"; # Add sops key
                     };
