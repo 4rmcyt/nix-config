@@ -41,7 +41,21 @@
   # 2. Nix Daemon Configuration
   # =================================================================
   nix = {
-    substituters = [ "https://aseipp-nix-cache.freetls.fastly.net" ];
+    settings = {
+      substituters = [ 
+        "https://aseipp-nix-cache.freetls.fastly.net"
+        "https://cache.nixos.org/"
+        "https://nix-community.cachix.org"
+        "https://homeserver.cachix.org"
+        "https://chaotic-nyx.cachix.org"
+        "https://4rmcyt.cachix.org"
+      ];
+      trusted-public-keys = [
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "homeserver.cachix.org-1:0vStm6koDUwET/iWYhbKpsuVO4v3UgN3510zYH9YpZU="
+        "4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="
+        "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
+      ];
     package = pkgs.nixVersions.latest;
     settings = {
       experimental-features = [
