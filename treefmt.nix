@@ -102,3 +102,12 @@
     ];
   };
 }
+
+[
+    {
+        "type": "command",
+        "details": {
+            "key": "workbench.action.files.delete"
+        }
+    }
+]
