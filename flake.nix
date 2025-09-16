@@ -114,7 +114,7 @@
                       imports = [
                         ./modules/home-manager/homeserver
                         inputs.sops-nix.homeManagerModules.sops
-                        inputs.agenix.homeManagerModules.agenix
+                        inputs.agenix.homeManagerModules.default
                       ];
                       sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                     };
@@ -150,7 +150,7 @@
                         ./modules/home-manager/desktop
                         inputs.chaotic.homeManagerModules.default
                         inputs.sops-nix.homeManagerModules.sops
-                        inputs.agenix.homeManagerModules.agenix
+                        inputs.agenix.homeManagerModules.default
                       ];
                       nixpkgs.config = {
                         allowUnfree = true;
@@ -179,7 +179,7 @@
                       imports = [
                         ./modules/home-manager/wsl
                         inputs.sops-nix.homeManagerModules.sops
-                        inputs.agenix.homeManagerModules.agenix
+                        inputs.agenix.homeManagerModules.default
                       ];
                       sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt"; # Add sops key
                     };
