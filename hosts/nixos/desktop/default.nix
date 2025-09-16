@@ -39,7 +39,7 @@
   # Group ALL services together
   services = {
     tailscale.enable = true;
-    
+
     desktopManager.plasma6.enable = true;
     displayManager.sddm = {
       enable = true;
@@ -60,7 +60,7 @@
     };
 
     openssh.enable = true;
-    
+
     auto-cpufreq = {
       enable = true;
       settings = {
@@ -70,11 +70,11 @@
         };
       };
     };
-    
+
     power-profiles-daemon.enable = false;
-    
+
     xserver.videoDrivers = [ "nvidia" ];
-    
+
     fwupd.enable = true;
   };
 
@@ -106,6 +106,7 @@
     jellyfin-media-player
     direnv
     btop
+    meslo-lgs-nf
     just
     just-lsp
     nixfmt
@@ -134,14 +135,14 @@
     yamlfmt
     dockfmt
     nix-diff
-    dockerfile-language-server-nodejs
+    dockerfile-language-server
   ];
 
   # Nix settings
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
-      substituters = [ 
+      substituters = [
         "https://cache.nixos.org/"
         "https://nix-community.cachix.org"
         "https://nix-gaming.cachix.org"
