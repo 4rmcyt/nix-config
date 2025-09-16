@@ -41,8 +41,8 @@
   # 2. Nix Daemon Configuration
   # =================================================================
   nix = {
+    substituters = [ "https://aseipp-nix-cache.freetls.fastly.net" ];
     package = pkgs.nixVersions.latest;
-    binaryCaches = [ "https://aseipp-nix-cache.freetls.fastly.net" ];
     settings = {
       experimental-features = [
         "nix-command"
