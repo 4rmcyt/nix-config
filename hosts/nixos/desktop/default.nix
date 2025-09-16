@@ -140,7 +140,6 @@
   # Nix settings
   nix = {
     package = pkgs.nixVersions.latest;
-
     settings = {
       substituters = [ 
         "https://aseipp-nix-cache.freetls.fastly.net"
