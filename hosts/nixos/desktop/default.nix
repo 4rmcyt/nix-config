@@ -145,6 +145,8 @@
     package = pkgs.nixVersions.latest;
     settings = {
       substituters = [
+        "https://cache.nixos.org"
+        "https://nixpkgs-wayland.cachix.org"
         "https://nix-community.cachix.org"
         "https://nix-gaming.cachix.org"
         "https://homeserver.cachix.org"
@@ -157,6 +159,8 @@
         "homeserver.cachix.org-1:0vStm6koDUwET/iWYhbKpsuVO4v3UgN3510zYH9YpZU="
         "4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="
         "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
       ];
       experimental-features = [
         "nix-command"
