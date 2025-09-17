@@ -339,7 +339,7 @@ in
   };
 
 
-  systemd.services.jellyfin.serviceConfig = {
+  systemd.services.nixarr-jellyfin.serviceConfig = {
     Environment = [
       "JELLYFIN_FFmpeg__analyzeduration=10000000"
       "JELLYFIN_FFmpeg__probesize=10000000"
