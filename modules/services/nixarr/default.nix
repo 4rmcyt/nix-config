@@ -338,10 +338,13 @@ in
     };
   };
 
-  systemd.services.jellyfin.serviceConfig.Environment = [
-    "JELLYFIN_FFmpeg__analyzeduration=10000000"
-    "JELLYFIN_FFmpeg__probesize=10000000"
-  ];
+
+  systemd.services.jellyfin.serviceConfig = {
+    Environment = [
+      "JELLYFIN_FFmpeg__analyzeduration=10000000"
+      "JELLYFIN_FFmpeg__probesize=10000000"
+    ];
+  };
   # services.headphones = {
   #     enable = true;
   #     port = 8181;
