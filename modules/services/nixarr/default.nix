@@ -327,8 +327,8 @@ in
     jellyfin = {
       enable = true;
       environment = {
-        JELLYFIN_FFmpeg__analyzeduration = 10000000; # Increase analyze duration to improve format detection
-        JELLYFIN_FFmpeg__probesize = 10000000;
+        JELLYFIN_FFmpeg__probesize = "10000000";
+        JELLYFIN_FFmpeg__analyzeduration = "10000000";
       };
     };
     bazarr.enable = true;
