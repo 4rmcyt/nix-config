@@ -324,13 +324,7 @@ in
     };
 
     audiobookshelf.enable = true;
-    jellyfin = {
-      enable = true;
-      environment = {
-        JELLYFIN_FFmpeg__probesize = "10000000";
-        JELLYFIN_FFmpeg__analyzeduration = "10000000";
-      };
-    };
+    jellyfin.enable = true;
     bazarr.enable = true;
     lidarr.enable = true;
     prowlarr.enable = true;
@@ -344,6 +338,10 @@ in
     };
   };
 
+  systemd.services.nixarr-jellyfin.serviceConfig.Environment = [
+    "JELLYFIN_FFmpeg__analyzeduration=10000000"
+    "JELLYFIN_FFmpeg__probesize=10000000"
+  ];
   # services.headphones = {
   #     enable = true;
   #     port = 8181;
