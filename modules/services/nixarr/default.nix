@@ -323,12 +323,15 @@ in
       };
     };
 
-    audiobookshelf.enable = true;
-    jellyfin.enable = true;
-    bazarr.enable = true;
-    lidarr.enable = true;
-    prowlarr.enable = true;
-    radarr.enable = true;
+    audiobookshelf = true;
+    jellyfin = {
+      enable = true;
+      ffmpegExtraConfig = "--analyzeduration 10000000 -probesize 10000000";
+    };
+    bazarr = true;
+    lidarr = true;
+    prowlarr = true;
+    radarr = true;
     sonarr.enable = true;
     jellyseerr.enable = true;
     readarr.enable = true;
