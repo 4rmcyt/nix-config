@@ -338,15 +338,6 @@ in
     };
   };
 
-
-  systemd.jellyfin.serviceConfig = {
-    Environment = [
-      "JELLYFIN_FFmpeg__analyzeduration=10000000"
-      "JELLYFIN_FFmpeg__probesize=10000000"
-    ];
-  };
-
-
   systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
     serviceConfig = {
       BindPaths = [
@@ -368,8 +359,14 @@ in
         "/data/media/.state"
         # "/data/media/torrents/.incomplete"
       ];
-    };
+    } // (lib.optionalAttrs (_serviceName == "jellyfin") {
+      Environment = [
+        "JELLYFIN_FFmpeg__analyzeduration=10000000"
+        "JELLYFIN_FFmpeg__probesize=10000000"
+      ];
+    });
   });
+
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
     "d /data/media/movies 770 zeev media -"
@@ -411,3 +408,4 @@ in
     "d /data/Downloads 775 zeev media -"
   ];
 }
+
