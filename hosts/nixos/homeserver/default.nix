@@ -44,13 +44,11 @@
     settings = {
       substituters = [
           "https://nix-community.cachix.org"
-          "https://nix-gaming.cachix.org"
           "https://homeserver.cachix.org"
         ];
         trusted-public-keys = [
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
           "homeserver.cachix.org-1:0vStm6koDUwET/iWYhbKpsuVO4v3UgN3510zYH9YpZU="
-          "4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="
         ];
       experimental-features = [
         "nix-command"
