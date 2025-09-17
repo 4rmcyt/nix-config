@@ -359,7 +359,7 @@ in
         "/data/media/.state"
         # "/data/media/torrents/.incomplete"
       ];
-    } // (lib.optionalAttrs (_serviceName == "jellyfin") {
+     } // (lib.optionalAttrs (_serviceName == "jellyfin") {
       Environment = [
         "JELLYFIN_FFmpeg__analyzeduration=10000000"
         "JELLYFIN_FFmpeg__probesize=10000000"
