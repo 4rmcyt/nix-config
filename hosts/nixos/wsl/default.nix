@@ -71,6 +71,16 @@
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
+      substituters = [
+        "https://nix-community.cachix.org"
+        "https://4rmcyt.cachix.org"
+        "https://numtide.cachix.org"
+      ];
+      trusted-public-keys = [
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="
+        "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+      ];
       experimental-features = [
         "nix-command"
         "flakes"
