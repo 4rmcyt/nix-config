@@ -4,6 +4,8 @@
   inputs = {
     # Core inputs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
+    nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs";
     systems.url = "github:nix-systems/default";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
