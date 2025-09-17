@@ -1,6 +1,6 @@
 {
   description = "A highly structured NixOS configuration";
-  
+
   inputs = {
     # Core inputs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
