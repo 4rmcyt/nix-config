@@ -140,7 +140,7 @@
     lm_sensors
     git-crypt
     prettier
-    helix_git
+    helix
     auto-cpufreq
     cachix
 
