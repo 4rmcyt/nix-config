@@ -138,8 +138,9 @@
     dockfmt
     nix-diff
     dockerfile-language-server
-    nix-software-center
-    nixos-conf-editor
+
+    # nix-software-center
+    # nixos-conf-editor
   ];
 
   # Nix settings
