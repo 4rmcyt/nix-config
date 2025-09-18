@@ -73,7 +73,7 @@
 
     power-profiles-daemon.enable = false;
 
-    xserver.videoDrivers = [ "nvidia" ];
+    xserver.videoDrivers = [ "nvidia" "displaylink" ];
 
     fwupd.enable = true;
   };
@@ -128,6 +128,7 @@
     nvidia-vaapi-driver
     age
     nh
+    displaylink
 
     # Devshell packages
     sops
