@@ -79,6 +79,16 @@
     ];
 
     fwupd.enable = true;
+    nextdns = {
+      enable = true;
+      arguments = [
+        "-profile"
+        "nextdns0"
+        "-cache-size"
+        "100MB"
+        "--report-client-info"
+      ];
+    };
   };
 
   # XDG portal for Plasma 6
