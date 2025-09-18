@@ -26,7 +26,7 @@
       winetricks
 
       # Performance tools
-      inputs.chaotic.packages.${pkgs.system}.gamescope or gamescope
+      gamescope
       mangohud
       gamemode
     ]
