@@ -144,7 +144,6 @@
     shfmt
     nixos-rebuild-ng
     yubikey-manager
-    yubioath-flutter
     cachix
     chromium
     fwupd
