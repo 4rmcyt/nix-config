@@ -142,6 +142,8 @@
     age
     nh
     # displaylink
+    xdg-desktop-portal-kde
+    xdg-desktop-portal-gtk
     nextdns
 
     # Devshell packages
@@ -212,4 +214,10 @@
   home-manager.backupFileExtension = "hm-backup";
 
   system.stateVersion = "25.05";
+
+  sops = {
+    age.keyFile = "/root/.config/sops/age/keys.txt";
+    # Optionally, enable secrets for activation
+    # defaultSopsFile = ./secrets/common.yaml;
+  };
 }

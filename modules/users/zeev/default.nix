@@ -31,6 +31,7 @@ in
   users = {
     groups = {
       media = { };
+      zeev = { };
     };
 
     users = {
@@ -49,6 +50,7 @@ in
           "podman"
           "input"
           "gamemode"
+          "zeev"
         ];
         hashedPasswordFile = config.sops.secrets.zeev_password.path;
         openssh.authorizedKeys.keys = server-keys;
