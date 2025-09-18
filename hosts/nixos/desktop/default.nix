@@ -24,6 +24,8 @@
     };
   };
 
+  systemd.services.dlm.wantedBy = [ "multi-user.target" ];
+
   networking = {
     hostName = "desktop";
     hostId = "e134040f";
@@ -86,24 +88,16 @@
       };
     };
 
+    udev.packages = [ pkgs.yubikey-personalization ];
+
     power-profiles-daemon.enable = false;
 
     xserver.videoDrivers = [
       "nvidia"
-      # "displaylink"
+      "displaylink"
     ];
 
     fwupd.enable = true;
-    # nextdns = {
-    #   enable = true;
-    #   arguments = [
-    #     "-profile"
-    #     "nextdns0"
-    #     "-cache-size"
-    #     "100MB"
-    #     "--report-client-info"
-    #   ];
-    # };
   };
 
   # XDG portal for Plasma 6
@@ -115,6 +109,11 @@
   };
 
   security.rtkit.enable = true;
+
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
 
   environment.systemPackages = with pkgs; [
     vim
@@ -156,8 +155,10 @@
     nvidia-vaapi-driver
     age
     nh
-    # displaylink
+    displaylink
     xdg-desktop-portal-gtk
+    unzip
+    p7zip
 
     # Devshell packages
     sops

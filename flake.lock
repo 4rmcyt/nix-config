@@ -143,6 +143,19 @@
         "type": "github"
       }
     },
+    "displaylink": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1757588289,
+        "narHash": "sha256-g100afanWhbnAjyBQN+NCYSEe2BkoP20izgUSi+UMls=",
+        "type": "tarball",
+        "url": "https://www.synaptics.com/sites/default/files/exe_files/2025-09/DisplayLink%20USB%20Graphics%20Software%20for%20Ubuntu6.2-EXE.zip"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://www.synaptics.com/sites/default/files/exe_files/2025-09/DisplayLink%20USB%20Graphics%20Software%20for%20Ubuntu6.2-EXE.zip"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -960,6 +973,7 @@
         "auto-cpufreq": "auto-cpufreq",
         "cpu-microcodes": "cpu-microcodes",
         "disko": "disko",
+        "displaylink": "displaylink",
         "flake-parts": "flake-parts_2",
         "home-manager": "home-manager_2",
         "nix-gaming": "nix-gaming",

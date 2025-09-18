@@ -9,6 +9,7 @@
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   boot = {
+    extraModulePackages = [ config.boot.kernelPackages.evdi ];
     initrd.availableKernelModules = [
       "nvme"
       "xhci_pci"
@@ -21,7 +22,8 @@
       "mt7921e"
       "btusb"
     ];
-    initrd.kernelModules = [ ];
+
+    initrd.kernelModules = [ "evdi" ];
 
     kernelModules = [
       "kvm-amd"
@@ -38,7 +40,7 @@
       "btusb"
     ];
 
-    kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
+    kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
     supportedFilesystems = [ "zfs" ];
     kernelParams = [
