@@ -30,6 +30,10 @@
     networkmanager.enable = true;
     wireless.enable = false;
     firewall.enable = true;
+    nameservers = [
+      "45.90.28.0#Desktop-nextdns0.dns.nextdns.io"
+      "45.90.30.0#Desktop-nextdns0.dns.nextdns.io"
+    ];
   };
 
   # Time zone and locale
@@ -38,6 +42,17 @@
 
   # Group ALL services together
   services = {
+    resolved = {
+      enable = true;
+      dnssec = "true";
+      domains = [ "~." ];
+      fallbackDns = [
+        "45.90.28.0#Desktop-nextdns0.dns.nextdns.io"
+        "45.90.30.0#Desktop-nextdns0.dns.nextdns.io"
+      ];
+      dnsovertls = "opportunistic";
+    };
+
     tailscale.enable = true;
 
     desktopManager.plasma6.enable = true;
@@ -79,16 +94,16 @@
     ];
 
     fwupd.enable = true;
-    nextdns = {
-      enable = true;
-      arguments = [
-        "-profile"
-        "nextdns0"
-        "-cache-size"
-        "100MB"
-        "--report-client-info"
-      ];
-    };
+    # nextdns = {
+    #   enable = true;
+    #   arguments = [
+    #     "-profile"
+    #     "nextdns0"
+    #     "-cache-size"
+    #     "100MB"
+    #     "--report-client-info"
+    #   ];
+    # };
   };
 
   # XDG portal for Plasma 6
@@ -142,9 +157,7 @@
     age
     nh
     # displaylink
-    xdg-desktop-portal-kde
     xdg-desktop-portal-gtk
-    nextdns
 
     # Devshell packages
     sops
