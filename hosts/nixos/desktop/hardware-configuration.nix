@@ -21,7 +21,7 @@
       "mt7921e"
       "btusb"
     ];
-    initrd.kernelModules = [ ];
+    initrd.kernelModules = ["evdi"];
 
     kernelModules = [
       "kvm-amd"
