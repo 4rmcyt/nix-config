@@ -21,7 +21,7 @@
       "mt7921e"
       "btusb"
     ];
-    initrd.kernelModules = ["evdi"];
+    initrd.kernelModules = [ ];
 
     kernelModules = [
       "kvm-amd"
@@ -38,7 +38,7 @@
       "btusb"
     ];
 
-    kernelPackages = pkgs.linuxPackages_cachyos-gcc.cachyOverride { mArch = "ZEN4"; };
+    kernelPackages = pkgs.linux_xanmod_latest;
 
     supportedFilesystems = [ "zfs" ];
     kernelParams = [

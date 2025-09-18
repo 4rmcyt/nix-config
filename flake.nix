@@ -34,7 +34,7 @@
     nixos-conf-editor.url = "github:snowfallorg/nixos-conf-editor";
 
     # Performance & hardware
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    # chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     auto-cpufreq = {
       url = "github:AdnanHodzic/auto-cpufreq";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -136,7 +136,6 @@
                     users.zeev = {
                       imports = [
                         ./modules/home-manager/desktop
-                        inputs.chaotic.homeManagerModules.default
                         inputs.sops-nix.homeManagerModules.sops
                         inputs.agenix.homeManagerModules.default
                       ];
