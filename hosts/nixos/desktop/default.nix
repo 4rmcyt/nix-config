@@ -1,4 +1,8 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  inputs,
+  ...
+}:
 {
   imports = [
     ./hardware-configuration.nix
@@ -14,7 +18,7 @@
     group = "git";
     home = "/var/lib/git";
     createHome = true;
-    shell = pkgs.bash;
+    shell = pkgs.zsh;
   };
 
   boot = {
@@ -159,7 +163,7 @@
     xdg-desktop-portal-gtk
     unzip
     p7zip
-    yubikey-manager 
+    yubikey-manager
     yubioath-flutter
 
     # Devshell packages
@@ -172,8 +176,8 @@
     nix-diff
     dockerfile-language-server
 
-    # nix-software-center
-    # nixos-conf-editor
+    inputs.nix-software-center.packages.${system}.nix-software-center
+    inputs.nixos-conf-editor.packages.${system}.nixos-conf-editor
   ];
 
   # Nix settings
