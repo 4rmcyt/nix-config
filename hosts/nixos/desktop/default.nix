@@ -73,7 +73,10 @@
 
     power-profiles-daemon.enable = false;
 
-    xserver.videoDrivers = [ "nvidia" "displaylink" ];
+    xserver.videoDrivers = [
+      "nvidia"
+      "displaylink"
+    ];
 
     fwupd.enable = true;
   };
@@ -129,6 +132,7 @@
     age
     nh
     displaylink
+    nextdns
 
     # Devshell packages
     sops
