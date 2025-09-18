@@ -77,6 +77,7 @@
     };
 
     openssh.enable = true;
+    pcscd.enable = true;
 
     auto-cpufreq = {
       enable = true;
