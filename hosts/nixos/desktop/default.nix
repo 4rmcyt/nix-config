@@ -159,6 +159,8 @@
     xdg-desktop-portal-gtk
     unzip
     p7zip
+    yubikey-manager 
+    yubioath-flutter
 
     # Devshell packages
     sops
