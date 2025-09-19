@@ -94,7 +94,9 @@
       profileExtra = ''
         export PYENV_ROOT="$HOME/.pyenv"
         export PATH="$PYENV_ROOT/bin:$PATH"
-        eval "$(pyenv init --path)"
+        if command -v pyenv >/dev/null 2>&1; then
+          eval "$(pyenv init --path)"
+        fi
       '';
       initContent = ''
         autoload -Uz compinit && compinit
@@ -207,14 +209,11 @@
       aggressiveResize = true;
       baseIndex = 1;
       newSession = true;
-      # Stop tmux+escape craziness.
       escapeTime = 0;
-      # Force tmux to use /tmp for sockets (WSL2 compat)
       secureSocket = false;
       mouse = true;
       clock24 = true;
       historyLimit = 500000;
-
       plugins = with pkgs.tmuxPlugins; [
         better-mouse-mode
         # tmux-cowboy # Doesn't exist
@@ -227,6 +226,8 @@
         prefix-highlight
         logging
         extrakto
+        sensible
+        yank
         {
           plugin = dracula;
           extraConfig = ''
@@ -259,7 +260,8 @@
         set -ga terminal-overrides ",*256col*:Tc"
         set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
         set-environment -g COLORTERM "truecolor"
-        set -g status-right '#[fg=green]#($TMUX_PLUGIN_MANAGER_PATH/tmux-mem-cpu-load/tmux-mem-cpu-load --colors --powerline-right --interval 2)#[default]'
+        set -g status-right '#[fg=black,bg=color15] #{cpu_percentage}  %H:%M '
+        run-shell ${pkgs.tmuxPlugins.cpu}/share/tmux-plugins/cpu/cpu.tmux
         set -ga update-environment EDITOR
         set -g @super-fingers-key f
         set -g @plugin 'dracula/tmux'
