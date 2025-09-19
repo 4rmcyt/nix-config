@@ -216,10 +216,17 @@
         better-mouse-mode
         # tmux-cowboy # Doesn't exist
         # tmux-menus # Doesn't exist
-        continuum
         fzf-tmux-url
         resurrect
-        # tmux-named-snapshot # Doesn't exist
+        {
+          plugin = continuum;
+          extraConfig = ''
+            set -g @continuum-restore 'on'
+            set -g @continuum-boot 'on'
+            set -g @continuum-save-interval '10'
+          '';
+        }
+
         # tmux-mem-cpu-load
         prefix-highlight
         logging
@@ -254,15 +261,15 @@
 
       extraConfig = ''
         # https://old.reddit.com/r/tmux/comments/mesrci/tmux_2_doesnt_seem_to_use_256_colors/
-        set -g default-terminal "xterm-256color"
+        set -g default-terminal "tmux-256color"
         set -ga terminal-overrides ",*256col*:Tc"
         set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
         set-environment -g COLORTERM "truecolor"
-        set -g status-right '#[fg=black,bg=color15] #{cpu_percentage}  %H:%M '
-        run-shell ${pkgs.tmuxPlugins.cpu}/share/tmux-plugins/cpu/cpu.tmux
+        set -g status-right '#{cpu_bg_color} CPU: #{cpu_icon} #{cpu_percentage} | %a %h-%d %H:%M '
         set -ga update-environment EDITOR
         set -g @super-fingers-key f
         set -g @plugin 'dracula/tmux'
+        set -g @plugin 'tmux-plugins/tmux-cpu'
         set -g mouse on
 
 
