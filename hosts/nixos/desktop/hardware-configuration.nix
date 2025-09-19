@@ -9,7 +9,6 @@
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   boot = {
-    extraModulePackages = [ config.boot.kernelPackages.evdi ];
     initrd.availableKernelModules = [
       "nvme"
       "xhci_pci"
