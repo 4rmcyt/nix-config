@@ -41,6 +41,9 @@
       set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
       set-environment -g COLORTERM "truecolor"
       set -g status-right '#[fg=green]#($TMUX_PLUGIN_MANAGER_PATH/tmux-mem-cpu-load/tmux-mem-cpu-load --colors --powerline-right --interval 2)#[default]'
+      set -ga update-environment EDITOR
+      set -g @super-fingers-key f
+
 
       # easy-to-remember split pane commands
       bind | split-window -h -c "#{pane_current_path}"
