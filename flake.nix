@@ -30,8 +30,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-software-center.url = "github:snowfallorg/nix-software-center";
-    nixos-conf-editor.url = "github:snowfallorg/nixos-conf-editor";
 
     # Performance & hardware
     # chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
