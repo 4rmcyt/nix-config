@@ -16,6 +16,7 @@
 
       # Development
       vscode
+      pyenv
 
       # GUI applications
       firefox
@@ -214,7 +215,7 @@
 
     tmux = {
       enable = true;
-      shell = "${pkgs.bash}/bin/zsh";
+      shell = "${pkgs.zsh}/bin/zsh";
       shortcut = "a";
       aggressiveResize = true;
       baseIndex = 1;
