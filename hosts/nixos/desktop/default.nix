@@ -99,7 +99,6 @@
 
     xserver.videoDrivers = [
       "nvidia"
-      "displaylink"
     ];
 
     fwupd.enable = true;
@@ -159,7 +158,6 @@
     nvidia-vaapi-driver
     age
     nh
-    displaylink
     xdg-desktop-portal-gtk
     unzip
     p7zip
@@ -236,18 +234,4 @@
     age.keyFile = "/root/.config/sops/age/keys.txt";
   };
 
-  systemd.services.displaylink-server = {
-    enable = true;
-    requires = [ "systemd-udevd.service" ];
-    after = [ "systemd-udevd.service" ];
-    wantedBy = [ "multi-user.target" ]; # Start at boot
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = "${pkgs.displaylink}/bin/DisplayLinkManager";
-      User = "root";
-      Group = "root";
-      Restart = "on-failure";
-      RestartSec = 5; # Wait 5 seconds before restarting
-    };
-  };
 }
