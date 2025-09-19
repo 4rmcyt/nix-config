@@ -30,7 +30,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-
     # Performance & hardware
     # chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     auto-cpufreq = {
