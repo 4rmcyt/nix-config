@@ -1,9 +1,9 @@
 { pkgs, ... }:
-{ 
-   environment.systemPackages = with pkgs; [
-     tmux
-     tmuxPlugins
-   ];
+{
+  environment.systemPackages = with pkgs; [
+    tmux
+    tmuxPlugins
+  ];
   programs.tmux = {
     enable = true;
     shell = "${pkgs.bash}/bin/zsh";
