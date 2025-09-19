@@ -22,7 +22,7 @@
       "btusb"
     ];
 
-    initrd.kernelModules = [ "evdi" ];
+    initrd.kernelModules = [ ];
 
     kernelModules = [
       "kvm-amd"
