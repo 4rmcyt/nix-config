@@ -99,22 +99,9 @@
       initContent = ''
         autoload -Uz compinit && compinit
 
-        bindkey -v
-        bindkey '^f' autosuggest-accept
-        bindkey '^p' history-search-backward
-        bindkey '^n' history-search-forward
-        bindkey '^[w' kill-region
-
         bindkey '^[[A' history-substring-search-up # or '\eOA'
         bindkey '^[[B' history-substring-search-down # or '\eOB'
         HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
-
-        # Fix Home/End/Delete keys in iTerm2
-        bindkey '\e[H' beginning-of-line
-        bindkey '\e[F' end-of-line
-        bindkey '\e[1~' beginning-of-line
-        bindkey '\e[4~' end-of-line
-        bindkey '\e[3~' delete-char
 
         zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
         zstyle ':completion:*' menu no
@@ -240,8 +227,22 @@
         prefix-highlight
         logging
         extrakto
-        dracula
+        # dracula
+        # modern-tmux-theme
+
         # muxile # Doesn't exist
+
+        # tmux-menus = pkgs.tmuxPlugins.mkTmuxPlugin
+        # {
+        #     pluginName = "tmux-menus";
+        #     version = "unstable-2023-01-06";
+        #     src = pkgs.fetchFromGitHub {
+        #         owner = "jaclu";
+        #         repo = "tmux_menus";
+        #         rev = "2c12044984124e74e21a5a87d00f844083e4bdf7";
+        #         sha256 = "sha256-cPZCV8xk9QpU49/7H8iGhQYK6JwWjviL29eWabuqruc=";
+        #     };
+        # };
       ];
 
       extraConfig = ''
@@ -253,6 +254,8 @@
         set -g status-right '#[fg=green]#($TMUX_PLUGIN_MANAGER_PATH/tmux-mem-cpu-load/tmux-mem-cpu-load --colors --powerline-right --interval 2)#[default]'
         set -ga update-environment EDITOR
         set -g @super-fingers-key f
+        set -g @plugin 'dracula/tmux'
+        set -g mouse on
 
 
         # easy-to-remember split pane commands
