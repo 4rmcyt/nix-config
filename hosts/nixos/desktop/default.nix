@@ -10,6 +10,7 @@
     ../../../modules/users/zeev
     ../../../modules/disko/desktop
     ../../../modules/base
+    /../../../modules/services/tmux
   ];
 
   users.groups.git = { };
@@ -233,5 +234,4 @@
   sops = {
     age.keyFile = "/root/.config/sops/age/keys.txt";
   };
-
 }
