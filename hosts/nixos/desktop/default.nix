@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -44,9 +41,15 @@
   # Time zone and locale
   time.timeZone = "America/Edmonton";
   i18n.defaultLocale = "en_US.UTF-8";
-
-  # Group ALL services together
   services = {
+    udev = {
+      packages = [ pkgs.yubikey-personalization ];
+      extraRules = ''
+        # Keychron V6
+        KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{serial}=="*vial:f64c2b3c*", ATTRS{idVendor}=="3434", ATTRS{idProduct}=="0110", MODE="0660", GROUP="users", TAG+="uaccess", TAG+="udev-acl"
+      '';
+    };
+
     resolved = {
       enable = true;
       dnssec = "true";
@@ -91,8 +94,6 @@
         };
       };
     };
-
-    udev.packages = [ pkgs.yubikey-personalization ];
 
     power-profiles-daemon.enable = false;
 
@@ -162,6 +163,7 @@
     p7zip
     yubikey-manager
     yubioath-flutter
+    usbutils
 
     # Devshell packages
     sops

@@ -41,6 +41,7 @@
       kdePackages.sddm-kcm
       papirus-icon-theme
       via
+      vial
     ];
   };
 
