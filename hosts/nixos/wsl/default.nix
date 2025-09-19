@@ -121,7 +121,7 @@
     libGL
     libGLU
     nixos-rebuild
-    lan-mouse_git
+    lan-mouse
     sops
     cmake-format
     nodePackages.prettier
