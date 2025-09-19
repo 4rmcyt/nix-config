@@ -40,7 +40,6 @@
       kdePackages.kclock
       kdePackages.sddm-kcm
       papirus-icon-theme
-      
     ];
   };
 
