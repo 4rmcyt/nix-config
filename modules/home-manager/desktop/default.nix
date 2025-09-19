@@ -216,7 +216,7 @@
     tmux = {
       enable = true;
       shell = "${pkgs.zsh}/bin/zsh";
-      shortcut = "a";
+      shortcut = "b";
       aggressiveResize = true;
       baseIndex = 1;
       newSession = true;
