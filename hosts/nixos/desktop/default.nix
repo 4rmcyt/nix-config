@@ -171,6 +171,7 @@
     qmk
     qmk-udev-rules
     dfu-util
+    mc
 
     # Devshell packages
     sops
