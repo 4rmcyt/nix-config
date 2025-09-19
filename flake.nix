@@ -9,11 +9,6 @@
     systems.url = "github:nix-systems/default";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    # displaylink = {
-    #   url = "https://www.synaptics.com/sites/default/files/exe_files/2025-09/DisplayLink%20USB%20Graphics%20Software%20for%20Ubuntu6.2-EXE.zip";
-    #   flake = false;
-    # };
-
     # NixOS modules
     home-manager = {
       url = "github:nix-community/home-manager";
