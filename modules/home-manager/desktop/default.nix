@@ -40,8 +40,7 @@
       kdePackages.kclock
       kdePackages.sddm-kcm
       papirus-icon-theme
-      via
-      vial
+      
     ];
   };
 

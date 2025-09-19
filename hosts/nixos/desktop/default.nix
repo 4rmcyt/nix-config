@@ -41,11 +41,15 @@
   i18n.defaultLocale = "en_US.UTF-8";
   services = {
     udev = {
-      packages = [ pkgs.yubikey-personalization ];
-      extraRules = ''
-        # Keychron V6
-        KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{serial}=="*vial:f64c2b3c*", ATTRS{idVendor}=="3434", ATTRS{idProduct}=="0110", MODE="0660", GROUP="users", TAG+="uaccess", TAG+="udev-acl"
-      '';
+      packages = [
+        pkgs.yubikey-personalization
+        pkgs.yubikey-manager
+        pkgs.yubioath-flutter
+        pkgs.via
+        pkgs.vial
+        pkgs.qmk
+        pkgs.qmk-udev-rules
+      ];
     };
 
     resolved = {
@@ -162,6 +166,10 @@
     yubikey-manager
     yubioath-flutter
     usbutils
+    via
+    vial
+    qmk
+    qmk-udev-rules
 
     # Devshell packages
     sops
