@@ -46,7 +46,6 @@
         pkgs.yubikey-manager
         pkgs.yubioath-flutter
         pkgs.via
-        pkgs.vial
         pkgs.qmk
         pkgs.qmk-udev-rules
         pkgs.dfu-util
@@ -169,7 +168,6 @@
     yubioath-flutter
     usbutils
     via
-    vial
     qmk
     qmk-udev-rules
     dfu-util
