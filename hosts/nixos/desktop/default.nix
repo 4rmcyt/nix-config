@@ -49,6 +49,7 @@
         pkgs.vial
         pkgs.qmk
         pkgs.qmk-udev-rules
+        pkgs.dfu-util
       ];
     };
 
@@ -69,6 +70,7 @@
     displayManager.sddm = {
       enable = true;
       wayland.enable = true;
+      autoNumlock = true;
     };
 
     pulseaudio.enable = false;
@@ -170,6 +172,7 @@
     vial
     qmk
     qmk-udev-rules
+    dfu-util
 
     # Devshell packages
     sops
