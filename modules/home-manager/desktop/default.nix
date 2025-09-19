@@ -227,7 +227,15 @@
         prefix-highlight
         logging
         extrakto
-        # dracula
+        {
+          plugin = dracula;
+          extraConfig = ''
+            set -g @dracula-show-battery false
+            set -g @dracula-show-powerline true
+            set -g @dracula-refresh-rate 10
+          '';
+        }
+
         # modern-tmux-theme
 
         # muxile # Doesn't exist
