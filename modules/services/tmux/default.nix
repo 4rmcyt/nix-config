@@ -45,9 +45,9 @@
     '';
   };
 
-  programs.tmate = {
-    enable = true;
-    # FIXME: This causes tmate to hang.
-    # extraConfig = config.xdg.configFile."tmux/tmux.conf".text;
-  };
+  # programs.tmate = {
+  #   enable = true;
+  #   # FIXME: This causes tmate to hang.
+  #   # extraConfig = config.xdg.configFile."tmux/tmux.conf".text;
+  # };
 }
