@@ -24,8 +24,6 @@
     };
   };
 
-  systemd.services.dlm.wantedBy = [ "multi-user.target" ];
-
   networking = {
     hostName = "desktop";
     hostId = "e134040f";
