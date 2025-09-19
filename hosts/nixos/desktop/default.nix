@@ -234,7 +234,20 @@
 
   sops = {
     age.keyFile = "/root/.config/sops/age/keys.txt";
-    # Optionally, enable secrets for activation
-    # defaultSopsFile = ./secrets/common.yaml;
+  };
+
+  systemd.services.displaylink-server = {
+    enable = true;
+    requires = [ "systemd-udevd.service" ];
+    after = [ "systemd-udevd.service" ];
+    wantedBy = [ "multi-user.target" ]; # Start at boot
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${pkgs.displaylink}/bin/DisplayLinkManager";
+      User = "root";
+      Group = "root";
+      Restart = "on-failure";
+      RestartSec = 5; # Wait 5 seconds before restarting
+    };
   };
 }
