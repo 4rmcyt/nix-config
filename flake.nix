@@ -90,7 +90,7 @@
                   home-manager = {
                     useGlobalPkgs = true;
                     useUserPackages = true;
-                    backupFileExtension = "hm-backup";
+                    backupFileExtension = "backup";
                     users.zeev = {
                       imports = [
                         ./modules/home-manager/homeserver
@@ -124,7 +124,7 @@
                   home-manager = {
                     useGlobalPkgs = false;
                     useUserPackages = true;
-                    backupFileExtension = "hm-backup";
+                    backupFileExtension = "backup";
                     users.zeev = {
                       imports = [
                         ./modules/home-manager/desktop
@@ -153,7 +153,7 @@
                   home-manager = {
                     useGlobalPkgs = true;
                     useUserPackages = true;
-                    backupFileExtension = "hm-backup"; # Add consistent backup extension
+                    backupFileExtension = "backup"; # Add consistent backup extension
                     users.zeev = {
                       imports = [
                         ./modules/home-manager/wsl
