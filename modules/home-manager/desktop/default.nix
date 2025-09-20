@@ -15,7 +15,7 @@
       lutris
 
       # Development
-      vscode
+      vscode-fhs
       pyenv
 
       # GUI applications
