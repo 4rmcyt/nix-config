@@ -86,6 +86,9 @@
       "net.core.busy_read" = 50;
       "net.core.busy_poll" = 50;
     };
+    initrd.preLVMCommands = ''
+      ${pkgs.kbd}/bin/setleds +num
+    '';
   };
 
   services.smartd = {
