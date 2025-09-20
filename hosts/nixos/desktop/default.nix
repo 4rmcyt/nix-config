@@ -235,7 +235,7 @@
   };
 
   # Enable home-manager backup for conflicting files
-  home-manager.backupFileExtension = "hm-backup";
+  home-manager.backupFileExtension = "backup";
 
   system.stateVersion = "25.05";
 
