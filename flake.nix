@@ -4,8 +4,6 @@
   inputs = {
     # Core inputs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
-    nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs";
     systems.url = "github:nix-systems/default";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
@@ -30,8 +28,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Performance & hardware
-    # chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     auto-cpufreq = {
       url = "github:AdnanHodzic/auto-cpufreq";
       inputs.nixpkgs.follows = "nixpkgs";
