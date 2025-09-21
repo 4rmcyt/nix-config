@@ -217,6 +217,11 @@
         # tmux-menus # Doesn't exist
         fzf-tmux-url
         resurrect
+        prefix-highlight
+        logging
+        extrakto
+        sensible
+        yank
         {
           plugin = continuum;
           extraConfig = ''
@@ -225,21 +230,22 @@
             set -g @continuum-save-interval '10'
           '';
         }
-
-        # tmux-mem-cpu-load
-        prefix-highlight
-        logging
-        extrakto
-        sensible
-        tmux-cpu
-        
-        yank
         {
           plugin = dracula;
           extraConfig = ''
             set -g @dracula-show-battery false
             set -g @dracula-show-powerline true
             set -g @dracula-refresh-rate 10
+          '';
+        }
+        {
+          plugin = cpu;
+          extraConfig = ''
+            set -g @cpu_icon "⚙️"
+            set -g @cpu_bg_color "#ff5c57"
+            set -g @cpu_fg_color "#282a36"
+            set -g @cpu_percentage_color "#f3f4f5"
+            set -g @cpu_update_interval "5"
           '';
         }
       ];
@@ -255,8 +261,18 @@
         set -g status-right '#{cpu_bg_color} CPU: #{cpu_icon} #{cpu_percentage} | %a %h-%d %H:%M '
         set -ga update-environment EDITOR
         set -g @super-fingers-key f
-        set -g @plugin 'dracula/tmux'
         set -g mouse on
+        set -g @plugin 'dracula/tmux'
+        set -g @plugin cpu
+        set -g @plugin better-mouse-mode
+        set -g @plugin fzf-tmux-url
+        set -g @plugin prefix-highlight
+        set -g @plugin logging
+        set -g @plugin extrakto
+        set -g @plugin sensible
+        set -g @plugin yank
+        set -g @plugin resurrect
+        set -g @plugin continuum
 
 
         # easy-to-remember split pane commands
