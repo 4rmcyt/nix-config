@@ -231,6 +231,8 @@
         logging
         extrakto
         sensible
+        tmux-cpu
+        
         yank
         {
           plugin = dracula;
@@ -240,22 +242,6 @@
             set -g @dracula-refresh-rate 10
           '';
         }
-
-        # modern-tmux-theme
-
-        # muxile # Doesn't exist
-
-        # tmux-menus = pkgs.tmuxPlugins.mkTmuxPlugin
-        # {
-        #     pluginName = "tmux-menus";
-        #     version = "unstable-2023-01-06";
-        #     src = pkgs.fetchFromGitHub {
-        #         owner = "jaclu";
-        #         repo = "tmux_menus";
-        #         rev = "2c12044984124e74e21a5a87d00f844083e4bdf7";
-        #         sha256 = "sha256-cPZCV8xk9QpU49/7H8iGhQYK6JwWjviL29eWabuqruc=";
-        #     };
-        # };
       ];
 
       extraConfig = ''
@@ -270,7 +256,6 @@
         set -ga update-environment EDITOR
         set -g @super-fingers-key f
         set -g @plugin 'dracula/tmux'
-        set -g @plugin 'tmux-plugins/tmux-cpu'
         set -g mouse on
 
 

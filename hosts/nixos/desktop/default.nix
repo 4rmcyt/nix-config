@@ -70,6 +70,7 @@
       enable = true;
       wayland.enable = true;
       autoNumlock = true;
+      settings.General.DisplayServer = "wayland";
     };
 
     pulseaudio.enable = false;
