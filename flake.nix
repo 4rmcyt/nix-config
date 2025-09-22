@@ -3,6 +3,10 @@
 
   inputs = {
     # Core inputs
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     systems.url = "github:nix-systems/default";
     flake-parts.url = "github:hercules-ci/flake-parts";
@@ -112,6 +116,7 @@
                 inputs.agenix.nixosModules.default
                 inputs.nix-gaming.nixosModules.pipewireLowLatency
                 inputs.nix-gaming.nixosModules.platformOptimizations
+                inputs.lanzaboote.nixosModules.lanzaboote
                 {
                   nixpkgs.config = {
                     allowUnfree = true;
