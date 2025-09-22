@@ -76,6 +76,8 @@
       wayland.enable = true;
       autoNumlock = true;
       settings.General.DisplayServer = "wayland";
+      theme = "sugar-dark";
+      enableHidpi = true;
     };
 
     pulseaudio.enable = false;
@@ -132,6 +134,9 @@
     sbctl
     shim-unsigned
     ifrextractor-rs
+    efitools
+    efibootmgr
+    sbsigntool
     uefitool
     openssl
     vim
