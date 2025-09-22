@@ -40,6 +40,10 @@
       kdePackages.kclock
       kdePackages.sddm-kcm
       papirus-icon-theme
+
+      # Tmux
+      tmuxp
+      tmuxPlugins.cpu
     ];
   };
 
@@ -246,6 +250,7 @@
             set -g @cpu_fg_color "#282a36"
             set -g @cpu_percentage_color "#f3f4f5"
             set -g @cpu_update_interval "5"
+            run-shell ${pkgs.tmuxPlugins.cpu}/share/tmux-plugins/cpu/cpu.tmux
           '';
         }
       ];

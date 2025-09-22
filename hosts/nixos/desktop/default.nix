@@ -19,9 +19,14 @@
 
   boot = {
     loader = {
-      systemd-boot.enable = true;
+      systemd-boot.enable = false;
       efi.canTouchEfiVariables = true;
     };
+  };
+
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
   };
 
   networking = {
@@ -124,6 +129,9 @@
   };
 
   environment.systemPackages = with pkgs; [
+    sbctl
+    shim-unsigned
+    openssl
     vim
     wget
     curl
