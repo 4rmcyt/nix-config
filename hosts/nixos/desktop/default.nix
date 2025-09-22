@@ -132,6 +132,7 @@
     sbctl
     shim-unsigned
     ifrextractor-rs
+    uefitool
     openssl
     vim
     wget
