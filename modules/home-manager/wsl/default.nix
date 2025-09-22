@@ -63,6 +63,7 @@
 
       # GUI applications - these will get Start Menu shortcuts
       ghostty
+      ghostty.terminfo
       obsidian
       firefox
       vscode
