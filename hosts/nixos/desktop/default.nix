@@ -131,6 +131,7 @@
   environment.systemPackages = with pkgs; [
     sbctl
     shim-unsigned
+    ifrextractor-rs
     openssl
     vim
     wget
