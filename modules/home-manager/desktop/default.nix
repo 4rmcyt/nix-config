@@ -39,7 +39,10 @@
       kdePackages.ksystemlog
       kdePackages.kclock
       kdePackages.sddm-kcm
-      papirus-icon-theme
+      gruvbox-material-gtk-theme
+      gruvbox-plus-icons
+      gruvbox-dark-icons-gtk
+      kde-gruvbox
 
       # Tmux
       tmuxp
@@ -299,8 +302,8 @@
   gtk = {
     enable = true;
     iconTheme = {
-      name = "Papirus";
-      package = pkgs.papirus-icon-theme;
+      name = "Gruvbox-Dark";
+      package = pkgs.gruvbox-dark-icons-gtk;
     };
     theme = {
       name = "Breeze";
