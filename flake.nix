@@ -7,6 +7,11 @@
       url = "github:nix-community/lanzaboote/v0.4.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     systems.url = "github:nix-systems/default";
     flake-parts.url = "github:hercules-ci/flake-parts";
@@ -135,6 +140,7 @@
                         ./modules/home-manager/desktop
                         inputs.sops-nix.homeManagerModules.sops
                         inputs.agenix.homeManagerModules.default
+                        inputs.plasma-manager.homeModules.plasma-manager
                       ];
                       nixpkgs.config = {
                         allowUnfree = true;

@@ -21,8 +21,10 @@
       # GUI applications
       firefox
       kdePackages.dolphin
+      slack
       nvtopPackages.nvidia
       jellyfin-media-player
+      ytmdesktop
 
       kdePackages.konsole
       kdePackages.kate
@@ -39,14 +41,20 @@
       kdePackages.ksystemlog
       kdePackages.kclock
       kdePackages.sddm-kcm
+      kdePackages.systemsettings
+      kdePackages.signon-kwallet-extension
+      sddm-sugar-dark
+
       gruvbox-material-gtk-theme
       gruvbox-plus-icons
       gruvbox-dark-icons-gtk
       kde-gruvbox
 
       # Tmux
-      tmuxp
+      sesh
       tmuxPlugins.cpu
+
+      ghostty
     ];
   };
 
@@ -251,8 +259,10 @@
             set -g @cpu_icon "⚙️"
             set -g @cpu_bg_color "#ff5c57"
             set -g @cpu_fg_color "#282a36"
+
             set -g @cpu_percentage_color "#f3f4f5"
             set -g @cpu_update_interval "5"
+            set -g status-right "CPU: #{cpu_percentage} | RAM: #{ram_percentage} | %H:%M"
             run-shell ${pkgs.tmuxPlugins.cpu}/share/tmux-plugins/cpu/cpu.tmux
           '';
         }
