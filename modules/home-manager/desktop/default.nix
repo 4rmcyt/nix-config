@@ -1,8 +1,34 @@
+#TODO: Make separated tmux configuration module
 {
   pkgs,
   lib,
   ...
 }:
+let
+  tmux2k = pkgs.tmuxPlugins.mkTmuxPlugin {
+    pluginName = "tmux2k";
+    version = "unstable-latest";
+    src = pkgs.fetchFromGitHub {
+      owner = "2kabhishek";
+      repo = "tmux2k";
+      rev = "master";
+      sha256 = "sha256-6dx81ItJodYUoWtlbGqoc5MPRCqy2PLgqIJK9lrAJ30";
+    };
+    rtpFilePath = "2k.tmux";
+  };
+
+  tmuxWhichKey = pkgs.tmuxPlugins.mkTmuxPlugin {
+    pluginName = "tmux-which-key";
+    version = "unstable-latest";
+    src = pkgs.fetchFromGitHub {
+      owner = "alexwforsythe";
+      repo = "tmux-which-key";
+      rev = "master";
+      sha256 = "1h830h9rz4d5pdr3ymmjjwaxg6sh9vi3fpsn0bh10yy0gaf6xcaz";
+    };
+    rtpFilePath = "plugin.sh.tmux";
+  };
+in
 {
   home = {
     username = "zeev";
@@ -27,28 +53,11 @@
       jellyfin-media-player
       ytmdesktop
 
-      kdePackages.konsole
-      kdePackages.kate
-      kdePackages.ark
-      kdePackages.okular
-      kdePackages.gwenview
-      kdePackages.spectacle
-      kdePackages.kcalc
-      kdePackages.kfind
-      kdePackages.filelight
-      kdePackages.partitionmanager
-      kdePackages.discover
-      kdePackages.kcharselect
-      kdePackages.ksystemlog
-      kdePackages.kclock
-      kdePackages.sddm-kcm
-      kdePackages.systemsettings
-      kdePackages.signon-kwallet-extension
-
       gruvbox-material-gtk-theme
       gruvbox-plus-icons
       gruvbox-dark-icons-gtk
       kde-gruvbox
+      sddm-sugar-dark
 
       # Tmux
       sesh
@@ -225,9 +234,8 @@
       secureSocket = false;
       mouse = true;
       clock24 = true;
-      historyLimit = 500000;
+      historyLimit = 50000000;
       plugins = with pkgs.tmuxPlugins; [
-        better-mouse-mode
         # tmux-cowboy # Doesn't exist
         # tmux-menus # Doesn't exist
         fzf-tmux-url
@@ -237,6 +245,7 @@
         extrakto
         sensible
         yank
+        tmux2k
         {
           plugin = continuum;
           extraConfig = ''
@@ -246,50 +255,51 @@
           '';
         }
         {
-          plugin = dracula;
+          plugin = tmuxWhichKey;
           extraConfig = ''
-            set -g @dracula-show-battery false
-            set -g @dracula-show-powerline true
-            set -g @dracula-refresh-rate 10
+            set -g @tmux-which-key-xdg-enable 1
           '';
         }
         {
-          plugin = cpu;
+          plugin = tmux2k;
           extraConfig = ''
-            set -g @cpu_icon "⚙️"
-            set -g @cpu_bg_color "#ff5c57"
-            set -g @cpu_fg_color "#282a36"
-
-            set -g @cpu_percentage_color "#f3f4f5"
-            set -g @cpu_update_interval "5"
-            set -g status-right "CPU: #{cpu_percentage} | RAM: #{ram_percentage} | %H:%M"
-            run-shell ${pkgs.tmuxPlugins.cpu}/share/tmux-plugins/cpu/cpu.tmux
+            set -g @tmux2k-theme 'onedark'
+            set -g @tmux2k-left-plugins "session git"
+            set -g @tmux2k-right-plugins "cpu memory network date"
+          '';
+        }
+        {
+          plugin = resurrect;
+          extraConfig = ''
+            set -g @resurrect-strategy-nvim 'session'
+            set -g @resurrect-processes 'vim nvim hx cat less more tail watch'
+            resurrect_dir=~/.local/share/tmux/resurrect
+            set -g @resurrect-dir $resurrect_dir
+            set -g @resurrect-hook-post-save-all "sed -i 's| --cmd .*-vim-pack-dir||g; s|/etc/profiles/per-user/$USER/bin/||g; s|/nix/store/.*/bin/||g' $(readlink -f $resurrect_dir/last)"
+            set -g @resurrect-save 'S'
+            set -g @resurrect-restore 'R'
+            set -g @resurrect-save-bash-history 'on'
+            set -g @resurrect-save-zsh-history 'on'
+            set -g @resurrect-save-shell-history 'on'
+            set -g @resurrect-capture-pane-contents 'on'
+          '';
+        }
+        sensible
+        {
+          plugin = continuum;
+          extraConfig = ''
+            set -g @continuum-restore 'on'
+            set -g @continuum-save-interval '0.5'
+            set -g @continuum-save-bash-history 'on'
+            set -g @continuum-save-zsh-history 'on'
+            set -g @continuum-save-shell-history 'on'
           '';
         }
       ];
 
       extraConfig = ''
-        # https://old.reddit.com/r/tmux/comments/mesrci/tmux_2_doesnt_seem_to_use_256_colors/
-        set -g default-terminal "tmux-256color"
-        set -ga terminal-overrides ",*256col*:Tc"
-        set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
-        set-environment -g COLORTERM "truecolor"
-
-
         set -g @super-fingers-key f
         set -g mouse on
-        set -g @plugin 'dracula/tmux'
-        set -g @plugin 'tmux-plugins/tmux-cpu'
-        set -g @plugin better-mouse-mode
-        set -g @plugin fzf-tmux-url
-        set -g @plugin prefix-highlight
-        set -g @plugin logging
-        set -g @plugin extrakto
-        set -g @plugin sensible
-        set -g @plugin yank
-        set -g @plugin resurrect
-        set -g @plugin continuum
-
 
         # easy-to-remember split pane commands
         bind | split-window -h -c "#{pane_current_path}"
