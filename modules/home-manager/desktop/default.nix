@@ -3,8 +3,7 @@
   pkgs,
   lib,
   ...
-}:
-let
+}: let
   tmux2k = pkgs.tmuxPlugins.mkTmuxPlugin {
     pluginName = "tmux2k";
     version = "unstable-latest";
@@ -28,8 +27,7 @@ let
     };
     rtpFilePath = "plugin.sh.tmux";
   };
-in
-{
+in {
   home = {
     username = "zeev";
     homeDirectory = "/home/zeev";

@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   home.stateVersion = "23.11";
 
   programs.plasma = {
@@ -133,7 +132,7 @@
                 activeTaskSource = "activeTask";
               };
               layout = {
-                elements = [ "windowTitle" ];
+                elements = ["windowTitle"];
                 horizontalAlignment = "left";
                 showDisabledElements = "deactivated";
                 verticalAlignment = "center";
@@ -203,7 +202,7 @@
             value = "dolphin";
             type = "substring";
           };
-          window-types = [ "normal" ];
+          window-types = ["normal"];
         };
         apply = {
           noborder = {
@@ -217,7 +216,6 @@
       }
     ];
 
-  
     kwin = {
       edgeBarrier = 0; # Disables the edge-barriers introduced in plasma 6.1
       cornerBarrier = false;

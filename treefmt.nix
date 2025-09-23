@@ -1,27 +1,26 @@
 # nixos-config/treefmt.nix
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   projectRootFile = "flake.nix";
   programs = {
     nixfmt = {
       enable = true;
       package = pkgs.nixfmt-rfc-style;
-      includes = [ "*.nix" ];
+      includes = ["*.nix"];
     };
     alejandra = {
       enable = true;
       package = pkgs.alejandra;
-      includes = [ "*.nix" ];
+      includes = ["*.nix"];
     };
     deadnix = {
       enable = true;
       package = pkgs.deadnix;
-      includes = [ "*.nix" ];
+      includes = ["*.nix"];
     };
     statix = {
       package = pkgs.statix;
       enable = true;
-      includes = [ "*.nix" ];
+      includes = ["*.nix"];
     };
     shfmt = {
       enable = true;
@@ -36,12 +35,12 @@
     just = {
       enable = true;
       package = pkgs.just;
-      includes = [ ".justfile" ];
+      includes = [".justfile"];
     };
     rustfmt = {
       enable = true;
       package = pkgs.rustfmt;
-      includes = [ "*.rs" ];
+      includes = ["*.rs"];
     };
     yamlfmt = {
       enable = true;
@@ -54,7 +53,7 @@
     toml-sort = {
       enable = true;
       package = pkgs.toml-sort;
-      includes = [ "*.toml" ];
+      includes = ["*.toml"];
     };
     dockfmt = {
       enable = true;
