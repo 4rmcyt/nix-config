@@ -54,7 +54,7 @@
       upgrade = true;
     };
     brewPrefix = "/opt/homebrew/bin";
-    taps = [ "amar1729/formulae" ];
+    taps = ["amar1729/formulae"];
     caskArgs = {
       no_quarantine = true;
     };
@@ -125,7 +125,7 @@
       "zstd"
       "mkvtoolnix"
     ];
-    masApps = { };
+    masApps = {};
   };
 
   services.cachix-agent.enable = true;

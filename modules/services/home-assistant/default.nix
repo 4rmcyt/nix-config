@@ -1,5 +1,4 @@
-{ config, ... }:
-{
+{config, ...}: {
   sops.secrets = {
     # --- Home Assistant Secrets ---
     home_assistant_db_password = {
@@ -23,8 +22,8 @@
       };
     };
     groups = {
-      mosquitto = { };
-      hass = { };
+      mosquitto = {};
+      hass = {};
     };
   };
 
@@ -113,15 +112,15 @@
         }
       ];
 
-      mqtt = { };
+      mqtt = {};
 
-      default_config = { };
+      default_config = {};
       frontend = {
         themes = "!include_dir_merge_named themes";
       };
-      shopping_list = { };
-      map = { };
-      system_health = { };
+      shopping_list = {};
+      map = {};
+      system_health = {};
       logger = {
         default = "info";
         logs = {
@@ -135,7 +134,7 @@
     enable = true;
     listeners = [
       {
-        acl = [ "pattern readwrite #" ];
+        acl = ["pattern readwrite #"];
         omitPasswordAuth = true;
         settings.allow_anonymous = true;
       }

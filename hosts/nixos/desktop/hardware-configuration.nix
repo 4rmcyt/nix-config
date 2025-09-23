@@ -4,9 +4,8 @@
   pkgs,
   modulesPath,
   ...
-}:
-{
-  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+}: {
+  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
   boot = {
     initrd.availableKernelModules = [
@@ -22,7 +21,7 @@
       "btusb"
     ];
 
-    initrd.kernelModules = [ ];
+    initrd.kernelModules = [];
 
     kernelModules = [
       "kvm-amd"
@@ -41,7 +40,7 @@
 
     kernelPackages = pkgs.linuxPackages_xanmod_latest;
 
-    supportedFilesystems = [ "zfs" ];
+    supportedFilesystems = ["zfs"];
     kernelParams = [
       "zfs.zfs_arc_max=12884901888"
       "nvidia-drm.modeset=1"
@@ -95,11 +94,11 @@
     enable = true;
     defaults.autodetected = "-a -o on -s (S/../.././02|L/../../7/04)";
     devices = [
-      { device = "/dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NS0W101791N"; }
+      {device = "/dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NS0W101791N";}
     ];
   };
 
-  swapDevices = [ ];
+  swapDevices = [];
 
   # NVIDIA Hardware Configuration
   hardware = {
