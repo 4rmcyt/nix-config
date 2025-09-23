@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   imports = [
     ./hardware-configuration.nix
     ../../../modules/gaming
@@ -8,7 +7,7 @@
     ../../../modules/base
   ];
 
-  users.groups.git = { };
+  users.groups.git = {};
   users.users.git = {
     isSystemUser = true;
     group = "git";
@@ -60,7 +59,7 @@
     resolved = {
       enable = true;
       dnssec = "true";
-      domains = [ "~." ];
+      domains = ["~."];
       fallbackDns = [
         "45.90.28.0#Desktop-nextdns0.dns.nextdns.io"
         "2a07:a8c0::#nextdns0.dns.nextdns.io"
@@ -251,7 +250,7 @@
         "big-parallel"
         "kvm"
       ];
-      trusted-users = [ "zeev" ];
+      trusted-users = ["zeev"];
       warn-dirty = false;
       cores = 6;
       max-jobs = 6;
@@ -260,7 +259,7 @@
     };
     optimise = {
       automatic = true;
-      dates = [ "weekly" ];
+      dates = ["weekly"];
     };
   };
 
@@ -282,7 +281,7 @@
   };
 
   systemd.services."systemd-resolved" = {
-    restartTriggers = [ ]; # This will prevent unnecessary restarts on configuration changes
+    restartTriggers = []; # This will prevent unnecessary restarts on configuration changes
     serviceConfig = {
       Restart = "on-failure";
       RestartSec = "5s";
