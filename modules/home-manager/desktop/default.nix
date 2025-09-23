@@ -17,6 +17,7 @@
       # Development
       vscode-fhs
       pyenv
+      bat
 
       # GUI applications
       firefox
@@ -43,7 +44,6 @@
       kdePackages.sddm-kcm
       kdePackages.systemsettings
       kdePackages.signon-kwallet-extension
-      sddm-sugar-dark
 
       gruvbox-material-gtk-theme
       gruvbox-plus-icons
@@ -276,12 +276,10 @@
         set-environment -g COLORTERM "truecolor"
 
 
-        set -g status-right '#{cpu_bg_color} CPU: #{cpu_icon} #{cpu_percentage} | %a %h-%d %H:%M '
-        set -ga update-environment EDITOR
         set -g @super-fingers-key f
         set -g mouse on
         set -g @plugin 'dracula/tmux'
-        set -g @plugin cpu
+        set -g @plugin 'tmux-plugins/tmux-cpu'
         set -g @plugin better-mouse-mode
         set -g @plugin fzf-tmux-url
         set -g @plugin prefix-highlight
@@ -297,6 +295,7 @@
         bind | split-window -h -c "#{pane_current_path}"
         bind - split-window -v -c "#{pane_current_path}"
         bind c new-window -c "#{pane_current_path}"
+        bind r source-file ~/.config/tmux/tmux.conf \; display-message "Config reloaded.."
       '';
     };
   };
@@ -316,8 +315,25 @@
       package = pkgs.gruvbox-dark-icons-gtk;
     };
     theme = {
-      name = "Breeze";
+      name = "breeze_transparent_dark";
       package = pkgs.kdePackages.breeze-gtk;
+    };
+  };
+  programs.ghostty = {
+    enable = true;
+    enableZshIntegration = true;
+    settings = {
+      theme = "Dracula+";
+      background-blur-radius = 40;
+      background-opacity = 0.90;
+      background-blur = true;
+      minimum-contrast = 1.1;
+      font-size = 14;
+      font-family = "MesloLGS NF";
+      window-theme = "system";
+      window-show-tab-bar = "always";
+      gtk-titlebar = true;
+      shell-integration-features = "sudo";
     };
   };
 }
