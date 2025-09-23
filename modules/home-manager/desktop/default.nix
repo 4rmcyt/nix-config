@@ -265,7 +265,7 @@ in
           extraConfig = ''
             set -g @tmux2k-theme 'onedark'
             set -g @tmux2k-left-plugins "session git"
-            set -g @tmux2k-right-plugins "cpu memory network date"
+            set -g @tmux2k-right-plugins "cpu ram network time"
           '';
         }
         {
