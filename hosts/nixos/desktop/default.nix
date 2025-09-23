@@ -188,6 +188,7 @@
     qmk-udev-rules
     dfu-util
     mc
+    sddm-sugar-dark
 
     # Devshell packages
     sops
