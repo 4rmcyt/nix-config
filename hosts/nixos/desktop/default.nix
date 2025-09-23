@@ -63,9 +63,11 @@
       domains = [ "~." ];
       fallbackDns = [
         "45.90.28.0#Desktop-2bffa2.dns.nextdns.io"
+        "2a07:a8c0::#2bffa2.dns.nextdns.io"
         "45.90.30.0#Desktop-2bffa2.dns.nextdns.io"
+        "2a07:a8c1::#2bffa2.dns.nextdns.io"
       ];
-      dnsovertls = "opportunistic";
+      dnsovertls = "true";
     };
 
     tailscale.enable = true;

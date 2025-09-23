@@ -325,7 +325,7 @@
     settings = {
       theme = "Dracula+";
       background-blur-radius = 40;
-      background-opacity = 0.90;
+      background-opacity = 0.50;
       background-blur = true;
       minimum-contrast = 1.1;
       font-size = 14;
