@@ -201,6 +201,25 @@
     dockfmt
     nix-diff
     dockerfile-language-server
+
+    # KDE
+    kdePackages.konsole
+    kdePackages.kate
+    kdePackages.ark
+    kdePackages.okular
+    kdePackages.gwenview
+    kdePackages.spectacle
+    kdePackages.kcalc
+    kdePackages.kfind
+    kdePackages.filelight
+    kdePackages.partitionmanager
+    kdePackages.discover
+    kdePackages.kcharselect
+    kdePackages.ksystemlog
+    kdePackages.kclock
+    kdePackages.sddm-kcm
+    kdePackages.systemsettings
+    kdePackages.signon-kwallet-extension
   ];
 
   # Nix settings
@@ -260,5 +279,13 @@
 
   sops = {
     age.keyFile = "/root/.config/sops/age/keys.txt";
+  };
+
+  systemd.services."systemd-resolved" = {
+    restartTriggers = [ ]; # This will prevent unnecessary restarts on configuration changes
+    serviceConfig = {
+      Restart = "on-failure";
+      RestartSec = "5s";
+    };
   };
 }
