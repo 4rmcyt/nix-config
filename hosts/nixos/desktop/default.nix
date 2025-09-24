@@ -383,7 +383,4 @@
     kdePackages.signon-kwallet-extension
   ];
 
-  systemd.user.tmpfiles.rules = [
-    "d %h/.cache/mozilla 0755 zeev users 7d"
-  ];
 }

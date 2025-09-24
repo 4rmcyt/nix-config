@@ -209,4 +209,8 @@
     algorithm = "zstd";
     memoryPercent = 10; # Only 6.4GB - emergency only
   };
+
+  systemd.user.tmpfiles.rules = [
+    "d %h/.cache/mozilla 0755 zeev users 7d"
+  ];
 }
