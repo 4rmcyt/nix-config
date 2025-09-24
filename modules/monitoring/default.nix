@@ -109,7 +109,7 @@
         }
         {
           job_name = "desktop-node";
-          static_configs = [ { targets = [ "desktop:9100" ]; } ];
+          static_configs = [ { targets = [ "192.168.1.118:9100" ]; } ];
         }
         {
           job_name = "postgres-exporter";
