@@ -218,6 +218,11 @@
         "--report-client-info"
       ];
     };
+    tailscale = {
+      enable = true;
+      sopsFile = ../../../secrets/tailscale-homeserver.yaml;
+      key = "tailscale_auth_key";
+    };
   };
 
   # =================================================================
