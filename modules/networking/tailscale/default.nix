@@ -1,16 +1,16 @@
 {
   config,
-  pkgs,
   lib,
+  pkgs,
   ...
 }:
 with lib;
 let
-  cfg = config.services.tailscale;
+  cfg = config.networking.tailscaleAuth;
 in
 {
-  options.services.tailscale = {
-    enable = mkEnableOption "Custom Tailscale module";
+  options.networking.tailscaleAuth = {
+    enable = mkEnableOption "Tailscale with SOPS authentication";
     sopsFile = mkOption {
       type = types.path;
       description = "Path to the SOPS file containing the Tailscale auth key";
@@ -28,18 +28,6 @@ in
       inherit (cfg) key;
     };
 
-    users.users.tailscale = {
-      isSystemUser = true;
-      group = "tailscale";
-    };
-    users.groups.tailscale = { };
-
-    networking.firewall = {
-      trustedInterfaces = [ "tailscale0" ];
-      allowedUDPPorts = [ config.services.tailscale.port ];
-    };
-
-    environment.systemPackages = [ pkgs.tailscale ];
     services.tailscale = {
       enable = true;
       useRoutingFeatures = "both";
@@ -47,9 +35,22 @@ in
 
     systemd.services.tailscale-autoconnect = {
       description = "Automatic connection to Tailscale";
+      after = [
+        "network-pre.target"
+        "tailscale.service"
+      ];
+      wants = [
+        "network-pre.target"
+        "tailscale.service"
+      ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig.Type = "oneshot";
       script = with pkgs; ''
+        sleep 2
+        status="$(${tailscale}/bin/tailscale status -json | ${jq}/bin/jq -r .BackendState)"
+        if [ $status = "Running" ]; then
+          exit 0
+        fi
         ${tailscale}/bin/tailscale up --authkey file:${config.sops.secrets.tailscale_auth_key.path} --accept-routes
       '';
     };

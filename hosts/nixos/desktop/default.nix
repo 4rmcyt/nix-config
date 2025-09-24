@@ -59,6 +59,11 @@
       enable = true;
       profileId = "2bffa2";
     };
+    tailscaleAuth = {
+      enable = true;
+      sopsFile = ../../../secrets/tailscale-desktop.yaml;
+      key = "tailscale_auth_key";
+    };
   };
 
   # =================================================================
@@ -133,13 +138,6 @@
   # 10. System Services
   # =================================================================
   services = {
-    # Networking
-    tailscale = {
-      enable = true;
-      sopsFile = ../../../secrets/tailscale-desktop.yaml;
-      key = "tailscale_auth_key";
-    };
-
     # Desktop Environment - Plasma 6
     desktopManager.plasma6.enable = true;
     displayManager.sddm = {
