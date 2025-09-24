@@ -54,7 +54,6 @@
     hostId = "e134040f";
     networkmanager.enable = true;
     wireless.enable = false;
-    firewall.enable = true;
     dnssec = {
       enable = true;
       profileId = "2bffa2";
@@ -63,6 +62,10 @@
       enable = true;
       sopsFile = ../../../secrets/tailscale-desktop.yaml;
       key = "tailscale_auth_key";
+    };
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
     };
   };
 
@@ -138,6 +141,27 @@
   # 10. System Services
   # =================================================================
   services = {
+    prometheus.exporters.node = {
+      enable = true;
+      port = 9100;
+      enabledCollectors = [
+        "systemd"
+        "processes"
+        "interrupts"
+        "ksmd"
+        "logind"
+        "meminfo_numa"
+        "mountstats"
+        "network_route"
+        "systemd"
+        "textfile"
+        "vmstat"
+        "zfs"
+        "thermal_zone"
+      ];
+      # Optional: restrict access to localhost and Tailscale network
+      listenAddress = "0.0.0.0";
+    };
     # Desktop Environment - Plasma 6
     desktopManager.plasma6.enable = true;
     displayManager.sddm = {
@@ -263,6 +287,7 @@
     p7zip
     usbutils
     openssl
+    pass
 
     # Development tools
     helix

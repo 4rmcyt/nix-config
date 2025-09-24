@@ -188,10 +188,18 @@
   # 8. System Services
   # =================================================================
 
-  networking.dnssec = {
-    enable = true;
-    profileId = "2bffa2";
+  networking = {
+    dnssec = {
+      enable = true;
+      profileId = "2bffa2";
+    };
+    tailscaleAuth = {
+      enable = true;
+      sopsFile = ../../../secrets/tailscale-desktop.yaml;
+      key = "tailscale_auth_key";
+    };
   };
+
   services = {
     # SSH configuration
     openssh = {
@@ -235,13 +243,6 @@
 
     # Other services
     vscode-server.enable = true;
-
-    # Tailscale configuration
-    tailscale = {
-      enable = true;
-      sopsFile = ../../../secrets/tailscale-homeserver.yaml;
-      key = "tailscale_auth_key";
-    };
   };
 
   # =================================================================
