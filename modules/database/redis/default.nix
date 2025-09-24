@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   sops.secrets = {
     redis_password = {
       sopsFile = ../../../secrets/redis.yaml;
@@ -11,9 +12,9 @@
   users.users.redis = {
     isSystemUser = true;
     group = "redis";
-    extraGroups = ["users"];
+    extraGroups = [ "users" ];
   };
-  users.groups.redis = {};
+  users.groups.redis = { };
 
   networking.firewall.allowedTCPPorts = [
     6379 # Redis
@@ -85,4 +86,3 @@
 #   CapabilityBoundingSet = "";
 #   AmbientCapabilities = "";
 # };
-
