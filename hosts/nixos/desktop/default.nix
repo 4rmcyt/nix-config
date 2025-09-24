@@ -6,6 +6,7 @@
     ../../../modules/users/zeev
     ../../../modules/disko/desktop
     ../../../modules/base
+    ../../../modules/networking/tailscale
   ];
 
   users.groups.git = { };
@@ -45,6 +46,11 @@
   time.timeZone = "America/Edmonton";
   i18n.defaultLocale = "en_US.UTF-8";
   services = {
+    tailscale = {
+      enable = true;
+      sopsFile = ../../../secrets/tailscale-desktop.yaml;
+      key = "tailscale_auth_key";
+    };
     udev = {
       packages = [
         pkgs.yubikey-personalization
@@ -69,8 +75,6 @@
       ];
       dnsovertls = "true";
     };
-
-    tailscale.enable = true;
 
     desktopManager.plasma6.enable = true;
     displayManager.sddm = {
