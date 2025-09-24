@@ -104,8 +104,12 @@
           static_configs = [ { targets = [ "localhost:9090" ]; } ];
         }
         {
-          job_name = "node-exporter";
+          job_name = "homeserver-node";
           static_configs = [ { targets = [ "localhost:9100" ]; } ];
+        }
+        {
+          job_name = "desktop-node";
+          static_configs = [ { targets = [ "desktop:9100" ]; } ];
         }
         {
           job_name = "postgres-exporter";
