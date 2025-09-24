@@ -1,5 +1,8 @@
 { pkgs, ... }:
 {
+  # =================================================================
+  # 1. Imports & Global Settings
+  # =================================================================
   imports = [
     ./hardware-configuration.nix
     ../../../modules/gaming
@@ -10,211 +13,81 @@
     ../../../modules/networking/dnssec
   ];
 
-  users.groups.git = { };
-  users.users.git = {
-    isSystemUser = true;
-    group = "git";
-    home = "/var/lib/git";
-    createHome = true;
-    shell = pkgs.zsh;
+  # =================================================================
+  # 2. System Configuration
+  # =================================================================
+  system.stateVersion = "25.05";
+
+  # =================================================================
+  # 3. User & Group Management
+  # =================================================================
+  users = {
+    groups.git = { };
+    users.git = {
+      isSystemUser = true;
+      group = "git";
+      home = "/var/lib/git";
+      createHome = true;
+      shell = pkgs.zsh;
+    };
   };
 
+  # =================================================================
+  # 4. Bootloader & Secure Boot
+  # =================================================================
   boot = {
     loader = {
       systemd-boot.enable = false;
       efi.canTouchEfiVariables = true;
     };
+    lanzaboote = {
+      enable = true;
+      pkiBundle = "/var/lib/sbctl";
+    };
   };
 
-  boot.lanzaboote = {
-    enable = true;
-    pkiBundle = "/var/lib/sbctl";
-  };
-
+  # =================================================================
+  # 5. Networking Configuration
+  # =================================================================
   networking = {
     hostName = "desktop";
     hostId = "e134040f";
     networkmanager.enable = true;
     wireless.enable = false;
     firewall.enable = true;
-    nameservers = [
-      "45.90.28.0#Desktop-2bffa2.dns.nextdns.io"
-      "45.90.30.0#Desktop-2bffa2.dns.nextdns.io"
-    ];
+    dnssec = {
+      enable = true;
+      profileId = "2bffa2";
+    };
   };
 
-  # Time zone and locale
+  # =================================================================
+  # 6. Time & Locale
+  # =================================================================
   time.timeZone = "America/Edmonton";
   i18n.defaultLocale = "en_US.UTF-8";
-  services = {
-    tailscale = {
-      enable = true;
-      sopsFile = ../../../secrets/tailscale-desktop.yaml;
-      key = "tailscale_auth_key";
-    };
-    udev = {
-      packages = [
-        pkgs.yubikey-personalization
-        pkgs.yubikey-manager
-        pkgs.yubioath-flutter
-        pkgs.via
-        pkgs.qmk
-        pkgs.qmk-udev-rules
-        pkgs.dfu-util
-      ];
-    };
 
-    desktopManager.plasma6.enable = true;
-    displayManager.sddm = {
-      enable = true;
-      wayland.enable = true;
-      autoNumlock = true;
-      settings.General.DisplayServer = "wayland";
-      theme = "sugar-dark";
-      enableHidpi = true;
-    };
-
-    pulseaudio.enable = false;
-    pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-      lowLatency = {
-        enable = true;
-        quantum = 64;
-        rate = 48000;
-      };
-    };
-
-    openssh.enable = true;
-    pcscd.enable = true;
-
-    auto-cpufreq = {
-      enable = true;
-      settings = {
-        charger = {
-          governor = "performance";
-          turbo = "auto";
-        };
-      };
-    };
-
-    power-profiles-daemon.enable = false;
-
-    xserver.videoDrivers = [
-      "nvidia"
-    ];
-
-    fwupd.enable = true;
+  # =================================================================
+  # 7. Hardware Configuration
+  # =================================================================
+  hardware.nvidia = {
+    modesetting.enable = true;
+    powerManagement.enable = false;
+    powerManagement.finegrained = false;
+    open = false;
+    nvidiaSettings = true;
   };
 
-  # XDG portal for Plasma 6
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      kdePackages.xdg-desktop-portal-kde
-    ];
+  # =================================================================
+  # 8. Secrets Management with SOPS
+  # =================================================================
+  sops = {
+    age.keyFile = "/root/.config/sops/age/keys.txt";
   };
 
-  security.rtkit.enable = true;
-
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-  };
-
-  environment.systemPackages = with pkgs; [
-    sbctl
-    shim-unsigned
-    ifrextractor-rs
-    efitools
-    efibootmgr
-    sbsigntool
-    uefitool
-    openssl
-    vim
-    wget
-    curl
-    git
-    firefox
-    discord
-    htop
-    toml-sort
-    rustfmt
-    neofetch
-    nvtopPackages.nvidia
-    tailscale
-    helix
-    telegram-desktop
-    jellyfin-media-player
-    direnv
-    btop
-    meslo-lgs-nf
-    just
-    just-lsp
-    nixfmt
-    treefmt
-    nixfmt-rfc-style
-    statix
-    alejandra
-    shfmt
-    nixos-rebuild-ng
-    yubikey-manager
-    cachix
-    chromium
-    fwupd
-    nix-fast-build
-    nix-output-monitor
-    zoxide
-    powertop
-    nvidia-vaapi-driver
-    age
-    nh
-    xdg-desktop-portal-gtk
-    unzip
-    p7zip
-    yubikey-manager
-    yubioath-flutter
-    usbutils
-    via
-    qmk
-    qmk-udev-rules
-    dfu-util
-    mc
-    sddm-sugar-dark
-
-    # Devshell packages
-    sops
-    cmake-format
-    nodePackages.prettier
-    deadnix
-    yamlfmt
-    dockfmt
-    nix-diff
-    dockerfile-language-server
-
-    # KDE
-    kdePackages.konsole
-    kdePackages.kate
-    kdePackages.ark
-    kdePackages.okular
-    kdePackages.gwenview
-    kdePackages.spectacle
-    kdePackages.kcalc
-    kdePackages.kfind
-    kdePackages.filelight
-    kdePackages.partitionmanager
-    kdePackages.discover
-    kdePackages.kcharselect
-    kdePackages.ksystemlog
-    kdePackages.kclock
-    kdePackages.sddm-kcm
-    kdePackages.systemsettings
-    kdePackages.signon-kwallet-extension
-  ];
-
-  # Nix settings
+  # =================================================================
+  # 9. Nix Configuration
+  # =================================================================
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
@@ -227,12 +100,12 @@
         "https://4rmcyt.cachix.org"
       ];
       trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
         "homeserver.cachix.org-1:0vStm6koDUwET/iWYhbKpsuVO4v3UgN3510zYH9YpZU="
         "4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
       ];
       experimental-features = [
         "nix-command"
@@ -256,28 +129,224 @@
     };
   };
 
-  hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = false;
-    powerManagement.finegrained = false;
-    open = false;
-    nvidiaSettings = true;
+  # =================================================================
+  # 10. System Services
+  # =================================================================
+  services = {
+    # Networking
+    tailscale = {
+      enable = true;
+      sopsFile = ../../../secrets/tailscale-desktop.yaml;
+      key = "tailscale_auth_key";
+    };
+
+    # Desktop Environment - Plasma 6
+    desktopManager.plasma6.enable = true;
+    displayManager.sddm = {
+      enable = true;
+      wayland.enable = true;
+      autoNumlock = true;
+      settings.General.DisplayServer = "wayland";
+      theme = "sugar-dark";
+      enableHidpi = true;
+    };
+
+    # Audio - PipeWire
+    pulseaudio.enable = false;
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      lowLatency = {
+        enable = true;
+        quantum = 64;
+        rate = 48000;
+      };
+    };
+
+    # Hardware Support
+    udev = {
+      packages = with pkgs; [
+        yubikey-personalization
+        yubikey-manager
+        yubioath-flutter
+        via
+        qmk
+        qmk-udev-rules
+        dfu-util
+      ];
+    };
+
+    # System Services
+    openssh.enable = true;
+    pcscd.enable = true;
+    fwupd.enable = true;
+
+    # Power Management
+    auto-cpufreq = {
+      enable = true;
+      settings = {
+        charger = {
+          governor = "performance";
+          turbo = "auto";
+        };
+      };
+    };
+    power-profiles-daemon.enable = false;
+
+    # Graphics
+    xserver.videoDrivers = [ "nvidia" ];
+  };
+
+  # =================================================================
+  # 11. Security & XDG Configuration
+  # =================================================================
+  security.rtkit.enable = true;
+
+  # XDG portal for Plasma 6
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      kdePackages.xdg-desktop-portal-kde
+    ];
+  };
+
+  # =================================================================
+  # 12. Programs Configuration
+  # =================================================================
+  programs = {
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
+
+    zsh.enable = true;
+
+    nix-index = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+
+    nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 10d --keep 3";
+      flake = "/home/zeev/src/nix-config";
+    };
   };
 
   # Enable home-manager backup for conflicting files
   home-manager.backupFileExtension = "backup";
 
-  system.stateVersion = "25.05";
+  # =================================================================
+  # 13. System Packages
+  # =================================================================
+  environment.systemPackages = with pkgs; [
+    # Secure Boot & EFI tools
+    sbctl
+    shim-unsigned
+    ifrextractor-rs
+    efitools
+    efibootmgr
+    sbsigntool
+    uefitool
 
-  sops = {
-    age.keyFile = "/root/.config/sops/age/keys.txt";
-  };
+    # Core utilities
+    vim
+    wget
+    curl
+    git
+    htop
+    btop
+    neofetch
+    mc
+    unzip
+    p7zip
+    usbutils
+    openssl
 
-  systemd.services."systemd-resolved" = {
-    restartTriggers = [ ]; # This will prevent unnecessary restarts on configuration changes
-    serviceConfig = {
-      Restart = "on-failure";
-      RestartSec = "5s";
-    };
-  };
+    # Development tools
+    helix
+    direnv
+    just
+    just-lsp
+    nixfmt
+    treefmt
+    nixfmt-rfc-style
+    statix
+    alejandra
+    shfmt
+    toml-sort
+    rustfmt
+    nixos-rebuild-ng
+    cachix
+    nix-fast-build
+    nix-output-monitor
+    nh
+    zoxide
+    age
+
+    # DevShell packages
+    sops
+    cmake-format
+    nodePackages.prettier
+    deadnix
+    yamlfmt
+    dockfmt
+    nix-diff
+    dockerfile-language-server
+
+    # Desktop applications
+    firefox
+    discord
+    telegram-desktop
+    jellyfin-media-player
+    chromium
+
+    # System monitoring
+    nvtopPackages.nvidia
+    powertop
+    fwupd
+
+    # Hardware support
+    yubikey-manager
+    yubioath-flutter
+    via
+    qmk
+    qmk-udev-rules
+    dfu-util
+
+    # Fonts
+    meslo-lgs-nf
+
+    # Theme
+    sddm-sugar-dark
+
+    # Graphics
+    nvidia-vaapi-driver
+    xdg-desktop-portal-gtk
+
+    # Networking
+    tailscale
+
+    # KDE Applications
+    kdePackages.konsole
+    kdePackages.kate
+    kdePackages.ark
+    kdePackages.okular
+    kdePackages.gwenview
+    kdePackages.spectacle
+    kdePackages.kcalc
+    kdePackages.kfind
+    kdePackages.filelight
+    kdePackages.partitionmanager
+    kdePackages.discover
+    kdePackages.kcharselect
+    kdePackages.ksystemlog
+    kdePackages.kclock
+    kdePackages.sddm-kcm
+    kdePackages.systemsettings
+    kdePackages.signon-kwallet-extension
+  ];
 }
