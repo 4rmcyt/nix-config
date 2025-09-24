@@ -22,13 +22,24 @@
   # 3. User & Group Management
   # =================================================================
   users = {
-    groups.git = { };
-    users.git = {
-      isSystemUser = true;
-      group = "git";
-      home = "/var/lib/git";
-      createHome = true;
-      shell = pkgs.zsh;
+    users = {
+      prometheus = {
+        isSystemUser = true;
+        description = "Prometheus daemon user";
+        group = "prometheus";
+      };
+      git = {
+        isSystemUser = true;
+        group = "git";
+        description = "Git user";
+        home = "/var/lib/git";
+        createHome = true;
+        shell = pkgs.zsh;
+      };
+    };
+    groups = {
+      git = { };
+      prometheus = { };
     };
   };
 
