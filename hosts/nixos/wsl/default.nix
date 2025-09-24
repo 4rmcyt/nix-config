@@ -2,7 +2,8 @@
   pkgs,
   inputs,
   ...
-}: {
+}:
+{
   imports = [
     inputs.nixos-wsl.nixosModules.wsl
     inputs.vscode-server.nixosModules.default
@@ -19,7 +20,7 @@
     isSystemUser = true;
     description = "Git user";
   };
-  users.groups.git = {};
+  users.groups.git = { };
 
   # VSCode Server Configuration
   services.vscode-server.enable = true;
@@ -40,8 +41,8 @@
   };
 
   # Allow loading NVIDIA driver
-  boot.kernelModules = ["nvidia"];
-  boot.extraModulePackages = [pkgs.linuxPackages.nvidia_x11];
+  boot.kernelModules = [ "nvidia" ];
+  boot.extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
 
   # System Configuration
   system.stateVersion = "25.05";
@@ -61,7 +62,7 @@
     nvidiaSettings = false;
     package = pkgs.linuxPackages.nvidia_x11;
   };
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = [ "nvidia" ];
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -84,7 +85,7 @@
         "nix-command"
         "flakes"
       ];
-      trusted-users = ["zeev"];
+      trusted-users = [ "zeev" ];
       download-buffer-size = 1073741824;
       warn-dirty = false;
       auto-optimise-store = true;
@@ -160,7 +161,7 @@
     useDHCP = false;
     dhcpcd.enable = false;
     wireless.enable = false;
-    interfaces = {};
+    interfaces = { };
   };
 
   systemd.network.enable = false;
