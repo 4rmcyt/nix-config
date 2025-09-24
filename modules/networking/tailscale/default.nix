@@ -28,9 +28,28 @@ in
       inherit (cfg) key;
     };
 
-    services.tailscale = {
-      enable = true;
-      useRoutingFeatures = "both";
+
+    environment.systemPackages = with pkgs; [
+      tailscale
+      jq
+      ethtool
+      networkd-dispatcher
+    ];
+
+    services = {
+      tailscale = {
+        enable = true;
+        useRoutingFeatures = "both";
+      };
+      networkd-dispatcher = {
+        enable = true;
+        rules."50-tailscale" = {
+          onState = [ "routable" ];
+          script = ''
+            ${lib.getExe ethtool} -K eth0 rx-udp-gro-forwarding on rx-gro-list off
+          '';
+        };
+      };
     };
 
     systemd.services.tailscale-autoconnect = {

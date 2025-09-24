@@ -159,7 +159,6 @@
         "zfs"
         "thermal_zone"
       ];
-      # Optional: restrict access to localhost and Tailscale network
       listenAddress = "0.0.0.0";
     };
     # Desktop Environment - Plasma 6
@@ -349,9 +348,7 @@
     # Graphics
     nvidia-vaapi-driver
     xdg-desktop-portal-gtk
-
-    # Networking
-    tailscale
+    xdg-desktop-portal-kde
 
     # KDE Applications
     kdePackages.konsole
