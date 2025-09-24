@@ -164,7 +164,6 @@
         "meminfo_numa"
         "mountstats"
         "network_route"
-        "systemd"
         "textfile"
         "vmstat"
         "zfs"
