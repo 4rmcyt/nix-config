@@ -46,6 +46,11 @@
           normalization = "formD";
           relatime = "on";
           "com.sun:auto-snapshot" = "false";
+          "sync" = "standard";
+          "logbias" = "throughput";
+          "primarycache" = "all";
+          "secondarycache" = "all";
+          "zfs_txg_timeout" = "30";
         };
         options = {
           ashift = "12";
