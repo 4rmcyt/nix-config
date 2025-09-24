@@ -20,13 +20,13 @@ in
   };
 
   config = mkIf cfg.enable {
-    dhcpcd.extraConfig = "nohook resolv.conf";
-    networkmanager.dns = "none";
-
-    networking.nameservers = [
-      "45.90.28.0#${nextdnsHost}"
-      "45.90.30.0#${nextdnsHost}"
-    ];
+    networking = {
+      nameservers = [
+        "45.90.28.0#${nextdnsHost}"
+        "45.90.30.0#${nextdnsHost}"
+      ];
+      networkmanager.dns = mkForce "none";
+    };
 
     services.resolved = {
       enable = true;
