@@ -3,7 +3,8 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   tmux2k = pkgs.tmuxPlugins.mkTmuxPlugin {
     pluginName = "tmux2k";
     version = "unstable-latest";
@@ -27,7 +28,8 @@
     };
     rtpFilePath = "plugin.sh.tmux";
   };
-in {
+in
+{
   home = {
     username = "zeev";
     homeDirectory = "/home/zeev";
@@ -57,10 +59,7 @@ in {
       kde-gruvbox
       sddm-sugar-dark
 
-      # Tmux
-      sesh
-      tmuxPlugins.cpu
-
+      python3
       ghostty
     ];
   };
@@ -256,6 +255,7 @@ in {
           plugin = tmuxWhichKey;
           extraConfig = ''
             set -g @tmux-which-key-xdg-enable 1
+            set -g @tmux-which-key-xdg-plugin-path=tmux/plugins/tmux-which-key
           '';
         }
         {
@@ -271,7 +271,7 @@ in {
           extraConfig = ''
             set -g @resurrect-strategy-nvim 'session'
             set -g @resurrect-processes 'vim nvim hx cat less more tail watch'
-            resurrect_dir=~/.local/share/tmux/resurrect
+            resurrect_dir=~/.config/tmux/resurrect
             set -g @resurrect-dir $resurrect_dir
             set -g @resurrect-hook-post-save-all "sed -i 's| --cmd .*-vim-pack-dir||g; s|/etc/profiles/per-user/$USER/bin/||g; s|/nix/store/.*/bin/||g' $(readlink -f $resurrect_dir/last)"
             set -g @resurrect-save 'S'
