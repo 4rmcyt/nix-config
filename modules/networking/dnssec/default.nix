@@ -1,5 +1,7 @@
-_:
-{
+_: {
+  dhcpcd.extraConfig = "nohook resolv.conf";
+  networkmanager.dns = "none";
+
   networking.nameservers = [
     "45.90.28.0#Desktop-nextdns0.dns.nextdns.io"
     "45.90.30.0#Desktop-nextdns0.dns.nextdns.io"
