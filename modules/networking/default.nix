@@ -5,6 +5,7 @@
     ./cloudflared
     ./nginx
     ./tailscale
+    ./dnssec
   ];
   networking = {
     hostName = "homeserver";

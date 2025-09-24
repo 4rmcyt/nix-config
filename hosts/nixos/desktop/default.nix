@@ -7,6 +7,7 @@
     ../../../modules/disko/desktop
     ../../../modules/base
     ../../../modules/networking/tailscale
+    ../../../modules/networking/dnssec
   ];
 
   users.groups.git = { };
