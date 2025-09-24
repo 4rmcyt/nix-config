@@ -132,6 +132,7 @@
             "stat"
             "time"
             "thermal_zone"
+            "pressure"
           ];
         };
         postgres = {
