@@ -28,7 +28,6 @@ in
       inherit (cfg) key;
     };
 
-
     environment.systemPackages = with pkgs; [
       tailscale
       jq
