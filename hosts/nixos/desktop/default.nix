@@ -348,7 +348,6 @@
     # Graphics
     nvidia-vaapi-driver
     xdg-desktop-portal-gtk
-    xdg-desktop-portal-kde
 
     # KDE Applications
     kdePackages.konsole
