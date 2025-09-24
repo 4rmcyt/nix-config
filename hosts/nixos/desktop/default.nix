@@ -290,6 +290,10 @@
     git
     htop
     btop
+    iotop
+    lsof
+    net-tools
+    iproute2
     neofetch
     mc
     unzip
@@ -377,5 +381,9 @@
     kdePackages.sddm-kcm
     kdePackages.systemsettings
     kdePackages.signon-kwallet-extension
+  ];
+
+  systemd.user.tmpfiles.rules = [
+    "d %h/.cache/mozilla 0755 zeev users 7d"
   ];
 }

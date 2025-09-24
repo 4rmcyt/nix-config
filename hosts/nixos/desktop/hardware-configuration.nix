@@ -44,6 +44,7 @@
     supportedFilesystems = [ "zfs" ];
     kernelParams = [
       "zfs.zfs_arc_max=12884901888"
+      "zfs.zfs_txg_timeout=30"
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
       "usbcore.quirks=0bda:0411:b"
@@ -85,6 +86,12 @@
       "net.ipv4.tcp_no_delay" = 1;
       "net.core.busy_read" = 50;
       "net.core.busy_poll" = 50;
+
+      "vm.dirty_background_ratio" = 2;
+      "vm.dirty_ratio" = 5;
+      "vm.dirty_expire_centisecs" = 1500;
+      "vm.dirty_writeback_centisecs" = 6000;
+      "vm.swappiness" = 1;
     };
     initrd.preLVMCommands = ''
       ${pkgs.kbd}/bin/setleds +num
@@ -141,4 +148,65 @@
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   hardware.enableRedistributableFirmware = lib.mkDefault true;
   hardware.cpu.amd.ryzen-smu.enable = true;
+
+  # Firefox cache in tmpfs (2GB should be plenty)
+  fileSystems."/home/zeev/.cache/mozilla" = {
+    device = "tmpfs";
+    fsType = "tmpfs";
+    options = [
+      "defaults"
+      "size=2G" # 2GB for Firefox cache
+      "mode=0755"
+      "uid=1000"
+      "gid=100"
+      "noatime" # No access time updates
+      "nodev" # Security: no device files
+      "nosuid" # Security: no suid binaries
+    ];
+  };
+
+  # Optional: More aggressive tmpfs for all browser caches
+  fileSystems."/home/zeev/.cache/chromium" = {
+    device = "tmpfs";
+    fsType = "tmpfs";
+    options = [
+      "defaults"
+      "size=1G"
+      "mode=0755"
+      "uid=1000"
+      "gid=100"
+      "noatime"
+    ];
+  };
+
+  # VS Code cache (those libuv workers writing heavily)
+  fileSystems."/home/zeev/.cache/vscode-cpptools" = {
+    device = "tmpfs";
+    fsType = "tmpfs";
+    options = [
+      "defaults"
+      "size=512M"
+      "mode=0755"
+      "uid=1000"
+      "gid=100"
+      "noatime"
+    ];
+  };
+
+  # General /tmp with more space
+  fileSystems."/tmp" = {
+    device = "tmpfs";
+    fsType = "tmpfs";
+    options = [
+      "defaults"
+      "size=8G" # Generous /tmp space
+      "mode=1777" # Sticky bit for multi-user
+      "noatime"
+    ];
+  };
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 10; # Only 6.4GB - emergency only
+  };
 }
