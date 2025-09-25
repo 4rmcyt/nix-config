@@ -3,18 +3,14 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 3 * * *'
-
 jobs:
   update-flake-lock:
     runs-on: ubuntu-latest
-    environment: production
     steps:
-      - name: Access private repository
-        uses: webfactory/ssh-agent@master
-        with:
-          ssh-private-key: ${{ secrets.GH_PRIVATE_KEY }}
       - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v12
+      - uses: cachix/install-nix-action@v27
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
       - id: update
         uses: DeterminateSystems/update-flake-lock@v23
         with:
@@ -25,5 +21,5 @@ jobs:
       - name: Merge
         run: gh pr merge --auto "${{ steps.update.outputs.pull-request-number }}" --rebase
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ steps.update.outputs.pull-request-number != '' }}
