@@ -46,7 +46,7 @@ in
       bat
 
       # GUI applications
-      firefox
+      
       kdePackages.dolphin
       slack
       nvtopPackages.nvidia
