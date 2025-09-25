@@ -66,7 +66,7 @@
         };
         options = {
           ashift = "12";
-          autotrim = "on";
+          autotrim = "off";
         };
         datasets = {
           # zfs uses cow free space to delete files when the disk is completely filled

@@ -43,7 +43,7 @@
 
     supportedFilesystems = [ "zfs" ];
     kernelParams = [
-      "zfs.zfs_arc_max=12884901888"
+      "zfs.zfs_arc_max=12884901888" # 12GB ARC size
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
       "usbcore.quirks=0bda:0411:b"
@@ -89,6 +89,9 @@
     initrd.preLVMCommands = ''
       ${pkgs.kbd}/bin/setleds +num
     '';
+    extraModprobeConfig = ''
+      options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=16777216 zfs_arc_max=2147483648
+    '';
   };
 
   services.smartd = {
@@ -120,11 +123,11 @@
   # Services for ZFS
   services.zfs = {
     autoScrub = {
-      enable = false;
+      enable = true;
       interval = "weekly";
     };
     trim = {
-      enable = false;
+      enable = true;
       interval = "weekly";
     };
   };
