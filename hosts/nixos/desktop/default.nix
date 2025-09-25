@@ -320,7 +320,6 @@
     dockerfile-language-server
 
     # Desktop applications
-    firefox
     discord
     telegram-desktop
     jellyfin-media-player
