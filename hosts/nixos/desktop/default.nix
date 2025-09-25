@@ -156,7 +156,6 @@
         "textfile"
         "time"
         "zfs"
-        "nvidia_gpu"
       ];
       listenAddress = "0.0.0.0";
     };
@@ -168,7 +167,7 @@
       wayland.compositor = "kwin";
       autoNumlock = true;
       settings.General.DisplayServer = "wayland";
-      theme = "breeze";
+      theme = "astronaut"; # sugar-dark, astronaut
       enableHidpi = true;
     };
 

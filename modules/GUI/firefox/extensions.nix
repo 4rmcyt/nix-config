@@ -31,11 +31,11 @@ let
   ];
 in
 {
-  hm.programs.firefox.profiles.default = {
+  programs.firefox.profiles.default = {
     extensions.packages = ryceeAddons ++ customAddons;
   };
 
-  hm.programs.firefox.policies."3rdparty".extensions = {
+  programs.firefox.policies."3rdparty".extensions = {
     "uBlock0@raymondhill.net" = {
       permissions = [ "internal:privateBrowsingAllowed" ];
       origins = [ ];

@@ -7,9 +7,7 @@
     ./ui.nix
   ];
 
-  features.browser = "firefox"; # Change if we ever stop using Firefox (unlikely)
-
-  hm.programs.firefox = {
+  programs.firefox = {
     enable = true;
 
     profiles.default = {
@@ -38,7 +36,6 @@
     };
   };
 
-  hm.home.file.".mozilla/firefox/profiles.ini".force = true;
-
-  environment.variables.BROWSER = "firefox"; # `man` likes having this
+  home.file.".mozilla/firefox/profiles.ini".force = true;
+  home.sessionVariables.BROWSER = "firefox";
 }
