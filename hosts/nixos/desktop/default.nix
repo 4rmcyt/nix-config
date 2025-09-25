@@ -308,6 +308,7 @@
     nh
     zoxide
     age
+    pciutils
 
     # DevShell packages
     sops
