@@ -88,7 +88,6 @@
       trusted-users = [ "zeev" ];
       download-buffer-size = 1073741824;
       warn-dirty = false;
-      auto-optimise-store = true;
     };
     gc = {
       automatic = true;

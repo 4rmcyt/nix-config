@@ -120,11 +120,11 @@
   # Services for ZFS
   services.zfs = {
     autoScrub = {
-      enable = true;
+      enable = false;
       interval = "weekly";
     };
     trim = {
-      enable = true;
+      enable = false;
       interval = "weekly";
     };
   };

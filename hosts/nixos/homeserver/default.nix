@@ -88,10 +88,6 @@
       show-trace = true;
       download-buffer-size = 1073741824;
     };
-    optimise = {
-      automatic = true;
-      dates = [ "weekly" ];
-    };
   };
 
   # =================================================================

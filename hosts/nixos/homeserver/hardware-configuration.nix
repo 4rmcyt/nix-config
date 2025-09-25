@@ -102,10 +102,10 @@
   };
 
   services.zfs = {
-    autoScrub.enable = true;
+    autoScrub.enable = false;
     autoScrub.interval = "monthly";
     autoSnapshot.enable = false;
-    trim.enable = true;
+    trim.enable = false;
     trim.interval = "weekly";
   };
 
