@@ -72,6 +72,7 @@
             type = "zfs_fs";
             options = {
               mountpoint = "legacy";
+              atime = "off";
               "com.sun:auto-snapshot" = "false";
             };
             mountpoint = "/";
@@ -94,6 +95,7 @@
             type = "zfs_fs";
             mountpoint = "/home";
             options = {
+              atime = "off";
               "com.sun:auto-snapshot" = "false";
             };
           };
