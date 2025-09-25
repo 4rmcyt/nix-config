@@ -54,7 +54,7 @@
         };
         options = {
           ashift = "12";
-          autotrim = "on";
+          autotrim = "off";
         };
         datasets = {
           # Reserve space for ZFS operations
