@@ -8,14 +8,28 @@
       isDefault = true;
       search = {
         force = true;
-
-        # DuckDuckGo has been excruciatingly awful lately
         default = "google";
       };
 
       settings = {
         # Normal firefox settings that happen to be blocked with policies
         "services.sync.declinedEngines" = "";
+        "browser.cache.disk.enable" = false;
+        "browser.cache.memory.enable" = true;
+        "browser.cache.memory.capacity" = 524288; # 512MB
+
+        # Reduce session store frequency
+        "browser.sessionstore.interval" = 300000; # 5 minutes
+
+        # Disable crash reporter disk writes
+        "toolkit.crashreporter.enabled" = false;
+
+        # Reduce various disk writes
+        "browser.download.manager.retention" = 0;
+        "browser.helperApps.deleteTempFileOnExit" = true;
+
+        # Disable safebrowsing disk cache
+        "browser.safebrowsing.provider.google4.dataSharingURL" = "";
 
         "sidebar.verticalTabs" = true;
         "sidebar.main.tools" = "";

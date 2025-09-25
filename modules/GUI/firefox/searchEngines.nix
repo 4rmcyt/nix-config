@@ -1,5 +1,4 @@
 { lib, ... }:
-
 {
   hm.programs.firefox.profiles.default.search.engines = {
     # Disable all the stupid "This time, search with" icons
@@ -93,6 +92,5 @@
       };
       definedAliases = lib.singleton "@on";
     };
-
   };
 }

@@ -94,7 +94,7 @@
             type = "zfs_fs";
             mountpoint = "/home";
             options = {
-              "com.sun:auto-snapshot" = "true";
+              "com.sun:auto-snapshot" = "false";
             };
           };
 

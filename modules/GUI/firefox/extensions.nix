@@ -1,5 +1,8 @@
-{ inputs, pkgs, ... }:
-
+{
+  inputs,
+  pkgs,
+  ...
+}:
 let
   # Search extension names with below command:
   # nix flake show --json "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons" --all-systems | jq -r '.packages."x86_64-linux" | keys[]' | rg QUERY
@@ -26,9 +29,9 @@ let
   ];
 
   customAddons = [
-
   ];
-in {
+in
+{
   hm.programs.firefox.profiles.default = {
     extensions.packages = ryceeAddons ++ customAddons;
   };
@@ -36,7 +39,7 @@ in {
   hm.programs.firefox.policies."3rdparty".extensions = {
     "uBlock0@raymondhill.net" = {
       permissions = [ "internal:privateBrowsingAllowed" ];
-      origins = [];
+      origins = [ ];
     };
 
     # Movie-web

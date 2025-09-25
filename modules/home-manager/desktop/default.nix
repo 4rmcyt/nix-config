@@ -241,32 +241,6 @@ in
       };
     };
 
-    # --- Applications ---
-    firefox = {
-      enable = true;
-      profiles.default = {
-        settings = {
-          # Disable disk cache, use RAM only
-          "browser.cache.disk.enable" = false;
-          "browser.cache.memory.enable" = true;
-          "browser.cache.memory.capacity" = 524288; # 512MB
-
-          # Reduce session store frequency
-          "browser.sessionstore.interval" = 300000; # 5 minutes
-
-          # Disable crash reporter disk writes
-          "toolkit.crashreporter.enabled" = false;
-
-          # Reduce various disk writes
-          "browser.download.manager.retention" = 0;
-          "browser.helperApps.deleteTempFileOnExit" = true;
-
-          # Disable safebrowsing disk cache
-          "browser.safebrowsing.provider.google4.dataSharingURL" = "";
-        };
-      };
-    };
-
     # --- Terminal Multiplexer ---
     tmux = {
       enable = true;

@@ -1,9 +1,8 @@
 { lib, ... }:
-
 {
   hm.programs.firefox.policies.Preferences."browser.uiCustomization.state" = builtins.toJSON {
     placements = {
-      widget-overflow-fixed-list = [];
+      widget-overflow-fixed-list = [ ];
       toolbar-menubar = [ "menubar-items" ];
       PersonalToolbar = [ "personal-bookmarks" ];
       nav-bar = [
@@ -36,26 +35,28 @@
     newElementCount = 3;
   };
 
-  hm.programs.firefox.profiles.default.userChrome = lib.mkAfter # css
-  ''
-    /* Remove useless separator */
-    .titlebar-spacer {
-      display: none;
-    }
+  hm.programs.firefox.profiles.default.userChrome =
+    lib.mkAfter # css
 
-    /* Remove bookmark star */
-    #star-button-box {
-      display: none !important;
-    }
+      ''
+        /* Remove useless separator */
+        .titlebar-spacer {
+          display: none;
+        }
 
-    /* Remove "Protection shield" icon */
-    #tracking-protection-icon-container {
-      display: none !important;
-    }
+        /* Remove bookmark star */
+        #star-button-box {
+          display: none !important;
+        }
 
-    #vertical-pinned-tabs-container,
-    scrollbox {
-      scrollbar-width: auto !important;
-    }
-  '';
+        /* Remove "Protection shield" icon */
+        #tracking-protection-icon-container {
+          display: none !important;
+        }
+
+        #vertical-pinned-tabs-container,
+        scrollbox {
+          scrollbar-width: auto !important;
+        }
+      '';
 }
