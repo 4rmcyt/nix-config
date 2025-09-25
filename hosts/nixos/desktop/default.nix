@@ -148,18 +148,15 @@
       enable = true;
       port = 9100;
       enabledCollectors = [
-        "systemd"
-        "processes"
-        "interrupts"
-        "ksmd"
-        "logind"
-        "meminfo_numa"
-        "mountstats"
-        "network_route"
+        "cpu"
+        "diskstats"
+        "filesystem"
+        "netdev"
+        "stat"
         "textfile"
-        "vmstat"
+        "time"
         "zfs"
-        "thermal_zone"
+        "nvidia_gpu"
       ];
       listenAddress = "0.0.0.0";
     };
