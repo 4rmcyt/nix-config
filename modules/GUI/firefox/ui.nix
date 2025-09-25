@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  hm.programs.firefox.policies.Preferences."browser.uiCustomization.state" = builtins.toJSON {
+  programs.firefox.policies.Preferences."browser.uiCustomization.state" = builtins.toJSON {
     placements = {
       widget-overflow-fixed-list = [ ];
       toolbar-menubar = [ "menubar-items" ];
@@ -35,7 +35,7 @@
     newElementCount = 3;
   };
 
-  hm.programs.firefox.profiles.default.userChrome =
+  programs.firefox.profiles.default.userChrome =
     lib.mkAfter # css
 
       ''

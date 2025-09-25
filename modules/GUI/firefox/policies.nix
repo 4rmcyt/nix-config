@@ -1,5 +1,5 @@
 {
-  hm.programs.firefox.policies = {
+  programs.firefox.policies = {
     DontCheckDefaultBrowser = true;
     DisableTelemetry = true;
     DisableFirefoxStudies = true;
