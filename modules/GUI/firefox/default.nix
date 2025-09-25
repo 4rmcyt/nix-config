@@ -1,4 +1,7 @@
 {
+  ...
+}:
+{
   imports = [
     ./extensions.nix
     ./policies.nix
@@ -7,9 +10,13 @@
     ./ui.nix
   ];
 
+  home.sessionVariables = {
+    XDG_CURRENT_DESKTOP = "sway";
+    MOZ_USE_XINPUT2 = "1";
+  };
+
   programs.firefox = {
     enable = true;
-
     profiles.default = {
       isDefault = true;
       search = {

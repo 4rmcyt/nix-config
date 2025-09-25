@@ -6,9 +6,10 @@
       toolbar-menubar = [ "menubar-items" ];
       PersonalToolbar = [ "personal-bookmarks" ];
       nav-bar = [
-        "sidebar-button" # For vertical tabs
+        "sidebar-button"
         "back-button"
         "forward-button"
+        "stop-reload-button"
         "urlbar-container"
         "downloads-button"
         "unified-extensions-button"
