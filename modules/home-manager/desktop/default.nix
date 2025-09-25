@@ -1,4 +1,4 @@
-# TODO: Make separated tmux configuration module
+#TODO: Make separated tmux configuration module
 {
   pkgs,
   lib,
@@ -12,7 +12,7 @@ let
       owner = "2kabhishek";
       repo = "tmux2k";
       rev = "master";
-      sha256 = "sha256-6dx81ItJodYUoWtlbGqoc5MPRCqy2PLgqIJK9lrAJ30=";
+      sha256 = "sha256-6dx81ItJodYUoWtlbGqoc5MPRCqy2PLgqIJK9lrAJ30";
     };
     rtpFilePath = "2k.tmux";
   };
@@ -24,35 +24,28 @@ let
       owner = "alexwforsythe";
       repo = "tmux-which-key";
       rev = "master";
-      sha256 = "sha256-1h830h9rz4d5pdr3ymmjjwaxg6sh9vi3fpsn0bh10yy0gaf6xcaz";
+      sha256 = "1h830h9rz4d5pdr3ymmjjwaxg6sh9vi3fpsn0bh10yy0gaf6xcaz";
     };
     rtpFilePath = "plugin.sh.tmux";
   };
 in
 {
-  # =================================================================
-  # 1. HOME CONFIGURATION
-  # =================================================================
-
   home = {
     username = "zeev";
     homeDirectory = "/home/zeev";
     stateVersion = "25.05";
-
     packages = with pkgs; [
-      # Development Tools
-      vscode-fhs
-      pyenv
-      bat
-      python3
-      ghostty
-
       # Gaming
       steam
       discord
       lutris
 
-      # GUI Applications
+      # Development
+      vscode-fhs
+      pyenv
+      bat
+
+      # GUI applications
       firefox
       kdePackages.dolphin
       slack
@@ -60,21 +53,19 @@ in
       jellyfin-media-player
       ytmdesktop
 
-      # Themes & Appearance
       gruvbox-material-gtk-theme
       gruvbox-plus-icons
       gruvbox-dark-icons-gtk
       kde-gruvbox
       sddm-sugar-dark
+
+      python3
+      ghostty
     ];
   };
 
-  # =================================================================
-  # 2. PROGRAMS CONFIGURATION
-  # =================================================================
-
+  # ZSH Configuration
   programs = {
-    # --- Version Control ---
     git = {
       enable = true;
       userName = "4rmcyt";
@@ -87,7 +78,24 @@ in
       };
     };
 
-    # --- Shell & Terminal ---
+    fzf = {
+      enable = true;
+      enableZshIntegration = true;
+      colors = {
+        fg = "#D8DEE9";
+        bg = "#2E3440";
+        hl = "#A3BE8C";
+        "fg+" = "#D8DEE9";
+        "bg+" = "#434C5E";
+        "hl+" = "#A3BE8C";
+        pointer = "#BF616A";
+        info = "#4C566A";
+        spinner = "#4C566A";
+        header = "#4C566A";
+        prompt = "#81A1C1";
+        marker = "#EBCB8B";
+      };
+    };
     zsh = {
       enable = true;
       shellAliases = {
@@ -96,7 +104,7 @@ in
       };
       sessionVariables = {
         EDITOR = "hx";
-        ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi";
+        ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi"; # Fixed typo: vin -> bin
         LC_CTYPE = "en_US.UTF-8";
         LEDGER_COLOR = "true";
         LESS = "-FRSXM";
@@ -111,8 +119,8 @@ in
       initContent = ''
         autoload -Uz compinit && compinit
 
-        bindkey '^[[A' history-substring-search-up
-        bindkey '^[[B' history-substring-search-down
+        bindkey '^[[A' history-substring-search-up # or '\eOA'
+        bindkey '^[[B' history-substring-search-down # or '\eOB'
         HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
         zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -125,11 +133,12 @@ in
         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
         if [ $(command -v fortune) ] && [ $UID != '0' ] && [[ $- == *i* ]] && [ $TERM != 'dumb' ]; then
-          if [ $(command -v cowsay) ]; then
-            fortune -a fortunes wisdom | cowsay
-          else
-            fortune -a fortunes wisdom
-          fi
+            ### Cowsay At Login ###
+            if [ $(command -v cowsay) ]; then
+                fortune -a fortunes wisdom | cowsay
+            else
+                fortune -a fortunes wisdom
+            fi
         fi
       '';
       antidote = {
@@ -138,7 +147,7 @@ in
         plugins = [
           "getantidote/use-omz"
 
-          # Oh My Zsh plugins
+          # Oh My Zsh plugins (no duplicates)
           "ohmyzsh/ohmyzsh path:plugins/ansible"
           "ohmyzsh/ohmyzsh path:plugins/aws"
           "ohmyzsh/ohmyzsh path:plugins/bazel"
@@ -157,7 +166,7 @@ in
           "ohmyzsh/ohmyzsh path:plugins/zoxide"
           "ohmyzsh/ohmyzsh path:plugins/sudo"
 
-          # Community plugins
+          # Separate community plugins
           "zsh-users/zsh-completions"
           "zsh-users/zsh-autosuggestions"
           "zsh-users/zsh-history-substring-search"
@@ -169,30 +178,20 @@ in
       };
     };
 
-    ghostty = {
-      enable = true;
-      enableZshIntegration = true;
-      settings = {
-        theme = "Dracula+";
-        background-blur-radius = 40;
-        background-opacity = 0.50;
-        background-blur = true;
-        minimum-contrast = 1.1;
-        font-size = 14;
-        font-family = "MesloLGS NF";
-        window-theme = "system";
-        window-show-tab-bar = "always";
-        gtk-titlebar = true;
-        shell-integration-features = "sudo";
-      };
-    };
+    # auto-cpufreq = {
+    #   enable = true;
+    #   settings = {
+    #     charger = {
+    #       governor = "performance";
+    #       turbo = "auto";
+    #     };
+    #   };
+    # };
 
-    # --- Development Tools ---
     direnv = {
       enable = true;
       enableZshIntegration = true;
     };
-
     helix = {
       enable = true;
       settings = {
@@ -221,27 +220,6 @@ in
       ];
     };
 
-    # --- Utilities ---
-    fzf = {
-      enable = true;
-      enableZshIntegration = true;
-      colors = {
-        fg = "#D8DEE9";
-        bg = "#2E3440";
-        hl = "#A3BE8C";
-        "fg+" = "#D8DEE9";
-        "bg+" = "#434C5E";
-        "hl+" = "#A3BE8C";
-        pointer = "#BF616A";
-        info = "#4C566A";
-        spinner = "#4C566A";
-        header = "#4C566A";
-        prompt = "#81A1C1";
-        marker = "#EBCB8B";
-      };
-    };
-
-    # --- Terminal Multiplexer ---
     tmux = {
       enable = true;
       shell = "${pkgs.zsh}/bin/zsh";
@@ -254,18 +232,40 @@ in
       mouse = true;
       clock24 = true;
       historyLimit = 50000000;
-
       plugins = with pkgs.tmuxPlugins; [
-        # Core plugins
+        # tmux-cowboy # Doesn't exist
+        # tmux-menus # Doesn't exist
+        fzf-tmux-url
+        resurrect
+        prefix-highlight
+        logging
+        extrakto
         sensible
         yank
-
-        # Navigation & UI
-        fzf-tmux-url
-        prefix-highlight
-        extrakto
-
-        # Session management
+        tmux2k
+        {
+          plugin = continuum;
+          extraConfig = ''
+            set -g @continuum-restore 'on'
+            set -g @continuum-boot 'on'
+            set -g @continuum-save-interval '10'
+          '';
+        }
+        {
+          plugin = tmuxWhichKey;
+          extraConfig = ''
+            set -g @tmux-which-key-xdg-enable 1
+            set -g @tmux-which-key-xdg-plugin-path=tmux/plugins/tmux-which-key
+          '';
+        }
+        {
+          plugin = tmux2k;
+          extraConfig = ''
+            set -g @tmux2k-theme 'onedark'
+            set -g @tmux2k-left-plugins "session git"
+            set -g @tmux2k-right-plugins "cpu ram network time"
+          '';
+        }
         {
           plugin = resurrect;
           extraConfig = ''
@@ -282,37 +282,15 @@ in
             set -g @resurrect-capture-pane-contents 'on'
           '';
         }
-
+        sensible
         {
           plugin = continuum;
           extraConfig = ''
             set -g @continuum-restore 'on'
-            set -g @continuum-boot 'on'
-            set -g @continuum-save-interval '10'
+            set -g @continuum-save-interval '0.5'
             set -g @continuum-save-bash-history 'on'
             set -g @continuum-save-zsh-history 'on'
             set -g @continuum-save-shell-history 'on'
-          '';
-        }
-
-        # Logging
-        logging
-
-        # Theme & UI plugins
-        {
-          plugin = tmux2k;
-          extraConfig = ''
-            set -g @tmux2k-theme 'onedark'
-            set -g @tmux2k-left-plugins "session git"
-            set -g @tmux2k-right-plugins "cpu ram network time"
-          '';
-        }
-
-        {
-          plugin = tmuxWhichKey;
-          extraConfig = ''
-            set -g @tmux-which-key-xdg-enable 1
-            set -g @tmux-which-key-xdg-plugin-path=tmux/plugins/tmux-which-key
           '';
         }
       ];
@@ -321,7 +299,7 @@ in
         set -g @super-fingers-key f
         set -g mouse on
 
-        # Easy-to-remember split pane commands
+        # easy-to-remember split pane commands
         bind | split-window -h -c "#{pane_current_path}"
         bind - split-window -v -c "#{pane_current_path}"
         bind c new-window -c "#{pane_current_path}"
@@ -330,11 +308,7 @@ in
     };
   };
 
-  # =================================================================
-  # 3. THEME CONFIGURATION
-  # =================================================================
-
-  # Qt configuration for Plasma 6
+  # Configure Qt for Plasma 6
   qt = {
     enable = true;
     platformTheme.name = "kde";
@@ -351,6 +325,23 @@ in
     theme = {
       name = "breeze_transparent_dark";
       package = pkgs.kdePackages.breeze-gtk;
+    };
+  };
+  programs.ghostty = {
+    enable = true;
+    enableZshIntegration = true;
+    settings = {
+      theme = "Dracula+";
+      background-blur-radius = 40;
+      background-opacity = 0.50;
+      background-blur = true;
+      minimum-contrast = 1.1;
+      font-size = 14;
+      font-family = "MesloLGS NF";
+      window-theme = "system";
+      window-show-tab-bar = "always";
+      gtk-titlebar = true;
+      shell-integration-features = "sudo";
     };
   };
 }

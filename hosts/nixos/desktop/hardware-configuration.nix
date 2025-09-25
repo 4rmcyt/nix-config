@@ -44,7 +44,6 @@
     supportedFilesystems = [ "zfs" ];
     kernelParams = [
       "zfs.zfs_arc_max=12884901888"
-      "zfs.zfs_txg_timeout=30"
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
       "usbcore.quirks=0bda:0411:b"
@@ -86,12 +85,6 @@
       "net.ipv4.tcp_no_delay" = 1;
       "net.core.busy_read" = 50;
       "net.core.busy_poll" = 50;
-
-      # "vm.dirty_background_ratio" = 2;
-      # "vm.dirty_ratio" = 5;
-      # "vm.dirty_expire_centisecs" = 1500;
-      # "vm.dirty_writeback_centisecs" = 6000;
-      # "vm.swappiness" = 1;
     };
     initrd.preLVMCommands = ''
       ${pkgs.kbd}/bin/setleds +num
