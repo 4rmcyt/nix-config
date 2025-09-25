@@ -175,7 +175,7 @@
       wayland.compositor = "kwin";
       autoNumlock = true;
       settings.General.DisplayServer = "wayland";
-      theme = "sddm-sugar-dark";
+      theme = "sddm-astronaut";
       enableHidpi = true;
     };
 
