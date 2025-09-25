@@ -1,4 +1,8 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  config,
+  ...
+}:
 {
   # =================================================================
   # 1. Imports & Global Settings
@@ -89,12 +93,21 @@
   # =================================================================
   # 7. Hardware Configuration
   # =================================================================
-  hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = false;
-    powerManagement.finegrained = false;
-    open = false;
-    nvidiaSettings = true;
+  hardware = {
+    # Enable graphics support
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+    };
+
+    nvidia = {
+      modesetting.enable = true;
+      powerManagement.enable = false;
+      powerManagement.finegrained = false;
+      open = false;
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+    };
   };
 
   # =================================================================
@@ -120,7 +133,7 @@
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
+        "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9EHOLYA="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
         "homeserver.cachix.org-1:0vStm6koDUwET/iWYhbKpsuVO4v3UgN3510zYH9YpZU="
@@ -171,6 +184,15 @@
       ];
       listenAddress = "0.0.0.0";
     };
+
+    # X11 and Display Manager Configuration
+    xserver = {
+      enable = true;
+      videoDrivers = [ "nvidia" ];
+      # Add libinput for touchpad support
+      libinput.enable = true;
+    };
+
     # Desktop Environment - Plasma 6
     desktopManager.plasma6.enable = true;
     displayManager = {
@@ -179,12 +201,12 @@
         enable = true;
         wayland.enable = true;
         autoNumlock = true;
-        settings.General.DisplayServer = "wayland";
         wayland.compositor = "kwin";
-        theme = "sddm-sugar-dark";
+        theme = "sugar-dark"; # Fixed theme name
         enableHidpi = true;
       };
     };
+
     # Audio - PipeWire
     pulseaudio.enable = false;
     pipewire = {
@@ -228,9 +250,6 @@
       };
     };
     power-profiles-daemon.enable = false;
-
-    # Graphics
-    xserver.videoDrivers = [ "nvidia" ];
   };
 
   # =================================================================
@@ -268,6 +287,9 @@
       clean.extraArgs = "--keep-since 10d --keep 3";
       flake = "/home/zeev/src/nix-config";
     };
+
+    # Add KDE Connect
+    kdeconnect.enable = true;
   };
 
   # Enable home-manager backup for conflicting files
@@ -322,7 +344,6 @@
     cachix
     nix-fast-build
     nix-output-monitor
-    nh
     zoxide
     age
 
@@ -386,5 +407,4 @@
     kdePackages.systemsettings
     kdePackages.signon-kwallet-extension
   ];
-
 }

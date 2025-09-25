@@ -87,11 +87,11 @@
       "net.core.busy_read" = 50;
       "net.core.busy_poll" = 50;
 
-      "vm.dirty_background_ratio" = 2;
-      "vm.dirty_ratio" = 5;
-      "vm.dirty_expire_centisecs" = 1500;
-      "vm.dirty_writeback_centisecs" = 6000;
-      "vm.swappiness" = 1;
+      # "vm.dirty_background_ratio" = 2;
+      # "vm.dirty_ratio" = 5;
+      # "vm.dirty_expire_centisecs" = 1500;
+      # "vm.dirty_writeback_centisecs" = 6000;
+      # "vm.swappiness" = 1;
     };
     initrd.preLVMCommands = ''
       ${pkgs.kbd}/bin/setleds +num
@@ -134,6 +134,12 @@
       enable = true;
       interval = "weekly";
     };
+  };
+
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 30;
   };
 
   # NVIDIA environment variables
