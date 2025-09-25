@@ -30,6 +30,9 @@ let
   };
 in
 {
+  imports = [
+    ../../GUI/firefox
+  ];
   home = {
     username = "zeev";
     homeDirectory = "/home/zeev";
@@ -46,7 +49,6 @@ in
       bat
 
       # GUI applications
-      
       kdePackages.dolphin
       slack
       nvtopPackages.nvidia
