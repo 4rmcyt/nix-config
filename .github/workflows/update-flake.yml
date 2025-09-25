@@ -1,35 +1,29 @@
-name: "build"
+name: update-flake-lock
 on:
-  push:
-    branches:
-      - master
-    tags:
-      - flake.lock
-  pull_request: {}
-  workflow_call: {}
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'
+
 jobs:
-  build:
-    name: Build
+  update-flake-lock:
     runs-on: ubuntu-latest
+    environment: production
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Access private repository
+        uses: webfactory/ssh-agent@master
         with:
-          fetch-depth: 0
-      - uses: cachix/install-nix-action@v31
+          ssh-private-key: ${{ secrets.GH_PRIVATE_KEY }}
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v12
+      - id: update
+        uses: DeterminateSystems/update-flake-lock@v23
         with:
-          extra_nix_config: "access-tokens = github.com=${{ github.token }}"
-      - name: Update flake
-        run: |
-          nix_bin=$(which nix)
-          nix flake update
-      - name: Upload flake.lock
-        uses: actions/upload-artifact@v4
-        with:
-          name: flake.lock
-          path: flake.lock
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: flake.lock
+          commit-msg: "chore(flake.lock): update"
+          pr-title: "chore(flake.lock): update"
+          pr-labels: auto-merge
+          token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Merge
+        run: gh pr merge --auto "${{ steps.update.outputs.pull-request-number }}" --rebase
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        if: ${{ steps.update.outputs.pull-request-number != '' }}
