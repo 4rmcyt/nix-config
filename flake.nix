@@ -54,6 +54,11 @@
     nixos-generators.url = "github:nix-community/nixos-generators";
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
 
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Non-flake inputs
     cpu-microcodes = {
       url = "github:platomav/CPUMicrocodes";
@@ -149,6 +154,7 @@
                         ];
                       };
                       sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+                      _module.args = { inherit inputs; };
                     };
                   };
                 }

@@ -7,7 +7,7 @@
     DisableFirefoxScreenshots = true;
 
     DisplayBookmarksToolbar = "never";
-    DisplayMenuBar = "never"; # Previously appeared when pressing alt
+    DisplayMenuBar = "never";
 
     OverrideFirstRunPage = "";
     PictureInPicture.Enabled = false;

@@ -17,7 +17,6 @@ let
     movie-web
 
     # bypass-paywalls-clean (can't use, was creating popups)
-    consent-o-matic
     terms-of-service-didnt-read
 
     auto-tab-discard
