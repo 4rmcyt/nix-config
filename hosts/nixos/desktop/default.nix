@@ -173,15 +173,18 @@
     };
     # Desktop Environment - Plasma 6
     desktopManager.plasma6.enable = true;
-    displayManager.sddm = {
-      enable = true;
-      wayland.enable = true;
-      autoNumlock = true;
-      settings.General.DisplayServer = "wayland";
-      theme = "sugar-dark";
-      enableHidpi = true;
+    displayManager = {
+      defaultSession = "plasma";
+      sddm = {
+        enable = true;
+        wayland.enable = true;
+        autoNumlock = true;
+        settings.General.DisplayServer = "wayland";
+        wayland.compositor = "kwin";
+        theme = "sddm-sugar-dark";
+        enableHidpi = true;
+      };
     };
-
     # Audio - PipeWire
     pulseaudio.enable = false;
     pipewire = {
@@ -356,8 +359,9 @@
     # Fonts
     meslo-lgs-nf
 
-    # Theme
+    # SDDM Themes
     sddm-sugar-dark
+    sddm-astronaut-theme
 
     # Graphics
     nvidia-vaapi-driver
