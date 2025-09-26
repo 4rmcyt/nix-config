@@ -324,7 +324,7 @@
     powertop
     fwupd
     cifs-utils
-    
+
     samba
     # Hardware support
     yubikey-manager
@@ -365,6 +365,5 @@
     kdePackages.qtsvg
     kdePackages.qtmultimedia
     kdePackages.kio-extras
-    
   ];
 }
