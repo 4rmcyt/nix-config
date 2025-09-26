@@ -217,6 +217,7 @@
 
     # Graphics
     xserver.videoDrivers = [ "nvidia" ];
+    xserver.xkb.layout = "us";
   };
 
   # =================================================================
