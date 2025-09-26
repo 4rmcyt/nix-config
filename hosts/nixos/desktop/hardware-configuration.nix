@@ -106,6 +106,7 @@
 
   # NVIDIA Hardware Configuration
   hardware = {
+    ckb-next.enable = true; # Enable CKB-Next for Corsair device support
     graphics = {
       enable = true;
       enable32Bit = true;
@@ -118,10 +119,8 @@
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
     };
-    openrgb.enable = true;
-    ckb-next.enable = true; # Enable CKB-Next for Corsair device support
   };
-
+  services.hardware.openrgb.enable = true;
   # Services for ZFS
   services.zfs = {
     autoScrub = {
