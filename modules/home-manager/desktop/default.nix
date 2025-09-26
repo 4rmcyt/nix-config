@@ -59,7 +59,6 @@ in
       gruvbox-plus-icons
       gruvbox-dark-icons-gtk
       kde-gruvbox
-      sddm-sugar-dark
 
       python3
       ghostty

@@ -167,7 +167,7 @@
       wayland.compositor = "kwin";
       autoNumlock = true;
       settings.General.DisplayServer = "wayland";
-      theme = "astronaut"; # sugar-dark, astronaut
+      theme = "sddm-astronaut";
       enableHidpi = true;
     };
 
@@ -342,7 +342,6 @@
     meslo-lgs-nf
 
     # Theme
-    sddm-sugar-dark
     sddm-astronaut
 
     # Graphics
