@@ -16,8 +16,11 @@
   # =================================================================
   # 2. System Configuration
   # =================================================================
-  system.stateVersion = "25.05";
-
+  system = {
+    stateVersion = "25.05";
+    timeZone = "America/Edmonton";
+    locale = "en_US.UTF-8";
+  };
   # =================================================================
   # 3. User & Group Management
   # =================================================================
@@ -83,19 +86,8 @@
   # =================================================================
   # 6. Time & Locale
   # =================================================================
-  time.timeZone = "America/Edmonton";
-  i18n.defaultLocale = "en_US.UTF-8";
 
-  # =================================================================
-  # 7. Hardware Configuration
-  # =================================================================
-  hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = false;
-    powerManagement.finegrained = false;
-    open = false;
-    nvidiaSettings = true;
-  };
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   # =================================================================
   # 8. Secrets Management with SOPS
@@ -215,7 +207,7 @@
     };
     power-profiles-daemon.enable = false;
 
-    # Graphics
+    xserver.enable = false;
     xserver.videoDrivers = [ "nvidia" ];
     xserver.xkb.layout = "us";
   };
@@ -237,6 +229,7 @@
   # 12. Programs Configuration
   # =================================================================
   programs = {
+    flatpak.enable = true;
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
@@ -330,7 +323,9 @@
     nvtopPackages.nvidia
     powertop
     fwupd
-
+    cifs-utils
+    
+    samba
     # Hardware support
     yubikey-manager
     yubioath-flutter
@@ -367,5 +362,9 @@
     kdePackages.sddm-kcm
     kdePackages.systemsettings
     kdePackages.signon-kwallet-extension
+    kdePackages.qtsvg
+    kdePackages.qtmultimedia
+    kdePackages.kio-extras
+    
   ];
 }

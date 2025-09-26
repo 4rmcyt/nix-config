@@ -118,6 +118,11 @@
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
     };
+    peripherals = {
+      enable = true;
+      openrgb.enable = true;
+      ckb-next.enable = true; # Enable CKB-Next for Corsair device support
+    };
   };
 
   # Services for ZFS
