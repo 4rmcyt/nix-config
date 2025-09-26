@@ -19,7 +19,6 @@
         "tabbrowser-tabs"
       ];
       unified-extensions-area = [
-        "sponsorblocker_ajay_app-browser-action"
         "ublock0_raymondhill_net-browser-action"
         "gdpr_cavi_au_dk-browser-action"
         "redirector_einaregilsson_com-browser-action"
