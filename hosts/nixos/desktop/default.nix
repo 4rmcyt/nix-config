@@ -136,6 +136,7 @@
   # 10. System Services
   # =================================================================
   services = {
+    flatpak.enable = true;
     prometheus.exporters.node = {
       enable = true;
       port = 9100;
@@ -229,7 +230,6 @@
   # 12. Programs Configuration
   # =================================================================
   programs = {
-    flatpak.enable = true;
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
