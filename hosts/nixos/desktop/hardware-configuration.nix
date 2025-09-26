@@ -106,7 +106,6 @@
 
   # NVIDIA Hardware Configuration
   hardware = {
-    ckb-next.enable = true; # Enable CKB-Next for Corsair device support
     graphics = {
       enable = true;
       enable32Bit = true;
