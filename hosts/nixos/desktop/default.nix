@@ -16,11 +16,12 @@
   # =================================================================
   # 2. System Configuration
   # =================================================================
-  system = {
-    stateVersion = "25.05";
-    timeZone = "America/Edmonton";
-    locale = "en_US.UTF-8";
-  };
+  system.stateVersion = "25.05";
+
+  
+  i18n.defaultLocale = "en_US.UTF-8";
+  time.timeZone = "America/Edmonton";
+
   # =================================================================
   # 3. User & Group Management
   # =================================================================
