@@ -18,7 +18,6 @@
   # =================================================================
   system.stateVersion = "25.05";
 
-  
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "America/Edmonton";
 
@@ -280,6 +279,7 @@
     p7zip
     usbutils
     openssl
+    libdbusmenu
     pass
 
     # Development tools
@@ -334,6 +334,7 @@
     qmk
     qmk-udev-rules
     dfu-util
+    openrgb-with-all-plugins
 
     # Fonts
     meslo-lgs-nf
