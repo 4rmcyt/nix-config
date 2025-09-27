@@ -47,7 +47,6 @@
       pass
       dive
       yamllint
-      ffmpeg
       trash-cli
       borgbackup
       nextdns
