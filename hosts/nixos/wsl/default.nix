@@ -89,11 +89,6 @@
       download-buffer-size = 1073741824;
       warn-dirty = false;
     };
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
-    };
   };
 
   networking.firewall.allowedTCPPorts = [
