@@ -40,7 +40,6 @@
       yamllint
       nix-index
       fzf
-      ffmpeg
       trash-cli
       zip
       unar
