@@ -6,73 +6,75 @@
 }:
 {
   home = {
-    stateVersion = "25.05";
     username = "zeev";
     homeDirectory = "/home/zeev";
+    stateVersion = "25.05";
     packages = with pkgs; [
-      # Shell & Editor
-      zsh
+      # Development tools
+      deadnix
+      deploy-rs
+      direnv
+      gh
+      git
+      gnupg
+      go
+      helix
+      just
+      nix-diff
+      nix-fast-build
+      nix-inspect
+      nixfmt-rfc-style
+      nixfmt-tree
+      nil
+      pyenv
+      rustfmt
+      shfmt
+      statix
+
+      # Editors
       neovim
       vim
+
+      # Fonts
       meslo-lgs-nf
-      # Dev tools
-      direnv
-      go
-      gnupg
-      git
-      gh
-      deploy-rs
-      just
-      nixfmt-rfc-style
-      nil
-      nix-fast-build
-      shfmt
-      nixfmt-tree
-      nix-inspect
-      nix-diff
-      zsh-powerlevel10k
-      helix
-      rustfmt
-      # User Utils
-      pass
-      jq
-      dive
-      yamllint
-      nix-index
-      fzf
-      trash-cli
-      zip
-      unar
-      unzip
-      p7zip
-      tree
-      borgbackup
-      nextdns
+
+      # Nix utilities
       nh
+      nix-index
       nix-output-monitor
       nvd
-      zoxide
-      pyenv
-      statix
-      sudo
-      deadnix
 
-      # System & Network Tools
-      tuptime
+      # Shell
+      zsh
+      zsh-powerlevel10k
+
+      # System & Network tools
       home-manager
+      nextdns
+      sudo
+      tuptime
+
+      # User utilities
+      borgbackup
+      dive
+      fzf
+      jq
+      p7zip
+      pass
+      trash-cli
+      tree
+      unar
+      unzip
+      yamllint
+      zip
+      zoxide
     ];
   };
+
   programs = {
-    git = {
+    direnv = {
       enable = true;
-      userName = "4rmcyt";
-      userEmail = "4rmcyt@gmail.com";
-      signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
-      extraConfig = {
-        commit.gpgsign = true;
-        gpg.format = "ssh";
-        user.signingkey = "~/.ssh/zeev";
-      };
+      enableZshIntegration = true;
     };
 
     fzf = {
@@ -93,6 +95,47 @@
         marker = "#EBCB8B";
       };
     };
+
+    git = {
+      enable = true;
+      userName = "4rmcyt";
+      userEmail = "4rmcyt@gmail.com";
+      signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
+      extraConfig = {
+        commit.gpgsign = true;
+        gpg.format = "ssh";
+        user.signingkey = "~/.ssh/zeev";
+      };
+    };
+
+    helix = {
+      enable = true;
+      settings = {
+        theme = "heisenberg";
+        editor = {
+          true-color = true;
+          line-number = "relative";
+          mouse = false;
+          cursorline = true;
+          bufferline = "multiple";
+          default-line-ending = "lf";
+          cursor-shape.insert = "bar";
+          cursor-shape.select = "underline";
+          lsp.display-inlay-hints = true;
+          lsp.display-messages = true;
+          file-picker.hidden = false;
+          file-picker.git-ignore = true;
+        };
+      };
+      languages.language = [
+        {
+          name = "nix";
+          auto-format = true;
+          formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
+        }
+      ];
+    };
+
     zsh = {
       enable = true;
       shellAliases = {
@@ -101,7 +144,7 @@
       };
       sessionVariables = {
         EDITOR = "nvim";
-        ALTERNATE_EDITOR = "${pkgs.vim}/vin/vi";
+        ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi";
         LC_CTYPE = "en_US.UTF-8";
         LEDGER_COLOR = "true";
         LESS = "-FRSXM";
@@ -157,7 +200,7 @@
         plugins = [
           "getantidote/use-omz"
 
-          # Oh My Zsh plugins (no duplicates)
+          # Oh My Zsh plugins
           "ohmyzsh/ohmyzsh path:plugins/ansible"
           "ohmyzsh/ohmyzsh path:plugins/aws"
           "ohmyzsh/ohmyzsh path:plugins/bazel"
@@ -165,61 +208,30 @@
           "ohmyzsh/ohmyzsh path:plugins/command-not-found"
           "ohmyzsh/ohmyzsh path:plugins/direnv"
           "ohmyzsh/ohmyzsh path:plugins/docker"
-          "ohmyzsh/ohmyzsh path:plugins/git"
           "ohmyzsh/ohmyzsh path:plugins/fzf"
+          "ohmyzsh/ohmyzsh path:plugins/git"
           "ohmyzsh/ohmyzsh path:plugins/poetry"
           "ohmyzsh/ohmyzsh path:plugins/pyenv"
           "ohmyzsh/ohmyzsh path:plugins/python"
           "ohmyzsh/ohmyzsh path:plugins/rust"
           "ohmyzsh/ohmyzsh path:plugins/safe-paste"
+          "ohmyzsh/ohmyzsh path:plugins/sudo"
           "ohmyzsh/ohmyzsh path:plugins/z"
           "ohmyzsh/ohmyzsh path:plugins/zoxide"
-          "ohmyzsh/ohmyzsh path:plugins/sudo"
 
-          # Separate community plugins
-          "zsh-users/zsh-completions"
-          "zsh-users/zsh-autosuggestions"
-          "zsh-users/zsh-history-substring-search"
-          "zdharma-continuum/fast-syntax-highlighting"
-          "MichaelAquilina/zsh-you-should-use"
+          # Community plugins
           "Aloxaf/fzf-tab"
+          "MichaelAquilina/zsh-you-should-use"
           "romkatv/powerlevel10k"
+          "zdharma-continuum/fast-syntax-highlighting"
+          "zsh-users/zsh-autosuggestions"
+          "zsh-users/zsh-completions"
+          "zsh-users/zsh-history-substring-search"
         ];
       };
     };
-
-    direnv = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-    helix = {
-      enable = true;
-      settings = {
-        theme = "heisenberg";
-        editor = {
-          true-color = true;
-          line-number = "relative";
-          mouse = false;
-          cursorline = true;
-          bufferline = "multiple";
-          default-line-ending = "lf";
-          cursor-shape.insert = "bar";
-          cursor-shape.select = "underline";
-          lsp.display-inlay-hints = true;
-          lsp.display-messages = true;
-          file-picker.hidden = false;
-          file-picker.git-ignore = true;
-        };
-      };
-      languages.language = [
-        {
-          name = "nix";
-          auto-format = true;
-          formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
-        }
-      ];
-    };
   };
+
   services = {
     ssh-agent.enable = true;
   };

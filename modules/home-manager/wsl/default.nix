@@ -5,108 +5,101 @@
 }:
 {
   home = {
-    stateVersion = "25.05";
     username = "zeev";
     homeDirectory = "/home/zeev";
+    stateVersion = "25.05";
     packages = with pkgs; [
-      # Shell & Editor
-      zsh
-      neovim
-      vim
-      helix
-
-      # Dev tools
-      direnv
-      git
-      gh
-      go
+      # Development tools
+      cachix
+      deadnix
+      delta
       deploy-rs
+      direnv
+      gh
+      git
+      go
       just
-      nixfmt-rfc-style
-      nixfmt-tree
       nil
+      nix-diff
       nix-fast-build
       nix-inspect
-      nix-diff
-      shfmt
-      rustfmt
-      cachix
-
-      # User Utils
-      jq
-      nix-index
-      fzf
-      zip
-      unzip
-      unar
-      p7zip
-      tree
-      zoxide
-      statix
-      deadnix
-      pass
-      dive
-      yamllint
-      trash-cli
-      borgbackup
-      nextdns
-      nh
-      nix-output-monitor
-      nvd
+      nixfmt-rfc-style
+      nixfmt-tree
       pyenv
-      sudo
+      rustfmt
+      shfmt
+      statix
 
-      # Security & Crypto
-      gnupg
-      pinentry-tty
+      # Editors
+      helix
+      neovim
+      vim
 
-      # GUI applications - these will get Start Menu shortcuts
+      # Fonts & Themes
+      meslo-lgs-nf
+      nerd-fonts.hack
+      zsh-powerlevel10k
+
+      # Fun terminal utilities
+      cowsay
+      fortune
+
+      # GUI applications (with Start Menu shortcuts)
+      firefox
       ghostty
       ghostty.terminfo
       obsidian
-      firefox
       vscode
+
+      # Nix utilities
+      nh
+      nix-index
+      nix-output-monitor
+      nvd
+
+      # Security & Crypto
+      gnupg
+      pass
+      pinentry-tty
+
+      # Shell
+      zsh
+
+      # System & Monitoring tools
+      btop
+      home-manager
+      htop
+      mc
+      nextdns
+      pwgen
+      sudo
+      tmux
+      tuptime
+
+      # User utilities
+      borgbackup
+      dive
+      fzf
+      jq
+      p7zip
+      trash-cli
+      tree
+      unar
+      unzip
+      yamllint
+      zip
+      zoxide
 
       # WSL-specific tools
       wslu
-
-      # System & Monitoring Tools
-      btop
-      htop
-      delta
-      pwgen
-      tmux
-      tuptime
-      home-manager
-      mc
-
-      # Add these for fun terminal stuff
-      fortune
-      cowsay
-
-      # Fonts & Themes
-      zsh-powerlevel10k
-      nerd-fonts.hack
-      meslo-lgs-nf
     ];
   };
 
   programs = {
-    git = {
+    direnv = {
       enable = true;
-      userName = "4rmcyt";
-      userEmail = "4rmcyt@gmail.com";
-      signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
-      extraConfig = {
-        commit.gpgsign = true;
-        gpg.format = "ssh";
-        user.signingkey = "~/.ssh/zeev";
-      };
-    };
-
-    gpg = {
-      enable = true;
-      homedir = "/home/zeev/.gnupg";
+      enableZshIntegration = true;
+      nix-direnv.enable = true;
     };
 
     fzf = {
@@ -128,16 +121,84 @@
       };
     };
 
+    ghostty = {
+      enable = true;
+      enableZshIntegration = true;
+      settings = {
+        theme = "Dracula+";
+        background-blur-radius = 40;
+        background-opacity = 0.8;
+        background-blur = true;
+        minimum-contrast = 1.1;
+        font-size = 14;
+        font-family = "MesloLGS NF";
+        window-theme = "system";
+        window-show-tab-bar = "always";
+        gtk-titlebar = true;
+        shell-integration-features = "sudo";
+      };
+    };
+
+    git = {
+      enable = true;
+      userName = "4rmcyt";
+      userEmail = "4rmcyt@gmail.com";
+      signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
+      extraConfig = {
+        commit.gpgsign = true;
+        gpg.format = "ssh";
+        user.signingkey = "~/.ssh/zeev";
+      };
+    };
+
+    gpg = {
+      enable = true;
+      homedir = "/home/zeev/.gnupg";
+    };
+
+    helix = {
+      enable = true;
+      settings = {
+        theme = "heisenberg";
+        editor = {
+          true-color = true;
+          line-number = "relative";
+          mouse = false;
+          cursorline = true;
+          bufferline = "multiple";
+          default-line-ending = "lf";
+          cursor-shape.insert = "bar";
+          cursor-shape.select = "underline";
+          lsp.display-inlay-hints = true;
+          lsp.display-messages = true;
+          file-picker.hidden = false;
+          file-picker.git-ignore = true;
+        };
+      };
+      languages.language = [
+        {
+          name = "nix";
+          auto-format = true;
+          formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
+        }
+      ];
+    };
+
+    zoxide = {
+      enable = true;
+      enableZshIntegration = true;
+      options = [ "--cmd cd" ];
+    };
+
     zsh = {
       enable = true;
       shellAliases = {
-        ll = "ls -la";
-        mc = "mc --nosubshell";
         ".." = "cd ..";
         "..." = "cd ../..";
+        ll = "ls -la";
+        mc = "mc --nosubshell";
         rebuild = "sudo nixos-rebuild switch --flake .#wsl";
       };
-
       sessionVariables = {
         EDITOR = "nvim";
         ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi";
@@ -147,7 +208,6 @@
         LESSCHARSET = "utf-8";
         PAGER = "less";
       };
-
       initContent = ''
         autoload -Uz compinit && compinit
 
@@ -186,7 +246,6 @@
             fi
         fi
       '';
-
       antidote = {
         enable = true;
         useFriendlyNames = true;
@@ -197,81 +256,23 @@
           "ohmyzsh/ohmyzsh path:plugins/command-not-found"
           "ohmyzsh/ohmyzsh path:plugins/direnv"
           "ohmyzsh/ohmyzsh path:plugins/docker"
-          "ohmyzsh/ohmyzsh path:plugins/git"
           "ohmyzsh/ohmyzsh path:plugins/fzf"
+          "ohmyzsh/ohmyzsh path:plugins/git"
           "ohmyzsh/ohmyzsh path:plugins/rust"
           "ohmyzsh/ohmyzsh path:plugins/safe-paste"
+          "ohmyzsh/ohmyzsh path:plugins/sudo"
           "ohmyzsh/ohmyzsh path:plugins/z"
           "ohmyzsh/ohmyzsh path:plugins/zoxide"
-          "ohmyzsh/ohmyzsh path:plugins/sudo"
 
           # Community plugins
-          "zsh-users/zsh-completions"
-          "zsh-users/zsh-autosuggestions"
-          "zsh-users/zsh-history-substring-search"
-          "zdharma-continuum/fast-syntax-highlighting"
-          "MichaelAquilina/zsh-you-should-use"
           "Aloxaf/fzf-tab"
+          "MichaelAquilina/zsh-you-should-use"
           "romkatv/powerlevel10k"
+          "zdharma-continuum/fast-syntax-highlighting"
+          "zsh-users/zsh-autosuggestions"
+          "zsh-users/zsh-completions"
+          "zsh-users/zsh-history-substring-search"
         ];
-      };
-    };
-
-    direnv = {
-      enable = true;
-      enableZshIntegration = true;
-      nix-direnv.enable = true;
-    };
-
-    zoxide = {
-      enable = true;
-      enableZshIntegration = true;
-      options = [ "--cmd cd" ];
-    };
-
-    helix = {
-      enable = true;
-      settings = {
-        theme = "heisenberg";
-        editor = {
-          true-color = true;
-          line-number = "relative";
-          mouse = false;
-          cursorline = true;
-          bufferline = "multiple";
-          default-line-ending = "lf";
-          cursor-shape.insert = "bar";
-          cursor-shape.select = "underline";
-          lsp.display-inlay-hints = true;
-          lsp.display-messages = true;
-          file-picker.hidden = false;
-          file-picker.git-ignore = true;
-        };
-      };
-      languages.language = [
-        {
-          name = "nix";
-          auto-format = true;
-          formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
-        }
-      ];
-    };
-
-    ghostty = {
-      enable = true;
-      enableZshIntegration = true;
-      settings = {
-        theme = "Dracula+";
-        background-blur-radius = 40;
-        background-opacity = 0.8;
-        background-blur = true;
-        minimum-contrast = 1.1;
-        font-size = 14;
-        font-family = "MesloLGS NF";
-        window-theme = "system";
-        window-show-tab-bar = "always";
-        gtk-titlebar = true;
-        shell-integration-features = "sudo";
       };
     };
   };
