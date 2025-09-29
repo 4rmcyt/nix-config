@@ -56,7 +56,7 @@
       "net.ipv4.tcp_congestion_control=bbr"
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
-      "usbcore.quirks=0bda:0411:b"
+      "usbcore.autosuspend=-1"
       "zfs.zfs_arc_max=12884901888" # 12GB ARC size
     ];
 
@@ -163,6 +163,16 @@
         enable = true;
         interval = "weekly";
       };
+    };
+
+    journald = {
+      extraConfig = ''
+        SystemMaxUse=1G
+        SystemMaxFileSize=100M
+        MaxRetentionSec=1month
+        ForwardToSyslog=no
+        Storage=persistent
+      '';
     };
   };
 
