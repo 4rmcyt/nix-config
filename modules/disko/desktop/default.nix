@@ -106,6 +106,8 @@
             mountpoint = "/var/log";
             options = {
               acltype = "posixacl";
+              atime = "off";
+              canmount = "on";
               xattr = "sa";
               "com.sun:auto-snapshot" = "false";
             };

@@ -312,7 +312,6 @@
     dockerfile-language-server
 
     # Desktop applications
-    discord
     telegram-desktop
     jellyfin-media-player
     chromium
