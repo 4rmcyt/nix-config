@@ -33,50 +33,57 @@ in
   imports = [
     ../../GUI/firefox
   ];
+
   home = {
     username = "zeev";
     homeDirectory = "/home/zeev";
     stateVersion = "25.05";
     packages = with pkgs; [
+      # Development
+      bat
+      pyenv
+      python3
+      vscode-fhs
+
       # Gaming
-      steam
       discord
       lutris
-
-      # Development
-      vscode-fhs
-      pyenv
-      bat
+      steam
 
       # GUI applications
-      kdePackages.dolphin
-      slack
-      nvtopPackages.nvidia
+      ghostty
       jellyfin-media-player
+      kdePackages.dolphin
+      nvtopPackages.nvidia
+      slack
       ytmdesktop
+      pinentry-qt
 
+      # Themes and icons
+      gruvbox-dark-icons-gtk
       gruvbox-material-gtk-theme
       gruvbox-plus-icons
-      gruvbox-dark-icons-gtk
       kde-gruvbox
-
-      python3
-      ghostty
     ];
   };
 
-  # ZSH Configuration
+  # GTK configuration for better theme consistency with Plasma 6
+  gtk = {
+    enable = true;
+    iconTheme = {
+      name = "Gruvbox-Dark";
+      package = pkgs.gruvbox-dark-icons-gtk;
+    };
+    theme = {
+      name = "breeze_transparent_dark";
+      package = pkgs.kdePackages.breeze-gtk;
+    };
+  };
+
   programs = {
-    git = {
+    direnv = {
       enable = true;
-      userName = "4rmcyt";
-      userEmail = "4rmcyt@gmail.com";
-      signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
-      extraConfig = {
-        commit.gpgsign = true;
-        gpg.format = "ssh";
-        user.signingkey = "~/.ssh/zeev";
-      };
+      enableZshIntegration = true;
     };
 
     fzf = {
@@ -97,6 +104,159 @@ in
         marker = "#EBCB8B";
       };
     };
+
+    ghostty = {
+      enable = true;
+      enableZshIntegration = true;
+      settings = {
+        theme = "Dracula+";
+        background-blur-radius = 40;
+        background-opacity = 0.50;
+        background-blur = true;
+        minimum-contrast = 1.1;
+        font-size = 14;
+        font-family = "MesloLGS NF";
+        window-theme = "system";
+        window-show-tab-bar = "always";
+        gtk-titlebar = true;
+        shell-integration-features = "sudo";
+      };
+    };
+
+    git = {
+      enable = true;
+      userName = "4rmcyt";
+      userEmail = "4rmcyt@gmail.com";
+      signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
+      extraConfig = {
+        commit.gpgsign = true;
+        gpg.format = "ssh";
+        user.signingkey = "~/.ssh/zeev";
+      };
+    };
+
+    gpg = {
+      enable = true;
+      settings = {
+        keyid-format = "long";
+        with-keygrip = true;
+        with-key-origin = true;
+        with-fingerprint = true;
+        with-subkey-fingerprint = true;
+      };
+    };
+
+    helix = {
+      enable = true;
+      settings = {
+        theme = "heisenberg";
+        editor = {
+          true-color = true;
+          line-number = "relative";
+          mouse = false;
+          cursorline = true;
+          bufferline = "multiple";
+          default-line-ending = "lf";
+          cursor-shape.insert = "bar";
+          cursor-shape.select = "underline";
+          lsp.display-inlay-hints = true;
+          lsp.display-messages = true;
+          file-picker.hidden = false;
+          file-picker.git-ignore = true;
+        };
+      };
+      languages.language = [
+        {
+          name = "nix";
+          auto-format = true;
+          formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
+        }
+      ];
+    };
+
+    tmux = {
+      enable = true;
+      shell = "${pkgs.zsh}/bin/zsh";
+      shortcut = "b";
+      aggressiveResize = true;
+      baseIndex = 1;
+      newSession = true;
+      escapeTime = 0;
+      secureSocket = false;
+      mouse = true;
+      clock24 = true;
+      historyLimit = 50000000;
+      plugins = with pkgs.tmuxPlugins; [
+        extrakto
+        fzf-tmux-url
+        logging
+        prefix-highlight
+        sensible
+        yank
+        tmux2k
+        {
+          plugin = continuum;
+          extraConfig = ''
+            set -g @continuum-restore 'on'
+            set -g @continuum-boot 'on'
+            set -g @continuum-save-interval '10'
+          '';
+        }
+        {
+          plugin = continuum;
+          extraConfig = ''
+            set -g @continuum-restore 'on'
+            set -g @continuum-save-interval '0.5'
+            set -g @continuum-save-bash-history 'on'
+            set -g @continuum-save-zsh-history 'on'
+            set -g @continuum-save-shell-history 'on'
+          '';
+        }
+        {
+          plugin = resurrect;
+          extraConfig = ''
+            set -g @resurrect-strategy-nvim 'session'
+            set -g @resurrect-processes 'vim nvim hx cat less more tail watch'
+            resurrect_dir=~/.config/tmux/resurrect
+            set -g @resurrect-dir $resurrect_dir
+            set -g @resurrect-hook-post-save-all "sed -i 's| --cmd .*-vim-pack-dir||g; s|/etc/profiles/per-user/$USER/bin/||g; s|/nix/store/.*/bin/||g' $(readlink -f $resurrect_dir/last)"
+            set -g @resurrect-save 'S'
+            set -g @resurrect-restore 'R'
+            set -g @resurrect-save-bash-history 'on'
+            set -g @resurrect-save-zsh-history 'on'
+            set -g @resurrect-save-shell-history 'on'
+            set -g @resurrect-capture-pane-contents 'on'
+          '';
+        }
+        {
+          plugin = tmux2k;
+          extraConfig = ''
+            set -g @tmux2k-theme 'onedark'
+            set -g @tmux2k-left-plugins "session git"
+            set -g @tmux2k-right-plugins "cpu ram network time"
+          '';
+        }
+        {
+          plugin = tmuxWhichKey;
+          extraConfig = ''
+            set -g @tmux-which-key-xdg-enable 1
+            set -g @tmux-which-key-xdg-plugin-path=tmux/plugins/tmux-which-key
+          '';
+        }
+      ];
+
+      extraConfig = ''
+        set -g @super-fingers-key f
+        set -g mouse on
+
+        # easy-to-remember split pane commands
+        bind | split-window -h -c "#{pane_current_path}"
+        bind - split-window -v -c "#{pane_current_path}"
+        bind c new-window -c "#{pane_current_path}"
+        bind r source-file ~/.config/tmux/tmux.conf \; display-message "Config reloaded.."
+      '';
+    };
+
     zsh = {
       enable = true;
       shellAliases = {
@@ -105,7 +265,7 @@ in
       };
       sessionVariables = {
         EDITOR = "hx";
-        ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi"; # Fixed typo: vin -> bin
+        ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi";
         LC_CTYPE = "en_US.UTF-8";
         LEDGER_COLOR = "true";
         LESS = "-FRSXM";
@@ -148,7 +308,7 @@ in
         plugins = [
           "getantidote/use-omz"
 
-          # Oh My Zsh plugins (no duplicates)
+          # Oh My Zsh plugins
           "ohmyzsh/ohmyzsh path:plugins/ansible"
           "ohmyzsh/ohmyzsh path:plugins/aws"
           "ohmyzsh/ohmyzsh path:plugins/bazel"
@@ -156,156 +316,27 @@ in
           "ohmyzsh/ohmyzsh path:plugins/command-not-found"
           "ohmyzsh/ohmyzsh path:plugins/direnv"
           "ohmyzsh/ohmyzsh path:plugins/docker"
-          "ohmyzsh/ohmyzsh path:plugins/git"
           "ohmyzsh/ohmyzsh path:plugins/fzf"
+          "ohmyzsh/ohmyzsh path:plugins/git"
           "ohmyzsh/ohmyzsh path:plugins/poetry"
           "ohmyzsh/ohmyzsh path:plugins/pyenv"
           "ohmyzsh/ohmyzsh path:plugins/python"
           "ohmyzsh/ohmyzsh path:plugins/rust"
           "ohmyzsh/ohmyzsh path:plugins/safe-paste"
+          "ohmyzsh/ohmyzsh path:plugins/sudo"
           "ohmyzsh/ohmyzsh path:plugins/z"
           "ohmyzsh/ohmyzsh path:plugins/zoxide"
-          "ohmyzsh/ohmyzsh path:plugins/sudo"
 
-          # Separate community plugins
-          "zsh-users/zsh-completions"
-          "zsh-users/zsh-autosuggestions"
-          "zsh-users/zsh-history-substring-search"
-          "zdharma-continuum/fast-syntax-highlighting"
-          "MichaelAquilina/zsh-you-should-use"
+          # Community plugins
           "Aloxaf/fzf-tab"
+          "MichaelAquilina/zsh-you-should-use"
           "romkatv/powerlevel10k"
+          "zdharma-continuum/fast-syntax-highlighting"
+          "zsh-users/zsh-autosuggestions"
+          "zsh-users/zsh-completions"
+          "zsh-users/zsh-history-substring-search"
         ];
       };
-    };
-
-    # auto-cpufreq = {
-    #   enable = true;
-    #   settings = {
-    #     charger = {
-    #       governor = "performance";
-    #       turbo = "auto";
-    #     };
-    #   };
-    # };
-
-    direnv = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-    helix = {
-      enable = true;
-      settings = {
-        theme = "heisenberg";
-        editor = {
-          true-color = true;
-          line-number = "relative";
-          mouse = false;
-          cursorline = true;
-          bufferline = "multiple";
-          default-line-ending = "lf";
-          cursor-shape.insert = "bar";
-          cursor-shape.select = "underline";
-          lsp.display-inlay-hints = true;
-          lsp.display-messages = true;
-          file-picker.hidden = false;
-          file-picker.git-ignore = true;
-        };
-      };
-      languages.language = [
-        {
-          name = "nix";
-          auto-format = true;
-          formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
-        }
-      ];
-    };
-
-    tmux = {
-      enable = true;
-      shell = "${pkgs.zsh}/bin/zsh";
-      shortcut = "b";
-      aggressiveResize = true;
-      baseIndex = 1;
-      newSession = true;
-      escapeTime = 0;
-      secureSocket = false;
-      mouse = true;
-      clock24 = true;
-      historyLimit = 50000000;
-      plugins = with pkgs.tmuxPlugins; [
-        # tmux-cowboy # Doesn't exist
-        # tmux-menus # Doesn't exist
-        fzf-tmux-url
-        resurrect
-        prefix-highlight
-        logging
-        extrakto
-        sensible
-        yank
-        tmux2k
-        {
-          plugin = continuum;
-          extraConfig = ''
-            set -g @continuum-restore 'on'
-            set -g @continuum-boot 'on'
-            set -g @continuum-save-interval '10'
-          '';
-        }
-        {
-          plugin = tmuxWhichKey;
-          extraConfig = ''
-            set -g @tmux-which-key-xdg-enable 1
-            set -g @tmux-which-key-xdg-plugin-path=tmux/plugins/tmux-which-key
-          '';
-        }
-        {
-          plugin = tmux2k;
-          extraConfig = ''
-            set -g @tmux2k-theme 'onedark'
-            set -g @tmux2k-left-plugins "session git"
-            set -g @tmux2k-right-plugins "cpu ram network time"
-          '';
-        }
-        {
-          plugin = resurrect;
-          extraConfig = ''
-            set -g @resurrect-strategy-nvim 'session'
-            set -g @resurrect-processes 'vim nvim hx cat less more tail watch'
-            resurrect_dir=~/.config/tmux/resurrect
-            set -g @resurrect-dir $resurrect_dir
-            set -g @resurrect-hook-post-save-all "sed -i 's| --cmd .*-vim-pack-dir||g; s|/etc/profiles/per-user/$USER/bin/||g; s|/nix/store/.*/bin/||g' $(readlink -f $resurrect_dir/last)"
-            set -g @resurrect-save 'S'
-            set -g @resurrect-restore 'R'
-            set -g @resurrect-save-bash-history 'on'
-            set -g @resurrect-save-zsh-history 'on'
-            set -g @resurrect-save-shell-history 'on'
-            set -g @resurrect-capture-pane-contents 'on'
-          '';
-        }
-        sensible
-        {
-          plugin = continuum;
-          extraConfig = ''
-            set -g @continuum-restore 'on'
-            set -g @continuum-save-interval '0.5'
-            set -g @continuum-save-bash-history 'on'
-            set -g @continuum-save-zsh-history 'on'
-            set -g @continuum-save-shell-history 'on'
-          '';
-        }
-      ];
-
-      extraConfig = ''
-        set -g @super-fingers-key f
-        set -g mouse on
-
-        # easy-to-remember split pane commands
-        bind | split-window -h -c "#{pane_current_path}"
-        bind - split-window -v -c "#{pane_current_path}"
-        bind c new-window -c "#{pane_current_path}"
-        bind r source-file ~/.config/tmux/tmux.conf \; display-message "Config reloaded.."
-      '';
     };
   };
 
@@ -316,33 +347,6 @@ in
     style.name = "breeze";
   };
 
-  # GTK configuration for better theme consistency with Plasma 6
-  gtk = {
-    enable = true;
-    iconTheme = {
-      name = "Gruvbox-Dark";
-      package = pkgs.gruvbox-dark-icons-gtk;
-    };
-    theme = {
-      name = "breeze_transparent_dark";
-      package = pkgs.kdePackages.breeze-gtk;
-    };
-  };
-  programs.ghostty = {
-    enable = true;
-    enableZshIntegration = true;
-    settings = {
-      theme = "Dracula+";
-      background-blur-radius = 40;
-      background-opacity = 0.50;
-      background-blur = true;
-      minimum-contrast = 1.1;
-      font-size = 14;
-      font-family = "MesloLGS NF";
-      window-theme = "system";
-      window-show-tab-bar = "always";
-      gtk-titlebar = true;
-      shell-integration-features = "sudo";
-    };
-  };
+  # GPG agent for pinentry
+  services.gpg-agent.enable = true;
 }
