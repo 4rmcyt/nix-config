@@ -4,28 +4,163 @@
   ...
 }:
 {
+  # =================================================================
+  # 1. Imports
+  # =================================================================
   imports = [
     inputs.nixos-wsl.nixosModules.wsl
     inputs.vscode-server.nixosModules.default
-    ../../../modules/users/zeev
     ../../../modules/base
+    ../../../modules/users/zeev
   ];
 
+  # =================================================================
+  # 2. System Configuration
+  # =================================================================
+  system.stateVersion = "25.05";
+
+  # =================================================================
+  # 3. Time Configuration
+  # =================================================================
+  time.timeZone = "America/Edmonton";
+
+  # =================================================================
+  # 4. Nixpkgs Configuration
+  # =================================================================
+  nixpkgs.config = {
+    allowUnfree = true;
+    cudaSupport = true;
+  };
+
+  # =================================================================
+  # 5. Boot Configuration
+  # =================================================================
+  boot = {
+    kernelModules = [ "nvidia" ];
+    extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
+  };
+
+  # =================================================================
+  # 6. Hardware Configuration
+  # =================================================================
+  hardware = {
+    # Graphics
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+    };
+
+    # NVIDIA CUDA Support for WSL
+    nvidia = {
+      modesetting.enable = true;
+      powerManagement.enable = false;
+      powerManagement.finegrained = false;
+      open = false;
+      nvidiaSettings = false;
+      package = pkgs.linuxPackages.nvidia_x11;
+    };
+  };
+
+  # =================================================================
+  # 7. Users & Groups
+  # =================================================================
+  users = {
+    users.git = {
+      isSystemUser = true;
+      description = "Git user";
+    };
+    groups.git = { };
+  };
+
+  # =================================================================
+  # 8. Nix Configuration
+  # =================================================================
+  nix = {
+    package = pkgs.nixVersions.latest;
+    settings = {
+      substituters = [
+        "https://cache.nixos.org"
+        "https://4rmcyt.cachix.org"
+        "https://nix-community.cachix.org"
+        "https://numtide.cachix.org"
+      ];
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+      ];
+      experimental-features = [
+        "flakes"
+        "nix-command"
+      ];
+      trusted-users = [ "zeev" ];
+      download-buffer-size = 1073741824;
+      warn-dirty = false;
+    };
+  };
+
+  # =================================================================
+  # 9. Secrets Management
+  # =================================================================
   sops = {
     age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
     defaultSopsFormat = "yaml";
   };
 
-  users.users.git = {
-    isSystemUser = true;
-    description = "Git user";
+  # =================================================================
+  # 10. Networking
+  # =================================================================
+  networking = {
+    hostName = "nixos-wsl";
+    networkmanager.enable = false;
+    useNetworkd = false;
+    useDHCP = false;
+    dhcpcd.enable = false;
+    wireless.enable = false;
+    interfaces = { };
+    firewall.allowedTCPPorts = [
+      4242 # Kavita
+    ];
   };
-  users.groups.git = { };
 
-  # VSCode Server Configuration
-  services.vscode-server.enable = true;
+  # =================================================================
+  # 11. Systemd Configuration
+  # =================================================================
+  systemd.network.enable = false;
 
-  # WSL Configuration
+  # =================================================================
+  # 12. Services
+  # =================================================================
+  services = {
+    # SSH configuration
+    openssh = {
+      enable = true;
+      settings = {
+        PasswordAuthentication = false;
+        PermitRootLogin = "no";
+      };
+    };
+
+    # Development services
+    vscode-server.enable = true;
+
+    # System services
+    resolved.enable = false;
+    xserver.videoDrivers = [ "nvidia" ];
+  };
+
+  # =================================================================
+  # 13. Programs
+  # =================================================================
+  programs = {
+    nix-ld.enable = true;
+    zsh.enable = true;
+  };
+
+  # =================================================================
+  # 14. WSL Configuration
+  # =================================================================
   wsl = {
     enable = true;
     defaultUser = "zeev";
@@ -40,136 +175,71 @@
     };
   };
 
-  # Allow loading NVIDIA driver
-  boot.kernelModules = [ "nvidia" ];
-  boot.extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
-
-  # System Configuration
-  system.stateVersion = "25.05";
-
-  # Allow unfree packages
-  nixpkgs.config = {
-    allowUnfree = true;
-    cudaSupport = true;
-  };
-
-  # NVIDIA CUDA Support for WSL
-  hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = false;
-    powerManagement.finegrained = false;
-    open = false;
-    nvidiaSettings = false;
-    package = pkgs.linuxPackages.nvidia_x11;
-  };
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-  };
-
-  nix = {
-    package = pkgs.nixVersions.latest;
-    settings = {
-      substituters = [
-        "https://nix-community.cachix.org"
-        "https://4rmcyt.cachix.org"
-        "https://numtide.cachix.org"
-      ];
-      trusted-public-keys = [
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="
-        "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
-      ];
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-      trusted-users = [ "zeev" ];
-      download-buffer-size = 1073741824;
-      warn-dirty = false;
+  # =================================================================
+  # 15. Environment Configuration
+  # =================================================================
+  environment = {
+    # CUDA and NVIDIA environment variables
+    variables = {
+      CUDA_PATH = "${pkgs.cudatoolkit}";
+      CUDA_ROOT = "${pkgs.cudatoolkit}";
+      EXTRA_LDFLAGS = "-L/usr/lib/wsl/lib -L${pkgs.cudatoolkit}/lib -L${pkgs.linuxPackages.nvidia_x11}/lib";
+      EXTRA_CCFLAGS = "-I${pkgs.cudatoolkit}/include";
+      NVIDIA_DRIVER_PATH = "/usr/lib/wsl/lib";
     };
-  };
 
-  networking.firewall.allowedTCPPorts = [
-    4242 # Kavita
-  ];
-
-  environment.systemPackages = with pkgs; [
-    git
-    vim
-    curl
-    wget
-    rsync
-    unzip
-    zip
-    coreutils
-    gnugrep
-    gawk
-    gnused
-    findutils
-    util-linux
-    mc
-    cudatoolkit
-    linuxPackages.nvidia_x11
-    libGL
-    libGLU
-    nixos-rebuild
-    lan-mouse
-    sops
-    cmake-format
-    nodePackages.prettier
-    rustfmt
-    nixfmt-rfc-style
-    deadnix
-    statix
-    yamlfmt
-    toml-sort
-    shfmt
-    just
-    dockfmt
-    alejandra
-    nix-diff
-  ];
-
-  time.timeZone = "America/Edmonton";
-
-  environment.etc."ld.so.conf.d/wsl-nvidia.conf".text = ''
-    /usr/lib/wsl/lib
-  '';
-  environment.sessionVariables = {
-    LD_LIBRARY_PATH = "/usr/lib/wsl/lib";
-  };
-  environment.variables = {
-    CUDA_PATH = "${pkgs.cudatoolkit}";
-    CUDA_ROOT = "${pkgs.cudatoolkit}";
-    EXTRA_LDFLAGS = "-L/usr/lib/wsl/lib -L${pkgs.cudatoolkit}/lib -L${pkgs.linuxPackages.nvidia_x11}/lib";
-    EXTRA_CCFLAGS = "-I${pkgs.cudatoolkit}/include";
-    NVIDIA_DRIVER_PATH = "/usr/lib/wsl/lib";
-  };
-
-  networking = {
-    hostName = "nixos-wsl";
-    networkmanager.enable = false;
-    useNetworkd = false;
-    useDHCP = false;
-    dhcpcd.enable = false;
-    wireless.enable = false;
-    interfaces = { };
-  };
-
-  systemd.network.enable = false;
-  services.resolved.enable = false;
-  # Enable services
-  services = {
-    openssh = {
-      enable = true;
-      settings = {
-        PasswordAuthentication = false;
-        PermitRootLogin = "no";
-      };
+    sessionVariables = {
+      LD_LIBRARY_PATH = "/usr/lib/wsl/lib";
     };
+
+    # NVIDIA library configuration
+    etc."ld.so.conf.d/wsl-nvidia.conf".text = ''
+      /usr/lib/wsl/lib
+    '';
+
+    # System packages
+    systemPackages = with pkgs; [
+      # Core utilities
+      coreutils
+      curl
+      findutils
+      gawk
+      git
+      gnugrep
+      gnused
+      mc
+      rsync
+      unzip
+      util-linux
+      vim
+      wget
+      zip
+
+      # CUDA and graphics
+      cudatoolkit
+      libGL
+      libGLU
+      linuxPackages.nvidia_x11
+
+      # System tools
+      lan-mouse
+      nixos-rebuild
+      sops
+
+      # Development & formatting tools
+      alejandra
+      cmake-format
+      deadnix
+      dockfmt
+      just
+      nix-diff
+      nixfmt-rfc-style
+      nodePackages.prettier
+      rustfmt
+      shfmt
+      statix
+      toml-sort
+      yamlfmt
+    ];
   };
-  programs.zsh.enable = true;
-  programs.nix-ld.enable = true;
 }
