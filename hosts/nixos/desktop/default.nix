@@ -1,16 +1,16 @@
 { pkgs, ... }:
 {
   # =================================================================
-  # 1. Imports & Global Settings
+  # 1. Imports
   # =================================================================
   imports = [
     ./hardware-configuration.nix
-    ../../../modules/gaming
-    ../../../modules/users/zeev
-    ../../../modules/disko/desktop
     ../../../modules/base
-    ../../../modules/networking/tailscale
+    ../../../modules/disko/desktop
+    ../../../modules/gaming
     ../../../modules/networking/dnssec
+    ../../../modules/networking/tailscale
+    ../../../modules/users/zeev
   ];
 
   # =================================================================
@@ -18,36 +18,14 @@
   # =================================================================
   system.stateVersion = "25.05";
 
+  # =================================================================
+  # 3. Internationalization & Time
+  # =================================================================
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "America/Edmonton";
 
   # =================================================================
-  # 3. User & Group Management
-  # =================================================================
-  users = {
-    users = {
-      prometheus = {
-        isSystemUser = true;
-        description = "Prometheus daemon user";
-        group = "prometheus";
-      };
-      git = {
-        isSystemUser = true;
-        group = "git";
-        description = "Git user";
-        home = "/var/lib/git";
-        createHome = true;
-        shell = pkgs.zsh;
-      };
-    };
-    groups = {
-      git = { };
-      prometheus = { };
-    };
-  };
-
-  # =================================================================
-  # 4. Bootloader & Secure Boot
+  # 4. Boot Configuration
   # =================================================================
   boot = {
     loader = {
@@ -61,7 +39,7 @@
   };
 
   # =================================================================
-  # 5. Networking Configuration
+  # 5. Networking
   # =================================================================
   networking = {
     hostName = "desktop";
@@ -84,13 +62,37 @@
   };
 
   # =================================================================
-  # 6. Time & Locale
+  # 6. Users & Groups
   # =================================================================
+  users = {
+    users = {
+      git = {
+        isSystemUser = true;
+        group = "git";
+        description = "Git user";
+        home = "/var/lib/git";
+        createHome = true;
+        shell = pkgs.zsh;
+      };
+      prometheus = {
+        isSystemUser = true;
+        description = "Prometheus daemon user";
+        group = "prometheus";
+      };
+    };
+    groups = {
+      git = { };
+      prometheus = { };
+    };
+  };
 
+  # =================================================================
+  # 7. Environment Variables
+  # =================================================================
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   # =================================================================
-  # 8. Secrets Management with SOPS
+  # 8. Secrets Management
   # =================================================================
   sops = {
     age.keyFile = "/root/.config/sops/age/keys.txt";
@@ -133,26 +135,15 @@
   };
 
   # =================================================================
-  # 10. System Services
+  # 10. Security
+  # =================================================================
+  security.rtkit.enable = true;
+
+  # =================================================================
+  # 11. Services
   # =================================================================
   services = {
-    flatpak.enable = true;
-    prometheus.exporters.node = {
-      enable = true;
-      port = 9100;
-      enabledCollectors = [
-        "cpu"
-        "diskstats"
-        "filesystem"
-        "netdev"
-        "stat"
-        "textfile"
-        "time"
-        "zfs"
-      ];
-      listenAddress = "0.0.0.0";
-    };
-    # Desktop Environment - Plasma 6
+    # Desktop Environment
     desktopManager.plasma6.enable = true;
     displayManager.sddm = {
       enable = true;
@@ -178,7 +169,19 @@
       };
     };
 
-    # Hardware Support
+    # Power Management
+    auto-cpufreq = {
+      enable = true;
+      settings = {
+        charger = {
+          governor = "performance";
+          turbo = "auto";
+        };
+      };
+    };
+    power-profiles-daemon.enable = false;
+
+    # Hardware & Peripherals
     udev = {
       packages = with pkgs; [
         yubikey-personalization
@@ -195,30 +198,34 @@
     openssh.enable = true;
     pcscd.enable = true;
     fwupd.enable = true;
+    flatpak.enable = true;
 
-    # Power Management
-    auto-cpufreq = {
+    # Monitoring
+    prometheus.exporters.node = {
       enable = true;
-      settings = {
-        charger = {
-          governor = "performance";
-          turbo = "auto";
-        };
-      };
+      port = 9100;
+      enabledCollectors = [
+        "cpu"
+        "diskstats"
+        "filesystem"
+        "netdev"
+        "stat"
+        "textfile"
+        "time"
+        "zfs"
+      ];
+      listenAddress = "0.0.0.0";
     };
-    power-profiles-daemon.enable = false;
 
+    # X Server (disabled but configured for NVIDIA)
     xserver.enable = false;
     xserver.videoDrivers = [ "nvidia" ];
     xserver.xkb.layout = "us";
   };
 
   # =================================================================
-  # 11. Security & XDG Configuration
+  # 12. XDG Portal
   # =================================================================
-  security.rtkit.enable = true;
-
-  # XDG portal for Plasma 6
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
@@ -227,21 +234,18 @@
   };
 
   # =================================================================
-  # 12. Programs Configuration
+  # 13. Programs
   # =================================================================
   programs = {
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
     };
-
     zsh.enable = true;
-
     nix-index = {
       enable = true;
       enableZshIntegration = true;
     };
-
     nh = {
       enable = true;
       clean.enable = true;
@@ -250,22 +254,15 @@
     };
   };
 
-  # Enable home-manager backup for conflicting files
+  # =================================================================
+  # 14. Home Manager
+  # =================================================================
   home-manager.backupFileExtension = "backup";
 
   # =================================================================
-  # 13. System Packages
+  # 15. System Packages
   # =================================================================
   environment.systemPackages = with pkgs; [
-    # Secure Boot & EFI tools
-    sbctl
-    shim-unsigned
-    ifrextractor-rs
-    efitools
-    efibootmgr
-    sbsigntool
-    uefitool
-
     # Core utilities
     vim
     wget
@@ -281,6 +278,7 @@
     openssl
     libdbusmenu
     pass
+    pciutils
 
     # Development tools
     helix
@@ -302,7 +300,6 @@
     nh
     zoxide
     age
-    pciutils
 
     # DevShell packages
     sops
@@ -325,8 +322,8 @@
     powertop
     fwupd
     cifs-utils
-
     samba
+
     # Hardware support
     yubikey-manager
     yubioath-flutter
@@ -336,15 +333,22 @@
     dfu-util
     openrgb-with-all-plugins
 
-    # Fonts
-    meslo-lgs-nf
-
-    # Theme
-    sddm-astronaut
+    # Secure Boot & EFI tools
+    sbctl
+    shim-unsigned
+    ifrextractor-rs
+    efitools
+    efibootmgr
+    sbsigntool
+    uefitool
 
     # Graphics
     nvidia-vaapi-driver
     xdg-desktop-portal-gtk
+
+    # Fonts & Themes
+    meslo-lgs-nf
+    sddm-astronaut
 
     # KDE Applications
     kdePackages.konsole

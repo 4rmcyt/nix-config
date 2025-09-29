@@ -1,131 +1,45 @@
 {
   pkgs,
-  lib,
+  inputs,
   ...
 }:
-# Add 'inputs' here
 {
-  # --------------------------------------------------------------------------------
-  # System & User Configuration
-  # --------------------------------------------------------------------------------
-  networking.hostName = "macbook";
+  imports = [
+    inputs.home-manager.darwinModules.home-manager
+    ../../modules/nix-darwin
+  ];
+
+  # Enable experimental features
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
+
+  # Auto upgrade nix package and the daemon service
+  services.nix-daemon.enable = true;
+
+  # Necessary for using flakes on this system
+  nix.package = pkgs.nix;
+
+  # Create /etc/zshrc that loads the nix-darwin environment
+  programs.zsh.enable = true;
+
+  # Set Git commit hash for darwin-version
+  system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
+
+  # Used for backwards compatibility, please read the changelog before changing
   system.stateVersion = 5;
+
+  # The platform the configuration will be used on
   nixpkgs.hostPlatform = "aarch64-darwin";
 
-  users.users.vk = {
-    name = "vk";
-    home = "/Users/vk";
-  };
-
-  environment.shellInit = ''
-    ulimit -n 2048
-  '';
-  # --------------------------------------------------------------------------------
-  # Nix Configuration (System-Wide)
-  # --------------------------------------------------------------------------------
-  nix = {
-    package = pkgs.nix;
-    settings = {
-      trusted-users = [
-        "root"
-        "vk"
-      ];
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-      warn-dirty = false;
-    };
-    gc = {
-      automatic = lib.mkDefault true;
-      options = lib.mkDefault "--delete-older-than 1w";
+  # Home Manager configuration
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    users.zeev = import ../../../modules/home-manager/darwin;
+    extraSpecialArgs = {
+      inherit inputs;
     };
   };
-
-  # --------------------------------------------------------------------------------
-  # Homebrew Management (System-Wide Integration)
-  # --------------------------------------------------------------------------------
-  homebrew = {
-    enable = true;
-    onActivation = {
-      autoUpdate = true;
-      cleanup = "zap";
-      upgrade = true;
-    };
-    brewPrefix = "/opt/homebrew/bin";
-    taps = [ "amar1729/formulae" ];
-    caskArgs = {
-      no_quarantine = true;
-    };
-    casks = [
-      "alt-tab"
-      "android-commandlinetools"
-      "android-platform-tools"
-      "discord"
-      "displaylink"
-      "docker-desktop"
-      "emclient"
-      "fbreader"
-      "firefox"
-      "font-hack-nerd-font"
-      "google-chrome"
-      "jellyfin-media-player"
-      "linearmouse"
-      "logitech-g-hub"
-      "meetingbar"
-      "obsidian"
-      "pycharm-ce"
-      "raycast"
-      "sublime-text"
-      "thunderbird"
-      "transmission-remote-gui"
-      "yubico-authenticator"
-    ];
-    brews = [
-      "adb-enhanced"
-      "brotli"
-      "ca-certificates"
-      "coreutils"
-      "emacs"
-      "gettext"
-      "gmp"
-      "gnutls"
-      "helix"
-      "libassuan"
-      "libevent"
-      "libgcrypt"
-      "libgpg-error"
-      "libidn2"
-      "libksba"
-      "libnghttp2"
-      "libssh2"
-      "libtasn1"
-      "libunistring"
-      "libusb"
-      "lz4"
-      "mpdecimal"
-      "nettle"
-      "npth"
-      "openssl@3"
-      "p11-kit"
-      "pcre2"
-      "pinentry"
-      "pinentry-mac"
-      "python@3.13"
-      "readline"
-      "ripgrep"
-      "rtmpdump"
-      "shfmt"
-      "sqlite"
-      "statix"
-      "tree-sitter"
-      "unbound"
-      "xz"
-      "zstd"
-      "mkvtoolnix"
-    ];
-    masApps = { };
-  };
-
-  services.cachix-agent.enable = true;
 }
