@@ -20,7 +20,7 @@
     "browser.tabs.loadInBackground" = true; # Load tabs automatically
     "browser.tabs.closeTabByDblclick" = true;
 
-    "media.ffmpeg.vaapi.enabled" = true; # Enable hardware acceleration
+    "media.cdpeg.vaapi.enabled" = true; # Enable hardware acceleration
     "layers.acceleration.force-enabled" = true;
     "gfx.webrender.all" = true;
 
