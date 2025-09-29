@@ -372,4 +372,6 @@
     kdePackages.qtmultimedia
     kdePackages.kio-extras
   ];
+
+  virtualisation.podman.enable = true;
 }
