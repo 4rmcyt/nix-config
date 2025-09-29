@@ -199,6 +199,7 @@
     pcscd.enable = true;
     fwupd.enable = true;
     flatpak.enable = true;
+    blueman.enable = true;
 
     # Monitoring
     prometheus.exporters.node = {
