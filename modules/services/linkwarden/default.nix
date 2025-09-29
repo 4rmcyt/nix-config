@@ -41,51 +41,16 @@ in
         '''
       '';
     };
-    database = {
-      port = lib.mkOption {
-        type = lib.types.int;
-        default = config.services.postgresql.settings.port;
-        description = "Port of the PostgreSQL database";
-      };
-    };
+
     enableRegistration = lib.mkOption {
       type = lib.types.bool;
       default = false;
       description = "Allow user registration in Linkwarden";
     };
-    homepage = {
-      name = lib.mkOption {
-        type = lib.types.str;
-        default = "Linkwarden";
-      };
-      description = lib.mkOption {
-        type = lib.types.str;
-        default = "Bookmark manager with web scraping support";
-      };
-      icon = lib.mkOption {
-        type = lib.types.str;
-        default = "linkwarden.png";
-      };
-      category = lib.mkOption {
-        type = lib.types.str;
-        default = "Services";
-      };
-    };
-    blackbox.targets = import ../../../lib/options/blackboxTargets.nix {
-      inherit lib;
-      defaultTargets =
-        let
-          blackbox = import ../../../lib/blackbox.nix { inherit lib; };
-        in
-        [
-          (blackbox.mkTcpTarget "${service}" "127.0.0.1:${toString cfg.listenPort}" "internal")
-          (blackbox.mkHttpTarget "${service}" "http://127.0.0.1:${toString cfg.listenPort}" "internal")
-          (blackbox.mkHttpTarget "${service}" "${cfg.url}" "external")
-        ];
-    };
+     
   };
   config = lib.mkIf cfg.enable {
-    services.${service} = {
+    services.linkwarden = {
       enable = true;
       host = cfg.listenAddress;
       port = cfg.listenPort;
@@ -96,12 +61,6 @@ in
       # https://docs.linkwarden.app/self-hosting/environment-variables
       environmentFile = lib.mkIf (cfg.secretEnvironmentFile != null) cfg.secretEnvironmentFile;
       # Path to a file containing environment variables, for example for NEXTAUTH_SECRET=<secret>,   POSTGRES_PASSWORD=<pass>
-    };
-    services.caddy.virtualHosts."${cfg.url}" = {
-      useACMEHost = homelab.baseDomain;
-      extraConfig = ''
-        reverse_proxy http://127.0.0.1:${toString cfg.listenPort}
-      '';
     };
   };
 }
