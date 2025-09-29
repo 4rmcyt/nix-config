@@ -6,38 +6,39 @@
     ../../../modules/users/zeev
   ];
 
+  # Enable experimental features for flakes
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
   ];
 
-  i18n.supportedLocales = [
-    "en_US.UTF-8/UTF-8"
-  ];
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  security.sudo.wheelNeedsPassword = false;
-
-  environment.systemPackages = with pkgs; [
-    git
-    rsync
-    zsh
-    neovim
-    wget
-    curl
-    rxvt-unicode # for terminfo
-  ];
-
-  programs.zsh.enable = true;
-
+  # Enable SSH for remote installation
   services.openssh = {
     enable = true;
     settings = {
-      PasswordAuthentication = false;
-      LoginGraceTime = 0;
-      PermitRootLogin = "no";
+      PasswordAuthentication = true;
+      PermitRootLogin = "yes";
     };
   };
 
-  system.stateVersion = "25.05";
+  # Set a password for the nixos user
+  users.users.nixos.password = "nixos";
+
+  # Add useful packages for installation
+  environment.systemPackages = with pkgs; [
+    git
+    helix
+    vim
+  ];
+
+  # Use faster mirror
+  nix.settings.substituters = lib.mkForce [
+    "https://cache.nixos.org"
+    "https://nix-community.cachix.org"
+  ];
+
+  nix.settings.trusted-public-keys = [
+    "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+  ];
 }
