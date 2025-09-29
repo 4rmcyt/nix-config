@@ -373,5 +373,4 @@
     kdePackages.kio-extras
   ];
 
-  virtualisation.podman.enable = true;
 }

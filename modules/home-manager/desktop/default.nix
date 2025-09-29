@@ -44,6 +44,7 @@ in
       pyenv
       python3
       vscode-fhs
+      pods
 
       # Gaming
       vesktop
