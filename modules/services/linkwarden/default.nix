@@ -47,7 +47,6 @@ in
       default = false;
       description = "Allow user registration in Linkwarden";
     };
-     
   };
   config = lib.mkIf cfg.enable {
     services.linkwarden = {
