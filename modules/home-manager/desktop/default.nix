@@ -46,7 +46,7 @@ in
       vscode-fhs
 
       # Gaming
-      discord
+      vesktop
       lutris
       steam
 

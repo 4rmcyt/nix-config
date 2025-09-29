@@ -56,8 +56,14 @@
       "net.ipv4.tcp_congestion_control=bbr"
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
+      "usbcore.quirks=0bda:0411:b"
       "usbcore.autosuspend=-1"
       "zfs.zfs_arc_max=12884901888" # 12GB ARC size
+      "cfg80211.ieee80211_regdom=CA"
+      "usbcore.use_both_schemes=n"
+      # Disable specific problematic USB controller
+      "pci=assign-busses,hpiosize=0x1000,hpmemsize=0x20000000"
+      "pci-stub.ids=1022:15b9" # AMD USB controller ID that's causing issues
     ];
 
     # ZFS configuration
