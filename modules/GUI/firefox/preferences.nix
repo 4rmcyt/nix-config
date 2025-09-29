@@ -28,7 +28,7 @@
     "ui.systemUsesDarkTheme" = true;
 
     "extensions.autoDisableScopes" = 0; # Automatically enable extensions
-    "extensions.update.enabled" = false;
+    "extensions.update.enabled" = true;
 
     "widget.use-xdg-desktop-portal.file-picker" = 1; # Use new gtk file picker instead of legacy one
 
