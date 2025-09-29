@@ -7,118 +7,151 @@
 }:
 {
   # =================================================================
-  # 1. Imports & Global Settings
+  # 1. Imports
   # =================================================================
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
-  # Enable firmware updates for devices like CPUs and SSDs.
-  hardware.enableRedistributableFirmware = lib.mkDefault true;
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-
   # =================================================================
-  # 2. Boot & Filesystem Configuration
+  # 2. Boot Configuration
   # =================================================================
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.systemd-boot.edk2-uefi-shell.enable = true;
-  boot.loader.systemd-boot.configurationLimit = 20;
-  boot.loader.systemd-boot.editor = false;
-  boot.loader.timeout = 3;
+  boot = {
+    # Boot loader configuration
+    loader = {
+      systemd-boot = {
+        enable = true;
+        edk2-uefi-shell.enable = true;
+        configurationLimit = 20;
+        editor = false;
+      };
+      efi.canTouchEfiVariables = true;
+      timeout = 3;
+    };
 
-  # Define filesystem support and ZFS settings for the initial ramdisk (initrd).
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.supportedFilesystems = [
-    "vfat"
-    "zfs"
-  ];
+    # Kernel configuration
+    kernelPackages = pkgs.linuxPackages_latest;
+    supportedFilesystems = [
+      "vfat"
+      "zfs"
+    ];
 
-  # Define kernel modules needed early in the boot process.
-  boot.initrd.availableKernelModules = [
-    "ahci"
-    "nvme"
-    "usb_storage"
-    "usbhid"
-    "xhci_pci"
-  ];
+    # Kernel modules
+    initrd.availableKernelModules = [
+      "ahci"
+      "nvme"
+      "usb_storage"
+      "usbhid"
+      "xhci_pci"
+    ];
 
-  # =================================================================
-  # 3. Kernel Configuration
-  # =================================================================
+    kernelModules = [
+      "coretemp"
+      "fuse"
+      "iTCO_wdt"
+      "kvm-intel"
+    ];
 
-  boot.zfs = {
-    devNodes = "/dev/disk/by-id/";
-    forceImportAll = true;
+    # Kernel parameters
+    kernelParams = [
+      "i915.enable_guc=2"
+      "zfs.zfs_arc_max=12884901888"
+    ];
+
+    # ZFS configuration
+    zfs = {
+      devNodes = "/dev/disk/by-id/";
+      forceImportAll = true;
+    };
   };
 
-  # Kernel modules to load at boot.
-  boot.kernelModules = [
-    "coretemp"
-    "fuse"
-    "kvm-intel"
-    "iTCO_wdt"
-  ];
+  # =================================================================
+  # 3. Hardware Configuration
+  # =================================================================
+  hardware = {
+    # CPU & firmware
+    cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+    enableRedistributableFirmware = lib.mkDefault true;
 
-  boot.kernelParams = [
-    "zfs.zfs_arc_max=12884901888"
-    "i915.enable_guc=2"
-  ];
+    # Graphics
+    graphics = {
+      enable = true;
+      extraPackages = with pkgs; [
+        intel-compute-runtime # For OpenCL (compute/filtering)
+        intel-media-driver # For VAAPI (decoding/encoding)
+        intel-ocl
+        intel-vaapi-driver
+        libva-vdpau-driver
+        vaapiVdpau
+      ];
+    };
+
+    # Hardware features
+    bluetooth.enable = false;
+    i2c.enable = true;
+  };
 
   # =================================================================
-  # 4. Hardware & Power Management
+  # 4. Power Management
   # =================================================================
-  hardware.graphics.enable = true;
-  hardware.graphics.extraPackages = with pkgs; [
-    intel-ocl
-    libva-vdpau-driver
-    vaapiVdpau
-    intel-vaapi-driver
-    intel-media-driver # For VAAPI (decoding/encoding)
-    intel-compute-runtime # For OpenCL (compute/filtering)
-  ];
+  powerManagement = {
+    enable = true;
+    cpuFreqGovernor = lib.mkDefault "performance";
+    powertop.enable = true;
+  };
+
+  # =================================================================
+  # 5. Environment Variables
+  # =================================================================
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "iHD";
   };
 
-  hardware.bluetooth.enable = false;
-  hardware.i2c.enable = true;
-
-  powerManagement.enable = true;
-  powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
-  powerManagement.powertop.enable = true;
-
   # =================================================================
-  # 5. System Services
+  # 6. Services
   # =================================================================
-  services.fwupd.enable = true;
-  systemd.oomd.enable = true;
-
-  services.smartd = {
-    enable = true;
-    defaults.autodetected = "-a -o on -s (S/../.././02|L/../../7/04)";
-    devices = [
-      { device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315"; }
-      { device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345"; }
-    ];
-  };
-
-  services.zfs = {
-    autoScrub.enable = false;
-    autoScrub.interval = "monthly";
-    autoSnapshot.enable = false;
-    trim.enable = false;
-    trim.interval = "weekly";
-  };
-
   services = {
+    # Hardware monitoring
+    smartd = {
+      enable = true;
+      defaults.autodetected = "-a -o on -s (S/../.././02|L/../../7/04)";
+      devices = [
+        { device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345"; }
+        { device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315"; }
+      ];
+    };
+
+    # ZFS services
+    zfs = {
+      autoScrub = {
+        enable = false;
+        interval = "monthly";
+      };
+      autoSnapshot.enable = false;
+      trim = {
+        enable = false;
+        interval = "weekly";
+      };
+    };
+
+    # System services
+    fwupd.enable = true;
+    thermald.enable = lib.mkDefault true;
+
+    # Disabled services
+    blueman.enable = false;
+    desktopManager.gnome.enable = false;
+    displayManager.gdm.enable = false;
+    geoclue2.enable = false;
     pipewire.enable = false;
+    printing.enable = false; # CUPS printing
     pulseaudio.enable = false;
     xserver.enable = false;
-    displayManager.gdm.enable = false;
-    desktopManager.gnome.enable = false;
-    blueman.enable = false;
-    geoclue2.enable = false;
-    printing.enable = false; # CUPS printing
-    thermald.enable = lib.mkDefault true;
   };
-  systemd.coredump.enable = false;
+
+  # =================================================================
+  # 7. Systemd Configuration
+  # =================================================================
+  systemd = {
+    coredump.enable = false;
+    oomd.enable = true;
+  };
 }
