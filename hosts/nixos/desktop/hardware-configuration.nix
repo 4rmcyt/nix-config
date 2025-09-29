@@ -29,7 +29,9 @@
       "xhci_pci"
     ];
 
-    initrd.kernelModules = [ ];
+    initrd.kernelModules = [
+      "pci-stub"
+    ];
 
     kernelModules = [
       "amdgpu"
@@ -41,6 +43,7 @@
       "nvidia_drm"
       "nvidia_modeset"
       "nvidia_uvm"
+      "pci-stub"
       "r8169"
       "snd-usb-audio"
       "snd_hda_intel"
@@ -60,10 +63,10 @@
       "usbcore.autosuspend=-1"
       "zfs.zfs_arc_max=12884901888" # 12GB ARC size
       "cfg80211.ieee80211_regdom=CA"
+      "cfg80211.disable_40mhz_24ghz=1"
       "usbcore.use_both_schemes=n"
       # Disable specific problematic USB controller
-      "pci=assign-busses,hpiosize=0x1000,hpmemsize=0x20000000"
-      "pci-stub.ids=1022:15b9" # AMD USB controller ID that's causing issues
+      "pci-stub.ids=1022:15b8"
     ];
 
     # ZFS configuration
@@ -114,6 +117,8 @@
     # Module configuration
     extraModprobeConfig = ''
       options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=16777216 zfs_arc_max=2147483648
+      # Disable problematic HDA Intel audio that has no codecs
+      options snd_hda_intel enable=0,1,1,1
     '';
   };
 

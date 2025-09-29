@@ -44,6 +44,7 @@
   networking = {
     hostName = "desktop";
     hostId = "e134040f";
+    enableIPv6 = false;
     networkmanager.enable = true;
     wireless.enable = false;
     dnssec = {
@@ -83,6 +84,7 @@
     groups = {
       git = { };
       prometheus = { };
+      plugdev = { };
     };
   };
 
@@ -188,8 +190,6 @@
         yubikey-manager
         yubioath-flutter
         via
-        qmk
-        qmk-udev-rules
         dfu-util
       ];
     };
