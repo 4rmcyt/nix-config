@@ -105,6 +105,8 @@
             type = "zfs_fs";
             mountpoint = "/var/log";
             options = {
+              acltype = "posixacl";
+              xattr = "sa";
               "com.sun:auto-snapshot" = "false";
             };
           };
