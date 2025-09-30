@@ -286,7 +286,6 @@
     usbutils
     openssl
     libdbusmenu
-    pass
     pciutils
 
     # Development tools
@@ -309,6 +308,7 @@
     nh
     zoxide
     age
+    gnumake
 
     # DevShell packages
     sops
@@ -381,8 +381,14 @@
     kdePackages.qtsvg
     kdePackages.qtmultimedia
     kdePackages.kio-extras
-    pass-wayland
-    passExtensions.pass-import
+    (pass.withExtensions (exts: [
+      exts.pass-otp
+      exts.pass-import
+      exts.pass-checkup
+      exts.pass-genphrase
+      exts.pass-file
+      exts.pass-update
+    ]))
     browserpass
   ];
 

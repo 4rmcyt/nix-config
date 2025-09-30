@@ -87,6 +87,8 @@ in
       enableZshIntegration = true;
     };
 
+    browserpass.enable = true;
+
     fzf = {
       enable = true;
       enableZshIntegration = true;
