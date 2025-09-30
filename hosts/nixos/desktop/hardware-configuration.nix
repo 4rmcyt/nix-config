@@ -152,21 +152,6 @@
     cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     enableRedistributableFirmware = lib.mkDefault true;
     cpu.amd.ryzen-smu.enable = true;
-
-    bluetooth = {
-      enable = true;
-      powerOnBoot = true;
-      settings = {
-        General = {
-          Enable = "Source,Sink,Media,Socket";
-          Experimental = true;
-          KernelExperimental = true;
-        };
-        Policy = {
-          AutoEnable = true;
-        };
-      };
-    };
   };
 
   # =================================================================
@@ -181,8 +166,6 @@
         { device = "/dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NS0W101791N"; }
       ];
     };
-
-    blueman.enable = true;
 
     # OpenRGB for RGB control
     hardware.openrgb.enable = true;
