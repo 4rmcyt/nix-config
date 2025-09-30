@@ -153,7 +153,7 @@
       wayland.compositor = "kwin";
       autoNumlock = true;
       settings.General.DisplayServer = "wayland";
-      theme = "astronaut";
+      theme = "sddm-astronaut-theme";
       enableHidpi = true;
     };
 
@@ -208,7 +208,6 @@
     pcscd.enable = true;
     fwupd.enable = true;
     flatpak.enable = true;
-    blueman.enable = true;
 
     # Monitoring
     prometheus.exporters.node = {
