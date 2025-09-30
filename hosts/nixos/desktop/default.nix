@@ -381,6 +381,7 @@
     kdePackages.qtsvg
     kdePackages.qtmultimedia
     kdePackages.kio-extras
+    pass-wayland
   ];
 
   virtualisation.podman.enable = true;
