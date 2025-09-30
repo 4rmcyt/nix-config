@@ -117,7 +117,7 @@
     # Module configuration
     extraModprobeConfig = ''
       options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=16777216 zfs_arc_max=2147483648
-       # Blacklist intel audio devices
+      # Blacklist intel audio devices
       blacklist snd_hda_intel
       install snd_hda_intel /bin/false
       # Ensure pci-stub binds to the problematic USB controller
