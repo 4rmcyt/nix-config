@@ -190,8 +190,18 @@
         yubikey-manager
         yubioath-flutter
         via
+        qmk
+        qmk-udev-rules
         dfu-util
       ];
+      extraRules = ''
+        # Fix QMK udev rules - ensure proper permissions
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ff4", MODE="0666", GROUP="plugdev"
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ffb", MODE="0666", GROUP="plugdev"
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="*", MODE="0666", GROUP="plugdev"
+        # Fix Rapoo gaming device input lag
+        SUBSYSTEM=="input", ATTRS{name}=="Rapoo Rapoo Gaming Device", TAG+="uaccess"
+      '';
     };
 
     # System Services
@@ -326,6 +336,7 @@
 
     # Hardware support
     yubikey-manager
+    yubico-pam
     yubioath-flutter
     via
     qmk
@@ -373,4 +384,5 @@
     kdePackages.kio-extras
   ];
 
+  virtualisation.podman.enable = true;
 }
