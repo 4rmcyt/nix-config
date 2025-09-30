@@ -153,7 +153,7 @@
       wayland.compositor = "kwin";
       autoNumlock = true;
       settings.General.DisplayServer = "wayland";
-      theme = "sddm-astronaut-theme";
+      theme = "sddm-sugar-dark-theme";
       enableHidpi = true;
     };
 
@@ -358,6 +358,7 @@
     # Fonts & Themes
     meslo-lgs-nf
     sddm-astronaut
+    sddm-sugar-dark
 
     # KDE Applications
     kdePackages.konsole
