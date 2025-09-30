@@ -153,7 +153,7 @@
       wayland.compositor = "kwin";
       autoNumlock = true;
       settings.General.DisplayServer = "wayland";
-      theme = "sddm-astronaut";
+      theme = "astronaut";
       enableHidpi = true;
     };
 
@@ -198,8 +198,7 @@
         # Fix QMK udev rules - ensure proper permissions
         SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ff4", MODE="0666", GROUP="plugdev"
         SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ffb", MODE="0666", GROUP="plugdev"
-        SUBSYSTEM=="usb", ATTRS{idVendor}=="1209", ATTRS{idProduct}=="*", MODE="0666", GROUP="plugdev"
-        # Fix Rapoo gaming device input lag
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="174c", ATTRS{idProduct}=="2074", MODE="0666", GROUP="plugdev"
         SUBSYSTEM=="input", ATTRS{name}=="Rapoo Rapoo Gaming Device", TAG+="uaccess"
       '';
     };
