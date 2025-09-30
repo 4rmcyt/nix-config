@@ -117,12 +117,14 @@
     # Module configuration
     extraModprobeConfig = ''
       options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=16777216 zfs_arc_max=2147483648
-      # Disable problematic HDA Intel audio that has no codecs
-      options snd_hda_intel enable=0,1,1,1
+       # Blacklist intel audio devices
+      blacklist snd_hda_intel
+      install snd_hda_intel /bin/false
       # Ensure pci-stub binds to the problematic USB controller
       options pci-stub ids=1022:15b8
       # Fix Bluetooth power management
-      options btusb enable_autosuspend=n
+      options btusb enable_autosuspend=n reset_resume=1
+      options bluetooth disable_ertm=1
     '';
   };
 
