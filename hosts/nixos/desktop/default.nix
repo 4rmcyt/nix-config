@@ -382,6 +382,8 @@
     kdePackages.qtmultimedia
     kdePackages.kio-extras
     pass-wayland
+    passExtensions.pass-import
+    browserpass
   ];
 
   virtualisation.podman.enable = true;
