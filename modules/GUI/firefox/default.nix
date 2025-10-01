@@ -1,6 +1,4 @@
-{
-  ...
-}:
+{ pkgs, ... }:
 {
   imports = [
     ./extensions.nix
@@ -17,6 +15,7 @@
 
   programs.firefox = {
     enable = true;
+    nativeMessagingHosts = [ pkgs.browserpass ];
     profiles.default = {
       isDefault = true;
       search = {

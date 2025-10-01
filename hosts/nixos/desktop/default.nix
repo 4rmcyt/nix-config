@@ -381,6 +381,7 @@
     kdePackages.qtsvg
     kdePackages.qtmultimedia
     kdePackages.kio-extras
+    kdePackages.plasma-browser-integration
     (pass.withExtensions (exts: [
       exts.pass-otp
       exts.pass-import
@@ -389,7 +390,6 @@
       exts.pass-file
       exts.pass-update
     ]))
-    browserpass
   ];
 
   virtualisation.podman.enable = true;
