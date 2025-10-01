@@ -11,6 +11,7 @@
     ../../../modules/networking/dnssec
     ../../../modules/networking/tailscale
     ../../../modules/users/zeev
+    ../../../modules/GUI/ollama
   ];
 
   # =================================================================
