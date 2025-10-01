@@ -47,6 +47,7 @@
       "r8169"
       "snd-usb-audio"
       "snd_hda_intel"
+      "v4l2loopback"
     ];
 
     # Kernel configuration
@@ -114,6 +115,9 @@
       ${pkgs.kbd}/bin/setleds +num
     '';
 
+    extraModulePackages = with config.boot.kernelPackages; [
+      v4l2loopback
+    ];
     # Module configuration
     extraModprobeConfig = ''
       options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=16777216 zfs_arc_max=2147483648
@@ -125,6 +129,8 @@
       # Fix Bluetooth power management
       options btusb enable_autosuspend=n reset_resume=1
       options bluetooth disable_ertm=1
+      # Enable v4l2loopback for virtual camera
+      options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
     '';
   };
 
@@ -212,6 +218,8 @@
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     LIBVA_DRIVER_NAME = "nvidia";
   };
+
+  security.polkit.enable = true;
 
   # =================================================================
   # 7. Networking
