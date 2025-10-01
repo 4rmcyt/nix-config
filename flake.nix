@@ -53,6 +53,7 @@
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
     nixarr.url = "github:rasmus-kirk/nixarr";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
+    # nix-ai.url = "github:olafkfreund/nix-ai-help";
 
     # Development tools
     nix-index-database.url = "github:nix-community/nix-index-database";
