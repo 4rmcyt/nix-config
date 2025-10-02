@@ -352,4 +352,5 @@ in
 
   # GPG agent for pinentry
   services.gpg-agent.enable = true;
+  # vscodeIntegration = true; # Enable VS Code integration
 }

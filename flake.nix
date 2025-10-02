@@ -53,7 +53,7 @@
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
     nixarr.url = "github:rasmus-kirk/nixarr";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
-    # nix-ai.url = "github:olafkfreund/nix-ai-help";
+    nixai.url = "github:olafkfreund/nix-ai-help";
 
     # Development tools
     nix-index-database.url = "github:nix-community/nix-index-database";
@@ -127,6 +127,7 @@
                         inputs.sops-nix.homeManagerModules.sops
                         inputs.agenix.homeManagerModules.default
                         inputs.plasma-manager.homeModules.plasma-manager
+                        inputs.nixai.homeManagerModules.default
                       ];
                       nixpkgs.config = {
                         allowUnfree = true;

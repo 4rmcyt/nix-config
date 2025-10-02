@@ -265,6 +265,7 @@
       clean.extraArgs = "--keep-since 10d --keep 3";
       flake = "/home/zeev/src/nix-config";
     };
+    # vscode.enable = true;
   };
 
   # =================================================================
