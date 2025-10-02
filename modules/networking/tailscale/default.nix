@@ -24,8 +24,8 @@ in
 
   config = mkIf cfg.enable {
     sops.secrets.tailscale_auth_key = {
-      inherit (cfg) sopsFile;
-      inherit (cfg) key;
+      sopsFile = cfg.sopsFile;
+      key = cfg.key;
     };
 
     environment.systemPackages = with pkgs; [
