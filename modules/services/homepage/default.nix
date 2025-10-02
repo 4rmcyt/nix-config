@@ -64,13 +64,6 @@
               ];
             };
           }
-          {
-            "Headphones" = {
-              href = "https://headphones.labhome.work";
-              description = "Music Library Management";
-              icon = "headphones";
-            };
-          }
         ];
       }
       {
@@ -231,6 +224,13 @@
               href = "http://192.168.1.165:12522";
               description = "Linkwarden Service";
               icon = "linkwarden";
+              widgets = [
+                {
+                  type = "linkwarden";
+                  url = "http://192.168.1.165:12522";
+                  key = "linkwarden-api-key";
+                }
+              ];
             };
           }
           {
