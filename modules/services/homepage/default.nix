@@ -362,7 +362,7 @@
               widgets = [
                 {
                   type = "tailscale";
-                  deviceid = "nXJkpdBaD611CNTRL";
+                  deviceid = "njShKixPvA21CNTRL";
                   key = "tskey-api-k75wJ2z2qD11CNTRL-PajmXo4dB71YsoV2kyZo71Quv2rQkgi4B";
                 }
               ];
