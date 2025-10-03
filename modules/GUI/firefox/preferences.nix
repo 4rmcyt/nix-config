@@ -117,8 +117,6 @@
     "widget.use-xdg-desktop-portal.file-picker" = 1;
 
     # URL Bar
-    "browser.urlbar.placeholderName" = "DuckDuckGo";
-    "browser.urlbar.placeholderName.private" = "DuckDuckGo";
     "browser.urlbar.shortcuts.bookmarks" = false;
     "browser.urlbar.shortcuts.history" = false;
     "browser.urlbar.shortcuts.tabs" = false;
@@ -126,5 +124,15 @@
     "browser.urlbar.suggest.searches" = true;
     "browser.urlbar.trimHttps" = true;
     "browser.urlbar.unitConversion.enabled" = true;
+
+    # SmoothFox
+    "apz.overscroll.enabled" = true;
+    "general.smoothScroll" = true;
+    "mousewheel.min_line_scroll_amount" = 10;
+    "general.smoothScroll.mouseWheel.durationMinMS" = 80;
+    "general.smoothScroll.currentVelocityWeighting" = 0.15;
+    "general.smoothScroll.stopDecelerationWeighting" = 0.6;
+    "general.smoothScroll.msdPhysics.enabled" = false;
+    "mousewheel.default.delta_multiplier_y" = 300;
   };
 }
