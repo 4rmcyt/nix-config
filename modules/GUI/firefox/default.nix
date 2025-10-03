@@ -22,7 +22,7 @@
     # Better DMA-BUF support
     MOZ_DRM_DEVICE = "/dev/dri/renderD128";
   };
-  
+
   programs.firefox = {
     enable = true;
     package = inputs.firefox-nightly.packages.x86_64-linux.firefox-nightly-bin;

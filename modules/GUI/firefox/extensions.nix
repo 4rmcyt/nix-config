@@ -10,16 +10,16 @@ let
     ublock-origin
     ublacklist
     terms-of-service-didnt-read
-    
+
     # === DEVELOPER TOOLS ===
     lovely-forks
     refined-github
-    
+
     # === MEDIA & ENTERTAINMENT ===
     fastforwardteam
     movie-web
     return-youtube-dislikes
-    
+
     # === PRODUCTIVITY & NAVIGATION ===
     auto-tab-discard
     indie-wiki-buddy
@@ -28,7 +28,7 @@ let
     to-google-translate
     tree-style-tab
     undoclosetabbutton
-    
+
     # === SYSTEM INTEGRATION ===
     plasma-integration
   ];
@@ -39,8 +39,8 @@ in
   programs.firefox.policies."3rdparty".extensions = {
     # uBlock Origin - Enhanced permissions
     "uBlock0@raymondhill.net" = {
-      permissions = [ 
-        "internal:privateBrowsingAllowed" 
+      permissions = [
+        "internal:privateBrowsingAllowed"
         "internal:svgContextPropertiesAllowed"
       ];
       origins = [ "<all_urls>" ];
