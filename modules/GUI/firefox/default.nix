@@ -21,7 +21,7 @@
 
   programs.firefox = {
     enable = true;
-    package = inputs.firefox.packages.x86_64-linux.firefox-nightly-bin;
+    package = inputs.firefox-nightly.packages.x86_64-linux.firefox-nightly-bin;
     betterfox = {
       profiles.default = {
         enableAllSections = false;
