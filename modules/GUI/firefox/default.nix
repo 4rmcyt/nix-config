@@ -27,7 +27,6 @@
     betterfox = {
       enable = true;
       profiles.default.settings = {
-        Smoothfox.enable = true;
         fastfox.enable = true;
       };
     };
