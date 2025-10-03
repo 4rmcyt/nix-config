@@ -22,7 +22,6 @@ let
     return-youtube-dislikes
 
     # Privacy & Security
-    pay-by-privacy
     terms-of-service-didnt-read
 
     # Productivity & Navigation
