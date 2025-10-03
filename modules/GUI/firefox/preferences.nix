@@ -69,7 +69,6 @@
     "browser.urlbar.suggest.searches" = true;
     "browser.urlbar.trimHttps" = true;
     "browser.urlbar.unitConversion.enabled" = true;
-    "browser.urlbar.speculativeConnect.enabled" = true;
 
     # === THEME & APPEARANCE ===
     "browser.in-content.dark-mode" = true;
@@ -99,7 +98,6 @@
     # === NETWORK & PERFORMANCE ===
     "browser.cache.disk.enable" = false;
     "browser.cache.memory.enable" = true;
-    "network.predictor.enabled" = true;
 
     # === NEW TAB PAGE ===
     "browser.newtabpage.activity-stream.showSponsored" = false;
