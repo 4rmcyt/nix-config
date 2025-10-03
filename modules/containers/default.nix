@@ -42,11 +42,11 @@
       2375 # Podman API (insecure, for local use only)
       2376 # Podman API (secure, for local use only)
       9948 # NextDNS Exporter
-      5299 # Lazylibrarian
       8191 # FlareSolverr
       8265 # Tdarr Web UI
       8266 # Tdarr Server
       8267 # Tdarr Node
+      3004 # Linkwarden
     ];
     allowedUDPPorts = [
       # Podman
@@ -108,6 +108,21 @@
           networks = [ "podman" ];
           ports = [ "127.0.0.1:9948:9948/tcp" ];
           environmentFiles = [ config.sops.secrets.containers_env.path ];
+        };
+        linkwarden = {
+          image = "ghcr.io/linkwarden/linkwarden";
+          autoStart = true;
+          ports = [ "127.0.0.1:3004:3000/tcp" ];
+          environment = {
+            TZ = "America/Edmonton";
+            DATABASE_URL = "postgresql://linkwarden:${config.sops.secrets.linkwarden_db_password.path}@/run/postgresql/linkwarden?sslmode=disable";
+            NEXTAUTH_SECRET = config.sops.secrets.containers_env.LINKWARDEN_NEXTAUTH_SECRET;
+            NEXTAUTH_URL = "http://localhost:3004/api/v1/auth";
+            CUSTOM_OPENAI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
+            OPENAI_MODEL = "gemini-2.0-flash";
+            OPENAI_API_KEY = "REDACTED";
+            NEXT_PUBLIC_DISABLE_REGISTRATION = "true";
+          };
         };
       };
     };

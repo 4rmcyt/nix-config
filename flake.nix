@@ -66,6 +66,14 @@
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    betterfox = {
+      url = "github:HeitorAugustoLN/betterfox-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    firefox-nightly = {
+      url = "github:nix-community/flake-firefox-nightly";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Non-flake inputs
     cpu-microcodes = {
@@ -128,6 +136,7 @@
                         inputs.agenix.homeManagerModules.default
                         inputs.plasma-manager.homeModules.plasma-manager
                         inputs.nixai.homeManagerModules.default
+                        inputs.betterfox.modules.homeManager.betterfox
                       ];
                       nixpkgs.config = {
                         allowUnfree = true;
