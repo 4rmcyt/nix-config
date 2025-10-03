@@ -1,6 +1,7 @@
 {
   pkgs,
   inputs,
+  lib,
   ...
 }:
 {
@@ -33,6 +34,9 @@
       };
     };
   };
-  home.file.".mozilla/firefox/profiles.ini".force = true;
+  # Force overwrite existing files
+  home.file.".mozilla/firefox/profiles.ini".force = lib.mkForce true;
+  home.file.".mozilla/firefox/default/search.json.mozlz4".force = lib.mkForce true;
+
   home.sessionVariables.BROWSER = "firefox";
 }
