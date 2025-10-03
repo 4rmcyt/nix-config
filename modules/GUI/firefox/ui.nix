@@ -34,29 +34,4 @@
     currentVersion = 20;
     newElementCount = 3;
   };
-
-  programs.firefox.profiles.default.userChrome =
-    lib.mkAfter # css
-
-      ''
-        /* Remove useless separator */
-        .titlebar-spacer {
-          display: none;
-        }
-
-        /* Remove bookmark star */
-        #star-button-box {
-          display: none !important;
-        }
-
-        /* Remove "Protection shield" icon */
-        #tracking-protection-icon-container {
-          display: none !important;
-        }
-
-        #vertical-pinned-tabs-container,
-        scrollbox {
-          scrollbar-width: auto !important;
-        }
-      '';
 }
