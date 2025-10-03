@@ -85,7 +85,7 @@
         "type": "github"
       }
     },
-    "betterfox": {
+    "betterfox-nix": {
       "inputs": {
         "flake-parts": "flake-parts_2",
         "import-tree": "import-tree",
@@ -309,7 +309,7 @@
     "flake-parts_2": {
       "inputs": {
         "nixpkgs-lib": [
-          "betterfox",
+          "betterfox-nix",
           "nixpkgs"
         ]
       },
@@ -1110,7 +1110,7 @@
         "agenix": "agenix",
         "authentik-nix": "authentik-nix",
         "auto-cpufreq": "auto-cpufreq",
-        "betterfox": "betterfox",
+        "betterfox-nix": "betterfox-nix",
         "cpu-microcodes": "cpu-microcodes",
         "disko": "disko",
         "firefox-addons": "firefox-addons",

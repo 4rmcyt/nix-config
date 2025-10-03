@@ -33,6 +33,7 @@
 
     # Developer Tools
     "devtools.chrome.enabled" = false; # Allow executing JS in the dev console
+    "svg.context-properties.content.enabled" = true;
     "toolkit.legacyUserProfileCustomizations.stylesheets" = true; # Allow userChrome.css
 
     # Display & Hi-DPI
@@ -54,6 +55,7 @@
     "extensions.pocket.enabled" = false;
     "extensions.update.enabled" = true;
     "extensions.webcompat-reporter.enabled" = false;
+    "extensions.webextensions.ExtensionStorageIDB.enabled" = false; # Make home-manager extension config work
 
     # Firefox Accounts & Services
     "browser.contentblocking.report.lockwise.enabled" = true;
@@ -63,15 +65,24 @@
     "identity.fxaccounts.toolbar.enabled" = true;
 
     # Graphics & Hardware Acceleration
+    "gfx.wayland.hdr" = true;
     "gfx.webrender.all" = true;
+    "gfx.webrender.compositor.force-enabled" = true; # FIXME: enabling causes graphic glitches
+    "gfx.x11-egl.force-enabled" = true;
+    "image.avif.enabled" = true;
+    "image.jxl.enabled" = true;
     "layers.acceleration.force-enabled" = true;
     "media.av1.enabled" = true;
     "media.cdpeg.vaapi.enabled" = true;
     "media.eme.enabled" = true;
     "media.ffmpeg.vaapi.enabled" = true;
     "media.ffvpx.enabled" = false;
+    "media.hardware-video-decoding.force-enabled" = true;
+    "media.hevc.enabled" = true;
+    "media.hls.enabled" = true;
     "media.rdd-ffmpeg.enabled" = true;
     "media.rdd-vpx.enabled" = false;
+    "media.videocontrols.picture-in-picture.enabled" = false;
     "widget.dmabuf.force-enabled" = true;
 
     # Internationalization
@@ -79,18 +90,18 @@
     "intl.accept_languages" = "en-US,en";
 
     # Network & Performance
-    "browser.urlbar.speculativeConnect.enabled" = true;
-    "network.predictor.enabled" = true;
     "browser.cache.disk.enable" = false;
     "browser.cache.memory.enable" = true;
+    "browser.urlbar.speculativeConnect.enabled" = true;
+    "network.predictor.enabled" = true;
 
     # New Tab Page
     "browser.newtabpage.activity-stream.showSponsored" = false;
     "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
 
     # Startup & Session
-    "browser.startup.page" = 3; # Resume previous session on startup
     "browser.ctrlTab.sortByRecentlyUsed" = false; # (default) Who wants that?
+    "browser.startup.page" = 3; # Resume previous session on startup
 
     # Tabs
     "browser.tabs.closeTabByDblclick" = true;
