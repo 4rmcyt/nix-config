@@ -21,13 +21,9 @@ let
     return-youtube-dislikes
 
     # === PRODUCTIVITY & NAVIGATION ===
-    auto-tab-discard
     indie-wiki-buddy
-    redirector
     rsshub-radar
     to-google-translate
-    tree-style-tab
-    undoclosetabbutton
 
     # === SYSTEM INTEGRATION ===
     plasma-integration
