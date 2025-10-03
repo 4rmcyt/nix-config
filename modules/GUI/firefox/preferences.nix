@@ -1,12 +1,17 @@
 {
   programs.firefox.policies.Preferences = {
     # About Config & Warnings
-    "browser.aboutConfig.showWarning" = false;
-    "browser.warnOnQuitShortcut" = false;
+    "browser.aboutConfig.showWarning" = false; # I sometimes know what I'm doing
     "browser.uitour.enabled" = false;
+    "browser.warnOnQuitShortcut" = false;
+
+    # Accessibility & Sound
+    "accessibility.typeaheadfind.enablesound" = false; # Why the fuck can my search window make bell sounds
+    "general.autoScroll" = true;
 
     # Content Blocking & Privacy
     "browser.send_pings" = false;
+    "privacy.clearOnShutdown.history" = false; # We want to save history on exit
     "privacy.donottrackheader.enabled" = true;
     "privacy.trackingprotection.enabled" = true;
     "privacy.trackingprotection.socialtracking.enabled" = true;
@@ -17,6 +22,7 @@
     "app.normandy.enabled" = false;
     "app.shield.optoutstudies.enabled" = false;
     "browser.ping-centre.telemetry" = false;
+    "browser.tabs.crashReporting.sendReport" = false; # Disable browser crash reporting
     "browser.urlbar.eventTelemetry.enabled" = false;
     "datareporting.healthreport.uploadEnabled" = false;
     "datareporting.policy.dataSubmissionEnabled" = false;
@@ -25,11 +31,21 @@
     "toolkit.telemetry.server" = "";
     "toolkit.telemetry.unified" = false;
 
+    # Developer Tools
+    "devtools.chrome.enabled" = false; # Allow executing JS in the dev console
+    "toolkit.legacyUserProfileCustomizations.stylesheets" = true; # Allow userChrome.css
+
+    # Display & Hi-DPI
+    "layout.css.devPixelsPerPx" = "1.5"; # Hi-DPI
+
     # DOM & Web Features
     "dom.battery.enabled" = false;
     "dom.private-attribution.submission.enabled" = true;
     "dom.push.connection.enabled" = true;
     "dom.push.enabled" = true;
+
+    # Downloads
+    "browser.download.useDownloadDir" = false; # Ask where to save stuff
 
     # Extensions
     "extensions.abuseReport.enabled" = false;
@@ -58,6 +74,10 @@
     "media.rdd-vpx.enabled" = false;
     "widget.dmabuf.force-enabled" = true;
 
+    # Internationalization
+    "browser.translations.neverTranslateLanguages" = "ru,ua,he"; # No need :)
+    "intl.accept_languages" = "en-US,en";
+
     # Network & Performance
     "browser.urlbar.speculativeConnect.enabled" = true;
     "network.predictor.enabled" = true;
@@ -65,6 +85,10 @@
     # New Tab Page
     "browser.newtabpage.activity-stream.showSponsored" = false;
     "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+
+    # Startup & Session
+    "browser.startup.page" = 3; # Resume previous session on startup
+    "browser.ctrlTab.sortByRecentlyUsed" = false; # (default) Who wants that?
 
     # Tabs
     "browser.tabs.closeTabByDblclick" = true;
