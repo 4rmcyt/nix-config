@@ -1,4 +1,8 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  inputs,
+  ...
+}:
 {
   imports = [
     ./extensions.nix
@@ -10,11 +14,24 @@
 
   home.sessionVariables = {
     XDG_CURRENT_DESKTOP = "sway";
-    MOZ_USE_XINPUT2 = "1";
+    MOZ_WEBRENDER = 1;
+    MOZ_USE_XINPUT2 = 1;
+    MOZ_DISABLE_RDD_SANDBOX = 1;
   };
 
   programs.firefox = {
     enable = true;
+    package = inputs.firefox.packages.x86_64-linux.firefox-nightly-bin;
+    betterfox = {
+      profiles.default = {
+        enableAllSections = false;
+        settings = {
+          fastfox.enable = true;
+          smoothfox.enable = true;
+        };
+      };
+    };
+
     nativeMessagingHosts = [ pkgs.browserpass ];
     profiles.default = {
       isDefault = true;
