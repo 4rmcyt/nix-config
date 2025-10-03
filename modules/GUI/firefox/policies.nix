@@ -1,41 +1,47 @@
 {
   programs.firefox.policies = {
+    # === BASIC POLICIES ===
     DontCheckDefaultBrowser = true;
+    HardwareAcceleration = true;
+    TranslateEnabled = true;
+    
+    # === PRIVACY & TELEMETRY ===
     DisableTelemetry = true;
     DisableFirefoxStudies = true;
     DisablePocket = true;
     DisableFirefoxScreenshots = true;
-
+    
+    # === UI POLICIES ===
     DisplayBookmarksToolbar = "never";
     DisplayMenuBar = "never";
-
-    OverrideFirstRunPage = "";
     PictureInPicture.Enabled = false;
     PromptForDownloadLocation = false;
-
-    HardwareAcceleration = true;
-    TranslateEnabled = true;
-
+    
+    # === STARTUP ===
+    OverrideFirstRunPage = "";
     Homepage.StartPage = "previous-session";
-
+    
+    # === USER MESSAGING ===
     UserMessaging = {
       UrlbarInterventions = false;
       SkipOnboarding = true;
     };
-
+    
+    # === FIREFOX SUGGEST ===
     FirefoxSuggest = {
       WebSuggestions = false;
       SponsoredSuggestions = false;
       ImproveSuggest = false;
     };
-
+    
+    # === TRACKING PROTECTION ===
     EnableTrackingProtection = {
       Value = true;
       Cryptomining = true;
       Fingerprinting = true;
     };
-
-    # Make new tab only show search
+    
+    # === NEW TAB PAGE ===
     FirefoxHome = {
       Search = true;
       TopSites = false;
@@ -45,15 +51,17 @@
       SponsoredPocket = false;
       Snippets = false;
     };
-
-    Handlers.schemes.vscode = {
-      action = "useSystemDefault"; # Open VSCode app
-      ask = false;
-    };
-
-    Handlers.schemes.element = {
-      action = "useSystemDefault"; # Open Element app
-      ask = false;
+    
+    # === PROTOCOL HANDLERS ===
+    Handlers.schemes = {
+      vscode = {
+        action = "useSystemDefault";
+        ask = false;
+      };
+      element = {
+        action = "useSystemDefault";
+        ask = false;
+      };
     };
   };
 }

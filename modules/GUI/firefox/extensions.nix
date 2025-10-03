@@ -4,52 +4,46 @@
   ...
 }:
 let
-  # Search extension names with below command:
-  # nix flake show --json "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons" --all-systems | jq -r '.packages."x86_64-linux" | keys[]' | rg QUERY
   ryceeAddons = with inputs.firefox-addons.packages.${pkgs.system}; [
-    # Ad Blocking & Privacy
+    # === AD BLOCKING & PRIVACY ===
     darkreader
     ublock-origin
     ublacklist
-
-    # Developer Tools
+    terms-of-service-didnt-read
+    
+    # === DEVELOPER TOOLS ===
     lovely-forks
     refined-github
-
-    # Media & Entertainment
+    
+    # === MEDIA & ENTERTAINMENT ===
     fastforwardteam
     movie-web
     return-youtube-dislikes
-
-    # Privacy & Security
-    terms-of-service-didnt-read
-
-    # Productivity & Navigation
+    
+    # === PRODUCTIVITY & NAVIGATION ===
     auto-tab-discard
     indie-wiki-buddy
-    redirector # For nixos wiki
+    redirector
     rsshub-radar
     to-google-translate
     tree-style-tab
     undoclosetabbutton
-
-    # System Integration
+    
+    # === SYSTEM INTEGRATION ===
     plasma-integration
-  ];
-
-  customAddons = [
   ];
 in
 {
-  programs.firefox.profiles.default = {
-    extensions.packages = ryceeAddons ++ customAddons;
-  };
+  programs.firefox.profiles.default.extensions.packages = ryceeAddons;
 
   programs.firefox.policies."3rdparty".extensions = {
-    # uBlock Origin
+    # uBlock Origin - Enhanced permissions
     "uBlock0@raymondhill.net" = {
-      permissions = [ "internal:privateBrowsingAllowed" ];
-      origins = [ ];
+      permissions = [ 
+        "internal:privateBrowsingAllowed" 
+        "internal:svgContextPropertiesAllowed"
+      ];
+      origins = [ "<all_urls>" ];
     };
 
     # Movie-web
