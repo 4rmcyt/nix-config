@@ -13,13 +13,16 @@
     inputs.betterfox-nix.homeModules.betterfox
   ];
 
-  home.sessionVariables = {
-    XDG_CURRENT_DESKTOP = "sway";
+  ome.sessionVariables = {
+    # Improved Wayland support
+    MOZ_ENABLE_WAYLAND = 1;
     MOZ_WEBRENDER = 1;
     MOZ_USE_XINPUT2 = 1;
     MOZ_DISABLE_RDD_SANDBOX = 1;
+    # Better DMA-BUF support
+    MOZ_DRM_DEVICE = "/dev/dri/renderD128";
   };
-
+  
   programs.firefox = {
     enable = true;
     package = inputs.firefox-nightly.packages.x86_64-linux.firefox-nightly-bin;
