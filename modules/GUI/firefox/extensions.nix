@@ -25,7 +25,7 @@ let
   ];
 in
 {
-  programs.firefox.profiles.default = {
+  programs.firefox.profiles.betterfox = {
     extensions.packages = ryceeAddons ++ customAddons;
   };
 

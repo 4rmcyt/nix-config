@@ -10,6 +10,7 @@
     ./preferences.nix
     ./searchEngines.nix
     ./ui.nix
+    inputs.betterfox.modules.homeManager.betterfox
   ];
 
   home.sessionVariables = {
@@ -22,21 +23,17 @@
   programs.firefox = {
     enable = true;
     package = inputs.firefox-nightly.packages.x86_64-linux.firefox-nightly-bin;
-
     nativeMessagingHosts = [ pkgs.browserpass ];
-    profiles.default = {
+
+    profiles.betterfox = {
       isDefault = true;
       search = {
         force = true;
         default = "google";
       };
-      betterfox = {
-        enable = true;
+      settings = {
         fastfox.enable = true;
         smoothfox.enable = true;
-      };
-
-      settings = {
         "sidebar.main.tools" = "aichat,syncedtabs,history,bookmarks";
       };
     };
