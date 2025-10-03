@@ -10,7 +10,7 @@
     ./preferences.nix
     ./searchEngines.nix
     ./ui.nix
-    inputs.betterfox.modules.homeManager.betterfox
+    inputs.betterfox.homeModules.betterfox
   ];
 
   home.sessionVariables = {
@@ -24,21 +24,19 @@
     enable = true;
     package = inputs.firefox-nightly.packages.x86_64-linux.firefox-nightly-bin;
     nativeMessagingHosts = [ pkgs.browserpass ];
+    betterfox = {
+      enable = true;
+      smoothfox.enable = true;
+      fastfox.enable = true;
+      profiles.betterfox = {
+        enableAllSections = true;
 
-    profiles.betterfox = {
-      isDefault = true;
-      search = {
-        force = true;
-        default = "google";
-      };
-      settings = {
-        fastfox.enable = true;
-        smoothfox.enable = true;
-        "sidebar.main.tools" = "aichat,syncedtabs,history,bookmarks";
+        settings = {
+          "sidebar.main.tools" = "aichat,syncedtabs,history,bookmarks";
+        };
       };
     };
   };
-
   home.file.".mozilla/firefox/profiles.ini".force = true;
   home.sessionVariables.BROWSER = "firefox";
 }

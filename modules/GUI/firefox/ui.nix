@@ -1,4 +1,4 @@
-{ lib, ... }:
+_:
 {
   programs.firefox.policies.Preferences."browser.uiCustomization.state" = builtins.toJSON {
     placements = {
