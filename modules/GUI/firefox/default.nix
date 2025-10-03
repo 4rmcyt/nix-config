@@ -26,7 +26,10 @@
   programs.firefox = {
     enable = true;
     package = inputs.firefox-nightly.packages.x86_64-linux.firefox-nightly-bin;
-    nativeMessagingHosts = [ pkgs.browserpass ];
+    nativeMessagingHosts = [
+      pkgs.browserpass
+      pkgs.kdePackages.plasma-browser-integration
+    ];
     betterfox = {
       enable = true;
       profiles.default.settings = {
