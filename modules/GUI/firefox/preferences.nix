@@ -76,7 +76,7 @@
     "browser.in-content.dark-mode" = true;
     "ui.systemUsesDarkTheme" = true;
     "widget.use-xdg-desktop-portal.file-picker" = 1;
-    "layout.css.devPixelsPerPx" = "1.8"; # Hi-DPI
+    "layout.css.devPixelsPerPx" = "1.7"; # Hi-DPI
 
     # === ACCESSIBILITY ===
     "accessibility.typeaheadfind.enablesound" = false;
