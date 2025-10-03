@@ -22,15 +22,6 @@
   programs.firefox = {
     enable = true;
     package = inputs.firefox-nightly.packages.x86_64-linux.firefox-nightly-bin;
-    betterfox = {
-      profiles.default = {
-        enableAllSections = false;
-        settings = {
-          fastfox.enable = true;
-          smoothfox.enable = true;
-        };
-      };
-    };
 
     nativeMessagingHosts = [ pkgs.browserpass ];
     profiles.default = {
@@ -39,21 +30,13 @@
         force = true;
         default = "google";
       };
+      betterfox = {
+        enable = true;
+        fastfox.enable = true;
+        smoothfox.enable = true;
+      };
 
       settings = {
-        # Normal firefox settings that happen to be blocked with policies
-        "services.sync.declinedEngines" = "";
-        "browser.cache.disk.enable" = false;
-        "browser.cache.memory.enable" = true;
-        # Reduce session store frequency
-        "browser.sessionstore.interval" = 300000; # 5 minutes
-        # Disable crash reporter disk writes
-        "toolkit.crashreporter.enabled" = false;
-        # Reduce various disk writes
-        "browser.download.manager.retention" = 0;
-        "browser.helperApps.deleteTempFileOnExit" = true;
-        # Disable safebrowsing disk cache
-        "browser.safebrowsing.provider.google4.dataSharingURL" = "";
         "sidebar.main.tools" = "aichat,syncedtabs,history,bookmarks";
       };
     };

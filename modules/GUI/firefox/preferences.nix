@@ -81,6 +81,8 @@
     # Network & Performance
     "browser.urlbar.speculativeConnect.enabled" = true;
     "network.predictor.enabled" = true;
+    "browser.cache.disk.enable" = false;
+    "browser.cache.memory.enable" = true;
 
     # New Tab Page
     "browser.newtabpage.activity-stream.showSponsored" = false;

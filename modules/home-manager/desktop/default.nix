@@ -59,6 +59,7 @@ in
       slack
       ytmdesktop
       pinentry-qt
+      signal-desktop
 
       # Themes and icons
       gruvbox-dark-icons-gtk
