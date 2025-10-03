@@ -10,7 +10,7 @@
     ./preferences.nix
     ./searchEngines.nix
     ./ui.nix
-    inputs.betterfox.homeModules.betterfox
+    inputs.betterfox-nix.homeModules.betterfox
   ];
 
   home.sessionVariables = {
@@ -26,14 +26,9 @@
     nativeMessagingHosts = [ pkgs.browserpass ];
     betterfox = {
       enable = true;
-      smoothfox.enable = true;
-      fastfox.enable = true;
-      profiles.betterfox = {
-        enableAllSections = true;
-
-        settings = {
-          "sidebar.main.tools" = "aichat,syncedtabs,history,bookmarks";
-        };
+      profiles.default.settings = {
+        Smoothfox.enable = true;
+        fastfox.enable = true;
       };
     };
   };

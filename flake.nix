@@ -66,7 +66,7 @@
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    betterfox = {
+    betterfox-nix = {
       url = "github:HeitorAugustoLN/betterfox-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
