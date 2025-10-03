@@ -7,6 +7,8 @@
     "gfx.x11-egl.force-enabled" = true;
     "layers.acceleration.force-enabled" = true;
     "widget.dmabuf.force-enabled" = true;
+    # "gfx.font_rendering.ahem_antialias_none" = true;
+    "gfx.font_rendering.fontconfig.max_generic_substitutions" = 127;
 
     # === MEDIA & CODECS ===
     "image.avif.enabled" = true;
@@ -74,7 +76,7 @@
     "browser.in-content.dark-mode" = true;
     "ui.systemUsesDarkTheme" = true;
     "widget.use-xdg-desktop-portal.file-picker" = 1;
-    "layout.css.devPixelsPerPx" = "1.5"; # Hi-DPI
+    "layout.css.devPixelsPerPx" = "1.8"; # Hi-DPI
 
     # === ACCESSIBILITY ===
     "accessibility.typeaheadfind.enablesound" = false;

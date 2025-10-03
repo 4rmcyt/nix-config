@@ -362,6 +362,10 @@
 
     # Fonts & Themes
     meslo-lgs-nf
+    fira-mono
+    fira-code
+    nerd-fonts.fira-code
+    nerd-fonts.droid-sans-mono
     sddm-astronaut
     sddm-sugar-dark
 
@@ -397,5 +401,6 @@
     ]))
   ];
 
+  fonts.fontconfig.useEmbeddedBitmaps = true;
   virtualisation.podman.enable = true;
 }
