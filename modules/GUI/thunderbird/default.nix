@@ -1,24 +1,80 @@
+{ config, ... }:
 {
-  config,
-  lib,
-  ...
-}:
-{
-  accounts.email.accounts = lib.flip lib.mapAttrs' config.userSecrets.accounts.email (
-    _n: v:
-    lib.nameValuePair v.address (
-      lib.recursiveUpdate v {
-        thunderbird = {
-          enable = true;
-          profiles = [ "personal" ];
-        };
-      }
-    )
-  );
+  accounts.email.accounts = {
+    "redacted@example.com" = {
+      address = "redacted@example.com";
+      userName = "redacted@example.com";
+      realName = "Redacted Name";
+      primary = true;
+      imap.host = "imap.gmail.com";
+      imap.port = 993;
+      imap.tls.enable = true;
+      aerc.imapAuth = "xoauth2";
+      thunderbird-extra = {
+        enable = true;
+        profiles = [ "${config.home.username}" ];
+      };
+    };
+    "redacted@example.com" = {
+      address = "redacted@example.com";
+      userName = "redacted@example.com";
+      realName = "Redacted Name";
+      primary = true;
+      imap.host = "imap.gmail.com";
+      imap.port = 993;
+      imap.tls.enable = true;
+      aerc.imapAuth = "xoauth2";
+      thunderbird-extra = {
+        enable = true;
+        profiles = [ "${config.home.username}" ];
+      };
+    };
+    "redacted@example.com" = {
+      address = "redacted@example.com";
+      userName = "redacted@example.com";
+      realName = "Redacted Name";
+      primary = true;
+      imap.host = "imap.gmail.com";
+      imap.port = 993;
+      imap.tls.enable = true;
+      aerc.imapAuth = "xoauth2";
+      thunderbird-extra = {
+        enable = true;
+        profiles = [ "${config.home.username}" ];
+      };
+    };
+    "hayatzeevibbuk@gmail.com" = {
+      address = "hayatzeevibbuk@gmail.com";
+      userName = "hayatzeevibbuk@gmail.com";
+      realName = "Redacted Name";
+      primary = true;
+      imap.host = "imap.gmail.com";
+      imap.port = 993;
+      imap.tls.enable = true;
+      aerc.imapAuth = "xoauth2";
+      thunderbird-extra = {
+        enable = true;
+        profiles = [ "${config.home.username}" ];
+      };
+    };
+    "redacted@example.com" = {
+      address = "redacted@example.com";
+      userName = "redacted@example.com";
+      realName = "Redacted Name";
+      imap.host = "127.0.0.1";
+      imap.port = 1143;
+      imap.tls.useStartTls = true;
+      smtp.host = "127.0.0.1";
+      smtp.port = 1025;
+      thunderbird-extra = {
+        enable = true;
+        profiles = [ "${config.home.username}" ];
+      };
+    };
+  };
 
   programs.thunderbird = {
     enable = true;
-
     profiles.personal = {
       isDefault = true;
       withExternalGnupg = true;
@@ -73,6 +129,15 @@
       "app.update.auto" = false;
       "privacy.donottrackheader.enabled" = true;
     };
+
+    policies.ExtensionSettings."en-CA@dictionaries.addons.mozilla.org" = {
+      installation_mode = "force_installed";
+      install_url = "https://addons.thunderbird.net/thunderbird/downloads/latest/canadian-english-dictionary/latest.xpi";
+    };
+    policies.ExtensionSettings."uk-UA@dictionaries.addons.mozilla.org" = {
+      installation_mode = "force_installed";
+      install_url = "https://addons.thunderbird.net/thunderbird/downloads/latest/ukrainian-dictionary/latest.xpi";
+    };
   };
 
   home.persistence."/state".directories = [
@@ -82,10 +147,4 @@
   home.persistence."/persist".directories = [
     ".thunderbird"
   ];
-
-  xdg.mimeApps.defaultApplications = {
-    "x-scheme-handler/mailto" = [ "thunderbird.desktop" ];
-    "x-scheme-handler/mid" = [ "thunderbird.desktop" ];
-    "message/rfc822" = [ "thunderbird.desktop" ];
-  };
 }
