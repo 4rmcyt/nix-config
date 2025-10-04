@@ -7,7 +7,7 @@ _: {
         "users"
       ];
     };
-    groups.ollama = { };
+    groups.ollama = {};
   };
   networking.firewall = {
     allowedTCPPorts = [

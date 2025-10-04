@@ -1,5 +1,4 @@
-{ config, ... }:
-{
+{config, ...}: {
   accounts.email.accounts = {
     "4rmcyt@gmail.com" = {
       address = "4rmcyt@gmail.com";
@@ -12,7 +11,7 @@
       aerc.imapAuth = "xoauth2";
       thunderbird-extra = {
         enable = true;
-        profiles = [ "${config.home.username}" ];
+        profiles = ["${config.home.username}"];
       };
     };
     "vld.kondratenk@gmail.com" = {
@@ -26,7 +25,7 @@
       aerc.imapAuth = "xoauth2";
       thunderbird-extra = {
         enable = true;
-        profiles = [ "${config.home.username}" ];
+        profiles = ["${config.home.username}"];
       };
     };
     "bakbukdibbuk@gmail.com" = {
@@ -40,7 +39,7 @@
       aerc.imapAuth = "xoauth2";
       thunderbird-extra = {
         enable = true;
-        profiles = [ "${config.home.username}" ];
+        profiles = ["${config.home.username}"];
       };
     };
     "hayatzeevibbuk@gmail.com" = {
@@ -54,7 +53,7 @@
       aerc.imapAuth = "xoauth2";
       thunderbird-extra = {
         enable = true;
-        profiles = [ "${config.home.username}" ];
+        profiles = ["${config.home.username}"];
       };
     };
     "bakbukdibbuk@protonmail.com" = {
@@ -68,7 +67,7 @@
       smtp.port = 1025;
       thunderbird-extra = {
         enable = true;
-        profiles = [ "${config.home.username}" ];
+        profiles = ["${config.home.username}"];
       };
     };
   };
@@ -137,6 +136,40 @@
     policies.ExtensionSettings."uk-UA@dictionaries.addons.mozilla.org" = {
       installation_mode = "force_installed";
       install_url = "https://addons.thunderbird.net/thunderbird/downloads/latest/ukrainian-dictionary/latest.xpi";
+    };
+  };
+
+  programs.thunderbird-extra = {
+    enable = true;
+    profiles = ["${config.home.username}"];
+    settings = id: {
+      "mail.server.server_${id}.authMethod" = 10;
+      "mail.smtpserver.smtp_${id}.authMethod" = 10;
+    };
+  };
+
+  # Proton Mail Bridge
+  home.packages = with pkgs; [
+    protonmail-bridge
+  ];
+
+  systemd.user.services.protonmail-bridge = {
+    Unit = {
+      Description = "Start Proton Mail Bridge";
+      PartOf = "graphical-session.target";
+    };
+    Install = {
+      WantedBy = ["graphical-session.target"];
+    };
+    Service = {
+      Type = "simple";
+      Environment = [
+        "XDG_CONFIG_HOME=/home/marc/Services/protonmail-bridge/config"
+        "XDG_CACHE_HOME=/home/marc/Services/protonmail-bridge/cache"
+        "XDG_DATA_HOME=/home/marc/Services/protonmail-bridge/data"
+      ];
+      ExecStart = "${pkgs.protonmail-bridge}/bin/protonmail-bridge --noninteractive";
+      Restart = "on-failure";
     };
   };
 

@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   environment.systemPackages = [
     pkgs.podman
     pkgs.podman-compose
@@ -28,7 +27,7 @@
         "podman"
       ];
     };
-    groups.podman = { };
+    groups.podman = {};
     extraGroups.podman.members = [
       "zeev"
       "uptime-kuma"
@@ -67,7 +66,7 @@
         flaresolverr = {
           image = "ghcr.io/flaresolverr/flaresolverr:latest";
           autoStart = true;
-          ports = [ "127.0.0.1:8191:8191/tcp" ];
+          ports = ["127.0.0.1:8191:8191/tcp"];
           environment = {
             LOG_LEVEL = "info";
             TZ = "America/Edmonton";
@@ -105,9 +104,9 @@
         nextdns-exporter = {
           image = "ghcr.io/raylas/nextdns-exporter";
           autoStart = true;
-          networks = [ "podman" ];
-          ports = [ "127.0.0.1:9948:9948/tcp" ];
-          environmentFiles = [ config.sops.secrets.containers_env.path ];
+          networks = ["podman"];
+          ports = ["127.0.0.1:9948:9948/tcp"];
+          environmentFiles = [config.sops.secrets.containers_env.path];
         };
         # linkwarden = {
         #   image = "ghcr.io/linkwarden/linkwarden";
