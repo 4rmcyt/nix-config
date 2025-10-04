@@ -1,9 +1,7 @@
-{ pkgs, ... }:
-
+_:
 {
   programs.thunderbird.enable = true;
   programs.thunderbird = {
-
     # General settings
     preferences."mailnews.mark_message_read.auto" = false;
     preferences."mail.identity.default.reply_on_top" = 1;
@@ -77,13 +75,5 @@
     preferences."mail.smtpserver.smtp_RWTH.authMethod" = 3;
 
     # Extensions
-    policies.ExtensionSettings."en-CA@dictionaries.addons.mozilla.org" = {
-      installation_mode = "force_installed";
-      install_url = "https://addons.thunderbird.net/thunderbird/downloads/latest/canadian-english-dictionary/latest.xpi";
-    };
-    policies.ExtensionSettings."uk-UA@dictionaries.addons.mozilla.org" = {
-      installation_mode = "force_installed";
-      install_url = "https://addons.thunderbird.net/thunderbird/downloads/latest/ukrainian-dictionary/latest.xpi";
-    };
   };
 }
