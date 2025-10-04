@@ -1,5 +1,4 @@
-{ lib, ... }:
-{
+{lib, ...}: {
   options.my.security.ssl = {
     certPath = lib.mkOption {
       type = lib.types.str;

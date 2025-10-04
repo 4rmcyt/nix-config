@@ -3,8 +3,7 @@
   inputs,
   lib,
   ...
-}:
-{
+}: {
   imports = [
     ./extensions.nix
     ./policies.nix
