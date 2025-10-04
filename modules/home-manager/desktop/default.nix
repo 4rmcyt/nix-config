@@ -32,6 +32,7 @@ in
 {
   imports = [
     ../../GUI/firefox
+    ../../GUI/thunderbird
   ];
 
   home = {
