@@ -293,6 +293,7 @@
     openssl
     libdbusmenu
     pciutils
+    libva-utils
 
     # Development tools
     helix
