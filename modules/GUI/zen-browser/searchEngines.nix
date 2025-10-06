@@ -74,7 +74,7 @@
     "Home Manager" = {
       urls = lib.singleton {
         template = "https://github.com/search?type=code&q=repo:nix-community/home-manager+lang:nix+{searchTerms}";
-      };z.profi
+      };
       definedAliases = lib.singleton "@hmgr";
     };
 
