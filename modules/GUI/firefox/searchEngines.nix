@@ -1,5 +1,4 @@
-{ lib, ... }:
-{
+{lib, ...}: {
   programs.firefox.profiles.default.search.engines = {
     # Disable all the stupid "This time, search with" icons
     ddg.metaData.hidden = true;

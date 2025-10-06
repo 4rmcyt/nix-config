@@ -2,8 +2,7 @@
   pkgs,
   lib,
   ...
-}:
-{
+}: {
   home = {
     username = "zeev";
     homeDirectory = "/home/zeev";
@@ -187,8 +186,8 @@
     zoxide = {
       enable = true;
       enableZshIntegration = true;
-      options = [ "--cmd cd" ];
-      options = [ "--cmd cd" ];
+      options = ["--cmd cd"];
+      options = ["--cmd cd"];
     };
 
     zsh = {

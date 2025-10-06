@@ -1,12 +1,10 @@
 # Template for secure service configuration
-{ config, ... }:
-let
+{config, ...}: let
   serviceName = "example";
   serviceUser = serviceName;
   serviceGroup = serviceName;
   dataDir = "/var/lib/${serviceName}";
-in
-{
+in {
   # SOPS secrets
   sops.secrets."${serviceName}-password" = {
     sopsFile = ../../../secrets/services.yaml;
@@ -16,7 +14,7 @@ in
   };
 
   # User and group creation
-  users.groups.${serviceGroup} = { };
+  users.groups.${serviceGroup} = {};
   users.users.${serviceUser} = {
     isSystemUser = true;
     group = serviceGroup;
@@ -55,7 +53,7 @@ in
       PrivateDevices = true;
       ProtectHome = true;
       ProtectSystem = "strict";
-      ReadWritePaths = [ dataDir ];
+      ReadWritePaths = [dataDir];
 
       # Network restrictions
       RestrictAddressFamilies = [
@@ -65,8 +63,8 @@ in
       ];
 
       # Capabilities
-      CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" ];
-      AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
+      CapabilityBoundingSet = ["CAP_NET_BIND_SERVICE"];
+      AmbientCapabilities = ["CAP_NET_BIND_SERVICE"];
 
       # File system restrictions
       ProtectKernelTunables = true;

@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. SOPS Secrets
   # =================================================================
@@ -49,9 +48,10 @@
   };
 
   users.groups = {
-    grafana = { };
-    uptime-kuma = { };
-    prometheus = { };
+    grafana = {};
+    nut-exporter = {};
+    prometheus = {};
+    uptime-kuma = {};
   };
 
   # =================================================================
@@ -71,86 +71,6 @@
   # 4. Services
   # =================================================================
   services = {
-    # services.nginx = {
-    #   enable = true;
-    #   recommendedGzipSettings = true;
-    #   recommendedOptimisation = true;
-    #   recommendedProxySettings = true;
-    #   recommendedTlsSettings = true;
-
-    #   virtualHosts = {
-    #     "prometheus.labhome.work" = {
-    #       forceSSL = true;
-    #       sslCertificate = config.my.security.ssl.certPath;
-    #       sslCertificateKey = config.my.security.ssl.keyPath;
-    #       locations."/".proxyPass = "http://localhost:9090";
-    #     };
-    #     "uptime-kuma.labhome.work" = {
-    #       forceSSL = true;
-    #       sslCertificate = config.my.security.ssl.certPath;
-    #       sslCertificateKey = config.my.security.ssl.keyPath;
-    #       locations."/".proxyPass = "http://localhost:3001";
-    #     };
-    #     "grafana.labhome.work" = {
-    #       forceSSL = true;
-    #       sslCertificate = config.my.security.ssl.certPath;
-    #       sslCertificateKey = config.my.security.ssl.keyPath;
-    #       extraConfig = "add_header Strict-Transport-Security \"max-age=31536000; includeSubDomains\" always;";
-    #       locations."/".proxyPass = "http://localhost:3000/";
-    #     };
-    #   };
-    # };
-
-    # --- Prometheus Monitoring Stack ---
-    prometheus = {
-      enable = true;
-      port = 9090;
-      retentionTime = "30d";
-      globalConfig.scrape_interval = "1m";
-      scrapeConfigs = [
-        {
-          job_name = "prometheus";
-          static_configs = [ { targets = [ "localhost:9090" ]; } ];
-        }
-        {
-          job_name = "homeserver-node";
-          static_configs = [ { targets = [ "localhost:9100" ]; } ];
-        }
-        {
-          job_name = "desktop-node";
-          static_configs = [ { targets = [ "192.168.1.118:9100" ]; } ];
-        }
-        {
-          job_name = "postgres-exporter";
-          static_configs = [ { targets = [ "localhost:9187" ]; } ];
-        }
-        {
-          job_name = "cloudflare-exporter";
-          static_configs = [ { targets = [ "localhost:8081" ]; } ];
-        }
-      ];
-      exporters = {
-        node = {
-          enable = true;
-          enabledCollectors = [
-            "systemd"
-            "zfs"
-            "diskstats"
-            "meminfo"
-            "netdev"
-            "stat"
-            "time"
-            "thermal_zone"
-            "pressure"
-          ];
-        };
-        postgres = {
-          enable = true;
-        };
-      };
-      ruleFiles = [ ./alerts/homeserver.yaml ];
-    };
-
     # --- Grafana Visualization ---
     grafana = {
       enable = true;
@@ -184,8 +104,8 @@
       port = 9090;
       retentionTime = "30d";
       globalConfig.scrape_interval = "1m";
-      ruleFiles = [ ./alerts/homeserver.yaml ];
-
+      ruleFiles = [./alerts/homeserver.yaml];
+      
       exporters = {
         node = {
           enable = true;
@@ -212,24 +132,24 @@
 
       scrapeConfigs = [
         {
-          job_name = "prometheus";
-          static_configs = [ { targets = [ "localhost:9090" ]; } ];
-        }
-        {
-          job_name = "homeserver-node";
-          static_configs = [ { targets = [ "localhost:9100" ]; } ];
+          job_name = "cloudflare-exporter";
+          static_configs = [{targets = ["localhost:8081"];}];
         }
         {
           job_name = "desktop-node";
-          static_configs = [ { targets = [ "192.168.1.118:9100" ]; } ];
+          static_configs = [{targets = ["192.168.1.118:9100"];}];
+        }
+        {
+          job_name = "homeserver-node";
+          static_configs = [{targets = ["localhost:9100"];}];
         }
         {
           job_name = "postgres-exporter";
-          static_configs = [ { targets = [ "localhost:9187" ]; } ];
+          static_configs = [{targets = ["localhost:9187"];}];
         }
         {
-          job_name = "cloudflare-exporter";
-          static_configs = [ { targets = [ "localhost:8081" ]; } ];
+          job_name = "prometheus";
+          static_configs = [{targets = ["localhost:9090"];}];
         }
       ];
     };
@@ -280,15 +200,19 @@
   # =================================================================
   systemd.services.cloudflare-exporter = {
     description = "Cloudflare Prometheus Exporter";
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = ["multi-user.target"];
+    after = ["network.target"];
     serviceConfig = {
       User = "prometheus";
+      Group = "prometheus";
       EnvironmentFile = config.sops.secrets.cloudflare_prometheus_exporter_token.path;
       ExecStart = ''
         ${pkgs.prometheus-cloudflare-exporter}/bin/cloudflare-exporter \
           --listen "127.0.0.1:8081" \
           --cf_api_token "$CLOUDFLARE_PROMETHEUS_EXPORTER_TOKEN"
       '';
+      Restart = "always";
+      RestartSec = 10;
     };
   };
 }

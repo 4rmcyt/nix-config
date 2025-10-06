@@ -3,8 +3,7 @@
   lib,
   pkgs,
   ...
-}:
-{
+}: {
   sops.secrets = {
     miniflux_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
@@ -26,9 +25,9 @@
   users.users.miniflux = {
     isSystemUser = true;
     group = "miniflux";
-    extraGroups = [ "users" ];
+    extraGroups = ["users"];
   };
-  users.groups.miniflux = { };
+  users.groups.miniflux = {};
 
   networking.firewall.allowedTCPPorts = [
     8086 # Miniflux
@@ -51,7 +50,7 @@
     };
   };
 
-  environment.systemPackages = [ pkgs.miniflux ];
+  environment.systemPackages = [pkgs.miniflux];
   services.miniflux = {
     enable = true;
     adminCredentialsFile = config.sops.secrets.miniflux_admin_creds.path; # path to admin credentials file
