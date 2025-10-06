@@ -1,11 +1,10 @@
 {
-  pkgs ?
-    import <nixpkgs> {
-      config = {
-        allowUnfree = true;
-        cudaSupport = true;
-      };
-    },
+  pkgs ? import <nixpkgs> {
+    config = {
+      allowUnfree = true;
+      cudaSupport = true;
+    };
+  },
 }:
 pkgs.mkShell {
   buildInputs = with pkgs; [

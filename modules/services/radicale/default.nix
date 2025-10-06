@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   sops.secrets.radicale_users = {
     sopsFile = ../../../secrets/radicale_users.txt;
     owner = config.users.users.radicale.name;
@@ -14,11 +15,11 @@
   users.users.radicale = {
     isSystemUser = true;
     group = "radicale";
-    extraGroups = ["users"];
+    extraGroups = [ "users" ];
   };
-  users.groups.radicale = {};
+  users.groups.radicale = { };
 
-  networking.firewall.allowedTCPPorts = [5232];
+  networking.firewall.allowedTCPPorts = [ 5232 ];
 
   services.nginx = {
     enable = true;
@@ -36,12 +37,12 @@
       };
     };
   };
-  environment.systemPackages = [pkgs.radicale];
+  environment.systemPackages = [ pkgs.radicale ];
   services.radicale = {
     enable = true;
     settings = {
       server = {
-        hosts = ["127.0.0.1:5232"];
+        hosts = [ "127.0.0.1:5232" ];
       };
 
       auth = {
@@ -54,7 +55,7 @@
         filesystem_folder = "/var/lib/radicale/collections";
       };
 
-      web = {};
+      web = { };
 
       logging = {
         level = "info";

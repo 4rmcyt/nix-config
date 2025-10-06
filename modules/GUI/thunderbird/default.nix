@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Email Accounts Configuration
   # =================================================================
@@ -20,7 +21,7 @@
       };
       thunderbird = {
         enable = true;
-        profiles = ["${config.home.username}"];
+        profiles = [ "${config.home.username}" ];
       };
     };
 
@@ -36,7 +37,7 @@
       };
       thunderbird = {
         enable = true;
-        profiles = ["${config.home.username}"];
+        profiles = [ "${config.home.username}" ];
       };
     };
 
@@ -51,7 +52,7 @@
       };
       thunderbird = {
         enable = true;
-        profiles = ["${config.home.username}"];
+        profiles = [ "${config.home.username}" ];
       };
     };
 
@@ -66,7 +67,7 @@
       };
       thunderbird = {
         enable = true;
-        profiles = ["${config.home.username}"];
+        profiles = [ "${config.home.username}" ];
       };
     };
 
@@ -87,7 +88,7 @@
       };
       thunderbird = {
         enable = true;
-        profiles = ["${config.home.username}"];
+        profiles = [ "${config.home.username}" ];
       };
     };
   };
@@ -173,7 +174,7 @@
   # =================================================================
   programs.thunderbird-extra = {
     enable = true;
-    profiles = ["${config.home.username}"];
+    profiles = [ "${config.home.username}" ];
     settings = id: {
       "mail.server.server_${id}.authMethod" = 10;
       "mail.smtpserver.smtp_${id}.authMethod" = 10;
@@ -201,7 +202,7 @@
       RestartSec = 5;
     };
     Install = {
-      WantedBy = ["default.target"];
+      WantedBy = [ "default.target" ];
     };
   };
 }

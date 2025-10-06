@@ -3,7 +3,8 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   tmux2k = pkgs.tmuxPlugins.mkTmuxPlugin {
     pluginName = "tmux2k";
     version = "unstable-latest";
@@ -27,7 +28,8 @@
     };
     rtpFilePath = "plugin.sh.tmux";
   };
-in {
+in
+{
   imports = [
     ../../GUI/firefox
     ../../GUI/thunderbird

@@ -3,7 +3,8 @@
   pkgs,
   inputs,
   ...
-}: {
+}:
+{
   # Steam
   programs.steam = {
     enable = true;
@@ -14,7 +15,8 @@
   };
 
   # Gaming packages
-  environment.systemPackages = with pkgs;
+  environment.systemPackages =
+    with pkgs;
     [
       # Gaming utilities
       lutris

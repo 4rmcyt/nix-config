@@ -1,7 +1,7 @@
 _: {
   # Allow Nginx to read the SSL certificates by adding its user to the 'acme' group.
   # The 'nginx' user is created automatically by the service module.
-  users.users.nginx.extraGroups = ["acme"];
+  users.users.nginx.extraGroups = [ "acme" ];
 
   # Open HTTP and HTTPS ports in the firewall.
   networking.firewall.allowedTCPPorts = [

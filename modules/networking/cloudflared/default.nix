@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   sops.secrets = {
     cloudflare_tunnel_credentials = {
       sopsFile = ../../../secrets/cloudflare_tunnel_credentials.bin;
@@ -13,9 +14,9 @@
   users.users.cloudflared = {
     isSystemUser = true;
     group = "cloudflared";
-    extraGroups = ["users"];
+    extraGroups = [ "users" ];
   };
-  users.groups.cloudflared = {};
+  users.groups.cloudflared = { };
 
   services.cloudflared = {
     enable = true;
