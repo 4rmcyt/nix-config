@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  programs.firefox.profiles.default.search.engines = {
+  programs.zen-browser.profiles.default.search.engines = {
     # Disable all the stupid "This time, search with" icons
     ddg.metaData.hidden = true;
     bing.metaData.hidden = true;
@@ -74,7 +74,7 @@
     "Home Manager" = {
       urls = lib.singleton {
         template = "https://github.com/search?type=code&q=repo:nix-community/home-manager+lang:nix+{searchTerms}";
-      };
+      };z.profi
       definedAliases = lib.singleton "@hmgr";
     };
 

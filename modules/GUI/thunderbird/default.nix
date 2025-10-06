@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. Email Accounts Configuration
   # =================================================================
@@ -21,7 +20,7 @@
       };
       thunderbird = {
         enable = true;
-        profiles = [ "${config.home.username}" ];
+        profiles = ["${config.home.username}"];
       };
     };
 
@@ -37,7 +36,7 @@
       };
       thunderbird = {
         enable = true;
-        profiles = [ "${config.home.username}" ];
+        profiles = ["${config.home.username}"];
       };
     };
 
@@ -52,7 +51,7 @@
       };
       thunderbird = {
         enable = true;
-        profiles = [ "${config.home.username}" ];
+        profiles = ["${config.home.username}"];
       };
     };
 
@@ -67,7 +66,7 @@
       };
       thunderbird = {
         enable = true;
-        profiles = [ "${config.home.username}" ];
+        profiles = ["${config.home.username}"];
       };
     };
 
@@ -88,7 +87,7 @@
       };
       thunderbird = {
         enable = true;
-        profiles = [ "${config.home.username}" ];
+        profiles = ["${config.home.username}"];
       };
     };
   };
@@ -155,34 +154,10 @@
         "privacy.donottrackheader.enabled" = true;
       };
     };
-
-    # Extension policies
-    policies.ExtensionSettings = {
-      "en-CA@dictionaries.addons.mozilla.org" = {
-        installation_mode = "force_installed";
-        install_url = "https://addons.thunderbird.net/thunderbird/downloads/latest/canadian-english-dictionary/latest.xpi";
-      };
-      "uk-UA@dictionaries.addons.mozilla.org" = {
-        installation_mode = "force_installed";
-        install_url = "https://addons.thunderbird.net/thunderbird/downloads/latest/ukrainian-dictionary/latest.xpi";
-      };
-    };
   };
 
   # =================================================================
-  # 3. Thunderbird Extra (OAuth2 Configuration)
-  # =================================================================
-  programs.thunderbird-extra = {
-    enable = true;
-    profiles = [ "${config.home.username}" ];
-    settings = id: {
-      "mail.server.server_${id}.authMethod" = 10;
-      "mail.smtpserver.smtp_${id}.authMethod" = 10;
-    };
-  };
-
-  # =================================================================
-  # 4. ProtonMail Bridge
+  # 3. ProtonMail Bridge
   # =================================================================
   home.packages = with pkgs; [
     protonmail-bridge
@@ -202,7 +177,7 @@
       RestartSec = 5;
     };
     Install = {
-      WantedBy = [ "default.target" ];
+      WantedBy = ["default.target"];
     };
   };
 }
