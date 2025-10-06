@@ -2,7 +2,8 @@
   inputs,
   pkgs,
   ...
-}: let
+}:
+let
   ryceeAddons = with inputs.firefox-addons.packages.${pkgs.system}; [
     # === AD BLOCKING & PRIVACY ===
     darkreader
@@ -27,7 +28,8 @@
     # === SYSTEM INTEGRATION ===
     plasma-integration
   ];
-in {
+in
+{
   programs.firefox.profiles.default.extensions.packages = ryceeAddons;
 
   programs.firefox.policies."3rdparty".extensions = {
@@ -37,19 +39,19 @@ in {
         "internal:privateBrowsingAllowed"
         "internal:svgContextPropertiesAllowed"
       ];
-      origins = ["<all_urls>"];
+      origins = [ "<all_urls>" ];
     };
 
     # Movie-web
     "{b0a674f9-f848-9cfd-0feb-583d211308b0}" = {
-      permissions = ["<all_urls>"];
-      origins = ["<all_urls>"];
+      permissions = [ "<all_urls>" ];
+      origins = [ "<all_urls>" ];
     };
 
     # GDPR/Cookie consent
     "gdpr@cavi.au.dk" = {
-      permissions = ["<all_urls>"];
-      origins = ["<all_urls>"];
+      permissions = [ "<all_urls>" ];
+      origins = [ "<all_urls>" ];
     };
   };
 }
