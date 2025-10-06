@@ -2,8 +2,7 @@
   config,
   lib,
   ...
-}:
-{
+}: {
   sops.secrets = {
     msmtp_gmail_password = lib.mkDefault {
       sopsFile = ../../../secrets/gmail_conf.yaml;
@@ -19,9 +18,9 @@
     group = "msmtp";
     description = "msmtp user for sending emails";
   };
-  users.groups.msmtp = { };
+  users.groups.msmtp = {};
 
-  networking.firewall.allowedTCPPorts = [ 587 ]; # SMTP over SSL
+  networking.firewall.allowedTCPPorts = [587]; # SMTP over SSL
 
   environment.etc."aliases" = {
     text = ''

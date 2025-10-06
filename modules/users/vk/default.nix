@@ -1,10 +1,8 @@
 # File: nixos-config/modules/users/vk/default.nix
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   username = "vk";
-in
-{
-  environment.shells = with pkgs; [ zsh ];
+in {
+  environment.shells = with pkgs; [zsh];
 
   programs.zsh.enable = true;
 

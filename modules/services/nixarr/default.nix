@@ -2,8 +2,7 @@
   pkgs,
   lib,
   ...
-}:
-let
+}: let
   servicesWithMediaAccess = [
     "bazarr"
     "jellyseerr"
@@ -17,8 +16,7 @@ let
     "jellyfin"
     # "headphones"
   ];
-in
-{
+in {
   users.users = {
     audiobookshelf = {
       isSystemUser = true;
@@ -108,17 +106,17 @@ in
     # };
   };
   users.groups = {
-    audiobookshelf = { };
-    bazarr = { };
-    jellyfin = { };
-    jellyseerr = { };
-    lidarr = { };
-    prowlarr = { };
-    radarr = { };
-    sonarr = { };
-    transmission = { };
-    readarr = { };
-    recyclarr = { };
+    audiobookshelf = {};
+    bazarr = {};
+    jellyfin = {};
+    jellyseerr = {};
+    lidarr = {};
+    prowlarr = {};
+    radarr = {};
+    sonarr = {};
+    transmission = {};
+    readarr = {};
+    recyclarr = {};
     # headphones = { };
   };
 
@@ -269,7 +267,7 @@ in
 
   nixarr = {
     enable = true;
-    mediaUsers = [ "zeev" ];
+    mediaUsers = ["zeev"];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
 

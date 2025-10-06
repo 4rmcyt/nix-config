@@ -1,5 +1,4 @@
-{ config, ... }:
-{
+{config, ...}: {
   # =================================================================
   # Set the value for our new system-wide SSL path options
   # =================================================================
@@ -25,7 +24,7 @@
       isSystemUser = true;
       group = "acme";
     };
-    users.groups.acme = { };
+    users.groups.acme = {};
 
     # =================================================================
     # ACME Certificate Configuration
@@ -36,7 +35,7 @@
 
       certs."example.com" = {
         domain = "*.example.com";
-        extraDomainNames = [ "example.com" ];
+        extraDomainNames = ["example.com"];
         dnsProvider = "cloudflare";
         credentialsFile = config.sops.secrets.cloudflare_acme_credentials.path;
         keyType = "ec256";
