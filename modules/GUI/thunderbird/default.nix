@@ -1,10 +1,5 @@
+{ config, ... }:
 {
-  config,
-  pkgs,
-  ...
-}:
-{
-  # Email accounts configuration
   accounts.email.accounts = {
     # Primary Gmail account
     "redacted@example.com" = {
@@ -19,6 +14,7 @@
       };
       thunderbird = {
         enable = true;
+        profiles = [ "${config.home.username}" ];
       };
     };
 
@@ -34,6 +30,7 @@
       };
       thunderbird = {
         enable = true;
+        profiles = [ "${config.home.username}" ];
       };
     };
 
@@ -48,6 +45,7 @@
       };
       thunderbird = {
         enable = true;
+        profiles = [ "${config.home.username}" ];
       };
     };
 
@@ -62,6 +60,7 @@
       };
       thunderbird = {
         enable = true;
+        profiles = [ "${config.home.username}" ];
       };
     };
 
@@ -82,6 +81,7 @@
       };
       thunderbird = {
         enable = true;
+        profiles = [ "${config.home.username}" ];
       };
     };
   };
@@ -139,14 +139,30 @@
         "mail.identity.default.auto_quote" = true;
         "mail.identity.default.attachPgpKey" = true;
 
-        # Privacy and security
-        "app.update.auto" = false;
-        "privacy.donottrackheader.enabled" = true;
-      };
+      "app.update.auto" = false;
+      "privacy.donottrackheader.enabled" = true;
+    };
+
+    policies.ExtensionSettings."en-CA@dictionaries.addons.mozilla.org" = {
+      installation_mode = "force_installed";
+      install_url = "https://addons.thunderbird.net/thunderbird/downloads/latest/canadian-english-dictionary/latest.xpi";
+    };
+    policies.ExtensionSettings."uk-UA@dictionaries.addons.mozilla.org" = {
+      installation_mode = "force_installed";
+      install_url = "https://addons.thunderbird.net/thunderbird/downloads/latest/ukrainian-dictionary/latest.xpi";
     };
   };
 
-  # ProtonMail Bridge packages
+  programs.thunderbird-extra = {
+    enable = true;
+    profiles = [ "${config.home.username}" ];
+    settings = id: {
+      "mail.server.server_${id}.authMethod" = 10;
+      "mail.smtpserver.smtp_${id}.authMethod" = 10;
+    };
+  };
+
+  # Proton Mail Bridge
   home.packages = with pkgs; [
     protonmail-bridge
     protonmail-bridge-gui
@@ -155,8 +171,11 @@
   # ProtonMail Bridge service
   systemd.user.services.protonmailbridge = {
     Unit = {
-      Description = "Protonmail Bridge";
-      After = [ "network.target" ];
+      Description = "Start Proton Mail Bridge";
+      PartOf = "graphical-session.target";
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
     };
     Service = {
       Type = "simple";
