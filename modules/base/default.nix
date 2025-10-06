@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   imports = [
     ./auto_upgrade
     ./msmtp

@@ -2,7 +2,8 @@
   pkgs,
   inputs,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -35,8 +36,8 @@
   # 5. Boot Configuration
   # =================================================================
   boot = {
-    kernelModules = ["nvidia"];
-    extraModulePackages = [pkgs.linuxPackages.nvidia_x11];
+    kernelModules = [ "nvidia" ];
+    extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
   };
 
   # =================================================================
@@ -68,7 +69,7 @@
       isSystemUser = true;
       description = "Git user";
     };
-    groups.git = {};
+    groups.git = { };
   };
 
   # =================================================================
@@ -95,7 +96,7 @@
         "flakes"
         "nix-command"
       ];
-      trusted-users = ["zeev"];
+      trusted-users = [ "zeev" ];
       download-buffer-size = 1073741824;
       warn-dirty = false;
     };
@@ -119,7 +120,7 @@
     useDHCP = false;
     dhcpcd.enable = false;
     wireless.enable = false;
-    interfaces = {};
+    interfaces = { };
     firewall.allowedTCPPorts = [
       4242 # Kavita
     ];
@@ -148,7 +149,7 @@
 
     # System services
     resolved.enable = false;
-    xserver.videoDrivers = ["nvidia"];
+    xserver.videoDrivers = [ "nvidia" ];
   };
 
   # =================================================================
