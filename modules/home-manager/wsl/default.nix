@@ -49,7 +49,7 @@
       ghostty
       ghostty.terminfo
       obsidian
-      vscode
+      vscode-fhs
 
       # Nix utilities
       nh
@@ -187,6 +187,7 @@
     zoxide = {
       enable = true;
       enableZshIntegration = true;
+      options = [ "--cmd cd" ];
       options = [ "--cmd cd" ];
     };
 
