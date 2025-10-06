@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -59,7 +60,7 @@
     };
     firewall = {
       enable = true;
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
     };
   };
 
@@ -83,9 +84,9 @@
       };
     };
     groups = {
-      git = {};
-      prometheus = {};
-      plugdev = {};
+      git = { };
+      prometheus = { };
+      plugdev = { };
     };
   };
 
@@ -130,7 +131,7 @@
         "big-parallel"
         "kvm"
       ];
-      trusted-users = ["zeev"];
+      trusted-users = [ "zeev" ];
       warn-dirty = false;
       cores = 6;
       max-jobs = 6;
@@ -231,7 +232,7 @@
 
     # X Server (disabled but configured for NVIDIA)
     xserver.enable = false;
-    xserver.videoDrivers = ["nvidia"];
+    xserver.videoDrivers = [ "nvidia" ];
     xserver.xkb.layout = "us";
   };
 

@@ -87,7 +87,8 @@ let
     bantime = ${service.bantime or "1h"}
     findtime = ${service.findtime or "10m"}
   '';
-in {
+in
+{
   # This block was redundant. The 'extraPackages' option below is the correct way.
   # environment.systemPackages = ...;
 
@@ -128,27 +129,29 @@ in {
       # ... your other filters
     '';
 
-    "fail2ban/action.d/cloudflare-token.conf".text = let
-      notes = "Fail2Ban-${config.networking.hostName}";
-      zoneIdFile = config.sops.secrets.cloudflare_zone_id.path;
-      apiKeyFile = config.sops.secrets.cloudflare_api_key.path;
-    in ''
-      [Definition]
-      actionban = curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$(cat ${zoneIdFile})/firewall/access_rules/rules" \
-          -H "Authorization: Bearer $(cat ${apiKeyFile})" \
-          -H "Content-Type: application/json" \
-          --data '{"mode":"block","configuration":{"target":"ip","value":"<ip>"},"notes":"${notes}"}'
+    "fail2ban/action.d/cloudflare-token.conf".text =
+      let
+        notes = "Fail2Ban-${config.networking.hostName}";
+        zoneIdFile = config.sops.secrets.cloudflare_zone_id.path;
+        apiKeyFile = config.sops.secrets.cloudflare_api_key.path;
+      in
+      ''
+        [Definition]
+        actionban = curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$(cat ${zoneIdFile})/firewall/access_rules/rules" \
+            -H "Authorization: Bearer $(cat ${apiKeyFile})" \
+            -H "Content-Type: application/json" \
+            --data '{"mode":"block","configuration":{"target":"ip","value":"<ip>"},"notes":"${notes}"}'
 
-      actionunban = id=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$(cat ${zoneIdFile})/firewall/access_rules/rules" \
-          -H "Authorization: Bearer $(cat ${apiKeyFile})" \
-          -H "Content-Type: application/json" \
-          | jq -r '.result[] | select(.notes == "${notes}" and .configuration.value == "<ip>") | .id')
-          if [ -z "$id" ]; then exit 0; fi; \
-          curl -s -X DELETE "https://api.cloudflare.com/client/v4/zones/$(cat ${zoneIdFile})/firewall/access_rules/rules/$id" \
-              -H "Authorization: Bearer $(cat ${apiKeyFile})"
+        actionunban = id=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$(cat ${zoneIdFile})/firewall/access_rules/rules" \
+            -H "Authorization: Bearer $(cat ${apiKeyFile})" \
+            -H "Content-Type: application/json" \
+            | jq -r '.result[] | select(.notes == "${notes}" and .configuration.value == "<ip>") | .id')
+            if [ -z "$id" ]; then exit 0; fi; \
+            curl -s -X DELETE "https://api.cloudflare.com/client/v4/zones/$(cat ${zoneIdFile})/firewall/access_rules/rules/$id" \
+                -H "Authorization: Bearer $(cat ${apiKeyFile})"
 
-      [Init]
-      name = cloudflare-token
-    '';
+        [Init]
+        name = cloudflare-token
+      '';
   };
 }

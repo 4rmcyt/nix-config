@@ -2,7 +2,12 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
+  imports = [
+    ../../GUI/firefox
+    # ../../GUI/thunderbird
+  ];
   home = {
     username = "zeev";
     homeDirectory = "/home/zeev";
@@ -186,7 +191,7 @@
     zoxide = {
       enable = true;
       enableZshIntegration = true;
-      options = ["--cmd cd"];
+      options = [ "--cmd cd" ];
     };
 
     zsh = {
