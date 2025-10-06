@@ -18,6 +18,11 @@
     MOZ_USE_XINPUT2 = 1;
     MOZ_DISABLE_RDD_SANDBOX = 1;
     MOZ_DRM_DEVICE = "/dev/dri/renderD128";
+
+    LIBVA_DRIVER_NAME = "nvidia";
+    GBM_BACKEND = "nvidia-drm";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    WLR_NO_HARDWARE_CURSORS = "1"; 
   };
 
   programs.zen-browser = {

@@ -10,7 +10,7 @@
     DisableFeedbackCommands = true;
     DontCheckDefaultBrowser = true;
     HardwareAcceleration = true;
-    NoDefaultBookmarks = true;
+    # NoDefaultBookmarks = true;
     TranslateEnabled = true;
 
     # === FIREFOX HOME (NEW TAB PAGE) ===
