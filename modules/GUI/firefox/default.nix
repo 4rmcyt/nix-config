@@ -3,7 +3,8 @@
   inputs,
   lib,
   ...
-}: {
+}:
+{
   imports = [
     ./extensions.nix
     ./policies.nix
@@ -28,6 +29,7 @@
     nativeMessagingHosts = [
       pkgs.browserpass
       pkgs.kdePackages.plasma-browser-integration
+      pkgs.firefoxpwa
     ];
     betterfox = {
       enable = true;

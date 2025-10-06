@@ -3,12 +3,14 @@
   lib,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.networking.dnssec;
   inherit (config.networking) hostName;
   inherit (cfg) profileId;
   nextdnsHost = "${hostName}-${profileId}.dns.nextdns.io";
-in {
+in
+{
   options.networking.dnssec = {
     enable = mkEnableOption "DNSSEC/NextDNS configuration";
     profileId = mkOption {
@@ -29,7 +31,7 @@ in {
     services.resolved = {
       enable = true;
       dnssec = "true";
-      domains = ["~."];
+      domains = [ "~." ];
       fallbackDns = [
         "45.90.28.0#${nextdnsHost}"
         "2a07:a8c0::#${nextdnsHost}"

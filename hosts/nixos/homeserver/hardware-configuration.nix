@@ -4,11 +4,12 @@
   pkgs,
   modulesPath,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
-  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   # =================================================================
   # 2. Boot Configuration
@@ -97,6 +98,8 @@
     powertop.enable = true;
   };
 
+  power.ups.package = pkgs.nut;
+
   # =================================================================
   # 5. Environment Variables
   # =================================================================
@@ -113,8 +116,8 @@
       enable = true;
       defaults.autodetected = "-a -o on -s (S/../.././02|L/../../7/04)";
       devices = [
-        {device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345";}
-        {device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315";}
+        { device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345"; }
+        { device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENX0K543315"; }
       ];
     };
 
