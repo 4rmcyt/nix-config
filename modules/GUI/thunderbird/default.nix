@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   accounts.email.accounts = {
     "redacted@example.com" = {
       address = "redacted@example.com";
@@ -11,7 +12,7 @@
       aerc.imapAuth = "xoauth2";
       thunderbird-extra = {
         enable = true;
-        profiles = ["${config.home.username}"];
+        profiles = [ "${config.home.username}" ];
       };
     };
     "redacted@example.com" = {
@@ -25,7 +26,7 @@
       aerc.imapAuth = "xoauth2";
       thunderbird-extra = {
         enable = true;
-        profiles = ["${config.home.username}"];
+        profiles = [ "${config.home.username}" ];
       };
     };
     "redacted@example.com" = {
@@ -39,7 +40,7 @@
       aerc.imapAuth = "xoauth2";
       thunderbird-extra = {
         enable = true;
-        profiles = ["${config.home.username}"];
+        profiles = [ "${config.home.username}" ];
       };
     };
     "hayatzeevibbuk@gmail.com" = {
@@ -53,7 +54,7 @@
       aerc.imapAuth = "xoauth2";
       thunderbird-extra = {
         enable = true;
-        profiles = ["${config.home.username}"];
+        profiles = [ "${config.home.username}" ];
       };
     };
     "redacted@example.com" = {
@@ -67,7 +68,7 @@
       smtp.port = 1025;
       thunderbird-extra = {
         enable = true;
-        profiles = ["${config.home.username}"];
+        profiles = [ "${config.home.username}" ];
       };
     };
   };
@@ -141,7 +142,7 @@
 
   programs.thunderbird-extra = {
     enable = true;
-    profiles = ["${config.home.username}"];
+    profiles = [ "${config.home.username}" ];
     settings = id: {
       "mail.server.server_${id}.authMethod" = 10;
       "mail.smtpserver.smtp_${id}.authMethod" = 10;
@@ -159,7 +160,7 @@
       PartOf = "graphical-session.target";
     };
     Install = {
-      WantedBy = ["graphical-session.target"];
+      WantedBy = [ "graphical-session.target" ];
     };
     Service = {
       Type = "simple";

@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   sops.secrets.vaultwarden_admin_token = {
     sopsFile = ../../../secrets/vaultwarden.yaml;
     key = "vaultwarden_admin_token";
@@ -16,9 +17,9 @@
   users.users.vaultwarden = {
     isSystemUser = true;
     group = "vaultwarden";
-    extraGroups = ["users"];
+    extraGroups = [ "users" ];
   };
-  users.groups.vaultwarden = {};
+  users.groups.vaultwarden = { };
 
   networking.firewall.allowedTCPPorts = [
     8222 # Vaultwarden
