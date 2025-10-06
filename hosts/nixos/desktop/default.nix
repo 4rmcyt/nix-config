@@ -252,7 +252,7 @@
   programs = {
     gnupg.agent = {
       enable = true;
-      pinentryPackage = pkgs.pinentry-curses;
+      pinentryPackage = pkgs.pinentry-qt;
       enableSSHSupport = true;
     };
     zsh.enable = true;
@@ -393,6 +393,7 @@
     kdePackages.qtmultimedia
     kdePackages.kio-extras
     kdePackages.plasma-browser-integration
+    kwalletcli
     (pass.withExtensions (exts: [
       exts.pass-otp
       exts.pass-import

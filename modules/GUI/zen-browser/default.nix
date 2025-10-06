@@ -8,7 +8,6 @@
     ./extensions.nix
     ./policies.nix
     ./preferences.nix
-    ./searchEngines.nix
     inputs.zen-browser.homeModules.beta
   ];
 
