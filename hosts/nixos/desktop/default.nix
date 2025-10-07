@@ -1,8 +1,4 @@
-{
-  pkgs,
-  lib,
-  ...
-}:
+{ pkgs, ... }:
 {
   # =================================================================
   # 1. Imports
@@ -109,6 +105,8 @@
       yubico-pam
       yubikey-manager
       yubioath-flutter
+      ryzen-monitor-ng
+      microcode-amd
 
       # KDE Applications
       kdePackages.ark
@@ -216,25 +214,27 @@
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
-      cores = 6;
+      cores = 12;
       download-buffer-size = 1073741824;
       experimental-features = [
         "nix-command"
         "flakes"
       ];
       fallback = true;
-      max-jobs = 6;
+      max-jobs = 12;
       show-trace = true;
       substituters = [
         "https://cache.nixos.org"
         "https://4rmcyt.cachix.org"
         "https://nix-gaming.cachix.org"
         "https://cuda-maintainers.cachix.org"
-        # "https://nix-community.cachix.org"
+        "https://nix-community.cachix.org"
       ];
       system-features = [
         "big-parallel"
         "kvm"
+        "gccarch-znver4"
+        "benchmark"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
@@ -247,6 +247,26 @@
       warn-dirty = false;
     };
   };
+
+  nixpkgs = {
+    hostPlatform = {
+      system = "x86_64-linux";
+      gcc = {
+        arch = "znver4";
+        tune = "znver4";
+      };
+    };
+    config = {
+      allowUnfree = true;
+    };
+  };
+
+  #   nixpkgs = {
+  #   hostPlatform = "x86_64-linux";  # Temporarily use this instead
+  #   config = {
+  #     allowUnfree = true;
+  #   };
+  # };
 
   # =================================================================
   # 9. Programs
@@ -310,6 +330,8 @@
       wayland.compositor = "kwin";
       wayland.enable = true;
     };
+
+    # auto-epp.enable = true;
 
     # Hardware & Peripherals
     udev = {
