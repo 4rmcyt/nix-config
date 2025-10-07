@@ -154,7 +154,9 @@
     displayManager.sddm = {
       enable = true;
       wayland.enable = true;
+      wayland.compositor = "kwin";
       autoNumlock = true;
+      settings.General.DisplayServer = "wayland";
       theme = "breeze";
       enableHidpi = true;
     };

@@ -13,27 +13,23 @@
 
 
   home.sessionVariables = {
-    GDK_BACKEND = "x11";
-    MOZ_ENABLE_WAYLAND = 0;
-    DISABLE_WAYLAND = 1;
-    QT_QPA_PLATFORM = "xcb";
-
-    # NVIDIA VAAPI
+    # NVIDIA + VAAPI optimizationsrmr
     LIBVA_DRIVER_NAME = "nvidia";
-    VAAPI_DISABLE_INTERLACE = 1;
+    MOZ_USE_XINPUT2 = 1;
     MOZ_DISABLE_RDD_SANDBOX = 1;
+    MOZ_WEBRENDER_DEBUG = 1;
     
     NVD_BACKEND = "direct";
 
     # NVIDIA + X11 optimizations
     GBM_BACKEND = "nvidia-drm";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    # WLR_NO_HARDWARE_CURSORS = 1;
-    # WLR_RENDERER = "vulkan";
+    WLR_NO_HARDWARE_CURSORS = 1;
+    WLR_RENDERER = "vulkan";
 
     # Mozilla optimizations for X11
     MOZ_WEBRENDER = 1;
-    MOZ_USE_XINPUT2 = 1;
+    
 
     # NVIDIA-specific browser fixes
     __GL_GSYNC_ALLOWED = 1;
