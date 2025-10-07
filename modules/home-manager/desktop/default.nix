@@ -35,11 +35,11 @@
     ../../GUI/zen-browser
   ];
 
+  home.sessionVariables.NIXOS_OZONE_WL = "1";
   home = {
     username = "zeev";
     homeDirectory = "/home/zeev";
     stateVersion = "25.05";
-    environment.sessionVariables.NIXOS_OZONE_WL = "1";
     packages = with pkgs; [
       # Development
       bat
@@ -49,6 +49,7 @@
       pods
       libva-utils
       home-manager
+      busybox
 
       # Gaming
       vesktop
@@ -81,9 +82,6 @@
           "--ignore-gpu-blocklist"
           "--enable-zero-copy"
         ];
-        extraOpts = {
-          "ExtensionManifestV2Availability" = 2;
-        };
       })
     ];
   };
@@ -216,7 +214,6 @@
         prefix-highlight
         sensible
         yank
-        tmux2k
         {
           plugin = continuum;
           extraConfig = ''
