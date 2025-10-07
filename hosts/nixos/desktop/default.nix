@@ -204,6 +204,16 @@
         SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ffb", MODE="0666", GROUP="plugdev"
         SUBSYSTEM=="usb", ATTRS{idVendor}=="174c", ATTRS{idProduct}=="2074", MODE="0666", GROUP="plugdev"
         SUBSYSTEM=="input", ATTRS{name}=="Rapoo Rapoo Gaming Device", TAG+="uaccess"
+
+        # Allow gamemode to access GPU vendor information
+        KERNEL=="card[0-9]*", SUBSYSTEM=="drm", GROUP="video", MODE="0664"
+        KERNEL=="controlD[0-9]*", SUBSYSTEM=="drm", GROUP="video", MODE="0664"
+    
+        # NVIDIA specific rules
+        KERNEL=="nvidia*", GROUP="video", MODE="0664"
+        KERNEL=="nvidiactl", GROUP="video", MODE="0664"
+        KERNEL=="nvidia-modeset", GROUP="video", MODE="0664"
+        KERNEL=="nvidia-uvm", GROUP="video", MODE="0664"
       '';
     };
 
