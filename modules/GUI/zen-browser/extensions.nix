@@ -7,23 +7,18 @@ let
   ryceeAddons = with inputs.firefox-addons.packages.${pkgs.system}; [
     # === AD BLOCKING & PRIVACY ===
     darkreader
-    terms-of-service-didnt-read
     ublacklist
     ublock-origin
 
     # === DEVELOPER TOOLS ===
-    lovely-forks
     refined-github
 
     # === MEDIA & ENTERTAINMENT ===
     fastforwardteam
-    movie-web
     return-youtube-dislikes
 
     # === PRODUCTIVITY & NAVIGATION ===
     indie-wiki-buddy
-    rsshub-radar
-    to-google-translate
 
     # === SYSTEM INTEGRATION ===
     plasma-integration

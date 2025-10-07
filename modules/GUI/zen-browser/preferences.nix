@@ -89,10 +89,14 @@
         "gfx.canvas.accelerated.cache-size" = 1024; # 1GB cache for 64GB RAM
         "gfx.wayland.hdr" = false; # Enable HDR with high-end setup
         "gfx.webrender.all" = true;
-        "gfx.webrender.compositor" = true;
-        "gfx.webrender.compositor.force-enabled" = true;
+        "gfx.webrender.compositor" = false;
+        "gfx.webrender.compositor.force-enabled" = false;
         "gfx.webrender.enabled" = true;
-        "gfx.x11-egl.force-enabled" = true;
+        "layers.mlgpu.enabled" = false;
+
+        # Adjust these values to prevent tearing/artifacts
+        "layout.frame_rate" = 60; # Match your monitor refresh rate
+        "gfx.vsync.hw-vsync.enabled" = true;
 
         # === FIREFOX SYNC / IDENTITY ===
         "identity.fxaccounts.commands.enabled" = true;
@@ -108,7 +112,7 @@
         "browser.translations.neverTranslateLanguages" = "ru,ua,he";
         "intl.accept_languages" = "en-US,en";
 
-        # === LAYERS (GPU ACCELERATION) ===
+        # # === LAYERS (GPU ACCELERATION) ===
         "layers.acceleration.force-enabled" = true;
         "layers.gpu-process.enabled" = true;
         "layers.gpu-process.force-enabled" = true;
@@ -195,10 +199,10 @@
         # === TOOLKIT ===
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
 
-        # === WEBGL ===
+        # # === WEBGL ===
         "webgl.disabled" = false;
         "webgl.force-enabled" = true;
-        "webgl.msaa-force" = true; # Enable MSAA with your GPU power
+        "webgl.msaa-force" = false; # Enable MSAA with your GPU power
 
         # === WIDGET (WAYLAND/X11) ===
         "widget.dmabuf.force-enabled" = true; # Try enabling with your specs
