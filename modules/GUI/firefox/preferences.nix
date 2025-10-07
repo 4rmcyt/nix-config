@@ -3,7 +3,9 @@
     # === PERFORMANCE & HARDWARE ===
     "gfx.wayland.hdr" = false;
     "gfx.webrender.all" = true;
-    "gfx.webrender.compositor.force-enabled" = true;
+    "gfx.webrender.compositor" = false;
+    "gfx.webrender.compositor.force-enabled" = false;
+    "gfx.webrender.enabled" = true;
     "gfx.x11-egl.force-enabled" = true;
     "layers.acceleration.force-enabled" = true;
     "widget.dmabuf.force-enabled" = true;

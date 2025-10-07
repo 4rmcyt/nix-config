@@ -16,7 +16,6 @@
     LIBVA_DRIVER_NAME = "nvidia";
     MOZ_USE_XINPUT2 = 1;
     MOZ_DISABLE_RDD_SANDBOX = 1;
-    MOZ_WEBRENDER_DEBUG = 1;
 
     NVD_BACKEND = "direct";
 
