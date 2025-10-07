@@ -208,7 +208,7 @@
         # Allow gamemode to access GPU vendor information
         KERNEL=="card[0-9]*", SUBSYSTEM=="drm", GROUP="video", MODE="0664"
         KERNEL=="controlD[0-9]*", SUBSYSTEM=="drm", GROUP="video", MODE="0664"
-    
+
         # NVIDIA specific rules
         KERNEL=="nvidia*", GROUP="video", MODE="0664"
         KERNEL=="nvidiactl", GROUP="video", MODE="0664"
