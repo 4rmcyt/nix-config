@@ -14,8 +14,6 @@
     inputs.betterfox-nix.homeModules.betterfox
   ];
 
-
-
   programs.firefox = {
     enable = true;
     package = inputs.firefox-nightly.packages.x86_64-linux.firefox-nightly-bin;
