@@ -10,30 +10,7 @@
     ./preferences.nix
     inputs.zen-browser.homeModules.beta
   ];
-
-  home.sessionVariables = {
-    #  NVIDIA VAAPI fixes
-    LIBVA_DRIVER_NAME = "nvidia";
-    MOZ_DISABLE_RDD_SANDBOX = 1; # Required for NVIDIA VAAPI
-    NVD_BACKEND = "direct"; # NVIDIA direct backend
-
-    # NVIDIA + Wayland optimizations
-    GBM_BACKEND = "nvidia-drm";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    WLR_NO_HARDWARE_CURSORS = "1";
-    WLR_RENDERER = "vulkan";
-
-    # Mozilla optimizations
-    MOZ_ENABLE_WAYLAND = 1;
-    MOZ_WEBRENDER = 1;
-    MOZ_USE_XINPUT2 = 1;
-    MOZ_DRM_DEVICE = "/dev/dri/renderD128";
-
-    # NVIDIA-specific browser fixes
-    __GL_GSYNC_ALLOWED = 1;
-    __GL_VRR_ALLOWED = 1;
-    WEBKIT_DISABLE_COMPOSITING_MODE = 1;
-  };
+ 
 
   programs.zen-browser = {
     enable = true;
@@ -60,8 +37,8 @@
         settings = {
           "zen.workspaces.continue-where-left-off" = true;
           "zen.workspaces.natural-scroll" = true;
-          "zen.view.compact.hide-tabbar" = true;
-          "zen.view.compact.hide-toolbar" = true;
+          "zen.view.compact.hide-tabbar" = false;
+          "zen.view.compact.hide-toolbar" = false;
           "zen.view.compact.animate-sidebar" = false;
           "zen.welcome-screen.seen" = true;
         };

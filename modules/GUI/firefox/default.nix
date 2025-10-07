@@ -14,14 +14,7 @@
     inputs.betterfox-nix.homeModules.betterfox
   ];
 
-  home.sessionVariables = {
-    # Improved Wayland support
-    MOZ_ENABLE_WAYLAND = 1;
-    MOZ_WEBRENDER = 1;
-    MOZ_USE_XINPUT2 = 1;
-    MOZ_DISABLE_RDD_SANDBOX = 1;
-    MOZ_DRM_DEVICE = "/dev/dri/renderD128";
-  };
+
 
   programs.firefox = {
     enable = true;

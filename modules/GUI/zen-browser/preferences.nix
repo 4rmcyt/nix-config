@@ -202,6 +202,7 @@
 
         # === WIDGET (WAYLAND/X11) ===
         "widget.dmabuf.force-enabled" = true; # Try enabling with your specs
+        "widget.wayland.opaque-region.enabled" = false;
       };
     };
 }
