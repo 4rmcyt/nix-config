@@ -330,7 +330,6 @@
     # Desktop applications
     telegram-desktop
     jellyfin-media-player
-    chromium
 
     # System monitoring
     nvtopPackages.nvidia

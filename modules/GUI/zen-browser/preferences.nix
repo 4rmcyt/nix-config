@@ -207,6 +207,27 @@
         # === WIDGET (WAYLAND/X11) ===
         "widget.dmabuf.force-enabled" = true; # Try enabling with your specs
         "widget.wayland.opaque-region.enabled" = false;
+
+        # === WAYLAND FIXES ===
+        "widget.use-xdg-desktop-portal.file-picker" = 1;
+        "widget.use-xdg-desktop-portal.mime-handler" = 1;
+        "gfx.webrender.software.opengl" = false;
+        "gfx.x11-egl.force-enabled" = false; # Disable X11 EGL on Wayland
+
+        # Force Wayland backend
+        "widget.gtk.wayland.force-enabled" = true;
+        "widget.gtk.wayland.fractional-scaling.enabled" = true;
+
+        # Disable problematic features that can cause Wayland crashes
+        "layers.omtp.enabled" = false;
+        "gfx.canvas.remote" = false;
+
+        # Enhanced Wayland stability
+        "gfx.webrender.software" = false;
+
+        # Disable hardware acceleration on Wayland if causing issues
+        "layers.acceleration.disabled" = false;
+        "gfx.webrender.force-disabled" = false;
       };
     };
 }
