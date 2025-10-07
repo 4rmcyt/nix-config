@@ -19,7 +19,7 @@
     with pkgs;
     [
       # Gaming utilities
-      lutris
+      # lutris # TODO: Re-enable when allegro CMake issue is fixed
       heroic
       bottles
       wine

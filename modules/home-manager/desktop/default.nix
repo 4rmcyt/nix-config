@@ -53,8 +53,8 @@
 
       # Gaming
       vesktop
-      lutris
       steam
+      #lutris
 
       # GUI applications
       ghostty
