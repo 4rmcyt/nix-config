@@ -4,31 +4,30 @@
   lib,
   ...
 }:
-let
-  tmux2k = pkgs.tmuxPlugins.mkTmuxPlugin {
-    pluginName = "tmux2k";
-    version = "unstable-latest";
-    src = pkgs.fetchFromGitHub {
-      owner = "2kabhishek";
-      repo = "tmux2k";
-      rev = "master";
-      sha256 = "sha256-6dx81ItJodYUoWtlbGqoc5MPRCqy2PLgqIJK9lrAJ30";
-    };
-    rtpFilePath = "2k.tmux";
-  };
-
-  tmuxWhichKey = pkgs.tmuxPlugins.mkTmuxPlugin {
-    pluginName = "tmux-which-key";
-    version = "unstable-latest";
-    src = pkgs.fetchFromGitHub {
-      owner = "alexwforsythe";
-      repo = "tmux-which-key";
-      rev = "master";
-      sha256 = "1h830h9rz4d5pdr3ymmjjwaxg6sh9vi3fpsn0bh10yy0gaf6xcaz";
-    };
-    rtpFilePath = "plugin.sh.tmux";
-  };
-in
+# let
+#   tmux2k = pkgs.tmuxPlugins.mkTmuxPlugin {
+#     pluginName = "tmux2k";
+#     version = "unstable-latest";
+#     src = pkgs.fetchFromGitHub {
+#       owner = "2kabhishek";
+#       repo = "tmux2k";
+#       rev = "master";
+#       sha256 = "sha256-6dx81ItJodYUoWtlbGqoc5MPRCqy2PLgqIJK9lrAJ30";
+#     };
+#     rtpFilePath = "2k.tmux";
+#   };
+#   tmuxWhichKey = pkgs.tmuxPlugins.mkTmuxPlugin {
+#     pluginName = "tmux-which-key";
+#     version = "unstable-latest";
+#     src = pkgs.fetchFromGitHub {
+#       owner = "alexwforsythe";
+#       repo = "tmux-which-key";
+#       rev = "master";
+#       sha256 = "1h830h9rz4d5pdr3ymmjjwaxg6sh9vi3fpsn0bh10yy0gaf6xcaz";
+#     };
+#     rtpFilePath = "plugin.sh.tmux";
+#   };
+# in
 {
   imports = [
     ../../GUI/firefox
@@ -40,7 +39,7 @@ in
     username = "zeev";
     homeDirectory = "/home/zeev";
     stateVersion = "25.05";
-
+    environment.sessionVariables.NIXOS_OZONE_WL = "1";
     packages = with pkgs; [
       # Development
       bat
@@ -73,6 +72,19 @@ in
       kde-gruvbox
       vdpauinfo
       vulkan-tools
+      (chromium.override {
+        enableWideVine = true;
+        commandLineArgs = [
+          "--enable-features=AcceleratedVideoEncoder,VaapiOnNvidiaGPUs,VaapiIgnoreDriverChecks,Vulkan,DefaultANGLEVulkan,VulkanFromANGLE"
+          "--enable-features=VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport"
+          "--enable-features=UseMultiPlaneFormatForHardwareVideo"
+          "--ignore-gpu-blocklist"
+          "--enable-zero-copy"
+        ];
+        extraOpts = {
+          "ExtensionManifestV2Availability" = 2;
+        };
+      })
     ];
   };
 
@@ -239,21 +251,21 @@ in
             set -g @resurrect-capture-pane-contents 'on'
           '';
         }
-        {
-          plugin = tmux2k;
-          extraConfig = ''
-            set -g @tmux2k-theme 'onedark'
-            set -g @tmux2k-left-plugins "session git"
-            set -g @tmux2k-right-plugins "cpu ram network time"
-          '';
-        }
-        {
-          plugin = tmuxWhichKey;
-          extraConfig = ''
-            set -g @tmux-which-key-xdg-enable 1
-            set -g @tmux-which-key-xdg-plugin-path=tmux/plugins/tmux-which-key
-          '';
-        }
+        # {
+        #   plugin = tmux2k;
+        #   extraConfig = ''
+        #     set -g @tmux2k-theme 'onedark'
+        #     set -g @tmux2k-left-plugins "session git"
+        #     set -g @tmux2k-right-plugins "cpu ram network time"
+        #   '';
+        # }
+        # {
+        #   plugin = tmuxWhichKey;
+        #   extraConfig = ''
+        #     set -g @tmux-which-key-xdg-enable 1
+        #     set -g @tmux-which-key-xdg-plugin-path=tmux/plugins/tmux-which-key
+        #   '';
+        # }
       ];
 
       extraConfig = ''
