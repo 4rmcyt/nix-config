@@ -1,7 +1,7 @@
 {
   programs.firefox.profiles.default.settings = {
     # === PERFORMANCE & HARDWARE ===
-    "gfx.wayland.hdr" = true;
+    "gfx.wayland.hdr" = false;
     "gfx.webrender.all" = true;
     "gfx.webrender.compositor.force-enabled" = true;
     "gfx.x11-egl.force-enabled" = true;

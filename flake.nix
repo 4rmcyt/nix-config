@@ -206,6 +206,29 @@
                 }
               ];
             };
+
+            # Add home-manager configurations
+            homeConfigurations = {
+              "zeev@desktop" = inputs.home-manager.lib.homeManagerConfiguration {
+                pkgs = import inputs.nixpkgs {
+                  system = "x86_64-linux";
+                  config = {
+                    allowUnfree = true;
+                    permittedInsecurePackages = [
+                      "qtwebengine-5.15.19"
+                    ];
+                  };
+                };
+                modules = [
+                  ./modules/home-manager/desktop
+                  inputs.sops-nix.homeManagerModules.sops
+                  inputs.agenix.homeManagerModules.default
+                  inputs.plasma-manager.homeModules.plasma-manager
+                  inputs.nixai.homeManagerModules.default
+                ];
+                extraSpecialArgs = { inherit inputs; };
+              };
+            };
           };
       };
 }

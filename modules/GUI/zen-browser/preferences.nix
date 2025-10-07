@@ -87,7 +87,7 @@
         # === GRAPHICS & WEBRENDER (High-End NVIDIA System) ===
         "gfx.canvas.accelerated" = true;
         "gfx.canvas.accelerated.cache-size" = 1024; # 1GB cache for 64GB RAM
-        "gfx.wayland.hdr" = true; # Enable HDR with high-end setup
+        "gfx.wayland.hdr" = false; # Enable HDR with high-end setup
         "gfx.webrender.all" = true;
         "gfx.webrender.compositor" = true;
         "gfx.webrender.compositor.force-enabled" = true;

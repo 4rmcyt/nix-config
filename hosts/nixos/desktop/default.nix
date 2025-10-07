@@ -151,13 +151,12 @@
   services = {
     # Desktop Environment
     desktopManager.plasma6.enable = true;
+    displayManager.defaultSession = "plasmax11";
     displayManager.sddm = {
       enable = true;
-      wayland.enable = true;
-      wayland.compositor = "kwin";
+      wayland.enable = false;
       autoNumlock = true;
-      settings.General.DisplayServer = "wayland";
-      theme = "sddm-sugar-dark-theme";
+      theme = "breeze";
       enableHidpi = true;
     };
 
@@ -231,7 +230,7 @@
     };
 
     # X Server (disabled but configured for NVIDIA)
-    xserver.enable = false;
+    xserver.enable = true;
     xserver.videoDrivers = [ "nvidia" ];
     xserver.xkb.layout = "us";
   };
