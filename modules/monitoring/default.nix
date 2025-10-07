@@ -122,10 +122,6 @@
             "zfs"
           ];
         };
-        nut = {
-          enable = true;
-          serviceName = "apcupsd";
-        };
         postgres = {
           enable = true;
         };
