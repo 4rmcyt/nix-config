@@ -248,26 +248,6 @@
     };
   };
 
-  nixpkgs = {
-    hostPlatform = {
-      system = "x86_64-linux";
-      gcc = {
-        arch = "znver4";
-        tune = "znver4";
-      };
-    };
-    config = {
-      allowUnfree = true;
-    };
-  };
-
-  #   nixpkgs = {
-  #   hostPlatform = "x86_64-linux";  # Temporarily use this instead
-  #   config = {
-  #     allowUnfree = true;
-  #   };
-  # };
-
   # =================================================================
   # 9. Programs
   # =================================================================

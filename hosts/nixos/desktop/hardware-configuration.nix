@@ -117,6 +117,7 @@
 
     extraModulePackages = with config.boot.kernelPackages; [
       v4l2loopback
+      zenpower
     ];
     # Module configuration
     extraModprobeConfig = ''
