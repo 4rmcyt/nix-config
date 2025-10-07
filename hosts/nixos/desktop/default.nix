@@ -151,10 +151,9 @@
   services = {
     # Desktop Environment
     desktopManager.plasma6.enable = true;
-    displayManager.defaultSession = "plasmax11";
     displayManager.sddm = {
       enable = true;
-      wayland.enable = false;
+      wayland.enable = true;
       autoNumlock = true;
       theme = "breeze";
       enableHidpi = true;
