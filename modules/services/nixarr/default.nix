@@ -21,7 +21,7 @@ in
   users.users = {
     audiobookshelf = {
       isSystemUser = true;
-      group = "audiobookshelf";
+      group = lib.mkForce "audiobookshelf"; # Force override the nixarr default
       extraGroups = [
         "users"
         "media"
@@ -29,7 +29,7 @@ in
     };
     bazarr = {
       isSystemUser = true;
-      group = "bazarr";
+      group = lib.mkForce "bazarr"; # Add this for consistency
       extraGroups = [
         "users"
         "media"
@@ -37,7 +37,7 @@ in
     };
     jellyfin = {
       isSystemUser = true;
-      group = "jellyfin";
+      group = lib.mkForce "jellyfin"; # Add this for consistency
       extraGroups = [
         "users"
         "media"
@@ -47,7 +47,7 @@ in
     };
     jellyseerr = {
       isSystemUser = true;
-      group = "jellyseerr";
+      group = lib.mkForce "jellyseerr"; # Add this for consistency
       extraGroups = [
         "users"
         "media"
@@ -55,7 +55,7 @@ in
     };
     lidarr = {
       isSystemUser = true;
-      group = "lidarr";
+      group = lib.mkForce "lidarr"; # Add this for consistency
       extraGroups = [
         "users"
         "media"
@@ -63,7 +63,7 @@ in
     };
     prowlarr = {
       isSystemUser = true;
-      group = "prowlarr";
+      group = lib.mkForce "prowlarr"; # Add this for consistency
       extraGroups = [
         "users"
         "media"
@@ -71,7 +71,7 @@ in
     };
     radarr = {
       isSystemUser = true;
-      group = "radarr";
+      group = lib.mkForce "radarr"; # Add this for consistency
       extraGroups = [
         "users"
         "media"
@@ -79,7 +79,7 @@ in
     };
     sonarr = {
       isSystemUser = true;
-      group = "sonarr";
+      group = lib.mkForce "sonarr"; # Add this for consistency
       extraGroups = [
         "users"
         "media"
@@ -87,7 +87,7 @@ in
     };
     readarr = {
       isSystemUser = true;
-      group = "readarr";
+      group = lib.mkForce "readarr"; # Add this for consistency
       extraGroups = [
         "users"
         "media"
@@ -95,7 +95,7 @@ in
     };
     transmission = {
       isSystemUser = true;
-      group = "transmission";
+      group = lib.mkForce "transmission"; # Add this for consistency
       extraGroups = [
         "users"
         "media"
@@ -103,7 +103,7 @@ in
     };
     recyclarr = {
       isSystemUser = true;
-      group = "recyclarr";
+      group = lib.mkForce "recyclarr"; # Add this for consistency
       extraGroups = [
         "users"
         "media"
