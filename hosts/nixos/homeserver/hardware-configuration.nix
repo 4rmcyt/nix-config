@@ -28,24 +28,8 @@ in
   # 2. Boot Configuration
   # =================================================================
   boot = {
-    # Boot loader configuration
-    loader = {
-      systemd-boot = {
-        enable = true;
-        edk2-uefi-shell.enable = true;
-        configurationLimit = 20;
-        editor = false;
-      };
-      efi.canTouchEfiVariables = true;
-      timeout = 3;
-    };
-
     # Kernel configuration
     kernelPackages = latestKernelPackage;
-    supportedFilesystems = [
-      "vfat"
-      "zfs"
-    ];
 
     # Kernel modules
     initrd.availableKernelModules = [
@@ -69,6 +53,24 @@ in
       "zfs.zfs_arc_max=12884901888"
     ];
 
+    # Boot loader configuration
+    loader = {
+      efi.canTouchEfiVariables = true;
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 20;
+        edk2-uefi-shell.enable = true;
+        editor = false;
+      };
+      timeout = 3;
+    };
+
+    # Filesystem support
+    supportedFilesystems = [
+      "vfat"
+      "zfs"
+    ];
+
     # ZFS configuration
     zfs = {
       devNodes = "/dev/disk/by-id/";
@@ -80,6 +82,10 @@ in
   # 3. Hardware Configuration
   # =================================================================
   hardware = {
+    # Hardware features
+    bluetooth.enable = false;
+    i2c.enable = true;
+
     # CPU & firmware
     cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     enableRedistributableFirmware = lib.mkDefault true;
@@ -96,22 +102,18 @@ in
         vaapiVdpau
       ];
     };
-
-    # Hardware features
-    bluetooth.enable = false;
-    i2c.enable = true;
   };
 
   # =================================================================
   # 4. Power Management
   # =================================================================
+  power.ups.package = pkgs.nut;
+
   powerManagement = {
     enable = true;
     cpuFreqGovernor = lib.mkDefault "performance";
     powertop.enable = true;
   };
-
-  power.ups.package = pkgs.nut;
 
   # =================================================================
   # 5. Environment Variables
@@ -124,6 +126,10 @@ in
   # 6. Services
   # =================================================================
   services = {
+    # System services
+    fwupd.enable = true;
+    thermald.enable = lib.mkDefault true;
+
     # Hardware monitoring
     smartd = {
       enable = true;
@@ -146,10 +152,6 @@ in
         interval = "weekly";
       };
     };
-
-    # System services
-    fwupd.enable = true;
-    thermald.enable = lib.mkDefault true;
 
     # Disabled services
     blueman.enable = false;
