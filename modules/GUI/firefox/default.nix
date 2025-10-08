@@ -15,7 +15,7 @@
   ];
 
   home.sessionVariables = {
-     # Wayland settings
+    # Wayland settings
     MOZ_ENABLE_WAYLAND = "1";
     MOZ_WAYLAND_USE_VAAPI = "1";
     MOZ_USE_XINPUT2 = "1";
@@ -26,7 +26,7 @@
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     MOZ_DISABLE_RDD_SANDBOX = "1";
     LIBVA_DRIVER_NAME = "nvidia";
-    };
+  };
 
   programs.firefox = {
     enable = true;
@@ -46,5 +46,4 @@
   # Force overwrite existing files
   home.file.".mozilla/firefox/profiles.ini".force = lib.mkForce true;
   home.file.".mozilla/firefox/default/search.json.mozlz4".force = lib.mkForce true;
-
 }

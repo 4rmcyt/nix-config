@@ -1,12 +1,12 @@
 { lib, ... }:
 {
   programs.firefox.profiles.default.search.engines = {
-    # Disable all the stupid "This time, search with" icons
-    ddg.metaData.hidden = true;
-    bing.metaData.hidden = true;
-    ebay.metaData.hidden = true;
-    amazondotcom.metaData.hidden = true;
-    wikipedia.metaData.hidden = true;
+    # === DISABLE DEFAULT SEARCH ENGINE SUGGESTIONS ===
+    "ddg".metaData.hidden = true;
+    "bing".metaData.hidden = true;
+    "ebay".metaData.hidden = true;
+    "amazondotcom-us".metaData.hidden = true;
+    "wikipedia".metaData.hidden = true;
 
     "Github Search Nix" = {
       urls = lib.singleton {
