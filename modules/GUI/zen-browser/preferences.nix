@@ -1,5 +1,4 @@
-{ lib, ... }:
-{
+_: {
   programs.zen-browser.profiles.default.settings = {
     # === ACCESSIBILITY ===
     "accessibility.typeaheadfind.enablesound" = false;
@@ -15,9 +14,10 @@
     # === BROWSER BEHAVIOR ===
     "browser.aboutConfig.showWarning" = false;
     "browser.cache.disk.enable" = false;
+    "browser.cache.frecency_half_life_hours" = 18; # More aggressive cache eviction
     "browser.cache.memory.enable" = true;
-    "browser.cache.memory.capacity" = 1048576; # 1GB memory cache for 64GB RAM
-    "browser.cache.memory.max_entry_size" = 51200; # 50MB max entry
+    "browser.cache.memory.capacity" = 10737418240; # 10GB memory cache for 64GB RAM
+    "browser.cache.memory.max_entry_size" = 327680; # 50MB max entry
     "browser.contentblocking.category" = "strict";
     "browser.contentblocking.report.lockwise.enabled" = true;
     "browser.ctrlTab.sortByRecentlyUsed" = false;
@@ -32,7 +32,8 @@
     "browser.safebrowsing.downloads.remote.enabled" = false;
     "browser.search.update" = false;
     "browser.send_pings" = false;
-    "browser.sessionstore.interval" = 30000; # More frequent saves with your RAM
+    "browser.sessionstore.interval" = 600000; # More frequent saves with your RAM
+    "browser.sessionhistory.max_entries" = 5; # Reduce memory usage
     "browser.startup.page" = 3; # Resume previous session
     "browser.tabs.crashReporting.sendReport" = false;
     "browser.tabs.hoverPreview.enabled" = true;
@@ -74,13 +75,14 @@
     "extensions.update.enabled" = true;
     "extensions.webcompat-reporter.enabled" = false;
     "extensions.webextensions.ExtensionStorageIDB.enabled" = false;
+    "extensions.pocket.enabled" = false;
 
     # === GEOLOCATION ===
     "geo.provider.network.url" = "https://beacondb.net/v1/geolocate";
 
     # === GRAPHICS & CANVAS ===
     "gfx.canvas.accelerated" = true;
-    "gfx.canvas.accelerated.cache-size" = lib.mkForce 1024;
+    "gfx.canvas.accelerated.cache-items" = 32768;
     "gfx.canvas.remote" = false;
     "gfx.vsync.hw-vsync.enabled" = true;
     "gfx.webrender.all" = true;
@@ -90,6 +92,9 @@
     "gfx.webrender.force-disabled" = false;
     "gfx.webrender.software" = false;
     "gfx.webrender.software.opengl" = false;
+    "gfx.webrender.precache-shaders" = true;
+    "image.cache.size" = 10485760; # 10GB image cache for 64GB RAM
+    "media.memory_caches_combined_limit_kb" = 3145728; # 3GB combined cache
 
     # === IMAGES ===
     "image.avif.enabled" = true;
@@ -151,6 +156,19 @@
     "network.cookie.cookieBehavior" = 5;
     "network.http.http3.enabled" = true;
     "network.http.referer.XOriginTrimmingPolicy" = 2;
+    "network.prefetch-next" = false;
+    "network.dnsCacheEntries" = 20000;
+    "network.dnsCacheExpiration" = 3600; # 1 hour
+    "network.dnsCacheExpirationGracePeriod" = 240; # 4 minutes
+    "network.predictor.enable-hover-on-ssl" = true;
+    "network.predictor.enable-prefetch" = true;
+    "network.predictor.preconnect-min-confidence" = 20;
+    "network.predictor.prefetch-force-valid-for" = 3600; # 1 hour
+    "network.predictor.prefetch-min-confidence" = 30;
+    "network.predictor.prefetch-rolling-load-count" = 120;
+    "network.predictor.preresolve-min-confidence" = 10;
+    "ssl_tokens_cache_capacity" = 10; # Cache 10 SSL session tokens
+    "network.buffer.cache.size" = 65535; # 10GB buffer cache for 64GB RAM
 
     # === PERMISSIONS ===
     "permissions.default.desktop-notification" = 2;
@@ -203,5 +221,11 @@
     "webgl.disabled" = false;
     "webgl.force-enabled" = true;
     "webgl.msaa-force" = false; # Enable MSAA with your GPU power
+
+    "javascript.options.baselinejit.threshold" = 50;
+    "javascript.options.ion.threshold" = 5000;
+    "javascript.options.concurrent_multiprocess_gcs.cpu_divisor" = 8;
+    "dom.timeout.throttling_delay" = 40;
+    "dom.timeout.budget_throttling_max_delay" = 0;
   };
 }

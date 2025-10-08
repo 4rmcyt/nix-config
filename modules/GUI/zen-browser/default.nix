@@ -25,11 +25,11 @@
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     MOZ_DISABLE_RDD_SANDBOX = "1";
     LIBVA_DRIVER_NAME = "nvidia";
-    
+
     # Set as default browser
     BROWSER = lib.mkForce "zen-browser";
   };
-  
+
   programs.zen-browser = {
     enable = true;
     package = inputs.zen-browser.packages.${pkgs.system}.beta;
