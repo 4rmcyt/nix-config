@@ -288,7 +288,7 @@ in
         # script-torrent-added-enabled = true;
         # script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
         blocklist-enabled = true;
-        blocklist-url = "https://github.com/Naunter/BT_BlockLists/raw/master/bt_blocklists.gz";
+        blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
       };
     };
 
