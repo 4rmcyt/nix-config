@@ -227,21 +227,21 @@ in
   #   };
   # };
 
-  nixpkgs.config.packageOverrides = pkgs: {
-    python3 = pkgs.python3.override {
-      packageOverrides = _pySelf: pySuper: {
-        pyrate-limiter = pySuper.pyrate-limiter.overridePythonAttrs (_oldAttrs: {
-          doCheck = false; # Skip tests
-        });
-      };
-    };
-    # Temporarily override libutp
-    libutp = pkgs.libutp.overrideAttrs (oldAttrs: {
-      meta = oldAttrs.meta // {
-        broken = false;
-      };
-    });
-  };
+  # nixpkgs.config.packageOverrides = pkgs: {
+  #   python3 = pkgs.python3.override {
+  #     packageOverrides = _pySelf: pySuper: {
+  #       pyrate-limiter = pySuper.pyrate-limiter.overridePythonAttrs (_oldAttrs: {
+  #         doCheck = false; # Skip tests
+  #       });
+  #     };
+  #   };
+  #   # Temporarily override libutp
+  #   libutp = pkgs.libutp.overrideAttrs (oldAttrs: {
+  #     meta = oldAttrs.meta // {
+  #       broken = false;
+  #     };
+  #   });
+  # };
 
   environment.systemPackages = [
     pkgs.jellyfin
