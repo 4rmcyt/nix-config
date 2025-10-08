@@ -240,6 +240,7 @@
     zfs
     apcupsd
     prometheus-apcupsd-exporter
+    microcode-intel
 
     # Network tools
     iproute2
