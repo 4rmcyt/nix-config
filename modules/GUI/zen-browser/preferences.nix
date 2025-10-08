@@ -23,6 +23,7 @@
     "browser.ctrlTab.sortByRecentlyUsed" = false;
     "browser.download.start_downloads_in_tmp_dir" = true;
     "browser.download.useDownloadDir" = false;
+    "browser.eme.ui.enabled" = true;
     "browser.newtabpage.activity-stream.feeds.topsites" = false;
     "browser.newtabpage.activity-stream.showSponsored" = false;
     "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
@@ -38,6 +39,7 @@
     "browser.tabs.loadInBackground" = true;
     "browser.tabs.warnOnClose" = false;
     "browser.topsites.contile.enabled" = false;
+    "browser.translations.neverTranslateLanguages" = "ru,ua,he";
     "browser.uitour.enabled" = false;
     "browser.urlbar.eventTelemetry.enabled" = false;
     "browser.urlbar.quicksuggest.enabled" = false;
@@ -49,7 +51,6 @@
     "browser.urlbar.trimHttps" = true;
     "browser.urlbar.unitConversion.enabled" = true;
     "browser.warnOnQuitShortcut" = false;
-    "browser.translations.neverTranslateLanguages" = "ru,ua,he";
 
     # === DATA REPORTING ===
     "datareporting.healthreport.uploadEnabled" = false;
@@ -61,6 +62,7 @@
     # === DOM ===
     "dom.battery.enabled" = false;
     "dom.ipc.processPriorityManager.backgroundUsesEcoQoS" = true;
+    "dom.webgpu.enabled" = true;
 
     # === EDITOR ===
     "editor.truncate_user_pastes" = false;
@@ -76,43 +78,48 @@
     # === GEOLOCATION ===
     "geo.provider.network.url" = "https://beacondb.net/v1/geolocate";
 
-    # === GRAPHICS & WEBRENDER (High-End NVIDIA System) ===
+    # === GRAPHICS & CANVAS ===
     "gfx.canvas.accelerated" = true;
+    "gfx.canvas.accelerated.cache-size" = lib.mkForce 1024;
+    "gfx.canvas.remote" = false;
+    "gfx.vsync.hw-vsync.enabled" = true;
     "gfx.webrender.all" = true;
     "gfx.webrender.compositor" = false;
     "gfx.webrender.compositor.force-enabled" = false;
     "gfx.webrender.enabled" = true;
+    "gfx.webrender.force-disabled" = false;
     "gfx.webrender.software" = false;
     "gfx.webrender.software.opengl" = false;
-    "gfx.webrender.force-disabled" = false;
-    "gfx.vsync.hw-vsync.enabled" = true;
 
     # === IMAGES ===
     "image.avif.enabled" = true;
     "image.jxl.enabled" = true;
 
+    # === IDENTITY & SYNC ===
+    "identity.fxaccounts.commands.enabled" = true;
+    "identity.fxaccounts.enabled" = true;
+    "identity.fxaccounts.pairing.enabled" = true;
+    "identity.fxaccounts.toolbar.enabled" = true;
+
     # === INTERNATIONALIZATION ===
     "intl.accept_languages" = "en-US,en";
 
     # === LAYERS (GPU ACCELERATION) ===
-    "layers.acceleration.force-enabled" = true;
     "layers.acceleration.disabled" = false;
+    "layers.acceleration.force-enabled" = true;
     "layers.gpu-process.enabled" = true;
     "layers.gpu-process.force-enabled" = true;
-    "layers.mlgpu.enabled" = false;
+    "layers.mlgpu.enabled" = true;
     "layers.omtp.enabled" = false;
 
-    # === LAYOUT ===
-    "layout.css.dpi" = "96"; # Standard DPI
-    "layout.css.devPixelsPerPx" = "1.7"; # Hi-DPI
-
     # === MEDIA & HARDWARE VIDEO ACCELERATION ===
-    "browser.eme.ui.enabled" = true;
     "media.av1.enabled" = true;
     "media.av1.use-dav1d" = false; # Use hardware decoder
     "media.eme.enabled" = true;
     "media.ffmpeg.vaapi.enabled" = true;
+    "media.ffmpeg.vaapi-drm-display.enabled" = true;
     "media.ffvpx.enabled" = false; # Use system FFmpeg
+    "media.gpu-process-decoder" = true;
     "media.hardwaremediakeys.enabled" = false;
     "media.hardware-video-decoding.enabled" = true;
     "media.hardware-video-decoding.force-enabled" = true;
@@ -184,27 +191,17 @@
     "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
 
     # === WAYLAND SETTINGS ===
-    "widget.use-xdg-desktop-portal.file-picker" = 1;
-    "widget.use-xdg-desktop-portal.mime-handler" = 1;
-    "widget.use-xdg-desktop-portal.settings" = 1;
-    "widget.use-xdg-desktop-portal.location" = 1;
-    "widget.use-xdg-desktop-portal.open-uri" = 1;
     "widget.gtk.wayland.force-enabled" = true;
     "widget.gtk.wayland.fractional-scaling.enabled" = true;
+    "widget.use-xdg-desktop-portal.file-picker" = 1;
+    "widget.use-xdg-desktop-portal.location" = 1;
+    "widget.use-xdg-desktop-portal.mime-handler" = 1;
+    "widget.use-xdg-desktop-portal.open-uri" = 1;
+    "widget.use-xdg-desktop-portal.settings" = 1;
 
     # === WEBGL ===
     "webgl.disabled" = false;
     "webgl.force-enabled" = true;
     "webgl.msaa-force" = false; # Enable MSAA with your GPU power
-
-    # === FIREFOX SYNC / IDENTITY ===
-    "identity.fxaccounts.commands.enabled" = true;
-    "identity.fxaccounts.enabled" = true;
-    "identity.fxaccounts.pairing.enabled" = true;
-    "identity.fxaccounts.toolbar.enabled" = true;
-
-    # === CANVAS (FORCE OVERRIDE CONFLICTS) ===
-    "gfx.canvas.accelerated.cache-size" = lib.mkForce 1024;
-    "gfx.canvas.remote" = false;
   };
 }

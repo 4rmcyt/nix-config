@@ -1,68 +1,48 @@
+{ lib, ... }:
 {
   programs.firefox.profiles.default.settings = {
-    # === PERFORMANCE & HARDWARE ===
-    "gfx.webrender.all" = true;
-    "gfx.webrender.compositor" = false;
-    "gfx.webrender.compositor.force-enabled" = false;
-    "gfx.webrender.enabled" = true;
-    "layers.acceleration.force-enabled" = true;
-    "widget.dmabuf.force-enabled" = true;
-    "gfx.font_rendering.fontconfig.max_generic_substitutions" = 127;
+    # === ACCESSIBILITY ===
+    "accessibility.typeaheadfind.enablesound" = false;
+    "general.autoScroll" = true;
 
-    # === MEDIA & CODECS ===
-    "image.avif.enabled" = true;
-    "image.jxl.enabled" = true;
-    "media.av1.enabled" = true;
-    "media.cdpeg.vaapi.enabled" = true;
-    "media.eme.enabled" = true;
-    "media.ffmpeg.vaapi.enabled" = true;
-    "media.ffvpx.enabled" = false;
-    "media.hardware-video-decoding.force-enabled" = true;
-    "media.hevc.enabled" = true;
-    "media.hls.enabled" = true;
-    "media.rdd-ffmpeg.enabled" = true;
-    "media.rdd-vpx.enabled" = false;
-
-    # === PRIVACY & SECURITY ===
-    "browser.send_pings" = false;
-    "dom.battery.enabled" = false;
-    "dom.private-attribution.submission.enabled" = false; # Fixed: was true
-    "privacy.clearOnShutdown.history" = false;
-    "privacy.donottrackheader.enabled" = true;
-    "privacy.trackingprotection.enabled" = true;
-    "privacy.trackingprotection.socialtracking.enabled" = true;
-    "privacy.userContext.enabled" = true;
-    "privacy.userContext.ui.enabled" = true;
-
-    # === TELEMETRY (COMPLETE DISABLE) ===
+    # === APP SETTINGS ===
     "app.normandy.enabled" = false;
     "app.shield.optoutstudies.enabled" = false;
-    "browser.ping-centre.telemetry" = false;
-    "browser.tabs.crashReporting.sendReport" = false;
-    "browser.urlbar.eventTelemetry.enabled" = false;
-    "datareporting.healthreport.uploadEnabled" = false;
-    "datareporting.policy.dataSubmissionEnabled" = false;
-    "toolkit.telemetry.archive.enabled" = false;
-    "toolkit.telemetry.enabled" = false;
-    "toolkit.telemetry.server" = "";
-    "toolkit.telemetry.unified" = false;
 
-    # === UI & BEHAVIOR ===
+    # === APZ (ASYNC PAN-ZOOM) ===
+    "apz.overscroll.enabled" = true;
+
+    # === BROWSER BEHAVIOR ===
     "browser.aboutConfig.showWarning" = false;
-    "browser.uitour.enabled" = false;
-    "browser.warnOnQuitShortcut" = false;
-    "browser.download.useDownloadDir" = false;
+    "browser.cache.disk.enable" = false;
+    "browser.cache.memory.enable" = true;
+    "browser.cache.memory.capacity" = 1048576; # 1GB memory cache for 64GB RAM
+    "browser.cache.memory.max_entry_size" = 51200; # 50MB max entry
+    "browser.contentblocking.category" = "strict";
+    "browser.contentblocking.report.lockwise.enabled" = true;
     "browser.ctrlTab.sortByRecentlyUsed" = false;
+    "browser.download.start_downloads_in_tmp_dir" = true;
+    "browser.download.useDownloadDir" = false;
+    "browser.eme.ui.enabled" = true;
+    "browser.newtabpage.activity-stream.feeds.topsites" = false;
+    "browser.newtabpage.activity-stream.showSponsored" = false;
+    "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+    "browser.ping-centre.telemetry" = false;
+    "browser.privatebrowsing.resetPBM.enabled" = true;
+    "browser.safebrowsing.downloads.remote.enabled" = false;
+    "browser.search.update" = false;
+    "browser.send_pings" = false;
+    "browser.sessionstore.interval" = 30000; # More frequent saves with your RAM
     "browser.startup.page" = 3; # Resume previous session
-
-    # === TABS ===
-    "browser.tabs.closeTabByDblclick" = true;
-    "browser.tabs.dragOverThresholdPercent" = 10;
-    "browser.tabs.groups.dragOverThresholdPercent" = 10;
+    "browser.tabs.crashReporting.sendReport" = false;
+    "browser.tabs.hoverPreview.enabled" = true;
     "browser.tabs.loadInBackground" = true;
-    "browser.tabs.tabMinWidth" = 75;
-
-    # === URL BAR ===
+    "browser.tabs.warnOnClose" = false;
+    "browser.topsites.contile.enabled" = false;
+    "browser.translations.neverTranslateLanguages" = "ru,ua,he";
+    "browser.uitour.enabled" = false;
+    "browser.urlbar.eventTelemetry.enabled" = false;
+    "browser.urlbar.quicksuggest.enabled" = false;
     "browser.urlbar.shortcuts.bookmarks" = false;
     "browser.urlbar.shortcuts.history" = false;
     "browser.urlbar.shortcuts.tabs" = false;
@@ -70,25 +50,23 @@
     "browser.urlbar.suggest.searches" = true;
     "browser.urlbar.trimHttps" = true;
     "browser.urlbar.unitConversion.enabled" = true;
+    "browser.warnOnQuitShortcut" = false;
 
-    # === THEME & APPEARANCE ===
-    "browser.in-content.dark-mode" = true;
-    "ui.systemUsesDarkTheme" = true;
-    "layout.css.dpi" = "96"; # Standard DPI
-    "layout.css.devPixelsPerPx" = "1.7"; # Hi-DPI
+    # === DATA REPORTING ===
+    "datareporting.healthreport.uploadEnabled" = false;
+    "datareporting.policy.dataSubmissionEnabled" = false;
 
-    # === WAYLAND FIXES ===
-    "widget.use-xdg-desktop-portal.file-picker" = 1;
-    "widget.use-xdg-desktop-portal.mime-handler" = 1;
-    "widget.use-xdg-desktop-portal.settings" = 1;
-    "widget.use-xdg-desktop-portal.location" = 1;
-    "widget.use-xdg-desktop-portal.open-uri" = 1;
-    "media.hardwaremediakeys.enabled" = false;
-    "gfx.webrender.software.opengl" = false;
+    # === DEVELOPER TOOLS ===
+    "devtools.chrome.enabled" = false;
 
-    # === ACCESSIBILITY ===
-    "accessibility.typeaheadfind.enablesound" = false;
-    "general.autoScroll" = true;
+    # === DOM ===
+    "dom.battery.enabled" = false;
+    "dom.ipc.processPriorityManager.backgroundUsesEcoQoS" = true;
+    "dom.private-attribution.submission.enabled" = false;
+    "dom.webgpu.enabled" = true;
+
+    # === EDITOR ===
+    "editor.truncate_user_pastes" = false;
 
     # === EXTENSIONS ===
     "extensions.abuseReport.enabled" = false;
@@ -98,45 +76,137 @@
     "extensions.webcompat-reporter.enabled" = false;
     "extensions.webextensions.ExtensionStorageIDB.enabled" = false;
 
-    # === FIREFOX SYNC ===
-    "browser.contentblocking.report.lockwise.enabled" = true;
+    # === GEOLOCATION ===
+    "geo.provider.network.url" = "https://beacondb.net/v1/geolocate";
+
+    # === GRAPHICS & CANVAS ===
+    "gfx.canvas.accelerated" = true;
+    "gfx.canvas.accelerated.cache-size" = lib.mkForce 1024; # 1GB cache for 64GB RAM
+    "gfx.canvas.remote" = false;
+    "gfx.font_rendering.fontconfig.max_generic_substitutions" = 127;
+    "gfx.vsync.hw-vsync.enabled" = true;
+    "gfx.wayland.hdr" = false; # Enable HDR with high-end setup
+    "gfx.webrender.all" = true;
+    "gfx.webrender.compositor" = false;
+    "gfx.webrender.compositor.force-enabled" = false;
+    "gfx.webrender.enabled" = true;
+    "gfx.webrender.force-disabled" = false;
+    "gfx.webrender.software" = false;
+    "gfx.webrender.software.opengl" = false;
+
+    # === IMAGES ===
+    "image.avif.enabled" = true;
+    "image.jxl.enabled" = true;
+
+    # === IDENTITY & SYNC ===
     "identity.fxaccounts.commands.enabled" = true;
     "identity.fxaccounts.enabled" = true;
     "identity.fxaccounts.pairing.enabled" = true;
     "identity.fxaccounts.toolbar.enabled" = true;
 
-    # === NETWORK & PERFORMANCE ===
-    "browser.cache.disk.enable" = false;
-    "browser.cache.memory.enable" = true;
+    # === INTERNATIONALIZATION ===
+    "intl.accept_languages" = "en-US,en";
 
-    # === NEW TAB PAGE ===
-    "browser.newtabpage.activity-stream.showSponsored" = false;
-    "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+    # === LAYERS (GPU ACCELERATION) ===
+    "layers.acceleration.disabled" = false;
+    "layers.acceleration.force-enabled" = true;
+    "layers.gpu-process.enabled" = true;
+    "layers.gpu-process.force-enabled" = true;
+    "layers.mlgpu.enabled" = true;
+    "layers.omtp.enabled" = false;
 
-    # === DEVELOPER TOOLS ===
-    "devtools.chrome.enabled" = false;
-    "svg.context-properties.content.enabled" = true;
-    "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+    # === MEDIA & HARDWARE VIDEO ACCELERATION ===
+    "media.av1.enabled" = true;
+    "media.av1.use-dav1d" = false; # Use hardware decoder
+    "media.cdpeg.vaapi.enabled" = true;
+    "media.eme.enabled" = true;
+    "media.ffmpeg.vaapi.enabled" = true;
+    "media.ffmpeg.vaapi-drm-display.enabled" = true;
+    "media.ffvpx.enabled" = false; # Use system FFmpeg
+    "media.gpu-process-decoder" = true;
+    "media.hardwaremediakeys.enabled" = false;
+    "media.hardware-video-decoding.enabled" = true;
+    "media.hardware-video-decoding.force-enabled" = true;
+    "media.hevc.enabled" = true;
+    "media.hls.enabled" = true;
+    "media.navigator.mediadatadecoder_vpx_enabled" = true;
+    "media.rdd-ffmpeg.enabled" = true;
+    "media.rdd-vpx.enabled" = false; # Disable VP8/VP9 in RDD process
+    "media.videocontrols.picture-in-picture.video-toggle.enabled" = true;
+    "media.wmf.amd.hevc.enabled" = true;
+    "media.wmf.hevc.enabled" = true;
 
-    # === SMOOTH SCROLLING ===
-    "apz.overscroll.enabled" = true;
+    # === MOUSE & SCROLLING ===
     "general.smoothScroll" = true;
     "general.smoothScroll.currentVelocityWeighting" = 0.15;
     "general.smoothScroll.mouseWheel.durationMinMS" = 80;
+    "general.smoothScroll.msdPhysics.continuousMotionMaxDeltaMS" = 12;
     "general.smoothScroll.msdPhysics.enabled" = false;
+    "general.smoothScroll.msdPhysics.motionBeginSpringConstant" = 600;
+    "general.smoothScroll.msdPhysics.regularSpringConstant" = 650;
+    "general.smoothScroll.msdPhysics.slowdownMinDeltaMS" = 25;
+    "general.smoothScroll.msdPhysics.slowdownSpringConstant" = 250;
     "general.smoothScroll.stopDecelerationWeighting" = 0.6;
     "mousewheel.default.delta_multiplier_y" = 300;
     "mousewheel.min_line_scroll_amount" = 10;
 
-    # === INTERNATIONALIZATION ===
-    "browser.translations.neverTranslateLanguages" = "ru,ua,he";
-    "intl.accept_languages" = "en-US,en";
+    # === NETWORK ===
+    "network.auth.subresource-http-auth-allow" = 1;
+    "network.cookie.cookieBehavior" = 5;
+    "network.http.http3.enabled" = true;
+    "network.http.referer.XOriginTrimmingPolicy" = 2;
 
-    # === DOM & PUSH ===
-    "dom.push.connection.enabled" = true;
-    "dom.push.enabled" = true;
+    # === PERMISSIONS ===
+    "permissions.default.desktop-notification" = 2;
+    "permissions.default.geo" = 2;
+    "permissions.manager.defaultsUrl" = "";
 
-    # === MISC ===
-    "browser.eme.ui.enabled" = true;
+    # === PRIVACY & SECURITY ===
+    "privacy.clearOnShutdown.history" = false;
+    "privacy.donottrackheader.enabled" = true;
+    "privacy.firstparty.isolate" = true;
+    "privacy.history.custom" = true;
+    "privacy.resistFingerprinting" = true;
+    "privacy.trackingprotection.allow_list.baseline.enabled" = true;
+    "privacy.trackingprotection.allow_list.convenience.enabled" = true;
+    "privacy.trackingprotection.enabled" = true;
+    "privacy.trackingprotection.socialtracking.enabled" = true;
+    "privacy.userContext.enabled" = true;
+    "privacy.userContext.ui.enabled" = true;
+
+    # === SECURITY ===
+    "security.OCSP.enabled" = 0;
+    "security.pki.crlite_mode" = 2;
+
+    # === SIGN-ON ===
+    "signon.formlessCapture.enabled" = false;
+    "signon.privateBrowsingCapture.enabled" = false;
+
+    # === SVG ===
+    "svg.context-properties.content.enabled" = true;
+
+    # === TELEMETRY ===
+    "toolkit.telemetry.archive.enabled" = false;
+    "toolkit.telemetry.enabled" = false;
+    "toolkit.telemetry.server" = "";
+    "toolkit.telemetry.unified" = false;
+
+    # === TOOLKIT ===
+    "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+
+    # === WAYLAND SETTINGS ===
+    "widget.dmabuf.force-enabled" = true;
+    "widget.gtk.wayland.force-enabled" = true;
+    "widget.gtk.wayland.fractional-scaling.enabled" = true;
+    "widget.use-xdg-desktop-portal.file-picker" = 1;
+    "widget.use-xdg-desktop-portal.location" = 1;
+    "widget.use-xdg-desktop-portal.mime-handler" = 1;
+    "widget.use-xdg-desktop-portal.open-uri" = 1;
+    "widget.use-xdg-desktop-portal.settings" = 1;
+
+    # === WEBGL ===
+    "webgl.disabled" = false;
+    "webgl.force-enabled" = true;
+    "webgl.msaa-force" = false; # Enable MSAA with your GPU power
   };
 }
