@@ -10,7 +10,7 @@
     # === AUTOFILL & CREDENTIALS ===
     AutofillAddressEnabled = true;
     AutofillCreditCardEnabled = false;
-    OfferToSaveLogins = false;
+    OfferToSaveLogins = true;
 
     # === FIREFOX HOME (NEW TAB PAGE) ===
     FirefoxHome = {

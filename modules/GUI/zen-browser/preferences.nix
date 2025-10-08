@@ -191,7 +191,7 @@ _: {
     "security.pki.crlite_mode" = 2;
 
     # === SIGN-ON ===
-    "signon.formlessCapture.enabled" = false;
+    "signon.formlessCapture.enabled" = true;
     "signon.privateBrowsingCapture.enabled" = false;
 
     # === SVG ===

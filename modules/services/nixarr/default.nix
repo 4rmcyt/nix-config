@@ -377,6 +377,15 @@ in
     "d /data/media/.state/headphones 775 headphones headphones -"
     "d /data/media/.state/nixarr/transmission 775 transmission transmission -"
 
+    # Add rules to fix ownership of existing directories
+    "Z /data/media/movies 775 zeev media -"
+    "Z /data/media/shows 775 zeev media -"
+    "Z /data/media/music 775 zeev media -"
+    "Z /data/media/audiobooks 775 zeev media -"
+    "Z /data/media/books 775 zeev media -"
+    "Z /data/media/comics 775 zeev media -"
+    "Z /data/media/manga 775 zeev media -"
+    
     "d /var/lib/transmission 775 transmission transmission -"
 
     "d /data/Downloads 775 zeev media -"
