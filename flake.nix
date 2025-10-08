@@ -7,23 +7,23 @@
     systems.url = "github:nix-systems/default";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    # Home Manager
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # System management
     disko = {
       url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.2";
+
+    # Home Manager
+    home-manager = {
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -51,9 +51,9 @@
     # Services & applications
     authentik-nix.url = "github:nix-community/authentik-nix";
     linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
+    nixai.url = "github:olafkfreund/nix-ai-help";
     nixarr.url = "github:rasmus-kirk/nixarr";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
-    nixai.url = "github:olafkfreund/nix-ai-help";
 
     # Development tools
     nix-index-database.url = "github:nix-community/nix-index-database";
@@ -62,19 +62,18 @@
     treefmt-nix.url = "github:numtide/treefmt-nix";
 
     # Browser extensions
-    firefox-addons = {
-      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     betterfox-nix = {
       url = "github:HeitorAugustoLN/betterfox-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     firefox-nightly = {
       url = "github:nix-community/flake-firefox-nightly";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
