@@ -16,8 +16,6 @@ _: {
     "browser.cache.disk.enable" = false;
     "browser.cache.memory.enable" = true;
     "browser.cache.frecency_half_life_hours" = 18; # More aggressive cache eviction
-    "browser.cache.memory.capacity" = 10737418240; # 10GB memory cache for 64GB RAM
-    "browser.cache.memory.max_entry_size" = 327680; # 50MB max entry
     "browser.contentblocking.category" = "strict";
     "browser.contentblocking.report.lockwise.enabled" = true;
     "browser.ctrlTab.sortByRecentlyUsed" = false;
