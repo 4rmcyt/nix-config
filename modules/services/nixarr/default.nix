@@ -21,6 +21,7 @@ in
   users.users = {
     audiobookshelf = {
       isSystemUser = true;
+      group = "audiobookshelf";
       extraGroups = [
         "users"
         "media"
@@ -28,6 +29,7 @@ in
     };
     bazarr = {
       isSystemUser = true;
+      group = "bazarr";
       extraGroups = [
         "users"
         "media"
@@ -35,6 +37,7 @@ in
     };
     jellyfin = {
       isSystemUser = true;
+      group = "jellyfin";
       extraGroups = [
         "users"
         "media"
@@ -44,6 +47,7 @@ in
     };
     jellyseerr = {
       isSystemUser = true;
+      group = "jellyseerr";
       extraGroups = [
         "users"
         "media"
@@ -51,6 +55,7 @@ in
     };
     lidarr = {
       isSystemUser = true;
+      group = "lidarr";
       extraGroups = [
         "users"
         "media"
@@ -58,6 +63,7 @@ in
     };
     prowlarr = {
       isSystemUser = true;
+      group = "prowlarr";
       extraGroups = [
         "users"
         "media"
@@ -65,6 +71,7 @@ in
     };
     radarr = {
       isSystemUser = true;
+      group = "radarr";
       extraGroups = [
         "users"
         "media"
@@ -72,6 +79,7 @@ in
     };
     sonarr = {
       isSystemUser = true;
+      group = "sonarr";
       extraGroups = [
         "users"
         "media"
@@ -79,6 +87,7 @@ in
     };
     readarr = {
       isSystemUser = true;
+      group = "readarr";
       extraGroups = [
         "users"
         "media"
@@ -86,6 +95,7 @@ in
     };
     transmission = {
       isSystemUser = true;
+      group = "transmission";
       extraGroups = [
         "users"
         "media"
@@ -93,6 +103,7 @@ in
     };
     recyclarr = {
       isSystemUser = true;
+      group = "recyclarr";
       extraGroups = [
         "users"
         "media"
@@ -332,16 +343,16 @@ in
   });
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
-    "d /data/media/movies 770 zeev media -"
-    "d /data/media/audiobooks 770 zeev media -"
-    "d /data/media/music 770 zeev media -"
-    "d /data/media/shows 770 zeev media -"
-    "d /data/media/books 770 zeev media -"
-    "d /data/media/comics 770 zeev media -"
-    "d /data/media/manga 770 zeev media -"
-    "d /data/media/torrents 770 zeev media -"
-    "d /data/media/usenet 770 zeev media -"
-    "d /data/Downloads 770 zeev users -"
+    "d /data/media/movies 775 zeev media -" # Changed from 770 to 775
+    "d /data/media/audiobooks 775 zeev media -"
+    "d /data/media/music 775 zeev media -"
+    "d /data/media/shows 775 zeev media -" # Changed from 770 to 775
+    "d /data/media/books 775 zeev media -"
+    "d /data/media/comics 775 zeev media -"
+    "d /data/media/manga 775 zeev media -"
+    "d /data/media/torrents 775 zeev media -"
+    "d /data/media/usenet 775 zeev media -"
+    "d /data/Downloads 775 zeev users -" # Changed from 770 to 775
 
     "d /data/media/.state 770 root media -"
     "d /data/media/.state/nixarr 770 root media -"
