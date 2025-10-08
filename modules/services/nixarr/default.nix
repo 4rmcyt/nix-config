@@ -282,6 +282,9 @@ in
         rpc-port = 9091;
         download-dir = "/data/Downloads";
 
+        peer-port = 63998;
+        peer-port-random-on-start = false;
+        port-forwarding-enabled = true;
         # script-torrent-added-enabled = true;
         # script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
         blocklist-enabled = true;
