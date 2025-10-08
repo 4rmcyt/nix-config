@@ -15,7 +15,6 @@ let
     "transmission"
     "audiobookshelf"
     "jellyfin"
-    # "headphones"
   ];
 in
 {
@@ -99,13 +98,6 @@ in
         "media"
       ];
     };
-    # headphones = {
-    #   isSystemUser = true;
-    #   extraGroups = [
-    #     "users"
-    #     "media"
-    #   ];
-    # };
   };
   users.groups = {
     audiobookshelf = { };
@@ -135,7 +127,6 @@ in
     5055 # Jellyseerr
     9091 # Transmission web UI
     63998 # Transmission peer port
-    # 8181 # Headphones
   ];
 
   networking.firewall.allowedUDPPorts = [
@@ -293,7 +284,6 @@ in
     };
 
     transmission = {
-      package = pkgs.transmission_4;
       enable = true;
       peerPort = 63998;
       vpn.enable = true;

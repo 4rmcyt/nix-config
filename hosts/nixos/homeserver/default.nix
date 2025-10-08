@@ -85,6 +85,7 @@
       system-features = [
         "big-parallel"
         "kvm"
+        "gccarch-skylake"
       ];
       trusted-users = [ "zeev" ];
       warn-dirty = false;
