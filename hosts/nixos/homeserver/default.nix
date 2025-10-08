@@ -40,24 +40,26 @@
   # =================================================================
   nixpkgs.config.allowUnfree = true;
 
-  nixpkgs.config.packageOverrides = pkgs: {
-    python3 = pkgs.python3.override {
-      packageOverrides = _pySelf: pySuper: {
-        pyrate-limiter = pySuper.pyrate-limiter.overridePythonAttrs (_oldAttrs: {
-          doCheck = false; # Skip tests
-        });
-        img2pdf = pySuper.img2pdf.overridePythonAttrs (_oldAttrs: {
-          doCheck = false; # Skip failing tests
-        });
+  nixpkgs.overlays = [
+    (final: prev: {
+      python3 = prev.python3.override {
+        packageOverrides = pySelf: pySuper: {
+          pyrate-limiter = pySuper.pyrate-limiter.overridePythonAttrs (_oldAttrs: {
+            doCheck = false;
+          });
+          img2pdf = pySuper.img2pdf.overridePythonAttrs (_oldAttrs: {
+            doCheck = false;
+          });
+        };
       };
-    };
-    # Temporarily override libutp
-    libutp = pkgs.libutp.overrideAttrs (oldAttrs: {
-      meta = oldAttrs.meta // {
-        broken = false;
-      };
-    });
-  };
+      # Override libutp to work around CMake issues
+      libutp = prev.libutp.overrideAttrs (oldAttrs: {
+        meta = oldAttrs.meta // {
+          broken = false;
+        };
+      });
+    })
+  ];
 
   # =================================================================
   # 5. Nix Configuration
