@@ -1,15 +1,12 @@
 {
   programs.firefox.profiles.default.settings = {
     # === PERFORMANCE & HARDWARE ===
-    "gfx.wayland.hdr" = false;
     "gfx.webrender.all" = true;
     "gfx.webrender.compositor" = false;
     "gfx.webrender.compositor.force-enabled" = false;
     "gfx.webrender.enabled" = true;
-    "gfx.x11-egl.force-enabled" = true;
     "layers.acceleration.force-enabled" = true;
     "widget.dmabuf.force-enabled" = true;
-    # "gfx.font_rendering.ahem_antialias_none" = true;
     "gfx.font_rendering.fontconfig.max_generic_substitutions" = 127;
 
     # === MEDIA & CODECS ===
@@ -77,8 +74,17 @@
     # === THEME & APPEARANCE ===
     "browser.in-content.dark-mode" = true;
     "ui.systemUsesDarkTheme" = true;
-    "widget.use-xdg-desktop-portal.file-picker" = 1;
+    "layout.css.dpi" = "96"; # Standard DPI
     "layout.css.devPixelsPerPx" = "1.7"; # Hi-DPI
+
+    # === WAYLAND FIXES ===
+    "widget.use-xdg-desktop-portal.file-picker" = 1;
+    "widget.use-xdg-desktop-portal.mime-handler" = 1;
+    "widget.use-xdg-desktop-portal.settings" = 1;
+    "widget.use-xdg-desktop-portal.location" = 1;
+    "widget.use-xdg-desktop-portal.open-uri" = 1;
+    "media.hardwaremediakeys.enabled" = false;
+    "gfx.webrender.software.opengl" = false;
 
     # === ACCESSIBILITY ===
     "accessibility.typeaheadfind.enablesound" = false;

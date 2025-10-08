@@ -14,6 +14,18 @@
     inputs.betterfox-nix.homeModules.betterfox
   ];
 
+  home.sessionVariables = {
+    MOZ_ENABLE_WAYLAND = "1";
+    MOZ_WAYLAND_USE_VAAPI = "1";
+    MOZ_USE_XINPUT2 = "1";
+    XDG_CURRENT_DESKTOP = "sway";
+
+    GBM_BACKEND = "nvidia-drm";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    MOZ_DISABLE_RDD_SANDBOX = "1";
+    LIBVA_DRIVER_NAME = "nvidia";
+  };
+
   programs.firefox = {
     enable = true;
     package = inputs.firefox-nightly.packages.x86_64-linux.firefox-nightly-bin;

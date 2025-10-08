@@ -25,8 +25,7 @@
 
       gpu = {
         apply_gpu_optimisations = "accept-responsibility";
-        nvidia_performance_level = "high";
-        # gpu_device = 0; # Let gamemode auto-detect the GPU
+        gpu_device = 2;
       };
 
       # Move custom section to top level (outside of gpu)

@@ -1,17 +1,16 @@
 {
   programs.zen-browser.policies = {
-    # === AUTOFILL & CREDENTIALS ===
-    AutofillAddressEnabled = true;
-    AutofillCreditCardEnabled = false;
-    OfferToSaveLogins = false;
-
     # === BASIC POLICIES ===
     DisableAppUpdate = true;
     DisableFeedbackCommands = true;
     DontCheckDefaultBrowser = true;
     HardwareAcceleration = true;
-    # NoDefaultBookmarks = true;
     TranslateEnabled = true;
+
+    # === AUTOFILL & CREDENTIALS ===
+    AutofillAddressEnabled = true;
+    AutofillCreditCardEnabled = false;
+    OfferToSaveLogins = false;
 
     # === FIREFOX HOME (NEW TAB PAGE) ===
     FirefoxHome = {
@@ -22,18 +21,6 @@
       Pocket = false;
       SponsoredPocket = false;
       Snippets = false;
-    };
-
-    # === PROTOCOL HANDLERS ===
-    Handlers.schemes = {
-      element = {
-        action = "useSystemDefault";
-        ask = false;
-      };
-      vscode = {
-        action = "useSystemDefault";
-        ask = false;
-      };
     };
 
     # === PRIVACY & TELEMETRY ===
@@ -62,6 +49,18 @@
     UserMessaging = {
       SkipOnboarding = true;
       UrlbarInterventions = false;
+    };
+
+    # === PROTOCOL HANDLERS ===
+    Handlers.schemes = {
+      element = {
+        action = "useSystemDefault";
+        ask = false;
+      };
+      vscode = {
+        action = "useSystemDefault";
+        ask = false;
+      };
     };
   };
 }
