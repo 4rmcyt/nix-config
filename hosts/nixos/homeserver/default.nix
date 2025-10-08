@@ -193,10 +193,10 @@
     };
     zsh.enable = true;
     nh = {
-      enable = true;
       clean.enable = true;
       clean.extraArgs = "--keep-since 10d --keep 3";
-      flake = "/home/zeev/src/nixos-config";
+      enable = true;
+      flake = "/home/zeev/src/nix-config";
     };
 
     # Commented out - uncomment when needed
