@@ -1,96 +1,98 @@
 { lib, ... }:
 {
   programs.zen-browser.profiles.default.search.engines = {
-    # Disable all the stupid "This time, search with" icons
-    ddg.metaData.hidden = true;
-    bing.metaData.hidden = true;
-    ebay.metaData.hidden = true;
-    amazondotcom.metaData.hidden = true;
-    wikipedia.metaData.hidden = true;
+    # === DISABLE DEFAULT SEARCH ENGINE SUGGESTIONS ===
+    "DuckDuckGo".metaData.hidden = true;
+    "Bing".metaData.hidden = true;
+    "eBay".metaData.hidden = true;
+    "Amazon.com".metaData.hidden = true;
+    "Wikipedia (en)".metaData.hidden = true;
 
+    # === GITHUB SEARCH ENGINES ===
     "Github Search Nix" = {
-      urls = lib.singleton {
+      urls = [{
         template = "https://github.com/search?type=code&q=lang:nix+NOT+is:fork+{searchTerms}";
-      };
+      }];
       icon = "https://github.com/favicon.ico";
-      definedAliases = lib.singleton "@gn";
+      definedAliases = [ "@gn" ];
     };
 
     "Github Search" = {
-      urls = lib.singleton {
+      urls = [{
         template = "https://github.com/search?type=code&q=NOT+is:fork+{searchTerms}";
-      };
+      }];
       icon = "https://github.com/favicon.ico";
-      definedAliases = lib.singleton "@gh";
+      definedAliases = [ "@gh" ];
     };
 
     "Github Search Fish" = {
-      urls = lib.singleton {
+      urls = [{
         template = "https://github.com/search?type=code&q=lang:fish+NOT+is:fork+{searchTerms}";
-      };
+      }];
       icon = "https://fishshell.com/favicon.ico";
-      definedAliases = lib.singleton "@gf";
+      definedAliases = [ "@gf" ];
     };
 
     "Github Search Lua" = {
-      urls = lib.singleton {
+      urls = [{
         template = "https://github.com/search?type=code&q=lang:lua+NOT+is:fork+{searchTerms}";
-      };
+      }];
       icon = "https://github.com/favicon.ico";
-      definedAliases = lib.singleton "@gl";
+      definedAliases = [ "@gl" ];
     };
 
     "Github Search Gleam" = {
-      urls = lib.singleton {
+      urls = [{
         template = "https://github.com/search?type=code&q=lang:gleam+NOT+is:fork+{searchTerms}";
-      };
+      }];
       icon = "https://github.com/favicon.ico";
-      definedAliases = lib.singleton "@gg";
+      definedAliases = [ "@gg" ];
     };
 
     "Github Search Typst" = {
-      urls = lib.singleton {
+      urls = [{
         template = "https://github.com/search?type=code&q=lang:typst+NOT+is:fork+{searchTerms}";
-      };
+      }];
       icon = "https://github.com/favicon.ico";
-      definedAliases = lib.singleton "@gt";
+      definedAliases = [ "@gt" ];
     };
 
+    # === NIX ECOSYSTEM SEARCH ENGINES ===
     "Noogle" = {
-      urls = lib.singleton {
+      urls = [{
         template = "https://noogle.dev/q?term={searchTerms}";
-      };
+      }];
       icon = "https://noogle.dev/favicon.png";
-      definedAliases = lib.singleton "@ng";
+      definedAliases = [ "@ng" ];
     };
 
     "Nixpkgs" = {
-      urls = lib.singleton {
+      urls = [{
         template = "https://github.com/search?type=code&q=repo:NixOS/nixpkgs+lang:nix+{searchTerms}";
-      };
-      definedAliases = lib.singleton "@npkgs";
+      }];
+      definedAliases = [ "@npkgs" ];
     };
 
     "Home Manager" = {
-      urls = lib.singleton {
+      urls = [{
         template = "https://github.com/search?type=code&q=repo:nix-community/home-manager+lang:nix+{searchTerms}";
-      };
-      definedAliases = lib.singleton "@hmgr";
+      }];
+      definedAliases = [ "@hmgr" ];
     };
 
     "Home Manager Options" = {
-      urls = lib.singleton {
+      urls = [{
         template = "https://home-manager-options.extranix.com/?release=release-24.11&query={searchTerms}";
-      };
+      }];
       icon = "https://home-manager-options.extranix.com/images/favicon.png";
-      definedAliases = lib.singleton "@oh";
+      definedAliases = [ "@oh" ];
     };
 
     "NixOS Options" = {
-      urls = lib.singleton {
+      urls = [{
         template = "https://search.nixos.org/options?channel=24.11&from=0&size=100&sort=alpha_asc&query={searchTerms}";
-      };
-      definedAliases = lib.singleton "@on";
+      }];
+      definedAliases = [ "@on" ];
     };
   };
 }
