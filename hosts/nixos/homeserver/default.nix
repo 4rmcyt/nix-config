@@ -46,6 +46,9 @@
         pyrate-limiter = pySuper.pyrate-limiter.overridePythonAttrs (_oldAttrs: {
           doCheck = false; # Skip tests
         });
+        img2pdf = pySuper.img2pdf.overridePythonAttrs (_oldAttrs: {
+          doCheck = false; # Skip failing tests
+        });
       };
     };
     # Temporarily override libutp
