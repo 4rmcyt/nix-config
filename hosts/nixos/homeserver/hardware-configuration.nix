@@ -94,7 +94,7 @@ in
     graphics = {
       enable = true;
       extraPackages = with pkgs; [
-        intel-compute-runtime # For OpenCL (compute/filtering)
+        # intel-compute-runtime # For OpenCL (compute/filtering)
         intel-media-driver # For VAAPI (decoding/encoding)
         intel-ocl
         intel-vaapi-driver
