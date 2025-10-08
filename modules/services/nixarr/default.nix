@@ -227,14 +227,12 @@ in
   #   };
   # };
 
-  
   environment.systemPackages = [
     pkgs.jellyfin
     pkgs.jellyfin-web
     pkgs.jellyfin-ffmpeg
   ];
 
-  
   nixarr = {
     enable = true;
     mediaUsers = [ "zeev" ];

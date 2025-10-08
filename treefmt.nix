@@ -3,102 +3,101 @@
 {
   projectRootFile = "flake.nix";
   programs = {
-    nixfmt = {
-      enable = true;
-      package = pkgs.nixfmt-rfc-style;
-      includes = [ "*.nix" ];
-    };
     alejandra = {
       enable = true;
-      package = pkgs.alejandra;
       includes = [ "*.nix" ];
+      package = pkgs.alejandra;
     };
     deadnix = {
       enable = true;
+      includes = [ "*.nix" ];
       package = pkgs.deadnix;
-      includes = [ "*.nix" ];
-    };
-    statix = {
-      package = pkgs.statix;
-      enable = true;
-      includes = [ "*.nix" ];
-    };
-    shfmt = {
-      enable = true;
-      package = pkgs.shfmt;
-      includes = [
-        "*.sh"
-        "*.bash"
-        "*.envrc"
-        "*.envrc.*"
-      ];
-    };
-    just = {
-      enable = true;
-      package = pkgs.just;
-      includes = [ ".justfile" ];
-    };
-    rustfmt = {
-      enable = true;
-      package = pkgs.rustfmt;
-      includes = [ "*.rs" ];
-    };
-    yamlfmt = {
-      enable = true;
-      package = pkgs.yamlfmt;
-      includes = [
-        "*.yaml"
-        "*.yml"
-      ];
-    };
-    toml-sort = {
-      enable = true;
-      package = pkgs.toml-sort;
-      includes = [ "*.toml" ];
     };
     dockfmt = {
       enable = true;
-      package = pkgs.dockfmt;
       includes = [
         "*.Dockerfile"
         "docker-compose.yml"
       ];
+      package = pkgs.dockfmt;
+    };
+    just = {
+      enable = true;
+      includes = [ ".justfile" ];
+      package = pkgs.just;
+    };
+    nixfmt = {
+      enable = true;
+      includes = [ "*.nix" ];
+      package = pkgs.nixfmt-rfc-style;
+    };
+    prettier = {
+      enable = true;
+      includes = [
+        "*.cjs"
+        "*.css"
+        "*.html"
+        "*.js"
+        "*.json"
+        "*.json5"
+        "*.jsx"
+        "*.mdx"
+        "*.mjs"
+        "*.scss"
+        "*.ts"
+        "*.tsx"
+        "*.vue"
+        "*.yaml"
+        "*.yml"
+      ];
+      package = pkgs.prettier;
+    };
+    rustfmt = {
+      enable = true;
+      includes = [ "*.rs" ];
+      package = pkgs.rustfmt;
+    };
+    shfmt = {
+      enable = true;
+      includes = [
+        "*.bash"
+        "*.envrc"
+        "*.envrc.*"
+        "*.sh"
+      ];
+      package = pkgs.shfmt;
+    };
+    statix = {
+      enable = true;
+      includes = [ "*.nix" ];
+      package = pkgs.statix;
+    };
+    toml-sort = {
+      enable = true;
+      includes = [ "*.toml" ];
+      package = pkgs.toml-sort;
+    };
+    yamlfmt = {
+      enable = true;
+      includes = [
+        "*.yaml"
+        "*.yml"
+      ];
+      package = pkgs.yamlfmt;
     };
   };
 
   settings.global.excludes = [
-    "secrets/*"
-    "*.png"
-    "*.jpeg"
-    "*.toml"
+    "*.age"
     "*.clan-flake"
     "*.code-workspace"
-    "*.pub"
-    "*.typed"
-    "*.age"
-    "*.list"
     "*.desktop"
+    "*.jpeg"
+    "*.list"
+    "*.png"
+    "*.pub"
+    "*.toml"
+    "*.typed"
+    "secrets/*"
   ];
-  programs.prettier = {
-    enable = true;
-    package = pkgs.prettier;
-    includes = [
-      "*.cjs"
-      "*.css"
-      "*.html"
-      "*.js"
-      "*.json5"
-      "*.jsx"
-      "*.mdx"
-      "*.mjs"
-      "*.scss"
-      "*.ts"
-      "*.tsx"
-      "*.vue"
-      "*.yaml"
-      "*.yml"
-      "*.json"
-      "*.yaml"
-    ];
-  };
 }

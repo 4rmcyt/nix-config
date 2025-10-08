@@ -39,7 +39,7 @@
   # 4. Nixpkgs Configuration
   # =================================================================
   nixpkgs.config.allowUnfree = true;
-  
+
   nixpkgs.config.packageOverrides = pkgs: {
     python3 = pkgs.python3.override {
       packageOverrides = _pySelf: pySuper: {
