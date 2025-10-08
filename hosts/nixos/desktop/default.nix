@@ -83,7 +83,8 @@
       zoxide
 
       # Desktop applications
-      jellyfin-media-player
+      # jellyfin-media-player
+      jellyfin-mpv-shim
       telegram-desktop
 
       # Fonts & Themes
