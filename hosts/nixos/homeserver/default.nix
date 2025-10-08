@@ -39,6 +39,7 @@
   # 4. Nixpkgs Configuration
   # =================================================================
   nixpkgs.config.allowUnfree = true;
+  
   nixpkgs.config.packageOverrides = pkgs: {
     python3 = pkgs.python3.override {
       packageOverrides = _pySelf: pySuper: {
@@ -47,6 +48,12 @@
         });
       };
     };
+    # Temporarily override libutp
+    libutp = pkgs.libutp.overrideAttrs (oldAttrs: {
+      meta = oldAttrs.meta // {
+        broken = false;
+      };
+    });
   };
 
   # =================================================================
