@@ -3,9 +3,9 @@
   imports = [
     ./homepage
     ./miniflux
-    ./paperless
-    ./radicale
-    ./home-assistant
+    # ./paperless
+    # ./radicale
+    # ./home-assistant
     ./nixarr
     ./kavita
     # ./tdarr
