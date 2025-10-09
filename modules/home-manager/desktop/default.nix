@@ -371,51 +371,72 @@
 
     mpv = {
       enable = true;
-      package = let
+      package = (
+        let
           mpv-jellyfin = pkgs.stdenv.mkDerivation {
             pname = "mpv-jellyfin";
-            version = "1.2.0";
-
+            version = "main";
+            
             src = pkgs.fetchFromGitHub {
               owner = "EmperorPenguin18";
               repo = "mpv-jellyfin";
-              rev = "v1.2.0";
-              sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # You'll need to update this
+              rev = "main";
+              sha256 = "sha256-dli/YNDSbPYgu3navhpSTiJn17dqRxISVPZpw9yzbNc=";
             };
-
+            
             dontBuild = true;
-
+            
             installPhase = ''
               mkdir -p $out/share/mpv/scripts
-              cp jellyfin.lua $out/share/mpv/scripts/
+              # List files to debug
+              echo "Files in source directory:"
+              find . -type f -name "*.lua" | head -20
+              
+              # Copy the actual lua file (check the repo structure)
+              if [ -f "jellyfin.lua" ]; then
+                cp jellyfin.lua $out/share/mpv/scripts/
+              elif [ -f "src/jellyfin.lua" ]; then
+                cp src/jellyfin.lua $out/share/mpv/scripts/
+              elif [ -f "script/jellyfin.lua" ]; then
+                cp script/jellyfin.lua $out/share/mpv/scripts/
+              else
+                # Find any lua file and copy it
+                lua_file=$(find . -name "*.lua" | head -1)
+                if [ -n "$lua_file" ]; then
+                  cp "$lua_file" $out/share/mpv/scripts/jellyfin.lua
+                else
+                  echo "No Lua files found!"
+                  exit 1
+                fi
+              fi
             '';
+            
+            # Add the required scriptName attribute
+            passthru.scriptName = "jellyfin.lua";
           };
         in
         pkgs.mpv-unwrapped.wrapper {
-          scripts =
-            with pkgs.mpvScripts;
-            [
-              uosc
-              sponsorblock
-            ]
-            ++ [
-              mpv-jellyfin
-            ];
+          scripts = with pkgs.mpvScripts; [
+            uosc
+            sponsorblock
+            mpv-jellyfin
+          ];
 
           mpv = pkgs.mpv-unwrapped.override {
             waylandSupport = true;
           };
-        };
+        }
+      );
 
       config = {
         profile = "high-quality";
         ytdl-format = "bestvideo+bestaudio";
         cache-default = 4000000;
-
+        
         # Jellyfin plugin configuration
         script-opts = "jellyfin-server=http://192.168.1.165:8096,jellyfin-username=admin";
       };
-    };
+  };~!
   };
 
   services.gpg-agent.enable = true;
