@@ -84,7 +84,6 @@
 
       # Desktop applications
       # jellyfin-media-player
-      jellyfin-mpv-shim
       telegram-desktop
 
       # Fonts & Themes
