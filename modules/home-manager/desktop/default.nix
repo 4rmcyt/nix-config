@@ -359,7 +359,7 @@
       };
     };
 
-    programs.mpv = {
+    mpv = {
       enable = true;
 
       package = (
