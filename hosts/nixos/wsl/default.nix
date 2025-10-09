@@ -155,8 +155,18 @@
   # =================================================================
   # 13. Programs
   # =================================================================
+
   programs = {
-    nix-ld.enable = true;
+    nix-index = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+    nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 10d --keep 3";
+      flake = "/home/zeev/src/nix-config";
+    };
     zsh.enable = true;
   };
 
