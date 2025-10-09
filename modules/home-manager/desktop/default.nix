@@ -82,6 +82,8 @@
           "--enable-zero-copy"
         ];
       })
+      pcsc-tools
+      ccid
     ];
   };
 
