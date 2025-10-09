@@ -271,7 +271,7 @@ in
 
     transmission = {
       enable = true;
-      package = pkgs.transmission_4;
+      # package = pkgs.transmission_4;
       peerPort = 63998;
       vpn.enable = true;
       flood.enable = false;
