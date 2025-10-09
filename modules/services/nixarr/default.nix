@@ -385,7 +385,7 @@ in
     "Z /data/media/books 775 zeev media -"
     "Z /data/media/comics 775 zeev media -"
     "Z /data/media/manga 775 zeev media -"
-    
+
     "d /var/lib/transmission 775 transmission transmission -"
 
     "d /data/Downloads 775 zeev media -"
