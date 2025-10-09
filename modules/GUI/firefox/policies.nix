@@ -8,7 +8,7 @@
     # === AUTOFILL & CREDENTIALS ===
     OfferToSaveLogins = true;
     PasswordManagerEnabled = true;
-    
+
     # === PRIVACY & TELEMETRY ===
     DisableTelemetry = true;
     DisableFirefoxStudies = true;

@@ -41,9 +41,9 @@
   nixpkgs.config.allowUnfree = true;
 
   nixpkgs.overlays = [
-    (final: prev: {
+    (_final: prev: {
       python3 = prev.python3.override {
-        packageOverrides = pySelf: pySuper: {
+        packageOverrides = _pySelf: pySuper: {
           pyrate-limiter = pySuper.pyrate-limiter.overridePythonAttrs (_oldAttrs: {
             doCheck = false;
           });

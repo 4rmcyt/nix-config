@@ -298,12 +298,17 @@
         eval "$(pyenv init --path)"
       '';
       initContent = ''
-        autoload -Uz compinit && compinit
+        autoload -Uz compinit && compinit -d ~/.zcompdump
 
+        # Load additional completion functions and fix missing ones
+        autoload -Uz _normal _set_command 2>/dev/null || true
+
+        # History substring search keybindings
         bindkey '^[[A' history-substring-search-up # or '\eOA'
         bindkey '^[[B' history-substring-search-down # or '\eOB'
         HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
+        # Completion styles
         zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
         zstyle ':completion:*' menu no
         zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
@@ -311,8 +316,13 @@
         zstyle ':completion:*:*:docker:*' option-stacking yes
         zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
+        # Suppress completion errors for missing functions
+        zstyle ':completion:*:functions' ignored-patterns '_*'
+
+        # Load powerlevel10k theme
         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+        # Fortune and cowsay at login
         if [ $(command -v fortune) ] && [ $UID != '0' ] && [[ $- == *i* ]] && [ $TERM != 'dumb' ]; then
             ### Cowsay At Login ###
             if [ $(command -v cowsay) ]; then
@@ -361,36 +371,52 @@
 
     mpv = {
       enable = true;
+      package = let
+          mpv-jellyfin = pkgs.stdenv.mkDerivation {
+            pname = "mpv-jellyfin";
+            version = "1.2.0";
 
-      package = (
+            src = pkgs.fetchFromGitHub {
+              owner = "EmperorPenguin18";
+              repo = "mpv-jellyfin";
+              rev = "v1.2.0";
+              sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # You'll need to update this
+            };
+
+            dontBuild = true;
+
+            installPhase = ''
+              mkdir -p $out/share/mpv/scripts
+              cp jellyfin.lua $out/share/mpv/scripts/
+            '';
+          };
+        in
         pkgs.mpv-unwrapped.wrapper {
-          scripts = with pkgs.mpvScripts; [
-            uosc
-            sponsorblock
-          ];
+          scripts =
+            with pkgs.mpvScripts;
+            [
+              uosc
+              sponsorblock
+            ]
+            ++ [
+              mpv-jellyfin
+            ];
 
           mpv = pkgs.mpv-unwrapped.override {
             waylandSupport = true;
           };
-        }
-      );
+        };
 
       config = {
         profile = "high-quality";
         ytdl-format = "bestvideo+bestaudio";
         cache-default = 4000000;
+
+        # Jellyfin plugin configuration
+        script-opts = "jellyfin-server=http://192.168.1.165:8096,jellyfin-username=admin";
       };
     };
   };
 
-  # Configure Qt for Plasma 6
-  qt = {
-    enable = true;
-    platformTheme.name = "kde";
-    style.name = "breeze";
-  };
-
-  # GPG agent for pinentry
   services.gpg-agent.enable = true;
-  # vscodeIntegration = true; # Enable VS Code integration
 }
