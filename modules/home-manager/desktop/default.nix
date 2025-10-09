@@ -49,6 +49,8 @@
       libva-utils
       home-manager
       busybox
+      ffmpeg
+
 
       # Gaming
       vesktop
@@ -64,6 +66,7 @@
       ytmdesktop
       pinentry-qt
       signal-desktop
+      obsidian
 
       # Themes and icons
       gruvbox-dark-icons-gtk
