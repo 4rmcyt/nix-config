@@ -83,7 +83,6 @@
       zoxide
       yubico-piv-tool
       ccid
-      
 
       # Desktop applications
       # jellyfin-media-player
@@ -307,7 +306,7 @@
       plugins = [ pkgs.ccid ];
     };
     usbmuxd.enable = true;
-    
+
     # Desktop Environment
     desktopManager.plasma6.enable = true;
     displayManager.sddm = {

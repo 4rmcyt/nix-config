@@ -372,7 +372,8 @@
 
     mpv = {
       enable = true;
-      package = let
+      package =
+        let
           mpv-jellyfin = pkgs.stdenv.mkDerivation {
             pname = "mpv-jellyfin";
             version = "main";
