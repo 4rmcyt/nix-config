@@ -1,20 +1,9 @@
 _: {
   programs.zen-browser.profiles.default.settings = {
-    # === ACCESSIBILITY ===
-    "accessibility.typeaheadfind.enablesound" = false;
-    "general.autoScroll" = true;
-
-    # === APP SETTINGS ===
-    "app.normandy.enabled" = false;
-    "app.shield.optoutstudies.enabled" = false;
-
-    # === APZ (ASYNC PAN-ZOOM) ===
-    "apz.overscroll.enabled" = true;
 
     # === BROWSER BEHAVIOR ===
     "browser.aboutConfig.showWarning" = false;
     "browser.cache.disk.enable" = false;
-    "browser.cache.frecency_half_life_hours" = 18; # More aggressive cache eviction
     "browser.cache.memory.enable" = true;
     "browser.contentblocking.category" = "strict";
     "browser.contentblocking.report.lockwise.enabled" = true;
@@ -30,9 +19,6 @@ _: {
     "browser.safebrowsing.downloads.remote.enabled" = false;
     "browser.search.update" = false;
     "browser.send_pings" = false;
-    "browser.sessionstore.interval" = 600000; # More frequent saves with your RAM
-    "browser.sessionhistory.max_entries" = 5; # Reduce memory usage
-    "browser.startup.page" = 3; # Resume previous session
     "browser.tabs.crashReporting.sendReport" = false;
     "browser.tabs.hoverPreview.enabled" = true;
     "browser.tabs.loadInBackground" = true;
@@ -60,8 +46,6 @@ _: {
 
     # === DOM ===
     "dom.battery.enabled" = false;
-    "dom.ipc.processPriorityManager.backgroundUsesEcoQoS" = true;
-    "dom.webgpu.enabled" = true;
 
     # === EDITOR ===
     "editor.truncate_user_pastes" = false;
@@ -79,24 +63,9 @@ _: {
     "geo.provider.network.url" = "https://beacondb.net/v1/geolocate";
 
     # === GRAPHICS & CANVAS ===
-    "gfx.canvas.accelerated" = true;
-    "gfx.canvas.accelerated.cache-items" = 32768;
-    "gfx.canvas.remote" = false;
-    "gfx.vsync.hw-vsync.enabled" = true;
     "gfx.webrender.all" = true;
-    "gfx.webrender.compositor" = false;
-    "gfx.webrender.compositor.force-enabled" = false;
-    "gfx.webrender.enabled" = true;
-    "gfx.webrender.force-disabled" = false;
-    "gfx.webrender.software" = false;
-    "gfx.webrender.software.opengl" = false;
-    "gfx.webrender.precache-shaders" = true;
-    "image.cache.size" = 10485760; # 10GB image cache for 64GB RAM
-    "media.memory_caches_combined_limit_kb" = 3145728; # 3GB combined cache
 
-    # === IMAGES ===
-    "image.avif.enabled" = true;
-    "image.jxl.enabled" = true;
+
 
     # === IDENTITY & SYNC ===
     "identity.fxaccounts.commands.enabled" = true;
@@ -107,33 +76,14 @@ _: {
     # === INTERNATIONALIZATION ===
     "intl.accept_languages" = "en-US,en";
 
-    # === LAYERS (GPU ACCELERATION) ===
-    "layers.acceleration.disabled" = false;
-    "layers.acceleration.force-enabled" = true;
-    "layers.gpu-process.enabled" = true;
-    "layers.gpu-process.force-enabled" = true;
-    "layers.mlgpu.enabled" = true;
-    "layers.omtp.enabled" = false;
 
     # === MEDIA & HARDWARE VIDEO ACCELERATION ===
     "media.av1.enabled" = true;
-    "media.av1.use-dav1d" = false; # Use hardware decoder
     "media.eme.enabled" = true;
     "media.ffmpeg.vaapi.enabled" = true;
-    "media.ffmpeg.vaapi-drm-display.enabled" = true;
-    "media.ffvpx.enabled" = false; # Use system FFmpeg
-    "media.gpu-process-decoder" = true;
-    "media.hardwaremediakeys.enabled" = false;
     "media.hardware-video-decoding.enabled" = true;
-    "media.hardware-video-decoding.force-enabled" = true;
     "media.hevc.enabled" = true;
     "media.hls.enabled" = true;
-    "media.navigator.mediadatadecoder_vpx_enabled" = true;
-    "media.rdd-ffmpeg.enabled" = true;
-    "media.rdd-vpx.enabled" = false; # Disable VP8/VP9 in RDD process
-    "media.videocontrols.picture-in-picture.video-toggle.enabled" = true;
-    "media.wmf.amd.hevc.enabled" = true;
-    "media.wmf.hevc.enabled" = true;
 
     # === MOUSE & SCROLLING ===
     "general.smoothScroll" = true;
@@ -186,16 +136,10 @@ _: {
     "privacy.userContext.enabled" = true;
     "privacy.userContext.ui.enabled" = true;
 
-    # === SECURITY ===
-    "security.OCSP.enabled" = 0;
-    "security.pki.crlite_mode" = 2;
 
     # === SIGN-ON ===
     "signon.formlessCapture.enabled" = true;
     "signon.privateBrowsingCapture.enabled" = false;
-
-    # === SVG ===
-    "svg.context-properties.content.enabled" = true;
 
     # === TELEMETRY ===
     "toolkit.telemetry.archive.enabled" = false;
@@ -205,25 +149,5 @@ _: {
 
     # === TOOLKIT ===
     "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-
-    # === WAYLAND SETTINGS ===
-    "widget.gtk.wayland.force-enabled" = true;
-    "widget.gtk.wayland.fractional-scaling.enabled" = true;
-    "widget.use-xdg-desktop-portal.file-picker" = 1;
-    "widget.use-xdg-desktop-portal.location" = 1;
-    "widget.use-xdg-desktop-portal.mime-handler" = 1;
-    "widget.use-xdg-desktop-portal.open-uri" = 1;
-    "widget.use-xdg-desktop-portal.settings" = 1;
-
-    # === WEBGL ===
-    "webgl.disabled" = false;
-    "webgl.force-enabled" = true;
-    "webgl.msaa-force" = false; # Enable MSAA with your GPU power
-
-    "javascript.options.baselinejit.threshold" = 50;
-    "javascript.options.ion.threshold" = 5000;
-    "javascript.options.concurrent_multiprocess_gcs.cpu_divisor" = 8;
-    "dom.timeout.throttling_delay" = 40;
-    "dom.timeout.budget_throttling_max_delay" = 0;
   };
 }

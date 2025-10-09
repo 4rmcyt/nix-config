@@ -118,24 +118,29 @@ _: {
 
     # === MEDIA & HARDWARE VIDEO ACCELERATION ===
     "media.av1.enabled" = true;
-    "media.av1.use-dav1d" = false; # Use hardware decoder
-    "media.cdpeg.vaapi.enabled" = true;
+    "media.av1.use-dav1d" = true; # Change to true - use software decoder for AV1
     "media.eme.enabled" = true;
-    "media.ffmpeg.vaapi.enabled" = true;
-    "media.ffmpeg.vaapi-drm-display.enabled" = true;
-    "media.ffvpx.enabled" = false; # Use system FFmpeg
-    "media.gpu-process-decoder" = true;
-    "media.hardwaremediakeys.enabled" = false;
-    "media.hardware-video-decoding.enabled" = true;
-    "media.hardware-video-decoding.force-enabled" = true;
-    "media.hevc.enabled" = true;
+    "media.ffmpeg.vaapi.enabled" = true; # Disable VAAPI temporarily
+    "media.ffmpeg.vaapi-drm-display.enabled" = true; # Disable VAAPI DRM
+    "media.ffvpx.enabled" = true; # Use built-in FFmpeg instead of system
+    "media.gpu-process-decoder" = true; # Disable GPU process decoder
+    "media.hardwaremediakeys.enabled" = true;
+    "media.hardware-video-decoding.enabled" = true; # Disable hardware decoding
+    "media.hardware-video-decoding.force-enabled" = true; # Don't force hardware decoding
+    "media.hevc.enabled" = true; # Disable HEVC which might be problematic
     "media.hls.enabled" = true;
     "media.navigator.mediadatadecoder_vpx_enabled" = true;
-    "media.rdd-ffmpeg.enabled" = true;
+    "media.rdd-ffmpeg.enabled" = false; # Disable RDD process for FFmpeg
     "media.rdd-vpx.enabled" = false; # Disable VP8/VP9 in RDD process
     "media.videocontrols.picture-in-picture.video-toggle.enabled" = true;
-    "media.wmf.amd.hevc.enabled" = true;
+    "media.wmf.amd.hevc.enabled" = true; # Disable Windows Media Foundation HEVC
     "media.wmf.hevc.enabled" = true;
+
+    # Add these additional media settings for stability
+    "media.decoder.doctor.min_crash_count" = 10;
+    "media.decoder.doctor.use_crash_guard" = true;
+    "media.gmp-manager.updateEnabled" = false;
+    "media.gmp.trial-create.enabled" = false;
 
     # === MOUSE & SCROLLING ===
     "general.smoothScroll" = true;
@@ -222,11 +227,5 @@ _: {
     "webgl.disabled" = false;
     "webgl.force-enabled" = true;
     "webgl.msaa-force" = false; # Enable MSAA with your GPU power
-
-    "javascript.options.baselinejit.threshold" = 50;
-    "javascript.options.ion.threshold" = 5000;
-    "javascript.options.concurrent_multiprocess_gcs.cpu_divisor" = 8;
-    "dom.timeout.throttling_delay" = 40;
-    "dom.timeout.budget_throttling_max_delay" = 0;
   };
 }
