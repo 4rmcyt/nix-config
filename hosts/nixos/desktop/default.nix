@@ -81,6 +81,9 @@
       treefmt
       yamlfmt
       zoxide
+      yubico-piv-tool
+      ccid
+      
 
       # Desktop applications
       # jellyfin-media-player
@@ -299,6 +302,12 @@
     };
     pulseaudio.enable = false;
 
+    pcscd = {
+      enable = true;
+      plugins = [ pkgs.ccid ];
+    };
+    usbmuxd.enable = true;
+    
     # Desktop Environment
     desktopManager.plasma6.enable = true;
     displayManager.sddm = {
@@ -364,7 +373,6 @@
     flatpak.enable = true;
     fwupd.enable = true;
     openssh.enable = true;
-    pcscd.enable = true;
 
     # X Server (disabled but configured for NVIDIA)
     xserver = {
