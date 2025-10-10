@@ -227,7 +227,7 @@
               widgets = [
                 {
                   type = "linkwarden";
-                  url = "https://link.labhome.work";
+                  url = "http://localhost:3000";
                   key = "leyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..uXGvjKqFRTKGAnp8.Uy6X_ksdeGgE9r_9HE64ZZPPbG1JaD1c6JupFCu8fJ62wiuJdLbdz8DLkOQdfyCOKcz8UNdK4DirXQH4VAr_9dwzQ-6FFlWEo2fpWQnAC1dTLgnIAQNC.OVKcuLUXEeKL6sxhKf6ERw";
                 }
               ];
@@ -337,7 +337,7 @@
               icon = "authentik";
               widget = {
                 type = "authentik";
-                url = "https://auth.labhome.work";
+                url = "http://localhost:9000";
                 key = "VL3AR8dWq1VIVb4VIGdupq8bRMIQ32YoGzCrqnb7D6X3R6e2KOn1m6aWQjrz";
               };
             };
