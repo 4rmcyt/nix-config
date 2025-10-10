@@ -228,7 +228,7 @@
                 {
                   type = "linkwarden";
                   url = "http://localhost:3000";
-                  key = "linkwarden-api-key";
+                  key = "leyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..uXGvjKqFRTKGAnp8.Uy6X_ksdeGgE9r_9HE64ZZPPbG1JaD1c6JupFCu8fJ62wiuJdLbdz8DLkOQdfyCOKcz8UNdK4DirXQH4VAr_9dwzQ-6FFlWEo2fpWQnAC1dTLgnIAQNC.OVKcuLUXEeKL6sxhKf6ERw";
                 }
               ];
             };
