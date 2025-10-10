@@ -19,6 +19,13 @@
       group = config.users.groups.postgresql.name;
       mode = "0400";
     };
+    # linkwarden_env = {
+    #   sopsFile = ../../secrets/linkwarden.yaml;
+    #   owner = config.users.users.podman.name;
+    #   group = config.users.groups.podman.name;
+    #   mode = "0400";
+    #   format = "dotenv";
+    # };
   };
 
   environment.systemPackages = [
@@ -96,7 +103,11 @@
             OPENAI_API_KEY = "REDACTED";
             # NEXT_PUBLIC_DISABLE_REGISTRATION = "true";
           };
+          environmentFiles = [ config.sops.secrets.linkwarden_env.path ];
           volumes = [ "/var/lib/linkwarden:/data/data" ];
+          extraOptions = [
+            "--network=host"
+          ];
         };
         nextdns-exporter = {
           image = "ghcr.io/raylas/nextdns-exporter";
