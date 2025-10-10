@@ -1,6 +1,5 @@
 _: {
   programs.zen-browser.profiles.default.settings = {
-
     # === BROWSER BEHAVIOR ===
     "browser.aboutConfig.showWarning" = false;
     "browser.cache.disk.enable" = false;
@@ -65,8 +64,6 @@ _: {
     # === GRAPHICS & CANVAS ===
     "gfx.webrender.all" = true;
 
-
-
     # === IDENTITY & SYNC ===
     "identity.fxaccounts.commands.enabled" = true;
     "identity.fxaccounts.enabled" = true;
@@ -75,7 +72,6 @@ _: {
 
     # === INTERNATIONALIZATION ===
     "intl.accept_languages" = "en-US,en";
-
 
     # === MEDIA & HARDWARE VIDEO ACCELERATION ===
     "media.av1.enabled" = true;
@@ -135,7 +131,6 @@ _: {
     "privacy.trackingprotection.socialtracking.enabled" = true;
     "privacy.userContext.enabled" = true;
     "privacy.userContext.ui.enabled" = true;
-
 
     # === SIGN-ON ===
     "signon.formlessCapture.enabled" = true;
