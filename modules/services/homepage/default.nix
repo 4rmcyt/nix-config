@@ -221,13 +221,13 @@
         "Productivity Tools" = [
           {
             "Linkwarden" = {
-              href = "http://192.168.1.165:3004";
+              href = "https://linkwarden.labhome.work";
               description = "Linkwarden Service";
               icon = "linkwarden";
               widgets = [
                 {
                   type = "linkwarden";
-                  url = "http://192.168.1.165:3004";
+                  url = "http://localhost:3000";
                   key = "linkwarden-api-key";
                 }
               ];
