@@ -86,7 +86,7 @@
         linkwarden = {
           image = "ghcr.io/linkwarden/linkwarden";
           autoStart = true;
-          ports = [ "127.0.0.1:3000:3004/tcp" ];
+          ports = [ "127.0.0.1:3004:3000/tcp" ];
           environment = {
             TZ = "America/Edmonton";
             CUSTOM_OPENAI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
