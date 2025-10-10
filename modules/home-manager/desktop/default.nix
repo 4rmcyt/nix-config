@@ -31,7 +31,7 @@
   imports = [
     ../../GUI/firefox
     ../../GUI/thunderbird
-    ../../GUI/zen-browser
+    # ../../GUI/zen-browser
   ];
 
   home.sessionVariables.NIXOS_OZONE_WL = "1";

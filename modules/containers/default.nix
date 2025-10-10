@@ -4,6 +4,16 @@
   ...
 }:
 {
+  sops.secrets = {
+    linkwarden_db_password = {
+      sopsFile = ../../secrets/postgresql.yaml;
+      key = "linkwarden_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+  };
+  
   environment.systemPackages = [
     pkgs.podman
     pkgs.podman-compose
