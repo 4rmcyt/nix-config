@@ -221,13 +221,13 @@
         "Productivity Tools" = [
           {
             "Linkwarden" = {
-              href = "http://192.168.1.165:12522";
+              href = "http://192.168.1.165:3004";
               description = "Linkwarden Service";
               icon = "linkwarden";
               widgets = [
                 {
                   type = "linkwarden";
-                  url = "http://192.168.1.165:12522";
+                  url = "http://192.168.1.165:3004";
                   key = "linkwarden-api-key";
                 }
               ];

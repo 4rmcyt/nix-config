@@ -42,14 +42,12 @@
           "jellyseerr.labhome.work" = "http://localhost:5055";
           "ollama.labhome.work" = "http://localhost:11434";
           "vault.labhome.work" = "http://localhost:8222";
-          "link.labhome.work" = "http://localhost:12522";
           "kuma.labhome.work" = "http://localhost:3001";
           "auth.labhome.work" = "http://localhost:9000";
           "grafana.labhome.work" = "http://localhost:3000";
-          "lazylibrarian.labhome.work" = "http://localhost:5299";
           "tdarr.labhome.work" = "http://localhost:8265";
           "readarr.labhome.work" = "http://localhost:8787";
-          "headphones.labhome.work" = "http://localhost:8181";
+          "link.labhome.work" = "http://localhost:3004";
         };
       };
     };
