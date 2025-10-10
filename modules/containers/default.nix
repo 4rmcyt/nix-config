@@ -86,6 +86,7 @@
         linkwarden = {
           image = "ghcr.io/linkwarden/linkwarden";
           autoStart = true;
+          networks = [ "podman" ];
           ports = [ "127.0.0.1:3004:3000/tcp" ];
           environment = {
             TZ = "America/Edmonton";
@@ -96,9 +97,6 @@
           };
           environmentFiles = [ config.sops.secrets.linkwarden_env.path ];
           volumes = [ "/var/lib/linkwarden:/data/data" ];
-          extraOptions = [
-            "--network=host"
-          ];
         };
         nextdns-exporter = {
           image = "ghcr.io/raylas/nextdns-exporter";
