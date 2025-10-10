@@ -103,7 +103,7 @@
             OPENAI_API_KEY = "REDACTED";
             # NEXT_PUBLIC_DISABLE_REGISTRATION = "true";
           };
-          environmentFiles = [ config.sops.secrets.linkwarden_env.path ];
+          # environmentFiles = [ config.sops.secrets.linkwarden_env.path ];
           volumes = [ "/var/lib/linkwarden:/data/data" ];
           extraOptions = [
             "--network=host"
