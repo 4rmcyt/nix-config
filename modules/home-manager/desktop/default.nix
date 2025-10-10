@@ -50,6 +50,7 @@
       home-manager
       busybox
       ffmpeg
+      davfs2
 
       # Gaming
       vesktop
@@ -66,6 +67,7 @@
       pinentry-qt
       signal-desktop
       obsidian
+      tail-tray
 
       # Themes and icons
       gruvbox-dark-icons-gtk
