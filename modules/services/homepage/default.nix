@@ -266,7 +266,7 @@
               widgets = [
                 {
                   type = "grafana";
-                  url = "http://localhost:3000";
+                  url = "http://localhost:3003";
                   username = "admin";
                   password = "Septuagint@1990";
                 }

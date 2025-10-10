@@ -44,10 +44,10 @@
           "vault.labhome.work" = "http://localhost:8222";
           "kuma.labhome.work" = "http://localhost:3001";
           "auth.labhome.work" = "http://localhost:9000";
-          "grafana.labhome.work" = "http://localhost:3000";
+          "grafana.labhome.work" = "http://localhost:3003";
           "tdarr.labhome.work" = "http://localhost:8265";
           "readarr.labhome.work" = "http://localhost:8787";
-          "link.labhome.work" = "http://localhost:3004";
+          "link.labhome.work" = "http://localhost:3000";
         };
       };
     };
