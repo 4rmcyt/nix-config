@@ -24,7 +24,7 @@
       owner = config.users.users.podman.name;
       group = config.users.groups.podman.name;
       mode = "0400";
-      format = "dotenv";
+      format = "yaml";
     };
   };
 
