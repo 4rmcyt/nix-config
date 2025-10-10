@@ -15,17 +15,10 @@
     linkwarden_db_password = {
       sopsFile = ../../secrets/postgresql.yaml;
       key = "linkwarden_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
+      owner = config.users.users.podman.name;
+      group = config.users.groups.podman.name;
       mode = "0400";
     };
-    # linkwarden_env = {
-    #   sopsFile = ../../secrets/linkwarden.yaml;
-    #   owner = config.users.users.podman.name;
-    #   group = config.users.groups.podman.name;
-    #   mode = "0400";
-    #   format = "yaml";
-    # };
   };
 
   environment.systemPackages = [
@@ -96,17 +89,19 @@
           ports = [ "127.0.0.1:3004:3000/tcp" ];
           environment = {
             TZ = "America/Edmonton";
-            DATABASE_URL = "postgresql://linkwarden:${config.sops.secrets.linkwarden_db_password.path}@/run/postgresql/linkwarden?sslmode=disable";
-            # NEXTAUTH_URL = "http://localhost:3004/api/v1/auth";
             CUSTOM_OPENAI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
             OPENAI_MODEL = "gemini-2.0-flash";
             OPENAI_API_KEY = "AIzaSyDpUZqecAdTeDxE3tEASd9VsEEB58_zYO4";
             # NEXT_PUBLIC_DISABLE_REGISTRATION = "true";
           };
-          # environmentFiles = [ config.sops.secrets.linkwarden_env.path ];
-          volumes = [ "/var/lib/linkwarden:/data/data" ];
+          volumes = [ 
+            "/var/lib/linkwarden:/data/data"
+            "${config.sops.secrets.linkwarden_db_password.path}:/run/secrets/db_password:ro"
+          ];
           extraOptions = [
             "--network=host"
+            "--env"
+            "DATABASE_URL=postgresql://linkwarden:$(cat /run/secrets/db_password)@localhost:5432/linkwarden"
           ];
         };
         nextdns-exporter = {
@@ -150,10 +145,10 @@
   };
 
   systemd.tmpfiles.rules = [
+    "d /var/lib/linkwarden 775 root media -"
     "d /var/lib/tdarr/configs 775 root media -"
     "d /var/lib/tdarr/data/cache 775 root media -"
     "d /var/lib/tdarr/data/server 775 root media -"
     "d /var/lib/tdarr/logs 775 root media -"
-    "d /var/lib/linkwarden 775 root media -"
   ];
 }
