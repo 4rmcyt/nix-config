@@ -62,7 +62,7 @@
       mode = "0400";
     };
   };
-  
+
   users.users.postgresql = {
     isSystemUser = true;
     group = "postgresql";
@@ -137,8 +137,8 @@
   # Set up user passwords after PostgreSQL is running
   systemd.services.postgresql-setup-users = {
     description = "Set up PostgreSQL user passwords";
-    after = [ "postgresql.service" "sops-install-secrets.service" ];
-    requires = [ "postgresql.service" "sops-install-secrets.service" ];
+    after = [ "postgresql.service" ];
+    requires = [ "postgresql.service" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       Type = "oneshot";
@@ -147,6 +147,12 @@
       Group = "postgres";
     };
     script = ''
+      # Wait for secrets to be available
+      while [ ! -f ${config.sops.secrets.linkwarden.path} ]; do
+        echo "Waiting for SOPS secrets to be available..."
+        sleep 1
+      done
+
       ${pkgs.postgresql_16}/bin/psql -c "ALTER USER linkwarden WITH PASSWORD '$(cat ${config.sops.secrets.linkwarden.path})';"
       ${pkgs.postgresql_16}/bin/psql -c "ALTER USER miniflux WITH PASSWORD '$(cat ${config.sops.secrets.miniflux.path})';"
       ${pkgs.postgresql_16}/bin/psql -c "ALTER USER paperless WITH PASSWORD '$(cat ${config.sops.secrets.paperless.path})';"
