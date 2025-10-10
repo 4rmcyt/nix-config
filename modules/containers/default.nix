@@ -19,13 +19,13 @@
       group = config.users.groups.postgresql.name;
       mode = "0400";
     };
-    linkwarden_env = {
-      sopsFile = ../../secrets/linkwarden.yaml;
-      owner = config.users.users.podman.name;
-      group = config.users.groups.podman.name;
-      mode = "0400";
-      format = "yaml";
-    };
+    # linkwarden_env = {
+    #   sopsFile = ../../secrets/linkwarden.yaml;
+    #   owner = config.users.users.podman.name;
+    #   group = config.users.groups.podman.name;
+    #   mode = "0400";
+    #   format = "yaml";
+    # };
   };
 
   environment.systemPackages = [
