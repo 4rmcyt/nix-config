@@ -88,11 +88,13 @@
           autoStart = true;
           networks = [ "podman" ];
           ports = [ "127.0.0.1:3004:3000/tcp" ];
-          environment = {
+         environment = {
             TZ = "America/Edmonton";
             CUSTOM_OPENAI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
             OPENAI_MODEL = "gemini-2.0-flash";
             OPENAI_API_KEY = "REDACTED";
+            # Set the port to avoid conflict with anything using 3000
+            PORT = "3004";
             # NEXT_PUBLIC_DISABLE_REGISTRATION = "true";
           };
           environmentFiles = [ config.sops.secrets.linkwarden_env.path ];
