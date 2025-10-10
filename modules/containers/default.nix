@@ -96,7 +96,7 @@
             OPENAI_API_KEY = "REDACTED";
             # NEXT_PUBLIC_DISABLE_REGISTRATION = "true";
           };
-          volumes = [ "/var/lib/linkwarden:/data" ];
+          volumes = [ "/var/lib/linkwarden:/data/data" ];
         };
         nextdns-exporter = {
           image = "ghcr.io/raylas/nextdns-exporter";
