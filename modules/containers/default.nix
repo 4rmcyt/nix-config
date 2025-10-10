@@ -143,5 +143,6 @@
     "d /var/lib/tdarr/data/cache 775 root media -"
     "d /var/lib/tdarr/data/server 775 root media -"
     "d /var/lib/tdarr/logs 775 root media -"
+    "d /var/lib/linkwarden 775 root media -"
   ];
 }
