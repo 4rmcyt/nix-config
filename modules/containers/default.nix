@@ -6,7 +6,7 @@
 {
   sops.secrets = {
     containers_env = {
-      sopsFile = ../../secrets/containers.yaml;
+      sopsFile = ../../secrets/.env;
       owner = config.users.users.podman.name;
       group = config.users.groups.podman.name;
       mode = "0400";
