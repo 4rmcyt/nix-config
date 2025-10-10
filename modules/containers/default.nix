@@ -5,13 +5,6 @@
 }:
 {
   sops.secrets = {
-    linkwarden_db_password = {
-      sopsFile = ../../secrets/postgresql.yaml;
-      key = "linkwarden_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
-      mode = "0400";
-    };
     containers_env = {
       sopsFile = ../../secrets/containers.yaml;
       owner = config.users.users.podman.name;
@@ -19,47 +12,54 @@
       mode = "0400";
       format = "dotenv";
     };
+    linkwarden_db_password = {
+      sopsFile = ../../secrets/postgresql.yaml;
+      key = "linkwarden_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
   };
 
   environment.systemPackages = [
+    pkgs.docker-compose
     pkgs.podman
     pkgs.podman-compose
     pkgs.podman-tui
-    pkgs.docker-compose
   ];
-
 
   users = {
     users.podman = {
       isSystemUser = true;
       group = "podman";
       extraGroups = [
-        "users"
         "podman"
+        "users"
       ];
     };
     groups.podman = { };
     extraGroups.podman.members = [
-      "zeev"
-      "uptime-kuma"
       "podman"
+      "uptime-kuma"
+      "zeev"
     ];
   };
 
   networking.firewall = {
     allowedTCPPorts = [
-      # Podman
+      # Podman API
       2375 # Podman API (insecure, for local use only)
       2376 # Podman API (secure, for local use only)
-      9948 # NextDNS Exporter
+      # Container services
+      3004 # Linkwarden
       8191 # FlareSolverr
       8265 # Tdarr Web UI
       8266 # Tdarr Server
       8267 # Tdarr Node
-      3004 # Linkwarden
+      9948 # NextDNS Exporter
     ];
     allowedUDPPorts = [
-      # Podman
+      # Podman API
       2375 # Podman API (insecure, for local use only)
       2376 # Podman API (secure, for local use only)
     ];
@@ -82,6 +82,28 @@
             LOG_LEVEL = "info";
             TZ = "America/Edmonton";
           };
+        };
+        linkwarden = {
+          image = "ghcr.io/linkwarden/linkwarden";
+          autoStart = true;
+          ports = [ "127.0.0.1:3004:3000/tcp" ];
+          environment = {
+            TZ = "America/Edmonton";
+            DATABASE_URL = "postgresql://linkwarden:${config.sops.secrets.linkwarden_db_password.path}@/run/postgresql/linkwarden?sslmode=disable";
+            # NEXTAUTH_URL = "http://localhost:3004/api/v1/auth";
+            CUSTOM_OPENAI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
+            OPENAI_MODEL = "gemini-2.0-flash";
+            OPENAI_API_KEY = "AIzaSyDpUZqecAdTeDxE3tEASd9VsEEB58_zYO4";
+            # NEXT_PUBLIC_DISABLE_REGISTRATION = "true";
+          };
+          volumes = [ "/var/lib/linkwarden:/data" ];
+        };
+        nextdns-exporter = {
+          image = "ghcr.io/raylas/nextdns-exporter";
+          autoStart = true;
+          networks = [ "podman" ];
+          ports = [ "127.0.0.1:9948:9948/tcp" ];
+          environmentFiles = [ config.sops.secrets.containers_env.path ];
         };
         tdarr = {
           image = "ghcr.io/haveagitgat/tdarr:latest";
@@ -112,36 +134,14 @@
             "--device=/dev/dri:/dev/dri"
           ];
         };
-        nextdns-exporter = {
-          image = "ghcr.io/raylas/nextdns-exporter";
-          autoStart = true;
-          networks = [ "podman" ];
-          ports = [ "127.0.0.1:9948:9948/tcp" ];
-          environmentFiles = [ config.sops.secrets.containers_env.path ];
-        };
-        linkwarden = {
-          image = "ghcr.io/linkwarden/linkwarden";
-          autoStart = true;
-          ports = [ "127.0.0.1:3004:3000/tcp" ];
-          environment = {
-            TZ = "America/Edmonton";
-            DATABASE_URL = "postgresql://linkwarden:${config.sops.secrets.linkwarden_db_password.path}@/run/postgresql/linkwarden?sslmode=disable";
-            NEXTAUTH_SECRET = config.sops.secrets.containers_env.LINKWARDEN_NEXTAUTH_SECRET;
-            NEXTAUTH_URL = "http://localhost:3004/api/v1/auth";
-            CUSTOM_OPENAI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
-            OPENAI_MODEL = "gemini-2.0-flash";
-            OPENAI_API_KEY = "AIzaSyDpUZqecAdTeDxE3tEASd9VsEEB58_zYO4";
-            NEXT_PUBLIC_DISABLE_REGISTRATION = "true";
-          };
-        };
       };
     };
   };
 
   systemd.tmpfiles.rules = [
+    "d /var/lib/tdarr/configs 775 root media -"
     "d /var/lib/tdarr/data/cache 775 root media -"
     "d /var/lib/tdarr/data/server 775 root media -"
     "d /var/lib/tdarr/logs 775 root media -"
-    "d /var/lib/tdarr/configs 775 root media -"
   ];
 }
