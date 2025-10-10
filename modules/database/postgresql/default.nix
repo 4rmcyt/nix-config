@@ -153,13 +153,13 @@
         sleep 1
       done
 
-      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER linkwarden WITH PASSWORD '$(cat ${config.sops.secrets.linkwarden.path})';"
-      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER miniflux WITH PASSWORD '$(cat ${config.sops.secrets.miniflux.path})';"
-      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER paperless WITH PASSWORD '$(cat ${config.sops.secrets.paperless.path})';"
-      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER hass WITH PASSWORD '$(cat ${config.sops.secrets.hass.path})';"
-      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER authentik WITH PASSWORD '$(cat ${config.sops.secrets.authentik.path})';"
-      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER grafana WITH PASSWORD '$(cat ${config.sops.secrets.grafana.path})';"
-      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER vaultwarden WITH PASSWORD '$(cat ${config.sops.secrets.vaultwarden.path})';"
+      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER linkwarden WITH PASSWORD '$(cat ${config.sops.secrets.linkwarden.path} | tr -d '\n\r')' CREATEDB;"
+      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER miniflux WITH PASSWORD '$(cat ${config.sops.secrets.miniflux.path} | tr -d '\n\r')';"
+      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER paperless WITH PASSWORD '$(cat ${config.sops.secrets.paperless.path} | tr -d '\n\r')';"
+      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER hass WITH PASSWORD '$(cat ${config.sops.secrets.hass.path} | tr -d '\n\r')';"
+      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER authentik WITH PASSWORD '$(cat ${config.sops.secrets.authentik.path} | tr -d '\n\r')';"
+      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER grafana WITH PASSWORD '$(cat ${config.sops.secrets.grafana.path} | tr -d '\n\r')';"
+      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER vaultwarden WITH PASSWORD '$(cat ${config.sops.secrets.vaultwarden.path} | tr -d '\n\r')';"
     '';
   };
 }
