@@ -86,7 +86,6 @@
         linkwarden = {
           image = "ghcr.io/linkwarden/linkwarden";
           autoStart = true;
-          ports = [ "127.0.0.1:3000:3000/tcp" ];
           extraOptions = [ "--network=host" ];
           environment = {
             TZ = "America/Edmonton";
