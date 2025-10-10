@@ -44,10 +44,10 @@
           "vault.example.com" = "http://localhost:8222";
           "kuma.example.com" = "http://localhost:3001";
           "auth.example.com" = "http://localhost:9000";
-          "grafana.example.com" = "http://localhost:3000";
+          "grafana.example.com" = "http://localhost:3003";
           "tdarr.example.com" = "http://localhost:8265";
           "readarr.example.com" = "http://localhost:8787";
-          "link.example.com" = "http://localhost:3004";
+          "link.example.com" = "http://localhost:3000";
         };
       };
     };
