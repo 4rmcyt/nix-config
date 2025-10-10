@@ -86,7 +86,6 @@
         linkwarden = {
           image = "ghcr.io/linkwarden/linkwarden";
           autoStart = true;
-          networks = [ "podman" ];
           ports = [ "127.0.0.1:3004:3000/tcp" ];
          environment = {
             TZ = "America/Edmonton";
