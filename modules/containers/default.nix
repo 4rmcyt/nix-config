@@ -12,12 +12,12 @@
       mode = "0400";
       format = "dotenv";
     };
-    linkwarden_db_password = {
-      sopsFile = ../../secrets/postgresql.yaml;
-      key = "linkwarden_db_password";
+    linkwarden_env = {
+      sopsFile = ../../secrets/linkwarden.env;
       owner = config.users.users.podman.name;
       group = config.users.groups.podman.name;
       mode = "0400";
+      format = "dotenv";
     };
   };
 
@@ -94,14 +94,10 @@
             OPENAI_API_KEY = "REDACTED";
             # NEXT_PUBLIC_DISABLE_REGISTRATION = "true";
           };
-          volumes = [ 
-            "/var/lib/linkwarden:/data/data"
-            "${config.sops.secrets.linkwarden_db_password.path}:/run/secrets/db_password:ro"
-          ];
+          environmentFiles = [ config.sops.secrets.linkwarden_env.path ];
+          volumes = [ "/var/lib/linkwarden:/data/data" ];
           extraOptions = [
             "--network=host"
-            "--env"
-            "DATABASE_URL=postgresql://linkwarden:$(cat /run/secrets/db_password)@localhost:5432/linkwarden"
           ];
         };
         nextdns-exporter = {
