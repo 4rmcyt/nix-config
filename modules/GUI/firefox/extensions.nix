@@ -12,18 +12,15 @@ let
     terms-of-service-didnt-read
 
     # === DEVELOPER TOOLS ===
-    lovely-forks
     refined-github
 
     # === MEDIA & ENTERTAINMENT ===
     fastforwardteam
-    movie-web
     return-youtube-dislikes
 
     # === PRODUCTIVITY & NAVIGATION ===
     indie-wiki-buddy
-    rsshub-radar
-    to-google-translate
+    linkwarden
 
     # === SYSTEM INTEGRATION ===
     plasma-integration
