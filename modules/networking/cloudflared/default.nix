@@ -42,14 +42,12 @@
           "jellyseerr.example.com" = "http://localhost:5055";
           "ollama.example.com" = "http://localhost:11434";
           "vault.example.com" = "http://localhost:8222";
-          "link.example.com" = "http://localhost:12522";
           "kuma.example.com" = "http://localhost:3001";
           "auth.example.com" = "http://localhost:9000";
           "grafana.example.com" = "http://localhost:3000";
-          "lazylibrarian.example.com" = "http://localhost:5299";
           "tdarr.example.com" = "http://localhost:8265";
           "readarr.example.com" = "http://localhost:8787";
-          "headphones.example.com" = "http://localhost:8181";
+          "link.example.com" = "http://localhost:3004";
         };
       };
     };
