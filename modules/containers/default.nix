@@ -109,21 +109,21 @@
           ports = [ "127.0.0.1:9948:9948/tcp" ];
           environmentFiles = [ config.sops.secrets.containers_env.path ];
         };
-        # linkwarden = {
-        #   image = "ghcr.io/linkwarden/linkwarden";
-        #   autoStart = true;
-        #   ports = [ "127.0.0.1:3004:3000/tcp" ];
-        #   environment = {
-        #     TZ = "America/Edmonton";
-        #     DATABASE_URL = "postgresql://linkwarden:${config.sops.secrets.linkwarden_db_password.path}@/run/postgresql/linkwarden?sslmode=disable";
-        #     NEXTAUTH_SECRET = config.sops.secrets.containers_env.LINKWARDEN_NEXTAUTH_SECRET;
-        #     NEXTAUTH_URL = "http://localhost:3004/api/v1/auth";
-        #     CUSTOM_OPENAI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
-        #     OPENAI_MODEL = "gemini-2.0-flash";
-        #     OPENAI_API_KEY = "AIzaSyDpUZqecAdTeDxE3tEASd9VsEEB58_zYO4";
-        #     NEXT_PUBLIC_DISABLE_REGISTRATION = "true";
-        #   };
-        # };
+        linkwarden = {
+          image = "ghcr.io/linkwarden/linkwarden";
+          autoStart = true;
+          ports = [ "127.0.0.1:3004:3000/tcp" ];
+          environment = {
+            TZ = "America/Edmonton";
+            DATABASE_URL = "postgresql://linkwarden:${config.sops.secrets.linkwarden_db_password.path}@/run/postgresql/linkwarden?sslmode=disable";
+            NEXTAUTH_SECRET = config.sops.secrets.containers_env.LINKWARDEN_NEXTAUTH_SECRET;
+            NEXTAUTH_URL = "http://localhost:3004/api/v1/auth";
+            CUSTOM_OPENAI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
+            OPENAI_MODEL = "gemini-2.0-flash";
+            OPENAI_API_KEY = "AIzaSyDpUZqecAdTeDxE3tEASd9VsEEB58_zYO4";
+            NEXT_PUBLIC_DISABLE_REGISTRATION = "true";
+          };
+        };
       };
     };
   };
