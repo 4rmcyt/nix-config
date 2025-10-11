@@ -20,7 +20,7 @@
     # XDG_CURRENT_DESKTOP = "sway";
     MOZ_DISABLE_RDD_SANDBOX = "1";
 
-    BROWSER = lib.mkForce "zen-browser";
+    # BROWSER = lib.mkForce "zen-browser";
   };
 
   programs.zen-browser = {
