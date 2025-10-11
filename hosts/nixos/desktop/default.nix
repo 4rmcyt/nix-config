@@ -379,6 +379,17 @@
       videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
+
+    davfs2 = {
+      enable = true;
+      settings = {
+        sections = {
+          "/data/zeev/Taildrive" = {
+            gui_optimize = true;
+          };
+        };
+      };
+    };
   };
 
   # =================================================================
@@ -426,4 +437,8 @@
       kdePackages.xdg-desktop-portal-kde
     ];
   };
+
+  systemd.tmpfiles.rules = [
+    "d /data/zeev/Taildrive 770 davfs2 users -"
+  ];
 }

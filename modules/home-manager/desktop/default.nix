@@ -306,9 +306,6 @@
       initContent = ''
         autoload -Uz compinit && compinit -d ~/.zcompdump
 
-        # Load additional completion functions and fix missing ones
-        autoload -Uz _normal _set_command 2>/dev/null || true
-
         # History substring search keybindings
         bindkey '^[[A' history-substring-search-up # or '\eOA'
         bindkey '^[[B' history-substring-search-down # or '\eOB'
@@ -327,16 +324,6 @@
 
         # Load powerlevel10k theme
         [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-        # Fortune and cowsay at login
-        if [ $(command -v fortune) ] && [ $UID != '0' ] && [[ $- == *i* ]] && [ $TERM != 'dumb' ]; then
-            ### Cowsay At Login ###
-            if [ $(command -v cowsay) ]; then
-                fortune -a fortunes wisdom | cowsay
-            else
-                fortune -a fortunes wisdom
-            fi
-        fi
       '';
       antidote = {
         enable = true;
