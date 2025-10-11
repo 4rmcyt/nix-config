@@ -67,7 +67,7 @@
       pinentry-qt
       signal-desktop
       obsidian
-      trayscale
+      tail-tray
 
       # Themes and icons
       gruvbox-dark-icons-gtk
