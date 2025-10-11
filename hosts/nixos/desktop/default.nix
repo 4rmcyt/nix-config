@@ -87,7 +87,6 @@
       # Desktop applications
       # jellyfin-media-player
       telegram-desktop
-      tail-tray
 
       # Fonts & Themes
       fira-code
