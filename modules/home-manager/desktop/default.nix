@@ -67,6 +67,7 @@
       pinentry-qt
       signal-desktop
       obsidian
+      tailscale
       tail-tray
 
       # Themes and icons
