@@ -3,8 +3,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   sops.secrets = {
     borg_private_key = {
       sopsFile = ../../secrets/system.yaml;
@@ -162,7 +161,7 @@
         "${pkgs.systemd}/bin/systemctl start home-assistant.service || true"
         "${pkgs.systemd}/bin/systemctl start miniflux.service || true"
       ];
-      on_error = [ "echo Error while creating a backup." ];
+      on_error = ["echo Error while creating a backup."];
 
       # Consistency Checks
       checks = [
@@ -198,7 +197,7 @@
   };
   systemd.services.borgmatic = {
     serviceConfig = {
-      ReadWritePaths = [ "/data/backup/borg" ];
+      ReadWritePaths = ["/data/backup/borg"];
       TimeoutStartSec = "0";
     };
   };
@@ -210,5 +209,5 @@
     "D /var/lib/borgmatic/log 750 root backup - -"
     "D /var/lib/borgmatic/cache 750 root backup - -"
   ];
-  users.groups.backup = { };
+  users.groups.backup = {};
 }
