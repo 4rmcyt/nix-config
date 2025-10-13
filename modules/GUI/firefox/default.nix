@@ -14,14 +14,6 @@
     inputs.betterfox-nix.homeModules.betterfox
   ];
 
-  home.sessionVariables = {
-    MOZ_ENABLE_WAYLAND = "1";
-    MOZ_USE_XINPUT2 = "1";
-    XDG_CURRENT_DESKTOP = "sway";
-    MOZ_DISABLE_RDD_SANDBOX = "1";
-    BROWSER = lib.mkForce "firefox";
-  };
-
   programs.firefox = {
     enable = true;
     package = inputs.firefox-nightly.packages.x86_64-linux.firefox-nightly-bin;
