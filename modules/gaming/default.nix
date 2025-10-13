@@ -70,6 +70,14 @@
     KERNEL=="nvidiactl", GROUP="video", MODE="0664"
     KERNEL=="nvidia-modeset", GROUP="video", MODE="0664"
     KERNEL=="nvidia-uvm", GROUP="video", MODE="0664"
+
+    #Locking the screen when a Yubikey is unplugged
+    ACTION=="remove",\
+       ENV{ID_BUS}=="usb",\
+       ENV{ID_MODEL_ID}=="0407",\
+       ENV{ID_VENDOR_ID}=="1050",\
+       ENV{ID_VENDOR}=="Yubico",\
+       RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
   '';
 
   # Ensure your user is in the video group
