@@ -34,7 +34,6 @@
     # ../../GUI/zen-browser
   ];
 
-  home.sessionVariables.NIXOS_OZONE_WL = "1";
   home = {
     username = "zeev";
     homeDirectory = "/home/zeev";
@@ -89,7 +88,16 @@
       })
       pcsc-tools
       ccid
+      pam_u2f
     ];
+
+    sessionVariables = {
+      MOZ_ENABLE_WAYLAND = "1";
+      MOZ_USE_XINPUT2 = "1";
+      MOZ_DISABLE_RDD_SANDBOX = "1";
+
+      BROWSER = lib.mkForce "firefox";
+    };
   };
 
   # GTK configuration for better theme consistency with Plasma 6
