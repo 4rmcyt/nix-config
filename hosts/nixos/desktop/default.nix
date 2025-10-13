@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -196,7 +197,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -245,7 +246,7 @@
         "4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="
         "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
       ];
-      trusted-users = ["zeev"];
+      trusted-users = [ "zeev" ];
       warn-dirty = false;
     };
   };
@@ -308,7 +309,7 @@
 
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
     usbmuxd.enable = true;
 
@@ -381,7 +382,7 @@
     # X Server (disabled but configured for NVIDIA)
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
 
@@ -407,9 +408,9 @@
   # =================================================================
   users = {
     groups = {
-      git = {};
-      plugdev = {};
-      prometheus = {};
+      git = { };
+      plugdev = { };
+      prometheus = { };
     };
     users = {
       git = {

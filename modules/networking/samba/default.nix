@@ -8,7 +8,7 @@ _: {
     ];
   };
 
-  users.groups.samba = {};
+  users.groups.samba = { };
 
   networking.firewall.allowedTCPPorts = [
     139 # Samba NetBIOS Session Service

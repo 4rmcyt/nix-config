@@ -1,9 +1,9 @@
 _: {
   programs.firefox.policies.Preferences."browser.uiCustomization.state" = builtins.toJSON {
     placements = {
-      widget-overflow-fixed-list = [];
-      toolbar-menubar = ["menubar-items"];
-      PersonalToolbar = ["personal-bookmarks"];
+      widget-overflow-fixed-list = [ ];
+      toolbar-menubar = [ "menubar-items" ];
+      PersonalToolbar = [ "personal-bookmarks" ];
       nav-bar = [
         "sidebar-button"
         "back-button"
