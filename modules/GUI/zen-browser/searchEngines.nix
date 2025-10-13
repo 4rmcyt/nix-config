@@ -15,7 +15,7 @@ _: {
         }
       ];
       icon = "https://github.com/favicon.ico";
-      definedAliases = ["@gn"];
+      definedAliases = [ "@gn" ];
     };
 
     "Github Search" = {
@@ -25,7 +25,7 @@ _: {
         }
       ];
       icon = "https://github.com/favicon.ico";
-      definedAliases = ["@gh"];
+      definedAliases = [ "@gh" ];
     };
 
     "Github Search Fish" = {
@@ -35,7 +35,7 @@ _: {
         }
       ];
       icon = "https://fishshell.com/favicon.ico";
-      definedAliases = ["@gf"];
+      definedAliases = [ "@gf" ];
     };
 
     "Github Search Lua" = {
@@ -45,7 +45,7 @@ _: {
         }
       ];
       icon = "https://github.com/favicon.ico";
-      definedAliases = ["@gl"];
+      definedAliases = [ "@gl" ];
     };
 
     "Github Search Gleam" = {
@@ -55,7 +55,7 @@ _: {
         }
       ];
       icon = "https://github.com/favicon.ico";
-      definedAliases = ["@gg"];
+      definedAliases = [ "@gg" ];
     };
 
     "Github Search Typst" = {
@@ -65,7 +65,7 @@ _: {
         }
       ];
       icon = "https://github.com/favicon.ico";
-      definedAliases = ["@gt"];
+      definedAliases = [ "@gt" ];
     };
 
     # === NIX ECOSYSTEM SEARCH ENGINES ===
@@ -76,7 +76,7 @@ _: {
         }
       ];
       icon = "https://noogle.dev/favicon.png";
-      definedAliases = ["@ng"];
+      definedAliases = [ "@ng" ];
     };
 
     "Nixpkgs" = {
@@ -85,7 +85,7 @@ _: {
           template = "https://github.com/search?type=code&q=repo:NixOS/nixpkgs+lang:nix+{searchTerms}";
         }
       ];
-      definedAliases = ["@npkgs"];
+      definedAliases = [ "@npkgs" ];
     };
 
     "Home Manager" = {
@@ -94,7 +94,7 @@ _: {
           template = "https://github.com/search?type=code&q=repo:nix-community/home-manager+lang:nix+{searchTerms}";
         }
       ];
-      definedAliases = ["@hmgr"];
+      definedAliases = [ "@hmgr" ];
     };
 
     "Home Manager Options" = {
@@ -104,7 +104,7 @@ _: {
         }
       ];
       icon = "https://home-manager-options.extranix.com/images/favicon.png";
-      definedAliases = ["@oh"];
+      definedAliases = [ "@oh" ];
     };
 
     "NixOS Options" = {
@@ -113,7 +113,7 @@ _: {
           template = "https://search.nixos.org/options?channel=24.11&from=0&size=100&sort=alpha_asc&query={searchTerms}";
         }
       ];
-      definedAliases = ["@on"];
+      definedAliases = [ "@on" ];
     };
   };
 }

@@ -4,11 +4,12 @@
   pkgs,
   modulesPath,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
-  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   # =================================================================
   # 2. Boot Configuration
@@ -51,7 +52,7 @@
 
     # Kernel configuration
     kernelPackages = pkgs.linuxPackages_xanmod_latest;
-    supportedFilesystems = ["zfs"];
+    supportedFilesystems = [ "zfs" ];
 
     # Kernel parameters
     kernelParams = [
@@ -165,7 +166,7 @@
       enable = true;
       defaults.autodetected = "-a -o on -s (S/../.././02|L/../../7/04)";
       devices = [
-        {device = "/dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NS0W101791N";}
+        { device = "/dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NS0W101791N"; }
       ];
     };
 
@@ -198,7 +199,7 @@
   # =================================================================
   # 5. Swap Configuration
   # =================================================================
-  swapDevices = [];
+  swapDevices = [ ];
 
   zramSwap = {
     enable = true;
