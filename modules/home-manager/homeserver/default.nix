@@ -3,8 +3,7 @@
   pkgs,
   lib,
   ...
-}:
-{
+}: {
   home = {
     username = "zeev";
     homeDirectory = "/home/zeev";

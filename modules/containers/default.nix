@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   sops.secrets = {
     containers_env = {
       sopsFile = ../../secrets/.env;
@@ -37,7 +36,7 @@
         "users"
       ];
     };
-    groups.podman = { };
+    groups.podman = {};
     extraGroups.podman.members = [
       "podman"
       "uptime-kuma"
@@ -77,7 +76,7 @@
         flaresolverr = {
           image = "ghcr.io/flaresolverr/flaresolverr:latest";
           autoStart = true;
-          ports = [ "127.0.0.1:8191:8191/tcp" ];
+          ports = ["127.0.0.1:8191:8191/tcp"];
           environment = {
             LOG_LEVEL = "info";
             TZ = "America/Edmonton";
@@ -86,7 +85,7 @@
         linkwarden = {
           image = "ghcr.io/linkwarden/linkwarden";
           autoStart = true;
-          extraOptions = [ "--network=host" ];
+          extraOptions = ["--network=host"];
           environment = {
             TZ = "America/Edmonton";
             CUSTOM_OPENAI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
@@ -95,15 +94,15 @@
             # Set the port to avoid conflict with anything using 3000
             # NEXT_PUBLIC_DISABLE_REGISTRATION = "true";
           };
-          environmentFiles = [ config.sops.secrets.linkwarden_env.path ];
-          volumes = [ "/var/lib/linkwarden:/data/data" ];
+          environmentFiles = [config.sops.secrets.linkwarden_env.path];
+          volumes = ["/var/lib/linkwarden:/data/data"];
         };
         nextdns-exporter = {
           image = "ghcr.io/raylas/nextdns-exporter";
           autoStart = true;
-          networks = [ "podman" ];
-          ports = [ "127.0.0.1:9948:9948/tcp" ];
-          environmentFiles = [ config.sops.secrets.containers_env.path ];
+          networks = ["podman"];
+          ports = ["127.0.0.1:9948:9948/tcp"];
+          environmentFiles = [config.sops.secrets.containers_env.path];
         };
         tdarr = {
           image = "ghcr.io/haveagitgat/tdarr:latest";

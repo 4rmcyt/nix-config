@@ -372,50 +372,49 @@
 
     mpv = {
       enable = true;
-      package =
-        let
-          mpv-jellyfin = pkgs.stdenv.mkDerivation {
-            pname = "mpv-jellyfin";
-            version = "main";
+      package = let
+        mpv-jellyfin = pkgs.stdenv.mkDerivation {
+          pname = "mpv-jellyfin";
+          version = "main";
 
-            src = pkgs.fetchFromGitHub {
-              owner = "EmperorPenguin18";
-              repo = "mpv-jellyfin";
-              rev = "main";
-              sha256 = "sha256-dli/YNDSbPYgu3navhpSTiJn17dqRxISVPZpw9yzbNc=";
-            };
-
-            dontBuild = true;
-
-            installPhase = ''
-              mkdir -p $out/share/mpv/scripts
-              # List files to debug
-              echo "Files in source directory:"
-              find . -type f -name "*.lua" | head -20
-
-              # Copy the actual lua file (check the repo structure)
-              if [ -f "jellyfin.lua" ]; then
-                cp jellyfin.lua $out/share/mpv/scripts/
-              elif [ -f "src/jellyfin.lua" ]; then
-                cp src/jellyfin.lua $out/share/mpv/scripts/
-              elif [ -f "script/jellyfin.lua" ]; then
-                cp script/jellyfin.lua $out/share/mpv/scripts/
-              else
-                # Find any lua file and copy it
-                lua_file=$(find . -name "*.lua" | head -1)
-                if [ -n "$lua_file" ]; then
-                  cp "$lua_file" $out/share/mpv/scripts/jellyfin.lua
-                else
-                  echo "No Lua files found!"
-                  exit 1
-                fi
-              fi
-            '';
-
-            # Add the required scriptName attribute
-            passthru.scriptName = "jellyfin.lua";
+          src = pkgs.fetchFromGitHub {
+            owner = "EmperorPenguin18";
+            repo = "mpv-jellyfin";
+            rev = "main";
+            sha256 = "sha256-dli/YNDSbPYgu3navhpSTiJn17dqRxISVPZpw9yzbNc=";
           };
-        in
+
+          dontBuild = true;
+
+          installPhase = ''
+            mkdir -p $out/share/mpv/scripts
+            # List files to debug
+            echo "Files in source directory:"
+            find . -type f -name "*.lua" | head -20
+
+            # Copy the actual lua file (check the repo structure)
+            if [ -f "jellyfin.lua" ]; then
+              cp jellyfin.lua $out/share/mpv/scripts/
+            elif [ -f "src/jellyfin.lua" ]; then
+              cp src/jellyfin.lua $out/share/mpv/scripts/
+            elif [ -f "script/jellyfin.lua" ]; then
+              cp script/jellyfin.lua $out/share/mpv/scripts/
+            else
+              # Find any lua file and copy it
+              lua_file=$(find . -name "*.lua" | head -1)
+              if [ -n "$lua_file" ]; then
+                cp "$lua_file" $out/share/mpv/scripts/jellyfin.lua
+              else
+                echo "No Lua files found!"
+                exit 1
+              fi
+            fi
+          '';
+
+          # Add the required scriptName attribute
+          passthru.scriptName = "jellyfin.lua";
+        };
+      in
         pkgs.mpv-unwrapped.wrapper {
           scripts = with pkgs.mpvScripts; [
             uosc
