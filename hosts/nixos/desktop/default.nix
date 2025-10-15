@@ -83,6 +83,7 @@
       zoxide
       yubico-piv-tool
       ccid
+      libfido2
 
       # Desktop applications
       # jellyfin-media-player
@@ -279,10 +280,10 @@
   # =================================================================
   security = {
     rtkit.enable = true;
-    pam.services = {
-      login.u2fAuth = true;
-      sudo.u2fAuth = true;
-    };
+    # pam.services = {
+    #   login.u2fAuth = true;
+      # sudo.u2fAuth = true;
+    # };
   };
   # =================================================================
   # 11. Secrets Management
