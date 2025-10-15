@@ -155,6 +155,8 @@
     cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     enableRedistributableFirmware = lib.mkDefault true;
     cpu.amd.ryzen-smu.enable = true;
+
+    gpgSmartcards.enable = true;
   };
 
   # =================================================================

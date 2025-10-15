@@ -84,6 +84,7 @@
       yubico-piv-tool
       ccid
       libfido2
+      pass-wayland
 
       # Desktop applications
       # jellyfin-media-player
@@ -135,7 +136,10 @@
       kdePackages.spectacle
       kdePackages.systemsettings
       kdePackages.full
+      kdePackages.qgpgme
+      kdePackages.kgpg
       kwalletcli
+      
 
       # Security & Encryption
       (pass.withExtensions (exts: [
