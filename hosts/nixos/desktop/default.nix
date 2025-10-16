@@ -38,7 +38,7 @@
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       LIBVA_DRIVER_NAME = "nvidia";
       NVD_BACKEND = "direct";
-      XDG_CURRENT_DESKTOP = "sway";
+      XDG_CURRENT_DESKTOP = "KDE";
       NIXOS_OZONE_WL = "1";
       CLUTTER_BACKEND = "wayland";
       SDL_VIDEODRIVER = "wayland";
@@ -48,6 +48,15 @@
       MOZ_USE_XINPUT2 = "1";
       MOZ_DISABLE_RDD_SANDBOX = "1";
       QT_QPA_PLATFORM = "wayland;xcb";
+
+      __GL_GSYNC_ALLOWED = "1";
+      __GL_VRR_ALLOWED = "0";
+      WLR_NO_HARDWARE_CURSORS = "1";
+      KWIN_DRM_DEVICES = "/dev/dri/card1:/dev/dri/card0";
+
+      # Add these for better KWin stability
+      KWIN_COMPOSE = "O2";
+      KWIN_TRIPLE_BUFFER = "1";
     };
     systemPackages = with pkgs; [
       # Core utilities
@@ -120,7 +129,6 @@
 
       # Graphics
       nvidia-vaapi-driver
-      xdg-desktop-portal-gtk
 
       # Hardware support
       apcupsd
@@ -344,11 +352,16 @@
     displayManager.sddm = {
       autoNumlock = true;
       enable = true;
-      enableHidpi = true;
-      settings.General.DisplayServer = "wayland";
+      enableHidpi = true;      
       theme = "breeze";
       wayland.compositor = "kwin";
       wayland.enable = true;
+      settings = {
+        General.DisplayServer = "wayland";
+        Autologin = {
+          Session = "plasma.desktop";
+        };
+      };
     };
 
     # auto-epp.enable = true;
