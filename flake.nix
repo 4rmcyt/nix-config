@@ -130,7 +130,7 @@
                 backupFileExtension = "backup";
                 users.zeev = {
                   imports = [
-                    ./modules/home-manager/desktop
+                    ./home-manager/desktop
                     inputs.sops-nix.homeManagerModules.sops
                     inputs.agenix.homeManagerModules.default
                     inputs.plasma-manager.homeModules.plasma-manager
@@ -167,7 +167,7 @@
                 backupFileExtension = "backup";
                 users.zeev = {
                   imports = [
-                    ./modules/home-manager/homeserver
+                    ./home-manager/homeserver
                     inputs.sops-nix.homeManagerModules.sops
                     inputs.agenix.homeManagerModules.default
                   ];
@@ -190,7 +190,7 @@
                 backupFileExtension = "backup";
                 users.zeev = {
                   imports = [
-                    ./modules/home-manager/wsl
+                    ./home-manager/wsl
                     inputs.sops-nix.homeManagerModules.sops
                     inputs.agenix.homeManagerModules.default
                   ];
@@ -214,7 +214,7 @@
               };
             };
             modules = [
-              ./modules/home-manager/desktop
+              ./home-manager/desktop
               inputs.sops-nix.homeManagerModules.sops
               inputs.agenix.homeManagerModules.default
               inputs.plasma-manager.homeModules.plasma-manager
