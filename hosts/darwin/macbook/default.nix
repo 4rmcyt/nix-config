@@ -36,7 +36,7 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    users.zeev = import ../../../modules/home-manager/darwin;
+    users.zeev = import ../../../home-manager/darwin;
     extraSpecialArgs = {
       inherit inputs;
     };
