@@ -1,7 +1,5 @@
-// filepath: /home/zeev/src/nix-config/modules/home-manager/homeserver/default.nix
 {
   pkgs,
-  lib,
   ...
 }:
 {
@@ -14,7 +12,7 @@
     username = "zeev";
     homeDirectory = "/home/zeev";
     stateVersion = "25.05";
-    
+
     packages = with pkgs; [
       # Development tools
       deadnix

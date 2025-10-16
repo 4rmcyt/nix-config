@@ -16,7 +16,12 @@
   ];
 
   # =================================================================
-  # 2. Boot Configuration
+  # 2. System Configuration
+  # =================================================================
+  system.stateVersion = "25.05";
+
+  # =================================================================
+  # 3. Boot Configuration
   # =================================================================
   boot = {
     loader = {
@@ -30,42 +35,67 @@
   };
 
   # =================================================================
-  # 3. Environment
+  # 5. Nixpkgs Configuration
+  # =================================================================
+  nixpkgs.config = {
+    allowUnfree = true;
+    permittedInsecurePackages = [
+      "qtwebengine-5.15.19"
+    ];
+  };
+
+  # =================================================================
+  # 6. Internationalization & Time
+  # =================================================================
+  i18n.defaultLocale = "en_US.UTF-8";
+  time.timeZone = "America/Edmonton";
+
+  # =================================================================
+  # 7. Environment
   # =================================================================
   environment = {
     sessionVariables = {
+      # Graphics & Display
       GBM_BACKEND = "nvidia-drm";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       LIBVA_DRIVER_NAME = "nvidia";
       NVD_BACKEND = "direct";
+
+      # Desktop Environment
       XDG_CURRENT_DESKTOP = "KDE";
+      XDG_SESSION_TYPE = "wayland";
+      QT_QPA_PLATFORM = "wayland;xcb";
+
+      # Wayland Support
       NIXOS_OZONE_WL = "1";
       CLUTTER_BACKEND = "wayland";
       SDL_VIDEODRIVER = "wayland";
-      XDG_SESSION_TYPE = "wayland";
       ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+
+      # Browser Optimization
       MOZ_ENABLE_WAYLAND = "1";
       MOZ_USE_XINPUT2 = "1";
       MOZ_DISABLE_RDD_SANDBOX = "1";
-      QT_QPA_PLATFORM = "wayland;xcb";
 
+      # GPU Settings
       __GL_GSYNC_ALLOWED = "1";
       __GL_VRR_ALLOWED = "0";
       WLR_NO_HARDWARE_CURSORS = "1";
       KWIN_DRM_DEVICES = "/dev/dri/card1:/dev/dri/card0";
 
-      # Add these for better KWin stability
+      # KWin Optimization
       KWIN_COMPOSE = "O2";
       KWIN_TRIPLE_BUFFER = "1";
     };
+
     systemPackages = with pkgs; [
-      # Core utilities
+      # =============================================================
+      # Core System Utilities
+      # =============================================================
       btop
       curl
       git
       htop
-      libdbusmenu
-      libva-utils
       mc
       neofetch
       openssl
@@ -76,7 +106,9 @@
       vim
       wget
 
-      # Development tools
+      # =============================================================
+      # Development Tools
+      # =============================================================
       age
       alejandra
       cachix
@@ -105,20 +137,23 @@
       treefmt
       yamlfmt
       zoxide
-      yubico-piv-tool
-      ccid
-      libfido2
-      pass-wayland
 
-
-      pavucontrol
+      # =============================================================
+      # Audio & Multimedia
+      # =============================================================
       helvum
+      pavucontrol
+      sof-firmware
 
-      # Desktop applications
-      # jellyfin-media-player
+      # =============================================================
+      # Desktop Applications
+      # =============================================================
       telegram-desktop
+      # jellyfin-media-player
 
+      # =============================================================
       # Fonts & Themes
+      # =============================================================
       fira-code
       fira-mono
       meslo-lgs-nf
@@ -127,31 +162,43 @@
       sddm-astronaut
       sddm-sugar-dark
 
-      # Graphics
+      # =============================================================
+      # Graphics & GPU
+      # =============================================================
+      libdbusmenu
+      libva-utils
       nvidia-vaapi-driver
 
-      # Hardware support
+      # =============================================================
+      # Hardware Support & Monitoring
+      # =============================================================
       apcupsd
-      openrgb-with-all-plugins
-      yubico-pam
-      yubikey-manager
-      yubioath-flutter
-      ryzen-monitor-ng
+      cifs-utils
+      fwupd
       microcode-amd
+      nvtopPackages.nvidia
+      openrgb-with-all-plugins
+      powertop
+      ryzen-monitor-ng
+      samba
 
+      # =============================================================
       # KDE Applications
+      # =============================================================
       kdePackages.ark
       kdePackages.discover
       kdePackages.filelight
+      kdePackages.full
       kdePackages.gwenview
-      kdePackages.kclock
-      kdePackages.kate
       kdePackages.kcalc
       kdePackages.kcharselect
+      kdePackages.kclock
       kdePackages.kfind
+      kdePackages.kgpg
       kdePackages.kio-extras
       kdePackages.konsole
       kdePackages.ksystemlog
+      kdePackages.kate
       kdePackages.okular
       kdePackages.partitionmanager
       kdePackages.plasma-browser-integration
@@ -162,12 +209,13 @@
       kdePackages.signon-kwallet-extension
       kdePackages.spectacle
       kdePackages.systemsettings
-      kdePackages.full
-      kdePackages.kgpg
       kwalletcli
-      sof-firmware
 
+      # =============================================================
       # Security & Encryption
+      # =============================================================
+      ccid
+      libfido2
       (pass.withExtensions (exts: [
         exts.pass-checkup
         exts.pass-file
@@ -176,9 +224,16 @@
         exts.pass-otp
         exts.pass-update
       ]))
+      pass-wayland
       pinentry-curses
+      yubico-pam
+      yubico-piv-tool
+      yubikey-manager
+      yubioath-flutter
 
-      # Secure Boot & EFI tools
+      # =============================================================
+      # Secure Boot & EFI Tools
+      # =============================================================
       efibootmgr
       efitools
       ifrextractor-rs
@@ -187,14 +242,9 @@
       shim-unsigned
       uefitool
 
-      # System monitoring
-      cifs-utils
-      fwupd
-      nvtopPackages.nvidia
-      powertop
-      samba
-
-      # Commented out due to CMake compatibility issues
+      # =============================================================
+      # Disabled due to CMake compatibility issues
+      # =============================================================
       # dfu-util
       # qmk
       # qmk-udev-rules
@@ -203,23 +253,17 @@
   };
 
   # =================================================================
-  # 4. Fonts
+  # 8. Fonts
   # =================================================================
   fonts.fontconfig.useEmbeddedBitmaps = true;
 
   # =================================================================
-  # 5. Home Manager
+  # 9. Home Manager
   # =================================================================
   home-manager.backupFileExtension = "backup";
 
   # =================================================================
-  # 6. Internationalization & Time
-  # =================================================================
-  i18n.defaultLocale = "en_US.UTF-8";
-  time.timeZone = "America/Edmonton";
-
-  # =================================================================
-  # 7. Networking
+  # 10. Networking
   # =================================================================
   networking = {
     dnssec = {
@@ -243,7 +287,7 @@
   };
 
   # =================================================================
-  # 8. Nix Configuration
+  # 11. Nix Configuration
   # =================================================================
   nix = {
     package = pkgs.nixVersions.latest;
@@ -260,22 +304,22 @@
       substituters = [
         "https://cache.nixos.org"
         "https://4rmcyt.cachix.org"
-        "https://nix-gaming.cachix.org"
         "https://cuda-maintainers.cachix.org"
         "https://nix-community.cachix.org"
+        "https://nix-gaming.cachix.org"
       ];
       system-features = [
-        "big-parallel"
-        "kvm"
-        "gccarch-znver4"
         "benchmark"
+        "big-parallel"
+        "gccarch-znver4"
+        "kvm"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
         "4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="
         "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
       ];
       trusted-users = [ "zeev" ];
       warn-dirty = false;
@@ -283,7 +327,7 @@
   };
 
   # =================================================================
-  # 9. Programs
+  # 12. Programs
   # =================================================================
   programs = {
     gnupg.agent = {
@@ -306,15 +350,25 @@
   };
 
   # =================================================================
-  # 11. Secrets Management
+  # 13. Security
+  # =================================================================
+  security = {
+    rtkit.enable = true;
+    polkit.enable = true;
+  };
+
+  # =================================================================
+  # 14. Secrets Management
   # =================================================================
   sops.age.keyFile = "/root/.config/sops/age/keys.txt";
 
   # =================================================================
-  # 12. Services
+  # 15. Services
   # =================================================================
   services = {
-    # Audio - PipeWire (enhanced configuration)
+    # =============================================================
+    # Audio Services
+    # =============================================================
     pipewire = {
       enable = true;
       audio.enable = true;
@@ -324,10 +378,7 @@
         enable = true;
         support32Bit = true;
       };
-      # Enable WirePlayer properly
       wireplumber.enable = true;
-
-      # Add Qt multimedia support
       extraConfig.pipewire."92-low-latency" = {
         context.properties = {
           default.clock.rate = 48000;
@@ -337,22 +388,16 @@
         };
       };
     };
-
-    # Disable PulseAudio since we're using PipeWire
     pulseaudio.enable = false;
 
-    pcscd = {
-      enable = true;
-      plugins = [ pkgs.ccid ];
-    };
-    usbmuxd.enable = true;
-
+    # =============================================================
     # Desktop Environment
+    # =============================================================
     desktopManager.plasma6.enable = true;
     displayManager.sddm = {
       autoNumlock = true;
       enable = true;
-      enableHidpi = true;      
+      enableHidpi = true;
       theme = "breeze";
       wayland.compositor = "kwin";
       wayland.enable = true;
@@ -364,29 +409,43 @@
       };
     };
 
-    # auto-epp.enable = true;
-
-    # Hardware & Peripherals
-    udev = {
-      extraRules = ''
-        # Fix QMK udev rules - ensure proper permissions
-        SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ff4", MODE="0666", GROUP="plugdev"
-        SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ffb", MODE="0666", GROUP="plugdev"
-        SUBSYSTEM=="usb", ATTRS{idVendor}=="174c", ATTRS{idProduct}=="2074", MODE="0666", GROUP="plugdev"
-        SUBSYSTEM=="input", ATTRS{name}=="Rapoo Rapoo Gaming Device", TAG+="uaccess"
-      '';
-      packages = with pkgs; [
-        yubioath-flutter
-        yubikey-manager
-        yubikey-personalization
-        # dfu-util
-        # qmk
-        # qmk-udev-rules
-        # via
-      ];
+    # =============================================================
+    # File Systems & Storage
+    # =============================================================
+    davfs2 = {
+      enable = true;
+      settings = {
+        sections = {
+          "/data/zeev/Taildrive" = {
+            gui_optimize = true;
+          };
+        };
+      };
     };
 
-    # Monitoring
+    # =============================================================
+    # Hardware Services
+    # =============================================================
+    auto-cpufreq = {
+      enable = true;
+      settings.charger = {
+        governor = "performance";
+        turbo = "auto";
+      };
+    };
+    flatpak.enable = true;
+    fwupd.enable = true;
+    openssh.enable = true;
+    pcscd = {
+      enable = true;
+      plugins = [ pkgs.ccid ];
+    };
+    power-profiles-daemon.enable = false;
+    usbmuxd.enable = true;
+
+    # =============================================================
+    # Monitoring Services
+    # =============================================================
     prometheus.exporters.node = {
       enable = true;
       enabledCollectors = [
@@ -403,47 +462,38 @@
       port = 9100;
     };
 
-    # Power Management
-    auto-cpufreq = {
-      enable = true;
-      settings.charger = {
-        governor = "performance";
-        turbo = "auto";
-      };
+    # =============================================================
+    # Hardware Peripherals
+    # =============================================================
+    udev = {
+      extraRules = ''
+        # QMK keyboard rules
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ff4", MODE="0666", GROUP="plugdev"
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ffb", MODE="0666", GROUP="plugdev"
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="174c", ATTRS{idProduct}=="2074", MODE="0666", GROUP="plugdev"
+
+        # Gaming device rules
+        SUBSYSTEM=="input", ATTRS{name}=="Rapoo Rapoo Gaming Device", TAG+="uaccess"
+      '';
+      packages = with pkgs; [
+        yubioath-flutter
+        yubikey-manager
+        yubikey-personalization
+      ];
     };
-    power-profiles-daemon.enable = false;
 
-    # System Services
-    flatpak.enable = true;
-    fwupd.enable = true;
-    openssh.enable = true;
-
-    # X Server (disabled but configured for NVIDIA)
+    # =============================================================
+    # X Server (for NVIDIA compatibility)
+    # =============================================================
     xserver = {
       enable = true;
       videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
-
-    davfs2 = {
-      enable = true;
-      settings = {
-        sections = {
-          "/data/zeev/Taildrive" = {
-            gui_optimize = true;
-          };
-        };
-      };
-    };
   };
 
   # =================================================================
-  # 13. System State
-  # =================================================================
-  system.stateVersion = "25.05";
-
-  # =================================================================
-  # 14. Users & Groups
+  # 16. Users & Groups
   # =================================================================
   users = {
     groups = {
@@ -469,12 +519,12 @@
   };
 
   # =================================================================
-  # 15. Virtualization
+  # 17. Virtualization
   # =================================================================
   virtualisation.podman.enable = true;
 
   # =================================================================
-  # 16. XDG Portal
+  # 18. XDG Portal
   # =================================================================
   xdg.portal = {
     enable = true;
@@ -483,6 +533,9 @@
     ];
   };
 
+  # =================================================================
+  # 19. Systemd Configuration
+  # =================================================================
   systemd.tmpfiles.rules = [
     "d /data/zeev/Taildrive 770 davfs2 users -"
   ];

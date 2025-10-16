@@ -124,7 +124,7 @@
       options bluetooth disable_ertm=1
       options bluetooth disable_esco=1
       options btusb enable_autosuspend=n reset_resume=1
-      
+
       # Additional Bluetooth L2CAP fixes
       options bluetooth l2cap_ertm=n
 

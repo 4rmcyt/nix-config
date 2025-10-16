@@ -13,7 +13,7 @@
     username = "zeev";
     homeDirectory = "/home/zeev";
     stateVersion = "25.05";
-    
+
     packages = with pkgs; [
       # Development tools
       cachix

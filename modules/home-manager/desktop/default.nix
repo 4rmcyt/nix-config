@@ -15,7 +15,7 @@
     username = "zeev";
     homeDirectory = "/home/zeev";
     stateVersion = "25.05";
-    
+
     packages = with pkgs; [
       # Development tools
       bat
@@ -147,42 +147,42 @@
       prefix = "C-Space";
       sensibleOnTop = false;
       terminal = "screen-256color";
-      
+
       extraConfig = ''
         # Terminal settings
         set -ag terminal-overrides ",xterm-256color:RGB"
         set-option -g default-terminal "screen-256color"
         set-option -sa terminal-overrides ',xterm*:Tc'
-        
+
         # Window and pane settings
         set-option -g renumber-windows on
         set-option -g automatic-rename on
         set-option -g automatic-rename-format '#{b:pane_current_path}'
-        
+
         # Status line
         set-option -g status-position top
-        
+
         # Key bindings
         bind-key x kill-pane
         bind-key X kill-window
         bind-key q confirm-before -p "kill-session #S? (y/n)" kill-session
-        
+
         # Pane navigation
         bind h select-pane -L
         bind j select-pane -D
         bind k select-pane -U
         bind l select-pane -R
-        
+
         # Pane resizing
         bind -r H resize-pane -L 10
         bind -r J resize-pane -D 10
         bind -r K resize-pane -U 10
         bind -r L resize-pane -R 10
-        
+
         # Window splitting
         bind | split-window -h -c "#{pane_current_path}"
         bind - split-window -v -c "#{pane_current_path}"
-        
+
         # Copy mode
         bind-key -T copy-mode-vi v send-keys -X begin-selection
         bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
