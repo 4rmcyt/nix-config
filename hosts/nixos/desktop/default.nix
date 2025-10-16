@@ -81,11 +81,7 @@
       __GL_VRR_ALLOWED = "0";
       WLR_NO_HARDWARE_CURSORS = "1";
       KWIN_DRM_DEVICES = "/dev/dri/card1:/dev/dri/card0";
-
-      # KWin Optimization
-      KWIN_COMPOSE = "O2";
-      KWIN_TRIPLE_BUFFER = "1";
-    };
+     };
 
     systemPackages = with pkgs; [
       # =============================================================

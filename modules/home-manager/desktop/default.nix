@@ -91,6 +91,7 @@
       MOZ_USE_XINPUT2 = "1";
       MOZ_DISABLE_RDD_SANDBOX = "1";
       QT_QPA_PLATFORM = "wayland;xcb";
+      
       BROWSER = lib.mkForce "firefox";
     };
   };
