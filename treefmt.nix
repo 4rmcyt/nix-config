@@ -25,11 +25,11 @@
       includes = [".justfile"];
       package = pkgs.just;
     };
-    nixfmt = {
-      enable = true;
-      includes = ["*.nix"];
-      package = pkgs.nixfmt-rfc-style;
-    };
+    # nixfmt = {
+    #   enable = true;
+    #   includes = ["*.nix"];
+    #   package = pkgs.nixfmt-rfc-style;
+    # };
     prettier = {
       enable = true;
       includes = [
