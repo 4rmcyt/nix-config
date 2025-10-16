@@ -1,15 +1,15 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 {
   programs.zsh = {
     enable = true;
-    
+
     shellAliases = {
       ".." = "cd ..";
       "..." = "cd ../..";
       ll = "ls -la";
       mc = "mc --nosubshell";
     };
-    
+
     sessionVariables = {
       EDITOR = "hx";
       ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi";
