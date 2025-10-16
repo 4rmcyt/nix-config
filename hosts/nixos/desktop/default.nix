@@ -34,7 +34,7 @@
   };
 
   # =================================================================
-  # 5. Nixpkgs Configuration
+  # 4. Nixpkgs Configuration
   # =================================================================
   nixpkgs.config = {
     allowUnfree = true;
@@ -44,44 +44,50 @@
   };
 
   # =================================================================
-  # 6. Internationalization & Time
+  # 5. Internationalization & Time
   # =================================================================
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "America/Edmonton";
 
   # =================================================================
-  # 7. Environment
+  # 6. Environment
   # =================================================================
   environment = {
     sessionVariables = {
       # Graphics & Display
       GBM_BACKEND = "nvidia-drm";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      __GL_THREADED_OPTIMIZATIONS = "1";
+      __GL_SHADER_DISK_CACHE = "1";
       LIBVA_DRIVER_NAME = "nvidia";
       NVD_BACKEND = "direct";
+      GDK_BACKEND = "wayland,x11";
 
       # Desktop Environment
       XDG_CURRENT_DESKTOP = "KDE";
+      XDG_SESSION_DESKTOP = "plasma";
       XDG_SESSION_TYPE = "wayland";
       QT_QPA_PLATFORM = "wayland;xcb";
+      QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+      QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
 
       # Wayland Support
       NIXOS_OZONE_WL = "1";
       CLUTTER_BACKEND = "wayland";
       SDL_VIDEODRIVER = "wayland";
       ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+      WLR_NO_HARDWARE_CURSORS = "1";
 
       # Browser Optimization
       MOZ_ENABLE_WAYLAND = "1";
       MOZ_USE_XINPUT2 = "1";
       MOZ_DISABLE_RDD_SANDBOX = "1";
 
-      # GPU Settings
-      __GL_GSYNC_ALLOWED = "1";
-      __GL_VRR_ALLOWED = "0";
-      WLR_NO_HARDWARE_CURSORS = "1";
+      # KWin Optimization
+      KWIN_COMPOSE = "O2";
+      KWIN_TRIPLE_BUFFER = "1";
       KWIN_DRM_DEVICES = "/dev/dri/card1:/dev/dri/card0";
-     };
+    };
 
     systemPackages = with pkgs; [
       # =============================================================
@@ -248,17 +254,17 @@
   };
 
   # =================================================================
-  # 8. Fonts
+  # 7. Fonts
   # =================================================================
   fonts.fontconfig.useEmbeddedBitmaps = true;
 
   # =================================================================
-  # 9. Home Manager
+  # 8. Home Manager
   # =================================================================
   home-manager.backupFileExtension = "backup";
 
   # =================================================================
-  # 10. Networking
+  # 9. Networking
   # =================================================================
   networking = {
     dnssec = {
@@ -282,7 +288,7 @@
   };
 
   # =================================================================
-  # 11. Nix Configuration
+  # 10. Nix Configuration
   # =================================================================
   nix = {
     package = pkgs.nixVersions.latest;
@@ -322,7 +328,7 @@
   };
 
   # =================================================================
-  # 12. Programs
+  # 11. Programs
   # =================================================================
   programs = {
     gnupg.agent = {
@@ -345,7 +351,7 @@
   };
 
   # =================================================================
-  # 13. Security
+  # 12. Security
   # =================================================================
   security = {
     rtkit.enable = true;
@@ -353,12 +359,12 @@
   };
 
   # =================================================================
-  # 14. Secrets Management
+  # 13. Secrets Management
   # =================================================================
   sops.age.keyFile = "/root/.config/sops/age/keys.txt";
 
   # =================================================================
-  # 15. Services
+  # 14. Services
   # =================================================================
   services = {
     # =============================================================
@@ -488,7 +494,7 @@
   };
 
   # =================================================================
-  # 16. Users & Groups
+  # 15. Users & Groups
   # =================================================================
   users = {
     groups = {
@@ -514,12 +520,12 @@
   };
 
   # =================================================================
-  # 17. Virtualization
+  # 16. Virtualization
   # =================================================================
   virtualisation.podman.enable = true;
 
   # =================================================================
-  # 18. XDG Portal
+  # 17. XDG Portal
   # =================================================================
   xdg.portal = {
     enable = true;
@@ -529,7 +535,7 @@
   };
 
   # =================================================================
-  # 19. Systemd Configuration
+  # 18. Systemd Configuration
   # =================================================================
   systemd.tmpfiles.rules = [
     "d /data/zeev/Taildrive 770 davfs2 users -"

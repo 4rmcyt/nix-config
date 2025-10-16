@@ -36,6 +36,15 @@
       bindkey '\e[H' beginning-of-line
       bindkey '\e[F' end-of-line
       bindkey '\e[1~' beginning-of-line
+
+      zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+      zstyle ':completion:*' menu no
+      zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+      zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+      zstyle ':completion:*:*:docker:*' option-stacking yes
+      zstyle ':completion:*:*:docker-*:*' option-stacking yes
+
+      [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
     '';
 
     antidote = {
