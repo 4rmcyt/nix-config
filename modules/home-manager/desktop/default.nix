@@ -92,20 +92,20 @@
     ];
 
     sessionVariables = {
-      # GBM_BACKEND = "nvidia-drm";
-      # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-      # LIBVA_DRIVER_NAME = "nvidia";
-      # NVD_BACKEND = "direct";
-      # XDG_CURRENT_DESKTOP = "sway";
-      # NIXOS_OZONE_WL = "1";
-      # # CLUTTER_BACKEND = "wayland";
-      # # SDL_VIDEODRIVER = "wayland";
-      # # XDG_SESSION_TYPE = "wayland";
-      # ELECTRON_OZONE_PLATFORM_HINT = "wayland";
-      # MOZ_ENABLE_WAYLAND = "1";
-      # MOZ_USE_XINPUT2 = "1";
-      # MOZ_DISABLE_RDD_SANDBOX = "1";
-      # QT_QPA_PLATFORM = "wayland;xcb";
+      GBM_BACKEND = "nvidia-drm";
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      LIBVA_DRIVER_NAME = "nvidia";
+      NVD_BACKEND = "direct";
+      XDG_CURRENT_DESKTOP = "KDE"; # Changed from "sway"
+      NIXOS_OZONE_WL = "1";
+      CLUTTER_BACKEND = "wayland";
+      SDL_VIDEODRIVER = "wayland";
+      XDG_SESSION_TYPE = "wayland";
+      ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+      MOZ_ENABLE_WAYLAND = "1";
+      MOZ_USE_XINPUT2 = "1";
+      MOZ_DISABLE_RDD_SANDBOX = "1";
+      QT_QPA_PLATFORM = "wayland;xcb";
 
       BROWSER = lib.mkForce "firefox";
     };
@@ -408,74 +408,6 @@
           "zsh-users/zsh-completions"
           "zsh-users/zsh-history-substring-search"
         ];
-      };
-    };
-
-    mpv = {
-      enable = true;
-      package =
-        let
-          mpv-jellyfin = pkgs.stdenv.mkDerivation {
-            pname = "mpv-jellyfin";
-            version = "main";
-
-            src = pkgs.fetchFromGitHub {
-              owner = "EmperorPenguin18";
-              repo = "mpv-jellyfin";
-              rev = "main";
-              sha256 = "sha256-dli/YNDSbPYgu3navhpSTiJn17dqRxISVPZpw9yzbNc=";
-            };
-
-            dontBuild = true;
-
-            installPhase = ''
-              mkdir -p $out/share/mpv/scripts
-              # List files to debug
-              echo "Files in source directory:"
-              find . -type f -name "*.lua" | head -20
-
-              # Copy the actual lua file (check the repo structure)
-              if [ -f "jellyfin.lua" ]; then
-                cp jellyfin.lua $out/share/mpv/scripts/
-              elif [ -f "src/jellyfin.lua" ]; then
-                cp src/jellyfin.lua $out/share/mpv/scripts/
-              elif [ -f "script/jellyfin.lua" ]; then
-                cp script/jellyfin.lua $out/share/mpv/scripts/
-              else
-                # Find any lua file and copy it
-                lua_file=$(find . -name "*.lua" | head -1)
-                if [ -n "$lua_file" ]; then
-                  cp "$lua_file" $out/share/mpv/scripts/jellyfin.lua
-                else
-                  echo "No Lua files found!"
-                  exit 1
-                fi
-              fi
-            '';
-
-            # Add the required scriptName attribute
-            passthru.scriptName = "jellyfin.lua";
-          };
-        in
-        pkgs.mpv-unwrapped.wrapper {
-          scripts = with pkgs.mpvScripts; [
-            uosc
-            sponsorblock
-            mpv-jellyfin
-          ];
-
-          mpv = pkgs.mpv-unwrapped.override {
-            waylandSupport = true;
-          };
-        };
-
-      config = {
-        profile = "high-quality";
-        ytdl-format = "bestvideo+bestaudio";
-        cache-default = 4000000;
-
-        # Jellyfin plugin configuration
-        script-opts = "jellyfin-server=http://192.168.1.165:8096,jellyfin-username=admin";
       };
     };
   };
