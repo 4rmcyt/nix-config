@@ -36,7 +36,6 @@
       signing.key = "D85B52C9288A138E";
       extraConfig = {
         commit.gpgsign = true;
-        gpg.format = "ssh";
       };
     };
 

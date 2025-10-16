@@ -4,7 +4,7 @@
   ...
 }: {
   imports = [
-    ../../modules/GUI/firefox # instead of ../../../modules/GUI/firefox
+    ../../modules/GUI/firefox
     ../../modules/GUI/thunderbird
     ../shared/common.nix
     ../shared/zsh.nix
