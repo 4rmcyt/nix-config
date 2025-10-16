@@ -76,5 +76,6 @@
   users.users.zeev.extraGroups = [
     "video"
     "gamemode"
+    "pipewire"
   ];
 }

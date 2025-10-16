@@ -33,7 +33,22 @@
   # 3. Environment
   # =================================================================
   environment = {
-    sessionVariables.NIXOS_OZONE_WL = "1";
+    sessionVariables = {
+      GBM_BACKEND = "nvidia-drm";
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      LIBVA_DRIVER_NAME = "nvidia";
+      NVD_BACKEND = "direct";
+      XDG_CURRENT_DESKTOP = "sway";
+      NIXOS_OZONE_WL = "1";
+      CLUTTER_BACKEND = "wayland";
+      SDL_VIDEODRIVER = "wayland";
+      XDG_SESSION_TYPE = "wayland";
+      ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+      MOZ_ENABLE_WAYLAND = "1";
+      MOZ_USE_XINPUT2 = "1";
+      MOZ_DISABLE_RDD_SANDBOX = "1";
+      QT_QPA_PLATFORM = "wayland;xcb";
+    };
     systemPackages = with pkgs; [
       # Core utilities
       btop
@@ -86,6 +101,10 @@
       libfido2
       pass-wayland
 
+
+      pavucontrol
+      helvum
+
       # Desktop applications
       # jellyfin-media-player
       telegram-desktop
@@ -136,10 +155,9 @@
       kdePackages.spectacle
       kdePackages.systemsettings
       kdePackages.full
-      kdePackages.qgpgme
       kdePackages.kgpg
       kwalletcli
-      
+      sof-firmware
 
       # Security & Encryption
       (pass.withExtensions (exts: [
@@ -280,16 +298,6 @@
   };
 
   # =================================================================
-  # 10. Security
-  # =================================================================
-  security = {
-    rtkit.enable = true;
-    # pam.services = {
-    #   login.u2fAuth = true;
-      # sudo.u2fAuth = true;
-    # };
-  };
-  # =================================================================
   # 11. Secrets Management
   # =================================================================
   sops.age.keyFile = "/root/.config/sops/age/keys.txt";
@@ -298,18 +306,31 @@
   # 12. Services
   # =================================================================
   services = {
-    # Audio - PipeWire
+    # Audio - PipeWire (enhanced configuration)
     pipewire = {
-      alsa.enable = true;
-      alsa.support32Bit = true;
       enable = true;
-      lowLatency = {
-        enable = true;
-        quantum = 64;
-        rate = 48000;
-      };
+      audio.enable = true;
       pulse.enable = true;
+      jack.enable = true;
+      alsa = {
+        enable = true;
+        support32Bit = true;
+      };
+      # Enable WirePlayer properly
+      wireplumber.enable = true;
+
+      # Add Qt multimedia support
+      extraConfig.pipewire."92-low-latency" = {
+        context.properties = {
+          default.clock.rate = 48000;
+          default.clock.quantum = 32;
+          default.clock.min-quantum = 32;
+          default.clock.max-quantum = 32;
+        };
+      };
     };
+
+    # Disable PulseAudio since we're using PipeWire
     pulseaudio.enable = false;
 
     pcscd = {
