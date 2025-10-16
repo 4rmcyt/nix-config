@@ -209,25 +209,10 @@
     memoryPercent = 30;
   };
 
-  # =================================================================
-  # 6. Environment Variables
-  # =================================================================
-  environment.variables = {
-    GBM_BACKEND = "nvidia-drm";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    LIBVA_DRIVER_NAME = "nvidia";
-    NVD_BACKEND = "direct";
-    XDG_CURRENT_DESKTOP = "sway";
-    NIXOS_OZONE_WL = "1";
-    QT_QPA_PLATFORM = "wayland";
-    CLUTTER_BACKEND = "wayland";
-    SDL_VIDEODRIVER = "wayland";
-    XDG_SESSION_TYPE = "wayland";
-    ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+  security = {
+    rtkit.enable = true;
+    polkit.enable = true;
   };
-
-  security.polkit.enable = true;
-
   # =================================================================
   # 7. Networking
   # =================================================================

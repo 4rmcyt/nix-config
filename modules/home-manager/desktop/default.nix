@@ -92,9 +92,20 @@
     ];
 
     sessionVariables = {
-      MOZ_ENABLE_WAYLAND = "1";
-      MOZ_USE_XINPUT2 = "1";
-      MOZ_DISABLE_RDD_SANDBOX = "1";
+      # GBM_BACKEND = "nvidia-drm";
+      # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      # LIBVA_DRIVER_NAME = "nvidia";
+      # NVD_BACKEND = "direct";
+      # XDG_CURRENT_DESKTOP = "sway";
+      # NIXOS_OZONE_WL = "1";
+      # # CLUTTER_BACKEND = "wayland";
+      # # SDL_VIDEODRIVER = "wayland";
+      # # XDG_SESSION_TYPE = "wayland";
+      # ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+      # MOZ_ENABLE_WAYLAND = "1";
+      # MOZ_USE_XINPUT2 = "1";
+      # MOZ_DISABLE_RDD_SANDBOX = "1";
+      # QT_QPA_PLATFORM = "wayland;xcb";
 
       BROWSER = lib.mkForce "firefox";
     };
@@ -179,23 +190,23 @@
         with-key-origin = true;
         with-fingerprint = true;
         with-subkey-fingerprint = true;
-        
+
         # Security and verification
         require-cross-certification = true;
         no-symkey-cache = true;
         throw-keyids = true;
-        
+
         # Algorithm preferences
         personal-cipher-preferences = "AES256 AES192 AES";
         personal-digest-preferences = "SHA512 SHA384 SHA256";
         personal-compress-preferences = "ZLIB BZIP2 ZIP Uncompressed";
         default-preference-list = "SHA512 SHA384 SHA256 AES256 AES192 AES ZLIB BZIP2 ZIP Uncompressed";
-        
+
         # Certificate preferences
         cert-digest-algo = "SHA512";
         s2k-digest-algo = "SHA512";
         s2k-cipher-algo = "AES256";
-        
+
         # Charset and display
         charset = "utf-8";
         fixed-list-mode = true;
@@ -205,7 +216,7 @@
         keyserver-options = "no-honor-keyserver-url";
         list-options = "show-uid-validity";
         verify-options = "show-uid-validity";
-        
+
         # Use agent
         use-agent = true;
       };
