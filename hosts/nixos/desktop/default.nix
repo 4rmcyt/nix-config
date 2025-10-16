@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -272,7 +271,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
+      allowedTCPPorts = [9100]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -321,7 +320,7 @@
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
       ];
-      trusted-users = [ "zeev" ];
+      trusted-users = ["zeev"];
       warn-dirty = false;
     };
   };
@@ -438,7 +437,7 @@
     openssh.enable = true;
     pcscd = {
       enable = true;
-      plugins = [ pkgs.ccid ];
+      plugins = [pkgs.ccid];
     };
     power-profiles-daemon.enable = false;
     usbmuxd.enable = true;
@@ -487,7 +486,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = [ "nvidia" ];
+      videoDrivers = ["nvidia"];
       xkb.layout = "us";
     };
   };
@@ -497,9 +496,9 @@
   # =================================================================
   users = {
     groups = {
-      git = { };
-      plugdev = { };
-      prometheus = { };
+      git = {};
+      plugdev = {};
+      prometheus = {};
     };
     users = {
       git = {

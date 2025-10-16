@@ -4,11 +4,9 @@
   pkgs,
   ...
 }:
-with lib;
-let
+with lib; let
   cfg = config.networking.tailscaleAuth;
-in
-{
+in {
   options.networking.tailscaleAuth = {
     enable = mkEnableOption "Tailscale with SOPS authentication";
     sopsFile = mkOption {
@@ -43,7 +41,7 @@ in
       networkd-dispatcher = {
         enable = true;
         rules."50-tailscale" = {
-          onState = [ "routable" ];
+          onState = ["routable"];
           script = ''
             ${pkgs.ethtool} -K eth0 rx-udp-gro-forwarding on rx-gro-list off
           '';
@@ -61,7 +59,7 @@ in
         "network-pre.target"
         "tailscale.service"
       ];
-      wantedBy = [ "multi-user.target" ];
+      wantedBy = ["multi-user.target"];
       serviceConfig.Type = "oneshot";
       script = with pkgs; ''
         sleep 2
