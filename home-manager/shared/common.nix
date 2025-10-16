@@ -33,11 +33,51 @@
       enable = true;
       userName = "4rmcyt";
       userEmail = "4rmcyt@gmail.com";
-      signing.key = "FD1AA16D16ACD8A003AD6D7AD85B52C9288A138E";
+      signing.key = "D85B52C9288A138E";
       extraConfig = {
         commit.gpgsign = true;
         gpg.format = "ssh";
-        user.signingkey = "~/.ssh/zeev";
+      };
+    };
+
+    gpg = {
+      enable = true;
+      settings = {
+        # Display options
+        keyid-format = "long";
+        with-keygrip = true;
+        with-key-origin = true;
+        with-fingerprint = true;
+        with-subkey-fingerprint = true;
+
+        # Security and verification
+        require-cross-certification = true;
+        no-symkey-cache = true;
+        throw-keyids = true;
+
+        # Algorithm preferences
+        personal-cipher-preferences = "AES256 AES192 AES";
+        personal-digest-preferences = "SHA512 SHA384 SHA256";
+        personal-compress-preferences = "ZLIB BZIP2 ZIP Uncompressed";
+        default-preference-list = "SHA512 SHA384 SHA256 AES256 AES192 AES ZLIB BZIP2 ZIP Uncompressed";
+
+        # Certificate preferences
+        cert-digest-algo = "SHA512";
+        s2k-digest-algo = "SHA512";
+        s2k-cipher-algo = "AES256";
+
+        # Charset and display
+        charset = "utf-8";
+        fixed-list-mode = true;
+        no-comments = true;
+        no-emit-version = true;
+        no-greeting = true;
+        keyserver-options = "no-honor-keyserver-url";
+        list-options = "show-uid-validity";
+        verify-options = "show-uid-validity";
+
+        # Use agent
+        use-agent = true;
       };
     };
 
