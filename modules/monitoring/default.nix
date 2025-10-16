@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. SOPS Secrets
   # =================================================================
@@ -49,10 +48,10 @@
   };
 
   users.groups = {
-    grafana = { };
-    nut-exporter = { };
-    prometheus = { };
-    uptime-kuma = { };
+    grafana = {};
+    nut-exporter = {};
+    prometheus = {};
+    uptime-kuma = {};
   };
 
   # =================================================================
@@ -105,7 +104,7 @@
       port = 9090;
       retentionTime = "30d";
       globalConfig.scrape_interval = "1m";
-      ruleFiles = [ ./alerts/homeserver.yaml ];
+      ruleFiles = [./alerts/homeserver.yaml];
 
       exporters = {
         node = {
@@ -130,23 +129,23 @@
       scrapeConfigs = [
         {
           job_name = "cloudflare-exporter";
-          static_configs = [ { targets = [ "localhost:8081" ]; } ];
+          static_configs = [{targets = ["localhost:8081"];}];
         }
         {
           job_name = "desktop-node";
-          static_configs = [ { targets = [ "192.168.1.118:9100" ]; } ];
+          static_configs = [{targets = ["192.168.1.118:9100"];}];
         }
         {
           job_name = "homeserver-node";
-          static_configs = [ { targets = [ "localhost:9100" ]; } ];
+          static_configs = [{targets = ["localhost:9100"];}];
         }
         {
           job_name = "postgres-exporter";
-          static_configs = [ { targets = [ "localhost:9187" ]; } ];
+          static_configs = [{targets = ["localhost:9187"];}];
         }
         {
           job_name = "prometheus";
-          static_configs = [ { targets = [ "localhost:9090" ]; } ];
+          static_configs = [{targets = ["localhost:9090"];}];
         }
       ];
     };
@@ -197,8 +196,8 @@
   # =================================================================
   systemd.services.cloudflare-exporter = {
     description = "Cloudflare Prometheus Exporter";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network.target" ];
+    wantedBy = ["multi-user.target"];
+    after = ["network.target"];
     serviceConfig = {
       User = "prometheus";
       Group = "prometheus";

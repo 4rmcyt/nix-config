@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   sops.secrets = {
     postgres = {
       sopsFile = ../../../secrets/postgresql.yaml;
@@ -67,7 +66,7 @@
     isSystemUser = true;
     group = "postgresql";
   };
-  users.groups.postgresql = { };
+  users.groups.postgresql = {};
 
   networking.firewall.allowedTCPPorts = [
     5432 # PostgreSQL
@@ -137,9 +136,9 @@
   # Set up user passwords after PostgreSQL is running
   systemd.services.postgresql-setup-users = {
     description = "Set up PostgreSQL user passwords";
-    after = [ "postgresql.service" ];
-    requires = [ "postgresql.service" ];
-    wantedBy = [ "multi-user.target" ];
+    after = ["postgresql.service"];
+    requires = ["postgresql.service"];
+    wantedBy = ["multi-user.target"];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;

@@ -2,8 +2,7 @@
   pkgs,
   lib,
   ...
-}:
-{
+}: {
   imports = [
     ../../GUI/firefox
     ../../GUI/thunderbird
