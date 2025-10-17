@@ -151,9 +151,17 @@
       open = false;
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
+    };
 
-      # prime.offload.enable = false;
-      # prime.sync.enable = false;
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+      settings = {
+        General = {
+          Enable = "Source,Sink,Media,Socket";
+          Experimental = true;
+        };
+      };
     };
 
     # CPU configuration
