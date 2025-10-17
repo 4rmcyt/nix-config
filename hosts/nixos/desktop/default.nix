@@ -57,8 +57,6 @@
       # Graphics & Display
       GBM_BACKEND = "nvidia-drm";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-      __GL_THREADED_OPTIMIZATIONS = "1";
-      __GL_SHADER_DISK_CACHE = "1";
       LIBVA_DRIVER_NAME = "nvidia";
       NVD_BACKEND = "direct";
       GDK_BACKEND = "wayland,x11";
@@ -76,7 +74,6 @@
       CLUTTER_BACKEND = "wayland";
       SDL_VIDEODRIVER = "wayland";
       ELECTRON_OZONE_PLATFORM_HINT = "wayland";
-      WLR_NO_HARDWARE_CURSORS = "1";
 
       # Browser Optimization
       MOZ_ENABLE_WAYLAND = "1";
@@ -86,7 +83,6 @@
       # KWin Optimization
       KWIN_COMPOSE = "O2";
       KWIN_TRIPLE_BUFFER = "1";
-      KWIN_DRM_DEVICES = "/dev/dri/card1:/dev/dri/card0";
     };
 
     systemPackages = with pkgs; [
@@ -395,18 +391,18 @@
     # Desktop Environment
     # =============================================================
     desktopManager.plasma6.enable = true;
-    displayManager.sddm = {
-      autoNumlock = true;
-      enable = true;
-      enableHidpi = true;
-      theme = "breeze";
-      wayland.compositor = "kwin";
-      wayland.enable = true;
-      settings = {
-        General.DisplayServer = "wayland";
-        Autologin = {
-          Session = "plasma.desktop";
-        };
+    displayManager = {
+      autoLogin = {
+        enable = true;
+        user = "zeev";
+      };
+      sddm = {
+        autoNumlock = true;
+        enable = true;
+        enableHidpi = true;
+        theme = "breeze";
+        wayland.compositor = "kwin";
+        wayland.enable = true;
       };
     };
 
