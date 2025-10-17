@@ -134,6 +134,7 @@
       treefmt
       yamlfmt
       zoxide
+      tmux
 
       # =============================================================
       # Audio & Multimedia
@@ -207,6 +208,8 @@
       kdePackages.spectacle
       kdePackages.systemsettings
       kwalletcli
+      kdePackages.qtwayland
+      libsForQt5.qt5.qtwayland
 
       # =============================================================
       # Security & Encryption
