@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, config, lib, ...}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -8,7 +8,6 @@
     ../../../modules/disko/desktop
     ../../../modules/gaming
     ../../../modules/networking/dnssec
-    ../../../modules/networking/tailscale
     ../../../modules/users/zeev
     # ../../../modules/GUI/ollama
     ../../../modules/GUI/OBS
@@ -18,6 +17,19 @@
   # 2. System Configuration
   # =================================================================
   system.stateVersion = "25.05";
+
+  users.users.tailscale = {
+    isSystemUser = true;
+    group = "tailscale";
+  };
+  users.groups.tailscale = {};
+
+  sops.secrets.tailscale_auth_key = {
+    sopsFile = ../../../secrets/tailscale-desktop.yaml;
+    key = "tailscale_auth_key"; # Or whatever your key is named in the YAML
+    # Ensures the tailscale service user can read the key file
+    owner = config.users.users.tailscale.name;
+  };
 
   # =================================================================
   # 3. Boot Configuration
@@ -60,7 +72,6 @@
       LIBVA_DRIVER_NAME = "nvidia";
       NVD_BACKEND = "direct";
       GDK_BACKEND = "wayland,x11";
-
 
       # Wayland Support
       NIXOS_OZONE_WL = "1";
@@ -267,11 +278,7 @@
     hostId = "e134040f";
     hostName = "desktop";
     networkmanager.enable = true;
-    tailscaleAuth = {
-      enable = true;
-      key = "tailscale_auth_key";
-      sopsFile = ../../../secrets/tailscale-desktop.yaml;
-    };
+
     wireless.enable = false;
   };
 
@@ -358,7 +365,7 @@
     # =============================================================
     # Audio Services
     # =============================================================
-    pipewire = {
+     pipewire = {
       enable = true;
       audio.enable = true;
       pulse.enable = true;
@@ -374,6 +381,15 @@
           default.clock.quantum = 32;
           default.clock.min-quantum = 32;
           default.clock.max-quantum = 32;
+        };
+      };
+      extraConfig.pipewire."93-screen-share" = {
+        "stream.properties" = {
+          "node.max-latency" = "1/60";
+        };
+        context.spa-libs = {
+          "support.*" = "support/libspa-support";
+          "api.libcamera.*" = "libcamera/libspa-libcamera";
         };
       };
     };
@@ -469,6 +485,13 @@
         yubikey-manager
         yubikey-personalization
       ];
+    };
+
+
+    tailscale = {
+      enable = true;
+      useRoutingFeatures = "both";
+      authKeyFile = config.sops.secrets.tailscale_auth_key.path;
     };
 
     # =============================================================
