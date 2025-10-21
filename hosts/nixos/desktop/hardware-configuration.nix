@@ -68,6 +68,8 @@ in {
       "r8169"
       "snd-usb-audio"
       "snd_hda_intel"
+      "snd_hda_codec_hdmi"
+      "snd_hda_codec_realtek"
       "v4l2loopback"
     ];
 
@@ -80,6 +82,8 @@ in {
       "net.core.default_qdisc=fq"
       "net.ipv4.tcp_congestion_control=bbr"
       "nvidia-drm.modeset=1"
+      "nvidia-drm.fbdev=1"
+      "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
       "zfs.zfs_arc_max=12884901888" # 12GB ARC size
       "cfg80211.ieee80211_regdom=CA"
       "nohibernate"
@@ -140,14 +144,7 @@ in {
     # Module configuration
     extraModprobeConfig = ''
       options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=16777216 zfs_arc_max=2147483648
-      # Fix Bluetooth L2CAP socket errors
-      options bluetooth disable_ertm=1
-      options bluetooth disable_esco=1
-      options btusb enable_autosuspend=n reset_resume=1
-
-      # Additional Bluetooth L2CAP fixes
-      options bluetooth l2cap_ertm=n
-
+     
       # Enable v4l2loopback for virtual camera
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
     '';
@@ -167,11 +164,9 @@ in {
     nvidia = {
       modesetting.enable = true;
       powerManagement.enable = false;
-      powerManagement.finegrained = false;
-      forceFullCompositionPipeline = true;
       open = false;
       nvidiaSettings = true;
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      package = config.boot.kernelPackages.nvidiaPackages.latest;
     };
 
     bluetooth = {
@@ -180,7 +175,7 @@ in {
       settings = {
         General = {
           Enable = "Source,Sink,Media,Socket";
-          Experimental = true;
+          Experimental = false;
         };
       };
     };
