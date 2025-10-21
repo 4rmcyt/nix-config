@@ -81,7 +81,6 @@ _: {
 
     # === GRAPHICS & CANVAS ===
     "gfx.canvas.accelerated" = true;
-    "gfx.canvas.accelerated.cache-items" = 32768;
     "gfx.canvas.remote" = false;
     "gfx.vsync.hw-vsync.enabled" = true;
     "gfx.webrender.all" = true;
@@ -92,8 +91,6 @@ _: {
     "gfx.webrender.software" = false;
     "gfx.webrender.software.opengl" = false;
     "gfx.webrender.precache-shaders" = true;
-    "image.cache.size" = 10485760; # 10GB image cache for 64GB RAM
-    "media.memory_caches_combined_limit_kb" = 3145728; # 3GB combined cache
 
     # === IMAGES ===
     "image.avif.enabled" = true;
@@ -162,7 +159,6 @@ _: {
     "network.http.http3.enabled" = true;
     "network.http.referer.XOriginTrimmingPolicy" = 2;
     "network.prefetch-next" = false;
-    "network.dnsCacheEntries" = 20000;
     "network.dnsCacheExpiration" = 3600; # 1 hour
     "network.dnsCacheExpirationGracePeriod" = 240; # 4 minutes
     "network.predictor.enable-hover-on-ssl" = true;

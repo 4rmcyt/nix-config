@@ -101,7 +101,6 @@ _: {
     "network.http.http3.enabled" = true;
     "network.http.referer.XOriginTrimmingPolicy" = 2;
     "network.prefetch-next" = false;
-    "network.dnsCacheEntries" = 20000;
     "network.dnsCacheExpiration" = 3600; # 1 hour
     "network.dnsCacheExpirationGracePeriod" = 240; # 4 minutes
     "network.predictor.enable-hover-on-ssl" = true;

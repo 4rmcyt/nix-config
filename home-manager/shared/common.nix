@@ -31,10 +31,10 @@
 
     git = {
       enable = true;
-      userName = "4rmcyt";
-      userEmail = "4rmcyt@gmail.com";
-      signing.key = "D85B52C9288A138E";
-      extraConfig = {
+      settings = {
+        user.name = "4rmcyt";
+        user.email = "4rmcyt@gmail.com";
+        signing.key = "D85B52C9288A138E";
         commit.gpgsign = true;
       };
     };

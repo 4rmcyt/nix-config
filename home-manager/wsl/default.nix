@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   ...
 }: {
   imports = [
@@ -108,27 +107,8 @@
         shell-integration-features = "sudo";
       };
     };
-
-    gpg = {
-      enable = true;
-      homedir = "/home/zeev/.gnupg";
-    };
   };
 
-  # Override git config for WSL (no SSH signing)
-  programs.git.extraConfig = lib.mkForce {
-    commit.gpgsign = true;
-    gpg.format = "openpgp";
-  };
-
-  # Override zsh profile for pyenv
-  programs.zsh.profileExtra = ''
-    export PYENV_ROOT="$HOME/.pyenv"
-    export PATH="$PYENV_ROOT/bin:$PATH"
-    eval "$(pyenv init --path)"
-  '';
-
-  # Enable XDG for desktop files
   xdg = {
     enable = true;
     mimeApps.enable = true;

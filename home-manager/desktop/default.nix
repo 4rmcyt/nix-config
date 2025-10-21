@@ -78,20 +78,24 @@
     ];
 
     sessionVariables = {
+      # Graphics & Display
       GBM_BACKEND = "nvidia-drm";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       LIBVA_DRIVER_NAME = "nvidia";
       NVD_BACKEND = "direct";
-      XDG_CURRENT_DESKTOP = "KDE";
+      GDK_BACKEND = "wayland,x11";
+
+
+      # Wayland Support
       NIXOS_OZONE_WL = "1";
       CLUTTER_BACKEND = "wayland";
       SDL_VIDEODRIVER = "wayland";
-      XDG_SESSION_TYPE = "wayland";
       ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+
+      # Browser Optimization
       MOZ_ENABLE_WAYLAND = "1";
       MOZ_USE_XINPUT2 = "1";
       MOZ_DISABLE_RDD_SANDBOX = "1";
-      QT_QPA_PLATFORM = "wayland;xcb";
 
       BROWSER = lib.mkForce "firefox";
     };

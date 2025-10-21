@@ -54,22 +54,6 @@
   };
 
   programs = {
-    git = {
-      enable = true;
-      userName = "zeev";
-      userEmail = "zeev@example.com"; # Update with your email
-      extraConfig = {
-        init.defaultBranch = "main";
-        push.autoSetupRemote = true;
-        pull.rebase = true;
-      };
-    };
-
-    gpg = {
-      enable = true;
-      homedir = "/home/zeev/.gnupg";
-    };
-
     zsh = {
       enable = true;
       enableCompletion = true;

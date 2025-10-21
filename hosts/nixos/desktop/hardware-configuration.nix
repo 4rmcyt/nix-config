@@ -4,7 +4,28 @@
   pkgs,
   modulesPath,
   ...
-}: {
+}: let
+  xanmodCompatibleKernelPackages =
+    lib.filterAttrs (
+      name: kernelPackages:
+        (builtins.match "linuxPackages_xanmod.*" name)
+        != null
+        && (builtins.tryEval kernelPackages).success
+        && kernelPackages ? ${config.boot.zfs.package.kernelModuleAttribute}
+        && (!kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken or false)
+    )
+    pkgs;
+
+  selectedKernelPackage = let
+    xanmodPackages = builtins.attrValues xanmodCompatibleKernelPackages;
+  in
+    if (builtins.length xanmodPackages) > 0
+    then
+      lib.last (
+        lib.sort (a: b: (lib.versionOlder a.kernel.version b.kernel.version)) xanmodPackages
+      )
+    else pkgs.linuxPackages_xanmod_latest;
+in {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -51,7 +72,7 @@
     ];
 
     # Kernel configuration
-    kernelPackages = pkgs.linuxPackages_xanmod_latest;
+    kernelPackages = selectedKernelPackage;
     supportedFilesystems = ["zfs"];
 
     # Kernel parameters

@@ -61,13 +61,6 @@
       NVD_BACKEND = "direct";
       GDK_BACKEND = "wayland,x11";
 
-      # Desktop Environment
-      XDG_CURRENT_DESKTOP = "KDE";
-      XDG_SESSION_DESKTOP = "plasma";
-      XDG_SESSION_TYPE = "wayland";
-      QT_QPA_PLATFORM = "wayland;xcb";
-      QT_AUTO_SCREEN_SCALE_FACTOR = "1";
-      QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
 
       # Wayland Support
       NIXOS_OZONE_WL = "1";
@@ -79,10 +72,6 @@
       MOZ_ENABLE_WAYLAND = "1";
       MOZ_USE_XINPUT2 = "1";
       MOZ_DISABLE_RDD_SANDBOX = "1";
-
-      # KWin Optimization
-      KWIN_COMPOSE = "O2";
-      KWIN_TRIPLE_BUFFER = "1";
     };
 
     systemPackages = with pkgs; [
