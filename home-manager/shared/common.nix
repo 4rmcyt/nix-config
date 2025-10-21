@@ -34,8 +34,9 @@
       settings = {
         user.name = "4rmcyt";
         user.email = "4rmcyt@gmail.com";
-        signing.key = "D85B52C9288A138E";
+        user.signingkey = "D85B52C9288A138E";
         commit.gpgsign = true;
+        gpg.program = "gpg";
       };
     };
 
