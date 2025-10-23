@@ -84,6 +84,12 @@
         "https://numtide.cachix.org"
         "https://cuda-maintainers.cachix.org"
       ];
+      system-features = [
+        "benchmark"
+        "big-parallel"
+        "gccarch-znver3"
+        "kvm"
+      ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="
