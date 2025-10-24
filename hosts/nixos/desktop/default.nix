@@ -1,4 +1,8 @@
-{pkgs, config, lib, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -43,16 +47,6 @@
       enable = true;
       pkiBundle = "/var/lib/sbctl";
     };
-  };
-
-  # =================================================================
-  # 4. Nixpkgs Configuration
-  # =================================================================
-  nixpkgs.config = {
-    allowUnfree = true;
-    permittedInsecurePackages = [
-      "qtwebengine-5.15.19"
-    ];
   };
 
   # =================================================================
@@ -201,7 +195,6 @@
       kdePackages.plasma-browser-integration
       kdePackages.qtmultimedia
       kdePackages.qtsvg
-      kdePackages.qtwebengine
       kdePackages.sddm-kcm
       kdePackages.signon-kwallet-extension
       kdePackages.spectacle
@@ -364,7 +357,7 @@
     # =============================================================
     # Audio Services
     # =============================================================
-     pipewire = {
+    pipewire = {
       enable = true;
       audio.enable = true;
       pulse.enable = true;
@@ -485,7 +478,6 @@
         yubikey-personalization
       ];
     };
-
 
     tailscale = {
       enable = true;
