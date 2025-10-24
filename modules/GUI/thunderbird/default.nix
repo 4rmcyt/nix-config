@@ -94,9 +94,9 @@
       };
     };
 
-    "hayatzeevibbuk@gmail.com" = {
-      address = "hayatzeevibbuk@gmail.com";
-      userName = "hayatzeevibbuk@gmail.com";
+    "hayatzeev@gmail.com" = {
+      address = "hayatzeev@gmail.com";
+      userName = "hayatzeev@gmail.com";
       realName = "Zeev Hayat";
       imap = {
         host = "imap.gmail.com";
@@ -110,7 +110,7 @@
       };
       # GPG configuration - you'll need a key for this email
       gpg = {
-        key = "hayatzeevibbuk@gmail.com"; # Update with actual key ID
+        key = "hayatzeev@gmail.com"; # Update with actual key ID
         signByDefault = true;
         encryptByDefault = false;
       };
@@ -229,8 +229,8 @@
         "mail.server.server_bakbukdibbuk@gmail.com.authMethod" = 10; # OAuth2
         "mail.smtpserver.smtp_bakbukdibbuk@gmail.com.authMethod" = 10; # OAuth2
 
-        "mail.server.server_hayatzeevibbuk@gmail.com.authMethod" = 10; # OAuth2
-        "mail.smtpserver.smtp_hayatzeevibbuk@gmail.com.authMethod" = 10; # OAuth2
+        "mail.server.server_hayatzeev@gmail.com.authMethod" = 10; # OAuth2
+        "mail.smtpserver.smtp_hayatzeev@gmail.com.authMethod" = 10; # OAuth2
 
         "mail.server.server_vld.kondratenk@gmail.com.authMethod" = 10; # OAuth2
         "mail.smtpserver.smtp_vld.kondratenk@gmail.com.authMethod" = 10; # OAuth2
