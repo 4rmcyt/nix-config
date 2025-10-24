@@ -115,7 +115,6 @@
             inputs.nixos-facter-modules.nixosModules.facter
             inputs.agenix.nixosModules.default
             inputs.nix-gaming.nixosModules.pipewireLowLatency
-            inputs.nix-gaming.nixosModules.platformOptimizations
             inputs.lanzaboote.nixosModules.lanzaboote
 
             # Inline Configuration

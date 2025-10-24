@@ -227,6 +227,17 @@ in {
     };
   };
 
+  # =================================================================
+  # 5. Swap Configuration
+  # =================================================================
+  swapDevices = [];
+
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 30;
+  };
+
   security = {
     rtkit.enable = true;
     polkit.enable = true;
