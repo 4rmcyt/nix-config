@@ -47,6 +47,7 @@
           "tdarr.example.com" = "http://localhost:8265";
           "readarr.example.com" = "http://localhost:8787";
           "link.example.com" = "http://localhost:3000";
+          "flare.example.com" = "http://localhost:3033";
         };
       };
     };

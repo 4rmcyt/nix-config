@@ -18,6 +18,13 @@
       mode = "0400";
       format = "dotenv";
     };
+    flare_env = {
+      sopsFile = ../../secrets/flare.env;
+      owner = config.users.users.podman.name;
+      group = config.users.groups.podman.name;
+      mode = "0400";
+      format = "dotenv";
+    };
   };
 
   environment.systemPackages = [
@@ -56,6 +63,7 @@
       8266 # Tdarr Server
       8267 # Tdarr Node
       9948 # NextDNS Exporter
+      3033 # Flare
     ];
     allowedUDPPorts = [
       # Podman API
@@ -91,8 +99,6 @@
             CUSTOM_OPENAI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
             OPENAI_MODEL = "gemini-2.0-flash";
             OPENAI_API_KEY = "REDACTED";
-            # Set the port to avoid conflict with anything using 3000
-            # NEXT_PUBLIC_DISABLE_REGISTRATION = "true";
           };
           environmentFiles = [config.sops.secrets.linkwarden_env.path];
           volumes = ["/var/lib/linkwarden:/data/data"];
@@ -132,6 +138,18 @@
           extraOptions = [
             "--device=/dev/dri:/dev/dri"
           ];
+        };
+        flare = {
+          image = "ghcr.io/flintsh/flare:latest";
+          ports = ["127.0.0.1:3033:3000/tcp"];
+          autoStart = true;
+          environment = {
+            TZ = "America/Edmonton";
+          };
+          volumes = [
+            "/data/media:/media"
+          ];
+          environmentFiles = [config.sops.secrets.flare_env.path];
         };
       };
     };

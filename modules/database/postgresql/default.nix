@@ -60,6 +60,13 @@
       group = config.users.groups.postgresql.name;
       mode = "0400";
     };
+    flare = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "flare";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
   };
 
   users.users.postgresql = {
@@ -83,6 +90,7 @@
       "grafana"
       "vaultwarden"
       "linkwarden"
+      "flare"
     ];
 
     ensureUsers = [
@@ -112,6 +120,10 @@
       }
       {
         name = "linkwarden";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "flare";
         ensureDBOwnership = true;
       }
     ];
@@ -159,6 +171,7 @@
       ${pkgs.postgresql_16}/bin/psql -c "ALTER USER authentik WITH PASSWORD '$(cat ${config.sops.secrets.authentik.path} | tr -d '\n\r')';"
       ${pkgs.postgresql_16}/bin/psql -c "ALTER USER grafana WITH PASSWORD '$(cat ${config.sops.secrets.grafana.path} | tr -d '\n\r')';"
       ${pkgs.postgresql_16}/bin/psql -c "ALTER USER vaultwarden WITH PASSWORD '$(cat ${config.sops.secrets.vaultwarden.path} | tr -d '\n\r')';"
+      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER flare WITH PASSWORD '$(cat ${config.sops.secrets.flare.path} | tr -d '\n\r')';"
     '';
   };
 }
