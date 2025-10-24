@@ -94,9 +94,9 @@
       };
     };
 
-    "hayatzeevibbuk@gmail.com" = {
-      address = "hayatzeevibbuk@gmail.com";
-      userName = "hayatzeevibbuk@gmail.com";
+    "redacted@example.com" = {
+      address = "redacted@example.com";
+      userName = "redacted@example.com";
       realName = "Redacted Name";
       imap = {
         host = "imap.gmail.com";
@@ -110,7 +110,7 @@
       };
       # GPG configuration - you'll need a key for this email
       gpg = {
-        key = "hayatzeevibbuk@gmail.com"; # Update with actual key ID
+        key = "redacted@example.com"; # Update with actual key ID
         signByDefault = true;
         encryptByDefault = false;
       };
@@ -229,8 +229,8 @@
         "mail.server.server_redacted@example.com.authMethod" = 10; # OAuth2
         "mail.smtpserver.smtp_redacted@example.com.authMethod" = 10; # OAuth2
 
-        "mail.server.server_hayatzeevibbuk@gmail.com.authMethod" = 10; # OAuth2
-        "mail.smtpserver.smtp_hayatzeevibbuk@gmail.com.authMethod" = 10; # OAuth2
+        "mail.server.server_redacted@example.com.authMethod" = 10; # OAuth2
+        "mail.smtpserver.smtp_redacted@example.com.authMethod" = 10; # OAuth2
 
         "mail.server.server_redacted@example.com.authMethod" = 10; # OAuth2
         "mail.smtpserver.smtp_redacted@example.com.authMethod" = 10; # OAuth2

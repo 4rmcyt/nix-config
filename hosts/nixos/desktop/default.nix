@@ -186,7 +186,6 @@
       kdePackages.ark
       kdePackages.discover
       kdePackages.filelight
-      kdePackages.full
       kdePackages.gwenview
       kdePackages.kcalc
       kdePackages.kcharselect
