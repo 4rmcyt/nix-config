@@ -27,6 +27,8 @@
       pyenv
       python3
       vscode-fhs
+      tenv
+      azure-cli
 
       # Gaming
       steam
