@@ -36,7 +36,6 @@
 
       # GUI applications
       ghostty
-      jellyfin-media-player
       obsidian
       signal-desktop
       slack
@@ -86,7 +85,6 @@
       LIBVA_DRIVER_NAME = "nvidia";
       NVD_BACKEND = "direct";
       GDK_BACKEND = "wayland,x11";
-
 
       # Wayland Support
       NIXOS_OZONE_WL = "1";

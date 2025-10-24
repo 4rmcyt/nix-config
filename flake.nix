@@ -3,9 +3,9 @@
 
   inputs = {
     # Core Nix ecosystem
+    flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     systems.url = "github:nix-systems/default";
-    flake-parts.url = "github:hercules-ci/flake-parts";
 
     # System management
     disko = {
@@ -86,7 +86,10 @@
     };
   };
 
-  outputs = inputs @ {treefmt-nix, ...}:
+  outputs = {
+    treefmt-nix,
+    ...
+  } @ inputs:
     inputs.flake-parts.lib.mkFlake
     {
       inherit inputs;
@@ -106,23 +109,22 @@
       in {
         nixosConfigurations = {
           desktop = mkNixos "desktop" "x86_64-linux" [
+            # Host-specific configuration
             ./hosts/nixos/desktop
             ./modules/users/zeev
             ./modules/disko/desktop
+
+            # Flake Modules
             inputs.nixos-facter-modules.nixosModules.facter
-            {config.facter.reportPath = ./hosts/nixos/desktop/facter.json;}
             inputs.agenix.nixosModules.default
             inputs.nix-gaming.nixosModules.pipewireLowLatency
             inputs.nix-gaming.nixosModules.platformOptimizations
             inputs.lanzaboote.nixosModules.lanzaboote
-            {
-              nixpkgs.config = {
-                allowUnfree = true;
-                permittedInsecurePackages = [
-                  "qtwebengine-5.15.19"
-                ];
-              };
 
+            # Inline Configuration
+            {
+              config.facter.reportPath = ./hosts/nixos/desktop/facter.json;
+              nixpkgs.config.allowUnfree = true;
               sops.age.keyFile = "/root/.config/sops/age/keys.txt";
               home-manager = {
                 useGlobalPkgs = false;
@@ -136,12 +138,7 @@
                     inputs.plasma-manager.homeModules.plasma-manager
                     inputs.nixai.homeManagerModules.default
                   ];
-                  nixpkgs.config = {
-                    allowUnfree = true;
-                    permittedInsecurePackages = [
-                      "qtwebengine-5.15.19"
-                    ];
-                  };
+                  nixpkgs.config.allowUnfree = true;
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   _module.args = {inherit inputs;};
                 };
@@ -150,16 +147,21 @@
           ];
 
           homeserver = mkNixos "homeserver" "x86_64-linux" [
+            # Host-specific configuration
             ./hosts/nixos/homeserver
             ./modules/users/zeev
             ./modules/disko/homeserver
+
+            # Flake Modules
             inputs.nixarr.nixosModules.default
             inputs.authentik-nix.nixosModules.default
             inputs.vscode-server.nixosModules.default
             inputs.nixos-facter-modules.nixosModules.facter
             inputs.agenix.nixosModules.default
-            {config.facter.reportPath = ./hosts/nixos/homeserver/facter.json;}
+
+            # Inline Configuration
             {
+              config.facter.reportPath = ./hosts/nixos/homeserver/facter.json;
               sops.age.keyFile = "/var/lib/sops/age.key";
               home-manager = {
                 useGlobalPkgs = true;
@@ -178,10 +180,15 @@
           ];
 
           wsl = mkNixos "wsl" "x86_64-linux" [
+            # Host-specific configuration
             ./hosts/nixos/wsl
             ./modules/users/zeev
+
+            # Flake Modules
             inputs.nixos-wsl.nixosModules.wsl
             inputs.agenix.nixosModules.default
+
+            # Inline Configuration
             {
               sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
               home-manager = {
@@ -201,24 +208,17 @@
           ];
         };
 
-        # Add home-manager configurations
+        # Standalone home-manager configurations
         homeConfigurations = {
           "zeev@desktop" = inputs.home-manager.lib.homeManagerConfiguration {
-            pkgs = import inputs.nixpkgs {
-              system = "x86_64-linux";
-              config = {
-                allowUnfree = true;
-                permittedInsecurePackages = [
-                  "qtwebengine-5.15.19"
-                ];
-              };
-            };
+            pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux";
             modules = [
               ./home-manager/desktop
               inputs.sops-nix.homeManagerModules.sops
               inputs.agenix.homeManagerModules.default
               inputs.plasma-manager.homeModules.plasma-manager
               inputs.nixai.homeManagerModules.default
+              {nixpkgs.config.allowUnfree = true;}
             ];
             extraSpecialArgs = {inherit inputs;};
           };

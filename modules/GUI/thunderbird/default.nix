@@ -243,7 +243,7 @@
   # =================================================================
   home.packages = with pkgs; [
     protonmail-bridge
-    protonmail-bridge-gui
+    # protonmail-bridge-gui
   ];
 
   systemd.user.services.protonmailbridge = {
