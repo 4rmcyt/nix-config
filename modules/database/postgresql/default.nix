@@ -62,7 +62,7 @@
     };
     flare = {
       sopsFile = ../../../secrets/postgresql.yaml;
-      key = "flare";
+      key = "flare_db_password";
       owner = config.users.users.postgresql.name;
       group = config.users.groups.postgresql.name;
       mode = "0400";
