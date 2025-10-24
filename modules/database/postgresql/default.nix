@@ -142,6 +142,7 @@
       # Require a password for network connections from localhost (both IPv4 and IPv6)
       host  all all 127.0.0.1/32 scram-sha-256
       host  all all ::1/128      scram-sha-256
+      host  all all 10.88.0.1/16 scram-sha-256 # Allow connections from podman containers
     '';
   };
 
