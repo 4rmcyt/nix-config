@@ -33,6 +33,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+    flatpaks.url = "github:in-a-dil-emma/declarative-flatpak/latest";
 
     # Security & secrets
     agenix.url = "github:ryantm/agenix";
@@ -133,6 +134,7 @@
                     inputs.agenix.homeManagerModules.default
                     inputs.plasma-manager.homeModules.plasma-manager
                     inputs.nixai.homeManagerModules.default
+                    inputs.flatpaks.homeModules.default
                   ];
                   nixpkgs.config.allowUnfree = true;
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
