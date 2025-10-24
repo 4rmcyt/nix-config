@@ -7,6 +7,7 @@
     # ./home-assistant
     ./nixarr
     ./kavita
+    # ./filebrowser
     # ./tdarr
     # ./vaultwarden
     # ./linkwarden

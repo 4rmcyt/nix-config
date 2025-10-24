@@ -15,7 +15,7 @@
     ../../../modules/users/zeev
     # ../../../modules/GUI/ollama
     ../../../modules/GUI/OBS
-    ../../modules/GUI/flatpak
+    ../../../modules/GUI/flatpak
   ];
 
   # =================================================================
@@ -431,7 +431,6 @@
         turbo = "auto";
       };
     };
-    flatpak.enable = true;
     fwupd.enable = true;
     openssh.enable = true;
     pcscd = {

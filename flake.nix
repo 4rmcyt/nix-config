@@ -117,6 +117,7 @@
             inputs.agenix.nixosModules.default
             inputs.nix-gaming.nixosModules.pipewireLowLatency
             inputs.lanzaboote.nixosModules.lanzaboote
+            inputs.flatpaks.nixosModules.default
 
             # Inline Configuration
             {config.facter.reportPath = ./hosts/nixos/desktop/facter.json;}
@@ -134,7 +135,6 @@
                     inputs.agenix.homeManagerModules.default
                     inputs.plasma-manager.homeModules.plasma-manager
                     inputs.nixai.homeManagerModules.default
-                    inputs.flatpaks.homeModules.default
                   ];
                   nixpkgs.config.allowUnfree = true;
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";

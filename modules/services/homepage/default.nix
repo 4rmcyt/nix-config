@@ -253,6 +253,13 @@
               icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/radicale.svg";
             };
           }
+          {
+            "Flare" = {
+              href = "https://flare.labhome.work";
+              description = "Flare Service";
+              icon = "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/filebrowser-quantum.svg";
+            };
+          }
         ];
       }
       {

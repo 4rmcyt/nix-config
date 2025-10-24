@@ -47,6 +47,7 @@
           "tdarr.labhome.work" = "http://localhost:8265";
           "readarr.labhome.work" = "http://localhost:8787";
           "link.labhome.work" = "http://localhost:3000";
+          "flare.labhome.work" = "http://localhost:3033";
         };
       };
     };
