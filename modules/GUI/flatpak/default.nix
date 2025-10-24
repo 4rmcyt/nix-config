@@ -1,10 +1,8 @@
 {
   pkgs,
   inputs,
-  lib,
   ...
-}:
-{
+}: {
   services.flatpak = {
     enable = true;
     remotes = {
@@ -15,29 +13,19 @@
       "flathub:app/org.kde.index//stable"
       "flathub-beta:app/org.kde.kdenlive/x86_64/stable"
       "flathub:/root/testflatpak.flatpakref"
+      "flathub:app/com.github.iwalton3.jellyfin-media-player"
     ];
-    overrides = {
-      # note: "global" is a flatpak thing
-      # if you ever ran "flatpak override" without specifying a ref you will know
-      "global".Context = {
-        filesystems = [
-          "home"
-        ];
-        sockets = [
-          "!x11"
-          "!fallback-x11"
-        ];
-      };
-      "org.mozilla.Firefox" = {
-        Environment = {
-          "MOZ_ENABLE_WAYLAND" = 1;
-        };
-        Context.sockets = [
-          "!wayland"
-          "!fallback-x11"
-          "x11"
-        ];
-      };
-    };
+    # overrides = {
+    #   "global".Context = {
+    #     filesystems = [
+    #       "home"
+    #     ];
+    #     sockets = [
+    #       "!x11"
+    #       "!fallback-x11"
+    #       "wayland"
+    #     ];
+    #   };
+    # };
   };
 }

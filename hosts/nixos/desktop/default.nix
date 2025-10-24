@@ -15,6 +15,7 @@
     ../../../modules/users/zeev
     # ../../../modules/GUI/ollama
     ../../../modules/GUI/OBS
+    ../../modules/GUI/flatpak
   ];
 
   # =================================================================
