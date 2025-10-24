@@ -86,10 +86,7 @@
     };
   };
 
-  outputs = {
-    treefmt-nix,
-    ...
-  } @ inputs:
+  outputs = inputs @ {treefmt-nix, ...}:
     inputs.flake-parts.lib.mkFlake
     {
       inherit inputs;
@@ -122,8 +119,8 @@
             inputs.lanzaboote.nixosModules.lanzaboote
 
             # Inline Configuration
+            {config.facter.reportPath = ./hosts/nixos/desktop/facter.json;}
             {
-              config.facter.reportPath = ./hosts/nixos/desktop/facter.json;
               nixpkgs.config.allowUnfree = true;
               sops.age.keyFile = "/root/.config/sops/age/keys.txt";
               home-manager = {
@@ -160,8 +157,8 @@
             inputs.agenix.nixosModules.default
 
             # Inline Configuration
+            {config.facter.reportPath = ./hosts/nixos/homeserver/facter.json;}
             {
-              config.facter.reportPath = ./hosts/nixos/homeserver/facter.json;
               sops.age.keyFile = "/var/lib/sops/age.key";
               home-manager = {
                 useGlobalPkgs = true;
@@ -208,17 +205,19 @@
           ];
         };
 
-        # Standalone home-manager configurations
+        # Add home-manager configurations
         homeConfigurations = {
           "zeev@desktop" = inputs.home-manager.lib.homeManagerConfiguration {
-            pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux";
+            pkgs = import inputs.nixpkgs {
+              system = "x86_64-linux";
+              config.allowUnfree = true;
+            };
             modules = [
               ./home-manager/desktop
               inputs.sops-nix.homeManagerModules.sops
               inputs.agenix.homeManagerModules.default
               inputs.plasma-manager.homeModules.plasma-manager
               inputs.nixai.homeManagerModules.default
-              {nixpkgs.config.allowUnfree = true;}
             ];
             extraSpecialArgs = {inherit inputs;};
           };
