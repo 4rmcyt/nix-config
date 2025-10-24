@@ -76,6 +76,11 @@
     podman = {
       enable = true;
       dockerCompat = true;
+      networks."podman" = {
+        driver = "bridge";
+        subnet = "10.88.0.0/16"; # You can use this standard range
+        gateway = "10.88.0.1";  # This will be your host's IP
+      };
       defaultNetwork.settings.dns_enabled = true;
     };
     oci-containers = {
