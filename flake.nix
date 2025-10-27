@@ -107,7 +107,6 @@
         treefmt = import ./treefmt.nix {inherit pkgs;};
       };
 
-      # Flake outputs (NixOS, Home Manager configs)
       flake = {
         nixosConfigurations = {
           desktop = inputs.nixpkgs.lib.nixosSystem {
@@ -119,14 +118,12 @@
                 ./modules/users/zeev
                 ./modules/disko/desktop
 
-                # Flake Modules
                 inputs.nixos-facter-modules.nixosModules.facter
                 inputs.agenix.nixosModules.default
                 inputs.nix-gaming.nixosModules.pipewireLowLatency
                 inputs.lanzaboote.nixosModules.lanzaboote
                 inputs.flatpaks.nixosModules.default
 
-                # Inline Configuration
                 {config.facter.reportPath = ./hosts/nixos/desktop/facter.json;}
                 {
                   nixpkgs.config.allowUnfree = true;
@@ -159,19 +156,16 @@
             specialArgs = {inherit inputs;};
             modules =
               [
-                # Host-specific configuration
                 ./hosts/nixos/homeserver
                 ./modules/users/zeev
                 ./modules/disko/homeserver
 
-                # Flake Modules
                 inputs.nixarr.nixosModules.default
                 inputs.authentik-nix.nixosModules.default
                 inputs.vscode-server.nixosModules.default
                 inputs.nixos-facter-modules.nixosModules.facter
                 inputs.agenix.nixosModules.default
 
-                # Inline Configuration
                 {config.facter.reportPath = ./hosts/nixos/homeserver/facter.json;}
                 {
                   sops.age.keyFile = "/var/lib/sops/age.key";
@@ -202,11 +196,9 @@
                 ./hosts/nixos/wsl
                 ./modules/users/zeev
 
-                # Flake Modules
                 inputs.nixos-wsl.nixosModules.wsl
                 inputs.agenix.nixosModules.default
 
-                # Inline Configuration
                 {
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   home-manager = {
@@ -232,7 +224,7 @@
         homeConfigurations = {
           "zeev@desktop" = inputs.home-manager.lib.homeManagerConfiguration {
             pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux";
-            specialArgs = {inherit inputs;}; # Correct for standalone HM config
+            specialArgs = {inherit inputs;};
             modules = [
               ./home-manager/desktop
               inputs.sops-nix.homeManagerModules.sops
