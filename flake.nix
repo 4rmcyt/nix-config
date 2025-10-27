@@ -1,3 +1,4 @@
+# nix-config/flake.nix
 {
   description = "A highly structured NixOS configuration";
 
@@ -20,7 +21,6 @@
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     # Home Manager
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -41,7 +41,6 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     # Performance & optimization
     auto-cpufreq = {
       url = "github:AdnanHodzic/auto-cpufreq";
@@ -79,7 +78,6 @@
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     # Non-flake inputs
     cpu-microcodes = {
       url = "github:platomav/CPUMicrocodes";
@@ -87,140 +85,162 @@
     };
   };
 
-  outputs = inputs @ {treefmt-nix, ...}:
-    inputs.flake-parts.lib.mkFlake
-    {
+  outputs = inputs @ {
+    flake-parts,
+    treefmt-nix,
+    ...
+  }: let
+    commonModules = [
+      inputs.sops-nix.nixosModules.sops
+      inputs.home-manager.nixosModules.home-manager
+      inputs.disko.nixosModules.disko
+      inputs.nix-index-database.nixosModules.nix-index
+    ];
+  in
+    # --- FIX: Move specialArgs to the first argument set ---
+    flake-parts.lib.mkFlake {
       inherit inputs;
-    }
-    {
+      specialArgs = {inherit inputs;};
+    } {
       systems = import inputs.systems;
       imports = [treefmt-nix.flakeModule];
 
+      # perSystem outputs (devshells, formatters)
       perSystem = {pkgs, ...}: {
         devShells.default = import ./devshell.nix {inherit pkgs;};
-        treefmt = import ./treefmt.nix;
+        treefmt = import ./treefmt.nix {inherit pkgs;};
       };
 
-      flake = let
-        helpers = import ./flakeHelpers.nix inputs;
-        inherit (helpers) mkNixos;
-      in {
+      # Flake outputs (NixOS, Home Manager configs)
+      flake = {
         nixosConfigurations = {
-          desktop = mkNixos "desktop" "x86_64-linux" [
-            # Host-specific configuration
-            ./hosts/nixos/desktop
-            ./modules/users/zeev
-            ./modules/disko/desktop
+          desktop = inputs.nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules =
+              [
+                # Host-specific configuration
+                ./hosts/nixos/desktop
+                ./modules/users/zeev
+                ./modules/disko/desktop
 
-            # Flake Modules
-            inputs.nixos-facter-modules.nixosModules.facter
-            inputs.agenix.nixosModules.default
-            inputs.nix-gaming.nixosModules.pipewireLowLatency
-            inputs.lanzaboote.nixosModules.lanzaboote
-            inputs.flatpaks.nixosModules.default
+                # Flake Modules
+                inputs.nixos-facter-modules.nixosModules.facter
+                inputs.agenix.nixosModules.default
+                inputs.nix-gaming.nixosModules.pipewireLowLatency
+                inputs.lanzaboote.nixosModules.lanzaboote
+                inputs.flatpaks.nixosModules.default
 
-            # Inline Configuration
-            {config.facter.reportPath = ./hosts/nixos/desktop/facter.json;}
-            {
-              nixpkgs.config.allowUnfree = true;
-              sops.age.keyFile = "/root/.config/sops/age/keys.txt";
-              home-manager = {
-                useGlobalPkgs = false;
-                useUserPackages = true;
-                backupFileExtension = "backup";
-                users.zeev = {
-                  imports = [
-                    ./home-manager/desktop
-                    inputs.sops-nix.homeManagerModules.sops
-                    inputs.agenix.homeManagerModules.default
-                    inputs.plasma-manager.homeModules.plasma-manager
-                    inputs.nixai.homeManagerModules.default
-                  ];
+                # Inline Configuration
+                {config.facter.reportPath = ./hosts/nixos/desktop/facter.json;}
+                {
                   nixpkgs.config.allowUnfree = true;
+                  sops.age.keyFile = "/root/.config/sops/age/keys.txt";
+                  home-manager = {
+                    useGlobalPkgs = false;
+                    useUserPackages = true;
+                    backupFileExtension = "backup";
+                    users.zeev = {
+                      imports = [
+                        ./home-manager/desktop
+                        inputs.sops-nix.homeManagerModules.sops
+                        inputs.agenix.homeManagerModules.default
+                        inputs.plasma-manager.homeModules.plasma-manager
+                        inputs.nixai.homeManagerModules.default
+                        inputs.betterfox-nix.homeModules.betterfox
+                      ];
+                      nixpkgs.config.allowUnfree = true;
+                      sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+                    };
+                  };
+                }
+              ]
+              ++ commonModules;
+          };
+
+          homeserver = inputs.nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules =
+              [
+                # Host-specific configuration
+                ./hosts/nixos/homeserver
+                ./modules/users/zeev
+                ./modules/disko/homeserver
+
+                # Flake Modules
+                inputs.nixarr.nixosModules.default
+                inputs.authentik-nix.nixosModules.default
+                inputs.vscode-server.nixosModules.default
+                inputs.nixos-facter-modules.nixosModules.facter
+                inputs.agenix.nixosModules.default
+
+                # Inline Configuration
+                {config.facter.reportPath = ./hosts/nixos/homeserver/facter.json;}
+                {
+                  sops.age.keyFile = "/var/lib/sops/age.key";
+                  home-manager = {
+                    useGlobalPkgs = true;
+                    useUserPackages = true;
+                    backupFileExtension = "backup";
+                    users.zeev = {
+                      imports = [
+                        ./home-manager/homeserver
+                        inputs.sops-nix.homeManagerModules.sops
+                        inputs.agenix.homeManagerModules.default
+                      ];
+                      sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+                    };
+                  };
+                }
+              ]
+              ++ commonModules;
+          };
+
+          wsl = inputs.nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules =
+              [
+                # Host-specific configuration
+                ./hosts/nixos/wsl
+                ./modules/users/zeev
+
+                # Flake Modules
+                inputs.nixos-wsl.nixosModules.wsl
+                inputs.agenix.nixosModules.default
+
+                # Inline Configuration
+                {
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-                  _module.args = {inherit inputs;};
-                };
-              };
-            }
-          ];
-
-          homeserver = mkNixos "homeserver" "x86_64-linux" [
-            # Host-specific configuration
-            ./hosts/nixos/homeserver
-            ./modules/users/zeev
-            ./modules/disko/homeserver
-
-            # Flake Modules
-            inputs.nixarr.nixosModules.default
-            inputs.authentik-nix.nixosModules.default
-            inputs.vscode-server.nixosModules.default
-            inputs.nixos-facter-modules.nixosModules.facter
-            inputs.agenix.nixosModules.default
-
-            # Inline Configuration
-            {config.facter.reportPath = ./hosts/nixos/homeserver/facter.json;}
-            {
-              sops.age.keyFile = "/var/lib/sops/age.key";
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                backupFileExtension = "backup";
-                users.zeev = {
-                  imports = [
-                    ./home-manager/homeserver
-                    inputs.sops-nix.homeManagerModules.sops
-                    inputs.agenix.homeManagerModules.default
-                  ];
-                  sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-                };
-              };
-            }
-          ];
-
-          wsl = mkNixos "wsl" "x86_64-linux" [
-            # Host-specific configuration
-            ./hosts/nixos/wsl
-            ./modules/users/zeev
-
-            # Flake Modules
-            inputs.nixos-wsl.nixosModules.wsl
-            inputs.agenix.nixosModules.default
-
-            # Inline Configuration
-            {
-              sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                backupFileExtension = "backup";
-                users.zeev = {
-                  imports = [
-                    ./home-manager/wsl
-                    inputs.sops-nix.homeManagerModules.sops
-                    inputs.agenix.homeManagerModules.default
-                  ];
-                  sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-                };
-              };
-            }
-          ];
+                  home-manager = {
+                    useGlobalPkgs = true;
+                    useUserPackages = true;
+                    backupFileExtension = "backup";
+                    users.zeev = {
+                      imports = [
+                        ./home-manager/wsl
+                        inputs.sops-nix.homeManagerModules.sops
+                        inputs.agenix.homeManagerModules.default
+                      ];
+                      sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+                    };
+                  };
+                }
+              ]
+              ++ commonModules;
+          };
         };
 
-        # Add home-manager configurations
         homeConfigurations = {
           "zeev@desktop" = inputs.home-manager.lib.homeManagerConfiguration {
-            pkgs = import inputs.nixpkgs {
-              system = "x86_64-linux";
-              config.allowUnfree = true;
-            };
+            pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux";
             modules = [
               ./home-manager/desktop
               inputs.sops-nix.homeManagerModules.sops
               inputs.agenix.homeManagerModules.default
               inputs.plasma-manager.homeModules.plasma-manager
               inputs.nixai.homeManagerModules.default
+              inputs.betterfox-nix.homeModules.betterfox
+              {nixpkgs.config.allowUnfree = true;}
             ];
-            extraSpecialArgs = {inherit inputs;};
           };
         };
       };

@@ -5,7 +5,7 @@
   ...
 }: {
   imports = [
-    ./extensions.nix
+    # ./extensions.nix
     ./policies.nix
     ./preferences.nix
     ./searchEngines.nix
@@ -27,6 +27,28 @@
         fastfox.enable = true;
       };
     };
+
+    extensions = with inputs.firefox-addons.packages."x86_64-linux"; [
+      # === AD BLOCKING & PRIVACY ===
+      darkreader
+      ublock-origin
+      ublacklist
+      terms-of-service-didnt-read
+
+      # === DEVELOPER TOOLS ===
+      refined-github
+
+      # === MEDIA & ENTERTAINMENT ===
+      fastforwardteam
+      return-youtube-dislikes
+
+      # === PRODUCTIVITY & NAVIGATION ===
+      indie-wiki-buddy
+      linkwarden
+
+      # === SYSTEM INTEGRATION ===
+      plasma-integration
+    ];
   };
   # Force overwrite existing files
   home.file.".mozilla/firefox/profiles.ini".force = lib.mkForce true;
