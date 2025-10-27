@@ -1,4 +1,3 @@
-# nix-config/flake.nix
 {
   description = "A highly structured NixOS configuration";
 
@@ -97,15 +96,12 @@
       inputs.nix-index-database.nixosModules.nix-index
     ];
   in
-    # --- FIX: Move specialArgs to the first argument set ---
     flake-parts.lib.mkFlake {
       inherit inputs;
       specialArgs = {inherit inputs;};
     } {
       systems = import inputs.systems;
       imports = [treefmt-nix.flakeModule];
-
-      # perSystem outputs (devshells, formatters)
       perSystem = {pkgs, ...}: {
         devShells.default = import ./devshell.nix {inherit pkgs;};
         treefmt = import ./treefmt.nix {inherit pkgs;};
@@ -116,9 +112,9 @@
         nixosConfigurations = {
           desktop = inputs.nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
+            specialArgs = {inherit inputs;};
             modules =
               [
-                # Host-specific configuration
                 ./hosts/nixos/desktop
                 ./modules/users/zeev
                 ./modules/disko/desktop
@@ -139,6 +135,7 @@
                     useGlobalPkgs = false;
                     useUserPackages = true;
                     backupFileExtension = "backup";
+                    extraSpecialArgs = {inherit inputs;};
                     users.zeev = {
                       imports = [
                         ./home-manager/desktop
@@ -159,6 +156,7 @@
 
           homeserver = inputs.nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
+            specialArgs = {inherit inputs;};
             modules =
               [
                 # Host-specific configuration
@@ -181,6 +179,7 @@
                     useGlobalPkgs = true;
                     useUserPackages = true;
                     backupFileExtension = "backup";
+                    extraSpecialArgs = {inherit inputs;};
                     users.zeev = {
                       imports = [
                         ./home-manager/homeserver
@@ -197,9 +196,9 @@
 
           wsl = inputs.nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
+            specialArgs = {inherit inputs;};
             modules =
               [
-                # Host-specific configuration
                 ./hosts/nixos/wsl
                 ./modules/users/zeev
 
@@ -214,6 +213,7 @@
                     useGlobalPkgs = true;
                     useUserPackages = true;
                     backupFileExtension = "backup";
+                    extraSpecialArgs = {inherit inputs;};
                     users.zeev = {
                       imports = [
                         ./home-manager/wsl
@@ -232,6 +232,7 @@
         homeConfigurations = {
           "zeev@desktop" = inputs.home-manager.lib.homeManagerConfiguration {
             pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux";
+            specialArgs = {inherit inputs;}; # Correct for standalone HM config
             modules = [
               ./home-manager/desktop
               inputs.sops-nix.homeManagerModules.sops

@@ -1,5 +1,21 @@
 {
   programs.firefox.policies = {
+    "3rdparty".extensions = {
+      # uBlock Origin - Enhanced permissions
+      "uBlock0@raymondhill.net" = {
+        permissions = [
+          "internal:privateBrowsingAllowed"
+          "internal:svgContextPropertiesAllowed"
+        ];
+        origins = ["<all_urls>"];
+      };
+
+      # GDPR/Cookie consent
+      "gdpr@cavi.au.dk" = {
+        permissions = ["<all_urls>"];
+        origins = ["<all_urls>"];
+      };
+    };
     # === BASIC POLICIES ===
     DontCheckDefaultBrowser = true;
     HardwareAcceleration = true;
