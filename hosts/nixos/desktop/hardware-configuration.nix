@@ -90,6 +90,7 @@ in {
       "loglevel=4"
       "usbcore.autosuspend=-1"
       "usb-storage.delay_use=0"
+      "systemd.unified_cgroup_hierarchy=1"
     ];
 
     # ZFS configuration
