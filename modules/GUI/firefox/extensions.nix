@@ -4,7 +4,6 @@
   ...
 }: let
   ryceeAddons = with inputs.firefox-addons.packages.${pkgs.system}; [
-    
   ];
 in {
   programs.firefox.profiles.default.extensions.packages = ryceeAddons;
