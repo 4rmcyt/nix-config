@@ -27,29 +27,27 @@
         "fastfox.enable" = true;
       };
       extensions = {
-        packages = with inputs.firefox-addons.packages."x86_64-linux";
-        
-          [
-            # === AD BLOCKING & PRIVACY ===
-            darkreader
-            ublock-origin
-            ublacklist
-            terms-of-service-didnt-read
+        packages = with inputs.firefox-addons.packages."x86_64-linux"; [
+          # === AD BLOCKING & PRIVACY ===
+          darkreader
+          ublock-origin
+          ublacklist
+          terms-of-service-didnt-read
 
-            # === DEVELOPER TOOLS ===
-            refined-github
+          # === DEVELOPER TOOLS ===
+          refined-github
 
-            # === MEDIA & ENTERTAINMENT ===
-            fastforwardteam
-            return-youtube-dislikes
+          # === MEDIA & ENTERTAINMENT ===
+          fastforwardteam
+          return-youtube-dislikes
 
-            # === PRODUCTIVITY & NAVIGATION ===
-            indie-wiki-buddy
-            linkwarden
+          # === PRODUCTIVITY & NAVIGATION ===
+          indie-wiki-buddy
+          linkwarden
 
-            # === SYSTEM INTEGRATION ===
-            plasma-integration
-          ];
+          # === SYSTEM INTEGRATION ===
+          plasma-integration
+        ];
       };
     };
   };
