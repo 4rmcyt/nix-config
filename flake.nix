@@ -98,32 +98,38 @@
   in
     flake-parts.lib.mkFlake {
       inherit inputs;
-      specialArgs = {inherit inputs;};
+      specialArgs = {inherit inputs;}; # flake-parts specialArgs
     } {
       systems = import inputs.systems;
       imports = [treefmt-nix.flakeModule];
+
+      # perSystem outputs (devshells, formatters)
       perSystem = {pkgs, ...}: {
         devShells.default = import ./devshell.nix {inherit pkgs;};
         treefmt = import ./treefmt.nix {inherit pkgs;};
       };
 
+      # Flake outputs (NixOS, Home Manager configs)
       flake = {
         nixosConfigurations = {
           desktop = inputs.nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
-            specialArgs = {inherit inputs;};
+            specialArgs = { inherit inputs; }; # NixOS specialArgs for this host
             modules =
               [
+                # Host-specific configuration
                 ./hosts/nixos/desktop
                 ./modules/users/zeev
                 ./modules/disko/desktop
 
+                # Flake Modules
                 inputs.nixos-facter-modules.nixosModules.facter
                 inputs.agenix.nixosModules.default
                 inputs.nix-gaming.nixosModules.pipewireLowLatency
                 inputs.lanzaboote.nixosModules.lanzaboote
                 inputs.flatpaks.nixosModules.default
 
+                # Inline Configuration
                 {config.facter.reportPath = ./hosts/nixos/desktop/facter.json;}
                 {
                   nixpkgs.config.allowUnfree = true;
@@ -132,7 +138,7 @@
                     useGlobalPkgs = false;
                     useUserPackages = true;
                     backupFileExtension = "backup";
-                    extraSpecialArgs = {inherit inputs;};
+                    extraSpecialArgs = { inherit inputs; }; # HM specialArgs for NixOS module
                     users.zeev = {
                       imports = [
                         ./home-manager/desktop
@@ -153,19 +159,22 @@
 
           homeserver = inputs.nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
-            specialArgs = {inherit inputs;};
+            specialArgs = { inherit inputs; }; # NixOS specialArgs for this host
             modules =
               [
+                # Host-specific configuration
                 ./hosts/nixos/homeserver
                 ./modules/users/zeev
                 ./modules/disko/homeserver
 
+                # Flake Modules
                 inputs.nixarr.nixosModules.default
                 inputs.authentik-nix.nixosModules.default
                 inputs.vscode-server.nixosModules.default
                 inputs.nixos-facter-modules.nixosModules.facter
                 inputs.agenix.nixosModules.default
 
+                # Inline Configuration
                 {config.facter.reportPath = ./hosts/nixos/homeserver/facter.json;}
                 {
                   sops.age.keyFile = "/var/lib/sops/age.key";
@@ -173,7 +182,7 @@
                     useGlobalPkgs = true;
                     useUserPackages = true;
                     backupFileExtension = "backup";
-                    extraSpecialArgs = {inherit inputs;};
+                    extraSpecialArgs = { inherit inputs; }; # HM specialArgs for NixOS module
                     users.zeev = {
                       imports = [
                         ./home-manager/homeserver
@@ -190,22 +199,25 @@
 
           wsl = inputs.nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
-            specialArgs = {inherit inputs;};
+            specialArgs = { inherit inputs; }; # NixOS specialArgs for this host
             modules =
               [
+                # Host-specific configuration
                 ./hosts/nixos/wsl
                 ./modules/users/zeev
 
+                # Flake Modules
                 inputs.nixos-wsl.nixosModules.wsl
                 inputs.agenix.nixosModules.default
 
+                # Inline Configuration
                 {
                   sops.age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
                   home-manager = {
                     useGlobalPkgs = true;
                     useUserPackages = true;
                     backupFileExtension = "backup";
-                    extraSpecialArgs = {inherit inputs;};
+                    extraSpecialArgs = { inherit inputs; }; # HM specialArgs for NixOS module
                     users.zeev = {
                       imports = [
                         ./home-manager/wsl
@@ -224,7 +236,7 @@
         homeConfigurations = {
           "zeev@desktop" = inputs.home-manager.lib.homeManagerConfiguration {
             pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux";
-            specialArgs = {inherit inputs;};
+            extraSpecialArgs = { inherit inputs; }; # Correct argument name for standalone HM
             modules = [
               ./home-manager/desktop
               inputs.sops-nix.homeManagerModules.sops

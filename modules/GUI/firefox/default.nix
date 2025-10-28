@@ -43,7 +43,6 @@
 
           # === PRODUCTIVITY & NAVIGATION ===
           indie-wiki-buddy
-          linkwarden
 
           # === SYSTEM INTEGRATION ===
           plasma-integration
