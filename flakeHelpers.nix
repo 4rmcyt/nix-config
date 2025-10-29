@@ -30,7 +30,6 @@
     }
   ];
 
-  # Conditionally add disko only for non-WSL hosts
   commonModulesWithDisko = hostname:
     if (inputs.nixpkgs.lib.strings.hasInfix "wsl" (inputs.nixpkgs.lib.strings.toLower hostname))
     then commonModules
@@ -47,8 +46,12 @@ in {
         modules =
           modules
           ++ [
-            ({config, lib, ...}: {
-              config.facter.reportPath = 
+            ({
+              config,
+              lib,
+              ...
+            }: {
+              config.facter.reportPath =
                 if (lib.strings.hasInfix "wsl" (lib.strings.toLower config.networking.hostName))
                 then null
                 else ./hosts/nixos/${config.networking.hostName}/facter.json;
