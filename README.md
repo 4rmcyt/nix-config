@@ -37,7 +37,9 @@ Personal NixOS configuration using flakes for multiple systems.
 │       ├── laptop/        # Laptop configuration
 │       └── wsl/           # WSL configuration
 ├── modules/
-│   ├── base/              # Base system modules
+│   ├── base/              # Base system modules & nix settings
+│   ├── roles/             # Role-based system abstractions (NEW!)
+│   ├── options/           # Centralized configuration options (NEW!)
 │   ├── GUI/               # GUI applications and settings
 │   ├── database/          # Database services (PostgreSQL)
 │   ├── disko/             # Disk partitioning configurations
@@ -93,6 +95,32 @@ home-manager switch --flake .#<hostname>
 Where `<hostname>` is one of: `desktop`, `homeserver`, `laptop`, or `wsl`
 
 ## 🔧 Key Features
+
+### 🎭 Role-Based System Abstraction (NEW!)
+- **Server Role**: Common server configurations (SSH, security, no GUI)
+- **Desktop Role**: GUI, audio, printing, user-focused settings
+- **Media Server Role**: Media directories, BitTorrent, media groups
+- **Monitoring Role**: Prometheus, Grafana, observability stack
+- Composable roles for clean host configurations
+
+### 🌐 Centralized Network Management (NEW!)
+- Complete network topology in code
+- All devices documented (25+ devices)
+- Service ports centralized (30+ services)
+- IP addresses managed in one place
+- See `modules/options/network.nix`
+
+### 🔄 Distributed Builds (NEW!)
+- Build sharing between desktop and homeserver
+- Automatic load balancing
+- Speed up compilation with remote cores
+- See `docs/distributed-builds.md` for setup
+
+### 🤖 CI/CD with GitHub Actions (NEW!)
+- Automated flake checking
+- Format validation
+- Build testing for all configurations
+- Nix store caching for faster CI
 
 ### Secrets Management
 - Uses [SOPS](https://github.com/Mic92/sops-nix) for encrypted secrets
