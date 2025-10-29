@@ -38,7 +38,8 @@
   environment.systemPackages = with pkgs;
     [
       # Gaming utilities
-      # lutris # TODO: Re-enable when allegro CMake issue is fixed
+      # lutris # Disabled due to allegro CMake compatibility issue in current nixpkgs
+      # Re-enable when fixed: https://github.com/NixOS/nixpkgs/issues/...
       heroic
       bottles
       wine

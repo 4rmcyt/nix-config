@@ -13,6 +13,7 @@
     ../../../modules/gaming
     ../../../modules/networking/dnssec
     ../../../modules/users/zeev
+    # Ollama disabled - enable when needed for local AI/LLM
     # ../../../modules/GUI/ollama
     ../../../modules/GUI/OBS
     ../../../modules/GUI/flatpak
@@ -277,41 +278,44 @@
   # =================================================================
   # 10. Nix Configuration
   # =================================================================
-  nix = {
-    package = pkgs.nixVersions.latest;
-    settings = {
-      cores = 12;
-      download-buffer-size = 1073741824;
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-      fallback = true;
-      max-jobs = 12;
-      show-trace = true;
-      substituters = [
-        "https://cache.nixos.org"
-        "https://4rmcyt.cachix.org"
-        "https://cuda-maintainers.cachix.org"
-        "https://nix-community.cachix.org"
-        "https://nix-gaming.cachix.org"
-      ];
-      system-features = [
-        "benchmark"
-        "big-parallel"
-        "gccarch-znver4"
-        "kvm"
-      ];
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="
-        "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-      ];
-      trusted-users = ["zeev"];
-      warn-dirty = false;
-    };
+  # Note: Base nix settings are in modules/base/nix-settings.nix
+  # Only host-specific overrides are defined here
+  nix.settings = {
+    # Desktop-specific: 12 cores for fast builds
+    cores = 12;
+    max-jobs = 12;
+
+    # Additional gaming and CUDA caches
+    substituters = [
+      "https://cache.nixos.org"
+      "https://4rmcyt.cachix.org"
+      "https://cuda-maintainers.cachix.org"
+      "https://nix-community.cachix.org"
+      "https://nix-gaming.cachix.org"
+    ];
+
+    # Desktop-specific system features
+    system-features = [
+      "benchmark"
+      "big-parallel"
+      "gccarch-znver4"
+      "kvm"
+    ];
+
+    # Additional trusted public keys for gaming and CUDA caches
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "4rmcyt.cachix.org-1:IzZEPOd8aKavFKw3BuUBAI/T93XUUWoS/n2M+LG65/0="
+      "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+    ];
+
+    # Allow zeev to use nix commands without sudo
+    trusted-users = ["zeev"];
+
+    # Disable dirty warnings for desktop
+    warn-dirty = false;
   };
 
   # =================================================================

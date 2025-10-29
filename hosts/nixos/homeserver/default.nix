@@ -18,6 +18,8 @@
     ../../../modules/security
     ../../../modules/services
     ../../../modules/users/zeev
+    # Backup module disabled - borgmatic configuration exists but not currently active
+    # Enable when ready to start automated backups to storage box
     # ../../../modules/backup
   ];
 
@@ -64,36 +66,39 @@
   # =================================================================
   # 5. Nix Configuration
   # =================================================================
-  nix = {
-    package = pkgs.nixVersions.latest;
-    settings = {
-      cores = 8;
-      download-buffer-size = 1073741824;
-      experimental-features = [
-        "flakes"
-        "nix-command"
-      ];
-      fallback = true;
-      max-jobs = 8;
-      show-trace = true;
-      substituters = [
-        "https://cache.nixos.org"
-        "https://homeserver.cachix.org"
-        "https://nix-community.cachix.org"
-      ];
-      system-features = [
-        "big-parallel"
-        "gccarch-skylake"
-        "kvm"
-      ];
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "homeserver.cachix.org-1:0vStm6koDUwET/iWYhbKpsuVO4v3UgN3510zYH9YpZU="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      ];
-      trusted-users = ["zeev"];
-      warn-dirty = false;
-    };
+  # Note: Base nix settings are in modules/base/nix-settings.nix
+  # Only host-specific overrides are defined here
+  nix.settings = {
+    # Homeserver-specific: 8 cores
+    cores = 8;
+    max-jobs = 8;
+
+    # Homeserver-specific caches
+    substituters = [
+      "https://cache.nixos.org"
+      "https://homeserver.cachix.org"
+      "https://nix-community.cachix.org"
+    ];
+
+    # Homeserver system features
+    system-features = [
+      "big-parallel"
+      "gccarch-skylake"
+      "kvm"
+    ];
+
+    # Homeserver trusted public keys
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "homeserver.cachix.org-1:0vStm6koDUwET/iWYhbKpsuVO4v3UgN3510zYH9YpZU="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+
+    # Allow zeev to use nix commands without sudo
+    trusted-users = ["zeev"];
+
+    # Disable dirty warnings
+    warn-dirty = false;
   };
 
   # =================================================================

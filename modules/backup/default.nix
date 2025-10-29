@@ -1,4 +1,6 @@
-# TODO use ZnapZend!
+# Borgmatic backup configuration for homeserver
+# Note: ZnapZend (ZFS snapshots) could be used as an alternative/addition
+# Current setup uses borgmatic for incremental encrypted backups
 {
   config,
   pkgs,

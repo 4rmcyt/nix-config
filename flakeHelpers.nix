@@ -52,7 +52,6 @@ in {
               lib,
               ...
             }: {
-              # Set facter report path based on hostname (skip for WSL)
               facter.reportPath = lib.mkIf
                 (!lib.strings.hasInfix "wsl" (lib.strings.toLower config.networking.hostName))
                 (lib.mkDefault ./hosts/nixos/${config.networking.hostName}/facter.json);
