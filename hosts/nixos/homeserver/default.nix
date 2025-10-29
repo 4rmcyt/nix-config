@@ -127,7 +127,7 @@
       sopsFile = ../../../secrets/tailscale-desktop.yaml;
       key = "tailscale_auth_key";
     };
-    
+
     firewall = {
       enable = true;
 
@@ -223,7 +223,6 @@
   # 10. Secrets Management
   # =================================================================
   sops = {
-    age.keyFile = "/var/lib/sops/age.key";
     defaultSopsFormat = "yaml";
     secrets = {
       ssh_host_ed25519_key = {
@@ -312,4 +311,6 @@
     gawk
     gnugrep
   ];
+
+  home-manager.backupFileExtension = "backup";
 }

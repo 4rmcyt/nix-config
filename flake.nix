@@ -84,7 +84,7 @@
     ...
   }: let
     userName = "zeev";
-    helpers = import ./flake_helpers.nix {inherit inputs userName;};
+    helpers = import ./flakeHelpers.nix {inherit inputs userName;};
   in
     flake-parts.lib.mkFlake {
       inherit inputs;
@@ -134,7 +134,6 @@
           };
 
           wsl = helpers.mkHost {
-            user = userName;
             modules =
               [
                 ./hosts/nixos/wsl
@@ -146,7 +145,6 @@
           };
 
           laptop = helpers.mkHost {
-            user = userName;
             modules =
               [
                 ./hosts/nixos/laptop
