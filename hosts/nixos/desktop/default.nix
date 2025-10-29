@@ -24,12 +24,6 @@
   # =================================================================
   system.stateVersion = "25.05";
 
-  users.users.tailscale = {
-    isSystemUser = true;
-    group = "tailscale";
-  };
-  users.groups.tailscale = {};
-
   sops.secrets.tailscale_auth_key = {
     sopsFile = ../../../secrets/tailscale-desktop.yaml;
     key = "tailscale_auth_key";
