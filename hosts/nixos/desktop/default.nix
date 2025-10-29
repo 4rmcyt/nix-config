@@ -31,8 +31,7 @@
 
   sops.secrets.tailscale_auth_key = {
     sopsFile = ../../../secrets/tailscale-desktop.yaml;
-    key = "tailscale_auth_key"; # Or whatever your key is named in the YAML
-    # Ensures the tailscale service user can read the key file
+    key = "tailscale_auth_key";
     owner = config.users.users.tailscale.name;
   };
 

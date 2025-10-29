@@ -94,19 +94,7 @@
             TZ = "America/Edmonton";
           };
         };
-        # linkwarden = {
-        #   image = "ghcr.io/linkwarden/linkwarden";
-        #   autoStart = true;
-        #   extraOptions = ["--network=host"];
-        #   environment = {
-        #     TZ = "America/Edmonton";
-        #     CUSTOM_OPENAI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
-        #     OPENAI_MODEL = "gemini-2.0-flash";
-        #     OPENAI_API_KEY = "REDACTED";
-        #   };
-        #   environmentFiles = [config.sops.secrets.linkwarden_env.path];
-        #   volumes = ["/var/lib/linkwarden:/data/data"];
-        # };
+  
         nextdns-exporter = {
           image = "ghcr.io/raylas/nextdns-exporter";
           autoStart = true;

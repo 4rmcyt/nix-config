@@ -45,19 +45,19 @@ in {
       // {
         modules =
           modules
+          ++ commonModules
           ++ [
             ({
               config,
               lib,
               ...
             }: {
-              config.facter.reportPath =
-                if (lib.strings.hasInfix "wsl" (lib.strings.toLower config.networking.hostName))
-                then null
-                else ./hosts/nixos/${config.networking.hostName}/facter.json;
+              # Set facter report path based on hostname (skip for WSL)
+              facter.reportPath = lib.mkIf
+                (!lib.strings.hasInfix "wsl" (lib.strings.toLower config.networking.hostName))
+                (lib.mkDefault ./hosts/nixos/${config.networking.hostName}/facter.json);
             })
-          ]
-          ++ (commonModulesWithDisko config.networking.hostName or "");
+          ];
       });
 
   mkHome = {modules}: [
