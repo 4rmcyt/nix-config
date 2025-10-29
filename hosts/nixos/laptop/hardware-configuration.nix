@@ -91,21 +91,23 @@
   # =================================================================
   # 4. Filesystems
   # =================================================================
+  # NOTE: UUIDs need to be updated after installation
+  # Find UUIDs with: sudo blkid
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX";
+    device = "/dev/disk/by-uuid/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"; # TODO: Update with actual root partition UUID
     fsType = "ext4";
     options = ["defaults" "noatime"];
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/XXXX-XXXX";
+    device = "/dev/disk/by-uuid/XXXX-XXXX"; # TODO: Update with actual boot partition UUID
     fsType = "vfat";
     options = ["defaults" "umask=0077"];
   };
 
   swapDevices = [
     {
-      device = "/dev/disk/by-uuid/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX";
+      device = "/dev/disk/by-uuid/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"; # TODO: Update with actual swap partition UUID
       randomEncryption.enable = true;
     }
   ];
