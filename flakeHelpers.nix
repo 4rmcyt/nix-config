@@ -42,15 +42,18 @@ in {
         modules =
           modules
           ++ [
-            ({config, ...}: {
-              config.facter.reportPath = ./hosts/nixos/${config.networking.hostName}/facter.json;
+            ({config, lib, ...}: {
+              config.facter.reportPath = 
+                if (lib.strings.hasInfix "wsl" (lib.strings.toLower config.networking.hostName))
+                then null
+                else ./hosts/nixos/${config.networking.hostName}/facter.json;
             })
           ]
           ++ commonModules;
       });
 
   mkHome = {modules}: [
-    ./modules/users/${userName} 
+    ./modules/users/${userName}
     {
       home-manager =
         globalHomeManagerOptions

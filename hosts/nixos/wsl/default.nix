@@ -119,7 +119,7 @@
   # 10. Networking
   # =================================================================
   networking = {
-    hostName = "nixos-wsl";
+    hostName = "wsl";
     networkmanager.enable = false;
     useNetworkd = false;
     useDHCP = false;
