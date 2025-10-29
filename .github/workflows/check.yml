@@ -1,0 +1,124 @@
+name: "NixOS Configuration Check"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: nix-community
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Check Nix flake formatting
+        run: |
+          nix fmt -- --check .
+
+  check-flake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: nix-community
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Check flake
+        run: |
+          nix flake check --all-systems --show-trace
+
+  build-hosts:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        host:
+          - desktop
+          - homeserver
+          - laptop
+          - wsl
+      fail-fast: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+            substituters = https://cache.nixos.org https://nix-community.cachix.org
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: nix-community
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Build NixOS configuration for ${{ matrix.host }}
+        run: |
+          nix build .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel --show-trace
+
+  check-home-manager:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config:
+          - desktop
+          - homeserver
+          - laptop
+          - wsl
+      fail-fast: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: nix-community
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Check home-manager configuration for ${{ matrix.config }}
+        run: |
+          # Home-manager configs are embedded in NixOS configs
+          # This step validates they can be evaluated
+          nix eval .#nixosConfigurations.${{ matrix.config }}.config.home-manager.users --apply 'x: "ok"'

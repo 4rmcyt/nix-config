@@ -4,6 +4,8 @@
     ./msmtp
     ./logging
     ./nix-settings.nix
+    ./distributed-builds.nix
+    ../roles
   ];
 
   time.timeZone = "America/Edmonton";
