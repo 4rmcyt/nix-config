@@ -30,11 +30,6 @@
     }
   ];
 
-  commonModulesWithDisko = hostname:
-    if (inputs.nixpkgs.lib.strings.hasInfix "wsl" (inputs.nixpkgs.lib.strings.toLower hostname))
-    then commonModules
-    else commonModules ++ [inputs.disko.nixosModules.disko];
-
   commonHomeManagerModules = [
     inputs.sops-nix.homeManagerModules.sops
     inputs.agenix.homeManagerModules.default

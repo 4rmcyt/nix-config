@@ -10,11 +10,6 @@
   config = lib.mkIf config.roles.server.enable {
     # Server-optimized settings
     services = {
-      # Automatic updates for servers
-      automatic-upgrades = {
-        enable = lib.mkDefault false; # Servers should update manually for stability
-      };
-
       # SSH configuration for servers
       openssh = {
         enable = lib.mkDefault true;
