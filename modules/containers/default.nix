@@ -53,9 +53,9 @@
 
   networking.firewall = {
     allowedTCPPorts = [
-      # Podman API
-      2375 # Podman API (insecure, for local use only)
-      2376 # Podman API (secure, for local use only)
+      # Podman API - Uncomment only if you need remote API access
+      # 2375 # Podman API (insecure, for local use only - NOT RECOMMENDED)
+      # 2376 # Podman API (secure with TLS, for local use only)
       # Container services
       3004 # Linkwarden
       8191 # FlareSolverr
@@ -66,9 +66,9 @@
       3033 # Flare
     ];
     allowedUDPPorts = [
-      # Podman API
-      2375 # Podman API (insecure, for local use only)
-      2376 # Podman API (secure, for local use only)
+      # Podman API - Uncomment only if you need remote API access
+      # 2375 # Podman API (insecure, for local use only - NOT RECOMMENDED)
+      # 2376 # Podman API (secure with TLS, for local use only)
     ];
   };
 

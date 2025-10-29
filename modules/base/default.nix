@@ -3,6 +3,7 @@
     ./auto_upgrade
     ./msmtp
     ./logging
+    ./nix-settings.nix
   ];
 
   time.timeZone = "America/Edmonton";
