@@ -24,30 +24,43 @@
         credentialsFile = config.sops.secrets.cloudflare_tunnel_credentials.path;
         default = "http_status:404";
         ingress = {
-          "jellyfin.labhome.work" = "http://localhost:8096";
-          "paperless.labhome.work" = "http://localhost:8888";
-          "home.labhome.work" = "http://localhost:8082";
-          "hass.labhome.work" = "http://localhost:8123";
-          "miniflux.labhome.work" = "http://localhost:8086";
-          "transmission.labhome.work" = "http://192.168.1.165:9091";
-          "cal.labhome.work" = "http://localhost:5232";
-          "audiobookshelf.labhome.work" = "http://localhost:9292";
-          "kavita.labhome.work" = "http://localhost:5000";
-          "prowlarr.labhome.work" = "http://localhost:9696";
-          "radarr.labhome.work" = "http://localhost:7878";
-          "sonarr.labhome.work" = "http://localhost:8989";
-          "lidarr.labhome.work" = "http://localhost:8686";
-          "bazarr.labhome.work" = "http://localhost:6767";
-          "jellyseerr.labhome.work" = "http://localhost:5055";
-          "ollama.labhome.work" = "http://localhost:11434";
-          "vault.labhome.work" = "http://localhost:8222";
-          "kuma.labhome.work" = "http://localhost:3001";
-          "auth.labhome.work" = "http://localhost:9000";
-          "grafana.labhome.work" = "http://localhost:3003";
-          "tdarr.labhome.work" = "http://localhost:8265";
-          "readarr.labhome.work" = "http://localhost:8787";
-          "link.labhome.work" = "http://localhost:3000";
-          "flare.labhome.work" = "http://localhost:3033";
+          # Media Services
+          "jellyfin.labhome.work" = "http://localhost:${toString config.my.network.ports.jellyfin}";
+          "audiobookshelf.labhome.work" = "http://localhost:${toString config.my.network.ports.audiobookshelf}";
+          "kavita.labhome.work" = "http://localhost:${toString config.my.network.ports.kavita}";
+          "tdarr.labhome.work" = "http://localhost:${toString config.my.network.ports.tdarr}";
+          "transmission.labhome.work" = "http://${config.my.network.hosts.homeserver}:${toString config.my.network.ports.transmission}";
+
+          # *arr Stack
+          "sonarr.labhome.work" = "http://localhost:${toString config.my.network.ports.sonarr}";
+          "radarr.labhome.work" = "http://localhost:${toString config.my.network.ports.radarr}";
+          "lidarr.labhome.work" = "http://localhost:${toString config.my.network.ports.lidarr}";
+          "readarr.labhome.work" = "http://localhost:${toString config.my.network.ports.readarr}";
+          "bazarr.labhome.work" = "http://localhost:${toString config.my.network.ports.bazarr}";
+          "prowlarr.labhome.work" = "http://localhost:${toString config.my.network.ports.prowlarr}";
+          "jellyseerr.labhome.work" = "http://localhost:${toString config.my.network.ports.jellyseerr}";
+
+          # Productivity
+          "paperless.labhome.work" = "http://localhost:${toString config.my.network.ports.paperless}";
+          "miniflux.labhome.work" = "http://localhost:${toString config.my.network.ports.miniflux}";
+          "cal.labhome.work" = "http://localhost:${toString config.my.network.ports.radicale}";
+          "home.labhome.work" = "http://localhost:${toString config.my.network.ports.homepage}";
+          "link.labhome.work" = "http://localhost:${toString config.my.network.ports.linkwarden}";
+          "flare.labhome.work" = "http://localhost:${toString config.my.network.ports.flare}";
+
+          # Monitoring
+          "grafana.labhome.work" = "http://localhost:${toString config.my.network.ports.grafana}";
+          "kuma.labhome.work" = "http://localhost:${toString config.my.network.ports.uptime-kuma}";
+
+          # Home Automation
+          "hass.labhome.work" = "http://localhost:${toString config.my.network.ports.home-assistant}";
+
+          # Security
+          "vault.labhome.work" = "http://localhost:${toString config.my.network.ports.vaultwarden}";
+          "auth.labhome.work" = "http://localhost:${toString config.my.network.ports.authentik}";
+
+          # AI
+          "ollama.labhome.work" = "http://localhost:${toString config.my.network.ports.ollama}";
         };
       };
     };
