@@ -10,7 +10,7 @@
   config = lib.mkIf config.roles.server.enable {
     # Automatic upgrades are generally enabled in modules/base/auto_upgrade.
     # The server role explicitly disables them, forcing manual updates for stability.
-    system.autoUpgrade.enable = lib.mkForce false; 
+    system.autoUpgrade.enable = lib.mkForce false;
 
     # Server-optimized settings
     services = {

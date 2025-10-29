@@ -47,7 +47,8 @@ in {
               lib,
               ...
             }: {
-              facter.reportPath = lib.mkIf
+              facter.reportPath =
+                lib.mkIf
                 (!lib.strings.hasInfix "wsl" (lib.strings.toLower config.networking.hostName))
                 (lib.mkDefault ./hosts/nixos/${config.networking.hostName}/facter.json);
             })

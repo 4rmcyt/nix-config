@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   ...
 }: {
@@ -41,7 +40,7 @@
       # AMD GPU variables
       LIBVA_DRIVER_NAME = "radeonsi";
       VDPAU_DRIVER = "radeonsi";
-      
+
       # Wayland Support
       GDK_BACKEND = "wayland,x11";
       SDL_VIDEODRIVER = "wayland";
@@ -86,17 +85,17 @@
       acpi
       brightnessctl
       powertop
-      
+
       # =============================================================
       # Hardware Support & Monitoring
       # =============================================================
       fwupd
-      
+
       # =============================================================
       # Desktop Applications
       # =============================================================
       # Add your preferred applications here
-      
+
       # =============================================================
       # Fonts
       # =============================================================
@@ -210,13 +209,13 @@
       enable = true;
       displayManager.gdm.enable = true;
       desktopManager.gnome.enable = true;
-      
+
       # Configure keymap
       xkb = {
         layout = "us";
         variant = "";
       };
-      
+
       # Touchpad support
       libinput = {
         enable = true;
@@ -248,7 +247,7 @@
         };
       };
     };
-    
+
     thermald.enable = true;
     power-profiles-daemon.enable = false; # Conflicts with auto-cpufreq
 
@@ -256,10 +255,10 @@
     # Hardware Services
     # =============================================================
     fwupd.enable = true;
-    
+
     # Printing support
     printing.enable = true;
-    
+
     # Bluetooth
     blueman.enable = true;
 
@@ -273,7 +272,7 @@
         PasswordAuthentication = false;
       };
     };
-    
+
     # Laptop-specific
     upower.enable = true;
     logind = {

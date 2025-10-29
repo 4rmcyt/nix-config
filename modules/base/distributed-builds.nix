@@ -78,17 +78,19 @@
 
     # Client role: Use remote builders
     nix = lib.mkIf (config.distributed-builds.role == "client" || config.distributed-builds.role == "both") {
-      buildMachines = map (builder: {
-        hostName = builder.hostName;
-        system = builder.system;
-        maxJobs = builder.maxJobs;
-        speedFactor = builder.speedFactor;
-        supportedFeatures = builder.supportedFeatures;
-        mandatoryFeatures = [];
-        sshUser = "nix-builder";
-        sshKey = "/root/.ssh/nix-builder";
-        publicHostKey = builder.publicHostKey;
-      }) config.distributed-builds.builders;
+      buildMachines =
+        map (builder: {
+          inherit (builder) hostName;
+          inherit (builder) system;
+          inherit (builder) maxJobs;
+          inherit (builder) speedFactor;
+          inherit (builder) supportedFeatures;
+          mandatoryFeatures = [];
+          sshUser = "nix-builder";
+          sshKey = "/root/.ssh/nix-builder";
+          inherit (builder) publicHostKey;
+        })
+        config.distributed-builds.builders;
 
       distributedBuilds = lib.mkDefault true;
 
@@ -104,12 +106,14 @@
     };
 
     # Add remote builders to known hosts
-    programs.ssh.knownHosts = lib.mkIf (config.distributed-builds.role == "client" || config.distributed-builds.role == "both")
+    programs.ssh.knownHosts =
+      lib.mkIf (config.distributed-builds.role == "client" || config.distributed-builds.role == "both")
       (lib.listToAttrs (map (builder: {
-        name = builder.hostName;
-        value = {
-          publicKey = builder.publicHostKey;
-        };
-      }) config.distributed-builds.builders));
+          name = builder.hostName;
+          value = {
+            publicKey = builder.publicHostKey;
+          };
+        })
+        config.distributed-builds.builders));
   };
 }

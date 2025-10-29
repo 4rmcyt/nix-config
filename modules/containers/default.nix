@@ -94,7 +94,7 @@
             TZ = "America/Edmonton";
           };
         };
-  
+
         nextdns-exporter = {
           image = "ghcr.io/raylas/nextdns-exporter";
           autoStart = true;
