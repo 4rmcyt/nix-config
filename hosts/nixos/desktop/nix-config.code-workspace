@@ -1,0 +1,34 @@
+{
+	"folders": [
+		{
+			"path": "../../../.git-crypt"
+		},
+		{
+			"path": "../../../.github"
+		},
+		{
+			"path": "../../../.vscode"
+		},
+		{
+			"path": "../../../home-manager"
+		},
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../modules"
+		},
+		{
+			"path": "../../../secrets"
+		},
+		{
+			"path": "../../../shells"
+		},
+		{
+			"path": "../../../snapshots"
+		}
+	],
+	"settings": {
+		"terminal.integrated.fontFamily": "MesloLGS NF"
+	}
+}
