@@ -24,30 +24,43 @@
         credentialsFile = config.sops.secrets.cloudflare_tunnel_credentials.path;
         default = "http_status:404";
         ingress = {
-          "jellyfin.example.com" = "http://localhost:8096";
-          "paperless.example.com" = "http://localhost:8888";
-          "home.example.com" = "http://localhost:8082";
-          "hass.example.com" = "http://localhost:8123";
-          "miniflux.example.com" = "http://localhost:8086";
-          "transmission.example.com" = "http://192.168.1.165:9091";
-          "cal.example.com" = "http://localhost:5232";
-          "audiobookshelf.example.com" = "http://localhost:9292";
-          "kavita.example.com" = "http://localhost:5000";
-          "prowlarr.example.com" = "http://localhost:9696";
-          "radarr.example.com" = "http://localhost:7878";
-          "sonarr.example.com" = "http://localhost:8989";
-          "lidarr.example.com" = "http://localhost:8686";
-          "bazarr.example.com" = "http://localhost:6767";
-          "jellyseerr.example.com" = "http://localhost:5055";
-          "ollama.example.com" = "http://localhost:11434";
-          "vault.example.com" = "http://localhost:8222";
-          "kuma.example.com" = "http://localhost:3001";
-          "auth.example.com" = "http://localhost:9000";
-          "grafana.example.com" = "http://localhost:3003";
-          "tdarr.example.com" = "http://localhost:8265";
-          "readarr.example.com" = "http://localhost:8787";
-          "link.example.com" = "http://localhost:3000";
-          "flare.example.com" = "http://localhost:3033";
+          # Media Services
+          "jellyfin.example.com" = "http://localhost:${toString config.my.network.ports.jellyfin}";
+          "audiobookshelf.example.com" = "http://localhost:${toString config.my.network.ports.audiobookshelf}";
+          "kavita.example.com" = "http://localhost:${toString config.my.network.ports.kavita}";
+          "tdarr.example.com" = "http://localhost:${toString config.my.network.ports.tdarr}";
+          "transmission.example.com" = "http://${config.my.network.hosts.homeserver}:${toString config.my.network.ports.transmission}";
+
+          # *arr Stack
+          "sonarr.example.com" = "http://localhost:${toString config.my.network.ports.sonarr}";
+          "radarr.example.com" = "http://localhost:${toString config.my.network.ports.radarr}";
+          "lidarr.example.com" = "http://localhost:${toString config.my.network.ports.lidarr}";
+          "readarr.example.com" = "http://localhost:${toString config.my.network.ports.readarr}";
+          "bazarr.example.com" = "http://localhost:${toString config.my.network.ports.bazarr}";
+          "prowlarr.example.com" = "http://localhost:${toString config.my.network.ports.prowlarr}";
+          "jellyseerr.example.com" = "http://localhost:${toString config.my.network.ports.jellyseerr}";
+
+          # Productivity
+          "paperless.example.com" = "http://localhost:${toString config.my.network.ports.paperless}";
+          "miniflux.example.com" = "http://localhost:${toString config.my.network.ports.miniflux}";
+          "cal.example.com" = "http://localhost:${toString config.my.network.ports.radicale}";
+          "home.example.com" = "http://localhost:${toString config.my.network.ports.homepage}";
+          "link.example.com" = "http://localhost:${toString config.my.network.ports.linkwarden}";
+          "flare.example.com" = "http://localhost:${toString config.my.network.ports.flare}";
+
+          # Monitoring
+          "grafana.example.com" = "http://localhost:${toString config.my.network.ports.grafana}";
+          "kuma.example.com" = "http://localhost:${toString config.my.network.ports.uptime-kuma}";
+
+          # Home Automation
+          "hass.example.com" = "http://localhost:${toString config.my.network.ports.home-assistant}";
+
+          # Security
+          "vault.example.com" = "http://localhost:${toString config.my.network.ports.vaultwarden}";
+          "auth.example.com" = "http://localhost:${toString config.my.network.ports.authentik}";
+
+          # AI
+          "ollama.example.com" = "http://localhost:${toString config.my.network.ports.ollama}";
         };
       };
     };

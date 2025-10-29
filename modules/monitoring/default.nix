@@ -133,11 +133,11 @@
         }
         {
           job_name = "desktop-node";
-          static_configs = [{targets = ["192.168.1.118:9100"];}];
+          static_configs = [{targets = ["${config.my.network.hosts.desktop-lan}:${toString config.my.network.ports.node-exporter}"];}];
         }
         {
           job_name = "homeserver-node";
-          static_configs = [{targets = ["localhost:9100"];}];
+          static_configs = [{targets = ["localhost:${toString config.my.network.ports.node-exporter}"];}];
         }
         {
           job_name = "postgres-exporter";
@@ -145,7 +145,7 @@
         }
         {
           job_name = "prometheus";
-          static_configs = [{targets = ["localhost:9090"];}];
+          static_configs = [{targets = ["localhost:${toString config.my.network.ports.prometheus}"];}];
         }
       ];
     };
