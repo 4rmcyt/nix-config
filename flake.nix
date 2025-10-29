@@ -101,66 +101,61 @@
       flake = {
         nixosConfigurations = {
           desktop = helpers.mkHost {
-            modules = [
-              ./hosts/nixos/desktop
-              ./modules/users/${userName}
-              ./modules/disko/desktop
-              inputs.nix-gaming.nixosModules.pipewireLowLatency
-              inputs.lanzaboote.nixosModules.lanzaboote
-              inputs.flatpaks.nixosModules.default
-              (helpers.mkHome {
-                user = userName;
+            modules =
+              [
+                ./hosts/nixos/desktop
+                ./modules/disko/desktop
+                inputs.nix-gaming.nixosModules.pipewireLowLatency
+                inputs.lanzaboote.nixosModules.lanzaboote
+                inputs.flatpaks.nixosModules.default
+              ]
+              ++ (helpers.mkHome {
                 modules = [
                   ./home-manager/desktop
                   inputs.plasma-manager.homeModules.plasma-manager
                   inputs.nixai.homeManagerModules.default
                   inputs.betterfox-nix.homeModules.betterfox
                 ];
-              })
-            ];
+              });
           };
 
           homeserver = helpers.mkHost {
-            user = userName;
-            modules = [
-              ./hosts/nixos/homeserver
-              ./modules/users/${userName}
-              ./modules/disko/homeserver
-              inputs.nixarr.nixosModules.default
-              inputs.authentik-nix.nixosModules.default
-              inputs.vscode-server.nixosModules.default
-              (helpers.mkHome {
-                user = "zeev";
+            modules =
+              [
+                ./hosts/nixos/homeserver
+                ./modules/disko/homeserver
+                inputs.nixarr.nixosModules.default
+                inputs.authentik-nix.nixosModules.default
+                inputs.vscode-server.nixosModules.default
+              ]
+              ++ (helpers.mkHome {
                 modules = [./home-manager/homeserver];
-              })
-            ];
+              });
           };
 
           wsl = helpers.mkHost {
             user = userName;
-            modules = [
-              ./hosts/nixos/wsl
-              ./modules/users/${userName}
-              inputs.nixos-wsl.nixosModules.wsl
-              (helpers.mkHome {
-                user = "zeev";
+            modules =
+              [
+                ./hosts/nixos/wsl
+                inputs.nixos-wsl.nixosModules.wsl
+              ]
+              ++ (helpers.mkHome {
                 modules = [./home-manager/wsl];
-              })
-            ];
+              });
           };
 
           laptop = helpers.mkHost {
             user = userName;
-            modules = [
-              ./hosts/nixos/laptop
-              ./modules/users/${userName}
-              ./modules/disko/laptop
-              inputs.flatpaks.nixosModules.default
-              (helpers.mkHome {
-                user = "zeev";
+            modules =
+              [
+                ./hosts/nixos/laptop
+                ./modules/disko/laptop
+                inputs.flatpaks.nixosModules.default
+              ]
+              ++ (helpers.mkHome {
                 modules = [./home-manager/laptop];
-              })
-            ];
+              });
           };
         };
 
