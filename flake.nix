@@ -73,10 +73,6 @@
       url = "github:nix-community/flake-firefox-nightly";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     # Non-flake inputs
     cpu-microcodes = {
       url = "github:platomav/CPUMicrocodes";
