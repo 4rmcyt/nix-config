@@ -37,8 +37,7 @@
   # =================================================================
   # 4. Nixpkgs Configuration
   # =================================================================
-  nixpkgs.config.allowUnfree = true;
-
+  # Note: allowUnfree is set in flakeHelpers.nix commonModules
   nixpkgs.overlays = [
     (_final: prev: {
       python3 = prev.python3.override {
