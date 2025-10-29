@@ -21,7 +21,6 @@
   commonModules = [
     inputs.sops-nix.nixosModules.sops
     inputs.home-manager.nixosModules.home-manager
-    inputs.disko.nixosModules.disko
     inputs.nix-index-database.nixosModules.nix-index
     inputs.nixos-facter-modules.nixosModules.facter
     inputs.agenix.nixosModules.default
@@ -30,6 +29,12 @@
       sops.age.keyFile = inputs.nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
     }
   ];
+
+  # Conditionally add disko only for non-WSL hosts
+  commonModulesWithDisko = hostname:
+    if (inputs.nixpkgs.lib.strings.hasInfix "wsl" (inputs.nixpkgs.lib.strings.toLower hostname))
+    then commonModules
+    else commonModules ++ [inputs.disko.nixosModules.disko];
 
   commonHomeManagerModules = [
     inputs.sops-nix.homeManagerModules.sops
@@ -49,7 +54,7 @@ in {
                 else ./hosts/nixos/${config.networking.hostName}/facter.json;
             })
           ]
-          ++ commonModules;
+          ++ (commonModulesWithDisko config.networking.hostName or "");
       });
 
   mkHome = {modules}: [

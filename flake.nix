@@ -157,7 +157,7 @@
           };
         };
 
-        homeConfigurations = import ./home_configurations.nix {inherit helpers inputs userName;};
+        homeConfigurations = import ./flakeHelpersHome.nix {inherit helpers inputs userName;};
       };
     };
 }

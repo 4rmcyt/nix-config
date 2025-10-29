@@ -1,122 +1,300 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running 'nixos-help').
-
-{ config, pkgs, ... }:
-
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      # Disko configuration
-      ./disko.nix
-      # Uncomment to enable home-manager
-      # ./home-manager/default.nix
-    ];
+  config,
+  pkgs,
+  ...
+}: {
+  # =================================================================
+  # 1. Imports
+  # =================================================================
+  imports = [
+    ./hardware-configuration.nix
+    ../../../modules/base
+    ../../../modules/users/zeev
+  ];
 
-  # Bootloader
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  # =================================================================
+  # 2. System Configuration
+  # =================================================================
+  system.stateVersion = "25.05";
 
-  # Networking
-  networking.hostName = "matebook-nixos";
-  networking.networkmanager.enable = true;
-
-  # Set your time zone.
-  time.timeZone = "America/Edmonton";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_CA.UTF-8";
-
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
-  # Enable touchpad support
-  services.libinput.enable = true;
-
-  # AMD GPU drivers and optimization
-  hardware.amdgpu.initrd.enable = true;
-  hardware.amdgpu.opencl.enable = true;
-  
-  # Power management for laptop
-  powerManagement = {
-    enable = true;
-    powertop.enable = true;
-  };
-  services.thermald.enable = true;
-  services.tlp = {
-    enable = true;
-    settings = {
-      CPU_SCALING_GOVERNOR_ON_AC = "performance";
-      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-      CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
-      CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
-      CPU_MIN_PERF_ON_AC = 0;
-      CPU_MAX_PERF_ON_AC = 100;
-      CPU_MIN_PERF_ON_BAT = 0;
-      CPU_MAX_PERF_ON_BAT = 60;
+  # =================================================================
+  # 3. Boot Configuration
+  # =================================================================
+  boot = {
+    loader = {
+      efi.canTouchEfiVariables = true;
+      systemd-boot.enable = true;
     };
   };
 
-  # Brightness control
-  programs.light.enable = true;
+  # =================================================================
+  # 4. Internationalization & Time
+  # =================================================================
+  i18n.defaultLocale = "en_CA.UTF-8";
+  time.timeZone = "America/Edmonton";
 
-  # Define a user account. Don't forget to set a password with 'passwd'.
-  users.users.user = {
-    isNormalUser = true;
-    description = "User";
-    extraGroups = [ "networkmanager" "wheel" "video" ];
-    packages = with pkgs; [
-      firefox
+  # =================================================================
+  # 5. Environment
+  # =================================================================
+  environment = {
+    sessionVariables = {
+      # AMD GPU variables
+      LIBVA_DRIVER_NAME = "radeonsi";
+      VDPAU_DRIVER = "radeonsi";
+      
+      # Wayland Support
+      GDK_BACKEND = "wayland,x11";
+      SDL_VIDEODRIVER = "wayland";
+      CLUTTER_BACKEND = "wayland";
+      MOZ_ENABLE_WAYLAND = "1";
+    };
+
+    systemPackages = with pkgs; [
+      # =============================================================
+      # Core System Utilities
+      # =============================================================
+      btop
+      curl
+      git
+      htop
+      mc
+      neofetch
+      openssl
+      p7zip
+      pciutils
+      unzip
+      usbutils
+      vim
+      wget
+
+      # =============================================================
+      # Development Tools
+      # =============================================================
+      age
+      alejandra
+      helix
+      just
+      nh
+      nixfmt-rfc-style
+      sops
+      tmux
+      zoxide
+
+      # =============================================================
+      # Laptop-specific tools
+      # =============================================================
+      acpi
+      brightnessctl
+      powertop
+      
+      # =============================================================
+      # Hardware Support & Monitoring
+      # =============================================================
+      fwupd
+      
+      # =============================================================
+      # Desktop Applications
+      # =============================================================
+      # Add your preferred applications here
+      
+      # =============================================================
+      # Fonts
+      # =============================================================
+      fira-code
+      fira-mono
+      meslo-lgs-nf
+      nerd-fonts.droid-sans-mono
+      nerd-fonts.fira-code
     ];
   };
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+  # =================================================================
+  # 6. Fonts
+  # =================================================================
+  fonts.fontconfig.useEmbeddedBitmaps = true;
 
-  # List packages installed in system profile
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    git
-    htop
-    powertop
-    acpi
-  ];
+  # =================================================================
+  # 7. Home Manager
+  # =================================================================
+  home-manager.backupFileExtension = "backup";
 
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  # =================================================================
+  # 8. Networking
+  # =================================================================
+  networking = {
+    enableIPv6 = true;
+    firewall = {
+      enable = true;
+    };
+    hostName = "matebook";
+    networkmanager = {
+      enable = true;
+      wifi.powersave = true;
+    };
+    wireless.enable = false;
+  };
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  # =================================================================
+  # 9. Nix Configuration
+  # =================================================================
+  nix = {
+    package = pkgs.nixVersions.latest;
+    settings = {
+      cores = 6;
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      max-jobs = 6;
+      substituters = [
+        "https://cache.nixos.org"
+        "https://nix-community.cachix.org"
+      ];
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
+      trusted-users = ["zeev"];
+      warn-dirty = false;
+    };
+  };
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It's perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  system.stateVersion = "24.05"; # Did you read the comment?
+  # =================================================================
+  # 10. Programs
+  # =================================================================
+  programs = {
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+      pinentryPackage = pkgs.pinentry-gnome3;
+    };
+    nh = {
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 10d --keep 3";
+      enable = true;
+      flake = "/home/zeev/src/nix-config";
+    };
+    zsh.enable = true;
+  };
+
+  # =================================================================
+  # 11. Security
+  # =================================================================
+  security = {
+    rtkit.enable = true;
+    polkit.enable = true;
+  };
+
+  # =================================================================
+  # 12. Services
+  # =================================================================
+  services = {
+    # =============================================================
+    # Audio Services
+    # =============================================================
+    pipewire = {
+      enable = true;
+      audio.enable = true;
+      pulse.enable = true;
+      alsa = {
+        enable = true;
+        support32Bit = true;
+      };
+      wireplumber.enable = true;
+    };
+
+    # =============================================================
+    # Desktop Environment - GNOME
+    # =============================================================
+    xserver = {
+      enable = true;
+      displayManager.gdm.enable = true;
+      desktopManager.gnome.enable = true;
+      
+      # Configure keymap
+      xkb = {
+        layout = "us";
+        variant = "";
+      };
+      
+      # Touchpad support
+      libinput = {
+        enable = true;
+        touchpad = {
+          tapping = true;
+          naturalScrolling = true;
+          accelProfile = "adaptive";
+        };
+      };
+    };
+
+    # =============================================================
+    # Power Management
+    # =============================================================
+    auto-cpufreq = {
+      enable = true;
+      settings = {
+        battery = {
+          governor = "powersave";
+          scaling_min_freq = 1400000;
+          scaling_max_freq = 3500000;
+          turbo = "never";
+        };
+        charger = {
+          governor = "performance";
+          scaling_min_freq = 1400000;
+          scaling_max_freq = 4700000;
+          turbo = "auto";
+        };
+      };
+    };
+    
+    thermald.enable = true;
+    power-profiles-daemon.enable = false; # Conflicts with auto-cpufreq
+
+    # =============================================================
+    # Hardware Services
+    # =============================================================
+    fwupd.enable = true;
+    
+    # Printing support
+    printing.enable = true;
+    
+    # Bluetooth
+    blueman.enable = true;
+
+    # =============================================================
+    # System Services
+    # =============================================================
+    openssh = {
+      enable = true;
+      settings = {
+        PermitRootLogin = "no";
+        PasswordAuthentication = false;
+      };
+    };
+    
+    # Laptop-specific
+    upower.enable = true;
+    logind = {
+      lidSwitch = "suspend";
+      lidSwitchDocked = "ignore";
+      extraConfig = ''
+        HandlePowerKey=suspend
+        IdleAction=suspend
+        IdleActionSec=30min
+      '';
+    };
+  };
+
+  # =================================================================
+  # 13. Hardware-specific fixes
+  # =================================================================
+  # Enable brightness control
+  programs.light.enable = true;
+
+  # =================================================================
+  # 14. Virtualization (optional)
+  # =================================================================
+  virtualisation.podman.enable = true;
 }
