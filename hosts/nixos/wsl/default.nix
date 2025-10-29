@@ -259,4 +259,6 @@
       yamlfmt
     ];
   };
+
+  home-manager.backupFileExtension = "backup";
 }

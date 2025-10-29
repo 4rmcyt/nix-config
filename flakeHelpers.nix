@@ -2,21 +2,19 @@
   inputs,
   userName,
 }: let
-  hostConfig = hostName: "./hosts/nixos/${hostName}";
-  diskConfig = hostName: "./modules/disko/${hostName}";
-  homeConfig = hostName: "./home-manager/${hostName}";
-
   commonArgs = {
     system = "x86_64-linux";
     specialArgs = {inherit inputs;};
   };
 
-  commonHomeUserArgs = {
-    extraSpecialArgs = {inherit inputs;};
-    nixpkgs.config.allowUnfree = true;
+  globalHomeManagerOptions = {
     useGlobalPkgs = false;
     useUserPackages = true;
     backupFileExtension = "backup";
+  };
+
+  userSpecificHomeManagerOptions = {
+    nixpkgs.config.allowUnfree = true;
     sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
   };
 
@@ -29,7 +27,7 @@
     inputs.agenix.nixosModules.default
     {
       nixpkgs.config.allowUnfree = true;
-      sops.age.keyFile = "/root/.config/sops/age/keys.txt";
+      sops.age.keyFile = inputs.nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
     }
   ];
 
@@ -37,16 +35,6 @@
     inputs.sops-nix.homeManagerModules.sops
     inputs.agenix.homeManagerModules.default
   ];
-  mkHomeModule = {
-    user,
-    modules,
-  }: {
-    home-manager.users.${user} =
-      commonHomeUserArgs
-      // {
-        imports = modules ++ commonHomeManagerModules;
-      };
-  };
 in {
   mkHost = {modules}:
     inputs.nixpkgs.lib.nixosSystem (commonArgs
@@ -60,21 +48,38 @@ in {
           ]
           ++ commonModules;
       });
-  mkHome = { modules }: [ 
-    ./modules/users/${userName}
-    (mkHomeModule {
-      user = userName;
-      modules = modules;
-    })
+
+  mkHome = {modules}: [
+    ./modules/users/${userName} 
+    {
+      home-manager =
+        globalHomeManagerOptions
+        // {
+          extraSpecialArgs = {inherit inputs;};
+          users.${userName} =
+            userSpecificHomeManagerOptions
+            // {
+              imports = modules ++ commonHomeManagerModules;
+            };
+        };
+    }
   ];
 
   mkStandaloneHome = {
     pkgs,
     modules,
   }:
-    inputs.home-manager.lib.homeManagerConfiguration (commonHomeUserArgs
-      // {
-        inherit pkgs;
-        modules = modules ++ commonHomeManagerModules;
-      });
+    inputs.home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
+      extraSpecialArgs = {inherit inputs;};
+      modules =
+        [
+          {
+            nixpkgs.config.allowUnfree = true;
+            sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
+          }
+        ]
+        ++ modules
+        ++ commonHomeManagerModules;
+    };
 }
