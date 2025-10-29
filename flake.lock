@@ -35,11 +35,11 @@
         "uv2nix": "uv2nix"
       },
       "locked": {
-        "lastModified": 1761573151,
-        "narHash": "sha256-Xhr8KqAmieWEjxcmICzUZvOI7EzXL6vGjulpWsQ3HM0=",
+        "lastModified": 1761726959,
+        "narHash": "sha256-SGndrZx7I0z4vITH1Arf60OTSfkQVMZRTcRgtPIBVtg=",
         "owner": "nix-community",
         "repo": "authentik-nix",
-        "rev": "3082a94074dfefa03b0d04549758425727e91685",
+        "rev": "ea1e06f9fe7cbf59c61b2ec4f2979801ff395d8e",
         "type": "github"
       },
       "original": {
@@ -72,11 +72,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1761471451,
-        "narHash": "sha256-/FpFhf7RuZdUl0K2A77POUJdN7kpkaqb+1sKQuBcuqI=",
+        "lastModified": 1761712534,
+        "narHash": "sha256-bJgBc/JomRXpvhPyysjTYbv9zzUeRM3KV/Zso29TA70=",
         "owner": "AdnanHodzic",
         "repo": "auto-cpufreq",
-        "rev": "1466fc5264b3f63136b239944a80602dde8023e7",
+        "rev": "68e91ab0f84a91fa3c40f7459323b0a78e56c2c1",
         "type": "github"
       },
       "original": {
@@ -189,11 +189,11 @@
       },
       "locked": {
         "dir": "pkgs/firefox-addons",
-        "lastModified": 1761624227,
-        "narHash": "sha256-AtfbVuB48QY0Ou3upSFEsYBJNmW1+S84nWQwZSzHQOY=",
+        "lastModified": 1761710614,
+        "narHash": "sha256-uj3jqMdY8fD8d4gE5jzdJKHCXcOrlAedsE+l2C0WaUE=",
         "owner": "rycee",
         "repo": "nur-expressions",
-        "rev": "23ad46145f62fcade09f1c609c660c45444f72b5",
+        "rev": "31620aefadf6b2ade64195f7be8554c9a49f6a5b",
         "type": "gitlab"
       },
       "original": {
@@ -212,11 +212,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1761701327,
-        "narHash": "sha256-9oLPU4ofpJbV/dkt3w3E42XTRkbwHq6dZ9JHsV00NME=",
+        "lastModified": 1761741562,
+        "narHash": "sha256-k4Oq/es6FrnSiDkt4xRU86Av/6/9J7T5BKN+TtgTD7A=",
         "owner": "nix-community",
         "repo": "flake-firefox-nightly",
-        "rev": "4616548aa408ef7d28c0407c5113bbc315f8f42e",
+        "rev": "da22efcccf2d14ffba1a0ffd79a914ebe23faada",
         "type": "github"
       },
       "original": {
@@ -525,32 +525,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1761666354,
-        "narHash": "sha256-fHr+tIYBJccNF8QWqgowfRmEAtAMSt1deZIRNKL8A7c=",
+        "lastModified": 1761750844,
+        "narHash": "sha256-ab6kNHAEP/oWz8qdblnDw7TIwetr4GnmnDyvya0aw/k=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "ca2ab1d877a24d5a437dad62f56b8b2c02e964e9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
-    "home-manager_3": {
-      "inputs": {
-        "nixpkgs": [
-          "zen-browser",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1752603129,
-        "narHash": "sha256-S+wmHhwNQ5Ru689L2Gu8n1OD6s9eU9n9mD827JNR+kw=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "e8c19a3cec2814c754f031ab3ae7316b64da085b",
+        "rev": "b8082c6803353456d45e6a8c0d4b36ad33fb7d6a",
         "type": "github"
       },
       "original": {
@@ -724,11 +703,11 @@
         "website-builder": "website-builder"
       },
       "locked": {
-        "lastModified": 1761225190,
-        "narHash": "sha256-1mf2wPI9S6okdmlI3dcUwdeeda3o+fgSFRX0RNqlWOA=",
+        "lastModified": 1761750966,
+        "narHash": "sha256-VpD5hh0I0581D9T+KKCSw3kn8Rtodd7J5OuVm7SR6uI=",
         "owner": "rasmus-kirk",
         "repo": "nixarr",
-        "rev": "e8312dfa783f3d5a67ea6e83782f53efaf1a5716",
+        "rev": "58a7d3d66c620d69c3bb27a0d9f7aeb181f756ef",
         "type": "github"
       },
       "original": {
@@ -1169,8 +1148,7 @@
         "sops-nix": "sops-nix",
         "systems": "systems_6",
         "treefmt-nix": "treefmt-nix",
-        "vscode-server": "vscode-server",
-        "zen-browser": "zen-browser"
+        "vscode-server": "vscode-server"
       }
     },
     "rust-overlay": {
@@ -1414,27 +1392,6 @@
       "original": {
         "owner": "rasmus-kirk",
         "repo": "website-builder",
-        "type": "github"
-      }
-    },
-    "zen-browser": {
-      "inputs": {
-        "home-manager": "home-manager_3",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1761535208,
-        "narHash": "sha256-E1PobJMiFmVUX2YdqYk/MpKb0LXavOYvlg8DCBBzlHc=",
-        "owner": "0xc000022070",
-        "repo": "zen-browser-flake",
-        "rev": "79a94872a3e6993a051c4e22a2dcb02c1d088acf",
-        "type": "github"
-      },
-      "original": {
-        "owner": "0xc000022070",
-        "repo": "zen-browser-flake",
         "type": "github"
       }
     }
