@@ -92,7 +92,6 @@
     } {
       systems = import inputs.systems;
       imports = [treefmt-nix.flakeModule];
-
       perSystem = {pkgs, ...}: {
         devShells.default = import ./devshell.nix {inherit pkgs;};
         treefmt = import ./treefmt.nix {inherit pkgs;};
@@ -105,6 +104,7 @@
               [
                 ./hosts/nixos/desktop
                 ./modules/disko/desktop
+                inputs.disko.nixosModules.disko
                 inputs.nix-gaming.nixosModules.pipewireLowLatency
                 inputs.lanzaboote.nixosModules.lanzaboote
                 inputs.flatpaks.nixosModules.default
@@ -124,6 +124,7 @@
               [
                 ./hosts/nixos/homeserver
                 ./modules/disko/homeserver
+                inputs.disko.nixosModules.disko
                 inputs.nixarr.nixosModules.default
                 inputs.authentik-nix.nixosModules.default
                 inputs.vscode-server.nixosModules.default
@@ -149,6 +150,7 @@
               [
                 ./hosts/nixos/laptop
                 ./modules/disko/laptop
+                inputs.disko.nixosModules.disko
                 inputs.flatpaks.nixosModules.default
               ]
               ++ (helpers.mkHome {
