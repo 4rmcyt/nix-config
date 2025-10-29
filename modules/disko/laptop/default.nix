@@ -1,8 +1,7 @@
 # Disko configuration for Huawei MateBook D14 WAQ9BR
 # Standard layout: EFI boot + swap + root partition
 # Adjust device path if your NVMe device is different
-
-{...}: {
+_: {
   disko.devices = {
     disk = {
       main = {

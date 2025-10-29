@@ -23,11 +23,11 @@
       "sd_mod"
       "rtsx_pci_sdmmc"
     ];
-    
+
     initrd.kernelModules = ["amdgpu"];
-    
+
     kernelModules = ["kvm-amd"];
-    
+
     extraModulePackages = [];
 
     # AMD GPU configuration for Ryzen 5 3500U (Vega 8)
@@ -118,7 +118,7 @@
   services = {
     # Battery optimization
     upower.enable = true;
-    
+
     # TLP conflicts with auto-cpufreq, using auto-cpufreq instead
     tlp.enable = false;
   };

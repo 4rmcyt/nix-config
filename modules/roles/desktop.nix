@@ -54,13 +54,14 @@
     # Fonts
     fonts = {
       enableDefaultPackages = lib.mkDefault true;
-      packages = with pkgs; lib.mkDefault [
-        noto-fonts
-        noto-fonts-emoji
-        liberation_ttf
-        fira-code
-        fira-code-symbols
-      ];
+      packages = with pkgs;
+        lib.mkDefault [
+          noto-fonts
+          noto-fonts-emoji
+          liberation_ttf
+          fira-code
+          fira-code-symbols
+        ];
     };
 
     # Desktop-focused security

@@ -21,30 +21,28 @@
     hostname = "${subdomain}.${domain}";
   in {
     # Nginx virtual host configuration
-    nginx =
-      lib.optionalAttrs enableNginx {
-        virtualHosts.${hostname} =
-          {
-            forceSSL = enableSSL;
-            sslCertificate = certPath;
-            sslCertificateKey = keyPath;
-            locations."/" =
-              {
-                proxyPass = "http://localhost:${toString port}";
-              }
-              // lib.optionalAttrs websockets {
-                proxyWebsockets = true;
-              };
-          }
-          // extraNginxLocations
-          // extraNginxConfig;
-      };
+    nginx = lib.optionalAttrs enableNginx {
+      virtualHosts.${hostname} =
+        {
+          forceSSL = enableSSL;
+          sslCertificate = certPath;
+          sslCertificateKey = keyPath;
+          locations."/" =
+            {
+              proxyPass = "http://localhost:${toString port}";
+            }
+            // lib.optionalAttrs websockets {
+              proxyWebsockets = true;
+            };
+        }
+        // extraNginxLocations
+        // extraNginxConfig;
+    };
 
     # Cloudflared tunnel ingress entry
-    cloudflared =
-      lib.optionalAttrs enableCloudflared {
-        ingress.${hostname} = cloudflaredTarget;
-      };
+    cloudflared = lib.optionalAttrs enableCloudflared {
+      ingress.${hostname} = cloudflaredTarget;
+    };
   };
 
   # Creates a standard nginx virtual host configuration for reverse proxy with SSL
