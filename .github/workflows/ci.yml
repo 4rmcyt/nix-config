@@ -104,11 +104,49 @@ jobs:
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
           skipPush: ${{ github.ref != 'refs/heads/main' }}
       - name: Build ${{ matrix.system }} configuration
+        id: build
+        continue-on-error: true
         run: |
           nix build \
             .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel \
             --print-build-logs \
             --show-trace
+      - name: Check build status
+        if: steps.build.outcome == 'failure'
+        run: exit 1
+      - name: Send Telegram notification - Build Failed
+        if: failure() && github.event_name != 'pull_request'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ❌ *Build Failed*
+
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            System: `${{ matrix.system }}`
+            Trigger: ${{ github.event_name }}
+
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+      - name: Send Telegram notification - Build Success
+        if: success() && github.ref == 'refs/heads/main'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ✅ *Build Successful*
+
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            System: `${{ matrix.system }}`
+
+            Build completed and pushed to Cachix.
+
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
   # =================================================================
   # Home Manager Check - Validate home-manager configurations
   # =================================================================

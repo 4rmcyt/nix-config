@@ -1,7 +1,14 @@
-name: update-flake-lock
+name: "Update Flake Lock"
 on:
   workflow_dispatch:
+    inputs:
+      notify:
+        description: "Send Telegram notification"
+        required: false
+        default: true
+        type: boolean
   schedule:
+    # Run daily at 3am UTC
     - cron: "0 3 * * *"
 permissions:
   contents: write
@@ -10,19 +17,52 @@ jobs:
   update-flake-lock:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: cachix/install-nix-action@v27
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
-      - id: update
+      - name: Update flake.lock
+        id: update
         uses: DeterminateSystems/update-flake-lock@v23
         with:
           commit-msg: "chore(flake.lock): update"
           pr-title: "chore(flake.lock): update"
           pr-labels: auto-merge
           token: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Merge
+      - name: Auto-merge PR
+        if: steps.update.outputs.pull-request-number != ''
         run: gh pr merge --auto "${{ steps.update.outputs.pull-request-number }}" --rebase
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: ${{ steps.update.outputs.pull-request-number != '' }}
+      - name: Send Telegram notification - PR Created
+        if: steps.update.outputs.pull-request-number != '' && (github.event_name == 'schedule' || inputs.notify == true)
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            🔄 *Flake Lock Update*
+
+            Repository: `${{ github.repository }}`
+
+            A new PR has been created to update flake.lock
+            PR #${{ steps.update.outputs.pull-request-number }} will auto-merge
+
+            [View PR](https://github.com/${{ github.repository }}/pull/${{ steps.update.outputs.pull-request-number }})
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+      - name: Send Telegram notification - No Updates
+        if: steps.update.outputs.pull-request-number == '' && (github.event_name == 'schedule' || inputs.notify == true)
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ℹ️ *Flake Lock Check*
+
+            Repository: `${{ github.repository }}`
+
+            No updates available - all inputs are up to date
