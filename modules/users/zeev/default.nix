@@ -28,6 +28,7 @@ in {
 
   users = {
     groups = {
+      git = {};
       media = {};
       zeev = {};
     };

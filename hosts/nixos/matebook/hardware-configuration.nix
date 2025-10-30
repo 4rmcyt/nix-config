@@ -51,15 +51,13 @@
   # =================================================================
   hardware = {
     # Graphics
+    # Note: RADV (the AMDGPU Vulkan driver) is enabled by default
+    # amdvlk has been deprecated by AMD and removed from nixpkgs
     graphics = {
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
-        amdvlk
         rocmPackages.clr.icd
-      ];
-      extraPackages32 = with pkgs; [
-        driversi686Linux.amdvlk
       ];
     };
 
@@ -91,26 +89,8 @@
   # =================================================================
   # 4. Filesystems
   # =================================================================
-  # NOTE: UUIDs need to be updated after installation
-  # Find UUIDs with: sudo blkid
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"; # TODO: Update with actual root partition UUID
-    fsType = "ext4";
-    options = ["defaults" "noatime"];
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/XXXX-XXXX"; # TODO: Update with actual boot partition UUID
-    fsType = "vfat";
-    options = ["defaults" "umask=0077"];
-  };
-
-  swapDevices = [
-    {
-      device = "/dev/disk/by-uuid/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"; # TODO: Update with actual swap partition UUID
-      randomEncryption.enable = true;
-    }
-  ];
+  # NOTE: Filesystem configuration is managed by disko module
+  # See: modules/disko/matebook/default.nix
 
   # =================================================================
   # 5. Services

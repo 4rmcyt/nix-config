@@ -37,10 +37,10 @@
       efi.canTouchEfiVariables = false;
       systemd-boot.enable = true;
     };
-    # lanzaboote = {
-    #   enable = true;
-    #   pkiBundle = "/var/lib/sbctl";
-    # };
+    lanzaboote = {
+      enable = false;
+      pkiBundle = "/var/lib/sbctl";
+    };
   };
 
   # =================================================================

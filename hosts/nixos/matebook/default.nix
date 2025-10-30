@@ -24,13 +24,7 @@
   };
 
   # =================================================================
-  # 4. Internationalization & Time
-  # =================================================================
-  i18n.defaultLocale = "en_CA.UTF-8";
-  time.timeZone = "America/Edmonton";
-
-  # =================================================================
-  # 5. Environment
+  # 4. Environment
   # =================================================================
   environment = {
     sessionVariables = {
@@ -105,17 +99,17 @@
   };
 
   # =================================================================
-  # 6. Fonts
+  # 5. Fonts
   # =================================================================
   fonts.fontconfig.useEmbeddedBitmaps = true;
 
   # =================================================================
-  # 7. Home Manager
+  # 6. Home Manager
   # =================================================================
   home-manager.backupFileExtension = "backup";
 
   # =================================================================
-  # 8. Networking
+  # 7. Networking
   # =================================================================
   networking = {
     enableIPv6 = true;
@@ -131,7 +125,7 @@
   };
 
   # =================================================================
-  # 9. Nix Configuration
+  # 8. Nix Configuration
   # =================================================================
   nix = {
     package = pkgs.nixVersions.latest;
@@ -156,7 +150,7 @@
   };
 
   # =================================================================
-  # 10. Programs
+  # 9. Programs
   # =================================================================
   programs = {
     gnupg.agent = {
@@ -174,7 +168,7 @@
   };
 
   # =================================================================
-  # 11. Security
+  # 10. Security
   # =================================================================
   security = {
     rtkit.enable = true;
@@ -182,7 +176,7 @@
   };
 
   # =================================================================
-  # 12. Services
+  # 11. Services
   # =================================================================
   services = {
     # =============================================================
@@ -202,27 +196,14 @@
     # =============================================================
     # Desktop Environment - GNOME
     # =============================================================
-    xserver = {
-      enable = true;
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
-
-      # Configure keymap
-      xkb = {
-        layout = "us";
-        variant = "";
-      };
-
-      # Touchpad support
-      libinput = {
-        enable = true;
-        touchpad = {
-          tapping = true;
-          naturalScrolling = true;
-          accelProfile = "adaptive";
-        };
-      };
+    desktopManager.gnome.enable = true;
+    libinput.enable = true;
+    libinput.touchpad = {
+      tapping = true;
+      naturalScrolling = true;
+      scrollMethod = "twofinger";
     };
+    displayManager.gdm.enable = true;
 
     # =============================================================
     # Power Management
@@ -272,25 +253,20 @@
 
     # Laptop-specific
     upower.enable = true;
-    logind = {
+    logind.settings.Login = {
       lidSwitch = "suspend";
       lidSwitchDocked = "ignore";
-      extraConfig = ''
-        HandlePowerKey=suspend
-        IdleAction=suspend
-        IdleActionSec=30min
-      '';
     };
   };
 
   # =================================================================
-  # 13. Hardware-specific fixes
+  # 12. Hardware-specific fixes
   # =================================================================
   # Enable brightness control
   programs.light.enable = true;
 
   # =================================================================
-  # 14. Virtualization (optional)
+  # 13. Virtualization (optional)
   # =================================================================
   virtualisation.podman.enable = true;
 }
