@@ -15,7 +15,7 @@
     ../../../modules/users/zeev
     # Ollama disabled - enable when needed for local AI/LLM
     # ../../../modules/GUI/ollama
-    ../../../modules/GUI/OBS
+    # ../../../modules/GUI/OBS
     ../../../modules/GUI/flatpak
   ];
 
@@ -48,6 +48,8 @@
   # =================================================================
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "America/Edmonton";
+
+  nixpkgs.config.allowBroken = true;
 
   # =================================================================
   # 6. Environment
@@ -90,6 +92,7 @@
       usbutils
       vim
       wget
+      nodejs
 
       # =============================================================
       # Development Tools

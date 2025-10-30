@@ -26,6 +26,7 @@
     inputs.agenix.nixosModules.default
     {
       nixpkgs.config.allowUnfree = true;
+      nixpkgs.config.allowBroken = true;
       sops.age.keyFile = inputs.nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
     }
   ];
