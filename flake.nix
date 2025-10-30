@@ -1,7 +1,10 @@
 {
   inputs = {
     # Core Nix ecosystem
-    flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     systems.url = "github:nix-systems/default";
 
@@ -30,10 +33,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
-    flatpaks.url = "github:in-a-dil-emma/declarative-flatpak/latest";
+    flatpaks = {
+      url = "github:in-a-dil-emma/declarative-flatpak/latest";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Security & secrets
-    agenix.url = "github:ryantm/agenix";
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -43,20 +52,50 @@
       url = "github:AdnanHodzic/auto-cpufreq";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-gaming.url = "github:fufexan/nix-gaming";
+    nix-gaming = {
+      url = "github:fufexan/nix-gaming";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Services & applications
-    authentik-nix.url = "github:nix-community/authentik-nix";
-    linkwarden.url = "github:EricTheMagician/nixpkgs/linkwarden";
-    nixai.url = "github:olafkfreund/nix-ai-help";
-    nixarr.url = "github:rasmus-kirk/nixarr";
-    vscode-server.url = "github:nix-community/nixos-vscode-server";
+    authentik-nix = {
+      url = "github:nix-community/authentik-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    linkwarden = {
+      url = "github:EricTheMagician/nixpkgs/linkwarden";
+      # This is a nixpkgs fork, no follows needed
+    };
+    nixai = {
+      url = "github:olafkfreund/nix-ai-help";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixarr = {
+      url = "github:rasmus-kirk/nixarr";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    vscode-server = {
+      url = "github:nix-community/nixos-vscode-server";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Development tools
-    nix-index-database.url = "github:nix-community/nix-index-database";
-    nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
-    nixos-generators.url = "github:nix-community/nixos-generators";
-    treefmt-nix.url = "github:numtide/treefmt-nix";
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixos-facter-modules = {
+      url = "github:nix-community/nixos-facter-modules";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Browser extensions
     betterfox-nix = {

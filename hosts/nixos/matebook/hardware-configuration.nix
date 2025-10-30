@@ -90,18 +90,8 @@
   # =================================================================
   # 4. Filesystems
   # =================================================================
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/89191d5d-2bec-4d94-8034-f9011da39bd0";
-    fsType = "ext4";
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/DE93-5277";
-    fsType = "vfat";
-    options = ["fmask=0077" "dmask=0077"];
-  };
-
-  swapDevices = [];
+  # NOTE: Filesystem configuration is managed by disko module
+  # See: modules/disko/matebook/default.nix
 
   # =================================================================
   # 5. Services
