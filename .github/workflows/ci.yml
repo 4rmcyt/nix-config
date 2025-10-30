@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+
 jobs:
   # =================================================================
   # Format Check - Fast feedback on formatting issues
@@ -13,20 +14,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Install Nix
         uses: cachix/install-nix-action@v27
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
             accept-flake-config = true
+
       - name: Setup Cachix
         uses: cachix/cachix-action@v15
         with:
-          name: nix-community
+          name: 4rmcyt
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
           skipPush: true
+
       - name: Check formatting
         run: nix fmt -- --ci .
+
   # =================================================================
   # Flake Check - Validate flake structure and evaluations
   # =================================================================
@@ -35,29 +40,34 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Install Nix
         uses: cachix/install-nix-action@v27
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
             accept-flake-config = true
+
       - name: Setup Cachix
         uses: cachix/cachix-action@v15
         with:
-          name: nix-community
+          name: 4rmcyt
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
           skipPush: true
+
       - name: Restore and cache Nix store
         uses: nix-community/cache-nix-action@v5
         with:
           primary-key: nix-${{ runner.os }}-flake-${{ hashFiles('**/*.nix', 'flake.lock') }}
           restore-prefixes-first-match: nix-${{ runner.os }}-flake-
-          gc-max-store-size-linux: 10737418240 # 10GB
+          gc-max-store-size-linux: 5368709120 # 5GB
           purge: true
           purge-prefixes: nix-${{ runner.os }}-flake-
           purge-last-accessed: 42
+
       - name: Check flake
         run: nix flake check --all-systems --show-trace
+
   # =================================================================
   # Build Configurations - Build all NixOS system configurations
   # =================================================================
@@ -75,6 +85,20 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Free up disk space
+        run: |
+          echo "=== Before cleanup ==="
+          df -h
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/share/swift
+          echo "=== After cleanup ==="
+          df -h
+
       - name: Install Nix
         uses: cachix/install-nix-action@v27
         with:
@@ -83,31 +107,23 @@ jobs:
             accept-flake-config = true
             max-jobs = auto
             cores = 0
-            substituters = https://cache.nixos.org https://nix-community.cachix.org
-            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
-      - name: Setup Cachix
+            substituters = https://cache.nixos.org https://4rmcyt-desktop.cachix.org https://4rmcyt-homeserver.cachix.org https://4rmcyt-matebook.cachix.org https://4rmcyt-wsl.cachix.org https://nix-community.cachix.org
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= 4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs= 4rmcyt-homeserver.cachix.org-1:SmDepzJsgaofX57WoXmDu+HRJl/Koh90UWsZO0k2Nkg= 4rmcyt-matebook.cachix.org-1:OG8MqlfrDlyperVhYk2+va8Cwo/vE6tG/VbTlvq4I0I= 4rmcyt-wsl.cachix.org-1:6Z2J6lPY35L3qxBgEYzyN0Q3Y6LCJhtz/YeY4VQ29BU= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+
+      - name: Setup Cachix for ${{ matrix.system }}
         uses: cachix/cachix-action@v15
         with:
-          name: nix-community
+          name: 4rmcyt-${{ matrix.system }}
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
-          skipPush: true
-      - name: Restore and cache Nix store
-        uses: nix-community/cache-nix-action@v5
-        with:
-          primary-key: nix-${{ runner.os }}-${{ matrix.system }}-${{ hashFiles('**/*.nix', 'flake.lock') }}
-          restore-prefixes-first-match: |
-            nix-${{ runner.os }}-${{ matrix.system }}-
-            nix-${{ runner.os }}-
-          gc-max-store-size-linux: 10737418240
-          purge: true
-          purge-prefixes: nix-${{ runner.os }}-${{ matrix.system }}-
-          purge-last-accessed: 42
+          skipPush: ${{ github.ref != 'refs/heads/main' }}
+
       - name: Build ${{ matrix.system }} configuration
         run: |
           nix build \
             .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel \
             --print-build-logs \
             --show-trace
+
   # =================================================================
   # Home Manager Check - Validate home-manager configurations
   # =================================================================
@@ -125,18 +141,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Install Nix
         uses: cachix/install-nix-action@v27
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
             accept-flake-config = true
+
       - name: Setup Cachix
         uses: cachix/cachix-action@v15
         with:
-          name: nix-community
+          name: 4rmcyt
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
           skipPush: true
+
       - name: Validate home-manager configuration for ${{ matrix.config }}
         run: |
           # Home-manager configs are embedded in NixOS configs
