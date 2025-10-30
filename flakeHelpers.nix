@@ -15,6 +15,7 @@
 
   userSpecificHomeManagerOptions = {
     nixpkgs.config.allowUnfree = true;
+    nixpkgs.config.allowBroken = true;
     sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
   };
 
