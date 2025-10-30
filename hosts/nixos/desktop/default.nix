@@ -34,13 +34,13 @@
   # =================================================================
   boot = {
     loader = {
-      efi.canTouchEfiVariables = true;
-      systemd-boot.enable = false;
+      efi.canTouchEfiVariables = false;
+      systemd-boot.enable = true;
     };
-    lanzaboote = {
-      enable = true;
-      pkiBundle = "/var/lib/sbctl";
-    };
+    # lanzaboote = {
+    #   enable = true;
+    #   pkiBundle = "/var/lib/sbctl";
+    # };
   };
 
   # =================================================================
@@ -48,7 +48,6 @@
   # =================================================================
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "America/Edmonton";
-
 
   # =================================================================
   # 6. Environment
