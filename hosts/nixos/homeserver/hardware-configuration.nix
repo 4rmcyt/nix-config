@@ -100,7 +100,6 @@ in {
         intel-ocl
         intel-vaapi-driver
         libva-vdpau-driver
-        vaapiVdpau
       ];
     };
   };
