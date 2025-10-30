@@ -42,7 +42,7 @@ Composable system roles that bundle related configurations:
 - Bluetooth, printing, power management
 - Common CLI utilities
 - **Important**: Does NOT include desktop environment (DE) or display manager
-- Suitable for: desktop, laptop
+- Suitable for: desktop, matebook
 
 **Why X Server in Desktop Role?**
 Even on Wayland-first systems (Plasma 6, GNOME), X Server is needed for:
@@ -138,7 +138,7 @@ hosts/nixos/
 │   ├── hardware-configuration.nix  # Auto-generated hardware
 │   └── facter.json          # Hardware facts
 ├── homeserver/
-├── laptop/
+├── matebook/
 └── wsl/
 ```
 
@@ -184,7 +184,7 @@ home-manager/
 │   └── tmux.nix      # Terminal multiplexer
 ├── desktop/          # Desktop-specific home config
 ├── homeserver/
-├── laptop/
+├── matebook/
 └── wsl/
 ```
 
@@ -226,7 +226,7 @@ imports = [
 
 ### Current Setup
 - **Desktop**: Plasma 6 + Wayland (primary), XWayland (fallback)
-- **Laptop**: GNOME + Wayland (planned), XWayland (fallback)
+- **Matebook**: GNOME + Wayland (planned), XWayland (fallback)
 
 ### X Server Configuration
 ```nix
@@ -241,7 +241,7 @@ This is **correct** because:
 
 ### Wayland-First Setup
 ```nix
-# Host config (desktop/laptop)
+# Host config (desktop/matebook)
 services.desktopManager.plasma6.enable = true;  # Wayland-native
 services.displayManager.sddm.wayland.enable = true;
 

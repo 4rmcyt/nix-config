@@ -52,7 +52,7 @@ jobs:
         host:
           - desktop
           - homeserver
-          - laptop
+          - matebook
           - wsl
       fail-fast: false
     steps:
@@ -82,7 +82,7 @@ jobs:
         config:
           - desktop
           - homeserver
-          - laptop
+          - matebook
           - wsl
       fail-fast: false
     steps:

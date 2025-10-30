@@ -50,10 +50,10 @@ This document summarizes all the improvements made to the nix-config repository.
 - **Impact**: Eliminates evaluation errors
 
 ### 7. Laptop Hardware Configuration
-**File**: `hosts/nixos/laptop/hardware-configuration.nix`
+**File**: `hosts/nixos/matebook/hardware-configuration.nix`
 - Added clear TODO comments for UUIDs
 - Provided instructions (`sudo blkid`)
-- **Impact**: Clear guidance for future laptop setup
+- **Impact**: Clear guidance for future matebook setup
 
 ### 8. StateVersion Consistency
 **File**: `modules/plasma/default.nix:2`

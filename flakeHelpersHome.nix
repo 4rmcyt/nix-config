@@ -25,8 +25,8 @@ in {
     modules = [./home-manager/wsl];
   };
 
-  "${userName}@laptop" = helpers.mkStandaloneHome {
+  "${userName}@matebook" = helpers.mkStandaloneHome {
     inherit pkgs;
-    modules = [./home-manager/laptop];
+    modules = [./home-manager/matebook];
   };
 }

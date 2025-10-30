@@ -46,7 +46,7 @@ jobs:
         system:
           - desktop
           - homeserver
-          - laptop
+          - matebook
           - wsl
       fail-fast: false
     steps:

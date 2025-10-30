@@ -15,7 +15,7 @@ Personal NixOS configuration using flakes for multiple systems.
 - **Services**: Media server (Jellyfin, *arr stack), monitoring (Prometheus, Grafana), databases (PostgreSQL)
 - **Use case**: Home lab and self-hosted services
 
-### Laptop
+### Matebook
 - **OS**: NixOS with GNOME
 - **Graphics**: AMD GPU
 - **Features**: Power management, portable system
@@ -34,7 +34,7 @@ Personal NixOS configuration using flakes for multiple systems.
 │   └── nixos/
 │       ├── desktop/       # Desktop system configuration
 │       ├── homeserver/    # Homeserver configuration
-│       ├── laptop/        # Laptop configuration
+│       ├── matebook/        # Matebook configuration
 │       └── wsl/           # WSL configuration
 ├── modules/
 │   ├── base/              # Base system modules & nix settings
@@ -55,7 +55,7 @@ Personal NixOS configuration using flakes for multiple systems.
 │   ├── shared/            # Shared home-manager modules
 │   ├── desktop/
 │   ├── homeserver/
-│   ├── laptop/
+│   ├── matebook/
 │   └── wsl/
 └── secrets/               # SOPS encrypted secrets
 
@@ -92,7 +92,7 @@ sudo nixos-rebuild switch --flake .#<hostname>
 home-manager switch --flake .#<hostname>
 ```
 
-Where `<hostname>` is one of: `desktop`, `homeserver`, `laptop`, or `wsl`
+Where `<hostname>` is one of: `desktop`, `homeserver`, `matebook`, or `wsl`
 
 ## 🔧 Key Features
 

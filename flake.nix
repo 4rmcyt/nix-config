@@ -145,16 +145,16 @@
               });
           };
 
-          laptop = helpers.mkHost {
+          matebook = helpers.mkHost {
             modules =
               [
-                ./hosts/nixos/laptop
-                ./modules/disko/laptop
+                ./hosts/nixos/matebook
+                ./modules/disko/matebook
                 inputs.disko.nixosModules.disko
                 inputs.flatpaks.nixosModules.default
               ]
               ++ (helpers.mkHome {
-                modules = [./home-manager/laptop];
+                modules = [./home-manager/matebook];
               });
           };
         };
