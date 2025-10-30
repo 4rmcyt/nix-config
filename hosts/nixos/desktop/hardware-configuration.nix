@@ -144,8 +144,6 @@ in {
     ];
     # Module configuration
     extraModprobeConfig = ''
-      options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=16777216 zfs_arc_max=2147483648
-
       # Enable v4l2loopback for virtual camera
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
     '';
@@ -159,6 +157,12 @@ in {
     graphics = {
       enable = true;
       enable32Bit = true;
+      extraPackages = with pkgs; [
+        # AMD GPU support (for integrated graphics)
+        rocmPackages.clr.icd
+        rocmPackages.clr
+        amdvlk
+      ];
     };
 
     # NVIDIA configuration
@@ -197,9 +201,8 @@ in {
     smartd = {
       enable = true;
       defaults.autodetected = "-a -o on -s (S/../.././02|L/../../7/04)";
-      devices = [
-        {device = "/dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NS0W101791N";}
-      ];
+      # Auto-detect all NVMe and SATA devices
+      autodetect = true;
     };
 
     # OpenRGB for RGB control

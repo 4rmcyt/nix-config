@@ -57,7 +57,10 @@
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
+        # ROCm for compute/OpenCL
         rocmPackages.clr.icd
+        # Video acceleration (VAAPI/VDPAU)
+        mesa.drivers
       ];
     };
 

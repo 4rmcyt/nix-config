@@ -26,6 +26,24 @@ jobs:
           skipPush: true
       - name: Check formatting
         run: nix fmt -- --ci .
+
+      - name: Send Telegram notification - Format Check Failed
+        if: failure() && github.event_name != 'pull_request'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ❌ *Format Check Failed*
+
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            Trigger: ${{ github.event_name }}
+
+            Code formatting issues detected. Please run `nix fmt` locally.
+
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
   # =================================================================
   # Flake Check - Validate flake structure and evaluations
   # =================================================================
@@ -56,6 +74,24 @@ jobs:
           purge-last-accessed: 42
       - name: Check flake
         run: nix flake check --all-systems --show-trace
+
+      - name: Send Telegram notification - Flake Check Failed
+        if: failure() && github.event_name != 'pull_request'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ❌ *Flake Check Failed*
+
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            Trigger: ${{ github.event_name }}
+
+            Flake validation failed. Check the workflow logs for details.
+
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
   # =================================================================
   # Build Configurations - Build all NixOS system configurations
   # =================================================================
@@ -73,6 +109,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Send Telegram notification - Build Started
+        if: github.event_name != 'pull_request'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            🔨 *Build Started*
+
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            System: `${{ matrix.system }}`
+            Trigger: ${{ github.event_name }}
+            Commit: `${{ github.event.head_commit.message }}`
+
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
       - name: Free up disk space
         run: |
           echo "=== Before cleanup ==="
@@ -178,3 +232,50 @@ jobs:
           # Home-manager configs are embedded in NixOS configs
           # This step validates they can be evaluated
           nix eval .#nixosConfigurations.${{ matrix.config }}.config.home-manager.users --apply 'x: "ok"'
+
+      - name: Send Telegram notification - Home Manager Check Failed
+        if: failure() && github.event_name != 'pull_request'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ❌ *Home Manager Check Failed*
+
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            Config: `${{ matrix.config }}`
+            Trigger: ${{ github.event_name }}
+
+            Home Manager configuration validation failed.
+
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+  # =================================================================
+  # Workflow Summary - Send overall workflow status
+  # =================================================================
+  workflow-summary:
+    runs-on: ubuntu-latest
+    needs: [format-check, flake-check, build-systems, check-home-manager]
+    if: always() && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Send Telegram notification - All Checks Passed
+        if: needs.format-check.result == 'success' && needs.flake-check.result == 'success' && needs.build-systems.result == 'success' && needs.check-home-manager.result == 'success'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ✅ *CI Workflow Completed Successfully*
+
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+
+            All checks passed:
+            ✅ Format check
+            ✅ Flake validation
+            ✅ All systems built (desktop, homeserver, matebook, wsl)
+            ✅ Home manager validation
+
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})

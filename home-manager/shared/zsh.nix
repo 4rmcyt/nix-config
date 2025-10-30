@@ -59,7 +59,6 @@
         "ohmyzsh/ohmyzsh path:plugins/git"
         "ohmyzsh/ohmyzsh path:plugins/safe-paste"
         "ohmyzsh/ohmyzsh path:plugins/sudo"
-        "ohmyzsh/ohmyzsh path:plugins/zoxide"
         "Aloxaf/fzf-tab"
         "MichaelAquilina/zsh-you-should-use"
         "romkatv/powerlevel10k"
@@ -69,5 +68,10 @@
         "zsh-users/zsh-history-substring-search"
       ];
     };
+
+    # Initialize zoxide at the very end (required by zoxide)
+    initExtra = ''
+      eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
+    '';
   };
 }
