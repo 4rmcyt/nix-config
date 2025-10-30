@@ -49,7 +49,6 @@
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "America/Edmonton";
 
-  nixpkgs.config.allowBroken = true;
 
   # =================================================================
   # 6. Environment
@@ -165,7 +164,7 @@
       cifs-utils
       fwupd
       microcode-amd
-      nvtopPackages.nvidia
+      # nvtopPackages.nvidia
       openrgb-with-all-plugins
       powertop
       ryzen-monitor-ng
