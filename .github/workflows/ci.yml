@@ -26,7 +26,6 @@ jobs:
           skipPush: true
       - name: Check formatting
         run: nix fmt -- --ci .
-
       - name: Send Telegram notification - Format Check Failed
         if: failure() && github.event_name != 'pull_request'
         uses: appleboy/telegram-action@master
@@ -74,7 +73,6 @@ jobs:
           purge-last-accessed: 42
       - name: Check flake
         run: nix flake check --all-systems --show-trace
-
       - name: Send Telegram notification - Flake Check Failed
         if: failure() && github.event_name != 'pull_request'
         uses: appleboy/telegram-action@master
@@ -109,7 +107,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Send Telegram notification - Build Started
         if: github.event_name != 'pull_request'
         uses: appleboy/telegram-action@master
@@ -232,7 +229,6 @@ jobs:
           # Home-manager configs are embedded in NixOS configs
           # This step validates they can be evaluated
           nix eval .#nixosConfigurations.${{ matrix.config }}.config.home-manager.users --apply 'x: "ok"'
-
       - name: Send Telegram notification - Home Manager Check Failed
         if: failure() && github.event_name != 'pull_request'
         uses: appleboy/telegram-action@master
