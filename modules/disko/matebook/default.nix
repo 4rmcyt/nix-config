@@ -1,5 +1,5 @@
 # Disko configuration for Huawei MateBook D14 WAQ9BR
-# Standard layout: EFI boot + swap + root partition
+# Standard layout: EFI boot + root partition + swap file
 # Adjust device path if your NVMe device is different
 _: {
   disko.devices = {
@@ -11,7 +11,7 @@ _: {
           type = "gpt";
           partitions = {
             ESP = {
-              size = "512M";
+              size = "2G";  # Your actual EFI partition size
               type = "EF00";
               content = {
                 type = "filesystem";
@@ -23,16 +23,8 @@ _: {
                 ];
               };
             };
-            swap = {
-              size = "16G"; # Increased for hibernation support (2x RAM)
-              content = {
-                type = "swap";
-                randomEncryption = true;
-                resumeDevice = true;
-              };
-            };
             root = {
-              size = "100%";
+              size = "100%";  # Rest of disk
               content = {
                 type = "filesystem";
                 format = "ext4";
@@ -49,4 +41,12 @@ _: {
       };
     };
   };
+
+  # Swap file configuration (16GB for hibernation support)
+  swapDevices = [
+    {
+      device = "/swapfile";
+      size = 16384; # 16GB in MB
+    }
+  ];
 }
