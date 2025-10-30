@@ -13,6 +13,11 @@
   # =================================================================
   system.stateVersion = "25.05";
 
+  sops.secrets.tailscale_auth_key = {
+    sopsFile = ../../../secrets/tailscale-matebook.yaml;
+    key = "tailscale_auth_key";
+  };
+
   # =================================================================
   # 3. Boot Configuration
   # =================================================================
@@ -251,6 +256,12 @@
         PermitRootLogin = "no";
         PasswordAuthentication = false;
       };
+    };
+
+    tailscale = {
+      enable = true;
+      useRoutingFeatures = "both";
+      authKeyFile = config.sops.secrets.tailscale_auth_key.path;
     };
 
     # Laptop-specific
