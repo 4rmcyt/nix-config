@@ -45,6 +45,8 @@
       zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
       [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+      eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
     '';
 
     antidote = {
@@ -68,10 +70,5 @@
         "zsh-users/zsh-history-substring-search"
       ];
     };
-
-    # Initialize zoxide at the very end (required by zoxide)
-    initExtra = ''
-      eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
-    '';
   };
 }

@@ -149,8 +149,9 @@
             modules =
               [
                 ./hosts/nixos/matebook
-                ./modules/disko/matebook
-                inputs.disko.nixosModules.disko
+                # Disko disabled - using existing installation with manual filesystem config
+                # ./modules/disko/matebook
+                # inputs.disko.nixosModules.disko
                 inputs.flatpaks.nixosModules.default
               ]
               ++ (helpers.mkHome {
