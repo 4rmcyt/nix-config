@@ -50,9 +50,7 @@
   # 3. Hardware Configuration
   # =================================================================
   hardware = {
-    # Graphics
-    # Note: RADV (the AMDGPU Vulkan driver) is enabled by default
-    # amdvlk has been deprecated by AMD and removed from nixpkgs
+    # AMD GPU configuration
     graphics = {
       enable = true;
       enable32Bit = true;

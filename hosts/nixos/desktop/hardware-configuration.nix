@@ -161,7 +161,6 @@ in {
         # AMD GPU support (for integrated graphics)
         rocmPackages.clr.icd
         rocmPackages.clr
-        amdvlk
       ];
     };
 
