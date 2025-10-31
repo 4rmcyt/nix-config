@@ -33,10 +33,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
-    flatpaks = {
-      url = "github:in-a-dil-emma/declarative-flatpak/latest";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    flatpaks.url = "github:in-a-dil-emma/declarative-flatpak/latest";
 
     # Security & secrets
     agenix = {
@@ -84,10 +81,7 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-facter-modules = {
-      url = "github:nix-community/nixos-facter-modules";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
