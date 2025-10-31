@@ -1,4 +1,19 @@
 {
+  // Your existing settings
   "terminal.integrated.fontFamily": "MesloLGS NF",
-  "git.enableCommitSigning": true
+  "git.enableCommitSigning": true,
+  // Nix IDE configuration
+  "editor.formatOnSave": true,
+  "[nix]": {
+    "editor.defaultFormatter": "jnoortheen.nix-ide"
+  },
+  "nix.serverPath": "nil",
+  "nix.serverSettings": {
+    "formatting": {
+      "command": ["alejandra"]
+    },
+    "diagnostics": {
+      "excluded_files": ["secrets/"]
+    }
+  }
 }
