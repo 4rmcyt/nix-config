@@ -295,6 +295,11 @@
       "kvm"
     ];
 
+    experimental-features = [
+        "flakes"
+        "nix-command"
+    ];
+    
     # Additional trusted public keys for gaming and CUDA caches
     trusted-public-keys = [
       "4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs="
