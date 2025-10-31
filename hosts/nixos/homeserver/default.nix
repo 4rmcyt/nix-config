@@ -75,7 +75,6 @@
 
     # Homeserver-specific caches
     substituters = [
-      "https://cache.nixos.org"
       "https://4rmcyt-homeserver.cachix.org"
       "https://nix-community.cachix.org"
     ];

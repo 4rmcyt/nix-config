@@ -281,7 +281,6 @@
 
     # Additional gaming and CUDA caches
     substituters = [
-      "https://cache.nixos.org"
       "https://4rmcyt-desktop.cachix.org"
       "https://cuda-maintainers.cachix.org"
       "https://nix-community.cachix.org"
