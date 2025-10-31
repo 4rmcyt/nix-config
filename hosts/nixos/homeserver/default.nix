@@ -73,9 +73,7 @@
     cores = 8;
     max-jobs = 8;
 
-    # Homeserver-specific caches
-    # Use lib.mkBefore to prepend homeserver cache (higher priority than base caches)
-    substituters = lib.mkBefore [
+    substituters = [
       "https://4rmcyt-homeserver.cachix.org"
     ];
 
