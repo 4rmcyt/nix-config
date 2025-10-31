@@ -3,7 +3,7 @@
     ./auto_upgrade
     ./msmtp
     ./logging
-    ./nix-settings.nix
+    # ./nix-settings.nix
     ./distributed-builds.nix
     ../roles
   ];
