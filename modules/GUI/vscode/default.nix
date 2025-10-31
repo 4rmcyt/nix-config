@@ -1,11 +1,13 @@
 # File: nix-config/modules/GUI/vscode/default.nix
-{ pkgs, ... }:
-
+{
+  pkgs,
+  config,
+  ...
+}:
+# Assuming 'config' is needed for user-data-dir
 {
   programs.vscode = {
     enable = true;
-    # Use the FHS package. This runs VS Code in an environment
-    # where it can find all the necessary system libraries and tools.
     package = pkgs.vscode-fhs;
 
     # =================================================================
@@ -40,7 +42,7 @@
     # 2. Settings (Merged from your settings.json)
     # =================================================================
     settings = {
-      // --- General Editor & Git ---
+      # --- General Editor & Git ---
       "editor.formatOnSave" = true;
       "editor.defaultFormatter" = "ibecker.treefmt-vscode";
       "files.autoSave" = "afterDelay";
@@ -58,31 +60,30 @@
       "git.ignoreRebaseWarning" = true;
       "github.gitProtocol" = "ssh";
 
-      // --- Theme ---
+      # --- Theme ---
       "workbench.colorTheme" = "Bearded Theme Arc Reversed";
       "workbench.iconTheme" = "bearded-icons";
 
-      // --- Terminal ---
+      # --- Terminal ---
       "terminal.integrated.fontFamily" = "MesloLGS NF";
       "terminal.integrated.defaultProfile.linux" = "zsh";
       "terminal.integrated.shell.osx" = "/bin/zsh";
       "terminal.integrated.tabs.defaultColor" = "terminal.ansiBlack";
 
-      // --- Nix (nil + treefmt) ---
+      # --- Nix (nil + treefmt) ---
       "[nix]" = {
         "editor.defaultFormatter" = "ibecker.treefmt-vscode";
       };
-      // Use 'nil' as the language server
-      "nix.serverPath" = "nil"; 
+      # Use 'nil' as the language server
+      "nix.serverPath" = "nil";
       "nix.serverSettings" = {
-        // nil will automatically find treefmt.toml and statix.toml
+        # nil will automatically find treefmt.toml and statix.toml
       };
       "nixEnvSelector.useFlakes" = true;
-      // Settings for treefmt-vscode extension
+      # Settings for treefmt-vscode extension
       "treefmt.debug" = true;
-     
 
-      // --- Language-Specific ---
+      # --- Language-Specific ---
       "[shellscript]" = {
         "files.autoSave" = "afterDelay";
         "editor.defaultFormatter" = "foxundermoon.shell-format";
@@ -122,7 +123,7 @@
         ];
       };
 
-      // --- Other ---
+      # --- Other ---
       "redhat.telemetry.enabled" = true;
       "python.analysis.enableTroubleshootMissingImports" = true;
       "github.copilot.nextEditSuggestions.enabled" = true;
@@ -130,7 +131,6 @@
         "192.168.1.165" = "linux";
         "192.168.1.125" = "linux";
         "wsl.localhost" = "linux";
-
       };
       "security.workspace.trust.untrustedFiles" = "open";
       "security.allowedUNCHosts" = [
@@ -151,7 +151,6 @@
       enable = true;
       # This matches the list from your settings.json
       ignoredExtensions = [
-
       ];
     };
   };

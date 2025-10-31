@@ -46,7 +46,6 @@
       ghostty
       ghostty.terminfo
       obsidian
-      vscode-fhs
 
       # Nix utilities
       nh
