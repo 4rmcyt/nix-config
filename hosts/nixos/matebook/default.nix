@@ -8,6 +8,7 @@
   # =================================================================
   imports = [
     ./hardware-configuration.nix
+    ../../../modules/disko/matebook
     ../../../modules/base
     ../../../modules/users/zeev
   ];
