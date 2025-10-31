@@ -1,0 +1,115 @@
+name: "Reusable: Build and Check System"
+# This workflow is called by other workflows
+on:
+  workflow_call:
+    # Define the inputs this workflow expects
+    inputs:
+      system:
+        required: true
+        type: string
+      ref_name:
+        required: true
+        type: string
+      ref_type:
+        required: true
+        type: string
+      event_name:
+        required: true
+        type: string
+      commit_message:
+        required: false
+        type: string
+    # Define the secrets this workflow needs
+    secrets:
+      CACHIX_AUTH_TOKEN:
+        required: true
+      TELEGRAM_CHAT_ID:
+        required: true
+      TELEGRAM_BOT_TOKEN:
+        required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Send Telegram notification - Build Started
+        if: inputs.event_name != 'pull_request'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            🔨 *Build Started*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ inputs.ref_name }}`
+            System: `${{ inputs.system }}`
+            Trigger: ${{ inputs.event_name }}
+            Commit: `${{ inputs.commit_message }}`
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+      - name: Free up disk space
+        run: |
+          echo "=== Before cleanup ==="
+          df -h
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY" /usr/local/lib/android /usr/share/swift
+          echo "=== After cleanup ==="
+          df -h
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+            max-jobs = auto
+            cores = 0
+            substituters = https://cache.nixos.org https://4rmcyt-desktop.cachix.org https://4rmcyt-homeserver.cachix.org https://4rmcyt-matebook.cachix.org https://4rmcyt-wsl.cachix.org https://nix-community.cachix.org
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= 4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs= 4rmcyt-homeserver.cachix.org-1:SmDepzJsgaofX57WoXmDu+HRJl/Koh90UWsZO0k2Nkg= 4rmcyt-matebook.cachix.org-1:OG8MqlfrDlyperVhYk2+va8Cwo/vE6tG/VbTlvq4I0I= 4rmcyt-wsl.cachix.org-1:6Z2J6lPY35L3qxBgEYzyN0Q3Y6LCJhtz/YeY4VQ29BU= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+      - name: Update flake inputs (in-memory)
+        run: nix flake update
+      - name: Setup Cachix for ${{ inputs.system }}
+        uses: cachix/cachix-action@v15
+        with:
+          name: 4rmcyt-${{ inputs.system }}
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+          skipPush: ${{ inputs.ref_type != 'branch' || inputs.ref_name != 'main' }}
+      - name: Validate Home Manager config for ${{ inputs.system }}
+        run: |
+          echo "Validating Home Manager config for ${{ inputs.system }}..."
+          nix eval .#nixosConfigurations.${{ inputs.system }}.config.home-manager.users --apply 'x: "ok"'
+      - name: Build ${{ inputs.system }} configuration
+        run: |
+          echo "Building system config for ${{ inputs.system }}..."
+          nix build \
+            .#nixosConfigurations.${{ inputs.system }}.config.system.build.toplevel \
+            --print-build-logs \
+            --show-trace
+      - name: Send Telegram notification - Build Failed
+        if: failure() && inputs.event_name != 'pull_request'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ❌ *Build Failed*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ inputs.ref_name }}`
+            System: `${{ inputs.system }}`
+            Trigger: ${{ inputs.event_name }}
+            Build or Home Manager validation failed.
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+      - name: Send Telegram notification - Build Success
+        if: success() && inputs.ref_type == 'branch' && inputs.ref_name == 'main'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ✅ *Build Successful*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ inputs.ref_name }}`
+            System: `${{ inputs.system }}`
+            Build completed and pushed to Cachix.
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})

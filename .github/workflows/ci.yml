@@ -1,14 +1,12 @@
 name: "CI"
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches:
       - main
   schedule:
     - cron: "0 3 * * *"
-# =================================================================
-# Concurrency - Stop previous runs on new commits
-# =================================================================
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
@@ -17,47 +15,10 @@ permissions:
   pull-requests: write
 jobs:
   # =================================================================
-  # Format Check - Fast feedback on formatting issues
+  # Validate - Run fast checks like formatting and flake validation
   # =================================================================
-  format-check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Install Nix
-        uses: cachix/install-nix-action@v27
-        with:
-          extra_nix_config: |
-            experimental-features = nix-command flakes
-            accept-flake-config = true
-      - name: Setup Cachix
-        uses: cachix/cachix-action@v15
-        with:
-          name: nix-community
-          skipPush: true
-      - name: Check formatting
-        run: nix fmt -- --ci .
-      - name: Send Telegram notification - Format Check Failed
-        if: failure() && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
-          message: |
-            ❌ *Format Check Failed*
-
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
-            Trigger: ${{ github.event_name }}
-
-            Code formatting issues detected. Please run `nix fmt` locally.
-
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-  # =================================================================
-  # Flake Check - Validate flake structure and evaluations
-  # =================================================================
-  flake-check:
+  validate:
+    name: Validate Flake & Formatting
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -82,9 +43,13 @@ jobs:
           purge: true
           purge-prefixes: nix-${{ runner.os }}-flake-
           purge-last-accessed: 42
+      - name: Update flake inputs (in-memory)
+        run: nix flake update
+      - name: Check formatting
+        run: nix fmt -- --ci .
       - name: Check flake
         run: nix flake check --all-systems --show-trace
-      - name: Send Telegram notification - Flake Check Failed
+      - name: Send Telegram notification - Validation Failed
         if: failure() && github.event_name != 'pull_request'
         uses: appleboy/telegram-action@master
         with:
@@ -92,182 +57,48 @@ jobs:
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           format: markdown
           message: |
-            ❌ *Flake Check Failed*
-
+            ❌ *Validation Failed (Format or Flake Check)*
             Repository: `${{ github.repository }}`
             Branch: `${{ github.ref_name }}`
             Trigger: ${{ github.event_name }}
-
-            Flake validation failed. Check the workflow logs for details.
-
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
   # =================================================================
-  # Build Configurations - Build all NixOS system configurations
+  # Build & Check Systems - Call the reusable workflow for each system
   # =================================================================
-  build-systems:
-    runs-on: ubuntu-latest
-    needs: [flake-check]
+  build-and-check-systems:
+    name: Build & Check ${{ matrix.system }}
+    needs: [validate]
     strategy:
-      fail-fast: false # Keep this to see all matrix build failures
+      fail-fast: false
       matrix:
         system:
           - desktop
           - homeserver
           - matebook
           - wsl
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Send Telegram notification - Build Started
-        if: github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
-          message: |
-            🔨 *Build Started*
-
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
-            System: `${{ matrix.system }}`
-            Trigger: ${{ github.event_name }}
-            Commit: `${{ github.event.head_commit.message }}`
-
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-      - name: Free up disk space
-        run: |
-          echo "=== Before cleanup ==="
-          df -h
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /usr/local/share/boost
-          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /usr/share/swift
-          echo "=== After cleanup ==="
-          df -h
-      - name: Install Nix
-        uses: cachix/install-nix-action@v27
-        with:
-          extra_nix_config: |
-            experimental-features = nix-command flakes
-            accept-flake-config = true
-            max-jobs = auto
-            cores = 0
-            substituters = https://cache.nixos.org https://4rmcyt-desktop.cachix.org https://4rmcyt-homeserver.cachix.org https://4rmcyt-matebook.cachix.org https://4rmcyt-wsl.cachix.org https://nix-community.cachix.org
-            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= 4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs= 4rmcyt-homeserver.cachix.org-1:SmDepzJsgaofX57WoXmDu+HRJl/Koh90UWsZO0k2Nkg= 4rmcyt-matebook.cachix.org-1:OG8MqlfrDlyperVhYk2+va8Cwo/vE6tG/VbTlvq4I0I= 4rmcyt-wsl.cachix.org-1:6Z2J6lPY35L3qxBgEYzyN0Q3Y6LCJhtz/YeY4VQ29BU= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
-      - name: Setup Cachix for ${{ matrix.system }}
-        uses: cachix/cachix-action@v15
-        with:
-          name: 4rmcyt-${{ matrix.system }}
-          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
-          skipPush: ${{ github.ref != 'refs/heads/main' }}
-      - name: Build ${{ matrix.system }} configuration
-        id: build
-        continue-on-error: true
-        run: |
-          nix build \
-            .#nixosConfigurations.${{ matrix.system }}.config.system.build.toplevel \
-            --print-build-logs \
-            --show-trace
-      - name: Check build status
-        if: steps.build.outcome == 'failure'
-        run: exit 1
-      - name: Send Telegram notification - Build Failed
-        if: failure() && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
-          message: |
-            ❌ *Build Failed*
-
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
-            System: `${{ matrix.system }}`
-            Trigger: ${{ github.event_name }}
-
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-      - name: Send Telegram notification - Build Success
-        if: success() && github.ref == 'refs/heads/main'
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
-          message: |
-            ✅ *Build Successful*
-
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
-            System: `${{ matrix.system }}`
-
-            Build completed and pushed to Cachix.
-
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-  # =================================================================
-  # Home Manager Check - Validate home-manager configurations
-  # =================================================================
-  check-home-manager:
-    runs-on: ubuntu-latest
-    needs: [flake-check]
-    strategy:
-      fail-fast: false # Keep this to see all matrix check failures
-      matrix:
-        config:
-          - desktop
-          - homeserver
-          - matebook
-          - wsl
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Install Nix
-        uses: cachix/install-nix-action@v27
-        with:
-          extra_nix_config: |
-            experimental-features = nix-command flakes
-            accept-flake-config = true
-      - name: Setup Cachix
-        uses: cachix/cachix-action@v15
-        with:
-          name: nix-community
-          skipPush: true
-      - name: Validate home-manager configuration for ${{ matrix.config }}
-        run: |
-          # Home-manager configs are embedded in NixOS configs
-          # This step validates they can be evaluated
-          nix eval .#nixosConfigurations.${{ matrix.config }}.config.home-manager.users --apply 'x: "ok"'
-      - name: Send Telegram notification - Home Manager Check Failed
-        if: failure() && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
-          message: |
-            ❌ *Home Manager Check Failed*
-
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
-            Config: `${{ matrix.config }}`
-            Trigger: ${{ github.event_name }}
-
-            Home Manager configuration validation failed.
-
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      system: ${{ matrix.system }}
+      # Pass event info to the reusable workflow
+      ref_name: ${{ github.ref_name }}
+      ref_type: ${{ github.ref_type }}
+      event_name: ${{ github.event_name }}
+      commit_message: ${{ github.event.head_commit.message }}
+    secrets:
+      CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
   # =================================================================
   # Workflow Summary - Send overall workflow status
   # =================================================================
   workflow-summary:
+    name: Workflow Summary
     runs-on: ubuntu-latest
-    needs: [format-check, flake-check, build-systems, check-home-manager]
+    needs: [validate, build-and-check-systems]
     if: always() && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     steps:
       - name: Send Telegram notification - All Checks Passed
-        if: needs.format-check.result == 'success' && needs.flake-check.result == 'success' && needs.build-systems.result == 'success' && needs.check-home-manager.result == 'success'
+        if: needs.validate.result == 'success' && needs.build-and-check-systems.result == 'success'
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -275,14 +106,10 @@ jobs:
           format: markdown
           message: |
             ✅ *CI Workflow Completed Successfully*
-
             Repository: `${{ github.repository }}`
             Branch: `${{ github.ref_name }}`
-
             All checks passed:
-            ✅ Format check
-            ✅ Flake validation
+            ✅ Validation (Format & Flake)
             ✅ All systems built (desktop, homeserver, matebook, wsl)
             ✅ Home manager validation
-
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
