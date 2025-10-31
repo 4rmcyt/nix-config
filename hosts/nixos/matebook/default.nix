@@ -139,19 +139,22 @@
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
-      cores = 6;
+      cores = 8;
+      max-jobs = 8;
       experimental-features = [
         "nix-command"
         "flakes"
       ];
-      max-jobs = 6;
+      system-features = [
+        "big-parallel"
+        "gccarch-znver1"
+        "kvm"
+      ];
       substituters = [
         "https://4rmcyt-matebook.cachix.org"
-        "https://nix-community.cachix.org"
       ];
       trusted-public-keys = [
         "4rmcyt-matebook.cachix.org-1:OG8MqlfrDlyperVhYk2+va8Cwo/vE6tG/VbTlvq4I0I="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
       trusted-users = ["zeev"];
       warn-dirty = false;
