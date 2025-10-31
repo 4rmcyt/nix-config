@@ -7,12 +7,11 @@ on:
       - main
   schedule:
     - cron: "0 3 * * *"
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
-permissions:
-  contents: write
-  pull-requests: write
+
 jobs:
   # =================================================================
   # Validate - Run fast checks like formatting and flake validation
@@ -23,26 +22,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Install Nix
         uses: cachix/install-nix-action@v27
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
             accept-flake-config = true
-      - name: Setup Cachix
-        uses: cachix/cachix-action@v15
-        with:
-          name: nix-community
-          skipPush: true
-      - name: Restore and cache Nix store
-        uses: nix-community/cache-nix-action@v5
-        with:
-          primary-key: nix-${{ runner.os }}-flake-${{ hashFiles('**/*.nix', 'flake.lock') }}
-          restore-prefixes-first-match: nix-${{ runner.os }}-flake-
-          gc-max-store-size-linux: 5368709120 # 5GB
-          purge: true
-          purge-prefixes: nix-${{ runner.os }}-flake-
-          purge-last-accessed: 42
+
+      - name: Setup Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@v4
+
       - name: Update flake inputs (in-memory)
         run: nix flake update
       - name: Check formatting
@@ -62,6 +52,7 @@ jobs:
             Branch: `${{ github.ref_name }}`
             Trigger: ${{ github.event_name }}
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
   # =================================================================
   # Build & Check Systems - Call the reusable workflow for each system
   # =================================================================
@@ -88,6 +79,7 @@ jobs:
       CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+
   # =================================================================
   # Workflow Summary - Send overall workflow status
   # =================================================================
