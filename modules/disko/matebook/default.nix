@@ -11,7 +11,7 @@ _: {
           type = "gpt";
           partitions = {
             ESP = {
-              size = "2G";  # Your actual EFI partition size
+              size = "2G"; # Your actual EFI partition size
               type = "EF00";
               content = {
                 type = "filesystem";
@@ -24,7 +24,7 @@ _: {
               };
             };
             root = {
-              size = "100%";  # Rest of disk
+              size = "100%"; # Rest of disk
               content = {
                 type = "filesystem";
                 format = "ext4";
