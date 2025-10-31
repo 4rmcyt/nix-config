@@ -1,14 +1,11 @@
 name: "Daily Flake Update"
-
 on:
   workflow_dispatch: # Allows you to run this manually
   schedule:
     - cron: "0 0 * * *" # Runs every day at 00:00 UTC
-
 # Permissions to write to the repository
 permissions:
   contents: write
-
 jobs:
   # =================================================================
   # Update Flake Lock - Automatically update flake.lock on a schedule
@@ -19,21 +16,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Install Nix
         uses: cachix/install-nix-action@v27
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
             accept-flake-config = true
-
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@v4
-
       - name: Update flake.lock
         id: flake-update
         run: nix flake update
-
       - name: Commit updated flake.lock
         id: commit
         uses: stefanzweifel/git-auto-commit-action@v5
@@ -43,7 +36,6 @@ jobs:
           commit_user_name: "github-actions[bot]"
           commit_user_email: "github-actions[bot]@users.noreply.github.com"
           commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
-
       - name: Send Telegram notification - Flake Lock Updated
         # Only send if the commit step actually found changes
         if: success() && steps.commit.outputs.changes_detected == 'true'
@@ -63,7 +55,6 @@ jobs:
             This commit will **not** trigger a new CI run.
 
             [View Commit](${{ github.server_url }}/${{ github.repository }}/commit/${{ steps.commit.outputs.commit_hash }})
-
       - name: Send Telegram notification - Flake Update Failed
         if: failure()
         uses: appleboy/telegram-action@master

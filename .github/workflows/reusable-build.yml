@@ -1,5 +1,4 @@
 name: "Reusable: Build and Check System"
-
 on:
   workflow_call:
     inputs:
@@ -25,7 +24,6 @@ on:
         required: true
       TELEGRAM_BOT_TOKEN:
         required: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -54,7 +52,6 @@ jobs:
           sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY" /usr/local/lib/android /usr/share/swift
           echo "=== After cleanup ==="
           df -h
-      
       - name: Install Nix
         uses: cachix/install-nix-action@v27
         with:
@@ -65,25 +62,20 @@ jobs:
             cores = 0
             substituters = https://cache.nixos.org https://4rmcyt-desktop.cachix.org https://4rmcyt-homeserver.cachix.org https://4rmcyt-matebook.cachix.org https://4rmcyt-wsl.cachix.org https://nix-community.cachix.org
             trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= 4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs= 4rmcyt-homeserver.cachix.org-1:SmDepzJsgaofX57WoXmDu+HRJl/Koh90UWsZO0k2Nkg= 4rmcyt-matebook.cachix.org-1:OG8MqlfrDlyperVhYk2+va8Cwo/vE6tG/VbTlvq4I0I= 4rmcyt-wsl.cachix.org-1:6Z2J6lPY35L3qxBgEYzyN0Q3Y6LCJhtz/YeY4VQ29BU= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
-
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@v4
-
       - name: Update flake inputs (in-memory)
         run: nix flake update
-
       - name: Setup Cachix for ${{ inputs.system }} (Push)
         uses: cachix/cachix-action@v15
         with:
           name: 4rmcyt-${{ inputs.system }}
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
           skipPush: ${{ inputs.ref_type != 'branch' || inputs.ref_name != 'main' }}
-
       - name: Validate Home Manager config for ${{ inputs.system }}
         run: |
           echo "Validating Home Manager config for ${{ inputs.system }}..."
           nix eval .#nixosConfigurations.${{ inputs.system }}.config.home-manager.users --apply 'x: "ok"'
-
       - name: Build ${{ inputs.system }} configuration
         run: |
           echo "Building system config for ${{ inputs.system }}..."
@@ -91,7 +83,6 @@ jobs:
             .#nixosConfigurations.${{ inputs.system }}.config.system.build.toplevel \
             --print-build-logs \
             --show-trace
-
       - name: Send Telegram notification - Build Failed
         if: failure() && inputs.event_name != 'pull_request'
         uses: appleboy/telegram-action@master

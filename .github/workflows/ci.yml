@@ -7,11 +7,9 @@ on:
       - main
   schedule:
     - cron: "0 3 * * *"
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
-
 jobs:
   # =================================================================
   # Validate - Run fast checks like formatting and flake validation
@@ -22,17 +20,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Install Nix
         uses: cachix/install-nix-action@v27
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
             accept-flake-config = true
-
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@v4
-
       - name: Update flake inputs (in-memory)
         run: nix flake update
       - name: Check formatting
@@ -52,7 +47,6 @@ jobs:
             Branch: `${{ github.ref_name }}`
             Trigger: ${{ github.event_name }}
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-
   # =================================================================
   # Build & Check Systems - Call the reusable workflow for each system
   # =================================================================
@@ -60,7 +54,7 @@ jobs:
     name: Build & Check ${{ matrix.system }}
     needs: [validate]
     strategy:
-      fail-fast: false
+      # fail-fast: false # <-- REMOVED THIS LINE. Defaults to true.
       matrix:
         system:
           - desktop
@@ -79,7 +73,6 @@ jobs:
       CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-
   # =================================================================
   # Workflow Summary - Send overall workflow status
   # =================================================================
