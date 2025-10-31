@@ -27,6 +27,9 @@ in {
 
   "${userName}@matebook" = helpers.mkStandaloneHome {
     inherit pkgs;
-    modules = [./home-manager/matebook];
+    modules = [
+      ./home-manager/matebook
+      inputs.betterfox-nix.homeModules.betterfox
+      ];
   };
 }
