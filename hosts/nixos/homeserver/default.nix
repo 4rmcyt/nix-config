@@ -85,10 +85,10 @@
     ];
 
     experimental-features = [
-        "flakes"
-        "nix-command"
+      "flakes"
+      "nix-command"
     ];
-    
+
     # Homeserver trusted public keys
     # Append to base trusted public keys
     trusted-public-keys = [
