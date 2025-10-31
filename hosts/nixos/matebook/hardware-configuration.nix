@@ -9,7 +9,6 @@
   # 1. Imports
   # =================================================================
   imports = [(modulesPath + "/installer/scan/not-detected.nix")];
-
   # =================================================================
   # 2. Boot Configuration
   # =================================================================
@@ -23,7 +22,6 @@
       "sd_mod"
       "rtsx_pci_sdmmc"
     ];
-
     initrd.kernelModules = ["amdgpu"];
 
     kernelModules = ["kvm-amd"];
@@ -41,11 +39,9 @@
       "rd.systemd.show_status=auto"
       "rd.udev.log_level=3"
     ];
-
     # Kernel selection
     kernelPackages = pkgs.linuxPackages_latest;
   };
-
   # =================================================================
   # 3. Hardware Configuration
   # =================================================================
@@ -65,7 +61,6 @@
     # AMD CPU configuration
     cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     enableRedistributableFirmware = lib.mkDefault true;
-
     # Bluetooth
     bluetooth = {
       enable = true;
@@ -99,18 +94,16 @@
   services = {
     # Battery optimization
     upower.enable = true;
-
     # TLP conflicts with auto-cpufreq, using auto-cpufreq instead
     tlp.enable = false;
   };
-
   # =================================================================
   # 6. Power Management
   # =================================================================
   powerManagement = {
     enable = true;
     powertop.enable = true;
-    cpuFreqGovernor = "schedutil";
+    # cpuFreqGovernor = "schedutil"; # Removed, as auto-cpufreq manages this
   };
 
   # =================================================================

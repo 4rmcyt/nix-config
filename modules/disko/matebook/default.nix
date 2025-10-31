@@ -6,12 +6,13 @@ _: {
     disk = {
       main = {
         type = "disk";
-        device = "/dev/nvme0n1"; # Verify with 'lsblk' before installing!
+        device = "/dev/disk/by-id/nvme-WDC_PC_SN730_SDBPNTY-512G-1027_20230H445703"; # Verify with 'lsblk' before installing!
         content = {
           type = "gpt";
           partitions = {
             ESP = {
-              size = "2G"; # Your actual EFI partition size
+              size = "2G";
+              # Your actual EFI partition size
               type = "EF00";
               content = {
                 type = "filesystem";
@@ -24,7 +25,8 @@ _: {
               };
             };
             root = {
-              size = "100%"; # Rest of disk
+              size = "100%";
+              # Rest of disk
               content = {
                 type = "filesystem";
                 format = "ext4";

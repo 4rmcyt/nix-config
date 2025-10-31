@@ -30,6 +30,6 @@ in {
     modules = [
       ./home-manager/matebook
       inputs.betterfox-nix.homeModules.betterfox
-      ];
+    ];
   };
 }

@@ -12,17 +12,14 @@
     ../../../modules/base
     ../../../modules/users/zeev
   ];
-
   # =================================================================
   # 2. System Configuration
   # =================================================================
   system.stateVersion = "25.05";
-
   sops.secrets.tailscale_auth_key = {
     sopsFile = ../../../secrets/tailscale-matebook.yaml;
     key = "tailscale_auth_key";
   };
-
   # =================================================================
   # 3. Boot Configuration
   # =================================================================
@@ -64,6 +61,7 @@
       pciutils
       unzip
       usbutils
+
       vim
       wget
       nodejs
@@ -81,6 +79,7 @@
       nh
       nix-diff
       nix-fast-build
+
       nix-output-monitor
       nixfmt
       nixfmt-rfc-style
@@ -98,6 +97,7 @@
       # Laptop-specific tools
       # =============================================================
       acpi
+
       brightnessctl
       powertop
 
@@ -115,6 +115,7 @@
       # Fonts
       # =============================================================
       fira-code
+
       fira-mono
       meslo-lgs-nf
       nerd-fonts.droid-sans-mono
@@ -126,12 +127,10 @@
   # 5. Fonts
   # =================================================================
   fonts.fontconfig.useEmbeddedBitmaps = true;
-
   # =================================================================
   # 6. Home Manager
   # =================================================================
   home-manager.backupFileExtension = "backup";
-
   # =================================================================
   # 7. Networking
   # =================================================================
@@ -147,7 +146,6 @@
     };
     wireless.enable = false;
   };
-
   # =================================================================
   # 8. Nix Configuration
   # =================================================================
@@ -196,7 +194,6 @@
     };
     zsh.enable = true;
   };
-
   # =================================================================
   # 10. Security
   # =================================================================
@@ -270,19 +267,17 @@
     # =============================================================
     # Hardware Services
     # =============================================================
-    fwupd.enable = true;
+    # fwupd.enable = true; # Removed, already in hardware-configuration.nix
     pcscd = {
       enable = true;
       plugins = [pkgs.ccid];
     };
     usbmuxd.enable = true;
-
     thermald.enable = true;
     power-profiles-daemon.enable = false; # Conflicts with auto-cpufreq
 
     # Bluetooth
     blueman.enable = true;
-
     # =============================================================
     # System Services
     # =============================================================
@@ -293,15 +288,13 @@
         PasswordAuthentication = false;
       };
     };
-
     tailscale = {
       enable = true;
       useRoutingFeatures = "both";
       authKeyFile = config.sops.secrets.tailscale_auth_key.path;
     };
-
     # Laptop-specific
-    upower.enable = true;
+    # upower.enable = true; # Removed, already in hardware-configuration.nix
     logind.settings.Login = {
       lidSwitch = "suspend";
       lidSwitchDocked = "ignore";
@@ -313,7 +306,6 @@
   # =================================================================
   # Enable brightness control
   programs.light.enable = true;
-
   users = {
     groups = {
       git = {};
@@ -329,7 +321,6 @@
       };
     };
   };
-
   # =================================================================
   # 13. Virtualization (optional)
   # =================================================================
