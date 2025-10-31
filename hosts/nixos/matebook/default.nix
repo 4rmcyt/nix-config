@@ -66,19 +66,33 @@
       usbutils
       vim
       wget
+      nodejs
+      cachix
 
       # =============================================================
       # Development Tools
       # =============================================================
       age
       alejandra
+      deadnix
+      direnv
       helix
       just
       nh
+      nix-diff
+      nix-fast-build
+      nix-output-monitor
+      nixfmt
       nixfmt-rfc-style
+      nixos-rebuild-ng
+      nodePackages.prettier
+      rustfmt
+      shfmt
       sops
-      tmux
-      zoxide
+      statix
+      toml-sort
+      treefmt
+      yamlfmt
 
       # =============================================================
       # Laptop-specific tools
@@ -138,7 +152,6 @@
   # 8. Nix Configuration
   # =================================================================
   nix = {
-    package = pkgs.nixVersions.latest;
     settings = {
       cores = 8;
       max-jobs = 8;
@@ -243,16 +256,29 @@
       };
     };
 
-    thermald.enable = true;
-    power-profiles-daemon.enable = false; # Conflicts with auto-cpufreq
+    davfs2 = {
+      enable = true;
+      settings = {
+        sections = {
+          "/home/zeev/Taildrive" = {
+            gui_optimize = true;
+          };
+        };
+      };
+    };
 
     # =============================================================
     # Hardware Services
     # =============================================================
     fwupd.enable = true;
+    pcscd = {
+      enable = true;
+      plugins = [pkgs.ccid];
+    };
+    usbmuxd.enable = true;
 
-    # Printing support
-    printing.enable = true;
+    thermald.enable = true;
+    power-profiles-daemon.enable = false; # Conflicts with auto-cpufreq
 
     # Bluetooth
     blueman.enable = true;
@@ -287,6 +313,22 @@
   # =================================================================
   # Enable brightness control
   programs.light.enable = true;
+
+  users = {
+    groups = {
+      git = {};
+    };
+    users = {
+      git = {
+        createHome = true;
+        description = "Git user";
+        group = "git";
+        home = "/var/lib/git";
+        isSystemUser = true;
+        shell = pkgs.zsh;
+      };
+    };
+  };
 
   # =================================================================
   # 13. Virtualization (optional)

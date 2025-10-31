@@ -122,8 +122,6 @@
       toml-sort
       treefmt
       yamlfmt
-      zoxide
-      tmux
 
       # =============================================================
       # Audio & Multimedia
@@ -275,7 +273,6 @@
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
   nix.settings = {
-    # Desktop-specific: 12 cores for fast builds
     cores = 12;
     max-jobs = 12;
 
