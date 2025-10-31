@@ -74,9 +74,9 @@
     max-jobs = 8;
 
     # Homeserver-specific caches
-    substituters = [
+    # Use lib.mkBefore to prepend homeserver cache (higher priority than base caches)
+    substituters = lib.mkBefore [
       "https://4rmcyt-homeserver.cachix.org"
-      "https://nix-community.cachix.org"
     ];
 
     # Homeserver system features
@@ -87,10 +87,9 @@
     ];
 
     # Homeserver trusted public keys
+    # Append to base trusted public keys
     trusted-public-keys = [
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "4rmcyt-homeserver.cachix.org-1:SmDepzJsgaofX57WoXmDu+HRJl/Koh90UWsZO0k2Nkg="
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
 
     # Allow zeev to use nix commands without sudo
