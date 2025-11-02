@@ -90,7 +90,10 @@ in {
 
       # Set passwords for all database users
       ${lib.concatMapStringsSep "\n      " (user: let
-        createDb = if user == "linkwarden" then " CREATEDB" else "";
+        createDb =
+          if user == "linkwarden"
+          then " CREATEDB"
+          else "";
       in ''
         ${pkgs.postgresql_16}/bin/psql -c "ALTER USER ${user} WITH PASSWORD '$(cat ${config.sops.secrets.${user}.path} | tr -d '\n\r')'${createDb};"
       '') (lib.filter (u: u != "postgres") dbUsers)}

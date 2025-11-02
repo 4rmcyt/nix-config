@@ -3,6 +3,7 @@
     ./msmtp
     ./distributed-builds
     ./common-packages
+    ../lib
     ../roles
   ];
 
