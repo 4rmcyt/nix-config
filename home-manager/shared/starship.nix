@@ -30,7 +30,7 @@ let
   };
 
   tokyoNightSettings = {
-    add_newline = true;
+    add_newline = false;
     command_timeout = 500;
     scan_timeout = 30;
 
