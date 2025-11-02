@@ -14,36 +14,6 @@ jobs:
         with:
           persist-credentials: false
       - uses: "DeterminateSystems/determinate-nix-action@v3"
-      - name: Clean problematic UTF-8 files
-        run: |
-          # Fix UTF-8 encoding issues in place
-          if [ -f "modules/services/homepage/default.nix" ]; then
-            echo "Cleaning UTF-8 issues in modules/services/homepage/default.nix"
-
-            # Try to convert to valid UTF-8, removing invalid characters
-            iconv -f utf-8 -t utf-8 -c "modules/services/homepage/default.nix" > /tmp/clean_file 2>/dev/null || {
-              echo "iconv failed, trying alternative approach"
-              # Alternative: remove non-UTF-8 characters using sed
-              LC_ALL=C sed 's/[\d128-\d255]//g' "modules/services/homepage/default.nix" > /tmp/clean_file
-            }
-
-            # Only replace if the cleaned file is not empty
-            if [ -s /tmp/clean_file ]; then
-              mv /tmp/clean_file "modules/services/homepage/default.nix"
-              echo "✅ Cleaned modules/services/homepage/default.nix"
-            else
-              echo "⚠️ Clean file is empty, removing problematic file"
-              rm -f "modules/services/homepage/default.nix"
-            fi
-          fi
-
-          # Verify no UTF-8 issues remain
-          echo "Checking for remaining UTF-8 issues..."
-          find . -name "*.nix" -exec file {} \; | grep -v "UTF-8" || echo "✅ All .nix files are UTF-8 clean"
-      - name: Verify flake before publishing
-        run: |
-          # Test that the flake works after cleaning
-          nix flake show --all-systems || echo "Flake show completed with warnings"
       - uses: "DeterminateSystems/flakehub-push@main"
         with:
           name: "4rmcyt/nix-config"
