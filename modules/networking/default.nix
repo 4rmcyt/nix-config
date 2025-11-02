@@ -2,7 +2,7 @@
   imports = [
     ./acme
     ./cloudflared
-    ./nginx
+    # ./nginx
     ./tailscale
     ./dnssec
   ];
