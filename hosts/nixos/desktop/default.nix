@@ -308,8 +308,6 @@
       enable = true;
       enableZshIntegration = true;
     };
-    nushell.enable = true;
-    zsh.enable = true;
     # vscode.enable = true;
   };
 
@@ -487,7 +485,7 @@
         group = "git";
         home = "/var/lib/git";
         isSystemUser = true;
-        shell = pkgs.zsh;
+        shell = pkgs.nushell;
       };
       prometheus = {
         description = "Prometheus daemon user";
