@@ -1,73 +1,27 @@
 {
   config,
   pkgs,
+  lib,
   ...
-}: {
-  sops.secrets = {
-    postgres = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "postgres_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
-      mode = "0400";
-    };
-    miniflux = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "miniflux_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
-      mode = "0400";
-    };
-    paperless = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "paperless_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
-      mode = "0400";
-    };
-    hass = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "hass_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
-      mode = "0400";
-    };
-    authentik = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "authentik_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
-      mode = "0400";
-    };
-    grafana = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "grafana_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
-      mode = "0400";
-    };
-    vaultwarden = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "vaultwarden_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
-      mode = "0400";
-    };
-    linkwarden = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "linkwarden_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
-      mode = "0400";
-    };
-    flare = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "flare_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
-      mode = "0400";
-    };
+}: let
+  # Database users and their configurations
+  dbUsers = ["postgres" "miniflux" "paperless" "hass" "authentik" "grafana" "vaultwarden" "linkwarden" "flare"];
+
+  # Generate SOPS secret configuration for a database user
+  mkDbSecret = user: {
+    sopsFile = ../../../secrets/postgresql.yaml;
+    key = "${user}_${
+      if user == "postgres"
+      then "password"
+      else "db_password"
+    }";
+    owner = config.users.users.postgresql.name;
+    group = config.users.groups.postgresql.name;
+    mode = "0400";
   };
+in {
+  # Generate all database secrets dynamically
+  sops.secrets = lib.genAttrs dbUsers mkDbSecret;
 
   users.users.postgresql = {
     isSystemUser = true;
@@ -79,54 +33,23 @@
     5432 # PostgreSQL
   ];
 
-  services.postgresql = {
+  services.postgresql = let
+    # Application databases (exclude postgres system user)
+    appDatabases = lib.filter (u: u != "postgres") dbUsers;
+  in {
     enable = true;
     package = pkgs.postgresql_16;
-    ensureDatabases = [
-      "miniflux"
-      "paperless"
-      "hass"
-      "authentik"
-      "grafana"
-      "vaultwarden"
-      "linkwarden"
-      "flare"
-    ];
 
-    ensureUsers = [
-      {
-        name = "miniflux";
+    # Automatically create databases for all app users
+    ensureDatabases = appDatabases;
+
+    # Automatically create users with DB ownership
+    ensureUsers =
+      map (name: {
+        inherit name;
         ensureDBOwnership = true;
-      }
-      {
-        name = "paperless";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "hass";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "authentik";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "grafana";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "vaultwarden";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "linkwarden";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "flare";
-        ensureDBOwnership = true;
-      }
-    ];
+      })
+      appDatabases;
 
     identMap = ''
       # ArbitraryMapName systemUser DBUser
@@ -165,14 +88,12 @@
         sleep 1
       done
 
-      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER linkwarden WITH PASSWORD '$(cat ${config.sops.secrets.linkwarden.path} | tr -d '\n\r')' CREATEDB;"
-      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER miniflux WITH PASSWORD '$(cat ${config.sops.secrets.miniflux.path} | tr -d '\n\r')';"
-      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER paperless WITH PASSWORD '$(cat ${config.sops.secrets.paperless.path} | tr -d '\n\r')';"
-      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER hass WITH PASSWORD '$(cat ${config.sops.secrets.hass.path} | tr -d '\n\r')';"
-      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER authentik WITH PASSWORD '$(cat ${config.sops.secrets.authentik.path} | tr -d '\n\r')';"
-      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER grafana WITH PASSWORD '$(cat ${config.sops.secrets.grafana.path} | tr -d '\n\r')';"
-      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER vaultwarden WITH PASSWORD '$(cat ${config.sops.secrets.vaultwarden.path} | tr -d '\n\r')';"
-      ${pkgs.postgresql_16}/bin/psql -c "ALTER USER flare WITH PASSWORD '$(cat ${config.sops.secrets.flare.path} | tr -d '\n\r')';"
+      # Set passwords for all database users
+      ${lib.concatMapStringsSep "\n      " (user: let
+        createDb = if user == "linkwarden" then " CREATEDB" else "";
+      in ''
+        ${pkgs.postgresql_16}/bin/psql -c "ALTER USER ${user} WITH PASSWORD '$(cat ${config.sops.secrets.${user}.path} | tr -d '\n\r')'${createDb};"
+      '') (lib.filter (u: u != "postgres") dbUsers)}
     '';
   };
 }
