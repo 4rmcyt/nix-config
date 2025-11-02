@@ -1,6 +1,6 @@
-{ pkgs, inputs, ... }:
+{ pkgs, lib, ... }:
 let
-  themes = {
+   themes = {
     b16 = {
       fg0 = "#181818";
       p0 = "#ff767a";
@@ -178,23 +178,10 @@ let
       format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
     };
   };
-  starshipFinal = { theme }:
-    let
-      toml = (pkgs.formats.toml { }).generate "starship.toml" (mkConfig theme);
-      bin = pkgs.writeShellScriptBin "ndstarship" ''
-        export STARSHIP_CONFIG="${toml}"
-        exec ${pkgs.starship}/bin/starship "$@"
-      '';
-    in pkgs.stdenvNoCC.mkDerivation {
-      name = "ndstarship";
-      src = null;
-      dontUnpack = true;
-      dontConfigure = true;
-      dontBuild = true;
-      installPhase = ''
-        install -Dm644 ${toml}               $out/share/ndstarship/starship.toml
-        install -Dm755 ${bin}/bin/ndstarship $out/bin/ndstarship
-        ln      -s     $out/bin/ndstarship   $out/bin/starship
-      '';
-    };
-in pkgs.lib.makeOverridable starshipFinal { theme = themes.b16; }
+in
+{
+  programs.starship = {
+    enable = true;
+    settings = mkConfig themes.gruvbox-dark;
+  };
+}
