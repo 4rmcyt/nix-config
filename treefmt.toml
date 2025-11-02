@@ -34,7 +34,7 @@ includes = ["*.Dockerfile", "docker-compose.yml"]
 command = "prettier"
 includes = [
     "*.cjs",
-    "*.css", 
+    "*.css",
     "*.html",
     "*.js",
     "*.json5",
@@ -52,7 +52,7 @@ includes = [
 excludes = [
     "secrets/*",
     "*.png",
-    "*.jpeg", 
+    "*.jpeg",
     "*.toml",
     "*.clan-flake",
     "*.code-workspace",
@@ -60,5 +60,6 @@ excludes = [
     "*.typed",
     "*.age",
     "*.list",
-    "*.desktop"
+    "*.desktop",
+    "modules/services/homepage/default.nix"
 ]

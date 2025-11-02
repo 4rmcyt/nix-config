@@ -98,5 +98,6 @@
     "*.toml"
     "*.typed"
     "secrets/*"
+    "modules/services/homepage/default.nix"
   ];
 }
