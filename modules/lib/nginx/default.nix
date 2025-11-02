@@ -1,6 +1,8 @@
-{ config, lib, ... }:
-
-let
+{
+  config,
+  lib,
+  ...
+}: let
   mkReverseProxy = {
     subdomain,
     port,
@@ -33,9 +35,10 @@ let
       ];
     };
   };
-in
-{
-  lib = lib // {
-    mkReverseProxy = mkReverseProxy;
-  };
+in {
+  lib =
+    lib
+    // {
+      inherit mkReverseProxy;
+    };
 }

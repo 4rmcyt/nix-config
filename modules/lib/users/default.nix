@@ -1,7 +1,8 @@
-{ lib, ... }:
-
-let
-  mkServiceUser = { serviceName, extraGroups ? [ "users" ] }: {
+{lib, ...}: let
+  mkServiceUser = {
+    serviceName,
+    extraGroups ? ["users"],
+  }: {
     users.users.${serviceName} = {
       isSystemUser = true;
       group = serviceName;
@@ -9,9 +10,10 @@ let
     };
     users.groups.${serviceName} = {};
   };
-in
-{
-  lib = lib // {
-    mkServiceUser = mkServiceUser;
-  };
+in {
+  lib =
+    lib
+    // {
+      inherit mkServiceUser;
+    };
 }

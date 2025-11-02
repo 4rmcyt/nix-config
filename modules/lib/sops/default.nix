@@ -1,6 +1,8 @@
-{ config, lib, ... }:
-
-let
+{
+  config,
+  lib,
+  ...
+}: let
   mkServiceSecret = {
     secretName,
     service,
@@ -16,10 +18,11 @@ let
   };
 
   mkSecretsPath = file: ../../../secrets + "/${file}";
-in
-{
-  lib = lib // {
-    mkServiceSecret = mkServiceSecret;
-    mkSecretsPath = mkSecretsPath;
-  };
+in {
+  lib =
+    lib
+    // {
+      inherit mkServiceSecret;
+      inherit mkSecretsPath;
+    };
 }
