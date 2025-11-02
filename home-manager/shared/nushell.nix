@@ -89,6 +89,9 @@
         )
         # command-not-found.nu shell hook
         $env.config.hooks.command_not_found = source ${pkgs.nix-index}/etc/profile.d/command-not-found.nu
+
+        $env.config.plugins.highlight.true_colors = true
+        $env.config.plugins.highlight.theme = ansi
       '';
       shellAliases = {
         vi = "hx";
@@ -99,4 +102,13 @@
     carapace.enable = true;
     carapace.enableNushellIntegration = true;
   };
+
+  home.packages = with pkgs; [
+    ## Official nushell plugins available in nixpkgs-unstable
+    nushellPlugins.semver
+    nushellPlugins.query        # SQL-like query support
+    nushellPlugins.highlight    # syntax highlighting
+    nushellPlugins.gstat        # git plugin
+    nushellPlugins.formats
+  ];
 }
