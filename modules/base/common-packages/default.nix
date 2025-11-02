@@ -29,6 +29,7 @@
     cachix
     cmake-format
     deadnix
+    treefmt
     dockfmt
     helix
     just
