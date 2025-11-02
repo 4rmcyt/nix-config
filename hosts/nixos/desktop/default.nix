@@ -7,17 +7,23 @@
   # 1. Imports
   # =================================================================
   imports = [
+    # Hardware and system base
     ./hardware-configuration.nix
     ../../../modules/base
     ../../../modules/disko/desktop
-    ../../../modules/gaming
-    ../../../modules/networking/dnssec
     ../../../modules/options
+
+    # Features and roles
+    ../../../modules/gaming
+    ../../../modules/GUI/flatpak
+    ../../../modules/networking/dnssec
+
+    # User configuration
     ../../../modules/users/zeev
-    # Ollama disabled - enable when needed for local AI/LLM
+
+    # Disabled - uncomment when needed
     # ../../../modules/GUI/ollama
     # ../../../modules/GUI/OBS
-    ../../../modules/GUI/flatpak
   ];
 
   # =================================================================

@@ -7,10 +7,15 @@
   # 1. Imports
   # =================================================================
   imports = [
+    # External modules
     inputs.nixos-wsl.nixosModules.wsl
     inputs.vscode-server.nixosModules.default
+
+    # System base
     ../../../modules/base
     ../../../modules/options
+
+    # User configuration
     ../../../modules/users/zeev
   ];
 

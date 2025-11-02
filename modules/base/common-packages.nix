@@ -7,7 +7,7 @@
   # Use lib.mkDefault to allow hosts to override if needed
   environment.systemPackages = lib.mkDefault (with pkgs; [
     # =================================================================
-    # Core System Utilities
+    # Core System Utilities (alphabetical)
     # =================================================================
     btop
     curl
@@ -22,7 +22,7 @@
     wget
 
     # =================================================================
-    # Development & Nix Tools
+    # Development & Nix Tools (alphabetical)
     # =================================================================
     age
     alejandra
@@ -43,7 +43,7 @@
     yamlfmt
 
     # =================================================================
-    # Security & Secrets Management
+    # Security & Secrets Management (alphabetical)
     # =================================================================
     gnupg
     ssh-to-age

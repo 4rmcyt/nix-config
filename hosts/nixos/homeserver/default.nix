@@ -7,20 +7,25 @@
   # 1. Imports
   # =================================================================
   imports = [
+    # Hardware and system base
     ./hardware-configuration.nix
     ../../../modules/base
+    ../../../modules/disko/homeserver
+    ../../../modules/options
+
+    # Infrastructure services
     ../../../modules/containers
     ../../../modules/database
-    ../../../modules/disko/homeserver
     ../../../modules/monitoring
     ../../../modules/networking
-    ../../../modules/options
     ../../../modules/security
     ../../../modules/services
+
+    # User configuration
     ../../../modules/users/zeev
-    # Backup module disabled - borgmatic configuration exists but not currently active
-    # Enable when ready to start automated backups to storage box
-    # ../../../modules/backup
+
+    # Disabled - uncomment when needed
+    # ../../../modules/backup  # borgmatic config exists but not active
   ];
 
   # =================================================================

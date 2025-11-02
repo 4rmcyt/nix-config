@@ -7,10 +7,13 @@
   # 1. Imports
   # =================================================================
   imports = [
+    # Hardware and system base
     ./hardware-configuration.nix
-    ../../../modules/disko/matebook
     ../../../modules/base
+    ../../../modules/disko/matebook
     ../../../modules/options
+
+    # User configuration
     ../../../modules/users/zeev
   ];
   # =================================================================
