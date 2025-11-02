@@ -155,10 +155,10 @@
       RemainAfterExit = true;
       User = config.users.users.cloudflared.name;
       Group = config.users.groups.cloudflared.name;
+      ExecStartPre = "+${pkgs.coreutils}/bin/mkdir -p /var/lib/cloudflared/config";
     };
     script = ''
-      # Create config directory
-      mkdir -p /var/lib/cloudflared/config
+      # Config directory is created by ExecStartPre as root
 
       # Read secrets
       TUNNEL_ID=$(cat ${config.sops.secrets.tunnel_id.path})
