@@ -22,13 +22,13 @@
     };
   };
 
-  # Create miniflux system user and group
-  imports = [
-    (config.lib.mkServiceUser {
-      serviceName = "miniflux";
-      extraGroups = ["users"];
-    })
-  ];
+  # Create miniflux system user and group manually
+  users.users.miniflux = {
+    isSystemUser = true;
+    group = "miniflux";
+    extraGroups = ["users"];
+  };
+  users.groups.miniflux = {};
 
   networking.firewall.allowedTCPPorts = [
     8086 # Miniflux
