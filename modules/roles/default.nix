@@ -1,8 +1,8 @@
 {...}: {
   imports = [
-    ./server.nix
-    ./desktop.nix
-    ./media-server.nix
-    ./monitoring.nix
+    ./server
+    ./desktop
+    ./media-server
+    ./monitoring
   ];
 }
