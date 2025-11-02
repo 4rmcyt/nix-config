@@ -97,6 +97,17 @@
 
           $env.config.plugins.highlight.true_colors = true
           $env.config.plugins.highlight.theme = "3024-night"
+
+          $env.REALNAME = "Redacted Name";
+          $env.EMAIL = "redacted@example.com";
+          $env.BROWSER = "firefox";
+          $env.XDG_CONFIG_HOME = $"($env.HOME)/.config";
+          $env.TODO_DIR = $"($env.HOME)/.todo";
+          $env.PAGER = try { (which bat).0.cmd } catch { "less" };
+          $env.BAT_PAGER = "less";
+          $env.BAT_THEME = "gruvbox-dark";
+          $env.PROMPT_INDICATOR_VI_INSERT = "⎆ ";
+          $env.PROMPT_INDICATOR_VI_NORMAL = "⎌ ";
         '';
       };
       shellAliases = {
@@ -104,6 +115,20 @@
         vim = "hx";
         nano = "hx";
       };
+
+      # export-env = {
+      #   $env.MPD_HOST = "anaproy.nl";
+      #   $env.REALNAME = "Redacted Name";
+      #   $env.EMAIL = "redacted@example.com";
+      #   $env.BROWSER = "firefox";
+      #   $env.XDG_CONFIG_HOME = $"($env.HOME)/.config";
+      #   $env.TODO_DIR = $"($env.HOME)/.todo";
+      #   $env.PAGER = try { (which bat).0.cmd } catch { "less" };
+      #   $env.BAT_PAGER = "less";
+      #   $env.BAT_THEME = "gruvbox-dark";
+      #   $env.PROMPT_INDICATOR_VI_INSERT = "⎆ ";
+      #   $env.PROMPT_INDICATOR_VI_NORMAL = "⎌ ";
+      # };
     };
     carapace.enable = true;
     carapace.enableNushellIntegration = true;

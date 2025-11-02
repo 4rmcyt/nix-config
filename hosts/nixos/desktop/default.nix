@@ -55,6 +55,7 @@
   # Environment
   # =================================================================
   environment = {
+    shells = with pkgs; [nushell];
     sessionVariables = {
       # Graphics & Display
       GBM_BACKEND = "nvidia-drm";
