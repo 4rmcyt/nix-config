@@ -17,6 +17,7 @@ pkgs.mkShell {
     just
     dockfmt
     alejandra
+    treefmt
 
     # Development tools
     nix-diff
