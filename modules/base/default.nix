@@ -1,11 +1,8 @@
 {...}: {
   imports = [
-    ./auto_upgrade
     ./msmtp
-    ./logging
-    # ./nix-settings.nix
-    ./distributed-builds.nix
-    ./common-packages.nix
+    ./distributed-builds
+    ./common-packages
     ../roles
   ];
 
