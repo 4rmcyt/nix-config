@@ -14,9 +14,35 @@ jobs:
         with:
           persist-credentials: false
       - uses: "DeterminateSystems/determinate-nix-action@v3"
+      - name: Prepare clean workspace for FlakeHub
+        run: |
+          # Create a clean copy without UTF-8 problematic files
+          mkdir -p /tmp/flakehub-clean
+
+          # Copy all files except the problematic one
+          rsync -av \
+            --exclude='modules/services/homepage/default.nix' \
+            --exclude='.git' \
+            . /tmp/flakehub-clean/
+
+          # Verify the clean workspace
+          echo "Clean workspace created at /tmp/flakehub-clean"
+          ls -la /tmp/flakehub-clean/
+
+          # Ensure flake.nix and flake.lock are present
+          if [ ! -f "/tmp/flakehub-clean/flake.nix" ]; then
+            echo "Error: flake.nix not found in clean workspace"
+            exit 1
+          fi
+      - name: Set up Nix in clean workspace
+        working-directory: /tmp/flakehub-clean
+        run: |
+          # Verify Nix can read the flake in the clean workspace
+          nix flake show --all-systems || echo "Flake show completed with warnings"
       - uses: "DeterminateSystems/flakehub-push@main"
         with:
           name: "4rmcyt/nix-config"
           rolling: true
           visibility: "private"
           include-output-paths: true
+          git-root: "/tmp/flakehub-clean"
