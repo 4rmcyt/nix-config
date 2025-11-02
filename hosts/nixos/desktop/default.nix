@@ -308,6 +308,7 @@
       enable = true;
       enableZshIntegration = true;
     };
+    nushell.enable = true;
     zsh.enable = true;
     # vscode.enable = true;
   };
@@ -479,6 +480,7 @@
       prometheus = {};
     };
     users = {
+      zeev.shell = lib.mkForce pkgs.nushell;
       git = {
         createHome = true;
         description = "Git user";
