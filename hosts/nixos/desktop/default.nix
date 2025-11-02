@@ -12,6 +12,7 @@
     ../../../modules/disko/desktop
     ../../../modules/gaming
     ../../../modules/networking/dnssec
+    ../../../modules/options
     ../../../modules/users/zeev
     # Ollama disabled - enable when needed for local AI/LLM
     # ../../../modules/GUI/ollama

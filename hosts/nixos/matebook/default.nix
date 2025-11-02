@@ -10,6 +10,7 @@
     ./hardware-configuration.nix
     ../../../modules/disko/matebook
     ../../../modules/base
+    ../../../modules/options
     ../../../modules/users/zeev
   ];
   # =================================================================

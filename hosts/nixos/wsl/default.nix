@@ -10,6 +10,7 @@
     inputs.nixos-wsl.nixosModules.wsl
     inputs.vscode-server.nixosModules.default
     ../../../modules/base
+    ../../../modules/options
     ../../../modules/users/zeev
   ];
 
