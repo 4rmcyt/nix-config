@@ -17,6 +17,7 @@
           jnoortheen.nix-ide
           ms-python.python
           nefrob.vscode-just-syntax
+          thenuprojectcontributors.vscode-nushell-lang
 
           # Git & SCM
           github.copilot
