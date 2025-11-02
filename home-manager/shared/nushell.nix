@@ -1,5 +1,8 @@
-{ lib, pkgs, ... }:
 {
+  lib,
+  pkgs,
+  ...
+}: {
   programs = {
     nushell = {
       enable = true;
@@ -84,6 +87,8 @@
           prepend /home/myuser/.apps {{!}}
           append /usr/bin/env
         )
+        # command-not-found.nu shell hook
+        $env.config.hooks.command_not_found = source ${pkgs.nix-index}/etc/profile.d/command-not-found.nu
       '';
       shellAliases = {
         vi = "hx";
