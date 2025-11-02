@@ -6,6 +6,13 @@
   programs = {
     nushell = {
       enable = true;
+      plugins = with pkgs.nushellPlugins; [
+        semver
+        query
+        highlight
+        gstat
+        formats
+      ];
       extraConfig = ''
         # Common ls aliases and sort them by type and then name
         # Inspired by https://github.com/nushell/nushell/issues/7190
@@ -91,7 +98,7 @@
         $env.config.hooks.command_not_found = source ${pkgs.nix-index}/etc/profile.d/command-not-found.nu
 
         $env.config.plugins.highlight.true_colors = true
-        $env.config.plugins.highlight.theme = ansi
+        $env.config.plugins.highlight.theme = "ansi"
       '';
       shellAliases = {
         vi = "hx";
@@ -103,12 +110,4 @@
     carapace.enableNushellIntegration = true;
   };
 
-  home.packages = with pkgs; [
-    ## Official nushell plugins available in nixpkgs-unstable
-    nushellPlugins.semver
-    nushellPlugins.query        # SQL-like query support
-    nushellPlugins.highlight    # syntax highlighting
-    nushellPlugins.gstat        # git plugin
-    nushellPlugins.formats
-  ];
 }
