@@ -103,18 +103,38 @@ let
 
     git_branch = {
       symbol = "";
-      format = "[[$symbol $branch ](fg:git-green bg:v_base bold)](bg:v_base)";
+      style = "bg:#394260";
+      format = "[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)";
     };
 
     git_status = {
-      format = "[[($all_status$ahead_behind )](fg:t_base bg:v_base)](bg:v_base$style)";
+      style = "bg:#394260";
+      format = "[[($all_status$ahead_behind )](fg:#769ff0 bg:#394260)]($style)";
+    };
+
+    rust= {
+      symbol = "";
+      style = "bg:#212736";
+      format = "[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)";
+    };
+
+    nodejs= {
+      symbol = "";
+      style = "bg:#212736";
+      format = "[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)";
+    };
+
+    golang= {
+      symbol = "";
+      style = "bg:#212736";
+      format = "[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)";
     };
 
     aws = {
-      disabled = true;
+      disabled = false;
     };
     docker_context = {
-      disabled = true;
+      disabled = false;
     };
     gcloud = {
       disabled = true;
@@ -129,6 +149,13 @@ let
     };
     vagrant = {
       disabled = true;
+    };
+
+    time = {
+      disabled = false;
+      time_format = "%R"; # Hour:Minute Format
+      style = "bg:#1d2230";
+      format = "[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)";
     };
   };
 in
