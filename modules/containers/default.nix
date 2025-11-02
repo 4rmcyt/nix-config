@@ -47,7 +47,7 @@
     extraGroups.podman.members = [
       "podman"
       "uptime-kuma"
-      "zeev"
+      config.my.defaults.user
     ];
   };
 

@@ -53,6 +53,7 @@
       btop
       curl
       git
+      git-crypt
       htop
       mc
       neofetch

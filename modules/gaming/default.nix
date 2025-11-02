@@ -2,6 +2,7 @@
   lib,
   pkgs,
   inputs,
+  config,
   ...
 }: {
   # Steam
@@ -70,8 +71,8 @@
     KERNEL=="nvidia-uvm", GROUP="video", MODE="0664"
   '';
 
-  # Ensure your user is in the video group
-  users.users.zeev.extraGroups = [
+  # Ensure the primary user is in the video group
+  users.users.${config.my.defaults.user}.extraGroups = [
     "video"
     "gamemode"
     "pipewire"

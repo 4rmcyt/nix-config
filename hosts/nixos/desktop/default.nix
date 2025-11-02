@@ -75,53 +75,28 @@
 
     systemPackages = with pkgs; [
       # =============================================================
-      # Core System Utilities
+      # Core System Utilities (desktop-specific)
       # =============================================================
-      btop
-      curl
-      git
-      htop
-      mc
+      # Common packages now provided by modules/base/common-packages.nix
       neofetch
-      openssl
       p7zip
-      pciutils
-      unzip
       usbutils
-      vim
-      wget
       nodejs
 
       # =============================================================
-      # Development Tools
+      # Development Tools (desktop-specific)
       # =============================================================
-      age
-      alejandra
-      cachix
-      cmake-format
-      deadnix
+      # Common dev tools now provided by modules/base/common-packages.nix
       direnv
-      dockfmt
       dockerfile-language-server
       gnumake
-      helix
-      just
       just-lsp
       nh
-      nix-diff
       nix-fast-build
       nix-output-monitor
       nixfmt
-      nixfmt-rfc-style
       nixos-rebuild-ng
-      nodePackages.prettier
-      rustfmt
-      shfmt
-      sops
-      statix
-      toml-sort
       treefmt
-      yamlfmt
 
       # =============================================================
       # Audio & Multimedia

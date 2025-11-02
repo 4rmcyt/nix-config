@@ -222,6 +222,7 @@
       findutils
       gawk
       git
+      git-crypt
       gnugrep
       gnused
       mc

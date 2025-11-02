@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  config,
   ...
 }: let
   servicesWithMediaAccess = [
@@ -244,7 +245,7 @@ in {
 
   nixarr = {
     enable = true;
-    mediaUsers = ["zeev"];
+    mediaUsers = [config.my.defaults.user];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
 

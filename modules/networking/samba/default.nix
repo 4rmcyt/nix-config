@@ -1,4 +1,4 @@
-_: {
+{config, ...}: {
   users.users.samba = {
     isSystemUser = true;
     group = "samba";
@@ -35,7 +35,7 @@ _: {
         "guest ok" = "no";
         "create mask" = "0644";
         "directory mask" = "0755";
-        "force user" = "zeev";
+        "force user" = config.my.defaults.user;
         "force group" = "users";
       };
 
@@ -46,7 +46,7 @@ _: {
         "guest ok" = "no";
         "create mask" = "0644";
         "directory mask" = "0755";
-        "force user" = "zeev";
+        "force user" = config.my.defaults.user;
         "force group" = "users";
       };
     };

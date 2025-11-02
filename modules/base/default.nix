@@ -5,6 +5,7 @@
     ./logging
     # ./nix-settings.nix
     ./distributed-builds.nix
+    ./common-packages.nix
     ../roles
   ];
 
@@ -20,6 +21,4 @@
       "3.nixos.pool.ntp.org"
     ];
   };
-
-  system.stateVersion = "25.05";
 }

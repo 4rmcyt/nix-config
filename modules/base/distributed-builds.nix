@@ -96,8 +96,8 @@
 
       settings = {
         builders-use-substitutes = lib.mkDefault true;
-        # Fallback to local builds if remote builders are unavailable
-        require-sigs = lib.mkDefault false; # Allow unsigned paths from builders
+        # Require signature verification for packages from remote builders
+        require-sigs = lib.mkDefault true;
       };
 
       extraOptions = ''

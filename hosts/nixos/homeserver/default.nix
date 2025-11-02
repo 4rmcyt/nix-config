@@ -250,30 +250,23 @@
   # =================================================================
   # 11. System Packages
   # =================================================================
+  # Common packages now provided by modules/base/common-packages.nix
+  # Only listing server-specific packages here
   environment.systemPackages = with pkgs; [
-    # Core utilities
-    age
+    # Core utilities (server-specific)
     coreutils
-    curl
-    git
-    htop
     lsof
-    mc
     openssh
-    openssl
-    wget
 
     # System monitoring & hardware
     apcupsd
     auto-cpufreq
-    btop
     cpuid
     fwupd
     intel-gpu-tools
     libva-utils
     lm_sensors
     microcode-intel
-    pciutils
     powertop
     prometheus-apcupsd-exporter
     smartmontools
@@ -283,33 +276,10 @@
     iproute2
     wireguard-tools
 
-    # Security & secrets
-    age
-    git-crypt
-    gnupg
+    # Security & secrets (server-specific)
     pinentry-tty
-    sops
-    ssh-to-age
-
-    # Development & formatting tools
-    alejandra
-    cmake-format
-    deadnix
-    dockfmt
-    helix
-    just
-    nix-diff
-    nixfmt-rfc-style
-    nodePackages.prettier
-    prettier
-    rustfmt
-    shfmt
-    statix
-    toml-sort
-    yamlfmt
 
     # Build & deployment tools
-    cachix
     prometheus-cloudflare-exporter
 
     # Text processing
