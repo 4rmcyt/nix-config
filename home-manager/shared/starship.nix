@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, inputs, ... }:
 let
   themes = {
     b16 = {
