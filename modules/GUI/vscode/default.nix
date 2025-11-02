@@ -21,7 +21,6 @@
           # Git & SCM
           github.copilot
           github.copilot-chat
-          gitlab.gitlab-workflow
           anthropic.claude-code
         ]
         ++ (with pkgs.vscode-utils; [
