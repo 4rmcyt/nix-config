@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   programs.vscode = {
     enable = true;
     package = pkgs.vscode-fhs;
@@ -24,9 +21,6 @@
         github.copilot
         github.copilot-chat
         gitlab.gitlab-workflow
-
-        # Themes & UI
-        # oderwat.indent-rainbow
       ]
       ++ (with pkgs.vscode-utils; [
         # Extensions from marketplace (auto-updating)
