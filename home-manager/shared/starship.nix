@@ -1,96 +1,102 @@
-{ pkgs, lib, ... }:
+{ pkgs }:
 let
-  # Set to true to use Tokyo Night theme, false for default theme
-  useTokyoNight = true;
-
-  defaultSettings = {
-    add_newline = true;
-    command_timeout = 500;
-    scan_timeout = 30;
-    aws = {
-      disabled = true;
+  themes = {
+    b16 = {
+      fg0 = "#181818";
+      p0 = "#ff767a";
+      p1 = "#ff9268";
+      p2 = "#ffd254";
+      p3 = "#86BBD8";
+      p4 = "#45ace7";
+      p5 = "#da84e4";
+      green = "#80dc7e";
+      purple = "#da84e4";
+      red = "#ff767a";
     };
-    docker_context = {
-      disabled = true;
+    pastel-powerline = {
+      fg0 = "#fafefc";
+      p0 = "#9A348E";
+      p1 = "#DA627D";
+      p2 = "#FCA17D";
+      p3 = "#86BBD8";
+      p4 = "#06969A";
+      p5 = "#33658A";
+      green = "#76D274";
+      purple = "#9A348E";
+      red = "#DA627D";
     };
-    gcloud = {
-      disabled = true;
-    };
-    memory_usage = {
-      disabled = true;
-      threshold = -1;
-      style = "bold dimmed green";
-    };
-    sudo = {
-      disabled = false;
-    };
-    vagrant = {
-      disabled = true;
+    gruvbox-dark = {
+      fg0 = "#fbf1c7";
+      p0 = "#d65d0e";
+      p1 = "#d79921";
+      p2 = "#689d6a";
+      p3 = "#458588";
+      p4 = "#3c3836";
+      p5 = "#665c54";
+      green = "#76D274";
+      purple = "#b16286";
+      red = "#FF7078";
     };
   };
-
-  tokyoNightSettings = {
-    add_newline = false;
-    command_timeout = 500;
-    scan_timeout = 30;
-
-    format = lib.concatStrings [
-      "$os"
-      "[](bg:v_secondary fg:v_primary)"
-      "$directory"
-      "[ ](bg:v_base fg:v_secondary)"
-      "$git_branch"
-      "$git_status"
-      "[](fg:v_base)"
-      "$line_break$character"
-    ];
-
-    right_format = lib.concatStrings [
-      "$localip"
-    ];
-
-    palette = "tokyo-night";
-
-    palettes.tokyo-night = {
-      git-green = "#6CA53A";
-      v_base = "#202334";
-      v_primary = "#83A1F1";
-      v_secondary = "#3D425F";
-      v_tertiary = "#3D4A6D";
-      t_base = "#769ff0";
-      t_primary = "#1E202E";
-      t_secondary = "#7892DA";
-      t_tertiary = "#D9DBE3";
+  mkConfig = c: {
+    "$schema" = "https://starship.rs/config-schema.json";
+    format = ''
+      [](${c.p0})$os$username[](bg:${c.p1} fg:${c.p0})$directory[](fg:${c.p1} bg:${c.p2})$git_branch$git_status[](fg:${c.p2} bg:${c.p3})$nix_shell$docker_context$conda[](fg:${c.p3} bg:${c.p4})$c$rust$golang$nodejs$php$java$kotlin$haskell$python[](fg:${c.p4} bg:${c.p5})$time[ ](fg:${c.p5})
+      $line_break$character
+    '';
+    # General
+    line_break.disabled = true;
+    character = {
+      disabled = false;
+      success_symbol = "[❯](bold fg:${c.green})";
+      error_symbol = "[❯](bold fg:${c.red})";
+      vimcmd_symbol = "[](bold fg:${c.green})";
+      vimcmd_replace_one_symbol = "[](bold fg:${c.p0})";
+      vimcmd_replace_symbol = "[](bold fg:${c.p0})";
+      vimcmd_visual_symbol = "[](bold fg:${c.p3})";
     };
 
+    # Symbols
     os = {
       disabled = false;
-      format = "[  $symbol  ](bg:v_primary fg:t_primary)";
+      style = "bg:${c.p0} fg:${c.fg0}";
       symbols = {
-        Arch = "";
+        Alpine = "";
+        Amazon = "";
+        Android = "";
+        Arch = "󰣇";
+        Artix = "󰣇";
         CentOS = "";
-        Debian = "";
-        Fedora = "";
-        FreeBSD = "";
-        Gentoo = "";
-        Linux = "";
-        Macos = "";
-        Mint = "";
-        NixOS = "";
-        Ubuntu = "";
-        Unknown = "";
-        Windows = "";
+        Debian = "󰣚";
+        Fedora = "󰣛";
+        Gentoo = "󰣨";
+        Linux = "󰌽";
+        Macos = "󰀵";
+        Manjaro = "";
+        Mint = "󰣭";
+        Raspbian = "󰐿";
+        RedHatEnterprise = "󱄛";
+        Redhat = "󱄛";
+        SUSE = "";
+        Ubuntu = "󰕈";
+        Windows = "󰍲";
       };
     };
-
-    localip = {
-      ssh_only = true;
-      format = "[ $localipv4 ](bg:v_primary fg:t_primary bold)";
+    time = {
       disabled = false;
+      time_format = "%R";
+      style = "bg:${c.p5}";
+      format = "[[  $time ](fg:${c.fg0} bg:${c.p5})]($style)";
     };
-
+    username = {
+      show_always = true;
+      style_user = "bg:${c.p0} fg:${c.fg0}";
+      style_root = "bg:${c.p0} fg:${c.fg0}";
+      format = "[ $user ]($style)";
+    };
     directory = {
-      format = "[  $path ](bg:v_secondary fg:t_secondary)";
+      style = "fg:${c.fg0} bg:${c.p1}";
+      format = "[ $path ]($style)";
       truncation_length = 3;
       truncation_symbol = "…/";
       substitutions = {
@@ -98,70 +104,97 @@ let
         "Downloads" = " ";
         "Music" = "󰝚 ";
         "Pictures" = " ";
+        "Developer" = "󰲋 ";
       };
     };
-
     git_branch = {
       symbol = "";
-      style = "bg:#394260";
-      format = "[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)";
+      style = "bg:${c.p2}";
+      format = "[[ $symbol $branch ](fg:${c.fg0} bg:${c.p2})]($style)";
     };
-
     git_status = {
-      style = "bg:#394260";
-      format = "[[($all_status$ahead_behind )](fg:#769ff0 bg:#394260)]($style)";
+      style = "bg:${c.p2}";
+      format =
+        "[[($all_status$ahead_behind )](fg:${c.fg0} bg:${c.p2})]($style)";
     };
-
-    rust= {
-      symbol = "";
-      style = "bg:#212736";
-      format = "[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)";
-    };
-
-    nodejs= {
-      symbol = "";
-      style = "bg:#212736";
-      format = "[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)";
-    };
-
-    golang= {
-      symbol = "";
-      style = "bg:#212736";
-      format = "[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)";
-    };
-
-    aws = {
-      disabled = false;
+    nix_shell = {
+      symbol = "󱄅";
+      style = "bg:${c.p3}";
+      format = "[[ $symbol( $name) ](fg:${c.fg0} bg:${c.p3})]($style)";
+      heuristic = true;
     };
     docker_context = {
-      disabled = false;
+      symbol = "";
+      style = "bg:${c.p3}";
+      format = "[[ $symbol( $context) ](fg:${c.fg0} bg:${c.p3})]($style)";
     };
-    gcloud = {
-      disabled = true;
+    conda = {
+      style = "bg:${c.p3}";
+      format = "[[ $symbol( $environment) ](fg:${c.fg0} bg:${c.p3})]($style)";
     };
-    memory_usage = {
-      disabled = true;
-      threshold = -1;
-      style = "bold dimmed green";
+    nodejs = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
     };
-    sudo = {
-      disabled = false;
+    c = {
+      symbol = " ";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
     };
-    vagrant = {
-      disabled = true;
+    rust = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
     };
-
-    time = {
-      disabled = false;
-      time_format = "%R"; # Hour:Minute Format
-      style = "bg:#1d2230";
-      format = "[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)";
+    golang = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
+    };
+    php = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
+    };
+    java = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
+    };
+    kotlin = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
+    };
+    haskell = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
+    };
+    python = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
     };
   };
-in
-{
-  programs.starship = {
-    enable = true;
-    settings = if useTokyoNight then tokyoNightSettings else defaultSettings;
-  };
-}
+  starshipFinal = { theme }:
+    let
+      toml = (pkgs.formats.toml { }).generate "starship.toml" (mkConfig theme);
+      bin = pkgs.writeShellScriptBin "ndstarship" ''
+        export STARSHIP_CONFIG="${toml}"
+        exec ${pkgs.starship}/bin/starship "$@"
+      '';
+    in pkgs.stdenvNoCC.mkDerivation {
+      name = "ndstarship";
+      src = null;
+      dontUnpack = true;
+      dontConfigure = true;
+      dontBuild = true;
+      installPhase = ''
+        install -Dm644 ${toml}               $out/share/ndstarship/starship.toml
+        install -Dm755 ${bin}/bin/ndstarship $out/bin/ndstarship
+        ln      -s     $out/bin/ndstarship   $out/bin/starship
+      '';
+    };
+in pkgs.lib.makeOverridable starshipFinal { theme = themes.b16; }
