@@ -81,7 +81,7 @@
       buildMachines =
         map (builder: {
           inherit (builder) hostName;
-          inherit (builder) system;
+          systems = [builder.system];
           inherit (builder) maxJobs;
           inherit (builder) speedFactor;
           inherit (builder) supportedFeatures;
