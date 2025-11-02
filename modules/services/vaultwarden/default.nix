@@ -30,10 +30,10 @@
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    virtualHosts."vault.example.com" = {
+    virtualHosts."vault.${config.my.defaults.domain}" = {
       forceSSL = true;
-      sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
-      sslCertificateKey = "/var/lib/acme/example.com/key.pem";
+      sslCertificate = config.my.security.ssl.certPath;
+      sslCertificateKey = config.my.security.ssl.keyPath;
       locations."/" = {
         proxyWebsockets = true;
         proxyPass = "http://127.0.0.1:8000";

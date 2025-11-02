@@ -26,10 +26,10 @@
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    virtualHosts."cal.example.com" = {
+    virtualHosts."cal.${config.my.defaults.domain}" = {
       forceSSL = true;
-      sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
-      sslCertificateKey = "/var/lib/acme/example.com/key.pem";
+      sslCertificate = config.my.security.ssl.certPath;
+      sslCertificateKey = config.my.security.ssl.keyPath;
       locations."/" = {
         proxyPass = "http://localhost:5232";
         proxyWebsockets = true;
