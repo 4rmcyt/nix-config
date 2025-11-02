@@ -36,22 +36,6 @@
     6636 # LDAPS
   ];
 
-  # services.nginx = {
-  #   enable = true;
-  #   recommendedGzipSettings = true;
-  #   recommendedOptimisation = true;
-  #   recommendedProxySettings = true;
-  #   recommendedTlsSettings = true;
-  #   virtualHosts."authentik.example.com" = {
-  #     forceSSL = true;
-  #     sslCertificate = "/var/lib/acme/example.com/fullchain.pem";
-  #     sslCertificateKey = "/var/lib/acme/example.com/key.pem";
-  #     locations."/" = {
-  #       proxyWebsockets = true;
-  #       proxyPass = "http://127.0.0.1:9000";
-  #     };
-  #   };
-  # };
   services.authentik = {
     enable = true;
     environmentFile = config.sops.secrets.authentik_env.path;
@@ -76,13 +60,5 @@
       disable_startup_analytics = true;
       avatars = "initials";
     };
-
-    # systemd.services.authentik = {
-    #   serviceConfig = {
-    #     # Resource limits
-    #     MemoryMax = "1G";
-    #     CPUQuota = "100%";
-    #   };
-    # };
   };
 }

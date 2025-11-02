@@ -59,8 +59,6 @@
       POLLING_FREQUENCY = "60"; # feed refresh interval in minutes
       BATCH_SIZE = "100"; # number of feeds sent to queue each interval
       CREATE_ADMIN = 1; # create admin user on first run
-      # ADMIN_USERNAME = "admin"; # admin username
-      # ADMIN_PASSWORD = config.sops.secrets.miniflux_admin_password.path;
       CLEANUP_ARCHIVE_READ_DAYS = "60"; # read items are removed after x days
       BASE_URL = "https://miniflux.example.com";
       LISTEN_ADDR = "localhost:8086";

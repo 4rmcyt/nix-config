@@ -158,38 +158,7 @@
         port = "3001";
       };
     };
-
-    # --- Nginx (commented out for reference) ---
-    # nginx = {
-    #   enable = true;
-    #   recommendedGzipSettings = true;
-    #   recommendedOptimisation = true;
-    #   recommendedProxySettings = true;
-    #   recommendedTlsSettings = true;
-    #
-    #   virtualHosts = {
-    #     "grafana.example.com" = {
-    #       forceSSL = true;
-    #       sslCertificate = config.my.security.ssl.certPath;
-    #       sslCertificateKey = config.my.security.ssl.keyPath;
-    #       extraConfig = "add_header Strict-Transport-Security \"max-age=31536000; includeSubDomains\" always;";
-    #       locations."/".proxyPass = "http://localhost:3000/";
-    #     };
-    #     "prometheus.example.com" = {
-    #       forceSSL = true;
-    #       sslCertificate = config.my.security.ssl.certPath;
-    #       sslCertificateKey = config.my.security.ssl.keyPath;
-    #       locations."/".proxyPass = "http://localhost:9090";
-    #     };
-    #     "uptime-kuma.example.com" = {
-    #       forceSSL = true;
-    #       sslCertificate = config.my.security.ssl.certPath;
-    #       sslCertificateKey = config.my.security.ssl.keyPath;
-    #       locations."/".proxyPass = "http://localhost:3001";
-    #     };
-    #   };
-    # };
-  };
+};
 
   # =================================================================
   # 5. Custom Systemd Services for Exporters
