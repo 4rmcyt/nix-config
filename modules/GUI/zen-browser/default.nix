@@ -24,7 +24,7 @@
 
   programs.zen-browser = {
     enable = true;
-    package = inputs.zen-browser.packages.${pkgs.system}.beta;
+    package = inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.beta;
     nativeMessagingHosts = [
       pkgs.browserpass
       pkgs.kdePackages.plasma-browser-integration

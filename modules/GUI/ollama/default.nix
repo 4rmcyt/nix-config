@@ -29,7 +29,7 @@ _: {
     enable = true;
     mcp = {
       enable = true;
-      package = inputs.nixai.packages.${pkgs.system}.nixai;
+      package = inputs.nixai.packages.${pkgs.stdenv.hostPlatform.system}.nixai;
       socketPath = "/run/nixai/mcp.sock";
       host = "localhost";
       port = 8080;

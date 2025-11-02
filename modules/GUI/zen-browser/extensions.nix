@@ -3,7 +3,7 @@
   pkgs,
   ...
 }: let
-  extensions = with inputs.firefox-addons.packages.${pkgs.system}; [
+  extensions = with inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}; [
     # === AD BLOCKING & PRIVACY ===
     darkreader
     ublacklist

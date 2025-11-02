@@ -51,7 +51,7 @@
       gamemode
     ]
     ++ lib.optionals (inputs ? nix-gaming) [
-      inputs.nix-gaming.packages.${pkgs.system}.wine-ge
+      inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.wine-ge
     ];
 
   # Enable 32-bit support for games
