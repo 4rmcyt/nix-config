@@ -98,7 +98,7 @@
         $env.config.hooks.command_not_found = source ${pkgs.nix-index}/etc/profile.d/command-not-found.nu
 
         $env.config.plugins.highlight.true_colors = true
-        $env.config.plugins.highlight.theme = "ansi"
+        $env.config.plugins.highlight.theme = "gruvbox-dark"
       '';
       shellAliases = {
         vi = "hx";
