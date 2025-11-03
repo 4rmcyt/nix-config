@@ -68,50 +68,52 @@
   );
 
 in {
-  # SSL certificate paths configuration
-  config.my.security.ssl = {
-    certPath = "/var/lib/acme/${domain}/fullchain.pem";
-    keyPath = "/var/lib/acme/${domain}/key.pem";
-  };
-
-  # ACME/Let's Encrypt configuration
-  sops.secrets.cloudflare_acme_credentials = {
-    sopsFile = ../../../secrets/cloudflare_acme_credentials.env;
-    owner = "acme";
-    group = "acme";
-    mode = "0400";
-    format = "dotenv";
-  };
-
-  users.users.acme = {
-    isSystemUser = true;
-    group = "acme";
-  };
-  users.groups.acme = {};
-
-  security.acme = {
-    acceptTerms = true;
-    defaults.email = config.my.defaults.email;
-
-    certs.${domain} = {
-      domain = "*.${domain}";
-      extraDomainNames = [domain];
-      dnsProvider = "cloudflare";
-      credentialsFile = config.sops.secrets.cloudflare_acme_credentials.path;
-      keyType = "ec256";
-      group = "nginx";
-      postRun = "systemctl reload nginx.service";
+  config = {
+    # SSL certificate paths configuration
+    my.security.ssl = {
+      certPath = "/var/lib/acme/${domain}/fullchain.pem";
+      keyPath = "/var/lib/acme/${domain}/key.pem";
     };
-  };
 
-  # Nginx reverse proxy configuration
-  services.nginx = {
-    enable = true;
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
+    # ACME/Let's Encrypt configuration
+    sops.secrets.cloudflare_acme_credentials = {
+      sopsFile = ../../../secrets/cloudflare_acme_credentials.env;
+      owner = "acme";
+      group = "acme";
+      mode = "0400";
+      format = "dotenv";
+    };
 
-    virtualHosts = virtualHosts;
+    users.users.acme = {
+      isSystemUser = true;
+      group = "acme";
+    };
+    users.groups.acme = {};
+
+    security.acme = {
+      acceptTerms = true;
+      defaults.email = config.my.defaults.email;
+
+      certs.${domain} = {
+        domain = "*.${domain}";
+        extraDomainNames = [domain];
+        dnsProvider = "cloudflare";
+        credentialsFile = config.sops.secrets.cloudflare_acme_credentials.path;
+        keyType = "ec256";
+        group = "nginx";
+        postRun = "systemctl reload nginx.service";
+      };
+    };
+
+    # Nginx reverse proxy configuration
+    services.nginx = {
+      enable = true;
+      recommendedGzipSettings = true;
+      recommendedOptimisation = true;
+      recommendedProxySettings = true;
+      recommendedTlsSettings = true;
+
+      virtualHosts = virtualHosts;
+    };
   };
 }
