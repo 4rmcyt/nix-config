@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+_: {
   programs.konsole = {
     enable = true;
     customColorSchemes = {

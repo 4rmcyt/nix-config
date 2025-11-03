@@ -2,9 +2,8 @@
   config,
   lib,
   ...
-}:
-let
-  domain = config.my.defaults.domain;
+}: let
+  inherit (config.my.defaults) domain;
 
   # Service to port mapping (from cloudflared domains list)
   services = {
@@ -34,31 +33,30 @@ let
   };
 
   # Helper function to create nginx virtualHost
-  mkNginxVirtualHost =
-    {
-      subdomain,
-      port,
-      domain ? config.my.defaults.domain,
-      certPath ? config.my.security.ssl.certPath,
-      keyPath ? config.my.security.ssl.keyPath,
-      websockets ? true,
-      extraLocations ? { },
-      extraConfig ? { },
-    }:
-    let
-      hostname = "${subdomain}.${domain}";
-    in
+  mkNginxVirtualHost = {
+    subdomain,
+    port,
+    domain ? config.my.defaults.domain,
+    certPath ? config.my.security.ssl.certPath,
+    keyPath ? config.my.security.ssl.keyPath,
+    websockets ? true,
+    extraLocations ? {},
+    extraConfig ? {},
+  }: let
+    hostname = "${subdomain}.${domain}";
+  in
     lib.nameValuePair hostname (
       {
         forceSSL = true;
         sslCertificate = certPath;
         sslCertificateKey = keyPath;
-        locations."/" = {
-          proxyPass = "http://localhost:${toString port}";
-        }
-        // lib.optionalAttrs websockets {
-          proxyWebsockets = true;
-        };
+        locations."/" =
+          {
+            proxyPass = "http://localhost:${toString port}";
+          }
+          // lib.optionalAttrs websockets {
+            proxyWebsockets = true;
+          };
       }
       // extraLocations
       // extraConfig
@@ -66,11 +64,9 @@ let
 
   # Generate nginx virtualHosts for all services
   virtualHosts = lib.listToAttrs (
-    lib.mapAttrsToList (subdomain: port: mkNginxVirtualHost { inherit subdomain port; }) services
+    lib.mapAttrsToList (subdomain: port: mkNginxVirtualHost {inherit subdomain port;}) services
   );
-
-in
-{
+in {
   config = {
     # SSL certificate paths configuration
     my.security.ssl = {
@@ -91,7 +87,7 @@ in
       isSystemUser = true;
       group = "acme";
     };
-    users.groups.acme = { };
+    users.groups.acme = {};
 
     security.acme = {
       acceptTerms = true;
@@ -99,7 +95,7 @@ in
 
       certs.${domain} = {
         domain = "*.${domain}";
-        extraDomainNames = [ domain ];
+        extraDomainNames = [domain];
         dnsProvider = "cloudflare";
         credentialsFile = config.sops.secrets.cloudflare_acme_credentials.path;
         keyType = "ec256";
@@ -116,7 +112,7 @@ in
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
 
-      virtualHosts = virtualHosts;
+      inherit virtualHosts;
     };
   };
 }

@@ -1,24 +1,28 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }: {
   sops.secrets = {
-    # Cloudflare tunnel credentials (binary file)
     cloudflare_tunnel_credentials = {
       sopsFile = ../../../secrets/cloudflare_tunnel_credentials.bin;
       key = "credentials";
-      owner = "cloudflared";
-      group = "cloudflared";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
       mode = "0400";
       format = "binary";
     };
 
-    # Cloudflare configuration (tunnel ID, domains, default response)
-    cloudflared = {
+    tunnel_id = {
       sopsFile = ../../../secrets/cloudflared.yaml;
-      key = "cloudflared";
+      key = "tunnel_id";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
+    };
+
+    domains = {
+      sopsFile = ../../../secrets/cloudflared.yaml;
+      key = "domains";
       owner = config.users.users.cloudflared.name;
       group = config.users.groups.cloudflared.name;
     };
@@ -44,7 +48,7 @@
           set -euo pipefail
 
           # Read tunnel ID from secrets
-          TUNNEL_ID=$(${pkgs.yq-go}/bin/yq -r '.tunnel_id' ${config.sops.secrets.cloudflared.path})
+          TUNNEL_ID=$(${pkgs.yq-go}/bin/yq -r '.tunnel_id' ${config.sops.secrets.tunnel_id.path})
 
           # Build config file
           cat > /var/lib/cloudflared/config.yml << EOF
@@ -55,9 +59,17 @@
           EOF
 
           # Add each domain as an ingress rule (connect to nginx via HTTPS)
-          ${pkgs.yq-go}/bin/yq -o=json '.domains' ${config.sops.secrets.cloudflared.path} | \
-            ${pkgs.jq}/bin/jq -r 'to_entries[] | "  - hostname: \(.key)\n    service: https://localhost:443\n    originRequest:\n      httpHostHeader: \(.key)\n      noTLSVerify: true"' \
-            >> /var/lib/cloudflared/config.yml
+          ${pkgs.yq-go}/bin/yq -o=json '.domains' ${config.sops.secrets.domains.path} \
+            | ${pkgs.jq}/bin/jq -r 'to_entries[] | .key' \
+            | while read -r domain; do
+              cat >> /var/lib/cloudflared/config.yml << INGRESS
+            - hostname: $domain
+              service: https://localhost:443
+              originRequest:
+                httpHostHeader: $domain
+                noTLSVerify: true
+          INGRESS
+            done
 
           # Add default rule (404 for unmatched routes)
           echo "  - service: http_status:404" >> /var/lib/cloudflared/config.yml

@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   ...
 }: let
   user-ed25519 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyieBFROVPWmH3iC2ZAE+5zofMd6mnunBzfObEwMgFx";

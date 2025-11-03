@@ -1,6 +1,5 @@
-{ pkgs, lib, ... }:
-let
-   themes = {
+_: let
+  themes = {
     b16 = {
       fg0 = "#181818";
       p0 = "#ff767a";
@@ -113,8 +112,7 @@ let
     };
     git_status = {
       style = "bg:${c.p2}";
-      format =
-        "[[($all_status$ahead_behind )](fg:${c.fg0} bg:${c.p2})]($style)";
+      format = "[[($all_status$ahead_behind )](fg:${c.fg0} bg:${c.p2})]($style)";
     };
     nix_shell = {
       symbol = "󱄅";
@@ -177,8 +175,7 @@ let
       format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
     };
   };
-in
-{
+in {
   programs.starship = {
     enable = true;
     settings = mkConfig themes.gruvbox-dark;
