@@ -2,7 +2,8 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   domain = config.my.defaults.domain;
 
   # Service to port mapping (from cloudflared domains list)
@@ -19,7 +20,7 @@
     prowlarr = 9696;
     jellyseerr = 5055;
     paperless = 8000;
-    miniflux = 8080;
+    miniflux = 8086;
     cal = 5232;
     home = 8082;
     link = 3000;
@@ -33,41 +34,43 @@
   };
 
   # Helper function to create nginx virtualHost
-  mkNginxVirtualHost = {
-    subdomain,
-    port,
-    domain ? config.my.defaults.domain,
-    certPath ? config.my.security.ssl.certPath,
-    keyPath ? config.my.security.ssl.keyPath,
-    websockets ? true,
-    extraLocations ? {},
-    extraConfig ? {},
-  }: let
-    hostname = "${subdomain}.${domain}";
-  in
-    lib.nameValuePair hostname ({
+  mkNginxVirtualHost =
+    {
+      subdomain,
+      port,
+      domain ? config.my.defaults.domain,
+      certPath ? config.my.security.ssl.certPath,
+      keyPath ? config.my.security.ssl.keyPath,
+      websockets ? true,
+      extraLocations ? { },
+      extraConfig ? { },
+    }:
+    let
+      hostname = "${subdomain}.${domain}";
+    in
+    lib.nameValuePair hostname (
+      {
         forceSSL = true;
         sslCertificate = certPath;
         sslCertificateKey = keyPath;
-        locations."/" =
-          {
-            proxyPass = "http://localhost:${toString port}";
-          }
-          // lib.optionalAttrs websockets {
-            proxyWebsockets = true;
-          };
+        locations."/" = {
+          proxyPass = "http://localhost:${toString port}";
+        }
+        // lib.optionalAttrs websockets {
+          proxyWebsockets = true;
+        };
       }
       // extraLocations
-      // extraConfig);
+      // extraConfig
+    );
 
   # Generate nginx virtualHosts for all services
   virtualHosts = lib.listToAttrs (
-    lib.mapAttrsToList (subdomain: port:
-      mkNginxVirtualHost {inherit subdomain port;}
-    ) services
+    lib.mapAttrsToList (subdomain: port: mkNginxVirtualHost { inherit subdomain port; }) services
   );
 
-in {
+in
+{
   config = {
     # SSL certificate paths configuration
     my.security.ssl = {
@@ -88,7 +91,7 @@ in {
       isSystemUser = true;
       group = "acme";
     };
-    users.groups.acme = {};
+    users.groups.acme = { };
 
     security.acme = {
       acceptTerms = true;
@@ -96,7 +99,7 @@ in {
 
       certs.${domain} = {
         domain = "*.${domain}";
-        extraDomainNames = [domain];
+        extraDomainNames = [ domain ];
         dnsProvider = "cloudflare";
         credentialsFile = config.sops.secrets.cloudflare_acme_credentials.path;
         keyType = "ec256";
