@@ -18,8 +18,10 @@
     # Cloudflare configuration (tunnel ID, domains, default response)
     cloudflared = {
       sopsFile = ../../../secrets/cloudflared.yaml;
-      owner = "cloudflared";
-      group = "cloudflared";
+      key = "cloudflared";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
+      format = "yaml";
     };
   };
 
