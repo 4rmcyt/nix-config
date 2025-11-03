@@ -21,7 +21,7 @@
     paperless = 8000;
     miniflux = 8080;
     cal = 5232;
-    home = 8123;
+    home = 8082;
     link = 3000;
     flare = 3001;
     grafana = 3002;
