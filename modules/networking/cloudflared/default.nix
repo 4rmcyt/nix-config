@@ -23,118 +23,174 @@
     domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
 
     # Service domains
     jellyfin_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "jellyfin_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     audiobookshelf_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "audiobookshelf_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     kavita_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "kavita_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     tdarr_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "tdarr_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     transmission_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "transmission_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     sonarr_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "sonarr_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     radarr_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "radarr_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     lidarr_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "lidarr_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     readarr_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "readarr_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     bazarr_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "bazarr_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     prowlarr_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "prowlarr_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     jellyseerr_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "jellyseerr_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     paperless_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "paperless_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     miniflux_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "miniflux_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     cal_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "cal_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     home_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "home_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     link_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "link_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     flare_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "flare_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     grafana_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "grafana_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     kuma_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "kuma_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     hass_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "hass_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     vault_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "vault_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     auth_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "auth_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     ollama_domain = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "ollama_domain";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
 
     # Internal configuration
     localhost = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "localhost";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     homeserver_host = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "homeserver_host";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
     default_response = {
       sopsFile = ../../../secrets/cloudflared.yaml;
       key = "default_response";
+      owner = config.users.users.cloudflared.name;
+      group = config.users.groups.cloudflared.name;
     };
   };
 
