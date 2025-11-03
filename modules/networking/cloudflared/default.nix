@@ -21,7 +21,6 @@
       key = "cloudflared";
       owner = config.users.users.cloudflared.name;
       group = config.users.groups.cloudflared.name;
-      format = "yaml";
     };
   };
 
