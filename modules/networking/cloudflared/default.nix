@@ -20,7 +20,6 @@
       sopsFile = ../../../secrets/cloudflared.yaml;
       owner = "cloudflared";
       group = "cloudflared";
-      format = "yaml";
     };
   };
 
