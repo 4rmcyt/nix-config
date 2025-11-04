@@ -10,13 +10,6 @@
       format = "binary";
     };
 
-    cloudflare_tunnel_id = {
-      sopsFile = ../../../secrets/cloudflare.yaml;
-      key = "cloudflare_tunnel_id";
-      owner = config.users.users.cloudflared.name;
-      group = config.users.groups.cloudflared.name;
-      mode = "0400";
-    };
   };
 
   users.users.cloudflared = {
@@ -29,7 +22,7 @@
   services.cloudflared = {
     enable = true;
     tunnels = {
-      "${config.sops.placeholder.cloudflare_tunnel_id}" = {
+      "f7876e26-87a8-4bdd-9798-3986b0f7cebc" = {
         credentialsFile = config.sops.secrets.cloudflare_tunnel_credentials.path;
         default = "http_status:404";
         ingress = {
