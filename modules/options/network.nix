@@ -1,30 +1,40 @@
-{lib, ...}: {
+{
+  lib,
+  config,
+  ...
+}: {
   options.my.network = {
     # Gateway
     gateway = lib.mkOption {
       type = lib.types.str;
-      default = "192.168.1.254";
+      default = "${config.my.defaults.gateway}";
       description = "Default gateway - Technicolor NH20T router";
     };
 
     # Primary systems
     hosts = {
-      homeserver = lib.mkOption {
+      homeserver_lan = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.1.165";
+        default = "${config.my.defaults.homeserver_lan}";
         description = "IP address of homeserver (Serv) - Main server";
       };
 
-      desktop-lan = lib.mkOption {
+      desktop_lan = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.1.118";
+        default = "${config.my.defaults.desktop_lan}";
         description = "IP address of desktop wired connection";
       };
 
-      desktop-wifi = lib.mkOption {
+      desktop_wifi = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.1.239";
+        default = "${config.my.defaults.desktop_wifi}";
         description = "IP address of desktop wireless connection";
+      };
+
+      matebook_wifi = lib.mkOption {
+        type = lib.types.str;
+        default = "${config.my.defaults.matebook_wifi}";
+        description = "IP address of Matebook wireless connection";
       };
     };
 

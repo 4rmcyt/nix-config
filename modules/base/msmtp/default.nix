@@ -24,7 +24,7 @@
 
   environment.etc."aliases" = {
     text = ''
-      default: admin@example.com
+      default: admin@${config.my.defaults.domain}
     '';
     mode = "0644";
   };
@@ -43,8 +43,8 @@
         host = "smtp.gmail.com";
         auth = "on";
         passwordeval = "cat ${config.sops.secrets.msmtp_gmail_password.path}";
-        user = "redacted@example.com";
-        from = "redacted@example.com";
+        user = "${config.my.defaults.email}";
+        from = "${config.my.defaults.email}";
       };
     };
   };

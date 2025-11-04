@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  ...
+}: {
   sops.secrets = {
     cloudflare_tunnel_credentials = {
       sopsFile = ../../../secrets/cloudflare_tunnel_credentials.bin;
@@ -26,7 +29,6 @@
     content = ''
       tunnel: ${config.sops.placeholder.cloudflare_tunnel_id}
       credentials-file: ${config.sops.secrets.cloudflare_tunnel_credentials.path}
-
       ingress:
         - hostname: jellyfin.${config.my.defaults.domain}
           service: http://localhost:8096
@@ -39,7 +41,7 @@
         - hostname: miniflux.${config.my.defaults.domain}
           service: http://localhost:8086
         - hostname: transmission.${config.my.defaults.domain}
-          service: http://${config.my.defaults.localIp}:9091
+          service: http://${config.my.defaults.homeserver_lan}:9091
         - hostname: cal.${config.my.defaults.domain}
           service: http://localhost:5232
         - hostname: audiobookshelf.${config.my.defaults.domain}
@@ -82,7 +84,7 @@
     isSystemUser = true;
     group = "cloudflared";
   };
-  users.groups.cloudflared = { };
+  users.groups.cloudflared = {};
 
   systemd.services.cloudflared = {
     after = ["network.target" "network-online.target" "sops-nix.service"];

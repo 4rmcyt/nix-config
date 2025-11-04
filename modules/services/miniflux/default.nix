@@ -60,7 +60,7 @@
       BATCH_SIZE = "100"; # number of feeds sent to queue each interval
       CREATE_ADMIN = 1; # create admin user on first run
       CLEANUP_ARCHIVE_READ_DAYS = "60"; # read items are removed after x days
-      BASE_URL = "https://miniflux.example.com";
+      BASE_URL = "https://miniflux.${config.my.defaults.domain}"; # base URL for generating links
       LISTEN_ADDR = "localhost:8086";
       DATABASE_MIGRATIONS = 1;
       DATABASE_URL = lib.mkForce "user=miniflux password=${config.sops.secrets.miniflux_db_password.path} dbname=miniflux sslmode=disable host=/run/postgresql";

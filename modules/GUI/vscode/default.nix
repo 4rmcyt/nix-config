@@ -104,8 +104,9 @@
 
         # ===== Remote SSH Settings =====
         "remote.SSH.remotePlatform" = {
-          "192.168.1.165" = "linux";
-          "192.168.1.125" = "linux";
+          "${config.my.defaults.homeserver_lan}" = "linux";
+          "${config.my.defaults.matebook_wifi}" = "linux";
+          "${config.my.defaults.desktop_lan}" = "linux";
           "wsl.localhost" = "linux";
         };
 

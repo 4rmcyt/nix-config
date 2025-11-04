@@ -53,15 +53,6 @@
   };
 
   services.home-assistant = {
-    # name = "Home";
-    # latitude = "!secret latitude";  # Use secrets
-    # longitude = "!secret longitude";
-    # Use secrets
-    # elevation = "!secret elevation";
-    # Use secrets
-    # auth_mfa_modules = [ "totp" ];
-    # internal_url = "http://localhost:8123";
-    # external_url = "https://ha.yourdomain.com";
     enable = true;
     configDir = "/var/lib/home-assistant";
     configWritable = true;
@@ -88,8 +79,8 @@
         time_zone = "America/Edmonton";
         country = "CA";
         currency = "CAD";
-        external_url = "https://hass.example.com";
-        internal_url = "http://192.168.1.165:8123";
+        external_url = "https://hass.${config.my.defaults.domain}";
+        internal_url = "http://${config.my.defaults.homeserver_lan}:8123";
       };
       recorder.db_url = "postgresql://@/hass";
 
@@ -99,7 +90,7 @@
         use_x_forwarded_for = true;
         trusted_proxies = [
           "127.0.0.1"
-          "192.168.1.165"
+          "${config.my.defaults.homeserver_lan}"
         ];
         ip_ban_enabled = true;
         login_attempts_threshold = 5;

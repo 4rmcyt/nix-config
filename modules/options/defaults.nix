@@ -1,27 +1,31 @@
-{lib, ...}:
-  let
-  secretsFile = ../../../secrets/common.yaml;
-in
 {
+  lib,
+  config,
+  ...
+}: let
+  secretsFile = ../../../secrets/common.yaml;
+in {
   sops.secrets = builtins.listToAttrs (map (key: {
-    name = "defaults-${key}";
-    value = {
-      sopsFile = secretsFile;
-      key = key;
-      mode = "0400";
-    };
-  }) [
-    "user"
-    "email"
-    "git_username"
-    "git_signing_key"
-    "domain"
-    "local_ip"
-    "timezone"
-    "locale"
-  ]);
-
-
+      name = "defaults-${key}";
+      value = {
+        sopsFile = secretsFile;
+        inherit key;
+        mode = "0400";
+      };
+    }) [
+      "user"
+      "email"
+      "git_username"
+      "git_signing_key"
+      "domain"
+      "timezone"
+      "locale"
+      "gateway"
+      "homeserver_lan"
+      "desktop_lan"
+      "desktop_wifi"
+      "matebook_wifi"
+    ]);
 
   options.my.defaults = {
     user = lib.mkOption {
@@ -54,12 +58,6 @@ in
       description = "Primary domain for homeserver services";
     };
 
-    localIp = lib.mkOption {
-      type = lib.types.str;
-      default = config.sops.secrets.defaults-local_ip.path;
-      description = "Local IP address of the homeserver";
-    };
-
     timezone = lib.mkOption {
       type = lib.types.str;
       default = config.sops.secrets.defaults-timezone.path;
@@ -70,6 +68,36 @@ in
       type = lib.types.str;
       default = config.sops.secrets.defaults-locale.path;
       description = "System locale";
+    };
+
+    gateway = lib.mkOption {
+      type = lib.types.str;
+      default = config.sops.secrets.defaults-gateway.path;
+      description = "Default gateway IP address";
+    };
+
+    homeserver_lan = lib.mkOption {
+      type = lib.types.str;
+      default = config.sops.secrets.defaults-homeserver_lan.path;
+      description = "Local IP address of the homeserver";
+    };
+
+    desktop_lan = lib.mkOption {
+      type = lib.types.str;
+      default = config.sops.secrets.defaults-desktop_lan.path;
+      description = "Local IP address of the desktop LAN connection";
+    };
+
+    desktop_wifi = lib.mkOption {
+      type = lib.types.str;
+      default = config.sops.secrets.defaults-desktop_wifi.path;
+      description = "Local IP address of the desktop WiFi connection";
+    };
+
+    matebook_wifi = lib.mkOption {
+      type = lib.types.str;
+      default = config.sops.secrets.defaults-matebook_wifi.path;
+      description = "Local IP address of the Matebook WiFi connection";
     };
   };
 

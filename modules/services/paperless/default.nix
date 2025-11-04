@@ -57,7 +57,7 @@
   };
   services.paperless = {
     enable = true;
-    domain = "paperless.example.com";
+    domain = "paperless.${config.my.defaults.domain}";
     package = pkgs.paperless-ngx.overrideAttrs (_oldAttrs: {
       doCheck = false;
     });
@@ -70,8 +70,8 @@
         "desktop.ini"
       ];
       PAPERLESS_ADMIN_USER = "admin";
-      PAPERLESS_ALLOWED_HOSTS = "paperless.example.com,localhost,127.0.0.1";
-      PAPERLESS_URL = "https://paperless.example.com";
+      PAPERLESS_ALLOWED_HOSTS = "paperless.${config.my.defaults.domain},localhost,127.0.0.1";
+      PAPERLESS_URL = "https://paperless.${config.my.defaults.domain}";
       PAPERLESS_TIME_ZONE = "America/Edmonton";
       PAPERLESS_DBHOST = "/run/postgresql";
       PAPERLESS_DBPORT = 5432;

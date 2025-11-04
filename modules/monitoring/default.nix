@@ -84,7 +84,7 @@
         security.admin_password_file = config.sops.secrets.grafana_admin_password.path;
         server = {
           http_port = 3003;
-          root_url = "http://grafana.example.com";
+          root_url = "http://grafana.${config.my.defaults.domain}";
         };
       };
       provision.datasources.settings.datasources = [
