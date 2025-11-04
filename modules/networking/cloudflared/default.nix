@@ -39,7 +39,7 @@
         - hostname: miniflux.${config.my.defaults.domain}
           service: http://localhost:8086
         - hostname: transmission.${config.my.defaults.domain}
-          service: http://192.168.1.165:9091
+          service: http://${config.my.defaults.localIp}:9091
         - hostname: cal.${config.my.defaults.domain}
           service: http://localhost:5232
         - hostname: audiobookshelf.${config.my.defaults.domain}
