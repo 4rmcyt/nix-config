@@ -1,6 +1,5 @@
 {
   lib,
-  config,
   ...
 }: let
   secretsFile = ../../secrets/common.yaml;

@@ -133,7 +133,7 @@
         }
         {
           job_name = "desktop-node";
-          static_configs = [{targets = ["${config.my.network.hosts.desktop-lan}:${toString config.my.network.ports.node-exporter}"];}];
+          static_configs = [{targets = ["${config.my.network.hosts.desktop_lan}:${toString config.my.network.ports.node-exporter}"];}];
         }
         {
           job_name = "homeserver-node";
