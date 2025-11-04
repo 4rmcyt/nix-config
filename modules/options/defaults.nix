@@ -5,28 +5,6 @@
 }: let
   secretsFile = ../../../secrets/common.yaml;
 in {
-  sops.secrets = builtins.listToAttrs (map (key: {
-      name = "defaults-${key}";
-      value = {
-        sopsFile = secretsFile;
-        inherit key;
-        mode = "0400";
-      };
-    }) [
-      "user"
-      "email"
-      "git_username"
-      "git_signing_key"
-      "domain"
-      "timezone"
-      "locale"
-      "gateway"
-      "homeserver_lan"
-      "desktop_lan"
-      "desktop_wifi"
-      "matebook_wifi"
-    ]);
-
   options.my.defaults = {
     user = lib.mkOption {
       type = lib.types.str;
@@ -102,7 +80,26 @@ in {
   };
 
   config = {
-    # Set the default values as configuration
-    # Other modules can reference config.my.defaults.*
+    sops.secrets = builtins.listToAttrs (map (key: {
+        name = "defaults-${key}";
+        value = {
+          sopsFile = secretsFile;
+          inherit key;
+          mode = "0400";
+        };
+      }) [
+        "user"
+        "email"
+        "git_username"
+        "git_signing_key"
+        "domain"
+        "timezone"
+        "locale"
+        "gateway"
+        "homeserver_lan"
+        "desktop_lan"
+        "desktop_wifi"
+        "matebook_wifi"
+      ]);
   };
 }
