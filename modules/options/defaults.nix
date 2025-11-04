@@ -1,40 +1,4 @@
 {lib, config, ...}: {
-  sops.secrets = {
-    defaults-user = {
-      sopsFile = ../../secrets/common.yaml;
-      key = "
-      ";
-    };
-    defaults-email = {
-      sopsFile = ../../secrets/common.yaml;
-      key = "email";
-    };
-    defaults-git_username = {
-      sopsFile = ../../secrets/common.yaml;
-      key = "git_username";
-    };
-    defaults-git_signing_key = {
-      sopsFile = ../../secrets/common.yaml;
-      key = "git_signing_key";
-    };
-    defaults-domain = {
-      sopsFile = ../../secrets/common.yaml;
-      key = "domain";
-    };
-    defaults-local_ip = {
-      sopsFile = ../../secrets/common.yaml;
-      key = "local_ip";
-    };
-    defaults-timezone = {
-      sopsFile = ../../secrets/common.yaml;
-      key = "timezone";
-    };
-    defaults-locale = {
-      sopsFile = ../../secrets/common.yaml;
-      key = "locale";
-    };
-  };
-
   options.my.defaults = {
     user = lib.mkOption {
       type = lib.types.str;
@@ -86,7 +50,39 @@
   };
 
   config = {
-    # Set the default values as configuration
-    # Other modules can reference config.my.defaults.*
+    sops.secrets = {
+      defaults-user = {
+        sopsFile = ../../secrets/common.yaml;
+        key = "user";
+      };
+      defaults-email = {
+        sopsFile = ../../secrets/common.yaml;
+        key = "email";
+      };
+      defaults-git_username = {
+        sopsFile = ../../secrets/common.yaml;
+        key = "git_username";
+      };
+      defaults-git_signing_key = {
+        sopsFile = ../../secrets/common.yaml;
+        key = "git_signing_key";
+      };
+      defaults-domain = {
+        sopsFile = ../../secrets/common.yaml;
+        key = "domain";
+      };
+      defaults-local_ip = {
+        sopsFile = ../../secrets/common.yaml;
+        key = "local_ip";
+      };
+      defaults-timezone = {
+        sopsFile = ../../secrets/common.yaml;
+        key = "timezone";
+      };
+      defaults-locale = {
+        sopsFile = ../../secrets/common.yaml;
+        key = "locale";
+      };
+    };
   };
 }
