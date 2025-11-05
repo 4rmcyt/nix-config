@@ -39,7 +39,7 @@
       url = "github:lilyinstarlight/nixos-cosmic";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     # Security & secrets
     agenix = {
       url = "github:ryantm/agenix";
