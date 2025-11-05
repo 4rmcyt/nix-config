@@ -35,6 +35,11 @@
     };
     flatpaks.url = "github:in-a-dil-emma/declarative-flatpak/latest";
 
+    nixos-cosmic = {
+      url = "github:lilyinstarlight/nixos-cosmic";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    
     # Security & secrets
     agenix = {
       url = "github:ryantm/agenix";

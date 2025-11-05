@@ -11,17 +11,5 @@ _: {
       "flathub:/root/testflatpak.flatpakref"
       "flathub:app/com.github.iwalton3.jellyfin-media-player//latest"
     ];
-    # overrides = {
-    #   "global".Context = {
-    #     filesystems = [
-    #       "home"
-    #     ];
-    #     sockets = [
-    #       "!x11"
-    #       "!fallback-x11"
-    #       "wayland"
-    #     ];
-    #   };
-    # };
   };
 }

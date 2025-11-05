@@ -14,9 +14,11 @@
     ../../../modules/disko/desktop
     ../../../modules/options
 
+    # Desktop environment
+    ../../../modules/desktops/KDE
+
     # Features and roles
     ../../../modules/gaming
-    ../../../modules/GUI/flatpak
     ../../../modules/networking/dnssec
 
     # User configuration
@@ -56,40 +58,23 @@
   # =================================================================
   environment = {
     shells = with pkgs; [nushell];
+
     sessionVariables = {
-      # Graphics & Display
+      # NVIDIA-specific settings
       GBM_BACKEND = "nvidia-drm";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       LIBVA_DRIVER_NAME = "nvidia";
       NVD_BACKEND = "direct";
-      GDK_BACKEND = "wayland,x11";
-
-      # Wayland Support
-      NIXOS_OZONE_WL = "1";
-      CLUTTER_BACKEND = "wayland";
-      SDL_VIDEODRIVER = "wayland";
-      ELECTRON_OZONE_PLATFORM_HINT = "wayland";
-
-      # Browser Optimization
-      MOZ_ENABLE_WAYLAND = "1";
-      MOZ_USE_XINPUT2 = "1";
-      MOZ_DISABLE_RDD_SANDBOX = "1";
     };
 
     systemPackages = lib.mkBefore (with pkgs; [
-      # =============================================================
       # Core System Utilities (desktop-specific)
-      # =============================================================
-      # Common packages now provided by modules/base/common-packages.nix
       neofetch
       p7zip
       usbutils
       nodejs
 
-      # =============================================================
       # Development Tools (desktop-specific)
-      # =============================================================
-      # Common dev tools now provided by modules/base/common-packages.nix
       direnv
       dockerfile-language-server
       gnumake
@@ -122,13 +107,10 @@
       meslo-lgs-nf
       nerd-fonts.droid-sans-mono
       nerd-fonts.fira-code
-      sddm-astronaut
-      sddm-sugar-dark
 
       # =============================================================
       # Graphics & GPU
       # =============================================================
-      libdbusmenu
       libva-utils
       nvidia-vaapi-driver
 
@@ -144,35 +126,6 @@
       powertop
       ryzen-monitor-ng
       samba
-
-      # =============================================================
-      # KDE Applications
-      # =============================================================
-      kdePackages.ark
-      kdePackages.discover
-      kdePackages.filelight
-      kdePackages.gwenview
-      kdePackages.kcalc
-      kdePackages.kcharselect
-      kdePackages.kclock
-      kdePackages.kfind
-      kdePackages.kgpg
-      kdePackages.kio-extras
-      kdePackages.konsole
-      kdePackages.ksystemlog
-      kdePackages.kate
-      kdePackages.okular
-      kdePackages.partitionmanager
-      kdePackages.plasma-browser-integration
-      kdePackages.qtmultimedia
-      kdePackages.qtsvg
-      kdePackages.sddm-kcm
-      kdePackages.signon-kwallet-extension
-      kdePackages.spectacle
-      kdePackages.systemsettings
-      kwalletcli
-      kdePackages.qtwayland
-      libsForQt5.qt5.qtwayland
 
       # =============================================================
       # Security & Encryption
@@ -204,14 +157,6 @@
       sbsigntool
       shim-unsigned
       uefitool
-
-      # =============================================================
-      # Disabled due to CMake compatibility issues
-      # =============================================================
-      # dfu-util
-      # qmk
-      # qmk-udev-rules
-      # via
     ]);
   };
 
@@ -313,14 +258,6 @@
   };
 
   # =================================================================
-  # Security
-  # =================================================================
-  security = {
-    rtkit.enable = true;
-    polkit.enable = true;
-  };
-
-  # =================================================================
   # Secrets Management
   # =================================================================
   sops.age.keyFile = "/root/.config/sops/age/keys.txt";
@@ -361,25 +298,6 @@
       };
     };
     pulseaudio.enable = false;
-
-    # =============================================================
-    # Desktop Environment
-    # =============================================================
-    desktopManager.plasma6.enable = true;
-    displayManager = {
-      autoLogin = {
-        enable = true;
-        user = "zeev";
-      };
-      sddm = {
-        autoNumlock = true;
-        enable = true;
-        enableHidpi = true;
-        theme = "breeze";
-        wayland.compositor = "kwin";
-        wayland.enable = true;
-      };
-    };
 
     # =============================================================
     # File Systems & Storage
@@ -500,16 +418,6 @@
   # Virtualization
   # =================================================================
   virtualisation.podman.enable = true;
-
-  # =================================================================
-  # XDG Portal
-  # =================================================================
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      kdePackages.xdg-desktop-portal-kde
-    ];
-  };
 
   # =================================================================
   # Systemd Configuration

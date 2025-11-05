@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, osConfig, ...}: {
   programs.vscode = {
     enable = true;
     package = pkgs.vscode-fhs;
@@ -104,9 +104,9 @@
 
         # ===== Remote SSH Settings =====
         "remote.SSH.remotePlatform" = {
-          "${config.my.defaults.homeserver_lan}" = "linux";
-          "${config.my.defaults.matebook_wifi}" = "linux";
-          "${config.my.defaults.desktop_lan}" = "linux";
+          "${osConfig.my.defaults.homeserver_lan}" = "linux";
+          "${osConfig.my.defaults.matebook_wifi}" = "linux";
+          "${osConfig.my.defaults.desktop_lan}" = "linux";
           "wsl.localhost" = "linux";
         };
 
