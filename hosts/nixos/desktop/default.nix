@@ -3,8 +3,7 @@
   config,
   lib,
   ...
-}:
-{
+}: {
   # =================================================================
   # Imports
   # =================================================================
@@ -16,7 +15,7 @@
     ../../../modules/options
 
     # Desktop environment
-    ../../../modules/desktops/kde
+    ../../../modules/desktops/cosmic
 
     # Features and roles
     ../../../modules/gaming
@@ -63,7 +62,7 @@
   # Environment
   # =================================================================
   environment = {
-    shells = with pkgs; [ nushell ];
+    shells = with pkgs; [nushell];
 
     sessionVariables = {
       # NVIDIA-specific settings
@@ -74,8 +73,7 @@
     };
 
     systemPackages = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         # Core System Utilities (desktop-specific)
         neofetch
         p7zip
@@ -189,7 +187,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
+      allowedTCPPorts = [9100]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -204,50 +202,44 @@
   # =================================================================
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
-  nix = {
-    settings = {
-      cores = 12;
-      max-jobs = 12;
+  nix.settings = lib.mkBefore {
+    cores = 12;
+    max-jobs = 12;
 
-      # Additional gaming and CUDA caches
-      substituters = [
-        "https://4rmcyt-desktop.cachix.org"
-        "https://cuda-maintainers.cachix.org"
-        "https://nix-community.cachix.org"
-        "https://nix-gaming.cachix.org"
-      ];
+    # Additional gaming and CUDA caches
+    substituters = [
+      "https://4rmcyt-desktop.cachix.org"
+      "https://cuda-maintainers.cachix.org"
+      "https://nix-community.cachix.org"
+      "https://nix-gaming.cachix.org"
+    ];
 
-      # Desktop-specific system features
-      system-features = [
-        "benchmark"
-        "big-parallel"
-        "gccarch-znver4"
-        "kvm"
-      ];
+    # Desktop-specific system features
+    system-features = [
+      "benchmark"
+      "big-parallel"
+      "gccarch-znver4"
+      "kvm"
+    ];
 
-      experimental-features = [
-        "flakes"
-        "nix-command"
-      ];
+    experimental-features = [
+      "flakes"
+      "nix-command"
+    ];
 
-      # Additional trusted public keys for gaming and CUDA caches
-      trusted-public-keys = [
-        "4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs="
-        "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-      ];
+    # Additional trusted public keys for gaming and CUDA caches
+    trusted-public-keys = [
+      "4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs="
+      "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+    ];
 
-      # Allow zeev to use nix commands without sudo
-      trusted-users = [ "zeev" ];
+    # Allow zeev to use nix commands without sudo
+    trusted-users = ["zeev"];
 
-      # Disable dirty warnings for desktop
-      warn-dirty = false;
-    };
-    extraOptions = ''
-      access-tokens = github.com=${config.sops.placeholder.git_access_token.path}
-    '';
-
+    # Disable dirty warnings for desktop
+    warn-dirty = false;
   };
 
   # =================================================================
@@ -342,7 +334,7 @@
     openssh.enable = true;
     pcscd = {
       enable = true;
-      plugins = [ pkgs.ccid ];
+      plugins = [pkgs.ccid];
     };
     power-profiles-daemon.enable = false;
     usbmuxd.enable = true;
@@ -397,7 +389,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = [ "nvidia" ];
+      videoDrivers = ["nvidia"];
       xkb.layout = "us";
     };
   };
@@ -407,9 +399,9 @@
   # =================================================================
   users = {
     groups = {
-      git = { };
-      plugdev = { };
-      prometheus = { };
+      git = {};
+      plugdev = {};
+      prometheus = {};
     };
     users = {
       zeev.shell = lib.mkForce pkgs.nushell;
