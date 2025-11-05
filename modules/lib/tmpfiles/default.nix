@@ -1,7 +1,4 @@
-{
-  lib,
-  ...
-}: let
+{lib, ...}: let
   mkServiceDirs = args: let
     inherit (args) service;
     user = args.user or service;
