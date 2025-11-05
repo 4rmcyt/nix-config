@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # =================================================================
   # KDE Plasma Desktop Environment - NixOS Configuration
   # =================================================================
@@ -44,6 +45,7 @@
     kdePackages.qtwayland
     libsForQt5.qt5.qtwayland
     kdePackages.dolphin
+    tail-tray
 
     # SDDM Themes
     sddm-astronaut

@@ -3,7 +3,8 @@
   config,
   lib,
   ...
-}: {
+}:
+{
   # =================================================================
   # Imports
   # =================================================================
@@ -62,7 +63,7 @@
   # Environment
   # =================================================================
   environment = {
-    shells = with pkgs; [nushell];
+    shells = with pkgs; [ nushell ];
 
     sessionVariables = {
       # NVIDIA-specific settings
@@ -73,7 +74,8 @@
     };
 
     systemPackages = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         # Core System Utilities (desktop-specific)
         neofetch
         p7zip
@@ -170,7 +172,12 @@
   # =================================================================
   # Fonts
   # =================================================================
-  fonts.fontconfig.useEmbeddedBitmaps = true;
+
+  fonts = {
+    fontconfig.useEmbeddedBitmaps = true;
+    fontDir.enable = true;
+    packages = builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
+  };
 
   # =================================================================
   # Home Manager
@@ -187,7 +194,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -236,7 +243,7 @@
     ];
 
     # Allow zeev to use nix commands without sudo
-    trusted-users = ["zeev"];
+    trusted-users = [ "zeev" ];
 
     # Disable dirty warnings for desktop
     warn-dirty = false;
@@ -334,7 +341,7 @@
     openssh.enable = true;
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
     power-profiles-daemon.enable = false;
     usbmuxd.enable = true;
@@ -389,7 +396,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
   };
@@ -399,9 +406,9 @@
   # =================================================================
   users = {
     groups = {
-      git = {};
-      plugdev = {};
-      prometheus = {};
+      git = { };
+      plugdev = { };
+      prometheus = { };
     };
     users = {
       zeev.shell = lib.mkForce pkgs.nushell;

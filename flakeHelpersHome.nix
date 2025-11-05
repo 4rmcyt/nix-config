@@ -10,7 +10,6 @@ in {
     modules = [
       ./home-manager/desktop
       inputs.plasma-manager.homeModules.plasma-manager
-      inputs.nixai.homeManagerModules.default
       inputs.betterfox-nix.homeModules.betterfox
     ];
   };
