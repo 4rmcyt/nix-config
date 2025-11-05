@@ -15,7 +15,7 @@
     ../../../modules/options
 
     # Desktop environment
-    ../../../modules/desktops/KDE
+    ../../../modules/desktops/cosmic
 
     # Features and roles
     ../../../modules/gaming
