@@ -245,7 +245,7 @@
       warn-dirty = false;
     };
     extraOptions = ''
-      access-tokens = github.com=${config.sops.secrets.git_access_token.value}
+      access-tokens = github.com=${config.sops.placeholder.git_access_token}
     '';
 
   };
