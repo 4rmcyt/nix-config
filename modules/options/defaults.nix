@@ -1,7 +1,4 @@
-{
-  lib,
-  ...
-}: let
+{lib, ...}: let
   secretsFile = ../../secrets/common.yaml;
 
   # Read secrets from the encrypted file
