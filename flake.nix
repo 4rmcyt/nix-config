@@ -35,8 +35,8 @@
     };
     flatpaks.url = "github:in-a-dil-emma/declarative-flatpak/latest";
 
-    nixos-cosmic = {
-      url = "github:lilyinstarlight/nixos-cosmic";
+    cosmic-unstable = {
+      url = "github:ninelore/nixpkgs-cosmic-unstable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -64,14 +64,7 @@
       url = "github:nix-community/authentik-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    linkwarden = {
-      url = "github:EricTheMagician/nixpkgs/linkwarden";
-      # This is a nixpkgs fork, no follows needed
-    };
-    nixai = {
-      url = "github:olafkfreund/nix-ai-help";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+
     nixarr = {
       url = "github:rasmus-kirk/nixarr";
       inputs.nixpkgs.follows = "nixpkgs";
