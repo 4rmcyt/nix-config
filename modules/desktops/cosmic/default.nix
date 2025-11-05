@@ -14,7 +14,9 @@
   # COSMIC-specific nix settings
   nix.settings = {
     substituters = lib.mkBefore ["https://9lore.cachix.org/"];
-    trusted-public-keys = lib.mkBefore ["9lore.cachix.org-1:H2/a1Wlm7VJRfJNNvFbxtLQPYswP3KzXwSI5ROgzGII="];
+    trusted-public-keys = lib.mkBefore [
+      "9lore.cachix.org-1:H2/a1Wlm7VJRfJNNvFbxtLQPYswP3KzXwSI5ROgzGII="
+    ];
   };
 
   # Enable COSMIC desktop
@@ -57,6 +59,24 @@
       xdg-desktop-portal-cosmic
     ];
   };
-  # systemd.packages = [pkgs.observatory];
-  # systemd.services.monitord.wantedBy = ["multi-user.target"];
+
+  environment.systemPackages = lib.mkBefore (
+    with pkgs; [
+      tasks
+      cosmic-bg
+      cosmic-osd
+      cosmic-idle
+      cosmic-comp
+      cosmic-randr
+      cosmic-icons
+      cosmic-reader
+      cosmic-ext-ctl
+      cosmic-applets
+      cosmic-protocols
+      cosmic-screenshot
+      cosmic-ext-tweaks
+      cosmic-ext-applet-external-monitor-brightness
+      quick-webapps
+    ]
+  );
 }

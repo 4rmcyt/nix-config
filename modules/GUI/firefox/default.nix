@@ -43,9 +43,6 @@
 
           # === PRODUCTIVITY & NAVIGATION ===
           indie-wiki-buddy
-
-          # === SYSTEM INTEGRATION ===
-          plasma-integration
         ];
       };
     };
