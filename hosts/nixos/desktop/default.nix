@@ -3,7 +3,8 @@
   config,
   lib,
   ...
-}: {
+}:
+{
   # =================================================================
   # Imports
   # =================================================================
@@ -15,7 +16,7 @@
     ../../../modules/options
 
     # Desktop environment
-    ../../../modules/desktops/cosmic
+    ../../../modules/desktops/kde
 
     # Features and roles
     ../../../modules/gaming
@@ -39,6 +40,11 @@
     key = "tailscale_auth_key";
   };
 
+  sops.secrets.git_access_token = {
+    sopsFile = ../../../secrets/common.yaml;
+    key = "git_access_token";
+  };
+
   # =================================================================
   # Boot Configuration
   # =================================================================
@@ -57,7 +63,7 @@
   # Environment
   # =================================================================
   environment = {
-    shells = with pkgs; [nushell];
+    shells = with pkgs; [ nushell ];
 
     sessionVariables = {
       # NVIDIA-specific settings
@@ -67,97 +73,100 @@
       NVD_BACKEND = "direct";
     };
 
-    systemPackages = lib.mkBefore (with pkgs; [
-      # Core System Utilities (desktop-specific)
-      neofetch
-      p7zip
-      usbutils
-      nodejs
+    systemPackages = lib.mkBefore (
+      with pkgs;
+      [
+        # Core System Utilities (desktop-specific)
+        neofetch
+        p7zip
+        usbutils
+        nodejs
 
-      # Development Tools (desktop-specific)
-      direnv
-      dockerfile-language-server
-      gnumake
-      just-lsp
-      nh
-      nix-fast-build
-      nix-output-monitor
-      nixfmt
-      nixos-rebuild-ng
-      treefmt
+        # Development Tools (desktop-specific)
+        direnv
+        dockerfile-language-server
+        gnumake
+        just-lsp
+        nh
+        nix-fast-build
+        nix-output-monitor
+        nixfmt
+        nixos-rebuild-ng
+        treefmt
 
-      # =============================================================
-      # Audio & Multimedia
-      # =============================================================
-      helvum
-      pavucontrol
-      sof-firmware
+        # =============================================================
+        # Audio & Multimedia
+        # =============================================================
+        helvum
+        pavucontrol
+        sof-firmware
 
-      # =============================================================
-      # Desktop Applications
-      # =============================================================
-      telegram-desktop
-      # jellyfin-media-player
+        # =============================================================
+        # Desktop Applications
+        # =============================================================
+        telegram-desktop
+        # jellyfin-media-player
 
-      # =============================================================
-      # Fonts & Themes
-      # =============================================================
-      fira-code
-      fira-mono
-      meslo-lgs-nf
-      nerd-fonts.droid-sans-mono
-      nerd-fonts.fira-code
+        # =============================================================
+        # Fonts & Themes
+        # =============================================================
+        fira-code
+        fira-mono
+        meslo-lgs-nf
+        nerd-fonts.droid-sans-mono
+        nerd-fonts.fira-code
 
-      # =============================================================
-      # Graphics & GPU
-      # =============================================================
-      libva-utils
-      nvidia-vaapi-driver
+        # =============================================================
+        # Graphics & GPU
+        # =============================================================
+        libva-utils
+        nvidia-vaapi-driver
 
-      # =============================================================
-      # Hardware Support & Monitoring
-      # =============================================================
-      apcupsd
-      cifs-utils
-      fwupd
-      microcode-amd
-      # nvtopPackages.nvidia
-      openrgb-with-all-plugins
-      powertop
-      ryzen-monitor-ng
-      samba
+        # =============================================================
+        # Hardware Support & Monitoring
+        # =============================================================
+        apcupsd
+        cifs-utils
+        fwupd
+        microcode-amd
+        # nvtopPackages.nvidia
+        openrgb-with-all-plugins
+        powertop
+        ryzen-monitor-ng
+        samba
 
-      # =============================================================
-      # Security & Encryption
-      # =============================================================
-      ccid
-      libfido2
-      (pass.withExtensions (exts: [
-        exts.pass-checkup
-        exts.pass-file
-        exts.pass-genphrase
-        exts.pass-import
-        exts.pass-otp
-        exts.pass-update
-      ]))
-      pass-wayland
-      pinentry-curses
-      yubico-pam
-      yubico-piv-tool
-      yubikey-manager
-      yubioath-flutter
+        # =============================================================
+        # Security & Encryption
+        # =============================================================
+        ccid
+        libfido2
+        (pass.withExtensions (exts: [
+          exts.pass-checkup
+          exts.pass-file
+          exts.pass-genphrase
+          exts.pass-import
+          exts.pass-otp
+          exts.pass-update
+        ]))
+        pass-wayland
+        pinentry-curses
+        yubico-pam
+        yubico-piv-tool
+        yubikey-manager
+        yubioath-flutter
 
-      # =============================================================
-      # Secure Boot & EFI Tools
-      # =============================================================
-      efibootmgr
-      efitools
-      ifrextractor-rs
-      sbctl
-      sbsigntool
-      shim-unsigned
-      uefitool
-    ]);
+        # =============================================================
+        # Secure Boot & EFI Tools
+        # =============================================================
+        efibootmgr
+        efitools
+        ifrextractor-rs
+        sbctl
+        sbsigntool
+        shim-unsigned
+        uefitool
+      ]
+    );
   };
 
   # =================================================================
@@ -180,7 +189,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -195,44 +204,50 @@
   # =================================================================
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
-  nix.settings = {
-    cores = 12;
-    max-jobs = 12;
+  nix = {
+    settings = {
+      cores = 12;
+      max-jobs = 12;
 
-    # Additional gaming and CUDA caches
-    substituters = [
-      "https://4rmcyt-desktop.cachix.org"
-      "https://cuda-maintainers.cachix.org"
-      "https://nix-community.cachix.org"
-      "https://nix-gaming.cachix.org"
-    ];
+      # Additional gaming and CUDA caches
+      substituters = [
+        "https://4rmcyt-desktop.cachix.org"
+        "https://cuda-maintainers.cachix.org"
+        "https://nix-community.cachix.org"
+        "https://nix-gaming.cachix.org"
+      ];
 
-    # Desktop-specific system features
-    system-features = [
-      "benchmark"
-      "big-parallel"
-      "gccarch-znver4"
-      "kvm"
-    ];
+      # Desktop-specific system features
+      system-features = [
+        "benchmark"
+        "big-parallel"
+        "gccarch-znver4"
+        "kvm"
+      ];
 
-    experimental-features = [
-      "flakes"
-      "nix-command"
-    ];
+      experimental-features = [
+        "flakes"
+        "nix-command"
+      ];
 
-    # Additional trusted public keys for gaming and CUDA caches
-    trusted-public-keys = [
-      "4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs="
-      "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-    ];
+      # Additional trusted public keys for gaming and CUDA caches
+      trusted-public-keys = [
+        "4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs="
+        "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+      ];
 
-    # Allow zeev to use nix commands without sudo
-    trusted-users = ["zeev"];
+      # Allow zeev to use nix commands without sudo
+      trusted-users = [ "zeev" ];
 
-    # Disable dirty warnings for desktop
-    warn-dirty = false;
+      # Disable dirty warnings for desktop
+      warn-dirty = false;
+    };
+    extraOptions = ''
+      access-tokens = github.com=${config.sops.secrets.git_access_token.value}
+    '';
+
   };
 
   # =================================================================
@@ -327,7 +342,7 @@
     openssh.enable = true;
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
     power-profiles-daemon.enable = false;
     usbmuxd.enable = true;
@@ -382,7 +397,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
   };
@@ -392,9 +407,9 @@
   # =================================================================
   users = {
     groups = {
-      git = {};
-      plugdev = {};
-      prometheus = {};
+      git = { };
+      plugdev = { };
+      prometheus = { };
     };
     users = {
       zeev.shell = lib.mkForce pkgs.nushell;

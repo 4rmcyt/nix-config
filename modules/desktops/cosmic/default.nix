@@ -7,11 +7,6 @@
     ../../GUI/flatpak/cosmic
   ];
 
-  # COSMIC-specific nix settings
-  nix.settings = {
-    substituters = ["https://cosmic.cachix.org/"];
-    trusted-public-keys = ["cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="];
-  };
 
   # Enable COSMIC desktop
   services = {
@@ -53,6 +48,6 @@
       xdg-desktop-portal-cosmic
     ];
   };
-  systemd.packages = [pkgs.observatory];
-  systemd.services.monitord.wantedBy = ["multi-user.target"];
+  # systemd.packages = [pkgs.observatory];
+  # systemd.services.monitord.wantedBy = ["multi-user.target"];
 }
