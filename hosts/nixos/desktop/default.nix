@@ -149,7 +149,7 @@
           exts.pass-update
         ]))
         pass-wayland
-        pinentry-curses
+        pinentry-all
         yubico-pam
         yubico-piv-tool
         yubikey-manager
