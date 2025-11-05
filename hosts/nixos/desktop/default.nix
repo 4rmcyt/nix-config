@@ -202,7 +202,7 @@
   # =================================================================
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
-  nix.settings = lib.mkBefore {
+  nix.settings = {
     cores = 12;
     max-jobs = 12;
 

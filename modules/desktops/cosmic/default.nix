@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   # =================================================================
   # COSMIC Desktop Environment - NixOS Configuration
   # =================================================================
@@ -8,9 +12,9 @@
   ];
 
   # COSMIC-specific nix settings
-  nix.settings = lib.mkBefore {
-    substituters = ["https://9lore.cachix.org/"];
-    trusted-public-keys = ["9lore.cachix.org-1:H2/a1Wlm7VJRfJNNvFbxtLQPYswP3KzXwSI5ROgzGII="];
+  nix.settings = {
+    substituters = lib.mkBefore ["https://9lore.cachix.org/"];
+    trusted-public-keys = lib.mkBefore ["9lore.cachix.org-1:H2/a1Wlm7VJRfJNNvFbxtLQPYswP3KzXwSI5ROgzGII="];
   };
 
   # Enable COSMIC desktop

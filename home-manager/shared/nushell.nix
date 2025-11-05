@@ -89,6 +89,19 @@
                 completer: $multiple_completers
               }
             }
+            keybindings: [
+              {
+                name: prepend_sudo
+                modifier: alt
+                keycode: char_/
+                mode: emacs
+                event: [
+                  { edit: MoveToStart }
+                  { edit: InsertString, value: "sudo " }
+                  { edit: MoveToEnd }
+                ]
+              }
+            ]
           }
 
           # command-not-found.nu shell hook
