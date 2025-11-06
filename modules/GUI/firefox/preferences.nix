@@ -12,6 +12,7 @@ _: {
     "apz.overscroll.enabled" = true;
 
     # === BROWSER BEHAVIOR ===
+    "layout.css.devPixelsPerPx" = "2.0"; # Default scaling
     "widget.gtk.libadwaita-colors.enabled" = false;
     "browser.aboutConfig.showWarning" = false;
     "browser.cache.disk.enable" = false;

@@ -89,6 +89,7 @@
       loupe
       gnome-calendar
       cheese
+      libsecret
     ]
   );
 
