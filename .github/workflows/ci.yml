@@ -57,7 +57,7 @@ jobs:
       matrix:
         system:
           - wsl
-          - desktop
+          # - desktop
           - homeserver
           - matebook
     uses: ./.github/workflows/reusable-build.yml
