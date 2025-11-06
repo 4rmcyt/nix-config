@@ -194,7 +194,6 @@
       interop.appendWindowsPath = false;
       network.generateHosts = true;
       network.generateResolvConf = true;
-      docker-desktop.enable = false;
     };
   };
 
