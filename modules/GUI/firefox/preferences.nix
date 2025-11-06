@@ -12,6 +12,7 @@ _: {
     "apz.overscroll.enabled" = true;
 
     # === BROWSER BEHAVIOR ===
+    "widget.gtk.libadwaita-colors.enabled" = false;
     "browser.aboutConfig.showWarning" = false;
     "browser.cache.disk.enable" = false;
     "browser.cache.memory.enable" = true;
