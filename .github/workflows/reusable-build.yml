@@ -43,7 +43,7 @@ jobs:
             Branch: `${{ inputs.ref_name }}`
             System: `${{ inputs.system }}`
             Trigger: ${{ inputs.event_name }}
-            Commit: `${{ inputs.commit_message }}`
+            Commit: `${{ inputs.commit_message || 'N/A' }}`
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
       - name: Free up disk space
         run: |
