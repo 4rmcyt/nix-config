@@ -54,13 +54,12 @@ jobs:
     name: Build & Check ${{ matrix.system }}
     needs: [validate]
     strategy:
-      # fail-fast: false # <-- REMOVED THIS LINE. Defaults to true.
       matrix:
         system:
+          - wsl
           - desktop
           - homeserver
           - matebook
-          - wsl
     uses: ./.github/workflows/reusable-build.yml
     with:
       system: ${{ matrix.system }}
@@ -95,6 +94,6 @@ jobs:
             Branch: `${{ github.ref_name }}`
             All checks passed:
             ✅ Validation (Format & Flake)
-            ✅ All systems built (desktop, homeserver, matebook, wsl)
+            ✅ All systems built (wsl, desktop, homeserver, matebook)
             ✅ Home manager validation
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
