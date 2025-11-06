@@ -22,6 +22,7 @@
 
   # Enable COSMIC desktop
   services = {
+    gnome.gnome-keyring.enable = true;
     desktopManager.cosmic.enable = true;
     displayManager = {
       cosmic-greeter.enable = true;
@@ -51,6 +52,7 @@
   security = {
     rtkit.enable = true;
     polkit.enable = true;
+    pam.services.login.enableGnomeKeyring = true;
   };
 
   # XDG Portal for COSMIC
@@ -61,24 +63,34 @@
     ];
   };
 
-  environment.systemPackages = lib.mkBefore (with pkgs; [
-    tasks
-    quick-webapps
-    cosmic-bg
-    cosmic-osd
-    cosmic-idle
-    cosmic-comp
-    cosmic-randr
-    cosmic-icons
-    cosmic-reader
-    cosmic-ext-ctl
-    cosmic-applets
-    cosmic-protocols
-    cosmic-screenshot
-    cosmic-ext-tweaks
-    cosmic-ext-applet-caffeine
-    cosmic-ext-applet-external-monitor-brightness
-  ]);
+  environment.systemPackages = lib.mkBefore (
+    with pkgs; [
+      tasks
+      quick-webapps
+      cosmic-bg
+      cosmic-osd
+      cosmic-idle
+      cosmic-comp
+      cosmic-randr
+      cosmic-icons
+      cosmic-reader
+      cosmic-ext-ctl
+      cosmic-applets
+      cosmic-protocols
+      cosmic-screenshot
+      cosmic-ext-tweaks
+      cosmic-ext-applet-caffeine
+      cosmic-ext-applet-external-monitor-brightness
+      cosmic-ext-calculator
+      forecast
+      cosmic-applibrary
+      seahorse
+      adw-gtk3
+      loupe
+      gnome-calendar
+      cheese
+    ]
+  );
 
   systemd.user.services.cosmic-ext-bg-theme = {
     description = "COSMIC Background Theme Extension";
@@ -94,7 +106,4 @@
       Restart = "on-failure";
     };
   };
-
-  systemd.packages = [pkgs.observatory];
-  systemd.services.monitord.wantedBy = ["multi-user.target"];
 }
