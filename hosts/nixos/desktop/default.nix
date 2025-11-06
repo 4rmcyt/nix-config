@@ -70,6 +70,7 @@
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       LIBVA_DRIVER_NAME = "nvidia";
       NVD_BACKEND = "direct";
+      XDG_CURRENT_DESKTOP = "sway";
     };
 
     systemPackages = lib.mkBefore (
