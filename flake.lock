@@ -112,6 +112,26 @@
         "type": "github"
       }
     },
+    "cosmic-applets-collection": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1760364987,
+        "narHash": "sha256-7WVGlF9sjvBrF1YqDdfWCTNboC1kGio2OdCWipyPaNs=",
+        "owner": "wingej0",
+        "repo": "ext-cosmic-applets-flake",
+        "rev": "5a41152d2c15eb1c8230137ce53d8ab29eb2438c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "wingej0",
+        "repo": "ext-cosmic-applets-flake",
+        "type": "github"
+      }
+    },
     "cosmic-manager": {
       "inputs": {
         "flake-parts": "flake-parts_3",
@@ -1019,6 +1039,7 @@
         "authentik-nix": "authentik-nix",
         "auto-cpufreq": "auto-cpufreq",
         "betterfox-nix": "betterfox-nix",
+        "cosmic-applets-collection": "cosmic-applets-collection",
         "cosmic-unstable": "cosmic-unstable",
         "cpu-microcodes": "cpu-microcodes",
         "disko": "disko",

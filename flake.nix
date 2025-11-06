@@ -40,6 +40,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    cosmic-applets-collection = {
+      url = "github:wingej0/ext-cosmic-applets-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Security & secrets
     agenix = {
       url = "github:ryantm/agenix";

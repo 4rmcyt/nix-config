@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  inputs,
   ...
 }: {
   # =================================================================
@@ -61,8 +62,9 @@
   };
 
   environment.systemPackages = lib.mkBefore (
-    with pkgs; [
+    (with pkgs; [
       tasks
+      quick-webapps
       cosmic-bg
       cosmic-osd
       cosmic-idle
@@ -75,8 +77,21 @@
       cosmic-protocols
       cosmic-screenshot
       cosmic-ext-tweaks
+      cosmic-ext-applet-caffeine
       cosmic-ext-applet-external-monitor-brightness
-      quick-webapps
-    ]
+    ])
   );
+
+  systemd.user.services.cosmic-ext-bg-theme = {
+    description = "COSMIC Background Theme Extension";
+    documentation = ["man:cosmic-ext-bg-theme(1)"];
+    partOf = ["graphical-session.target"];
+    wantedBy = ["graphical-session.target"];
+
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${inputs.cosmic-applets-collection.packages.${pkgs.stdenv.hostPlatform.system}.cosmic-ext-bg-theme}/bin/cosmic-ext-bg-theme";
+      Restart = "on-failure";
+    };
+  };
 }
