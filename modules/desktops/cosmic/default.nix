@@ -61,26 +61,24 @@
     ];
   };
 
-  environment.systemPackages = lib.mkBefore (
-    (with pkgs; [
-      tasks
-      quick-webapps
-      cosmic-bg
-      cosmic-osd
-      cosmic-idle
-      cosmic-comp
-      cosmic-randr
-      cosmic-icons
-      cosmic-reader
-      cosmic-ext-ctl
-      cosmic-applets
-      cosmic-protocols
-      cosmic-screenshot
-      cosmic-ext-tweaks
-      cosmic-ext-applet-caffeine
-      cosmic-ext-applet-external-monitor-brightness
-    ])
-  );
+  environment.systemPackages = lib.mkBefore (with pkgs; [
+    tasks
+    quick-webapps
+    cosmic-bg
+    cosmic-osd
+    cosmic-idle
+    cosmic-comp
+    cosmic-randr
+    cosmic-icons
+    cosmic-reader
+    cosmic-ext-ctl
+    cosmic-applets
+    cosmic-protocols
+    cosmic-screenshot
+    cosmic-ext-tweaks
+    cosmic-ext-applet-caffeine
+    cosmic-ext-applet-external-monitor-brightness
+  ]);
 
   systemd.user.services.cosmic-ext-bg-theme = {
     description = "COSMIC Background Theme Extension";
@@ -90,8 +88,13 @@
 
     serviceConfig = {
       Type = "simple";
-      ExecStart = "${inputs.cosmic-applets-collection.packages.${pkgs.stdenv.hostPlatform.system}.cosmic-ext-bg-theme}/bin/cosmic-ext-bg-theme";
+      ExecStart = "${
+        inputs.cosmic-applets-collection.packages.${pkgs.stdenv.hostPlatform.system}.cosmic-ext-bg-theme
+      }/bin/cosmic-ext-bg-theme";
       Restart = "on-failure";
     };
   };
+
+  systemd.packages = [pkgs.observatory];
+  systemd.services.monitord.wantedBy = ["multi-user.target"];
 }
