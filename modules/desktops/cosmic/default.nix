@@ -46,6 +46,9 @@
     MOZ_ENABLE_WAYLAND = "1";
     MOZ_USE_XINPUT2 = "1";
     MOZ_DISABLE_RDD_SANDBOX = "1";
+
+    # iso-codes data for COSMIC apps
+    XDG_DATA_DIRS = lib.mkAfter ["${pkgs.isocodes}/share"];
   };
 
   # Security settings

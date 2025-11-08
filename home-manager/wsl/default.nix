@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ../shared/common.nix
     ../shared/zsh.nix
@@ -103,6 +104,7 @@
         shell-integration-features = "sudo";
       };
     };
+    zsh.enable = true;
   };
 
   xdg = {
