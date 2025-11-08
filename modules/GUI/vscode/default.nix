@@ -1,6 +1,7 @@
 {
   pkgs,
-  osConfig,
+  osConfig ? null,
+  lib,
   ...
 }: {
   programs.vscode = {
@@ -107,12 +108,15 @@
         "security.workspace.trust.untrustedFiles" = "prompt";
 
         # ===== Remote SSH Settings =====
-        "remote.SSH.remotePlatform" = {
-          "${osConfig.my.defaults.homeserver_lan}" = "linux";
-          "${osConfig.my.defaults.matebook_wifi}" = "linux";
-          "${osConfig.my.defaults.desktop_lan}" = "linux";
-          "wsl.localhost" = "linux";
-        };
+        "remote.SSH.remotePlatform" =
+          {
+            "wsl.localhost" = "linux";
+          }
+          // lib.optionalAttrs (osConfig != null && osConfig ? my.defaults) {
+            "${osConfig.my.defaults.homeserver_lan}" = "linux";
+            "${osConfig.my.defaults.matebook_wifi}" = "linux";
+            "${osConfig.my.defaults.desktop_lan}" = "linux";
+          };
 
         # ===== Language-Specific Settings =====
 

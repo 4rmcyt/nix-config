@@ -80,6 +80,7 @@
       cosmic-applets
       cosmic-protocols
       cosmic-screenshot
+      cosmic-initial-setup
       cosmic-ext-tweaks
       cosmic-ext-applet-caffeine
       cosmic-ext-applet-external-monitor-brightness
@@ -92,6 +93,9 @@
       gnome-calendar
       cheese
       libsecret
+      isocodes
+      libisocodes
+      locale
     ]
   );
 

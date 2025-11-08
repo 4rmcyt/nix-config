@@ -30,6 +30,10 @@
       neovim
       vim
 
+      cuetools
+      shntool
+      flac
+
       # Fonts
       meslo-lgs-nf
 
