@@ -41,6 +41,7 @@
     CLUTTER_BACKEND = "wayland";
     SDL_VIDEODRIVER = "wayland";
     ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+    ELECTRON_FORCE_SAFE_STORAGE_BACKEND = "gnome_libsecret";
 
     # Browser Optimization
     MOZ_ENABLE_WAYLAND = "1";
