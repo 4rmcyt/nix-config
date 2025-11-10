@@ -62,9 +62,9 @@
   # Environment
   # =================================================================
   environment = {
-    shells = with pkgs; [nushell];
+    shells = lib.mkBefore (with pkgs; [nushell]);
 
-    sessionVariables = {
+    sessionVariables = lib.mkBefore {
       # NVIDIA-specific settings
       GBM_BACKEND = "nvidia-drm";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";

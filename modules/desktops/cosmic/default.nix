@@ -34,7 +34,7 @@
   };
 
   # Wayland environment variables
-  environment.sessionVariables = {
+  environment.sessionVariables = lib.mkBefore {
     # Wayland Support
     COSMIC_DATA_CONTROL_ENABLED = 1;
     NIXOS_OZONE_WL = "1";

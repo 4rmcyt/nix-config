@@ -291,6 +291,6 @@
     gawk
     gnugrep
   ];
-
+  environment.shells = lib.mkBefore (with pkgs; [zsh]);
   home-manager.backupFileExtension = "backup";
 }
