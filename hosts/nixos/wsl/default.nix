@@ -266,6 +266,6 @@
     ];
   };
 
-  environment.shells = lib.mkBefore (with pkgs; [zsh]);
+  environment.shells = with pkgs; [zsh];
   home-manager.backupFileExtension = "backup";
 }
