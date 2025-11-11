@@ -21,7 +21,7 @@
       owner = config.users.users.postgresql.name;
     };
     grafana_oauth_secret = {
-      sopsFile = ../../../secrets/authentik.yaml;
+      sopsFile = ../../secrets/authentik.yaml;
       key = "grafana_oauth_secret";
       owner = config.users.users.grafana.name;
       mode = "0400";
