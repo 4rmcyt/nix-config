@@ -3,8 +3,7 @@
   lib,
   inputs,
   ...
-}:
-{
+}: {
   # =================================================================
   # COSMIC Desktop Environment - NixOS Configuration
   # =================================================================
@@ -15,7 +14,7 @@
 
   # COSMIC-specific nix settings
   nix.settings = {
-    substituters = lib.mkBefore [ "https://9lore.cachix.org/" ];
+    substituters = lib.mkBefore ["https://9lore.cachix.org/"];
     trusted-public-keys = lib.mkBefore [
       "9lore.cachix.org-1:H2/a1Wlm7VJRfJNNvFbxtLQPYswP3KzXwSI5ROgzGII="
     ];
@@ -53,7 +52,7 @@
     MOZ_DISABLE_RDD_SANDBOX = "1";
 
     # iso-codes data for COSMIC apps
-    XDG_DATA_DIRS = lib.mkAfter [ "${pkgs.isocodes}/share" ];
+    XDG_DATA_DIRS = lib.mkAfter ["${pkgs.isocodes}/share"];
   };
 
   # Security settings
@@ -74,8 +73,7 @@
   };
 
   environment.systemPackages = lib.mkBefore (
-    with pkgs;
-    [
+    with pkgs; [
       tasks
       quick-webapps
       cosmic-bg
@@ -110,9 +108,9 @@
 
   systemd.user.services.cosmic-ext-bg-theme = {
     description = "COSMIC Background Theme Extension";
-    documentation = [ "man:cosmic-ext-bg-theme(1)" ];
-    partOf = [ "graphical-session.target" ];
-    wantedBy = [ "graphical-session.target" ];
+    documentation = ["man:cosmic-ext-bg-theme(1)"];
+    partOf = ["graphical-session.target"];
+    wantedBy = ["graphical-session.target"];
 
     serviceConfig = {
       Type = "simple";

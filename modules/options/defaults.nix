@@ -1,25 +1,84 @@
-{lib, ...}: let
+{
+  config,
+  lib,
+  ...
+}: let
   secretsFile = ../../secrets/common.yaml;
-
-  # Read secrets from the encrypted file
-  # These are only available at build time in the secrets file
-  secretsData = builtins.fromJSON (builtins.readFile (
-    builtins.toFile "defaults-secrets.json" (builtins.toJSON {
-      user = "zeev";
-      email = "redacted@example.com";
-      git_username = "4rmcyt";
-      git_signing_key = "D85B52C9288A138E";
-      domain = "example.com";
-      timezone = "America/Edmonton";
-      locale = "en_US.UTF-8";
-      gateway = "192.168.1.254";
-      homeserver_lan = "192.168.1.165";
-      desktop_lan = "192.168.1.66";
-      desktop_wifi = "192.168.1.45";
-      matebook_wifi = "192.168.1.132";
-    })
-  ));
 in {
+  # =================================================================
+  # 1. SOPS Secrets
+  # =================================================================
+  sops.secrets = {
+    defaults_user = {
+      sopsFile = secretsFile;
+      key = "user";
+    };
+    defaults_email = {
+      sopsFile = secretsFile;
+      key = "email";
+    };
+    defaults_git_username = {
+      sopsFile = secretsFile;
+      key = "git_username";
+    };
+    defaults_git_signing_key = {
+      sopsFile = secretsFile;
+      key = "git_signing_key";
+    };
+    defaults_domain = {
+      sopsFile = secretsFile;
+      key = "domain";
+    };
+    defaults_timezone = {
+      sopsFile = secretsFile;
+      key = "timezone";
+    };
+    defaults_locale = {
+      sopsFile = secretsFile;
+      key = "locale";
+    };
+    defaults_gateway = {
+      sopsFile = secretsFile;
+      key = "gateway";
+    };
+    defaults_homeserver_lan = {
+      sopsFile = secretsFile;
+      key = "homeserver_lan";
+    };
+    defaults_desktop_lan = {
+      sopsFile = secretsFile;
+      key = "desktop_lan";
+    };
+    defaults_desktop_wifi = {
+      sopsFile = secretsFile;
+      key = "desktop_wifi";
+    };
+    defaults_matebook_wifi = {
+      sopsFile = secretsFile;
+      key = "matebook_wifi";
+    };
+  };
+
+  # =================================================================
+  # 2. Config Values (loaded from secrets)
+  # =================================================================
+  config = {
+    my.defaults = {
+      user = lib.mkDefault config.sops.secrets.user.path;
+      email = lib.mkDefault config.sops.secrets.email.path;
+      gitUsername = lib.mkDefault config.sops.secrets.git_username.path;
+      gitSigningKey = lib.mkDefault config.sops.secrets.git_signing_key.path;
+      domain = lib.mkDefault config.sops.secrets.domain.path;
+      timezone = lib.mkDefault config.sops.secrets.timezone.path;
+      locale = lib.mkDefault config.sops.secrets.locale.path;
+      gateway = lib.mkDefault config.sops.secrets.gateway.path;
+      homeserver_lan = lib.mkDefault config.sops.secrets.homeserver_lan.path;
+      desktop_lan = lib.mkDefault config.sops.secrets.desktop_lan.path;
+      desktop_wifi = lib.mkDefault config.sops.secrets.desktop_wifi.path;
+      matebook_wifi = lib.mkDefault config.sops.secrets.matebook_wifi.path;
+    };
+  };
+
   options.my.defaults = {
     user = lib.mkOption {
       type = lib.types.str;
@@ -80,44 +139,5 @@ in {
       type = lib.types.str;
       description = "Local IP address of the Matebook WiFi connection";
     };
-  };
-
-  config = {
-    my.defaults = {
-      user = lib.mkDefault secretsData.user;
-      email = lib.mkDefault secretsData.email;
-      gitUsername = lib.mkDefault secretsData.git_username;
-      gitSigningKey = lib.mkDefault secretsData.git_signing_key;
-      domain = lib.mkDefault secretsData.domain;
-      timezone = lib.mkDefault secretsData.timezone;
-      locale = lib.mkDefault secretsData.locale;
-      gateway = lib.mkDefault secretsData.gateway;
-      homeserver_lan = lib.mkDefault secretsData.homeserver_lan;
-      desktop_lan = lib.mkDefault secretsData.desktop_lan;
-      desktop_wifi = lib.mkDefault secretsData.desktop_wifi;
-      matebook_wifi = lib.mkDefault secretsData.matebook_wifi;
-    };
-
-    sops.secrets = builtins.listToAttrs (map (key: {
-        name = "defaults-${key}";
-        value = {
-          sopsFile = secretsFile;
-          inherit key;
-          mode = "0400";
-        };
-      }) [
-        "user"
-        "email"
-        "git_username"
-        "git_signing_key"
-        "domain"
-        "timezone"
-        "locale"
-        "gateway"
-        "homeserver_lan"
-        "desktop_lan"
-        "desktop_wifi"
-        "matebook_wifi"
-      ]);
   };
 }

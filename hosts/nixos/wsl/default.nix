@@ -33,6 +33,7 @@
   # 4. Nixpkgs Configuration
   # =================================================================
   # Note: allowUnfree is set in flakeHelpers.nix commonModules
+  nixpkgs.hostPlatform = "x86_64-linux";
   nixpkgs.config = {
     cudaSupport = true;
   };
