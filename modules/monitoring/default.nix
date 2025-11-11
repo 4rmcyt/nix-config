@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. SOPS Secrets
   # =================================================================
@@ -18,6 +19,12 @@
     grafana_db_password = {
       sopsFile = ../../secrets/postgresql.yaml;
       owner = config.users.users.postgresql.name;
+    };
+    grafana_oauth_secret = {
+      sopsFile = ../../../secrets/authentik.yaml;
+      key = "grafana_oauth_secret";
+      owner = config.users.users.grafana.name;
+      mode = "0400";
     };
   };
 
@@ -48,10 +55,10 @@
   };
 
   users.groups = {
-    grafana = {};
-    nut-exporter = {};
-    prometheus = {};
-    uptime-kuma = {};
+    grafana = { };
+    nut-exporter = { };
+    prometheus = { };
+    uptime-kuma = { };
   };
 
   # =================================================================
@@ -83,8 +90,21 @@
         };
         security.admin_password_file = config.sops.secrets.grafana_admin_password.path;
         server = {
+          http_addr = "127.0.0.1";
           http_port = 3003;
           root_url = "http://grafana.${config.my.defaults.domain}";
+        };
+        "auth.generic_oauth" = {
+          enabled = true;
+          name = "Authentik";
+          client_id = "grafana";
+          client_secret = "$__file{${config.sops.secrets.grafana_oauth_secret.path}}";
+          scopes = "openid profile email";
+          auth_url = "https://auth.${config.my.defaults.domain}/application/o/authorize/";
+          token_url = "https://auth.${config.my.defaults.domain}/application/o/token/";
+          api_url = "https://auth.${config.my.defaults.domain}/application/o/userinfo/";
+          role_attribute_path = "contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'";
+          allow_sign_up = true;
         };
       };
       provision.datasources.settings.datasources = [
@@ -104,7 +124,7 @@
       port = 9090;
       retentionTime = "30d";
       globalConfig.scrape_interval = "1m";
-      ruleFiles = [./alerts/homeserver.yaml];
+      ruleFiles = [ ./alerts/homeserver.yaml ];
 
       exporters = {
         node = {
@@ -129,23 +149,31 @@
       scrapeConfigs = [
         {
           job_name = "cloudflare-exporter";
-          static_configs = [{targets = ["localhost:8081"];}];
+          static_configs = [ { targets = [ "localhost:8081" ]; } ];
         }
         {
           job_name = "desktop-node";
-          static_configs = [{targets = ["${config.my.network.hosts.desktop_lan}:${toString config.my.network.ports.node-exporter}"];}];
+          static_configs = [
+            {
+              targets = [
+                "${config.my.network.hosts.desktop_lan}:${toString config.my.network.ports.node-exporter}"
+              ];
+            }
+          ];
         }
         {
           job_name = "homeserver-node";
-          static_configs = [{targets = ["localhost:${toString config.my.network.ports.node-exporter}"];}];
+          static_configs = [
+            { targets = [ "localhost:${toString config.my.network.ports.node-exporter}" ]; }
+          ];
         }
         {
           job_name = "postgres-exporter";
-          static_configs = [{targets = ["localhost:9187"];}];
+          static_configs = [ { targets = [ "localhost:9187" ]; } ];
         }
         {
           job_name = "prometheus";
-          static_configs = [{targets = ["localhost:${toString config.my.network.ports.prometheus}"];}];
+          static_configs = [ { targets = [ "localhost:${toString config.my.network.ports.prometheus}" ]; } ];
         }
       ];
     };
@@ -165,8 +193,8 @@
   # =================================================================
   systemd.services.cloudflare-exporter = {
     description = "Cloudflare Prometheus Exporter";
-    wantedBy = ["multi-user.target"];
-    after = ["network.target"];
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network.target" ];
     serviceConfig = {
       User = "prometheus";
       Group = "prometheus";

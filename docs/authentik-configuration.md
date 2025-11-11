@@ -27,6 +27,39 @@ Your homeserver runs 18 services that can be integrated with Authentik for centr
 **Domain**: `example.com`
 **Authentik URL**: `https://auth.example.com`
 
+### About Authorization Flows
+
+In the configurations below, we reference `default-authorization-flow`. This is a built-in flow that Authentik creates automatically on installation.
+
+**To verify your flows:**
+1. Log into Authentik at `https://auth.example.com`
+2. Go to **Flows & Stages** > **Flows**
+3. Look for these default flows:
+   - `default-authentication-flow` - For user login
+   - `default-authorization-flow` - For OAuth2/OIDC consent
+   - `default-invalidation-flow` - For logout
+   - `default-provider-authorization-implicit-consent` - Auto-consent flow (optional)
+
+**Flow Selection Guide:**
+
+| Provider Type | Recommended Flow | Alternative | Behavior |
+|--------------|------------------|-------------|----------|
+| OAuth2/OIDC | `default-authorization-flow` | `default-provider-authorization-implicit-consent` | Shows consent screen / Auto-consents |
+| Proxy Provider | `default-provider-authorization-implicit-consent` | `default-authorization-flow` | Auto-login / Shows consent |
+
+**Recommendation:**
+- **OIDC Providers**: Use `default-authorization-flow` for better security (users see what permissions they're granting)
+- **Proxy Providers**: Use `default-provider-authorization-implicit-consent` for seamless experience (no extra click)
+
+**Custom Flows (Optional):**
+You can create custom flows if you want to:
+- Add additional authentication stages (2FA, password change prompts, etc.)
+- Customize the consent screen
+- Add custom validation logic
+- Implement different authentication methods per application
+
+For the configurations in this document, we'll use the default flows, but you can substitute your own custom flows if you've created them.
+
 ---
 
 ## Service Authentication Summary
