@@ -104,8 +104,6 @@
             ]
           }
 
-          $env.config.hooks.command_not_found = source ${pkgs.nix-index}/etc/profile.d/command-not-found.nu
-          $env.config.hooks.env_change.PWD = source ${pkgs.direnv}/share/direnv/direnv.nu
           $env.config.plugins.highlight.true_colors = true
           $env.config.plugins.highlight.theme = "3024-night"
 
@@ -143,5 +141,8 @@
     };
     carapace.enable = true;
     carapace.enableNushellIntegration = true;
+
+    direnv.enable = true;
+    direnv.enableNushellIntegration = true;
   };
 }

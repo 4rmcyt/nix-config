@@ -1,4 +1,11 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
+  imports = [
+    ./home-manager/shared/common.nix
+    ./home-manager/shared/zsh.nix
+    ./home-manager/shared/tmux.nix
+    ./home-manager/shared/starship.nix
+  ];
   default = {
     # Use nushell as the default shell
     devshell.motd = ''
@@ -8,7 +15,6 @@
 
     packages = with pkgs; [
       # Shell
-      nushell
       carapace
       direnv
       nix-direnv
