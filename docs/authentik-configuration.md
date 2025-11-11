@@ -29,27 +29,44 @@ Your homeserver runs 18 services that can be integrated with Authentik for centr
 
 ### About Authorization Flows
 
-In the configurations below, we reference `default-authorization-flow`. This is a built-in flow that Authentik creates automatically on installation.
+In the configurations below, we reference authorization flows. These are built-in flows that Authentik creates automatically on installation.
 
 **To verify your flows:**
 1. Log into Authentik at `https://auth.example.com`
 2. Go to **Flows & Stages** > **Flows**
-3. Look for these default flows:
-   - `default-authentication-flow` - For user login
-   - `default-authorization-flow` - For OAuth2/OIDC consent
-   - `default-invalidation-flow` - For logout
-   - `default-provider-authorization-implicit-consent` - Auto-consent flow (optional)
+3. Look for these flows (names vary by Authentik version):
+
+**Newer Authentik versions (2024.x+):**
+- `default-authentication-flow` - For user login
+- `default-provider-authorization-explicit-consent` - Shows consent screen
+- `default-provider-authorization-implicit-consent` - Auto-consent (no screen)
+- `default-invalidation-flow` - For logout
+
+**Older Authentik versions:**
+- `default-authentication-flow` - For user login
+- `default-authorization-flow` - For OAuth2/OIDC consent
+- `default-invalidation-flow` - For logout
+- `default-provider-authorization-implicit-consent` - Auto-consent flow
 
 **Flow Selection Guide:**
 
 | Provider Type | Recommended Flow | Alternative | Behavior |
 |--------------|------------------|-------------|----------|
-| OAuth2/OIDC | `default-authorization-flow` | `default-provider-authorization-implicit-consent` | Shows consent screen / Auto-consents |
-| Proxy Provider | `default-provider-authorization-implicit-consent` | `default-authorization-flow` | Auto-login / Shows consent |
+| **OAuth2/OIDC Providers** | `default-provider-authorization-explicit-consent` | `default-provider-authorization-implicit-consent` | Shows consent screen / Auto-consents |
+| **Proxy Providers** | `default-provider-authorization-implicit-consent` | `default-provider-authorization-explicit-consent` | Auto-login / Shows consent |
+
+**Quick Reference (if you have the newer flow names):**
+- **For OIDC apps** (Grafana, Paperless, Miniflux, etc.):
+  - Use: `default-provider-authorization-explicit-consent`
+  - Why: Shows users what permissions they're granting (more secure)
+
+- **For Proxy apps** (Sonarr, Homepage, etc.):
+  - Use: `default-provider-authorization-implicit-consent`
+  - Why: Seamless login without extra clicks (better UX)
 
 **Recommendation:**
-- **OIDC Providers**: Use `default-authorization-flow` for better security (users see what permissions they're granting)
-- **Proxy Providers**: Use `default-provider-authorization-implicit-consent` for seamless experience (no extra click)
+- **OIDC Providers**: Use `explicit-consent` for better security (users see what permissions they're granting)
+- **Proxy Providers**: Use `implicit-consent` for seamless experience (no extra consent click)
 
 **Custom Flows (Optional):**
 You can create custom flows if you want to:
@@ -98,7 +115,7 @@ These services have native OIDC support built-in. Configuration is straightforwa
 1. **Create Provider:**
    - Type: OAuth2/OpenID Provider
    - Name: `Grafana`
-   - Authorization flow: `default-authorization-flow`
+   - Authorization flow: `default-provider-authorization-explicit-consent`
    - Client type: `Confidential`
    - Client ID: `grafana`
    - Redirect URIs: `https://grafana.example.com/login/generic_oauth`
@@ -163,7 +180,7 @@ sops.secrets.grafana_oauth_secret = {
 1. **Create Provider:**
    - Type: OAuth2/OpenID Provider
    - Name: `Audiobookshelf`
-   - Authorization flow: `default-authorization-flow`
+   - Authorization flow: `default-provider-authorization-explicit-consent`
    - Client type: `Confidential`
    - Client ID: `audiobookshelf`
    - Redirect URIs:
@@ -204,7 +221,7 @@ sops.secrets.grafana_oauth_secret = {
 1. **Create Provider:**
    - Type: OAuth2/OpenID Provider
    - Name: `Paperless`
-   - Authorization flow: `default-authorization-flow`
+   - Authorization flow: `default-provider-authorization-explicit-consent`
    - Client type: `Confidential`
    - Client ID: `paperless-ngx`
    - Redirect URIs: `https://paperless.example.com/accounts/oidc/authentik/login/callback/`
@@ -262,7 +279,7 @@ sops.secrets.paperless_oidc_secret = {
 1. **Create Provider:**
    - Type: OAuth2/OpenID Provider
    - Name: `Miniflux`
-   - Authorization flow: `default-authorization-flow`
+   - Authorization flow: `default-provider-authorization-explicit-consent`
    - Client type: `Confidential`
    - Client ID: `miniflux`
    - Redirect URIs: `https://miniflux.example.com/oauth2/oidc/callback`
@@ -314,7 +331,7 @@ sops.secrets.miniflux_oauth_secret = {
 1. **Create Provider:**
    - Type: OAuth2/OpenID Provider
    - Name: `Kavita`
-   - Authorization flow: `default-authorization-flow`
+   - Authorization flow: `default-provider-authorization-explicit-consent`
    - Client type: `Confidential`
    - Client ID: `kavita`
    - Redirect URIs: `https://kavita.example.com/registration/confirm-migration-link`
@@ -349,7 +366,7 @@ sops.secrets.miniflux_oauth_secret = {
 1. **Create Provider:**
    - Type: OAuth2/OpenID Provider
    - Name: `Jellyseerr`
-   - Authorization flow: `default-authorization-flow`
+   - Authorization flow: `default-provider-authorization-explicit-consent`
    - Client type: `Confidential`
    - Client ID: `jellyseerr`
    - Redirect URIs: `https://jellyseerr.example.com/login/oidc/callback`
@@ -391,7 +408,7 @@ sops.secrets.miniflux_oauth_secret = {
 1. **Create Provider:**
    - Type: OAuth2/OpenID Provider
    - Name: `Jellyfin`
-   - Authorization flow: `default-authorization-flow`
+   - Authorization flow: `default-provider-authorization-explicit-consent`
    - Client type: `Confidential`
    - Client ID: `jellyfin`
    - Redirect URIs: `https://jellyfin.example.com/sso/OID/redirect/authentik`
@@ -437,7 +454,7 @@ sops.secrets.miniflux_oauth_secret = {
 1. **Create Provider:**
    - Type: OAuth2/OpenID Provider
    - Name: `Home Assistant`
-   - Authorization flow: `default-authorization-flow`
+   - Authorization flow: `default-provider-authorization-explicit-consent`
    - Client type: `Public` (important!)
    - Client ID: `homeassistant`
    - Redirect URIs: `https://hass.example.com/auth/oidc/callback`
@@ -482,7 +499,7 @@ These services don't have native SSO support and require Authentik's Proxy Provi
 1. **Create Proxy Provider in Authentik:**
    - Type: Proxy Provider
    - Name: `[Service Name] Proxy`
-   - Authorization flow: `default-authorization-flow`
+   - Authorization flow: `default-provider-authorization-implicit-consent`
    - Mode: `Forward auth (single application)`
    - External host: `https://[service].example.com`
    - Cookie domain: `example.com`
