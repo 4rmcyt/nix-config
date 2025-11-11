@@ -2,7 +2,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   programs = {
     nushell = {
       enable = true;
@@ -104,9 +105,8 @@
             ]
           }
 
-          # command-not-found.nu shell hook
           $env.config.hooks.command_not_found = source ${pkgs.nix-index}/etc/profile.d/command-not-found.nu
-
+          $env.config.hooks.env_change.PWD = source ${pkgs.direnv}/share/direnv/direnv.nu
           $env.config.plugins.highlight.true_colors = true
           $env.config.plugins.highlight.theme = "3024-night"
 
@@ -129,7 +129,7 @@
       };
 
       # export-env = {
-      #   $env.MPD_HOST = "anaproy.nl";
+      #   $env.MPD_HOST = "example.com";
       #   $env.REALNAME = "Redacted Name";
       #   $env.EMAIL = "redacted@example.com";
       #   $env.BROWSER = "firefox";
