@@ -4,3 +4,4 @@ core
 core.*
 .vscode
 .claude
+.flake-inputs

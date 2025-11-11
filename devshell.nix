@@ -10,9 +10,12 @@
       # Shell
       nushell
       carapace
-
-      # SOPS for secrets management
+      direnv
+      nix-direnv
       sops
+      openssl
+      sqlite
+      git
 
       # Code formatters
       cmake-format
