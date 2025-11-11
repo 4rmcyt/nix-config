@@ -5,3 +5,4 @@ core.*
 .vscode
 .claude
 .flake-inputs
+.direnv/flake-inputs/*
