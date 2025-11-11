@@ -23,7 +23,7 @@
           ms-python.python
           nefrob.vscode-just-syntax
           thenuprojectcontributors.vscode-nushell-lang
-          
+
           mkhl.direnv
 
           # Git & SCM
