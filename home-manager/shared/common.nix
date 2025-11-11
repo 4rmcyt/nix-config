@@ -32,9 +32,11 @@
     git = {
       enable = true;
       settings = {
-        user.name = "4rmcyt";
-        user.email = "redacted@example.com";
-        user.signingkey = "D85B52C9288A138E";
+        user = {
+          name = "4rmcyt";
+          email = "redacted@example.com";
+          signingkey = "D85B52C9288A138E";
+        };
         commit.gpgsign = true;
         gpg.program = "gpg";
       };

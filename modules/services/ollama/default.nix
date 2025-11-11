@@ -1,12 +1,16 @@
 _: {
-  services.ollama.enable = true;
-  services.ollama.acceleration = "cuda";
-  services.ollama.loadModels = [
-    "codellama:7b"
-    "codellama:13b"
-    "phi3:mini-4k"
-  ];
-  services.open-webui.enable = true;
+  services = {
+    ollama = {
+      enable = true;
+      acceleration = "cuda";
+      loadModels = [
+        "codellama:7b"
+        "codellama:13b"
+        "phi3:mini-4k"
+      ];
+    };
+    open-webui.enable = true;
+  };
 
   nix.settings = {
     extra-substituters = [

@@ -36,22 +36,29 @@ in {
   # =================================================================
   boot = {
     # Kernel modules
-    initrd.availableKernelModules = [
-      "ahci"
-      "amdgpu"
-      "btusb"
-      "mt7921e"
-      "nvme"
-      "r8169"
-      "sd_mod"
-      "usb_storage"
-      "usbhid"
-      "xhci_pci"
-    ];
+    initrd = {
+      availableKernelModules = [
+        "ahci"
+        "amdgpu"
+        "btusb"
+        "mt7921e"
+        "nvme"
+        "r8169"
+        "sd_mod"
+        "usb_storage"
+        "usbhid"
+        "xhci_pci"
+      ];
 
-    initrd.kernelModules = [
-      "pci-stub"
-    ];
+      kernelModules = [
+        "pci-stub"
+      ];
+
+      # Pre-boot commands
+      preLVMCommands = ''
+        ${pkgs.kbd}/bin/setleds +num
+      '';
+    };
 
     kernelModules = [
       "amdgpu"
@@ -132,11 +139,6 @@ in {
       "net.core.busy_read" = 50;
       "net.core.busy_poll" = 50;
     };
-
-    # Pre-boot commands
-    initrd.preLVMCommands = ''
-      ${pkgs.kbd}/bin/setleds +num
-    '';
 
     extraModulePackages = with config.boot.kernelPackages; [
       v4l2loopback

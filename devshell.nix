@@ -1,25 +1,59 @@
-{pkgs ? import <nixpkgs> {}}:
-pkgs.mkShell {
-  packages = with pkgs; [
-    # SOPS for secrets management
-    sops
+{pkgs, ...}: {
+  default = {
+    # Use nushell as the default shell
+    devshell.motd = ''
+      {202}🔨 NixOS Config Development Shell{reset}
+      $(type -p menu &>/dev/null && menu)
+    '';
 
-    # Code formatters
-    cmake-format
-    nodePackages.prettier # This is the correct way to get prettier
-    rustfmt
-    nixfmt-rfc-style
-    deadnix
-    statix
-    yamlfmt
-    toml-sort
-    shfmt
-    just
-    dockfmt
-    alejandra
-    treefmt
+    packages = with pkgs; [
+      # Shell
+      nushell
+      carapace
 
-    # Development tools
-    nix-diff
-  ];
+      # SOPS for secrets management
+      sops
+
+      # Code formatters
+      cmake-format
+      nodePackages.prettier
+      rustfmt
+      yamlfmt
+      toml-sort
+      shfmt
+      shellcheck
+      just
+      dockfmt
+      alejandra
+      treefmt
+      statix
+
+      # Development tools
+      nix-diff
+    ];
+
+    commands = [
+      {
+        package = pkgs.nixfmt-rfc-style;
+        help = "Format Nix files using RFC style";
+      }
+      {
+        package = pkgs.deadnix;
+        help = "Find and remove unused code in Nix files";
+      }
+      {
+        package = pkgs.treefmt;
+        help = "Format all files in the project";
+      }
+    ];
+
+    # Set nushell as the shell
+    devshell.name = "nix-config";
+    bash.extra = ''
+      # Launch nushell if available and in an interactive shell
+      if command -v nu &> /dev/null && [[ $- == *i* ]]; then
+        exec nu
+      fi
+    '';
+  };
 }

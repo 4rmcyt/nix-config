@@ -229,6 +229,26 @@
         "type": "github"
       }
     },
+    "devshell": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1762521437,
+        "narHash": "sha256-RXN+lcx4DEn3ZS+LqEJSUu/HH+dwGvy0syN7hTo/Chg=",
+        "owner": "numtide",
+        "repo": "devshell",
+        "rev": "07bacc9531f5f4df6657c0a02a806443685f384a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "devshell",
+        "type": "github"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -1042,6 +1062,7 @@
         "cosmic-applets-collection": "cosmic-applets-collection",
         "cosmic-unstable": "cosmic-unstable",
         "cpu-microcodes": "cpu-microcodes",
+        "devshell": "devshell",
         "disko": "disko",
         "firefox-addons": "firefox-addons",
         "firefox-nightly": "firefox-nightly",

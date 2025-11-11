@@ -80,6 +80,10 @@
     };
 
     # Development tools
+    devshell = {
+      url = "github:numtide/devshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -127,9 +131,12 @@
       specialArgs = {inherit inputs;};
     } {
       systems = import inputs.systems;
-      imports = [treefmt-nix.flakeModule];
+      imports = [
+        treefmt-nix.flakeModule
+        inputs.devshell.flakeModule
+      ];
       perSystem = {pkgs, ...}: {
-        devShells.default = import ./devshell.nix {inherit pkgs;};
+        devshells = import ./devshell.nix {inherit pkgs;};
         treefmt = import ./treefmt.nix {inherit pkgs;};
       };
 

@@ -34,14 +34,18 @@
   # =================================================================
   system.stateVersion = "25.05";
 
-  sops.secrets.tailscale_auth_key = {
-    sopsFile = ../../../secrets/tailscale-desktop.yaml;
-    key = "tailscale_auth_key";
-  };
-
-  sops.secrets.git_access_token = {
-    sopsFile = ../../../secrets/common.yaml;
-    key = "git_access_token";
+  sops = {
+    secrets = {
+      tailscale_auth_key = {
+        sopsFile = ../../../secrets/tailscale-desktop.yaml;
+        key = "tailscale_auth_key";
+      };
+      git_access_token = {
+        sopsFile = ../../../secrets/common.yaml;
+        key = "git_access_token";
+      };
+    };
+    age.keyFile = "/root/.config/sops/age/keys.txt";
   };
 
   # =================================================================
@@ -271,11 +275,6 @@
   };
 
   # =================================================================
-  # Secrets Management
-  # =================================================================
-  sops.age.keyFile = "/root/.config/sops/age/keys.txt";
-
-  # =================================================================
   # Services
   # =================================================================
   services = {
@@ -294,10 +293,12 @@
       wireplumber.enable = true;
       extraConfig.pipewire."92-low-latency" = {
         context.properties = {
-          default.clock.rate = 48000;
-          default.clock.quantum = 32;
-          default.clock.min-quantum = 32;
-          default.clock.max-quantum = 32;
+          default.clock = {
+            rate = 48000;
+            quantum = 32;
+            min-quantum = 32;
+            max-quantum = 32;
+          };
         };
       };
       extraConfig.pipewire."93-screen-share" = {
