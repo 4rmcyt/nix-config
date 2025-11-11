@@ -6,3 +6,4 @@ core.*
 .claude
 .flake-inputs
 .direnv/flake-inputs/*
+.direnv/flake-profile-*
