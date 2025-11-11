@@ -1,0 +1,66 @@
+[formatter.alejandra]
+command = "alejandra"
+includes = ["*.nix"]
+
+[formatter.deadnix]
+command = "deadnix"
+includes = ["*.nix"]
+
+[formatter.dockfmt]
+command = "dockfmt"
+includes = ["*.Dockerfile", "docker-compose.yml"]
+
+[formatter.just]
+command = "just"
+includes = [".justfile"]
+
+[formatter.prettier]
+command = "prettier"
+includes = [
+  "*.cjs",
+  "*.css",
+  "*.html",
+  "*.js",
+  "*.json",
+  "*.json5",
+  "*.jsx",
+  "*.mdx",
+  "*.mjs",
+  "*.scss",
+  "*.ts",
+  "*.tsx",
+  "*.vue",
+  "*.yaml",
+  "*.yml"
+]
+
+[formatter.rustfmt]
+command = "rustfmt"
+includes = ["*.rs"]
+
+[formatter.shfmt]
+command = "shfmt"
+includes = ["*.bash", "*.envrc", "*.envrc.*", "*.sh", ".*zsh"]
+
+[formatter.toml-sort]
+command = "toml-sort"
+includes = ["*.toml"]
+
+[formatter.yamlfmt]
+command = "yamlfmt"
+includes = ["*.yaml", "*.yml"]
+
+[global]
+excludes = [
+  "*.age",
+  "*.clan-flake",
+  "*.code-workspace",
+  "*.desktop",
+  "*.jpeg",
+  "*.list",
+  "*.png",
+  "*.pub",
+  "*.toml",
+  "*.typed",
+  "secrets/*"
+]

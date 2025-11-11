@@ -3,7 +3,7 @@ disabled = [
     'manual_inherit',
     'manual_inherit_from'
 ]
-nix_version = '2.31'
+nix_version = '2.31.2'
 ignore = [
     '.direnv/**',
     'result*/**',
