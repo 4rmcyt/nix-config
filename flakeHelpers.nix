@@ -2,9 +2,7 @@
   inputs,
   userName,
 }: let
-  system = "x86_64-linux";
   commonArgs = {
-    inherit system;
     specialArgs = {inherit inputs;};
   };
 

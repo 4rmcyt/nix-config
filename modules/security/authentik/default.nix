@@ -51,11 +51,11 @@
       email = {
         host = "smtp.gmail.com";
         port = 587;
-        username = "redacted@example.com";
+        username = config.my.defaults.email;
         passwordeval = "cat ${config.sops.secrets.authentik_gmail_password.path}";
         use_tls = true;
         use_ssl = false;
-        from = "redacted@example.com";
+        from = config.my.defaults.email;
       };
       disable_startup_analytics = true;
       avatars = "initials";
