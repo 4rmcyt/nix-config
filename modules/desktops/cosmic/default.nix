@@ -95,6 +95,7 @@
       cosmic-screenshot
       forecast
       gnome-calendar
+      gnome-online-accounts
       isocodes
       libisocodes
       libsecret
