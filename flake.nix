@@ -144,7 +144,10 @@
         treefmt-nix.flakeModule
         inputs.devshell.flakeModule
       ];
-      perSystem = {pkgs, ...}: {
+      perSystem = {
+        pkgs,
+        ...
+      }: {
         devshells = import ./devshell.nix {inherit pkgs;};
         treefmt = import ./treefmt.nix {inherit pkgs;};
       };
@@ -213,6 +216,7 @@
           };
         };
 
+        # Standalone home-manager configurations
         homeConfigurations = import ./flakeHelpersHome.nix {inherit helpers inputs userName;};
       };
     };

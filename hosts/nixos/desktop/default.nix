@@ -53,12 +53,18 @@
   # =================================================================
   boot = {
     loader = {
-      efi.canTouchEfiVariables = false;
-      systemd-boot.enable = true;
-    };
-    lanzaboote = {
-      enable = false;
-      pkiBundle = "/var/lib/sbctl";
+      efi.canTouchEfiVariables = true;
+      systemd-boot.enable = false;
+      limine = {
+        enable = true;
+        enableEditor = false;
+        maxGenerations = 10;
+        validateChecksums = true;
+        panicOnChecksumMismatch = true;
+        efiSupport = true;
+        efiInstallAsRemovable = false;
+        biosSupport = false;
+      };
     };
   };
 

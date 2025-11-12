@@ -88,6 +88,8 @@ in {
       "usbcore.autosuspend=-1"
       "usb-storage.delay_use=0"
       "systemd.unified_cgroup_hierarchy=1"
+      "rd.systemd.show_status=auto"
+      "rd.udev.log_priority=3"
     ];
 
     # ZFS configuration

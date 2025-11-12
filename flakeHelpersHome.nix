@@ -3,7 +3,8 @@
   inputs,
   userName,
 }: let
-  pkgs = inputs.nixpkgs.legacyPackages."x86_64-linux";
+  # Use the current system's pkgs instead of hardcoding x86_64-linux
+  pkgs = inputs.nixpkgs.legacyPackages.${builtins.currentSystem};
 in {
   "${userName}@desktop" = helpers.mkStandaloneHome {
     inherit pkgs;
