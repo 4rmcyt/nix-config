@@ -137,7 +137,6 @@
         powertop
         ryzen-monitor-ng
         samba
-        wireplumber
 
         # =============================================================
         # Security & Encryption
