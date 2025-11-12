@@ -1,10 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-{
+{pkgs, ...}: {
   home.packages = with pkgs; [
     mpvpaper
     mpvpaper-daemon
@@ -14,7 +8,7 @@
     "$mainMod, W, exec, ${pkgs.wallpaper-sh}/bin/wallpaper.sh"
   ];
 
-  programs.waybar.settings.main."custom/wallpaper" = {
+  home.programs.waybar.settings.main."custom/wallpaper" = {
     format = "󰸉";
     tooltip-format = "Change wallpaper";
     on-click = "${pkgs.wallpaper-sh}/bin/wallpaper.sh";
@@ -23,8 +17,8 @@
   systemd.user.services.mpvpaper-daemon = {
     Unit = {
       Description = "mpvpaper wallpaper control daemon";
-      After = [ "graphical-session.target" ];
-      PartOf = [ "graphical-session.target" ];
+      After = ["graphical-session.target"];
+      PartOf = ["graphical-session.target"];
     };
 
     Service = {
@@ -33,6 +27,6 @@
       RestartSec = 10;
     };
 
-    Install.WantedBy = [ "graphical-session.target" ];
+    Install.WantedBy = ["graphical-session.target"];
   };
 }

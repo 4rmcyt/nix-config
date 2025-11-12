@@ -75,16 +75,14 @@
           }
 
           $env.config = {
-            show_banner: false,
+            show_banner: true,
             completions: {
               case_sensitive: false # case-sensitive completions
               quick: true           # set to false to prevent auto-selecting completions
               partial: true         # set to false to prevent partial filling of the prompt
               algorithm: "fuzzy"    # prefix or fuzzy
               external: {
-                # set to false to prevent nushell looking into $env.PATH to find more suggestions
                 enable: true
-                # set to lower can improve completion performance at the cost of omitting some options
                 max_results: 100
                 completer: $multiple_completers
               }
@@ -104,6 +102,8 @@
             ]
           }
 
+          $env.config.hooks.command_not_found = source ${config.programs.nix-index.package}/etc/profile.d/command-not-found.nu
+
           $env.config.plugins.highlight.true_colors = true
           $env.config.plugins.highlight.theme = "3024-night"
 
@@ -118,6 +118,63 @@
           $env.PROMPT_INDICATOR_VI_INSERT = "⎆ ";
           $env.PROMPT_INDICATOR_VI_NORMAL = "⎌ ";
         '';
+        settings = {
+          show_banner = true;
+          completions = {
+            case_sensitive = false;
+            quick = true;
+            partial = true;
+            algorithm = "fuzzy";
+          };
+          history = {
+            file_format = "sqlite";
+            max_size = 1000000;
+            isolation = true;
+          };
+        };
+        shellAliases = {
+          "l" = "ls -a";
+          "ll" = "ls -la";
+          "_" = "doas";
+          "clr" = "clear";
+          "rcp" = "rsync -ah --partial --no-whole-file --info=progress2";
+          "rrcp" = "_ rsync -ah --partial --no-whole-file --info=progress2";
+          "ncg" = "_ nix-collect-garbage";
+          "ncgd" = "_ nix-collect-garbage -d";
+          "weather" = "curl wttr.in/Volzhskiy";
+          "rede" = "systemctl --user start gammastep.service &";
+          "redd" = "systemctl --user stop gammastep.service &";
+          "show-packages" = "_ nix-store -q --references /run/current-system/sw";
+          # "ns" = "nix shell nixpkgs#";
+          "nsp" = "nix-shell --run zsh -p";
+          "nd" = "nix develop -c zsh";
+          "nb" = "nix build";
+          "nbf" = "nix-fast-build --flake";
+          "nbfc" = "nix-fast-build --skip-cached --flake";
+          "nr" = "nix run";
+          # "e" = "$EDITOR";
+          "q" = "qalc";
+          "man" = "pinfo";
+          "t" = "trans";
+          "steam-gamescope" = "gamescope -b --steam -- steam -pipewire-dmabuf";
+          # systemd
+          "ctl" = "systemctl";
+          "ctlsp" = "systemctl stop";
+          "ctlst" = "systemctl start";
+          "ctlrt" = "systemctl restart";
+          "ctls" = "systemctl status";
+          "ctlu" = "systemctl --user";
+          "ctlusp" = "systemctl --user stop";
+          "ctlust" = "systemctl --user start";
+          "ctlurt" = "systemctl --user restart";
+          "ctlus" = "systemctl --user status";
+          "ctlfailed" = "systemctl --failed --all";
+          "ctlrf" = "systemctl reset-failed";
+          "ctldrd" = "systemctl daemon-reload";
+          "j" = "journalctl";
+          "ju" = "journalctl -xe -u";
+          "juu" = "journalctl -xe --user-unit";
+        };
       };
       shellAliases = {
         vi = "hx";

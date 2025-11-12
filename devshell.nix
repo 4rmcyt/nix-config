@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   imports = [
     ./home-manager/shared/common.nix
     ./home-manager/shared/zsh.nix

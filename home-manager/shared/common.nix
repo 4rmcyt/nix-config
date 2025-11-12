@@ -13,6 +13,9 @@
     fzf = {
       enable = true;
       enableZshIntegration = true;
+      enableNushellIntegration = true;
+      defaultOptions = ["--border" "--ansi" "--layout=reverse"];
+      defaultCommand = "${pkgs.fd}/bin/fd --type f --color=always";
       colors = {
         fg = "#D8DEE9";
         bg = "#2E3440";
@@ -113,8 +116,36 @@
 
     zoxide = {
       enable = true;
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+      enableNushellIntegration = true;
       enableZshIntegration = true;
       options = ["--cmd cd"];
+    };
+
+    yazi = {
+      enable = true;
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+      enableNushellIntegration = true;
+      enableZshIntegration = true;
+    };
+
+    tealdeer = {
+      enable = true;
+      enableAutoUpdates = true;
+      settings.updates = {
+        auto_update = true;
+        auto_update_interval_hours = 100;
+      };
+    };
+
+    carapace = {
+      enable = true;
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+      enableNushellIntegration = true;
+      enableZshIntegration = true;
     };
   };
 
