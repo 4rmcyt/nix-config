@@ -56,7 +56,6 @@
 
     sessionVariables = {
       ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi";
-      EDITOR = "hx";
       LC_CTYPE = "en_US.UTF-8";
       LEDGER_COLOR = "true";
       LESS = "-FRSXM";

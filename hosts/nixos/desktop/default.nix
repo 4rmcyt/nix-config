@@ -74,7 +74,6 @@
   # =================================================================
   environment = {
     sessionVariables = lib.mkBefore {
-      # NVIDIA-specific settings
       GBM_BACKEND = "nvidia-drm";
       LIBVA_DRIVER_NAME = "nvidia";
       NVD_BACKEND = "direct";
