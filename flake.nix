@@ -78,6 +78,10 @@
       url = "github:nix-community/nixos-vscode-server";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-vscode-marketplace = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Development tools
     devshell = {
@@ -111,9 +115,14 @@
       url = "github:nix-community/flake-firefox-nightly";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     # Non-flake inputs
     cpu-microcodes = {
       url = "github:platomav/CPUMicrocodes";
+      flake = false;
+    };
+    nushell-scripts = {
+      url = "github:nushell/nu_scripts";
       flake = false;
     };
   };

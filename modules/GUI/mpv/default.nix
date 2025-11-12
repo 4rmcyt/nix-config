@@ -18,7 +18,12 @@
       sub-auto = "fuzzy";
       slang = "en,eng,enUS,en-US";
       user-agent = "Mozilla/5.0";
-      # msg-level=all=debug
+      vo = "gpu-next";
+      gpu-context = "wayland";
+      hwdec =
+        if gpu == "nvidia"
+        then "vdpau"
+        else "vaapi";
       script-opts = "ytdl_hook-ytdl_path=yt-dlp,ytdl_hook-try_ytdl_first=yes";
       ytdl-raw-options = "sub-lang=\"en,eng,enUS,en-US\",write-sub=,write-auto-sub=,yes-playlist=,concurrent-fragments=4";
     };
