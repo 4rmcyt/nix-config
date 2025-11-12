@@ -1,8 +1,10 @@
 {
   lib,
   pkgs,
+  config,
   ...
-}: {
+}:
+{
   programs = {
     nushell = {
       enable = true;
@@ -118,68 +120,63 @@
           $env.PROMPT_INDICATOR_VI_INSERT = "⎆ ";
           $env.PROMPT_INDICATOR_VI_NORMAL = "⎌ ";
         '';
-        settings = {
-          show_banner = true;
-          completions = {
-            case_sensitive = false;
-            quick = true;
-            partial = true;
-            algorithm = "fuzzy";
-          };
-          history = {
-            file_format = "sqlite";
-            max_size = 1000000;
-            isolation = true;
-          };
+      };
+      settings = {
+        show_banner = true;
+        completions = {
+          case_sensitive = false;
+          quick = true;
+          partial = true;
+          algorithm = "fuzzy";
         };
-        shellAliases = {
-          "l" = "ls -a";
-          "ll" = "ls -la";
-          "_" = "doas";
-          "clr" = "clear";
-          "rcp" = "rsync -ah --partial --no-whole-file --info=progress2";
-          "rrcp" = "_ rsync -ah --partial --no-whole-file --info=progress2";
-          "ncg" = "_ nix-collect-garbage";
-          "ncgd" = "_ nix-collect-garbage -d";
-          "weather" = "curl wttr.in/Volzhskiy";
-          "rede" = "systemctl --user start gammastep.service &";
-          "redd" = "systemctl --user stop gammastep.service &";
-          "show-packages" = "_ nix-store -q --references /run/current-system/sw";
-          # "ns" = "nix shell nixpkgs#";
-          "nsp" = "nix-shell --run zsh -p";
-          "nd" = "nix develop -c zsh";
-          "nb" = "nix build";
-          "nbf" = "nix-fast-build --flake";
-          "nbfc" = "nix-fast-build --skip-cached --flake";
-          "nr" = "nix run";
-          # "e" = "$EDITOR";
-          "q" = "qalc";
-          "man" = "pinfo";
-          "t" = "trans";
-          "steam-gamescope" = "gamescope -b --steam -- steam -pipewire-dmabuf";
-          # systemd
-          "ctl" = "systemctl";
-          "ctlsp" = "systemctl stop";
-          "ctlst" = "systemctl start";
-          "ctlrt" = "systemctl restart";
-          "ctls" = "systemctl status";
-          "ctlu" = "systemctl --user";
-          "ctlusp" = "systemctl --user stop";
-          "ctlust" = "systemctl --user start";
-          "ctlurt" = "systemctl --user restart";
-          "ctlus" = "systemctl --user status";
-          "ctlfailed" = "systemctl --failed --all";
-          "ctlrf" = "systemctl reset-failed";
-          "ctldrd" = "systemctl daemon-reload";
-          "j" = "journalctl";
-          "ju" = "journalctl -xe -u";
-          "juu" = "journalctl -xe --user-unit";
+        history = {
+          file_format = "sqlite";
+          max_size = 1000000;
+          isolation = true;
         };
       };
       shellAliases = {
-        vi = "hx";
-        vim = "hx";
-        nano = "hx";
+        "l" = "ls -a";
+        "ll" = "ls -la";
+        "_" = "doas";
+        "clr" = "clear";
+        "rcp" = "rsync -ah --partial --no-whole-file --info=progress2";
+        "rrcp" = "_ rsync -ah --partial --no-whole-file --info=progress2";
+        "ncg" = "_ nix-collect-garbage";
+        "ncgd" = "_ nix-collect-garbage -d";
+        "weather" = "curl wttr.in/Volzhskiy";
+        "rede" = "systemctl --user start gammastep.service &";
+        "redd" = "systemctl --user stop gammastep.service &";
+        "show-packages" = "_ nix-store -q --references /run/current-system/sw";
+        # "ns" = "nix shell nixpkgs#";
+        "nsp" = "nix-shell --run zsh -p";
+        "nd" = "nix develop -c zsh";
+        "nb" = "nix build";
+        "nbf" = "nix-fast-build --flake";
+        "nbfc" = "nix-fast-build --skip-cached --flake";
+        "nr" = "nix run";
+        # "e" = "$EDITOR";
+        "q" = "qalc";
+        "man" = "pinfo";
+        "t" = "trans";
+        "steam-gamescope" = "gamescope -b --steam -- steam -pipewire-dmabuf";
+        # systemd
+        "ctl" = "systemctl";
+        "ctlsp" = "systemctl stop";
+        "ctlst" = "systemctl start";
+        "ctlrt" = "systemctl restart";
+        "ctls" = "systemctl status";
+        "ctlu" = "systemctl --user";
+        "ctlusp" = "systemctl --user stop";
+        "ctlust" = "systemctl --user start";
+        "ctlurt" = "systemctl --user restart";
+        "ctlus" = "systemctl --user status";
+        "ctlfailed" = "systemctl --failed --all";
+        "ctlrf" = "systemctl reset-failed";
+        "ctldrd" = "systemctl daemon-reload";
+        "j" = "journalctl";
+        "ju" = "journalctl -xe -u";
+        "juu" = "journalctl -xe --user-unit";
       };
     };
     carapace.enable = true;

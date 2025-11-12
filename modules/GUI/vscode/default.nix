@@ -3,26 +3,8 @@
   osConfig ? null,
   lib,
   ...
-}: let
-  EDITOR = pkgs.writeShellScript "code-editor" ''
-    source "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
-    NIXOS_OZONE_WL=1 \
-    exec \
-    ${getExe config.programs.vscode.package} \
-    --password-store="gnome-libsecret" \
-    -w -n \
-    "$@"
-  '';
-in {
-  defaultApplications.editor = {
-    cmd = EDITOR;
-    desktop = "code-wayland";
-  };
-
-  home.sessionVariables = {
-    EDITOR = config.defaultApplications.editor.cmd;
-    VISUAL = config.defaultApplications.editor.cmd;
-  };
+}:
+{
 
   programs.vscode = {
     enable = true;
@@ -32,75 +14,72 @@ in {
     profiles.default = {
       enableExtensionUpdateCheck = false;
       enableUpdateCheck = false;
-      extensions = let
-        ext-market = pkgs.nix-vscode-extensions.vscode-marketplace;
-      in
-        with ext-market;
-          [
-            # Formatters
-            aaron-bond.better-comments
-            codezombiech.gitignore
-            christian-kohler.path-intellisense
-            gruntfuggly.todo-tree
-            irongeek.vscode-env
-            esbenp.prettier-vscode
-            foxundermoon.shell-format
-            redhat.vscode-yaml
-            tamasfe.even-better-toml
+      extensions =
+        with pkgs.vscode-extensions;
+        [
+          # Formatters
+          aaron-bond.better-comments
+          codezombiech.gitignore
+          christian-kohler.path-intellisense
+          gruntfuggly.todo-tree
+          irongeek.vscode-env
+          esbenp.prettier-vscode
+          foxundermoon.shell-format
+          redhat.vscode-yaml
+          tamasfe.even-better-toml
 
-            # Languages
-            jnoortheen.nix-ide
-            ms-python.python
-            nefrob.vscode-just-syntax
-            thenuprojectcontributors.vscode-nushell-lang
+          # Languages
+          jnoortheen.nix-ide
+          ms-python.python
+          nefrob.vscode-just-syntax
+          thenuprojectcontributors.vscode-nushell-lang
 
-            mkhl.direnv
-            ms-azuretools.vscode-docker
-            ms-python.isort
-            ms-python.python
-            ms-python.vscode-pylance
-            ms-vscode-remote.remote-containers
-            ms-vscode-remote.remote-ssh
-            pkief.material-icon-theme
-            tamasfe.even-better-toml
-            usernamehw.errorlens
-            yzhang.markdown-all-in-one
+          mkhl.direnv
+          ms-azuretools.vscode-docker
+          ms-python.isort
+          ms-python.python
+          ms-python.vscode-pylance
+          ms-vscode-remote.remote-containers
+          ms-vscode-remote.remote-ssh
+          pkief.material-icon-theme
+          tamasfe.even-better-toml
+          usernamehw.errorlens
+          yzhang.markdown-all-in-one
 
-            # Git & SCM
-            github.copilot
-            github.copilot-chat
-            anthropic.claude-code
-          ]
-          ++ (with pkgs.vscode-utils; [
-            # Extensions from marketplace
-            (buildVscodeMarketplaceExtension {
-              mktplcRef = {
-                publisher = "BeardedBear";
-                name = "beardedtheme";
-                version = "10.1.0";
-                sha256 = "0c0kcl08j8ii65h5mkpgssgqgshhkf49adgxd5xh1klx8qn2zjgc";
-              };
-            })
-            (buildVscodeMarketplaceExtension {
-              mktplcRef = {
-                publisher = "BeardedBear";
-                name = "beardedicons";
-                version = "1.22.0";
-                sha256 = "1aaxbrbss3ck9pab3fz55xkkwm1qc1dgq6aypfh7fl2qakfv0r0f";
-              };
-            })
-            (buildVscodeMarketplaceExtension {
-              mktplcRef = {
-                publisher = "ibecker";
-                name = "treefmt-vscode";
-                version = "2.2.1";
-                sha256 = "1ll7i4xfv4744d5xg3jcpcpi2b048qla1b95fi3sfnhkgk788k6y";
-              };
-            })
-          ]);
+          # Git & SCM
+          github.copilot
+          github.copilot-chat
+          anthropic.claude-code
+        ]
+        ++ (with pkgs.vscode-utils; [
+          # Extensions from marketplace
+          (buildVscodeMarketplaceExtension {
+            mktplcRef = {
+              publisher = "BeardedBear";
+              name = "beardedtheme";
+              version = "10.1.0";
+              sha256 = "0c0kcl08j8ii65h5mkpgssgqgshhkf49adgxd5xh1klx8qn2zjgc";
+            };
+          })
+          (buildVscodeMarketplaceExtension {
+            mktplcRef = {
+              publisher = "BeardedBear";
+              name = "beardedicons";
+              version = "1.22.0";
+              sha256 = "1aaxbrbss3ck9pab3fz55xkkwm1qc1dgq6aypfh7fl2qakfv0r0f";
+            };
+          })
+          (buildVscodeMarketplaceExtension {
+            mktplcRef = {
+              publisher = "ibecker";
+              name = "treefmt-vscode";
+              version = "2.2.1";
+              sha256 = "1ll7i4xfv4744d5xg3jcpcpi2b048qla1b95fi3sfnhkgk788k6y";
+            };
+          })
+        ]);
 
       userSettings = {
-        "editor.fontFamily" = fonts.mono.family;
         "editor.fontLigatures" = true;
         "editor.fontSize" = 16;
         "editor.quickSuggestions" = {
@@ -142,7 +121,7 @@ in {
         "workbench.colorTheme" = "Bearded Theme Arc Reversed";
         "workbench.editor.enablePreview" = false;
         "workbench.editor.limit.perEditorGroup" = true;
-        "workbench.iconTheme" = "bearded-icons";
+        "workbench.iconTheme" = "material-icon-theme";
         "workbench.startupEditor" = "none";
 
         # ===== Explorer Settings =====
@@ -151,22 +130,7 @@ in {
 
         # ===== Diff Editor Settings =====
         "diffEditor.ignoreTrimWhitespace" = true;
-        "nix.enableLanguageServer" = true;
-        "nix.formatterPath" = getExe pkgs.nixfmt-rfc-style;
-        "nix.serverSettings" = {
-          "nil" = {
-            "formatting" = {
-              "command" = [(getExe pkgs.nixfmt-rfc-style)];
-            };
-          };
-          "nixd" = {
-            "formatting" = {
-              "command" = [
-                (getExe pkgs.nixfmt-rfc-style)
-              ];
-            };
-          };
-        };
+
         "search.exclude" = {
           "**/.devenv" = true;
           "**/.direnv" = true;
@@ -197,20 +161,19 @@ in {
         "github.gitProtocol" = "ssh";
 
         # ===== Security Settings =====
-        "security.allowedUNCHosts" = ["wsl.localhost"];
+        "security.allowedUNCHosts" = [ "wsl.localhost" ];
         "security.workspace.trust.untrustedFiles" = "open";
         "telemetry.telemetryLevel" = "off";
 
         # ===== Remote SSH Settings =====
-        "remote.SSH.remotePlatform" =
-          {
-            "wsl.localhost" = "linux";
-          }
-          // lib.optionalAttrs (osConfig != null && osConfig ? my.defaults) {
-            "${osConfig.my.defaults.homeserver_lan}" = "linux";
-            "${osConfig.my.defaults.matebook_wifi}" = "linux";
-            "${osConfig.my.defaults.desktop_lan}" = "linux";
-          };
+        "remote.SSH.remotePlatform" = {
+          "wsl.localhost" = "linux";
+        }
+        // lib.optionalAttrs (osConfig != null && osConfig ? my.defaults) {
+          "${osConfig.my.defaults.homeserver_lan}" = "linux";
+          "${osConfig.my.defaults.matebook_wifi}" = "linux";
+          "${osConfig.my.defaults.desktop_lan}" = "linux";
+        };
 
         # ===== Language-Specific Settings =====
 
@@ -293,7 +256,4 @@ in {
       };
     };
   };
-  persist.state.directories = [
-    ".config/Code"
-  ];
 }

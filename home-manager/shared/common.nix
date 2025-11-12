@@ -13,7 +13,6 @@
     fzf = {
       enable = true;
       enableZshIntegration = true;
-      enableNushellIntegration = true;
       defaultOptions = ["--border" "--ansi" "--layout=reverse"];
       defaultCommand = "${pkgs.fd}/bin/fd --type f --color=always";
       colors = {
