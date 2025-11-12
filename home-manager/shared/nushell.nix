@@ -124,25 +124,13 @@
         vim = "hx";
         nano = "hx";
       };
-
-      # export-env = {
-      #   $env.MPD_HOST = "example.com";
-      #   $env.REALNAME = "Redacted Name";
-      #   $env.EMAIL = "redacted@example.com";
-      #   $env.BROWSER = "firefox";
-      #   $env.XDG_CONFIG_HOME = $"($env.HOME)/.config";
-      #   $env.TODO_DIR = $"($env.HOME)/.todo";
-      #   $env.PAGER = try { (which bat).0.cmd } catch { "less" };
-      #   $env.BAT_PAGER = "less";
-      #   $env.BAT_THEME = "gruvbox-dark";
-      #   $env.PROMPT_INDICATOR_VI_INSERT = "⎆ ";
-      #   $env.PROMPT_INDICATOR_VI_NORMAL = "⎌ ";
-      # };
     };
     carapace.enable = true;
     carapace.enableNushellIntegration = true;
 
+    # Disable automatic Nushell integration for direnv to avoid parse-time source errors
+    # Direnv integration will be handled via the direnv hook in home-manager
     direnv.enable = true;
-    direnv.enableNushellIntegration = true;
+    direnv.enableNushellIntegration = false;
   };
 }
