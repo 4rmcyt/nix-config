@@ -12,27 +12,27 @@
       # =================================================================
       btop
       curl
-      git
-      git-crypt
-      htop
-      mc
-      openssl
-      pciutils
-      unzip
-      vim
-      wget
-      neofetch
-      p7zip
-      usbutils
-      nodejs
       direnv
       dockerfile-language-server
+      git
+      git-crypt
       gnumake
+      htop
       just-lsp
+      mc
+      neofetch
       nh
       nix-fast-build
       nix-output-monitor
       nixos-rebuild-ng
+      nodejs
+      openssl
+      p7zip
+      pciutils
+      unzip
+      usbutils
+      vim
+      wget
 
       # =================================================================
       # Development & Nix Tools (alphabetical)
@@ -42,7 +42,6 @@
       cachix
       cmake-format
       deadnix
-      treefmt
       dockfmt
       helix
       just
@@ -55,6 +54,7 @@
       sops
       statix
       toml-sort
+      treefmt
       yamlfmt
 
       # =================================================================

@@ -1,7 +1,6 @@
 {
   pkgs,
   lib,
-  inputs,
   ...
 }: {
   # =================================================================
@@ -22,34 +21,35 @@
 
   # Enable COSMIC desktop
   services = {
-    gnome.gnome-keyring.enable = true;
     desktopManager.cosmic.enable = true;
     displayManager = {
-      cosmic-greeter.enable = true;
       autoLogin = {
         enable = true;
         user = "zeev";
       };
+      cosmic-greeter.enable = true;
     };
+    gnome.gnome-keyring.enable = true;
   };
 
   # Wayland environment variables
   environment.sessionVariables = lib.mkBefore {
-    # Wayland Support
-    COSMIC_DATA_CONTROL_ENABLED = 1;
-    NIXOS_OZONE_WL = "1";
-    CLUTTER_BACKEND = "wayland";
-    SDL_VIDEODRIVER = "wayland";
-    # Qt Wayland Support
-    QT_QPA_PLATFORM = "wayland;xcb";
-    QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-    ELECTRON_OZONE_PLATFORM_HINT = "auto";
-    ELECTRON_FORCE_SAFE_STORAGE_BACKEND = "gnome_libsecret";
-
     # Browser Optimization
+    MOZ_DISABLE_RDD_SANDBOX = "1";
     MOZ_ENABLE_WAYLAND = "1";
     MOZ_USE_XINPUT2 = "1";
-    MOZ_DISABLE_RDD_SANDBOX = "1";
+
+    # Qt Wayland Support
+    ELECTRON_FORCE_SAFE_STORAGE_BACKEND = "gnome_libsecret";
+    ELECTRON_OZONE_PLATFORM_HINT = "auto";
+    QT_QPA_PLATFORM = "wayland;xcb";
+    QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+
+    # Wayland Support
+    CLUTTER_BACKEND = "wayland";
+    COSMIC_DATA_CONTROL_ENABLED = 1;
+    NIXOS_OZONE_WL = "1";
+    SDL_VIDEODRIVER = "wayland";
 
     # iso-codes data for COSMIC apps
     XDG_DATA_DIRS = lib.mkAfter ["${pkgs.isocodes}/share"];
@@ -57,9 +57,9 @@
 
   # Security settings
   security = {
-    rtkit.enable = true;
-    polkit.enable = true;
     pam.services.login.enableGnomeKeyring = true;
+    polkit.enable = true;
+    rtkit.enable = true;
   };
 
   # XDG Portal for COSMIC
@@ -74,50 +74,35 @@
 
   environment.systemPackages = lib.mkBefore (
     with pkgs; [
-      tasks
-      quick-webapps
-      cosmic-bg
-      cosmic-osd
-      cosmic-idle
-      cosmic-comp
-      cosmic-randr
-      cosmic-icons
-      cosmic-reader
-      cosmic-ext-ctl
+      adw-gtk3
+      cheese
+      cosmic-applibrary
       cosmic-applets
-      cosmic-protocols
-      cosmic-screenshot
-      cosmic-initial-setup
-      cosmic-ext-tweaks
+      cosmic-bg
+      cosmic-comp
       cosmic-ext-applet-caffeine
       cosmic-ext-applet-external-monitor-brightness
       cosmic-ext-calculator
+      cosmic-ext-ctl
+      cosmic-ext-tweaks
+      cosmic-icons
+      cosmic-idle
+      cosmic-initial-setup
+      cosmic-osd
+      cosmic-protocols
+      cosmic-randr
+      cosmic-reader
+      cosmic-screenshot
       forecast
-      cosmic-applibrary
-      seahorse
-      adw-gtk3
-      loupe
       gnome-calendar
-      cheese
-      libsecret
       isocodes
       libisocodes
+      libsecret
       locale
+      loupe
+      quick-webapps
+      seahorse
+      tasks
     ]
   );
-
-  systemd.user.services.cosmic-ext-bg-theme = {
-    description = "COSMIC Background Theme Extension";
-    documentation = ["man:cosmic-ext-bg-theme(1)"];
-    partOf = ["graphical-session.target"];
-    wantedBy = ["graphical-session.target"];
-
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = "${
-        inputs.cosmic-applets-collection.packages.${pkgs.stdenv.hostPlatform.system}.cosmic-ext-bg-theme
-      }/bin/cosmic-ext-bg-theme";
-      Restart = "on-failure";
-    };
-  };
 }

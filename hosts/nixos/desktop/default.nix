@@ -72,26 +72,43 @@
   # Environment
   # =================================================================
   environment = {
-    shells = lib.mkBefore (with pkgs; [nushell]);
-
     sessionVariables = lib.mkBefore {
       # NVIDIA-specific settings
       GBM_BACKEND = "nvidia-drm";
-      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       LIBVA_DRIVER_NAME = "nvidia";
       NVD_BACKEND = "direct";
       XDG_CURRENT_DESKTOP = "sway";
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     };
+
+    shells = lib.mkBefore (with pkgs; [nushell]);
 
     systemPackages = lib.mkBefore (
       with pkgs; [
+        # =============================================================
+        # Audio & Multimedia
+        # =============================================================
+        helvum
+        pavucontrol
+        sof-firmware
+
+        # =============================================================
         # Core System Utilities (desktop-specific)
+        # =============================================================
         neofetch
+        nodejs
         p7zip
         usbutils
-        nodejs
 
+        # =============================================================
+        # Desktop Applications
+        # =============================================================
+        telegram-desktop
+        # jellyfin-media-player
+
+        # =============================================================
         # Development Tools (desktop-specific)
+        # =============================================================
         direnv
         dockerfile-language-server
         gnumake
@@ -102,19 +119,6 @@
         nixfmt
         nixos-rebuild-ng
         treefmt
-
-        # =============================================================
-        # Audio & Multimedia
-        # =============================================================
-        helvum
-        pavucontrol
-        sof-firmware
-
-        # =============================================================
-        # Desktop Applications
-        # =============================================================
-        telegram-desktop
-        # jellyfin-media-player
 
         # =============================================================
         # Fonts & Themes
@@ -181,10 +185,9 @@
   # =================================================================
   # Fonts
   # =================================================================
-
   fonts = {
-    fontconfig.useEmbeddedBitmaps = true;
     fontDir.enable = true;
+    fontconfig.useEmbeddedBitmaps = true;
     packages = builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
   };
 
@@ -209,7 +212,6 @@
     hostId = "e134040f";
     hostName = "desktop";
     networkmanager.enable = true;
-
     wireless.enable = false;
   };
 
@@ -220,6 +222,12 @@
   # Only host-specific overrides are defined here
   nix.settings = {
     cores = 12;
+
+    experimental-features = [
+      "flakes"
+      "nix-command"
+    ];
+
     max-jobs = 12;
 
     # Additional gaming and CUDA caches
@@ -228,6 +236,7 @@
       "https://cuda-maintainers.cachix.org"
       "https://nix-community.cachix.org"
       "https://nix-gaming.cachix.org"
+      "https://chaotic-nyx.cachix.org"
     ];
 
     # Desktop-specific system features
@@ -238,17 +247,13 @@
       "kvm"
     ];
 
-    experimental-features = [
-      "flakes"
-      "nix-command"
-    ];
-
     # Additional trusted public keys for gaming and CUDA caches
     trusted-public-keys = [
       "4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs="
       "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+      "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
     ];
 
     # Allow zeev to use nix commands without sudo
@@ -267,16 +272,19 @@
       enableSSHSupport = true;
       pinentryPackage = pkgs.pinentry-qt;
     };
+
     nh = {
       clean.enable = true;
       clean.extraArgs = "--keep-since 10d --keep 3";
       enable = true;
       flake = "/home/zeev/src/nix-config";
     };
+
     nix-index = {
       enable = true;
       enableZshIntegration = true;
     };
+
     # vscode.enable = true;
   };
 
@@ -288,21 +296,18 @@
     # Audio Services
     # =============================================================
     pipewire = {
-      enable = true;
-      audio.enable = true;
-      pulse.enable = true;
-      jack.enable = true;
       alsa = {
         enable = true;
         support32Bit = true;
       };
-      wireplumber.enable = true;
+      audio.enable = true;
+      enable = true;
       extraConfig.pipewire."92-low-latency" = {
         context.properties = {
-          default.clock.rate = 48000;
-          default.clock.quantum = 32;
-          default.clock.min-quantum = 32;
           default.clock.max-quantum = 32;
+          default.clock.min-quantum = 32;
+          default.clock.quantum = 32;
+          default.clock.rate = 48000;
         };
       };
       extraConfig.pipewire."93-screen-share" = {
@@ -310,11 +315,15 @@
           "node.max-latency" = "1/60";
         };
         context.spa-libs = {
-          "support.*" = "support/libspa-support";
           "api.libcamera.*" = "libcamera/libspa-libcamera";
+          "support.*" = "support/libspa-support";
         };
       };
+      jack.enable = true;
+      pulse.enable = true;
+      wireplumber.enable = true;
     };
+
     pulseaudio.enable = false;
 
     # =============================================================
@@ -341,13 +350,18 @@
         turbo = "auto";
       };
     };
+
     fwupd.enable = true;
+
     openssh.enable = true;
+
     pcscd = {
       enable = true;
       plugins = [pkgs.ccid];
     };
+
     power-profiles-daemon.enable = false;
+
     usbmuxd.enable = true;
 
     # =============================================================
@@ -370,6 +384,15 @@
     };
 
     # =============================================================
+    # Networking Services
+    # =============================================================
+    tailscale = {
+      authKeyFile = config.sops.secrets.tailscale_auth_key.path;
+      enable = true;
+      useRoutingFeatures = "both";
+    };
+
+    # =============================================================
     # Hardware Peripherals
     # =============================================================
     udev = {
@@ -387,12 +410,6 @@
         yubikey-manager
         yubikey-personalization
       ];
-    };
-
-    tailscale = {
-      enable = true;
-      useRoutingFeatures = "both";
-      authKeyFile = config.sops.secrets.tailscale_auth_key.path;
     };
 
     # =============================================================
@@ -414,8 +431,8 @@
       plugdev = {};
       prometheus = {};
     };
+
     users = {
-      zeev.shell = lib.mkForce pkgs.nushell;
       git = {
         createHome = true;
         description = "Git user";
@@ -424,11 +441,14 @@
         isSystemUser = true;
         shell = pkgs.nushell;
       };
+
       prometheus = {
         description = "Prometheus daemon user";
         group = "prometheus";
         isSystemUser = true;
       };
+
+      zeev.shell = lib.mkForce pkgs.nushell;
     };
   };
 

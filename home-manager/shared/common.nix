@@ -4,6 +4,14 @@
   ...
 }: {
   programs = {
+    carapace = {
+      enable = true;
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+      enableNushellIntegration = true;
+      enableZshIntegration = true;
+    };
+
     direnv = {
       enable = true;
       enableZshIntegration = true;
@@ -11,74 +19,74 @@
     };
 
     fzf = {
+      colors = {
+        "bg+" = "#434C5E";
+        "fg+" = "#D8DEE9";
+        "hl+" = "#A3BE8C";
+        bg = "#2E3440";
+        fg = "#D8DEE9";
+        header = "#4C566A";
+        hl = "#A3BE8C";
+        info = "#4C566A";
+        marker = "#EBCB8B";
+        pointer = "#BF616A";
+        prompt = "#81A1C1";
+        spinner = "#4C566A";
+      };
+      defaultCommand = "${pkgs.fd}/bin/fd --type f --color=always";
+      defaultOptions = ["--border" "--ansi" "--layout=reverse"];
       enable = true;
       enableZshIntegration = true;
-      defaultOptions = ["--border" "--ansi" "--layout=reverse"];
-      defaultCommand = "${pkgs.fd}/bin/fd --type f --color=always";
-      colors = {
-        fg = "#D8DEE9";
-        bg = "#2E3440";
-        hl = "#A3BE8C";
-        "fg+" = "#D8DEE9";
-        "bg+" = "#434C5E";
-        "hl+" = "#A3BE8C";
-        pointer = "#BF616A";
-        info = "#4C566A";
-        spinner = "#4C566A";
-        header = "#4C566A";
-        prompt = "#81A1C1";
-        marker = "#EBCB8B";
-      };
     };
 
     git = {
       enable = true;
       settings = {
-        user = {
-          name = "4rmcyt";
-          email = "redacted@example.com";
-          signingkey = "D85B52C9288A138E";
-        };
         commit.gpgsign = true;
         gpg.program = "gpg";
+        user = {
+          email = "redacted@example.com";
+          name = "4rmcyt";
+          signingkey = "D85B52C9288A138E";
+        };
       };
     };
 
     gpg = {
       enable = true;
       settings = {
-        # Display options
-        keyid-format = "long";
-        with-keygrip = true;
-        with-key-origin = true;
-        with-fingerprint = true;
-        with-subkey-fingerprint = true;
-
-        # Security and verification
-        require-cross-certification = true;
-        no-symkey-cache = true;
-        throw-keyids = true;
-
         # Algorithm preferences
-        personal-cipher-preferences = "AES256 AES192 AES";
-        personal-digest-preferences = "SHA512 SHA384 SHA256";
-        personal-compress-preferences = "ZLIB BZIP2 ZIP Uncompressed";
         default-preference-list = "SHA512 SHA384 SHA256 AES256 AES192 AES ZLIB BZIP2 ZIP Uncompressed";
+        personal-cipher-preferences = "AES256 AES192 AES";
+        personal-compress-preferences = "ZLIB BZIP2 ZIP Uncompressed";
+        personal-digest-preferences = "SHA512 SHA384 SHA256";
 
         # Certificate preferences
         cert-digest-algo = "SHA512";
-        s2k-digest-algo = "SHA512";
         s2k-cipher-algo = "AES256";
+        s2k-digest-algo = "SHA512";
 
         # Charset and display
         charset = "utf-8";
         fixed-list-mode = true;
+        keyserver-options = "no-honor-keyserver-url";
+        list-options = "show-uid-validity";
         no-comments = true;
         no-emit-version = true;
         no-greeting = true;
-        keyserver-options = "no-honor-keyserver-url";
-        list-options = "show-uid-validity";
         verify-options = "show-uid-validity";
+
+        # Display options
+        keyid-format = "long";
+        with-fingerprint = true;
+        with-key-origin = true;
+        with-keygrip = true;
+        with-subkey-fingerprint = true;
+
+        # Security and verification
+        no-symkey-cache = true;
+        require-cross-certification = true;
+        throw-keyids = true;
 
         # Use agent
         use-agent = true;
@@ -87,47 +95,30 @@
 
     helix = {
       enable = true;
-      settings = {
-        theme = "heisenberg";
-        editor = {
-          true-color = true;
-          line-number = "relative";
-          mouse = false;
-          cursorline = true;
-          bufferline = "multiple";
-          default-line-ending = "lf";
-          cursor-shape.insert = "bar";
-          cursor-shape.select = "underline";
-          lsp.display-inlay-hints = true;
-          lsp.display-messages = true;
-          file-picker.hidden = false;
-          file-picker.git-ignore = true;
-        };
-      };
       languages.language = [
         {
-          name = "nix";
           auto-format = true;
           formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
+          name = "nix";
         }
       ];
-    };
-
-    zoxide = {
-      enable = true;
-      enableBashIntegration = true;
-      enableFishIntegration = true;
-      enableNushellIntegration = true;
-      enableZshIntegration = true;
-      options = ["--cmd cd"];
-    };
-
-    yazi = {
-      enable = true;
-      enableBashIntegration = true;
-      enableFishIntegration = true;
-      enableNushellIntegration = true;
-      enableZshIntegration = true;
+      settings = {
+        editor = {
+          bufferline = "multiple";
+          cursor-shape.insert = "bar";
+          cursor-shape.select = "underline";
+          cursorline = true;
+          default-line-ending = "lf";
+          file-picker.git-ignore = true;
+          file-picker.hidden = false;
+          line-number = "relative";
+          lsp.display-inlay-hints = true;
+          lsp.display-messages = true;
+          mouse = false;
+          true-color = true;
+        };
+        theme = "heisenberg";
+      };
     };
 
     tealdeer = {
@@ -139,12 +130,21 @@
       };
     };
 
-    carapace = {
+    yazi = {
       enable = true;
       enableBashIntegration = true;
       enableFishIntegration = true;
       enableNushellIntegration = true;
       enableZshIntegration = true;
+    };
+
+    zoxide = {
+      enable = true;
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+      enableNushellIntegration = true;
+      enableZshIntegration = true;
+      options = ["--cmd cd"];
     };
   };
 

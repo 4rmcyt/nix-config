@@ -1,8 +1,8 @@
 {...}: {
   imports = [
     ./cloudflared
+    ./dnssec
     ./nginx
     ./tailscale
-    ./dnssec
   ];
 }

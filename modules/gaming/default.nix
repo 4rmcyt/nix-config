@@ -5,34 +5,33 @@
   config,
   ...
 }: {
-  # Steam
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-    gamescopeSession.enable = true;
-  };
-
+  # Programs
   programs.gamemode = {
     enable = true;
     settings = {
+      custom = {
+        end = "${pkgs.libnotify}/bin/notify-send 'GameMode ended'";
+        start = "${pkgs.libnotify}/bin/notify-send 'GameMode started'";
+      };
+
       general = {
-        renice = 10;
-        ioprio = 7;
         inhibit_screensaver = 1;
+        ioprio = 7;
+        renice = 10;
       };
 
       gpu = {
         apply_gpu_optimisations = "accept-responsibility";
         gpu_device = 2;
       };
-
-      # Move custom section to top level (outside of gpu)
-      custom = {
-        start = "${pkgs.libnotify}/bin/notify-send 'GameMode started'";
-        end = "${pkgs.libnotify}/bin/notify-send 'GameMode ended'";
-      };
     };
+  };
+
+  programs.steam = {
+    dedicatedServer.openFirewall = true;
+    enable = true;
+    gamescopeSession.enable = true;
+    remotePlay.openFirewall = true;
   };
 
   # Gaming packages
@@ -41,15 +40,15 @@
       # Gaming utilities
       # lutris # Disabled due to allegro CMake compatibility issue in current nixpkgs
       # Re-enable when fixed: https://github.com/NixOS/nixpkgs/issues/...
-      heroic
       bottles
+      heroic
       wine
       winetricks
 
       # Performance tools
+      gamemode
       gamescope
       mangohud
-      gamemode
     ]
     ++ lib.optionals (inputs ? nix-gaming) [
       inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.wine-ge
@@ -73,8 +72,8 @@
 
   # Ensure the primary user is in the video group
   users.users.${config.my.defaults.user}.extraGroups = [
-    "video"
     "gamemode"
     "pipewire"
+    "video"
   ];
 }

@@ -1,23 +1,28 @@
 {pkgs, ...}: {
   programs.zsh = {
+    antidote = {
+      enable = true;
+      plugins = [
+        "Aloxaf/fzf-tab"
+        "MichaelAquilina/zsh-you-should-use"
+        "getantidote/use-omz"
+        "ohmyzsh/ohmyzsh path:plugins/command-not-found"
+        "ohmyzsh/ohmyzsh path:plugins/direnv"
+        "ohmyzsh/ohmyzsh path:plugins/docker"
+        "ohmyzsh/ohmyzsh path:plugins/fzf"
+        "ohmyzsh/ohmyzsh path:plugins/git"
+        "ohmyzsh/ohmyzsh path:plugins/safe-paste"
+        "ohmyzsh/ohmyzsh path:plugins/sudo"
+        "romkatv/powerlevel10k"
+        "zdharma-continuum/fast-syntax-highlighting"
+        "zsh-users/zsh-autosuggestions"
+        "zsh-users/zsh-completions"
+        "zsh-users/zsh-history-substring-search"
+      ];
+      useFriendlyNames = true;
+    };
+
     enable = true;
-
-    shellAliases = {
-      ".." = "cd ..";
-      "..." = "cd ../..";
-      ll = "ls -la";
-      mc = "mc --nosubshell";
-    };
-
-    sessionVariables = {
-      EDITOR = "hx";
-      ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi";
-      LC_CTYPE = "en_US.UTF-8";
-      LEDGER_COLOR = "true";
-      LESS = "-FRSXM";
-      LESSCHARSET = "utf-8";
-      PAGER = "less";
-    };
 
     initContent = ''
       autoload -Uz compinit && compinit
@@ -49,26 +54,21 @@
       eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
     '';
 
-    antidote = {
-      enable = true;
-      useFriendlyNames = true;
-      plugins = [
-        "getantidote/use-omz"
-        "ohmyzsh/ohmyzsh path:plugins/command-not-found"
-        "ohmyzsh/ohmyzsh path:plugins/direnv"
-        "ohmyzsh/ohmyzsh path:plugins/docker"
-        "ohmyzsh/ohmyzsh path:plugins/fzf"
-        "ohmyzsh/ohmyzsh path:plugins/git"
-        "ohmyzsh/ohmyzsh path:plugins/safe-paste"
-        "ohmyzsh/ohmyzsh path:plugins/sudo"
-        "Aloxaf/fzf-tab"
-        "MichaelAquilina/zsh-you-should-use"
-        "romkatv/powerlevel10k"
-        "zdharma-continuum/fast-syntax-highlighting"
-        "zsh-users/zsh-autosuggestions"
-        "zsh-users/zsh-completions"
-        "zsh-users/zsh-history-substring-search"
-      ];
+    sessionVariables = {
+      ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi";
+      EDITOR = "hx";
+      LC_CTYPE = "en_US.UTF-8";
+      LEDGER_COLOR = "true";
+      LESS = "-FRSXM";
+      LESSCHARSET = "utf-8";
+      PAGER = "less";
+    };
+
+    shellAliases = {
+      ".." = "cd ..";
+      "..." = "cd ../..";
+      ll = "ls -la";
+      mc = "mc --nosubshell";
     };
   };
 }

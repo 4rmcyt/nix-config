@@ -1,15 +1,15 @@
 {...}: {
   imports = [
-    ./homepage
-    ./miniflux
+    # ./filebrowser
+    # ./home-assistant
+    # ./linkwarden
     # ./paperless
     # ./radicale
-    # ./home-assistant
-    ./nixarr
-    ./kavita
-    # ./filebrowser
     # ./tdarr
     # ./vaultwarden
-    # ./linkwarden
+    ./homepage
+    ./kavita
+    ./miniflux
+    ./nixarr
   ];
 }

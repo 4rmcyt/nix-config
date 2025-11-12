@@ -5,14 +5,22 @@
   ...
 }: {
   programs = {
+    carapace.enable = true;
+    carapace.enableNushellIntegration = true;
+
+    # Disable automatic Nushell integration for direnv to avoid parse-time source errors
+    # Direnv integration will be handled via the direnv hook in home-manager
+    direnv.enable = true;
+    direnv.enableNushellIntegration = false;
+
     nushell = {
       enable = true;
       plugins = with pkgs.nushellPlugins; [
-        semver
-        query
-        highlight
-        gstat
         formats
+        gstat
+        highlight
+        query
+        semver
       ];
       configFile = {
         text = ''
@@ -121,69 +129,61 @@
         '';
       };
       settings = {
-        show_banner = true;
         completions = {
-          case_sensitive = false;
-          quick = true;
-          partial = true;
           algorithm = "fuzzy";
+          case_sensitive = false;
+          partial = true;
+          quick = true;
         };
         history = {
           file_format = "sqlite";
-          max_size = 1000000;
           isolation = true;
+          max_size = 1000000;
         };
+        show_banner = true;
       };
       shellAliases = {
-        "l" = "ls -a";
-        "ll" = "ls -la";
+        # "e" = "$EDITOR";
+        # "ns" = "nix shell nixpkgs#";
         "_" = "doas";
         "clr" = "clear";
-        "rcp" = "rsync -ah --partial --no-whole-file --info=progress2";
-        "rrcp" = "_ rsync -ah --partial --no-whole-file --info=progress2";
-        "ncg" = "_ nix-collect-garbage";
-        "ncgd" = "_ nix-collect-garbage -d";
-        "weather" = "curl wttr.in/Volzhskiy";
-        "rede" = "systemctl --user start gammastep.service &";
-        "redd" = "systemctl --user stop gammastep.service &";
-        "show-packages" = "_ nix-store -q --references /run/current-system/sw";
-        # "ns" = "nix shell nixpkgs#";
-        "nsp" = "nix-shell --run zsh -p";
-        "nd" = "nix develop -c zsh";
-        "nb" = "nix build";
-        "nbf" = "nix-fast-build --flake";
-        "nbfc" = "nix-fast-build --skip-cached --flake";
-        "nr" = "nix run";
-        # "e" = "$EDITOR";
-        "q" = "qalc";
-        "man" = "pinfo";
-        "t" = "trans";
-        "steam-gamescope" = "gamescope -b --steam -- steam -pipewire-dmabuf";
-        # systemd
         "ctl" = "systemctl";
-        "ctlsp" = "systemctl stop";
-        "ctlst" = "systemctl start";
-        "ctlrt" = "systemctl restart";
-        "ctls" = "systemctl status";
-        "ctlu" = "systemctl --user";
-        "ctlusp" = "systemctl --user stop";
-        "ctlust" = "systemctl --user start";
-        "ctlurt" = "systemctl --user restart";
-        "ctlus" = "systemctl --user status";
+        "ctldrd" = "systemctl daemon-reload";
         "ctlfailed" = "systemctl --failed --all";
         "ctlrf" = "systemctl reset-failed";
-        "ctldrd" = "systemctl daemon-reload";
+        "ctlrt" = "systemctl restart";
+        "ctls" = "systemctl status";
+        "ctlsp" = "systemctl stop";
+        "ctlst" = "systemctl start";
+        "ctlu" = "systemctl --user";
+        "ctlurt" = "systemctl --user restart";
+        "ctlus" = "systemctl --user status";
+        "ctlusp" = "systemctl --user stop";
+        "ctlust" = "systemctl --user start";
         "j" = "journalctl";
         "ju" = "journalctl -xe -u";
         "juu" = "journalctl -xe --user-unit";
+        "l" = "ls -a";
+        "ll" = "ls -la";
+        "man" = "pinfo";
+        "nb" = "nix build";
+        "nbf" = "nix-fast-build --flake";
+        "nbfc" = "nix-fast-build --skip-cached --flake";
+        "ncg" = "_ nix-collect-garbage";
+        "ncgd" = "_ nix-collect-garbage -d";
+        "nd" = "nix develop -c zsh";
+        "nr" = "nix run";
+        "nsp" = "nix-shell --run zsh -p";
+        "q" = "qalc";
+        "rcp" = "rsync -ah --partial --no-whole-file --info=progress2";
+        "redd" = "systemctl --user stop gammastep.service &";
+        "rede" = "systemctl --user start gammastep.service &";
+        "rrcp" = "_ rsync -ah --partial --no-whole-file --info=progress2";
+        "show-packages" = "_ nix-store -q --references /run/current-system/sw";
+        "steam-gamescope" = "gamescope -b --steam -- steam -pipewire-dmabuf";
+        "t" = "trans";
+        "weather" = "curl wttr.in/Volzhskiy";
       };
     };
-    carapace.enable = true;
-    carapace.enableNushellIntegration = true;
-
-    # Disable automatic Nushell integration for direnv to avoid parse-time source errors
-    # Direnv integration will be handled via the direnv hook in home-manager
-    direnv.enable = true;
-    direnv.enableNushellIntegration = false;
   };
 }

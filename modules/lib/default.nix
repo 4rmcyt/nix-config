@@ -3,7 +3,7 @@
   imports = [
     ./nginx
     ./sops
-    ./users
     ./tmpfiles
+    ./users
   ];
 }

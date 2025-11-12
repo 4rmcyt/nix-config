@@ -1,13 +1,12 @@
 {...}: {
   imports = [
-    ./msmtp
-    ./distributed-builds
-    ./common-packages
     ../lib
     ../roles
+    ./common-packages
+    ./distributed-builds
+    ./msmtp
   ];
 
-  time.timeZone = "America/Edmonton";
   i18n.defaultLocale = "en_US.UTF-8";
 
   services.timesyncd = {
@@ -19,4 +18,6 @@
       "3.nixos.pool.ntp.org"
     ];
   };
+
+  time.timeZone = "America/Edmonton";
 }

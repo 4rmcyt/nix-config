@@ -30,29 +30,29 @@ in {
     };
 
     users = {
+      git = {
+        group = "git";
+        isSystemUser = true;
+      };
+
       zeev = {
-        isNormalUser = true;
         description = "zeev";
         extraGroups = [
-          "networkmanager"
-          "wheel"
-          "docker"
           "audio"
+          "docker"
+          "gamemode"
+          "input"
           "media"
+          "networkmanager"
+          "podman"
           "samba"
           "video"
-          "podman"
-          "input"
-          "gamemode"
+          "wheel"
           "zeev"
         ];
         hashedPasswordFile = config.sops.secrets.zeev_password.path;
+        isNormalUser = true;
         openssh.authorizedKeys.keys = server-keys;
-      };
-
-      git = {
-        isSystemUser = true;
-        group = "git";
       };
     };
   };

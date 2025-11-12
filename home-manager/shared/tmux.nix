@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   programs.tmux = {
-    enable = true;
     baseIndex = 1;
+    enable = true;
     escapeTime = 0;
     historyLimit = 64096;
     keyMode = "vi";
@@ -53,46 +53,46 @@
 
     plugins = with pkgs.tmuxPlugins; [
       {
-        plugin = resurrect;
         extraConfig = ''
-          set -g @resurrect-strategy-vim 'session'
-          set -g @resurrect-strategy-nvim 'session'
-          set -g @resurrect-capture-pane-contents 'on'
-        '';
-      }
-      {
-        plugin = continuum;
-        extraConfig = ''
-          set -g @continuum-restore 'on'
-          set -g @continuum-save-interval '10'
-          set -g @continuum-save-bash-history 'on'
-          set -g @continuum-save-zsh-history 'on'
-        '';
-      }
-      yank
-      {
-        plugin = catppuccin;
-        extraConfig = ''
+          set -g @catppuccin_date_time_text "%H:%M"
+          set -g @catppuccin_directory_text "#{b:pane_current_path}"
           set -g @catppuccin_flavour 'mocha'
-          set -g @catppuccin_window_left_separator ""
-          set -g @catppuccin_window_right_separator " "
-          set -g @catppuccin_window_middle_separator " █"
-          set -g @catppuccin_window_number_position "right"
-          set -g @catppuccin_window_default_fill "number"
-          set -g @catppuccin_window_default_text "#W"
-          set -g @catppuccin_window_current_fill "number"
-          set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,(),}"
-          set -g @catppuccin_status_modules_right "directory date_time"
-          set -g @catppuccin_status_modules_left "session"
+          set -g @catppuccin_status_connect_separator "no"
+          set -g @catppuccin_status_fill "icon"
           set -g @catppuccin_status_left_separator  " "
+          set -g @catppuccin_status_modules_left "session"
+          set -g @catppuccin_status_modules_right "directory date_time"
           set -g @catppuccin_status_right_separator " "
           set -g @catppuccin_status_right_separator_inverse "no"
-          set -g @catppuccin_status_fill "icon"
-          set -g @catppuccin_status_connect_separator "no"
-          set -g @catppuccin_directory_text "#{b:pane_current_path}"
-          set -g @catppuccin_date_time_text "%H:%M"
+          set -g @catppuccin_window_current_fill "number"
+          set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,(),}"
+          set -g @catppuccin_window_default_fill "number"
+          set -g @catppuccin_window_default_text "#W"
+          set -g @catppuccin_window_left_separator ""
+          set -g @catppuccin_window_middle_separator " █"
+          set -g @catppuccin_window_number_position "right"
+          set -g @catppuccin_window_right_separator " "
         '';
+        plugin = catppuccin;
       }
+      {
+        extraConfig = ''
+          set -g @continuum-restore 'on'
+          set -g @continuum-save-bash-history 'on'
+          set -g @continuum-save-interval '10'
+          set -g @continuum-save-zsh-history 'on'
+        '';
+        plugin = continuum;
+      }
+      {
+        extraConfig = ''
+          set -g @resurrect-capture-pane-contents 'on'
+          set -g @resurrect-strategy-nvim 'session'
+          set -g @resurrect-strategy-vim 'session'
+        '';
+        plugin = resurrect;
+      }
+      yank
     ];
   };
 }

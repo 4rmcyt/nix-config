@@ -6,6 +6,7 @@
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     systems.url = "github:nix-systems/default";
 
     # System management
@@ -144,10 +145,7 @@
         treefmt-nix.flakeModule
         inputs.devshell.flakeModule
       ];
-      perSystem = {
-        pkgs,
-        ...
-      }: {
+      perSystem = {pkgs, ...}: {
         devshells = import ./devshell.nix {inherit pkgs;};
         treefmt = import ./treefmt.nix {inherit pkgs;};
       };
@@ -163,6 +161,8 @@
                 inputs.nix-gaming.nixosModules.pipewireLowLatency
                 inputs.lanzaboote.nixosModules.lanzaboote
                 inputs.flatpaks.nixosModules.default
+                inputs.chaotic.nixosModules.nyx-cache
+                inputs.chaotic.nixosModules.nyx-overlay
               ]
               ++ (helpers.mkHome {
                 modules = [

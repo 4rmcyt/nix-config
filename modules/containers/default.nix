@@ -5,25 +5,25 @@
 }: {
   sops.secrets = {
     containers_env = {
+      format = "dotenv";
+      group = config.users.groups.podman.name;
+      mode = "0400";
+      owner = config.users.users.podman.name;
       sopsFile = ../../secrets/.env;
-      owner = config.users.users.podman.name;
-      group = config.users.groups.podman.name;
-      mode = "0400";
-      format = "dotenv";
-    };
-    linkwarden_env = {
-      sopsFile = ../../secrets/linkwarden.env;
-      owner = config.users.users.podman.name;
-      group = config.users.groups.podman.name;
-      mode = "0400";
-      format = "dotenv";
     };
     flare_env = {
-      sopsFile = ../../secrets/flare.env;
-      owner = config.users.users.podman.name;
+      format = "dotenv";
       group = config.users.groups.podman.name;
       mode = "0400";
+      owner = config.users.users.podman.name;
+      sopsFile = ../../secrets/flare.env;
+    };
+    linkwarden_env = {
       format = "dotenv";
+      group = config.users.groups.podman.name;
+      mode = "0400";
+      owner = config.users.users.podman.name;
+      sopsFile = ../../secrets/linkwarden.env;
     };
   };
 
@@ -35,20 +35,20 @@
   ];
 
   users = {
+    extraGroups.podman.members = [
+      config.my.defaults.user
+      "podman"
+      "uptime-kuma"
+    ];
+    groups.podman = {};
     users.podman = {
-      isSystemUser = true;
-      group = "podman";
       extraGroups = [
         "podman"
         "users"
       ];
+      group = "podman";
+      isSystemUser = true;
     };
-    groups.podman = {};
-    extraGroups.podman.members = [
-      "podman"
-      "uptime-kuma"
-      config.my.defaults.user
-    ];
   };
 
   networking.firewall = {
@@ -58,12 +58,12 @@
       # 2376 # Podman API (secure with TLS, for local use only)
       # Container services
       3004 # Linkwarden
+      3033 # Flare
       8191 # FlareSolverr
       8265 # Tdarr Web UI
       8266 # Tdarr Server
       8267 # Tdarr Node
       9948 # NextDNS Exporter
-      3033 # Flare
     ];
     allowedUDPPorts = [
       # Podman API - Uncomment only if you need remote API access
@@ -73,77 +73,77 @@
   };
 
   virtualisation = {
-    podman = {
-      enable = true;
-      dockerCompat = true;
-      defaultNetwork.settings = {
-        dns_enabled = true;
-        subnet = "10.88.0.0/16";
-        gateway = "10.88.0.1";
-      };
-    };
     oci-containers = {
       backend = "podman";
       containers = {
-        flaresolverr = {
-          image = "ghcr.io/flaresolverr/flaresolverr:latest";
+        flare = {
           autoStart = true;
-          ports = ["127.0.0.1:8191:8191/tcp"];
+          environment = {
+            TZ = "America/Edmonton";
+          };
+          environmentFiles = [config.sops.secrets.flare_env.path];
+          image = "ghcr.io/flintsh/flare:latest";
+          ports = ["127.0.0.1:3033:3000/tcp"];
+          volumes = [
+            "/data/media:/media"
+          ];
+        };
+        flaresolverr = {
+          autoStart = true;
           environment = {
             LOG_LEVEL = "info";
             TZ = "America/Edmonton";
           };
+          image = "ghcr.io/flaresolverr/flaresolverr:latest";
+          ports = ["127.0.0.1:8191:8191/tcp"];
         };
 
         nextdns-exporter = {
-          image = "ghcr.io/raylas/nextdns-exporter";
           autoStart = true;
+          environmentFiles = [config.sops.secrets.containers_env.path];
+          image = "ghcr.io/raylas/nextdns-exporter";
           networks = ["podman"];
           ports = ["127.0.0.1:9948:9948/tcp"];
-          environmentFiles = [config.sops.secrets.containers_env.path];
         };
         tdarr = {
+          autoStart = true;
+          environment = {
+            TZ = "America/Edmonton";
+            ffmpegVersion = "7";
+            inContainer = "true";
+            internalNode = "true";
+            nodeName = "homeserver";
+            serverIP = "0.0.0.0";
+            serverPort = "8266";
+            webUIPort = "8265";
+          };
+          extraOptions = [
+            "--device=/dev/dri:/dev/dri"
+          ];
           image = "ghcr.io/haveagitgat/tdarr:latest";
           ports = [
             "8265:8265"
             "8266:8266"
             "8267:8267"
           ];
-          autoStart = true;
-          environment = {
-            serverIP = "0.0.0.0";
-            serverPort = "8266";
-            webUIPort = "8265";
-            internalNode = "true";
-            inContainer = "true";
-            ffmpegVersion = "7";
-            nodeName = "homeserver";
-            TZ = "America/Edmonton";
-          };
           volumes = [
             "/data/media:/media"
             "/var/lib/tdarr/configs:/app/configs"
-            "/var/lib/tdarr/logs:/app/logs"
-            "/var/lib/tdarr/data/server:/app/server"
             "/var/lib/tdarr/data/cache:/temp"
+            "/var/lib/tdarr/data/server:/app/server"
+            "/var/lib/tdarr/logs:/app/logs"
           ];
-          extraOptions = [
-            "--device=/dev/dri:/dev/dri"
-          ];
-        };
-        flare = {
-          image = "ghcr.io/flintsh/flare:latest";
-          ports = ["127.0.0.1:3033:3000/tcp"];
-          autoStart = true;
-          environment = {
-            TZ = "America/Edmonton";
-          };
-          volumes = [
-            "/data/media:/media"
-          ];
-          environmentFiles = [config.sops.secrets.flare_env.path];
         };
       };
+    };
+    podman = {
+      defaultNetwork.settings = {
+        dns_enabled = true;
+        gateway = "10.88.0.1";
+        subnet = "10.88.0.0/16";
+      };
+      dockerCompat = true;
+      enable = true;
     };
   };
 
