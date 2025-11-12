@@ -7,9 +7,6 @@
   programs = {
     carapace.enable = true;
     carapace.enableNushellIntegration = true;
-
-    # Disable automatic Nushell integration for direnv to avoid parse-time source errors
-    # Direnv integration will be handled via the direnv hook in home-manager
     direnv.enable = true;
     direnv.enableNushellIntegration = false;
 
@@ -19,6 +16,7 @@
         formats
         gstat
         highlight
+        desktop_notifications
         query
         semver
       ];
