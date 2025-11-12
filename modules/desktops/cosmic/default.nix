@@ -2,8 +2,7 @@
   pkgs,
   lib,
   ...
-}:
-{
+}: {
   # =================================================================
   # COSMIC Desktop Environment - NixOS Configuration
   # =================================================================
@@ -14,7 +13,7 @@
 
   # COSMIC-specific nix settings
   nix.settings = {
-    substituters = lib.mkBefore [ "https://9lore.cachix.org/" ];
+    substituters = lib.mkBefore ["https://9lore.cachix.org/"];
     trusted-public-keys = lib.mkBefore [
       "9lore.cachix.org-1:H2/a1Wlm7VJRfJNNvFbxtLQPYswP3KzXwSI5ROgzGII="
     ];
@@ -53,7 +52,7 @@
     SDL_VIDEODRIVER = "wayland";
 
     # iso-codes data for COSMIC apps
-    XDG_DATA_DIRS = lib.mkAfter [ "${pkgs.isocodes}/share" ];
+    XDG_DATA_DIRS = lib.mkAfter ["${pkgs.isocodes}/share"];
   };
 
   # Security settings
@@ -74,8 +73,7 @@
   };
 
   environment.systemPackages = lib.mkBefore (
-    with pkgs;
-    [
+    with pkgs; [
       adw-gtk3
       cheese
       cosmic-applibrary
