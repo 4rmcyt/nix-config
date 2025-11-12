@@ -8,7 +8,7 @@
     "$mainMod, W, exec, ${pkgs.wallpaper-sh}/bin/wallpaper.sh"
   ];
 
-  home.programs.waybar.settings.main."custom/wallpaper" = {
+  programs.waybar.settings.main."custom/wallpaper" = {
     format = "󰸉";
     tooltip-format = "Change wallpaper";
     on-click = "${pkgs.wallpaper-sh}/bin/wallpaper.sh";

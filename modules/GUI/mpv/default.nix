@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   home.packages = [pkgs.material-design-icons];
-  home.programs.mpv = {
+  programs.mpv = {
     enable = true;
     scripts = with pkgs; [
       mpvScripts.modernx
@@ -20,12 +20,7 @@
       user-agent = "Mozilla/5.0";
       vo = "gpu-next";
       gpu-context = "wayland";
-      hwdec =
-        if gpu == "nvidia"
-        then "vdpau"
-        else "vaapi";
-      script-opts = "ytdl_hook-ytdl_path=yt-dlp,ytdl_hook-try_ytdl_first=yes";
-      ytdl-raw-options = "sub-lang=\"en,eng,enUS,en-US\",write-sub=,write-auto-sub=,yes-playlist=,concurrent-fragments=4";
+      hwdec = "vdpau";
     };
     bindings = {
       "ctrl+f" = "script-binding quality_menu/video_formats_toggle";

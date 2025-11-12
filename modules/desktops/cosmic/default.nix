@@ -43,7 +43,7 @@
     # Qt Wayland Support
     QT_QPA_PLATFORM = "wayland;xcb";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-    ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+    ELECTRON_OZONE_PLATFORM_HINT = "auto";
     ELECTRON_FORCE_SAFE_STORAGE_BACKEND = "gnome_libsecret";
 
     # Browser Optimization
