@@ -3,7 +3,8 @@
   config,
   lib,
   ...
-}: {
+}:
+{
   # =================================================================
   # Imports
   # =================================================================
@@ -79,12 +80,14 @@
       NVD_BACKEND = "direct";
       XDG_CURRENT_DESKTOP = "sway";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      XDG_RUNTIME_DIR = "/run/user/$UID";
     };
 
-    shells = lib.mkBefore (with pkgs; [nushell]);
+    shells = lib.mkBefore (with pkgs; [ nushell ]);
 
     systemPackages = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -118,7 +121,6 @@
         nix-output-monitor
         nixfmt
         nixos-rebuild-ng
-        treefmt
 
         # =============================================================
         # Fonts & Themes
@@ -165,7 +167,6 @@
         pinentry-all
         yubico-pam
         yubico-piv-tool
-        yubikey-manager
         yubioath-flutter
 
         # =============================================================
@@ -211,7 +212,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -262,7 +263,7 @@
     ];
 
     # Allow zeev to use nix commands without sudo
-    trusted-users = ["zeev"];
+    trusted-users = [ "zeev" ];
 
     # Disable dirty warnings for desktop
     warn-dirty = false;
@@ -364,7 +365,7 @@
 
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
     power-profiles-daemon.enable = false;
@@ -424,7 +425,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
   };
@@ -434,9 +435,9 @@
   # =================================================================
   users = {
     groups = {
-      git = {};
-      plugdev = {};
-      prometheus = {};
+      git = { };
+      plugdev = { };
+      prometheus = { };
     };
 
     users = {

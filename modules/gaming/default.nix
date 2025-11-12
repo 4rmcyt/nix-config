@@ -70,10 +70,6 @@
     KERNEL=="nvidia-uvm", GROUP="video", MODE="0664"
   '';
 
-  # Ensure the primary user is in the video group
-  users.users.${config.my.defaults.user}.extraGroups = [
-    "gamemode"
-    "pipewire"
-    "video"
-  ];
+  # Note: User group memberships (gamemode, video) are defined in modules/users/zeev/default.nix
+  # to avoid duplication. Keeping this comment for reference.
 }
