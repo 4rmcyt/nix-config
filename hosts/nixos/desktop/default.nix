@@ -224,6 +224,10 @@
   # =================================================================
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
+  nixpkgs.config = {
+    cudaSupport = true;
+  };
+  
   nixpkgs.hostPlatform = {
     system = "x86_64-linux";
     gcc.arch = "znver4";

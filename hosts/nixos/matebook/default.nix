@@ -154,6 +154,12 @@
   # =================================================================
   # 8. Nix Configuration
   # =================================================================
+  nixpkgs.hostPlatform = {
+    system = "x86_64-linux";
+    gcc.arch = "znver1";
+    gcc.tune = "znver1";
+  };
+
   nix = {
     settings = {
       cores = 8;
