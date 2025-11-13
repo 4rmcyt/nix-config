@@ -106,6 +106,7 @@ jobs:
     needs: [validate]
     strategy:
       fail-fast: false # Continue building other systems even if one fails
+      max-parallel: 1 # Build systems sequentially to avoid resource exhaustion
       matrix:
         system:
           - wsl # AMD Zen 3 (znver3)
