@@ -110,7 +110,7 @@
       # Build performance improvements
       builders-use-substitutes = true; # Allow builders to use substitutes
       require-sigs = true; # Security: require signatures
-      
+
       substituters = [
         "https://cache.nixos.org"
         "https://4rmcyt-wsl.cachix.org"

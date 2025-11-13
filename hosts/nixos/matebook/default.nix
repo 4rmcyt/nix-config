@@ -2,8 +2,7 @@
   pkgs,
   config,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -313,7 +312,7 @@
     # fwupd.enable = true; # Removed, already in hardware-configuration.nix
     pcscd = {
       enable = true;
-      plugins = [ pkgs.ccid ];
+      plugins = [pkgs.ccid];
     };
     usbmuxd.enable = true;
     thermald.enable = true;
@@ -351,7 +350,7 @@
   programs.light.enable = true;
   users = {
     groups = {
-      git = { };
+      git = {};
     };
     users = {
       git = {
