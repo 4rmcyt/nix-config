@@ -18,23 +18,23 @@ jobs:
     name: Validate Flake & Formatting
     runs-on: ubuntu-latest
     steps:
-# Checkout
+      # Checkout
       - name: Checkout repository
         uses: actions/checkout@v4
-# Setup Nix
+      # Setup Nix
       - name: Install Nix
         uses: cachix/install-nix-action@v27
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
             accept-flake-config = true
-# Setup Magic Nix Cache
+      # Setup Magic Nix Cache
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@v4
-# Update and validate
+      # Update and validate
       - name: Update flake inputs (in-memory)
         run: nix flake update
-# Check for uncommitted changes after flake update
+      # Check for uncommitted changes after flake update
       - name: Check for uncommitted changes after flake update
         run: |
           if ! git diff --quiet || ! git diff --cached --quiet; then
@@ -43,12 +43,12 @@ jobs:
             git diff
             exit 1
           fi
-# Formatting check (informational only - doesn't fail the job)
+      # Formatting check (informational only - doesn't fail the job)
       - name: Check formatting
         id: formatting
         continue-on-error: true
         run: nix fmt -- --ci .
-# Send Telegram notification - Formatting Failed
+      # Send Telegram notification - Formatting Failed
       - name: Send Telegram notification - Formatting Failed
         if: steps.formatting.outcome == 'failure' && github.event_name != 'pull_request'
         uses: appleboy/telegram-action@master
@@ -63,12 +63,12 @@ jobs:
             Trigger: ${{ github.event_name }}
             The formatting check failed but the workflow will continue.
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-# Flake check (informational only - doesn't fail the job)
+      # Flake check (informational only - doesn't fail the job)
       - name: Check flake
         id: flake-check
         continue-on-error: true
         run: nix flake check --show-trace
-# Send Telegram notification - Formatting Failed
+      # Send Telegram notification - Formatting Failed
       - name: Send Telegram notification - Flake Check Failed
         if: steps.flake-check.outcome == 'failure' && github.event_name != 'pull_request'
         uses: appleboy/telegram-action@master
@@ -83,7 +83,6 @@ jobs:
             Trigger: ${{ github.event_name }}
             The flake check failed but the workflow will continue.
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-
       # Send Telegram notification - Validation Failed
       - name: Send Telegram notification - Validation Failed
         if: failure() && github.event_name != 'pull_request'
