@@ -76,12 +76,6 @@
     cudaSupport = true;
   };
 
-  nixpkgs.hostPlatform = {
-    system = "x86_64-linux";
-    gcc.arch = "znver3";
-    gcc.tune = "znver3";
-  };
-
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {

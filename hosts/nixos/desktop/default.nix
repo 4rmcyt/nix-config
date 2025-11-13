@@ -228,12 +228,6 @@
     cudaSupport = true;
   };
 
-  nixpkgs.hostPlatform = {
-    system = "x86_64-linux";
-    gcc.arch = "znver4";
-    gcc.tune = "znver4";
-  };
-
   nix = {
     channel.enable = false;
     settings = {

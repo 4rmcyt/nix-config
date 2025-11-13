@@ -73,13 +73,7 @@
   # =================================================================
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
-  nixpkgs.hostPlatform = {
-    system = "x86_64-linux";
-    gcc.arch = "skylake";
-    gcc.tune = "skylake";
-  };
-
-  nix.settings = {
+   nix.settings = {
     # Homeserver-specific: 8 cores
     cores = 8;
     max-jobs = 8;
