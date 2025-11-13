@@ -1,11 +1,5 @@
-{
-  config,
-  lib,
-  ...
-}:
-with lib; let
-  cfg = config.my.kernel;
-in {
+{lib, ...}:
+with lib; {
   imports = [
     ./modprobed-db.nix
   ];
