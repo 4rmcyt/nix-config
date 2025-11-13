@@ -3,8 +3,7 @@
   config,
   lib,
   ...
-}:
-{
+}: {
   # =================================================================
   # Imports
   # =================================================================
@@ -102,7 +101,6 @@
       MOZ_ENABLE_WAYLAND = "1";
       MOZ_WEBRENDER = "1";
       MOZ_ACCELERATED = "1";
-      
 
       # XDG
       XDG_CACHE_HOME = "$HOME/.cache";
@@ -111,11 +109,10 @@
       XDG_STATE_HOME = "$HOME/.local/state";
     };
 
-    shells = lib.mkBefore (with pkgs; [ nushell ]);
+    shells = lib.mkBefore (with pkgs; [nushell]);
 
     systemPackages = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -240,7 +237,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
+      allowedTCPPorts = [9100]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -429,7 +426,7 @@
 
     pcscd = {
       enable = true;
-      plugins = [ pkgs.ccid ];
+      plugins = [pkgs.ccid];
     };
 
     power-profiles-daemon.enable = false;
@@ -489,7 +486,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = [ "nvidia" ];
+      videoDrivers = ["nvidia"];
       xkb.layout = "us";
     };
   };
@@ -499,9 +496,9 @@
   # =================================================================
   users = {
     groups = {
-      git = { };
-      plugdev = { };
-      prometheus = { };
+      git = {};
+      plugdev = {};
+      prometheus = {};
     };
 
     users = {
