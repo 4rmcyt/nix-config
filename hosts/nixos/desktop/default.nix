@@ -227,7 +227,7 @@
   nixpkgs.config = {
     cudaSupport = true;
   };
-  
+
   nixpkgs.hostPlatform = {
     system = "x86_64-linux";
     gcc.arch = "znver4";

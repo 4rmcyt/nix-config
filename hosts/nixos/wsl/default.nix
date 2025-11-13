@@ -28,7 +28,22 @@
   # 3. Time Configuration
   # =================================================================
   time.timeZone = "America/Edmonton";
-==========================================================
+
+  # =================================================================
+  # 4. Nixpkgs Configuration
+  # =================================================================
+  # Note: allowUnfree is set in flakeHelpers.nix commonModules
+  nixpkgs.config = {
+    cudaSupport = true;
+  };
+
+  nixpkgs.hostPlatform = {
+    system = "x86_64-linux";
+    gcc.arch = "znver3";
+    gcc.tune = "znver3";
+  };
+
+  # =================================================================
   # 5. Boot Configuration
   # =================================================================
   boot = {
@@ -71,15 +86,6 @@
   # =================================================================
   # 8. Nix Configuration
   # =================================================================
-  nixpkgs.config = {
-    cudaSupport = true;
-  };
-  
-  nixpkgs.hostPlatform = {
-    system = "x86_64-linux";
-    gcc.arch = "znver3";
-    gcc.tune = "znver3";
-  };
 
   nix = {
     package = pkgs.nixVersions.latest;
