@@ -31,18 +31,18 @@ jobs:
       # Setup Magic Nix Cache
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@v4
-      # Update and validate
-      - name: Update flake inputs (in-memory)
-        run: nix flake update
-      # Check for uncommitted changes after flake update
-      - name: Check for uncommitted changes after flake update
+      # Check for uncommitted changes before flake update
+      - name: Check for uncommitted changes before flake update
         run: |
           if ! git diff --quiet || ! git diff --cached --quiet; then
-            echo "❌ Uncommitted changes detected after flake update!"
+            echo "❌ Uncommitted changes detected before flake update!"
             git status
             git diff
             exit 1
           fi
+      # Update and validate
+      - name: Update flake inputs (in-memory)
+        run: nix flake update
       # Formatting check (informational only - doesn't fail the job)
       - name: Check formatting
         id: formatting
