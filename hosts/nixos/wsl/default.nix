@@ -82,7 +82,6 @@
     gcc.tune = "znver3";
   };
 
-
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
