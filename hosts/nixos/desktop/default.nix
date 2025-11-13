@@ -20,6 +20,7 @@
     # Features and roles
     ../../../modules/gaming
     ../../../modules/networking/dnssec
+    ../../../modules/kernel
 
     # User configuration
     ../../../modules/users/zeev
@@ -461,6 +462,23 @@
   # Virtualization
   # =================================================================
   virtualisation.podman.enable = true;
+
+  # =================================================================
+  # Kernel Configuration
+  # =================================================================
+  # Enable modprobed-db for automatic kernel module tracking
+  # This will run hourly and store loaded modules to optimize future kernel builds
+  services.modprobed-db = {
+    enable = true;
+    user = "root";
+  };
+
+  # Optional: Enable kernel optimization (uncomment after collecting module data)
+  # my.kernel.optimized = {
+  #   enable = true;
+  #   march = "znver4";  # Or "native" for auto-detection
+  #   compiler = "gcc";   # Or "clang"
+  # };
 
   # =================================================================
   # Systemd Configuration
