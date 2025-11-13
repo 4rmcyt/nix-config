@@ -27,15 +27,16 @@ services.modprobed-db = {
 
 ### Advanced: Kernel Optimization
 
-After collecting module data for a few weeks, you can enable kernel optimization:
+After collecting module data for a few weeks, you can use it to optimize your kernel builds.
 
+**Option 1: Show Optimization Instructions**
 ```nix
-my.kernel.optimized = {
-  enable = true;
-  march = "znver4";  # Or "native" for auto-detection
-  compiler = "gcc";   # Or "clang"
-};
+my.kernel.optimized.enable = true;
 ```
+This will display instructions on how to use your collected module data.
+
+**Option 2: Manual Kernel Configuration**
+Use the modprobed.db file with CachyOS kernel configurator or other kernel build tools to only compile the modules you actually use.
 
 ## Usage
 
@@ -111,14 +112,14 @@ sudo journalctl -u modprobed-db.service | tail -20
 - **Optimized Performance**: CPU-specific optimizations
 - **Security**: Smaller attack surface (fewer modules loaded)
 
-## Architecture Detection
+## Using modprobed.db for Kernel Optimization
 
-Common `march` values:
-- `native`: Auto-detect and optimize for current CPU
-- `znver4`: AMD Ryzen 9000 series
-- `znver3`: AMD Ryzen 5000/7000 series
-- `znver2`: AMD Ryzen 3000 series
-- `x86-64-v3`: Generic modern x86-64 with AVX2
+The database file at `/var/lib/modprobed-db/.config/modprobed-db/modprobed.db` contains a list of all kernel modules you've used. You can use this to:
+
+1. Build a custom kernel with only these modules
+2. Configure CachyOS kernel with optimized module selection
+3. Reduce kernel compilation time significantly
+4. Create a smaller, more secure kernel image
 
 ## Troubleshooting
 

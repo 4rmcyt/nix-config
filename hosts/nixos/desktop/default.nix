@@ -473,12 +473,8 @@
     user = "root";
   };
 
-  # Optional: Enable kernel optimization (uncomment after collecting module data)
-  # my.kernel.optimized = {
-  #   enable = true;
-  #   march = "znver4";  # Or "native" for auto-detection
-  #   compiler = "gcc";   # Or "clang"
-  # };
+  # Optional: Enable to show kernel optimization instructions
+  my.kernel.optimized.enable = true;
 
   # =================================================================
   # Systemd Configuration
