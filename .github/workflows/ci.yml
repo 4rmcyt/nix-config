@@ -56,10 +56,10 @@ jobs:
     strategy:
       matrix:
         system:
-          - wsl
-          - desktop
+          # - wsl
+          # - desktop
           - homeserver
-          - matebook
+          # - matebook
     uses: ./.github/workflows/reusable-build.yml
     with:
       system: ${{ matrix.system }}
