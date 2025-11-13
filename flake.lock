@@ -186,11 +186,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1762917305,
-        "narHash": "sha256-z9h+mk1ksgi8YYORBreufO+KzBcFtSu3wvzp4kUJkFk=",
+        "lastModified": 1763003842,
+        "narHash": "sha256-GnhobDtXD6JSdZkTBDzKv5H/FvK16oxxqBOSduOhK1A=",
         "owner": "ninelore",
         "repo": "nixpkgs-cosmic-unstable",
-        "rev": "e1e72f598771878e6587f03dc3ea830caebbd4b1",
+        "rev": "30769708eeec421d49e226ed50867b095c03e1be",
         "type": "github"
       },
       "original": {
