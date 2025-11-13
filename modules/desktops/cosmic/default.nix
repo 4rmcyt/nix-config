@@ -45,6 +45,7 @@
     # Wayland Support
     CLUTTER_BACKEND = "wayland";
     COSMIC_DATA_CONTROL_ENABLED = 1;
+    COSMIC_DISABLE_DIRECT_SCANOUT = 1;
     SDL_VIDEODRIVER = "wayland";
 
     # iso-codes data for COSMIC apps
