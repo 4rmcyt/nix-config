@@ -73,7 +73,7 @@
   # =================================================================
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
-   nix.settings = {
+  nix.settings = {
     # Homeserver-specific: 8 cores
     cores = 8;
     max-jobs = 8;
