@@ -3,7 +3,8 @@
   config,
   lib,
   ...
-}: {
+}:
+{
   # =================================================================
   # Imports
   # =================================================================
@@ -74,18 +75,47 @@
   # =================================================================
   environment = {
     sessionVariables = lib.mkBefore {
+      # General nvidia settings
       GBM_BACKEND = "nvidia-drm";
       LIBVA_DRIVER_NAME = "nvidia";
       NVD_BACKEND = "direct";
       XDG_CURRENT_DESKTOP = "sway";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
       XDG_RUNTIME_DIR = "/run/user/$UID";
+
+      # Wayland
+      NIXOS_OZONE_WL = "1";
+      XDG_SESSION_TYPE = "wayland";
+
+      # Qt (allow Stylix to override QT_QPA_PLATFORMTHEME)
+      QT_QPA_PLATFORM = "wayland;xcb";
+      QT_QPA_PLATFORMTHEME = lib.mkDefault "qt6ct";
+      QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+      QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+      QT_SCALE_FACTOR = "1";
+
+      # GTK
+      GDK_BACKEND = "wayland,x11";
+      GDK_SCALE = "1";
+
+      # Mozilla
+      MOZ_ENABLE_WAYLAND = "1";
+      MOZ_WEBRENDER = "1";
+      MOZ_ACCELERATED = "1";
+      
+
+      # XDG
+      XDG_CACHE_HOME = "$HOME/.cache";
+      XDG_CONFIG_HOME = "$HOME/.config";
+      XDG_DATA_HOME = "$HOME/.local/share";
+      XDG_STATE_HOME = "$HOME/.local/state";
     };
 
-    shells = lib.mkBefore (with pkgs; [nushell]);
+    shells = lib.mkBefore (with pkgs; [ nushell ]);
 
     systemPackages = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -210,7 +240,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -399,7 +429,7 @@
 
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
     power-profiles-daemon.enable = false;
@@ -459,7 +489,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
   };
@@ -469,9 +499,9 @@
   # =================================================================
   users = {
     groups = {
-      git = {};
-      plugdev = {};
-      prometheus = {};
+      git = { };
+      plugdev = { };
+      prometheus = { };
     };
 
     users = {

@@ -38,21 +38,13 @@
 
   # Wayland environment variables
   environment.sessionVariables = lib.mkBefore {
-    # Browser Optimization
-    MOZ_DISABLE_RDD_SANDBOX = "1";
-    MOZ_ENABLE_WAYLAND = "1";
-    MOZ_USE_XINPUT2 = "1";
-
     # Qt Wayland Support
     ELECTRON_FORCE_SAFE_STORAGE_BACKEND = "gnome_libsecret";
     ELECTRON_OZONE_PLATFORM_HINT = "auto";
-    QT_QPA_PLATFORM = "wayland;xcb";
-    QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
 
     # Wayland Support
     CLUTTER_BACKEND = "wayland";
     COSMIC_DATA_CONTROL_ENABLED = 1;
-    NIXOS_OZONE_WL = "1";
     SDL_VIDEODRIVER = "wayland";
 
     # iso-codes data for COSMIC apps
