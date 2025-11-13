@@ -323,11 +323,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1762996923,
-        "narHash": "sha256-i812lfDsTuDBmuA9lLdD4MjF2utth4AB2//ZtX4YQhM=",
+        "lastModified": 1763029439,
+        "narHash": "sha256-CpUYPbyjLqr6r+tpboaUqzVAa2X/eZW3jQ2pUc7f1Q4=",
         "owner": "nix-community",
         "repo": "flake-firefox-nightly",
-        "rev": "7e46d6cd66d7143e904e9000bca9ab2e684e4d82",
+        "rev": "8f087a30624e96f2de8211e372dcfd7b04be2a35",
         "type": "github"
       },
       "original": {
@@ -913,11 +913,11 @@
         "website-builder": "website-builder"
       },
       "locked": {
-        "lastModified": 1762329494,
-        "narHash": "sha256-Cww1bU7xX3i6rSLUidM6mAW6srkPN2YH//YWrGt/yFc=",
+        "lastModified": 1763045576,
+        "narHash": "sha256-7Lo83JgNA95rrT2LLsWQd+3vO1luAU4HbjVAkPX2X4c=",
         "owner": "rasmus-kirk",
         "repo": "nixarr",
-        "rev": "837562b51943aec6459348a4cee1735c38067c80",
+        "rev": "fd055b3af0f670bf1fd9e1f67a81b3fa10871a6e",
         "type": "github"
       },
       "original": {
@@ -1291,11 +1291,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1762812535,
-        "narHash": "sha256-A91a+K0Q9wfdPLwL06e/kbHeAWSzPYy2EGdTDsyfb+s=",
+        "lastModified": 1763023272,
+        "narHash": "sha256-TCVNCn/GcKhwm+WlSJEZEPW4ISQdU9ICIU3lTiOLBYc=",
         "owner": "Mic92",
         "repo": "sops-nix",
-        "rev": "d75e4f89e58fdda39e4809f8c52013caa22483b7",
+        "rev": "b80c966e70fa0615352c9596315678df1de75801",
         "type": "github"
       },
       "original": {

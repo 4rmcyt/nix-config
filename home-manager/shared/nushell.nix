@@ -82,7 +82,7 @@
           }
 
           $env.config = {
-            show_banner: true,
+            show_banner: false,
             completions: {
               case_sensitive: false # case-sensitive completions
               quick: true           # set to false to prevent auto-selecting completions

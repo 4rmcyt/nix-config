@@ -81,6 +81,7 @@
     substituters = [
       "https://4rmcyt-homeserver.cachix.org"
       "https://nix-community.cachix.org"
+      "https://cache.flox.dev"
     ];
 
     # Homeserver system features
@@ -95,11 +96,13 @@
       "nix-command"
     ];
 
+    auto-optimise-store = true;
     # Homeserver trusted public keys
     # Append to base trusted public keys
     trusted-public-keys = [
       "4rmcyt-homeserver.cachix.org-1:SmDepzJsgaofX57WoXmDu+HRJl/Koh90UWsZO0k2Nkg="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
     ];
 
     # Allow zeev to use nix commands without sudo

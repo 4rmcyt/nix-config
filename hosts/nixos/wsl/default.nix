@@ -2,7 +2,8 @@
   pkgs,
   inputs,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -33,8 +34,8 @@
   # 5. Boot Configuration
   # =================================================================
   boot = {
-    kernelModules = ["nvidia"];
-    extraModulePackages = [pkgs.linuxPackages.nvidia_x11];
+    kernelModules = [ "nvidia" ];
+    extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
   };
 
   # =================================================================
@@ -66,7 +67,7 @@
       isSystemUser = true;
       description = "Git user";
     };
-    groups.git = {};
+    groups.git = { };
   };
 
   # =================================================================
@@ -87,6 +88,7 @@
         "https://4rmcyt-wsl.cachix.org"
         "https://nix-community.cachix.org"
         "https://numtide.cachix.org"
+        "https://cache.flox.dev"
         "https://cuda-maintainers.cachix.org"
       ];
       system-features = [
@@ -101,12 +103,14 @@
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
         "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+        "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
       ];
       experimental-features = [
         "flakes"
         "nix-command"
       ];
-      trusted-users = ["zeev"];
+      auto-optimise-store = true;
+      trusted-users = [ "zeev" ];
       download-buffer-size = 1073741824;
       warn-dirty = false;
     };
@@ -130,7 +134,7 @@
     useDHCP = false;
     dhcpcd.enable = false;
     wireless.enable = false;
-    interfaces = {};
+    interfaces = { };
     firewall.allowedTCPPorts = [
       4242 # Kavita
     ];
@@ -159,7 +163,7 @@
 
     # System services
     resolved.enable = false;
-    xserver.videoDrivers = ["nvidia"];
+    xserver.videoDrivers = [ "nvidia" ];
   };
 
   # =================================================================
@@ -265,6 +269,6 @@
     ];
   };
 
-  environment.shells = with pkgs; [zsh];
+  environment.shells = with pkgs; [ zsh ];
   home-manager.backupFileExtension = "backup";
 }

@@ -3,7 +3,8 @@
   config,
   lib,
   ...
-}: {
+}:
+{
   # =================================================================
   # Imports
   # =================================================================
@@ -82,10 +83,11 @@
       XDG_RUNTIME_DIR = "/run/user/$UID";
     };
 
-    shells = lib.mkBefore (with pkgs; [nushell]);
+    shells = lib.mkBefore (with pkgs; [ nushell ]);
 
     systemPackages = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -210,7 +212,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -224,10 +226,8 @@
   # =================================================================
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
-  nixpkgs.config = {
-    cudaSupport = true;
-  };
-
+  nixpkgs.config.cudaSupport = true;
+  
   nix = {
     channel.enable = false;
     settings = {
@@ -244,6 +244,7 @@
       # Additional gaming and CUDA caches
       substituters = [
         "https://4rmcyt-desktop.cachix.org"
+        "https://cache.flox.dev"
         "https://cuda-maintainers.cachix.org"
         "https://nix-community.cachix.org"
         "https://nix-gaming.cachix.org"
@@ -265,10 +266,11 @@
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
         "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
+        "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
       ];
 
       # Allow zeev to use nix commands without sudo
-      trusted-users = ["zeev"];
+      trusted-users = [ "zeev" ];
       download-buffer-size = 1073741824;
 
       # Disable dirty warnings for desktop
@@ -372,7 +374,7 @@
 
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
     power-profiles-daemon.enable = false;
@@ -432,7 +434,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
   };
@@ -442,9 +444,9 @@
   # =================================================================
   users = {
     groups = {
-      git = {};
-      plugdev = {};
-      prometheus = {};
+      git = { };
+      plugdev = { };
+      prometheus = { };
     };
 
     users = {

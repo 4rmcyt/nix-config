@@ -2,7 +2,8 @@
   pkgs,
   config,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -171,13 +172,16 @@
         "https://4rmcyt-matebook.cachix.org"
         "https://nix-community.cachix.org"
         "https://nix-gaming.cachix.org"
+        "https://cache.flox.dev"
       ];
       trusted-public-keys = [
         "4rmcyt-matebook.cachix.org-1:OG8MqlfrDlyperVhYk2+va8Cwo/vE6tG/VbTlvq4I0I="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+        "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
       ];
-      trusted-users = ["zeev"];
+      auto-optimise-store = true;
+      trusted-users = [ "zeev" ];
       warn-dirty = false;
     };
   };
@@ -275,7 +279,7 @@
     # fwupd.enable = true; # Removed, already in hardware-configuration.nix
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
     usbmuxd.enable = true;
     thermald.enable = true;
@@ -313,7 +317,7 @@
   programs.light.enable = true;
   users = {
     groups = {
-      git = {};
+      git = { };
     };
     users = {
       git = {
