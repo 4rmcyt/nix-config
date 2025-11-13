@@ -224,6 +224,11 @@
   # =================================================================
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
+  nixpkgs.hostPlatform = {
+    system = "x86_64-linux";
+    gcc.arch = "znver3";
+    gcc.tune = "znver3";
+  };
 
   nix = {
     channel.enable = false;

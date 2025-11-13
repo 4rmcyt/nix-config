@@ -24,7 +24,7 @@ in {
 
     storeDir = mkOption {
       type = types.path;
-      default = "/var/lib/modprobed-db";
+      default = "/var/lib/modprobed-db/";
       description = "Directory to store modprobed-db database";
     };
   };
