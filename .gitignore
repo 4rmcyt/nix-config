@@ -5,5 +5,4 @@ core.*
 .vscode
 .claude
 .flake-inputs
-.direnv/flake-inputs/*
-.direnv/flake-profile-*.rc
+.direnv

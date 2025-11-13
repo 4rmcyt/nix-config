@@ -36,7 +36,6 @@
           refined-github
 
           # === MEDIA & ENTERTAINMENT ===
-          github-action-raw-log-viewer
           return-youtube-dislikes
 
           # === PRODUCTIVITY & NAVIGATION ===
