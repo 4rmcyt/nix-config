@@ -33,14 +33,16 @@ in {
     # Ensure modprobed-db package is installed
     environment.systemPackages = [pkgs.modprobed-db];
 
-    # Create storage directory
+    # Create storage directory and .config subdirectory
     systemd.tmpfiles.rules = [
       "d ${cfg.storeDir} 0755 ${cfg.user} root -"
+      "d ${cfg.storeDir}/.config 0755 ${cfg.user} root -"
     ];
 
     # Systemd service
     systemd.services.modprobed-db = {
       description = "Store currently loaded kernel modules";
+      path = with pkgs; [ coreutils glibc.bin glibc.getent ];
       serviceConfig = {
         Type = "oneshot";
         User = cfg.user;
