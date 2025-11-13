@@ -13,9 +13,13 @@
 
   # COSMIC-specific nix settings
   nix.settings = {
-    substituters = lib.mkBefore ["https://9lore.cachix.org/"];
+    substituters = lib.mkBefore [
+      "https://9lore.cachix.org?priority=5"
+      "https://cosmic.cachix.org?priority=6"
+    ];
     trusted-public-keys = lib.mkBefore [
       "9lore.cachix.org-1:H2/a1Wlm7VJRfJNNvFbxtLQPYswP3KzXwSI5ROgzGII="
+      "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
     ];
   };
 

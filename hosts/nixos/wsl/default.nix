@@ -82,6 +82,35 @@
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
+      cores = 0;
+
+      experimental-features = [
+        "flakes"
+        "nix-command"
+      ];
+
+      auto-optimise-store = true;
+      warn-dirty = false;
+      max-jobs = "auto"; # Auto-detect job count
+      keep-going = true; # Continue building other derivations on failure
+
+      # Network optimization for faster downloads
+      max-substitution-jobs = 4; # Parallel downloads
+      http-connections = 25; # More HTTP connections
+      connect-timeout = 5; # Faster timeout
+
+      # Store optimization for better performance
+      keep-outputs = true; # Keep build dependencies for faster rebuilds
+      keep-derivations = true; # Keep derivations for faster evaluation
+
+      # Disk space management
+      min-free = 5368709120; # 5GB - trigger GC when less than 5GB free
+      max-free = 10737418240; # 10GB - stop GC when 10GB free
+
+      # Build performance improvements
+      builders-use-substitutes = true; # Allow builders to use substitutes
+      require-sigs = true; # Security: require signatures
+      
       substituters = [
         "https://cache.nixos.org"
         "https://4rmcyt-wsl.cachix.org"
@@ -104,14 +133,10 @@
         "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
         "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
       ];
-      experimental-features = [
-        "flakes"
-        "nix-command"
+      trusted-users = [
+        "root"
+        "@wheel"
       ];
-      auto-optimise-store = true;
-      trusted-users = ["zeev"];
-      download-buffer-size = 1073741824;
-      warn-dirty = false;
     };
   };
 

@@ -3,7 +3,8 @@
   config,
   lib,
   ...
-}: {
+}:
+{
   # =================================================================
   # Imports
   # =================================================================
@@ -82,10 +83,11 @@
       XDG_RUNTIME_DIR = "/run/user/$UID";
     };
 
-    shells = lib.mkBefore (with pkgs; [nushell]);
+    shells = lib.mkBefore (with pkgs; [ nushell ]);
 
     systemPackages = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -210,7 +212,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -229,7 +231,7 @@
   nix = {
     channel.enable = false;
     settings = {
-      cores = 12;
+      cores = 0;
 
       experimental-features = [
         "flakes"
@@ -237,16 +239,41 @@
       ];
 
       auto-optimise-store = true;
-      max-jobs = 12;
+      warn-dirty = false;
+      max-jobs = "auto"; # Auto-detect job count
+      keep-going = true; # Continue building other derivations on failure
 
-      # Additional gaming and CUDA caches
+      # Network optimization for faster downloads
+      max-substitution-jobs = 4; # Parallel downloads
+      http-connections = 25; # More HTTP connections
+      connect-timeout = 5; # Faster timeout
+
+      # Store optimization for better performance
+      keep-outputs = true; # Keep build dependencies for faster rebuilds
+      keep-derivations = true; # Keep derivations for faster evaluation
+
+      # Disk space management
+      min-free = 5368709120; # 5GB - trigger GC when less than 5GB free
+      max-free = 10737418240; # 10GB - stop GC when 10GB free
+
+      # Build performance improvements
+      builders-use-substitutes = true; # Allow builders to use substitutes
+      require-sigs = true; # Security: require signatures
+
+      # Evaluation performance
+      eval-cache = true; # Cache evaluation results
+      
       substituters = [
-        "https://4rmcyt-desktop.cachix.org"
-        "https://cache.flox.dev"
-        "https://cuda-maintainers.cachix.org"
-        "https://nix-community.cachix.org"
-        "https://nix-gaming.cachix.org"
-        "https://chaotic-nyx.cachix.org"
+        "https://4rmcyt-desktop.cachix.org?priority=1"
+        "https://cache.flox.dev?priority=2"
+        "https://cuda-maintainers.cachix.org?priority=3"
+        "https://nix-community.cachix.org?priority=4"
+        "https://nix-gaming.cachix.org?priority=6"
+        "https://chaotic-nyx.cachix.org?priority=7"
+        "https://helix.cachix.org?priority=8"
+        "https://yazi.cachix.org?priority=9"
+        "https://devenv.cachix.org?priority=10"
+        "https://nixpkgs-unfree.cachix.org?priority=11"
       ];
 
       # Desktop-specific system features
@@ -265,14 +292,16 @@
         "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
         "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
         "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
+        "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
+        "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
+        "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
+        "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
       ];
 
-      # Allow zeev to use nix commands without sudo
-      trusted-users = ["zeev"];
-      download-buffer-size = 1073741824;
-
-      # Disable dirty warnings for desktop
-      warn-dirty = false;
+      trusted-users = [
+        "root"
+        "@wheel"
+      ];
     };
   };
 
@@ -372,7 +401,7 @@
 
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
     power-profiles-daemon.enable = false;
@@ -432,7 +461,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
   };
@@ -442,9 +471,9 @@
   # =================================================================
   users = {
     groups = {
-      git = {};
-      plugdev = {};
-      prometheus = {};
+      git = { };
+      plugdev = { };
+      prometheus = { };
     };
 
     users = {
