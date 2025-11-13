@@ -46,6 +46,10 @@ jobs:
       # ======================================================================
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Download updated flake.lock
+        uses: actions/download-artifact@v4
+        with:
+          name: flake-lock
       - name: Send Telegram notification - Build Started
         if: inputs.event_name != 'pull_request'
         uses: appleboy/telegram-action@master

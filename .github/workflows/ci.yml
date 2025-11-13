@@ -43,6 +43,25 @@ jobs:
       # Update and validate
       - name: Update flake inputs (in-memory)
         run: nix flake update
+      # Check if flake.lock changed after update
+      - name: Check if flake.lock changed
+        id: flake-changed
+        run: |
+          if git diff --quiet flake.lock; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "✅ flake.lock unchanged - skipping flake check"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "⚠️ flake.lock changed - will run flake check"
+            git diff flake.lock
+          fi
+      # Upload updated flake.lock for reuse in build jobs
+      - name: Upload updated flake.lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: flake-lock
+          path: flake.lock
+          retention-days: 1
       # Formatting check (informational only - doesn't fail the job)
       - name: Check formatting
         id: formatting
@@ -66,6 +85,7 @@ jobs:
       # Flake check (informational only - doesn't fail the job)
       - name: Check flake
         id: flake-check
+        if: steps.flake-changed.outputs.changed == 'true'
         continue-on-error: true
         run: nix flake check --show-trace
       # Send Telegram notification - Formatting Failed
