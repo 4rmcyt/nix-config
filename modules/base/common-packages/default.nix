@@ -29,6 +29,8 @@
       openssl
       p7zip
       pciutils
+      prek
+      namaka
       unzip
       usbutils
       vim

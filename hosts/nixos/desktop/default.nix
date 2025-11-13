@@ -3,8 +3,7 @@
   config,
   lib,
   ...
-}:
-{
+}: {
   # =================================================================
   # Imports
   # =================================================================
@@ -83,11 +82,10 @@
       XDG_RUNTIME_DIR = "/run/user/$UID";
     };
 
-    shells = lib.mkBefore (with pkgs; [ nushell ]);
+    shells = lib.mkBefore (with pkgs; [nushell]);
 
     systemPackages = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -212,7 +210,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
+      allowedTCPPorts = [9100]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -227,7 +225,7 @@
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
   nixpkgs.config.cudaSupport = true;
-  
+
   nix = {
     channel.enable = false;
     settings = {
@@ -270,7 +268,7 @@
       ];
 
       # Allow zeev to use nix commands without sudo
-      trusted-users = [ "zeev" ];
+      trusted-users = ["zeev"];
       download-buffer-size = 1073741824;
 
       # Disable dirty warnings for desktop
@@ -374,7 +372,7 @@
 
     pcscd = {
       enable = true;
-      plugins = [ pkgs.ccid ];
+      plugins = [pkgs.ccid];
     };
 
     power-profiles-daemon.enable = false;
@@ -434,7 +432,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = [ "nvidia" ];
+      videoDrivers = ["nvidia"];
       xkb.layout = "us";
     };
   };
@@ -444,9 +442,9 @@
   # =================================================================
   users = {
     groups = {
-      git = { };
-      plugdev = { };
-      prometheus = { };
+      git = {};
+      plugdev = {};
+      prometheus = {};
     };
 
     users = {

@@ -2,8 +2,7 @@
   pkgs,
   config,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -181,7 +180,7 @@
         "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
       ];
       auto-optimise-store = true;
-      trusted-users = [ "zeev" ];
+      trusted-users = ["zeev"];
       warn-dirty = false;
     };
   };
@@ -279,7 +278,7 @@
     # fwupd.enable = true; # Removed, already in hardware-configuration.nix
     pcscd = {
       enable = true;
-      plugins = [ pkgs.ccid ];
+      plugins = [pkgs.ccid];
     };
     usbmuxd.enable = true;
     thermald.enable = true;
@@ -317,7 +316,7 @@
   programs.light.enable = true;
   users = {
     groups = {
-      git = { };
+      git = {};
     };
     users = {
       git = {
