@@ -239,6 +239,7 @@
         "flakes"
         "nix-command"
       ];
+
       auto-optimise-store = true;
       max-jobs = 12;
 
