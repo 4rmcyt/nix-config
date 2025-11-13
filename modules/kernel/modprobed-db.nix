@@ -33,10 +33,9 @@ in {
     # Ensure modprobed-db package is installed
     environment.systemPackages = [pkgs.modprobed-db];
 
-    # Create storage directory and .config subdirectory
+    # Create storage directory
     systemd.tmpfiles.rules = [
       "d ${cfg.storeDir} 0755 ${cfg.user} root -"
-      "d ${cfg.storeDir}/.config 0755 ${cfg.user} root -"
     ];
 
     # Systemd service
