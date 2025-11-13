@@ -75,8 +75,8 @@
   # Only host-specific overrides are defined here
   nixpkgs.hostPlatform = {
     system = "x86_64-linux";
-    gcc.arch = "gccarch-skylake";
-    gcc.tune = "gccarch-skylake";
+    gcc.arch = "skylake";
+    gcc.tune = "skylake";
   };
 
   nix.settings = {
