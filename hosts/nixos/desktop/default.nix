@@ -270,6 +270,7 @@
 
       # Allow zeev to use nix commands without sudo
       trusted-users = ["zeev"];
+      download-buffer-size = 1073741824;
 
       # Disable dirty warnings for desktop
       warn-dirty = false;
