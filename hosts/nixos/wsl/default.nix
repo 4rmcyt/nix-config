@@ -72,8 +72,11 @@
   # =================================================================
   # 8. Nix Configuration
   # =================================================================
-  nixpkgs.config = {
-    cudaSupport = true;
+  nixpkgs = {
+    hostPlatform = "x86_64-linux";
+    config = {
+      cudaSupport = true;
+    };
   };
 
   nix = {
