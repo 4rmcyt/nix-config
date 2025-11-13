@@ -9,12 +9,6 @@
         ];
         origins = ["<all_urls>"];
       };
-
-      # GDPR/Cookie consent
-      "gdpr@cavi.au.dk" = {
-        permissions = ["<all_urls>"];
-        origins = ["<all_urls>"];
-      };
     };
     # === BASIC POLICIES ===
     DontCheckDefaultBrowser = true;

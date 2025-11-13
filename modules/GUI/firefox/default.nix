@@ -17,7 +17,6 @@
 
     nativeMessagingHosts = [
       pkgs.browserpass
-      pkgs.kdePackages.plasma-browser-integration
       pkgs.firefoxpwa
     ];
     betterfox.enable = true;
