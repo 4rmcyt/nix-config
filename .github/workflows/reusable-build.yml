@@ -52,6 +52,26 @@ jobs:
           sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY" /usr/local/lib/android /usr/share/swift
           echo "=== After cleanup ==="
           df -h
+      - name: Set system features for ${{ inputs.system }}
+        id: system-features
+        run: |
+          case "${{ inputs.system }}" in
+            desktop)
+              echo "features=benchmark big-parallel kvm nixos-test gccarch-znver4" >> $GITHUB_OUTPUT
+              ;;
+            homeserver)
+              echo "features=benchmark big-parallel kvm nixos-test gccarch-skylake" >> $GITHUB_OUTPUT
+              ;;
+            matebook)
+              echo "features=benchmark big-parallel kvm nixos-test gccarch-znver1" >> $GITHUB_OUTPUT
+              ;;
+            wsl)
+              echo "features=benchmark big-parallel kvm nixos-test gccarch-znver3" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "features=benchmark big-parallel kvm nixos-test" >> $GITHUB_OUTPUT
+              ;;
+          esac
       - name: Install Nix
         uses: cachix/install-nix-action@v27
         with:
@@ -60,6 +80,7 @@ jobs:
             accept-flake-config = true
             max-jobs = auto
             cores = 0
+            system-features = ${{ steps.system-features.outputs.features }}
             substituters = https://cache.nixos.org https://4rmcyt-desktop.cachix.org https://4rmcyt-homeserver.cachix.org https://4rmcyt-matebook.cachix.org https://4rmcyt-wsl.cachix.org https://nix-community.cachix.org
             trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= 4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs= 4rmcyt-homeserver.cachix.org-1:SmDepzJsgaofX57WoXmDu+HRJl/Koh90UWsZO0k2Nkg= 4rmcyt-matebook.cachix.org-1:OG8MqlfrDlyperVhYk2+va8Cwo/vE6tG/VbTlvq4I0I= 4rmcyt-wsl.cachix.org-1:6Z2J6lPY35L3qxBgEYzyN0Q3Y6LCJhtz/YeY4VQ29BU= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
       - name: Setup Magic Nix Cache

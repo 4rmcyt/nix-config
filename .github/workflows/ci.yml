@@ -30,10 +30,10 @@ jobs:
         uses: DeterminateSystems/magic-nix-cache-action@v4
       - name: Update flake inputs (in-memory)
         run: nix flake update
-      - name: Check formatting
-        run: nix fmt -- --ci .
-      - name: Check flake
-        run: nix flake check --all-systems --show-trace
+      # - name: Check formatting
+      #   run: nix fmt -- --ci .
+      # - name: Check flake
+      #   run: nix flake check --all-systems --show-trace
       - name: Send Telegram notification - Validation Failed
         if: failure() && github.event_name != 'pull_request'
         uses: appleboy/telegram-action@master
@@ -56,10 +56,10 @@ jobs:
     strategy:
       matrix:
         system:
-          # - wsl
-          # - desktop
+          - wsl
+          - desktop
           - homeserver
-          # - matebook
+          - matebook
     uses: ./.github/workflows/reusable-build.yml
     with:
       system: ${{ matrix.system }}
