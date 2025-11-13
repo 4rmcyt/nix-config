@@ -40,6 +40,8 @@
   allSystems = import inputs.systems;
 in
   # Merge home configurations for all systems
-  inputs.nixpkgs.lib.foldl' (acc: system:
-    acc // (mkHomeConfigurationsForSystem system)
-  ) {} allSystems
+  inputs.nixpkgs.lib.foldl' (
+    acc: system:
+      acc // (mkHomeConfigurationsForSystem system)
+  ) {}
+  allSystems
