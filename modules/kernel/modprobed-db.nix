@@ -41,7 +41,7 @@ in {
     # Systemd service
     systemd.services.modprobed-db = {
       description = "Store currently loaded kernel modules";
-      path = with pkgs; [ coreutils glibc.bin glibc.getent ];
+      path = with pkgs; [coreutils gawk glibc.bin glibc.getent];
       serviceConfig = {
         Type = "oneshot";
         User = cfg.user;

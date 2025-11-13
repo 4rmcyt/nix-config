@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 with lib; let
@@ -37,21 +36,23 @@ in {
     (mkIf cfg.optimized.enable {
       # Inform user about kernel optimization
       # The modprobed.db file will be used during manual kernel compilation
-      warnings = [
-        ''
-          Kernel optimization is enabled. To use modprobed-db data:
+      warnings =
+        [
+          ''
+            Kernel optimization is enabled. To use modprobed-db data:
 
-          1. Ensure you've collected module data: modprobed-db list
-          2. The module database is at: ${toString cfg.optimized.modulesPath}
-          3. For custom kernel builds, use the CachyOS kernel configurator
-             or manually configure your kernel with the tracked modules.
+            1. Ensure you've collected module data: modprobed-db list
+            2. The module database is at: ${toString cfg.optimized.modulesPath}
+            3. For custom kernel builds, use the CachyOS kernel configurator
+               or manually configure your kernel with the tracked modules.
 
-          The modprobed-db systemd service is running hourly to track modules.
-        ''
-      ] ++ optional (!builtins.pathExists cfg.optimized.modulesPath) ''
-        Warning: modprobed.db not found at ${toString cfg.optimized.modulesPath}.
-        Run the system for a few days/weeks to collect module data.
-      '';
+            The modprobed-db systemd service is running hourly to track modules.
+          ''
+        ]
+        ++ optional (!builtins.pathExists cfg.optimized.modulesPath) ''
+          Warning: modprobed.db not found at ${toString cfg.optimized.modulesPath}.
+          Run the system for a few days/weeks to collect module data.
+        '';
     })
   ];
 }
