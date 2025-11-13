@@ -226,8 +226,8 @@
   # Only host-specific overrides are defined here
   nixpkgs.hostPlatform = {
     system = "x86_64-linux";
-    gcc.arch = "znver3";
-    gcc.tune = "znver3";
+    gcc.arch = "znver4";
+    gcc.tune = "znver4";
   };
 
   nix = {
