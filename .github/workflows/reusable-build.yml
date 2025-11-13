@@ -1,22 +1,32 @@
 name: "Reusable: Build and Check System"
+# ============================================================================
+# Reusable Workflow - Called by ci.yml for each system
+# ============================================================================
 on:
   workflow_call:
+    # Input parameters
     inputs:
       system:
+        description: "System to build (wsl, desktop, homeserver, matebook)"
         required: true
         type: string
       ref_name:
+        description: "Git ref name (branch or tag)"
         required: true
         type: string
       ref_type:
+        description: "Git ref type (branch or tag)"
         required: true
         type: string
       event_name:
+        description: "GitHub event name that triggered the workflow"
         required: true
         type: string
       commit_message:
+        description: "Commit message (optional)"
         required: false
         type: string
+    # Required secrets
     secrets:
       CACHIX_AUTH_TOKEN:
         required: true
@@ -24,10 +34,16 @@ on:
         required: true
       TELEGRAM_BOT_TOKEN:
         required: true
+# ============================================================================
+# Jobs
+# ============================================================================
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # ======================================================================
+      # 1. Setup
+      # ======================================================================
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Send Telegram notification - Build Started
@@ -49,9 +65,23 @@ jobs:
         run: |
           echo "=== Before cleanup ==="
           df -h
-          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY" /usr/local/lib/android /usr/share/swift
+          sudo rm -rf \
+            /usr/share/dotnet \
+            /opt/ghc \
+            /usr/local/share/boost \
+            "$AGENT_TOOLSDIRECTORY" \
+            /usr/local/lib/android \
+            /usr/share/swift
           echo "=== After cleanup ==="
           df -h
+      # ======================================================================
+      # 2. Configure System-Specific Features
+      # ======================================================================
+      # Each system has different CPU architecture optimizations:
+      # - desktop:     AMD Zen 4 (znver4)
+      # - homeserver:  Intel Skylake
+      # - matebook:    AMD Zen 1 (znver1)
+      # - wsl:         AMD Zen 3 (znver3)
       - name: Set system features for ${{ inputs.system }}
         id: system-features
         run: |
@@ -72,6 +102,9 @@ jobs:
               echo "features=benchmark big-parallel kvm nixos-test" >> $GITHUB_OUTPUT
               ;;
           esac
+      # ======================================================================
+      # 3. Install and Configure Nix
+      # ======================================================================
       - name: Install Nix
         uses: cachix/install-nix-action@v27
         with:
@@ -87,12 +120,18 @@ jobs:
         uses: DeterminateSystems/magic-nix-cache-action@v4
       - name: Update flake inputs (in-memory)
         run: nix flake update
+      # ======================================================================
+      # 4. Setup Cachix (for pushing builds)
+      # ======================================================================
       - name: Setup Cachix for ${{ inputs.system }} (Push)
         uses: cachix/cachix-action@v15
         with:
           name: 4rmcyt-${{ inputs.system }}
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
           skipPush: ${{ inputs.ref_type != 'branch' || inputs.ref_name != 'main' }}
+      # ======================================================================
+      # 5. Validate and Build
+      # ======================================================================
       - name: Validate Home Manager config for ${{ inputs.system }}
         run: |
           echo "Validating Home Manager config for ${{ inputs.system }}..."
@@ -104,6 +143,9 @@ jobs:
             .#nixosConfigurations.${{ inputs.system }}.config.system.build.toplevel \
             --print-build-logs \
             --show-trace
+      # ======================================================================
+      # 6. Notifications
+      # ======================================================================
       - name: Send Telegram notification - Build Failed
         if: failure() && inputs.event_name != 'pull_request'
         uses: appleboy/telegram-action@master

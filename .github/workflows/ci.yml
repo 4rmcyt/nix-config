@@ -1,39 +1,90 @@
 name: "CI"
 on:
-  workflow_dispatch:
-  pull_request:
+  workflow_dispatch: # Manual trigger
+  pull_request: # PRs to any branch
   push:
     branches:
-      - main
+      - main # Auto-run on main branch
   schedule:
-    - cron: "0 3 * * *"
+    - cron: "0 3 * * *" # Daily at 3 AM UTC
+# ============================================================================
+# Concurrency Control
+# ============================================================================
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 jobs:
-  # =================================================================
-  # Validate - Run fast checks like formatting and flake validation
-  # =================================================================
   validate:
     name: Validate Flake & Formatting
     runs-on: ubuntu-latest
     steps:
+# Checkout
       - name: Checkout repository
         uses: actions/checkout@v4
+# Setup Nix
       - name: Install Nix
         uses: cachix/install-nix-action@v27
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
             accept-flake-config = true
+# Setup Magic Nix Cache
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@v4
+# Update and validate
       - name: Update flake inputs (in-memory)
         run: nix flake update
-      # - name: Check formatting
-      #   run: nix fmt -- --ci .
-      # - name: Check flake
-      #   run: nix flake check --all-systems --show-trace
+# Check for uncommitted changes after flake update
+      - name: Check for uncommitted changes after flake update
+        run: |
+          if ! git diff --quiet || ! git diff --cached --quiet; then
+            echo "❌ Uncommitted changes detected after flake update!"
+            git status
+            git diff
+            exit 1
+          fi
+# Formatting check (informational only - doesn't fail the job)
+      - name: Check formatting
+        id: formatting
+        continue-on-error: true
+        run: nix fmt -- --ci .
+# Send Telegram notification - Formatting Failed
+      - name: Send Telegram notification - Formatting Failed
+        if: steps.formatting.outcome == 'failure' && github.event_name != 'pull_request'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ⚠️ *Formatting Check Failed (Non-blocking)*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            Trigger: ${{ github.event_name }}
+            The formatting check failed but the workflow will continue.
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+# Flake check (informational only - doesn't fail the job)
+      - name: Check flake
+        id: flake-check
+        continue-on-error: true
+        run: nix flake check --show-trace
+# Send Telegram notification - Formatting Failed
+      - name: Send Telegram notification - Flake Check Failed
+        if: steps.flake-check.outcome == 'failure' && github.event_name != 'pull_request'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ⚠️ *Flake Check Failed (Non-blocking)*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            Trigger: ${{ github.event_name }}
+            The flake check failed but the workflow will continue.
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+      # Send Telegram notification - Validation Failed
       - name: Send Telegram notification - Validation Failed
         if: failure() && github.event_name != 'pull_request'
         uses: appleboy/telegram-action@master
@@ -47,23 +98,23 @@ jobs:
             Branch: `${{ github.ref_name }}`
             Trigger: ${{ github.event_name }}
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-  # =================================================================
+  # ==========================================================================
   # Build & Check Systems - Call the reusable workflow for each system
-  # =================================================================
+  # ==========================================================================
   build-and-check-systems:
     name: Build & Check ${{ matrix.system }}
     needs: [validate]
     strategy:
+      fail-fast: false # Continue building other systems even if one fails
       matrix:
         system:
-          - wsl
-          - desktop
-          - homeserver
-          - matebook
+          - wsl # AMD Zen 3 (znver3)
+          - desktop # AMD Zen 4 (znver4)
+          - homeserver # Intel Skylake
+          - matebook # AMD Zen 1 (znver1)
     uses: ./.github/workflows/reusable-build.yml
     with:
       system: ${{ matrix.system }}
-      # Pass event info to the reusable workflow
       ref_name: ${{ github.ref_name }}
       ref_type: ${{ github.ref_type }}
       event_name: ${{ github.event_name }}
@@ -72,9 +123,9 @@ jobs:
       CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-  # =================================================================
+  # ==========================================================================
   # Workflow Summary - Send overall workflow status
-  # =================================================================
+  # ==========================================================================
   workflow-summary:
     name: Workflow Summary
     runs-on: ubuntu-latest
