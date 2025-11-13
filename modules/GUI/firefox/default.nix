@@ -31,14 +31,12 @@
           # === AD BLOCKING & PRIVACY ===
           darkreader
           ublock-origin
-          ublacklist
-          terms-of-service-didnt-read
 
           # === DEVELOPER TOOLS ===
           refined-github
 
           # === MEDIA & ENTERTAINMENT ===
-          fastforwardteam
+          github-action-raw-log-viewer
           return-youtube-dislikes
 
           # === PRODUCTIVITY & NAVIGATION ===
