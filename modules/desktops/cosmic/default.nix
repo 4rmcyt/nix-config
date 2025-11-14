@@ -15,7 +15,7 @@
   nixpkgs.overlays = [
     (final: prev: {
       cosmic-files = prev.cosmic-files.overrideAttrs (oldAttrs: {
-        cargoDeps = oldAttrs.cargoDeps.overrideAttrs (oldDeps: {
+        src = oldAttrs.src.overrideAttrs (oldSrc: {
           outputHash = "sha256-82DuMGVyZAwEaBbLAIodchtjKMugZTiHOHwsLZAJXz4=";
         });
       });

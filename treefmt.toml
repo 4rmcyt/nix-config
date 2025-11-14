@@ -31,7 +31,7 @@ includes = [
   "*.tsx",
   "*.vue",
   "*.yaml",
-  "*.yml"
+  "*.yml",
 ]
 
 [formatter.rustfmt]
@@ -62,5 +62,6 @@ excludes = [
   "*.pub",
   "*.toml",
   "*.typed",
-  "secrets/*"
+  "secrets/*",
+  ".gitignore",
 ]
