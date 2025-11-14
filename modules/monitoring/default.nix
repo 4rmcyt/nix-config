@@ -184,13 +184,13 @@
         {
           job_name = "homeserver-node";
           static_configs = [
-            { targets = [ "localhost:${toString config.my.network.ports.node-exporter}" ]; }
+            { targets = [ "localhost:9100" ]; }
           ];
         }
         {
           job_name = "postgres-exporter";
           static_configs = [
-            { targets = [ "localhost:${toString config.my.network.ports.postgres-exporter}" ]; }
+            { targets = [ "localhost:9187" ]; }
           ];
         }
         {
