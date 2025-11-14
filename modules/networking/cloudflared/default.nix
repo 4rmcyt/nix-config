@@ -76,6 +76,8 @@
           service: http://localhost:8787
         - hostname: link.${config.my.defaults.domain}
           service: http://localhost:3000
+        - hostname: loki.${config.my.defaults.domain}
+          service: http://localhost:3100
         - service: http_status:404
     '';
   };

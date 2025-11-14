@@ -26,6 +26,12 @@
       owner = config.users.users.grafana.name;
       mode = "0400";
     };
+    loki_github_actions_token = {
+      sopsFile = ../../secrets/loki.yaml;
+      key = "github_actions_token";
+      owner = "loki";
+      mode = "0400";
+    };
   };
 
   # =================================================================
@@ -126,6 +132,14 @@
           url = "http://localhost:${toString config.services.loki.configuration.server.http_listen_port}";
         }
       ];
+      provision.dashboards.settings.providers = [
+        {
+          name = "GitHub Actions";
+          options.path = ./dashboards;
+          disableDeletion = false;
+          updateIntervalSeconds = 30;
+        }
+      ];
     };
 
     # --- Prometheus Monitoring Stack ---
@@ -194,7 +208,11 @@
     loki = {
       enable = true;
       configuration = {
-        server.http_listen_port = 3100;
+        server = {
+          http_listen_port = 3100;
+          # Listen on all interfaces to accept logs from GitHub Actions
+          http_listen_address = "0.0.0.0";
+        };
         auth_enabled = false;
         server.log_level = "warn";
 
@@ -231,6 +249,9 @@
         limits_config = {
           reject_old_samples = true;
           reject_old_samples_max_age = "168h";
+          # Increase ingestion limits for GitHub Actions logs
+          ingestion_rate_mb = 10;
+          ingestion_burst_size_mb = 20;
         };
 
         ruler = {

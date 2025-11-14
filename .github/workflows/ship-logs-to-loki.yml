@@ -1,0 +1,53 @@
+name: Ship Logs to Loki
+
+# This workflow ships GitHub Actions logs to your Loki instance
+# It runs after the CI workflow completes
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  ship-logs:
+    name: Ship Workflow Logs to Loki
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.event != 'pull_request'
+
+    steps:
+      - name: Download workflow logs
+        id: download
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "Downloading logs for run ${{ github.event.workflow_run.id }}..."
+
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/logs \
+            > workflow-logs.zip
+
+          unzip -q workflow-logs.zip -d logs/
+          echo "Downloaded $(ls logs/ | wc -l) log files"
+
+      - name: Ship logs to Loki using promtail
+        uses: grafana/loki-github-actions@main
+        with:
+          loki-url: ${{ secrets.LOKI_ENDPOINT }}
+          loki-username: github-actions
+          loki-password: ${{ secrets.LOKI_AUTH_TOKEN }}
+          loki-batch-size: 100
+          loki-labels: |
+            job=github-actions,
+            workflow=${{ github.event.workflow_run.name }},
+            repository=${{ github.repository }},
+            branch=${{ github.event.workflow_run.head_branch }},
+            status=${{ github.event.workflow_run.conclusion }}
+          log-files: |
+            logs/*.txt
