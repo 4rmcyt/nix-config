@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. SOPS Secrets
   # =================================================================
@@ -54,7 +55,7 @@
     promtail = {
       isSystemUser = true;
       description = "Promtail user";
-      group = "loki";
+      group = "promtail";
     };
     uptime-kuma = {
       isSystemUser = true;
@@ -64,12 +65,12 @@
   };
 
   users.groups = {
-    grafana = {};
-    nut-exporter = {};
-    prometheus = {};
-    loki = {};
-    promtail = {};
-    uptime-kuma = {};
+    grafana = { };
+    nut-exporter = { };
+    prometheus = { };
+    loki = { };
+    promtail = { };
+    uptime-kuma = { };
   };
 
   # =================================================================
@@ -143,7 +144,7 @@
       port = 9090;
       retentionTime = "30d";
       globalConfig.scrape_interval = "1m";
-      ruleFiles = [./alerts/homeserver.yaml];
+      ruleFiles = [ ./alerts/homeserver.yaml ];
 
       exporters = {
         node = {
@@ -168,7 +169,7 @@
       scrapeConfigs = [
         {
           job_name = "cloudflare-exporter";
-          static_configs = [{targets = ["localhost:8081"];}];
+          static_configs = [ { targets = [ "localhost:8081" ]; } ];
         }
         {
           job_name = "desktop-node";
@@ -183,18 +184,18 @@
         {
           job_name = "homeserver-node";
           static_configs = [
-            {targets = ["localhost:${toString config.my.network.ports.node-exporter}"];}
+            { targets = [ "localhost:${toString config.my.network.ports.node-exporter}" ]; }
           ];
         }
         {
           job_name = "postgres-exporter";
           static_configs = [
-            {targets = ["localhost:${toString config.my.network.ports.postgres-exporter}"];}
+            { targets = [ "localhost:${toString config.my.network.ports.postgres-exporter}" ]; }
           ];
         }
         {
           job_name = "prometheus";
-          static_configs = [{targets = ["localhost:${toString config.my.network.ports.prometheus}"];}];
+          static_configs = [ { targets = [ "localhost:${toString config.my.network.ports.prometheus}" ]; } ];
         }
       ];
     };
@@ -286,12 +287,12 @@
             };
             relabel_configs = [
               {
-                source_labels = ["__journal__systemd_unit"];
+                source_labels = [ "__journal__systemd_unit" ];
                 regex = "(.*)\\.service";
                 target_label = "service";
               }
               {
-                source_labels = ["__journal__hostname"];
+                source_labels = [ "__journal__hostname" ];
                 target_label = "hostname";
               }
             ];
@@ -315,8 +316,8 @@
   # =================================================================
   systemd.services.cloudflare-exporter = {
     description = "Cloudflare Prometheus Exporter";
-    wantedBy = ["multi-user.target"];
-    after = ["network.target"];
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network.target" ];
     serviceConfig = {
       User = "prometheus";
       Group = "prometheus";
