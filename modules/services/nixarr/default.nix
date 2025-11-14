@@ -26,6 +26,7 @@ in {
     };
     recyclarr_config = {
       sopsFile = ../../../secrets/recyclarr.yaml;
+      format = "binary";
       mode = "0600";
       owner = "recyclarr";
       group = "recyclarr";
