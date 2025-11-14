@@ -1,0 +1,304 @@
+name: "Security Scanning"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1" # Weekly on Mondays at 6 AM UTC
+
+# Permissions for security scanning
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  # ==========================================================================
+  # Vulnerability Scanning - Scan for CVEs in dependencies
+  # ==========================================================================
+  trivy-scan:
+    name: Trivy Vulnerability Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        if: github.token != ''
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          format: "sarif"
+          output: "trivy-results.sarif"
+          severity: "CRITICAL,HIGH,MEDIUM"
+
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always() && github.event_name != 'pull_request' && github.token != ''
+        with:
+          sarif_file: "trivy-results.sarif"
+
+      - name: Generate Trivy report for notification
+        uses: aquasecurity/trivy-action@master
+        if: github.token != ''
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          format: "table"
+          output: "trivy-report.txt"
+          severity: "CRITICAL,HIGH"
+
+      - name: Send Telegram notification - Vulnerabilities Found
+        if: failure() && github.event_name != 'pull_request'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            🔒 *Security Scan - Vulnerabilities Detected*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            Scanner: Trivy
+            Critical/High vulnerabilities found!
+            [View Details](${{ github.server_url }}/${{ github.repository }}/security/code-scanning)
+
+  # ==========================================================================
+  # Secret Scanning - Detect accidentally committed secrets
+  # ==========================================================================
+  secret-scan:
+    name: Secret Detection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        if: github.token != ''
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified
+
+      - name: Send Telegram notification - Secrets Found
+        if: failure() && github.event_name != 'pull_request'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            🚨 *Security Alert - Secrets Detected*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            Scanner: TruffleHog
+            Potential secrets found in repository!
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+  # ==========================================================================
+  # SOPS Validation - Ensure encrypted secrets are properly configured
+  # ==========================================================================
+  sops-validation:
+    name: SOPS Secrets Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+
+      - name: Setup Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@v4
+
+      - name: Validate SOPS encrypted files
+        run: |
+          echo "🔐 Validating SOPS encrypted files..."
+
+          # Find all encrypted SOPS files
+          SOPS_FILES=$(find secrets -type f \( -name "*.yaml" -o -name "*.yml" -o -name "*.json" \) 2>/dev/null || echo "")
+
+          if [ -z "$SOPS_FILES" ]; then
+            echo "No SOPS files found to validate"
+            exit 0
+          fi
+
+          # Check each file is properly encrypted
+          for file in $SOPS_FILES; do
+            echo "Checking: $file"
+            if ! grep -q "sops:" "$file"; then
+              echo "❌ File $file does not appear to be SOPS encrypted!"
+              exit 1
+            fi
+          done
+
+          echo "✅ All SOPS files are properly encrypted"
+
+      - name: Send Telegram notification - SOPS Validation Failed
+        if: failure() && github.event_name != 'pull_request'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ⚠️ *SOPS Validation Failed*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            Some secrets files may not be properly encrypted!
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+  # ==========================================================================
+  # Configuration Syntax Validation
+  # ==========================================================================
+  syntax-validation:
+    name: Syntax Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+
+      - name: Setup Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@v4
+
+      - name: Validate Nushell configuration syntax
+        run: |
+          echo "🐚 Checking Nushell configuration syntax..."
+
+          # Find all .nu files
+          NU_FILES=$(find . -name "*.nu" -not -path "./.git/*" || echo "")
+
+          if [ -z "$NU_FILES" ]; then
+            echo "No .nu files found to validate"
+            exit 0
+          fi
+
+          ERRORS=0
+          for file in $NU_FILES; do
+            echo "Checking: $file"
+            if ! nix run nixpkgs#nushell -- --commands "nu-check $file"; then
+              echo "❌ Syntax error in $file"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+
+          if [ $ERRORS -gt 0 ]; then
+            echo "❌ Found $ERRORS Nushell syntax errors"
+            exit 1
+          fi
+
+          echo "✅ All Nushell configurations have valid syntax"
+
+      - name: Validate YAML files
+        run: |
+          echo "📄 Checking YAML file syntax..."
+
+          # Find all YAML files (excluding SOPS encrypted ones)
+          YAML_FILES=$(find . -type f \( -name "*.yaml" -o -name "*.yml" \) \
+            -not -path "./.git/*" \
+            -not -path "./secrets/*" || echo "")
+
+          if [ -z "$YAML_FILES" ]; then
+            echo "No YAML files found to validate"
+            exit 0
+          fi
+
+          ERRORS=0
+          for file in $YAML_FILES; do
+            echo "Checking: $file"
+            if ! nix run nixpkgs#yq -- eval "$file" > /dev/null 2>&1; then
+              echo "❌ Syntax error in $file"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+
+          if [ $ERRORS -gt 0 ]; then
+            echo "❌ Found $ERRORS YAML syntax errors"
+            exit 1
+          fi
+
+          echo "✅ All YAML files have valid syntax"
+
+      - name: Send Telegram notification - Syntax Validation Failed
+        if: failure() && github.event_name != 'pull_request'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ⚠️ *Syntax Validation Failed*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            Configuration files contain syntax errors!
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+  # ==========================================================================
+  # Security Summary
+  # ==========================================================================
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs: [trivy-scan, secret-scan, sops-validation, syntax-validation]
+    if: always() && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Send Telegram notification - All Security Checks Passed
+        if: needs.trivy-scan.result == 'success' && needs.secret-scan.result == 'success' && needs.sops-validation.result == 'success' && needs.syntax-validation.result == 'success'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ✅ *Security Scan Completed - All Checks Passed*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+
+            Security checks passed:
+            ✅ Vulnerability scanning (Trivy)
+            ✅ Secret detection (TruffleHog)
+            ✅ SOPS validation
+            ✅ Syntax validation
+
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+      - name: Send Telegram notification - Security Issues Detected
+        if: needs.trivy-scan.result == 'failure' || needs.secret-scan.result == 'failure' || needs.sops-validation.result == 'failure' || needs.syntax-validation.result == 'failure'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ⚠️ *Security Scan - Issues Detected*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+
+            Check results:
+            ${{ needs.trivy-scan.result == 'success' && '✅' || '❌' }} Vulnerability scanning
+            ${{ needs.secret-scan.result == 'success' && '✅' || '❌' }} Secret detection
+            ${{ needs.sops-validation.result == 'success' && '✅' || '❌' }} SOPS validation
+            ${{ needs.syntax-validation.result == 'success' && '✅' || '❌' }} Syntax validation
+
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})

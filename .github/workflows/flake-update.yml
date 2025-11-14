@@ -1,11 +1,20 @@
 name: "Daily Flake Update"
+
 on:
   workflow_dispatch: # Allows you to run this manually
   schedule:
     - cron: "0 0 * * *" # Runs every day at 00:00 UTC
+
 # Permissions to write to the repository
 permissions:
   contents: write
+  pull-requests: write # For creating PRs if needed
+
+# Environment Variables
+env:
+  SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
+  CURL_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
+  NIX_SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
 jobs:
   # =================================================================
   # Update Flake Lock - Automatically update flake.lock on a schedule
@@ -17,11 +26,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Nix
-        uses: cachix/install-nix-action@v27
+        uses: cachix/install-nix-action@v31
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
             accept-flake-config = true
+            # SSL/TLS Configuration
+            ssl-cert-file = /etc/ssl/certs/ca-certificates.crt
+            # Performance optimizations
+            max-jobs = auto
+            cores = 0
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@v4
       - name: Update flake.lock
