@@ -1,24 +1,19 @@
 name: Ship Logs to Loki
-
 # This workflow ships GitHub Actions logs to your Loki instance
 # It runs after the CI workflow completes
-
 on:
   workflow_run:
     workflows: ["CI"]
     types:
       - completed
-
 permissions:
   actions: read
   contents: read
-
 jobs:
   ship-logs:
     name: Ship Workflow Logs to Loki
     runs-on: ubuntu-latest
     if: github.event.workflow_run.event != 'pull_request'
-
     steps:
       - name: Download workflow logs
         id: download
@@ -35,7 +30,6 @@ jobs:
 
           unzip -q workflow-logs.zip -d logs/
           echo "Downloaded $(ls logs/ | wc -l) log files"
-
       - name: Ship logs to Loki using promtail
         uses: grafana/loki-github-actions@main
         with:
