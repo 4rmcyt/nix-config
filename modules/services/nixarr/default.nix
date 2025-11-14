@@ -24,14 +24,6 @@ in {
       format = "binary";
       mode = "0600";
     };
-    recyclarr_config = {
-      sopsFile = ../../../secrets/recyclarr.yaml;
-      key = "";
-      format = "binary";
-      mode = "0600";
-      owner = "recyclarr";
-      group = "recyclarr";
-    };
   };
 
   users.users = {
@@ -229,7 +221,7 @@ in {
     readarr.enable = true;
     recyclarr = {
       enable = true;
-      configFile = config.sops.secrets.recyclarr_config.path;
+      configFile = ./recyclarr.yaml;
     };
   };
 
