@@ -11,6 +11,17 @@
     ../../GUI/flatpak/cosmic
   ];
 
+  # Temporary hash fix for cosmic-files until upstream is updated
+  nixpkgs.overlays = [
+    (final: prev: {
+      cosmic-files = prev.cosmic-files.overrideAttrs (oldAttrs: {
+        cargoDeps = oldAttrs.cargoDeps.overrideAttrs (oldDeps: {
+          outputHash = "sha256-82DuMGVyZAwEaBbLAIodchtjKMugZTiHOHwsLZAJXz4=";
+        });
+      });
+    })
+  ];
+
   # COSMIC-specific nix settings
   nix.settings = {
     substituters = lib.mkBefore [
