@@ -17,6 +17,22 @@
     "jellyfin"
   ];
 in {
+  # SOPS secrets for nixarr
+  sops.secrets = {
+    wg_conf = {
+      sopsFile = ../../../secrets/wg.conf;
+      format = "binary";
+      mode = "0600";
+    };
+    recyclarr_config = {
+      sopsFile = ../../../secrets/recyclarr.yaml;
+      format = "yaml";
+      mode = "0600";
+      owner = "recyclarr";
+      group = "recyclarr";
+    };
+  };
+
   users.users = {
     audiobookshelf = {
       isSystemUser = true;
@@ -159,7 +175,7 @@ in {
 
     vpn = {
       enable = true;
-      wgConf = "/data/.secret/wg.conf";
+      wgConf = config.sops.secrets.wg_conf.path;
       openTcpPorts = [
         58403
         63998
@@ -212,7 +228,7 @@ in {
     readarr.enable = true;
     recyclarr = {
       enable = true;
-      configFile = ./recyclarr.yaml;
+      configFile = config.sops.secrets.recyclarr_config.path;
     };
   };
 

@@ -30,18 +30,58 @@ jobs:
 
           unzip -q workflow-logs.zip -d logs/
           echo "Downloaded $(ls logs/ | wc -l) log files"
-      - name: Ship logs to Loki using promtail
-        uses: grafana/loki-github-actions@main
-        with:
-          loki-url: ${{ secrets.LOKI_ENDPOINT }}
-          loki-username: github-actions
-          loki-password: ${{ secrets.LOKI_AUTH_TOKEN }}
-          loki-batch-size: 100
-          loki-labels: |
-            job=github-actions,
-            workflow=${{ github.event.workflow_run.name }},
-            repository=${{ github.repository }},
-            branch=${{ github.event.workflow_run.head_branch }},
-            status=${{ github.event.workflow_run.conclusion }}
-          log-files: |
-            logs/*.txt
+      - name: Ship logs to Loki
+        env:
+          LOKI_URL: ${{ secrets.LOKI_ENDPOINT }}
+          LOKI_AUTH_TOKEN: ${{ secrets.LOKI_AUTH_TOKEN }}
+        run: |
+          set -e
+
+          echo "Shipping logs to Loki..."
+
+          # Process each log file
+          for log_file in logs/*.txt; do
+            [ -f "$log_file" ] || continue
+
+            job_name=$(basename "$log_file" .txt)
+            echo "Processing: $job_name"
+
+            # Read log file and create Loki payload
+            # Each line becomes a log entry with timestamp
+            timestamp_ns=$(date +%s)000000000
+
+            # Create JSON payload for Loki push API
+            jq -Rs --arg ts "$timestamp_ns" \
+                   --arg job "github-actions" \
+                   --arg workflow "${{ github.event.workflow_run.name }}" \
+                   --arg repository "${{ github.repository }}" \
+                   --arg branch "${{ github.event.workflow_run.head_branch }}" \
+                   --arg status "${{ github.event.workflow_run.conclusion }}" \
+                   --arg job_name "$job_name" \
+              '{
+                streams: [{
+                  stream: {
+                    job: $job,
+                    workflow: $workflow,
+                    repository: $repository,
+                    branch: $branch,
+                    status: $status,
+                    job_name: $job_name
+                  },
+                  values: [
+                    [$ts, .]
+                  ]
+                }]
+              }' "$log_file" > payload.json
+
+            # Send to Loki
+            curl -X POST \
+              -H "Content-Type: application/json" \
+              -H "Authorization: Bearer $LOKI_AUTH_TOKEN" \
+              -d @payload.json \
+              "$LOKI_URL/loki/api/v1/push" || echo "Warning: Failed to ship $job_name"
+
+            rm payload.json
+          done
+
+          echo "✅ Log shipping completed"

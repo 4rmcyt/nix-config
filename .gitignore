@@ -7,3 +7,9 @@ core.*
 .flake-inputs
 .direnv
 .direnv/flake-profile-a5d5b61aa8a61b7d9d765e1daf971a9a578f1cfa.rc
+
+# Security: Ignore secrets directory (SOPS-encrypted files only!)
+# Note: secrets/ is tracked but only encrypted files should be committed
+secrets/*.backup
+secrets/*.tmp
+secrets/*.unencrypted
