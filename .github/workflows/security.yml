@@ -1,5 +1,4 @@
 name: "Security Scanning"
-
 on:
   push:
     branches: [main]
@@ -8,13 +7,11 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 6 * * 1" # Weekly on Mondays at 6 AM UTC
-
 # Permissions for security scanning
 permissions:
   actions: read
   contents: read
   security-events: write
-
 jobs:
   # ==========================================================================
   # Vulnerability Scanning - Scan for CVEs in dependencies
@@ -27,7 +24,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         if: github.token != ''
@@ -37,13 +33,11 @@ jobs:
           format: "sarif"
           output: "trivy-results.sarif"
           severity: "CRITICAL,HIGH,MEDIUM"
-
       - name: Upload Trivy results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         if: always() && github.event_name != 'pull_request' && github.token != ''
         with:
           sarif_file: "trivy-results.sarif"
-
       - name: Generate Trivy report for notification
         uses: aquasecurity/trivy-action@master
         if: github.token != ''
@@ -53,7 +47,6 @@ jobs:
           format: "table"
           output: "trivy-report.txt"
           severity: "CRITICAL,HIGH"
-
       - name: Send Telegram notification - Vulnerabilities Found
         if: failure() && github.event_name != 'pull_request'
         uses: appleboy/telegram-action@master
@@ -68,7 +61,6 @@ jobs:
             Scanner: Trivy
             Critical/High vulnerabilities found!
             [View Details](${{ github.server_url }}/${{ github.repository }}/security/code-scanning)
-
   # ==========================================================================
   # Secret Scanning - Detect accidentally committed secrets
   # ==========================================================================
@@ -80,7 +72,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: TruffleHog Secret Scan
         uses: trufflesecurity/trufflehog@main
         if: github.token != ''
@@ -89,7 +80,6 @@ jobs:
           base: ${{ github.event.repository.default_branch }}
           head: HEAD
           extra_args: --only-verified
-
       - name: Send Telegram notification - Secrets Found
         if: failure() && github.event_name != 'pull_request'
         uses: appleboy/telegram-action@master
@@ -104,7 +94,6 @@ jobs:
             Scanner: TruffleHog
             Potential secrets found in repository!
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-
   # ==========================================================================
   # SOPS Validation - Ensure encrypted secrets are properly configured
   # ==========================================================================
@@ -114,17 +103,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Install Nix
         uses: cachix/install-nix-action@v31
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
             accept-flake-config = true
-
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@v4
-
       - name: Validate SOPS encrypted files
         run: |
           echo "🔐 Validating SOPS encrypted files..."
@@ -147,7 +133,6 @@ jobs:
           done
 
           echo "✅ All SOPS files are properly encrypted"
-
       - name: Send Telegram notification - SOPS Validation Failed
         if: failure() && github.event_name != 'pull_request'
         uses: appleboy/telegram-action@master
@@ -161,7 +146,6 @@ jobs:
             Branch: `${{ github.ref_name }}`
             Some secrets files may not be properly encrypted!
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-
   # ==========================================================================
   # Configuration Syntax Validation
   # ==========================================================================
@@ -171,17 +155,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Install Nix
         uses: cachix/install-nix-action@v31
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
             accept-flake-config = true
-
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@v4
-
       - name: Validate Nushell configuration syntax
         run: |
           echo "🐚 Checking Nushell configuration syntax..."
@@ -209,7 +190,6 @@ jobs:
           fi
 
           echo "✅ All Nushell configurations have valid syntax"
-
       - name: Validate YAML files
         run: |
           echo "📄 Checking YAML file syntax..."
@@ -239,7 +219,6 @@ jobs:
           fi
 
           echo "✅ All YAML files have valid syntax"
-
       - name: Send Telegram notification - Syntax Validation Failed
         if: failure() && github.event_name != 'pull_request'
         uses: appleboy/telegram-action@master
@@ -253,7 +232,6 @@ jobs:
             Branch: `${{ github.ref_name }}`
             Configuration files contain syntax errors!
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-
   # ==========================================================================
   # Security Summary
   # ==========================================================================
@@ -282,7 +260,6 @@ jobs:
             ✅ Syntax validation
 
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-
       - name: Send Telegram notification - Security Issues Detected
         if: needs.trivy-scan.result == 'failure' || needs.secret-scan.result == 'failure' || needs.sops-validation.result == 'failure' || needs.syntax-validation.result == 'failure'
         uses: appleboy/telegram-action@master

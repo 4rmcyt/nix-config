@@ -13,9 +13,9 @@
 
   # Temporary hash fix for cosmic-files until upstream is updated
   nixpkgs.overlays = [
-    (final: prev: {
+    (_final: prev: {
       cosmic-files = prev.cosmic-files.overrideAttrs (oldAttrs: {
-        src = oldAttrs.src.overrideAttrs (oldSrc: {
+        src = oldAttrs.src.overrideAttrs (_oldSrc: {
           outputHash = "sha256-82DuMGVyZAwEaBbLAIodchtjKMugZTiHOHwsLZAJXz4=";
         });
       });

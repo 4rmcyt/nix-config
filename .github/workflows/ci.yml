@@ -1,5 +1,4 @@
 name: "CI"
-
 on:
   workflow_dispatch: # Manual trigger
   pull_request: # PRs to any branch
@@ -8,14 +7,12 @@ on:
       - main # Auto-run on main branch
   schedule:
     - cron: "0 3 * * *" # Daily at 3 AM UTC
-
 # ============================================================================
 # Permissions (Principle of Least Privilege) test
 # ============================================================================
 permissions:
   actions: read
   contents: read
-
 # ============================================================================
 # Environment Variables
 # ============================================================================
@@ -24,7 +21,6 @@ env:
   SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
   CURL_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
   NIX_SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
-
 # ============================================================================
 # Concurrency Control
 # ============================================================================
@@ -89,7 +85,6 @@ jobs:
           name: flake-lock
           path: flake.lock
           retention-days: 1
-
       # Validate flake metadata and structure
       - name: Validate flake metadata
         run: |
@@ -97,7 +92,6 @@ jobs:
           nix flake metadata --json | jq .
           nix flake show
           echo "✅ Flake structure is valid"
-
       # Formatting check (informational only - doesn't fail the job)
       - name: Check formatting
         id: formatting

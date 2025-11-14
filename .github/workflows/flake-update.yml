@@ -1,15 +1,12 @@
 name: "Daily Flake Update"
-
 on:
   workflow_dispatch: # Allows you to run this manually
   schedule:
     - cron: "0 0 * * *" # Runs every day at 00:00 UTC
-
 # Permissions to write to the repository
 permissions:
   contents: write
   pull-requests: write # For creating PRs if needed
-
 # Environment Variables
 env:
   SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
