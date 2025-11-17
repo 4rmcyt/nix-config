@@ -16,6 +16,8 @@ _: {
       TabsToolbar = [
         "firefox-view-button"
         "tabbrowser-tabs"
+        "new-tab-button"
+        "alltabs-button"
       ];
       unified-extensions-area = [
         "ublock0_raymondhill_net-browser-action"

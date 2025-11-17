@@ -101,6 +101,7 @@
       cosmic-randr
       cosmic-reader
       cosmic-screenshot
+      gnome-firmware
       forecast
       gnome-calendar
       gnome-online-accounts-gtk

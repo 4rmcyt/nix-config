@@ -106,6 +106,17 @@
                   { edit: MoveToEnd }
                 ]
               }
+              {
+                name: prepend_sudo_esc
+                modifier: none
+                keycode: esc
+                mode: emacs
+                event: [
+                  { edit: MoveToStart }
+                  { edit: InsertString, value: "sudo " }
+                  { edit: MoveToEnd }
+                ]
+              }
             ]
           }
 

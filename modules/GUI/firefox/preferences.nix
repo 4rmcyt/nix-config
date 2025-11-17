@@ -15,6 +15,7 @@ _: {
     "layout.css.devPixelsPerPx" = "2.0"; # Default scaling
     "widget.gtk.libadwaita-colors.enabled" = false;
     "browser.aboutConfig.showWarning" = false;
+    "browser.uidensity" = 1; # 0 = normal, 1 = compact, 2 = touch
     "browser.cache.disk.enable" = false;
     "browser.cache.memory.enable" = true;
     "browser.cache.frecency_half_life_hours" = 18; # More aggressive cache eviction

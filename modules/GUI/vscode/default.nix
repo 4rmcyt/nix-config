@@ -44,7 +44,6 @@
 
           # Git & SCM
           github.copilot
-          github.copilot-chat
           anthropic.claude-code
         ]
         ++ (with pkgs.vscode-utils; [
