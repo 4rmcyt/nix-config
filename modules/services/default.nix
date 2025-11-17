@@ -10,6 +10,6 @@
     ./homepage
     ./kavita
     ./miniflux
-    ./nixarr
+    # ./nixarr
   ];
 }

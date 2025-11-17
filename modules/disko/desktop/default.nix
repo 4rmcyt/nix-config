@@ -50,7 +50,6 @@
           "logbias" = "throughput";
           "primarycache" = "all";
           "secondarycache" = "all";
-          "zfs_txg_timeout" = "30";
         };
         options = {
           ashift = "12";
