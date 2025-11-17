@@ -19,12 +19,12 @@
 in {
   # SOPS secrets for nixarr
   sops.secrets = {
-    wg_conf = {
-      sopsFile = ../../../secrets/wg.conf;
-      format = "binary";
-      mode = "0600";
-    };
-  };
+    # wg_conf = {
+    #   sopsFile = ../../../secrets/wg.conf;
+    #   format = "binary";
+    #   mode = "0600";
+    # };
+  # };
 
   users.users = {
     audiobookshelf = {
@@ -168,7 +168,7 @@ in {
 
     vpn = {
       enable = true;
-      wgConf = config.sops.secrets.wg_conf.path;
+      wgConf = ./wg.conf;
       openTcpPorts = [
         58403
         63998
