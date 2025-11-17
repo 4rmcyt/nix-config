@@ -146,6 +146,10 @@
       enableZshIntegration = true;
       options = ["--cmd cd"];
     };
+
+    rclone = {
+      enable = true;
+    };
   };
 
   services.ssh-agent.enable = true;

@@ -8,7 +8,6 @@
     enable = true;
     package = pkgs.vscode-fhs;
 
-    # User settings and extensions
     profiles.default = {
       enableExtensionUpdateCheck = false;
       enableUpdateCheck = false;
@@ -146,7 +145,7 @@
           "editor.tabSize" = 2;
           "editor.detectIndentation" = true;
         };
-        "window.menuBarVisibility" = "toggle";
+        "window.menuBarVisibility" = "visible";
         "window.titleBarStyle" = "custom";
 
         # ===== Git Settings =====

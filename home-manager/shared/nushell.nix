@@ -114,6 +114,11 @@
           $env.config.plugins.highlight.true_colors = true
           $env.config.plugins.highlight.theme = "3024-night"
 
+          # Auto-add SSH key if not already loaded
+          if (ssh-add -l | complete | get exit_code) != 0 {
+            ssh-add ~/.ssh/zeev
+          }
+
           $env.REALNAME = "Redacted Name";
           $env.EMAIL = "redacted@example.com";
           $env.BROWSER = "firefox";
