@@ -254,7 +254,7 @@
   nixpkgs.config.cudaSupport = true;
 
   nix = {
-    channel.enable = false;
+    channel.enable = true;
     settings = {
       cores = 0;
 
