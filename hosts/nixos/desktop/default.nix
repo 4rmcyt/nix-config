@@ -422,7 +422,7 @@
 
     fwupd = {
       enable = true;
-      extraRemotes = ["lvfs-testing"];
+      extraRemotes = ["lvfs-testing" "vendor"];
     };
 
     openssh.enable = true;
