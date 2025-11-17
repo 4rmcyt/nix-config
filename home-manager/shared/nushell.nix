@@ -135,6 +135,15 @@
           $env.BAT_THEME = "gruvbox-dark";
           $env.PROMPT_INDICATOR_VI_INSERT = "⎆ ";
           $env.PROMPT_INDICATOR_VI_NORMAL = "⎌ ";
+
+          # SSH Agent and GPG configuration
+          $env.SSH_AUTH_SOCK = $"/run/user/(id -u)/ssh-agent"
+          $env.GPG_TTY = (tty)
+
+          # Auto-add SSH key if not already loaded
+          if (ssh-add -l | complete | get exit_code) != 0 {
+            ssh-add ~/.ssh/zeev
+          }
         '';
       };
       settings = {
