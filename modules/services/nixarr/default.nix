@@ -19,11 +19,11 @@
 in {
   # SOPS secrets for nixarr
   # sops.secrets = {
-    # wg_conf = {
-    #   sopsFile = ../../../secrets/wg.conf;
-    #   format = "binary";
-    #   mode = "0600";
-    # };
+  # wg_conf = {
+  #   sopsFile = ../../../secrets/wg.conf;
+  #   format = "binary";
+  #   mode = "0600";
+  # };
   # };
 
   users.users = {

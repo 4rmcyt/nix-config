@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   imports = [
     # ./filebrowser
     # ./home-assistant
