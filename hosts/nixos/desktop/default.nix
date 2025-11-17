@@ -291,10 +291,10 @@
       substituters = [
         "https://4rmcyt-desktop.cachix.org?priority=1"
         "https://cache.flox.dev?priority=2"
-        "https://cuda-maintainers.cachix.org?priority=3"
+        "https://nixpkgs-unfree.cachix.org?priority=3"
         "https://nix-community.cachix.org?priority=4"
-        "https://nixpkgs-unfree.cachix.org?priority=5"
-        "https://chaotic-nyx.cachix.org?priority=6"
+        "https://chaotic-nyx.cachix.org?priority=5"
+        "https://cuda-maintainers.cachix.org?priority=6"
         "https://helix.cachix.org?priority=7"
         "https://yazi.cachix.org?priority=8"
         "https://devenv.cachix.org?priority=9"
