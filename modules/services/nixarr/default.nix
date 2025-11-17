@@ -18,7 +18,7 @@
   ];
 in {
   # SOPS secrets for nixarr
-  sops.secrets = {
+  # sops.secrets = {
     # wg_conf = {
     #   sopsFile = ../../../secrets/wg.conf;
     #   format = "binary";
