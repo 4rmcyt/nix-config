@@ -49,6 +49,7 @@
       just
       nix-diff
       nixfmt
+      nufmt
       nixfmt-rfc-style
       nodePackages.prettier
       rustfmt
