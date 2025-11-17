@@ -16,7 +16,7 @@
     (_final: prev: {
       cosmic-files = prev.cosmic-files.overrideAttrs (oldAttrs: {
         src = oldAttrs.src.overrideAttrs (_oldSrc: {
-          outputHash = "sha256-82DuMGVyZAwEaBbLAIodchtjKMugZTiHOHwsLZAJXz4=";
+          outputHash = "sha256-BJEHqLkYU7ZXOBIF/rdLaBedoCYHL+5biiMeBzU5Q0Q=";
         });
       });
     })
