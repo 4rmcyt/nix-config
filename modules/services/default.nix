@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   imports = [
     # ./filebrowser
     # ./home-assistant
@@ -10,6 +11,6 @@
     ./homepage
     ./kavita
     ./miniflux
-    # ./nixarr
+    ./nixarr
   ];
 }
