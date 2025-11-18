@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   ...
 }: {
   # =================================================================
@@ -324,21 +323,21 @@
   # =================================================================
   # 5. Custom Systemd Services for Exporters
   # =================================================================
-  systemd.services.cloudflare-exporter = {
-    description = "Cloudflare Prometheus Exporter";
-    wantedBy = ["multi-user.target"];
-    after = ["network.target"];
-    serviceConfig = {
-      User = "prometheus";
-      Group = "prometheus";
-      EnvironmentFile = config.sops.secrets.cloudflare_prometheus_exporter_token.path;
-      ExecStart = ''
-        ${pkgs.prometheus-cloudflare-exporter}/bin/cloudflare-exporter \
-          --listen "127.0.0.1:8081" \
-          --cf_api_token "$CLOUDFLARE_PROMETHEUS_EXPORTER_TOKEN"
-      '';
-      Restart = "always";
-      RestartSec = 10;
-    };
-  };
+  # systemd.services.cloudflare-exporter = {
+  #   description = "Cloudflare Prometheus Exporter";
+  #   wantedBy = ["multi-user.target"];
+  #   after = ["network.target"];
+  #   serviceConfig = {
+  #     User = "prometheus";
+  #     Group = "prometheus";
+  #     EnvironmentFile = config.sops.secrets.cloudflare_prometheus_exporter_token.path;
+  #     ExecStart = ''
+  #       ${pkgs.prometheus-cloudflare-exporter}/bin/cloudflare-exporter \
+  #         --listen "127.0.0.1:8081" \
+  #         --cf_api_token "$CLOUDFLARE_PROMETHEUS_EXPORTER_TOKEN"
+  #     '';
+  #     Restart = "always";
+  #     RestartSec = 10;
+  #   };
+  # };
 }

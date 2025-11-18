@@ -557,18 +557,18 @@
   # SSH config - written directly with correct permissions
   # (home-manager symlinks to nix store cause permission issues)
   system.activationScripts.sshConfig = ''
-    mkdir -p /home/zeev/.ssh
-    cat > /home/zeev/.ssh/config << 'EOF'
-Host *
-  AddKeysToAgent yes
-  ControlMaster auto
-  ControlPersist 10m
+        mkdir -p /home/zeev/.ssh
+        cat > /home/zeev/.ssh/config << 'EOF'
+    Host *
+      AddKeysToAgent yes
+      ControlMaster auto
+      ControlPersist 10m
 
-Host github.com
-  IdentityFile ~/.ssh/zeev
-  IdentitiesOnly yes
-EOF
-    chown zeev:users /home/zeev/.ssh/config
-    chmod 600 /home/zeev/.ssh/config
+    Host github.com
+      IdentityFile ~/.ssh/zeev
+      IdentitiesOnly yes
+    EOF
+        chown zeev:users /home/zeev/.ssh/config
+        chmod 600 /home/zeev/.ssh/config
   '';
 }

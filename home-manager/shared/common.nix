@@ -52,35 +52,28 @@
       };
     };
 
-    # SSH config managed at system level to avoid symlink permission issues
-    ssh.enable = false;
-
     gpg = {
       enable = true;
       settings = {
         # Algorithm preferences
+        cert-digest-algo = "SHA512";
         default-preference-list = "SHA512 SHA384 SHA256 AES256 AES192 AES ZLIB BZIP2 ZIP Uncompressed";
         personal-cipher-preferences = "AES256 AES192 AES";
         personal-compress-preferences = "ZLIB BZIP2 ZIP Uncompressed";
         personal-digest-preferences = "SHA512 SHA384 SHA256";
-
-        # Certificate preferences
-        cert-digest-algo = "SHA512";
         s2k-cipher-algo = "AES256";
         s2k-digest-algo = "SHA512";
 
         # Charset and display
         charset = "utf-8";
         fixed-list-mode = true;
+        keyid-format = "long";
         keyserver-options = "no-honor-keyserver-url";
         list-options = "show-uid-validity";
         no-comments = true;
         no-emit-version = true;
         no-greeting = true;
         verify-options = "show-uid-validity";
-
-        # Display options
-        keyid-format = "long";
         with-fingerprint = true;
         with-key-origin = true;
         with-keygrip = true;
@@ -90,8 +83,6 @@
         no-symkey-cache = true;
         require-cross-certification = true;
         throw-keyids = true;
-
-        # Use agent
         use-agent = true;
       };
     };
@@ -124,6 +115,11 @@
       };
     };
 
+    rclone.enable = true;
+
+    # SSH config managed at system level to avoid symlink permission issues
+    ssh.enable = false;
+
     tealdeer = {
       enable = true;
       enableAutoUpdates = true;
@@ -148,10 +144,6 @@
       enableNushellIntegration = true;
       enableZshIntegration = true;
       options = ["--cmd cd"];
-    };
-
-    rclone = {
-      enable = true;
     };
   };
 

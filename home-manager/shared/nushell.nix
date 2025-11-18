@@ -5,21 +5,18 @@
   ...
 }: {
   programs = {
-    carapace.enable = true;
-    carapace.enableNushellIntegration = true;
-    direnv.enable = true;
-    direnv.enableNushellIntegration = false;
+    carapace = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
+
+    direnv = {
+      enable = true;
+      enableNushellIntegration = false;
+    };
 
     nushell = {
       enable = true;
-      plugins = with pkgs.nushellPlugins; [
-        formats
-        gstat
-        highlight
-        desktop_notifications
-        query
-        semver
-      ];
       configFile = {
         text = ''
           # Common ls aliases and sort them by type and then name
@@ -125,22 +122,29 @@
           $env.config.plugins.highlight.true_colors = true
           $env.config.plugins.highlight.theme = "3024-night"
 
-          $env.REALNAME = "Redacted Name";
-          $env.EMAIL = "redacted@example.com";
-          $env.BROWSER = "firefox";
-          $env.XDG_CONFIG_HOME = $"($env.HOME)/.config";
-          $env.TODO_DIR = $"($env.HOME)/.todo";
-          $env.PAGER = try { (which bat).0.cmd } catch { "less" };
+          # Environment variables
           $env.BAT_PAGER = "less";
           $env.BAT_THEME = "gruvbox-dark";
+          $env.BROWSER = "firefox";
+          $env.EMAIL = "redacted@example.com";
+          $env.GPG_TTY = (tty)
+          $env.PAGER = try { (which bat).0.cmd } catch { "less" };
           $env.PROMPT_INDICATOR_VI_INSERT = "⎆ ";
           $env.PROMPT_INDICATOR_VI_NORMAL = "⎌ ";
-
-          # GPG Agent for SSH
-          $env.SSH_AUTH_SOCK = $"/run/user/(id -u)/gnupg/S.gpg-agent.ssh"
-          $env.GPG_TTY = (tty)
+          $env.REALNAME = "Redacted Name";
+          $env.SSH_AUTH_SOCK = (gpgconf --list-dirs agent-ssh-socket | lines | first);
+          $env.TODO_DIR = $"($env.HOME)/.todo";
+          $env.XDG_CONFIG_HOME = $"($env.HOME)/.config";
         '';
       };
+      plugins = with pkgs.nushellPlugins; [
+        desktop_notifications
+        formats
+        gstat
+        highlight
+        query
+        semver
+      ];
       settings = {
         completions = {
           algorithm = "fuzzy";
@@ -156,8 +160,6 @@
         show_banner = true;
       };
       shellAliases = {
-        # "e" = "$EDITOR";
-        # "ns" = "nix shell nixpkgs#";
         "_" = "doas";
         "clr" = "clear";
         "ctl" = "systemctl";
