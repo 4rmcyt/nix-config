@@ -44,8 +44,8 @@
   # =================================================================
   # ISO Configuration
   # =================================================================
-  image.fileName = lib.mkOverride 0 "nixos-installer-desktop.iso";
   isoImage = {
+    image.baseName = "nixos-installer-desktop";
     makeEfiBootable = true;
     makeUsbBootable = true;
     squashfsCompression = "zstd -Xcompression-level 6";

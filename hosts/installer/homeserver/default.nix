@@ -57,8 +57,8 @@ in {
   # =================================================================
   # ISO Configuration
   # =================================================================
-  image.fileName = lib.mkOverride 0 "nixos-installer-homeserver.iso";
   isoImage = {
+    isoBaseName = lib.mkForce "nixos-installer-homeserver";
     makeEfiBootable = true;
     makeUsbBootable = true;
     squashfsCompression = "zstd -Xcompression-level 6";
