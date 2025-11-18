@@ -214,6 +214,16 @@
                 ];
               });
           };
+
+          installer-desktop = inputs.nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            specialArgs = {inherit inputs;};
+            modules = [
+              ./hosts/installer/desktop
+              inputs.cosmic-unstable.nixosModules.default
+              {nixpkgs.config.allowUnfree = true;}
+            ];
+          };
         };
 
         # Standalone home-manager configurations
