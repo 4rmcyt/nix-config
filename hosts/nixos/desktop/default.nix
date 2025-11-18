@@ -96,6 +96,8 @@
       # GTK
       GDK_BACKEND = "wayland,x11";
       GDK_SCALE = "1";
+      GTK_CSD = "1";
+      GTK_DECORATION_LAYOUT = ":minimize,maximize,close";
 
       # Mozilla
       MOZ_ENABLE_WAYLAND = "1";

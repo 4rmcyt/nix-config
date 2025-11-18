@@ -1,13 +1,15 @@
 {
   pkgs,
   lib,
+  inputs,
   ...
 }: {
   imports = [
-    <nixpkgs/nixos/modules/installer/cd-dvd/installation-cd-graphical-base.nix>
-    <nixpkgs/nixos/modules/installer/cd-dvd/channel.nix>
+    "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-base.nix"
+    "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
     ../../../modules/users/zeev
     ../../../modules/desktops/cosmic
+    ../../../modules/disko/desktop
   ];
 
   # =================================================================
@@ -34,15 +36,16 @@
   # Boot Configuration
   # =================================================================
   boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_cachyos;
+    zfs.package = pkgs.zfs_cachyos;
     supportedFilesystems = ["btrfs" "ntfs" "zfs"];
   };
 
   # =================================================================
   # ISO Configuration
   # =================================================================
+  image.fileName = lib.mkOverride 0 "nixos-installer-desktop.iso";
   isoImage = {
-    isoName = lib.mkForce "nixos-desktop-installer.iso";
     makeEfiBootable = true;
     makeUsbBootable = true;
     squashfsCompression = "zstd -Xcompression-level 6";
@@ -82,7 +85,8 @@
   # Users
   # =================================================================
   users.users.nixos = {
-    password = "nixos";
+    initialHashedPassword = lib.mkForce null;
+    initialPassword = lib.mkForce "nixos";
     extraGroups = ["wheel" "networkmanager" "video" "audio"];
   };
 

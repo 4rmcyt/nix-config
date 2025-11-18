@@ -1,13 +1,31 @@
 {
+  config,
   pkgs,
   lib,
   inputs,
   ...
-}: {
+}: let
+  # Auto-select latest ZFS-compatible kernel
+  zfsCompatibleKernelPackages =
+    lib.filterAttrs (
+      name: kernelPackages:
+        (builtins.match "linux_[0-9]+_[0-9]+" name)
+        != null
+        && (builtins.tryEval kernelPackages).success
+        && (!kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
+    )
+    pkgs.linuxKernel.packages;
+  latestKernelPackage = lib.last (
+    lib.sort (a: b: (lib.versionOlder a.kernel.version b.kernel.version)) (
+      builtins.attrValues zfsCompatibleKernelPackages
+    )
+  );
+in {
   imports = [
     "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
     "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
     ../../../modules/users/zeev
+    ../../../modules/disko/homeserver
   ];
 
   # =================================================================
@@ -32,14 +50,14 @@
   # Boot Configuration
   # =================================================================
   boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = latestKernelPackage;
     supportedFilesystems = ["btrfs" "ntfs" "zfs"];
   };
 
   # =================================================================
   # ISO Configuration
   # =================================================================
-  image.fileName = lib.mkForce "nixos-installer-homeserver.iso";
+  image.fileName = lib.mkOverride 0 "nixos-installer-homeserver.iso";
   isoImage = {
     makeEfiBootable = true;
     makeUsbBootable = true;

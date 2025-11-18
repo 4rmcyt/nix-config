@@ -8,6 +8,7 @@
     "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix"
     "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
     ../../../modules/users/zeev
+    ../../../modules/disko/matebook
   ];
 
   # =================================================================
@@ -33,13 +34,13 @@
   # =================================================================
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
-    supportedFilesystems = ["btrfs" "ntfs"];
+    supportedFilesystems = lib.mkForce ["btrfs" "ntfs"];
   };
 
   # =================================================================
   # ISO Configuration
   # =================================================================
-  image.fileName = lib.mkForce "nixos-installer-matebook.iso";
+  image.fileName = lib.mkOverride 0 "nixos-installer-matebook.iso";
   isoImage = {
     makeEfiBootable = true;
     makeUsbBootable = true;

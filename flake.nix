@@ -221,6 +221,33 @@
             modules = [
               ./hosts/installer/desktop
               inputs.cosmic-unstable.nixosModules.default
+              inputs.flatpaks.nixosModules.default
+              inputs.sops-nix.nixosModules.sops
+              inputs.disko.nixosModules.disko
+              inputs.chaotic.nixosModules.nyx-cache
+              inputs.chaotic.nixosModules.nyx-overlay
+              {nixpkgs.config.allowUnfree = true;}
+            ];
+          };
+
+          installer-homeserver = inputs.nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            specialArgs = {inherit inputs;};
+            modules = [
+              ./hosts/installer/homeserver
+              inputs.sops-nix.nixosModules.sops
+              inputs.disko.nixosModules.disko
+              {nixpkgs.config.allowUnfree = true;}
+            ];
+          };
+
+          installer-matebook = inputs.nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            specialArgs = {inherit inputs;};
+            modules = [
+              ./hosts/installer/matebook
+              inputs.sops-nix.nixosModules.sops
+              inputs.disko.nixosModules.disko
               {nixpkgs.config.allowUnfree = true;}
             ];
           };

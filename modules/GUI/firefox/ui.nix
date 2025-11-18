@@ -19,6 +19,11 @@ _: {
         "new-tab-button"
         "alltabs-button"
       ];
+      window-controls = [
+        "minimize-button"
+        "restore-button"
+        "close-button"
+      ];
       unified-extensions-area = [
         "ublock0_raymondhill_net-browser-action"
         "gdpr_cavi_au_dk-browser-action"
