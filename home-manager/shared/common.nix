@@ -52,22 +52,8 @@
       };
     };
 
-    ssh = {
-      enable = true;
-      matchBlocks = {
-        "*" = {
-          extraOptions = {
-            AddKeysToAgent = "yes";
-            ControlMaster = "auto";
-            ControlPersist = "10m";
-          };
-        };
-        "github.com" = {
-          identityFile = "~/.ssh/zeev";
-          identitiesOnly = true;
-        };
-      };
-    };
+    # SSH config managed at system level to avoid symlink permission issues
+    ssh.enable = false;
 
     gpg = {
       enable = true;
