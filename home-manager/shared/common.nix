@@ -52,6 +52,20 @@
       };
     };
 
+    ssh = {
+      enable = true;
+      enableDefaultConfig = false;
+      matchBlocks = {
+        "*" = {
+          addKeysToAgent = "yes";
+        };
+        "github.com" = {
+          identityFile = "~/.ssh/zeev";
+          identitiesOnly = true;
+        };
+      };
+    };
+
     gpg = {
       enable = true;
       settings = {
@@ -152,5 +166,6 @@
     };
   };
 
-  services.ssh-agent.enable = true;
+  # SSH handled by gpg-agent with enableSSHSupport
+  services.ssh-agent.enable = false;
 }
