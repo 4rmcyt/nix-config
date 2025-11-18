@@ -137,13 +137,12 @@
           $env.PROMPT_INDICATOR_VI_NORMAL = "⎌ ";
 
           # SSH Agent and GPG configuration
-          $env.SSH_AUTH_SOCK = $"/run/user/(id -u)/ssh-agent"
+          # Use GPG agent for SSH when available (enableSSHSupport = true)
+          $env.SSH_AUTH_SOCK = (gpgconf --list-dirs agent-ssh-socket)
           $env.GPG_TTY = (tty)
 
-          # Auto-add SSH key if not already loaded
-          if (ssh-add -l | complete | get exit_code) != 0 {
-            ssh-add ~/.ssh/zeev
-          }
+          # Refresh gpg-agent to pick up the TTY
+          gpg-connect-agent updatestartuptty /bye | ignore
         '';
       };
       settings = {
