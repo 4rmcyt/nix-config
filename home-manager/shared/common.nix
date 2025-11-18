@@ -54,12 +54,13 @@
 
     ssh = {
       enable = true;
-      enableDefaultConfig = false;
       matchBlocks = {
         "*" = {
-          addKeysToAgent = "yes";
-          controlMaster = "auto";
-          controlPersist = "10m";
+          extraOptions = {
+            AddKeysToAgent = "yes";
+            ControlMaster = "auto";
+            ControlPersist = "10m";
+          };
         };
         "github.com" = {
           identityFile = "~/.ssh/zeev";
@@ -170,12 +171,4 @@
 
   # SSH handled by gpg-agent with enableSSHSupport
   services.ssh-agent.enable = false;
-
-  # Fix SSH config permissions - copy instead of symlink for correct perms
-  home.activation.fixSshConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    if [ -L "$HOME/.ssh/config" ]; then
-      $DRY_RUN_CMD cp --remove-destination "$(readlink -f "$HOME/.ssh/config")" "$HOME/.ssh/config"
-      $DRY_RUN_CMD chmod 600 "$HOME/.ssh/config"
-    fi
-  '';
 }
