@@ -81,6 +81,9 @@
 
   nix = {
     package = pkgs.nixVersions.latest;
+    extraOptions = ''
+      !include /run/secrets/nix_access_token
+    '';
     settings = {
       cores = 0;
 
@@ -146,8 +149,13 @@
   sops = {
     age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
     defaultSopsFormat = "yaml";
+    secrets = {
+      nix_access_token = {
+        sopsFile = ../../../secrets/common.yaml;
+        key = "nix_access_token";
+      };
+    };
   };
-
   # =================================================================
   # 10. Networking
   # =================================================================

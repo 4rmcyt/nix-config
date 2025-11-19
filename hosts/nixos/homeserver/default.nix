@@ -74,8 +74,11 @@
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
   nix.settings = {
+    package = pkgs.nixVersions.latest;
+    extraOptions = ''
+      !include /run/secrets/nix_access_token
+    '';
     cores = 0;
-
     experimental-features = [
       "flakes"
       "nix-command"
@@ -281,6 +284,10 @@
         owner = config.users.users.root.name;
         group = config.users.groups.root.name;
         mode = "0600";
+      };
+      nix_access_token = {
+        sopsFile = ../../../secrets/common.yaml;
+        key = "nix_access_token";
       };
     };
   };

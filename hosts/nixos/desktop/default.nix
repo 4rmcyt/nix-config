@@ -41,9 +41,9 @@
         sopsFile = ../../../secrets/tailscale-desktop.yaml;
         key = "tailscale_auth_key";
       };
-      git_access_token = {
+      nix_access_token = {
         sopsFile = ../../../secrets/common.yaml;
-        key = "git_access_token";
+        key = "nix_access_token";
       };
     };
     age.keyFile = "/root/.config/sops/age/keys.txt";
@@ -260,6 +260,10 @@
 
   nix = {
     channel.enable = true;
+    package = pkgs.nixVersions.latest;
+    extraOptions = ''
+      !include /run/secrets/nix_access_token
+    '';
     settings = {
       cores = 0;
 

@@ -20,10 +20,18 @@
   # 2. System Configuration
   # =================================================================
   system.stateVersion = "25.05";
-  sops.secrets.tailscale_auth_key = {
-    sopsFile = ../../../secrets/tailscale-matebook.yaml;
-    key = "tailscale_auth_key";
+
+  sops.secrets = {
+    tailscale_auth_key = {
+      sopsFile = ../../../secrets/tailscale-matebook.yaml;
+      key = "tailscale_auth_key";
+    };
+    nix_access_token = {
+      sopsFile = ../../../secrets/common.yaml;
+      key = "nix_access_token";
+    };
   };
+
   # =================================================================
   # 3. Boot Configuration
   # =================================================================
@@ -155,6 +163,10 @@
   # 8. Nix Configuration
   # =================================================================
   nix = {
+    package = pkgs.nixVersions.latest;
+    extraOptions = ''
+      !include /run/secrets/nix_access_token
+    '';
     settings = {
       cores = 0;
 

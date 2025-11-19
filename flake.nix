@@ -103,6 +103,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # microvm = {
+    #   url = "github:microvm-nix/microvm.nix";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
+
     # Browser extensions
     betterfox-nix = {
       url = "github:HeitorAugustoLN/betterfox-nix";
