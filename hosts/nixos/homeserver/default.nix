@@ -73,11 +73,11 @@
   # =================================================================
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
+  nix.package = pkgs.nixVersions.latest;
+  nix.extraOptions = ''
+    !include /run/secrets/nix_access_token
+  '';
   nix.settings = {
-    package = pkgs.nixVersions.latest;
-    extraOptions = ''
-      !include /run/secrets/nix_access_token
-    '';
     cores = 0;
     experimental-features = [
       "flakes"
