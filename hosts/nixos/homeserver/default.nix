@@ -34,7 +34,34 @@
   system.stateVersion = "25.05";
 
   # =================================================================
-  # 3. Boot Configuration
+  # 3. Secrets Management
+  # =================================================================
+  sops = {
+    defaultSopsFormat = "yaml";
+    secrets = {
+      ssh_host_ed25519_key = {
+        sopsFile = ../../../secrets/system.yaml;
+        key = "ssh_host_ed25519_key";
+        owner = config.users.users.root.name;
+        group = config.users.groups.root.name;
+        mode = "0600";
+      };
+      ssh_host_rsa_key = {
+        sopsFile = ../../../secrets/system.yaml;
+        key = "ssh_host_rsa_key";
+        owner = config.users.users.root.name;
+        group = config.users.groups.root.name;
+        mode = "0600";
+      };
+      nix_access_token = {
+        sopsFile = ../../../secrets/common.yaml;
+        key = "nix_access_token";
+      };
+    };
+  };
+
+  # =================================================================
+  # 4. Boot Configuration
   # =================================================================
   boot.loader = {
     systemd-boot.enable = true;
@@ -42,7 +69,7 @@
   };
 
   # =================================================================
-  # 4. Nixpkgs Configuration
+  # 5. Nixpkgs Configuration
   # =================================================================
   # Note: allowUnfree is set in flakeHelpers.nix commonModules
   nixpkgs.overlays = [
@@ -69,7 +96,7 @@
   ];
 
   # =================================================================
-  # 5. Nix Configuration
+  # 6. Nix Configuration
   # =================================================================
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
@@ -79,6 +106,7 @@
   '';
   nix.settings = {
     cores = 0;
+
     experimental-features = [
       "flakes"
       "nix-command"
@@ -143,20 +171,54 @@
   };
 
   # =================================================================
-  # 6. Users & Groups
+  # 7. Environment
   # =================================================================
-  users = {
-    users.git = {
-      isSystemUser = true;
-      description = "Git user";
-      group = "git";
-    };
-    users.zeev.shell = pkgs.zsh;
-    groups.git = {};
-  };
+  # Common packages now provided by modules/base/common-packages.nix
+  # Only listing server-specific packages here
+  environment.systemPackages = with pkgs; [
+    # Core utilities (server-specific)
+    coreutils
+    lsof
+    openssh
+
+    # System monitoring & hardware
+    apcupsd
+    auto-cpufreq
+    cpuid
+    fwupd
+    intel-gpu-tools
+    libva-utils
+    lm_sensors
+    microcode-intel
+    powertop
+    prometheus-apcupsd-exporter
+    smartmontools
+    zfs
+
+    # Network tools
+    iproute2
+    wireguard-tools
+
+    # Security & secrets (server-specific)
+    pinentry-tty
+
+    # Build & deployment tools
+    prometheus-cloudflare-exporter
+
+    # Text processing
+    gawk
+    gnugrep
+  ];
+
+  environment.shells = with pkgs; [zsh];
 
   # =================================================================
-  # 7. Networking
+  # 8. Home Manager
+  # =================================================================
+  home-manager.backupFileExtension = "backup";
+
+  # =================================================================
+  # 9. Networking
   # =================================================================
   networking = {
     hostName = "homeserver";
@@ -168,6 +230,7 @@
       enable = true;
       profileId = "nextdns0";
     };
+
     tailscaleAuth = {
       enable = true;
       sopsFile = ../../../secrets/tailscale-homeserver.yaml;
@@ -207,7 +270,26 @@
   };
 
   # =================================================================
-  # 8. Services
+  # 10. Programs
+  # =================================================================
+  programs = {
+    nix-index = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+
+    nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 10d --keep 3";
+      flake = "/home/zeev/src/nix-config";
+    };
+
+    zsh.enable = true;
+  };
+
+  # =================================================================
+  # 11. Services
   # =================================================================
   services = {
     # SSH configuration
@@ -249,88 +331,15 @@
   };
 
   # =================================================================
-  # 9. Programs
+  # 12. Users & Groups
   # =================================================================
-  programs = {
-    nix-index = {
-      enable = true;
-      enableZshIntegration = true;
+  users = {
+    users.git = {
+      isSystemUser = true;
+      description = "Git user";
+      group = "git";
     };
-    nh = {
-      enable = true;
-      clean.enable = true;
-      clean.extraArgs = "--keep-since 10d --keep 3";
-      flake = "/home/zeev/src/nix-config";
-    };
-    zsh.enable = true;
+    users.zeev.shell = pkgs.zsh;
+    groups.git = {};
   };
-
-  # =================================================================
-  # 10. Secrets Management
-  # =================================================================
-  sops = {
-    defaultSopsFormat = "yaml";
-    secrets = {
-      ssh_host_ed25519_key = {
-        sopsFile = ../../../secrets/system.yaml;
-        key = "ssh_host_ed25519_key";
-        owner = config.users.users.root.name;
-        group = config.users.groups.root.name;
-        mode = "0600";
-      };
-      ssh_host_rsa_key = {
-        sopsFile = ../../../secrets/system.yaml;
-        key = "ssh_host_rsa_key";
-        owner = config.users.users.root.name;
-        group = config.users.groups.root.name;
-        mode = "0600";
-      };
-      nix_access_token = {
-        sopsFile = ../../../secrets/common.yaml;
-        key = "nix_access_token";
-      };
-    };
-  };
-
-  # =================================================================
-  # 11. System Packages
-  # =================================================================
-  # Common packages now provided by modules/base/common-packages.nix
-  # Only listing server-specific packages here
-  environment.systemPackages = with pkgs; [
-    # Core utilities (server-specific)
-    coreutils
-    lsof
-    openssh
-
-    # System monitoring & hardware
-    apcupsd
-    auto-cpufreq
-    cpuid
-    fwupd
-    intel-gpu-tools
-    libva-utils
-    lm_sensors
-    microcode-intel
-    powertop
-    prometheus-apcupsd-exporter
-    smartmontools
-    zfs
-
-    # Network tools
-    iproute2
-    wireguard-tools
-
-    # Security & secrets (server-specific)
-    pinentry-tty
-
-    # Build & deployment tools
-    prometheus-cloudflare-exporter
-
-    # Text processing
-    gawk
-    gnugrep
-  ];
-  environment.shells = with pkgs; [zsh];
-  home-manager.backupFileExtension = "backup";
 }

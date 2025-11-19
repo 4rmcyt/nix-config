@@ -52,6 +52,17 @@
       "v4l2loopback"
     ];
 
+    extraModulePackages = with config.boot.kernelPackages; [
+      v4l2loopback
+      zenpower
+    ];
+
+    # Module configuration
+    extraModprobeConfig = ''
+      # Enable v4l2loopback for virtual camera
+      options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
+    '';
+
     # Kernel configuration
     kernelPackages = pkgs.linuxPackages_cachyos;
     zfs.package = pkgs.zfs_cachyos;
@@ -122,15 +133,7 @@
       ${pkgs.kbd}/bin/setleds +num
     '';
 
-    extraModulePackages = with config.boot.kernelPackages; [
-      v4l2loopback
-      zenpower
-    ];
-    # Module configuration
-    extraModprobeConfig = ''
-      # Enable v4l2loopback for virtual camera
-      options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
-    '';
+    # Tmp configuration
     tmp.useTmpfs = true;
     tmp.tmpfsSize = "100%";
     tmp.tmpfsHugeMemoryPages = "within_size";
@@ -184,7 +187,15 @@
   };
 
   # =================================================================
-  # 4. Services
+  # 4. Security
+  # =================================================================
+  security = {
+    polkit.enable = true;
+    rtkit.enable = true;
+  };
+
+  # =================================================================
+  # 5. Services
   # =================================================================
   services = {
     # OpenRGB for RGB control
@@ -226,7 +237,12 @@
   };
 
   # =================================================================
-  # 5. Swap Configuration
+  # 6. Networking
+  # =================================================================
+  networking.useDHCP = lib.mkDefault true;
+
+  # =================================================================
+  # 7. Swap Configuration
   # =================================================================
   swapDevices = [];
 
@@ -235,19 +251,6 @@
     algorithm = "zstd";
     memoryPercent = 30;
   };
-
-  # =================================================================
-  # 6. Security
-  # =================================================================
-  security = {
-    polkit.enable = true;
-    rtkit.enable = true;
-  };
-
-  # =================================================================
-  # 7. Networking
-  # =================================================================
-  networking.useDHCP = lib.mkDefault true;
 
   # =================================================================
   # 8. Systemd Configuration

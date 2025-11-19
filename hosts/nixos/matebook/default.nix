@@ -16,11 +16,15 @@
     # User configuration
     ../../../modules/users/zeev
   ];
+
   # =================================================================
   # 2. System Configuration
   # =================================================================
   system.stateVersion = "25.05";
 
+  # =================================================================
+  # 3. Secrets Management
+  # =================================================================
   sops.secrets = {
     tailscale_auth_key = {
       sopsFile = ../../../secrets/tailscale-matebook.yaml;
@@ -33,7 +37,7 @@
   };
 
   # =================================================================
-  # 3. Boot Configuration
+  # 4. Boot Configuration
   # =================================================================
   boot = {
     loader = {
@@ -43,7 +47,83 @@
   };
 
   # =================================================================
-  # 4. Environment
+  # 5. Nix Configuration
+  # =================================================================
+  nix = {
+    package = pkgs.nixVersions.latest;
+    extraOptions = ''
+      !include /run/secrets/nix_access_token
+    '';
+    settings = {
+      cores = 0;
+
+      experimental-features = [
+        "flakes"
+        "nix-command"
+      ];
+
+      auto-optimise-store = true;
+      warn-dirty = false;
+      max-jobs = "auto"; # Auto-detect job count
+      keep-going = true; # Continue building other derivations on failure
+
+      # Network optimization for faster downloads
+      max-substitution-jobs = 4; # Parallel downloads
+      http-connections = 25; # More HTTP connections
+      connect-timeout = 5; # Faster timeout
+
+      # Store optimization for better performance
+      keep-outputs = true; # Keep build dependencies for faster rebuilds
+      keep-derivations = true; # Keep derivations for faster evaluation
+
+      # Disk space management
+      min-free = 5368709120; # 5GB - trigger GC when less than 5GB free
+      max-free = 10737418240; # 10GB - stop GC when 10GB free
+
+      # Build performance improvements
+      builders-use-substitutes = true; # Allow builders to use substitutes
+      require-sigs = true; # Security: require signatures
+
+      # Evaluation performance
+      eval-cache = true; # Cache evaluation results
+
+      system-features = [
+        "big-parallel"
+        "gccarch-znver1"
+        "kvm"
+      ];
+
+      substituters = [
+        "https://4rmcyt-matebook.cachix.org?priority=1"
+        "https://nix-community.cachix.org?priority=2"
+        "https://nix-gaming.cachix.org?priority=3"
+        "https://cache.flox.dev?priority=4"
+        "https://helix.cachix.org?priority=8"
+        "https://yazi.cachix.org?priority=9"
+        "https://devenv.cachix.org?priority=10"
+        "https://nixpkgs-unfree.cachix.org?priority=11"
+      ];
+
+      trusted-public-keys = [
+        "4rmcyt-matebook.cachix.org-1:OG8MqlfrDlyperVhYk2+va8Cwo/vE6tG/VbTlvq4I0I="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+        "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
+        "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
+        "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
+        "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
+        "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
+      ];
+
+      trusted-users = [
+        "root"
+        "@wheel"
+      ];
+    };
+  };
+
+  # =================================================================
+  # 6. Environment
   # =================================================================
   environment = {
     sessionVariables = {
@@ -137,15 +217,17 @@
   };
 
   # =================================================================
-  # 5. Fonts
+  # 7. Fonts
   # =================================================================
   fonts.fontconfig.useEmbeddedBitmaps = true;
+
   # =================================================================
-  # 6. Home Manager
+  # 8. Home Manager
   # =================================================================
   home-manager.backupFileExtension = "backup";
+
   # =================================================================
-  # 7. Networking
+  # 9. Networking
   # =================================================================
   networking = {
     enableIPv6 = true;
@@ -159,80 +241,9 @@
     };
     wireless.enable = false;
   };
-  # =================================================================
-  # 8. Nix Configuration
-  # =================================================================
-  nix = {
-    package = pkgs.nixVersions.latest;
-    extraOptions = ''
-      !include /run/secrets/nix_access_token
-    '';
-    settings = {
-      cores = 0;
-
-      experimental-features = [
-        "flakes"
-        "nix-command"
-      ];
-
-      auto-optimise-store = true;
-      warn-dirty = false;
-      max-jobs = "auto"; # Auto-detect job count
-      keep-going = true; # Continue building other derivations on failure
-
-      # Network optimization for faster downloads
-      max-substitution-jobs = 4; # Parallel downloads
-      http-connections = 25; # More HTTP connections
-      connect-timeout = 5; # Faster timeout
-
-      # Store optimization for better performance
-      keep-outputs = true; # Keep build dependencies for faster rebuilds
-      keep-derivations = true; # Keep derivations for faster evaluation
-
-      # Disk space management
-      min-free = 5368709120; # 5GB - trigger GC when less than 5GB free
-      max-free = 10737418240; # 10GB - stop GC when 10GB free
-
-      # Build performance improvements
-      builders-use-substitutes = true; # Allow builders to use substitutes
-      require-sigs = true; # Security: require signatures
-
-      # Evaluation performance
-      eval-cache = true; # Cache evaluation results
-      system-features = [
-        "big-parallel"
-        "gccarch-znver1"
-        "kvm"
-      ];
-      substituters = [
-        "https://4rmcyt-matebook.cachix.org?priority=1"
-        "https://nix-community.cachix.org?priority=2"
-        "https://nix-gaming.cachix.org?priority=3"
-        "https://cache.flox.dev?priority=4"
-        "https://helix.cachix.org?priority=8"
-        "https://yazi.cachix.org?priority=9"
-        "https://devenv.cachix.org?priority=10"
-        "https://nixpkgs-unfree.cachix.org?priority=11"
-      ];
-      trusted-public-keys = [
-        "4rmcyt-matebook.cachix.org-1:OG8MqlfrDlyperVhYk2+va8Cwo/vE6tG/VbTlvq4I0I="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-        "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
-        "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
-        "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
-        "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
-        "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
-      ];
-      trusted-users = [
-        "root"
-        "@wheel"
-      ];
-    };
-  };
 
   # =================================================================
-  # 9. Programs
+  # 10. Programs
   # =================================================================
   programs = {
     gnupg.agent = {
@@ -240,16 +251,21 @@
       enableSSHSupport = true;
       pinentryPackage = pkgs.pinentry-gnome3;
     };
+
+    light.enable = true;
+
     nh = {
       clean.enable = true;
       clean.extraArgs = "--keep-since 10d --keep 3";
       enable = true;
       flake = "/home/zeev/src/nix-config";
     };
+
     zsh.enable = true;
   };
+
   # =================================================================
-  # 10. Security
+  # 11. Security
   # =================================================================
   security = {
     rtkit.enable = true;
@@ -257,7 +273,7 @@
   };
 
   # =================================================================
-  # 11. Services
+  # 12. Services
   # =================================================================
   services = {
     # =============================================================
@@ -278,13 +294,42 @@
     # Desktop Environment - GNOME
     # =============================================================
     desktopManager.gnome.enable = true;
+    displayManager.gdm.enable = true;
+
     libinput.enable = true;
     libinput.touchpad = {
       tapping = true;
       naturalScrolling = true;
       scrollMethod = "twofinger";
     };
-    displayManager.gdm.enable = true;
+
+    # =============================================================
+    # File Systems & Storage
+    # =============================================================
+    davfs2 = {
+      enable = true;
+      settings = {
+        sections = {
+          "/home/zeev/Taildrive" = {
+            gui_optimize = true;
+          };
+        };
+      };
+    };
+
+    # =============================================================
+    # Hardware Services
+    # =============================================================
+    blueman.enable = true;
+
+    pcscd = {
+      enable = true;
+      plugins = [pkgs.ccid];
+    };
+
+    thermald.enable = true;
+
+    usbmuxd.enable = true;
 
     # =============================================================
     # Power Management
@@ -307,31 +352,13 @@
       };
     };
 
-    davfs2 = {
-      enable = true;
-      settings = {
-        sections = {
-          "/home/zeev/Taildrive" = {
-            gui_optimize = true;
-          };
-        };
-      };
+    logind.settings.Login = {
+      lidSwitch = "suspend";
+      lidSwitchDocked = "ignore";
     };
 
-    # =============================================================
-    # Hardware Services
-    # =============================================================
-    # fwupd.enable = true; # Removed, already in hardware-configuration.nix
-    pcscd = {
-      enable = true;
-      plugins = [pkgs.ccid];
-    };
-    usbmuxd.enable = true;
-    thermald.enable = true;
     power-profiles-daemon.enable = false; # Conflicts with auto-cpufreq
 
-    # Bluetooth
-    blueman.enable = true;
     # =============================================================
     # System Services
     # =============================================================
@@ -342,28 +369,22 @@
         PasswordAuthentication = false;
       };
     };
+
     tailscale = {
       enable = true;
       useRoutingFeatures = "both";
       authKeyFile = config.sops.secrets.tailscale_auth_key.path;
     };
-    # Laptop-specific
-    # upower.enable = true; # Removed, already in hardware-configuration.nix
-    logind.settings.Login = {
-      lidSwitch = "suspend";
-      lidSwitchDocked = "ignore";
-    };
   };
 
   # =================================================================
-  # 12. Hardware-specific fixes
+  # 13. Users & Groups
   # =================================================================
-  # Enable brightness control
-  programs.light.enable = true;
   users = {
     groups = {
       git = {};
     };
+
     users = {
       git = {
         createHome = true;
@@ -375,8 +396,9 @@
       };
     };
   };
+
   # =================================================================
-  # 13. Virtualization (optional)
+  # 14. Virtualization
   # =================================================================
   virtualisation.podman.enable = true;
 }

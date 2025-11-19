@@ -25,12 +25,21 @@
   system.stateVersion = "25.05";
 
   # =================================================================
-  # 3. Time Configuration
+  # 3. Secrets Management
   # =================================================================
-  time.timeZone = "America/Edmonton";
+  sops = {
+    age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
+    defaultSopsFormat = "yaml";
+    secrets = {
+      nix_access_token = {
+        sopsFile = ../../../secrets/common.yaml;
+        key = "nix_access_token";
+      };
+    };
+  };
 
   # =================================================================
-  # 5. Boot Configuration
+  # 4. Boot Configuration
   # =================================================================
   boot = {
     kernelModules = ["nvidia"];
@@ -38,39 +47,7 @@
   };
 
   # =================================================================
-  # 6. Hardware Configuration
-  # =================================================================
-  hardware = {
-    # Graphics
-    graphics = {
-      enable = true;
-      enable32Bit = true;
-    };
-
-    # NVIDIA CUDA Support for WSL
-    nvidia = {
-      modesetting.enable = true;
-      powerManagement.enable = false;
-      powerManagement.finegrained = false;
-      open = false;
-      nvidiaSettings = false;
-      package = pkgs.linuxPackages.nvidia_x11;
-    };
-  };
-
-  # =================================================================
-  # 7. Users & Groups
-  # =================================================================
-  users = {
-    users.git = {
-      isSystemUser = true;
-      description = "Git user";
-    };
-    groups.git = {};
-  };
-
-  # =================================================================
-  # 8. Nix Configuration
+  # 5. Nixpkgs Configuration
   # =================================================================
   nixpkgs = {
     hostPlatform = "x86_64-linux";
@@ -79,6 +56,9 @@
     };
   };
 
+  # =================================================================
+  # 6. Nix Configuration
+  # =================================================================
   nix = {
     package = pkgs.nixVersions.latest;
     extraOptions = ''
@@ -114,6 +94,13 @@
       builders-use-substitutes = true; # Allow builders to use substitutes
       require-sigs = true; # Security: require signatures
 
+      system-features = [
+        "benchmark"
+        "big-parallel"
+        "gccarch-znver3"
+        "kvm"
+      ];
+
       substituters = [
         "https://cache.nixos.org"
         "https://4rmcyt-wsl.cachix.org"
@@ -122,12 +109,7 @@
         "https://cache.flox.dev"
         "https://cuda-maintainers.cachix.org"
       ];
-      system-features = [
-        "benchmark"
-        "big-parallel"
-        "gccarch-znver3"
-        "kvm"
-      ];
+
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "4rmcyt-wsl.cachix.org-1:6Z2J6lPY35L3qxBgEYzyN0Q3Y6LCJhtz/YeY4VQ29BU="
@@ -136,6 +118,7 @@
         "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
         "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
       ];
+
       trusted-users = [
         "root"
         "@wheel"
@@ -144,96 +127,7 @@
   };
 
   # =================================================================
-  # 9. Secrets Management
-  # =================================================================
-  sops = {
-    age.keyFile = "/home/zeev/.config/sops/age/keys.txt";
-    defaultSopsFormat = "yaml";
-    secrets = {
-      nix_access_token = {
-        sopsFile = ../../../secrets/common.yaml;
-        key = "nix_access_token";
-      };
-    };
-  };
-  # =================================================================
-  # 10. Networking
-  # =================================================================
-  networking = {
-    hostName = "wsl";
-    networkmanager.enable = false;
-    useNetworkd = false;
-    useDHCP = false;
-    dhcpcd.enable = false;
-    wireless.enable = false;
-    interfaces = {};
-    firewall.allowedTCPPorts = [
-      4242 # Kavita
-    ];
-  };
-
-  # =================================================================
-  # 11. Systemd Configuration
-  # =================================================================
-  systemd.network.enable = false;
-
-  # =================================================================
-  # 12. Services
-  # =================================================================
-  services = {
-    # SSH configuration
-    openssh = {
-      enable = true;
-      settings = {
-        PasswordAuthentication = false;
-        PermitRootLogin = "no";
-      };
-    };
-
-    # Development services
-    vscode-server.enable = true;
-
-    # System services
-    resolved.enable = false;
-    xserver.videoDrivers = ["nvidia"];
-  };
-
-  # =================================================================
-  # 13. Programs
-  # =================================================================
-
-  programs = {
-    nix-index = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-    nh = {
-      enable = true;
-      clean.enable = true;
-      clean.extraArgs = "--keep-since 10d --keep 3";
-      flake = "/home/zeev/src/nix-config";
-    };
-    zsh.enable = true;
-  };
-
-  # =================================================================
-  # 14. WSL Configuration
-  # =================================================================
-  wsl = {
-    enable = true;
-    defaultUser = "zeev";
-    startMenuLaunchers = true;
-    useWindowsDriver = true;
-    wslConf = {
-      automount.root = "/mnt";
-      interop.appendWindowsPath = false;
-      network.generateHosts = true;
-      network.generateResolvConf = true;
-    };
-  };
-
-  # =================================================================
-  # 15. Environment Configuration
+  # 7. Environment
   # =================================================================
   environment = {
     # CUDA and NVIDIA environment variables
@@ -253,6 +147,8 @@
     etc."ld.so.conf.d/wsl-nvidia.conf".text = ''
       /usr/lib/wsl/lib
     '';
+
+    shells = with pkgs; [zsh];
 
     # System packages
     systemPackages = with pkgs; [
@@ -301,6 +197,122 @@
     ];
   };
 
-  environment.shells = with pkgs; [zsh];
+  # =================================================================
+  # 8. Hardware
+  # =================================================================
+  hardware = {
+    # Graphics
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+    };
+
+    # NVIDIA CUDA Support for WSL
+    nvidia = {
+      modesetting.enable = true;
+      powerManagement.enable = false;
+      powerManagement.finegrained = false;
+      open = false;
+      nvidiaSettings = false;
+      package = pkgs.linuxPackages.nvidia_x11;
+    };
+  };
+
+  # =================================================================
+  # 9. Home Manager
+  # =================================================================
   home-manager.backupFileExtension = "backup";
+
+  # =================================================================
+  # 10. Networking
+  # =================================================================
+  networking = {
+    hostName = "wsl";
+    networkmanager.enable = false;
+    useNetworkd = false;
+    useDHCP = false;
+    dhcpcd.enable = false;
+    wireless.enable = false;
+    interfaces = {};
+    firewall.allowedTCPPorts = [
+      4242 # Kavita
+    ];
+  };
+
+  # =================================================================
+  # 11. Programs
+  # =================================================================
+  programs = {
+    nix-index = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+
+    nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 10d --keep 3";
+      flake = "/home/zeev/src/nix-config";
+    };
+
+    zsh.enable = true;
+  };
+
+  # =================================================================
+  # 12. Services
+  # =================================================================
+  services = {
+    # SSH configuration
+    openssh = {
+      enable = true;
+      settings = {
+        PasswordAuthentication = false;
+        PermitRootLogin = "no";
+      };
+    };
+
+    # Development services
+    vscode-server.enable = true;
+
+    # System services
+    resolved.enable = false;
+    xserver.videoDrivers = ["nvidia"];
+  };
+
+  # =================================================================
+  # 13. Time Configuration
+  # =================================================================
+  time.timeZone = "America/Edmonton";
+
+  # =================================================================
+  # 14. Users & Groups
+  # =================================================================
+  users = {
+    users.git = {
+      isSystemUser = true;
+      description = "Git user";
+    };
+    groups.git = {};
+  };
+
+  # =================================================================
+  # 15. Systemd Configuration
+  # =================================================================
+  systemd.network.enable = false;
+
+  # =================================================================
+  # 16. WSL Configuration
+  # =================================================================
+  wsl = {
+    enable = true;
+    defaultUser = "zeev";
+    startMenuLaunchers = true;
+    useWindowsDriver = true;
+    wslConf = {
+      automount.root = "/mnt";
+      interop.appendWindowsPath = false;
+      network.generateHosts = true;
+      network.generateResolvConf = true;
+    };
+  };
 }

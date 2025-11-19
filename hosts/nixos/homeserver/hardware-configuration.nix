@@ -105,7 +105,14 @@ in {
   };
 
   # =================================================================
-  # 4. Power Management
+  # 4. Environment Variables
+  # =================================================================
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "iHD";
+  };
+
+  # =================================================================
+  # 5. Power Management
   # =================================================================
   power.ups.package = pkgs.nut;
 
@@ -113,13 +120,6 @@ in {
     enable = true;
     cpuFreqGovernor = lib.mkDefault "performance";
     powertop.enable = true;
-  };
-
-  # =================================================================
-  # 5. Environment Variables
-  # =================================================================
-  environment.sessionVariables = {
-    LIBVA_DRIVER_NAME = "iHD";
   };
 
   # =================================================================

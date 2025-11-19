@@ -108,6 +108,8 @@
     #   inputs.nixpkgs.follows = "nixpkgs";
     # };
 
+    nixos-cli.url = "github:nix-community/nixos-cli";
+
     # Browser extensions
     betterfox-nix = {
       url = "github:HeitorAugustoLN/betterfox-nix";
@@ -168,6 +170,7 @@
                 inputs.flatpaks.nixosModules.default
                 inputs.chaotic.nixosModules.nyx-cache
                 inputs.chaotic.nixosModules.nyx-overlay
+                inputs.nixos-cli.nixosModules.nixos-cli
               ]
               ++ (helpers.mkHome {
                 modules = [

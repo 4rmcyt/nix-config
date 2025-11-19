@@ -399,6 +399,22 @@
         "type": "github"
       }
     },
+    "flake-compat_5": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1761588595,
+        "narHash": "sha256-XKUZz9zewJNUj46b4AJdiRZJAvSZ0Dqj2BNfXvFlJC4=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "f387cd2afec9419c8ee37694406ca490c3f34ee5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": "nixpkgs-lib"
@@ -574,7 +590,25 @@
     },
     "flake-utils_3": {
       "inputs": {
-        "systems": "systems_6"
+        "systems": "systems_5"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_4": {
+      "inputs": {
+        "systems": "systems_7"
       },
       "locked": {
         "lastModified": 1681202837,
@@ -884,6 +918,27 @@
         "type": "github"
       }
     },
+    "nix-options-doc": {
+      "inputs": {
+        "flake-utils": "flake-utils_3",
+        "nixpkgs": "nixpkgs_2",
+        "rust-overlay": "rust-overlay_3"
+      },
+      "locked": {
+        "lastModified": 1742115705,
+        "narHash": "sha256-RfXwJPWBoWswIU68+y/XZfTWtFHd/fK14bKvOlRmfPo=",
+        "owner": "Thunderbottom",
+        "repo": "nix-options-doc",
+        "rev": "2caa4b5756a8666d65d70122f413e295f56886e7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Thunderbottom",
+        "ref": "v0.2.0",
+        "repo": "nix-options-doc",
+        "type": "github"
+      }
+    },
     "nix-vscode-marketplace": {
       "inputs": {
         "nixpkgs": [
@@ -941,6 +996,26 @@
         "type": "github"
       }
     },
+    "nixos-cli": {
+      "inputs": {
+        "flake-compat": "flake-compat_4",
+        "nix-options-doc": "nix-options-doc",
+        "nixpkgs": "nixpkgs_3"
+      },
+      "locked": {
+        "lastModified": 1762988082,
+        "narHash": "sha256-vG6oQXdKjBE6VQME1QoSqKP9KVynnu/Fl8WDYh7fSOM=",
+        "owner": "nix-community",
+        "repo": "nixos-cli",
+        "rev": "9dbe10616aad6b6f92519253ecd9579c1dcb9c6a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixos-cli",
+        "type": "github"
+      }
+    },
     "nixos-facter-modules": {
       "locked": {
         "lastModified": 1762264948,
@@ -979,7 +1054,7 @@
     },
     "nixos-wsl": {
       "inputs": {
-        "flake-compat": "flake-compat_4",
+        "flake-compat": "flake-compat_5",
         "nixpkgs": [
           "nixpkgs"
         ]
@@ -1077,6 +1152,38 @@
       }
     },
     "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1740695751,
+        "narHash": "sha256-D+R+kFxy1KsheiIzkkx/6L63wEHBYX21OIwlFV8JvDs=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "6313551cd05425cd5b3e63fe47dbc324eabb15e4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
+        "lastModified": 1761880412,
+        "narHash": "sha256-QoJjGd4NstnyOG4mm4KXF+weBzA2AH/7gn1Pmpfcb0A=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "a7fc11be66bdfb5cdde611ee5ce381c183da8386",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_4": {
       "locked": {
         "lastModified": 1763421233,
         "narHash": "sha256-Stk9ZYRkGrnnpyJ4eqt9eQtdFWRRIvMxpNRf4sIegnw=",
@@ -1230,14 +1337,15 @@
         "nix-index-database": "nix-index-database",
         "nix-vscode-marketplace": "nix-vscode-marketplace",
         "nixarr": "nixarr",
+        "nixos-cli": "nixos-cli",
         "nixos-facter-modules": "nixos-facter-modules",
         "nixos-generators": "nixos-generators",
         "nixos-wsl": "nixos-wsl",
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": "nixpkgs_4",
         "nushell-scripts": "nushell-scripts",
         "plasma-manager": "plasma-manager",
         "sops-nix": "sops-nix",
-        "systems": "systems_5",
+        "systems": "systems_6",
         "treefmt-nix": "treefmt-nix",
         "vscode-server": "vscode-server"
       }
@@ -1276,6 +1384,28 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "rev": "0be641045af6d8666c11c2c40e45ffc9667839b5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "rust-overlay_3": {
+      "inputs": {
+        "nixpkgs": [
+          "nixos-cli",
+          "nix-options-doc",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1740796337,
+        "narHash": "sha256-FuoXrXZPoJEZQ3PF7t85tEpfBVID9JQIOnVKMNfTAb0=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "bbac9527bc6b28b6330b13043d0e76eac11720dc",
         "type": "github"
       },
       "original": {
@@ -1394,6 +1524,21 @@
         "type": "github"
       }
     },
+    "systems_7": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
     "treefmt-nix": {
       "inputs": {
         "nixpkgs": [
@@ -1456,7 +1601,7 @@
     },
     "vscode-server": {
       "inputs": {
-        "flake-utils": "flake-utils_3",
+        "flake-utils": "flake-utils_4",
         "nixpkgs": [
           "nixpkgs"
         ]
