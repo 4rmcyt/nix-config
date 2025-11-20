@@ -5,7 +5,7 @@
   ...
 }: let
   # Database users and their configurations
-  dbUsers = ["postgres" "miniflux" "paperless" "hass" "authentik" "grafana" "vaultwarden" "linkwarden" "flare" "atuin_db_password"];
+  dbUsers = ["postgres" "miniflux" "paperless" "hass" "authentik" "grafana" "vaultwarden" "linkwarden" "flare" "atuin"];
 
   # Generate SOPS secret configuration for a database user
   mkDbSecret = user: {
