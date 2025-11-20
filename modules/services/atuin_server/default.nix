@@ -13,9 +13,8 @@
     };
   };
 
-  # Create environment file with database URI using sops template
   sops.templates."atuin-env".content = ''
-    ATUIN_DB_URI=postgres://atuin:${config.sops.placeholder.atuin_db_password}@/atuin?host=/run/postgresql
+    ATUIN_DB_URI=postgresql://atuin:${config.sops.placeholder.atuin_db_password}@localhost/atuin?host=/run/postgresql
   '';
 
   networking.firewall.allowedTCPPorts = lib.mkIf config.services.atuin.openFirewall [config.services.atuin.port];
