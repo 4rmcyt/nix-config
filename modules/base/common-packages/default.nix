@@ -48,6 +48,7 @@
       helix
       just
       neovim
+      nil
       nix-diff
       nix-index
       nixfmt

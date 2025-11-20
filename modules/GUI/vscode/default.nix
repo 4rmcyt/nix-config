@@ -64,14 +64,6 @@
               sha256 = "1aaxbrbss3ck9pab3fz55xkkwm1qc1dgq6aypfh7fl2qakfv0r0f";
             };
           })
-          (buildVscodeMarketplaceExtension {
-            mktplcRef = {
-              publisher = "ibecker";
-              name = "treefmt-vscode";
-              version = "2.2.1";
-              sha256 = "1ll7i4xfv4744d5xg3jcpcpi2b048qla1b95fi3sfnhkgk788k6y";
-            };
-          })
         ]);
 
       userSettings = {
@@ -174,11 +166,14 @@
         # ===== Language-Specific Settings =====
 
         # Nix
-        "[nix]"."editor.defaultFormatter" = "ibecker.treefmt-vscode";
+        "[nix]"."editor.defaultFormatter" = "jnoortheen.nix-ide";
+        "nix.enableLanguageServer" = true;
         "nix.serverPath" = "nil";
         "nix.serverSettings" = {
           # nil will automatically find treefmt.toml and statix.toml
+          formatting.command = ["alejandra"];
         };
+        "nix.formatterPath" = "alejandra";
         "nixEnvSelector.useFlakes" = true;
 
         # Shell
@@ -240,10 +235,6 @@
         "[toml]"."editor.defaultFormatter" = "tamasfe.even-better-toml";
 
         # ===== Extension-Specific Settings =====
-
-        # Treefmt
-        "treefmt.debug" = false;
-        "treefmt.configFile" = "\${workspaceFolder}/treefmt.toml";
 
         # GitHub Copilot
         "github.copilot.nextEditSuggestions.enabled" = true;
