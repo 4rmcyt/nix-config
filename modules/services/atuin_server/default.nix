@@ -21,13 +21,17 @@ in {
 
   # Override the systemd service to use EnvironmentFile for the database URI
   systemd.services.atuin = {
-    preStart = lib.mkBefore ''
+    script = lib.mkBefore ''
       # Generate the environment file with the actual password at runtime
-      echo "ATUIN_DB_URI=postgres://atuin:$(cat ${config.sops.secrets.atuin.path} | tr -d '\n\r')@/atuin?host=/run/postgresql" > /run/atuin/db-uri.env
+      ${pkgs.coreutils}/bin/echo "ATUIN_DB_URI=postgres://atuin:$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.atuin.path} | ${pkgs.coreutils}/bin/tr -d '\n\r')@/atuin?host=/run/postgresql" > /run/atuin/db-uri.env
+
+      # Source the environment file
+      source /run/atuin/db-uri.env
+
+      # Start atuin server
+      exec ${config.services.atuin.package}/bin/atuin server start --host ${config.services.atuin.host} --port ${toString config.services.atuin.port}
     '';
     serviceConfig = {
-      # Load the database URI from the generated environment file
-      EnvironmentFile = "/run/atuin/db-uri.env";
       # Ensure the service has access to the secret
       SupplementaryGroups = lib.mkAfter [config.users.groups.postgresql.name];
       # Ensure /run/atuin exists
