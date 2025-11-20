@@ -9,17 +9,11 @@
     atuin_session = {
       sopsFile = ../../../secrets/atuin.yaml;
       key = "atuin_session";
-      owner = config.my.user.name;
-      group = config.my.user.name;
-      mode = "0400";
     };
 
     atuin_key = {
       sopsFile = ../../../secrets/atuin.yaml;
       key = "atuin_key";
-      owner = config.my.user.name;
-      group = config.my.user.name;
-      mode = "0400";
     };
   };
   programs = {
