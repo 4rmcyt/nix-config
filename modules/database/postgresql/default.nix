@@ -37,7 +37,7 @@ in {
     appDatabases = lib.filter (u: u != "postgres") dbUsers;
   in {
     enable = true;
-    package = pkgs.postgresql_16;
+    package = pkgs.postgresql;
 
     # Automatically create databases for all app users
     ensureDatabases = appDatabases;
@@ -81,20 +81,24 @@ in {
       Group = "postgres";
     };
     script = ''
-      # Wait for secrets to be available
-      while [ ! -f ${config.sops.secrets.linkwarden.path} ]; do
-        echo "Waiting for SOPS secrets to be available..."
-        sleep 1
-      done
+      # Wait for all secrets to be available
+      ${lib.concatMapStringsSep "\n      " (user: ''
+        while [ ! -f ${config.sops.secrets.${user}.path} ]; do
+          echo "Waiting for ${user} secret to be available..."
+          sleep 1
+        done
+      '') (lib.filter (u: u != "postgres") dbUsers)}
 
-      # Set passwords for all database users
-      ${lib.concatMapStringsSep "\n      " (user: let
-        createDb =
-          if user == "linkwarden"
-          then " CREATEDB"
-          else "";
-      in ''
-        ${pkgs.postgresql_16}/bin/psql -c "ALTER USER ${user} WITH PASSWORD '$(cat ${config.sops.secrets.${user}.path} | tr -d '\n\r')'${createDb};"
+      # Set passwords for all database users, grant CREATEDB privilege, and ensure database exists
+      ${lib.concatMapStringsSep "\n      " (user: ''
+        # Set password and grant CREATEDB privilege
+        ${pkgs.postgresql}/bin/psql -c "ALTER USER ${user} WITH PASSWORD '$(cat ${config.sops.secrets.${user}.path} | tr -d '\n\r')' CREATEDB;"
+
+        # Create database if it doesn't exist
+        if ! ${pkgs.postgresql}/bin/psql -lqt | cut -d \| -f 1 | grep -qw ${user}; then
+          echo "Creating database ${user}..."
+          ${pkgs.postgresql}/bin/psql -c "CREATE DATABASE ${user} OWNER ${user};"
+        fi
       '') (lib.filter (u: u != "postgres") dbUsers)}
     '';
   };
