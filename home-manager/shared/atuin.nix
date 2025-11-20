@@ -1,10 +1,8 @@
 {
-  pkgs,
   config,
   osConfig,
   ...
 }: {
-
   sops.secrets = {
     atuin_session = {
       sopsFile = ../../../secrets/atuin.yaml;

@@ -2,7 +2,7 @@
   lib,
   config,
   ...
-}:{
+}: {
   sops.secrets = {
     atuin_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;

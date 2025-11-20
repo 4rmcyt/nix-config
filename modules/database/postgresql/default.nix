@@ -6,15 +6,42 @@
 }: let
   # Database users for script generation
   dbUsers = [
-    {name = "miniflux"; secret = "miniflux";}
-    {name = "paperless"; secret = "paperless";}
-    {name = "hass"; secret = "hass";}
-    {name = "authentik"; secret = "authentik";}
-    {name = "grafana"; secret = "grafana";}
-    {name = "vaultwarden"; secret = "vaultwarden";}
-    {name = "linkwarden"; secret = "linkwarden";}
-    {name = "flare"; secret = "flare";}
-    {name = "atuin"; secret = "atuin_db_password";}
+    {
+      name = "miniflux";
+      secret = "miniflux";
+    }
+    {
+      name = "paperless";
+      secret = "paperless";
+    }
+    {
+      name = "hass";
+      secret = "hass";
+    }
+    {
+      name = "authentik";
+      secret = "authentik";
+    }
+    {
+      name = "grafana";
+      secret = "grafana";
+    }
+    {
+      name = "vaultwarden";
+      secret = "vaultwarden";
+    }
+    {
+      name = "linkwarden";
+      secret = "linkwarden";
+    }
+    {
+      name = "flare";
+      secret = "flare";
+    }
+    {
+      name = "atuin";
+      secret = "atuin_db_password";
+    }
   ];
 in {
   # Database secrets configuration
@@ -103,15 +130,42 @@ in {
 
     # Automatically create users with DB ownership
     ensureUsers = [
-      {name = "miniflux"; ensureDBOwnership = true;}
-      {name = "paperless"; ensureDBOwnership = true;}
-      {name = "hass"; ensureDBOwnership = true;}
-      {name = "authentik"; ensureDBOwnership = true;}
-      {name = "grafana"; ensureDBOwnership = true;}
-      {name = "vaultwarden"; ensureDBOwnership = true;}
-      {name = "linkwarden"; ensureDBOwnership = true;}
-      {name = "flare"; ensureDBOwnership = true;}
-      {name = "atuin"; ensureDBOwnership = true;}
+      {
+        name = "miniflux";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "paperless";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "hass";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "authentik";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "grafana";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "vaultwarden";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "linkwarden";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "flare";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "atuin";
+        ensureDBOwnership = true;
+      }
     ];
 
     identMap = ''
@@ -147,21 +201,23 @@ in {
     script = ''
       # Wait for all secrets to be available
       ${lib.concatMapStringsSep "\n      " (user: ''
-        while [ ! -f ${config.sops.secrets.${user.secret}.path} ]; do
-          echo "Waiting for ${user.name} secret to be available..."
-          sleep 1
-        done
-      '') dbUsers}
+          while [ ! -f ${config.sops.secrets.${user.secret}.path} ]; do
+            echo "Waiting for ${user.name} secret to be available..."
+            sleep 1
+          done
+        '')
+        dbUsers}
 
       # Set passwords for all database users, grant CREATEDB privilege, and ensure database exists
       ${lib.concatMapStringsSep "\n      " (user: ''
-        # ${user.name}
-        ${pkgs.postgresql}/bin/psql -c "ALTER USER ${user.name} WITH PASSWORD '$(cat ${config.sops.secrets.${user.secret}.path} | tr -d '\n\r')' CREATEDB;"
-        if ! ${pkgs.postgresql}/bin/psql -lqt | cut -d \| -f 1 | grep -qw ${user.name}; then
-          echo "Creating database ${user.name}..."
-          ${pkgs.postgresql}/bin/psql -c "CREATE DATABASE ${user.name} OWNER ${user.name};"
-        fi
-      '') dbUsers}
+          # ${user.name}
+          ${pkgs.postgresql}/bin/psql -c "ALTER USER ${user.name} WITH PASSWORD '$(cat ${config.sops.secrets.${user.secret}.path} | tr -d '\n\r')' CREATEDB;"
+          if ! ${pkgs.postgresql}/bin/psql -lqt | cut -d \| -f 1 | grep -qw ${user.name}; then
+            echo "Creating database ${user.name}..."
+            ${pkgs.postgresql}/bin/psql -c "CREATE DATABASE ${user.name} OWNER ${user.name};"
+          fi
+        '')
+        dbUsers}
     '';
   };
 }
