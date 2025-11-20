@@ -5,7 +5,7 @@
   ...
 }: let
   # Database users and their configurations
-  dbUsers = ["postgres" "miniflux" "paperless" "hass" "authentik" "grafana" "vaultwarden" "linkwarden" "flare"];
+  dbUsers = ["postgres" "miniflux" "paperless" "hass" "authentik" "grafana" "vaultwarden" "linkwarden" "flare" "atuin_db_password"];
 
   # Generate SOPS secret configuration for a database user
   mkDbSecret = user: {
@@ -34,7 +34,6 @@ in {
   ];
 
   services.postgresql = let
-    # Application databases (exclude postgres system user)
     appDatabases = lib.filter (u: u != "postgres") dbUsers;
   in {
     enable = true;

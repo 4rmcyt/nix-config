@@ -140,57 +140,9 @@
 
     systemPackages = with pkgs; [
       # =============================================================
-      # Core System Utilities
-      # =============================================================
-      btop
-      curl
-      git
-      git-crypt
-      htop
-      mc
-      neofetch
-      openssl
-      p7zip
-      pciutils
-      unzip
-      usbutils
-
-      vim
-      wget
-      nodejs
-      cachix
-
-      # =============================================================
-      # Development Tools
-      # =============================================================
-      age
-      alejandra
-      deadnix
-      direnv
-      helix
-      just
-      nh
-      nix-diff
-      nix-fast-build
-
-      nix-output-monitor
-      nixfmt
-      nixfmt-rfc-style
-      nixos-rebuild-ng
-      nodePackages.prettier
-      rustfmt
-      shfmt
-      sops
-      statix
-      toml-sort
-      treefmt
-      yamlfmt
-
-      # =============================================================
       # Laptop-specific tools
       # =============================================================
       acpi
-
       brightnessctl
       powertop
 
@@ -208,7 +160,6 @@
       # Fonts
       # =============================================================
       fira-code
-
       fira-mono
       meslo-lgs-nf
       nerd-fonts.droid-sans-mono

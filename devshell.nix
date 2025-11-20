@@ -9,45 +9,14 @@
     packages = with pkgs; [
       # Shell
       carapace
-      direnv
       nix-direnv
-      sops
-      openssl
       sqlite
-      git
 
       # Code formatters
-      cmake-format
-      nodePackages.prettier
-      rustfmt
-      yamlfmt
-      toml-sort
-      shfmt
       shellcheck
-      just
-      dockfmt
-      alejandra
-      treefmt
-      statix
-
-      # Development tools
-      nix-diff
     ];
 
-    commands = [
-      {
-        package = pkgs.nixfmt-rfc-style;
-        help = "Format Nix files using RFC style";
-      }
-      {
-        package = pkgs.deadnix;
-        help = "Find and remove unused code in Nix files";
-      }
-      {
-        package = pkgs.treefmt;
-        help = "Format all files in the project";
-      }
-    ];
+    commands = [];
 
     # Set nushell as the shell
     devshell.name = "nix-config";

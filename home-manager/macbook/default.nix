@@ -7,31 +7,18 @@
       # Shell & Editor
       zsh
       neovim
-      vim
-      cachix
       # Dev tools
-      direnv
-      git
       gh
-      just
-      nixfmt-rfc-style
       nil
-      shfmt
-      helix
-      rustfmt
       # User Utils
       jq
       nix-index
       fzf
       zip
-      unzip
       tree
       zoxide
-      statix
-      deadnix
 
       # Security & Crypto
-      gnupg
       pinentry-tty
 
       # GUI applications - these will get Start Menu shortcuts
@@ -44,8 +31,6 @@
       wslu # WSL utilities
 
       # Additional packages from macbook config
-      btop
-      htop
       delta
       pwgen
       tmux
