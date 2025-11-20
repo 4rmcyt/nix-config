@@ -3,15 +3,16 @@
   osConfig,
   ...
 }: {
-  sops.secrets = {
-    atuin_session = {
-      sopsFile = ../../../secrets/atuin.yaml;
-      key = "atuin_session";
-    };
-
-    atuin_key = {
-      sopsFile = ../../../secrets/atuin.yaml;
-      key = "atuin_key";
+  sops = {
+    secrets = {
+      atuin_key = {
+        sopsFile = ../../secrets/atuin.yaml;
+        key = "atuin_key";
+      };
+      atuin_session = {
+        sopsFile = ../../secrets/atuin.yaml;
+        key = "atuin_session";
+      };
     };
   };
   programs = {
