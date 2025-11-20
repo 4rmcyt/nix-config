@@ -6,6 +6,8 @@
   atuin_db_password = {
       sopsFile = ../../secrets/postgresql.yaml;
       owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
   };
   networking.firewall.allowedTCPPorts = lib.mkIf config.services.atuin.openFirewall [config.services.atuin.port];
 
