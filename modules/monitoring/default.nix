@@ -220,6 +220,19 @@
           path_prefix = "/var/lib/loki";
         };
 
+        ingester = {
+          lifecycler = {
+            address = "127.0.0.1";
+            ring = {
+              kvstore.store = "inmemory";
+              replication_factor = 1;
+            };
+            final_sleep = "0s";
+          };
+          chunk_idle_period = "5m";
+          chunk_retain_period = "30s";
+        };
+
         schema_config = {
           configs = [
             {

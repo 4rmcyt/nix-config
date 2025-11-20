@@ -12,8 +12,9 @@ _: {
     "apz.overscroll.enabled" = true;
 
     # === BROWSER BEHAVIOR ===
-    "browser.tabs.inTitlebar" = 1; # Use Firefox's title bar with window controls
-    "widget.gtk.non-native-titlebar-buttons.enabled" = false; # Use native GTK window controls
+    # Disable client-side decorations for COSMIC compatibility
+    "browser.tabs.inTitlebar" = 0; # Use system titlebar with window controls
+    "widget.gtk.non-native-titlebar-buttons.enabled" = true; # Enable native GTK window controls
     "layout.css.devPixelsPerPx" = "2.0"; # Default scaling
     "widget.gtk.libadwaita-colors.enabled" = false;
     "browser.aboutConfig.showWarning" = false;
