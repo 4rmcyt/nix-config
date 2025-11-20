@@ -188,7 +188,6 @@
       # Qt (allow Stylix to override QT_QPA_PLATFORMTHEME)
       QT_QPA_PLATFORM = "wayland;xcb";
       QT_QPA_PLATFORMTHEME = lib.mkDefault "qt6ct";
-      QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
       QT_AUTO_SCREEN_SCALE_FACTOR = "1";
       QT_SCALE_FACTOR = "1";
 
