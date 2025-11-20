@@ -9,7 +9,7 @@
     enable = true;
     port = 8881;
 
-    database.uri = "postgres://atuin:${config.sops.secrets.atuin_db_password.path}@/atuin?host=/run/postgresql";
+    database.uri = "postgres://atuin:$(cat ${config.sops.secrets.atuin_db_password.path})@/atuin?host=/run/postgresql";
     openRegistration = true;
   };
 }
