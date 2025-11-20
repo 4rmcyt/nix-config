@@ -160,7 +160,6 @@
         "flake-parts": "flake-parts_3",
         "home-manager": "home-manager_3",
         "nixpkgs": [
-          "cosmic-unstable",
           "nixpkgs"
         ]
       },
@@ -175,27 +174,6 @@
       "original": {
         "owner": "HeitorAugustoLN",
         "repo": "cosmic-manager",
-        "type": "github"
-      }
-    },
-    "cosmic-unstable": {
-      "inputs": {
-        "cosmic-manager": "cosmic-manager",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1763608989,
-        "narHash": "sha256-EGUkMgngzTeFRXfJqCPAact6mB7WXY8WHGsV/Q8ZGN8=",
-        "owner": "ninelore",
-        "repo": "nixpkgs-cosmic-unstable",
-        "rev": "050422541ae07672ef9ceefb0700fb272c2fa959",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ninelore",
-        "repo": "nixpkgs-cosmic-unstable",
         "type": "github"
       }
     },
@@ -323,11 +301,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1763637530,
-        "narHash": "sha256-YUv8wgiLPZ/hZdD7XHyhZXoMi95xE5a9LBqnf7C8QXk=",
+        "lastModified": 1763680774,
+        "narHash": "sha256-vIwX6lE08tcB5T+aJeeue53Q1OfzUX07bjKfLry04CI=",
         "owner": "nix-community",
         "repo": "flake-firefox-nightly",
-        "rev": "958e4cc964a7735ae724a7fc13c4cd084fac2e0b",
+        "rev": "f3b329de2c5cfd9f6cb75622334a7f39b1b87113",
         "type": "github"
       },
       "original": {
@@ -457,7 +435,6 @@
     "flake-parts_3": {
       "inputs": {
         "nixpkgs-lib": [
-          "cosmic-unstable",
           "cosmic-manager",
           "nixpkgs"
         ]
@@ -707,7 +684,6 @@
     "home-manager_3": {
       "inputs": {
         "nixpkgs": [
-          "cosmic-unstable",
           "cosmic-manager",
           "nixpkgs"
         ]
@@ -1323,7 +1299,7 @@
         "betterfox-nix": "betterfox-nix",
         "chaotic": "chaotic",
         "cosmic-applets-collection": "cosmic-applets-collection",
-        "cosmic-unstable": "cosmic-unstable",
+        "cosmic-manager": "cosmic-manager",
         "cpu-microcodes": "cpu-microcodes",
         "devshell": "devshell",
         "disko": "disko",

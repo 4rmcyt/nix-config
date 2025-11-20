@@ -23,7 +23,6 @@
     inputs.nix-index-database.nixosModules.nix-index
     inputs.nixos-facter-modules.nixosModules.facter
     inputs.agenix.nixosModules.default
-    inputs.cosmic-unstable.nixosModules.default
     {
       nixpkgs.config.allowUnfree = true;
       sops.age.keyFile = inputs.nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
