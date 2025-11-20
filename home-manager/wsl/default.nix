@@ -2,6 +2,7 @@
   imports = [
     ../shared/common.nix
     ../shared/zsh.nix
+    ../shared/atuin.nix
   ];
 
   home = {
