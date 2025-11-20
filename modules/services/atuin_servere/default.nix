@@ -3,11 +3,7 @@
   config,
   ...
 }: {
-  sops.secrets = {
-    atuin_key = {
-      sopsFile = ../../secrets/atuin.yaml;
-      key = "atuin_key";
-    };
+  
     networking.firewall.allowedTCPPorts = lib.mkIf config.services.atuin.openFirewall [config.services.atuin.port];
 
     services.atuin = {
