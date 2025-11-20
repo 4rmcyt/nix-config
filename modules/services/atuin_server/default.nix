@@ -2,7 +2,11 @@
   lib,
   config,
   ...
-}: {
+}:{
+  atuin_db_password = {
+      sopsFile = ../../secrets/postgresql.yaml;
+      owner = config.users.users.postgresql.name;
+  };
   networking.firewall.allowedTCPPorts = lib.mkIf config.services.atuin.openFirewall [config.services.atuin.port];
 
   services.atuin = {
