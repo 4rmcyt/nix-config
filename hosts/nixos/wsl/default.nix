@@ -140,6 +140,8 @@
     };
 
     sessionVariables = {
+      # GPG Agent for SSH (uses gpg-agent socket)
+      SSH_AUTH_SOCK = "/run/user/$UID/gnupg/S.gpg-agent.ssh";
       LD_LIBRARY_PATH = "/usr/lib/wsl/lib";
     };
 
@@ -243,6 +245,12 @@
   # 11. Programs
   # =================================================================
   programs = {
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+      pinentryPackage = pkgs.pinentry-tty;
+    };
+
     nix-index = {
       enable = true;
       enableZshIntegration = true;

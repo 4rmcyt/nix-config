@@ -127,6 +127,9 @@
   # =================================================================
   environment = {
     sessionVariables = {
+      # GPG Agent for SSH (uses gpg-agent socket)
+      SSH_AUTH_SOCK = "/run/user/$UID/gnupg/S.gpg-agent.ssh";
+
       # AMD GPU variables
       LIBVA_DRIVER_NAME = "radeonsi";
       VDPAU_DRIVER = "radeonsi";
