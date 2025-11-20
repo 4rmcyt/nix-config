@@ -4,24 +4,85 @@
   lib,
   ...
 }: let
-  # Database users and their configurations
-  dbUsers = ["postgres" "miniflux" "paperless" "hass" "authentik" "grafana" "vaultwarden" "linkwarden" "flare" "atuin"];
-
-  # Generate SOPS secret configuration for a database user
-  mkDbSecret = user: {
-    sopsFile = ../../../secrets/postgresql.yaml;
-    key = "${user}_${
-      if user == "postgres"
-      then "password"
-      else "db_password"
-    }";
-    owner = config.users.users.postgresql.name;
-    group = config.users.groups.postgresql.name;
-    mode = "0400";
-  };
+  # Database users for script generation
+  dbUsers = [
+    {name = "miniflux"; secret = "miniflux";}
+    {name = "paperless"; secret = "paperless";}
+    {name = "hass"; secret = "hass";}
+    {name = "authentik"; secret = "authentik";}
+    {name = "grafana"; secret = "grafana";}
+    {name = "vaultwarden"; secret = "vaultwarden";}
+    {name = "linkwarden"; secret = "linkwarden";}
+    {name = "flare"; secret = "flare";}
+    {name = "atuin"; secret = "atuin_db_password";}
+  ];
 in {
-  # Generate all database secrets dynamically
-  sops.secrets = lib.genAttrs dbUsers mkDbSecret;
+  # Database secrets configuration
+  sops.secrets = {
+    postgres = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "postgres_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+    miniflux = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "miniflux_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+    paperless = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "paperless_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+    hass = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "hass_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+    authentik = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "authentik_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+    grafana = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "grafana_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+    vaultwarden = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "vaultwarden_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+    linkwarden = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "linkwarden_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+    flare = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "flare_db_password";
+      owner = config.users.users.postgresql.name;
+      group = config.users.groups.postgresql.name;
+      mode = "0400";
+    };
+  };
 
   users.users.postgresql = {
     isSystemUser = true;
@@ -33,22 +94,25 @@ in {
     5432 # PostgreSQL
   ];
 
-  services.postgresql = let
-    appDatabases = lib.filter (u: u != "postgres") dbUsers;
-  in {
+  services.postgresql = {
     enable = true;
     package = pkgs.postgresql;
 
     # Automatically create databases for all app users
-    ensureDatabases = appDatabases;
+    ensureDatabases = ["miniflux" "paperless" "hass" "authentik" "grafana" "vaultwarden" "linkwarden" "flare" "atuin"];
 
     # Automatically create users with DB ownership
-    ensureUsers =
-      map (name: {
-        inherit name;
-        ensureDBOwnership = true;
-      })
-      appDatabases;
+    ensureUsers = [
+      {name = "miniflux"; ensureDBOwnership = true;}
+      {name = "paperless"; ensureDBOwnership = true;}
+      {name = "hass"; ensureDBOwnership = true;}
+      {name = "authentik"; ensureDBOwnership = true;}
+      {name = "grafana"; ensureDBOwnership = true;}
+      {name = "vaultwarden"; ensureDBOwnership = true;}
+      {name = "linkwarden"; ensureDBOwnership = true;}
+      {name = "flare"; ensureDBOwnership = true;}
+      {name = "atuin"; ensureDBOwnership = true;}
+    ];
 
     identMap = ''
       # ArbitraryMapName systemUser DBUser
@@ -83,23 +147,21 @@ in {
     script = ''
       # Wait for all secrets to be available
       ${lib.concatMapStringsSep "\n      " (user: ''
-        while [ ! -f ${config.sops.secrets.${user}.path} ]; do
-          echo "Waiting for ${user} secret to be available..."
+        while [ ! -f ${config.sops.secrets.${user.secret}.path} ]; do
+          echo "Waiting for ${user.name} secret to be available..."
           sleep 1
         done
-      '') (lib.filter (u: u != "postgres") dbUsers)}
+      '') dbUsers}
 
       # Set passwords for all database users, grant CREATEDB privilege, and ensure database exists
       ${lib.concatMapStringsSep "\n      " (user: ''
-        # Set password and grant CREATEDB privilege
-        ${pkgs.postgresql}/bin/psql -c "ALTER USER ${user} WITH PASSWORD '$(cat ${config.sops.secrets.${user}.path} | tr -d '\n\r')' CREATEDB;"
-
-        # Create database if it doesn't exist
-        if ! ${pkgs.postgresql}/bin/psql -lqt | cut -d \| -f 1 | grep -qw ${user}; then
-          echo "Creating database ${user}..."
-          ${pkgs.postgresql}/bin/psql -c "CREATE DATABASE ${user} OWNER ${user};"
+        # ${user.name}
+        ${pkgs.postgresql}/bin/psql -c "ALTER USER ${user.name} WITH PASSWORD '$(cat ${config.sops.secrets.${user.secret}.path} | tr -d '\n\r')' CREATEDB;"
+        if ! ${pkgs.postgresql}/bin/psql -lqt | cut -d \| -f 1 | grep -qw ${user.name}; then
+          echo "Creating database ${user.name}..."
+          ${pkgs.postgresql}/bin/psql -c "CREATE DATABASE ${user.name} OWNER ${user.name};"
         fi
-      '') (lib.filter (u: u != "postgres") dbUsers)}
+      '') dbUsers}
     '';
   };
 }
