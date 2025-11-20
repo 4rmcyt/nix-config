@@ -243,7 +243,6 @@
 
         # Treefmt
         "treefmt.debug" = false;
-        "treefmt.path" = "~/.nix-profile/bin/treefmt";
         "treefmt.configFile" = "\${workspaceFolder}/treefmt.toml";
 
         # GitHub Copilot
