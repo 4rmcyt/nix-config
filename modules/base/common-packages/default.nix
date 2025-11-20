@@ -47,11 +47,14 @@
       dockfmt
       helix
       just
+      neovim
       nix-diff
+      nix-index
       nixfmt
       nufmt
       nixfmt-rfc-style
       nodePackages.prettier
+      pinentry-tty
       rustfmt
       shfmt
       sops
@@ -59,6 +62,7 @@
       toml-sort
       treefmt
       yamlfmt
+      zsh-powerlevel10k
 
       # =================================================================
       # Security & Secrets Management (alphabetical)

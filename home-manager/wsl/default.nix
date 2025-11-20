@@ -1,8 +1,9 @@
 {pkgs, ...}: {
   imports = [
-    ../shared/common.nix
-    ../shared/zsh.nix
-    ../shared/atuin.nix
+    ../../modules/GUI/ghostty
+    ../../modules/TUI/common
+    ../../modules/TUI/zsh
+    ../../modules/TUI/atuin
   ];
 
   home = {
@@ -29,14 +30,9 @@
       shfmt
       statix
 
-      # Editors
-      neovim
-      vim
-
-      # Fonts & Themes
+      # Fonts & Themes (dev tools like vim, neovim, nh, nix-index, zsh-powerlevel10k, pinentry-tty moved to shared/dev-tools.nix)
       meslo-lgs-nf
       nerd-fonts.hack
-      zsh-powerlevel10k
 
       # Fun terminal utilities
       cowsay
@@ -49,15 +45,12 @@
       obsidian
 
       # Nix utilities
-      nh
-      nix-index
       nix-output-monitor
       nvd
 
       # Security & Crypto
       gnupg
       pass
-      pinentry-tty
 
       # System & Monitoring tools
       btop
@@ -87,23 +80,7 @@
   };
 
   programs = {
-    ghostty = {
-      enable = true;
-      enableZshIntegration = true;
-      settings = {
-        theme = "Dracula+";
-        background-blur-radius = 40;
-        background-opacity = 0.8;
-        background-blur = true;
-        minimum-contrast = 1.1;
-        font-size = 14;
-        font-family = "MesloLGS NF";
-        window-theme = "system";
-        window-show-tab-bar = "always";
-        gtk-titlebar = true;
-        shell-integration-features = "sudo";
-      };
-    };
+    # ghostty configuration moved to shared module: ../../modules/GUI/ghostty
     zsh.enable = true;
   };
 

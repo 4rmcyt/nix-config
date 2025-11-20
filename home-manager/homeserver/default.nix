@@ -1,8 +1,8 @@
 {pkgs, ...}: {
   imports = [
-    ../shared/common.nix
-    ../shared/zsh.nix
-    ../shared/atuin.nix
+    ../../modules/TUI/common
+    ../../modules/TUI/zsh
+    ../../modules/TUI/atuin
   ];
 
   home = {
@@ -27,10 +27,7 @@
       shfmt
       statix
 
-      # Editors
-      neovim
-      vim
-
+      # Audio tools
       cuetools
       shntool
       flac
@@ -38,14 +35,9 @@
       # Fonts
       meslo-lgs-nf
 
-      # Nix utilities
-      nh
-      nix-index
+      # Nix utilities (common tools moved to shared/dev-tools.nix)
       nix-output-monitor
       nvd
-
-      # Shell
-      zsh-powerlevel10k
 
       # System & Network tools
       nextdns

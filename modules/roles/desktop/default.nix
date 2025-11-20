@@ -76,23 +76,20 @@
       firewall.enable = lib.mkDefault true;
     };
 
-    # Common desktop utilities
-    # Note: GUI applications (Firefox, browsers, etc.) should be managed via
-    # dedicated modules in modules/GUI/ or home-manager, not here
+    # Desktop-specific system utilities
+    # Note: Common packages (git, vim, wget, curl, htop) are in modules/base/common-packages
+    # GUI applications should be managed via modules/GUI/ or home-manager
     environment.systemPackages = with pkgs;
       lib.mkDefault [
-        # Command-line utilities
-        git
-        vim
-        wget
-        curl
+        # Archive utilities (desktop-specific)
         unzip
         zip
-        htop
+
+        # File utilities
         file
         tree
 
-        # System tools
+        # Hardware inspection tools (desktop-specific)
         pciutils
         usbutils
         lshw
