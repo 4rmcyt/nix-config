@@ -8,7 +8,7 @@
   services.atuin = {
     enable = true;
     port = 8881;
-    database.uri = "user=atuin password=${config.sops.secrets.atuin.path} dbname=atuin sslmode=disable host=/run/postgresql";
+    database.uri = "postgres://atuin:$(cat ${config.sops.secrets.atuin.path})@/atuin?host=/run/postgresql";
     openRegistration = true;
   };
 }
