@@ -262,6 +262,7 @@
         # =============================================================
         libva-utils
         nvidia-vaapi-driver
+        atuin
 
         # =============================================================
         # Hardware Support & Monitoring
@@ -305,6 +306,7 @@
         sbsigntool
         shim-unsigned
         uefitool
+        optnix
       ]
     );
   };
@@ -516,8 +518,6 @@
       videoDrivers = ["nvidia"];
       xkb.layout = "us";
     };
-
-    nixos-cli.enable = true;
   };
   # =================================================================
   # 14. Users & Groups
