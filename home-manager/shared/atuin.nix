@@ -15,7 +15,7 @@
       settings = {
         auto_sync = true;
         sync_frequency = "30m";
-        sync_address = "https://api.atuin.sh";
+        sync_address = "https://atuin.${config.my.network.domain}";
         update_check = false;
         filter_mode = "global";
         enter_accept = true;
