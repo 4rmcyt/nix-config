@@ -4,7 +4,7 @@
   ...
 }: {
   sops.secrets.atuin_db_password = {
-    sopsFile = ../../secrets/atuin.yaml;
+    sopsFile = ../../secrets/postgresql.yaml;
     key = "atuin_db_password";
   };
 
