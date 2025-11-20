@@ -11,5 +11,6 @@
     ./kavita
     ./miniflux
     ./nixarr
+    ./atuin_server
   ];
 }

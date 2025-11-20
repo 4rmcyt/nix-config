@@ -78,6 +78,8 @@
           service: http://localhost:3000
         - hostname: loki.${config.my.defaults.domain}
           service: http://localhost:3100
+        - hostname: atuin.${config.my.defaults.domain}
+          service: http://localhost:8881
         - service: http_status:404
     '';
   };
