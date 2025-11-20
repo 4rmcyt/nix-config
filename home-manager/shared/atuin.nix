@@ -1,8 +1,27 @@
 {
   pkgs,
   config,
+  osConfig,
   ...
 }: {
+
+  sops.secrets = {
+    atuin_session = {
+      sopsFile = ../../../secrets/atuin.yaml;
+      key = "atuin_session";
+      owner = config.my.user.name;
+      group = config.my.user.name;
+      mode = "0400";
+    };
+
+    atuin_key = {
+      sopsFile = ../../../secrets/atuin.yaml;
+      key = "atuin_key";
+      owner = config.my.user.name;
+      group = config.my.user.name;
+      mode = "0400";
+    };
+  };
   programs = {
     browserpass.enable = true;
     nushell.enable = true;
@@ -16,7 +35,7 @@
       settings = {
         auto_sync = true;
         sync_frequency = "30m";
-        sync_address = "https://atuin.${config.my.defaults.domain}";
+        sync_address = "https://atuin.${osConfig.my.defaults.domain}";
         update_check = false;
         filter_mode = "global";
         enter_accept = true;
@@ -27,8 +46,6 @@
         inline_height = 10;
         search_mode = "fuzzy";
         filter_mode_shell_up_key_binding = "session";
-        # client_config = "/home/zeev/.config/atuin/config.toml";
-        # client_db_path = "/home/zeev/.local/share/atuin/history.db";
         session_path = config.sops.secrets.atuin_session.path;
         key_path = config.sops.secrets.atuin_key.path;
       };
