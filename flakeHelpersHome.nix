@@ -13,7 +13,7 @@
       modules = [
         ./home-manager/desktop
         inputs.plasma-manager.homeModules.plasma-manager
-        inputs.cosmic-manager.homeModules.default
+        inputs.cosmic-manager.homeManagerModules.cosmic-manager
         inputs.betterfox-nix.homeModules.betterfox
       ];
     };

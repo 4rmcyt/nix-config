@@ -1,7 +1,9 @@
 {pkgs, ...}: {
-  # =================================================================
-  # KDE Plasma Desktop Environment - NixOS Configuration
-  # =================================================================
+
+  imports = [
+    ../../GUI/flatpak/kde
+  ];
+
 
   environment.sessionVariables = {
     # Wayland Support
