@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   sops.secrets = {
     cloudflare_tunnel_credentials = {
       sopsFile = ../../../secrets/cloudflare_tunnel_credentials.bin;
@@ -74,8 +75,6 @@
           service: http://localhost:8265
         - hostname: readarr.${config.my.defaults.domain}
           service: http://localhost:8787
-        - hostname: link.${config.my.defaults.domain}
-          service: http://localhost:3000
         - hostname: loki.${config.my.defaults.domain}
           service: http://localhost:3100
         - hostname: atuin.${config.my.defaults.domain}
@@ -88,17 +87,26 @@
     isSystemUser = true;
     group = "cloudflared";
   };
-  users.groups.cloudflared = {};
+  users.groups.cloudflared = { };
 
   systemd.services.cloudflared = {
-    after = ["network.target" "network-online.target" "sops-nix.service"];
-    wants = ["network.target" "network-online.target"];
-    wantedBy = ["multi-user.target"];
+    after = [
+      "network.target"
+      "network-online.target"
+      "sops-nix.service"
+    ];
+    wants = [
+      "network.target"
+      "network-online.target"
+    ];
+    wantedBy = [ "multi-user.target" ];
 
     serviceConfig = {
       User = "cloudflared";
       Group = "cloudflared";
-      ExecStart = "${pkgs.cloudflared}/bin/cloudflared tunnel --config ${config.sops.templates."cloudflared-config.yml".path} --no-autoupdate run";
+      ExecStart = "${pkgs.cloudflared}/bin/cloudflared tunnel --config ${
+        config.sops.templates."cloudflared-config.yml".path
+      } --no-autoupdate run";
       Restart = "on-failure";
       RestartSec = "5s";
     };

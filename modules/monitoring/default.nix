@@ -68,7 +68,7 @@
   # 3. Firewall
   # =================================================================
   networking.firewall.allowedTCPPorts = [
-    3000 # Grafana
+    3003 # Grafana
     3001 # Uptime Kuma
     3100 # Loki
     28183 # Promtail
@@ -96,7 +96,7 @@
         security.admin_password_file = config.sops.secrets.grafana_admin_password.path;
         server = {
           http_addr = "127.0.0.1";
-          http_port = 3000;
+          http_port = 3003;
           root_url = "https://grafana.${config.my.defaults.domain}";
         };
         "auth.generic_oauth" = {
