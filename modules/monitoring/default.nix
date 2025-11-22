@@ -99,6 +99,9 @@
           http_port = 3003;
           root_url = "https://grafana.${config.my.defaults.domain}";
         };
+        auth = {
+          disable_login_form = false;
+        };
         "auth.generic_oauth" = {
           enabled = true;
           name = "Authentik";
