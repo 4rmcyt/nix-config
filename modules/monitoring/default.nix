@@ -96,7 +96,7 @@
         security.admin_password_file = config.sops.secrets.grafana_admin_password.path;
         server = {
           http_addr = "127.0.0.1";
-          http_port = 3003;
+          http_port = 3000;
           root_url = "https://grafana.${config.my.defaults.domain}";
         };
         "auth.generic_oauth" = {
