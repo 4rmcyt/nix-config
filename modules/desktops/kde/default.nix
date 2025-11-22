@@ -58,8 +58,8 @@
     gruvbox-material-gtk-theme
     gruvbox-plus-icons
     kde-gruvbox
-    latte-dock
     plasma-panel-colorizer
+    crystal-dock
 
     # Qt/KDE Support Packages
     pinentry-qt
