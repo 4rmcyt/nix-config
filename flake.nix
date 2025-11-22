@@ -170,7 +170,6 @@
                 inputs.flatpaks.nixosModules.default
                 inputs.chaotic.nixosModules.nyx-cache
                 inputs.chaotic.nixosModules.nyx-overlay
-                inputs.nixos-cli.nixosModules.nixos-cli
               ]
               ++ (helpers.mkHome {
                 modules = [
