@@ -1,9 +1,7 @@
 {pkgs, ...}: {
-
   imports = [
     ../../GUI/flatpak/kde
   ];
-
 
   environment.sessionVariables = {
     # Wayland Support
@@ -60,6 +58,8 @@
     gruvbox-material-gtk-theme
     gruvbox-plus-icons
     kde-gruvbox
+    latte-dock
+    plasma-panel-colorizer
 
     # Qt/KDE Support Packages
     pinentry-qt
