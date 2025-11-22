@@ -102,6 +102,9 @@
         auth = {
           disable_login_form = false;
         };
+        "auth.ldap" = {
+          enabled = false;
+        };
         "auth.generic_oauth" = {
           enabled = true;
           name = "Authentik";
