@@ -28,6 +28,8 @@
     # Disabled - uncomment when needed
     # ../../../modules/GUI/ollama
     # ../../../modules/GUI/OBS
+
+    ../../../modules/GUI/chromium
   ];
 
   # =================================================================

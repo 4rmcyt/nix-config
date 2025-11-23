@@ -1,18 +1,27 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
+  environment.systemPackages = lib.mkBefore (
+    with pkgs; [
+      (chromium.override {
+        enableWideVine = true;
+        commandLineArgs = [
+          "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo"
+          "--ignore-gpu-blocklist"
+          "--enable-zero-copy"
+          "--enable-features=UseOzonePlatform"
+          "--ozone-platform=wayland"
+          "--oauth2-client-id=77185425430.apps.googleusercontent.com"
+          "--oauth2-client-secret=REDACTED"
+        ];
+      })
+    ]
+  );
   programs.chromium = {
     enable = true;
-    package = pkgs.chromium.override {
-      enableWideVine = true;
-      commandLineArgs = [
-        "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo"
-        "--ignore-gpu-blocklist"
-        "--enable-zero-copy"
-        "--enable-features=UseOzonePlatform"
-        "--ozone-platform=wayland"
-        "--oauth2-client-id=77185425430.apps.googleusercontent.com"
-        "--oauth2-client-secret=REDACTED"
-      ];
-    };
+    enablePlasmaBrowserIntegration = true;
     extensions = [
       "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
       "naepdomgkenhinolocfifgehidddafch" # Browserpass
@@ -24,9 +33,9 @@
       "cimiefiiaegbelhefglklhhakcgmhkai" # Plasma integration
     ];
 
-    nativeMessagingHosts = {
-      browserpass = pkgs.browserpassChromium;
-      inherit (pkgs.kdePackages) plasma-browser-integration;
+    extraOpts = {
+      "BrowserSignin" = 1;
+      "SyncDisabled" = false;
     };
   };
 }
