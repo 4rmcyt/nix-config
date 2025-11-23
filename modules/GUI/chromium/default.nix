@@ -1,8 +1,4 @@
-{
-  pkgs,
-  ...
-}:
-{
+{pkgs, ...}: {
   programs.chromium = {
     enable = true;
     package = pkgs.chromium.override {
@@ -30,7 +26,7 @@
 
     nativeMessagingHosts = {
       browserpass = pkgs.browserpassChromium;
-      plasma-browser-integration = pkgs.kdePackages.plasma-browser-integration;
+      inherit (pkgs.kdePackages) plasma-browser-integration;
     };
   };
 }

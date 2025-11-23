@@ -110,20 +110,14 @@
         "conditions": [
           {
             "evaluator": {
-              "params": [
-                0
-              ],
+              "params": [0],
               "type": "gt"
             },
             "operator": {
               "type": "and"
             },
             "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
+              "params": ["A", "5m", "now"]
             },
             "reducer": {
               "params": [],
@@ -314,20 +308,14 @@
         "conditions": [
           {
             "evaluator": {
-              "params": [
-                0
-              ],
+              "params": [0],
               "type": "gt"
             },
             "operator": {
               "type": "and"
             },
             "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
+              "params": ["A", "5m", "now"]
             },
             "reducer": {
               "params": [],
@@ -509,20 +497,14 @@
         "conditions": [
           {
             "evaluator": {
-              "params": [
-                0.01
-              ],
+              "params": [0.01],
               "type": "gt"
             },
             "operator": {
               "type": "and"
             },
             "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
+              "params": ["A", "5m", "now"]
             },
             "reducer": {
               "params": [],
@@ -649,20 +631,14 @@
         "conditions": [
           {
             "evaluator": {
-              "params": [
-                0.01
-              ],
+              "params": [0.01],
               "type": "gt"
             },
             "operator": {
               "type": "and"
             },
             "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
+              "params": ["A", "5m", "now"]
             },
             "reducer": {
               "params": [],
@@ -804,20 +780,14 @@
         "conditions": [
           {
             "evaluator": {
-              "params": [
-                5000
-              ],
+              "params": [5000],
               "type": "gt"
             },
             "operator": {
               "type": "and"
             },
             "query": {
-              "params": [
-                "A",
-                "1m",
-                "now"
-              ]
+              "params": ["A", "1m", "now"]
             },
             "reducer": {
               "params": [],
@@ -1041,20 +1011,14 @@
         "conditions": [
           {
             "evaluator": {
-              "params": [
-                1000000
-              ],
+              "params": [1000000],
               "type": "gt"
             },
             "operator": {
               "type": "and"
             },
             "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
+              "params": ["A", "5m", "now"]
             },
             "reducer": {
               "params": [],
@@ -1195,20 +1159,14 @@
         "conditions": [
           {
             "evaluator": {
-              "params": [
-                80
-              ],
+              "params": [80],
               "type": "gt"
             },
             "operator": {
               "type": "and"
             },
             "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
+              "params": ["A", "5m", "now"]
             },
             "reducer": {
               "params": [],
@@ -1490,20 +1448,14 @@
         "conditions": [
           {
             "evaluator": {
-              "params": [
-                80
-              ],
+              "params": [80],
               "type": "gt"
             },
             "operator": {
               "type": "and"
             },
             "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
+              "params": ["A", "5m", "now"]
             },
             "reducer": {
               "params": [],
@@ -1798,20 +1750,14 @@
         "conditions": [
           {
             "evaluator": {
-              "params": [
-                80
-              ],
+              "params": [80],
               "type": "gt"
             },
             "operator": {
               "type": "and"
             },
             "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
+              "params": ["A", "5m", "now"]
             },
             "reducer": {
               "params": [],
@@ -2097,20 +2043,14 @@
         "conditions": [
           {
             "evaluator": {
-              "params": [
-                80
-              ],
+              "params": [80],
               "type": "gt"
             },
             "operator": {
               "type": "and"
             },
             "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
+              "params": ["A", "5m", "now"]
             },
             "reducer": {
               "params": [],
@@ -2393,10 +2333,7 @@
   "refresh": "1m",
   "schemaVersion": 26,
   "style": "dark",
-  "tags": [
-    "tools",
-    "loki"
-  ],
+  "tags": ["tools", "loki"],
   "templating": {
     "list": []
   },
@@ -2416,17 +2353,7 @@
       "2h",
       "1d"
     ],
-    "time_options": [
-      "5m",
-      "15m",
-      "1h",
-      "6h",
-      "12h",
-      "24h",
-      "2d",
-      "7d",
-      "30d"
-    ]
+    "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
   },
   "timezone": "",
   "title": "Loki stack monitoring (Promtail, Loki)",
