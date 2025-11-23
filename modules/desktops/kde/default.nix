@@ -63,6 +63,8 @@
 
     # Qt/KDE Support Packages
     pinentry-qt
+    ibus
+    ibus-with-plugins
   ];
 
   services = {

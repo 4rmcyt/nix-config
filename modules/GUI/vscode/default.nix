@@ -44,9 +44,17 @@
 
           # Git & SCM
           github.copilot
-          anthropic.claude-code
         ]
         ++ (with pkgs.vscode-utils; [
+          # Claude Code with correct hash
+          (buildVscodeMarketplaceExtension {
+            mktplcRef = {
+              publisher = "anthropic";
+              name = "claude-code";
+              version = "2.0.47";
+              sha256 = "sha256-Do9fXSw7nK7Rk1qGyTceFUDLWnlmCiHYnqxTBnY6feY=";
+            };
+          })
           # Extensions from marketplace
           (buildVscodeMarketplaceExtension {
             mktplcRef = {
