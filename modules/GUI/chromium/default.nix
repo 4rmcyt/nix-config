@@ -13,6 +13,8 @@
         "--enable-zero-copy"
         "--enable-features=UseOzonePlatform"
         "--ozone-platform=wayland"
+        "--oauth2-client-id=77185425430.apps.googleusercontent.com"
+        "--oauth2-client-secret=REDACTED"
       ];
     };
     extensions = [
@@ -23,6 +25,12 @@
       "hlepfoohegkhhmjieoechaddaejaokhf" # Refined Github
       "gebbhagfogifgggkldgodflihgfeippi" # Return YouTube Dislike
       "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
+      "cimiefiiaegbelhefglklhhakcgmhkai" # Plasma integration
     ];
+
+    nativeMessagingHosts = {
+      browserpass = pkgs.browserpassChromium;
+      plasma-browser-integration = pkgs.kdePackages.plasma-browser-integration;
+    };
   };
 }
