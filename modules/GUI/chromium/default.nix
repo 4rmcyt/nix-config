@@ -1,43 +1,34 @@
 {
-  config,
-  lib,
+  pkgs,
   ...
 }:
 {
-  environment.systemPackages = [
-    config.programs.browsing.chromium.package
+  home.packages = with pkgs; [
+    (chromium.override {
+      enableWideVine = true;
+      commandLineArgs = [
+        "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo"
+        "--ignore-gpu-blocklist"
+        "--enable-zero-copy"
+        "--enable-features=UseOzonePlatform"
+        "--ozone-platform=wayland"
+      ];
+    })
   ];
 
   programs.chromium = {
-    enable = lib.mkDefault true;
+    enable = true;
     extraOpts = {
-      "AudioSandboxEnabled" = false;
-      "AutofillAddressEnabled" = false;
-      "AutofillCreditCardEnabled" = false;
-      "BlockThirdPartyCookies" = true;
-      "BraveAIChatEnabled" = 0; # Disable Brave AI Chat
-      "BraveNewsDisabled" = 1; # Disable Brave News
-      "BraveRewardsDisabled" = 1; # Disable Brave Rewards
-      "BraveTalkDisabled" = 1; # Disable Brave Talk
-      "BraveVPNDisabled" = 1; # Disable Brave VPN
-      "BraveWalletDisabled" = 1; # Disable Brave Wallet
-      "DefaultSearchProviderEnabled" = true;
-      "RestoreOnStartup" = 4; # Restore specified pages
-      "RestoreOnStartupURLs" = [ "https://start.v3rm1n.dev" ];
-      "MetricsReportingEnabled" = false;
-      "PasswordManagerEnabled" = false;
-      "SafeBrowsingExtendedReportingEnabled" = false;
+      "ExtensionManifestV2Availability" = 2;
     };
     extensions = [
-      "nngceckbapebfimnlniiiahkandclblb" # Bitwarden
-      "enamippconapkdmgfgjchkhakpfinmaj" # DeArrow
-      "oldceeleldhonbafppcapldpdifcinji" # LanguageTool
+      "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
+      "naepdomgkenhinolocfifgehidddafch" # Browserpass
       "bggfcpfjbdkhfhfmkjpbhnkhnpjjeomc" # Material Icons for GitHub
-      "pkehgijcmpdhfbdbbnkijodmdjhbjlgp" # Privacy Badger
-      #"ghmbeldphafepmbegfdlkpapadhbakde" # Proton Pass
+      "fkagelmloambgokoeokbpihmgpkbgbfm" # Indie Wiki Buddy
+      "hlepfoohegkhhmjieoechaddaejaokhf" # Refined Github
       "gebbhagfogifgggkldgodflihgfeippi" # Return YouTube Dislike
-      #"cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
-      "ponfpcnoihfmfllpaingbgckeeldkhle" # YouTube Enhancer
+      "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
     ];
   };
 }
