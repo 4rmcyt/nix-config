@@ -166,9 +166,9 @@
             "zfs"
           ];
         };
-        postgres = {
-          enable = true;
-        };
+        # postgres = {
+        #   enable = true;
+        # };
       };
 
       scrapeConfigs = [
@@ -192,12 +192,12 @@
             {targets = ["localhost:9100"];}
           ];
         }
-        {
-          job_name = "postgres-exporter";
-          static_configs = [
-            {targets = ["localhost:9187"];}
-          ];
-        }
+        # {
+        #   job_name = "postgres-exporter";
+        #   static_configs = [
+        #     {targets = ["localhost:9187"];}
+        #   ];
+        # }
         {
           job_name = "prometheus";
           static_configs = [{targets = ["localhost:${toString config.my.network.ports.prometheus}"];}];
