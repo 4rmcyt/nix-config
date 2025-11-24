@@ -29,7 +29,7 @@
     # ../../../modules/GUI/ollama
     # ../../../modules/GUI/OBS
 
-    ../../../modules/GUI/chrome
+    ../../../modules/GUI/chromium
   ];
 
   # =================================================================
