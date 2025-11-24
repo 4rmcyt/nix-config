@@ -235,7 +235,6 @@
         # =============================================================
         # Desktop Applications
         # =============================================================
-        telegram-desktop
         ayugram-desktop
         # jellyfin-media-player
 
