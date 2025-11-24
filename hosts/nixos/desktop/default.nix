@@ -135,6 +135,7 @@
         "https://devenv.cachix.org?priority=9"
         "https://nix-gaming.cachix.org?priority=10"
         "https://watersucks.cachix.org?priority=11"
+        "https://cache.garnix.io?priority=2"
       ];
 
       # Desktop-specific system features
@@ -158,6 +159,7 @@
         "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
         "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
         "watersucks.cachix.org-1:6gadPC5R8iLWQ3EUtfu3GFrVY7X6I4Fwz/ihW25Jbv8="
+        "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
       ];
 
       trusted-users = [
@@ -234,6 +236,7 @@
         # Desktop Applications
         # =============================================================
         telegram-desktop
+        ayugram-desktop
         # jellyfin-media-player
 
         # =============================================================

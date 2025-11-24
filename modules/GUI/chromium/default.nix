@@ -13,12 +13,17 @@
           "--enable-zero-copy"
           "--enable-features=UseOzonePlatform"
           "--ozone-platform=wayland"
-          "--oauth2-client-id=839524313676-1k175brl5r4fvmi049iovjht5cqvfkvr.apps.googleusercontent.com"
-          "--oauth2-api-key=REDACTED"
         ];
       })
     ]
   );
+
+  # Set Google API credentials for Chromium sync
+  environment.sessionVariables = {
+    GOOGLE_API_KEY = "REDACTED";
+    GOOGLE_DEFAULT_CLIENT_ID = "839524313676-1k175brl5r4fvmi049iovjht5cqvfkvr.apps.googleusercontent.com";
+    GOOGLE_DEFAULT_CLIENT_SECRET = "REDACTED";
+  };
   programs.chromium = {
     enable = true;
     enablePlasmaBrowserIntegration = true;
