@@ -48,7 +48,6 @@
       description = "Prometheus daemon user";
       group = "prometheus";
     };
-    # Note: loki and promtail users/groups are created by their respective NixOS modules
     uptime-kuma = {
       isSystemUser = true;
       description = "Uptime Kuma user";
@@ -60,7 +59,6 @@
     grafana = {};
     nut-exporter = {};
     prometheus = {};
-    # Note: loki and promtail groups are created by their respective NixOS modules
     uptime-kuma = {};
   };
 
