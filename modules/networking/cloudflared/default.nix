@@ -32,12 +32,8 @@
       ingress:
         - hostname: jellyfin.${config.my.defaults.domain}
           service: http://localhost:8096
-        - hostname: paperless.${config.my.defaults.domain}
-          service: http://localhost:8888
         - hostname: home.${config.my.defaults.domain}
           service: http://localhost:8082
-        - hostname: hass.${config.my.defaults.domain}
-          service: http://localhost:8123
         - hostname: miniflux.${config.my.defaults.domain}
           service: http://localhost:8086
         - hostname: transmission.${config.my.defaults.domain}
@@ -60,8 +56,6 @@
           service: http://localhost:6767
         - hostname: jellyseerr.${config.my.defaults.domain}
           service: http://localhost:5055
-        - hostname: ollama.${config.my.defaults.domain}
-          service: http://localhost:11434
         - hostname: vault.${config.my.defaults.domain}
           service: http://localhost:8222
         - hostname: kuma.${config.my.defaults.domain}
@@ -70,12 +64,8 @@
           service: http://localhost:9000
         - hostname: grafana.${config.my.defaults.domain}
           service: http://localhost:3003
-        - hostname: tdarr.${config.my.defaults.domain}
-          service: http://localhost:8265
         - hostname: readarr.${config.my.defaults.domain}
           service: http://localhost:8787
-        - hostname: loki.${config.my.defaults.domain}
-          service: http://localhost:3100
         - hostname: atuin.${config.my.defaults.domain}
           service: http://localhost:8881
         - service: http_status:404
@@ -111,3 +101,15 @@
     };
   };
 }
+
+
+        # - hostname: loki.${config.my.defaults.domain}
+        #   service: http://localhost:3100
+        # - hostname: ollama.${config.my.defaults.domain}
+        #   service: http://localhost:11434
+        # - hostname: hass.${config.my.defaults.domain}
+        #   service: http://localhost:8123
+        # - hostname: paperless.${config.my.defaults.domain}
+        #   service: http://localhost:8888
+        # - hostname: tdarr.${config.my.defaults.domain}
+        #   service: http://localhost:8265
