@@ -209,6 +209,7 @@
 
     # Build & deployment tools
     prometheus-cloudflare-exporter
+    betula
 
     # Text processing
     gawk

@@ -36,6 +36,7 @@
       "gebbhagfogifgggkldgodflihgfeippi" # Return YouTube Dislike
       "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
       "cimiefiiaegbelhefglklhhakcgmhkai" # Plasma integration
+      "olnngmhgopdgnfenhimlmnmemadhofdd" # Miniflux injector
     ];
 
     extraOpts = {
