@@ -1,9 +1,8 @@
 {
   config,
-  lib,
   ...
 }: let
-  domain = config.my.defaults.domain;
+  inherit (config.my.defaults) domain;
   proxyPort = 4180;
 
   # Helper function to add OAuth2 authentication to nginx locations
@@ -57,93 +56,119 @@ in {
   services.nginx.virtualHosts = {
     # Homepage Dashboard
     "home.${domain}" = {
-      locations = oauth2ProxyLocations // {
-        "/" = mkAuthLocation "http://localhost:8082";
-      };
+      locations =
+        oauth2ProxyLocations
+        // {
+          "/" = mkAuthLocation "http://localhost:8082";
+        };
     };
 
     # Kavita
     "kavita.${domain}" = {
-      locations = oauth2ProxyLocations // {
-        "/" = mkAuthLocation "http://localhost:5000";
-      };
+      locations =
+        oauth2ProxyLocations
+        // {
+          "/" = mkAuthLocation "http://localhost:5000";
+        };
     };
 
     # Microbin
     "microbin.${domain}" = {
-      locations = oauth2ProxyLocations // {
-        "/" = mkAuthLocation "http://localhost:8069";
-      };
+      locations =
+        oauth2ProxyLocations
+        // {
+          "/" = mkAuthLocation "http://localhost:8069";
+        };
     };
 
     # Miniflux
     "miniflux.${domain}" = {
-      locations = oauth2ProxyLocations // {
-        "/" = mkAuthLocation "http://localhost:8086";
-      };
+      locations =
+        oauth2ProxyLocations
+        // {
+          "/" = mkAuthLocation "http://localhost:8086";
+        };
     };
 
     # Jellyfin
     "jellyfin.${domain}" = {
-      locations = oauth2ProxyLocations // {
-        "/" = mkAuthLocation "http://localhost:8096";
-      };
+      locations =
+        oauth2ProxyLocations
+        // {
+          "/" = mkAuthLocation "http://localhost:8096";
+        };
     };
 
     # Sonarr
     "sonarr.${domain}" = {
-      locations = oauth2ProxyLocations // {
-        "/" = mkAuthLocation "http://localhost:8989";
-      };
+      locations =
+        oauth2ProxyLocations
+        // {
+          "/" = mkAuthLocation "http://localhost:8989";
+        };
     };
 
     # Radarr
     "radarr.${domain}" = {
-      locations = oauth2ProxyLocations // {
-        "/" = mkAuthLocation "http://localhost:7878";
-      };
+      locations =
+        oauth2ProxyLocations
+        // {
+          "/" = mkAuthLocation "http://localhost:7878";
+        };
     };
 
     # Prowlarr
     "prowlarr.${domain}" = {
-      locations = oauth2ProxyLocations // {
-        "/" = mkAuthLocation "http://localhost:9696";
-      };
+      locations =
+        oauth2ProxyLocations
+        // {
+          "/" = mkAuthLocation "http://localhost:9696";
+        };
     };
 
     # Bazarr
     "bazarr.${domain}" = {
-      locations = oauth2ProxyLocations // {
-        "/" = mkAuthLocation "http://localhost:6767";
-      };
+      locations =
+        oauth2ProxyLocations
+        // {
+          "/" = mkAuthLocation "http://localhost:6767";
+        };
     };
 
     # Lidarr
     "lidarr.${domain}" = {
-      locations = oauth2ProxyLocations // {
-        "/" = mkAuthLocation "http://localhost:8686";
-      };
+      locations =
+        oauth2ProxyLocations
+        // {
+          "/" = mkAuthLocation "http://localhost:8686";
+        };
     };
 
     # Readarr
     "readarr.${domain}" = {
-      locations = oauth2ProxyLocations // {
-        "/" = mkAuthLocation "http://localhost:8787";
-      };
+      locations =
+        oauth2ProxyLocations
+        // {
+          "/" = mkAuthLocation "http://localhost:8787";
+        };
     };
 
     # Jellyseerr
     "jellyseerr.${domain}" = {
-      locations = oauth2ProxyLocations // {
-        "/" = mkAuthLocation "http://localhost:5055";
-      };
+      locations =
+        oauth2ProxyLocations
+        // {
+          "/" = mkAuthLocation "http://localhost:5055";
+        };
     };
 
     # Audiobookshelf
     "audiobookshelf.${domain}" = {
-      locations = oauth2ProxyLocations // {
-        "/" = mkAuthLocation "http://localhost:9292";
-      };
+      locations =
+        oauth2ProxyLocations
+        // {
+          "/" = mkAuthLocation "http://localhost:9292";
+        };
     };
 
     # Grafana already has native Keycloak OAuth - no auth_request needed

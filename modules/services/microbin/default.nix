@@ -72,7 +72,8 @@ in {
           export MICROBIN_UPLOADER_PASSWORD=$(cat ''${CREDENTIALS_DIRECTORY}/uploader_password)
           exec ${pkgs.microbin}/bin/microbin
         '';
-      in pkgs.lib.mkForce "${startScript}";
+      in
+        pkgs.lib.mkForce "${startScript}";
     };
   };
 

@@ -1,48 +1,11 @@
-{
-  config,
-  ...
-}: let
+{config, ...}: let
   # OAuth2 Proxy configuration for Keycloak
   proxyPort = 4180;
 
   # Services to protect with OAuth2 Proxy
   # Format: { subdomain, internal_port, service_name }
-  protectedServices = [
-    { subdomain = "home"; port = 8082; name = "homepage-dashboard"; }
-    { subdomain = "kavita"; port = 5000; name = "kavita"; }
-    { subdomain = "microbin"; port = 8069; name = "microbin"; }
-    { subdomain = "miniflux"; port = 8086; name = "miniflux"; }
-    # Nixarr services
-    { subdomain = "jellyfin"; port = 8096; name = "jellyfin"; }
-    { subdomain = "sonarr"; port = 8989; name = "sonarr"; }
-    { subdomain = "radarr"; port = 7878; name = "radarr"; }
-    { subdomain = "prowlarr"; port = 9696; name = "prowlarr"; }
-    { subdomain = "bazarr"; port = 6767; name = "bazarr"; }
-    { subdomain = "lidarr"; port = 8686; name = "lidarr"; }
-    { subdomain = "readarr"; port = 8787; name = "readarr"; }
-    { subdomain = "jellyseerr"; port = 5055; name = "jellyseerr"; }
-    { subdomain = "audiobookshelf"; port = 9292; name = "audiobookshelf"; }
-  ];
 
   # Generate nginx auth_request configuration for each service
-  mkAuthRequestConfig = service: {
-    "https://${service.subdomain}.${config.my.defaults.domain}/oauth2/" = {
-      proxyPass = "http://127.0.0.1:${toString proxyPort}";
-      extraConfig = ''
-        proxy_set_header X-Scheme $scheme;
-        proxy_set_header X-Auth-Request-Redirect $scheme://$host$request_uri;
-      '';
-    };
-    "= /oauth2/auth" = {
-      proxyPass = "http://127.0.0.1:${toString proxyPort}";
-      extraConfig = ''
-        internal;
-        proxy_set_header X-Scheme $scheme;
-        proxy_set_header X-Original-URI $request_uri;
-        proxy_set_header X-Forwarded-Host $host;
-      '';
-    };
-  };
 in {
   # =================================================================
   # SOPS Secrets for OAuth2 Proxy
