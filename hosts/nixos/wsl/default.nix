@@ -60,71 +60,70 @@
   # =================================================================
   # 6. Nix Configuration
   # =================================================================
-  # nix.package is set by lix-module
-  nix = {
-    settings = {
-      access-tokens = "github.com=REDACTED";
-      cores = 0;
+  lix.enable = true;
 
-      experimental-features = [
-        "flakes"
-        "nix-command"
-      ];
+  nix.settings = {
+    access-tokens = "github.com=REDACTED";
+    cores = 0;
 
-      auto-optimise-store = true;
-      warn-dirty = false;
-      max-jobs = "auto"; # Auto-detect job count
-      keep-going = true; # Continue building other derivations on failure
+    experimental-features = [
+      "flakes"
+      "nix-command"
+    ];
 
-      # Network optimization for faster downloads
-      max-substitution-jobs = 4; # Parallel downloads
-      http-connections = 25; # More HTTP connections
-      connect-timeout = 5; # Faster timeout
+    auto-optimise-store = true;
+    warn-dirty = false;
+    max-jobs = "auto"; # Auto-detect job count
+    keep-going = true; # Continue building other derivations on failure
 
-      # Store optimization for better performance
-      keep-outputs = true; # Keep build dependencies for faster rebuilds
-      keep-derivations = true; # Keep derivations for faster evaluation
+    # Network optimization for faster downloads
+    max-substitution-jobs = 4; # Parallel downloads
+    http-connections = 25; # More HTTP connections
+    connect-timeout = 5; # Faster timeout
 
-      # Disk space management
-      min-free = 5368709120; # 5GB - trigger GC when less than 5GB free
-      max-free = 10737418240; # 10GB - stop GC when 10GB free
+    # Store optimization for better performance
+    keep-outputs = true; # Keep build dependencies for faster rebuilds
+    keep-derivations = true; # Keep derivations for faster evaluation
 
-      # Build performance improvements
-      builders-use-substitutes = true; # Allow builders to use substitutes
-      require-sigs = true; # Security: require signatures
+    # Disk space management
+    min-free = 5368709120; # 5GB - trigger GC when less than 5GB free
+    max-free = 10737418240; # 10GB - stop GC when 10GB free
 
-      system-features = [
-        "benchmark"
-        "big-parallel"
-        "gccarch-znver3"
-        "kvm"
-      ];
+    # Build performance improvements
+    builders-use-substitutes = true; # Allow builders to use substitutes
+    require-sigs = true; # Security: require signatures
 
-      substituters = [
-        "https://cache.nixos.org"
-        "https://4rmcyt-wsl.cachix.org"
-        "https://nix-community.cachix.org"
-        "https://numtide.cachix.org"
-        "https://cache.flox.dev"
-        "https://cuda-maintainers.cachix.org"
-        "https://cache.lix.systems"
-      ];
+    system-features = [
+      "benchmark"
+      "big-parallel"
+      "gccarch-znver3"
+      "kvm"
+    ];
 
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "4rmcyt-wsl.cachix.org-1:6Z2J6lPY35L3qxBgEYzyN0Q3Y6LCJhtz/YeY4VQ29BU="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
-        "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
-        "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
-        "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
-      ];
+    substituters = [
+      "https://cache.nixos.org"
+      "https://4rmcyt-wsl.cachix.org"
+      "https://nix-community.cachix.org"
+      "https://numtide.cachix.org"
+      "https://cache.flox.dev"
+      "https://cuda-maintainers.cachix.org"
+      "https://cache.lix.systems"
+    ];
 
-      trusted-users = [
-        "root"
-        "@wheel"
-      ];
-    };
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "4rmcyt-wsl.cachix.org-1:6Z2J6lPY35L3qxBgEYzyN0Q3Y6LCJhtz/YeY4VQ29BU="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+      "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+      "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
+      "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
+    ];
+
+    trusted-users = [
+      "root"
+      "@wheel"
+    ];
   };
 
   # =================================================================
