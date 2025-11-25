@@ -59,8 +59,8 @@
   # =================================================================
   # 6. Nix Configuration
   # =================================================================
+  # nix.package is set by lix-module
   nix = {
-    package = pkgs.nixVersions.latest;
     extraOptions = ''
       !include /run/secrets/nix_access_token
     '';

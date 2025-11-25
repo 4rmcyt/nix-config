@@ -84,9 +84,9 @@
   # =================================================================
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
+  # nix.package is set by lix-module
   nix = {
     channel.enable = true;
-    package = pkgs.nixVersions.latest;
     extraOptions = ''
       !include /run/secrets/nix_access_token
     '';
@@ -136,6 +136,7 @@
         "https://nix-gaming.cachix.org?priority=10"
         "https://watersucks.cachix.org?priority=11"
         "https://cache.garnix.io?priority=2"
+        "https://cache.lix.systems?priority=3"
       ];
 
       # Desktop-specific system features
@@ -160,6 +161,7 @@
         "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
         "watersucks.cachix.org-1:6gadPC5R8iLWQ3EUtfu3GFrVY7X6I4Fwz/ihW25Jbv8="
         "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+        "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
       ];
 
       trusted-users = [
