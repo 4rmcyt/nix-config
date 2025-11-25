@@ -102,6 +102,7 @@
         "https://yazi.cachix.org?priority=9"
         "https://devenv.cachix.org?priority=10"
         "https://nixpkgs-unfree.cachix.org?priority=11"
+        "https://cache.lix.systems"
       ];
 
       trusted-public-keys = [
@@ -113,6 +114,7 @@
         "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
         "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
         "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
+        "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
       ];
 
       trusted-users = [
