@@ -61,7 +61,7 @@
   # 6. Nix Configuration
   # =================================================================
   nix = {
-    package = pkgs.lix;
+    # package = pkgs.lix;
     settings = {
       access-tokens = "github.com=REDACTED";
       cores = 0;
