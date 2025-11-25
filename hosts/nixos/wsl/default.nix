@@ -1,6 +1,5 @@
 {
   pkgs,
-  inputs,
   ...
 }: {
   # =================================================================
@@ -8,9 +7,6 @@
   # =================================================================
   imports = [
     # External modules
-    inputs.nixos-wsl.nixosModules.wsl
-    inputs.vscode-server.nixosModules.default
-    inputs.lix-module.nixosModules.default
 
     # System base
     ../../../modules/base

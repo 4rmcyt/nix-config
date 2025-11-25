@@ -215,6 +215,7 @@
                 ./hosts/nixos/wsl
                 inputs.nixos-wsl.nixosModules.wsl
                 inputs.lix-module.nixosModules.default
+                inputs.vscode-server.nixosModules.default
               ]
               ++ (helpers.mkHome {
                 modules = [./home-manager/wsl];
