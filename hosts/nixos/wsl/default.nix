@@ -300,7 +300,9 @@
     users.git = {
       isSystemUser = true;
       description = "Git user";
+      group = "git";
     };
+    users.zeev.shell = pkgs.zsh;
     groups.git = {};
   };
 
