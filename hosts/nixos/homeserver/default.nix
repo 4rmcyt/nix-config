@@ -101,12 +101,10 @@
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
   # nix.package is set by lix-module
-  nix.extraOptions = ''
-    !include /run/secrets/nix_access_token
-  '';
+
   nix.settings = {
     cores = 0;
-
+    access-tokens = "github.com=REDACTED";
     experimental-features = [
       "flakes"
       "nix-command"

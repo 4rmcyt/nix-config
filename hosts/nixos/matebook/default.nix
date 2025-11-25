@@ -51,10 +51,8 @@
   # =================================================================
   # nix.package is set by lix-module
   nix = {
-    extraOptions = ''
-      !include /run/secrets/nix_access_token
-    '';
     settings = {
+      access-tokens = "github.com=REDACTED";
       cores = 0;
 
       experimental-features = [
