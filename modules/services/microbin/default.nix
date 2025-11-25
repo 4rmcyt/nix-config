@@ -1,10 +1,8 @@
 {
   config,
   pkgs,
-  lib,
   ...
-}:
-let
+}: let
   nordHighlight = builtins.toFile "nord.css" (builtins.readFile ./nord.css);
   nordUi = builtins.toFile "nord_ui.css" (builtins.readFile ./nord_ui.css);
   highlightJsNix = pkgs.fetchurl {
@@ -15,9 +13,7 @@ let
     url = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js";
     hash = "sha256-xKOZ3W9Ii8l6NUbjR2dHs+cUyZxXuUcxVMb7jSWbk4E=";
   };
-in
-{
-
+in {
   sops.secrets = {
     microbin_admin_password = {
       sopsFile = ../../../secrets/microbin.yaml;
@@ -79,7 +75,6 @@ in
         MICROBIN_ADMIN_USERNAME = "admin";
         MICROBIN_ADMIN_PASSWORD = config.sops.secrets.microbin_admin_password.path;
         MICROBIN_UPLOADER_PASSWORD = config.sops.secrets.microbin_uploader_password.path;
-
       };
     };
     # passwordFile = lib.literalExpression ''
