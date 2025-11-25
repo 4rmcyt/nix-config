@@ -1,6 +1,5 @@
 {...}: {
   imports = [
-    # ./filebrowser
     # ./home-assistant
     # ./linkwarden
     # ./paperless
