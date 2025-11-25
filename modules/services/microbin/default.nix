@@ -60,6 +60,22 @@ in {
       );
     })
   ];
+  systemd.services.microbin = {
+    serviceConfig = {
+      LoadCredential = [
+        "admin_password:${config.sops.secrets.microbin_admin_password.path}"
+        "uploader_password:${config.sops.secrets.microbin_uploader_password.path}"
+      ];
+      ExecStart = let
+        startScript = pkgs.writeShellScript "microbin-start" ''
+          export MICROBIN_ADMIN_PASSWORD=$(cat ''${CREDENTIALS_DIRECTORY}/admin_password)
+          export MICROBIN_UPLOADER_PASSWORD=$(cat ''${CREDENTIALS_DIRECTORY}/uploader_password)
+          exec ${pkgs.microbin}/bin/microbin
+        '';
+      in pkgs.lib.mkForce "${startScript}";
+    };
+  };
+
   services = {
     microbin = {
       enable = true;
@@ -74,17 +90,8 @@ in {
         MICROBIN_HIDE_HEADER = false;
         MICROBIN_HIDE_FOOTER = false;
         MICROBIN_ADMIN_USERNAME = "admin";
-        MICROBIN_ADMIN_PASSWORD = config.sops.secrets.microbin_admin_password.path;
-        MICROBIN_UPLOADER_PASSWORD = config.sops.secrets.microbin_uploader_password.path;
       };
     };
-    # passwordFile = lib.literalExpression ''
-    #   pkgs.writeText "microbin-secret.txt" '''
-    #     MICROBIN_ADMIN_USERNAME: admin
-    #     MICROBIN_ADMIN_PASSWORD: ${config.sops.secrets.microbin_admin_password.path}
-    #     MICROBIN_UPLOADER_PASSWORD: ${config.sops.secrets.microbin_uploader_password.path}
-    #   '''
-    # '';
 
     nginx = {
       enable = true;
