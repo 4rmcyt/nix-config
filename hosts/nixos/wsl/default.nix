@@ -60,8 +60,8 @@
   # =================================================================
   # 6. Nix Configuration
   # =================================================================
-  # nix.package is set by lix-module
   nix = {
+    package = pkgs.lix;
     settings = {
       access-tokens = "github.com=REDACTED";
       cores = 0;
