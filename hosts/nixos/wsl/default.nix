@@ -108,6 +108,7 @@
         "https://numtide.cachix.org"
         "https://cache.flox.dev"
         "https://cuda-maintainers.cachix.org"
+        "https://cache.lix.systems"
       ];
 
       trusted-public-keys = [
@@ -117,6 +118,7 @@
         "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
         "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
         "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
+        "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
       ];
 
       trusted-users = [
