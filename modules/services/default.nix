@@ -12,5 +12,6 @@
     ./miniflux
     ./nixarr
     ./atuin_server
+    ./microbin
   ];
 }
