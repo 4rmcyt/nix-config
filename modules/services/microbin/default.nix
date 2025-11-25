@@ -91,7 +91,7 @@ in {
       recommendedOptimisation = true;
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
-      virtualHosts."miniflux.${config.my.defaults.domain}" = {
+      virtualHosts."microbin.${config.my.defaults.domain}" = {
         forceSSL = true;
         sslCertificate = config.my.security.ssl.certPath;
         sslCertificateKey = config.my.security.ssl.keyPath;
