@@ -101,15 +101,14 @@
     };
   };
 }
+# - hostname: loki.${config.my.defaults.domain}
+#   service: http://localhost:3100
+# - hostname: ollama.${config.my.defaults.domain}
+#   service: http://localhost:11434
+# - hostname: hass.${config.my.defaults.domain}
+#   service: http://localhost:8123
+# - hostname: paperless.${config.my.defaults.domain}
+#   service: http://localhost:8888
+# - hostname: tdarr.${config.my.defaults.domain}
+#   service: http://localhost:8265
 
-
-        # - hostname: loki.${config.my.defaults.domain}
-        #   service: http://localhost:3100
-        # - hostname: ollama.${config.my.defaults.domain}
-        #   service: http://localhost:11434
-        # - hostname: hass.${config.my.defaults.domain}
-        #   service: http://localhost:8123
-        # - hostname: paperless.${config.my.defaults.domain}
-        #   service: http://localhost:8888
-        # - hostname: tdarr.${config.my.defaults.domain}
-        #   service: http://localhost:8265
