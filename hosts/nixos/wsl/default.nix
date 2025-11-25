@@ -60,8 +60,8 @@
   # =================================================================
   # 6. Nix Configuration
   # =================================================================
+  # nix.package is set by lix-module
   nix = {
-    # package = pkgs.lix;
     settings = {
       access-tokens = "github.com=REDACTED";
       cores = 0;
@@ -300,9 +300,7 @@
     users.git = {
       isSystemUser = true;
       description = "Git user";
-      group = "git";
     };
-    users.zeev.shell = pkgs.zsh;
     groups.git = {};
   };
 
