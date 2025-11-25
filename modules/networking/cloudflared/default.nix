@@ -38,8 +38,6 @@
           service: http://localhost:8086
         - hostname: transmission.${config.my.defaults.domain}
           service: http://${config.my.defaults.homeserver_lan}:9091
-        - hostname: cal.${config.my.defaults.domain}
-          service: http://localhost:5232
         - hostname: audiobookshelf.${config.my.defaults.domain}
           service: http://localhost:9292
         - hostname: kavita.${config.my.defaults.domain}
@@ -68,6 +66,8 @@
           service: http://localhost:8787
         - hostname: atuin.${config.my.defaults.domain}
           service: http://localhost:8881
+        - hostname: microbin.${config.my.defaults.domain}
+          service: http://localhost:8069
         - service: http_status:404
     '';
   };
@@ -110,5 +110,6 @@
 # - hostname: paperless.${config.my.defaults.domain}
 #   service: http://localhost:8888
 # - hostname: tdarr.${config.my.defaults.domain}
-#   service: http://localhost:8265
-
+# #   service: http://localhost:8265
+# - hostname: cal.${config.my.defaults.domain}
+#           service: http://localhost:5232
