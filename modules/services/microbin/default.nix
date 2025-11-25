@@ -19,20 +19,19 @@ in
 {
 
   sops.secrets = {
-    miniflux_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "miniflux_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
+    microbin_admin_password = {
+      sopsFile = ../../../secrets/microbin.yaml;
+      key = "admin_password";
+      owner = config.users.users.microbin.name;
+      group = config.users.groups.microbin.name;
       mode = "0400";
     };
-    miniflux_admin_creds = {
-      sopsFile = ../../../secrets/miniflux.env;
-      key = "miniflux_admin_creds";
-      owner = config.users.users.miniflux.name;
-      group = config.users.groups.miniflux.name;
-      mode = "0600";
-      format = "dotenv";
+    microbin_uploader_password = {
+      sopsFile = ../../../secrets/microbin.yaml;
+      key = "uploader_password";
+      owner = config.users.users.microbin.name;
+      group = config.users.groups.microbin.name;
+      mode = "0400";
     };
   };
 
@@ -73,19 +72,23 @@ in
         MICROBIN_PUBLIC_PATH = "https://miniflux.${config.my.defaults.domain}";
         MICROBIN_BIND = "127.0.0.1";
         MICROBIN_PORT = 8069;
-        MICROBIN_HIDE_LOGO = true;
+        MICROBIN_HIDE_LOGO = false;
         MICROBIN_HIGHLIGHTSYNTAX = true;
-        MICROBIN_HIDE_HEADER = true;
-        MICROBIN_HIDE_FOOTER = true;
+        MICROBIN_HIDE_HEADER = false;
+        MICROBIN_HIDE_FOOTER = false;
+        MICROBIN_ADMIN_USERNAME = "admin";
+        MICROBIN_ADMIN_PASSWORD = config.sops.secrets.microbin_admin_password.path;
+        MICROBIN_UPLOADER_PASSWORD = config.sops.secrets.microbin_uploader_password.path;
+
       };
     };
-    passwordFile = lib.literalExpression ''
-      pkgs.writeText "microbin-secret.txt" '''
-        MICROBIN_ADMIN_USERNAME
-        MICROBIN_ADMIN_PASSWORD
-        MICROBIN_UPLOADER_PASSWORD
-      '''
-    '';
+    # passwordFile = lib.literalExpression ''
+    #   pkgs.writeText "microbin-secret.txt" '''
+    #     MICROBIN_ADMIN_USERNAME: admin
+    #     MICROBIN_ADMIN_PASSWORD: ${config.sops.secrets.microbin_admin_password.path}
+    #     MICROBIN_UPLOADER_PASSWORD: ${config.sops.secrets.microbin_uploader_password.path}
+    #   '''
+    # '';
 
     nginx = {
       enable = true;
