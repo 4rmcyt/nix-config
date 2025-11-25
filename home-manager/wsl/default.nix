@@ -79,10 +79,13 @@
     ];
   };
 
-  programs = {
-    # ghostty configuration moved to shared module: ../../modules/GUI/ghostty
-    zsh.enable = true;
-  };
+  programs.zsh.enable = true;
+  # Override zsh profile for pyenv
+  programs.zsh.profileExtra = ''
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init --path)"
+  '';
 
   xdg = {
     enable = true;
