@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   ...
 }: let
   # OAuth2 Proxy configuration for Keycloak
