@@ -1,10 +1,8 @@
 {config, ...}: let
   # OAuth2 Proxy configuration for Keycloak
   proxyPort = 4180;
-
   # Services to protect with OAuth2 Proxy
   # Format: { subdomain, internal_port, service_name }
-
   # Generate nginx auth_request configuration for each service
 in {
   # =================================================================

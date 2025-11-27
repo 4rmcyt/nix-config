@@ -1,6 +1,6 @@
 {...}: {
   imports = [
-    ./authentik
+    ./keycloak
     ./fail2ban
   ];
 }

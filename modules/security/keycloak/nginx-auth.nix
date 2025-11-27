@@ -1,7 +1,4 @@
-{
-  config,
-  ...
-}: let
+{config, ...}: let
   inherit (config.my.defaults) domain;
   proxyPort = 4180;
 
