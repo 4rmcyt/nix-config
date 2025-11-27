@@ -48,9 +48,12 @@ in {
     # Keycloak configuration
     clientID = "oauth2-proxy";
 
+    # Dummy value - actual secret loaded from file via client-secret-file
+    clientSecret = "dummy";
+
     # OIDC configuration
     extraConfig = {
-      # Secrets loaded from files
+      # Secrets loaded from files (these override the dummy values above)
       client-secret-file = config.sops.secrets.oauth2_proxy_client_secret.path;
       cookie-secret-file = "%d/cookie_secret";
 
