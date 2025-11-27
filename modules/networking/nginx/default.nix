@@ -5,30 +5,24 @@
 }: let
   inherit (config.my.defaults) domain;
 
-  # Service to port mapping (from cloudflared domains list)
+  # Service to port mapping
+  # Note: Services with OAuth authentication are managed in modules/security/keycloak/nginx-auth.nix
+  # These are services that don't require OAuth or have their own authentication
   services = {
-    jellyfin = 8096;
-    audiobookshelf = 9292;
-    kavita = 5000;
+    # Services managed by keycloak/nginx-auth.nix (OAuth protected):
+    # jellyfin, audiobookshelf, kavita, sonarr, radarr, lidarr, readarr,
+    # bazarr, prowlarr, jellyseerr, miniflux, home, auth (keycloak)
+
+    # Services with their own auth or excluded from OAuth
     tdarr = 8265;
-    sonarr = 8989;
-    radarr = 7878;
-    lidarr = 8686;
-    readarr = 8787;
-    bazarr = 6767;
-    prowlarr = 9696;
-    jellyseerr = 5055;
     paperless = 8000;
-    miniflux = 8086;
     cal = 5232;
-    home = 8082;
     link = 3000;
     flare = 3001;
-    grafana = 3002;
+    grafana = 3002; # Has native Keycloak OAuth integration
     kuma = 5681;
     hass = 8123;
     vault = 8200;
-    auth = 9443;
     ollama = 11434;
   };
 

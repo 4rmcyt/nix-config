@@ -29,22 +29,8 @@
     5000 # Kavita
   ];
 
-  services.nginx = {
-    enable = true;
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
-    virtualHosts."kavita.${config.my.defaults.domain}" = {
-      forceSSL = true;
-      sslCertificate = config.my.security.ssl.certPath;
-      sslCertificateKey = config.my.security.ssl.keyPath;
-      locations."/" = {
-        proxyPass = "http://localhost:5000";
-        proxyWebsockets = true;
-      };
-    };
-  };
+  # Nginx configuration managed in modules/security/keycloak/nginx-auth.nix
+
   environment.systemPackages = [pkgs.kavita];
 
   services.kavita = {

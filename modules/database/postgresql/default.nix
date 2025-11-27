@@ -19,8 +19,8 @@
       secret = "hass";
     }
     {
-      name = "authentik";
-      secret = "authentik";
+      name = "keycloak";
+      secret = "keycloak";
     }
     {
       name = "grafana";
@@ -74,9 +74,9 @@ in {
       group = config.users.groups.postgresql.name;
       mode = "0400";
     };
-    authentik = {
+    keycloak = {
       sopsFile = ../../../secrets/postgresql.yaml;
-      key = "authentik_db_password";
+      key = "keycloak_db_password";
       owner = config.users.users.postgresql.name;
       group = config.users.groups.postgresql.name;
       mode = "0400";
@@ -143,7 +143,7 @@ in {
         ensureDBOwnership = true;
       }
       {
-        name = "authentik";
+        name = "keycloak";
         ensureDBOwnership = true;
       }
       {

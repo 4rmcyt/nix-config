@@ -39,22 +39,8 @@
     8888 # Paperless
   ];
 
-  services.nginx = {
-    enable = true;
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
-    virtualHosts."paperless.${config.my.defaults.domain}" = {
-      forceSSL = true;
-      sslCertificate = config.my.security.ssl.certPath;
-      sslCertificateKey = config.my.security.ssl.keyPath;
-      locations."/" = {
-        proxyPass = "http://localhost:8888";
-        proxyWebsockets = true;
-      };
-    };
-  };
+  # Nginx configuration managed in modules/networking/nginx/default.nix
+
   services.paperless = {
     enable = true;
     domain = "paperless.${config.my.defaults.domain}";

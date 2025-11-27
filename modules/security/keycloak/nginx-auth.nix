@@ -49,8 +49,32 @@
 in {
   # This module adds OAuth2 authentication to all nginx virtual hosts
   # It works by intercepting requests and checking authentication via oauth2-proxy
+  # Note: Base nginx configuration is in modules/networking/nginx/default.nix
 
   services.nginx.virtualHosts = {
+    # Keycloak authentication server
+    "auth.${domain}" = {
+      forceSSL = true;
+      sslCertificate = config.my.security.ssl.certPath;
+      sslCertificateKey = config.my.security.ssl.keyPath;
+
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:${toString config.services.keycloak.settings.http-port}";
+        proxyWebsockets = true;
+
+        extraConfig = ''
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-Host $host;
+          proxy_set_header X-Forwarded-Port $server_port;
+
+          # Increase buffer sizes for Keycloak
+          proxy_buffer_size 128k;
+          proxy_buffers 4 256k;
+          proxy_busy_buffers_size 256k;
+        '';
+      };
+    };
     # Homepage Dashboard
     "home.${domain}" = {
       locations =

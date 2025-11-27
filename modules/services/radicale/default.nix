@@ -20,22 +20,8 @@
 
   networking.firewall.allowedTCPPorts = [5232];
 
-  services.nginx = {
-    enable = true;
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
-    virtualHosts."cal.${config.my.defaults.domain}" = {
-      forceSSL = true;
-      sslCertificate = config.my.security.ssl.certPath;
-      sslCertificateKey = config.my.security.ssl.keyPath;
-      locations."/" = {
-        proxyPass = "http://localhost:5232";
-        proxyWebsockets = true;
-      };
-    };
-  };
+  # Nginx configuration managed in modules/networking/nginx/default.nix
+
   environment.systemPackages = [pkgs.radicale];
   services.radicale = {
     enable = true;

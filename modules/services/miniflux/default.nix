@@ -33,22 +33,7 @@
     8086 # Miniflux
   ];
 
-  services.nginx = {
-    enable = true;
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
-    virtualHosts."miniflux.${config.my.defaults.domain}" = {
-      forceSSL = true;
-      sslCertificate = config.my.security.ssl.certPath;
-      sslCertificateKey = config.my.security.ssl.keyPath;
-      locations."/" = {
-        proxyPass = "http://localhost:8086";
-        proxyWebsockets = true;
-      };
-    };
-  };
+  # Nginx configuration managed in modules/security/keycloak/nginx-auth.nix
 
   environment.systemPackages = [pkgs.miniflux];
   services.miniflux = {
