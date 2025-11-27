@@ -1,19 +1,20 @@
 {
-  config,
   pkgs,
-  lib,
+  config,
   ...
 }: let
-  # Realm configuration
-  realmName = "homelab";
   inherit (config.my.defaults) domain;
-
-  # Generate realm configuration JSON
-  realmConfig = pkgs.writeText "homelab-realm.json" (builtins.toJSON {
+  realmName = "homelab";
+  realm = {
     realm = realmName;
     enabled = true;
     displayName = "Homelab Services";
     displayNameHtml = "<div class=\"kc-logo-text\"><span>Homelab</span></div>";
+
+    authUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/auth";
+    tokenUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/token";
+    userInfoUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/userinfo";
+    logoutUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/logout";
 
     # Session and token settings
     ssoSessionIdleTimeout = 1800; # 30 minutes
@@ -38,7 +39,10 @@
     # WebAuthn (YubiKey/FIDO2) configuration
     webAuthnPolicyRpEntityName = "Homelab";
     webAuthnPolicyRpId = domain;
-    webAuthnPolicySignatureAlgorithms = ["ES256" "RS256"];
+    webAuthnPolicySignatureAlgorithms = [
+      "ES256"
+      "RS256"
+    ];
     webAuthnPolicyAttestationConveyancePreference = "none";
     webAuthnPolicyAuthenticatorAttachment = "cross-platform";
     webAuthnPolicyRequireResidentKey = "No";
@@ -50,7 +54,10 @@
     # WebAuthn Passwordless configuration
     webAuthnPolicyPasswordlessRpEntityName = "Homelab";
     webAuthnPolicyPasswordlessRpId = domain;
-    webAuthnPolicyPasswordlessSignatureAlgorithms = ["ES256" "RS256"];
+    webAuthnPolicyPasswordlessSignatureAlgorithms = [
+      "ES256"
+      "RS256"
+    ];
     webAuthnPolicyPasswordlessAttestationConveyancePreference = "none";
     webAuthnPolicyPasswordlessAuthenticatorAttachment = "cross-platform";
     webAuthnPolicyPasswordlessRequireResidentKey = "Yes";
@@ -99,39 +106,13 @@
       ];
     };
 
-    # Default groups
-    groups = [
-      {
-        name = "Users";
-        path = "/Users";
-        realmRoles = ["user"];
-      }
-      {
-        name = "Admins";
-        path = "/Admins";
-        realmRoles = ["admin" "user"];
-      }
-      {
-        name = "Grafana Admins";
-        path = "/Grafana Admins";
-        realmRoles = ["grafana-admin"];
-      }
-      {
-        name = "Grafana Editors";
-        path = "/Grafana Editors";
-        realmRoles = ["grafana-editor"];
-      }
-    ];
-
-    # OAuth2 Proxy client (for general service authentication)
     clients = [
       {
         clientId = "oauth2-proxy";
-        name = "OAuth2 Proxy";
         description = "OAuth2 Proxy for service authentication";
-        enabled = true;
+        rootUrl = "http://localhost:4180";
         clientAuthenticatorType = "client-secret";
-        secret = "PLACEHOLDER_OAUTH2_PROXY_SECRET"; # Replace via admin console or SOPS
+        secret = "@@OAUTH2_PROXY_CLIENT_SECRET@@";
         redirectUris = [
           "https://auth.${domain}/oauth2/callback"
           "https://*.${domain}/oauth2/callback"
@@ -157,7 +138,7 @@
         description = "Grafana monitoring dashboard";
         enabled = true;
         clientAuthenticatorType = "client-secret";
-        secret = "PLACEHOLDER_GRAFANA_SECRET"; # Replace via admin console or SOPS
+        secret = "@@GRAFANA_CLIENT_SECRET@@";
         redirectUris = [
           "https://grafana.${domain}/*"
         ];
@@ -187,8 +168,6 @@
         ];
       }
     ];
-
-    # Client scopes
     clientScopes = [
       {
         name = "roles";
@@ -200,8 +179,35 @@
         };
       }
     ];
+    # Users should be created manually via admin console or via API
+    # This ensures passwords are properly managed via SOPS secrets
+    users = [];
+    groups = [
+      {
+        name = "Users";
+        path = "/Users";
+        realmRoles = ["user"];
+      }
+      {
+        name = "Admins";
+        path = "/Admins";
+        realmRoles = [
+          "admin"
+          "user"
+        ];
+      }
+      {
+        name = "Grafana Admins";
+        path = "/Grafana Admins";
+        realmRoles = ["grafana-admin"];
+      }
+      {
+        name = "Grafana Editors";
+        path = "/Grafana Editors";
+        realmRoles = ["grafana-editor"];
+      }
+    ];
 
-    # Browser security headers
     browserSecurityHeaders = {
       contentSecurityPolicy = "frame-src 'self'; frame-ancestors 'self'; object-src 'none';";
       xContentTypeOptions = "nosniff";
@@ -213,7 +219,11 @@
 
     # Internationalization
     internationalizationEnabled = true;
-    supportedLocales = ["en" "de" "es" "fr" "it" "ja" "pt-BR" "ru" "zh-CN"];
+    supportedLocales = [
+      "en"
+      "ru"
+      "he"
+    ];
     defaultLocale = "en";
 
     # Events configuration
@@ -233,7 +243,6 @@
     adminEventsEnabled = true;
     adminEventsDetailsEnabled = true;
 
-    # Required actions - includes WebAuthn registration
     requiredActions = [
       {
         alias = "CONFIGURE_TOTP";
@@ -290,131 +299,16 @@
         config = {};
       }
     ];
-  });
+  };
 in {
-  sops.secrets = {
-    keycloak_admin_password = {
-      sopsFile = ../../../secrets/keycloak.yaml;
-      key = "keycloak_admin_password";
-      owner = config.users.users.keycloak.name;
-      group = config.users.groups.keycloak.name;
-      mode = "0400";
-    };
-    gmail_password = {
-      sopsFile = ../../../secrets/gmail_conf.yaml;
-      key = "gmail_password";
-      owner = config.users.users.keycloak.name;
-      group = config.users.groups.keycloak.name;
-      mode = "0400";
-    };
-  };
-  # Expose realm name as an option for other modules
-  options.my.keycloak = {
-    realm = lib.mkOption {
-      type = lib.types.str;
-      default = realmName;
-      description = "The name of the Keycloak realm";
-    };
+  # Expose the realm template for use by default.nix
+  # The template contains placeholders (@@OAUTH2_PROXY_CLIENT_SECRET@@, etc.)
+  # that will be substituted with SOPS secrets at runtime
+  services.keycloak.realmTemplate = pkgs.writeText "homelab-realm-template.json" (builtins.toJSON realm);
 
-    authUrl = lib.mkOption {
-      type = lib.types.str;
-      default = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/auth";
-      description = "OAuth authorization URL";
-    };
-
-    tokenUrl = lib.mkOption {
-      type = lib.types.str;
-      default = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/token";
-      description = "OAuth token URL";
-    };
-
-    userInfoUrl = lib.mkOption {
-      type = lib.types.str;
-      default = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/userinfo";
-      description = "OAuth userinfo URL";
-    };
-
-    logoutUrl = lib.mkOption {
-      type = lib.types.str;
-      default = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/logout";
-      description = "OAuth logout URL";
-    };
-  };
-
-  config = {
-    my.keycloak = {
-      realm = realmName;
-      authUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/auth";
-      tokenUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/token";
-      userInfoUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/userinfo";
-      logoutUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/logout";
-    };
-
-    # Add realm import systemd service
-    systemd.services.keycloak-realm-import = {
-      description = "Import Keycloak Realm Configuration";
-      after = ["keycloak.service"];
-      wantedBy = ["multi-user.target"];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        User = config.users.users.keycloak.name;
-        Group = config.users.groups.keycloak.name;
-      };
-
-      script = let
-        kcadm = "${pkgs.keycloak}/bin/kcadm.sh";
-        keycloakUrl = "http://127.0.0.1:${toString config.services.keycloak.settings.http-port}";
-      in ''
-        # Wait for Keycloak to be ready
-        echo "Waiting for Keycloak to start..."
-        for i in {1..60}; do
-          if ${pkgs.curl}/bin/curl -s ${keycloakUrl}/health/ready | grep -q "UP"; then
-            echo "Keycloak is ready!"
-            break
-          fi
-          if [ $i -eq 60 ]; then
-            echo "Timeout waiting for Keycloak to start"
-            exit 1
-          fi
-          sleep 2
-        done
-
-        # Read secrets
-        ADMIN_PASSWORD=$(cat ${config.sops.secrets.keycloak_admin_password.path})
-        GMAIL_PASSWORD=$(cat ${config.sops.secrets.gmail_password.path})
-
-        # Authenticate with Keycloak
-        ${kcadm} config credentials \
-          --server ${keycloakUrl} \
-          --realm master \
-          --user admin \
-          --password "$ADMIN_PASSWORD"
-
-        # Check if realm exists
-        if ${kcadm} get realms/${realmName} &>/dev/null; then
-          echo "Realm '${realmName}' already exists, updating..."
-          ${kcadm} update realms/${realmName} -f ${realmConfig}
-        else
-          echo "Creating realm '${realmName}'..."
-          ${kcadm} create realms -f ${realmConfig}
-        fi
-
-        # Configure SMTP settings (must be done via API as they're sensitive)
-        echo "Configuring SMTP settings..."
-        ${kcadm} update realms/${realmName} \
-          -s 'smtpServer.host=smtp.gmail.com' \
-          -s 'smtpServer.port=587' \
-          -s 'smtpServer.from=${config.my.defaults.email}' \
-          -s 'smtpServer.fromDisplayName=Homelab Auth' \
-          -s 'smtpServer.ssl=false' \
-          -s 'smtpServer.starttls=true' \
-          -s 'smtpServer.auth=true' \
-          -s 'smtpServer.user=${config.my.defaults.email}' \
-          -s "smtpServer.password=$GMAIL_PASSWORD"
-
-        echo "Realm configuration import completed successfully!"
-      '';
-    };
-  };
+  # Point Keycloak to the runtime-generated realm file
+  # The actual file is created by keycloak-prepare-realm.service in default.nix
+  services.keycloak.realmFiles = [
+    "/var/lib/keycloak/realm-configs/homelab-realm.json"
+  ];
 }

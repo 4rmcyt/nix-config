@@ -16,15 +16,15 @@ in {
     oauth2_proxy_client_secret = {
       sopsFile = ../../../secrets/keycloak.yaml;
       key = "oauth2_proxy_client_secret";
-      owner = "oauth2-proxy";
-      group = "oauth2-proxy";
+      owner = config.users.users.oauth2-proxy.name;
+      group = config.users.groups.oauth2-proxy.name;
       mode = "0400";
     };
     oauth2_proxy_cookie_secret = {
       sopsFile = ../../../secrets/keycloak.yaml;
       key = "oauth2_proxy_cookie_secret";
-      owner = "oauth2-proxy";
-      group = "oauth2-proxy";
+      owner = config.users.users.oauth2-proxy.name;
+      group = config.users.groups.oauth2-proxy.name;
       mode = "0400";
     };
   };

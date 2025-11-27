@@ -191,8 +191,5 @@ in {
           "/" = mkAuthLocation "http://localhost:9292";
         };
     };
-
-    # Grafana already has native Keycloak OAuth - no auth_request needed
-    # "grafana.${domain}" is managed in modules/monitoring/default.nix
   };
 }
