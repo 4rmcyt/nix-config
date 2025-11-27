@@ -211,7 +211,13 @@ in {
       # Set passwords for all database users, grant CREATEDB privilege, and ensure database exists
       ${lib.concatMapStringsSep "\n      " (user: ''
           # ${user.name}
-          ${pkgs.postgresql}/bin/psql -c "ALTER USER ${user.name} WITH PASSWORD '$(cat ${config.sops.secrets.${user.secret}.path} | tr -d '\n\r')' CREATEDB;"
+          if ${pkgs.postgresql}/bin/psql -c "SELECT 1 FROM pg_roles WHERE rolname='${user.name}'" | grep -q 1; then
+            echo "Updating user ${user.name}..."
+            ${pkgs.postgresql}/bin/psql -c "ALTER USER ${user.name} WITH PASSWORD '$(cat ${config.sops.secrets.${user.secret}.path} | tr -d '\n\r')' CREATEDB;"
+          else
+            echo "Creating user ${user.name}..."
+            ${pkgs.postgresql}/bin/psql -c "CREATE USER ${user.name} WITH PASSWORD '$(cat ${config.sops.secrets.${user.secret}.path} | tr -d '\n\r')' CREATEDB;"
+          fi
           if ! ${pkgs.postgresql}/bin/psql -lqt | cut -d \| -f 1 | grep -qw ${user.name}; then
             echo "Creating database ${user.name}..."
             ${pkgs.postgresql}/bin/psql -c "CREATE DATABASE ${user.name} OWNER ${user.name};"
