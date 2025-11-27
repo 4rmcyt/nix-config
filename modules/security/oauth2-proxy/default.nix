@@ -48,9 +48,13 @@ in {
 
     # Keycloak configuration
     clientID = "oauth2-proxy";
-    # Note: These should use keyFile options, but if not available, set via environment
-    # clientSecret loaded from environment variable OAUTH2_PROXY_CLIENT_SECRET
-    # cookie.secret loaded from environment variable OAUTH2_PROXY_COOKIE_SECRET
+
+    # Secrets loaded via keyFile
+    keyFile = config.sops.secrets.oauth2_proxy_client_secret.path;
+
+    cookie = {
+      secret = null; # Will be set via environment variable from LoadCredential
+    };
 
     # OIDC configuration
     extraConfig = {
@@ -101,9 +105,8 @@ in {
   # =================================================================
   systemd.services.oauth2-proxy = {
     serviceConfig = {
-      # Load secrets from SOPS
+      # Load cookie secret from SOPS
       LoadCredential = [
-        "client_secret:${config.sops.secrets.oauth2_proxy_client_secret.path}"
         "cookie_secret:${config.sops.secrets.oauth2_proxy_cookie_secret.path}"
       ];
 
@@ -118,11 +121,10 @@ in {
       CPUQuota = "50%";
     };
 
-    # Set environment variables from credentials
-    script = lib.mkBefore ''
-      export OAUTH2_PROXY_CLIENT_SECRET=$(cat $CREDENTIALS_DIRECTORY/client_secret)
-      export OAUTH2_PROXY_COOKIE_SECRET=$(cat $CREDENTIALS_DIRECTORY/cookie_secret)
-    '';
+    # Set cookie secret environment variable from credentials
+    environment = {
+      OAUTH2_PROXY_COOKIE_SECRET_FILE = "%d/cookie_secret";
+    };
   };
 
   # =================================================================
