@@ -10,6 +10,7 @@
     useGlobalPkgs = false;
     useUserPackages = true;
     backupFileExtension = "backup";
+    sharedModules = [{home.enableNixpkgsReleaseCheck = false;}];
   };
 
   userSpecificHomeManagerOptions = {
