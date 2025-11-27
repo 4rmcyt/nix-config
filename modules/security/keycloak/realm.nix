@@ -59,15 +59,19 @@
     webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister = false;
     webAuthnPolicyPasswordlessAcceptableAaguids = [];
 
-    # Email settings (configure your SMTP later)
+    # Email settings - Gmail SMTP
+    # Note: SMTP credentials are automatically configured from SOPS secrets
+    # Username: config.my.defaults.email
+    # Password: From secrets/gmail_conf.yaml (gmail_password key)
     smtpServer = {
-      # host = "smtp.example.com";
-      # port = "587";
-      # from = "noreply@${domain}";
-      # fromDisplayName = "Homelab Auth";
-      # ssl = "false";
-      # starttls = "true";
-      # auth = "true";
+      host = "smtp.gmail.com";
+      port = "587";
+      from = config.my.defaults.email;
+      fromDisplayName = "Homelab Auth";
+      ssl = "false";
+      starttls = "true";
+      auth = "true";
+      # Credentials are set automatically via realm import script
     };
 
     # Default roles
@@ -319,8 +323,9 @@ in {
         sleep 2
       done
 
-      # Read admin password
+      # Read secrets
       ADMIN_PASSWORD=$(cat ${config.sops.secrets.keycloak_admin_password.path})
+      GMAIL_PASSWORD=$(cat ${config.sops.secrets.gmail_password.path})
 
       # Authenticate with Keycloak
       ${kcadm} config credentials \
@@ -337,6 +342,19 @@ in {
         echo "Creating realm '${realmName}'..."
         ${kcadm} create realms -f ${realmConfig}
       fi
+
+      # Configure SMTP settings (must be done via API as they're sensitive)
+      echo "Configuring SMTP settings..."
+      ${kcadm} update realms/${realmName} \
+        -s 'smtpServer.host=smtp.gmail.com' \
+        -s 'smtpServer.port=587' \
+        -s 'smtpServer.from=${config.my.defaults.email}' \
+        -s 'smtpServer.fromDisplayName=Homelab Auth' \
+        -s 'smtpServer.ssl=false' \
+        -s 'smtpServer.starttls=true' \
+        -s 'smtpServer.auth=true' \
+        -s 'smtpServer.user=${config.my.defaults.email}' \
+        -s "smtpServer.password=$GMAIL_PASSWORD"
 
       echo "Realm configuration import completed successfully!"
     '';

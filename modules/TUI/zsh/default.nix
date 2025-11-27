@@ -51,6 +51,7 @@
 
       [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+      # Initialize zoxide at the end (required by zoxide doctor check)
       eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
     '';
 
