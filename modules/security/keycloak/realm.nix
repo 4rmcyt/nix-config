@@ -35,6 +35,30 @@
     maxDeltaTimeSeconds = 43200;
     failureFactor = 30;
 
+    # WebAuthn (YubiKey/FIDO2) configuration
+    webAuthnPolicyRpEntityName = "Homelab";
+    webAuthnPolicyRpId = domain;
+    webAuthnPolicySignatureAlgorithms = ["ES256" "RS256"];
+    webAuthnPolicyAttestationConveyancePreference = "none";
+    webAuthnPolicyAuthenticatorAttachment = "cross-platform";
+    webAuthnPolicyRequireResidentKey = "No";
+    webAuthnPolicyUserVerificationRequirement = "preferred";
+    webAuthnPolicyCreateTimeout = 60;
+    webAuthnPolicyAvoidSameAuthenticatorRegister = false;
+    webAuthnPolicyAcceptableAaguids = [];
+
+    # WebAuthn Passwordless configuration
+    webAuthnPolicyPasswordlessRpEntityName = "Homelab";
+    webAuthnPolicyPasswordlessRpId = domain;
+    webAuthnPolicyPasswordlessSignatureAlgorithms = ["ES256" "RS256"];
+    webAuthnPolicyPasswordlessAttestationConveyancePreference = "none";
+    webAuthnPolicyPasswordlessAuthenticatorAttachment = "cross-platform";
+    webAuthnPolicyPasswordlessRequireResidentKey = "Yes";
+    webAuthnPolicyPasswordlessUserVerificationRequirement = "required";
+    webAuthnPolicyPasswordlessCreateTimeout = 60;
+    webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister = false;
+    webAuthnPolicyPasswordlessAcceptableAaguids = [];
+
     # Email settings (configure your SMTP later)
     smtpServer = {
       # host = "smtp.example.com";
@@ -200,9 +224,69 @@
       "REGISTER_ERROR"
       "UPDATE_PASSWORD"
       "UPDATE_PASSWORD_ERROR"
+      "UPDATE_TOTP"
+      "REMOVE_TOTP"
     ];
     adminEventsEnabled = true;
     adminEventsDetailsEnabled = true;
+
+    # Required actions - includes WebAuthn registration
+    requiredActions = [
+      {
+        alias = "CONFIGURE_TOTP";
+        name = "Configure OTP";
+        providerId = "CONFIGURE_TOTP";
+        enabled = true;
+        defaultAction = false;
+        priority = 10;
+        config = {};
+      }
+      {
+        alias = "UPDATE_PASSWORD";
+        name = "Update Password";
+        providerId = "UPDATE_PASSWORD";
+        enabled = true;
+        defaultAction = false;
+        priority = 30;
+        config = {};
+      }
+      {
+        alias = "UPDATE_PROFILE";
+        name = "Update Profile";
+        providerId = "UPDATE_PROFILE";
+        enabled = true;
+        defaultAction = false;
+        priority = 40;
+        config = {};
+      }
+      {
+        alias = "VERIFY_EMAIL";
+        name = "Verify Email";
+        providerId = "VERIFY_EMAIL";
+        enabled = true;
+        defaultAction = false;
+        priority = 50;
+        config = {};
+      }
+      {
+        alias = "webauthn-register";
+        name = "WebAuthn Register";
+        providerId = "webauthn-register";
+        enabled = true;
+        defaultAction = false;
+        priority = 70;
+        config = {};
+      }
+      {
+        alias = "webauthn-register-passwordless";
+        name = "WebAuthn Register Passwordless";
+        providerId = "webauthn-register-passwordless";
+        enabled = true;
+        defaultAction = false;
+        priority = 80;
+        config = {};
+      }
+    ];
   });
 in {
   # Add realm import systemd service
