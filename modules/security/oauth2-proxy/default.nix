@@ -48,15 +48,12 @@ in {
     # Keycloak configuration
     clientID = "oauth2-proxy";
 
-    # Secrets loaded via keyFile
-    keyFile = config.sops.secrets.oauth2_proxy_client_secret.path;
-
-    cookie = {
-      secret = null; # Will be set via environment variable from LoadCredential
-    };
-
     # OIDC configuration
     extraConfig = {
+      # Secrets loaded from files
+      client-secret-file = config.sops.secrets.oauth2_proxy_client_secret.path;
+      cookie-secret-file = "%d/cookie_secret";
+
       oidc-issuer-url = "https://auth.${config.my.defaults.domain}/realms/master";
       redirect-url = "https://auth.${config.my.defaults.domain}/oauth2/callback";
 
@@ -118,11 +115,6 @@ in {
       # Resource limits
       MemoryMax = "256M";
       CPUQuota = "50%";
-    };
-
-    # Set cookie secret environment variable from credentials
-    environment = {
-      OAUTH2_PROXY_COOKIE_SECRET_FILE = "%d/cookie_secret";
     };
   };
 
