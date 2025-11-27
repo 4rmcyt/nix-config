@@ -49,73 +49,73 @@ in {
     postgres = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "postgres_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.postgres.name;
       mode = "0400";
     };
     miniflux = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "miniflux_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.postgres.name;
       mode = "0400";
     };
     paperless = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "paperless_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.postgres.name;
       mode = "0400";
     };
     hass = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "hass_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.postgres.name;
       mode = "0400";
     };
     keycloak = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "keycloak_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.postgres.name;
       mode = "0400";
     };
     grafana = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "grafana_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.postgres.name;
       mode = "0400";
     };
     vaultwarden = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "vaultwarden_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.postgres.name;
       mode = "0400";
     };
     linkwarden = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "linkwarden_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.postgres.name;
       mode = "0400";
     };
     flare = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "flare_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.postgres.name;
       mode = "0400";
     };
   };
 
-  users.users.postgresql = {
+  users.users.postgres = {
     isSystemUser = true;
-    group = "postgresql";
+    group = "postgres";
   };
-  users.groups.postgresql = {};
+  users.groups.postgres = {};
 
   networking.firewall.allowedTCPPorts = [
     5432 # PostgreSQL
