@@ -8,35 +8,35 @@
   dbUsers = [
     {
       name = "miniflux";
-      secret = "miniflux";
+      secret = "miniflux_db_password";
     }
     {
       name = "paperless";
-      secret = "paperless";
+      secret = "paperless_db_password";
     }
     {
       name = "hass";
-      secret = "hass";
+      secret = "hass_db_password";
     }
     {
       name = "keycloak";
-      secret = "keycloak";
+      secret = "keycloak_db_password";
     }
     {
       name = "grafana";
-      secret = "grafana";
+      secret = "grafana_db_password";
     }
     {
       name = "vaultwarden";
-      secret = "vaultwarden";
+      secret = "vaultwarden_db_password";
     }
     {
       name = "linkwarden";
-      secret = "linkwarden";
+      secret = "linkwarden_db_password";
     }
     {
       name = "flare";
-      secret = "flare";
+      secret = "flare_db_password";
     }
     {
       name = "atuin";
