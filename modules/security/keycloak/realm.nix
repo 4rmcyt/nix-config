@@ -301,14 +301,5 @@
     ];
   };
 in {
-  # Expose the realm template for use by default.nix
-  # The template contains placeholders (@@OAUTH2_PROXY_CLIENT_SECRET@@, etc.)
-  # that will be substituted with SOPS secrets at runtime
-  services.keycloak.realmTemplate = pkgs.writeText "homelab-realm-template.json" (builtins.toJSON realm);
-
-  # Point Keycloak to the runtime-generated realm file
-  # The actual file is created by keycloak-prepare-realm.service in default.nix
-  services.keycloak.realmFiles = [
-    "/var/lib/keycloak/realm-configs/homelab-realm.json"
-  ];
+  _module.args.keycloakRealmTemplate = pkgs.writeText "homelab-realm-template.json" (builtins.toJSON realm);
 }
