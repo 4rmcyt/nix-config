@@ -8,7 +8,6 @@
     # ./vaultwarden
     ./homepage
     ./kavita
-    ./keycloak
     ./miniflux
     ./nixarr
     ./atuin_server

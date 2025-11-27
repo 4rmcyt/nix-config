@@ -34,7 +34,7 @@
       "fkagelmloambgokoeokbpihmgpkbgbfm" # Indie Wiki Buddy
       "hlepfoohegkhhmjieoechaddaejaokhf" # Refined Github
       "gebbhagfogifgggkldgodflihgfeippi" # Return YouTube Dislike
-      "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
+      "ddkjiahejlhfcafbddmgiahcphecmpfh" # uBlock Origin light
       "cimiefiiaegbelhefglklhhakcgmhkai" # Plasma integration
       "olnngmhgopdgnfenhimlmnmemadhofdd" # Miniflux injector
     ];
