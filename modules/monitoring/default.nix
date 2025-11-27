@@ -13,7 +13,7 @@
     };
     grafana_db_password = {
       sopsFile = ../../secrets/postgresql.yaml;
-      owner = config.users.users.postgresql.name;
+      owner = config.users.users.postgres.name;
     };
     grafana_oauth_secret = {
       sopsFile = ../../secrets/authentik.yaml;

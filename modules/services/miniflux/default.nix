@@ -8,8 +8,8 @@
     miniflux_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "miniflux_db_password";
-      owner = config.users.users.postgresql.name;
-      group = config.users.groups.postgresql.name;
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.postgres.name;
       mode = "0400";
     };
     miniflux_admin_creds = {
