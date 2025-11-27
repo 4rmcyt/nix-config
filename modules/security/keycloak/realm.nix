@@ -293,73 +293,6 @@
     ];
   });
 in {
-  # Add realm import systemd service
-  systemd.services.keycloak-realm-import = {
-    description = "Import Keycloak Realm Configuration";
-    after = ["keycloak.service"];
-    wantedBy = ["multi-user.target"];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      User = config.users.users.keycloak.name;
-      Group = config.users.groups.keycloak.name;
-    };
-
-    script = let
-      kcadm = "${pkgs.keycloak}/bin/kcadm.sh";
-      keycloakUrl = "http://127.0.0.1:${toString config.services.keycloak.settings.http-port}";
-    in ''
-      # Wait for Keycloak to be ready
-      echo "Waiting for Keycloak to start..."
-      for i in {1..60}; do
-        if ${pkgs.curl}/bin/curl -s ${keycloakUrl}/health/ready | grep -q "UP"; then
-          echo "Keycloak is ready!"
-          break
-        fi
-        if [ $i -eq 60 ]; then
-          echo "Timeout waiting for Keycloak to start"
-          exit 1
-        fi
-        sleep 2
-      done
-
-      # Read secrets
-      ADMIN_PASSWORD=$(cat ${config.sops.secrets.keycloak_admin_password.path})
-      GMAIL_PASSWORD=$(cat ${config.sops.secrets.gmail_password.path})
-
-      # Authenticate with Keycloak
-      ${kcadm} config credentials \
-        --server ${keycloakUrl} \
-        --realm master \
-        --user admin \
-        --password "$ADMIN_PASSWORD"
-
-      # Check if realm exists
-      if ${kcadm} get realms/${realmName} &>/dev/null; then
-        echo "Realm '${realmName}' already exists, updating..."
-        ${kcadm} update realms/${realmName} -f ${realmConfig}
-      else
-        echo "Creating realm '${realmName}'..."
-        ${kcadm} create realms -f ${realmConfig}
-      fi
-
-      # Configure SMTP settings (must be done via API as they're sensitive)
-      echo "Configuring SMTP settings..."
-      ${kcadm} update realms/${realmName} \
-        -s 'smtpServer.host=smtp.gmail.com' \
-        -s 'smtpServer.port=587' \
-        -s 'smtpServer.from=${config.my.defaults.email}' \
-        -s 'smtpServer.fromDisplayName=Homelab Auth' \
-        -s 'smtpServer.ssl=false' \
-        -s 'smtpServer.starttls=true' \
-        -s 'smtpServer.auth=true' \
-        -s 'smtpServer.user=${config.my.defaults.email}' \
-        -s "smtpServer.password=$GMAIL_PASSWORD"
-
-      echo "Realm configuration import completed successfully!"
-    '';
-  };
-
   # Expose realm name as an option for other modules
   options.my.keycloak = {
     realm = lib.mkOption {
@@ -393,11 +326,80 @@ in {
     };
   };
 
-  config.my.keycloak = {
-    realm = realmName;
-    authUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/auth";
-    tokenUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/token";
-    userInfoUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/userinfo";
-    logoutUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/logout";
+  config = {
+    my.keycloak = {
+      realm = realmName;
+      authUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/auth";
+      tokenUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/token";
+      userInfoUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/userinfo";
+      logoutUrl = "https://auth.${domain}/realms/${realmName}/protocol/openid-connect/logout";
+    };
+
+    # Add realm import systemd service
+    systemd.services.keycloak-realm-import = {
+      description = "Import Keycloak Realm Configuration";
+      after = ["keycloak.service"];
+      wantedBy = ["multi-user.target"];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        User = config.users.users.keycloak.name;
+        Group = config.users.groups.keycloak.name;
+      };
+
+      script = let
+        kcadm = "${pkgs.keycloak}/bin/kcadm.sh";
+        keycloakUrl = "http://127.0.0.1:${toString config.services.keycloak.settings.http-port}";
+      in ''
+        # Wait for Keycloak to be ready
+        echo "Waiting for Keycloak to start..."
+        for i in {1..60}; do
+          if ${pkgs.curl}/bin/curl -s ${keycloakUrl}/health/ready | grep -q "UP"; then
+            echo "Keycloak is ready!"
+            break
+          fi
+          if [ $i -eq 60 ]; then
+            echo "Timeout waiting for Keycloak to start"
+            exit 1
+          fi
+          sleep 2
+        done
+
+        # Read secrets
+        ADMIN_PASSWORD=$(cat ${config.sops.secrets.keycloak_admin_password.path})
+        GMAIL_PASSWORD=$(cat ${config.sops.secrets.gmail_password.path})
+
+        # Authenticate with Keycloak
+        ${kcadm} config credentials \
+          --server ${keycloakUrl} \
+          --realm master \
+          --user admin \
+          --password "$ADMIN_PASSWORD"
+
+        # Check if realm exists
+        if ${kcadm} get realms/${realmName} &>/dev/null; then
+          echo "Realm '${realmName}' already exists, updating..."
+          ${kcadm} update realms/${realmName} -f ${realmConfig}
+        else
+          echo "Creating realm '${realmName}'..."
+          ${kcadm} create realms -f ${realmConfig}
+        fi
+
+        # Configure SMTP settings (must be done via API as they're sensitive)
+        echo "Configuring SMTP settings..."
+        ${kcadm} update realms/${realmName} \
+          -s 'smtpServer.host=smtp.gmail.com' \
+          -s 'smtpServer.port=587' \
+          -s 'smtpServer.from=${config.my.defaults.email}' \
+          -s 'smtpServer.fromDisplayName=Homelab Auth' \
+          -s 'smtpServer.ssl=false' \
+          -s 'smtpServer.starttls=true' \
+          -s 'smtpServer.auth=true' \
+          -s 'smtpServer.user=${config.my.defaults.email}' \
+          -s "smtpServer.password=$GMAIL_PASSWORD"
+
+        echo "Realm configuration import completed successfully!"
+      '';
+    };
   };
 }
