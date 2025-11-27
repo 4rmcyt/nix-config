@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   home = {
-    stateVersion = "25.05";
+    stateVersion = "24.11";
     username = "zeev";
     homeDirectory = "/home/zeev";
     packages = with pkgs; [

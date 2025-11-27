@@ -8,7 +8,7 @@
   home = {
     username = "zeev";
     homeDirectory = "/home/zeev";
-    stateVersion = "25.05";
+    stateVersion = "24.11";
 
     packages = with pkgs; [
       # Development tools
