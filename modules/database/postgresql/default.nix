@@ -126,7 +126,7 @@ in {
     package = pkgs.postgresql;
 
     # Automatically create databases for all app users
-    ensureDatabases = ["miniflux" "paperless" "hass" "authentik" "grafana" "vaultwarden" "linkwarden" "flare" "atuin"];
+    ensureDatabases = ["miniflux" "paperless" "hass" "authentik" "keycloak" "grafana" "vaultwarden" "linkwarden" "flare" "atuin"];
 
     # Automatically create users with DB ownership
     ensureUsers = [
