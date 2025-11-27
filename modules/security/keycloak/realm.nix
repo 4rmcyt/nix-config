@@ -71,7 +71,6 @@
       ssl = "false";
       starttls = "true";
       auth = "true";
-      # Credentials are set automatically via realm import script
     };
 
     # Default roles
@@ -293,6 +292,22 @@
     ];
   });
 in {
+  sops.secrets = {
+    keycloak_admin_password = {
+      sopsFile = ../../../secrets/keycloak.yaml;
+      key = "keycloak_admin_password";
+      owner = config.users.users.keycloak.name;
+      group = config.users.groups.keycloak.name;
+      mode = "0400";
+    };
+    gmail_password = {
+      sopsFile = ../../../secrets/gmail_conf.yaml;
+      key = "gmail_password";
+      owner = config.users.users.keycloak.name;
+      group = config.users.groups.keycloak.name;
+      mode = "0400";
+    };
+  };
   # Expose realm name as an option for other modules
   options.my.keycloak = {
     realm = lib.mkOption {
