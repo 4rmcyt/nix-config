@@ -22,7 +22,6 @@ Add the following keys:
 
 ```yaml
 keycloak_admin_password: your-secure-admin-password
-db_password: your-secure-database-password
 oauth2_proxy_client_secret: your-oauth2-proxy-client-secret
 oauth2_proxy_cookie_secret: your-cookie-secret-base64
 ```
