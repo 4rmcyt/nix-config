@@ -1,13 +1,29 @@
 {
   inputs = {
     # Core Nix ecosystem
+    empty-flake.url = "github:4rmcyt/empty-flake";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nix-systems.url = "github:nix-systems/default";
+    systems.url = "github:nix-systems/default";
+
+    nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
+
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-    systems.url = "github:nix-systems/default";
+
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.systems.follows = "nix-systems";
+    };
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     lix = {
       url = "https://git.lix.systems/lix-project/lix/archive/main.tar.gz";
@@ -35,7 +51,7 @@
     };
     # Home Manager
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -131,6 +147,29 @@
     firefox-nightly = {
       url = "github:nix-community/flake-firefox-nightly";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.utils.follows = "flake-utils";
+      inputs.flake-compat.follows = "empty-flake";
+    };
+    nixos-anywhere = {
+      url = "github:nix-community/nixos-anywhere";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.disko.follows = "empty-flake";
+      inputs.nixos-stable.follows = "empty-flake";
+      inputs.nixos-images.follows = "empty-flake";
+      inputs.treefmt-nix.follows = "empty-flake";
+    };
+
+    nixcord = {
+      url = "github:kaylorben/nixcord";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-compat.follows = "empty-flake";
+      inputs.flake-parts.follows = "flake-parts";
     };
 
     # Non-flake inputs

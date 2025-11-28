@@ -1,7 +1,4 @@
-{
-  config,
-  ...
-}: let
+{config, ...}: let
   # OAuth2 Proxy configuration for Keycloak
   proxyPort = 4180;
   # Services to protect with OAuth2 Proxy
