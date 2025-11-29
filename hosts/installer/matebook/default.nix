@@ -40,8 +40,9 @@
   # =================================================================
   # ISO Configuration
   # =================================================================
+  image.baseName = "nixos-installer-matebook";
+
   isoImage = {
-    isoBaseName = lib.mkForce "nixos-installer-matebook";
     makeEfiBootable = true;
     makeUsbBootable = true;
     squashfsCompression = "zstd -Xcompression-level 6";

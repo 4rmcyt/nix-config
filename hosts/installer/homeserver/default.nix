@@ -57,8 +57,9 @@ in {
   # =================================================================
   # ISO Configuration
   # =================================================================
+  image.baseName = "nixos-installer-homeserver";
+
   isoImage = {
-    isoBaseName = lib.mkForce "nixos-installer-homeserver";
     makeEfiBootable = true;
     makeUsbBootable = true;
     squashfsCompression = "zstd -Xcompression-level 6";
