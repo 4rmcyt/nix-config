@@ -184,36 +184,139 @@
   };
 
   outputs = inputs @ {
-    self,
     flake-parts,
     treefmt-nix,
-    nixpkgs,
     ...
   }: let
-    lib = nixpkgs.lib.extend (final: _prev: {
-      config = import ./lib/flake-helpers.nix self final;
-    });
-    hosts = import ./hosts.nix {inherit inputs;};
+    userName = "zeev";
+    helpers = import ./flakeHelpers.nix {inherit inputs userName;};
   in
-    flake-parts.lib.mkFlake {inherit inputs;}
+    flake-parts.lib.mkFlake
+    {
+      inherit inputs;
+      specialArgs = {inherit inputs;};
+    }
     {
       systems = import inputs.systems;
-      imports = [treefmt-nix.flakeModule inputs.devshell.flakeModule];
-
+      imports = [
+        treefmt-nix.flakeModule
+        inputs.devshell.flakeModule
+      ];
       perSystem = {pkgs, ...}: {
         devshells = import ./devshell.nix {inherit pkgs;};
         treefmt = import ./treefmt.nix {inherit pkgs;};
       };
 
       flake = {
-        nixosConfigurations =
-          lib.config.makeNixosConfigurations hosts.nixos
-          // lib.config.makeInstallers hosts.installers;
+        nixosConfigurations = {
+          desktop = helpers.mkHost {
+            modules =
+              [
+                ./hosts/nixos/desktop
+                ./modules/disko/desktop
+                inputs.disko.nixosModules.disko
+                inputs.nix-gaming.nixosModules.pipewireLowLatency
+                inputs.lanzaboote.nixosModules.lanzaboote
+                inputs.flatpaks.nixosModules.default
+                inputs.chaotic.nixosModules.nyx-cache
+                inputs.chaotic.nixosModules.nyx-overlay
+                inputs.lix-module.nixosModules.default
+              ]
+              ++ (helpers.mkHome {
+                modules = [
+                  ./home-manager/desktop
+                  inputs.plasma-manager.homeModules.plasma-manager
+                  inputs.betterfox-nix.homeModules.betterfox
+                  inputs.cosmic-manager.homeManagerModules.default
+                ];
+              });
+          };
 
-        homeConfigurations = lib.config.makeHomeConfigurations {
-          configs = hosts.home;
-          systems = import inputs.systems;
+          homeserver = helpers.mkHost {
+            modules =
+              [
+                ./hosts/nixos/homeserver
+                ./modules/disko/homeserver
+                inputs.disko.nixosModules.disko
+                inputs.nixarr.nixosModules.default
+                inputs.authentik-nix.nixosModules.default
+                inputs.vscode-server.nixosModules.default
+                inputs.lix-module.nixosModules.default
+              ]
+              ++ (helpers.mkHome {
+                modules = [./home-manager/homeserver];
+              });
+          };
+
+          wsl = helpers.mkHost {
+            modules =
+              [
+                ./hosts/nixos/wsl
+                inputs.nixos-wsl.nixosModules.wsl
+                inputs.lix-module.nixosModules.default
+                inputs.vscode-server.nixosModules.default
+              ]
+              ++ (helpers.mkHome {
+                modules = [./home-manager/wsl];
+              });
+          };
+
+          matebook = helpers.mkHost {
+            modules =
+              [
+                ./hosts/nixos/matebook
+                ./modules/disko/matebook
+                inputs.disko.nixosModules.disko
+                inputs.flatpaks.nixosModules.default
+                inputs.lix-module.nixosModules.default
+              ]
+              ++ (helpers.mkHome {
+                modules = [
+                  ./home-manager/matebook
+                  inputs.betterfox-nix.homeModules.betterfox
+                ];
+              });
+          };
+
+          installer-desktop = inputs.nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            specialArgs = {inherit inputs;};
+            modules = [
+              ./hosts/installer/desktop
+              inputs.flatpaks.nixosModules.default
+              inputs.sops-nix.nixosModules.sops
+              inputs.disko.nixosModules.disko
+              inputs.chaotic.nixosModules.nyx-cache
+              inputs.chaotic.nixosModules.nyx-overlay
+              {nixpkgs.config.allowUnfree = true;}
+            ];
+          };
+
+          installer-homeserver = inputs.nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            specialArgs = {inherit inputs;};
+            modules = [
+              ./hosts/installer/homeserver
+              inputs.sops-nix.nixosModules.sops
+              inputs.disko.nixosModules.disko
+              {nixpkgs.config.allowUnfree = true;}
+            ];
+          };
+
+          installer-matebook = inputs.nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            specialArgs = {inherit inputs;};
+            modules = [
+              ./hosts/installer/matebook
+              inputs.sops-nix.nixosModules.sops
+              inputs.disko.nixosModules.disko
+              {nixpkgs.config.allowUnfree = true;}
+            ];
+          };
         };
+
+        # Standalone home-manager configurations
+        homeConfigurations = import ./flakeHelpersHome.nix {inherit helpers inputs userName;};
       };
     };
 }

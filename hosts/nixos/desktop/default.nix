@@ -235,16 +235,7 @@
         # =============================================================
         # Desktop Applications
         # =============================================================
-        (pkgs.writeShellScriptBin "AyuGram" ''
-          export QT_QPA_PLATFORM=xcb
-          export QT_OPENGL=software
-          export QTWEBENGINE_CHROMIUM_FLAGS="--disable-gpu --disable-gpu-compositing --enable-features=UseOzonePlatform --ozone-platform=x11"
-          export LIBGL_ALWAYS_SOFTWARE=1
-          export QT_QUICK_BACKEND=software
-          export QT_XCB_GL_INTEGRATION=xcb_egl
-          exec ${pkgs.ayugram-desktop}/bin/AyuGram "$@"
-        '')
-        # jellyfin-media-player
+
 
         # =============================================================
         # Development Tools (desktop-specific)
