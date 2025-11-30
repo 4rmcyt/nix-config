@@ -47,7 +47,7 @@ in {
 
     # Dummy values - actual secrets loaded from files
     clientSecret = "dummy";
-    cookie.secret = "dummycookiesecretdummycookies"; # Must be exactly 32 bytes
+    cookie.secret = "12345678901234567890123456789012"; # Must be exactly 32 bytes
 
     # OIDC configuration
     extraConfig = {
