@@ -2,7 +2,7 @@
   # Define SOPS secret for the realm configuration
   sops.secrets.keycloak_realm = {
     sopsFile = ../../../secrets/keycloak-realm.json;
-    format = "binary";
+    format = "json";
     owner = config.users.users.keycloak.name;
     group = config.users.groups.keycloak.name;
     mode = "0400";
