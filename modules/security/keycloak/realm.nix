@@ -1,7 +1,4 @@
-{
-  config,
-  ...
-}: {
+{config, ...}: {
   # Define SOPS secret for the realm configuration
   sops.secrets.keycloak_realm = {
     sopsFile = ../../../secrets/keycloak-realm.json;
