@@ -1,14 +1,5 @@
-{config, ...}: {
-  # Define SOPS secret for the realm configuration
-  sops.secrets.keycloak_realm = {
-    sopsFile = ../../../secrets/keycloak-realm.json;
-    format = "json";
-    owner = config.users.users.keycloak.name;
-    group = config.users.groups.keycloak.name;
-    mode = "0400";
-  };
-
-  # The realm template path will point to the decrypted SOPS secret
-  # Runtime substitution happens in the keycloak-prepare-realm service
-  _module.args.keycloakRealmTemplate = config.sops.secrets.keycloak_realm.path;
+{...}: {
+  # The realm template is stored as a plain JSON file in the Nix store
+  # Secrets are injected at runtime by the keycloak-prepare-realm service
+  _module.args.keycloakRealmTemplate = ./homelab-realm.json;
 }
