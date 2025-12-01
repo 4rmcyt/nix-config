@@ -31,24 +31,24 @@
   # Generate kcadm commands for user creation
   createUserCommands = lib.concatMapStringsSep "\n" (user: ''
     # Check if user exists
-    USER_ID=$(${kcadm} get users -r homelab -q username=${user.username} --fields id --format csv --noquotes 2>/dev/null || true)
+    USER_ID=$(${kcadm} get users -r homelab -q username="${user.username}" --fields id --format csv --noquotes 2>/dev/null || true)
 
     if [ -z "$USER_ID" ]; then
       echo "Creating user: ${user.username}"
       ${kcadm} create users -r homelab \
-        -s username=${user.username} \
-        -s email=${user.email} \
+        -s username="${user.username}" \
+        -s email="${user.email}" \
         -s firstName="${user.firstName}" \
         -s lastName="${user.lastName}" \
-        -s enabled=${lib.boolToString user.enabled} \
+        -s enabled=${if user.enabled then "true" else "false"} \
         -s emailVerified=true
 
       # Get the newly created user ID
-      USER_ID=$(${kcadm} get users -r homelab -q username=${user.username} --fields id --format csv --noquotes)
+      USER_ID=$(${kcadm} get users -r homelab -q username="${user.username}" --fields id --format csv --noquotes)
 
       # Set temporary password (user must change on first login)
       echo "Setting temporary password for ${user.username}"
-      ${kcadm} set-password -r homelab --username ${user.username} --new-password "ChangeMe123!" --temporary
+      ${kcadm} set-password -r homelab --username "${user.username}" --new-password "ChangeMe123!" --temporary
     else
       echo "User ${user.username} already exists (ID: $USER_ID)"
     fi
