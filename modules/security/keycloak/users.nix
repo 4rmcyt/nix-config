@@ -85,21 +85,39 @@ in {
       ];
     };
 
+    path = with pkgs; [
+      curl
+      coreutils
+    ];
+
     script = ''
       set -e
 
       # Wait for Keycloak to be fully ready
       echo "Waiting for Keycloak to be ready..."
-      for i in {1..60}; do
-        if curl -sf http://127.0.0.1:9000/realms/homelab >/dev/null 2>&1; then
-          echo "Keycloak is ready!"
-          break
+      MAX_ATTEMPTS=90
+      SLEEP_TIME=3
+
+      for i in $(seq 1 $MAX_ATTEMPTS); do
+        if curl -sf http://127.0.0.1:9000/health/ready >/dev/null 2>&1; then
+          echo "Keycloak health check passed!"
+          # Give it a few more seconds to fully initialize
+          sleep 5
+          if curl -sf http://127.0.0.1:9000/realms/homelab >/dev/null 2>&1; then
+            echo "Keycloak is ready!"
+            break
+          fi
         fi
-        if [ $i -eq 60 ]; then
-          echo "Timeout waiting for Keycloak"
+
+        if [ $i -eq $MAX_ATTEMPTS ]; then
+          echo "Timeout waiting for Keycloak after $((MAX_ATTEMPTS * SLEEP_TIME)) seconds"
+          echo "Checking Keycloak status..."
+          systemctl status keycloak.service --no-pager -l || true
           exit 1
         fi
-        sleep 2
+
+        echo "Attempt $i/$MAX_ATTEMPTS - Keycloak not ready yet, waiting..."
+        sleep $SLEEP_TIME
       done
 
       # Get admin password
