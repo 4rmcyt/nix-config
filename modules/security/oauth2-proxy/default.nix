@@ -111,7 +111,6 @@ in {
       ];
 
       # Restart configuration - keep retrying until Keycloak is ready
-      Restart = "on-failure";
       RestartSec = "5s";
       StartLimitBurst = 10;
       StartLimitIntervalSec = 60;
