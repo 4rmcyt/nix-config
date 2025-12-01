@@ -11,25 +11,25 @@
   "app:go-back" = [
     {
       key = "ArrowLeft";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
   "app:go-forward" = [
     {
       key = "ArrowRight";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
   "app:open-sandbox-vault" = [
     {
       key = "'";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
   "app:open-settings" = [
     {
       key = ";";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
   "app:open-vault" = [
@@ -53,19 +53,19 @@
   "canvas:new-file" = [
     {
       key = "M";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
   "command-palette:open" = [
     {
       key = " ";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
   daily-notes = [
     {
       key = "D";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
   "editor:attach-file" = [
@@ -77,25 +77,25 @@
       ];
     }
   ];
-  "editor:delete-paragraph" = [ ];
-  "editor:follow-link" = [ ];
-  "editor:insert-link" = [ ];
+  "editor:delete-paragraph" = [];
+  "editor:follow-link" = [];
+  "editor:insert-link" = [];
   "editor:insert-table" = [
     {
       key = "T";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
-  "editor:open-link-in-new-leaf" = [ ];
-  "editor:open-link-in-new-split" = [ ];
-  "editor:open-link-in-new-window" = [ ];
+  "editor:open-link-in-new-leaf" = [];
+  "editor:open-link-in-new-split" = [];
+  "editor:open-link-in-new-window" = [];
   "editor:open-search" = [
     {
       key = "F";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
-  "editor:open-search-replace" = [ ];
+  "editor:open-search-replace" = [];
   "editor:rename-heading" = [
     {
       key = "R";
@@ -108,26 +108,26 @@
   "editor:save-file" = [
     {
       key = "S";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
     {
       key = "S";
-      modifiers = [ "Mod" ];
+      modifiers = ["Mod"];
     }
   ];
-  "editor:toggle-bold" = [ ];
-  "editor:toggle-checklist-status" = [ ];
+  "editor:toggle-bold" = [];
+  "editor:toggle-checklist-status" = [];
   "editor:toggle-comments" = [
     {
       key = "C";
-      modifiers = [ "Mod" ];
+      modifiers = ["Mod"];
     }
   ];
-  "editor:toggle-italics" = [ ];
+  "editor:toggle-italics" = [];
   "file-explorer:new-file" = [
     {
       key = "A";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
   "file-explorer:new-file-in-current-tab" = [
@@ -151,7 +151,7 @@
   "graph:open" = [
     {
       key = "G";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
   "graph:open-local" = [
@@ -163,8 +163,8 @@
       ];
     }
   ];
-  "markdown:add-metadata-property" = [ ];
-  "markdown:toggle-preview" = [ ];
+  "markdown:add-metadata-property" = [];
+  "markdown:toggle-preview" = [];
   "omnisearch:show-modal" = [
     {
       key = "L";
@@ -177,19 +177,19 @@
   "omnisearch:show-modal-infile" = [
     {
       key = "L";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
   "switcher:open" = [
     {
       key = "Enter";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
   "workspace:close" = [
     {
       key = "Q";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
   "workspace:close-others" = [
@@ -201,79 +201,79 @@
       ];
     }
   ];
-  "workspace:close-window" = [ ];
+  "workspace:close-window" = [];
   "workspace:copy-path" = [
     {
       key = "C";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
   "workspace:edit-file-title" = [
     {
       key = "R";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
-  "workspace:goto-last-tab" = [ ];
+  "workspace:goto-last-tab" = [];
   "workspace:new-tab" = [
     {
       key = "W";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
-  "workspace:next-tab" = [ ];
-  "workspace:previous-tab" = [ ];
+  "workspace:next-tab" = [];
+  "workspace:previous-tab" = [];
   "workspace:show-trash" = [
     {
       key = "\\";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
   "workspace:toggle-stacked-tabs" = [
     {
       key = "Tab";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
-  "workspace:undo-close-pane" = [ ];
+  "workspace:undo-close-pane" = [];
 
   # plugins
   "obsidian-minimal-settings:toggle-colorful-headings" = [
     {
       key = "U";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
   "obsidian-minimal-settings:toggle-minimal-focus-mode" = [
     {
       key = "I";
-      modifiers = [ "Alt" ];
+      modifiers = ["Alt"];
     }
   ];
 
   "app:toggle-left-sidebar" = [
     {
       "key" = "[";
-      "modifiers" = [ "Alt" ];
+      "modifiers" = ["Alt"];
     }
   ];
   "app:toggle-right-sidebar" = [
     {
       "key" = "]";
-      "modifiers" = [ "Alt" ];
+      "modifiers" = ["Alt"];
     }
   ];
   "editor:toggle-source" = [
     {
       "key" = " ";
-      "modifiers" = [ "Shift" ];
+      "modifiers" = ["Shift"];
     }
   ];
 
   "prettier:format-content" = [
     {
       "key" = "P";
-      "modifiers" = [ "Mod" ];
+      "modifiers" = ["Mod"];
     }
   ];
 }

@@ -14,7 +14,7 @@ in {
       key = "oauth2_proxy_client_secret";
       owner = config.users.users.oauth2-proxy.name;
       group = config.users.groups.oauth2-proxy.name;
-      mode = "0400";
+      mode = "0440";
     };
     oauth2_proxy_cookie_secret = {
       sopsFile = ../../../secrets/keycloak.yaml;
@@ -101,6 +101,9 @@ in {
   # Systemd Service Hardening
   # =================================================================
   systemd.services.oauth2-proxy = {
+    after = ["keycloak.service"];
+    wants = ["keycloak.service"];
+
     serviceConfig = {
       # Load cookie secret from SOPS
       LoadCredential = [

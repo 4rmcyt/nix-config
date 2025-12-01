@@ -1,12 +1,8 @@
-{
-  config,
-  ...
-}:
-
-[
+{config, ...}: [
   {
     name = "system-font";
-    text = # css
+    text =
+      # css
       ''
         body
           {
@@ -20,13 +16,15 @@
 
   {
     name = "stop-blinking-cursor";
-    text = # css
+    text =
+      # css
       ''.cm-cursorLayer { animation: none !important; }'';
   }
 
   {
     name = "helix-remove-statusbar";
-    text = # css
+    text =
+      # css
       ''
         .cm-hx-command-panel { display: none !important; }
         .cm-hx-status-panel  { display: none !important; }
@@ -35,7 +33,8 @@
 
   {
     name = "floating-statusbar";
-    text = # css
+    text =
+      # css
       ''
         body {
           --status-bar-position: absolute;
@@ -65,7 +64,8 @@
 
   {
     name = "docxer-hide";
-    text = # css
+    text =
+      # css
       ''
         #docxer-header { display: none !important;  }
       '';

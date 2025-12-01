@@ -172,6 +172,11 @@
       inputs.flake-parts.follows = "flake-parts";
     };
 
+    zellij-nix = {
+      url = "github:a-kenji/zellij-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Non-flake inputs
     cpu-microcodes = {
       url = "github:platomav/CPUMicrocodes";

@@ -4,16 +4,14 @@
   config,
   ...
 }:
-
-with pkgs.obsidian-plugins;
-let
+with pkgs.obsidian-plugins; let
   helixBinds = true;
-in
-
-{
-  target = lib.removePrefix (
-    config.hm.home.homeDirectory + "/"
-  ) config.hm.services.syncthing.settings.folders.notes.path;
+in {
+  target =
+    lib.removePrefix (
+      config.hm.home.homeDirectory + "/"
+    )
+    config.hm.services.syncthing.settings.folders.notes.path;
 
   settings = {
     app = {
@@ -34,48 +32,49 @@ in
     };
 
     themes = [
-      { pkg = minimal; }
+      {pkg = minimal;}
     ];
 
-    corePlugins = [
-      {
-        name = "canvas";
-        settings = {
-          newFileLocation = "folder";
-          newFileFolderPath = "Inbox";
-          defaultWheelBehavior = "zoom";
-          snapToObjects = true;
-          snapToGrid = true;
-          cardLabelVisibility = "hover";
-        };
-      }
-      {
-        name = "daily-notes";
-        settings = {
-          format = "YYYY-MM-DD";
-        };
-      }
-    ]
-    ++ [
-      "audio-recorder"
-      "bookmarks"
-      "command-palette"
-      "editor-status"
-      "file-explorer"
-      "graph"
-      "markdown-importer"
-      "note-composer"
-      "outgoing-link"
-      "outline"
-      "page-preview"
-      "properties"
-      "slash-command"
-      "slides"
-      "switcher"
-      "tag-pane"
-      "word-count"
-      "workspaces"
-    ];
+    corePlugins =
+      [
+        {
+          name = "canvas";
+          settings = {
+            newFileLocation = "folder";
+            newFileFolderPath = "Inbox";
+            defaultWheelBehavior = "zoom";
+            snapToObjects = true;
+            snapToGrid = true;
+            cardLabelVisibility = "hover";
+          };
+        }
+        {
+          name = "daily-notes";
+          settings = {
+            format = "YYYY-MM-DD";
+          };
+        }
+      ]
+      ++ [
+        "audio-recorder"
+        "bookmarks"
+        "command-palette"
+        "editor-status"
+        "file-explorer"
+        "graph"
+        "markdown-importer"
+        "note-composer"
+        "outgoing-link"
+        "outline"
+        "page-preview"
+        "properties"
+        "slash-command"
+        "slides"
+        "switcher"
+        "tag-pane"
+        "word-count"
+        "workspaces"
+      ];
 
     communityPlugins = [
       {
@@ -121,7 +120,7 @@ in
 
             removeExtraSpaces = false;
             addTrailingSpaces = true;
-            languageMappings = { };
+            languageMappings = {};
 
             formatOptions = {
               trailingComma = "es5";
@@ -140,7 +139,7 @@ in
         };
       }
 
-      { pkg = docxer; }
+      {pkg = docxer;}
     ];
 
     hotkeys = import ./binds.nix;

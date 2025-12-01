@@ -1,10 +1,4 @@
-{
-  pkgs,
-  ...
-}:
-
-{
-
+{pkgs, ...}: {
   hmPackages = with pkgs; [
     obsidian
   ];
