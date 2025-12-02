@@ -3,9 +3,7 @@
   lib,
   pkgs,
   ...
-}:
-
-{
+}: {
   imports = [
     ./themes/theme.kdl.nix
     ./layouts/default.kdl.nix
@@ -14,7 +12,7 @@
   programs.zellij = {
     enable = true;
     package = pkgs.zellij;
-    settings ={
+    settings = {
       on_force_close = "detach";
       simplified_ui = false;
       default_shell = lib.getExe pkgs.nushell;
