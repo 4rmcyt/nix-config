@@ -12,6 +12,11 @@
   #   # paperless = 1;
   #   # authentik = 2;
   # };
+  # Add more service users here when needed:
+  # Paperless user - database 1
+  # user paperless on >${config.sops.secrets.redis-paperless-password.path} ~paperless:* &* +@all -@dangerous
+  # Authentik user - database 2
+  # user authentik on >${config.sops.secrets.redis-authentik-password.path} ~* &* +@all -@dangerous
   # ACL configuration file generation
   # Each service gets its own user with access only to their database
   aclConfig = pkgs.writeText "redis-users.acl" ''
@@ -20,13 +25,6 @@
 
     # OAuth2 Proxy user - database 0
     user oauth2-proxy on >${config.sops.secrets.redis-oauth2-proxy-password.path} ~* &* +@all -@dangerous
-
-    # Add more service users here when needed:
-    # Paperless user - database 1
-    # user paperless on >${config.sops.secrets.redis-paperless-password.path} ~paperless:* &* +@all -@dangerous
-
-    # Authentik user - database 2
-    # user authentik on >${config.sops.secrets.redis-authentik-password.path} ~* &* +@all -@dangerous
   '';
 in {
   # =================================================================
