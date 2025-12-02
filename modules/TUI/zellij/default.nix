@@ -25,7 +25,7 @@
       copy_command = "${pkgs.wl-clipboard}/bin/wl-copy";
       copy_clipboard = "system";
       copy_on_select = true;
-      scrollback_editor = lib.getExe pkgs.hx;
+      scrollback_editor = lib.getExe pkgs.helix;
       mirror_session = true;
       layout_dirs = "${config.home.homeDirectory}/.config/zellij/layouts";
       theme_dirs = "${config.home.homeDirectory}/.config/zellij/themes";

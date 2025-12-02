@@ -86,7 +86,7 @@
       # =================================================================
       git
       git-crypt
-      gitAndTools.delta # pretty diff tool
+      delta # pretty diff tool
       gh # github cli tool
       glab # gitlab cli tool
 
