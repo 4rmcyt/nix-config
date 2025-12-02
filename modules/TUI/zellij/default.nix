@@ -17,7 +17,7 @@
     settings ={
       on_force_close = "detach";
       simplified_ui = false;
-      default_shell = lib.getExe pkgs.nu;
+      default_shell = lib.getExe pkgs.nushell;
       pane_frames = true;
       theme = "theme";
       default_layout = "default";
