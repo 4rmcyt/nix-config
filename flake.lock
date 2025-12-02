@@ -1880,11 +1880,10 @@
       },
       "locked": {
         "dir": "home_manager",
+        "dirtyRev": "f8d3d9638bec12b5e8c71660f2935d0fcb475e7e-dirty",
+        "dirtyShortRev": "f8d3d96-dirty",
         "lastModified": 1764526199,
-        "narHash": "sha256-lkvv0tP0k3ixgFN6GCAFgV9ptf6Av0iNCFFULommt6A=",
-        "ref": "refs/heads/main",
-        "rev": "f8d3d9638bec12b5e8c71660f2935d0fcb475e7e",
-        "revCount": 1078,
+        "narHash": "sha256-ZDXt/kz/X3yd5yDhvNd7JKH98ojflrOfTr76GcqTPoI=",
         "type": "git",
         "url": "file:///home/zeev/.config/yazelix"
       },
