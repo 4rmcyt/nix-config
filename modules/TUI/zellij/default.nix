@@ -1,19 +1,66 @@
-{pkgs, ...}: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+
+{
+  imports = [
+    ./themes/theme.kdl.nix
+    ./layouts/default.kdl.nix
+  ];
+
   programs.zellij = {
     enable = true;
     package = pkgs.zellij;
+    settings ={
+      on_force_close = "detach";
+      simplified_ui = false;
+      default_shell = lib.getExe pkgs.nu;
+      pane_frames = true;
+      theme = "theme";
+      default_layout = "default";
+      default_mode = "locked";
+      mouse_mode = true;
+      scroll_buffer_size = 25000;
+      copy_command = "${pkgs.wl-clipboard}/bin/wl-copy";
+      copy_clipboard = "system";
+      copy_on_select = true;
+      scrollback_editor = lib.getExe pkgs.hx;
+      mirror_session = true;
+      layout_dirs = "${config.home.homeDirectory}/.config/zellij/layouts";
+      theme_dirs = "${config.home.homeDirectory}/.config/zellij/themes";
+      env = {
+        RUST_BACKTRACE = 1;
+      };
+      ui = {
+        pane_frame = {
+          rounded_corners = true;
+          hide_session_name = true;
+        };
+      };
+      auto_layout = true;
+      styled_underlines = true;
+      session_serialization = true;
+      pane_viewport_serialization = false;
+      scrollback_lines_to_serialize = 0;
+      serialization_interval = 30;
+      disable_session_metadata = false;
+      stacked_resize = true;
+      show_startup_tips = false;
+      show_release_notes = true;
+      web_server = true;
+      web_server_ip = "127.0.0.1";
+      web_server_port = 8085;
+      web_client = true;
+      advanced_mouse_actions = true;
+    };
+    enableBashIntegration = lib.mkIf config.programs.bash.enable false;
+    enableZshIntegration = lib.mkIf config.programs.zsh.enable false;
   };
-  # See https://github.com/dj95/zjstatus/discussions/44 for some ricing ideas
-  # Use manual file until extraConfig PR is fixed
-  # home.file.".config/zellij/config.kdl".source = ./config.kdl;
-  # home.file.".config/zellij/layouts".source = ./layouts;
 
-  # programs.zsh = {
-  #   shellAliases = {
-  #     zl = "zellij";
-  #     zls = "zellij list-sessions";
-  #     zla = "zellij attach";
-  #   };
-  #   initContent = lib.readFile ./zellij_session_completions;
-  # };
+  home.shellAliases = {
+    zj = "zellij";
+  };
 }

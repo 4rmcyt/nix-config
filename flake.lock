@@ -902,11 +902,11 @@
     "lix": {
       "flake": false,
       "locked": {
-        "lastModified": 1764672350,
-        "narHash": "sha256-BSfur4W4yq35UOPdEN21A4sk+lGJS/U1M9fD7Pgz1qc=",
-        "rev": "06f987fb0c8f96730edc15599dd62705a37cfca5",
+        "lastModified": 1764705158,
+        "narHash": "sha256-odDOzewTaSFY47OAhKPox8NOfYKmeJ9EBAr1Y+ghPF8=",
+        "rev": "8353b3cc6a3e07b4a83518e9d8d90fb2d3492239",
         "type": "tarball",
-        "url": "https://git.lix.systems/api/v1/repos/lix-project/lix/archive/06f987fb0c8f96730edc15599dd62705a37cfca5.tar.gz?rev=06f987fb0c8f96730edc15599dd62705a37cfca5"
+        "url": "https://git.lix.systems/api/v1/repos/lix-project/lix/archive/8353b3cc6a3e07b4a83518e9d8d90fb2d3492239.tar.gz?rev=8353b3cc6a3e07b4a83518e9d8d90fb2d3492239"
       },
       "original": {
         "type": "tarball",
