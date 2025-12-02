@@ -1,5 +1,9 @@
 {
   inputs = {
+    yazelix-hm = {
+      url = "/home/zeev/.config/yazelix/home_manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # Core Nix ecosystem
     empty-flake.url = "github:4rmcyt/empty-flake";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";

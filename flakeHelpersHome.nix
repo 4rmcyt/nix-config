@@ -15,6 +15,7 @@
         inputs.plasma-manager.homeModules.plasma-manager
         inputs.cosmic-manager.homeManagerModules.cosmic-manager
         inputs.betterfox-nix.homeModules.betterfox
+        inputs.yazelix-hm.homeManagerModules.default
       ];
     };
 

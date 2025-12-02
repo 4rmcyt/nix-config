@@ -68,6 +68,8 @@
           service: http://localhost:8881
         - hostname: microbin.${config.my.defaults.domain}
           service: http://localhost:8069
+        - hostname: oauth2-proxy.${config.my.defaults.domain}
+          service: http://localhost:4180
         - service: http_status:404
     '';
   };

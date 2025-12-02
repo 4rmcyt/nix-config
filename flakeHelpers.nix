@@ -33,6 +33,7 @@
   commonHomeManagerModules = [
     inputs.sops-nix.homeManagerModules.sops
     inputs.agenix.homeManagerModules.default
+    inputs.yazelix-hm.homeManagerModules.default
   ];
 in {
   mkHost = {modules}:

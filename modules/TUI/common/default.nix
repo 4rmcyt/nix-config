@@ -34,7 +34,11 @@
         spinner = "#4C566A";
       };
       defaultCommand = "${pkgs.fd}/bin/fd --type f --color=always";
-      defaultOptions = ["--border" "--ansi" "--layout=reverse"];
+      defaultOptions = [
+        "--border"
+        "--ansi"
+        "--layout=reverse"
+      ];
       enable = true;
       enableZshIntegration = true;
     };
@@ -110,12 +114,15 @@
           lsp.display-messages = true;
           mouse = false;
           true-color = true;
+          keys.normal = {
+            "A-y" = ":sh nu ~/.config/yazelix/nushell/scripts/integrations/reveal_in_yazi.nu \"%{buffer_name}\"";
+          };
         };
         theme = "heisenberg";
       };
     };
 
-    rclone.enable = true;
+    rclone.enable = false;
 
     # SSH config managed at system level to avoid symlink permission issues
     ssh.enable = false;
