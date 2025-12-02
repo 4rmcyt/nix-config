@@ -70,6 +70,8 @@
           service: http://localhost:8069
         - hostname: oauth2-proxy.${config.my.defaults.domain}
           service: http://localhost:4180
+        - hostname: livesync.${config.my.defaults.domain}
+          service: http://localhost:5984
         - service: http_status:404
     '';
   };

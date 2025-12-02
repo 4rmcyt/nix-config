@@ -62,17 +62,11 @@ in {
         provider-display-name = "Keycloak";
         whitelist-domain = ["*.nukdokplex.ru"];
         session-store-type = "redis";
-        redis-connection-url = "unix://${config.services.redis.servers.oauth2-proxy.unixSocket}";
+        redis-connection-url = "unix://${config.services.redis.servers.homeserver.unixSocket}?username=oauth2-proxy&password=${config.sops.secrets.redis-oauth2-proxy-password.path}";
         # skip-jwt-bearer-tokens = true;
       };
       setXauthrequest = true;
       passAccessToken = true;
-    };
-
-    redis.servers.oauth2-proxy = {
-      enable = true;
-      unixSocketPerm = 660;
-      user = "oauth2-proxy";
     };
 
     nginx.virtualHosts.${config.services.oauth2-proxy.nginx.domain} = {
@@ -87,7 +81,8 @@ in {
   };
 
   systemd.services.oauth2-proxy = {
-    after = ["redis-oauth2-proxy.service"];
+    after = ["redis-homeserver.service"];
+    requires = ["redis-homeserver.service"];
     # Don't give up trying to start oauth2-proxy, even if keycloak isn't up yet
     # https://gist.github.com/benley/78a5e84c52131f58d18319bf26d52cda
     startLimitIntervalSec = 0;

@@ -42,7 +42,6 @@
       firefox
       ghostty
       ghostty.terminfo
-      obsidian
 
       # Nix utilities
       nix-output-monitor
