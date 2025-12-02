@@ -817,27 +817,6 @@
         "type": "github"
       }
     },
-    "home-manager_5": {
-      "inputs": {
-        "nixpkgs": [
-          "yazelix-hm",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1764636297,
-        "narHash": "sha256-S41K55kw+hWgDfgKmZ9/fMZ3F0BQDMvqFfE120fMHeE=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "ff067cfc619fdf6f82d50344e7d19ff2323f0827",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
     "import-tree": {
       "locked": {
         "lastModified": 1763762820,
@@ -1542,7 +1521,6 @@
         "systems": "systems_6",
         "treefmt-nix": "treefmt-nix",
         "vscode-server": "vscode-server",
-        "yazelix-hm": "yazelix-hm",
         "zellij-nix": "zellij-nix"
       }
     },
@@ -1868,29 +1846,6 @@
       "original": {
         "owner": "rasmus-kirk",
         "repo": "website-builder",
-        "type": "github"
-      }
-    },
-    "yazelix-hm": {
-      "inputs": {
-        "home-manager": "home-manager_5",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "dir": "home_manager",
-        "lastModified": 1764526199,
-        "narHash": "sha256-lkvv0tP0k3ixgFN6GCAFgV9ptf6Av0iNCFFULommt6A=",
-        "owner": "luccahuguet",
-        "repo": "yazelix",
-        "rev": "f8d3d9638bec12b5e8c71660f2935d0fcb475e7e",
-        "type": "github"
-      },
-      "original": {
-        "dir": "home_manager",
-        "owner": "luccahuguet",
-        "repo": "yazelix",
         "type": "github"
       }
     },
