@@ -1,7 +1,7 @@
 {
   inputs = {
     yazelix-hm = {
-      url = "/home/zeev/.config/yazelix/home_manager";
+      url = "github:luccahuguet/yazelix?dir=home_manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # Core Nix ecosystem

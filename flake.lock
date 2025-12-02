@@ -1880,18 +1880,18 @@
       },
       "locked": {
         "dir": "home_manager",
-        "lastModified": 1764701860,
-        "narHash": "sha256-5diWd1uWHtptVWqHrQHsTS7R0Q0cNrozTHLCIT7QAaQ=",
-        "ref": "refs/heads/main",
-        "rev": "bd8409481682cfcf4d558c6bcb127d8ae8eeae1a",
-        "revCount": 1080,
-        "type": "git",
-        "url": "file:///home/zeev/.config/yazelix"
+        "lastModified": 1764526199,
+        "narHash": "sha256-lkvv0tP0k3ixgFN6GCAFgV9ptf6Av0iNCFFULommt6A=",
+        "owner": "luccahuguet",
+        "repo": "yazelix",
+        "rev": "f8d3d9638bec12b5e8c71660f2935d0fcb475e7e",
+        "type": "github"
       },
       "original": {
         "dir": "home_manager",
-        "type": "git",
-        "url": "file:///home/zeev/.config/yazelix"
+        "owner": "luccahuguet",
+        "repo": "yazelix",
+        "type": "github"
       }
     },
     "zellij": {
