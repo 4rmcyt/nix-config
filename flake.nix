@@ -322,6 +322,21 @@
 
         # Standalone home-manager configurations
         homeConfigurations = import ./flakeHelpersHome.nix {inherit helpers inputs userName;};
+
+        # Deploy-rs configuration for remote deployments
+        deploy.nodes = {
+          homeserver = {
+            hostname = "homeserver";
+            profiles.system = {
+              sshUser = "zeev";
+              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.homeserver;
+              user = "root";
+            };
+          };
+        };
+
+        # Check deploy-rs configurations
+        checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
       };
     };
 }

@@ -2,16 +2,7 @@
   config,
   pkgs,
   ...
-}: let
-  # Centralized Redis configuration for homeserver
-  # Each service gets its own ACL user with access only to their database
-  # ACL configuration file
-  # Reference: https://redis.io/docs/management/security/acl/
-  aclUsers = pkgs.writeText "redis-users.acl" ''
-    user default off nopass ~* &* +@all
-    user oauth2-proxy on >${config.sops.secrets.redis-oauth2-proxy-password.path} ~* &* +@all -@dangerous resetchannels resetkeys
-  '';
-in {
+}: {
   # =================================================================
   # SOPS Secrets for Redis
   # =================================================================
@@ -44,7 +35,7 @@ in {
     enable = true;
 
     # Network configuration
-    bind = "127.0.0.1 ::1"; # Local only
+    bind = "127.0.0.1"; # Local only (IPv4)
     port = 6379;
 
     # Unix socket for better performance
@@ -56,8 +47,8 @@ in {
 
     # Security and configuration settings
     settings = {
-      # ACL configuration - load users from file
-      aclfile = "${aclUsers}";
+      # Disable default user for security
+      # ACL will be configured via post-start script
 
       # Resource limits
       maxmemory = "1GB";
@@ -92,7 +83,7 @@ in {
   ];
 
   # =================================================================
-  # Systemd Service Hardening
+  # Systemd Service Configuration
   # =================================================================
   systemd.services.redis-homeserver = {
     serviceConfig = {
@@ -130,12 +121,51 @@ in {
       SystemCallFilter = ["@system-service" "~@privileged"];
     };
   };
+
+  # =================================================================
+  # ACL Configuration via Post-Start Script
+  # =================================================================
+  systemd.services.redis-acl-setup = {
+    description = "Configure Redis ACL users with SOPS passwords";
+    after = ["redis-homeserver.service"];
+    requires = ["redis-homeserver.service"];
+    wantedBy = ["multi-user.target"];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      User = "redis";
+      Group = "redis";
+    };
+
+    script = ''
+      # Wait for Redis to be ready
+      for i in {1..30}; do
+        if ${pkgs.redis}/bin/redis-cli -s ${config.services.redis.servers.homeserver.unixSocket} ping 2>/dev/null | grep -q PONG; then
+          break
+        fi
+        sleep 1
+      done
+
+      # Read password from SOPS secret
+      OAUTH2_PASSWORD=$(cat ${config.sops.secrets.redis-oauth2-proxy-password.path})
+
+      # Configure ACL users
+      ${pkgs.redis}/bin/redis-cli -s ${config.services.redis.servers.homeserver.unixSocket} <<EOF
+      ACL SETUSER default off
+      ACL SETUSER oauth2-proxy on >"$OAUTH2_PASSWORD" ~* &* +@all -@dangerous resetchannels resetkeys
+      ACL SAVE
+      EOF
+    '';
+  };
 }
 # =================================================================
 # Configuration Notes
 # =================================================================
 # This Redis instance uses ACL-based authentication with separate users per service.
 # Each service has its own username and password with isolated access.
+#
+# ACL is configured at runtime via systemd service because passwords are in SOPS secrets.
 #
 # Database allocation:
 # - oauth2-proxy: database 0 (user: oauth2-proxy)
@@ -147,7 +177,7 @@ in {
 #
 # To add a new service:
 # 1. Add password secret in sops.secrets section above
-# 2. Add ACL user definition in aclUsers
+# 2. Add ACL SETUSER command in redis-acl-setup script
 # 3. Add service to users.groups.redis.members
 # 4. Add service group to users.users.redis.extraGroups
 # 5. Configure service to use unix socket with username and password
