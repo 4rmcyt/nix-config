@@ -48,7 +48,7 @@
         system = "x86_64-linux";
         maxJobs = 16;
         speedFactor = 2;
-        supportedFeatures = ["nixos-test" "benchmark" "big-parallel" "kvm"];
+        supportedFeatures = ["nixos-test" "benchmark" "big-parallel" "gccarch-skylake" "kvm"];
         publicHostKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEYURQfg2oU9NsUxV2ru/I/W5/mbUiGYplR1Fdepnole";
       }
     ];
