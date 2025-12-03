@@ -123,7 +123,6 @@
     };
   };
 }
-
 # =================================================================
 # Configuration Notes
 # =================================================================
@@ -139,3 +138,4 @@
 # - oauth2-proxy: database 0
 # - paperless: database 1 (when enabled)
 # - authentik: database 2 (when enabled)
+
