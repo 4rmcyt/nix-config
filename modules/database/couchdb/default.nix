@@ -1,6 +1,7 @@
 # CouchDB for Obsidian LiveSync
 # https://github.com/vrtmrz/obsidian-livesync
-_: {
+{ config, pkgs, ... }:
+{
   # =================================================================
   # SOPS Secrets for CouchDB
   # =================================================================
@@ -21,7 +22,7 @@ _: {
     isSystemUser = true;
     group = "couchdb";
   };
-  users.groups.couchdb = {};
+  users.groups.couchdb = { };
 
   # =================================================================
   # CouchDB Service
@@ -31,14 +32,13 @@ _: {
     port = 5984;
     bindAddress = "127.0.0.1"; # Local only, expose via nginx
 
+    # Admin user configured directly (plaintext, will be hashed by CouchDB)
+    adminUser = "admin";
+    adminPass = "LxC0c7ru331tqWV1";
+
     # Configuration for Obsidian LiveSync
     # https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/setup_own_server.md
     extraConfig = {
-      # Admin user - password will be set via preStart script
-      admins = {
-        admin = "LxC0c7ru331tqWV1";
-      };
-
       chttpd = {
         require_valid_user = true;
         enable_cors = true;
@@ -144,4 +144,3 @@ _: {
 # References:
 # - https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/setup_own_server.md
 # - https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/quick_setup.md
-
