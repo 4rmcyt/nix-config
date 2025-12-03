@@ -39,20 +39,20 @@
   # =================================================================
   # 2.5. Distributed Builds Configuration
   # =================================================================
-  distributed-builds = {
-    enable = true;
-    role = "client";
-    builders = [
-      {
-        hostName = config.my.network.hosts.desktop_lan;
-        system = "x86_64-linux";
-        maxJobs = 16;
-        speedFactor = 2;
-        supportedFeatures = ["nixos-test" "benchmark" "big-parallel" "gccarch-skylake" "kvm"];
-        publicHostKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEYURQfg2oU9NsUxV2ru/I/W5/mbUiGYplR1Fdepnole";
-      }
-    ];
-  };
+  # distributed-builds = {
+  #   enable = true;
+  #   role = "client";
+  #   builders = [
+  #     {
+  #       hostName = config.my.network.hosts.desktop_lan;
+  #       system = "x86_64-linux";
+  #       maxJobs = 16;
+  #       speedFactor = 2;
+  #       supportedFeatures = ["nixos-test" "benchmark" "big-parallel" "gccarch-skylake" "kvm"];
+  #       publicHostKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEYURQfg2oU9NsUxV2ru/I/W5/mbUiGYplR1Fdepnole";
+  #     }
+  #   ];
+  # };
 
   # =================================================================
   # 3. Secrets Management
