@@ -2,5 +2,6 @@
   imports = [
     ./postgresql
     ./redis
+    ./couchdb
   ];
 }
