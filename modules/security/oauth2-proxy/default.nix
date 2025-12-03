@@ -1,4 +1,8 @@
-{config, ...}: let
+{
+  config,
+  pkgs,
+  ...
+}: let
   domain = rec {
     root = "example.com";
     oauth2-proxy = "oauth2-proxy.${root}";
@@ -86,17 +90,16 @@ in {
     startLimitIntervalSec = 0;
     serviceConfig = {
       RestartSec = 1;
+      EnvironmentFile = pkgs.writeText "oauth2-proxy-redis-env" ''
+        OAUTH2_PROXY_SESSION_STORE_TYPE=redis
+      '';
+      ExecStart = let
+        wrapper = pkgs.writeShellScript "oauth2-proxy-wrapper" ''
+          REDIS_PASSWORD=$(cat ${config.sops.secrets.redis-oauth2-proxy-password.path})
+          export OAUTH2_PROXY_REDIS_CONNECTION_URL="redis://:$REDIS_PASSWORD@127.0.0.1:6379/0"
+          exec ${config.services.oauth2-proxy.package}/bin/oauth2-proxy --config=${config.services.oauth2-proxy.configFile}
+        '';
+      in pkgs.lib.mkForce "${wrapper}";
     };
-    environment = {
-      OAUTH2_PROXY_REDIS_CONNECTION_URL = "redis://:@127.0.0.1:6379/0";
-      OAUTH2_PROXY_SESSION_STORE_TYPE = "redis";
-    };
-    script = let
-      cfg = config.services.oauth2-proxy;
-    in ''
-      REDIS_PASSWORD=$(cat ${config.sops.secrets.redis-oauth2-proxy-password.path})
-      export OAUTH2_PROXY_REDIS_CONNECTION_URL="redis://:$REDIS_PASSWORD@127.0.0.1:6379/0"
-      exec ${cfg.package}/bin/oauth2-proxy ${toString cfg.configFile}
-    '';
   };
 }
