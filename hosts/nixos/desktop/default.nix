@@ -266,6 +266,7 @@
         libva-utils
         nvidia-vaapi-driver
         atuin
+        # luxtorpeda
 
         # =============================================================
         # Hardware Support & Monitoring
