@@ -9,7 +9,7 @@
   # Reference: https://redis.io/docs/management/security/acl/
   aclUsers = pkgs.writeText "redis-users.acl" ''
     user default off nopass ~* &* +@all
-    user oauth2-proxy on #${config.sops.secrets.redis-oauth2-proxy-password.path} ~* &* +@all -@dangerous resetchannels resetkeys
+    user oauth2-proxy on >${config.sops.secrets.redis-oauth2-proxy-password.path} ~* &* +@all -@dangerous resetchannels resetkeys
   '';
 in {
   # =================================================================
