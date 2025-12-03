@@ -22,7 +22,7 @@
     ../../../modules/services
 
     # Distributed builds
-    ../../../modules/base/distributed-builds
+    # ../../../modules/base/distributed-builds
 
     # User configuration
     ../../../modules/users/zeev
