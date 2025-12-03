@@ -114,9 +114,6 @@
           lsp.display-messages = true;
           mouse = false;
           true-color = true;
-          keys.normal = {
-            "A-y" = ":sh nu ~/.config/yazelix/nushell/scripts/integrations/reveal_in_yazi.nu \"%{buffer_name}\"";
-          };
         };
         theme = "heisenberg";
       };

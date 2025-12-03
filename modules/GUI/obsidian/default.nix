@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  hmPackages = with pkgs; [
+  home.packages = with pkgs; [
     obsidian
   ];
 

@@ -181,3 +181,4 @@
 # 3. Add service to users.groups.redis.members
 # 4. Add service group to users.users.redis.extraGroups
 # 5. Configure service to use unix socket with username and password
+
