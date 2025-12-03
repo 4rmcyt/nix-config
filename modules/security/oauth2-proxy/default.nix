@@ -62,7 +62,8 @@ in {
         provider-display-name = "Keycloak";
         whitelist-domain = ["*.nukdokplex.ru"];
         session-store-type = "redis";
-        redis-connection-url = "unix://${config.services.redis.servers.homeserver.unixSocket}?password=${config.sops.secrets.redis-password.path}";
+        # Use ACL authentication with separate user for oauth2-proxy
+        redis-connection-url = "unix://${config.services.redis.servers.homeserver.unixSocket}?username=oauth2-proxy&password=${config.sops.secrets.redis-oauth2-proxy-password.path}";
         # skip-jwt-bearer-tokens = true;
       };
       setXauthrequest = true;
