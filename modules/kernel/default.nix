@@ -10,7 +10,7 @@ with lib; {
 
       modulesPath = mkOption {
         type = types.path;
-        default = /var/lib/modprobed-db/modprobed.db;
+        default = /root/.config/modprobed.db;
         description = "Path to modprobed.db file containing kernel modules";
       };
     };
