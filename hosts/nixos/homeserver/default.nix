@@ -377,8 +377,4 @@
     users.zeev.shell = pkgs.zsh;
     groups.git = {};
   };
-
-  # =================================================================
-  # 13. Kernel Configuration
-  # =================================================================
-  # Enable modprobed-db module tracking for kernel optimization
+}
