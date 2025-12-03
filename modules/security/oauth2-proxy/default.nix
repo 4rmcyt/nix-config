@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: let
+{config, ...}: let
   domain = rec {
     root = "example.com";
     oauth2-proxy = "oauth2-proxy.${root}";
@@ -64,8 +60,10 @@ in {
         skip-provider-button = true;
         code-challenge-method = "S256";
         provider-display-name = "Keycloak";
-        whitelist-domain = ["*.nukdokplex.ru"];
-        # skip-jwt-bearer-tokens = true;
+        session-store-type = "cookie";
+        # redis-connection-url = "unix://${config.services.redis.servers.homeserver.unixSocket}?username=oauth2-proxy&password=${config.sops.secrets.redis-oauth2-proxy-password.path}";
+        # redis-connection-url = "unix://${config.services.redis.servers.oauth2-proxy.unixSocket}";
+
       };
       setXauthrequest = true;
       passAccessToken = true;
@@ -90,17 +88,6 @@ in {
     startLimitIntervalSec = 0;
     serviceConfig = {
       RestartSec = 1;
-      RuntimeDirectory = "oauth2-proxy";
-      EnvironmentFile = [
-        (pkgs.writeText "oauth2-proxy-redis-env" ''
-          OAUTH2_PROXY_SESSION_STORE_TYPE=redis
-        '')
-        "/run/oauth2-proxy/redis-env"
-      ];
-      ExecStartPre = pkgs.writeShellScript "oauth2-proxy-set-redis-pass" ''
-        REDIS_PASSWORD=$(cat ${config.sops.secrets.redis-oauth2-proxy-password.path})
-        echo "OAUTH2_PROXY_REDIS_CONNECTION_URL=redis://:$REDIS_PASSWORD@127.0.0.1:6379/0" > /run/oauth2-proxy/redis-env
-      '';
     };
   };
 }
