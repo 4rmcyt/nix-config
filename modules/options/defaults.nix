@@ -11,8 +11,8 @@
       locale = "en_US.UTF-8";
       gateway = "192.168.1.254";
       homeserver_lan = "192.168.1.165";
-      desktop_lan = "192.168.1.66";
-      desktop_wifi = "192.168.1.45";
+      desktop_lan = "192.168.1.118";
+      desktop_wifi = "192.168.1.239";
       matebook_wifi = "192.168.1.132";
     })
   ));
