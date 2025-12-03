@@ -32,7 +32,9 @@
     port = 5984;
     bindAddress = "127.0.0.1"; # Local only, expose via nginx
 
-    # No admin configured here - will be set via postStart script
+    # Temporary admin to allow startup - will be replaced by postStart
+    adminUser = "admin";
+    adminPass = "-";  # Placeholder, will be set via postStart
 
     # Configuration for Obsidian LiveSync
     # https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/setup_own_server.md
@@ -110,20 +112,26 @@
     postStart = ''
       # Wait for CouchDB to be ready
       for i in {1..30}; do
-        if ${pkgs.curl}/bin/curl -s http://127.0.0.1:5984/ > /dev/null 2>&1; then
+        if ${pkgs.curl}/bin/curl -s http://admin:-@127.0.0.1:5984/ > /dev/null 2>&1; then
           break
         fi
         sleep 1
       done
 
-      # Configure admin user via cluster setup
+      # Update admin password from sops secret
       ADMIN_PASS=$(cat ${config.sops.secrets.couchdb_admin_password.path})
-      ${pkgs.curl}/bin/curl -X PUT http://127.0.0.1:5984/_node/_local/_config/admins/admin \
+      ${pkgs.curl}/bin/curl -X PUT http://admin:-@127.0.0.1:5984/_node/_local/_config/admins/admin \
         -H "Content-Type: application/json" \
         -d "\"$ADMIN_PASS\"" || true
 
+      # Wait a moment for password to be updated
+      sleep 2
+
       # Create _users database
       ${pkgs.curl}/bin/curl -X PUT http://admin:$ADMIN_PASS@127.0.0.1:5984/_users || true
+
+      # Create _replicator database
+      ${pkgs.curl}/bin/curl -X PUT http://admin:$ADMIN_PASS@127.0.0.1:5984/_replicator || true
     '';
 
     serviceConfig = {
