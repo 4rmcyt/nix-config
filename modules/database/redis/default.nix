@@ -8,11 +8,7 @@
   # ACL configuration file
   # Reference: https://redis.io/docs/management/security/acl/
   aclUsers = pkgs.writeText "redis-users.acl" ''
-    # Default user - disabled for security
     user default off nopass ~* &* +@all
-
-    # OAuth2 Proxy user - database 0
-    # Permissions: all commands except dangerous ones, all keys, select db 0
     user oauth2-proxy on #${config.sops.secrets.redis-oauth2-proxy-password.path} ~* &* +@all -@dangerous resetchannels resetkeys
   '';
 in {
@@ -20,7 +16,6 @@ in {
   # SOPS Secrets for Redis
   # =================================================================
   sops.secrets = {
-    # Service-specific passwords
     redis-oauth2-proxy-password = {
       sopsFile = ../../../secrets/redis.yaml;
       key = "oauth2_proxy_password";
@@ -28,23 +23,6 @@ in {
       group = "redis";
       mode = "0400";
     };
-
-    # Add more service passwords when needed:
-    # redis-paperless-password = {
-    #   sopsFile = ../../../secrets/redis.yaml;
-    #   key = "paperless_password";
-    #   owner = "redis";
-    #   group = "redis";
-    #   mode = "0400";
-    # };
-
-    # redis-authentik-password = {
-    #   sopsFile = ../../../secrets/redis.yaml;
-    #   key = "authentik_password";
-    #   owner = "redis";
-    #   group = "redis";
-    #   mode = "0400";
-    # };
   };
 
   # =================================================================
@@ -90,7 +68,11 @@ in {
       syslog-enabled = "yes";
 
       # Persistence settings
-      save = "900 1 300 10 60 10000";
+      save = [
+        "900 1"
+        "300 10"
+        "60 10000"
+      ];
 
       # Append-only file for durability
       appendonly = "yes";
@@ -176,3 +158,4 @@ in {
 # 3. Add service to users.groups.redis.members
 # 4. Add service group to users.users.redis.extraGroups
 # 5. Configure service to use unix socket with username and password
+
