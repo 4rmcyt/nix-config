@@ -83,7 +83,7 @@ in
       forceSSL = true;
       enableACME = true;
       locations."/" = {
-        proxyPass = "http://[::1]:${toString port}";
+        proxyPass = "http://localhost:${toString port}";
         proxyWebsockets = true;
       };
     };
