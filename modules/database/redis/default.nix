@@ -81,13 +81,6 @@ in {
       # Performance tuning
       tcp-keepalive = "300";
       timeout = "0";
-
-      # Rename dangerous commands for additional security
-      "rename-command FLUSHDB" = ''"FLUSHDB_DISABLED"'';
-      "rename-command FLUSHALL" = ''"FLUSHALL_DISABLED"'';
-      "rename-command CONFIG" = ''"CONFIG_DISABLED"'';
-      "rename-command SHUTDOWN" = ''"SHUTDOWN_DISABLED"'';
-      "rename-command DEBUG" = ''"DEBUG_DISABLED"'';
     };
   };
 
