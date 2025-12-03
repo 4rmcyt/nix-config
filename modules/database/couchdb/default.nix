@@ -1,7 +1,10 @@
 # CouchDB for Obsidian LiveSync
 # https://github.com/vrtmrz/obsidian-livesync
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  ...
+}: {
   # =================================================================
   # SOPS Secrets for CouchDB
   # =================================================================
@@ -22,7 +25,7 @@
     isSystemUser = true;
     group = "couchdb";
   };
-  users.groups.couchdb = { };
+  users.groups.couchdb = {};
 
   # =================================================================
   # CouchDB Service
@@ -34,7 +37,7 @@
 
     # Temporary admin to allow startup - will be replaced by postStart
     adminUser = "admin";
-    adminPass = "-";  # Placeholder, will be set via postStart
+    adminPass = "-"; # Placeholder, will be set via postStart
 
     # Configuration for Obsidian LiveSync
     # https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/setup_own_server.md
@@ -169,3 +172,4 @@
 # References:
 # - https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/setup_own_server.md
 # - https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/quick_setup.md
+

@@ -61,10 +61,6 @@ in {
         code-challenge-method = "S256";
         provider-display-name = "Keycloak";
         whitelist-domain = ["*.nukdokplex.ru"];
-        session-store-type = "redis";
-        # Use TCP connection with simple password auth, database 0
-        redis-connection-url = "redis://127.0.0.1:6379/0";
-        redis-password-file = config.sops.secrets.redis-oauth2-proxy-password.path;
         # skip-jwt-bearer-tokens = true;
       };
       setXauthrequest = true;
@@ -91,5 +87,16 @@ in {
     serviceConfig = {
       RestartSec = 1;
     };
+    environment = {
+      OAUTH2_PROXY_REDIS_CONNECTION_URL = "redis://:@127.0.0.1:6379/0";
+      OAUTH2_PROXY_SESSION_STORE_TYPE = "redis";
+    };
+    script = let
+      cfg = config.services.oauth2-proxy;
+    in ''
+      REDIS_PASSWORD=$(cat ${config.sops.secrets.redis-oauth2-proxy-password.path})
+      export OAUTH2_PROXY_REDIS_CONNECTION_URL="redis://:$REDIS_PASSWORD@127.0.0.1:6379/0"
+      exec ${cfg.package}/bin/oauth2-proxy ${toString cfg.configFile}
+    '';
   };
 }
