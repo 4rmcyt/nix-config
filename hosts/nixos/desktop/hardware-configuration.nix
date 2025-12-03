@@ -264,4 +264,19 @@
   # 9. Platform Configuration
   # =================================================================
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+
+  # =================================================================
+  # 10. Package Overrides
+  # =================================================================
+  nixpkgs.overlays = [
+    (final: prev: {
+      # Fix ryzen-smu build: add gcc to nativeBuildInputs for monitor-cpu
+      linuxPackagesFor = kernel:
+        (prev.linuxPackagesFor kernel).extend (_lpFinal: lpPrev: {
+          ryzen-smu = lpPrev.ryzen-smu.overrideAttrs (oldAttrs: {
+            nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [final.gcc];
+          });
+        });
+    })
+  ];
 }

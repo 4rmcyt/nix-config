@@ -59,27 +59,41 @@ in {
     # Optimized kernel configuration (when enabled)
     (mkIf cfg.enable {
       # Display optimization info
-      warnings = mkIf cfg.showInstructions [
-        ''
-          ╔════════════════════════════════════════════════════════════╗
-          ║     Kernel Module Tracking with modprobed-db enabled      ║
-          ╚════════════════════════════════════════════════════════════╝
+      warnings = let
+        moduleCount = getModulesCount cfg.modulesPath;
+        modulesList = getModulesList cfg.modulesPath;
+        hasModules = moduleCount > 0;
+      in
+        mkIf cfg.showInstructions [
+          ''
+            ╔════════════════════════════════════════════════════════════╗
+            ║     Kernel Module Tracking with modprobed-db enabled      ║
+            ╚════════════════════════════════════════════════════════════╝
 
-          📊 Configuration:
-          ├─ Module database: ${toString cfg.modulesPath}
-          ├─ CPU architecture: ${cfg.cpuArch}
-          ├─ Modules tracked: ${toString (getModulesCount cfg.modulesPath)}
-          └─ Exported to: /etc/modprobed-modules.txt (after rebuild)
+            📊 Configuration:
+            ├─ Module database: ${toString cfg.modulesPath}
+            ├─ CPU architecture: ${cfg.cpuArch}
+            ├─ Modules tracked: ${toString moduleCount}
+            └─ Exported to: /etc/modprobed-modules.txt (after rebuild)
 
-          🔍 Recently tracked modules (first 10):
-          ${concatStringsSep ", " (take 10 (getModulesList cfg.modulesPath))}${
-            optionalString ((getModulesCount cfg.modulesPath) > 10)
-            "... and ${toString ((getModulesCount cfg.modulesPath) - 10)} more"
-          }
+            ${
+              if hasModules
+              then ''
+                🔍 Recently tracked modules (first 10):
+                ${concatStringsSep ", " (take 10 modulesList)}${
+                  optionalString (moduleCount > 10)
+                  "... and ${toString (moduleCount - 10)} more"
+                }
+              ''
+              else ''
+                ⚠️  No modules tracked yet. The service will start collecting modules
+                   after the first boot. Use 'systemctl status modprobed-db.timer' to check.
+              ''
+            }
 
-          ℹ️  Automatic tracking runs hourly via systemd (modprobed-db.service)
-        ''
-      ];
+            ℹ️  Automatic tracking runs hourly via systemd (modprobed-db.service)
+          ''
+        ];
 
       # System features for build - adds CPU-specific compilation flags
       nix.settings.system-features = mkIf (cfg.cpuArch != null) [
