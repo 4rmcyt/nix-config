@@ -115,9 +115,10 @@
       ProtectHome = true;
       ProtectSystem = "strict";
 
-      # Allow CouchDB to write to its data directory
+      # Allow CouchDB to write to its data directory and runtime directory
       ReadWritePaths = [
         "/var/lib/couchdb"
+        "/run/couchdb"
       ];
 
       # Resource limits

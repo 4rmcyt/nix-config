@@ -1,15 +1,11 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{config, ...}: {
   # =================================================================
   # SOPS Secrets for Redis
   # =================================================================
   sops.secrets = {
-    redis-oauth2-proxy-password = {
+    redis-password = {
       sopsFile = ../../../secrets/redis.yaml;
-      key = "oauth2_proxy_password";
+      key = "redis_password";
       owner = "redis";
       group = "redis";
       mode = "0400";
@@ -42,14 +38,14 @@
     unixSocket = "/run/redis-homeserver/redis.sock";
     unixSocketPerm = 660;
 
+    # Password authentication
+    requirePassFile = config.sops.secrets.redis-password.path;
+
     # Database configuration
     databases = 16; # Support databases 0-15
 
     # Security and configuration settings
     settings = {
-      # Disable default user for security
-      # ACL will be configured via post-start script
-
       # Resource limits
       maxmemory = "1GB";
       maxmemory-policy = "allkeys-lru";
@@ -121,64 +117,23 @@
       SystemCallFilter = ["@system-service" "~@privileged"];
     };
   };
-
-  # =================================================================
-  # ACL Configuration via Post-Start Script
-  # =================================================================
-  systemd.services.redis-acl-setup = {
-    description = "Configure Redis ACL users with SOPS passwords";
-    after = ["redis-homeserver.service"];
-    requires = ["redis-homeserver.service"];
-    wantedBy = ["multi-user.target"];
-
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      User = "redis";
-      Group = "redis";
-    };
-
-    script = ''
-      # Wait for Redis to be ready
-      for i in {1..30}; do
-        if ${pkgs.redis}/bin/redis-cli -s ${config.services.redis.servers.homeserver.unixSocket} ping 2>/dev/null | grep -q PONG; then
-          break
-        fi
-        sleep 1
-      done
-
-      # Read password from SOPS secret
-      OAUTH2_PASSWORD=$(cat ${config.sops.secrets.redis-oauth2-proxy-password.path})
-
-      # Configure ACL users
-      ${pkgs.redis}/bin/redis-cli -s ${config.services.redis.servers.homeserver.unixSocket} <<EOF
-      ACL SETUSER default off
-      ACL SETUSER oauth2-proxy on >"$OAUTH2_PASSWORD" ~* &* +@all -@dangerous resetchannels resetkeys
-      ACL SAVE
-      EOF
-    '';
-  };
 }
 # =================================================================
 # Configuration Notes
 # =================================================================
-# This Redis instance uses ACL-based authentication with separate users per service.
-# Each service has its own username and password with isolated access.
-#
-# ACL is configured at runtime via systemd service because passwords are in SOPS secrets.
+# This Redis instance uses simple password authentication with database separation.
+# Each service connects with the same password but uses a different database number.
 #
 # Database allocation:
-# - oauth2-proxy: database 0 (user: oauth2-proxy)
-# - paperless: database 1 (user: paperless) - when enabled
-# - authentik: database 2 (user: authentik) - when enabled
+# - oauth2-proxy: database 0
+# - paperless: database 1 (when enabled)
+# - authentik: database 2 (when enabled)
 #
-# Connection format:
-# unix:///run/redis-homeserver/redis.sock?username=<service>&password=<from-sops>
+# Connection format examples:
+# - TCP: redis://:password@127.0.0.1:6379/0
+# - TCP with password file: redis://127.0.0.1:6379/0 + redis-password-file option
+# - Unix socket: unix:///run/redis-homeserver/redis.sock?db=0 + password-file option
 #
-# To add a new service:
-# 1. Add password secret in sops.secrets section above
-# 2. Add ACL SETUSER command in redis-acl-setup script
-# 3. Add service to users.groups.redis.members
-# 4. Add service group to users.users.redis.extraGroups
-# 5. Configure service to use unix socket with username and password
+# Database isolation provides separation without ACL complexity.
+# Services use the same password but different database numbers for isolation.
 
