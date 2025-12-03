@@ -4,22 +4,7 @@
   pkgs,
   modulesPath,
   ...
-}: let
-  zfsCompatibleKernelPackages =
-    lib.filterAttrs (
-      name: kernelPackages:
-        (builtins.match "linux_[0-9]+_[0-9]+" name)
-        != null
-        && (builtins.tryEval kernelPackages).success
-        && (!kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
-    )
-    pkgs.linuxKernel.packages;
-  latestKernelPackage = lib.last (
-    lib.sort (a: b: (lib.versionOlder a.kernel.version b.kernel.version)) (
-      builtins.attrValues zfsCompatibleKernelPackages
-    )
-  );
-in {
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -29,8 +14,10 @@ in {
   # 2. Boot Configuration
   # =================================================================
   boot = {
-    # Kernel configuration
-    kernelPackages = latestKernelPackage;
+    # Kernel configuration - CachyOS kernel optimized for stability
+    # Using standard variant as server variant has same features
+    kernelPackages = pkgs.linuxPackages_cachyos;
+    zfs.package = pkgs.zfs_cachyos;
 
     # Kernel modules
     initrd.availableKernelModules = [

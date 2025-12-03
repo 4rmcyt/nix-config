@@ -246,6 +246,8 @@
                 inputs.nixarr.nixosModules.default
                 inputs.authentik-nix.nixosModules.default
                 inputs.vscode-server.nixosModules.default
+                inputs.chaotic.nixosModules.nyx-cache
+                inputs.chaotic.nixosModules.nyx-overlay
                 inputs.lix-module.nixosModules.default
               ]
               ++ (helpers.mkHome {
@@ -273,6 +275,8 @@
                 ./modules/disko/matebook
                 inputs.disko.nixosModules.disko
                 inputs.flatpaks.nixosModules.default
+                inputs.chaotic.nixosModules.nyx-cache
+                inputs.chaotic.nixosModules.nyx-overlay
                 inputs.lix-module.nixosModules.default
               ]
               ++ (helpers.mkHome {

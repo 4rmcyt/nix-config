@@ -1,21 +1,27 @@
 # Kernel Optimization with modprobed-db
 
-This module provides automatic kernel module tracking and optional kernel optimization using modprobed-db.
+This module provides automatic kernel module tracking and kernel optimization information using modprobed-db.
 
 ## Features
 
 - **Automatic Module Tracking**: Systemd service runs hourly to track loaded kernel modules
-- **Kernel Optimization**: Optional custom kernel builds using only the modules you actually use
-- **Compiler Options**: Support for both GCC and Clang
-- **CPU Optimization**: Native and specific CPU architecture targeting
+- **Module Information**: Display tracked modules during system build
+- **CPU Optimization Flags**: Configure CPU-specific build features
+- **Module Export**: Exports module list to `/etc/modprobed-modules.txt` for reference
+
+## Current Status
+
+✅ **Module Tracking**: Fully implemented and working
+ℹ️  **Kernel Optimization**: Information/guidance mode (full automation is complex)
+✅ **CPU Architecture Flags**: Supported via `nix.settings.system-features`
 
 ## Configuration
 
 ### Basic Setup (Module Tracking Only)
 
 The module tracking is enabled by default when you import this module. It will:
-- Run hourly to track loaded modules
-- Store data in `/var/lib/modprobed-db/.config/modprobed-db/modprobed.db`
+- Run hourly to track loaded kernel modules
+- Store data in `/root/.config/modprobed.db`
 - Start 5 minutes after boot and then run every hour
 
 ```nix
@@ -25,29 +31,49 @@ services.modprobed-db = {
 };
 ```
 
-### Advanced: Kernel Optimization
+### Kernel Optimization Information
 
-After collecting module data for a few weeks, you can use it to optimize your kernel builds.
+Enable this to see what modules you're tracking and get guidance:
 
-**Option 1: Show Optimization Instructions**
 ```nix
-my.kernel.optimized.enable = true;
+my.kernel.optimized = {
+  enable = true;
+  cpuArch = "znver4";  # Your CPU architecture
+  compiler = "gcc";     # or "clang"
+  showInstructions = true;
+};
 ```
-This will display instructions on how to use your collected module data.
 
-**Option 2: Manual Kernel Configuration**
-Use the modprobed.db file with CachyOS kernel configurator or other kernel build tools to only compile the modules you actually use.
+This will:
+- Show module count during `nixos-rebuild`
+- List first 10 tracked modules
+- Export full list to `/etc/modprobed-modules.txt`
+- Add CPU-specific build features to Nix
+
+### CPU Architecture Options
+
+Common values for `cpuArch`:
+- `znver4` - AMD Ryzen 7000/9000 series (Zen 4)
+- `znver3` - AMD Ryzen 5000 series (Zen 3)
+- `znver2` - AMD Ryzen 3000 series (Zen 2)
+- `znver` - AMD Ryzen 1000/2000 series (Zen/Zen+)
 
 ## Usage
 
 ### Manual Commands
 
 ```bash
-# View tracked modules
-modprobed-db list
+# View tracked modules in the database
+cat /root/.config/modprobed.db
 
-# Manually store current modules
-sudo modprobed-db store
+# View exported module list (after rebuild)
+cat /etc/modprobed-modules.txt
+
+# Count tracked modules
+wc -l /root/.config/modprobed.db
+
+# Manually trigger module collection
+sudo systemctl start modprobed-db.service
 
 # View the database file
 cat /var/lib/modprobed-db/.config/modprobed-db/modprobed.db

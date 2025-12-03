@@ -42,8 +42,9 @@
       "rd.udev.log_level=3"
     ];
 
-    # Kernel selection
-    kernelPackages = pkgs.linuxPackages_latest;
+    # Kernel configuration - CachyOS for better performance on AMD laptop
+    kernelPackages = pkgs.linuxPackages_cachyos;
+    zfs.package = pkgs.zfs_cachyos;
   };
 
   # =================================================================

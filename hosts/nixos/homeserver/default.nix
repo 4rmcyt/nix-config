@@ -22,6 +22,9 @@
     ../../../modules/security
     ../../../modules/services
 
+    # Kernel optimization
+    ../../../modules/kernel
+
     # Distributed builds
     # ../../../modules/base/distributed-builds
 
@@ -374,5 +377,15 @@
     };
     users.zeev.shell = pkgs.zsh;
     groups.git = {};
+  };
+
+  # =================================================================
+  # 13. Kernel Configuration
+  # =================================================================
+  # Enable modprobed-db module tracking for kernel optimization
+  my.kernel.optimized = {
+    enable = true;
+    cpuArch = "skylake"; # Intel i7-9700T (Coffee Lake uses Skylake arch)
+    showInstructions = true;
   };
 }

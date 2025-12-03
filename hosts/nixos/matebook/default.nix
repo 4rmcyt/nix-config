@@ -13,6 +13,9 @@
     ../../../modules/disko/matebook
     ../../../modules/options
 
+    # Kernel optimization
+    ../../../modules/kernel
+
     # Networking
     ../../../modules/networking/ssh-hosts.nix
 
@@ -358,4 +361,14 @@
   # 14. Virtualization
   # =================================================================
   virtualisation.podman.enable = true;
+
+  # =================================================================
+  # 15. Kernel Configuration
+  # =================================================================
+  # Enable modprobed-db module tracking for kernel optimization
+  my.kernel.optimized = {
+    enable = true;
+    cpuArch = "znver"; # Ryzen 5 3500U (Zen/Zen+)
+    showInstructions = true;
+  };
 }

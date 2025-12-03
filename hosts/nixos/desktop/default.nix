@@ -574,8 +574,12 @@
   # =================================================================
   # 16. Kernel Configuration
   # =================================================================
-  # Optional: Enable to show kernel optimization instructions
-  my.kernel.optimized.enable = true;
+  # Enable modprobed-db module tracking for kernel optimization
+  my.kernel.optimized = {
+    enable = true;
+    cpuArch = "znver4"; # Ryzen 5 7600X (Zen 4)
+    showInstructions = true;
+  };
 
   # =================================================================
   # 17. Systemd Configuration

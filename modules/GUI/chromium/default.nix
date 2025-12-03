@@ -8,7 +8,8 @@
       (chromium.override {
         enableWideVine = true;
         commandLineArgs = [
-          "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo"
+          "--enable-features=VaapiVideoDecodeLinuxGL,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo"
+          # VaapiVideoEncoder removed - it's for Intel/AMD only, not NVIDIA
           "--ignore-gpu-blocklist"
           "--enable-zero-copy"
           "--enable-features=UseOzonePlatform"

@@ -63,8 +63,8 @@
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
     '';
 
-    # Kernel configuration
-    kernelPackages = pkgs.linuxPackages_cachyos;
+    # Kernel configuration - CachyOS with LTO and Zen4 optimizations
+    kernelPackages = pkgs.linuxPackages_cachyos-lto-znver4;
     zfs.package = pkgs.zfs_cachyos;
     supportedFilesystems = ["zfs"];
 
