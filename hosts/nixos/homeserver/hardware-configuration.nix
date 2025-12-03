@@ -39,6 +39,9 @@
     kernelParams = [
       "i915.enable_guc=2"
       "zfs.zfs_arc_max=12884901888"
+      "nohz_full=1-15"
+      "rcu_nocbs=1-15"
+      "isolcpus=1-15"
     ];
 
     # Boot loader configuration
@@ -118,8 +121,11 @@
     thermald.enable = lib.mkDefault true;
 
     # SCX Scheduler
-    scx.enable = true;
-    scx.scheduler = "scx_tickless";
+    scx = {
+      enable = true;
+      scheduler = "scx_tickless";
+      extraArgs = ["-f" "100"];
+    };
 
     # Hardware monitoring
     smartd = {
