@@ -277,7 +277,7 @@
         # nvtopPackages.nvidia
         openrgb-with-all-plugins
         powertop
-        ryzen-monitor-ng
+        # ryzen-monitor-ng
         samba
 
         # =============================================================

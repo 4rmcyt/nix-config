@@ -55,7 +55,7 @@
     extraModulePackages = with config.boot.kernelPackages; [
       # v4l2loopback
       zenpower
-      ryzen-smu
+      # ryzen-smu
     ];
 
     # Module configuration
@@ -157,7 +157,7 @@
     };
 
     # CPU configuration
-    cpu.amd.ryzen-smu.enable = true;
+    # cpu.amd.ryzen-smu.enable = true;
     cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
     # Firmware

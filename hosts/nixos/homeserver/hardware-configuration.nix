@@ -117,6 +117,10 @@
     fwupd.enable = true;
     thermald.enable = lib.mkDefault true;
 
+    # SCX Scheduler
+    scx.enable = true;
+    scx.scheduler = "scx_tickless";
+
     # Hardware monitoring
     smartd = {
       enable = true;
