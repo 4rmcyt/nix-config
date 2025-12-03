@@ -1,70 +1,16 @@
-{
-  config,
-  pkgs,
-  ...
-}: let
-  # Centralized Redis configuration for homeserver
-  # Each service gets its own database number and ACL user
-  # Database allocation (for documentation and future use)
-  # databases = {
-  #   oauth2-proxy = 0;
-  #   # Add more services here when needed:
-  #   # paperless = 1;
-  #   # authentik = 2;
-  # };
-  # Add more service users here when needed:
-  # Paperless user - database 1
-  # user paperless on >${config.sops.secrets.redis-paperless-password.path} ~paperless:* &* +@all -@dangerous
-  # Authentik user - database 2
-  # user authentik on >${config.sops.secrets.redis-authentik-password.path} ~* &* +@all -@dangerous
-  # ACL configuration file generation
-  # Each service gets its own user with access only to their database
-  aclConfig = pkgs.writeText "redis-users.acl" ''
-    # Default user - disabled for security
-    user default off nopass
-
-    # OAuth2 Proxy user - database 0
-    user oauth2-proxy on >${config.sops.secrets.redis-oauth2-proxy-password.path} ~* &* +@all -@dangerous
-  '';
-in {
+{config, ...}: {
   # =================================================================
   # SOPS Secrets for Redis
   # =================================================================
   sops.secrets = {
-    # Main Redis admin password
-    redis-admin-password = {
+    # Redis password for authentication
+    redis-password = {
       sopsFile = ../../../secrets/redis.yaml;
-      key = "admin_password";
+      key = "redis_password";
       owner = "redis";
       group = "redis";
       mode = "0400";
     };
-
-    # Service-specific passwords
-    redis-oauth2-proxy-password = {
-      sopsFile = ../../../secrets/redis.yaml;
-      key = "oauth2_proxy_password";
-      owner = "redis";
-      group = "redis";
-      mode = "0400";
-    };
-
-    # Add more service passwords when needed:
-    # redis-paperless-password = {
-    #   sopsFile = ../../../secrets/redis.yaml;
-    #   key = "paperless_password";
-    #   owner = "redis";
-    #   group = "redis";
-    #   mode = "0400";
-    # };
-
-    # redis-authentik-password = {
-    #   sopsFile = ../../../secrets/redis.yaml;
-    #   key = "authentik_password";
-    #   owner = "redis";
-    #   group = "redis";
-    #   mode = "0400";
-    # };
   };
 
   # =================================================================
@@ -96,8 +42,8 @@ in {
     # Database configuration
     databases = 16; # Support databases 0-15
 
-    # Authentication - use ACL file
-    aclFile = "${aclConfig}";
+    # Password authentication
+    requirePass = config.sops.secrets.redis-password.path;
 
     # Resource limits
     maxmemory = "1GB";
@@ -105,16 +51,6 @@ in {
 
     # Security: Disable dangerous commands
     settings = {
-      # Rename dangerous commands
-      rename-command = {
-        FLUSHDB = "";
-        FLUSHALL = "";
-        KEYS = "";
-        CONFIG = "CONFIG_${builtins.substring 0 8 (builtins.hashString "sha256" "random")}";
-        SHUTDOWN = "";
-        DEBUG = "";
-      };
-
       # Logging
       loglevel = "notice";
       syslog-enabled = "yes";
@@ -129,6 +65,14 @@ in {
       # Performance tuning
       tcp-keepalive = "300";
       timeout = "0";
+
+      # Rename dangerous commands for security
+      "rename-command FLUSHDB" = ''"FLUSHDB_DISABLED"'';
+      "rename-command FLUSHALL" = ''"FLUSHALL_DISABLED"'';
+      "rename-command CONFIG" = ''"CONFIG_DISABLED"'';
+      "rename-command SHUTDOWN" = ''"SHUTDOWN_DISABLED"'';
+      "rename-command DEBUG" = ''"DEBUG_DISABLED"'';
+      "rename-command KEYS" = ''"KEYS_DISABLED"'';
     };
   };
 
@@ -179,3 +123,19 @@ in {
     };
   };
 }
+
+# =================================================================
+# Configuration Notes
+# =================================================================
+# This Redis instance uses simple password authentication via unix socket.
+# OAuth2-proxy connects using: unix:///run/redis-homeserver/redis.sock?password=...
+#
+# To add more services:
+# 1. Add service group to users.groups.redis.members
+# 2. Add service to users.users.redis.extraGroups
+# 3. Configure service to use unix socket with password from redis_password
+#
+# Database allocation (by convention):
+# - oauth2-proxy: database 0
+# - paperless: database 1 (when enabled)
+# - authentik: database 2 (when enabled)
