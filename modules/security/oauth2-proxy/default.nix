@@ -1,4 +1,5 @@
-{config, ...}: let
+{ config, ... }:
+let
   domain = rec {
     root = "example.com";
     oauth2-proxy = "oauth2-proxy.${root}";
@@ -6,11 +7,12 @@
   };
   port = 4180;
   realm = "homelab";
-in {
+in
+{
   # =================================================================
   # Users and Groups
   # =================================================================
-  users.groups.oauth2-proxy = {};
+  users.groups.oauth2-proxy = { };
   users.users.oauth2-proxy = {
     isSystemUser = true;
     group = "oauth2-proxy";
@@ -39,7 +41,7 @@ in {
       enable = true;
 
       reverseProxy = true;
-      httpAddress = "http://[::1]:${toString port}";
+      httpAddress = "http://localhost:${toString port}";
 
       nginx = {
         domain = domain.oauth2-proxy;
@@ -49,7 +51,7 @@ in {
       provider = "keycloak-oidc";
       oidcIssuerUrl = "https://${domain.sso}/realms/${realm}";
       redirectURL = "https://${domain.oauth2-proxy}/oauth2/callback";
-      email.domains = ["*"];
+      email.domains = [ "*" ];
       cookie = {
         domain = ".${domain.root}";
         secure = true;
@@ -63,7 +65,14 @@ in {
         session-store-type = "cookie";
         # redis-connection-url = "unix://${config.services.redis.servers.homeserver.unixSocket}?username=oauth2-proxy&password=${config.sops.secrets.redis-oauth2-proxy-password.path}";
         # redis-connection-url = "unix://${config.services.redis.servers.oauth2-proxy.unixSocket}";
-
+        #         Dec 02 20:08:27 homeserver oauth2-proxy[3482548]: [2025/12/02 20:08:27] [provider.go:55] Performing OIDC Discovery...
+        # Dec 02 20:08:27 homeserver oauth2-proxy[3482548]: [2025/12/02 20:08:27] [oauthproxy.go:176] OAuthProxy configured for Keycloak OIDC Client ID: oauth2-proxy
+        # Dec 02 20:08:27 homeserver oauth2-proxy[3482548]: [2025/12/02 20:08:27] [oauthproxy.go:182] Cookie settings: name:_oauth2_proxy secure(https):true httponly:true expiry:168h0m0s domains:.example.com path:/ samesite: refresh:disabled
+        # Dec 02 20:08:27 homeserver oauth2-proxy[3482548]: [2025/12/02 20:08:27] [main.go:59] ERROR: Failed to initialise OAuth2 Proxy: error setting up server: could not build app server: error setting up listener: listen (tcp, [::1]:4180) failed: listen tcp [::1]:4180: bind: cannot assign requested address
+        # Dec 02 20:08:27 homeserver systemd[1]: oauth2-proxy.service: Main process exited, code=exited, status=1/FAILURE
+        # Dec 02 20:08:27 homeserver systemd[1]: oauth2-proxy.service: Failed with result 'exit-code'.
+        # Dec 02 20:08:27 homeserver systemd[1]: oauth2-proxy.service: Consumed 38ms CPU time, 9M memory peak, 11.7K incoming IP traffic, 2.5K outgoing IP traffic.
+        # ~
       };
       setXauthrequest = true;
       passAccessToken = true;
@@ -81,8 +90,8 @@ in {
   };
 
   systemd.services.oauth2-proxy = {
-    after = ["redis-homeserver.service"];
-    requires = ["redis-homeserver.service"];
+    after = [ "redis-homeserver.service" ];
+    requires = [ "redis-homeserver.service" ];
     # Don't give up trying to start oauth2-proxy, even if keycloak isn't up yet
     # https://gist.github.com/benley/78a5e84c52131f58d18319bf26d52cda
     startLimitIntervalSec = 0;
