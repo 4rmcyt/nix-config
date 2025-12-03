@@ -21,9 +21,6 @@
     ../../../modules/networking/ssh-hosts.nix
     ../../../modules/security
     ../../../modules/services
-
-    # Kernel optimization
-
     # Distributed builds
     # ../../../modules/base/distributed-builds
 

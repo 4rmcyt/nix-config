@@ -447,13 +447,6 @@
       extraRemotes = ["lvfs-testing" "vendor"];
     };
 
-    # Enable modprobed-db for automatic kernel module tracking
-    # This will run hourly and store loaded modules to optimize future kernel builds
-    modprobed-db = {
-      enable = true;
-      user = "root";
-    };
-
     openssh.enable = true;
 
     pcscd = {

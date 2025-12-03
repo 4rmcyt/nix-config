@@ -360,14 +360,4 @@
   # 14. Virtualization
   # =================================================================
   virtualisation.podman.enable = true;
-
-  # =================================================================
-  # 15. Kernel Configuration
-  # =================================================================
-  # Enable modprobed-db module tracking for kernel optimization
-  my.kernel.optimized = {
-    enable = true;
-    cpuArch = "znver"; # Ryzen 5 3500U (Zen/Zen+)
-    showInstructions = true;
-  };
 }
