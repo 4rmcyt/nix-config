@@ -90,16 +90,17 @@ in {
     startLimitIntervalSec = 0;
     serviceConfig = {
       RestartSec = 1;
-      EnvironmentFile = pkgs.writeText "oauth2-proxy-redis-env" ''
-        OAUTH2_PROXY_SESSION_STORE_TYPE=redis
+      RuntimeDirectory = "oauth2-proxy";
+      EnvironmentFile = [
+        (pkgs.writeText "oauth2-proxy-redis-env" ''
+          OAUTH2_PROXY_SESSION_STORE_TYPE=redis
+        '')
+        "/run/oauth2-proxy/redis-env"
+      ];
+      ExecStartPre = pkgs.writeShellScript "oauth2-proxy-set-redis-pass" ''
+        REDIS_PASSWORD=$(cat ${config.sops.secrets.redis-oauth2-proxy-password.path})
+        echo "OAUTH2_PROXY_REDIS_CONNECTION_URL=redis://:$REDIS_PASSWORD@127.0.0.1:6379/0" > /run/oauth2-proxy/redis-env
       '';
-      ExecStart = let
-        wrapper = pkgs.writeShellScript "oauth2-proxy-wrapper" ''
-          REDIS_PASSWORD=$(cat ${config.sops.secrets.redis-oauth2-proxy-password.path})
-          export OAUTH2_PROXY_REDIS_CONNECTION_URL="redis://:$REDIS_PASSWORD@127.0.0.1:6379/0"
-          exec ${config.services.oauth2-proxy.package}/bin/oauth2-proxy --config=${config.services.oauth2-proxy.configFile}
-        '';
-      in pkgs.lib.mkForce "${wrapper}";
     };
   };
 }

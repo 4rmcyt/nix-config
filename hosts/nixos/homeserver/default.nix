@@ -21,6 +21,9 @@
     ../../../modules/security
     ../../../modules/services
 
+    # Distributed builds
+    ../../../modules/base/distributed-builds
+
     # User configuration
     ../../../modules/users/zeev
 
@@ -32,6 +35,24 @@
   # 2. System Configuration
   # =================================================================
   system.stateVersion = "25.05";
+
+  # =================================================================
+  # 2.5. Distributed Builds Configuration
+  # =================================================================
+  distributed-builds = {
+    enable = true;
+    role = "client";
+    builders = [
+      {
+        hostName = config.my.network.hosts.desktop_lan;
+        system = "x86_64-linux";
+        maxJobs = 16;
+        speedFactor = 2;
+        supportedFeatures = ["nixos-test" "benchmark" "big-parallel" "kvm"];
+        publicHostKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEYURQfg2oU9NsUxV2ru/I/W5/mbUiGYplR1Fdepnole";
+      }
+    ];
+  };
 
   # =================================================================
   # 3. Secrets Management
@@ -56,6 +77,13 @@
       nix_access_token = {
         sopsFile = ../../../secrets/common.yaml;
         key = "nix_access_token";
+      };
+      nix_builder_private_key = {
+        sopsFile = ../../../secrets/nix-builder-homeserver.yaml;
+        key = "nix_builder_private_key";
+        owner = "root";
+        mode = "0600";
+        path = "/root/.ssh/nix-builder";
       };
     };
   };

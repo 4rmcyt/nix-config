@@ -165,6 +165,7 @@
       trusted-users = [
         "root"
         "@wheel"
+        "nix-builder"
       ];
     };
   };
@@ -528,6 +529,7 @@
       git = {};
       plugdev = {};
       prometheus = {};
+      nix-builder = {};
     };
 
     users = {
@@ -544,6 +546,19 @@
         description = "Prometheus daemon user";
         group = "prometheus";
         isSystemUser = true;
+      };
+
+      # User for accepting remote nix builds
+      nix-builder = {
+        isSystemUser = true;
+        group = "nix-builder";
+        description = "Nix remote builder user";
+        home = "/var/lib/nix-builder";
+        createHome = true;
+        shell = pkgs.bash;
+        openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ6N/kA0Cx1Swre7mQzWvqxL2o4TvD3l0hrAiNr0Qkcp nix-builder@homeserver"
+        ];
       };
 
       zeev.shell = lib.mkForce pkgs.nushell;
