@@ -21,7 +21,6 @@
     ../../../modules/gaming
     ../../../modules/networking/dnssec
     ../../../modules/networking/ssh-hosts.nix
-    ../../../modules/kernel
 
     # User configuration
     ../../../modules/users/zeev
@@ -575,12 +574,7 @@
   # =================================================================
   # 16. Kernel Configuration
   # =================================================================
-  # Enable modprobed-db module tracking for kernel optimization
-  my.kernel.optimized = {
-    enable = true;
-    cpuArch = "znver4"; # Ryzen 5 7600X (Zen 4)
-    showInstructions = true;
-  };
+  # Using standard CachyOS kernel with LTO and Zen4 optimizations
 
   # =================================================================
   # 17. Systemd Configuration

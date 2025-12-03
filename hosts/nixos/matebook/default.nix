@@ -14,7 +14,6 @@
     ../../../modules/options
 
     # Kernel optimization
-    ../../../modules/kernel
 
     # Networking
     ../../../modules/networking/ssh-hosts.nix
