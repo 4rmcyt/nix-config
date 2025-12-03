@@ -3,9 +3,9 @@
   # SOPS Secrets for Redis
   # =================================================================
   sops.secrets = {
-    redis-password = {
+    redis-oauth2-proxy-password = {
       sopsFile = ../../../secrets/redis.yaml;
-      key = "redis_password";
+      key = "oauth2_proxy_password";
       owner = "redis";
       group = "redis";
       mode = "0400";
@@ -38,8 +38,8 @@
     unixSocket = "/run/redis-homeserver/redis.sock";
     unixSocketPerm = 660;
 
-    # Password authentication
-    requirePassFile = config.sops.secrets.redis-password.path;
+    # Simple password authentication - oauth2-proxy password
+    requirePassFile = config.sops.secrets.redis-oauth2-proxy-password.path;
 
     # Database configuration
     databases = 16; # Support databases 0-15
@@ -121,19 +121,16 @@
 # =================================================================
 # Configuration Notes
 # =================================================================
-# This Redis instance uses simple password authentication with database separation.
-# Each service connects with the same password but uses a different database number.
+# Simple Redis setup: one password, separate databases per service
 #
 # Database allocation:
 # - oauth2-proxy: database 0
 # - paperless: database 1 (when enabled)
 # - authentik: database 2 (when enabled)
 #
-# Connection format examples:
-# - TCP: redis://:password@127.0.0.1:6379/0
-# - TCP with password file: redis://127.0.0.1:6379/0 + redis-password-file option
-# - Unix socket: unix:///run/redis-homeserver/redis.sock?db=0 + password-file option
+# All services use the same password (oauth2_proxy_password from secrets)
+# Isolation is achieved through different database numbers
 #
-# Database isolation provides separation without ACL complexity.
-# Services use the same password but different database numbers for isolation.
+# Connection format:
+# - TCP: redis://127.0.0.1:6379/0 + redis-password-file option
 

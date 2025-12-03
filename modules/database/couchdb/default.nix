@@ -1,6 +1,6 @@
 # CouchDB for Obsidian LiveSync
 # https://github.com/vrtmrz/obsidian-livesync
-{config, ...}: {
+_: {
   # =================================================================
   # SOPS Secrets for CouchDB
   # =================================================================
@@ -31,13 +31,14 @@
     port = 5984;
     bindAddress = "127.0.0.1"; # Local only, expose via nginx
 
-    # Admin credentials
-    adminUser = "admin";
-    adminPass = config.sops.secrets.couchdb_admin_password.path;
-
     # Configuration for Obsidian LiveSync
     # https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/setup_own_server.md
     extraConfig = {
+      # Admin user - password will be set via preStart script
+      admins = {
+        admin = "LxC0c7ru331tqWV1";
+      };
+
       chttpd = {
         require_valid_user = true;
         enable_cors = true;
@@ -132,8 +133,8 @@
 # =================================================================
 # 1. After first deployment, visit: https://livesync.example.com/_utils
 # 2. Login with admin credentials from secrets/couchdb.yaml
-# 3. Create a new database named "obsidian" (or your preferred name)
-# 4. Create a user for your Obsidian client (recommended for security)
+# 3. Create a new database named "" (or your preferred name)
+# 4. Create a user for your Obsidian client (recommended for securobsidianity)
 # 5. In Obsidian LiveSync plugin settings:
 #    - Remote Database URL: https://livesync.example.com/obsidian
 #    - Username: (your created user)

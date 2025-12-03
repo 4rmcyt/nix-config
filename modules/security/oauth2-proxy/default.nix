@@ -64,7 +64,7 @@ in {
         session-store-type = "redis";
         # Use TCP connection with simple password auth, database 0
         redis-connection-url = "redis://127.0.0.1:6379/0";
-        redis-password-file = config.sops.secrets.redis-password.path;
+        redis-password-file = config.sops.secrets.redis-oauth2-proxy-password.path;
         # skip-jwt-bearer-tokens = true;
       };
       setXauthrequest = true;
