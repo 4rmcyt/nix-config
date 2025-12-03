@@ -83,14 +83,14 @@ in {
     # Database configuration
     databases = 16; # Support databases 0-15
 
-    # Resource limits
-    maxmemory = "1GB";
-    maxmemoryPolicy = "allkeys-lru";
-
     # Security and configuration settings
     settings = {
       # ACL configuration - load users from file
       aclfile = "${aclUsers}";
+
+      # Resource limits
+      maxmemory = "1GB";
+      maxmemory-policy = "allkeys-lru";
 
       # Logging
       loglevel = "notice";
