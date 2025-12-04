@@ -397,41 +397,11 @@
       enable = true;
       extraConfig.pipewire."92-low-latency" = {
         context.properties = {
-          default.clock.max-quantum = 512;
-          default.clock.min-quantum = 512;
-          default.clock.quantum = 512;
           default.clock.rate = 48000;
-          # Real-time scheduling
-          core.daemon = true;
-          core.name = "pipewire-0";
+          default.clock.quantum = 512;
+          default.clock.min-quantum = 512;
+          default.clock.max-quantum = 512;
         };
-        context.modules = [
-          {
-            name = "libpipewire-module-rtkit";
-            args = {
-              nice.level = -11;
-              rt.prio = 88;
-              rt.time.soft = 2000000;
-              rt.time.hard = 2000000;
-            };
-            flags = [
-              "ifexists"
-              "nofail"
-            ];
-          }
-          {
-            name = "libpipewire-module-protocol-native";
-          }
-          {
-            name = "libpipewire-module-client-node";
-          }
-          {
-            name = "libpipewire-module-adapter";
-          }
-          {
-            name = "libpipewire-module-link-factory";
-          }
-        ];
       };
       extraConfig.pipewire."93-screen-share" = {
         "stream.properties" = {
@@ -443,21 +413,16 @@
         };
       };
       extraConfig.pipewire-pulse."92-pulse-low-latency" = {
-        context.modules = [
-          {
-            name = "libpipewire-module-protocol-pulse";
-            args = {
-              pulse.min.req = "512/48000";
-              pulse.default.req = "512/48000";
-              pulse.max.req = "512/48000";
-              pulse.min.quantum = "512/48000";
-              pulse.max.quantum = "512/48000";
-            };
-          }
-        ];
-        stream.properties = {
-          node.latency = "512/48000";
-          resample.quality = 4;
+        "pulse.properties" = {
+          "pulse.min.req" = "512/48000";
+          "pulse.default.req" = "512/48000";
+          "pulse.max.req" = "512/48000";
+          "pulse.min.quantum" = "512/48000";
+          "pulse.max.quantum" = "512/48000";
+        };
+        "stream.properties" = {
+          "node.latency" = "512/48000";
+          "resample.quality" = 4;
         };
       };
       wireplumber = {
