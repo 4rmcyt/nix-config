@@ -4,11 +4,12 @@
   pkgs,
   modulesPath,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
-  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   # =================================================================
   # 2. Boot Configuration
@@ -67,7 +68,7 @@
     # Kernel configuration - CachyOS with LTO and Zen4 optimizations
     kernelPackages = pkgs.linuxPackages_cachyos-lto-znver4;
     zfs.package = pkgs.zfs_cachyos;
-    supportedFilesystems = ["zfs"];
+    supportedFilesystems = [ "zfs" ];
 
     # Kernel parameters
     kernelParams = [
@@ -80,6 +81,11 @@
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
       "pti=off"
+      "preempt=full"
+      "threadirqs"
+      "amd_pstate=active" # Use CPPC-based driver for faster response
+      "amd_prefcore=1" # Prefer V-Cache CCD for latency-sensitive threads
+      "mitigations=off"
       "rd.systemd.show_status=auto"
       "rd.udev.log_priority=3"
       "retbleed=off" # big performance impact
@@ -214,8 +220,15 @@
     };
 
     # SCX Scheduler
-    scx.enable = true;
-    scx.scheduler = "scx_rustland";
+    scx = {
+      enable = true;
+      package = pkgs.scx.full;
+      scheduler = "scx_bpfland";
+      extraArgs = [
+        "-m"
+        "performance"
+      ];
+    };
 
     # Hardware monitoring
     smartd = {
@@ -245,7 +258,7 @@
   # =================================================================
   # 7. Swap Configuration
   # =================================================================
-  swapDevices = [];
+  swapDevices = [ ];
 
   zramSwap = {
     enable = true;
