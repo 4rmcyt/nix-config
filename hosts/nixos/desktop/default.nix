@@ -485,12 +485,11 @@
               {
                 matches = [
                   {
-                    "node.name" = "~alsa_output.*";
+                    "node.name" = "~alsa_output.usb.*";
                   }
                 ];
                 actions = {
                   update-props = {
-                    "audio.format" = "S24LE";
                     "audio.rate" = 48000;
                     "api.alsa.period-size" = 512;
                     "api.alsa.headroom" = 512;

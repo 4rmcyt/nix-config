@@ -36,6 +36,9 @@
       inputs.lix.follows = "lix";
     };
 
+    ucodenix.url = "github:e-tho/ucodenix";
+
+
     # System management
     disko = {
       url = "github:nix-community/disko";
@@ -226,6 +229,7 @@
                 inputs.chaotic.nixosModules.nyx-cache
                 inputs.chaotic.nixosModules.nyx-overlay
                 inputs.lix-module.nixosModules.default
+                inputs.ucodenix.nixosModules.default
               ]
               ++ (helpers.mkHome {
                 modules = [

@@ -99,6 +99,7 @@
       "usb-storage.delay_use=0"
       "usbcore.autosuspend=-1"
       "zfs.zfs_arc_max=12884901888" # 12GB ARC size
+      "microcode.amd_sha_check=off"
     ];
 
     # ZFS configuration
@@ -253,6 +254,11 @@
         interval = "weekly";
       };
     };
+    ucodenix = {
+      enable = true;
+      cpuModelId = ./facter.json;
+    };
+
   };
 
   # =================================================================

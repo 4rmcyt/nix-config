@@ -11,6 +11,7 @@
       # Core System Utilities (alphabetical)
       # =================================================================
       btop
+      cpuid
       coreutils-full
       curl
       direnv
