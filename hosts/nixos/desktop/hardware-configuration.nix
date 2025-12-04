@@ -63,6 +63,12 @@
     extraModprobeConfig = ''
       # Enable v4l2loopback for virtual camera
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
+
+      # USB audio optimizations
+      options snd-usb-audio implicit_fb=1 use_vmalloc=1 quirk_flags=0x80
+
+      # HDA audio optimizations
+      options snd-hda-intel power_save=0 power_save_controller=N
     '';
 
     # Kernel configuration - CachyOS with LTO and Zen4 optimizations
@@ -82,7 +88,6 @@
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
       "pti=off"
       "preempt=full"
-      "threadirqs"
       "amd_pstate=active" # Use CPPC-based driver for faster response
       "amd_prefcore=1" # Prefer V-Cache CCD for latency-sensitive threads
       "mitigations=off"
