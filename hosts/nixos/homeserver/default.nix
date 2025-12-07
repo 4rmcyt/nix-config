@@ -74,9 +74,9 @@
         group = config.users.groups.root.name;
         mode = "0600";
       };
-      nix_access_token = {
+      git_access_token = {
         sopsFile = ../../../secrets/common.yaml;
-        key = "nix_access_token";
+        key = "git_access_token";
       };
       nix_builder_private_key = {
         sopsFile = ../../../secrets/nix-builder-homeserver.yaml;
@@ -87,6 +87,12 @@
       };
     };
   };
+
+  # Create system-wide nix configuration with GitHub access token
+  systemd.services.nix-daemon.preStart = ''
+    mkdir -p /etc/nix
+    echo "access-tokens = github.com=$(cat ${config.sops.secrets.git_access_token.path})" > /etc/nix/nix.conf
+  '';
 
   # =================================================================
   # 4. Boot Configuration

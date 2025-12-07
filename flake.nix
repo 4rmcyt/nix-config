@@ -38,7 +38,6 @@
 
     ucodenix.url = "github:e-tho/ucodenix";
 
-
     # System management
     disko = {
       url = "github:nix-community/disko";

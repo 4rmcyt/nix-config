@@ -3,8 +3,7 @@
   config,
   lib,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -27,7 +26,7 @@
     ../../../modules/users/zeev
 
     # Disabled - uncomment when needed
-    # ../../../modules/GUI/ollama
+    ../../../modules/GUI/ollama
     # ../../../modules/GUI/OBS
 
     ../../../modules/GUI/chromium
@@ -47,13 +46,19 @@
         sopsFile = ../../../secrets/tailscale-desktop.yaml;
         key = "tailscale_auth_key";
       };
-      nix_access_token = {
+      git_access_token = {
         sopsFile = ../../../secrets/common.yaml;
-        key = "nix_access_token";
+        key = "git_access_token";
       };
     };
     age.keyFile = "/root/.config/sops/age/keys.txt";
   };
+
+  # Create system-wide nix configuration with GitHub access token
+  systemd.services.nix-daemon.preStart = ''
+    mkdir -p /etc/nix
+    echo "access-tokens = github.com=$(cat ${config.sops.secrets.git_access_token.path})" > /etc/nix/nix.conf
+  '';
 
   # =================================================================
   # 4. Boot Configuration
@@ -89,7 +94,6 @@
   nix = {
     channel.enable = true;
     settings = {
-      access-tokens = "github.com=REDACTED";
       cores = 0;
 
       experimental-features = [
@@ -215,11 +219,10 @@
       XDG_STATE_HOME = "$HOME/.local/state";
     };
 
-    shells = lib.mkBefore (with pkgs; [ nushell ]);
+    shells = lib.mkBefore (with pkgs; [zsh nushell]);
 
     systemPackages = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -345,7 +348,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
+      allowedTCPPorts = [9100]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -377,6 +380,8 @@
       enable = true;
       enableZshIntegration = true;
     };
+
+    zsh.enable = true;
 
     # vscode.enable = true;
   };
@@ -509,7 +514,7 @@
 
     pcscd = {
       enable = true;
-      plugins = [ pkgs.ccid ];
+      plugins = [pkgs.ccid];
     };
 
     power-profiles-daemon.enable = false;
@@ -569,7 +574,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = [ "nvidia" ];
+      videoDrivers = ["nvidia"];
       xkb.layout = "us";
     };
   };
@@ -578,10 +583,10 @@
   # =================================================================
   users = {
     groups = {
-      git = { };
-      plugdev = { };
-      prometheus = { };
-      nix-builder = { };
+      git = {};
+      plugdev = {};
+      prometheus = {};
+      nix-builder = {};
     };
 
     users = {
@@ -613,7 +618,7 @@
         ];
       };
 
-      zeev.shell = lib.mkForce pkgs.nushell;
+      zeev.shell = lib.mkForce pkgs.zsh;
     };
   };
 

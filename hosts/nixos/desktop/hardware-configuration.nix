@@ -4,12 +4,11 @@
   pkgs,
   modulesPath,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
-  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
   # =================================================================
   # 2. Boot Configuration
@@ -74,7 +73,7 @@
     # Kernel configuration - CachyOS with LTO and Zen4 optimizations
     kernelPackages = pkgs.linuxPackages_cachyos-lto-znver4;
     zfs.package = pkgs.zfs_cachyos;
-    supportedFilesystems = [ "zfs" ];
+    supportedFilesystems = ["zfs"];
 
     # Kernel parameters
     kernelParams = [
@@ -258,7 +257,6 @@
       enable = true;
       cpuModelId = ./facter.json;
     };
-
   };
 
   # =================================================================
@@ -269,7 +267,7 @@
   # =================================================================
   # 7. Swap Configuration
   # =================================================================
-  swapDevices = [ ];
+  swapDevices = [];
 
   zramSwap = {
     enable = true;

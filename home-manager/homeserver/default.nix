@@ -66,4 +66,14 @@
     export PATH="$PYENV_ROOT/bin:$PATH"
     eval "$(pyenv init --path)"
   '';
+
+  # Create nix configuration with GitHub access token from secrets
+  home.activation.createNixConfig = pkgs.lib.hm.dag.entryAfter ["writeBoundary"] ''
+    if [ -f /run/secrets/git_access_token ]; then
+      $DRY_RUN_CMD mkdir -p $HOME/.config/nix
+      if [ ! "$DRY_RUN" ]; then
+        echo "access-tokens = github.com=$(cat /run/secrets/git_access_token)" > $HOME/.config/nix/nix.conf
+      fi
+    fi
+  '';
 }

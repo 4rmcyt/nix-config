@@ -27,7 +27,6 @@
     initContent = ''
       autoload -Uz compinit && compinit
 
-      bindkey -v
       bindkey '^f' autosuggest-accept
       bindkey '^p' history-search-backward
       bindkey '^n' history-search-forward
@@ -50,8 +49,10 @@
       zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
       [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+    '';
 
-      # Initialize zoxide at the end (required by zoxide doctor check)
+    # Initialize zoxide at the very end (required by zoxide doctor check)
+    initExtraLast = ''
       eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
     '';
 
