@@ -88,6 +88,7 @@
   # nix.package is set by lix-module
   nix = {
     channel.enable = true;
+    access-tokens = "github.com=REDACTED";
     settings = {
       cores = 0;
 
