@@ -270,52 +270,6 @@
       wallpaper = "/home/zeev/Pictures/Wallpapers/scorched_earth_art-wallpaper-3840x2160.jpg";
     };
 
-    # Screen configuration
-    screens = {
-      "1" = {
-        name = "DP-4";
-        position = {
-          x = 0;
-          y = 0;
-        };
-        mode = {
-          size = {
-            width = 3840;
-            height = 2160;
-          };
-          refreshRate = 60.0;
-        };
-        scale = 2.1;
-        hdr = {
-          enable = true;
-          sdrBrightness = 130;
-          sdrGamutWideness = 0;
-        };
-        wideColorGamut = true;
-      };
-      "2" = {
-        name = "DP-5";
-        position = {
-          x = 1829;
-          y = 0;
-        };
-        mode = {
-          size = {
-            width = 3840;
-            height = 2160;
-          };
-          refreshRate = 60.0;
-        };
-        scale = 2.1;
-        hdr = {
-          enable = true;
-          sdrBrightness = 130;
-          sdrGamutWideness = 0;
-        };
-        wideColorGamut = true;
-      };
-    };
-
     # KDE Configuration Files
     configFile = {
       # Baloo file indexing

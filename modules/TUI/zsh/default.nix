@@ -1,4 +1,9 @@
 {pkgs, ...}: {
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   programs.zsh = {
     antidote = {
       enable = true;
@@ -49,11 +54,6 @@
       zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
       [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-    '';
-
-    # Initialize zoxide at the very end (required by zoxide doctor check)
-    initExtraLast = ''
-      eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
     '';
 
     sessionVariables = {
