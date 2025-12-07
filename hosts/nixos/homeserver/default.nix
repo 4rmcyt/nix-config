@@ -88,12 +88,6 @@
     };
   };
 
-  # Create system-wide nix configuration with GitHub access token
-  systemd.services.nix-daemon.preStart = ''
-    mkdir -p /etc/nix
-    echo "access-tokens = github.com=$(cat ${config.sops.secrets.git_access_token.path})" > /etc/nix/nix.conf
-  '';
-
   # =================================================================
   # 4. Boot Configuration
   # =================================================================

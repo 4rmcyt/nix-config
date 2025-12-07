@@ -62,7 +62,6 @@
 
     # Qt/KDE Support Packages
     pinentry-qt
-    ibus
     ibus-with-plugins
   ];
 
@@ -267,6 +266,7 @@
 
     # Workspace settings
     workspace = {
+      colorScheme = "Layan";
       wallpaper = "/home/zeev/Pictures/Wallpapers/scorched_earth_art-wallpaper-3840x2160.jpg";
     };
 

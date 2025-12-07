@@ -51,14 +51,9 @@
         key = "git_access_token";
       };
     };
+
     age.keyFile = "/root/.config/sops/age/keys.txt";
   };
-
-  # Create system-wide nix configuration with GitHub access token
-  systemd.services.nix-daemon.preStart = ''
-    mkdir -p /etc/nix
-    echo "access-tokens = github.com=$(cat ${config.sops.secrets.git_access_token.path})" > /etc/nix/nix.conf
-  '';
 
   # =================================================================
   # 4. Boot Configuration
@@ -628,7 +623,14 @@
   virtualisation.podman.enable = true;
 
   # =================================================================
-  # 16. Kernel Configuration
+  # 16. Systemd Configuration
+  # =================================================================
+  systemd.extraConfig = ''
+    DefaultTimeoutStopSec=10s
+  '';
+
+  # =================================================================
+  # 17. Kernel Configuration
   # =================================================================
   # Using standard CachyOS kernel with LTO and Zen4 optimizations
 

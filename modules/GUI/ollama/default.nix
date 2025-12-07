@@ -24,6 +24,6 @@
         "deepseek-r1:8b"
       ];
     };
-    open-webui.enable = true;
+    # open-webui.enable = true;
   };
 }
