@@ -3,10 +3,8 @@
   lib,
   config,
   ...
-}:
-let
+}: let
   servicesWithMediaAccess = [
-    "autobrr"
     "bazarr"
     "jellyseerr"
     "lidarr"
@@ -18,8 +16,7 @@ let
     "audiobookshelf"
     "jellyfin"
   ];
-in
-{
+in {
   # SOPS secrets for nixarr
   sops.secrets = {
     wg_conf = {
@@ -30,14 +27,6 @@ in
   };
 
   users.users = {
-    autobrr = {
-      isSystemUser = true;
-      group = lib.mkForce "autobrr";
-      extraGroups = [
-        "users"
-        "media"
-      ];
-    };
     audiobookshelf = {
       isSystemUser = true;
       group = lib.mkForce "audiobookshelf";
@@ -130,18 +119,17 @@ in
     };
   };
   users.groups = {
-    autobrr = { };
-    audiobookshelf = { };
-    bazarr = { };
-    jellyfin = { };
-    jellyseerr = { };
-    lidarr = { };
-    prowlarr = { };
-    radarr = { };
-    sonarr = { };
-    transmission = { };
-    readarr = { };
-    recyclarr = { };
+    audiobookshelf = {};
+    bazarr = {};
+    jellyfin = {};
+    jellyseerr = {};
+    lidarr = {};
+    prowlarr = {};
+    radarr = {};
+    sonarr = {};
+    transmission = {};
+    readarr = {};
+    recyclarr = {};
     # headphones = { };
   };
 
@@ -177,21 +165,20 @@ in
     openTcpPorts = [
       # 80    # HTTP - conflicts with existing router mapping
       # 443   # HTTPS - conflicts with existing router mapping
-      8096  # Jellyfin
-      8920  # Jellyfin HTTPS
-      9292  # Audiobookshelf
-      5055  # Jellyseerr
-      7474  # Autobrr
+      8096 # Jellyfin
+      8920 # Jellyfin HTTPS
+      9292 # Audiobookshelf
+      5055 # Jellyseerr
     ];
     openUdpPorts = [
-      1900  # Jellyfin DLNA
-      7359  # Jellyfin discovery
+      1900 # Jellyfin DLNA
+      7359 # Jellyfin discovery
     ];
   };
 
   nixarr = {
     enable = true;
-    mediaUsers = [ config.my.defaults.user ];
+    mediaUsers = [config.my.defaults.user];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
 
@@ -247,8 +234,6 @@ in
     jellyseerr.enable = true;
     jellyfin.enable = true;
 
-    autobrr.enable = true;
-
     bazarr.enable = true;
     lidarr.enable = true;
     prowlarr.enable = true;
@@ -300,7 +285,6 @@ in
     "d /data/media/.state 770 root media -"
     "d /data/media/.state/nixarr 770 root media -"
 
-    "d /data/media/.state/nixarr/autobrr 775 autobrr autobrr -"
     "d /data/media/.state/nixarr/audiobookshelf 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/jellyfin 755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/data 755 jellyfin jellyfin -"
@@ -336,5 +320,5 @@ in
   ];
 
   # Import UPNP fix for nixarr typo bug
-  imports = [ ./upnp-fix.nix ];
+  imports = [./upnp-fix.nix];
 }

@@ -29,8 +29,6 @@
     5000 # Kavita
   ];
 
-  # Nginx configuration managed in modules/security/keycloak/nginx-auth.nix
-
   environment.systemPackages = [pkgs.kavita];
 
   services.kavita = {
