@@ -243,20 +243,9 @@ in
       };
     };
 
-    audiobookshelf = {
-      enable = true;
-      expose.https.upnp.enable = true;
-    };
-
-    jellyseerr = {
-      enable = true;
-      expose.https.upnp.enable = true;
-    };
-
-    jellyfin = {
-      enable = true;
-      expose.https.upnp.enable = true;
-    };
+    audiobookshelf.enable = true;
+    jellyseerr.enable = true;
+    jellyfin.enable = true;
 
     autobrr.enable = true;
 
