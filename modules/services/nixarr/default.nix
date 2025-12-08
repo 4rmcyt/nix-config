@@ -165,7 +165,19 @@ in
 
   util-nixarr.upnp = {
     enable = true;
-    openUpdPorts = [ ]; # Workaround for nixarr typo bug
+    openTcpPorts = [
+      80    # HTTP for Jellyfin/Audiobookshelf/Jellyseerr
+      443   # HTTPS for Jellyfin/Audiobookshelf/Jellyseerr
+      8096  # Jellyfin
+      8920  # Jellyfin HTTPS
+      9292  # Audiobookshelf
+      5055  # Jellyseerr
+      7474  # Autobrr
+    ];
+    openUdpPorts = [
+      1900  # Jellyfin DLNA
+      7359  # Jellyfin discovery
+    ];
   };
 
   nixarr = {
