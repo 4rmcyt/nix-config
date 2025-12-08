@@ -335,4 +335,7 @@ in
 
     "d /data/Downloads 775 zeev media -"
   ];
+
+  # Import UPNP fix for nixarr typo bug
+  imports = [ ./upnp-fix.nix ];
 }
