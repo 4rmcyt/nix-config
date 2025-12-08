@@ -30,6 +30,14 @@ in
   };
 
   users.users = {
+    autobrr = {
+      isSystemUser = true;
+      group = lib.mkForce "autobrr";
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
     audiobookshelf = {
       isSystemUser = true;
       group = lib.mkForce "audiobookshelf";
@@ -122,6 +130,7 @@ in
     };
   };
   users.groups = {
+    autobrr = { };
     audiobookshelf = { };
     bazarr = { };
     jellyfin = { };
@@ -166,7 +175,7 @@ in
   util-nixarr.upnp = {
     enable = true;
     openTcpPorts = [
-      80    # HTTP for Jellyfin/Audiobookshelf/Jellyseerr
+      # 80    # HTTP - conflicts with existing router mapping
       443   # HTTPS for Jellyfin/Audiobookshelf/Jellyseerr
       8096  # Jellyfin
       8920  # Jellyfin HTTPS
@@ -302,6 +311,7 @@ in
     "d /data/media/.state 770 root media -"
     "d /data/media/.state/nixarr 770 root media -"
 
+    "d /data/media/.state/nixarr/autobrr 775 autobrr autobrr -"
     "d /data/media/.state/nixarr/audiobookshelf 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/jellyfin 755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/data 755 jellyfin jellyfin -"
