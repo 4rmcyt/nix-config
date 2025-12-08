@@ -163,8 +163,6 @@ in
     pkgs.jellyfin-ffmpeg
   ];
 
-  util-nixarr.upnp.enable = true;
-
   nixarr = {
     enable = true;
     mediaUsers = [ config.my.defaults.user ];
