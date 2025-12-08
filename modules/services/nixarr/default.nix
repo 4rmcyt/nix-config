@@ -176,7 +176,7 @@ in
     enable = true;
     openTcpPorts = [
       # 80    # HTTP - conflicts with existing router mapping
-      443   # HTTPS for Jellyfin/Audiobookshelf/Jellyseerr
+      # 443   # HTTPS - conflicts with existing router mapping
       8096  # Jellyfin
       8920  # Jellyfin HTTPS
       9292  # Audiobookshelf
