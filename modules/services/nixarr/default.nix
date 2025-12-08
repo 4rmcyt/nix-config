@@ -5,6 +5,7 @@
   ...
 }: let
   servicesWithMediaAccess = [
+    "autobrr"
     "bazarr"
     "jellyseerr"
     "lidarr"
@@ -166,9 +167,15 @@ in {
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
 
+    util-nixarr.upnp.enable = true;
+
     vpn = {
       enable = true;
       wgConf = config.sops.secrets.wg_conf.path;
+      vpnTestService = {
+        enable = true;
+        port = 58403;
+      };
       openTcpPorts = [
         58403
         63998
@@ -211,7 +218,17 @@ in {
     };
 
     audiobookshelf.enable = true;
-    jellyfin.enable = true;
+
+    jellyfin = {
+      enable = true;
+      expose.https.upnp.enable = true;
+    };
+
+    autobrr = {
+      enable = true;
+      vpn.enable = true;
+    };
+
     bazarr.enable = true;
     lidarr.enable = true;
     prowlarr.enable = true;

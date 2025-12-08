@@ -72,6 +72,8 @@
           service: http://localhost:4180
         - hostname: livesync.${config.my.defaults.domain}
           service: http://localhost:5984
+        - hostname: autobrr.${config.my.defaults.domain}
+          service: http://localhost:7474
         - service: http_status:404
     '';
   };
@@ -117,4 +119,3 @@
 # #   service: http://localhost:8265
 # - hostname: cal.${config.my.defaults.domain}
 #           service: http://localhost:5232
-
