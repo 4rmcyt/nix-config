@@ -218,7 +218,7 @@ in {
 
     audiobookshelf = {
       enable = true;
-      upnp.enable = true;
+      expose.https.upnp.enable = true;
     };
 
     jellyseerr = {
