@@ -4,11 +4,12 @@
   pkgs,
   modulesPath,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
-  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   # =================================================================
   # 2. Boot Configuration
@@ -46,16 +47,14 @@
       "pci-stub"
       "r8169"
       "snd-usb-audio"
+      "snd_hda_codec_generic"
       "snd_hda_codec_hdmi"
-      "snd_hda_codec_realtek"
       "snd_hda_intel"
       "v4l2loopback"
     ];
 
     extraModulePackages = with config.boot.kernelPackages; [
-      # v4l2loopback
       zenpower
-      # ryzen-smu
     ];
 
     # Module configuration
@@ -67,29 +66,30 @@
       options snd-usb-audio implicit_fb=1 use_vmalloc=1 quirk_flags=0x80
 
       # HDA audio optimizations
-      options snd-hda-intel power_save=0 power_save_controller=N
+      options snd-hda-intel power_save=0 power_save_controller=N probe_mask=1
     '';
 
     # Kernel configuration - CachyOS with LTO and Zen4 optimizations
     kernelPackages = pkgs.linuxPackages_cachyos-lto-znver4;
     zfs.package = pkgs.zfs_cachyos;
-    supportedFilesystems = ["zfs"];
+    supportedFilesystems = [ "zfs" ];
 
     # Kernel parameters
     kernelParams = [
+      "amd_pstate=active" # Use CPPC-based driver for faster response
+      "amd_prefcore=1" # Prefer V-Cache CCD for latency-sensitive threads
       "cfg80211.ieee80211_regdom=CA"
       "loglevel=4"
+      "microcode.amd_sha_check=off"
+      "mitigations=off"
       "net.core.default_qdisc=fq"
       "net.ipv4.tcp_congestion_control=bbr"
       "nohibernate"
       "nvidia-drm.fbdev=1"
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
-      "pti=off"
       "preempt=full"
-      "amd_pstate=active" # Use CPPC-based driver for faster response
-      "amd_prefcore=1" # Prefer V-Cache CCD for latency-sensitive threads
-      "mitigations=off"
+      "pti=off"
       "rd.systemd.show_status=auto"
       "rd.udev.log_priority=3"
       "retbleed=off" # big performance impact
@@ -98,7 +98,6 @@
       "usb-storage.delay_use=0"
       "usbcore.autosuspend=-1"
       "zfs.zfs_arc_max=12884901888" # 12GB ARC size
-      "microcode.amd_sha_check=off"
     ];
 
     # ZFS configuration
@@ -155,6 +154,9 @@
   # 3. Hardware Configuration
   # =================================================================
   hardware = {
+    # AMD GPU
+    amdgpu.overdrive.enable = true;
+
     # Bluetooth
     bluetooth = {
       enable = true;
@@ -167,8 +169,7 @@
       };
     };
 
-    # CPU configuration
-    # cpu.amd.ryzen-smu.enable = true;
+    # CPU
     cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
     # Firmware
@@ -182,7 +183,6 @@
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
-        # AMD GPU support (for integrated graphics)
         rocmPackages.clr
         rocmPackages.clr.icd
       ];
@@ -242,6 +242,12 @@
       enable = true;
     };
 
+    # Microcode updates
+    ucodenix = {
+      enable = true;
+      cpuModelId = ./facter.json;
+    };
+
     # ZFS services
     zfs = {
       autoScrub = {
@@ -253,10 +259,6 @@
         interval = "weekly";
       };
     };
-    ucodenix = {
-      enable = true;
-      cpuModelId = ./facter.json;
-    };
   };
 
   # =================================================================
@@ -267,7 +269,7 @@
   # =================================================================
   # 7. Swap Configuration
   # =================================================================
-  swapDevices = [];
+  swapDevices = [ ];
 
   zramSwap = {
     enable = true;

@@ -232,7 +232,7 @@
               ]
               ++ (helpers.mkHome {
                 modules = [
-                  ./home-manager/desktop
+                  ./home/desktop
                   inputs.plasma-manager.homeModules.plasma-manager
                   inputs.betterfox-nix.homeModules.betterfox
                   inputs.cosmic-manager.homeManagerModules.default
@@ -254,7 +254,7 @@
                 inputs.lix-module.nixosModules.default
               ]
               ++ (helpers.mkHome {
-                modules = [./home-manager/homeserver];
+                modules = [./home/homeserver];
               });
           };
 
@@ -267,7 +267,7 @@
                 inputs.vscode-server.nixosModules.default
               ]
               ++ (helpers.mkHome {
-                modules = [./home-manager/wsl];
+                modules = [./home/wsl];
               });
           };
 
@@ -284,7 +284,7 @@
               ]
               ++ (helpers.mkHome {
                 modules = [
-                  ./home-manager/matebook
+                  ./home/matebook
                   inputs.betterfox-nix.homeModules.betterfox
                 ];
               });

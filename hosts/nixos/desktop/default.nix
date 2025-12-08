@@ -3,7 +3,8 @@
   config,
   lib,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -15,7 +16,7 @@
     ../../../modules/options
 
     # Desktop environment
-    ../../../modules/desktops/kde
+    ../../../modules/DE/kde
 
     # Features and roles
     ../../../modules/gaming
@@ -191,22 +192,22 @@
       NIXOS_OZONE_WL = "1";
       XDG_SESSION_TYPE = "wayland";
 
-      # Qt (allow Stylix to override QT_QPA_PLATFORMTHEME)
-      QT_QPA_PLATFORM = "wayland;xcb";
-      QT_QPA_PLATFORMTHEME = lib.mkDefault "qt6ct";
-      QT_AUTO_SCREEN_SCALE_FACTOR = "1";
-      QT_SCALE_FACTOR = "1";
+      # # Qt (allow Stylix to override QT_QPA_PLATFORMTHEME)
+      # QT_QPA_PLATFORM = "wayland;xcb";
+      # QT_QPA_PLATFORMTHEME = lib.mkDefault "qt6ct";
+      # QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+      # QT_SCALE_FACTOR = "1";
 
-      # GTK
-      GDK_BACKEND = "wayland,x11";
-      GDK_SCALE = "1";
-      GTK_CSD = "1";
-      GTK_DECORATION_LAYOUT = ":minimize,maximize,close";
+      # # GTK
+      # GDK_BACKEND = "wayland,x11";
+      # GDK_SCALE = "1";
+      # GTK_CSD = "1";
+      # GTK_DECORATION_LAYOUT = ":minimize,maximize,close";
 
-      # Mozilla
-      MOZ_ENABLE_WAYLAND = "1";
-      MOZ_WEBRENDER = "1";
-      MOZ_ACCELERATED = "1";
+      # # Mozilla
+      # MOZ_ENABLE_WAYLAND = "1";
+      # MOZ_WEBRENDER = "1";
+      # MOZ_ACCELERATED = "1";
 
       # XDG
       XDG_CACHE_HOME = "$HOME/.cache";
@@ -215,10 +216,17 @@
       XDG_STATE_HOME = "$HOME/.local/state";
     };
 
-    shells = lib.mkBefore (with pkgs; [zsh nushell]);
+    shells = lib.mkBefore (
+      with pkgs;
+      [
+        zsh
+        nushell
+      ]
+    );
 
     systemPackages = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -344,7 +352,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -398,10 +406,10 @@
       enable = true;
       extraConfig.pipewire."92-low-latency" = {
         context.properties = {
+          default.clock.max-quantum = 32;
+          default.clock.min-quantum = 32;
+          default.clock.quantum = 32;
           default.clock.rate = 48000;
-          default.clock.quantum = 512;
-          default.clock.min-quantum = 512;
-          default.clock.max-quantum = 512;
         };
       };
       extraConfig.pipewire."93-screen-share" = {
@@ -413,65 +421,13 @@
           "support.*" = "support/libspa-support";
         };
       };
-      extraConfig.pipewire-pulse."92-pulse-low-latency" = {
-        "pulse.properties" = {
-          "pulse.min.req" = "512/48000";
-          "pulse.default.req" = "512/48000";
-          "pulse.max.req" = "512/48000";
-          "pulse.min.quantum" = "512/48000";
-          "pulse.max.quantum" = "512/48000";
-        };
-        "stream.properties" = {
-          "node.latency" = "512/48000";
-          "resample.quality" = 4;
-        };
-      };
-      wireplumber = {
-        enable = true;
-        extraConfig = {
-          "51-usb-audio-priority" = {
-            "monitor.alsa.rules" = [
-              {
-                matches = [
-                  {
-                    "device.name" = "~alsa_card.usb-Logitech_G735_Gaming_Headset.*";
-                  }
-                ];
-                actions = {
-                  update-props = {
-                    "device.nick" = "G735 Gaming Headset";
-                    "device.description" = "G735 Gaming Headset";
-                    "priority.driver" = 1000;
-                    "priority.session" = 1000;
-                    "api.alsa.use-acp" = true;
-                    "api.alsa.disable-batch" = true;
-                  };
-                };
-              }
-              {
-                matches = [
-                  {
-                    "node.name" = "~alsa_output.usb.*";
-                  }
-                ];
-                actions = {
-                  update-props = {
-                    "audio.rate" = 48000;
-                    "api.alsa.period-size" = 512;
-                    "api.alsa.headroom" = 512;
-                    "api.alsa.disable-batch" = true;
-                  };
-                };
-              }
-            ];
-          };
-        };
-      };
       jack.enable = true;
       pulse.enable = true;
+      wireplumber.enable = true;
     };
 
     pulseaudio.enable = false;
+
 
     # =============================================================
     # File Systems & Storage
@@ -510,7 +466,7 @@
 
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
     power-profiles-daemon.enable = false;
@@ -570,7 +526,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
   };
@@ -579,10 +535,10 @@
   # =================================================================
   users = {
     groups = {
-      git = {};
-      plugdev = {};
-      prometheus = {};
-      nix-builder = {};
+      git = { };
+      plugdev = { };
+      prometheus = { };
+      nix-builder = { };
     };
 
     users = {
@@ -622,22 +578,6 @@
   # 15. Virtualization
   # =================================================================
   virtualisation.podman.enable = true;
-
-  # =================================================================
-  # 16. Systemd Configuration
-  # =================================================================
-  systemd.extraConfig = ''
-    DefaultTimeoutStopSec=10s
-  '';
-
-  # =================================================================
-  # 17. Kernel Configuration
-  # =================================================================
-  # Using standard CachyOS kernel with LTO and Zen4 optimizations
-
-  # =================================================================
-  # 17. Systemd Configuration
-  # =================================================================
   systemd.tmpfiles.rules = [
     "d /data/zeev/Taildrive 770 davfs2 users -"
   ];

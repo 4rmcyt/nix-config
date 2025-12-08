@@ -8,7 +8,7 @@
     "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-base.nix"
     "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
     ../../../modules/users/zeev
-    ../../../modules/desktops/cosmic
+    ../../../modules/DE/cosmic
     ../../../modules/disko/desktop
   ];
 
