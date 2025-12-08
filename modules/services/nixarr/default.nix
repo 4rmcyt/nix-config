@@ -233,10 +233,7 @@ in
       expose.https.upnp.enable = true;
     };
 
-    autobrr = {
-      enable = true;
-      vpn.enable = true;
-    };
+    autobrr.enable = true;
 
     bazarr.enable = true;
     lidarr.enable = true;
