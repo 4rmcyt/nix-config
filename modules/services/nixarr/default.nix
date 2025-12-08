@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   servicesWithMediaAccess = [
     "autobrr"
     "bazarr"
@@ -17,7 +18,8 @@
     "audiobookshelf"
     "jellyfin"
   ];
-in {
+in
+{
   # SOPS secrets for nixarr
   sops.secrets = {
     wg_conf = {
@@ -120,17 +122,17 @@ in {
     };
   };
   users.groups = {
-    audiobookshelf = {};
-    bazarr = {};
-    jellyfin = {};
-    jellyseerr = {};
-    lidarr = {};
-    prowlarr = {};
-    radarr = {};
-    sonarr = {};
-    transmission = {};
-    readarr = {};
-    recyclarr = {};
+    audiobookshelf = { };
+    bazarr = { };
+    jellyfin = { };
+    jellyseerr = { };
+    lidarr = { };
+    prowlarr = { };
+    radarr = { };
+    sonarr = { };
+    transmission = { };
+    readarr = { };
+    recyclarr = { };
     # headphones = { };
   };
 
@@ -161,12 +163,13 @@ in {
     pkgs.jellyfin-ffmpeg
   ];
 
+  util-nixarr.upnp.enable = true;
+
   nixarr = {
     enable = true;
-    mediaUsers = [config.my.defaults.user];
+    mediaUsers = [ config.my.defaults.user ];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
-    util-nixarr.upnp.enable = true;
 
     vpn = {
       enable = true;
