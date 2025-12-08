@@ -13,8 +13,8 @@
       path = [ pkgs.miniupnpc ];
 
       script =
-        (lib.strings.concatMapStrings (x: "upnpc -r ${builtins.toString x} UDP" + "\n") config.util-nixarr.upnp.openUdpPorts)
-        ++ (lib.strings.concatMapStrings (x: "upnpc -r ${builtins.toString x} TCP" + "\n") config.util-nixarr.upnp.openTcpPorts);
+        (lib.strings.concatMapStrings (x: "upnpc -r ${builtins.toString x} UDP\n") config.util-nixarr.upnp.openUdpPorts)
+        + (lib.strings.concatMapStrings (x: "upnpc -r ${builtins.toString x} TCP\n") config.util-nixarr.upnp.openTcpPorts);
 
       serviceConfig = {
         Type = "oneshot";
