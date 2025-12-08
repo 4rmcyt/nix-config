@@ -236,7 +236,7 @@ in
     autobrr = {
       enable = true;
       vpn.enable = true;
-      settings = {
+      settings = lib.mkForce {
         checkForUpdates = false;
         host = "0.0.0.0";
         port = 7474;
