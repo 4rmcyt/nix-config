@@ -163,6 +163,11 @@ in
     pkgs.jellyfin-ffmpeg
   ];
 
+  util-nixarr.upnp = {
+    enable = true;
+    openUpdPorts = [ ]; # Workaround for nixarr typo bug
+  };
+
   nixarr = {
     enable = true;
     mediaUsers = [ config.my.defaults.user ];
@@ -226,6 +231,7 @@ in
       enable = true;
       expose.https.upnp.enable = true;
     };
+
     jellyfin = {
       enable = true;
       expose.https.upnp.enable = true;
