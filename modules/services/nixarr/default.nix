@@ -166,7 +166,6 @@ in {
     mediaUsers = [config.my.defaults.user];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
-
     util-nixarr.upnp.enable = true;
 
     vpn = {
@@ -217,8 +216,15 @@ in {
       };
     };
 
-    audiobookshelf.enable = true;
+    audiobookshelf = {
+      enable = true;
+      upnp.enable = true;
+    };
 
+    jellyseerr = {
+      enable = true;
+      expose.https.upnp.enable = true;
+    };
     jellyfin = {
       enable = true;
       expose.https.upnp.enable = true;
@@ -234,7 +240,6 @@ in {
     prowlarr.enable = true;
     radarr.enable = true;
     sonarr.enable = true;
-    jellyseerr.enable = true;
     readarr.enable = true;
     recyclarr = {
       enable = true;
