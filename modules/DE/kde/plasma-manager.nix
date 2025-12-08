@@ -189,9 +189,9 @@
 
     # Panels configuration
     panels = [
-      # Bottom panel - Screen 0
+      # Top panel - Screen 0
       {
-        location = "bottom";
+        location = "top";
         screen = 0;
         widgets = [
           "org.kde.plasma.kickoff"
@@ -225,9 +225,9 @@
           "org.kde.plasma.showdesktop"
         ];
       }
-      # Bottom panel - Screen 1
+      # Top panel - Screen 1
       {
-        location = "bottom";
+        location = "top";
         screen = 1;
         widgets = [
           "org.kde.plasma.kickoff"
@@ -267,7 +267,10 @@
     # Workspace settings
     workspace = {
       colorScheme = "Layan";
-      wallpaper = "/home/zeev/Pictures/Wallpapers/scorched_earth_art-wallpaper-3840x2160.jpg";
+      wallpaperSlideShow = {
+        path = "/home/zeev/Pictures/Wallpapers";
+        interval = 3600; # Change wallpaper every 1 hour (3600 seconds)
+      };
     };
 
     # KDE Configuration Files
