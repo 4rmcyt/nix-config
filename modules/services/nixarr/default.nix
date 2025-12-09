@@ -59,8 +59,6 @@ in {
       extraGroups = [
         "users"
         "media"
-        "render"
-        "video"
       ];
     };
     lidarr = {
