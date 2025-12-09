@@ -36,5 +36,22 @@
     extraPortals = with pkgs; [
       kdePackages.xdg-desktop-portal-kde
     ];
+    # Fix portal registration issues
+    xdgOpenUsePortal = true;
+    config = {
+      common = {
+        default = ["kde"];
+      };
+      kde = {
+        default = ["kde" "gtk"];
+        "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+      };
+    };
   };
+
+  # Enable dbus for proper portal communication
+  services.dbus.enable = true;
+
+  # Enable GNOME keyring for secret portal
+  services.gnome.gnome-keyring.enable = true;
 }

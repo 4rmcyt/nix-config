@@ -17,6 +17,8 @@
   home.packages = with pkgs; [
     # KDE Applications
     kdePackages.ark
+    kdePackages.breeze
+    kdePackages.breeze-icons
     kdePackages.discover
     kdePackages.filelight
     kdePackages.gwenview
@@ -267,6 +269,7 @@
     # Workspace settings
     workspace = {
       colorScheme = "Layan";
+      cursorTheme = "breeze_cursors";
       wallpaperSlideShow = {
         path = "/home/zeev/Pictures/Wallpapers";
         interval = 3600; # Change wallpaper every 1 hour (3600 seconds)
@@ -383,6 +386,13 @@
         BorderSize = "Tiny";
         BorderSizeAuto = false;
         theme = "__aurorae__svg__Ant-Dark";
+      };
+      # Window Switcher configuration
+      kwinrc.TabBox = {
+        LayoutName = "org.kde.breeze.desktop";
+      };
+      kwinrc.TabBoxAlternative = {
+        LayoutName = "org.kde.breeze.desktop";
       };
 
       # Locale

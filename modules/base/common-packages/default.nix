@@ -29,7 +29,7 @@
       openssl
       p7zip
       unrar
-      unarchiver
+      unar
       pciutils
       procs # better ps
       unixtools.watch # watches commands

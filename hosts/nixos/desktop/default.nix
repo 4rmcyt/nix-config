@@ -177,36 +177,26 @@
   environment = {
     sessionVariables = lib.mkBefore {
       # GPG Agent for SSH (uses gpg-agent socket)
-      SSH_AUTH_SOCK = "/run/user/$UID/gnupg/S.gpg-agent.ssh";
+      SSH_AUTH_SOCK = "/run/user/\${UID}/gnupg/S.gpg-agent.ssh";
 
       # General nvidia settings
       GBM_BACKEND = "nvidia-drm";
       LIBVA_DRIVER_NAME = "nvidia";
       NVD_BACKEND = "direct";
-      XDG_CURRENT_DESKTOP = "sway";
+      XDG_CURRENT_DESKTOP = "KDE";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-      # XDG_RUNTIME_DIR = "/run/user/$UID";
+      # XDG_RUNTIME_DIR = "/run/user/\${UID}";
 
       # Wayland
       NIXOS_OZONE_WL = "1";
       XDG_SESSION_TYPE = "wayland";
 
-      # # Qt (allow Stylix to override QT_QPA_PLATFORMTHEME)
-      # QT_QPA_PLATFORM = "wayland;xcb";
-      # QT_QPA_PLATFORMTHEME = lib.mkDefault "qt6ct";
-      # QT_AUTO_SCREEN_SCALE_FACTOR = "1";
-      # QT_SCALE_FACTOR = "1";
+      # Qt Wayland - Disable client-side decorations to fix QWaylandGLContext errors
+      QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
 
-      # # GTK
-      # GDK_BACKEND = "wayland,x11";
-      # GDK_SCALE = "1";
-      # GTK_CSD = "1";
-      # GTK_DECORATION_LAYOUT = ":minimize,maximize,close";
-
-      # # Mozilla
-      # MOZ_ENABLE_WAYLAND = "1";
-      # MOZ_WEBRENDER = "1";
-      # MOZ_ACCELERATED = "1";
+      # Additional Wayland optimizations for NVIDIA
+      KWIN_DRM_USE_MODIFIERS = "1";
+      WLR_NO_HARDWARE_CURSORS = "1";
 
       # XDG
       XDG_CACHE_HOME = "$HOME/.cache";
@@ -377,10 +367,6 @@
       };
       audio.enable = true;
       enable = true;
-      jack.enable = true;
-      pulse.enable = true;
-      # Disable WirePlumber due to event dispatcher bug in 0.5.12
-      # https://github.com/CachyOS/distribution/issues/245
       wireplumber.enable = true;
     };
 
