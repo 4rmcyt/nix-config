@@ -227,6 +227,9 @@
     prometheus-apcupsd-exporter
     smartmontools
     zfs
+    libva-utils # To test VA-API
+    intel-gpu-tools # For GPU monitoring
+    clinfo
 
     # Network tools
     iproute2
