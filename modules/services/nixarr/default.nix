@@ -45,7 +45,7 @@ in {
     };
     jellyfin = {
       isSystemUser = true;
-      group = lib.mkForce "jellyfin"; # Add this for consistency
+      group = lib.mkForce "jellyfin";
       extraGroups = [
         "users"
         "media"
@@ -55,15 +55,17 @@ in {
     };
     jellyseerr = {
       isSystemUser = true;
-      group = lib.mkForce "jellyseerr"; # Add this for consistency
+      group = lib.mkForce "jellyseerr";
       extraGroups = [
         "users"
         "media"
+        "render"
+        "video"
       ];
     };
     lidarr = {
       isSystemUser = true;
-      group = lib.mkForce "lidarr"; # Add this for consistency
+      group = lib.mkForce "lidarr";
       extraGroups = [
         "users"
         "media"
@@ -71,7 +73,7 @@ in {
     };
     prowlarr = {
       isSystemUser = true;
-      group = lib.mkForce "prowlarr"; # Add this for consistency
+      group = lib.mkForce "prowlarr";
       extraGroups = [
         "users"
         "media"
@@ -79,7 +81,7 @@ in {
     };
     radarr = {
       isSystemUser = true;
-      group = lib.mkForce "radarr"; # Add this for consistency
+      group = lib.mkForce "radarr";
       extraGroups = [
         "users"
         "media"
