@@ -185,7 +185,7 @@
       NVD_BACKEND = "direct";
       XDG_CURRENT_DESKTOP = "sway";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-      XDG_RUNTIME_DIR = "/run/user/$UID";
+      # XDG_RUNTIME_DIR = "/run/user/$UID";
 
       # Wayland
       NIXOS_OZONE_WL = "1";
@@ -405,9 +405,7 @@
       pulse.enable = true;
       # Disable WirePlumber due to event dispatcher bug in 0.5.12
       # https://github.com/CachyOS/distribution/issues/245
-      wireplumber.enable = false;
-      # Use pipewire-media-session as fallback
-      media-session.enable = true;
+      wireplumber.enable = true;
     };
 
     pulseaudio.enable = false;

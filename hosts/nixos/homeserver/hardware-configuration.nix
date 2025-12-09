@@ -93,8 +93,8 @@
         # libvdpau-va-gl
         # intel-compute-runtime-legacy1
         vpl-gpu-rt
-        vaapiIntel
-        vaapiVdpau
+        intel-vaapi-driver
+        libva-vdpau-driver
         libvdpau-va-gl
         intel-media-driver
         intel-compute-runtime-legacy1
