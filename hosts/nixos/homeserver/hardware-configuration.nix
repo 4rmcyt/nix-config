@@ -76,6 +76,7 @@
     # Hardware features
     bluetooth.enable = false;
     i2c.enable = true;
+    enableAllFirmware = true;
 
     # CPU & firmware
     cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
@@ -85,11 +86,14 @@
     graphics = {
       enable = true;
       extraPackages = with pkgs; [
-        # intel-compute-runtime # For OpenCL (compute/filtering)
-        intel-media-driver # For VAAPI (decoding/encoding)
+        # intel-media-driver
         intel-ocl
         intel-vaapi-driver
         libva-vdpau-driver
+        libvdpau-va-gl
+        intel-compute-runtime-legacy1
+        vpl-gpu-rt
+
       ];
     };
   };
@@ -98,7 +102,7 @@
   # 4. Environment Variables
   # =================================================================
   environment.sessionVariables = {
-    LIBVA_DRIVER_NAME = "iHD";
+    LIBVA_DRIVER_NAME = "i965";
   };
 
   # =================================================================

@@ -401,26 +401,13 @@
       };
       audio.enable = true;
       enable = true;
-      extraConfig.pipewire."92-low-latency" = {
-        context.properties = {
-          default.clock.max-quantum = 32;
-          default.clock.min-quantum = 32;
-          default.clock.quantum = 32;
-          default.clock.rate = 48000;
-        };
-      };
-      extraConfig.pipewire."93-screen-share" = {
-        "stream.properties" = {
-          "node.max-latency" = "1/60";
-        };
-        context.spa-libs = {
-          "api.libcamera.*" = "libcamera/libspa-libcamera";
-          "support.*" = "support/libspa-support";
-        };
-      };
       jack.enable = true;
       pulse.enable = true;
-      wireplumber.enable = true;
+      # Disable WirePlumber due to event dispatcher bug in 0.5.12
+      # https://github.com/CachyOS/distribution/issues/245
+      wireplumber.enable = false;
+      # Use pipewire-media-session as fallback
+      media-session.enable = true;
     };
 
     pulseaudio.enable = false;
