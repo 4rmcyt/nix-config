@@ -28,6 +28,8 @@
       neofetch
       openssl
       p7zip
+      unrar
+      unarchiver
       pciutils
       procs # better ps
       unixtools.watch # watches commands

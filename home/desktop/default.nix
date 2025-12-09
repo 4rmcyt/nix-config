@@ -33,11 +33,9 @@
       azure-cli
       bat
       busybox
-      ffmpeg
       libva-utils
       pods
       pyenv
-      python3
       tenv
       nu_scripts
       devenv

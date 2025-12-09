@@ -232,31 +232,6 @@
         sof-firmware
 
         # =============================================================
-        # Core System Utilities (desktop-specific)
-        # =============================================================
-        neofetch
-        nodejs
-        p7zip
-        usbutils
-
-        # =============================================================
-        # Desktop Applications
-        # =============================================================
-
-        # =============================================================
-        # Development Tools (desktop-specific)
-        # =============================================================
-        direnv
-        dockerfile-language-server
-        gnumake
-        just-lsp
-        nh
-        nix-fast-build
-        nix-output-monitor
-        nixfmt
-        nixos-rebuild-ng
-
-        # =============================================================
         # Fonts & Themes
         # =============================================================
         fira-code
@@ -315,6 +290,7 @@
         sbsigntool
         shim-unsigned
         uefitool
+        uefitoolPackages.old-engine
         optnix
       ]
     );

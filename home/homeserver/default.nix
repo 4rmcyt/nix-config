@@ -12,20 +12,11 @@
 
     packages = with pkgs; [
       # Development tools
-      deadnix
       deploy-rs
       go
-      just
-      nix-diff
-      nix-fast-build
       nix-inspect
-      nixfmt-rfc-style
       nixfmt-tree
-      nil
       pyenv
-      rustfmt
-      shfmt
-      statix
 
       # Audio tools
       cuetools
@@ -35,8 +26,7 @@
       # Fonts
       meslo-lgs-nf
 
-      # Nix utilities (common tools moved to shared/dev-tools.nix)
-      nix-output-monitor
+      # Nix utilities
       nvd
 
       # System & Network tools
@@ -46,14 +36,11 @@
 
       # User utilities
       borgbackup
-      dive
       jq
-      p7zip
       pass
       trash-cli
       tree
       unar
-      unzip
       yamllint
       zip
     ];

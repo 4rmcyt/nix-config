@@ -210,7 +210,6 @@
   # Only listing server-specific packages here
   environment.systemPackages = with pkgs; [
     # Core utilities (server-specific)
-    coreutils
     lsof
     openssh
 
@@ -227,24 +226,15 @@
     prometheus-apcupsd-exporter
     smartmontools
     zfs
-    libva-utils # To test VA-API
-    intel-gpu-tools # For GPU monitoring
     clinfo
 
     # Network tools
     iproute2
     wireguard-tools
 
-    # Security & secrets (server-specific)
-    pinentry-tty
-
     # Build & deployment tools
     prometheus-cloudflare-exporter
     betula
-
-    # Text processing
-    gawk
-    gnugrep
   ];
 
   environment.shells = with pkgs; [zsh];

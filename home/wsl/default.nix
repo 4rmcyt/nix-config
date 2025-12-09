@@ -13,24 +13,13 @@
 
     packages = with pkgs; [
       # Development tools
-      cachix
-      deadnix
-      delta
       deploy-rs
       go
-      just
-      nix-diff
-      nix-fast-build
       nix-inspect
-      nixfmt-rfc-style
       nixfmt-tree
-      nil
       pyenv
-      rustfmt
-      shfmt
-      statix
 
-      # Fonts & Themes (dev tools like vim, neovim, nh, nix-index, zsh-powerlevel10k, pinentry-tty moved to shared/dev-tools.nix)
+      # Fonts & Themes
       meslo-lgs-nf
       nerd-fonts.hack
 
@@ -44,17 +33,12 @@
       ghostty.terminfo
 
       # Nix utilities
-      nix-output-monitor
       nvd
 
       # Security & Crypto
-      gnupg
       pass
 
       # System & Monitoring tools
-      btop
-      htop
-      mc
       nextdns
       pwgen
       sudo
@@ -63,13 +47,10 @@
 
       # User utilities
       borgbackup
-      dive
       jq
-      p7zip
       trash-cli
       tree
       unar
-      unzip
       yamllint
       zip
 

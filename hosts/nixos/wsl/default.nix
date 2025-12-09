@@ -149,21 +149,9 @@
 
     # System packages
     systemPackages = with pkgs; [
-      # Core utilities
-      coreutils
-      curl
-      findutils
-      gawk
-      git
-      git-crypt
-      gnugrep
-      gnused
-      mc
+      # Core utilities (WSL-specific)
       rsync
-      unzip
       util-linux
-      vim
-      wget
       zip
 
       # CUDA and graphics
@@ -175,22 +163,6 @@
       # System tools
       lan-mouse
       nixos-rebuild
-      sops
-
-      # Development & formatting tools
-      alejandra
-      cmake-format
-      deadnix
-      dockfmt
-      just
-      nix-diff
-      nixfmt-rfc-style
-      nodePackages.prettier
-      rustfmt
-      shfmt
-      statix
-      toml-sort
-      yamlfmt
     ];
   };
 
