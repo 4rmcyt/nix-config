@@ -86,12 +86,6 @@
     graphics = {
       enable = true;
       extraPackages = with pkgs; [
-        # # intel-media-driver
-        intel-ocl
-        # intel-vaapi-driver
-        # libva-vdpau-driver
-        # libvdpau-va-gl
-        # intel-compute-runtime-legacy1
         vpl-gpu-rt
         intel-vaapi-driver
         libva-vdpau-driver
@@ -99,6 +93,7 @@
         intel-media-driver
         intel-compute-runtime-legacy1
         ocl-icd
+        intel-ocl
       ];
     };
   };
