@@ -8,8 +8,6 @@ _: {
     packages = [
       "flathub:app/org.kde.index//stable"
       "flathub-beta:app/org.kde.kdenlive/x86_64/stable"
-      "flathub:/root/testflatpak.flatpakref"
-      "flathub:app/com.github.iwalton3.jellyfin-media-player//latest"
     ];
   };
 }

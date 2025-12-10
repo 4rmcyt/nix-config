@@ -92,6 +92,7 @@
         libvdpau-va-gl
         intel-media-driver
         intel-compute-runtime-legacy1
+        intel-compute-runtime
         ocl-icd
         intel-ocl
       ];
