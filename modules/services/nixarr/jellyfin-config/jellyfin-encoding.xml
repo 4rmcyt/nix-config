@@ -39,7 +39,7 @@
   <EnableEnhancedNvdecDecoder>true</EnableEnhancedNvdecDecoder>
   <PreferSystemNativeHwDecoder>true</PreferSystemNativeHwDecoder>
   <EnableIntelLowPowerH264HwEncoder>true</EnableIntelLowPowerH264HwEncoder>
-  <EnableIntelLowPowerHevcHwEncoder>true</EnableIntelLowPowerHevcHwEncoder>
+  <EnableIntelLowPowerHevcHwEncoder>false</EnableIntelLowPowerHevcHwEncoder>
   <EnableHardwareEncoding>true</EnableHardwareEncoding>
   <AllowHevcEncoding>true</AllowHevcEncoding>
   <AllowAv1Encoding>false</AllowAv1Encoding>
