@@ -18,7 +18,7 @@
 
         # Keyboard layout - can be overridden per host
         xkb = {
-          layout = lib.mkDefault "us";
+          layout = lib.mkDefault "ca";
         };
 
         # Note: Desktop environment (Plasma/GNOME) and display manager (SDDM/GDM)

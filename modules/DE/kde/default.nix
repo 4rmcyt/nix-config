@@ -3,6 +3,20 @@
     ../../GUI/flatpak/kde
   ];
 
+  # KDE system packages
+  environment.systemPackages = with pkgs; [
+    # Core Plasma components that need system-wide availability
+    kdePackages.discover
+    kdePackages.systemsettings
+    kdePackages.plasma-pa
+    kdePackages.sddm-kcm
+    kdePackages.partitionmanager
+    kdePackages.ksystemlog
+    kdePackages.kio-extras
+    kdePackages.signon-kwallet-extension
+    kdePackages.qtwayland
+  ];
+
   # Essential system services for KDE Plasma
   services = {
     desktopManager.plasma6.enable = true;

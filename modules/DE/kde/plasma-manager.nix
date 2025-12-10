@@ -18,7 +18,6 @@
     # KDE Applications
     kdePackages.ark
     kdePackages.breeze
-    kdePackages.discover
     kdePackages.filelight
     kdePackages.gwenview
     kdePackages.kcalc
@@ -26,22 +25,14 @@
     kdePackages.kclock
     kdePackages.kfind
     kdePackages.kgpg
-    kdePackages.kio-extras
     kdePackages.konsole
-    kdePackages.ksystemlog
     kdePackages.kate
     kdePackages.okular
-    kdePackages.partitionmanager
     kdePackages.plasma-browser-integration
-    kdePackages.plasma-pa
     kdePackages.qtmultimedia
     kdePackages.qtsvg
-    kdePackages.sddm-kcm
-    kdePackages.signon-kwallet-extension
     kdePackages.spectacle
-    kdePackages.systemsettings
     kwalletcli
-    kdePackages.qtwayland
     libsForQt5.qt5.qtwayland
     kdePackages.dolphin
     tail-tray
