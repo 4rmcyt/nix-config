@@ -35,7 +35,7 @@
 
     # Kernel parameters
     kernelParams = [
-      "i915.enable_guc=2"
+      "i915.enable_guc=3" # Enable GuC submission + HuC (required for OpenCL)
       "zfs.zfs_arc_max=12884901888"
       "nohz_full=1-15"
       "rcu_nocbs=1-15"
