@@ -244,7 +244,8 @@
         # Audio & Multimedia
         # =============================================================
         helvum
-        pavucontrol
+        pavucontrol # PulseAudio Volume Control
+        pamixer # Command-line mixer for PulseAudio
         sof-firmware
 
         # =============================================================
@@ -385,28 +386,15 @@
     # =============================================================
     # Audio Services
     # =============================================================
+    # Standard PipeWire configuration following NixOS Wiki recommendations
+    # https://nixos.wiki/wiki/NixOS_Wiki:Audio
     pipewire = {
+      enable = true;
       alsa = {
         enable = true;
         support32Bit = true;
       };
-      audio.enable = true;
-      enable = true;
-      jack.enable = true;
       pulse.enable = true;
-      wireplumber.enable = false;
-      configPackages = [
-        (pkgs.writeTextDir "share/pipewire/pipewire.conf.d/99-alsa-devices.conf" ''
-          context.objects = [
-            { factory = adapter
-              args = {
-                factory.name     = api.alsa.enum.udev
-                node.name        = alsa-udev
-              }
-            }
-          ]
-        '')
-      ];
     };
 
     pulseaudio.enable = false;
@@ -500,6 +488,7 @@
         yubioath-flutter
         yubikey-manager
         yubikey-personalization
+        headsetcontrol
       ];
     };
 
