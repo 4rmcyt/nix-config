@@ -394,7 +394,19 @@
       enable = true;
       jack.enable = true;
       pulse.enable = true;
-      wireplumber.enable = true;
+      wireplumber.enable = false;
+      configPackages = [
+        (pkgs.writeTextDir "share/pipewire/pipewire.conf.d/99-alsa-devices.conf" ''
+          context.objects = [
+            { factory = adapter
+              args = {
+                factory.name     = api.alsa.enum.udev
+                node.name        = alsa-udev
+              }
+            }
+          ]
+        '')
+      ];
     };
 
     pulseaudio.enable = false;
