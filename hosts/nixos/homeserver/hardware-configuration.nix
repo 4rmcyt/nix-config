@@ -86,8 +86,7 @@
       extraPackages = with pkgs; [
         # intel-vaapi-driver
         intel-media-driver
-        # intel-compute-runtime-legacy1
-        intel-compute-runtime
+        intel-compute-runtime-legacy
         ocl-icd
       ];
     };
