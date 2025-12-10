@@ -14,8 +14,6 @@
   # 2. Boot Configuration
   # =================================================================
   boot = {
-    # Kernel configuration - CachyOS kernel optimized for stability
-    # Using standard variant as server variant has same features
     kernelPackages = pkgs.linuxPackages_cachyos;
     zfs.package = pkgs.zfs_cachyos;
 
@@ -101,13 +99,15 @@
   environment = {
     sessionVariables = {
       LIBVA_DRIVER_NAME = "iHD";
-      OCL_ICD_VENDORS = "${pkgs.intel-compute-runtime}/etc/OpenCL/vendors";
     };
 
     # System packages
     systemPackages = with pkgs; [
       clinfo # For testing OpenCL
     ];
+
+    # Create /etc/OpenCL/vendors directory with Intel ICD file
+    etc."OpenCL/vendors/intel.icd".text = "${pkgs.intel-compute-runtime}/lib/intel-opencl/libigdrcl.so";
   };
 
   # =================================================================
