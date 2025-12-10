@@ -24,8 +24,6 @@
 
     # User configuration
     ../../../modules/users/zeev
-
-    # Disabled - uncomment when needed
     ../../../modules/GUI/ollama
     # ../../../modules/GUI/OBS
 
