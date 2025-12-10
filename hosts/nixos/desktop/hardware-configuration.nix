@@ -46,13 +46,14 @@
       "pci-stub"
       "r8169"
       "snd-usb-audio"
-      "snd_hda_codec_generic"
       "snd_hda_codec_hdmi"
+      "snd_hda_codec_realtek"
       "snd_hda_intel"
       "v4l2loopback"
     ];
 
     extraModulePackages = with config.boot.kernelPackages; [
+      v4l2loopback
       zenpower
     ];
 
@@ -60,12 +61,6 @@
     extraModprobeConfig = ''
       # Enable v4l2loopback for virtual camera
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
-
-      # USB audio optimizations
-      options snd-usb-audio implicit_fb=1 use_vmalloc=1 quirk_flags=0x80
-
-      # HDA audio optimizations
-      options snd-hda-intel power_save=0 power_save_controller=N enable=1,1,0
     '';
 
     # Kernel configuration - CachyOS with LTO and Zen4 optimizations

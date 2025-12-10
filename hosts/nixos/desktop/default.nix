@@ -387,16 +387,33 @@
   services = {
     # =============================================================
     # Audio Services
-    # =============================================================
-    # Standard PipeWire configuration following NixOS Wiki recommendations
-    # https://nixos.wiki/wiki/NixOS_Wiki:Audio
     pipewire = {
-      enable = true;
       alsa = {
         enable = true;
         support32Bit = true;
       };
+      audio.enable = true;
+      enable = true;
+      extraConfig.pipewire."92-low-latency" = {
+        context.properties = {
+          default.clock.max-quantum = 32;
+          default.clock.min-quantum = 32;
+          default.clock.quantum = 32;
+          default.clock.rate = 48000;
+        };
+      };
+      extraConfig.pipewire."93-screen-share" = {
+        "stream.properties" = {
+          "node.max-latency" = "1/60";
+        };
+        context.spa-libs = {
+          "api.libcamera.*" = "libcamera/libspa-libcamera";
+          "support.*" = "support/libspa-support";
+        };
+      };
+      jack.enable = true;
       pulse.enable = true;
+      wireplumber.enable = true;
     };
 
     pulseaudio.enable = false;

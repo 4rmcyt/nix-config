@@ -102,7 +102,10 @@
   # 4. Environment Variables
   # =================================================================
   environment.sessionVariables = {
-    LIBVA_DRIVER_NAME = "i965";
+    # Use iHD (Intel Media Driver) instead of i965 for better performance
+    # and support for modern features (VPP tonemapping, 10-bit HEVC, etc.)
+    # iHD is required for Jellyfin QSV transcoding with HDR tonemapping
+    LIBVA_DRIVER_NAME = "iHD";
   };
 
   # =================================================================

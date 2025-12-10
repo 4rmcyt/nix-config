@@ -58,7 +58,7 @@
       tailscale
       ytmdesktop
       popsicle
-      # ayugram-desktop moved to modules/GUI/telegram
+      iw # for wifi management
 
       # Hardware monitoring
       nvtopPackages.nvidia
