@@ -86,7 +86,8 @@
       extraPackages = with pkgs; [
         # intel-vaapi-driver
         intel-media-driver
-        intel-compute-runtime-legacy
+        # Legacy runtime for Gen8/Gen9/Gen11 (Coffee Lake UHD 630 is Gen 9.5)
+        intel-compute-runtime-legacy1
         ocl-icd
       ];
     };
@@ -104,9 +105,6 @@
     systemPackages = with pkgs; [
       clinfo # For testing OpenCL
     ];
-
-    # Create /etc/OpenCL/vendors directory with Intel ICD file
-    etc."OpenCL/vendors/intel.icd".text = "${pkgs.intel-compute-runtime}/lib/intel-opencl/libigdrcl.so";
   };
 
   # =================================================================
