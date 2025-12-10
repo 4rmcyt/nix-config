@@ -86,15 +86,10 @@
     graphics = {
       enable = true;
       extraPackages = with pkgs; [
-        vpl-gpu-rt
-        intel-vaapi-driver
-        libva-vdpau-driver
-        libvdpau-va-gl
         intel-media-driver
-        intel-compute-runtime-legacy1
+        intel-compute-runtime
         intel-compute-runtime
         ocl-icd
-        intel-ocl
       ];
     };
   };
@@ -103,9 +98,6 @@
   # 4. Environment Variables
   # =================================================================
   environment.sessionVariables = {
-    # Use iHD (Intel Media Driver) instead of i965 for better performance
-    # and support for modern features (VPP tonemapping, 10-bit HEVC, etc.)
-    # iHD is required for Jellyfin QSV transcoding with HDR tonemapping
     LIBVA_DRIVER_NAME = "iHD";
   };
 
@@ -132,7 +124,10 @@
     scx = {
       enable = true;
       scheduler = "scx_tickless";
-      extraArgs = ["-f" "100"];
+      extraArgs = [
+        "-f"
+        "100"
+      ];
     };
 
     # Hardware monitoring
