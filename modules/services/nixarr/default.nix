@@ -246,29 +246,51 @@ in {
     };
   };
 
-  systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
-    serviceConfig = {
-      BindPaths = [
-        "/data/Downloads"
-        "/data/media"
-        "/data/media/movies"
-        "/data/media/audiobooks"
-        "/data/media/music"
-        "/data/media/shows"
-        "/data/media/books"
-        "/data/media/comics"
-        "/data/media/manga"
-        "/data/media/torrents"
-        "/data/media/usenet"
-        "/data/media/audiobooks"
-        "/data/Downloads/radarr"
-        "/data/Downloads/lidarr"
-        "/data/Downloads/tv-sonarr"
-        "/data/media/.state"
-        # "/data/media/torrents/.incomplete"
-      ];
+  systemd.services =
+    (lib.genAttrs servicesWithMediaAccess (_serviceName: {
+      serviceConfig = {
+        BindPaths = [
+          "/data/Downloads"
+          "/data/media"
+          "/data/media/movies"
+          "/data/media/audiobooks"
+          "/data/media/music"
+          "/data/media/shows"
+          "/data/media/books"
+          "/data/media/comics"
+          "/data/media/manga"
+          "/data/media/torrents"
+          "/data/media/usenet"
+          "/data/media/audiobooks"
+          "/data/Downloads/radarr"
+          "/data/Downloads/lidarr"
+          "/data/Downloads/tv-sonarr"
+          "/data/media/.state"
+          # "/data/media/torrents/.incomplete"
+        ];
+      };
+    }))
+    // {
+      # Restore Jellyfin configuration before starting
+      jellyfin.preStart = ''
+        config_dir="/data/media/.state/nixarr/jellyfin/config"
+        # Copy encoding.xml from nix store if it doesn't exist or is different
+        if [ ! -f "$config_dir/encoding.xml" ] || ! ${pkgs.diffutils}/bin/cmp -s ${./jellyfin-config/jellyfin-encoding.xml} "$config_dir/encoding.xml"; then
+          echo "Restoring Jellyfin encoding configuration..."
+          ${pkgs.coreutils}/bin/cp ${./jellyfin-config/jellyfin-encoding.xml} "$config_dir/encoding.xml"
+          ${pkgs.coreutils}/bin/chown jellyfin:media "$config_dir/encoding.xml"
+          ${pkgs.coreutils}/bin/chmod 600 "$config_dir/encoding.xml"
+        fi
+
+        # Copy system.xml from nix store if it doesn't exist or is different
+        if [ ! -f "$config_dir/system.xml" ] || ! ${pkgs.diffutils}/bin/cmp -s ${./jellyfin-config/jellyfin-system.xml} "$config_dir/system.xml"; then
+          echo "Restoring Jellyfin system configuration..."
+          ${pkgs.coreutils}/bin/cp ${./jellyfin-config/jellyfin-system.xml} "$config_dir/system.xml"
+          ${pkgs.coreutils}/bin/chown jellyfin:media "$config_dir/system.xml"
+          ${pkgs.coreutils}/bin/chmod 600 "$config_dir/system.xml"
+        fi
+      '';
     };
-  });
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
     "d /data/media/movies 775 zeev media -" # Changed from 770 to 775

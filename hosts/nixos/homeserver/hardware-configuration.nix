@@ -86,7 +86,6 @@
       extraPackages = with pkgs; [
         # intel-vaapi-driver
         intel-media-driver
-        # Legacy runtime for Gen8/Gen9/Gen11 (Coffee Lake UHD 630 is Gen 9.5)
         intel-compute-runtime-legacy1
         ocl-icd
       ];
