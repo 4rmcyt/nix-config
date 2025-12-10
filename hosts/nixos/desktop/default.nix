@@ -110,9 +110,7 @@
   # =================================================================
   # 6. Nix Configuration
   # =================================================================
-  # Note: Base nix settings are in modules/base/nix-settings.nix
-  # Only host-specific overrides are defined here
-  # nix.package is set by lix-module
+
   nix = {
     channel.enable = true;
     settings = {
