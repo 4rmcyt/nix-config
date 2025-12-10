@@ -7,6 +7,7 @@
     ../../modules/DE/kde/plasma-manager.nix
     ../../modules/GUI/firefox
     ../../modules/GUI/thunderbird
+    ../../modules/GUI/telegram
     ../../modules/GUI/vscode
     ../../modules/GUI/ghostty
     ../../modules/GUI/wezterm
@@ -57,7 +58,7 @@
       tailscale
       ytmdesktop
       popsicle
-      ayugram-desktop
+      # ayugram-desktop moved to modules/GUI/telegram
 
       # Hardware monitoring
       nvtopPackages.nvidia

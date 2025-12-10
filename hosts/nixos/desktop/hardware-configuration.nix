@@ -65,7 +65,7 @@
       options snd-usb-audio implicit_fb=1 use_vmalloc=1 quirk_flags=0x80
 
       # HDA audio optimizations
-      options snd-hda-intel power_save=0 power_save_controller=N probe_mask=1
+      options snd-hda-intel power_save=0 power_save_controller=N enable=1,1,0
     '';
 
     # Kernel configuration - CachyOS with LTO and Zen4 optimizations
