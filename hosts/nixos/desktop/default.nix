@@ -210,7 +210,6 @@
       NVD_BACKEND = "direct";
       XDG_CURRENT_DESKTOP = "KDE";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-      # XDG_RUNTIME_DIR = "/run/user/\${UID}";
 
       # Wayland
       NIXOS_OZONE_WL = "1";
