@@ -7,7 +7,6 @@
     ../../modules/DE/kde/plasma-manager.nix
     ../../modules/GUI/firefox
     ../../modules/GUI/thunderbird
-    ../../modules/GUI/telegram
     ../../modules/GUI/vscode
     ../../modules/GUI/ghostty
     ../../modules/GUI/wezterm
@@ -58,7 +57,8 @@
       tailscale
       ytmdesktop
       popsicle
-      iw # for wifi management
+      jellyflix
+      ayugram-desktop
 
       # Hardware monitoring
       nvtopPackages.nvidia

@@ -244,7 +244,6 @@
         # Audio & Multimedia
         # =============================================================
         helvum
-        jellyflix # Modern Jellyfin client for movies and shows
         pavucontrol # PulseAudio Volume Control
         pamixer # Command-line mixer for PulseAudio
         bluez # Bluetooth support

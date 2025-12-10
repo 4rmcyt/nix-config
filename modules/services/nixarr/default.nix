@@ -278,7 +278,6 @@ in {
         if [ ! -f "$config_dir/encoding.xml" ] || ! ${pkgs.diffutils}/bin/cmp -s ${./jellyfin-config/jellyfin-encoding.xml} "$config_dir/encoding.xml"; then
           echo "Restoring Jellyfin encoding configuration..."
           ${pkgs.coreutils}/bin/cp ${./jellyfin-config/jellyfin-encoding.xml} "$config_dir/encoding.xml"
-          ${pkgs.coreutils}/bin/chown jellyfin:media "$config_dir/encoding.xml"
           ${pkgs.coreutils}/bin/chmod 600 "$config_dir/encoding.xml"
         fi
 
@@ -286,7 +285,6 @@ in {
         if [ ! -f "$config_dir/system.xml" ] || ! ${pkgs.diffutils}/bin/cmp -s ${./jellyfin-config/jellyfin-system.xml} "$config_dir/system.xml"; then
           echo "Restoring Jellyfin system configuration..."
           ${pkgs.coreutils}/bin/cp ${./jellyfin-config/jellyfin-system.xml} "$config_dir/system.xml"
-          ${pkgs.coreutils}/bin/chown jellyfin:media "$config_dir/system.xml"
           ${pkgs.coreutils}/bin/chmod 600 "$config_dir/system.xml"
         fi
       '';

@@ -37,6 +37,7 @@
       usbutils
       vim
       wget
+      iw
 
       # =================================================================
       # Development & Nix Tools (alphabetical)
