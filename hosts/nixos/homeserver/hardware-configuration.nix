@@ -101,7 +101,6 @@
   environment = {
     sessionVariables = {
       LIBVA_DRIVER_NAME = "iHD";
-      # Required for OpenCL ICD loader to find Intel compute runtime
       OCL_ICD_VENDORS = "${pkgs.intel-compute-runtime}/etc/OpenCL/vendors";
     };
 

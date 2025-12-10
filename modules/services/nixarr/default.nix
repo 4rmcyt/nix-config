@@ -246,29 +246,36 @@ in {
     };
   };
 
-  systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
-    serviceConfig = {
-      BindPaths = [
-        "/data/Downloads"
-        "/data/media"
-        "/data/media/movies"
-        "/data/media/audiobooks"
-        "/data/media/music"
-        "/data/media/shows"
-        "/data/media/books"
-        "/data/media/comics"
-        "/data/media/manga"
-        "/data/media/torrents"
-        "/data/media/usenet"
-        "/data/media/audiobooks"
-        "/data/Downloads/radarr"
-        "/data/Downloads/lidarr"
-        "/data/Downloads/tv-sonarr"
-        "/data/media/.state"
-        # "/data/media/torrents/.incomplete"
-      ];
+  systemd.services =
+    (lib.genAttrs servicesWithMediaAccess (_serviceName: {
+      serviceConfig = {
+        BindPaths = [
+          "/data/Downloads"
+          "/data/media"
+          "/data/media/movies"
+          "/data/media/audiobooks"
+          "/data/media/music"
+          "/data/media/shows"
+          "/data/media/books"
+          "/data/media/comics"
+          "/data/media/manga"
+          "/data/media/torrents"
+          "/data/media/usenet"
+          "/data/media/audiobooks"
+          "/data/Downloads/radarr"
+          "/data/Downloads/lidarr"
+          "/data/Downloads/tv-sonarr"
+          "/data/media/.state"
+          # "/data/media/torrents/.incomplete"
+        ];
+      };
+    }))
+    // {
+      # Add OpenCL environment variable specifically for Jellyfin service
+      jellyfin.environment = {
+        OCL_ICD_VENDORS = "${pkgs.intel-compute-runtime}/etc/OpenCL/vendors";
+      };
     };
-  });
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
     "d /data/media/movies 775 zeev media -" # Changed from 770 to 775
