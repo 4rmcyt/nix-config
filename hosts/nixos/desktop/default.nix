@@ -101,8 +101,10 @@
   # PAM U2F configuration
   security.pam.u2f = {
     enable = true;
-    control = "sufficient"; # U2F is sufficient, password not required if U2F succeeds
-    cue = true; # Prompt user to touch Yubikey
+    control = "sufficient";
+    settings = {
+      cue = true;
+    };
   };
 
   # =================================================================
@@ -397,10 +399,7 @@
       enable = true;
       jack.enable = true;
       pulse.enable = true;
-      # Disable WirePlumber due to event dispatcher bug in 0.5.12
-      # PipeWire will use pipewire-media-session as fallback
-      # https://github.com/CachyOS/distribution/issues/245
-      wireplumber.enable = false;
+      wireplumber.enable = true;
     };
 
     pulseaudio.enable = false;
