@@ -4,17 +4,18 @@
   pkgs,
   modulesPath,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
-  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
   # =================================================================
   # 2. Boot Configuration
   # =================================================================
   boot = {
+    # Kernel configuration - CachyOS kernel optimized for stability
+    # Using standard variant as server variant has same features
     kernelPackages = pkgs.linuxPackages_cachyos;
     zfs.package = pkgs.zfs_cachyos;
 
@@ -43,6 +44,7 @@
       "isolcpus=1-15"
     ];
 
+    # Boot loader configuration
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot = {
@@ -54,6 +56,7 @@
       timeout = 3;
     };
 
+    # Filesystem support
     supportedFilesystems = [
       "vfat"
       "zfs"
@@ -83,8 +86,9 @@
     graphics = {
       enable = true;
       extraPackages = with pkgs; [
+        # intel-vaapi-driver
         intel-media-driver
-        intel-compute-runtime
+        # intel-compute-runtime-legacy1
         intel-compute-runtime
         ocl-icd
       ];
@@ -121,10 +125,7 @@
     scx = {
       enable = true;
       scheduler = "scx_tickless";
-      extraArgs = [
-        "-f"
-        "100"
-      ];
+      extraArgs = ["-f" "100"];
     };
 
     # Hardware monitoring
