@@ -81,6 +81,31 @@
   nixpkgs.config.cudaSupport = true;
 
   # =================================================================
+  # 5.5. Security - PAM U2F for KWallet
+  # =================================================================
+  security.pam.services = {
+    # Enable U2F authentication for login
+    login.u2fAuth = true;
+
+    # Enable U2F for KWallet unlock
+    kwallet = {
+      allowNullPassword = true;
+      enableKwallet = true;
+      u2fAuth = true;
+    };
+
+    # Enable U2F for sudo
+    sudo.u2fAuth = true;
+  };
+
+  # PAM U2F configuration
+  security.pam.u2f = {
+    enable = true;
+    control = "sufficient"; # U2F is sufficient, password not required if U2F succeeds
+    cue = true; # Prompt user to touch Yubikey
+  };
+
+  # =================================================================
   # 6. Nix Configuration
   # =================================================================
   # Note: Base nix settings are in modules/base/nix-settings.nix
@@ -198,6 +223,10 @@
       KWIN_DRM_USE_MODIFIERS = "1";
       WLR_NO_HARDWARE_CURSORS = "1";
 
+      # Cursor theme
+      XCURSOR_THEME = "breeze_cursors";
+      XCURSOR_SIZE = "24";
+
       # XDG
       XDG_CACHE_HOME = "$HOME/.cache";
       XDG_CONFIG_HOME = "$HOME/.config";
@@ -236,7 +265,6 @@
         libva-utils
         nvidia-vaapi-driver
         atuin
-        # luxtorpeda
 
         # =============================================================
         # Hardware Support & Monitoring
@@ -367,7 +395,12 @@
       };
       audio.enable = true;
       enable = true;
-      wireplumber.enable = true;
+      jack.enable = true;
+      pulse.enable = true;
+      # Disable WirePlumber due to event dispatcher bug in 0.5.12
+      # PipeWire will use pipewire-media-session as fallback
+      # https://github.com/CachyOS/distribution/issues/245
+      wireplumber.enable = false;
     };
 
     pulseaudio.enable = false;

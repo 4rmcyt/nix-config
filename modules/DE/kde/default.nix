@@ -44,14 +44,10 @@
       };
       kde = {
         default = ["kde" "gtk"];
-        "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
       };
     };
   };
 
   # Enable dbus for proper portal communication
   services.dbus.enable = true;
-
-  # Enable GNOME keyring for secret portal
-  services.gnome.gnome-keyring.enable = true;
 }

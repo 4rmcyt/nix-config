@@ -323,6 +323,9 @@
 
       # Global KDE settings
       kdeglobals.Icons.Theme = "Gruvbox-Plus-Dark";
+
+      # Cursor theme configuration
+      kcminputrc.Mouse.cursorTheme = "breeze_cursors";
       kdeglobals."KFileDialog Settings" = {
         "Allow Expansion" = false;
         "Automatically select filename extension" = true;
