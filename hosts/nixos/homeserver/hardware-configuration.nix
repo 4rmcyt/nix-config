@@ -4,18 +4,17 @@
   pkgs,
   modulesPath,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
-  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   # =================================================================
   # 2. Boot Configuration
   # =================================================================
   boot = {
-    # Kernel configuration - CachyOS kernel optimized for stability
-    # Using standard variant as server variant has same features
     kernelPackages = pkgs.linuxPackages_cachyos;
     zfs.package = pkgs.zfs_cachyos;
 
@@ -44,7 +43,6 @@
       "isolcpus=1-15"
     ];
 
-    # Boot loader configuration
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot = {
@@ -56,7 +54,6 @@
       timeout = 3;
     };
 
-    # Filesystem support
     supportedFilesystems = [
       "vfat"
       "zfs"
@@ -134,7 +131,6 @@
     smartd = {
       enable = true;
       defaults.autodetected = "-a -o on -s (S/../.././02|L/../../7/04)";
-      # Auto-detect all NVMe and SATA devices
       autodetect = true;
     };
 
