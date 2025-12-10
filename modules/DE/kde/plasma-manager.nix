@@ -18,7 +18,6 @@
     # KDE Applications
     kdePackages.ark
     kdePackages.breeze
-    kdePackages.breeze-icons
     kdePackages.discover
     kdePackages.filelight
     kdePackages.gwenview
@@ -269,7 +268,7 @@
     # Workspace settings
     workspace = {
       colorScheme = "Layan";
-      cursorTheme = "breeze_cursors";
+      cursor.theme = "breeze_cursors";
       wallpaperSlideShow = {
         path = "/home/zeev/Pictures/Wallpapers";
         interval = 3600; # Change wallpaper every 1 hour (3600 seconds)
