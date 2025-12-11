@@ -35,7 +35,7 @@
 
     # Kernel parameters
     kernelParams = [
-      "i915.enable_guc=3" # Enable GuC submission + HuC (required for OpenCL)
+      "i915.enable_guc=3"
       "zfs.zfs_arc_max=12884901888"
       "nohz_full=1-15"
       "rcu_nocbs=1-15"
@@ -65,6 +65,11 @@
       devNodes = "/dev/disk/by-id/";
       forceImportAll = true;
     };
+
+    extraModprobeConfig = ''
+      # Enable venable_guc=3 for Intel iGPU
+      options i915 enable_guc=3
+    '';
   };
 
   # =================================================================
@@ -129,7 +134,10 @@
     scx = {
       enable = true;
       scheduler = "scx_tickless";
-      extraArgs = ["-f" "100"];
+      extraArgs = [
+        "-f"
+        "100"
+      ];
     };
 
     # Hardware monitoring
