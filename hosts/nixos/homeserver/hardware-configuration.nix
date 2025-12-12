@@ -35,11 +35,16 @@
 
     # Kernel parameters
     kernelParams = [
-      "i915.enable_guc=3"
-      "zfs.zfs_arc_max=12884901888"
-      "nohz_full=1-15"
-      "rcu_nocbs=1-15"
-      "isolcpus=1-15"
+      # Intel GPU optimizations
+      "i915.enable_guc=3" # GuC firmware and HuC authentication
+
+      # ZFS ARC
+      "zfs.zfs_arc_max=13421772800" # 12.5GB (40% of 32GB RAM)
+
+      # CPU isolation
+      "nohz_full=1-7" # Updated to match 8-core CPU
+      "rcu_nocbs=1-7"
+      "isolcpus=1-7"
     ];
 
     # Boot loader configuration
@@ -67,9 +72,33 @@
     };
 
     extraModprobeConfig = ''
-      # Enable venable_guc=3 for Intel iGPU
+      # Intel iGPU GuC/HuC firmware
       options i915 enable_guc=3
     '';
+
+    # System control parameters
+    kernel.sysctl = {
+      # Kernel optimizations for server
+      "kernel.nmi_watchdog" = 0;
+
+      # VM/Memory optimizations for 32GB RAM
+      "vm.swappiness" = 10;
+      "vm.vfs_cache_pressure" = 50;
+      "vm.dirty_ratio" = 15;
+      "vm.dirty_background_ratio" = 5;
+
+      # ZFS-specific
+      "vm.min_free_kbytes" = 524288; # 512MB min free
+
+      # Network optimizations for server
+      "net.core.rmem_max" = 16777216;
+      "net.core.wmem_max" = 16777216;
+      "net.ipv4.tcp_rmem" = "4096 87380 16777216";
+      "net.ipv4.tcp_wmem" = "4096 65536 16777216";
+      "net.ipv4.tcp_fastopen" = 3;
+      "net.core.default_qdisc" = "fq";
+      "net.ipv4.tcp_congestion_control" = "bbr";
+    };
   };
 
   # =================================================================

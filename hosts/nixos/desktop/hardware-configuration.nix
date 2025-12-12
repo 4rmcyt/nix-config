@@ -70,27 +70,42 @@
 
     # Kernel parameters
     kernelParams = [
-      "amd_pstate=active" # Use CPPC-based driver for faster response
-      "amd_prefcore=1" # Prefer V-Cache CCD for latency-sensitive threads
-      "cfg80211.ieee80211_regdom=CA"
-      "loglevel=4"
+      # AMD CPU optimizations (Zen 4)
+      "amd_pstate=active" # Use CPPC EPP driver for best Zen 4 performance
+      "amd_prefcore=1" # Prefer highest boost frequency cores
       "microcode.amd_sha_check=off"
+
+      # AMD GPU optimizations (integrated Radeon Graphics)
+      "amdgpu.dpm=1" # Enable dynamic power management
+      "amdgpu.ppfeaturemask=0xfffd7fff" # Enable all PowerPlay features
+
+      # Security mitigations (Zen 4 benefits from keeping these enabled)
       "mitigations=auto"
-      # "pti=off"
-      # "retbleed=off" # big performance impact
+
+      # Network optimizations
       "net.core.default_qdisc=fq"
       "net.ipv4.tcp_congestion_control=bbr"
-      "nohibernate"
+
+      # NVIDIA GPU
       "nvidia-drm.fbdev=1"
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
-      "preempt=full"
+
+      # Scheduler and preemption
+      "preempt=full" # Full preemption for desktop responsiveness
+
+      # ZFS
+      "zfs.zfs_arc_max=25769803776" # 24GB ARC (40% of 62GB RAM)
+
+      # System configuration
+      "cfg80211.ieee80211_regdom=CA"
+      "loglevel=4"
+      "nohibernate"
       "rd.systemd.show_status=auto"
       "rd.udev.log_priority=3"
       "systemd.unified_cgroup_hierarchy=1"
       "usb-storage.delay_use=0"
       "usbcore.autosuspend=-1"
-      "zfs.zfs_arc_max=12884901888" # 12GB ARC size
     ];
 
     # ZFS configuration
@@ -103,6 +118,16 @@
     kernel.sysctl = {
       # Kernel optimizations
       "kernel.split_lock_mitigate" = 0;
+      "kernel.nmi_watchdog" = 0; # Disable NMI watchdog to reduce interrupts and save power
+
+      # VM/Memory optimizations for 62GB RAM system
+      "vm.swappiness" = 10; # Reduce swap usage with abundant RAM
+      "vm.vfs_cache_pressure" = 50; # Keep more inodes/dentries cached
+      "vm.dirty_ratio" = 10; # Start writing dirty pages at 10% RAM
+      "vm.dirty_background_ratio" = 5; # Background writes at 5% RAM
+
+      # ZFS-specific optimizations for Zen 4
+      "vm.min_free_kbytes" = 1048576; # 1GB min free for ZFS ARC stability
 
       # Network queue and backlog
       "net.core.busy_poll" = 50;
@@ -120,10 +145,7 @@
       "net.ipv4.ip_local_port_range" = "1024 65535";
 
       # TCP optimizations
-      "net.ipv4.tcp_fack" = 1;
       "net.ipv4.tcp_fastopen" = 3;
-      "net.ipv4.tcp_low_latency" = 1;
-      "net.ipv4.tcp_no_delay" = 1;
       "net.ipv4.tcp_rmem" = "4096 65536 16777216";
       "net.ipv4.tcp_sack" = 1;
       "net.ipv4.tcp_timestamps" = 1;
@@ -267,7 +289,7 @@
   zramSwap = {
     enable = true;
     algorithm = "zstd";
-    memoryPercent = 30;
+    memoryPercent = 15; # 15% of 62GB = ~9GB compressed swap (reduced from 30%)
   };
 
   # =================================================================

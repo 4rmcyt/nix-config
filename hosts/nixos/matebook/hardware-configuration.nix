@@ -30,14 +30,23 @@
 
     extraModulePackages = [];
 
-    # AMD GPU configuration for Ryzen 5 3500U (Vega 8)
+    # Kernel parameters
     kernelParams = [
+      # AMD GPU optimizations (Vega 8 iGPU)
       "amdgpu.gpu_recovery=1"
       "amdgpu.ppfeaturemask=0xffffffff"
-      "retbleed=off" # Disable most expensive mitigation (14-39% cost)
-      "spectre_v2=off" # Disable Spectre v2 (5-15% cost)
-      "spec_store_bypass_disable=off" # Disable SSBD (2-5% cost)
-      "pti=off" # Disable PTI (AMD not affected by Meltdown)
+      "amdgpu.dpm=1" # Dynamic power management for battery life
+
+      # AMD CPU (Zen+ - prioritize battery life over security)
+      "amd_pstate=passive" # Passive mode for Zen+ (active is for Zen 3+)
+
+      # Security mitigations (disabled for battery life on Zen+)
+      "retbleed=off" # Save 14-39% performance
+      "spectre_v2=off" # Save 5-15% performance
+      "spec_store_bypass_disable=off" # Save 2-5% performance
+      "pti=off" # AMD not affected by Meltdown
+
+      # System configuration
       "quiet"
       "splash"
       "loglevel=3"
@@ -49,6 +58,24 @@
     # Kernel configuration - CachyOS for better performance on AMD laptop
     kernelPackages = pkgs.linuxPackages_cachyos;
     zfs.package = pkgs.zfs_cachyos;
+
+    # System control parameters
+    kernel.sysctl = {
+      # Laptop power optimizations
+      "kernel.nmi_watchdog" = 0;
+
+      # VM/Memory optimizations for laptop (assume 8-16GB RAM)
+      "vm.swappiness" = 60; # Higher for laptops (may have less RAM)
+      "vm.vfs_cache_pressure" = 50;
+      "vm.dirty_ratio" = 20;
+      "vm.dirty_background_ratio" = 10;
+      "vm.dirty_writeback_centisecs" = 1500; # Longer for battery life
+
+      # Network optimizations
+      "net.ipv4.tcp_fastopen" = 3;
+      "net.core.default_qdisc" = "fq";
+      "net.ipv4.tcp_congestion_control" = "bbr";
+    };
   };
 
   # =================================================================
