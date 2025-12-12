@@ -51,8 +51,8 @@
             mktplcRef = {
               publisher = "anthropic";
               name = "claude-code";
-              version = "2.0.50";
-              sha256 = "sha256-Do9fXSw7nK7Rk1qGyTceFUDLWnlmCiHYnqxTBnY6feY=";
+              version = "2.0.65";
+              sha256 = "sha256-iudhgG4odEWW5mITOGC1dyHESyrncLXWMYCGZI77sh8=";
             };
           })
           # Extensions from marketplace
