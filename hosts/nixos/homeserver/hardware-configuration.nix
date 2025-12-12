@@ -159,15 +159,9 @@
     fwupd.enable = true;
     thermald.enable = lib.mkDefault true;
 
-    # SCX Scheduler
-    scx = {
-      enable = true;
-      scheduler = "scx_tickless";
-      extraArgs = [
-        "-f"
-        "100"
-      ];
-    };
+    # SCX Scheduler (disabled - conflicts with CPU isolation)
+    # Use default CFS scheduler with isolated CPUs instead
+    scx.enable = false;
 
     # Hardware monitoring
     smartd = {
