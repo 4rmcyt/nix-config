@@ -75,7 +75,9 @@
       "cfg80211.ieee80211_regdom=CA"
       "loglevel=4"
       "microcode.amd_sha_check=off"
-      "mitigations=off"
+      "mitigations=auto"
+      # "pti=off"
+      # "retbleed=off" # big performance impact
       "net.core.default_qdisc=fq"
       "net.ipv4.tcp_congestion_control=bbr"
       "nohibernate"
@@ -83,11 +85,8 @@
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
       "preempt=full"
-      "pti=off"
       "rd.systemd.show_status=auto"
       "rd.udev.log_priority=3"
-      "retbleed=off" # big performance impact
-      "spectre_v2=off"
       "systemd.unified_cgroup_hierarchy=1"
       "usb-storage.delay_use=0"
       "usbcore.autosuspend=-1"

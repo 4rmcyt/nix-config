@@ -34,6 +34,10 @@
     kernelParams = [
       "amdgpu.gpu_recovery=1"
       "amdgpu.ppfeaturemask=0xffffffff"
+      "retbleed=off" # Disable most expensive mitigation (14-39% cost)
+      "spectre_v2=off" # Disable Spectre v2 (5-15% cost)
+      "spec_store_bypass_disable=off" # Disable SSBD (2-5% cost)
+      "pti=off" # Disable PTI (AMD not affected by Meltdown)
       "quiet"
       "splash"
       "loglevel=3"
