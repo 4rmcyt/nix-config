@@ -339,6 +339,8 @@
         isSystemUser = true;
         shell = pkgs.zsh;
       };
+
+      zeev.shell = pkgs.zsh;
     };
   };
 
