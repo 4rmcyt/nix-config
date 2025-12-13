@@ -2,7 +2,8 @@
   pkgs,
   config,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -12,8 +13,6 @@
     ../../../modules/base
     ../../../modules/disko/matebook
     ../../../modules/options
-
-    # Kernel optimization
 
     # Networking
     ../../../modules/networking/ssh-hosts.nix
@@ -158,6 +157,12 @@
       # Hardware Support & Monitoring
       # =============================================================
       fwupd
+
+      fira-code
+      fira-mono
+      meslo-lgs-nf
+      nerd-fonts.droid-sans-mono
+      nerd-fonts.fira-code
     ];
   };
 
@@ -269,7 +274,7 @@
 
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
     thermald.enable = true;
@@ -327,7 +332,7 @@
   # =================================================================
   users = {
     groups = {
-      git = {};
+      git = { };
     };
 
     users = {
