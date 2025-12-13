@@ -4,11 +4,12 @@
   pkgs,
   modulesPath,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
-  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   # =================================================================
   # 2. Boot Configuration
@@ -24,11 +25,11 @@
       "rtsx_pci_sdmmc"
     ];
 
-    initrd.kernelModules = ["amdgpu"];
+    initrd.kernelModules = [ "amdgpu" ];
 
-    kernelModules = ["kvm-amd"];
+    kernelModules = [ "kvm-amd" ];
 
-    extraModulePackages = [];
+    extraModulePackages = [ ];
 
     # Kernel parameters
     kernelParams = [
@@ -39,6 +40,7 @@
 
       # AMD CPU (Zen+ - prioritize battery life over security)
       "amd_pstate=passive" # Passive mode for Zen+ (active is for Zen 3+)
+      "microcode.amd_sha_check=off"
 
       # Security mitigations (disabled for battery life on Zen+)
       "retbleed=off" # Save 14-39% performance
@@ -136,6 +138,12 @@
     upower.enable = true;
     # TLP conflicts with auto-cpufreq, using auto-cpufreq instead
     tlp.enable = false;
+
+    ucodenix = {
+      enable = true;
+      cpuModelId = ./facter.json;
+    };
+
   };
 
   # =================================================================
