@@ -4,12 +4,11 @@
   pkgs,
   modulesPath,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
-  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
   # =================================================================
   # 2. Boot Configuration
@@ -25,11 +24,11 @@
       "rtsx_pci_sdmmc"
     ];
 
-    initrd.kernelModules = [ "amdgpu" ];
+    initrd.kernelModules = ["amdgpu"];
 
-    kernelModules = [ "kvm-amd" ];
+    kernelModules = ["kvm-amd"];
 
-    extraModulePackages = [ ];
+    extraModulePackages = [];
 
     # Kernel parameters
     kernelParams = [
@@ -143,7 +142,6 @@
       enable = true;
       cpuModelId = ./facter.json;
     };
-
   };
 
   # =================================================================
