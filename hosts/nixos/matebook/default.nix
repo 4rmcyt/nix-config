@@ -18,6 +18,9 @@
 
     # User configuration
     ../../../modules/users/zeev
+
+    # GUI Applications
+    ../../../modules/GUI/chromium
   ];
 
   # =================================================================
