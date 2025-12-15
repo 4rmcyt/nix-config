@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   sops.secrets = {
     cloudflare_tunnel_credentials = {
       sopsFile = ../../../secrets/cloudflare_tunnel_credentials.bin;
@@ -34,6 +35,14 @@
       warp-routing:
         enabled: false
 
+      # Global origin request settings to prevent QUIC timeouts
+      originRequest:
+        connectTimeout: 30s
+        tcpKeepAlive: 30s
+        keepAliveTimeout: 90s
+        keepAliveConnections: 100
+        noHappyEyeballs: false
+
       ingress:
         - hostname: jellyfin.${config.my.defaults.domain}
           service: http://localhost:8096
@@ -63,10 +72,6 @@
           service: http://localhost:8222
         - hostname: kuma.${config.my.defaults.domain}
           service: http://localhost:3001
-          originRequest:
-            noTLSVerify: true
-            connectTimeout: 30s
-            keepAliveTimeout: 90s
         - hostname: auth.${config.my.defaults.domain}
           service: http://localhost:9000
         - hostname: grafana.${config.my.defaults.domain}
@@ -89,7 +94,7 @@
     isSystemUser = true;
     group = "cloudflared";
   };
-  users.groups.cloudflared = {};
+  users.groups.cloudflared = { };
 
   systemd.services.cloudflared = {
     after = [
@@ -101,7 +106,7 @@
       "network.target"
       "network-online.target"
     ];
-    wantedBy = ["multi-user.target"];
+    wantedBy = [ "multi-user.target" ];
 
     serviceConfig = {
       User = "cloudflared";
@@ -126,4 +131,3 @@
 # #   service: http://localhost:8265
 # - hostname: cal.${config.my.defaults.domain}
 #           service: http://localhost:5232
-
