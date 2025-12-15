@@ -29,6 +29,11 @@
     content = ''
       tunnel: ${config.sops.placeholder.cloudflare_tunnel_id}
       credentials-file: ${config.sops.secrets.cloudflare_tunnel_credentials.path}
+
+      # Enable WebSocket support for all services
+      warp-routing:
+        enabled: false
+
       ingress:
         - hostname: jellyfin.${config.my.defaults.domain}
           service: http://localhost:8096
@@ -58,6 +63,10 @@
           service: http://localhost:8222
         - hostname: kuma.${config.my.defaults.domain}
           service: http://localhost:3001
+          originRequest:
+            noTLSVerify: true
+            connectTimeout: 30s
+            keepAliveTimeout: 90s
         - hostname: auth.${config.my.defaults.domain}
           service: http://localhost:9000
         - hostname: grafana.${config.my.defaults.domain}
