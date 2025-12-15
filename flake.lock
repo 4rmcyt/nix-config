@@ -359,11 +359,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1765588871,
-        "narHash": "sha256-OB+DoaP4EB4owW7MUVxp1MWPvbRiPikKEPN1t0KQnH0=",
+        "lastModified": 1765624668,
+        "narHash": "sha256-aJ6w3Xpx+5QYIzM1i6i+wPYqzg8RwqNWGWJ84xUUxfY=",
         "owner": "nix-community",
         "repo": "flake-firefox-nightly",
-        "rev": "789a045578d24556482dab3862f27937826a66f4",
+        "rev": "f95325f43f5cfa600403b33833442c5810ecae37",
         "type": "github"
       },
       "original": {
@@ -820,11 +820,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1765480374,
-        "narHash": "sha256-HlbvQAqLx7WqZFFQZ8nu5UUJAVlXiV/kqKbyueA8srw=",
+        "lastModified": 1765606130,
+        "narHash": "sha256-KOP4QnkiRwiD5KEOr6ceF67rfTP1OqPmCCft6xDC3k4=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "39cb677ed9e908e90478aa9fe5f3383dfc1a63f3",
+        "rev": "d787ec69c3216ea33be1c0424fe65cb23aa8fb31",
         "type": "github"
       },
       "original": {
@@ -919,11 +919,11 @@
     "lix": {
       "flake": false,
       "locked": {
-        "lastModified": 1765472986,
-        "narHash": "sha256-2vsvYj0GNsNaAMg8VDKvEm81sJU5+2A7qNnT4GI5+jQ=",
-        "rev": "a6f0e59c2c21811e02d4e65b0a7c9b779d7869b3",
+        "lastModified": 1765634859,
+        "narHash": "sha256-ChqkRTI+Zmxepj26ZR33Uwe0cfyeYcvdQC9TYzLm9eI=",
+        "rev": "43b1b63df98635d90a489695548294567c40e5a6",
         "type": "tarball",
-        "url": "https://git.lix.systems/api/v1/repos/lix-project/lix/archive/a6f0e59c2c21811e02d4e65b0a7c9b779d7869b3.tar.gz?rev=a6f0e59c2c21811e02d4e65b0a7c9b779d7869b3"
+        "url": "https://git.lix.systems/api/v1/repos/lix-project/lix/archive/43b1b63df98635d90a489695548294567c40e5a6.tar.gz?rev=43b1b63df98635d90a489695548294567c40e5a6"
       },
       "original": {
         "type": "tarball",
@@ -1150,11 +1150,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1765585629,
-        "narHash": "sha256-pVWmesqnnLhRO+QFRKziHNzsjntcGvYi1/o6s+tHRZ8=",
+        "lastModified": 1765612951,
+        "narHash": "sha256-FMvPUiiUIFkHT31yrmvygRPIFfz9rf2+TnUtEcu/WqU=",
         "owner": "kaylorben",
         "repo": "nixcord",
-        "rev": "5d812d3f6346370f8023458127a12f0200d1b4ff",
+        "rev": "98cec18f9ed248b91a7d9283648ae66a84d844ce",
         "type": "github"
       },
       "original": {
