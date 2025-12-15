@@ -13,11 +13,11 @@
       description = "Open ports using UPnP";
       after = ["network.target"];
       wantedBy = ["multi-user.target"];
-      path = [pkgs.miniupnpc];
+      path = [pkgs.miniupnpc pkgs.coreutils];
 
       script =
-        (lib.strings.concatMapStrings (x: "upnpc -r ${builtins.toString x} UDP\n") config.util-nixarr.upnp.openUdpPorts)
-        + (lib.strings.concatMapStrings (x: "upnpc -r ${builtins.toString x} TCP\n") config.util-nixarr.upnp.openTcpPorts);
+        (lib.strings.concatMapStrings (x: "upnpc -r ${builtins.toString x} UDP\nsleep 3\n") config.util-nixarr.upnp.openUdpPorts)
+        + (lib.strings.concatMapStrings (x: "upnpc -r ${builtins.toString x} TCP\nsleep 3\n") config.util-nixarr.upnp.openTcpPorts);
 
       serviceConfig = {
         Type = "oneshot";
