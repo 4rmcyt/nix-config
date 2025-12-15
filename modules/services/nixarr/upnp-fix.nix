@@ -15,9 +15,12 @@
       wantedBy = ["multi-user.target"];
       path = [pkgs.miniupnpc pkgs.coreutils];
 
-      script =
-        (lib.strings.concatMapStrings (x: "upnpc -r ${builtins.toString x} UDP\nsleep 3\n") config.util-nixarr.upnp.openUdpPorts)
-        + (lib.strings.concatMapStrings (x: "upnpc -r ${builtins.toString x} TCP\nsleep 3\n") config.util-nixarr.upnp.openTcpPorts);
+      script = ''
+        set +e  # Don't exit on errors, continue with remaining ports
+        ${lib.strings.concatMapStrings (x: "upnpc -r ${builtins.toString x} UDP || true\nsleep 4\n") config.util-nixarr.upnp.openUdpPorts}
+        ${lib.strings.concatMapStrings (x: "upnpc -r ${builtins.toString x} TCP || true\nsleep 4\n") config.util-nixarr.upnp.openTcpPorts}
+        exit 0  # Always exit successfully
+      '';
 
       serviceConfig = {
         Type = "oneshot";
