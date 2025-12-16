@@ -21,6 +21,7 @@
     ../../../modules/gaming
     ../../../modules/networking/dnssec
     ../../../modules/networking/ssh-hosts.nix
+    ../../../modules/networking/nut-client
 
     # User configuration
     ../../../modules/users/zeev

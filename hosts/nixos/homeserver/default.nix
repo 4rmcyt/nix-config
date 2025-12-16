@@ -19,6 +19,8 @@
     ../../../modules/monitoring
     ../../../modules/networking
     ../../../modules/networking/ssh-hosts.nix
+    ../../../modules/networking/nut-server
+    ../../../modules/networking/nut-client
     ../../../modules/security
     ../../../modules/services
     # Distributed builds
