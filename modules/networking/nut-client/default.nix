@@ -1,7 +1,11 @@
-{config, ...}: {
+{
+  config,
+  lib,
+  ...
+}: {
   power.ups = {
     enable = true;
-    mode = "netclient";
+    mode = lib.mkDefault "netclient";
 
     users.upsmon = {
       passwordFile = config.sops.secrets.nut_password.path;
