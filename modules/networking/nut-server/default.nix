@@ -1,14 +1,17 @@
-{config, ...}: {
+{config, lib, ...}: {
   users.users.nut = {
     isSystemUser = true;
     group = "nut";
   };
 
-  users.users.prometheus-nut-exporter = {
-    extraGroups = ["nut"];
-  };
-
   users.groups.nut = {};
+
+  # Add prometheus-nut-exporter to nut group for password file access
+  systemd.services.prometheus-nut-exporter = lib.mkIf config.services.prometheus.exporters.nut.enable {
+    serviceConfig = {
+      SupplementaryGroups = ["nut"];
+    };
+  };
 
   networking.firewall.allowedTCPPorts = [
     3493 # NUT (Network UPS Tools)
