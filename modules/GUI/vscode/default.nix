@@ -52,7 +52,7 @@
               publisher = "anthropic";
               name = "claude-code";
               version = "2.0.65";
-              sha256 = "sha256-iudhgG4odEWW5mITOGC1dyHESyrncLXWMYCGZI77sh8=";
+              sha256 = "sha256-nHZCEEWEgBdxAzpLFkQsTwNPx3JxuwhgwxKgW8LJ450=";
             };
           })
           # Extensions from marketplace
