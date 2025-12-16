@@ -195,6 +195,7 @@
           static_configs = [
             {targets = ["localhost:9199"];}
           ];
+          metrics_path = "/ups_metrics";
         }
         # {
         #   job_name = "postgres-exporter";
