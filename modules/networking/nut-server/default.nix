@@ -4,6 +4,10 @@
     group = "nut";
   };
 
+  users.users.prometheus-nut-exporter = {
+    extraGroups = ["nut"];
+  };
+
   users.groups.nut = {};
 
   networking.firewall.allowedTCPPorts = [
@@ -43,8 +47,8 @@
 
   sops.secrets.nut_password = {
     sopsFile = ../../../secrets/nut.yaml;
-    owner = "nut";
+    owner = "root";
     group = "nut";
-    mode = "0400";
+    mode = "0440";
   };
 }

@@ -27,11 +27,6 @@
       owner = "loki";
       mode = "0400";
     };
-    nut_password = {
-      sopsFile = ../../secrets/nut.yaml;
-      owner = "prometheus-nut-exporter";
-      mode = "0400";
-    };
   };
 
   # =================================================================
