@@ -20,6 +20,13 @@
       description = "APC Back-UPS ES 550";
     };
 
+    upsd.listen = [
+      {
+        address = "0.0.0.0";
+        port = 3493;
+      }
+    ];
+
     users.upsmon = {
       passwordFile = config.sops.secrets.nut_password.path;
       upsmon = "primary";

@@ -27,6 +27,11 @@
       owner = "loki";
       mode = "0400";
     };
+    nut_password = {
+      sopsFile = ../../secrets/nut.yaml;
+      owner = "prometheus-nut-exporter";
+      mode = "0400";
+    };
   };
 
   # =================================================================
@@ -37,11 +42,6 @@
       isSystemUser = true;
       description = "Grafana user";
       group = "grafana";
-    };
-    nut-exporter = {
-      isSystemUser = true;
-      description = "NUT Exporter user";
-      group = "nut-exporter";
     };
     prometheus = {
       isSystemUser = true;
@@ -57,7 +57,6 @@
 
   users.groups = {
     grafana = {};
-    nut-exporter = {};
     prometheus = {};
     uptime-kuma = {};
   };
@@ -74,7 +73,7 @@
     9090 # Prometheus
     9100 # Node Exporter
     9187 # PostgreSQL Exporter
-    9199 # NUT Exporter
+    9995 # NUT Exporter
   ];
 
   # =================================================================
@@ -164,6 +163,12 @@
             "zfs"
           ];
         };
+        nut = {
+          enable = true;
+          nutServer = "localhost";
+          nutUser = "upsmon";
+          passwordPath = config.sops.secrets.nut_password.path;
+        };
         # postgres = {
         #   enable = true;
         # };
@@ -188,6 +193,12 @@
           job_name = "homeserver-node";
           static_configs = [
             {targets = ["localhost:9100"];}
+          ];
+        }
+        {
+          job_name = "nut-exporter";
+          static_configs = [
+            {targets = ["localhost:9995"];}
           ];
         }
         # {
