@@ -58,6 +58,7 @@
       ytmdesktop
       popsicle
       jellyflix
+      jellyfin-desktop
       ayugram-desktop
 
       # Hardware monitoring
