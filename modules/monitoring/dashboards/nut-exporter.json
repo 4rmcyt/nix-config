@@ -829,8 +829,8 @@
               "type": "special"
             }
           ],
-          "max": 30,
-          "min": 0,
+          "max": 15,
+          "min": 10,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -839,12 +839,16 @@
                 "value": null
               },
               {
+                "color": "dark-yellow",
+                "value": 11.5
+              },
+              {
                 "color": "dark-green",
-                "value": 22
+                "value": 12
               },
               {
                 "color": "dark-red",
-                "value": 28
+                "value": 14
               }
             ]
           },
