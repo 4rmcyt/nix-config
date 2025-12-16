@@ -68,7 +68,7 @@
     9090 # Prometheus
     9100 # Node Exporter
     9187 # PostgreSQL Exporter
-    9995 # NUT Exporter
+    9199 # NUT Exporter
   ];
 
   # =================================================================
@@ -193,7 +193,7 @@
         {
           job_name = "nut-exporter";
           static_configs = [
-            {targets = ["localhost:9995"];}
+            {targets = ["localhost:9199"];}
           ];
         }
         # {
