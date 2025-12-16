@@ -57,7 +57,6 @@
       tailscale
       ytmdesktop
       popsicle
-      jellyflix
       jellyfin-media-player
       ayugram-desktop
 
