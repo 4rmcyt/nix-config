@@ -22,14 +22,14 @@
 
     users.upsmon = {
       passwordFile = config.sops.secrets.nut_password.path;
-      upsmon = "master";
+      upsmon = "primary";
     };
 
     upsmon = {
       monitor.apc = {
         system = "apc@localhost";
         user = "upsmon";
-        type = "master";
+        type = "primary";
       };
     };
   };

@@ -5,14 +5,14 @@
 
     users.upsmon = {
       passwordFile = config.sops.secrets.nut_password.path;
-      upsmon = "slave";
+      upsmon = "secondary";
     };
 
     upsmon = {
       monitor.apc = {
         system = "apc@homeserver";
         user = "upsmon";
-        type = "slave";
+        type = "secondary";
       };
     };
   };
