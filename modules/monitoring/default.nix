@@ -163,6 +163,16 @@
           nutServer = "localhost";
           nutUser = "upsmon";
           passwordPath = config.sops.secrets.nut_password.path;
+          nutVariables = [
+            "battery.charge"
+            "battery.runtime"
+            "battery.voltage"
+            "battery.voltage.nominal"
+            "input.voltage"
+            "input.voltage.nominal"
+            "ups.load"
+            "ups.status"
+          ];
         };
         # postgres = {
         #   enable = true;
