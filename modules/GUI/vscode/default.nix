@@ -3,7 +3,8 @@
   osConfig ? null,
   lib,
   ...
-}: {
+}:
+{
   programs.vscode = {
     enable = true;
     package = pkgs.vscode-fhs;
@@ -11,7 +12,8 @@
     profiles.default = {
       enableExtensionUpdateCheck = false;
       enableUpdateCheck = false;
-      extensions = with pkgs.vscode-extensions;
+      extensions =
+        with pkgs.vscode-extensions;
         [
           # Formatters
           aaron-bond.better-comments
@@ -119,7 +121,7 @@
         "workbench.editor.limit.perEditorGroup" = true;
         "workbench.iconTheme" = "material-icon-theme";
         "workbench.startupEditor" = "none";
-        "workbench.settings.applyToAllProfiles" = [];
+        "workbench.settings.applyToAllProfiles" = [ ];
         "extensions.ignoreRecommendations" = true;
 
         # ===== Explorer Settings =====
@@ -159,20 +161,19 @@
         "github.gitProtocol" = "ssh";
 
         # ===== Security Settings =====
-        "security.allowedUNCHosts" = ["wsl.localhost"];
+        "security.allowedUNCHosts" = [ "wsl.localhost" ];
         "security.workspace.trust.untrustedFiles" = "open";
         "telemetry.telemetryLevel" = "off";
 
         # ===== Remote SSH Settings =====
-        "remote.SSH.remotePlatform" =
-          {
-            "wsl.localhost" = "linux";
-          }
-          // lib.optionalAttrs (osConfig != null && osConfig ? my.defaults) {
-            "${osConfig.my.defaults.homeserver_lan}" = "linux";
-            "${osConfig.my.defaults.matebook_wifi}" = "linux";
-            "${osConfig.my.defaults.desktop_lan}" = "linux";
-          };
+        "remote.SSH.remotePlatform" = {
+          "wsl.localhost" = "linux";
+        }
+        // lib.optionalAttrs (osConfig != null && osConfig ? my.defaults) {
+          "${osConfig.my.defaults.homeserver_lan}" = "linux";
+          "${osConfig.my.defaults.matebook_wifi}" = "linux";
+          "${osConfig.my.defaults.desktop_lan}" = "linux";
+        };
 
         # ===== Language-Specific Settings =====
 
@@ -181,7 +182,7 @@
         "nix.enableLanguageServer" = true;
         "nix.serverPath" = "nil";
         "nix.serverSettings" = {
-          formatting.command = ["alejandra"];
+          formatting.command = [ "alejandra" ];
         };
         "nix.formatterPath" = "alejandra";
         "nixEnvSelector.useFlakes" = true;
@@ -251,6 +252,13 @@
 
         # Red Hat
         "redhat.telemetry.enabled" = false;
+
+        "yaml.schemas" = {
+          "kubernetes" = [
+            "k3s/*.yaml"
+            "k8s/*.yaml"
+          ];
+        };
       };
     };
   };
