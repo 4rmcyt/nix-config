@@ -8,6 +8,7 @@
       local config = wezterm.config_builder()
       -- Color scheme
       config.color_scheme = 'Dracula+'
+      config.window_close_confirmation = 'NeverPrompt'
       return config
     '';
   };
