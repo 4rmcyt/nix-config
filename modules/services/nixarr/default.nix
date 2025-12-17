@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   servicesWithMediaAccess = [
     "bazarr"
     "jellyseerr"
@@ -16,7 +17,8 @@
     "audiobookshelf"
     "jellyfin"
   ];
-in {
+in
+{
   # SOPS secrets for nixarr
   sops.secrets = {
     wg_conf = {
@@ -119,17 +121,17 @@ in {
     };
   };
   users.groups = {
-    audiobookshelf = {};
-    bazarr = {};
-    jellyfin = {};
-    jellyseerr = {};
-    lidarr = {};
-    prowlarr = {};
-    radarr = {};
-    sonarr = {};
-    transmission = {};
-    readarr = {};
-    recyclarr = {};
+    audiobookshelf = { };
+    bazarr = { };
+    jellyfin = { };
+    jellyseerr = { };
+    lidarr = { };
+    prowlarr = { };
+    radarr = { };
+    sonarr = { };
+    transmission = { };
+    readarr = { };
+    recyclarr = { };
     # headphones = { };
   };
 
@@ -178,7 +180,7 @@ in {
 
   nixarr = {
     enable = true;
-    mediaUsers = [config.my.defaults.user];
+    mediaUsers = [ config.my.defaults.user ];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
 
@@ -255,10 +257,6 @@ in {
     cacheDir = "/data/media/.state/nixarr/jellyfin/cache";
     logDir = "/data/media/.state/nixarr/jellyfin/log";
     configDir = "/data/media/.state/nixarr/jellyfin/config";
-    extraOptions = {
-      "MediaBrowser.Server.Configuration.EnableUPnP" = true;
-      "MediaBrowser.Server.Configuration.EnableDLNA" = false;
-    };
   };
 
   systemd.services =
@@ -355,5 +353,5 @@ in {
   ];
 
   # Import UPNP fix for nixarr typo bug
-  imports = [./upnp-fix.nix];
+  imports = [ ./upnp-fix.nix ];
 }
