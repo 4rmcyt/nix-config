@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  inputs,
   ...
 }: let
   servicesWithMediaAccess = [
@@ -170,10 +171,10 @@ in {
     ];
   };
 
-  environment.systemPackages.inputs.nixos-jellyfin.packages.x86_64-linux = with pkgs; [
-    jellyfin
-    jellyfin-web
-    jellyfin-ffmpeg
+  environment.systemPackages = [
+    inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin
+    inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-web
+    inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-ffmpeg
   ];
 
   nixarr = {

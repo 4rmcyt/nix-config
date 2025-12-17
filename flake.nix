@@ -234,7 +234,6 @@
                 inputs.chaotic.nixosModules.nyx-overlay
                 inputs.lix-module.nixosModules.default
                 inputs.ucodenix.nixosModules.default
-                inputs.nixos-jellyfin.nixosModules.default
               ]
               ++ (helpers.mkHome {
                 modules = [
@@ -258,7 +257,6 @@
                 inputs.chaotic.nixosModules.nyx-cache
                 inputs.chaotic.nixosModules.nyx-overlay
                 inputs.lix-module.nixosModules.default
-                inputs.nixos-jellyfin.nixosModules.default
               ]
               ++ (helpers.mkHome {
                 modules = [./home/homeserver];

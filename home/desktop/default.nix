@@ -57,7 +57,6 @@
       tailscale
       ytmdesktop
       popsicle
-      jellyfin-media-player
       ayugram-desktop
 
       # Hardware monitoring

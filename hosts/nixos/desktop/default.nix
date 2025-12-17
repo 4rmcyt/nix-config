@@ -2,6 +2,7 @@
   pkgs,
   config,
   lib,
+  inputs,
   ...
 }: {
   # =================================================================
@@ -250,6 +251,7 @@
         bluez # Bluetooth support
         bluez-tools # Bluetooth tools
         sof-firmware
+        inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-desktop
 
         # =============================================================
         # Fonts & Themes
