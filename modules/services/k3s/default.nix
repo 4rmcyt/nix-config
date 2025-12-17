@@ -280,6 +280,7 @@ in {
     description = "k3s GitOps sync from ${gitOpsRepo}";
     after = ["k3s.service" "network-online.target"];
     requires = ["k3s.service"];
+    wants = ["network-online.target"];
     wantedBy = ["multi-user.target"];
 
     serviceConfig = {

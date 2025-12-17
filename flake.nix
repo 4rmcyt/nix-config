@@ -252,6 +252,7 @@
                 ./modules/disko/homeserver
                 inputs.disko.nixosModules.disko
                 inputs.nixarr.nixosModules.default
+                inputs.nixos-jellyfin.nixosModules.default
                 inputs.authentik-nix.nixosModules.default
                 inputs.vscode-server.nixosModules.default
                 inputs.chaotic.nixosModules.nyx-cache

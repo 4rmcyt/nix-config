@@ -1,10 +1,8 @@
 {
   lib,
   config,
-  inputs,
   ...
-}:
-let
+}: let
   servicesWithMediaAccess = [
     "bazarr"
     "jellyseerr"
@@ -17,8 +15,11 @@ let
     "audiobookshelf"
     "jellyfin"
   ];
-in
-{
+in {
+  imports = [
+    ./upnp-fix.nix
+    ./jellyfin
+  ];
   # SOPS secrets for nixarr
   sops.secrets = {
     wg_conf = {
@@ -121,17 +122,17 @@ in
     };
   };
   users.groups = {
-    audiobookshelf = { };
-    bazarr = { };
-    jellyfin = { };
-    jellyseerr = { };
-    lidarr = { };
-    prowlarr = { };
-    radarr = { };
-    sonarr = { };
-    transmission = { };
-    readarr = { };
-    recyclarr = { };
+    audiobookshelf = {};
+    bazarr = {};
+    jellyfin = {};
+    jellyseerr = {};
+    lidarr = {};
+    prowlarr = {};
+    radarr = {};
+    sonarr = {};
+    transmission = {};
+    readarr = {};
+    recyclarr = {};
     # headphones = { };
   };
 
@@ -172,15 +173,9 @@ in
     ];
   };
 
-  environment.systemPackages = [
-    inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin
-    inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-web
-    inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-ffmpeg
-  ];
-
   nixarr = {
     enable = true;
-    mediaUsers = [ config.my.defaults.user ];
+    mediaUsers = [config.my.defaults.user];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
 
@@ -234,7 +229,6 @@ in
 
     audiobookshelf.enable = true;
     jellyseerr.enable = true;
-    jellyfin.enable = true;
 
     bazarr.enable = true;
     lidarr.enable = true;
@@ -248,8 +242,7 @@ in
     };
   };
 
-  systemd.services = (
-    lib.genAttrs servicesWithMediaAccess (_serviceName: {
+  systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
       serviceConfig = {
         BindPaths = [
           "/data/Downloads"
@@ -271,8 +264,7 @@ in
           # "/data/media/torrents/.incomplete"
         ];
       };
-    })
-  );
+    });
   # // {
   #   # Restore Jellyfin configuration before starting
   #   # jellyfin.preStart = ''
@@ -342,7 +334,4 @@ in
 
     "d /data/Downloads 775 zeev media -"
   ];
-
-  # Import UPNP fix for nixarr typo bug
-  imports = [ ./upnp-fix.nix ];
 }
