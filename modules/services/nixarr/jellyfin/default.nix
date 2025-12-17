@@ -70,42 +70,42 @@ _: {
           {
             name = "Jellyfin Stable";
             url = "https://repo.jellyfin.org/files/plugin/manifest.json";
-            enabled = true;
+            enable = true;
           }
           {
             name = "danieladov";
             url = "https://raw.githubusercontent.com/danieladov/JellyfinPluginManifest/master/manifest.json";
-            enabled = true;
+            enable = true;
           }
           {
             name = "jellyfin-unstable";
             url = "https://repo.jellyfin.org/files/plugin-unstable/manifest.json";
-            enabled = true;
+            enable = true;
           }
           {
             name = "jellyfin-plugin-cinemamode";
             url = "https://raw.githubusercontent.com/CherryFloors/jellyfin-plugin-cinemamode/main/manifest.json";
-            enabled = true;
+            enable = true;
           }
           {
             name = "jellyfin-plugin-sso";
             url = "https://raw.githubusercontent.com/9p4/jellyfin-plugin-sso/manifest-release/manifest.json";
-            enabled = true;
+            enable = true;
           }
           {
             name = "Intro skipper";
             url = "https://intro-skipper.org/manifest.json";
-            enabled = true;
+            enable = true;
           }
           {
             name = "Jellyfin-Enhanced";
             url = "https://raw.githubusercontent.com/n00bcodr/jellyfin-plugins/main/10.11/manifest.json";
-            enabled = true;
+            enable = true;
           }
           {
             name = "File Transformation";
             url = "https://www.iamparadox.dev/jellyfin/plugins/manifest.json";
-            enabled = true;
+            enable = true;
           }
         ];
 
