@@ -232,7 +232,7 @@ in {
 
     audiobookshelf.enable = true;
     jellyseerr.enable = true;
-    jellyfin.enable = true;
+    jellyfin.enable = false;
 
     bazarr.enable = true;
     lidarr.enable = true;
@@ -243,6 +243,21 @@ in {
     recyclarr = {
       enable = true;
       configFile = ./recyclarr.yaml;
+    };
+  };
+
+  services.jellyfin = {
+    enable = true;
+    package = pkgs.jellyfin;
+    webPackage = pkgs.jellyfin-web;
+    ffmpegPackage = pkgs.jellyfin-ffmpeg;
+    dataDir = "/data/media/.state/nixarr/jellyfin/data";
+    cacheDir = "/data/media/.state/nixarr/jellyfin/cache";
+    logDir = "/data/media/.state/nixarr/jellyfin/log";
+    configDir = "/data/media/.state/nixarr/jellyfin/config";
+    extraOptions = {
+      "MediaBrowser.Server.Configuration.EnableUPnP" = true;
+      "MediaBrowser.Server.Configuration.EnableDLNA" = false;
     };
   };
 

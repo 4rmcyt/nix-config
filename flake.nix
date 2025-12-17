@@ -179,6 +179,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixos-jellyfin = {
+      url = "github:matt1432/nixos-jellyfin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Non-flake inputs
     cpu-microcodes = {
       url = "github:platomav/CPUMicrocodes";
@@ -229,6 +234,7 @@
                 inputs.chaotic.nixosModules.nyx-overlay
                 inputs.lix-module.nixosModules.default
                 inputs.ucodenix.nixosModules.default
+                inputs.nixos-jellyfin.nixosModules.default
               ]
               ++ (helpers.mkHome {
                 modules = [
@@ -252,6 +258,7 @@
                 inputs.chaotic.nixosModules.nyx-cache
                 inputs.chaotic.nixosModules.nyx-overlay
                 inputs.lix-module.nixosModules.default
+                inputs.nixos-jellyfin.nixosModules.default
               ]
               ++ (helpers.mkHome {
                 modules = [./home/homeserver];
