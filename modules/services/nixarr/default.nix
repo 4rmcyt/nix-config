@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  inputs,
   ...
 }:
 let
@@ -245,9 +246,9 @@ in
 
   services.jellyfin = {
     enable = true;
-    package = pkgs.jellyfin;
-    webPackage = pkgs.jellyfin-web;
-    ffmpegPackage = pkgs.jellyfin-ffmpeg;
+    package = inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin;
+    webPackage = inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-web;
+    ffmpegPackage = inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-ffmpeg;
     dataDir = "/data/media/.state/nixarr/jellyfin/data";
     cacheDir = "/data/media/.state/nixarr/jellyfin/cache";
     logDir = "/data/media/.state/nixarr/jellyfin/log";
