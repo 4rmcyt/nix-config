@@ -38,156 +38,6 @@
 
   # Note: Keycloak manifest moved to GitOps repo
   # Previously defined keycloakManifest for reference (now in gitops repo at k3s/keycloak/)
-  _keycloakManifestExample = [
-    # Keycloak Deployment
-    {
-      apiVersion = "apps/v1";
-      kind = "Deployment";
-      metadata = {
-        name = "keycloak";
-        namespace = "default";
-        labels.app = "keycloak";
-      };
-      spec = {
-        replicas = 1;
-        selector.matchLabels.app = "keycloak";
-        strategy = {
-          type = "Recreate"; # Avoid multiple instances connecting to DB during upgrade
-        };
-        template = {
-          metadata.labels.app = "keycloak";
-          spec = {
-            containers = [
-              {
-                name = "keycloak";
-                image = "quay.io/keycloak/keycloak:26.0";
-                args = ["start"];
-                env = [
-                  {
-                    name = "KC_DB";
-                    value = "postgres";
-                  }
-                  {
-                    name = "KC_DB_URL_HOST";
-                    value = config.my.defaults.homeserver_lan;
-                  }
-                  {
-                    name = "KC_DB_URL_PORT";
-                    value = "5432";
-                  }
-                  {
-                    name = "KC_DB_URL_DATABASE";
-                    value = "keycloak";
-                  }
-                  {
-                    name = "KC_DB_USERNAME";
-                    value = "keycloak";
-                  }
-                  {
-                    name = "KC_DB_PASSWORD";
-                    valueFrom.secretKeyRef = {
-                      name = "keycloak-db-config";
-                      key = "db-password";
-                    };
-                  }
-                  {
-                    name = "KEYCLOAK_ADMIN";
-                    value = "admin";
-                  }
-                  {
-                    name = "KEYCLOAK_ADMIN_PASSWORD";
-                    valueFrom.secretKeyRef = {
-                      name = "keycloak-admin";
-                      key = "password";
-                    };
-                  }
-                  {
-                    name = "KC_HOSTNAME";
-                    value = "auth.${config.my.defaults.domain}";
-                  }
-                  {
-                    name = "KC_PROXY";
-                    value = "edge";
-                  }
-                  {
-                    name = "KC_HTTP_ENABLED";
-                    value = "true";
-                  }
-                  {
-                    name = "KC_HEALTH_ENABLED";
-                    value = "true";
-                  }
-                  {
-                    name = "KC_METRICS_ENABLED";
-                    value = "true";
-                  }
-                ];
-                ports = [
-                  {
-                    name = "http";
-                    containerPort = 8080;
-                    protocol = "TCP";
-                  }
-                ];
-                readinessProbe = {
-                  httpGet = {
-                    path = "/health/ready";
-                    port = 8080;
-                  };
-                  initialDelaySeconds = 60;
-                  periodSeconds = 10;
-                  timeoutSeconds = 5;
-                  failureThreshold = 3;
-                };
-                livenessProbe = {
-                  httpGet = {
-                    path = "/health/live";
-                    port = 8080;
-                  };
-                  initialDelaySeconds = 90;
-                  periodSeconds = 30;
-                  timeoutSeconds = 5;
-                  failureThreshold = 3;
-                };
-                resources = {
-                  requests = {
-                    memory = "512Mi";
-                    cpu = "250m";
-                  };
-                  limits = {
-                    memory = "2Gi";
-                    cpu = "1000m";
-                  };
-                };
-              }
-            ];
-          };
-        };
-      };
-    }
-    # Keycloak Service
-    {
-      apiVersion = "v1";
-      kind = "Service";
-      metadata = {
-        name = "keycloak";
-        namespace = "default";
-        labels.app = "keycloak";
-      };
-      spec = {
-        type = "LoadBalancer";
-        selector.app = "keycloak";
-        ports = [
-          {
-            name = "http";
-            port = 9000; # External port (matches cloudflared config)
-            targetPort = 8080; # Keycloak container port
-            protocol = "TCP";
-          }
-        ];
-      };
-    }
-  ];
 
   # Manifests to deploy
   # Note: Keycloak and other app manifests are now managed in the GitOps repository
@@ -224,6 +74,43 @@
   # Containerd config template
   containerdConfigTemplate = null;
 
+  # Pod Security Standards configuration
+  podSecurityConfig = pkgs.writeText "pod-security-config.yaml" ''
+    apiVersion: apiserver.config.k8s.io/v1
+    kind: AdmissionConfiguration
+    plugins:
+    - name: PodSecurity
+      configuration:
+        apiVersion: pod-security.admission.config.k8s.io/v1
+        kind: PodSecurityConfiguration
+        defaults:
+          enforce: "baseline"
+          enforce-version: "latest"
+          audit: "restricted"
+          audit-version: "latest"
+          warn: "restricted"
+          warn-version: "latest"
+        exemptions:
+          usernames: []
+          runtimeClasses: []
+          namespaces: [kube-system]
+  '';
+
+  # Secrets encryption at rest configuration
+  encryptionConfig = pkgs.writeText "encryption-config.yaml" ''
+    apiVersion: apiserver.config.k8s.io/v1
+    kind: EncryptionConfiguration
+    resources:
+      - resources:
+          - secrets
+        providers:
+          - aescbc:
+              keys:
+                - name: key1
+                  secret: $(head -c 32 /dev/urandom | base64)
+          - identity: {}
+  '';
+
   # Setup script to link manifests, charts, and images
   setupScript = pkgs.writeShellScript "setup-k3s-content" ''
     # Create directories
@@ -236,8 +123,7 @@
       if manifests != {}
       then
         builtins.concatStringsSep "\n    " (
-          builtins.map (name:
-            "${pkgs.coreutils-full}/bin/ln -sfn ${manifestFiles}/${name}.yaml ${manifestDir}/${name}.yaml")
+          builtins.map (name: "${pkgs.coreutils-full}/bin/ln -sfn ${manifestFiles}/${name}.yaml ${manifestDir}/${name}.yaml")
           (builtins.attrNames manifests)
         )
       else ""
@@ -256,8 +142,7 @@
 
     # Link images
     ${builtins.concatStringsSep "\n    " (
-      builtins.map (image:
-        "${pkgs.coreutils-full}/bin/ln -sfn ${image} ${imageDir}/${image.name}")
+      builtins.map (image: "${pkgs.coreutils-full}/bin/ln -sfn ${image} ${imageDir}/${image.name}")
       images
     )}
 
@@ -307,7 +192,10 @@ in {
     path = lib.optional config.boot.zfs.enabled config.boot.zfs.package;
 
     serviceConfig = {
-      Type = if k3sRole == "agent" then "exec" else "notify";
+      Type =
+        if k3sRole == "agent"
+        then "exec"
+        else "notify";
       KillMode = "process";
       Delegate = "yes";
       Restart = "always";
@@ -317,13 +205,20 @@ in {
       LimitCORE = "infinity";
       TasksMax = "infinity";
       ExecStartPre = setupScript;
-      ExecStart = lib.concatStringsSep " \\\n  " (
-        [
-          "${pkgs.k3s}/bin/k3s ${k3sRole}"
-          "--kubelet-arg=config=${kubeletConfigFile}"
-          "--kube-proxy-arg=config=${kubeProxyConfigFile}"
-        ]
-      );
+      ExecStart = lib.concatStringsSep " \\\n  " [
+        "${pkgs.k3s}/bin/k3s ${k3sRole}"
+        "--token-file=${config.sops.secrets.k3s_token_file.path}"
+        "--bind-address=127.0.0.1"
+        "--advertise-address=127.0.0.1"
+        "--kube-apiserver-arg=admission-control-config-file=${podSecurityConfig}"
+        "--kube-apiserver-arg=encryption-provider-config=${encryptionConfig}"
+        "--kube-apiserver-arg=audit-log-path=/var/log/k3s/audit.log"
+        "--kube-apiserver-arg=audit-log-maxage=30"
+        "--kube-apiserver-arg=audit-log-maxbackup=10"
+        "--kube-apiserver-arg=audit-log-maxsize=100"
+        "--kubelet-arg=config=${kubeletConfigFile}"
+        "--kube-proxy-arg=config=${kubeProxyConfigFile}"
+      ];
     };
   };
 
@@ -391,11 +286,36 @@ in {
       Type = "oneshot";
       WorkingDirectory = "/var/lib/k3s-gitops";
       StateDirectory = "k3s-gitops";
+
+      # Security hardening
+      User = "k3s-gitops";
+      Group = "k3s-gitops";
+
+      # Systemd security features
+      NoNewPrivileges = true;
+      PrivateTmp = true;
+      ProtectSystem = "strict";
+      ProtectHome = true;
+      ReadWritePaths = ["/var/lib/k3s-gitops"];
+
+      # Additional protections
+      ProtectKernelTunables = true;
+      ProtectKernelModules = true;
+      ProtectControlGroups = true;
+      RestrictSUIDSGID = true;
+      RestrictRealtime = true;
+      RestrictNamespaces = true;
+      LockPersonality = true;
+      MemoryDenyWriteExecute = true;
+
+      # Allow access to k3s kubeconfig
+      SupplementaryGroups = ["root"];
     };
 
     script = ''
       # Ensure git is available
       export PATH="${pkgs.git}/bin:${pkgs.k3s}/bin:$PATH"
+      export KUBECONFIG="/etc/rancher/k3s/k3s.yaml"
 
       # Wait for k3s to be ready
       until kubectl get nodes &>/dev/null; do
@@ -452,7 +372,7 @@ in {
   # Port Analysis - NO CONFLICTS DETECTED:
   #
   # k3s ports:
-  # - 6443: Kubernetes API server
+  # - 6443: Kubernetes API server (LOCALHOST-ONLY for security)
   # - 8472: Flannel VXLAN (UDP)
   # - 9000: Keycloak via LoadBalancer (already used by system keycloak)
   # - 10250: Kubelet metrics
@@ -466,10 +386,18 @@ in {
   # - 8123: Hass, 8686: Lidarr, 8787: Readarr, 8881: Atuin
   # - 8888: Paperless, 8989: Sonarr, 9292: Audiobookshelf
   # - 9696: Prowlarr, 11434: Ollama
+  #
+  # Security hardening applied:
+  # - API server bound to localhost (127.0.0.1) only
+  # - Token authentication required
+  # - Pod Security Standards enforced (baseline)
+  # - Secrets encrypted at rest
+  # - Audit logging enabled
+  # - GitOps service runs as non-root with systemd hardening
 
   networking.firewall = {
     allowedTCPPorts = [
-      6443 # Kubernetes API server
+      # 6443 # Kubernetes API server - REMOVED: now localhost-only for security
       10250 # Kubelet metrics
       # Port 9000 already opened by modules/security/keycloak/default.nix
     ];
@@ -493,6 +421,17 @@ in {
     "d /var/lib/rancher/k3s 0755 root root -"
     "d /var/lib/rancher/k3s/server 0755 root root -"
     "d /var/lib/rancher/k3s/agent 0755 root root -"
-    "d /var/lib/k3s-gitops 0755 root root -"
+    "d /var/lib/k3s-gitops 0755 k3s-gitops k3s-gitops -"
+    "d /var/log/k3s 0755 root root -"
   ];
+
+  # =================================================================
+  # GitOps Service User
+  # =================================================================
+  users.users.k3s-gitops = {
+    isSystemUser = true;
+    group = "k3s-gitops";
+    description = "k3s GitOps sync service user";
+  };
+  users.groups.k3s-gitops = {};
 }

@@ -176,19 +176,17 @@
       # =================================================================
       # Kubernetes (commented out)
       # =================================================================
-      # docker-compose
-      # kubectl
-      # kubelogin # oidc login azure
-      # krew # kubectl plugins
-      # kubie # fzf kubeconfig browser
-      # kind # k8s in docker
-      # velero # k8s backup tool
-      # fluxcd # automation
-      # kubent # check for deprecations
-      # termshark # tui for wireshark
-      # prometheus # prometheus linter
-      # kubebuilder # generate controller
-      # kubernetes-helm # deploy applications
+      docker-compose
+      kubectl
+      krew # kubectl plugins
+      kubie # fzf kubeconfig browser
+      kind # k8s in docker
+      velero # k8s backup tool
+      kubent # check for deprecations
+      termshark # tui for wireshark
+      prometheus # prometheus linter
+      kubebuilder # generate controller
+      kubernetes-helm # deploy applications
     ]
   );
 }

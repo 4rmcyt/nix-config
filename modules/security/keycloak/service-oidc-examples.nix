@@ -1,11 +1,8 @@
 # Example OIDC Configuration for Services
 # This file contains example configurations for integrating services with Keycloak OIDC
 # Copy relevant sections to your service modules as needed
-
 {
   config,
-  lib,
-  pkgs,
   ...
 }: {
   # =================================================================

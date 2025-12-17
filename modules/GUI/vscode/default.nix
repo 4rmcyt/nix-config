@@ -32,6 +32,7 @@
 
           mkhl.direnv
           ms-azuretools.vscode-docker
+          ms-kubernetes-tools.vscode-kubernetes-tools
           ms-python.isort
           ms-python.python
           ms-python.vscode-pylance

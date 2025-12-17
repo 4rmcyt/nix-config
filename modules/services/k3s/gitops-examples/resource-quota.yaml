@@ -1,0 +1,52 @@
+# Resource quota for default namespace
+# Add this to your gitops repo at: k3s/quotas/default-quota.yaml
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: default-quota
+  namespace: default
+spec:
+  hard:
+    # CPU limits
+    requests.cpu: "4"
+    limits.cpu: "8"
+
+    # Memory limits
+    requests.memory: 8Gi
+    limits.memory: 16Gi
+
+    # Pod count limits
+    pods: "20"
+
+    # Storage limits
+    persistentvolumeclaims: "10"
+    requests.storage: 100Gi
+---
+# LimitRange to set default resource requests/limits for pods
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: default-limit-range
+  namespace: default
+spec:
+  limits:
+  # Default limits for containers
+  - max:
+      cpu: "2"
+      memory: "4Gi"
+    min:
+      cpu: "10m"
+      memory: "64Mi"
+    default:
+      cpu: "500m"
+      memory: "512Mi"
+    defaultRequest:
+      cpu: "100m"
+      memory: "256Mi"
+    type: Container
+  # Limits for pods
+  - max:
+      cpu: "4"
+      memory: "8Gi"
+    type: Pod
