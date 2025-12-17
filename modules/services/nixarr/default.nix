@@ -1,10 +1,10 @@
 {
-  pkgs,
   lib,
   config,
   inputs,
   ...
-}: let
+}:
+let
   servicesWithMediaAccess = [
     "bazarr"
     "jellyseerr"
@@ -17,7 +17,8 @@
     "audiobookshelf"
     "jellyfin"
   ];
-in {
+in
+{
   # SOPS secrets for nixarr
   sops.secrets = {
     wg_conf = {
@@ -120,17 +121,17 @@ in {
     };
   };
   users.groups = {
-    audiobookshelf = {};
-    bazarr = {};
-    jellyfin = {};
-    jellyseerr = {};
-    lidarr = {};
-    prowlarr = {};
-    radarr = {};
-    sonarr = {};
-    transmission = {};
-    readarr = {};
-    recyclarr = {};
+    audiobookshelf = { };
+    bazarr = { };
+    jellyfin = { };
+    jellyseerr = { };
+    lidarr = { };
+    prowlarr = { };
+    radarr = { };
+    sonarr = { };
+    transmission = { };
+    readarr = { };
+    recyclarr = { };
     # headphones = { };
   };
 
@@ -179,7 +180,7 @@ in {
 
   nixarr = {
     enable = true;
-    mediaUsers = [config.my.defaults.user];
+    mediaUsers = [ config.my.defaults.user ];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
 
@@ -247,8 +248,8 @@ in {
     };
   };
 
-  systemd.services =
-    (lib.genAttrs servicesWithMediaAccess (_serviceName: {
+  systemd.services = (
+    lib.genAttrs servicesWithMediaAccess (_serviceName: {
       serviceConfig = {
         BindPaths = [
           "/data/Downloads"
@@ -270,26 +271,28 @@ in {
           # "/data/media/torrents/.incomplete"
         ];
       };
-    }))
-    // {
-      # Restore Jellyfin configuration before starting
-      jellyfin.preStart = ''
-        config_dir="/data/media/.state/nixarr/jellyfin/config"
-        # Copy encoding.xml from nix store if it doesn't exist or is different
-        if [ ! -f "$config_dir/encoding.xml" ] || ! ${pkgs.diffutils}/bin/cmp -s ${./jellyfin-config/jellyfin-encoding.xml} "$config_dir/encoding.xml"; then
-          echo "Restoring Jellyfin encoding configuration..."
-          ${pkgs.coreutils}/bin/cp ${./jellyfin-config/jellyfin-encoding.xml} "$config_dir/encoding.xml"
-          ${pkgs.coreutils}/bin/chmod 600 "$config_dir/encoding.xml"
-        fi
+    })
+  );
+  # // {
+  #   # Restore Jellyfin configuration before starting
+  #   # jellyfin.preStart = ''
+  #   #   config_dir="/data/media/.state/nixarr/jellyfin/config"
+  #   #   # Copy encoding.xml from nix store if it doesn't exist or is different
+  #   #   if [ ! -f "$config_dir/encoding.xml" ] || ! ${pkgs.diffutils}/bin/cmp -s ${./jellyfin-config/jellyfin-encoding.xml} "$config_dir/encoding.xml"; then
+  #   #     echo "Restoring Jellyfin encoding configuration..."
+  #   #     ${pkgs.coreutils}/bin/cp ${./jellyfin-config/jellyfin-encoding.xml} "$config_dir/encoding.xml"
+  #   #     ${pkgs.coreutils}/bin/chmod 600 "$config_dir/encoding.xml"
+  #   #   fi
 
-        # Copy system.xml from nix store if it doesn't exist or is different
-        if [ ! -f "$config_dir/system.xml" ] || ! ${pkgs.diffutils}/bin/cmp -s ${./jellyfin-config/jellyfin-system.xml} "$config_dir/system.xml"; then
-          echo "Restoring Jellyfin system configuration..."
-          ${pkgs.coreutils}/bin/cp ${./jellyfin-config/jellyfin-system.xml} "$config_dir/system.xml"
-          ${pkgs.coreutils}/bin/chmod 600 "$config_dir/system.xml"
-        fi
-      '';
-    };
+  #   #   # Copy system.xml from nix store if it doesn't exist or is different
+  #   #   if [ ! -f "$config_dir/system.xml" ] || ! ${pkgs.diffutils}/bin/cmp -s ${./jellyfin-config/jellyfin-system.xml} "$config_dir/system.xml"; then
+  #   #     echo "Restoring Jellyfin system configuration..."
+  #   #     ${pkgs.coreutils}/bin/cp ${./jellyfin-config/jellyfin-system.xml} "$config_dir/system.xml"
+  #   #     ${pkgs.coreutils}/bin/chmod 600 "$config_dir/system.xml"
+  #   #   fi
+  #   # '';
+  # };
+
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
     "d /data/media/movies 775 zeev media -" # Changed from 770 to 775
@@ -341,5 +344,5 @@ in {
   ];
 
   # Import UPNP fix for nixarr typo bug
-  imports = [./upnp-fix.nix];
+  imports = [ ./upnp-fix.nix ];
 }
