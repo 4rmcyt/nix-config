@@ -1,5 +1,4 @@
 {config, ...}: {
-
   sops.secrets.miniflux_oidc_client_secret = {
     sopsFile = ../../../secrets/keycloak-clients.yaml;
     key = "miniflux_client_secret";
