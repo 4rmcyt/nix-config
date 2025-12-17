@@ -156,11 +156,6 @@ in
     7359 # Jellyfin discovery
   ];
 
-  environment.systemPackages = [
-    pkgs.jellyfin
-    pkgs.jellyfin-web
-    pkgs.jellyfin-ffmpeg
-  ];
 
   util-nixarr.upnp = {
     enable = true;
