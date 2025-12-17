@@ -2,7 +2,6 @@
   pkgs,
   lib,
   config,
-  inputs,
   ...
 }:
 let
@@ -157,7 +156,6 @@ in
     7359 # Jellyfin discovery
   ];
 
-
   util-nixarr.upnp = {
     enable = true;
     openTcpPorts = [
@@ -173,6 +171,12 @@ in
       7359 # Jellyfin discovery
     ];
   };
+
+  environment.systemPackages.inputs.nixos-jellyfin.packages.x86_64-linux = with pkgs; [
+    jellyfin
+    jellyfin-web
+    jellyfin-ffmpeg
+  ];
 
   nixarr = {
     enable = true;
@@ -230,7 +234,7 @@ in
 
     audiobookshelf.enable = true;
     jellyseerr.enable = true;
-    jellyfin.enable = false;
+    jellyfin.enable = true;
 
     bazarr.enable = true;
     lidarr.enable = true;
@@ -242,17 +246,6 @@ in
       enable = true;
       configFile = ./recyclarr.yaml;
     };
-  };
-
-  services.jellyfin = {
-    enable = true;
-    package = inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin;
-    webPackage = inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-web;
-    ffmpegPackage = inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-ffmpeg;
-    dataDir = "/data/media/.state/nixarr/jellyfin/data";
-    cacheDir = "/data/media/.state/nixarr/jellyfin/cache";
-    logDir = "/data/media/.state/nixarr/jellyfin/log";
-    configDir = "/data/media/.state/nixarr/jellyfin/config";
   };
 
   systemd.services =
