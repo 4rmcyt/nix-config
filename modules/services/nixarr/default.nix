@@ -3,8 +3,7 @@
   lib,
   config,
   ...
-}:
-let
+}: let
   servicesWithMediaAccess = [
     "bazarr"
     "jellyseerr"
@@ -17,8 +16,7 @@ let
     "audiobookshelf"
     "jellyfin"
   ];
-in
-{
+in {
   # SOPS secrets for nixarr
   sops.secrets = {
     wg_conf = {
@@ -121,17 +119,17 @@ in
     };
   };
   users.groups = {
-    audiobookshelf = { };
-    bazarr = { };
-    jellyfin = { };
-    jellyseerr = { };
-    lidarr = { };
-    prowlarr = { };
-    radarr = { };
-    sonarr = { };
-    transmission = { };
-    readarr = { };
-    recyclarr = { };
+    audiobookshelf = {};
+    bazarr = {};
+    jellyfin = {};
+    jellyseerr = {};
+    lidarr = {};
+    prowlarr = {};
+    radarr = {};
+    sonarr = {};
+    transmission = {};
+    readarr = {};
+    recyclarr = {};
     # headphones = { };
   };
 
@@ -180,7 +178,7 @@ in
 
   nixarr = {
     enable = true;
-    mediaUsers = [ config.my.defaults.user ];
+    mediaUsers = [config.my.defaults.user];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
 
@@ -342,5 +340,5 @@ in
   ];
 
   # Import UPNP fix for nixarr typo bug
-  imports = [ ./upnp-fix.nix ];
+  imports = [./upnp-fix.nix];
 }

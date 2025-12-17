@@ -181,6 +181,7 @@
 
     nixos-jellyfin = {
       url = "github:matt1432/nixos-jellyfin";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Non-flake inputs
