@@ -1,14 +1,4 @@
-# Example OIDC Configuration for Services
-# This file contains example configurations for integrating services with Keycloak OIDC
-# Copy relevant sections to your service modules as needed
-{
-  config,
-  ...
-}: {
-  # =================================================================
-  # Example 1: Miniflux with Native OIDC Support
-  # =================================================================
-  # Add to modules/services/miniflux/default.nix
+{config, ...}: {
 
   sops.secrets.miniflux_oidc_client_secret = {
     sopsFile = ../../../secrets/keycloak-clients.yaml;
