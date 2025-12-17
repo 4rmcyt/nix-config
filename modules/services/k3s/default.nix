@@ -97,6 +97,11 @@
   '';
 
   # Secrets encryption at rest configuration
+  # Generate a random 32-byte key and base64 encode it at build time
+  encryptionKey = builtins.readFile (pkgs.runCommand "gen-encryption-key" {} ''
+    ${pkgs.coreutils}/bin/head -c 32 /dev/urandom | ${pkgs.coreutils}/bin/base64 -w 0 > $out
+  '');
+
   encryptionConfig = pkgs.writeText "encryption-config.yaml" ''
     apiVersion: apiserver.config.k8s.io/v1
     kind: EncryptionConfiguration
@@ -107,7 +112,7 @@
           - aescbc:
               keys:
                 - name: key1
-                  secret: $(head -c 32 /dev/urandom | base64)
+                  secret: ${encryptionKey}
           - identity: {}
   '';
 
