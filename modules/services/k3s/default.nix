@@ -213,6 +213,7 @@ in {
       ExecStart = lib.concatStringsSep " \\\n  " [
         "${pkgs.k3s}/bin/k3s ${k3sRole}"
         "--token-file=${config.sops.secrets.k3s_token_file.path}"
+        "--bind-address=0.0.0.0"
         "--kube-apiserver-arg=admission-control-config-file=${podSecurityConfig}"
         "--kube-apiserver-arg=encryption-provider-config=${encryptionConfig}"
         "--kube-apiserver-arg=audit-log-path=/var/log/k3s/audit.log"
