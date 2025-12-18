@@ -72,7 +72,7 @@
       if [ ! -d ".git" ]; then
         # Remove any non-git files and clone fresh
         rm -rf * .[!.]* 2>/dev/null || true
-        git clone -b main https://github.com/4rmcyt/gitops.git .
+        git clone -b main git@github.com:4rmcyt/gitops.git .
       else
         git fetch origin main
         LOCAL=$(git rev-parse HEAD)
