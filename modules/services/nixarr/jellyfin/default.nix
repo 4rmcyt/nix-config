@@ -2,10 +2,7 @@
   lib,
   pkgs,
   ...
-}:
-{
-
-
+}: {
   users.users.jellyfin = {
     isSystemUser = true;
     group = lib.mkForce "jellyfin";
@@ -141,7 +138,7 @@
         enableFallbackFont = false;
 
         # Keyframe extraction
-        allowOnDemandMetadataBasedKeyframeExtractionForExtensions = [ "mkv" ];
+        allowOnDemandMetadataBasedKeyframeExtractionForExtensions = ["mkv"];
       };
     };
   };
