@@ -43,10 +43,8 @@
   # GitOps sync
   systemd.services.k3s-gitops-sync = {
     description = "k3s GitOps sync";
-    after = ["k3s.service" "network-online.target"];
-    requires = ["k3s.service"];
-    wants = ["network-online.target"];
-    wantedBy = ["multi-user.target"];
+    after = ["k3s.service"];
+    wants = ["k3s.service"];
 
     serviceConfig = {
       Type = "oneshot";
