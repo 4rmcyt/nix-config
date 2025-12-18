@@ -2,8 +2,7 @@
   lib,
   config,
   ...
-}:
-let
+}: let
   servicesWithMediaAccess = [
     "bazarr"
     "jellyseerr"
@@ -16,12 +15,11 @@ let
     "audiobookshelf"
     "jellyfin"
   ];
-in
-{
+in {
   imports = [
     ./upnp-fix.nix
+    ./jellyfin
   ];
-
   # SOPS secrets for nixarr
   sops.secrets = {
     wg_conf = {
@@ -48,17 +46,7 @@ in
         "media"
       ];
     };
-    jellyfin = {
-      isSystemUser = true;
-      group = lib.mkForce "jellyfin";
-      extraGroups = [
-        "users"
-        "media"
-        "render"
-        "video"
-        "input"
-      ];
-    };
+
     jellyseerr = {
       isSystemUser = true;
       group = lib.mkForce "jellyseerr";
@@ -125,17 +113,16 @@ in
     };
   };
   users.groups = {
-    audiobookshelf = { };
-    bazarr = { };
-    jellyfin = { };
-    jellyseerr = { };
-    lidarr = { };
-    prowlarr = { };
-    radarr = { };
-    sonarr = { };
-    transmission = { };
-    readarr = { };
-    recyclarr = { };
+    audiobookshelf = {};
+    bazarr = {};
+    jellyseerr = {};
+    lidarr = {};
+    prowlarr = {};
+    radarr = {};
+    sonarr = {};
+    transmission = {};
+    readarr = {};
+    recyclarr = {};
     # headphones = { };
   };
 
@@ -178,7 +165,7 @@ in
 
   nixarr = {
     enable = true;
-    mediaUsers = [ config.my.defaults.user ];
+    mediaUsers = [config.my.defaults.user];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
 
@@ -232,10 +219,7 @@ in
 
     audiobookshelf.enable = true;
     jellyseerr.enable = true;
-    jellyfin = {
-      enable = true;
-      package = config.inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin;
-    };
+    jellyfin.enable = false;
     bazarr.enable = true;
     lidarr.enable = true;
     prowlarr.enable = true;
@@ -248,31 +232,29 @@ in
     };
   };
 
-  systemd.services = (
-    lib.genAttrs servicesWithMediaAccess (_serviceName: {
-      serviceConfig = {
-        BindPaths = [
-          "/data/Downloads"
-          "/data/media"
-          "/data/media/movies"
-          "/data/media/audiobooks"
-          "/data/media/music"
-          "/data/media/shows"
-          "/data/media/books"
-          "/data/media/comics"
-          "/data/media/manga"
-          "/data/media/torrents"
-          "/data/media/usenet"
-          "/data/media/audiobooks"
-          "/data/Downloads/radarr"
-          "/data/Downloads/lidarr"
-          "/data/Downloads/tv-sonarr"
-          "/data/media/.state"
-          # "/data/media/torrents/.incomplete"
-        ];
-      };
-    })
-  );
+  systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
+    serviceConfig = {
+      BindPaths = [
+        "/data/Downloads"
+        "/data/media"
+        "/data/media/movies"
+        "/data/media/audiobooks"
+        "/data/media/music"
+        "/data/media/shows"
+        "/data/media/books"
+        "/data/media/comics"
+        "/data/media/manga"
+        "/data/media/torrents"
+        "/data/media/usenet"
+        "/data/media/audiobooks"
+        "/data/Downloads/radarr"
+        "/data/Downloads/lidarr"
+        "/data/Downloads/tv-sonarr"
+        "/data/media/.state"
+        # "/data/media/torrents/.incomplete"
+      ];
+    };
+  });
 
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
