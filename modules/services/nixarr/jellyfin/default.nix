@@ -1,9 +1,11 @@
 {
   lib,
   pkgs,
+  config,
   nixos-jellyfin,
   ...
-}: {
+}:
+{
 
   imports = [
     nixos-jellyfin.nixosModules.default
@@ -144,7 +146,7 @@
         enableFallbackFont = false;
 
         # Keyframe extraction
-        allowOnDemandMetadataBasedKeyframeExtractionForExtensions = ["mkv"];
+        allowOnDemandMetadataBasedKeyframeExtractionForExtensions = [ "mkv" ];
       };
     };
   };
