@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs.wezterm = {
     enable = true;
     package = pkgs.wezterm;
@@ -9,6 +10,15 @@
       -- Color scheme
       config.color_scheme = 'Dracula+'
       config.window_close_confirmation = 'NeverPrompt'
+      config.skip_close_confirmation_for_processes_named = {
+        'bash',
+        'sh',
+        'zsh',
+        'fish',
+        'tmux',
+        'nu',
+        'zellij',
+      }
       return config
     '';
   };
