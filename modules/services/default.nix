@@ -12,6 +12,6 @@
     ./nixarr
     ./atuin_server
     ./microbin
-    # ./k3s  # Temporarily disabled for testing
+    ./k3s
   ];
 }
