@@ -56,11 +56,22 @@
       export PATH="${pkgs.git}/bin:${pkgs.k3s}/bin:$PATH"
       export KUBECONFIG="/etc/rancher/k3s/k3s.yaml"
 
-      until kubectl get nodes &>/dev/null; do
+      # Wait up to 60 seconds for k3s to be ready
+      for i in {1..12}; do
+        if kubectl get nodes &>/dev/null; then
+          break
+        fi
+        if [ $i -eq 12 ]; then
+          echo "k3s not ready after 60 seconds, skipping GitOps sync"
+          exit 0
+        fi
         sleep 5
       done
 
+      # Initialize or update git repository
       if [ ! -d ".git" ]; then
+        # Remove any non-git files and clone fresh
+        rm -rf * .[!.]* 2>/dev/null || true
         git clone -b main https://github.com/4rmcyt/gitops.git .
       else
         git fetch origin main
