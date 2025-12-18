@@ -1,18 +1,14 @@
 {
-  config,
   nixos-jellyfin,
   lib,
   pkgs,
   ...
 }:
-let
-  inherit (lib) hasAttr optionals;
-in
 {
 
-  imports = [
-    nixos-jellyfin.nixosModules.default
-  ];
+  # imports = [
+  #   nixos-jellyfin.nixosModules.default
+  # ];
 
   users.users.jellyfin = {
     isSystemUser = true;
