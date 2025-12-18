@@ -219,6 +219,7 @@ in {
 
     audiobookshelf.enable = true;
     jellyseerr.enable = true;
+    jellyfin.enable = false;
     bazarr.enable = true;
     lidarr.enable = true;
     prowlarr.enable = true;
