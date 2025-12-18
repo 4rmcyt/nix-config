@@ -45,4 +45,9 @@
     from = 30000;
     to = 32767;
   }];
+
+  # Allow users in wheel group to access kubeconfig
+  systemd.tmpfiles.rules = [
+    "z /etc/rancher/k3s/k3s.yaml 0640 root wheel -"
+  ];
 }
