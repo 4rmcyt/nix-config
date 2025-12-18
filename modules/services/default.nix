@@ -13,5 +13,6 @@
     ./atuin_server
     ./microbin
     ./k3s
+    ./argocd
   ];
 }
