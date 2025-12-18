@@ -1,160 +1,127 @@
-{ lib, pkgs, inputs, ... }: {
-  # Jellyfin declarative configuration using nixos-jellyfin module
+{
+  nixos-jellyfin,
+  lib,
+  pkgs,
+  ...
+}: {
+  imports = [
+    nixos-jellyfin.nixosModules.default
+  ];
+
+  users.users.jellyfin = {
+    isSystemUser = true;
+    group = lib.mkForce "jellyfin";
+    extraGroups = [
+      "users"
+      "media"
+      "render"
+      "video"
+      "input"
+    ];
+  };
+
   services.jellyfin = {
     enable = true;
-
-    # Use packages from nixos-jellyfin flake
-    package = inputs.nixos-jellyfin.packages.${pkgs.system}.jellyfin;
-    webPackage = inputs.nixos-jellyfin.packages.${pkgs.system}.jellyfin-web;
-    ffmpegPackage = inputs.nixos-jellyfin.packages.${pkgs.system}.jellyfin-ffmpeg;
+    package = pkgs.jellyfin;
+    ffmpegPackage = pkgs.jellyfin-ffmpeg;
+    webPackage = pkgs.jellyfin-web;
 
     settings = {
-      # System configuration (from base-app-config.nix and server-config.nix)
       system = {
-        # Base configuration
+        serverName = "Jellyfin Homeserver";
+        quickConnectAvailable = false;
         isStartupWizardCompleted = true;
-        cachePath = "/data/media/.state/nixarr/jellyfin/cache";
-        logFileRetentionDays = 3;
 
-        # Server identity
-        serverName = "homeserver";
-        displayLanguage = "en-US";
-
-        # Metadata configuration
-        metadataPath = "/data/media/.state/nixarr/jellyfin/data/metadata";
-        preferredMetadataLanguage = "en";
-        metadataCountryCode = "CA";
-
-        # Library monitoring
-        libraryMonitorDelay = 60;
-        libraryUpdateDuration = 30;
-        libraryScanFanoutConcurrency = 2;
-        libraryMetadataRefreshConcurrency = 0;
-
-        # Playback state tracking
-        minResumePct = 5;
-        maxResumePct = 90;
-        minResumeDurationSeconds = 300;
-        minAudiobookResume = 5;
-        maxAudiobookResume = 5;
-        inactiveSessionThreshold = 0;
-
-        # Images
-        imageSavingConvention = "Legacy";
-        chapterImageResolution = "matchsource";
-        imageExtractionTimeoutMs = 0;
-        parallelImageEncodingLimit = 2;
-        dummyChapterDuration = 0;
-
-        # Network & Security
-        isPortAuthorized = true;
-        quickConnectAvailable = true;
-        corsHosts = ["*"];
-        remoteClientBitrateLimit = 120000000;
-
-        # Monitoring & Logging
-        enableMetrics = false;
-        activityLogRetentionDays = 30;
-        enableSlowResponseWarning = true;
-        slowResponseThresholdMs = 500;
-        allowClientLogUpload = true;
-
-        # Feature flags
-        enableNormalizedItemByNameIds = true;
-        enableCaseSensitiveItemIds = true;
-        disableLiveTvChannelUserDataName = true;
-        skipDeserializationForBasicTypes = true;
-        saveMetadataHidden = false;
-        enableFolderView = false;
         enableGroupingIntoCollections = false;
-        displaySpecialsWithinSeasons = true;
-        enableExternalContentInSuggestions = true;
+        enableExternalContentInSuggestions = false;
 
-        # Plugin repositories
+        metadataPath = "/data/media/.state/nixarr/jellyfin/data/metadata";
+        cachePath = "/data/media/.state/nixarr/jellyfin/cache";
+
         pluginRepositories = [
           {
             name = "Jellyfin Stable";
-            url = "https://repo.jellyfin.org/files/plugin/manifest.json";
-            enable = true;
+            url = "https://repo.jellyfin.org/releases/plugin/manifest-stable.json";
+          }
+          {
+            name = "Intro Skipper";
+            url = "https://manifest.intro-skipper.org/manifest.json";
+          }
+          {
+            name = "Merge Versions Plugin";
+            url = "https://raw.githubusercontent.com/danieladov/JellyfinPluginManifest/master/manifest.json";
+          }
+          {
+            name = "Meilisearch";
+            url = "https://raw.githubusercontent.com/arnesacnussem/jellyfin-plugin-meilisearch/refs/heads/master/manifest.json";
+          }
+          {
+            name = "Air Times";
+            url = "https://raw.githubusercontent.com/apteryxxyz/jellyfin-plugin-airtimes/main/manifest.json";
+          }
+          {
+            name = "InPlayerEpisodePreview";
+            url = "https://raw.githubusercontent.com/Namo2/InPlayerEpisodePreview/master/manifest.json";
+          }
+          {
+            name = "Streamyfin";
+            url = "https://raw.githubusercontent.com/streamyfin/jellyfin-plugin-streamyfin/main/manifest.json";
           }
           {
             name = "danieladov";
             url = "https://raw.githubusercontent.com/danieladov/JellyfinPluginManifest/master/manifest.json";
-            enable = true;
           }
           {
             name = "jellyfin-unstable";
             url = "https://repo.jellyfin.org/files/plugin-unstable/manifest.json";
-            enable = true;
           }
           {
             name = "jellyfin-plugin-cinemamode";
             url = "https://raw.githubusercontent.com/CherryFloors/jellyfin-plugin-cinemamode/main/manifest.json";
-            enable = true;
           }
           {
             name = "jellyfin-plugin-sso";
             url = "https://raw.githubusercontent.com/9p4/jellyfin-plugin-sso/manifest-release/manifest.json";
-            enable = true;
           }
           {
             name = "Intro skipper";
             url = "https://intro-skipper.org/manifest.json";
-            enable = true;
-          }
-          {
-            name = "Jellyfin-Enhanced";
-            url = "https://raw.githubusercontent.com/n00bcodr/jellyfin-plugins/main/10.11/manifest.json";
-            enable = true;
           }
           {
             name = "File Transformation";
             url = "https://www.iamparadox.dev/jellyfin/plugins/manifest.json";
-            enable = true;
           }
         ];
 
-        # Cast receiver applications
-        castReceiverApplications = [
-          {
-            id = "F007D354";
-            name = "Stable";
-          }
-          {
-            id = "6F511C87";
-            name = "Unstable";
-          }
-        ];
+        enableSlowResponseWarning = false;
       };
 
-      # Encoding configuration (from encoding-options.nix)
       encoding = {
-        # Hardware acceleration (VAAPI for Intel/AMD)
         hardwareAccelerationType = "vaapi";
         vaapiDevice = "/dev/dri/renderD128";
         enableHardwareEncoding = true;
         preferSystemNativeHwDecoder = true;
-        hardwareDecodingCodecs = ["h264" "hevc" "mpeg2video" "vp8" "vp9" "vc1"];
-
-        # Tone mapping for HDR content
+        hardwareDecodingCodecs = [
+          "h264"
+          "hevc"
+          "mpeg2video"
+          "mpeg4"
+          "vc1"
+          "vp8"
+          "vp9"
+        ];
+        allowHevcEncoding = true;
+        enableThrottling = true;
         enableTonemapping = true;
-        enableVppTonemapping = false;
         tonemappingAlgorithm = "bt2390";
         tonemappingMode = "auto";
         tonemappingRange = "auto";
         tonemappingDesat = 0;
         tonemappingPeak = 100;
         tonemappingParam = 0;
-        vppTonemappingBrightness = 16;
-        vppTonemappingContrast = 1;
 
-        # Encoding quality settings
         encodingThreadCount = 4;
-        h264Crf = 23;
-        h265Crf = 28;
         encoderPreset = "superfast";
-        allowHevcEncoding = true;
-        allowAv1Encoding = false;
 
         # Enable 10-bit codec support
         enableDecodingColorDepth10Hevc = true;
@@ -164,22 +131,8 @@
         enableIntelLowPowerH264HwEncoder = true;
         enableIntelLowPowerHevcHwEncoder = false;
 
-        # Enhanced decoder
-        enableEnhancedNvdecDecoder = true;
-
-        # Audio settings
-        enableAudioVbr = false;
-        downMixAudioBoost = 2;
-        downMixStereoAlgorithm = "none";
-
-        # Deinterlacing
-        deinterlaceDoubleRate = false;
-        deinterlaceMethod = "yadif";
-
-        # Transcoding settings
         transcodingTempPath = "/data/media/.state/nixarr/jellyfin/cache/transcodes";
         maxMuxingQueueSize = 2048;
-        enableThrottling = true;
         throttleDelaySeconds = 180;
         enableSegmentDeletion = true;
         segmentKeepSeconds = 720;
@@ -191,13 +144,6 @@
         # Keyframe extraction
         allowOnDemandMetadataBasedKeyframeExtractionForExtensions = ["mkv"];
       };
-
-      # Metadata configuration (from metadata-config.nix)
-      metadata = {
-        useFileCreationTimeForDateAdded = true;
-      };
     };
   };
-
-  systemd.services.jellyfin.preStart = lib.mkForce "";
 }

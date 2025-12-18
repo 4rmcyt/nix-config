@@ -46,16 +46,7 @@ in {
         "media"
       ];
     };
-    jellyfin = {
-      isSystemUser = true;
-      group = lib.mkForce "jellyfin";
-      extraGroups = [
-        "users"
-        "media"
-        "render"
-        "video"
-      ];
-    };
+
     jellyseerr = {
       isSystemUser = true;
       group = lib.mkForce "jellyseerr";
@@ -243,28 +234,28 @@ in {
   };
 
   systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
-      serviceConfig = {
-        BindPaths = [
-          "/data/Downloads"
-          "/data/media"
-          "/data/media/movies"
-          "/data/media/audiobooks"
-          "/data/media/music"
-          "/data/media/shows"
-          "/data/media/books"
-          "/data/media/comics"
-          "/data/media/manga"
-          "/data/media/torrents"
-          "/data/media/usenet"
-          "/data/media/audiobooks"
-          "/data/Downloads/radarr"
-          "/data/Downloads/lidarr"
-          "/data/Downloads/tv-sonarr"
-          "/data/media/.state"
-          # "/data/media/torrents/.incomplete"
-        ];
-      };
-    });
+    serviceConfig = {
+      BindPaths = [
+        "/data/Downloads"
+        "/data/media"
+        "/data/media/movies"
+        "/data/media/audiobooks"
+        "/data/media/music"
+        "/data/media/shows"
+        "/data/media/books"
+        "/data/media/comics"
+        "/data/media/manga"
+        "/data/media/torrents"
+        "/data/media/usenet"
+        "/data/media/audiobooks"
+        "/data/Downloads/radarr"
+        "/data/Downloads/lidarr"
+        "/data/Downloads/tv-sonarr"
+        "/data/media/.state"
+        # "/data/media/torrents/.incomplete"
+      ];
+    };
+  });
   # // {
   #   # Restore Jellyfin configuration before starting
   #   # jellyfin.preStart = ''
