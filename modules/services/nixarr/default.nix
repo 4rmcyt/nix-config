@@ -234,7 +234,7 @@ in
     jellyseerr.enable = true;
     jellyfin = {
       enable = true;
-      # package = config.inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin;
+      package = config.inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin;
     };
     bazarr.enable = true;
     lidarr.enable = true;
