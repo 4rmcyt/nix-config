@@ -176,8 +176,6 @@ in
     ];
   };
 
-
-
   nixarr = {
     enable = true;
     mediaUsers = [ config.my.defaults.user ];
@@ -212,8 +210,7 @@ in
         "127.0.0.1"
       ];
       messageLevel = "info";
-      extraSettings =
-{
+      extraSettings = {
         umask = 2;
         download-queue-size = 10;
         download-queue-enabled = true;
@@ -237,7 +234,7 @@ in
     jellyseerr.enable = true;
     jellyfin = {
       enable = true;
-      package = config.inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin;
+      # package = config.inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin;
     };
     bazarr.enable = true;
     lidarr.enable = true;
@@ -276,7 +273,6 @@ in
       };
     })
   );
-
 
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
