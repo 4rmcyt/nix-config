@@ -24,9 +24,9 @@
   services.jellyfin = {
     enable = true;
 
-    package = pkgs.inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin;
-    ffmpegPackage = pkgs.inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-ffmpeg;
-    webPackage = pkgs.inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-web;
+    package = pkgs.jellyfin;
+    ffmpegPackage = pkgs.jellyfin-ffmpeg;
+    webPackage = pkgs.jellyfin-web;
 
     settings = {
       system = {
