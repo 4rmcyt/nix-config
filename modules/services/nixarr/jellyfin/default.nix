@@ -1,12 +1,8 @@
 {
   lib,
   pkgs,
-  nixos-jellyfin,
   ...
 }: {
-  imports = [
-    nixos-jellyfin.nixosModules.default
-  ];
 
   users.users.jellyfin = {
     isSystemUser = true;
@@ -22,9 +18,9 @@
 
   services.jellyfin = {
     enable = true;
-    package = pkgs.jellyfin;
-    ffmpegPackage = pkgs.jellyfin-ffmpeg;
-    webPackage = pkgs.jellyfin-web;
+    package = pkgs.inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin;
+    ffmpegPackage = pkgs.inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-ffmpeg;
+    webPackage = pkgs.inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-web;
 
     settings = {
       system = {
