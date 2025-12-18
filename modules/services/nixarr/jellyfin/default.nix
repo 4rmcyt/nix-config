@@ -1,12 +1,12 @@
 {
-  nixos-jellyfin,
   lib,
   pkgs,
+  nixos-jellyfin,
   ...
 }: {
-  # imports = [
-  #   nixos-jellyfin.nixosModules.default
-  # ];
+  imports = [
+    nixos-jellyfin.nixosModules.default
+  ];
 
   users.users.jellyfin = {
     isSystemUser = true;
