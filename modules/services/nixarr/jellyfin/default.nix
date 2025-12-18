@@ -17,8 +17,6 @@
 
   services.jellyfin = {
     enable = true;
-
-    package = pkgs.jellyfin;
     ffmpegPackage = pkgs.jellyfin-ffmpeg;
     webPackage = pkgs.jellyfin-web;
 
