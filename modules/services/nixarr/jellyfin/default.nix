@@ -1,5 +1,4 @@
 {
-  config,
   nixos-jellyfin,
   lib,
   pkgs,
