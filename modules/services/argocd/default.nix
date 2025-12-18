@@ -35,6 +35,9 @@
         # Wait for ArgoCD to be ready
         kubectl wait --for=condition=available --timeout=300s deployment/argocd-server -n argocd || true
 
+        # Configure repository with insecure TLS
+        kubectl apply -f ${./repository.yaml}
+
         # Create ArgoCD Application for gitops repo
         kubectl apply -f ${./application.yaml}
       fi
