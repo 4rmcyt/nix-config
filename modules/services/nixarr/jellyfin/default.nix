@@ -1,8 +1,8 @@
 {
-  lib,
-  pkgs,
   config,
   nixos-jellyfin,
+  lib,
+  pkgs,
   ...
 }:
 {
