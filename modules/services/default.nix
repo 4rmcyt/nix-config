@@ -12,7 +12,7 @@
     ./nixarr
     ./atuin_server
     ./microbin
-    ./k3s
-    ./argocd
+    # ./k3s
+    # ./argocd
   ];
 }
