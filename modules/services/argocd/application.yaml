@@ -18,3 +18,7 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+  # Ignore TLS verification
+  ignoreDifferences:
+  - group: ""
+    kind: Secret
