@@ -1,4 +1,4 @@
-_: {
+{ lib, ... }: {
   # Jellyfin declarative configuration using nixos-jellyfin module
   services.jellyfin = {
     enable = true;
@@ -193,4 +193,7 @@ _: {
       };
     };
   };
+
+  # Fix nixos-jellyfin module's preStart chmod issue with read-only nix store symlinks
+  systemd.services.jellyfin.preStart = lib.mkForce "";
 }
