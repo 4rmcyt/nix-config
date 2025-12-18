@@ -2,7 +2,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   users.users.jellyfin = {
     isSystemUser = true;
     group = lib.mkForce "jellyfin";
@@ -29,6 +30,7 @@
         enableGroupingIntoCollections = false;
         enableExternalContentInSuggestions = false;
 
+        WorkingDirectory = "/data/media/.state/nixarr/jellyfin";
         metadataPath = "/data/media/.state/nixarr/jellyfin/data/metadata";
         cachePath = "/data/media/.state/nixarr/jellyfin/cache";
 
@@ -136,7 +138,7 @@
         enableFallbackFont = false;
 
         # Keyframe extraction
-        allowOnDemandMetadataBasedKeyframeExtractionForExtensions = ["mkv"];
+        allowOnDemandMetadataBasedKeyframeExtractionForExtensions = [ "mkv" ];
       };
     };
   };
