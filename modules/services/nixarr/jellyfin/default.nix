@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  inputs,
   ...
 }:
 {
@@ -18,8 +19,9 @@
 
   services.jellyfin = {
     enable = true;
-    ffmpegPackage = pkgs.jellyfin-ffmpeg;
-    webPackage = pkgs.jellyfin-web;
+    package = inputs.nixos-jellyfin.packages.${pkgs.system}.jellyfin;
+    ffmpegPackage = inputs.nixos-jellyfin.packages.${pkgs.system}.jellyfin-ffmpeg;
+    webPackage = inputs.nixos-jellyfin.packages.${pkgs.system}.jellyfin-web;
 
     settings = {
       system = {
