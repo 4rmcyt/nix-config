@@ -52,9 +52,6 @@
       Type = "oneshot";
       WorkingDirectory = "/var/lib/k3s-gitops";
       StateDirectory = "k3s-gitops";
-      User = "k3s-gitops";
-      Group = "k3s-gitops";
-      SupplementaryGroups = ["root"];
     };
 
     script = ''
@@ -97,13 +94,6 @@
 
   # Directories
   systemd.tmpfiles.rules = [
-    "d /var/lib/k3s-gitops 0755 k3s-gitops k3s-gitops -"
+    "d /var/lib/k3s-gitops 0755 root root -"
   ];
-
-  # GitOps user
-  users.users.k3s-gitops = {
-    isSystemUser = true;
-    group = "k3s-gitops";
-  };
-  users.groups.k3s-gitops = {};
 }
