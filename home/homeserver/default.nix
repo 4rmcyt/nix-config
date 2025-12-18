@@ -47,10 +47,13 @@
   };
 
   programs.zsh.enable = true;
-  # Override zsh profile for pyenv
+  # Override zsh profile for pyenv and kubectl
   programs.zsh.profileExtra = ''
     export PYENV_ROOT="$HOME/.pyenv"
     export PATH="$PYENV_ROOT/bin:$PATH"
     eval "$(pyenv init --path)"
+
+    # k3s kubectl configuration
+    export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
   '';
 }
