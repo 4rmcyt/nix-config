@@ -1,166 +1,9 @@
 {
   config,
   pkgs,
-  lib,
   ...
-}: let
-  manifestDir = "/var/lib/rancher/k3s/server/manifests";
-  chartDir = "/var/lib/rancher/k3s/server/static/charts";
-  imageDir = "/var/lib/rancher/k3s/agent/images";
-  containerdConfigTemplateFile = "/var/lib/rancher/k3s/agent/etc/containerd/config.toml.tmpl";
-
-  # k3s Configuration (single-node setup)
-  k3sRole = "server";
-
-  # GitOps configuration
-  gitOpsEnabled = true;
-  gitOpsRepo = "https://github.com/4rmcyt/gitops.git";
-  gitOpsBranch = "main";
-  gitOpsPath = "k3s"; # Relative path in repo for k8s manifests
-  gitOpsSyncInterval = "5m"; # How often to check for changes
-
-  # Kubelet configuration
-  kubeletConfig = {
-    apiVersion = "kubelet.config.k8s.io/v1beta1";
-    kind = "KubeletConfiguration";
-    shutdownGracePeriod = "30s";
-    shutdownGracePeriodCriticalPods = "10s";
-  };
-
-  # KubeProxy configuration
-  kubeProxyConfig = {
-    apiVersion = "kubeproxy.config.k8s.io/v1alpha1";
-    kind = "KubeProxyConfiguration";
-  };
-
-  kubeletConfigFile = (pkgs.formats.yaml {}).generate "k3s-kubelet-config" kubeletConfig;
-  kubeProxyConfigFile = (pkgs.formats.yaml {}).generate "k3s-kubeProxy-config" kubeProxyConfig;
-
-  # Note: Keycloak manifest moved to GitOps repo
-  # Previously defined keycloakManifest for reference (now in gitops repo at k3s/keycloak/)
-
-  # Manifests to deploy
-  # Note: Keycloak and other app manifests are now managed in the GitOps repository
-  # at https://github.com/4rmcyt/gitops.git under k3s/keycloak/
-  manifests = {};
-
-  # Generate manifest files with proper YAML formatting
-  manifestFiles =
-    if manifests == {}
-    then pkgs.runCommand "empty-manifests" {} "mkdir -p $out"
-    else
-      pkgs.linkFarm "k3s-manifests" (
-        builtins.map (name: let
-          docs = manifests.${name};
-          yamlContent =
-            if builtins.isList docs
-            then
-              builtins.concatStringsSep "\n---\n" (
-                builtins.map (doc: builtins.readFile ((pkgs.formats.yaml {}).generate "temp" doc)) docs
-              )
-            else builtins.readFile ((pkgs.formats.yaml {}).generate "temp" docs);
-        in {
-          name = "${name}.yaml";
-          path = pkgs.writeText "${name}.yaml" yamlContent;
-        }) (builtins.attrNames manifests)
-      );
-
-  # Charts to deploy
-  charts = {};
-
-  # Container images to preload
-  images = [];
-
-  # Containerd config template
-  containerdConfigTemplate = null;
-
-  # Pod Security Standards configuration
-  podSecurityConfig = pkgs.writeText "pod-security-config.yaml" ''
-    apiVersion: apiserver.config.k8s.io/v1
-    kind: AdmissionConfiguration
-    plugins:
-    - name: PodSecurity
-      configuration:
-        apiVersion: pod-security.admission.config.k8s.io/v1
-        kind: PodSecurityConfiguration
-        defaults:
-          enforce: "baseline"
-          enforce-version: "latest"
-          audit: "restricted"
-          audit-version: "latest"
-          warn: "restricted"
-          warn-version: "latest"
-        exemptions:
-          usernames: []
-          runtimeClasses: []
-          namespaces: [kube-system]
-  '';
-
-  # Secrets encryption at rest configuration
-  # Generate a random 32-byte key and base64 encode it at build time
-  encryptionKey = builtins.readFile (pkgs.runCommand "gen-encryption-key" {} ''
-    ${pkgs.coreutils}/bin/head -c 32 /dev/urandom | ${pkgs.coreutils}/bin/base64 -w 0 > $out
-  '');
-
-  encryptionConfig = pkgs.writeText "encryption-config.yaml" ''
-    apiVersion: apiserver.config.k8s.io/v1
-    kind: EncryptionConfiguration
-    resources:
-      - resources:
-          - secrets
-        providers:
-          - aescbc:
-              keys:
-                - name: key1
-                  secret: ${encryptionKey}
-          - identity: {}
-  '';
-
-  # Setup script to link manifests, charts, and images
-  setupScript = pkgs.writeShellScript "setup-k3s-content" ''
-    # Create directories
-    ${pkgs.coreutils-full}/bin/mkdir -p ${manifestDir}
-    ${pkgs.coreutils-full}/bin/mkdir -p ${chartDir}
-    ${pkgs.coreutils-full}/bin/mkdir -p ${imageDir}
-
-    # Link manifests
-    ${
-      if manifests != {}
-      then
-        builtins.concatStringsSep "\n    " (
-          builtins.map (name: "${pkgs.coreutils-full}/bin/ln -sfn ${manifestFiles}/${name}.yaml ${manifestDir}/${name}.yaml")
-          (builtins.attrNames manifests)
-        )
-      else ""
-    }
-
-    # Link charts
-    ${builtins.concatStringsSep "\n    " (
-      lib.mapAttrsToList (name: path: let
-        target =
-          if lib.hasSuffix ".tgz" name
-          then name
-          else "${name}.tgz";
-      in "${pkgs.coreutils-full}/bin/ln -sfn ${path} ${chartDir}/${target}")
-      charts
-    )}
-
-    # Link images
-    ${builtins.concatStringsSep "\n    " (
-      builtins.map (image: "${pkgs.coreutils-full}/bin/ln -sfn ${image} ${imageDir}/${image.name}")
-      images
-    )}
-
-    # Setup containerd config template if provided
-    ${lib.optionalString (containerdConfigTemplate != null) ''
-      mkdir -p $(dirname ${containerdConfigTemplateFile})
-      ${pkgs.coreutils-full}/bin/ln -sfn ${pkgs.writeText "config.toml.tmpl" containerdConfigTemplate} ${containerdConfigTemplateFile}
-    ''}
-  '';
-in {
-  # =================================================================
-  # SOPS Secrets for k3s and Keycloak
-  # =================================================================
+}: {
+  # SOPS Secrets
   sops.secrets = {
     k3s_token_file = {
       sopsFile = ../../../secrets/k3s.yaml;
@@ -174,33 +17,17 @@ in {
     };
   };
 
-  # Note: keycloak_db_password is already defined in modules/database/postgresql/default.nix
-
   environment.systemPackages = [pkgs.k3s];
 
-  # =================================================================
   # k3s Service
-  # =================================================================
   systemd.services.k3s = {
     description = "k3s service";
-    after = [
-      "firewall.service"
-      "network-online.target"
-      "postgresql.service" # Wait for system PostgreSQL
-    ];
-    wants = [
-      "firewall.service"
-      "network-online.target"
-    ];
-    requires = ["postgresql.service"];
+    after = ["network-online.target"];
+    wants = ["network-online.target"];
     wantedBy = ["multi-user.target"];
-    path = lib.optional config.boot.zfs.enabled config.boot.zfs.package;
 
     serviceConfig = {
-      Type =
-        if k3sRole == "agent"
-        then "exec"
-        else "notify";
+      Type = "notify";
       KillMode = "process";
       Delegate = "yes";
       Restart = "always";
@@ -209,79 +36,13 @@ in {
       LimitNPROC = "infinity";
       LimitCORE = "infinity";
       TasksMax = "infinity";
-      ExecStartPre = setupScript;
-      ExecStart = lib.concatStringsSep " \\\n  " [
-        "${pkgs.k3s}/bin/k3s ${k3sRole}"
-        "--token-file=${config.sops.secrets.k3s_token_file.path}"
-        "--bind-address=0.0.0.0"
-        "--kube-apiserver-arg=admission-control-config-file=${podSecurityConfig}"
-        "--kube-apiserver-arg=encryption-provider-config=${encryptionConfig}"
-        "--kube-apiserver-arg=audit-log-path=/var/log/k3s/audit.log"
-        "--kube-apiserver-arg=audit-log-maxage=30"
-        "--kube-apiserver-arg=audit-log-maxbackup=10"
-        "--kube-apiserver-arg=audit-log-maxsize=100"
-        "--kubelet-arg=config=${kubeletConfigFile}"
-        "--kube-proxy-arg=config=${kubeProxyConfigFile}"
-      ];
+      ExecStart = "${pkgs.k3s}/bin/k3s server --token-file=${config.sops.secrets.k3s_token_file.path}";
     };
   };
 
-  # =================================================================
-  # Post-deployment: Create k8s secrets from sops
-  # =================================================================
-  systemd.services.k3s-setup-secrets = {
-    description = "Setup k3s secrets from sops";
-    after = ["k3s.service" "sops-nix.service"];
-    requires = ["k3s.service"];
-    wantedBy = ["multi-user.target"];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
-    script = ''
-      # Wait for k3s to be ready
-      until ${pkgs.k3s}/bin/kubectl get nodes &>/dev/null; do
-        echo "Waiting for k3s to be ready..."
-        sleep 5
-      done
-
-      # Create keycloak-db-config secret with db-password from sops
-      if ! ${pkgs.k3s}/bin/kubectl get secret keycloak-db-config -n default &>/dev/null; then
-        ${pkgs.k3s}/bin/kubectl create secret generic keycloak-db-config \
-          --from-literal=db-password="$(cat ${config.sops.secrets.keycloak_db_password.path})" \
-          -n default
-      else
-        # Update existing secret
-        ${pkgs.k3s}/bin/kubectl create secret generic keycloak-db-config \
-          --from-literal=db-password="$(cat ${config.sops.secrets.keycloak_db_password.path})" \
-          -n default \
-          --dry-run=client -o yaml | ${pkgs.k3s}/bin/kubectl apply -f -
-      fi
-
-      # Create keycloak-admin secret
-      if ! ${pkgs.k3s}/bin/kubectl get secret keycloak-admin -n default &>/dev/null; then
-        ${pkgs.k3s}/bin/kubectl create secret generic keycloak-admin \
-          --from-literal=username=admin \
-          --from-literal=password="$(cat ${config.sops.secrets.k3s_keycloak_admin_password.path})" \
-          -n default
-      else
-        # Update existing secret
-        ${pkgs.k3s}/bin/kubectl create secret generic keycloak-admin \
-          --from-literal=username=admin \
-          --from-literal=password="$(cat ${config.sops.secrets.k3s_keycloak_admin_password.path})" \
-          -n default \
-          --dry-run=client -o yaml | ${pkgs.k3s}/bin/kubectl apply -f -
-      fi
-
-      echo "k3s secrets setup complete"
-    '';
-  };
-
-  # =================================================================
-  # GitOps: Auto-deploy from git repository
-  # =================================================================
-  systemd.services.k3s-gitops-sync = lib.mkIf gitOpsEnabled {
-    description = "k3s GitOps sync from ${gitOpsRepo}";
+  # GitOps sync
+  systemd.services.k3s-gitops-sync = {
+    description = "k3s GitOps sync";
     after = ["k3s.service" "network-online.target"];
     requires = ["k3s.service"];
     wants = ["network-online.target"];
@@ -291,152 +52,58 @@ in {
       Type = "oneshot";
       WorkingDirectory = "/var/lib/k3s-gitops";
       StateDirectory = "k3s-gitops";
-
-      # Security hardening
       User = "k3s-gitops";
       Group = "k3s-gitops";
-
-      # Systemd security features
-      NoNewPrivileges = true;
-      PrivateTmp = true;
-      ProtectSystem = "strict";
-      ProtectHome = true;
-      ReadWritePaths = ["/var/lib/k3s-gitops"];
-
-      # Additional protections
-      ProtectKernelTunables = true;
-      ProtectKernelModules = true;
-      ProtectControlGroups = true;
-      RestrictSUIDSGID = true;
-      RestrictRealtime = true;
-      RestrictNamespaces = true;
-      LockPersonality = true;
-      MemoryDenyWriteExecute = true;
-
-      # Allow access to k3s kubeconfig
       SupplementaryGroups = ["root"];
     };
 
     script = ''
-      # Ensure git is available
       export PATH="${pkgs.git}/bin:${pkgs.k3s}/bin:$PATH"
       export KUBECONFIG="/etc/rancher/k3s/k3s.yaml"
 
-      # Wait for k3s to be ready
       until kubectl get nodes &>/dev/null; do
-        echo "Waiting for k3s to be ready..."
         sleep 5
       done
 
-      # Clone or update repository
       if [ ! -d ".git" ]; then
-        echo "Cloning repository ${gitOpsRepo}..."
-        git clone -b ${gitOpsBranch} ${gitOpsRepo} .
+        git clone -b main https://github.com/4rmcyt/gitops.git .
       else
-        echo "Updating repository..."
-        git fetch origin ${gitOpsBranch}
-
-        # Check if there are any changes
+        git fetch origin main
         LOCAL=$(git rev-parse HEAD)
-        REMOTE=$(git rev-parse origin/${gitOpsBranch})
-
-        if [ "$LOCAL" = "$REMOTE" ]; then
-          echo "No changes detected, skipping deployment"
-          exit 0
-        fi
-
-        echo "Changes detected: $LOCAL -> $REMOTE"
-        git reset --hard origin/${gitOpsBranch}
+        REMOTE=$(git rev-parse origin/main)
+        [ "$LOCAL" = "$REMOTE" ] && exit 0
+        git reset --hard origin/main
       fi
 
-      # Apply manifests if directory exists
-      if [ -d "${gitOpsPath}" ]; then
-        echo "Applying manifests from ${gitOpsPath}..."
-        kubectl apply -f ${gitOpsPath}/ --recursive
-      else
-        echo "Warning: ${gitOpsPath} not found in repository"
-      fi
-
-      echo "GitOps sync complete"
+      [ -d "k3s" ] && kubectl apply -f k3s/ --recursive
     '';
   };
 
-  systemd.timers.k3s-gitops-sync = lib.mkIf gitOpsEnabled {
+  systemd.timers.k3s-gitops-sync = {
     description = "Timer for k3s GitOps sync";
     wantedBy = ["timers.target"];
     timerConfig = {
-      OnBootSec = "2min"; # Run 2 minutes after boot
-      OnUnitActiveSec = gitOpsSyncInterval;
+      OnBootSec = "2min";
+      OnUnitActiveSec = "5m";
       Unit = "k3s-gitops-sync.service";
     };
   };
 
-  # =================================================================
-  # Firewall Configuration
-  # =================================================================
-  # Port Analysis - NO CONFLICTS DETECTED:
-  #
-  # k3s ports:
-  # - 6443: Kubernetes API server (LOCALHOST-ONLY for security)
-  # - 8472: Flannel VXLAN (UDP)
-  # - 9000: Keycloak via LoadBalancer (already used by system keycloak)
-  # - 10250: Kubelet metrics
-  # - 30000-32767: NodePort range
-  #
-  # Existing service ports:
-  # - 587: SMTP, 1883: MQTT, 3001: Kuma, 3003: Grafana
-  # - 3493: NUT, 5000: Kavita, 5232: Radicale, 5432: PostgreSQL
-  # - 6767: Bazarr, 7878: Radarr, 8069: Microbin
-  # - 8082: Homepage, 8086: Miniflux, 8096: Jellyfin
-  # - 8123: Hass, 8686: Lidarr, 8787: Readarr, 8881: Atuin
-  # - 8888: Paperless, 8989: Sonarr, 9292: Audiobookshelf
-  # - 9696: Prowlarr, 11434: Ollama
-  #
-  # Security hardening applied:
-  # - API server bound to localhost (127.0.0.1) only
-  # - Token authentication required
-  # - Pod Security Standards enforced (baseline)
-  # - Secrets encrypted at rest
-  # - Audit logging enabled
-  # - GitOps service runs as non-root with systemd hardening
+  # Firewall - NodePort range for external service access
+  networking.firewall.allowedTCPPortRanges = [{
+    from = 30000;
+    to = 32767;
+  }];
 
-  networking.firewall = {
-    allowedTCPPorts = [
-      # 6443 # Kubernetes API server - REMOVED: now localhost-only for security
-      10250 # Kubelet metrics
-      # Port 9000 already opened by modules/security/keycloak/default.nix
-    ];
-    allowedUDPPorts = [
-      8472 # Flannel VXLAN
-    ];
-    # Allow NodePort range for k3s services
-    allowedTCPPortRanges = [
-      {
-        from = 30000;
-        to = 32767;
-      }
-    ];
-  };
-
-  # =================================================================
-  # System Directories
-  # =================================================================
+  # Directories
   systemd.tmpfiles.rules = [
-    "d /var/lib/rancher 0755 root root -"
-    "d /var/lib/rancher/k3s 0755 root root -"
-    "d /var/lib/rancher/k3s/server 0755 root root -"
-    "d /var/lib/rancher/k3s/agent 0755 root root -"
     "d /var/lib/k3s-gitops 0755 k3s-gitops k3s-gitops -"
-    "d /var/log/k3s 0755 root root -"
   ];
 
-  # =================================================================
-  # GitOps Service User
-  # =================================================================
+  # GitOps user
   users.users.k3s-gitops = {
     isSystemUser = true;
     group = "k3s-gitops";
-    description = "k3s GitOps sync service user";
   };
   users.groups.k3s-gitops = {};
 }
