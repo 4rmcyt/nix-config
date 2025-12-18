@@ -1,9 +1,13 @@
 {
+  config,
   nixos-jellyfin,
   lib,
   pkgs,
   ...
 }:
+let
+  inherit (lib) hasAttr optionals;
+in
 {
 
   imports = [
