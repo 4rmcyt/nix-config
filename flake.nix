@@ -182,6 +182,7 @@
     nixos-jellyfin = {
       url = "github:matt1432/nixos-jellyfin";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.systems.follows = "systems";
     };
 
     # Non-flake inputs
@@ -258,6 +259,7 @@
                 inputs.chaotic.nixosModules.nyx-cache
                 inputs.chaotic.nixosModules.nyx-overlay
                 inputs.lix-module.nixosModules.default
+                inputs.nixos-jellyfin.nixosModules.default
               ]
               ++ (helpers.mkHome {
                 modules = [./home/homeserver];
