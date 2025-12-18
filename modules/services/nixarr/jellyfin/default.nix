@@ -1,7 +1,12 @@
-{ lib, ... }: {
+{ lib, pkgs, inputs, ... }: {
   # Jellyfin declarative configuration using nixos-jellyfin module
   services.jellyfin = {
     enable = true;
+
+    # Use packages from nixos-jellyfin flake
+    package = inputs.nixos-jellyfin.packages.${pkgs.system}.jellyfin;
+    webPackage = inputs.nixos-jellyfin.packages.${pkgs.system}.jellyfin-web;
+    ffmpegPackage = inputs.nixos-jellyfin.packages.${pkgs.system}.jellyfin-ffmpeg;
 
     settings = {
       # System configuration (from base-app-config.nix and server-config.nix)
@@ -194,6 +199,5 @@
     };
   };
 
-  # Fix nixos-jellyfin module's preStart chmod issue with read-only nix store symlinks
   systemd.services.jellyfin.preStart = lib.mkForce "";
 }
