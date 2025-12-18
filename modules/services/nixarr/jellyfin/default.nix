@@ -17,6 +17,11 @@
     ];
   };
 
+  systemd.services.jellyfin = {
+    # Prevent blocking during system activation
+    restartIfChanged = false;
+  };
+
   services.jellyfin = {
     enable = true;
     package = inputs.nixos-jellyfin.packages.${pkgs.system}.jellyfin;
