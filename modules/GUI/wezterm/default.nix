@@ -20,16 +20,16 @@
             -- Fonts
             --------
             config.font = wezterm.font_with_fallback({
-              "Hack",
-              "Material Design Icons",
+               "MesloLGS Nerd Font",
+               "Symbols Nerd Font",
+               "Material Design Icons",
             })
             config.initial_rows = 24
             config.initial_cols = 85
             config.bold_brightens_ansi_colors = true
             config.font_rules = {
               {
-                italic = true,
-                font = wezterm.font("Hack", { italic = false })
+                font = wezterm.font("MesloLGS Nerd Font", { italic = false })
               }
             }
             --config.font_antialias = "Subpixel"
@@ -40,7 +40,7 @@
 
             -- Bling
             --------
-            config.color_scheme = 'Dracula+'
+            config.color_scheme = 'Dracula (Official)'
             config.default_cursor_style = "BlinkingBlock"
 
             -- Tabbar

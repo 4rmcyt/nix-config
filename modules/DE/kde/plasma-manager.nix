@@ -32,9 +32,16 @@
     kdePackages.qtmultimedia
     kdePackages.qtsvg
     kdePackages.spectacle
+    kdePackages.krohnkite
+    kdePackages.konversation
+    kdePackages.kompare
+    kdePackages.kguiaddons
+    kdePackages.kdeplasma-addons
+    kdePackages.aurorae
     kwalletcli
     libsForQt5.qt5.qtwayland
     kdePackages.dolphin
+    kdePackages.dolphin-plugins
     tail-tray
 
     # SDDM Themes (for configuration via GUI)
