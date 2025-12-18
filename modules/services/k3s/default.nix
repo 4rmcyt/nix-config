@@ -50,6 +50,7 @@
       Type = "oneshot";
       WorkingDirectory = "/var/lib/k3s-gitops";
       StateDirectory = "k3s-gitops";
+      Environment = "GIT_SSH_COMMAND=ssh -o StrictHostKeyChecking=accept-new -i /root/.ssh/zeev";
     };
 
     script = ''
