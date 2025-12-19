@@ -20,5 +20,5 @@ spec:
       - CreateNamespace=true
   # Ignore TLS verification
   ignoreDifferences:
-  - group: ""
-    kind: Secret
+    - group: ""
+      kind: Secret

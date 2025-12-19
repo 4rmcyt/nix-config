@@ -4,7 +4,8 @@
   lib,
   inputs,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -120,6 +121,9 @@
       experimental-features = [
         "flakes"
         "nix-command"
+        "flake-self-attrs"
+        "lix-custom-sub-commands"
+        "auto-allocate-uids"
       ];
 
       auto-optimise-store = true;
@@ -234,14 +238,16 @@
     };
 
     shells = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         zsh
         nushell
       ]
     );
 
     systemPackages = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -346,7 +352,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -458,7 +464,7 @@
 
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
     power-profiles-daemon.enable = false;
@@ -519,7 +525,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
   };
@@ -528,10 +534,10 @@
   # =================================================================
   users = {
     groups = {
-      git = {};
-      plugdev = {};
-      prometheus = {};
-      nix-builder = {};
+      git = { };
+      plugdev = { };
+      prometheus = { };
+      nix-builder = { };
     };
 
     users = {

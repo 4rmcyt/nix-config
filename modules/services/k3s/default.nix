@@ -41,10 +41,12 @@
   };
 
   # Firewall - NodePort range for external service access
-  networking.firewall.allowedTCPPortRanges = [{
-    from = 30000;
-    to = 32767;
-  }];
+  networking.firewall.allowedTCPPortRanges = [
+    {
+      from = 30000;
+      to = 32767;
+    }
+  ];
 
   # Allow users in wheel group to access kubeconfig
   systemd.tmpfiles.rules = [
