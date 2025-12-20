@@ -8,10 +8,9 @@
       (chromium.override {
         enableWideVine = true;
         commandLineArgs = [
-          "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo"
+          "--enable-features=AcceleratedVideoDecodeLinuxGL,AcceleratedVideoEncoder,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo,UseOzonePlatform"
           "--ignore-gpu-blocklist"
           "--enable-zero-copy"
-          "--enable-features=UseOzonePlatform"
           "--ozone-platform=wayland"
         ];
       })
@@ -42,6 +41,7 @@
     extraOpts = {
       "BrowserSignin" = 1;
       "SyncDisabled" = false;
+      "ExtensionManifestV2Availability" = 2; # 2 = Enable for all extensions
     };
   };
 }
