@@ -36,6 +36,8 @@
       inputs.lix.follows = "lix";
     };
 
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
+
     ucodenix.url = "github:e-tho/ucodenix";
 
     # System management
