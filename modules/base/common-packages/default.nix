@@ -38,6 +38,7 @@
       vim
       wget
       iw
+      fh
 
       # =================================================================
       # Development & Nix Tools (alphabetical)
