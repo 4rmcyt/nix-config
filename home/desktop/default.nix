@@ -65,7 +65,6 @@
       gvfs
       loupe
       ffmpegthumbnailer
-      nautilus-python
       gst_all_1.gst-libav
 
       # Hardware monitoring

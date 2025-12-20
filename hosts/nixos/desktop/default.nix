@@ -287,6 +287,8 @@
         # ryzen-monitor-ng
         samba
         headset-charge-indicator
+        yubikey-personalization
+        headsetcontrol
 
         # =============================================================
         # Security & Encryption
