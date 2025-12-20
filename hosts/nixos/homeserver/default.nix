@@ -168,7 +168,7 @@
 
     substituters = [
       "https://4rmcyt-homeserver.cachix.org?priority=1"
-      "https://nix-community.cachix.org?priority=2"
+"https://install.determinate.systems?priority=1"  "https://nix-community.cachix.org?priority=2"
       "https://cache.flox.dev"
       "https://cache.lix.systems"
       "https://helix.cachix.org?priority=8"
@@ -193,6 +193,8 @@
       "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
       "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
       "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
+
+"cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
     ];
 
     trusted-users = [
