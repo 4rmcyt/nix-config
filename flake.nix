@@ -261,7 +261,6 @@
                 inputs.chaotic.nixosModules.nyx-overlay
 
 inputs.determinate.nixosModules.default
-                inputs.lix-module.nixosModules.default
               ]
               ++ (helpers.mkHome {
                 modules = [./home/homeserver];
@@ -273,8 +272,7 @@ inputs.determinate.nixosModules.default
               [
                 ./hosts/nixos/wsl
                 inputs.nixos-wsl.nixosModules.wsl
-                inputs.lix-module.nixosModules.default
-                inputs.vscode-server.nixosModules.default
+           inputs.vscode-server.nixosModules.default
               ]
               ++ (helpers.mkHome {
                 modules = [./home/wsl];
