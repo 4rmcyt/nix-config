@@ -208,8 +208,6 @@
     ...
   }: let
     userName = "zeev";
-
-    # Common arguments for all NixOS systems
     commonArgs = {
       specialArgs = {inherit inputs;};
     };
@@ -293,6 +291,26 @@
           };
       }
     ];
+
+    # Helper function to create standalone Home Manager configurations
+    mkStandaloneHome = {
+      modules,
+      system ? "x86_64-linux",
+    }:
+      inputs.home-manager.lib.homeManagerConfiguration {
+        pkgs = inputs.nixpkgs.legacyPackages.${system};
+        extraSpecialArgs = {inherit inputs;};
+        modules =
+          modules
+          ++ commonHomeManagerModules
+          ++ [
+            ./modules/users/${userName}
+            userSpecificHomeManagerOptions
+            {
+              home.stateVersion = "24.11";
+            }
+          ];
+      };
   in
     flake-parts.lib.mkFlake
     {
@@ -369,6 +387,34 @@
                   inputs.betterfox-nix.homeModules.betterfox
                 ];
               });
+          };
+        };
+
+        homeConfigurations = {
+          "${userName}@desktop" = mkStandaloneHome {
+            modules = [
+              ./home/desktop
+              inputs.plasma-manager.homeModules.plasma-manager
+              inputs.betterfox-nix.homeModules.betterfox
+              inputs.noctalia.homeModules.default
+              inputs.stylix.homeModules.stylix
+              inputs.pam-shim.homeModules.default
+            ];
+          };
+
+          "${userName}@homeserver" = mkStandaloneHome {
+            modules = [./home/homeserver];
+          };
+
+          "${userName}@wsl" = mkStandaloneHome {
+            modules = [./home/wsl];
+          };
+
+          "${userName}@matebook" = mkStandaloneHome {
+            modules = [
+              ./home/matebook
+              inputs.betterfox-nix.homeModules.betterfox
+            ];
           };
         };
       };
