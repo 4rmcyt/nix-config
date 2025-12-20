@@ -4,8 +4,7 @@
   lib,
   inputs,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -121,9 +120,6 @@
       experimental-features = [
         "flakes"
         "nix-command"
-        "flake-self-attrs"
-        "lix-custom-sub-commands"
-        "auto-allocate-uids"
       ];
 
       auto-optimise-store = true;
@@ -153,18 +149,18 @@
 
       substituters = [
         "https://4rmcyt-desktop.cachix.org?priority=1"
-        "https://cache.flox.dev?priority=2"
-        "https://nixpkgs-unfree.cachix.org?priority=3"
-        "https://nix-community.cachix.org?priority=4"
-        "https://chaotic-nyx.cachix.org?priority=5"
-        "https://cuda-maintainers.cachix.org?priority=6"
-        "https://helix.cachix.org?priority=7"
-        "https://yazi.cachix.org?priority=8"
-        "https://devenv.cachix.org?priority=9"
-        "https://nix-gaming.cachix.org?priority=10"
-        "https://watersucks.cachix.org?priority=11"
-        "https://cache.garnix.io?priority=2"
-        "https://cache.lix.systems?priority=3"
+        "https://install.determinate.systems?priority=2"
+        "https://cache.flox.dev?priority=3"
+        "https://nixpkgs-unfree.cachix.org?priority=4"
+        "https://nix-community.cachix.org?priority=5"
+        "https://chaotic-nyx.cachix.org?priority=6"
+        "https://cuda-maintainers.cachix.org?priority=7"
+        "https://helix.cachix.org?priority=8"
+        "https://yazi.cachix.org?priority=9"
+        "https://devenv.cachix.org?priority=10"
+        "https://nix-gaming.cachix.org?priority=11"
+        "https://watersucks.cachix.org?priority=12"
+        "https://cache.garnix.io?priority=13"
       ];
 
       # Desktop-specific system features
@@ -190,6 +186,7 @@
         "watersucks.cachix.org-1:6gadPC5R8iLWQ3EUtfu3GFrVY7X6I4Fwz/ihW25Jbv8="
         "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
         "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
+        "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
       ];
 
       trusted-users = [
@@ -238,16 +235,14 @@
     };
 
     shells = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         zsh
         nushell
       ]
     );
 
     systemPackages = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -352,7 +347,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
+      allowedTCPPorts = [9100]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -464,7 +459,7 @@
 
     pcscd = {
       enable = true;
-      plugins = [ pkgs.ccid ];
+      plugins = [pkgs.ccid];
     };
 
     power-profiles-daemon.enable = false;
@@ -525,7 +520,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = [ "nvidia" ];
+      videoDrivers = ["nvidia"];
       xkb.layout = "us";
     };
   };
@@ -534,10 +529,10 @@
   # =================================================================
   users = {
     groups = {
-      git = { };
-      plugdev = { };
-      prometheus = { };
-      nix-builder = { };
+      git = {};
+      plugdev = {};
+      prometheus = {};
+      nix-builder = {};
     };
 
     users = {

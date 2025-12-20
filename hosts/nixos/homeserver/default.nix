@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -116,9 +115,11 @@
       };
       # Override libutp to work around CMake issues
       libutp = prev.libutp.overrideAttrs (oldAttrs: {
-        meta = oldAttrs.meta // {
-          broken = false;
-        };
+        meta =
+          oldAttrs.meta
+          // {
+            broken = false;
+          };
       });
     })
   ];
@@ -165,13 +166,13 @@
 
     substituters = [
       "https://4rmcyt-homeserver.cachix.org?priority=1"
-"https://install.determinate.systems?priority=1"  "https://nix-community.cachix.org?priority=2"
-      "https://cache.flox.dev"
-      "https://cache.lix.systems"
-      "https://helix.cachix.org?priority=8"
-      "https://yazi.cachix.org?priority=9"
-      "https://devenv.cachix.org?priority=10"
-      "https://nixpkgs-unfree.cachix.org?priority=11"
+      "https://install.determinate.systems?priority=2"
+      "https://nix-community.cachix.org?priority=3"
+      "https://cache.flox.dev?priority=4"
+      "https://helix.cachix.org?priority=5"
+      "https://yazi.cachix.org?priority=6"
+      "https://devenv.cachix.org?priority=7"
+      "https://nixpkgs-unfree.cachix.org?priority=8"
     ];
 
     # Homeserver system features
@@ -190,8 +191,7 @@
       "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
       "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
       "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
-
-"cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
+      "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
     ];
 
     trusted-users = [
@@ -239,7 +239,7 @@
     betula
   ];
 
-  environment.shells = with pkgs; [ zsh ];
+  environment.shells = with pkgs; [zsh];
 
   # =================================================================
   # 8. Home Manager
@@ -367,6 +367,6 @@
       group = "git";
     };
     users.zeev.shell = pkgs.zsh;
-    groups.git = { };
+    groups.git = {};
   };
 }

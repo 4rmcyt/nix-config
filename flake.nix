@@ -234,8 +234,9 @@
                 inputs.flatpaks.nixosModules.default
                 inputs.chaotic.nixosModules.nyx-cache
                 inputs.chaotic.nixosModules.nyx-overlay
-                inputs.lix-module.nixosModules.default
+                # inputs.lix-module.nixosModules.default
                 inputs.ucodenix.nixosModules.default
+                inputs.determinate.nixosModules.default
               ]
               ++ (helpers.mkHome {
                 modules = [
@@ -259,8 +260,7 @@
                 inputs.vscode-server.nixosModules.default
                 inputs.chaotic.nixosModules.nyx-cache
                 inputs.chaotic.nixosModules.nyx-overlay
-
-inputs.determinate.nixosModules.default
+                inputs.determinate.nixosModules.default
               ]
               ++ (helpers.mkHome {
                 modules = [./home/homeserver];
@@ -272,7 +272,8 @@ inputs.determinate.nixosModules.default
               [
                 ./hosts/nixos/wsl
                 inputs.nixos-wsl.nixosModules.wsl
-           inputs.vscode-server.nixosModules.default
+                inputs.vscode-server.nixosModules.default
+                inputs.determinate.nixosModules.default
               ]
               ++ (helpers.mkHome {
                 modules = [./home/wsl];
@@ -288,8 +289,8 @@ inputs.determinate.nixosModules.default
                 inputs.flatpaks.nixosModules.default
                 inputs.chaotic.nixosModules.nyx-cache
                 inputs.chaotic.nixosModules.nyx-overlay
-                inputs.lix-module.nixosModules.default
                 inputs.ucodenix.nixosModules.default
+                inputs.determinate.nixosModules.default
               ]
               ++ (helpers.mkHome {
                 modules = [
