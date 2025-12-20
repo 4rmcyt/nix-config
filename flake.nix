@@ -259,6 +259,8 @@
                 inputs.vscode-server.nixosModules.default
                 inputs.chaotic.nixosModules.nyx-cache
                 inputs.chaotic.nixosModules.nyx-overlay
+
+inputs.determinate.nixosModules.default
                 inputs.lix-module.nixosModules.default
               ]
               ++ (helpers.mkHome {
