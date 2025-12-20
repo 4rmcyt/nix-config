@@ -13,7 +13,7 @@
     ../../modules/GUI/zed
     ../../modules/GUI/mpv
     ../../modules/GUI/obsidian
-    ../../modules/GUI/noctalia
+    # ../../modules/GUI/noctalia
     # ../../modules/GUI/konsole
     ../../modules/TUI/common
     ../../modules/TUI/zsh
