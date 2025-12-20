@@ -41,7 +41,6 @@
     extraOpts = {
       "BrowserSignin" = 1;
       "SyncDisabled" = false;
-      "ExtensionManifestV2Availability" = 2; # 2 = Enable for all extensions
     };
   };
 }
