@@ -3,9 +3,9 @@
 
   inputs = {
     # Core Nix ecosystem
-    flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/0.2.0.tar.gz";
+    flake-schemas.url = "github:DeterminateSystems/flake-schemas/0.2.0";
     empty-flake.url = "github:4rmcyt/empty-flake";
-    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.913595.tar.gz";
+    nixpkgs.url = "github:DeterminateSystems/flakehub-mirror";
     nix-systems.url = "github:nix-systems/default";
     systems.url = "github:nix-systems/default";
 
@@ -14,17 +14,17 @@
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
     flake-parts = {
-      url = "https://flakehub.com/f/hercules-ci/flake-parts/0.1.424.tar.gz";
+      url = "github:DeterminateSystems/flakehub-mirror";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
 
     flake-utils = {
-      url = "https://flakehub.com/f/numtide/flake-utils/0.1.102.tar.gz";
+      url = "github:DeterminateSystems/flakehub-mirror";
       inputs.systems.follows = "nix-systems";
     };
 
     rust-overlay = {
-      url = "https://flakehub.com/f/oxalica/rust-overlay/0.1.2016.tar.gz";
+      url = "github:DeterminateSystems/flakehub-mirror";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -40,12 +40,12 @@
     };
 
     determinate = {
-      url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
+      url = "github:DeterminateSystems/determinate/3.15.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     fh = {
-      url = "https://flakehub.com/f/DeterminateSystems/fh/*";
+      url = "github:DeterminateSystems/fh/0.1.27";
       inputs.nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.2405.*";
     };
 
@@ -53,11 +53,11 @@
 
     # System management
     disko = {
-      url = "https://flakehub.com/f/nix-community/disko/1.12.0.tar.gz";
+      url = "github:DeterminateSystems/flakehub-mirror/1.12.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     lanzaboote = {
-      url = "https://flakehub.com/f/nix-community/lanzaboote/0.4.3.tar.gz";
+      url = "github:DeterminateSystems/flakehub-mirror/0.4.3";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-wsl = {
@@ -90,11 +90,11 @@
 
     # Security & secrets
     agenix = {
-      url = "https://flakehub.com/f/ryantm/agenix/0.15.0.tar.gz";
+      url = "github:ryantm/agenix/0.15.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sops-nix = {
-      url = "https://flakehub.com/f/Mic92/sops-nix/0.1.1059.tar.gz";
+      url = "github:DeterminateSystems/flakehub-mirror";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # Performance & optimization
@@ -137,11 +137,11 @@
     };
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
     nixos-generators = {
-      url = "https://flakehub.com/f/nix-community/nixos-generators/0.1.485.tar.gz";
+      url = "github:DeterminateSystems/flakehub-mirror";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     treefmt-nix = {
-      url = "https://flakehub.com/f/numtide/treefmt-nix/0.1.507.tar.gz";
+      url = "github:DeterminateSystems/flakehub-mirror";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
