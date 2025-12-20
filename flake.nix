@@ -1,4 +1,6 @@
 {
+  description = "4rmcyt's Nix configuration flake";
+
   inputs = {
     # Core Nix ecosystem
     flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/0.2.0.tar.gz";
