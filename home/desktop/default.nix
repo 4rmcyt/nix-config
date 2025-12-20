@@ -61,7 +61,6 @@
       ayugram-desktop
 
       foliate
-      sushi
       gvfs
       loupe
       ffmpegthumbnailer

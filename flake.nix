@@ -304,10 +304,14 @@
           modules
           ++ commonHomeManagerModules
           ++ [
-            ./modules/users/${userName}
-            userSpecificHomeManagerOptions
             {
-              home.stateVersion = "24.11";
+              home = {
+                username = userName;
+                homeDirectory = "/home/${userName}";
+                stateVersion = "24.11";
+              };
+              nixpkgs.config.allowUnfree = true;
+              sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
             }
           ];
       };
