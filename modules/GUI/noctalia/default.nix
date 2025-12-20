@@ -1,12 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-
-{
-
+{pkgs, ...}: {
   home.packages = [
     pkgs.hicolor-icon-theme
     pkgs.adwaita-icon-theme
@@ -16,7 +8,6 @@
   programs.noctalia-shell = {
     enable = true;
     systemd.enable = true;
-    
 
     settings = [
       {
@@ -136,28 +127,26 @@
           ];
         };
 
-
-
         controlCenter = {
           shortcuts = {
-            left =  [
+            left = [
               [
-                { id = "WiFi"; }
-                { id = "Bluetooth"; }
+                {id = "WiFi";}
+                {id = "Bluetooth";}
               ]
               [
-                { id = "ScreenRecorder"; }
-                { id = "WallpaperSelector"; }
+                {id = "ScreenRecorder";}
+                {id = "WallpaperSelector";}
               ]
             ];
             right = [
-               [
-                { id = "PowerProfile"; }
+              [
+                {id = "PowerProfile";}
               ]
               [
-                { id = "Notifications"; }
-                { id = "KeepAwake"; }
-                { id = "NightLight"; }
+                {id = "Notifications";}
+                {id = "KeepAwake";}
+                {id = "NightLight";}
               ]
             ];
           };

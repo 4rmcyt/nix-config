@@ -13,6 +13,7 @@
     ../../modules/GUI/zed
     ../../modules/GUI/mpv
     ../../modules/GUI/obsidian
+    ../../modules/GUI/noctalia
     # ../../modules/GUI/konsole
     ../../modules/TUI/common
     ../../modules/TUI/zsh
@@ -58,6 +59,14 @@
       ytmdesktop
       popsicle
       ayugram-desktop
+
+      foliate
+      sushi
+      gvfs
+      loupe
+      ffmpegthumbnailer
+      nautilus-python
+      gst_all_1.gst-libav
 
       # Hardware monitoring
       nvtopPackages.nvidia

@@ -281,11 +281,12 @@
         cifs-utils
         fwupd
         microcode-amd
-        # nvtopPackages.nvidia
+        nvtopPackages.nvidia
         openrgb-with-all-plugins
         powertop
         # ryzen-monitor-ng
         samba
+        headset-charge-indicator
 
         # =============================================================
         # Security & Encryption
@@ -369,7 +370,7 @@
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
-      pinentryPackage = pkgs.pinentry-qt;
+      pinentryPackage = pkgs.pinentry-all;
     };
 
     nh = {
@@ -386,6 +387,9 @@
 
     zsh.enable = true;
 
+    nix-ld.enable = true;
+
+    noisetorch.enable = true;
     # vscode.enable = true;
   };
 
@@ -396,12 +400,14 @@
     # =============================================================
     # Audio Services
     pipewire = {
+      enable = true;
       alsa = {
         enable = true;
         support32Bit = true;
       };
-      audio.enable = true;
-      enable = true;
+      pulse.enable = true;
+      wireplumber.enable = true;
+      jack.enable = true;
       extraConfig.pipewire."92-low-latency" = {
         context.properties = {
           default.clock.max-quantum = 32;
@@ -419,9 +425,14 @@
           "support.*" = "support/libspa-support";
         };
       };
-      jack.enable = true;
-      pulse.enable = true;
-      wireplumber.enable = true;
+      extraConfig.pipewire."99-usb-audio-fix" = {
+        "context.properties" = {
+          "default.clock.rate" = 48000;
+          "default.clock.quantum" = 512;
+          "default.clock.min-quantum" = 64;
+          "default.clock.max-quantum" = 4096;
+        };
+      };
     };
 
     pulseaudio.enable = false;
@@ -465,6 +476,8 @@
       enable = true;
       plugins = [pkgs.ccid];
     };
+
+    dbus.packages = [pkgs.gcr];
 
     power-profiles-daemon.enable = false;
 
@@ -510,6 +523,14 @@
 
         # Gaming device rules
         SUBSYSTEM=="input", ATTRS{name}=="Rapoo Rapoo Gaming Device", TAG+="uaccess"
+
+        # Lock PC on yubikey removal
+        ACTION=="remove",\
+         ENV{ID_BUS}=="usb",\
+         ENV{ID_MODEL_ID}=="0407",\
+         ENV{ID_VENDOR_ID}=="1050",\
+         ENV{ID_VENDOR}=="Yubico",\
+         RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
       '';
       packages = with pkgs; [
         yubioath-flutter

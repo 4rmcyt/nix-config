@@ -7,6 +7,14 @@
 
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
+    nur = {
+      url = "github:nix-community/NUR";
+    };
+
+    nixos-hardware = {
+      url = "github:nixos/nixos-hardware";
+    };
+
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
@@ -136,18 +144,46 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    pam-shim = {
+      url = "github:Cu3PO42/pam_shim/next";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     deploy-rs = {
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     nixos-anywhere = {
-      url = "github:nix-community/nixos-anywhere";
+      url = "github:numtide/nixos-anywhere";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.disko.follows = "disko";
+    };
+
+    nix-topology = {
+      url = "github:oddlama/nix-topology";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    comma = {
+      url = "github:nix-community/comma";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    stylix.url = "github:danth/stylix";
 
     zellij-nix = {
       url = "github:a-kenji/zellij-nix";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    zjstatus = {
+      url = "github:dj95/zjstatus";
     };
 
     nixos-jellyfin = {
@@ -206,6 +242,7 @@
       inputs.ucodenix.nixosModules.default
       inputs.disko.nixosModules.disko
       inputs.nixos-jellyfin.nixosModules.default
+      inputs.nix-topology.nixosModules.default
       {
         nixpkgs.config.allowUnfree = true;
         sops.age.keyFile = inputs.nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
@@ -287,6 +324,9 @@
                   ./home/desktop
                   inputs.plasma-manager.homeModules.plasma-manager
                   inputs.betterfox-nix.homeModules.betterfox
+                  inputs.noctalia.homeModules.default
+                  inputs.stylix.homeModules.stylix
+                  inputs.pam-shim.homeModules.default
                   # inputs.cosmic-manager.homeManagerModules.default
                 ];
               });
