@@ -123,7 +123,7 @@
       ];
 
       auto-optimise-store = true;
-      
+
       lazy-trees = true;
       eval-cores = 0;
       warn-dirty = false;
