@@ -85,9 +85,6 @@
     experimental-features = [
       "flakes"
       "nix-command"
-      "flake-self-attrs"
-      "lix-custom-sub-commands"
-      "auto-allocate-uids"
     ];
 
     auto-optimise-store = true;
@@ -121,6 +118,7 @@
 
     substituters = [
       "https://cache.nixos.org"
+      "https://install.determinate.systems"
       "https://4rmcyt-wsl.cachix.org"
       "https://nix-community.cachix.org"
       "https://numtide.cachix.org"
@@ -137,6 +135,7 @@
       "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
       "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
       "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
+      "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
     ];
 
     trusted-users = [

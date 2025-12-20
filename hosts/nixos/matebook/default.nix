@@ -64,9 +64,6 @@
       experimental-features = [
         "flakes"
         "nix-command"
-        "flake-self-attrs"
-        "lix-custom-sub-commands"
-        "auto-allocate-uids"
       ];
 
       auto-optimise-store = true;
@@ -102,14 +99,15 @@
 
       substituters = [
         "https://4rmcyt-matebook.cachix.org?priority=1"
-        "https://nix-community.cachix.org?priority=2"
-        "https://nix-gaming.cachix.org?priority=3"
-        "https://cache.flox.dev?priority=4"
-        "https://helix.cachix.org?priority=8"
-        "https://yazi.cachix.org?priority=9"
-        "https://devenv.cachix.org?priority=10"
-        "https://nixpkgs-unfree.cachix.org?priority=11"
-        "https://cache.lix.systems"
+        "https://install.determinate.systems?priority=2"
+        "https://nix-community.cachix.org?priority=3"
+        "https://nix-gaming.cachix.org?priority=4"
+        "https://cache.flox.dev?priority=5"
+        "https://helix.cachix.org?priority=6"
+        "https://yazi.cachix.org?priority=7"
+        "https://devenv.cachix.org?priority=8"
+        "https://nixpkgs-unfree.cachix.org?priority=9"
+        "https://cache.lix.systems?priority=10"
       ];
 
       trusted-public-keys = [
@@ -122,6 +120,7 @@
         "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
         "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
         "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
+        "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
       ];
 
       trusted-users = [
