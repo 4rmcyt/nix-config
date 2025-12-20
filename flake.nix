@@ -243,7 +243,7 @@
                   ./home/desktop
                   inputs.plasma-manager.homeModules.plasma-manager
                   inputs.betterfox-nix.homeModules.betterfox
-                  inputs.cosmic-manager.homeManagerModules.default
+                  # inputs.cosmic-manager.homeManagerModules.default
                 ];
               });
           };
