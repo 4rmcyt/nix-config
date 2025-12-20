@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -116,9 +115,11 @@
       };
       # Override libutp to work around CMake issues
       libutp = prev.libutp.overrideAttrs (oldAttrs: {
-        meta = oldAttrs.meta // {
-          broken = false;
-        };
+        meta =
+          oldAttrs.meta
+          // {
+            broken = false;
+          };
       });
     })
   ];
@@ -136,6 +137,9 @@
     experimental-features = [
       "flakes"
       "nix-command"
+      "flake-self-attrs"
+      "lix-custom-sub-commands"
+      "auto-allocate-uids"
     ];
 
     auto-optimise-store = true;
@@ -238,7 +242,7 @@
     betula
   ];
 
-  environment.shells = with pkgs; [ zsh ];
+  environment.shells = with pkgs; [zsh];
 
   # =================================================================
   # 8. Home Manager
@@ -366,6 +370,6 @@
       group = "git";
     };
     users.zeev.shell = pkgs.zsh;
-    groups.git = { };
+    groups.git = {};
   };
 }
