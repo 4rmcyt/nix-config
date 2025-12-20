@@ -136,9 +136,6 @@
     experimental-features = [
       "flakes"
       "nix-command"
-      "flake-self-attrs"
-      "lix-custom-sub-commands"
-      "auto-allocate-uids"
     ];
 
     auto-optimise-store = true;
