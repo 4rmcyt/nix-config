@@ -123,6 +123,9 @@
       ];
 
       auto-optimise-store = true;
+      
+      lazy-trees = true;
+      eval-cores = 0;
       warn-dirty = false;
       max-jobs = "auto"; # Auto-detect job count
       keep-going = true; # Continue building other derivations on failure
