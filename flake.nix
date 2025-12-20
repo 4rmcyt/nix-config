@@ -1,6 +1,7 @@
 {
   inputs = {
     # Core Nix ecosystem
+    flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/0.2.0.tar.gz";
     empty-flake.url = "github:4rmcyt/empty-flake";
     nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.1.913595.tar.gz";
     nix-systems.url = "github:nix-systems/default";
@@ -208,7 +209,7 @@
   outputs =
     inputs@{
       flake-parts,
-      treefmt-nix,
+      treefmt-nix, flake-schemas,
       ...
     }:
     let
