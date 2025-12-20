@@ -1,21 +1,19 @@
 {lib, ...}: let
   secretsFile = ../../secrets/common.yaml;
-  secretsData = builtins.fromJSON (builtins.readFile (
-    builtins.toFile "defaults-secrets.json" (builtins.toJSON {
-      user = "zeev";
-      email = "redacted@example.com";
-      git_username = "4rmcyt";
-      git_signing_key = "D85B52C9288A138E";
-      domain = "example.com";
-      timezone = "America/Edmonton";
-      locale = "en_US.UTF-8";
-      gateway = "192.168.1.254";
-      homeserver_lan = "192.168.1.165";
-      desktop_lan = "192.168.1.118";
-      desktop_wifi = "192.168.1.239";
-      matebook_wifi = "192.168.1.132";
-    })
-  ));
+  secretsData = {
+    user = "zeev";
+    email = "redacted@example.com";
+    git_username = "4rmcyt";
+    git_signing_key = "D85B52C9288A138E";
+    domain = "example.com";
+    timezone = "America/Edmonton";
+    locale = "en_US.UTF-8";
+    gateway = "192.168.1.254";
+    homeserver_lan = "192.168.1.165";
+    desktop_lan = "192.168.1.118";
+    desktop_wifi = "192.168.1.239";
+    matebook_wifi = "192.168.1.132";
+  };
 in {
   options.my.defaults = {
     user = lib.mkOption {
