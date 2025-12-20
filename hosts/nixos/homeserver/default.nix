@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -115,11 +116,9 @@
       };
       # Override libutp to work around CMake issues
       libutp = prev.libutp.overrideAttrs (oldAttrs: {
-        meta =
-          oldAttrs.meta
-          // {
-            broken = false;
-          };
+        meta = oldAttrs.meta // {
+          broken = false;
+        };
       });
     })
   ];
@@ -166,7 +165,7 @@
 
     substituters = [
       "https://4rmcyt-homeserver.cachix.org?priority=1"
-      "https://install.determinate.systems?priority=2"
+      "https://cache.lix.systems?priority=2"
       "https://nix-community.cachix.org?priority=3"
       "https://cache.flox.dev?priority=4"
       "https://helix.cachix.org?priority=5"
@@ -239,7 +238,7 @@
     betula
   ];
 
-  environment.shells = with pkgs; [zsh];
+  environment.shells = with pkgs; [ zsh ];
 
   # =================================================================
   # 8. Home Manager
@@ -367,6 +366,6 @@
       group = "git";
     };
     users.zeev.shell = pkgs.zsh;
-    groups.git = {};
+    groups.git = { };
   };
 }

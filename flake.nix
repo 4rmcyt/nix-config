@@ -2,10 +2,8 @@
   description = "4rmcyt's Nix configuration flake";
 
   inputs = {
-    # Core Nix ecosystem
-    flake-schemas.url = "github:DeterminateSystems/flake-schemas/0.2.0";
-    empty-flake.url = "github:4rmcyt/empty-flake";
-    nixpkgs.url = "github:DeterminateSystems/flakehub-mirror";
+
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nix-systems.url = "github:nix-systems/default";
     systems.url = "github:nix-systems/default";
 
@@ -14,17 +12,22 @@
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
     flake-parts = {
-      url = "github:DeterminateSystems/flakehub-mirror";
+      url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
 
     flake-utils = {
-      url = "github:DeterminateSystems/flakehub-mirror";
+      url = "github:numtide/flake-utils";
       inputs.systems.follows = "nix-systems";
     };
 
+    fh = {
+      url = "github:DeterminateSystems/fh/0.1.27";
+      inputs.nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.2405.*";
+    };
+
     rust-overlay = {
-      url = "github:DeterminateSystems/flakehub-mirror";
+      url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -39,25 +42,17 @@
       inputs.lix.follows = "lix";
     };
 
-    determinate = {
-      url = "github:DeterminateSystems/determinate/3.15.0";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    fh = {
-      url = "github:DeterminateSystems/fh/0.1.27";
-      inputs.nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0.2405.*";
-    };
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
 
     ucodenix.url = "github:e-tho/ucodenix";
 
     # System management
     disko = {
-      url = "github:DeterminateSystems/flakehub-mirror/1.12.0";
+      url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     lanzaboote = {
-      url = "github:DeterminateSystems/flakehub-mirror/0.4.3";
+      url = "github:nix-community/lanzaboote/v0.4.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-wsl = {
@@ -90,11 +85,11 @@
 
     # Security & secrets
     agenix = {
-      url = "github:ryantm/agenix/0.15.0";
+      url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sops-nix = {
-      url = "github:DeterminateSystems/flakehub-mirror";
+      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # Performance & optimization
@@ -137,11 +132,11 @@
     };
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
     nixos-generators = {
-      url = "github:DeterminateSystems/flakehub-mirror";
+      url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     treefmt-nix = {
-      url = "github:DeterminateSystems/flakehub-mirror";
+      url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -208,35 +203,38 @@
     };
   };
 
-  outputs = inputs @ {
-    flake-parts,
-    treefmt-nix,
-    ...
-  }: let
-    userName = "zeev";
-    helpers = import ./flakeHelpers.nix {inherit inputs userName;};
-  in
+  outputs =
+    inputs@{
+      flake-parts,
+      treefmt-nix,
+      ...
+    }:
+    let
+      userName = "zeev";
+      helpers = import ./flakeHelpers.nix { inherit inputs userName; };
+    in
     flake-parts.lib.mkFlake
-    {
-      inherit inputs;
-      specialArgs = {inherit inputs;};
-    }
-    {
-      systems = import inputs.systems;
-      imports = [
-        treefmt-nix.flakeModule
-        inputs.devshell.flakeModule
-      ];
-      perSystem = {pkgs, ...}: {
-        devshells = import ./devshell.nix {inherit pkgs;};
-        treefmt = import ./treefmt.nix {inherit pkgs;};
-      };
+      {
+        inherit inputs;
+        specialArgs = { inherit inputs; };
+      }
+      {
+        systems = import inputs.systems;
+        imports = [
+          treefmt-nix.flakeModule
+          inputs.devshell.flakeModule
+        ];
+        perSystem =
+          { pkgs, ... }:
+          {
+            devshells = import ./devshell.nix { inherit pkgs; };
+            treefmt = import ./treefmt.nix { inherit pkgs; };
+          };
 
-      flake = {
-        nixosConfigurations = {
-          desktop = helpers.mkHost {
-            modules =
-              [
+        flake = {
+          nixosConfigurations = {
+            desktop = helpers.mkHost {
+              modules = [
                 ./hosts/nixos/desktop
                 ./modules/disko/desktop
                 inputs.disko.nixosModules.disko
@@ -246,7 +244,7 @@
                 inputs.chaotic.nixosModules.nyx-cache
                 inputs.chaotic.nixosModules.nyx-overlay
                 inputs.ucodenix.nixosModules.default
-                inputs.determinate.nixosModules.default
+                inputs.lix-module.nixosModules.default
               ]
               ++ (helpers.mkHome {
                 modules = [
@@ -256,11 +254,10 @@
                   # inputs.cosmic-manager.homeManagerModules.default
                 ];
               });
-          };
+            };
 
-          homeserver = helpers.mkHost {
-            modules =
-              [
+            homeserver = helpers.mkHost {
+              modules = [
                 ./hosts/nixos/homeserver
                 ./modules/disko/homeserver
                 inputs.disko.nixosModules.disko
@@ -270,29 +267,27 @@
                 inputs.vscode-server.nixosModules.default
                 inputs.chaotic.nixosModules.nyx-cache
                 inputs.chaotic.nixosModules.nyx-overlay
-                inputs.determinate.nixosModules.default
+                inputs.lix-module.nixosModules.default
               ]
               ++ (helpers.mkHome {
-                modules = [./home/homeserver];
+                modules = [ ./home/homeserver ];
               });
-          };
+            };
 
-          wsl = helpers.mkHost {
-            modules =
-              [
+            wsl = helpers.mkHost {
+              modules = [
                 ./hosts/nixos/wsl
                 inputs.nixos-wsl.nixosModules.wsl
                 inputs.vscode-server.nixosModules.default
-                inputs.determinate.nixosModules.default
+                inputs.lix-module.nixosModules.default
               ]
               ++ (helpers.mkHome {
-                modules = [./home/wsl];
+                modules = [ ./home/wsl ];
               });
-          };
+            };
 
-          matebook = helpers.mkHost {
-            modules =
-              [
+            matebook = helpers.mkHost {
+              modules = [
                 ./hosts/nixos/matebook
                 ./modules/disko/matebook
                 inputs.disko.nixosModules.disko
@@ -300,7 +295,7 @@
                 inputs.chaotic.nixosModules.nyx-cache
                 inputs.chaotic.nixosModules.nyx-overlay
                 inputs.ucodenix.nixosModules.default
-                inputs.determinate.nixosModules.default
+                inputs.lix-module.nixosModules.default
               ]
               ++ (helpers.mkHome {
                 modules = [
@@ -308,66 +303,64 @@
                   inputs.betterfox-nix.homeModules.betterfox
                 ];
               });
-          };
+            };
 
-          installer-desktop = inputs.nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
-            specialArgs = {inherit inputs;};
-            modules = [
-              ./hosts/installer/desktop
-              inputs.flatpaks.nixosModules.default
-              inputs.sops-nix.nixosModules.sops
-              inputs.disko.nixosModules.disko
-              inputs.chaotic.nixosModules.nyx-cache
-              inputs.chaotic.nixosModules.nyx-overlay
-              {nixpkgs.config.allowUnfree = true;}
-            ];
-          };
+            installer-desktop = inputs.nixpkgs.lib.nixosSystem {
+              system = "x86_64-linux";
+              specialArgs = { inherit inputs; };
+              modules = [
+                ./hosts/installer/desktop
+                inputs.flatpaks.nixosModules.default
+                inputs.sops-nix.nixosModules.sops
+                inputs.disko.nixosModules.disko
+                inputs.chaotic.nixosModules.nyx-cache
+                inputs.chaotic.nixosModules.nyx-overlay
+                { nixpkgs.config.allowUnfree = true; }
+              ];
+            };
 
-          installer-homeserver = inputs.nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
-            specialArgs = {inherit inputs;};
-            modules = [
-              ./hosts/installer/homeserver
-              inputs.sops-nix.nixosModules.sops
-              inputs.disko.nixosModules.disko
-              {nixpkgs.config.allowUnfree = true;}
-            ];
-          };
+            installer-homeserver = inputs.nixpkgs.lib.nixosSystem {
+              system = "x86_64-linux";
+              specialArgs = { inherit inputs; };
+              modules = [
+                ./hosts/installer/homeserver
+                inputs.sops-nix.nixosModules.sops
+                inputs.disko.nixosModules.disko
+                { nixpkgs.config.allowUnfree = true; }
+              ];
+            };
 
-          installer-matebook = inputs.nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
-            specialArgs = {inherit inputs;};
-            modules = [
-              ./hosts/installer/matebook
-              inputs.sops-nix.nixosModules.sops
-              inputs.disko.nixosModules.disko
-              {nixpkgs.config.allowUnfree = true;}
-            ];
-          };
-        };
-
-        # Standalone home-manager configurations
-        homeConfigurations = import ./flakeHelpersHome.nix {inherit helpers inputs userName;};
-
-        # Deploy-rs configuration for remote deployments
-        deploy.nodes = {
-          homeserver = {
-            hostname = "homeserver";
-            profiles.system = {
-              sshUser = "zeev";
-              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.homeserver;
-              user = "root";
+            installer-matebook = inputs.nixpkgs.lib.nixosSystem {
+              system = "x86_64-linux";
+              specialArgs = { inherit inputs; };
+              modules = [
+                ./hosts/installer/matebook
+                inputs.sops-nix.nixosModules.sops
+                inputs.disko.nixosModules.disko
+                { nixpkgs.config.allowUnfree = true; }
+              ];
             };
           };
-        };
 
-        # Check deploy-rs configurations
-        checks =
-          builtins.mapAttrs (
+          # Standalone home-manager configurations
+          homeConfigurations = import ./flakeHelpersHome.nix { inherit helpers inputs userName; };
+
+          # Deploy-rs configuration for remote deployments
+          deploy.nodes = {
+            homeserver = {
+              hostname = "homeserver";
+              profiles.system = {
+                sshUser = "zeev";
+                path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.homeserver;
+                user = "root";
+              };
+            };
+          };
+
+          # Check deploy-rs configurations
+          checks = builtins.mapAttrs (
             _system: deployLib: deployLib.deployChecks inputs.self.deploy
-          )
-          inputs.deploy-rs.lib;
+          ) inputs.deploy-rs.lib;
+        };
       };
-    };
 }

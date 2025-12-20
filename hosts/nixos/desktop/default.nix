@@ -4,7 +4,8 @@
   lib,
   inputs,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -120,6 +121,9 @@
       experimental-features = [
         "flakes"
         "nix-command"
+        "flake-self-attrs"
+        "lix-custom-sub-commands"
+        "auto-allocate-uids"
       ];
 
       auto-optimise-store = true;
@@ -152,7 +156,7 @@
 
       substituters = [
         "https://4rmcyt-desktop.cachix.org?priority=1"
-        "https://install.determinate.systems?priority=2"
+        "https://cache.lix.systems?priority=2"
         "https://cache.flox.dev?priority=3"
         "https://nixpkgs-unfree.cachix.org?priority=4"
         "https://nix-community.cachix.org?priority=5"
@@ -238,14 +242,16 @@
     };
 
     shells = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         zsh
         nushell
       ]
     );
 
     systemPackages = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -350,7 +356,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -462,7 +468,7 @@
 
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
     power-profiles-daemon.enable = false;
@@ -523,7 +529,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
   };
@@ -532,10 +538,10 @@
   # =================================================================
   users = {
     groups = {
-      git = {};
-      plugdev = {};
-      prometheus = {};
-      nix-builder = {};
+      git = { };
+      plugdev = { };
+      prometheus = { };
+      nix-builder = { };
     };
 
     users = {

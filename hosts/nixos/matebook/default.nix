@@ -99,7 +99,7 @@
 
       substituters = [
         "https://4rmcyt-matebook.cachix.org?priority=1"
-        "https://install.determinate.systems?priority=2"
+        "https://cache.lix.systems?priority=2"
         "https://nix-community.cachix.org?priority=3"
         "https://nix-gaming.cachix.org?priority=4"
         "https://cache.flox.dev?priority=5"
@@ -107,7 +107,6 @@
         "https://yazi.cachix.org?priority=7"
         "https://devenv.cachix.org?priority=8"
         "https://nixpkgs-unfree.cachix.org?priority=9"
-        "https://cache.lix.systems?priority=10"
       ];
 
       trusted-public-keys = [
