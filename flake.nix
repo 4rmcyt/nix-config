@@ -7,18 +7,9 @@
 
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
-    nur = {
-      url = "github:nix-community/NUR";
-    };
+    nur.url = "github:nix-community/NUR";
 
-    nixos-hardware = {
-      url = "github:nixos/nixos-hardware";
-    };
-
-    flake-parts = {
-      url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs-lib.follows = "nixpkgs";
-    };
+    nixos-hardware.url = "github:nixos/nixos-hardware";
 
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
@@ -42,6 +33,11 @@
     };
 
     ucodenix.url = "github:e-tho/ucodenix";
+
+    clan-core = {
+      url = "https://git.clan.lol/clan/clan-core/archive/main.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # System management
     disko = {
@@ -182,9 +178,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    zjstatus = {
-      url = "github:dj95/zjstatus";
-    };
+    zjstatus.url = "github:dj95/zjstatus";
 
     nixos-jellyfin = {
       url = "github:matt1432/nixos-jellyfin";
@@ -203,224 +197,330 @@
   };
 
   outputs = inputs @ {
-    flake-parts,
-    treefmt-nix,
+    nixpkgs,
+    home-manager,
     ...
   }: let
     userName = "zeev";
-    commonArgs = {
-      specialArgs = {inherit inputs;};
-    };
+    system = "x86_64-linux";
+  in {
+    # NixOS Configurations
+    nixosConfigurations = {
+      desktop = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs;};
+        modules = [
+          # Host configuration
+          ./hosts/nixos/desktop
+          ./modules/disko/desktop
 
-    # Home Manager global options
-    globalHomeManagerOptions = {
-      useGlobalPkgs = false;
-      useUserPackages = true;
-      backupFileExtension = "backup";
-      sharedModules = [{home.enableNixpkgsReleaseCheck = false;}];
-    };
+          # Common modules
+          inputs.sops-nix.nixosModules.sops
+          inputs.home-manager.nixosModules.home-manager
+          inputs.nix-index-database.nixosModules.nix-index
+          inputs.nixos-facter-modules.nixosModules.facter
+          inputs.agenix.nixosModules.default
+          inputs.vscode-server.nixosModules.default
+          inputs.lix-module.nixosModules.default
+          inputs.chaotic.nixosModules.nyx-cache
+          inputs.chaotic.nixosModules.nyx-overlay
+          inputs.ucodenix.nixosModules.default
+          inputs.disko.nixosModules.disko
+          inputs.nixos-jellyfin.nixosModules.default
+          inputs.nix-topology.nixosModules.default
 
-    # User-specific Home Manager options
-    userSpecificHomeManagerOptions = {
-      nixpkgs.config.allowUnfree = true;
-      sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
-    };
+          # Desktop-specific modules
+          inputs.nix-gaming.nixosModules.pipewireLowLatency
+          inputs.lanzaboote.nixosModules.lanzaboote
+          inputs.flatpaks.nixosModules.default
 
-    # Common modules for all NixOS hosts
-    commonModules = [
-      inputs.sops-nix.nixosModules.sops
-      inputs.home-manager.nixosModules.home-manager
-      inputs.nix-index-database.nixosModules.nix-index
-      inputs.nixos-facter-modules.nixosModules.facter
-      inputs.agenix.nixosModules.default
-      inputs.vscode-server.nixosModules.default
-      inputs.lix-module.nixosModules.default
-      inputs.chaotic.nixosModules.nyx-cache
-      inputs.chaotic.nixosModules.nyx-overlay
-      inputs.ucodenix.nixosModules.default
-      inputs.disko.nixosModules.disko
-      inputs.nixos-jellyfin.nixosModules.default
-      inputs.nix-topology.nixosModules.default
-      {
-        nixpkgs.config.allowUnfree = true;
-        sops.age.keyFile = inputs.nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
-      }
-    ];
+          # NixOS-level configuration
+          {
+            nixpkgs.config.allowUnfree = true;
+            sops.age.keyFile = nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
+            facter.reportPath = ./hosts/nixos/desktop/facter.json;
+          }
 
-    # Common Home Manager modules
-    commonHomeManagerModules = [
-      inputs.sops-nix.homeManagerModules.sops
-      inputs.agenix.homeManagerModules.default
-    ];
-
-    # Helper function to create NixOS hosts
-    mkHost = {modules}:
-      inputs.nixpkgs.lib.nixosSystem (
-        commonArgs
-        // {
-          modules =
-            modules
-            ++ commonModules
-            ++ [
-              (
-                {
-                  config,
-                  lib,
-                  ...
-                }: {
-                  facter.reportPath = lib.mkIf (!lib.strings.hasInfix "wsl" (lib.strings.toLower config.networking.hostName)) (lib.mkDefault ./hosts/nixos/${config.networking.hostName}/facter.json);
-                }
-              )
-            ];
-        }
-      );
-
-    # Helper function to create Home Manager configuration for NixOS modules
-    mkHome = {modules}: [
-      ./modules/users/${userName}
-      {
-        home-manager =
-          globalHomeManagerOptions
-          // {
-            extraSpecialArgs = {inherit inputs;};
-            users.${userName} =
-              userSpecificHomeManagerOptions
-              // {
-                imports = modules ++ commonHomeManagerModules;
-              };
-          };
-      }
-    ];
-
-    # Helper function to create standalone Home Manager configurations
-    mkStandaloneHome = {
-      modules,
-      system ? "x86_64-linux",
-    }:
-      inputs.home-manager.lib.homeManagerConfiguration {
-        pkgs = inputs.nixpkgs.legacyPackages.${system};
-        extraSpecialArgs = {inherit inputs;};
-        modules =
-          modules
-          ++ commonHomeManagerModules
-          ++ [
-            {
-              home = {
-                username = userName;
-                homeDirectory = "/home/${userName}";
-                stateVersion = "24.11";
-              };
+          # Home Manager configuration
+          ./modules/users/${userName}
+          {
+            home-manager.useGlobalPkgs = false;
+            home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "backup";
+            home-manager.sharedModules = [{home.enableNixpkgsReleaseCheck = false;}];
+            home-manager.extraSpecialArgs = {inherit inputs;};
+            home-manager.users.${userName} = {
+              imports = [
+                ./home/desktop
+                inputs.sops-nix.homeManagerModules.sops
+                inputs.agenix.homeManagerModules.default
+                inputs.plasma-manager.homeModules.plasma-manager
+                inputs.betterfox-nix.homeModules.betterfox
+                inputs.noctalia.homeModules.default
+                inputs.stylix.homeModules.stylix
+                inputs.pam-shim.homeModules.default
+                # inputs.cosmic-manager.homeManagerModules.default
+              ];
               nixpkgs.config.allowUnfree = true;
               sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
-            }
-          ];
-      };
-  in
-    flake-parts.lib.mkFlake
-    {
-      inherit inputs;
-      specialArgs = {inherit inputs;};
-    }
-    {
-      systems = import inputs.systems;
-      imports = [
-        treefmt-nix.flakeModule
-      ];
-      perSystem = {pkgs, ...}: {
-        treefmt = import ./treefmt.nix {inherit pkgs;};
+            };
+          }
+        ];
       };
 
-      flake = {
-        nixosConfigurations = {
-          desktop = mkHost {
-            modules =
-              [
-                ./hosts/nixos/desktop
-                ./modules/disko/desktop
-                inputs.nix-gaming.nixosModules.pipewireLowLatency
-                inputs.lanzaboote.nixosModules.lanzaboote
-                inputs.flatpaks.nixosModules.default
-              ]
-              ++ (mkHome {
-                modules = [
-                  ./home/desktop
-                  inputs.plasma-manager.homeModules.plasma-manager
-                  inputs.betterfox-nix.homeModules.betterfox
-                  inputs.noctalia.homeModules.default
-                  inputs.stylix.homeModules.stylix
-                  inputs.pam-shim.homeModules.default
-                  # inputs.cosmic-manager.homeManagerModules.default
-                ];
-              });
-          };
+      homeserver = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs;};
+        modules = [
+          # Host configuration
+          ./hosts/nixos/homeserver
+          ./modules/disko/homeserver
 
-          homeserver = mkHost {
-            modules =
-              [
-                ./hosts/nixos/homeserver
-                ./modules/disko/homeserver
-                inputs.nixarr.nixosModules.default
-                inputs.authentik-nix.nixosModules.default
-              ]
-              ++ (mkHome {
-                modules = [./home/homeserver];
-              });
-          };
+          # Common modules
+          inputs.sops-nix.nixosModules.sops
+          inputs.home-manager.nixosModules.home-manager
+          inputs.nix-index-database.nixosModules.nix-index
+          inputs.nixos-facter-modules.nixosModules.facter
+          inputs.agenix.nixosModules.default
+          inputs.vscode-server.nixosModules.default
+          inputs.lix-module.nixosModules.default
+          inputs.chaotic.nixosModules.nyx-cache
+          inputs.chaotic.nixosModules.nyx-overlay
+          inputs.ucodenix.nixosModules.default
+          inputs.disko.nixosModules.disko
+          inputs.nixos-jellyfin.nixosModules.default
+          inputs.nix-topology.nixosModules.default
 
-          wsl = mkHost {
-            modules =
-              [
-                ./hosts/nixos/wsl
-                inputs.nixos-wsl.nixosModules.wsl
-              ]
-              ++ (mkHome {
-                modules = [./home/wsl];
-              });
-          };
+          # Homeserver-specific modules
+          inputs.nixarr.nixosModules.default
+          inputs.authentik-nix.nixosModules.default
 
-          matebook = mkHost {
-            modules =
-              [
-                ./hosts/nixos/matebook
-                ./modules/disko/matebook
-                inputs.flatpaks.nixosModules.default
-              ]
-              ++ (mkHome {
-                modules = [
-                  ./home/matebook
-                  inputs.betterfox-nix.homeModules.betterfox
-                ];
-              });
-          };
-        };
+          # NixOS-level configuration
+          {
+            nixpkgs.config.allowUnfree = true;
+            sops.age.keyFile = nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
+            facter.reportPath = ./hosts/nixos/homeserver/facter.json;
+          }
 
-        homeConfigurations = {
-          "${userName}@desktop" = mkStandaloneHome {
-            modules = [
-              ./home/desktop
-              inputs.plasma-manager.homeModules.plasma-manager
-              inputs.betterfox-nix.homeModules.betterfox
-              inputs.noctalia.homeModules.default
-              inputs.stylix.homeModules.stylix
-              inputs.pam-shim.homeModules.default
-            ];
-          };
+          # Home Manager configuration
+          ./modules/users/${userName}
+          {
+            home-manager.useGlobalPkgs = false;
+            home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "backup";
+            home-manager.sharedModules = [{home.enableNixpkgsReleaseCheck = false;}];
+            home-manager.extraSpecialArgs = {inherit inputs;};
+            home-manager.users.${userName} = {
+              imports = [
+                ./home/homeserver
+                inputs.sops-nix.homeManagerModules.sops
+                inputs.agenix.homeManagerModules.default
+              ];
+              nixpkgs.config.allowUnfree = true;
+              sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
+            };
+          }
+        ];
+      };
 
-          "${userName}@homeserver" = mkStandaloneHome {
-            modules = [./home/homeserver];
-          };
+      wsl = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs;};
+        modules = [
+          # Host configuration
+          ./hosts/nixos/wsl
 
-          "${userName}@wsl" = mkStandaloneHome {
-            modules = [./home/wsl];
-          };
+          # Common modules
+          inputs.sops-nix.nixosModules.sops
+          inputs.home-manager.nixosModules.home-manager
+          inputs.nix-index-database.nixosModules.nix-index
+          inputs.nixos-facter-modules.nixosModules.facter
+          inputs.agenix.nixosModules.default
+          inputs.vscode-server.nixosModules.default
+          inputs.lix-module.nixosModules.default
+          inputs.chaotic.nixosModules.nyx-cache
+          inputs.chaotic.nixosModules.nyx-overlay
+          inputs.ucodenix.nixosModules.default
+          inputs.disko.nixosModules.disko
+          inputs.nixos-jellyfin.nixosModules.default
+          inputs.nix-topology.nixosModules.default
 
-          "${userName}@matebook" = mkStandaloneHome {
-            modules = [
-              ./home/matebook
-              inputs.betterfox-nix.homeModules.betterfox
-            ];
-          };
-        };
+          # WSL-specific modules
+          inputs.nixos-wsl.nixosModules.wsl
+
+          # NixOS-level configuration
+          {
+            nixpkgs.config.allowUnfree = true;
+            sops.age.keyFile = nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
+          }
+
+          # Home Manager configuration
+          ./modules/users/${userName}
+          {
+            home-manager.useGlobalPkgs = false;
+            home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "backup";
+            home-manager.sharedModules = [{home.enableNixpkgsReleaseCheck = false;}];
+            home-manager.extraSpecialArgs = {inherit inputs;};
+            home-manager.users.${userName} = {
+              imports = [
+                ./home/wsl
+                inputs.sops-nix.homeManagerModules.sops
+                inputs.agenix.homeManagerModules.default
+              ];
+              nixpkgs.config.allowUnfree = true;
+              sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
+            };
+          }
+        ];
+      };
+
+      matebook = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs;};
+        modules = [
+          # Host configuration
+          ./hosts/nixos/matebook
+          ./modules/disko/matebook
+
+          # Common modules
+          inputs.sops-nix.nixosModules.sops
+          inputs.home-manager.nixosModules.home-manager
+          inputs.nix-index-database.nixosModules.nix-index
+          inputs.nixos-facter-modules.nixosModules.facter
+          inputs.agenix.nixosModules.default
+          inputs.vscode-server.nixosModules.default
+          inputs.lix-module.nixosModules.default
+          inputs.chaotic.nixosModules.nyx-cache
+          inputs.chaotic.nixosModules.nyx-overlay
+          inputs.ucodenix.nixosModules.default
+          inputs.disko.nixosModules.disko
+          inputs.nixos-jellyfin.nixosModules.default
+          inputs.nix-topology.nixosModules.default
+
+          # Matebook-specific modules
+          inputs.flatpaks.nixosModules.default
+
+          # NixOS-level configuration
+          {
+            nixpkgs.config.allowUnfree = true;
+            sops.age.keyFile = nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
+            facter.reportPath = ./hosts/nixos/matebook/facter.json;
+          }
+
+          # Home Manager configuration
+          ./modules/users/${userName}
+          {
+            home-manager.useGlobalPkgs = false;
+            home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "backup";
+            home-manager.sharedModules = [{home.enableNixpkgsReleaseCheck = false;}];
+            home-manager.extraSpecialArgs = {inherit inputs;};
+            home-manager.users.${userName} = {
+              imports = [
+                ./home/matebook
+                inputs.sops-nix.homeManagerModules.sops
+                inputs.agenix.homeManagerModules.default
+                inputs.betterfox-nix.homeModules.betterfox
+              ];
+              nixpkgs.config.allowUnfree = true;
+              sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
+            };
+          }
+        ];
       };
     };
+
+    # Standalone Home Manager Configurations
+    homeConfigurations = {
+      "${userName}@desktop" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.${system};
+        extraSpecialArgs = {inherit inputs;};
+        modules = [
+          ./home/desktop
+          inputs.sops-nix.homeManagerModules.sops
+          inputs.agenix.homeManagerModules.default
+          inputs.plasma-manager.homeModules.plasma-manager
+          inputs.betterfox-nix.homeModules.betterfox
+          inputs.noctalia.homeModules.default
+          inputs.stylix.homeModules.stylix
+          inputs.pam-shim.homeModules.default
+          {
+            home = {
+              username = userName;
+              homeDirectory = "/home/${userName}";
+              stateVersion = "24.11";
+            };
+            nixpkgs.config.allowUnfree = true;
+            sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
+          }
+        ];
+      };
+
+      "${userName}@homeserver" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.${system};
+        extraSpecialArgs = {inherit inputs;};
+        modules = [
+          ./home/homeserver
+          inputs.sops-nix.homeManagerModules.sops
+          inputs.agenix.homeManagerModules.default
+          {
+            home = {
+              username = userName;
+              homeDirectory = "/home/${userName}";
+              stateVersion = "24.11";
+            };
+            nixpkgs.config.allowUnfree = true;
+            sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
+          }
+        ];
+      };
+
+      "${userName}@wsl" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.${system};
+        extraSpecialArgs = {inherit inputs;};
+        modules = [
+          ./home/wsl
+          inputs.sops-nix.homeManagerModules.sops
+          inputs.agenix.homeManagerModules.default
+          {
+            home = {
+              username = userName;
+              homeDirectory = "/home/${userName}";
+              stateVersion = "24.11";
+            };
+            nixpkgs.config.allowUnfree = true;
+            sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
+          }
+        ];
+      };
+
+      "${userName}@matebook" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.${system};
+        extraSpecialArgs = {inherit inputs;};
+        modules = [
+          ./home/matebook
+          inputs.sops-nix.homeManagerModules.sops
+          inputs.agenix.homeManagerModules.default
+          inputs.betterfox-nix.homeModules.betterfox
+          {
+            home = {
+              username = userName;
+              homeDirectory = "/home/${userName}";
+              stateVersion = "24.11";
+            };
+            nixpkgs.config.allowUnfree = true;
+            sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
+          }
+        ];
+      };
+    };
+
+    # Formatter
+    formatter.${system} = let
+      pkgs = nixpkgs.legacyPackages.${system};
+      treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs (import ./treefmt.nix);
+    in
+      treefmtEval.config.build.wrapper;
+  };
 }

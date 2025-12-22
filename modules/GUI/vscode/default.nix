@@ -134,7 +134,7 @@
           "**/.direnv" = true;
         };
         # ===== Terminal Settings =====
-        "terminal.integrated.defaultProfile.linux" = "nu";
+        "terminal.integrated.defaultProfile.linux" = "zsh";
         "terminal.integrated.defaultProfile.osx" = "zsh";
         "terminal.integrated.fontFamily" = "MesloLGS NF";
         "terminal.integrated.tabs.defaultColor" = "terminal.ansiBlack";

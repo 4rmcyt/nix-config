@@ -289,6 +289,8 @@
         headset-charge-indicator
         yubikey-personalization
         headsetcontrol
+        limine-full
+        # clan-cli
 
         # =============================================================
         # Security & Encryption
