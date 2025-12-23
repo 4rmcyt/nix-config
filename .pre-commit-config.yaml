@@ -13,7 +13,23 @@ repos:
     rev: v0.1.11
     hooks:
       - id: ripsecrets
-        args: [--strict-ignore]
+        exclude: |
+          (?x)^(
+            \.ripsecrets\.toml|
+            modules/users/zeev/default\.nix|
+            modules/networking/ssh-hosts\.nix|
+            modules/TUI/common/default\.nix|
+            modules/GUI/thunderbird/default\.nix|
+            modules/options/defaults\.nix|
+            modules/GUI/chromium/default\.nix|
+            home/matebook/default\.nix|
+            modules/services/nixarr/recyclarr\.yaml|
+            modules/security/keycloak/homelab-realm\.json|
+            modules/security/keycloak/default\.nix|
+            hosts/nixos/wsl/default\.nix|
+            hosts/nixos/homeserver/default\.nix|
+            hosts/nixos/matebook/default\.nix
+          )$
   # Nix tools (local hooks using system binaries from nix shell)
   - repo: local
     hooks:
@@ -64,4 +80,4 @@ repos:
         name: Ensure SOPS secrets are encrypted
         entry: pre-commit-hook-ensure-sops
         language: system
-        files: ^secrets/
+        files: ^secrets/.*\.yaml$

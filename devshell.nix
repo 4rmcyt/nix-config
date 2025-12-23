@@ -36,6 +36,7 @@ pkgs.mkShell {
     taplo
     yamlfmt
     ripsecrets
+    pre-commit-hook-ensure-sops
   ];
 
   shellHook = ''
