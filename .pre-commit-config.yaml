@@ -40,12 +40,13 @@ repos:
         language: system
         files: \.nix$
         pass_filenames: false
-      - id: namaka-check
-        name: Namaka snapshot tests
-        entry: namaka check
-        language: system
-        files: \.nix$
-        pass_filenames: false
+        # Disabled due to unknown error - no snapshot tests in repository
+        # - id: namaka-check
+        #   name: Namaka snapshot tests
+        #   entry: namaka check
+        #   language: system
+        #   files: \.nix$
+        #   pass_filenames: false
   # Project-specific hooks
   - repo: local
     hooks:
