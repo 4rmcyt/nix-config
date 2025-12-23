@@ -385,5 +385,8 @@
       treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs (import ./treefmt.nix);
     in
       treefmtEval.config.build.wrapper;
+
+    deploy = import ./deploy-rs.nix {inherit inputs system;};
+    checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
   };
 }
