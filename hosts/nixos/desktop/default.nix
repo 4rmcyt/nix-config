@@ -114,7 +114,6 @@
   nix = {
     channel.enable = true;
     settings = {
-      access-tokens = "github.com=REDACTED";
       cores = 0;
 
       experimental-features = [

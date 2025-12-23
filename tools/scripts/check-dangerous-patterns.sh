@@ -26,8 +26,9 @@ fi
 echo "🔍 Checking for dangerous shell patterns..."
 
 for file in "$@"; do
-  # Skip if file doesn't exist
+  # Skip if file doesn't exist or is this script itself
   [ -f "$file" ] || continue
+  [[ $file == *"check-dangerous-patterns.sh" ]] && continue
 
   for pattern in "${DANGEROUS_PATTERNS[@]}"; do
     if grep -n "$pattern" "$file" 2>/dev/null; then

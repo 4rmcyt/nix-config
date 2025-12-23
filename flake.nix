@@ -388,12 +388,13 @@
       };
 
       cuda = import ./shells/cuda-shell.nix {
-        pkgs = nixpkgs.legacyPackages.${system}.extend (_final: _prev: {
+        pkgs = import nixpkgs {
+          inherit system;
           config = {
             allowUnfree = true;
             cudaSupport = true;
           };
-        });
+        };
       };
     };
   };
