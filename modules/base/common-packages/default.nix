@@ -29,7 +29,6 @@
       openssl
       p7zip
       unrar
-      unar
       pciutils
       procs # better ps
       unixtools.watch # watches commands
@@ -41,6 +40,7 @@
       fh
       tailspin
       gomi
+      jq
 
       # =================================================================
       # Development & Nix Tools (alphabetical)

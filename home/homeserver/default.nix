@@ -35,12 +35,9 @@
       tuptime
 
       # User utilities
-      borgbackup
-      jq
       pass
       trash-cli
       tree
-      unar
       yamllint
       zip
     ];
