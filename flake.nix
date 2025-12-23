@@ -226,20 +226,23 @@
       home-manager.useGlobalPkgs = false;
       home-manager.useUserPackages = true;
       home-manager.backupFileExtension = "backup";
-      home-manager.sharedModules = [
-        {
-          _module.args = {inherit inputs;};
-          home.enableNixpkgsReleaseCheck = false;
-          nixpkgs.config.allowUnfree = true;
-          sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
-          nixpkgs.overlays = [
-            (final: prev: {
-              firefox-nightly = inputs.firefox-nightly.packages.${system}.firefox-nightly-bin or prev.firefox;
-            })
-          ];
-        }
-      ];
+      home-manager.sharedModules = [{home.enableNixpkgsReleaseCheck = false;}];
       home-manager.extraSpecialArgs = {inherit inputs;};
+    };
+
+    commonHomeManagerUserConfig = {
+      nixpkgs.config.allowUnfree = true;
+      sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
+    };
+
+    commonHomeConfig = {
+      home = {
+        username = userName;
+        homeDirectory = "/home/${userName}";
+        stateVersion = "24.11";
+      };
+      nixpkgs.config.allowUnfree = true;
+      sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
     };
 
     mkNixosConfig = hostName: {hasFacter ? true}:
@@ -261,6 +264,7 @@
         userName
         system
         commonHomeManagerModules
+        commonHomeConfig
         ;
     };
   in {
@@ -282,18 +286,20 @@
             (
               commonHomeManagerNixosConfig
               // {
-                home-manager.users.${userName} = {
-                  imports =
-                    [
-                      ./home/desktop
-                      inputs.betterfox-nix.homeModules.betterfox
-                      inputs.plasma-manager.homeModules.plasma-manager
-                      inputs.noctalia.homeModules.default
-                      inputs.stylix.homeModules.stylix
-                      inputs.pam-shim.homeModules.default
-                    ]
-                    ++ commonHomeManagerModules;
-                };
+                home-manager.users.${userName} =
+                  {
+                    imports =
+                      [
+                        ./home/desktop
+                        inputs.betterfox-nix.homeModules.betterfox
+                        inputs.plasma-manager.homeModules.plasma-manager
+                        inputs.noctalia.homeModules.default
+                        inputs.stylix.homeModules.stylix
+                        inputs.pam-shim.homeModules.default
+                      ]
+                      ++ commonHomeManagerModules;
+                  }
+                  // commonHomeManagerUserConfig;
               }
             )
           ]
@@ -317,9 +323,11 @@
             (
               commonHomeManagerNixosConfig
               // {
-                home-manager.users.${userName} = {
-                  imports = [./home/homeserver] ++ commonHomeManagerModules;
-                };
+                home-manager.users.${userName} =
+                  {
+                    imports = [./home/homeserver] ++ commonHomeManagerModules;
+                  }
+                  // commonHomeManagerUserConfig;
               }
             )
           ]
@@ -340,9 +348,11 @@
             (
               commonHomeManagerNixosConfig
               // {
-                home-manager.users.${userName} = {
-                  imports = [./home/wsl] ++ commonHomeManagerModules;
-                };
+                home-manager.users.${userName} =
+                  {
+                    imports = [./home/wsl] ++ commonHomeManagerModules;
+                  }
+                  // commonHomeManagerUserConfig;
               }
             )
           ]
@@ -362,14 +372,16 @@
             (
               commonHomeManagerNixosConfig
               // {
-                home-manager.users.${userName} = {
-                  imports =
-                    [
-                      ./home/matebook
-                      inputs.betterfox-nix.homeModules.betterfox
-                    ]
-                    ++ commonHomeManagerModules;
-                };
+                home-manager.users.${userName} =
+                  {
+                    imports =
+                      [
+                        ./home/matebook
+                        inputs.betterfox-nix.homeModules.betterfox
+                      ]
+                      ++ commonHomeManagerModules;
+                  }
+                  // commonHomeManagerUserConfig;
               }
             )
           ]
