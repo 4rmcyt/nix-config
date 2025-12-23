@@ -232,6 +232,11 @@
           home.enableNixpkgsReleaseCheck = false;
           nixpkgs.config.allowUnfree = true;
           sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
+          nixpkgs.overlays = [
+            (final: prev: {
+              firefox-nightly = inputs.firefox-nightly.packages.${system}.firefox-nightly-bin or prev.firefox;
+            })
+          ];
         }
       ];
       home-manager.extraSpecialArgs = {inherit inputs;};

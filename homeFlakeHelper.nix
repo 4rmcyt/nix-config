@@ -16,6 +16,13 @@
     };
     nixpkgs.config.allowUnfree = true;
     sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
+
+    # Add firefox-nightly to pkgs via overlay
+    nixpkgs.overlays = [
+      (final: prev: {
+        firefox-nightly = inputs.firefox-nightly.packages.${system}.firefox-nightly-bin or prev.firefox;
+      })
+    ];
   };
 
   # Helper function to create a home-manager configuration

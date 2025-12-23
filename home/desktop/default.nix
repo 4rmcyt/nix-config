@@ -88,5 +88,8 @@
   programs = {
     browserpass.enable = true;
     nushell.enable = true;
+
+    # Firefox with nightly package
+    firefox.package = pkgs.firefox-nightly or pkgs.firefox;
   };
 }
