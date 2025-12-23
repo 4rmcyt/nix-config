@@ -235,16 +235,6 @@
       sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
     };
 
-    commonHomeConfig = {
-      home = {
-        username = userName;
-        homeDirectory = "/home/${userName}";
-        stateVersion = "24.11";
-      };
-      nixpkgs.config.allowUnfree = true;
-      sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
-    };
-
     mkNixosConfig = hostName: {hasFacter ? true}:
       {
         nixpkgs.config.allowUnfree = true;
@@ -264,7 +254,6 @@
         userName
         system
         commonHomeManagerModules
-        commonHomeConfig
         ;
     };
   in {
