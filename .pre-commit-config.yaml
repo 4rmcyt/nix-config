@@ -6,11 +6,11 @@ exclude: |
 repos:
   # File format validation and formatting
   - repo: https://github.com/google/yamlfmt
-    rev: v0.13.0
+    rev: v0.20.0
     hooks:
       - id: yamlfmt
   - repo: https://github.com/sirwart/ripsecrets
-    rev: v0.1.8
+    rev: v0.1.11
     hooks:
       - id: ripsecrets
         args: [--strict-ignore]
