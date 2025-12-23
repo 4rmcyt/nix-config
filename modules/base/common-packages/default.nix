@@ -41,6 +41,7 @@
       tailspin
       gomi
       jq
+      taplo
 
       # =================================================================
       # Development & Nix Tools (alphabetical)
