@@ -31,11 +31,6 @@
 
     ucodenix.url = "github:e-tho/ucodenix";
 
-    clan-core = {
-      url = "https://git.clan.lol/clan/clan-core/archive/main.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # System management
     disko = {
       url = "github:nix-community/disko";
@@ -386,7 +381,20 @@
     in
       treefmtEval.config.build.wrapper;
 
-    deploy = import ./deploy-rs.nix {inherit inputs system;};
-    checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
+    devShells.${system} = {
+      default = import ./devshell.nix {
+        pkgs = nixpkgs.legacyPackages.${system};
+        inherit inputs;
+      };
+
+      cuda = import ./shells/cuda-shell.nix {
+        pkgs = nixpkgs.legacyPackages.${system}.extend (_final: _prev: {
+          config = {
+            allowUnfree = true;
+            cudaSupport = true;
+          };
+        });
+      };
+    };
   };
 }

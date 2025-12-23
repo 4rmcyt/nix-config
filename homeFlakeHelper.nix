@@ -19,7 +19,7 @@
 
     # Add firefox-nightly to pkgs via overlay
     nixpkgs.overlays = [
-      (final: prev: {
+      (_final: prev: {
         firefox-nightly = inputs.firefox-nightly.packages.${system}.firefox-nightly-bin or prev.firefox;
       })
     ];

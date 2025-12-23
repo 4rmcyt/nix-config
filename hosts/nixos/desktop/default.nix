@@ -155,16 +155,8 @@
         "https://4rmcyt-desktop.cachix.org?priority=1"
         "https://cache.lix.systems?priority=2"
         "https://cache.flox.dev?priority=3"
-        "https://nixpkgs-unfree.cachix.org?priority=4"
-        "https://nix-community.cachix.org?priority=5"
-        "https://chaotic-nyx.cachix.org?priority=6"
-        "https://cuda-maintainers.cachix.org?priority=7"
-        "https://helix.cachix.org?priority=8"
-        "https://yazi.cachix.org?priority=9"
-        "https://devenv.cachix.org?priority=10"
-        "https://nix-gaming.cachix.org?priority=11"
-        "https://watersucks.cachix.org?priority=12"
-        "https://cache.garnix.io?priority=13"
+        "https://nix-community.cachix.org?priority=4"
+        "https://chaotic-nyx.cachix.org?priority=5"
       ];
 
       # Desktop-specific system features
@@ -178,17 +170,8 @@
       # Additional trusted public keys for gaming and CUDA caches
       trusted-public-keys = [
         "4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs="
-        "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
         "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
-        "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
-        "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
-        "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
-        "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
-        "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
-        "watersucks.cachix.org-1:6gadPC5R8iLWQ3EUtfu3GFrVY7X6I4Fwz/ihW25Jbv8="
-        "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
         "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
         "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
       ];
