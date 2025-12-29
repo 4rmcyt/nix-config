@@ -227,7 +227,6 @@
     useNetworkd = false;
     useDHCP = false;
     dhcpcd.enable = false;
-    wireless.enable = false;
     interfaces = {};
     firewall.allowedTCPPorts = [
       4242 # Kavita

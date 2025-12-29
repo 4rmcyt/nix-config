@@ -195,7 +195,6 @@
       enable = true;
       wifi.powersave = true;
     };
-    wireless.enable = false;
   };
 
   # =================================================================

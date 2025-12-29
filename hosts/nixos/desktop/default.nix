@@ -110,6 +110,9 @@
   # =================================================================
   # 6. Nix Configuration
   # =================================================================
+  nixpkgs.config.permittedInsecurePackages = [
+    "ventoy-qt5-1.1.07"
+  ];
 
   nix = {
     channel.enable = true;
@@ -305,6 +308,7 @@
         uefitool
         uefitoolPackages.old-engine
         optnix
+        ventoy-full-qt
       ]
     );
   };
@@ -344,7 +348,6 @@
     hostId = "e134040f";
     hostName = "desktop";
     networkmanager.enable = true;
-    wireless.enable = false;
   };
 
   # =================================================================
