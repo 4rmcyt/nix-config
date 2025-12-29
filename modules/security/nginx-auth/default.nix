@@ -188,7 +188,7 @@ in {
       locations =
         oauth2ProxyLocations
         // {
-          "/" = mkAuthLocation "http://localhost:9292";
+          "/" = mkAuthLocation "http://localhost:9292/audiobookshelf";
         };
     };
   };
