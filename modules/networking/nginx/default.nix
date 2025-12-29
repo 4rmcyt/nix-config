@@ -10,7 +10,7 @@
   # These are services that don't require OAuth or have their own authentication
   services = {
     # Services managed by keycloak/nginx-auth.nix (OAuth protected):
-    # jellyfin, audiobookshelf, kavita, sonarr, radarr, lidarr, readarr,
+    # jellyfin, kavita, sonarr, radarr, lidarr, readarr,
     # bazarr, prowlarr, jellyseerr, miniflux, home, auth (keycloak)
 
     # Services with their own auth or excluded from OAuth
@@ -106,7 +106,18 @@ in {
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
 
-      inherit virtualHosts;
+      virtualHosts = virtualHosts // {
+        # Audiobookshelf - custom config due to base path requirement
+        "audiobookshelf.${domain}" = {
+          forceSSL = true;
+          sslCertificate = config.my.security.ssl.certPath;
+          sslCertificateKey = config.my.security.ssl.keyPath;
+          locations."/" = {
+            proxyPass = "http://localhost:9292/audiobookshelf/";
+            proxyWebsockets = true;
+          };
+        };
+      };
     };
   };
 }

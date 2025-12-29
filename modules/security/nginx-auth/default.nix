@@ -183,13 +183,5 @@ in {
         };
     };
 
-    # Audiobookshelf
-    "audiobookshelf.${domain}" = {
-      locations =
-        oauth2ProxyLocations
-        // {
-          "/" = mkAuthLocation "http://localhost:9292/audiobookshelf/";
-        };
-    };
   };
 }
