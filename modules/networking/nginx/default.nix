@@ -106,18 +106,7 @@ in {
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
 
-      virtualHosts = virtualHosts // {
-        # Audiobookshelf - custom config due to base path requirement
-        "audiobookshelf.${domain}" = {
-          forceSSL = true;
-          sslCertificate = config.my.security.ssl.certPath;
-          sslCertificateKey = config.my.security.ssl.keyPath;
-          locations."/" = {
-            proxyPass = "http://localhost:9292/audiobookshelf/";
-            proxyWebsockets = true;
-          };
-        };
-      };
+      inherit virtualHosts;
     };
   };
 }
