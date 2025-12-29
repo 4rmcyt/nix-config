@@ -201,10 +201,15 @@ in {
         umask = 2;
         download-queue-size = 10;
         download-queue-enabled = true;
+
+        # RPC Configuration
         rpc-whitelist-enabled = false;
         rpc-bind-address = "0.0.0.0";
         rpc-enabled = true;
         rpc-port = 9091;
+        rpc-host-whitelist-enabled = false; # Disable host whitelist to prevent HTML responses
+        rpc-authentication-required = false; # Explicitly set auth requirement
+
         download-dir = "/data/Downloads";
 
         peer-port = 63998;
