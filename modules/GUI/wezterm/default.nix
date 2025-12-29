@@ -85,11 +85,11 @@
           action = act.DecreaseFontSize,
         },
 
-         -- Right click sends "woot" to the terminal
+         -- Right click pastes from clipboard
         {
           event = { Down = { streak = 1, button = 'Right' } },
           mods = 'NONE',
-          action = act.SendString 'woot',
+          action = act.PasteFrom 'Clipboard',
         },
 
         -- Change the default click behavior so that it only selects

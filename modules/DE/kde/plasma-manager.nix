@@ -67,6 +67,9 @@
   programs.plasma = {
     enable = true;
 
+    # Autostart applications
+    startup.startupScript.ktailctl.text = "ktailctl";
+
     # Keyboard Shortcuts
     shortcuts = {
       # KDE Keyboard Layout Switcher

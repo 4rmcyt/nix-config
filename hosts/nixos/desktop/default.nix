@@ -59,6 +59,11 @@
   # 4. Boot Configuration
   # =================================================================
   boot = {
+    # Suppress MSI MYSTIC LIGHT USB reconnect spam (known firmware issue)
+    kernelParams = [
+      "usbcore.quirks=1462:7d75:b"  # Add USB_QUIRK_RESET_RESUME for MSI MYSTIC LIGHT
+    ];
+
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = false;
@@ -273,7 +278,6 @@
         samba
         headset-charge-indicator
         yubikey-personalization
-        headsetcontrol
         limine-full
         # clan-cli
 
@@ -513,6 +517,10 @@
         # Gaming device rules
         SUBSYSTEM=="input", ATTRS{name}=="Rapoo Rapoo Gaming Device", TAG+="uaccess"
 
+        # MSI MYSTIC LIGHT - Unbind USB driver to stop reconnect cycles (disables RGB control)
+        ACTION=="bind", SUBSYSTEM=="usb", ATTRS{idVendor}=="1462", ATTRS{idProduct}=="7d75", TEST=="power/control", ATTR{power/control}="auto"
+        ACTION=="bind", SUBSYSTEM=="usb", ATTRS{idVendor}=="1462", ATTRS{idProduct}=="7d75", RUN+="${pkgs.bash}/bin/sh -c 'echo $kernel > /sys/bus/usb/drivers/usb/unbind'"
+
         # Lock PC on yubikey removal
         ACTION=="remove",\
          ENV{ID_BUS}=="usb",\
@@ -525,7 +533,6 @@
         yubioath-flutter
         yubikey-manager
         yubikey-personalization
-        headsetcontrol
       ];
     };
 
