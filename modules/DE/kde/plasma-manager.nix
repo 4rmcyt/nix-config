@@ -384,6 +384,11 @@
         Rows = 1;
       };
       kwinrc.Tiling.padding = 4;
+
+      # KWin Compositing - Disable direct scanout to fix fullscreen video black screen
+      kwinrc.Compositing = {
+        AllowDirectScanout = false;
+      };
       kwinrc."Tiling/e4961df9-b1c6-45e0-a909-bc04f57ae456/ae54fcef-1a61-4c5d-8e94-9157e55af1be".tiles = ''{"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}'';
       kwinrc."Tiling/e4961df9-b1c6-45e0-a909-bc04f57ae456/dfc3ea77-365f-4b09-bb91-ee25371552bd".tiles = ''{"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}'';
       kwinrc.Xwayland.Scale = 2.1;

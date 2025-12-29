@@ -25,6 +25,7 @@
     kdePackages.kwalletmanager
     kdePackages.kwallet-pam
     kdePackages.kwallet
+    kdePackages.kdbusaddons
   ];
 
   # Essential system services for KDE Plasma
