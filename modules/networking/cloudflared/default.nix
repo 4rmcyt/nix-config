@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   sops.secrets = {
     cloudflare_tunnel_credentials = {
       sopsFile = ../../../secrets/cloudflare_tunnel_credentials.bin;
@@ -94,7 +93,7 @@
     isSystemUser = true;
     group = "cloudflared";
   };
-  users.groups.cloudflared = { };
+  users.groups.cloudflared = {};
 
   systemd.services.cloudflared = {
     after = [
@@ -106,7 +105,7 @@
       "network.target"
       "network-online.target"
     ];
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = ["multi-user.target"];
 
     serviceConfig = {
       User = "cloudflared";
@@ -131,3 +130,4 @@
 # #   service: http://localhost:8265
 # - hostname: cal.${config.my.defaults.domain}
 #           service: http://localhost:5232
+

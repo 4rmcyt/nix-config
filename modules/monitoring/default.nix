@@ -38,11 +38,6 @@
       description = "Grafana user";
       group = "grafana";
     };
-    nut-exporter = {
-      isSystemUser = true;
-      description = "NUT Exporter user";
-      group = "nut-exporter";
-    };
     prometheus = {
       isSystemUser = true;
       description = "Prometheus daemon user";
@@ -57,7 +52,6 @@
 
   users.groups = {
     grafana = {};
-    nut-exporter = {};
     prometheus = {};
     uptime-kuma = {};
   };
@@ -164,6 +158,22 @@
             "zfs"
           ];
         };
+        nut = {
+          enable = true;
+          nutServer = "localhost";
+          nutUser = "upsmon";
+          passwordPath = config.sops.secrets.nut_password.path;
+          nutVariables = [
+            "battery.charge"
+            "battery.runtime"
+            "battery.voltage"
+            "battery.voltage.nominal"
+            "input.voltage"
+            "input.voltage.nominal"
+            "ups.load"
+            "ups.status"
+          ];
+        };
         # postgres = {
         #   enable = true;
         # };
@@ -189,6 +199,13 @@
           static_configs = [
             {targets = ["localhost:9100"];}
           ];
+        }
+        {
+          job_name = "nut-exporter";
+          static_configs = [
+            {targets = ["localhost:9199"];}
+          ];
+          metrics_path = "/ups_metrics";
         }
         # {
         #   job_name = "postgres-exporter";

@@ -1,23 +1,16 @@
 {
+  description = "4rmcyt's Nix configuration flake";
+
   inputs = {
-    # Core Nix ecosystem
-    empty-flake.url = "github:4rmcyt/empty-flake";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nix-systems.url = "github:nix-systems/default";
     systems.url = "github:nix-systems/default";
-
-    nixpkgs-lib.url = "github:nix-community/nixpkgs.lib";
-
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    nur.url = "github:nix-community/NUR";
+    nixos-hardware.url = "github:nixos/nixos-hardware";
 
-    flake-parts = {
-      url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs-lib.follows = "nixpkgs";
-    };
-
-    flake-utils = {
-      url = "github:numtide/flake-utils";
-      inputs.systems.follows = "nix-systems";
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     rust-overlay = {
@@ -113,29 +106,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Development tools
-    devshell = {
-      url = "github:numtide/devshell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
+
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # microvm = {
-    #   url = "github:microvm-nix/microvm.nix";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
 
     # Browser extensions
     betterfox-nix = {
@@ -151,31 +132,48 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    pam-shim = {
+      url = "github:Cu3PO42/pam_shim/next";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     deploy-rs = {
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.utils.follows = "flake-utils";
-      inputs.flake-compat.follows = "empty-flake";
-    };
-    nixos-anywhere = {
-      url = "github:nix-community/nixos-anywhere";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-parts.follows = "flake-parts";
-      inputs.disko.follows = "empty-flake";
-      inputs.nixos-stable.follows = "empty-flake";
-      inputs.nixos-images.follows = "empty-flake";
-      inputs.treefmt-nix.follows = "empty-flake";
     };
 
-    nixcord = {
-      url = "github:kaylorben/nixcord";
+    nixos-anywhere = {
+      url = "github:numtide/nixos-anywhere";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-compat.follows = "empty-flake";
-      inputs.flake-parts.follows = "flake-parts";
+      inputs.disko.follows = "disko";
     };
+
+    nix-topology = {
+      url = "github:oddlama/nix-topology";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    comma = {
+      url = "github:nix-community/comma";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    stylix.url = "github:danth/stylix";
 
     zellij-nix = {
       url = "github:a-kenji/zellij-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    zjstatus.url = "github:dj95/zjstatus";
+
+    nixos-jellyfin = {
+      url = "github:matt1432/nixos-jellyfin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -191,164 +189,213 @@
   };
 
   outputs = inputs @ {
-    flake-parts,
-    treefmt-nix,
+    nixpkgs,
+    home-manager,
     ...
   }: let
     userName = "zeev";
-    helpers = import ./flakeHelpers.nix {inherit inputs userName;};
-  in
-    flake-parts.lib.mkFlake
-    {
-      inherit inputs;
-      specialArgs = {inherit inputs;};
-    }
-    {
-      systems = import inputs.systems;
-      imports = [
-        treefmt-nix.flakeModule
-        inputs.devshell.flakeModule
-      ];
-      perSystem = {pkgs, ...}: {
-        devshells = import ./devshell.nix {inherit pkgs;};
-        treefmt = import ./treefmt.nix {inherit pkgs;};
+    system = "x86_64-linux";
+
+    commonNixosModules = [
+      inputs.sops-nix.nixosModules.sops
+      inputs.home-manager.nixosModules.home-manager
+      inputs.nix-index-database.nixosModules.nix-index
+      inputs.nixos-facter-modules.nixosModules.facter
+      inputs.agenix.nixosModules.default
+      inputs.vscode-server.nixosModules.default
+      inputs.lix-module.nixosModules.default
+      inputs.chaotic.nixosModules.nyx-cache
+      inputs.chaotic.nixosModules.nyx-overlay
+      inputs.ucodenix.nixosModules.default
+      inputs.disko.nixosModules.disko
+      inputs.nixos-jellyfin.nixosModules.default
+      inputs.nix-topology.nixosModules.default
+    ];
+
+    commonHomeManagerModules = [
+      inputs.sops-nix.homeManagerModules.sops
+      inputs.agenix.homeManagerModules.default
+    ];
+
+    commonHomeManagerNixosConfig = {
+      home-manager.useGlobalPkgs = false;
+      home-manager.useUserPackages = true;
+      home-manager.backupFileExtension = "backup";
+      home-manager.sharedModules = [{home.enableNixpkgsReleaseCheck = false;}];
+      home-manager.extraSpecialArgs = {inherit inputs;};
+    };
+
+    commonHomeManagerUserConfig = {
+      nixpkgs.config.allowUnfree = true;
+      sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
+    };
+
+    mkNixosConfig = hostName: {hasFacter ? true}:
+      {
+        nixpkgs.config.allowUnfree = true;
+        sops.age.keyFile = nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
+      }
+      // (
+        if hasFacter
+        then {facter.reportPath = ./hosts/nixos + "/${hostName}/facter.json";}
+        else {}
+      );
+
+    homeFlakeHelper = import ./homeFlakeHelper.nix {
+      inherit
+        inputs
+        nixpkgs
+        home-manager
+        userName
+        system
+        commonHomeManagerModules
+        ;
+    };
+  in {
+    nixosConfigurations = {
+      desktop = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs;};
+        modules =
+          [
+            ./hosts/nixos/desktop
+            ./modules/disko/desktop
+
+            inputs.flatpaks.nixosModules.default
+            inputs.nix-gaming.nixosModules.pipewireLowLatency
+            inputs.lanzaboote.nixosModules.lanzaboote
+
+            (mkNixosConfig "desktop" {})
+            ./modules/users/${userName}
+            (
+              commonHomeManagerNixosConfig
+              // {
+                home-manager.users.${userName} =
+                  {
+                    imports =
+                      [
+                        ./home/desktop
+                        inputs.betterfox-nix.homeModules.betterfox
+                        inputs.plasma-manager.homeModules.plasma-manager
+                        inputs.noctalia.homeModules.default
+                        inputs.stylix.homeModules.stylix
+                        inputs.pam-shim.homeModules.default
+                      ]
+                      ++ commonHomeManagerModules;
+                  }
+                  // commonHomeManagerUserConfig;
+              }
+            )
+          ]
+          ++ commonNixosModules;
       };
 
-      flake = {
-        nixosConfigurations = {
-          desktop = helpers.mkHost {
-            modules =
-              [
-                ./hosts/nixos/desktop
-                ./modules/disko/desktop
-                inputs.disko.nixosModules.disko
-                inputs.nix-gaming.nixosModules.pipewireLowLatency
-                inputs.lanzaboote.nixosModules.lanzaboote
-                inputs.flatpaks.nixosModules.default
-                inputs.chaotic.nixosModules.nyx-cache
-                inputs.chaotic.nixosModules.nyx-overlay
-                inputs.lix-module.nixosModules.default
-                inputs.ucodenix.nixosModules.default
-              ]
-              ++ (helpers.mkHome {
-                modules = [
-                  ./home/desktop
-                  inputs.plasma-manager.homeModules.plasma-manager
-                  inputs.betterfox-nix.homeModules.betterfox
-                  inputs.cosmic-manager.homeManagerModules.default
-                ];
-              });
-          };
+      homeserver = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs;};
+        modules =
+          [
+            # Host configuration
+            ./hosts/nixos/homeserver
+            ./modules/disko/homeserver
 
-          homeserver = helpers.mkHost {
-            modules =
-              [
-                ./hosts/nixos/homeserver
-                ./modules/disko/homeserver
-                inputs.disko.nixosModules.disko
-                inputs.nixarr.nixosModules.default
-                inputs.authentik-nix.nixosModules.default
-                inputs.vscode-server.nixosModules.default
-                inputs.chaotic.nixosModules.nyx-cache
-                inputs.chaotic.nixosModules.nyx-overlay
-                inputs.lix-module.nixosModules.default
-              ]
-              ++ (helpers.mkHome {
-                modules = [./home/homeserver];
-              });
-          };
+            inputs.nixarr.nixosModules.default
+            inputs.authentik-nix.nixosModules.default
 
-          wsl = helpers.mkHost {
-            modules =
-              [
-                ./hosts/nixos/wsl
-                inputs.nixos-wsl.nixosModules.wsl
-                inputs.lix-module.nixosModules.default
-                inputs.vscode-server.nixosModules.default
-              ]
-              ++ (helpers.mkHome {
-                modules = [./home/wsl];
-              });
-          };
+            (mkNixosConfig "homeserver" {})
+            ./modules/users/${userName}
+            (
+              commonHomeManagerNixosConfig
+              // {
+                home-manager.users.${userName} =
+                  {
+                    imports = [./home/homeserver] ++ commonHomeManagerModules;
+                  }
+                  // commonHomeManagerUserConfig;
+              }
+            )
+          ]
+          ++ commonNixosModules;
+      };
 
-          matebook = helpers.mkHost {
-            modules =
-              [
-                ./hosts/nixos/matebook
-                ./modules/disko/matebook
-                inputs.disko.nixosModules.disko
-                inputs.flatpaks.nixosModules.default
-                inputs.chaotic.nixosModules.nyx-cache
-                inputs.chaotic.nixosModules.nyx-overlay
-                inputs.lix-module.nixosModules.default
-                inputs.ucodenix.nixosModules.default
-              ]
-              ++ (helpers.mkHome {
-                modules = [
-                  ./home/matebook
-                  inputs.betterfox-nix.homeModules.betterfox
-                ];
-              });
-          };
+      wsl = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs;};
+        modules =
+          [
+            ./hosts/nixos/wsl
 
-          installer-desktop = inputs.nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
-            specialArgs = {inherit inputs;};
-            modules = [
-              ./hosts/installer/desktop
-              inputs.flatpaks.nixosModules.default
-              inputs.sops-nix.nixosModules.sops
-              inputs.disko.nixosModules.disko
-              inputs.chaotic.nixosModules.nyx-cache
-              inputs.chaotic.nixosModules.nyx-overlay
-              {nixpkgs.config.allowUnfree = true;}
-            ];
-          };
+            inputs.nixos-wsl.nixosModules.wsl
 
-          installer-homeserver = inputs.nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
-            specialArgs = {inherit inputs;};
-            modules = [
-              ./hosts/installer/homeserver
-              inputs.sops-nix.nixosModules.sops
-              inputs.disko.nixosModules.disko
-              {nixpkgs.config.allowUnfree = true;}
-            ];
-          };
+            (mkNixosConfig "wsl" {hasFacter = false;})
+            ./modules/users/${userName}
+            (
+              commonHomeManagerNixosConfig
+              // {
+                home-manager.users.${userName} =
+                  {
+                    imports = [./home/wsl] ++ commonHomeManagerModules;
+                  }
+                  // commonHomeManagerUserConfig;
+              }
+            )
+          ]
+          ++ commonNixosModules;
+      };
 
-          installer-matebook = inputs.nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
-            specialArgs = {inherit inputs;};
-            modules = [
-              ./hosts/installer/matebook
-              inputs.sops-nix.nixosModules.sops
-              inputs.disko.nixosModules.disko
-              {nixpkgs.config.allowUnfree = true;}
-            ];
-          };
-        };
-
-        # Standalone home-manager configurations
-        homeConfigurations = import ./flakeHelpersHome.nix {inherit helpers inputs userName;};
-
-        # Deploy-rs configuration for remote deployments
-        deploy.nodes = {
-          homeserver = {
-            hostname = "homeserver";
-            profiles.system = {
-              sshUser = "zeev";
-              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos inputs.self.nixosConfigurations.homeserver;
-              user = "root";
-            };
-          };
-        };
-
-        # Check deploy-rs configurations
-        checks =
-          builtins.mapAttrs (
-            _system: deployLib: deployLib.deployChecks inputs.self.deploy
-          )
-          inputs.deploy-rs.lib;
+      matebook = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs;};
+        modules =
+          [
+            ./hosts/nixos/matebook
+            ./modules/disko/matebook
+            inputs.flatpaks.nixosModules.default
+            (mkNixosConfig "matebook" {})
+            ./modules/users/${userName}
+            (
+              commonHomeManagerNixosConfig
+              // {
+                home-manager.users.${userName} =
+                  {
+                    imports =
+                      [
+                        ./home/matebook
+                        inputs.betterfox-nix.homeModules.betterfox
+                      ]
+                      ++ commonHomeManagerModules;
+                  }
+                  // commonHomeManagerUserConfig;
+              }
+            )
+          ]
+          ++ commonNixosModules;
       };
     };
+
+    inherit (homeFlakeHelper) homeConfigurations;
+
+    formatter.${system} = let
+      pkgs = nixpkgs.legacyPackages.${system};
+      treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs (import ./treefmt.nix);
+    in
+      treefmtEval.config.build.wrapper;
+
+    devShells.${system} = {
+      default = import ./devshell.nix {
+        pkgs = nixpkgs.legacyPackages.${system};
+        inherit inputs;
+      };
+
+      cuda = import ./shells/cuda-shell.nix {
+        pkgs = import nixpkgs {
+          inherit system;
+          config = {
+            allowUnfree = true;
+            cudaSupport = true;
+          };
+        };
+      };
+    };
+  };
 }

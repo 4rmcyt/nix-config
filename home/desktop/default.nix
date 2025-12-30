@@ -13,6 +13,7 @@
     ../../modules/GUI/zed
     ../../modules/GUI/mpv
     ../../modules/GUI/obsidian
+    # ../../modules/GUI/noctalia
     # ../../modules/GUI/konsole
     ../../modules/TUI/common
     ../../modules/TUI/zsh
@@ -57,8 +58,13 @@
       tailscale
       ytmdesktop
       popsicle
-      jellyflix
       ayugram-desktop
+
+      foliate
+      gvfs
+      loupe
+      ffmpegthumbnailer
+      gst_all_1.gst-libav
 
       # Hardware monitoring
       nvtopPackages.nvidia
@@ -82,5 +88,8 @@
   programs = {
     browserpass.enable = true;
     nushell.enable = true;
+
+    # Firefox with nightly package
+    firefox.package = pkgs.firefox-nightly or pkgs.firefox;
   };
 }

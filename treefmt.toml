@@ -16,6 +16,7 @@ includes = [".justfile"]
 
 [formatter.prettier]
 command = "prettier"
+options = ["--tab-width", "2", "--write"]
 includes = [
   "*.cjs",
   "*.css",
@@ -27,6 +28,7 @@ includes = [
   "*.mdx",
   "*.mjs",
   "*.scss",
+  "*.toml",
   "*.ts",
   "*.tsx",
   "*.vue",
@@ -65,3 +67,8 @@ excludes = [
   "secrets/*",
   ".gitignore",
 ]
+
+[formatter.trailing-whitespace]
+command = "trailing-whitespace-fixer"
+includes = ["*"]
+excludes = ["*.patch"]

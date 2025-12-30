@@ -15,6 +15,17 @@
     kdePackages.kio-extras
     kdePackages.signon-kwallet-extension
     kdePackages.qtwayland
+    kdePackages.applet-window-buttons6
+    kdePackages.wayland
+    kdePackages.wayland-protocols
+    kdePackages.plasma-wayland-protocols
+    kdePackages.kwayland
+    kdePackages.qgpgme
+    kdePackages.sweeper
+    kdePackages.kwalletmanager
+    kdePackages.kwallet-pam
+    kdePackages.kwallet
+    kdePackages.kdbusaddons
   ];
 
   # Essential system services for KDE Plasma

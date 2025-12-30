@@ -6,7 +6,6 @@ _: {
       "flathub-beta" = "https://dl.flathub.org/beta-repo/flathub-beta.flatpakrepo";
     };
     packages = [
-      "flathub:app/com.github.iwalton3.jellyfin-media-player//stable"
       # Gaming: 32-bit graphics support for Lutris
       "flathub:runtime/org.freedesktop.Platform.GL32.default/x86_64/24.08"
       "flathub:runtime/org.freedesktop.Platform.GL32.nvidia-580-105-08/x86_64/1.4"

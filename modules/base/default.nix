@@ -36,5 +36,6 @@
     ];
   };
 
+  console.keyMap = "us";
   time.timeZone = "America/Edmonton";
 }

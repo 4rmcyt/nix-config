@@ -2,6 +2,7 @@
   pkgs,
   config,
   lib,
+  inputs,
   ...
 }: {
   # =================================================================
@@ -21,6 +22,7 @@
     ../../../modules/gaming
     ../../../modules/networking/dnssec
     ../../../modules/networking/ssh-hosts.nix
+    ../../../modules/networking/nut-client
 
     # User configuration
     ../../../modules/users/zeev
@@ -57,6 +59,10 @@
   # 4. Boot Configuration
   # =================================================================
   boot = {
+    kernelParams = [
+      "usbcore.quirks=1462:7d75:k"  # Disable autosuspend for MSI MYSTIC LIGHT
+    ];
+
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = false;
@@ -108,19 +114,25 @@
   # =================================================================
   # 6. Nix Configuration
   # =================================================================
+  nixpkgs.config.permittedInsecurePackages = [
+    "ventoy-qt5-1.1.07"
+  ];
 
   nix = {
     channel.enable = true;
     settings = {
-      access-tokens = "github.com=REDACTED";
       cores = 0;
 
       experimental-features = [
         "flakes"
         "nix-command"
+        "flake-self-attrs"
+        "lix-custom-sub-commands"
+        "auto-allocate-uids"
       ];
 
       auto-optimise-store = true;
+
       warn-dirty = false;
       max-jobs = "auto"; # Auto-detect job count
       keep-going = true; # Continue building other derivations on failure
@@ -147,18 +159,10 @@
 
       substituters = [
         "https://4rmcyt-desktop.cachix.org?priority=1"
-        "https://cache.flox.dev?priority=2"
-        "https://nixpkgs-unfree.cachix.org?priority=3"
+        "https://cache.lix.systems?priority=2"
+        "https://cache.flox.dev?priority=3"
         "https://nix-community.cachix.org?priority=4"
         "https://chaotic-nyx.cachix.org?priority=5"
-        "https://cuda-maintainers.cachix.org?priority=6"
-        "https://helix.cachix.org?priority=7"
-        "https://yazi.cachix.org?priority=8"
-        "https://devenv.cachix.org?priority=9"
-        "https://nix-gaming.cachix.org?priority=10"
-        "https://watersucks.cachix.org?priority=11"
-        "https://cache.garnix.io?priority=2"
-        "https://cache.lix.systems?priority=3"
       ];
 
       # Desktop-specific system features
@@ -172,18 +176,10 @@
       # Additional trusted public keys for gaming and CUDA caches
       trusted-public-keys = [
         "4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs="
-        "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
         "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
-        "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
-        "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
-        "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
-        "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
-        "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
-        "watersucks.cachix.org-1:6gadPC5R8iLWQ3EUtfu3GFrVY7X6I4Fwz/ihW25Jbv8="
-        "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
         "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
+        "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
       ];
 
       trusted-users = [
@@ -249,6 +245,7 @@
         bluez # Bluetooth support
         bluez-tools # Bluetooth tools
         sof-firmware
+        inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-desktop
 
         # =============================================================
         # Fonts & Themes
@@ -273,11 +270,15 @@
         cifs-utils
         fwupd
         microcode-amd
-        # nvtopPackages.nvidia
+        nvtopPackages.nvidia
         openrgb-with-all-plugins
         powertop
         # ryzen-monitor-ng
         samba
+        headset-charge-indicator
+        yubikey-personalization
+        limine-full
+        # clan-cli
 
         # =============================================================
         # Security & Encryption
@@ -310,6 +311,7 @@
         uefitool
         uefitoolPackages.old-engine
         optnix
+        ventoy-full-qt
       ]
     );
   };
@@ -349,7 +351,6 @@
     hostId = "e134040f";
     hostName = "desktop";
     networkmanager.enable = true;
-    wireless.enable = false;
   };
 
   # =================================================================
@@ -361,7 +362,7 @@
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
-      pinentryPackage = pkgs.pinentry-qt;
+      pinentryPackage = pkgs.pinentry-all;
     };
 
     nh = {
@@ -378,6 +379,9 @@
 
     zsh.enable = true;
 
+    nix-ld.enable = true;
+
+    noisetorch.enable = true;
     # vscode.enable = true;
   };
 
@@ -388,12 +392,14 @@
     # =============================================================
     # Audio Services
     pipewire = {
+      enable = true;
       alsa = {
         enable = true;
         support32Bit = true;
       };
-      audio.enable = true;
-      enable = true;
+      pulse.enable = true;
+      wireplumber.enable = true;
+      jack.enable = true;
       extraConfig.pipewire."92-low-latency" = {
         context.properties = {
           default.clock.max-quantum = 32;
@@ -411,9 +417,14 @@
           "support.*" = "support/libspa-support";
         };
       };
-      jack.enable = true;
-      pulse.enable = true;
-      wireplumber.enable = true;
+      extraConfig.pipewire."99-usb-audio-fix" = {
+        "context.properties" = {
+          "default.clock.rate" = 48000;
+          "default.clock.quantum" = 512;
+          "default.clock.min-quantum" = 64;
+          "default.clock.max-quantum" = 4096;
+        };
+      };
     };
 
     pulseaudio.enable = false;
@@ -457,6 +468,8 @@
       enable = true;
       plugins = [pkgs.ccid];
     };
+
+    dbus.packages = [pkgs.gcr];
 
     power-profiles-daemon.enable = false;
 
@@ -502,12 +515,22 @@
 
         # Gaming device rules
         SUBSYSTEM=="input", ATTRS{name}=="Rapoo Rapoo Gaming Device", TAG+="uaccess"
+
+        # MSI MYSTIC LIGHT - Keep power management disabled (handled by kernel quirk)
+        ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="1462", ATTRS{idProduct}=="7d75", TEST=="power/control", ATTR{power/control}="on"
+
+        # Lock PC on yubikey removal
+        ACTION=="remove",\
+         ENV{ID_BUS}=="usb",\
+         ENV{ID_MODEL_ID}=="0407",\
+         ENV{ID_VENDOR_ID}=="1050",\
+         ENV{ID_VENDOR}=="Yubico",\
+         RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
       '';
       packages = with pkgs; [
         yubioath-flutter
         yubikey-manager
         yubikey-personalization
-        headsetcontrol
       ];
     };
 

@@ -6,20 +6,13 @@
   inherit (config.my.defaults) domain;
 
   # Service to port mapping
-  # Note: Services with OAuth authentication are managed in modules/security/keycloak/nginx-auth.nix
-  # These are services that don't require OAuth or have their own authentication
   services = {
-    # Services managed by keycloak/nginx-auth.nix (OAuth protected):
-    # jellyfin, audiobookshelf, kavita, sonarr, radarr, lidarr, readarr,
-    # bazarr, prowlarr, jellyseerr, miniflux, home, auth (keycloak)
-
-    # Services with their own auth or excluded from OAuth
     tdarr = 8265;
     paperless = 8000;
     cal = 5232;
     link = 3000;
     flare = 3001;
-    grafana = 3002; # Has native Keycloak OAuth integration
+    grafana = 3002;
     kuma = 5681;
     hass = 8123;
     vault = 8200;

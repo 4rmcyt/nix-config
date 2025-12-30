@@ -29,7 +29,6 @@
       openssl
       p7zip
       unrar
-      unar
       pciutils
       procs # better ps
       unixtools.watch # watches commands
@@ -38,6 +37,11 @@
       vim
       wget
       iw
+      fh
+      tailspin
+      gomi
+      jq
+      taplo
 
       # =================================================================
       # Development & Nix Tools (alphabetical)
@@ -92,6 +96,7 @@
       git-crypt
       delta # pretty diff tool
       gh # github cli tool
+      gh-dash
       glab # gitlab cli tool
 
       # =================================================================
@@ -133,19 +138,14 @@
       # =================================================================
       # Infrastructure & DevOps (alphabetical)
       # =================================================================
-      k6 # load testing tool
       opentofu
-      pulumi-bin # manage infrastructure as code
       terraform
 
       # =================================================================
       # Cloud Providers (alphabetical)
       # =================================================================
       awscli2
-      google-cloud-sdk
       s3cmd
-      # TODO: compile fails
-      #azure-cli
 
       # =================================================================
       # Programming Languages & Runtimes
@@ -176,19 +176,21 @@
       # =================================================================
       # Kubernetes (commented out)
       # =================================================================
-      # docker-compose
-      # kubectl
-      # kubelogin # oidc login azure
-      # krew # kubectl plugins
-      # kubie # fzf kubeconfig browser
-      # kind # k8s in docker
-      # velero # k8s backup tool
-      # fluxcd # automation
-      # kubent # check for deprecations
-      # termshark # tui for wireshark
-      # prometheus # prometheus linter
-      # kubebuilder # generate controller
-      # kubernetes-helm # deploy applications
+      docker-compose
+      kubectl
+      krew # kubectl plugins
+      kubie # fzf kubeconfig browser
+      kind # k8s in docker
+      kubent # check for deprecations
+      prometheus # prometheus linter
+      kubebuilder # generate controller
+      kubernetes-helm # deploy applications
+
+      # Core Unix utilities
+      moreutils # Additional Unix utilities (sponge, vidir, etc)
+
+      # Nix utilities
+      optinix # Nix flake utilities
     ]
   );
 }

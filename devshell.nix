@@ -1,30 +1,45 @@
-{pkgs, ...}: {
-  default = {
-    # Use nushell as the default shell
-    devshell.motd = ''
-      {202}🔨 NixOS Config Development Shell{reset}
-      $(type -p menu &>/dev/null && menu)
-    '';
+{pkgs, ...}:
+pkgs.mkShell {
+  name = "nix-config";
 
-    packages = with pkgs; [
-      # Shell
-      carapace
-      nix-direnv
-      sqlite
+  packages = with pkgs; [
+    zsh
+    nix-direnv
+    nixfmt-rfc-style
+    statix
+    deadnix
+    nix-tree
+    nix-diff
+    nix-output-monitor
+    nix-prefetch-git
+    nix-update
+    nh
+    nvd
+    sops
+    age
+    ssh-to-age
+    git
+    gh
+    shellcheck
+    shfmt
+    jq
+    yq
+    btop
+    fd
+    ripgrep
+    bat
+    eza
+    just
+    alejandra
+    nurl
+    pre-commit
+    taplo
+    yamlfmt
+    ripsecrets
+    pre-commit-hook-ensure-sops
+  ];
 
-      # Code formatters
-      shellcheck
-    ];
-
-    commands = [];
-
-    # Set nushell as the shell
-    devshell.name = "nix-config";
-    bash.extra = ''
-      # Launch nushell if available and in an interactive shell
-      if command -v nu &> /dev/null && [[ $- == *i* ]]; then
-        exec nu
-      fi
-    '';
-  };
+  shellHook = ''
+    echo "🔨 NixOS Config Development Shell"
+  '';
 }

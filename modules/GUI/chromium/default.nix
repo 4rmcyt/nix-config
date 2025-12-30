@@ -8,11 +8,10 @@
       (chromium.override {
         enableWideVine = true;
         commandLineArgs = [
-          "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo"
+          "--enable-features=VaapiVideoDecoder,VaapiIgnoreDriverChecks"
           "--ignore-gpu-blocklist"
-          "--enable-zero-copy"
-          "--enable-features=UseOzonePlatform"
           "--ozone-platform=wayland"
+          "--disable-features=WaylandOverlayDelegation"
         ];
       })
     ]
