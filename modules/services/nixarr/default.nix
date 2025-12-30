@@ -2,7 +2,8 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   servicesWithMediaAccess = [
     "bazarr"
     "jellyseerr"
@@ -15,7 +16,8 @@
     "audiobookshelf"
     "jellyfin"
   ];
-in {
+in
+{
   imports = [
     ./upnp-fix.nix
     ./jellyfin
@@ -41,6 +43,15 @@ in {
     bazarr = {
       isSystemUser = true;
       group = lib.mkForce "bazarr";
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+
+    jackett = {
+      isSystemUser = true;
+      group = lib.mkForce "jackett";
       extraGroups = [
         "users"
         "media"
@@ -113,16 +124,17 @@ in {
     };
   };
   users.groups = {
-    audiobookshelf = {};
-    bazarr = {};
-    jellyseerr = {};
-    lidarr = {};
-    prowlarr = {};
-    radarr = {};
-    sonarr = {};
-    transmission = {};
-    readarr = {};
-    recyclarr = {};
+    audiobookshelf = { };
+    bazarr = { };
+    jellyseerr = { };
+    lidarr = { };
+    prowlarr = { };
+    radarr = { };
+    sonarr = { };
+    transmission = { };
+    readarr = { };
+    recyclarr = { };
+    jackett = { };
     # headphones = { };
   };
 
@@ -139,6 +151,7 @@ in {
     5055 # Jellyseerr
     9091 # Transmission web UI
     63998 # Transmission peer port
+    9117 # Jackett
   ];
 
   networking.firewall.allowedUDPPorts = [
@@ -165,7 +178,7 @@ in {
 
   nixarr = {
     enable = true;
-    mediaUsers = [config.my.defaults.user];
+    mediaUsers = [ config.my.defaults.user ];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
 
@@ -237,6 +250,9 @@ in {
     };
   };
 
+  services.jackett = {
+    enable = true;
+  };
   systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
     serviceConfig = {
       BindPaths = [

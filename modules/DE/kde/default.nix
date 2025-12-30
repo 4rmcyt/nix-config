@@ -25,6 +25,7 @@
     kdePackages.kwalletmanager
     kdePackages.kwallet-pam
     kdePackages.kwallet
+    kdePackages.plasma-vault
     kdePackages.kdbusaddons
   ];
 
