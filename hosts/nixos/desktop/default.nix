@@ -60,7 +60,7 @@
   # =================================================================
   boot = {
     kernelParams = [
-      "usbcore.quirks=1462:7d75:k"  # Disable autosuspend for MSI MYSTIC LIGHT
+      "usbcore.quirks=1462:7d75:k" # Disable autosuspend for MSI MYSTIC LIGHT
     ];
 
     loader = {

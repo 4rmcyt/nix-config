@@ -182,6 +182,5 @@ in {
           "/" = mkAuthLocation "http://localhost:5055";
         };
     };
-
   };
 }
