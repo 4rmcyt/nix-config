@@ -1,4 +1,9 @@
 {pkgs, ...}: {
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   programs.zsh = {
     antidote = {
       enable = true;
