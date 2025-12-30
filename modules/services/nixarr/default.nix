@@ -263,6 +263,12 @@ in
     };
   });
 
+  # Fix nginx timeout issues for transmission proxy
+  # Nixarr creates an nginx proxy to the VPN namespace
+  # The default timeouts are too short causing 504 errors
+  services.nginx.proxyTimeout = "300s";
+  services.nginx.clientMaxBodySize = "0"; # Allow unlimited upload size for torrents
+
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
     "d /data/media/movies 775 zeev media -" # Changed from 770 to 775

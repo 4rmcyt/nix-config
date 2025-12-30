@@ -74,6 +74,21 @@
     extraModprobeConfig = ''
       # Intel iGPU GuC/HuC firmware
       options i915 enable_guc=3
+
+      # ZFS performance tuning
+      # Increase txg timeout to reduce sync frequency (default: 5s)
+      options zfs zfs_txg_timeout=30
+
+      # Increase dirty data limit to allow more write coalescing
+      # Default is 10% of ARC, increase to 20% for better write performance
+      options zfs zfs_dirty_data_max_percent=20
+
+      # Async write tuning - allow more pending writes
+      options zfs zfs_vdev_async_write_min_active=2
+      options zfs zfs_vdev_async_write_max_active=10
+
+      # Reduce metadata overhead
+      options zfs metaslab_debug_load=0
     '';
 
     # System control parameters
