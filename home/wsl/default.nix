@@ -68,6 +68,7 @@
     eval "$(pyenv init --path)"
   '';
 
+
   xdg = {
     enable = true;
     mimeApps.enable = true;
