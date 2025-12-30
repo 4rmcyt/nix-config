@@ -3,16 +3,9 @@
   # 1. Imports
   # =================================================================
   imports = [
-    # External modules
-
-    # System base
     ../../../modules/base
     ../../../modules/options
-
-    # Networking
     ../../../modules/networking/ssh-hosts.nix
-
-    # User configuration
     ../../../modules/users/zeev
   ];
 

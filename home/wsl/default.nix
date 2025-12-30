@@ -4,6 +4,7 @@
     ../../modules/TUI/common
     ../../modules/TUI/zsh
     ../../modules/TUI/atuin
+    ../../modules/GUI/wezterm
   ];
 
   home = {
