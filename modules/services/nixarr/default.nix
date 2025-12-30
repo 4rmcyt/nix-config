@@ -49,15 +49,6 @@ in
       ];
     };
 
-    jackett = {
-      isSystemUser = true;
-      group = lib.mkForce "jackett";
-      extraGroups = [
-        "users"
-        "media"
-      ];
-    };
-
     jellyseerr = {
       isSystemUser = true;
       group = lib.mkForce "jellyseerr";
@@ -134,7 +125,6 @@ in
     transmission = { };
     readarr = { };
     recyclarr = { };
-    jackett = { };
     # headphones = { };
   };
 
@@ -151,7 +141,6 @@ in
     5055 # Jellyseerr
     9091 # Transmission web UI
     63998 # Transmission peer port
-    9117 # Jackett
   ];
 
   networking.firewall.allowedUDPPorts = [
@@ -250,9 +239,6 @@ in
     };
   };
 
-  services.jackett = {
-    enable = true;
-  };
   systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
     serviceConfig = {
       BindPaths = [

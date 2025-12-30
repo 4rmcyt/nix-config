@@ -85,8 +85,6 @@
           service: http://localhost:4180
         - hostname: livesync.${config.my.defaults.domain}
           service: http://localhost:5984
-        - hostname: jackett.${config.my.defaults.domain}
-          service: http://localhost:9117
         - service: http_status:404
     '';
   };
