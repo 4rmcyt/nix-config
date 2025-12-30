@@ -80,7 +80,7 @@ let
   mkJailConfig = service: ''
     enabled = true
     backend = systemd
-    action = cloudflare-token
+    action = cloudflare-token-custom
     filter = ${service.filter}
     journalmatch = ${service.journalmatch}
     maxretry = ${toString (service.maxretry or config.services.fail2ban.maxretry)}
@@ -128,7 +128,8 @@ in {
       # ... your other filters
     '';
 
-    "fail2ban/action.d/cloudflare-token.conf" = lib.mkForce {
+    "fail2ban/action.d/cloudflare-token-custom.conf" = {
+      mode = "0644";
       text = let
         notes = "Fail2Ban-${config.networking.hostName}";
         zoneIdFile = config.sops.secrets.cloudflare_zone_id.path;
@@ -149,7 +150,7 @@ in {
                 -H "Authorization: Bearer $(cat ${apiKeyFile})"
 
         [Init]
-        name = cloudflare-token
+        name = cloudflare-token-custom
       '';
     };
   };
