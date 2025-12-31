@@ -18,17 +18,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    lix = {
-      url = "https://git.lix.systems/lix-project/lix/archive/main.tar.gz";
-      flake = false;
-    };
-
-    lix-module = {
-      url = "https://git.lix.systems/lix-project/nixos-module/archive/main.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.lix.follows = "lix";
-    };
-
     ucodenix.url = "github:e-tho/ucodenix";
 
     # System management
@@ -203,13 +192,16 @@
       inputs.nixos-facter-modules.nixosModules.facter
       inputs.agenix.nixosModules.default
       inputs.vscode-server.nixosModules.default
-      inputs.lix-module.nixosModules.default
       inputs.chaotic.nixosModules.nyx-cache
       inputs.chaotic.nixosModules.nyx-overlay
       inputs.ucodenix.nixosModules.default
       inputs.disko.nixosModules.disko
       inputs.nixos-jellyfin.nixosModules.default
       inputs.nix-topology.nixosModules.default
+      # Use git version of Lix from nixpkgs lixPackageSets (has binary caches)
+      ({pkgs, ...}: {
+        nix.package = pkgs.lixPackageSets.git.lix;
+      })
     ];
 
     commonHomeManagerModules = [
