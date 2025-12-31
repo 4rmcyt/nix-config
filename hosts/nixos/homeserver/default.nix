@@ -181,7 +181,7 @@
     # Homeserver system features
     system-features = [
       "big-parallel"
-      "gccarch-skylake"
+      # "gccarch-skylake"
       "kvm"
     ];
 
