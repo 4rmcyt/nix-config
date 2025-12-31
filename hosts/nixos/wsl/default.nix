@@ -108,7 +108,7 @@
     system-features = [
       "benchmark"
       "big-parallel"
-      "gccarch-znver3"
+      # "gccarch-znver3"
       "kvm"
     ];
 
