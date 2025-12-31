@@ -121,10 +121,10 @@
             };
             mountpoint = "/var/lib/containers";
           };
-          "authentik" = {
+          "authelia" = {
             type = "zfs_fs";
             options."com.sun:auto-snapshot" = "false";
-            mountpoint = "/var/lib/private/authentik";
+            mountpoint = "/var/lib/private/authelia";
           };
           "vaultwarden" = {
             type = "zfs_fs";

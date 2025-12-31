@@ -20,7 +20,8 @@
 
   networking.firewall.allowedTCPPorts = [5232];
 
-  # Nginx configuration managed in modules/networking/nginx/default.nix
+  # Radicale is exposed via Traefik - see modules/networking/traefik/default.nix
+  # Traefik handles TLS termination and security headers
 
   environment.systemPackages = [pkgs.radicale];
   services.radicale = {

@@ -19,12 +19,6 @@ let
       filter = "homeassistant";
       journalmatch = "_SYSTEMD_UNIT=home-assistant.service";
     };
-    keycloak = {
-      filter = "keycloak";
-      journalmatch = "_SYSTEMD_UNIT=keycloak.service";
-      maxretry = 3;
-      bantime = "2h";
-    };
     jellyfin = {
       filter = "jellyfin";
       journalmatch = "_SYSTEMD_UNIT=jellyfin.service";

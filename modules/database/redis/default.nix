@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   # =================================================================
   # SOPS Secrets for Redis
   # =================================================================
@@ -18,10 +19,10 @@
   users.users.redis = {
     isSystemUser = true;
     group = "redis";
-    extraGroups = ["oauth2-proxy"]; # Add service groups that need access
+    extraGroups = [ "oauth2-proxy" ]; # Add service groups that need access
   };
   users.groups.redis = {
-    members = ["oauth2-proxy"]; # Services that need Redis access
+    members = [ "oauth2-proxy" ]; # Services that need Redis access
   };
 
   # =================================================================
@@ -100,7 +101,11 @@
       ];
 
       # Network restrictions
-      RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_UNIX"];
+      RestrictAddressFamilies = [
+        "AF_INET"
+        "AF_INET6"
+        "AF_UNIX"
+      ];
 
       # Capabilities
       CapabilityBoundingSet = "";
@@ -114,7 +119,10 @@
       RestrictRealtime = true;
       RestrictNamespaces = true;
       LockPersonality = true;
-      SystemCallFilter = ["@system-service" "~@privileged"];
+      SystemCallFilter = [
+        "@system-service"
+        "~@privileged"
+      ];
     };
   };
 }
@@ -126,12 +134,10 @@
 # Database allocation:
 # - oauth2-proxy: database 0
 # - paperless: database 1 (when enabled)
-# - authentik: database 2 (when enabled)
-# - authelia: database 3 (when enabled)
+# - authelia: database 2 (when enabled)
 #
 # All services use the same password (oauth2_proxy_password from secrets)
 # Isolation is achieved through different database numbers
 #
 # Connection format:
 # - TCP: redis://127.0.0.1:6379/0 + redis-password-file option
-

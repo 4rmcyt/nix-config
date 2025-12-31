@@ -39,7 +39,8 @@
     8888 # Paperless
   ];
 
-  # Nginx configuration managed in modules/networking/nginx/default.nix
+  # Paperless is exposed via Traefik - see modules/networking/traefik/default.nix
+  # Traefik handles TLS termination and security headers
 
   services.paperless = {
     enable = true;

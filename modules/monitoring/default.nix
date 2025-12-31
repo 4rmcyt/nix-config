@@ -15,12 +15,6 @@
       sopsFile = ../../secrets/postgresql.yaml;
       owner = config.users.users.postgres.name;
     };
-    grafana_oauth_secret = {
-      sopsFile = ../../secrets/authentik.yaml;
-      key = "grafana_oauth_secret";
-      owner = config.users.users.grafana.name;
-      mode = "0400";
-    };
     loki_github_actions_token = {
       sopsFile = ../../secrets/loki.yaml;
       key = "github_actions_token";
@@ -91,23 +85,9 @@
           http_port = 3003;
           root_url = "https://grafana.${config.my.defaults.domain}";
         };
+        # Authentication handled by Authelia reverse proxy
         auth = {
           disable_login_form = false;
-        };
-        "auth.ldap" = {
-          enabled = false;
-        };
-        "auth.generic_oauth" = {
-          enabled = true;
-          name = "Authelia";
-          client_id = "grafana";
-          client_secret = "$__file{${config.sops.secrets.grafana_oauth_secret.path}}";
-          scopes = "openid profile email groups";
-          auth_url = "https://auth.${config.my.defaults.domain}/api/oidc/authorization";
-          token_url = "https://auth.${config.my.defaults.domain}/api/oidc/token";
-          api_url = "https://auth.${config.my.defaults.domain}/api/oidc/userinfo";
-          role_attribute_path = "contains(groups, 'admin') && 'Admin' || 'Viewer'";
-          allow_sign_up = true;
         };
       };
       provision.datasources.settings.datasources = [

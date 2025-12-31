@@ -340,10 +340,10 @@
         description = "Vaultwarden password manager";
       };
 
-      authentik = lib.mkOption {
+      authelia = lib.mkOption {
         type = lib.types.port;
         default = 9000;
-        description = "Authentik SSO/identity provider";
+        description = "Authelia SSO/identity provider";
       };
 
       # AI & Development
