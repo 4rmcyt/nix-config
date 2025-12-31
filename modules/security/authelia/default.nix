@@ -151,14 +151,14 @@ in {
         {
           authorization_policy = "one_factor";
           client_id = "jellyfin";
-          client_secret = "$pbkdf2-sha512$310000$Q9q1DjPnfSXqe.hJwOG8HQ$s0tFVDKU5d6/7.d3Is5/Efvteb2Byp8j.EO5NNp.gRM70y/Zfss73KPtMM2wBqdm54qML.wG5relOrI/6.zeag";
+          client_secret = "$pbkdf2-sha512$310000$O3AaVIp.a0vTGZClL/077w$05zVMYkb.JhHv.7Fm3bDIQuQCSFrkH99tssuYRpjnIDAr0xnUjWCjGam6ALMV1QtYBC1HPUAge0NSFjMhrfn2g";
           redirect_uris = ["https://jellyfin.${domain}/sso/OID/r/authelia"];
           token_endpoint_auth_method = "client_secret_post";
         }
         {
           authorization_policy = "one_factor";
           client_id = "deluge";
-          client_secret = "$pbkdf2-sha512$310000$wPpdmhrPqd.dU.tcLTh9nQ$du11GENjjxaXf5njeqnhpVgr8O9fCISulobjRStCsYJzY6i3aaOyiloRJHKDh.CC.4n1QVqsP.ty9Lo8UH3XvA";
+          client_secret = "$pbkdf2-sha512$310000$jBwK1WmvrZF5lFwcUKYcXA$OT9Trx7oEztmPIepqMJv/o.SGQf01gV2Hxmx9vYmjDrC32JEk984JlRD06.cIsiI6pWd07W2Ann71281Gh/u1A";
           redirect_uris = ["https://deluge.${domain}/oauth-callback"];
           scopes = ["openid" "profile" "email"];
           userinfo_signed_response_alg = "none";
@@ -167,15 +167,14 @@ in {
         {
           authorization_policy = "one_factor";
           client_id = "grafana";
-          client_secret = "$pbkdf2-sha512$310000$DuxSEDPMOTcuCZ4zuf5z.Q$yR.S0q0u/TmRcntDVDrcm3bAlpvi8FC4axMkvfWM9Ho8m79ca5anoVrddID06T1Dv997KDJFeJ39BWaIEBL2rA"; # Replace with actual hash
-          redirect_uris = ["https://grafana.${domain}/login/generic_oauth"];
+          client_secret = "$pbkdf2-sha512$310000$2h6vczoKorfBcG/H9ZDqNA$EV9OqqWrMlRoTflmZMYj9rDUjr6LrbDgx/G9YJRGgG7zKeekWOBnFH8SvEzzg4L/NFyZ7u1AjolksUzOIMnmvQ";
           scopes = ["openid" "profile" "email" "groups"];
           token_endpoint_auth_method = "client_secret_post";
         }
         {
           authorization_policy = "one_factor";
           client_id = "miniflux";
-          client_secret = "$pbkdf2-sha512$310000$n7ASXEk5Bu9rx9AkK1HAbg$myf5gls9Xj56pcXsFmRnVXEcD4ujgdln/juPh5aqH66cYOEkMgWUPSkBF1rUZqIUUqt/L3DJBtspIHl68fy8hQ"; # Replace with actual hash
+          client_secret = "$pbkdf2-sha512$310000$AnAp9BqRGMt9ZqMwZ4WsHQ$PtSKXkEmDdlqD3MwDlJ98cnazNB1eQLxK2o7eBauDxdQRCsMp4nGj/Q3njTpJVmh9TZ7ECkF1A8/0LTivFbCDw";
           redirect_uris = ["https://miniflux.${domain}/oauth2/oidc/callback"];
           scopes = ["openid" "profile" "email"];
           token_endpoint_auth_method = "client_secret_post";
@@ -183,7 +182,7 @@ in {
         {
           authorization_policy = "one_factor";
           client_id = "kavita";
-          client_secret = "$pbkdf2-sha512$310000$DbpxHaocwOdGqRpm7iD7pQ$UsLk7MlTWSe90VjcbnAoOZI89aum7IId9oheIka.94fYTDAaf/qZ.ohkwe/mtiNDhLtAhiFox/P7RbilYL4a1Q"; # Replace with actual hash
+          client_secret = "$pbkdf2-sha512$310000$ukp9l/M9a/k2HLaLwdgmGA$MGjXsJjLIiE6FPLPfNlo2HOrirRFNt47uE677sUQ0zbxrMhxLltCTUfAe07K/NOJW8HT0pdFL3Ik7jgxm7TS1w";
           redirect_uris = ["https://kavita.${domain}/registration/confirm-migration-link"];
           scopes = ["openid" "profile" "email"];
           token_endpoint_auth_method = "client_secret_post";
@@ -191,7 +190,7 @@ in {
         {
           authorization_policy = "one_factor";
           client_id = "audiobookshelf";
-          client_secret = "$pbkdf2-sha512$310000$OkJl.VUDh3Fla5NsRTu4nw$1BplxNYVp6pA1cVEhSpQOwM8Kswvx15OV5p89iW19ZETHGXA.PEA.O0l3QFyD8KCvz.lLeINja2h9NhTWZ6vUA"; # Replace with actual hash
+          client_secret = "$pbkdf2-sha512$310000$JwO58hiz.ZVGuJqFCmUjwA$cZC0tI7Wz36aFwrNGDrwP/2Q8xYU3Ul6b.QWK.GNl5jfrRu2KQbOnIH5NFTQqUil5ouQ/5d1EfS6upzIP1dHMQ"; # Replace with actual hash
           redirect_uris = ["https://audiobookshelf.${domain}/auth/openid/callback" "https://audiobookshelf.${domain}/auth/openid/mobile-redirect"];
           scopes = ["openid" "profile" "email"];
           token_endpoint_auth_method = "client_secret_post";
