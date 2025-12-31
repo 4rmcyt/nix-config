@@ -41,52 +41,107 @@
         keepAliveTimeout: 90s
         keepAliveConnections: 100
         noHappyEyeballs: false
+        # Enable TLS for last-mile encryption to Traefik
+        originServerName: ${config.my.defaults.domain}
+        noTLSVerify: true  # Using self-signed cert, can be set to false with proper CA
 
       ingress:
-        - hostname: jellyfin.${config.my.defaults.domain}
-          service: http://localhost:8096
-        - hostname: home.${config.my.defaults.domain}
-          service: http://localhost:8082
-        - hostname: miniflux.${config.my.defaults.domain}
-          service: http://localhost:8086
-        - hostname: deluge.${config.my.defaults.domain}
-          service: http://localhost:8112
-        - hostname: audiobookshelf.${config.my.defaults.domain}
-          service: http://localhost:9292
-        - hostname: kavita.${config.my.defaults.domain}
-          service: http://localhost:5000
-        - hostname: prowlarr.${config.my.defaults.domain}
-          service: http://localhost:9696
-        - hostname: radarr.${config.my.defaults.domain}
-          service: http://localhost:7878
+        # ALL services routed through Traefik with TLS (last-mile encryption)
+        # Traefik handles authentication (OIDC or forward auth) and TLS termination
+
+        # Nixarr services (forward auth via Authelia)
         - hostname: sonarr.${config.my.defaults.domain}
-          service: http://localhost:8989
-        - hostname: lidarr.${config.my.defaults.domain}
-          service: http://localhost:8686
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: sonarr.${config.my.defaults.domain}
+        - hostname: radarr.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: radarr.${config.my.defaults.domain}
+        - hostname: prowlarr.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: prowlarr.${config.my.defaults.domain}
         - hostname: bazarr.${config.my.defaults.domain}
-          service: http://localhost:6767
-        - hostname: jellyseerr.${config.my.defaults.domain}
-          service: http://localhost:5055
-        - hostname: vault.${config.my.defaults.domain}
-          service: http://localhost:8222
-        - hostname: kuma.${config.my.defaults.domain}
-          service: http://localhost:3001
-        - hostname: auth.${config.my.defaults.domain}
-          service: http://localhost:9000
-        - hostname: lldap.${config.my.defaults.domain}
-          service: http://localhost:17170
-        - hostname: grafana.${config.my.defaults.domain}
-          service: http://localhost:3003
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: bazarr.${config.my.defaults.domain}
+        - hostname: lidarr.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: lidarr.${config.my.defaults.domain}
         - hostname: readarr.${config.my.defaults.domain}
-          service: http://localhost:8787
-        - hostname: atuin.${config.my.defaults.domain}
-          service: http://localhost:8881
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: readarr.${config.my.defaults.domain}
+        - hostname: jellyseerr.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: jellyseerr.${config.my.defaults.domain}
+
+        # Services with OIDC support (now through Traefik for consistent TLS)
+        - hostname: jellyfin.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: jellyfin.${config.my.defaults.domain}
+        - hostname: deluge.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: deluge.${config.my.defaults.domain}
+        - hostname: grafana.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: grafana.${config.my.defaults.domain}
+        - hostname: miniflux.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: miniflux.${config.my.defaults.domain}
+        - hostname: kavita.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: kavita.${config.my.defaults.domain}
+        - hostname: audiobookshelf.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: audiobookshelf.${config.my.defaults.domain}
+
+        # Other services
+        - hostname: home.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: home.${config.my.defaults.domain}
         - hostname: microbin.${config.my.defaults.domain}
-          service: http://localhost:8069
-        - hostname: oauth2-proxy.${config.my.defaults.domain}
-          service: http://localhost:4180
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: microbin.${config.my.defaults.domain}
+        - hostname: auth.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: auth.${config.my.defaults.domain}
+
+        # Infrastructure services (can be added to Traefik later if needed)
+        - hostname: vault.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: vault.${config.my.defaults.domain}
+        - hostname: kuma.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: kuma.${config.my.defaults.domain}
+        - hostname: lldap.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: lldap.${config.my.defaults.domain}
+        - hostname: atuin.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: atuin.${config.my.defaults.domain}
         - hostname: livesync.${config.my.defaults.domain}
-          service: http://localhost:5984
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: livesync.${config.my.defaults.domain}
+
+        # Catch-all
         - service: http_status:404
     '';
   };

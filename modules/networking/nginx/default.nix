@@ -86,20 +86,9 @@ in {
         dnsProvider = "cloudflare";
         credentialsFile = config.sops.secrets.cloudflare_acme_credentials.path;
         keyType = "ec256";
-        group = "nginx";
-        postRun = "systemctl reload nginx.service";
+        group = "traefik";
+        postRun = "systemctl reload traefik.service";
       };
-    };
-
-    # Nginx reverse proxy configuration
-    services.nginx = {
-      enable = true;
-      recommendedGzipSettings = true;
-      recommendedOptimisation = true;
-      recommendedProxySettings = true;
-      recommendedTlsSettings = true;
-
-      inherit virtualHosts;
     };
   };
 }

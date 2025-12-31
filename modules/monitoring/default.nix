@@ -99,14 +99,14 @@
         };
         "auth.generic_oauth" = {
           enabled = true;
-          name = "Authentik";
+          name = "Authelia";
           client_id = "grafana";
           client_secret = "$__file{${config.sops.secrets.grafana_oauth_secret.path}}";
-          scopes = "openid profile email";
-          auth_url = "https://auth.${config.my.defaults.domain}/application/o/authorize/";
-          token_url = "https://auth.${config.my.defaults.domain}/application/o/token/";
-          api_url = "https://auth.${config.my.defaults.domain}/application/o/userinfo/";
-          role_attribute_path = "contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'";
+          scopes = "openid profile email groups";
+          auth_url = "https://auth.${config.my.defaults.domain}/api/oidc/authorization";
+          token_url = "https://auth.${config.my.defaults.domain}/api/oidc/token";
+          api_url = "https://auth.${config.my.defaults.domain}/api/oidc/userinfo";
+          role_attribute_path = "contains(groups, 'admin') && 'Admin' || 'Viewer'";
           allow_sign_up = true;
         };
       };
