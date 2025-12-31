@@ -127,6 +127,7 @@
 # - oauth2-proxy: database 0
 # - paperless: database 1 (when enabled)
 # - authentik: database 2 (when enabled)
+# - authelia: database 3 (when enabled)
 #
 # All services use the same password (oauth2_proxy_password from secrets)
 # Isolation is achieved through different database numbers

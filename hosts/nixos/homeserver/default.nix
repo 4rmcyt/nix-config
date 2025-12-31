@@ -18,7 +18,7 @@
     ../../../modules/database
     ../../../modules/monitoring
     ../../../modules/networking
-    ../../../modules/networking/ssh-hosts.nix
+    ../../../modules/networking/ssh.nix
     ../../../modules/networking/nut-server
     ../../../modules/security
     ../../../modules/services

@@ -21,7 +21,7 @@
     # Features and roles
     ../../../modules/gaming
     ../../../modules/networking/dnssec
-    ../../../modules/networking/ssh-hosts.nix
+    ../../../modules/networking/ssh.nix
     ../../../modules/networking/nut-client
 
     # User configuration

@@ -19,10 +19,6 @@
       secret = "hass_db_password";
     }
     {
-      name = "keycloak";
-      secret = "keycloak_db_password";
-    }
-    {
       name = "grafana";
       secret = "grafana_db_password";
     }
@@ -41,6 +37,10 @@
     {
       name = "atuin";
       secret = "atuin_db_password";
+    }
+    {
+      name = "authelia";
+      secret = "authelia_db_password";
     }
   ];
 in {
@@ -70,13 +70,6 @@ in {
     hass_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "hass_db_password";
-      owner = config.users.users.postgres.name;
-      group = config.users.groups.postgres.name;
-      mode = "0400";
-    };
-    keycloak_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "keycloak_db_password";
       owner = config.users.users.postgres.name;
       group = config.users.groups.postgres.name;
       mode = "0400";
@@ -116,6 +109,13 @@ in {
       group = config.users.groups.postgres.name;
       mode = "0400";
     };
+    authelia_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "authelia_db_password";
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.postgres.name;
+      mode = "0400";
+    };
   };
 
   users.users.postgres = {
@@ -133,7 +133,7 @@ in {
     package = pkgs.postgresql;
 
     # Automatically create databases for all app users
-    ensureDatabases = ["miniflux" "paperless" "hass" "authentik" "keycloak" "grafana" "vaultwarden" "linkwarden" "flare" "atuin"];
+    ensureDatabases = ["miniflux" "paperless" "hass" "grafana" "vaultwarden" "linkwarden" "flare" "atuin" "authelia"];
 
     # Automatically create users with DB ownership
     ensureUsers = [
@@ -147,10 +147,6 @@ in {
       }
       {
         name = "hass";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "keycloak";
         ensureDBOwnership = true;
       }
       {
@@ -171,6 +167,10 @@ in {
       }
       {
         name = "atuin";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "authelia";
         ensureDBOwnership = true;
       }
     ];

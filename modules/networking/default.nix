@@ -4,5 +4,6 @@
     ./dnssec
     ./nginx
     ./tailscale
+    ./wireguard
   ];
 }

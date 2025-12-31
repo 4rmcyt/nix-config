@@ -2,8 +2,7 @@
   lib,
   config,
   ...
-}:
-let
+}: let
   servicesWithMediaAccess = [
     "bazarr"
     "jellyseerr"
@@ -12,24 +11,17 @@ let
     "radarr"
     "readarr"
     "sonarr"
-    "transmission"
+    "deluge"
     "audiobookshelf"
     "jellyfin"
   ];
-in
-{
+in {
   imports = [
     ./upnp-fix.nix
     ./jellyfin
+    ./deluge
   ];
-  # SOPS secrets for nixarr
-  sops.secrets = {
-    wg_conf = {
-      sopsFile = ../../../secrets/wg.conf;
-      format = "binary";
-      mode = "0600";
-    };
-  };
+  # SOPS secrets are now managed in the wireguard module
 
   users.users = {
     audiobookshelf = {
@@ -97,14 +89,6 @@ in
         "media"
       ];
     };
-    transmission = {
-      isSystemUser = true;
-      group = lib.mkForce "transmission";
-      extraGroups = [
-        "users"
-        "media"
-      ];
-    };
     recyclarr = {
       isSystemUser = true;
       group = lib.mkForce "recyclarr";
@@ -115,16 +99,15 @@ in
     };
   };
   users.groups = {
-    audiobookshelf = { };
-    bazarr = { };
-    jellyseerr = { };
-    lidarr = { };
-    prowlarr = { };
-    radarr = { };
-    sonarr = { };
-    transmission = { };
-    readarr = { };
-    recyclarr = { };
+    audiobookshelf = {};
+    bazarr = {};
+    jellyseerr = {};
+    lidarr = {};
+    prowlarr = {};
+    radarr = {};
+    sonarr = {};
+    readarr = {};
+    recyclarr = {};
     # headphones = { };
   };
 
@@ -139,12 +122,9 @@ in
     8989 # Sonarr
     8787 # Readarr
     5055 # Jellyseerr
-    9091 # Transmission web UI
-    63998 # Transmission peer port
   ];
 
   networking.firewall.allowedUDPPorts = [
-    63998 # Transmission peer port
     1900 # Jellyfin DLNA
     7359 # Jellyfin discovery
   ];
@@ -167,62 +147,9 @@ in
 
   nixarr = {
     enable = true;
-    mediaUsers = [ config.my.defaults.user ];
+    mediaUsers = [config.my.defaults.user];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
-
-    vpn = {
-      enable = true;
-      wgConf = config.sops.secrets.wg_conf.path;
-      vpnTestService = {
-        enable = true;
-        port = 58403;
-      };
-      openTcpPorts = [
-        58403
-        63998
-        9091
-      ];
-    };
-
-    transmission = {
-      enable = true;
-      # package = pkgs.transmission_4;
-      peerPort = 63998;
-      vpn.enable = true;
-      flood.enable = false;
-      openFirewall = true;
-      uiPort = 9091;
-      extraAllowedIps = [
-        "192.168.1.0/24"
-        "192.168.0.0/24"
-        "127.0.0.1"
-      ];
-      messageLevel = "info";
-      extraSettings = {
-        umask = 2;
-        download-queue-size = 10;
-        download-queue-enabled = true;
-
-        # RPC Configuration
-        rpc-whitelist-enabled = false;
-        rpc-bind-address = "0.0.0.0";
-        rpc-enabled = true;
-        rpc-port = 9091;
-        rpc-host-whitelist-enabled = false; # Disable host whitelist to prevent HTML responses
-        rpc-authentication-required = false; # Explicitly set auth requirement
-
-        download-dir = "/data/Downloads";
-
-        peer-port = 63998;
-        peer-port-random-on-start = false;
-        port-forwarding-enabled = true;
-        # script-torrent-added-enabled = true;
-        # script-torrent-added-filename = "/etc/nixos/scripts/add-trackers.sh";
-        blocklist-enabled = true;
-        blocklist-url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
-      };
-    };
 
     audiobookshelf.enable = true;
     jellyseerr.enable = true;
@@ -263,12 +190,6 @@ in
     };
   });
 
-  # Fix nginx timeout issues for transmission proxy
-  # Nixarr creates an nginx proxy to the VPN namespace
-  # The default timeouts are too short causing 504 errors
-  services.nginx.proxyTimeout = "300s";
-  services.nginx.clientMaxBodySize = "0"; # Allow unlimited upload size for torrents
-
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
     "d /data/media/movies 775 zeev media -" # Changed from 770 to 775
@@ -303,8 +224,6 @@ in
     "d /data/media/.state/nixarr/sabnzbd 775 sabnzbd sabnzbd -"
     "d /data/media/.state/nixarr/bazarr 775 bazarr bazarr -"
     "d /data/media/.state/headphones 775 headphones headphones -"
-    "d /data/media/.state/nixarr/transmission 775 transmission transmission -"
-
     # Add rules to fix ownership of existing directories
     "Z /data/media/movies 775 zeev media -"
     "Z /data/media/shows 775 zeev media -"
@@ -313,8 +232,6 @@ in
     "Z /data/media/books 775 zeev media -"
     "Z /data/media/comics 775 zeev media -"
     "Z /data/media/manga 775 zeev media -"
-
-    "d /var/lib/transmission 775 transmission transmission -"
 
     "d /data/Downloads 775 zeev media -"
   ];

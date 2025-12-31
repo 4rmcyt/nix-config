@@ -49,8 +49,8 @@
           service: http://localhost:8082
         - hostname: miniflux.${config.my.defaults.domain}
           service: http://localhost:8086
-        - hostname: transmission.${config.my.defaults.domain}
-          service: http://${config.my.defaults.homeserver_lan}:9091
+        - hostname: deluge.${config.my.defaults.domain}
+          service: http://localhost:8112
         - hostname: audiobookshelf.${config.my.defaults.domain}
           service: http://localhost:9292
         - hostname: kavita.${config.my.defaults.domain}
@@ -73,6 +73,8 @@
           service: http://localhost:3001
         - hostname: auth.${config.my.defaults.domain}
           service: http://localhost:9000
+        - hostname: lldap.${config.my.defaults.domain}
+          service: http://localhost:17170
         - hostname: grafana.${config.my.defaults.domain}
           service: http://localhost:3003
         - hostname: readarr.${config.my.defaults.domain}
@@ -130,3 +132,4 @@
 # #   service: http://localhost:8265
 # - hostname: cal.${config.my.defaults.domain}
 #           service: http://localhost:5232
+
