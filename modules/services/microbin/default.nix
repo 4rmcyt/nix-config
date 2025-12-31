@@ -78,6 +78,9 @@ in {
   };
 
   services = {
+    # Microbin is exposed via Traefik - see modules/networking/traefik/default.nix
+    # Traefik handles TLS termination, authentication, and security headers
+
     microbin = {
       enable = true;
       settings = {
@@ -91,23 +94,6 @@ in {
         MICROBIN_HIDE_HEADER = false;
         MICROBIN_HIDE_FOOTER = false;
         MICROBIN_ADMIN_USERNAME = "admin";
-      };
-    };
-
-    nginx = {
-      enable = true;
-      recommendedGzipSettings = true;
-      recommendedOptimisation = true;
-      recommendedProxySettings = true;
-      recommendedTlsSettings = true;
-      virtualHosts."microbin.${config.my.defaults.domain}" = {
-        forceSSL = true;
-        sslCertificate = config.my.security.ssl.certPath;
-        sslCertificateKey = config.my.security.ssl.keyPath;
-        locations."/" = {
-          proxyPass = "http://localhost:8069";
-          proxyWebsockets = true;
-        };
       };
     };
   };

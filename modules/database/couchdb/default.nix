@@ -33,7 +33,7 @@
   services.couchdb = {
     enable = true;
     port = 5984;
-    bindAddress = "127.0.0.1"; # Local only, expose via nginx
+    bindAddress = "127.0.0.1"; 
 
     # Temporary admin to allow startup - will be replaced by postStart
     adminUser = "admin";
@@ -68,17 +68,7 @@
     };
   };
 
-  # =================================================================
-  # Reverse Proxy
-  # =================================================================
-  # CouchDB is exposed via Traefik at livesync.${domain}
-  # See modules/networking/traefik/default.nix for routing configuration
-  # Traefik handles TLS termination and security headers
 
-  # =================================================================
-  # Firewall
-  # =================================================================
-  # CouchDB only accessible via Traefik, no direct access needed
   networking.firewall.allowedTCPPorts = [ 5984 ]; # Exposed to Traefik locally
 
   # =================================================================
@@ -145,4 +135,3 @@
 # References:
 # - https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/setup_own_server.md
 # - https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/quick_setup.md
-

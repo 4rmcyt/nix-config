@@ -36,22 +36,8 @@
   ];
 
   services = {
-    nginx = {
-      enable = true;
-      recommendedGzipSettings = true;
-      recommendedOptimisation = true;
-      recommendedProxySettings = true;
-      recommendedTlsSettings = true;
-      virtualHosts."hass.${config.my.defaults.domain}" = {
-        forceSSL = true;
-        sslCertificate = config.my.security.ssl.certPath;
-        sslCertificateKey = config.my.security.ssl.keyPath;
-        locations."/" = {
-          proxyPass = "http://localhost:8123";
-          proxyWebsockets = true;
-        };
-      };
-    };
+    # Home Assistant is exposed via Traefik - see modules/networking/traefik/default.nix
+    # Traefik handles TLS termination and security headers
 
     home-assistant = {
       enable = true;
