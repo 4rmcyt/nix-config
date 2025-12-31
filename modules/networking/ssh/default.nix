@@ -6,7 +6,7 @@ in {
   # =================================================================
   sops.secrets = {
     ssh_private_key = {
-      sopsFile = ../../secrets/ssh.yaml;
+      sopsFile = ../../../secrets/ssh.yaml;
       key = "ssh_private_key";
       mode = "0600";
       owner = user;
@@ -15,7 +15,7 @@ in {
     };
 
     ssh_public_key = {
-      sopsFile = ../../secrets/ssh.yaml;
+      sopsFile = ../../../secrets/ssh.yaml;
       key = "ssh_public_key";
       mode = "0644";
       owner = user;

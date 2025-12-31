@@ -69,44 +69,17 @@
   };
 
   # =================================================================
-  # Nginx Reverse Proxy
+  # Reverse Proxy
   # =================================================================
-  services.nginx.virtualHosts."livesync.example.com" = {
-    forceSSL = true;
-    enableACME = true;
-
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:5984";
-      proxyWebsockets = true;
-
-      extraConfig = ''
-        # Pass authentication headers
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header Host $host;
-
-        # Required for CouchDB
-        proxy_buffering off;
-        proxy_redirect off;
-
-        # Increase timeouts for large syncs
-        proxy_connect_timeout 600;
-        proxy_send_timeout 600;
-        proxy_read_timeout 600;
-        send_timeout 600;
-
-        # Large body size for vault syncs
-        client_max_body_size 4G;
-      '';
-    };
-  };
+  # CouchDB is exposed via Traefik at livesync.${domain}
+  # See modules/networking/traefik/default.nix for routing configuration
+  # Traefik handles TLS termination and security headers
 
   # =================================================================
   # Firewall
   # =================================================================
-  # CouchDB only accessible via nginx, no direct access needed
-  # networking.firewall.allowedTCPPorts = [ 5984 ];
+  # CouchDB only accessible via Traefik, no direct access needed
+  networking.firewall.allowedTCPPorts = [ 5984 ]; # Exposed to Traefik locally
 
   # =================================================================
   # Systemd Service Configuration

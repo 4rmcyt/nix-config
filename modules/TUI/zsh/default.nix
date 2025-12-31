@@ -1,10 +1,17 @@
-{pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   programs.zoxide = {
     enable = true;
     enableZshIntegration = true;
   };
 
   programs.zsh = {
+    # Use XDG config directory for zsh (new default behavior)
+    dotDir = "${config.xdg.configHome}/zsh";
+
     antidote = {
       enable = true;
       plugins = [
