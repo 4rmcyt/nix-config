@@ -33,7 +33,7 @@
   services.couchdb = {
     enable = true;
     port = 5984;
-    bindAddress = "127.0.0.1"; 
+    bindAddress = "127.0.0.1";
 
     # Temporary admin to allow startup - will be replaced by postStart
     adminUser = "admin";
@@ -68,8 +68,7 @@
     };
   };
 
-
-  networking.firewall.allowedTCPPorts = [ 5984 ]; # Exposed to Traefik locally
+  networking.firewall.allowedTCPPorts = [5984]; # Exposed to Traefik locally
 
   # =================================================================
   # Systemd Service Configuration
@@ -135,3 +134,4 @@
 # References:
 # - https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/setup_own_server.md
 # - https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/quick_setup.md
+

@@ -1,5 +1,4 @@
-{ config, ... }:
-{
+{config, ...}: {
   # =================================================================
   # SOPS Secrets for Redis
   # =================================================================
@@ -19,10 +18,10 @@
   users.users.redis = {
     isSystemUser = true;
     group = "redis";
-    extraGroups = [ "oauth2-proxy" ]; # Add service groups that need access
+    extraGroups = ["oauth2-proxy"]; # Add service groups that need access
   };
   users.groups.redis = {
-    members = [ "oauth2-proxy" ]; # Services that need Redis access
+    members = ["oauth2-proxy"]; # Services that need Redis access
   };
 
   # =================================================================
@@ -141,3 +140,4 @@
 #
 # Connection format:
 # - TCP: redis://127.0.0.1:6379/0 + redis-password-file option
+

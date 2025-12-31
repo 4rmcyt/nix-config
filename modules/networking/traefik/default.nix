@@ -24,10 +24,12 @@ in {
           address = ":443";
           http.tls = {
             certResolver = "default";
-            domains = [{
-              main = domain;
-              sans = ["*.${domain}"];
-            }];
+            domains = [
+              {
+                main = domain;
+                sans = ["*.${domain}"];
+              }
+            ];
           };
         };
       };
@@ -80,7 +82,7 @@ in {
 
         # Certificate resolvers (using existing certs)
         certificatesResolvers.default.acme = {
-          email = config.my.defaults.email;
+          inherit (config.my.defaults) email;
           storage = "/var/lib/traefik/acme.json";
           tlsChallenge = {};
         };
@@ -140,10 +142,12 @@ in {
 
         # TLS configuration using existing certs
         tls = {
-          certificates = [{
-            certFile = certPath;
-            keyFile = keyPath;
-          }];
+          certificates = [
+            {
+              certFile = certPath;
+              keyFile = keyPath;
+            }
+          ];
           stores.default.defaultCertificate = {
             certFile = certPath;
             keyFile = keyPath;
