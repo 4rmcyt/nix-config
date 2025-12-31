@@ -18,7 +18,7 @@
     ../../../modules/database
     ../../../modules/monitoring
     ../../../modules/networking
-    ../../../modules/networking/ssh.nix
+    ../../../modules/networking/ssh
     ../../../modules/networking/nut-server
     ../../../modules/security
     ../../../modules/services
@@ -299,6 +299,14 @@
       ];
       rejectPackets = true;
     };
+  };
+
+  # =================================================================
+  # 9.5. WireGuard VPN
+  # =================================================================
+  my.wireguard = {
+    enable = true;
+    forwardedPort = 63998;
   };
 
   # =================================================================

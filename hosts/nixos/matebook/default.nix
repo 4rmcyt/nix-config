@@ -14,7 +14,7 @@
     ../../../modules/options
 
     # Networking
-    ../../../modules/networking/ssh.nix
+    ../../../modules/networking/ssh
 
     # User configuration
     ../../../modules/users/zeev

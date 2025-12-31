@@ -5,7 +5,7 @@
   imports = [
     ../../../modules/base
     ../../../modules/options
-    ../../../modules/networking/ssh.nix
+    ../../../modules/networking/ssh
     ../../../modules/users/zeev
   ];
 
