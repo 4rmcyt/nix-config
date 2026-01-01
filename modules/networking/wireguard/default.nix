@@ -87,11 +87,11 @@ in {
           # Extract addresses from config (AirVPN uses comma-separated format)
           ADDRS=$(grep -E '^Address' ${config.sops.secrets.wg_conf.path} | cut -d'=' -f2 | tr -d ' ')
 
-          # Create temporary config without Address line
-          # (wg setconf doesn't support comma-separated Address values)
+          # Create temporary config without Address, DNS, and MTU lines
+          # (wg setconf only accepts PrivateKey, [Peer], PublicKey, PresharedKey, Endpoint, AllowedIPs, PersistentKeepalive)
           TEMP_CONF=$(mktemp)
           trap "rm -f $TEMP_CONF" EXIT
-          grep -v '^Address' ${config.sops.secrets.wg_conf.path} > "$TEMP_CONF"
+          grep -vE '^(Address|DNS|MTU)' ${config.sops.secrets.wg_conf.path} > "$TEMP_CONF"
 
           # Move WireGuard interface to namespace
           ${pkgs.iproute2}/bin/ip link add wg0 type wireguard
