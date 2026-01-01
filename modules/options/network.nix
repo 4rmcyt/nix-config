@@ -314,12 +314,6 @@
         description = "Flare bookmarks manager";
       };
 
-      linkwarden = lib.mkOption {
-        type = lib.types.port;
-        default = 3000;
-        description = "Linkwarden link manager";
-      };
-
       # Home Automation
       home-assistant = lib.mkOption {
         type = lib.types.port;

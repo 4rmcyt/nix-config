@@ -18,13 +18,6 @@
       owner = config.users.users.podman.name;
       sopsFile = ../../secrets/flare.env;
     };
-    linkwarden_env = {
-      format = "dotenv";
-      group = config.users.groups.podman.name;
-      mode = "0400";
-      owner = config.users.users.podman.name;
-      sopsFile = ../../secrets/linkwarden.env;
-    };
   };
 
   environment.systemPackages = [
@@ -57,7 +50,6 @@
       # 2375 # Podman API (insecure, for local use only - NOT RECOMMENDED)
       # 2376 # Podman API (secure with TLS, for local use only)
       # Container services
-      3004 # Linkwarden
       3033 # Flare
       8191 # FlareSolverr
       8265 # Tdarr Web UI
@@ -148,7 +140,6 @@
   };
 
   systemd.tmpfiles.rules = [
-    "d /var/lib/linkwarden 775 root media -"
     "d /var/lib/tdarr/configs 775 root media -"
     "d /var/lib/tdarr/data/cache 775 root media -"
     "d /var/lib/tdarr/data/server 775 root media -"

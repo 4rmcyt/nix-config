@@ -28,10 +28,6 @@ let
       secret = "vaultwarden_db_password";
     }
     {
-      name = "linkwarden";
-      secret = "linkwarden_db_password";
-    }
-    {
       name = "flare";
       secret = "flare_db_password";
     }
@@ -90,13 +86,6 @@ in
     vaultwarden_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "vaultwarden_db_password";
-      owner = config.users.users.postgres.name;
-      group = config.users.groups.postgres.name;
-      mode = "0400";
-    };
-    linkwarden_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "linkwarden_db_password";
       owner = config.users.users.postgres.name;
       group = config.users.groups.postgres.name;
       mode = "0400";
@@ -178,10 +167,6 @@ in
       }
       {
         name = "vaultwarden";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "linkwarden";
         ensureDBOwnership = true;
       }
       {

@@ -1,7 +1,6 @@
 {...}: {
   imports = [
     # ./home-assistant
-    # ./linkwarden
     # ./paperless
     # ./radicale
     # ./tdarr
