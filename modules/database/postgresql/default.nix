@@ -133,7 +133,7 @@ in {
     package = pkgs.postgresql;
 
     # Automatically create databases for all app users
-    ensureDatabases = ["miniflux" "paperless" "hass" "grafana" "vaultwarden" "linkwarden" "flare" "atuin" "authelia-main"];
+    ensureDatabases = ["miniflux" "paperless" "hass" "grafana" "vaultwarden" "linkwarden" "flare" "atuin" "authelia"];
 
     # Automatically create users with DB ownership
     ensureUsers = [
@@ -170,7 +170,7 @@ in {
         ensureDBOwnership = true;
       }
       {
-        name = "authelia-main";
+        name = "authelia";
         ensureDBOwnership = true;
       }
     ];
@@ -179,6 +179,7 @@ in {
       # ArbitraryMapName systemUser DBUser
          superuser_map      root      postgres
          superuser_map      postgres  postgres
+         superuser_map      authelia-main  authelia
          # Let other names login as themselves
          superuser_map      /^(.*)$   \1
     '';
