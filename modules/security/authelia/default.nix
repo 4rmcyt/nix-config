@@ -52,8 +52,15 @@ in {
 
   environment.systemPackages = [config.services.authelia.instances.main.package];
 
+  # Create authelia user and group
+  users.users.authelia = {
+    isSystemUser = true;
+    group = "authelia";
+    extraGroups = ["redis" "postgres" "msmtp"];
+  };
+  users.groups.authelia = {};
+
   users.users."${user}".extraGroups = ["authelia"];
-  users.users."${authelia.user}".extraGroups = ["redis" "postgres" "msmtp"];
 
   # Authelia service configuration (proxied by Traefik)
   services.authelia.instances.main = {
