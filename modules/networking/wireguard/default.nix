@@ -15,7 +15,6 @@
       "192.168.0.0/24"
       "10.0.0.0/8"
       "127.0.0.1/32"
-      ""
     ];
 
     # Port forwarding from host to VPN namespace
