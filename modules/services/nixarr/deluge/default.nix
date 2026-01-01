@@ -41,6 +41,7 @@
       random_port = false;
       listen_ports = [
         63998
+        63998
       ];
       random_outgoing_ports = false;
     };
