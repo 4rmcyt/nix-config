@@ -28,14 +28,23 @@
     declarative = true;
     authFile = config.sops.secrets.deluge-accounts.path;
     config = {
-      enabled_plugins = ["Label"];
+      enabled_plugins = [
+        "Label"
+        "Blocklist"
+        "AutoRemovePlus"
+      ];
       torrentfiles_location = "/data/Downloads/torrents";
       download_location = "/data/Downloads";
+      pre_allocate_storage = true;
       dont_count_slow_torrents = true;
-      max_active_seeding = 5;
+      max_active_seeding = -1;
       max_active_limit = -1;
       max_active_downloading = 8;
       max_connections_global = -1;
+      max_connections_per_second = 150;
+      max_half_open_connections = 100;
+      max_download_speed = -1.0;
+      max_upload_speed = -1.0;
       allow_remote = true;
       daemon_port = 58846;
       random_port = false;
@@ -44,12 +53,26 @@
         63998
       ];
       random_outgoing_ports = false;
+      enc_level = 2;
+      enc_in_policy = 1;
+      enc_out_policy = 1;
+      upnp = false;
+      natpmp = false;
+      dht = true;
+      peer_tos = "0x00";
+      blocklist = {
+        url = "https://raw.githubusercontent.com/Naunter/BT_BlockLists/master/bt_blocklists.gz";
+        check_after_days = 7;
+        load_on_start = true;
+      };
     };
-    # Publicly opens listen_ports only
     openFirewall = true;
     web = {
       enable = true;
       port = 8112;
+    };
+    webConfig = {
+      theme = "Access";
     };
   };
 
@@ -89,7 +112,8 @@
     requires = ["deluged.service"];
 
     serviceConfig = {
-      ExecStart = "${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 192.168.15.1:58846";
+      ExecStart = "${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:58846";
+      NetworkNamespacePath = "/run/netns/wg";
     };
   };
 

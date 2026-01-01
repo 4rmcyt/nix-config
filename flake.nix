@@ -198,22 +198,20 @@
       inputs.disko.nixosModules.disko
       inputs.nixos-jellyfin.nixosModules.default
       inputs.nix-topology.nixosModules.default
-      # Use git version of Lix from nixpkgs lixPackageSets (has binary caches)
       (
         {pkgs, ...}: {
-          nixpkgs.overlays = [
-            (_final: prev: {
-              inherit
-                (prev.lixPackageSets.stable)
-                nixpkgs-review
-                nix-eval-jobs
-                nix-fast-build
-                colmena
-                ;
-            })
+          nix.package = pkgs.lixPackageSets.latest.lix;
+          environment.systemPackages = with pkgs.lixPackageSets.latest; [
+            lix
+            nix-update
+            nix-direnv
+            nix-init
+            editline
+            boehmgc
+            nix-eval-jobs
+            nix-fast-build
+            colmena
           ];
-
-          nix.package = pkgs.lixPackageSets.git.lix;
         }
       )
     ];

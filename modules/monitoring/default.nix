@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   # =================================================================
   # 1. SOPS Secrets
   # =================================================================
@@ -14,6 +15,11 @@
     grafana_db_password = {
       sopsFile = ../../secrets/postgresql.yaml;
       owner = config.users.users.postgres.name;
+    };
+    grafana_oidc_client_secret = {
+      sopsFile = ../../secrets/grafana.yaml;
+      key = "grafana_oidc_client_secret";
+      owner = config.users.users.grafana.name;
     };
     loki_github_actions_token = {
       sopsFile = ../../secrets/loki.yaml;
@@ -45,9 +51,9 @@
   };
 
   users.groups = {
-    grafana = {};
-    prometheus = {};
-    uptime-kuma = {};
+    grafana = { };
+    prometheus = { };
+    uptime-kuma = { };
   };
 
   # =================================================================
@@ -85,9 +91,17 @@
           http_port = 3003;
           root_url = "https://grafana.${config.my.defaults.domain}";
         };
-        # Authentication handled by Authelia reverse proxy
-        auth = {
-          disable_login_form = false;
+        "auth.generic_oauth" = {
+          enabled = true;
+          name = "Authelia";
+          client_id = "grafana";
+          client_secret = "$__file{${config.sops.secrets.grafana_oidc_client_secret.path}}";
+          scopes = "openid profile email groups";
+          auth_url = "https://auth.${config.my.defaults.domain}/api/oidc/authorization";
+          token_url = "https://auth.${config.my.defaults.domain}/api/oidc/token";
+          api_url = "https://auth.${config.my.defaults.domain}/api/oidc/userinfo";
+          role_attribute_path = "contains(groups[*], 'admin') && 'Admin' || 'Viewer'";
+          allow_sign_up = true;
         };
       };
       provision.datasources.settings.datasources = [
@@ -121,7 +135,7 @@
       port = 9090;
       retentionTime = "30d";
       globalConfig.scrape_interval = "1m";
-      ruleFiles = [./alerts/homeserver.yaml];
+      ruleFiles = [ ./alerts/homeserver.yaml ];
 
       exporters = {
         node = {
@@ -162,7 +176,7 @@
       scrapeConfigs = [
         {
           job_name = "cloudflare-exporter";
-          static_configs = [{targets = ["localhost:8081"];}];
+          static_configs = [ { targets = [ "localhost:8081" ]; } ];
         }
         {
           job_name = "desktop-node";
@@ -177,13 +191,13 @@
         {
           job_name = "homeserver-node";
           static_configs = [
-            {targets = ["localhost:9100"];}
+            { targets = [ "localhost:9100" ]; }
           ];
         }
         {
           job_name = "nut-exporter";
           static_configs = [
-            {targets = ["localhost:9199"];}
+            { targets = [ "localhost:9199" ]; }
           ];
           metrics_path = "/ups_metrics";
         }
@@ -195,7 +209,7 @@
         # }
         {
           job_name = "prometheus";
-          static_configs = [{targets = ["localhost:${toString config.my.network.ports.prometheus}"];}];
+          static_configs = [ { targets = [ "localhost:${toString config.my.network.ports.prometheus}" ]; } ];
         }
       ];
     };
@@ -307,12 +321,12 @@
             };
             relabel_configs = [
               {
-                source_labels = ["__journal__systemd_unit"];
+                source_labels = [ "__journal__systemd_unit" ];
                 regex = "(.*)\\.service";
                 target_label = "service";
               }
               {
-                source_labels = ["__journal__hostname"];
+                source_labels = [ "__journal__hostname" ];
                 target_label = "hostname";
               }
             ];
