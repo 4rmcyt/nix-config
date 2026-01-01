@@ -44,13 +44,15 @@ in {
     };
   };
 
-  # Note: redis-oauth2-proxy-password is defined in modules/database/redis/default.nix
-  # Authelia user needs to be in redis group to read it
+  # Authelia needs access to secrets from other services
+  # - redis-oauth2-proxy-password (redis:redis)
+  # - authelia_db_password (postgres:postgres)
+  # - msmtp_gmail_password (msmtp:msmtp)
 
   environment.systemPackages = [config.services.authelia.instances.main.package];
 
   users.users."${user}".extraGroups = ["authelia"];
-  users.users."${authelia.user}".extraGroups = ["redis"];
+  users.users."${authelia.user}".extraGroups = ["redis" "postgres" "msmtp"];
 
   # Authelia service configuration (proxied by Traefik)
   services.authelia.instances.main = {

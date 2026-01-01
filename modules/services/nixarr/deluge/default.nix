@@ -73,12 +73,6 @@
       UMask = "0002";
       ExecStart = "${pkgs.deluge}/bin/deluge-web -d -c /var/lib/deluge/.config/deluge -L warning -l /var/lib/deluge/deluge-web.log";
       Restart = "on-failure";
-
-
-      # Read/write access to state directory
-      ReadWritePaths = [
-        "/var/lib/deluge"
-      ];
     };
   };
 
