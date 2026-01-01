@@ -9,36 +9,43 @@ in {
     authelia_jwt_secret = {
       sopsFile = ../../../secrets/authelia.yaml;
       key = "jwt_secret";
+      owner = authelia.user;
       mode = "0400";
     };
     authelia_hmac_secret = {
       sopsFile = ../../../secrets/authelia.yaml;
       key = "hmac_secret";
+      owner = authelia.user;
       mode = "0400";
     };
     authelia_issuer_priv_key = {
       sopsFile = ../../../secrets/authelia.yaml;
       key = "issuer_priv_key.pem";
+      owner = authelia.user;
       mode = "0400";
     };
     authelia_session_secret = {
       sopsFile = ../../../secrets/authelia.yaml;
       key = "session_secret";
+      owner = authelia.user;
       mode = "0400";
     };
     authelia_storage_encryption_key = {
       sopsFile = ../../../secrets/authelia.yaml;
       key = "storage_encryption_key";
+      owner = authelia.user;
       mode = "0400";
     };
     ldap_password = {
       sopsFile = ../../../secrets/authelia.yaml;
       key = "ldap_password";
+      owner = authelia.user;
       mode = "0400";
     };
     redis-oauth2-proxy-password = {
       sopsFile = ../../../secrets/redis.yaml;
       key = "oauth2_proxy_password";
+      owner = authelia.user;
       mode = "0400";
     };
   };
