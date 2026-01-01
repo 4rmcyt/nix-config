@@ -8,7 +8,7 @@
       key = "oauth2_proxy_password";
       owner = "redis";
       group = "redis";
-      mode = "0400";
+      mode = "0440";  # Group-readable so authelia user can access
     };
   };
 
