@@ -38,7 +38,6 @@ in {
     };
   };
 
-
   environment.systemPackages = [config.services.authelia.instances.main.package];
 
   users.users.authelia = {

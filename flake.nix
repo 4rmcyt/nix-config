@@ -199,9 +199,23 @@
       inputs.nixos-jellyfin.nixosModules.default
       inputs.nix-topology.nixosModules.default
       # Use git version of Lix from nixpkgs lixPackageSets (has binary caches)
-      ({pkgs, ...}: {
-        nix.package = pkgs.lixPackageSets.git.lix;
-      })
+      (
+        {pkgs, ...}: {
+          nixpkgs.overlays = [
+            (_final: prev: {
+              inherit
+                (prev.lixPackageSets.stable)
+                nixpkgs-review
+                nix-eval-jobs
+                nix-fast-build
+                colmena
+                ;
+            })
+          ];
+
+          nix.package = pkgs.lixPackageSets.git.lix;
+        }
+      )
     ];
 
     commonHomeManagerModules = [

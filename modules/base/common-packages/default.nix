@@ -109,7 +109,6 @@
       mask # taskrunner
       mob # mob programming tool
       presenterm # presentation tool
-      silicon # create code snippets as images
       slides # terminal presentation tool
       tealdeer # community driven man pages
       termdown # terminal countdown
