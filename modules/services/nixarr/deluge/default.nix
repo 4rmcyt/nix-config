@@ -115,9 +115,7 @@
     requires = ["deluged.service"];
 
     serviceConfig = {
-      ExecStart = "${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:58846";
-      NetworkNamespacePath = "/run/netns/wg";
-      PrivateNetwork = true;
+      ExecStart = "${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 192.168.15.1:58846";
     };
   };
 
