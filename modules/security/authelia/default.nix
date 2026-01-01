@@ -1,9 +1,11 @@
-{config, ...}: let
+{ config, ... }:
+let
   authelia = config.services.authelia.instances.main;
   redis = config.services.redis.servers.homeserver;
   port = 9000;
   inherit (config.my.defaults) domain user;
-in {
+in
+{
   # SOPS secrets for Authelia
   sops.secrets = {
     authelia_jwt_secret = {
@@ -38,16 +40,21 @@ in {
     };
   };
 
-  environment.systemPackages = [config.services.authelia.instances.main.package];
+  environment.systemPackages = [ config.services.authelia.instances.main.package ];
 
   users.users.authelia = {
     isSystemUser = true;
     group = "authelia";
-    extraGroups = ["redis" "postgres" "msmtp" "lldap"];
+    extraGroups = [
+      "redis"
+      "postgres"
+      "msmtp"
+      "lldap"
+    ];
   };
-  users.groups.authelia = {};
+  users.groups.authelia = { };
 
-  users.users."${user}".extraGroups = ["authelia"];
+  users.users."${user}".extraGroups = [ "authelia" ];
 
   # Authelia service configuration (proxied by Traefik)
   services.authelia.instances.main = {
@@ -118,7 +125,7 @@ in {
         networks = [
           {
             name = "localhost";
-            networks = ["127.0.0.1/32"];
+            networks = [ "127.0.0.1/32" ];
           }
           {
             name = "internal";
@@ -135,7 +142,7 @@ in {
             domain = "*.${domain}";
             policy = "one_factor";
             networks = "internal";
-            subject = ["group:admin"];
+            subject = [ "group:admin" ];
           }
         ];
       };
@@ -159,15 +166,19 @@ in {
           authorization_policy = "one_factor";
           client_id = "jellyfin";
           client_secret = "$pbkdf2-sha512$310000$O3AaVIp.a0vTGZClL/077w$05zVMYkb.JhHv.7Fm3bDIQuQCSFrkH99tssuYRpjnIDAr0xnUjWCjGam6ALMV1QtYBC1HPUAge0NSFjMhrfn2g";
-          redirect_uris = ["https://jellyfin.${domain}/sso/OID/r/authelia"];
+          redirect_uris = [ "https://jellyfin.${domain}/sso/OID/r/authelia" ];
           token_endpoint_auth_method = "client_secret_post";
         }
         {
           authorization_policy = "one_factor";
           client_id = "deluge";
           client_secret = "$pbkdf2-sha512$310000$jBwK1WmvrZF5lFwcUKYcXA$OT9Trx7oEztmPIepqMJv/o.SGQf01gV2Hxmx9vYmjDrC32JEk984JlRD06.cIsiI6pWd07W2Ann71281Gh/u1A";
-          redirect_uris = ["https://deluge.${domain}/oauth-callback"];
-          scopes = ["openid" "profile" "email"];
+          redirect_uris = [ "https://deluge.${domain}/oauth-callback" ];
+          scopes = [
+            "openid"
+            "profile"
+            "email"
+          ];
           userinfo_signed_response_alg = "none";
           token_endpoint_auth_method = "client_secret_post";
         }
@@ -175,31 +186,51 @@ in {
           authorization_policy = "one_factor";
           client_id = "grafana";
           client_secret = "$pbkdf2-sha512$310000$2h6vczoKorfBcG/H9ZDqNA$EV9OqqWrMlRoTflmZMYj9rDUjr6LrbDgx/G9YJRGgG7zKeekWOBnFH8SvEzzg4L/NFyZ7u1AjolksUzOIMnmvQ";
-          scopes = ["openid" "profile" "email" "groups"];
+          scopes = [
+            "openid"
+            "profile"
+            "email"
+            "groups"
+          ];
           token_endpoint_auth_method = "client_secret_post";
         }
         {
           authorization_policy = "one_factor";
           client_id = "miniflux";
           client_secret = "$pbkdf2-sha512$310000$AnAp9BqRGMt9ZqMwZ4WsHQ$PtSKXkEmDdlqD3MwDlJ98cnazNB1eQLxK2o7eBauDxdQRCsMp4nGj/Q3njTpJVmh9TZ7ECkF1A8/0LTivFbCDw";
-          redirect_uris = ["https://miniflux.${domain}/oauth2/oidc/callback"];
-          scopes = ["openid" "profile" "email"];
+          redirect_uris = [ "https://miniflux.${domain}/oauth2/oidc/callback" ];
+          scopes = [
+            "openid"
+            "profile"
+            "email"
+          ];
           token_endpoint_auth_method = "client_secret_post";
         }
         {
           authorization_policy = "one_factor";
           client_id = "kavita";
           client_secret = "$pbkdf2-sha512$310000$ukp9l/M9a/k2HLaLwdgmGA$MGjXsJjLIiE6FPLPfNlo2HOrirRFNt47uE677sUQ0zbxrMhxLltCTUfAe07K/NOJW8HT0pdFL3Ik7jgxm7TS1w";
-          redirect_uris = ["https://kavita.${domain}/registration/confirm-migration-link"];
-          scopes = ["openid" "profile" "email"];
+          redirect_uris = [ "https://kavita.${domain}/registration/confirm-migration-link" ];
+          scopes = [
+            "openid"
+            "profile"
+            "email"
+          ];
           token_endpoint_auth_method = "client_secret_post";
         }
         {
           authorization_policy = "one_factor";
           client_id = "audiobookshelf";
           client_secret = "$pbkdf2-sha512$310000$JwO58hiz.ZVGuJqFCmUjwA$cZC0tI7Wz36aFwrNGDrwP/2Q8xYU3Ul6b.QWK.GNl5jfrRu2KQbOnIH5NFTQqUil5ouQ/5d1EfS6upzIP1dHMQ"; # Replace with actual hash
-          redirect_uris = ["https://audiobookshelf.${domain}/auth/openid/callback" "https://audiobookshelf.${domain}/auth/openid/mobile-redirect"];
-          scopes = ["openid" "profile" "email"];
+          redirect_uris = [
+            "https://audiobookshelf.${domain}/auth/openid/callback"
+            "https://audiobookshelf.${domain}/auth/openid/mobile-redirect"
+          ];
+          scopes = [
+            "openid"
+            "profile"
+            "email"
+          ];
           token_endpoint_auth_method = "client_secret_post";
         }
       ];
@@ -211,5 +242,9 @@ in {
     9000 # Authelia
   ];
 
-  systemd.services.authelia.after = ["lldap.service" "postgresql.service" "redis-homeserver.service"];
+  systemd.services.authelia.after = [
+    "lldap.service"
+    "postgresql.service"
+    "redis-homeserver.service"
+  ];
 }

@@ -29,11 +29,13 @@ in {
 
   services.lldap = {
     enable = true;
+    silenceForceUserPassResetWarning = true;
     settings = {
       http_url = "https://lldap.${domain}";
       http_port = 17170;
       ldap_base_dn = "dc=labhome,dc=work";
-      # Let LLDAP generate its own private key for JWT signing
+      force_ldap_user_pass_reset = true;
+      database_url = "postgres://lldap:$(cat ${config.sops.secrets.lldap_user_pass.path})@/run/postgresql/lldap";
     };
     environment = {
       LLDAP_JWT_SECRET_FILE = config.sops.secrets.lldap_jwt_secret.path;

@@ -3,7 +3,8 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   # Database users for script generation
   dbUsers = [
     {
@@ -42,8 +43,13 @@
       name = "authelia";
       secret = "authelia_db_password";
     }
+    {
+      name = "lldap";
+      secret = "lldap_db_password";
+    }
   ];
-in {
+in
+{
   # Database secrets configuration
   sops.secrets = {
     postgres_password = {
@@ -116,13 +122,20 @@ in {
       group = config.users.groups.postgres.name;
       mode = "0440"; # Group-readable so authelia user can access
     };
+    lldap_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "lldap_db_password";
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.postgres.name;
+      mode = "0400";
+    };
   };
 
   users.users.postgres = {
     isSystemUser = true;
     group = "postgres";
   };
-  users.groups.postgres = {};
+  users.groups.postgres = { };
 
   networking.firewall.allowedTCPPorts = [
     5432 # PostgreSQL
@@ -133,7 +146,17 @@ in {
     package = pkgs.postgresql;
 
     # Automatically create databases for all app users
-    ensureDatabases = ["miniflux" "paperless" "hass" "grafana" "vaultwarden" "linkwarden" "flare" "atuin" "authelia"];
+    ensureDatabases = [
+      "miniflux"
+      "paperless"
+      "hass"
+      "grafana"
+      "vaultwarden"
+      "lldap"
+      "flare"
+      "atuin"
+      "authelia"
+    ];
 
     # Automatically create users with DB ownership
     ensureUsers = [
@@ -173,6 +196,10 @@ in {
         name = "authelia";
         ensureDBOwnership = true;
       }
+      {
+        name = "lldap";
+        ensureDBOwnership = true;
+      }
     ];
 
     identMap = ''
@@ -196,9 +223,9 @@ in {
   # Set up user passwords after PostgreSQL is running
   systemd.services.postgresql-setup-users = {
     description = "Set up PostgreSQL user passwords";
-    after = ["postgresql.service"];
-    requires = ["postgresql.service"];
-    wantedBy = ["multi-user.target"];
+    after = [ "postgresql.service" ];
+    requires = [ "postgresql.service" ];
+    wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
@@ -208,29 +235,31 @@ in {
     script = ''
       # Wait for all secrets to be available
       ${lib.concatMapStringsSep "\n      " (user: ''
-          while [ ! -f ${config.sops.secrets.${user.secret}.path} ]; do
-            echo "Waiting for ${user.name} secret to be available..."
-            sleep 1
-          done
-        '')
-        dbUsers}
+        while [ ! -f ${config.sops.secrets.${user.secret}.path} ]; do
+          echo "Waiting for ${user.name} secret to be available..."
+          sleep 1
+        done
+      '') dbUsers}
 
       # Set passwords for all database users, grant CREATEDB privilege, and ensure database exists
       ${lib.concatMapStringsSep "\n      " (user: ''
-          # ${user.name}
-          if ${pkgs.postgresql}/bin/psql -c "SELECT 1 FROM pg_roles WHERE rolname='${user.name}'" | grep -q 1; then
-            echo "Updating user ${user.name}..."
-            ${pkgs.postgresql}/bin/psql -c "ALTER USER ${user.name} WITH PASSWORD '$(cat ${config.sops.secrets.${user.secret}.path} | tr -d '\n\r')' CREATEDB;"
-          else
-            echo "Creating user ${user.name}..."
-            ${pkgs.postgresql}/bin/psql -c "CREATE USER ${user.name} WITH PASSWORD '$(cat ${config.sops.secrets.${user.secret}.path} | tr -d '\n\r')' CREATEDB;"
-          fi
-          if ! ${pkgs.postgresql}/bin/psql -lqt | cut -d \| -f 1 | grep -qw ${user.name}; then
-            echo "Creating database ${user.name}..."
-            ${pkgs.postgresql}/bin/psql -c "CREATE DATABASE ${user.name} OWNER ${user.name};"
-          fi
-        '')
-        dbUsers}
+        # ${user.name}
+        if ${pkgs.postgresql}/bin/psql -c "SELECT 1 FROM pg_roles WHERE rolname='${user.name}'" | grep -q 1; then
+          echo "Updating user ${user.name}..."
+          ${pkgs.postgresql}/bin/psql -c "ALTER USER ${user.name} WITH PASSWORD '$(cat ${
+            config.sops.secrets.${user.secret}.path
+          } | tr -d '\n\r')' CREATEDB;"
+        else
+          echo "Creating user ${user.name}..."
+          ${pkgs.postgresql}/bin/psql -c "CREATE USER ${user.name} WITH PASSWORD '$(cat ${
+            config.sops.secrets.${user.secret}.path
+          } | tr -d '\n\r')' CREATEDB;"
+        fi
+        if ! ${pkgs.postgresql}/bin/psql -lqt | cut -d \| -f 1 | grep -qw ${user.name}; then
+          echo "Creating database ${user.name}..."
+          ${pkgs.postgresql}/bin/psql -c "CREATE DATABASE ${user.name} OWNER ${user.name};"
+        fi
+      '') dbUsers}
     '';
   };
 }
