@@ -15,12 +15,17 @@
   # =================================================================
   # Users and Groups
   # =================================================================
+  # Create redis user/group for secret ownership
   users.users.redis = {
     isSystemUser = true;
     group = "redis";
   };
-  users.groups.redis = {
-    members = ["authelia-main"]; # Services that need Redis access
+  users.groups.redis = {};
+
+  # NixOS Redis module creates dynamic user/group: redis-homeserver
+  # Add authelia-main to redis-homeserver group for socket access
+  users.groups.redis-homeserver = {
+    members = ["authelia-main"]; # Services that need Redis socket access
   };
 
   # =================================================================

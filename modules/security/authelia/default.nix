@@ -44,10 +44,11 @@ in {
     };
   };
 
-  # Authelia needs access to secrets from other services
-  # - redis-oauth2-proxy-password (redis:redis)
-  # - authelia_db_password (postgres:postgres)
-  # - msmtp_gmail_password (msmtp:msmtp)
+  # Authelia needs access to secrets and sockets from other services
+  # - redis-oauth2-proxy-password secret (redis:redis - for secret file access)
+  # - redis socket (redis-homeserver:redis-homeserver - for socket access)
+  # - authelia_db_password secret (postgres:postgres)
+  # - msmtp_gmail_password secret (msmtp:msmtp)
 
   environment.systemPackages = [config.services.authelia.instances.main.package];
 
