@@ -71,9 +71,6 @@
       enable = true;
       port = 8112;
     };
-    webConfig = {
-      theme = "Access";
-    };
   };
 
   # Override deluged service to run in VPN namespace
