@@ -100,12 +100,12 @@ in {
           address = "ldap://localhost:3890";
           timeout = "5m";
           start_tls = false;
-          base_dn = "dc=longerhv,dc=xyz";
+          base_dn = "dc=labhome,dc=work";
           additional_users_dn = "ou=people";
           users_filter = "(&({username_attribute}={input})(objectClass=person))";
           additional_groups_dn = "ou=groups";
           groups_filter = "(member={dn})";
-          user = "uid=admin,ou=people,dc=longerhv,dc=xyz";
+          user = "uid=admin,ou=people,dc=labhome,dc=work";
           attributes = {
             display_name = "displayName";
             group_name = "cn";

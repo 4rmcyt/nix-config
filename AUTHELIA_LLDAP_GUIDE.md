@@ -16,12 +16,12 @@ Complete guide for setting up and using Authelia (SSO/2FA) and LLDAP (user manag
 
 ### Components
 - **LLDAP**: Lightweight LDAP server for user/group management
-  - URL: `https://ldap.longerhv.xyz`
+  - URL: `https://lldap.example.com`
   - LDAP Port: 3890
   - Web UI Port: 17170
 
 - **Authelia**: Authentication & Authorization server with SSO and 2FA
-  - URL: `https://auth.longerhv.xyz`
+  - URL: `https://auth.example.com`
   - Port: 9000 (proxied by Traefik)
   - Features: OIDC provider, TOTP 2FA, session management
 
@@ -77,7 +77,7 @@ sops -d nix-config/secrets/lldap.yaml | grep user_pass
 
 ### 3. Access LLDAP Web UI
 
-1. Open browser: `https://ldap.longerhv.xyz`
+1. Open browser: `https://lldap.example.com`
 2. Login with:
    - **Username**: `admin`
    - **Password**: (from step 2)
@@ -139,14 +139,14 @@ Current configuration (from `modules/security/authelia/default.nix`):
 ```nix
 # Bypass authentication for localhost
 {
-  domain = "*.longerhv.xyz";
+  domain = "*.example.com";
   policy = "bypass";
   networks = "localhost";
 }
 
 # Require one-factor auth for internal network (admin group only)
 {
-  domain = "*.longerhv.xyz";
+  domain = "*.example.com";
   policy = "one_factor";
   networks = "internal";
   subject = ["group:admin"];
@@ -174,9 +174,9 @@ ip addr show | grep inet
 The following services are configured to use Authelia OIDC for authentication:
 
 ### 1. Jellyfin (Media Server)
-- **URL**: `https://jellyfin.longerhv.xyz`
+- **URL**: `https://jellyfin.example.com`
 - **Client ID**: `jellyfin`
-- **Redirect URI**: `https://jellyfin.longerhv.xyz/sso/OID/r/authelia`
+- **Redirect URI**: `https://jellyfin.example.com/sso/OID/r/authelia`
 
 **Setup**:
 1. Access Jellyfin
@@ -186,28 +186,28 @@ The following services are configured to use Authelia OIDC for authentication:
    - Provider: Custom OIDC
    - Client ID: `jellyfin`
    - Client Secret: (from Authelia config - contact admin)
-   - Discovery URL: `https://auth.longerhv.xyz/.well-known/openid-configuration`
+   - Discovery URL: `https://auth.example.com/.well-known/openid-configuration`
    - Scopes: `openid profile email groups`
 
 ### 2. Deluge (Torrent Client)
-- **URL**: `https://deluge.longerhv.xyz`
+- **URL**: `https://deluge.example.com`
 - **Client ID**: `deluge`
-- **Redirect URI**: `https://deluge.longerhv.xyz/callback`
+- **Redirect URI**: `https://deluge.example.com/callback`
 
 **Note**: Deluge runs in VPN namespace for privacy. OIDC plugin may need manual configuration.
 
 ### 3. Grafana (Monitoring)
-- **URL**: `https://grafana.longerhv.xyz`
+- **URL**: `https://grafana.example.com`
 - **Client ID**: `grafana`
-- **Redirect URI**: `https://grafana.longerhv.xyz/login/generic_oauth`
+- **Redirect URI**: `https://grafana.example.com/login/generic_oauth`
 
 **Setup**:
 Grafana should auto-configure via NixOS module. Check configuration in `modules/monitoring/default.nix`.
 
 ### 4. Miniflux (RSS Reader)
-- **URL**: `https://miniflux.longerhv.xyz`
+- **URL**: `https://miniflux.example.com`
 - **Client ID**: `miniflux`
-- **Redirect URI**: `https://miniflux.longerhv.xyz/oauth2/oidc/callback`
+- **Redirect URI**: `https://miniflux.example.com/oauth2/oidc/callback`
 
 **Check config**:
 ```bash
@@ -215,14 +215,14 @@ grep -A 10 "oauth2" nix-config/modules/services/miniflux/default.nix
 ```
 
 ### 5. Kavita (eBook/Manga Reader)
-- **URL**: `https://kavita.longerhv.xyz`
+- **URL**: `https://kavita.example.com`
 - **Client ID**: `kavita`
-- **Redirect URI**: `https://kavita.longerhv.xyz/api/plugin/authenticate`
+- **Redirect URI**: `https://kavita.example.com/api/plugin/authenticate`
 
 ### 6. Audiobookshelf (Audiobook Server)
-- **URL**: `https://audiobookshelf.longerhv.xyz`
+- **URL**: `https://audiobookshelf.example.com`
 - **Client ID**: `audiobookshelf`
-- **Redirect URI**: `https://audiobookshelf.longerhv.xyz/auth/openid/callback`
+- **Redirect URI**: `https://audiobookshelf.example.com/auth/openid/callback`
 
 ---
 
@@ -230,11 +230,11 @@ grep -A 10 "oauth2" nix-config/modules/services/miniflux/default.nix
 
 ### Step 1: Access a Protected Service
 
-Try to access any OIDC-enabled service, e.g., `https://jellyfin.longerhv.xyz`
+Try to access any OIDC-enabled service, e.g., `https://jellyfin.example.com`
 
 ### Step 2: Redirected to Authelia
 
-You'll be redirected to: `https://auth.longerhv.xyz`
+You'll be redirected to: `https://auth.example.com`
 
 ### Step 3: Login with LDAP Credentials
 
@@ -273,16 +273,16 @@ Sessions are stored in Redis with the following behavior:
 Check if Authelia OIDC discovery is working:
 
 ```bash
-curl -k https://auth.longerhv.xyz/.well-known/openid-configuration | jq
+curl -k https://auth.example.com/.well-known/openid-configuration | jq
 ```
 
 Expected output should include:
 ```json
 {
-  "issuer": "https://auth.longerhv.xyz",
-  "authorization_endpoint": "https://auth.longerhv.xyz/api/oidc/authorization",
-  "token_endpoint": "https://auth.longerhv.xyz/api/oidc/token",
-  "userinfo_endpoint": "https://auth.longerhv.xyz/api/oidc/userinfo",
+  "issuer": "https://auth.example.com",
+  "authorization_endpoint": "https://auth.example.com/api/oidc/authorization",
+  "token_endpoint": "https://auth.example.com/api/oidc/token",
+  "userinfo_endpoint": "https://auth.example.com/api/oidc/userinfo",
   ...
 }
 ```
@@ -297,9 +297,9 @@ nix-shell -p openldap
 
 # Test admin bind
 ldapsearch -x -H ldap://localhost:3890 \
-  -D "uid=admin,ou=people,dc=longerhv,dc=xyz" \
+  -D "uid=admin,ou=people,dc=labhome,dc=work" \
   -W \
-  -b "dc=longerhv,dc=xyz"
+  -b "dc=labhome,dc=work"
 ```
 
 Enter your LLDAP admin password when prompted.
@@ -310,9 +310,9 @@ Search for your user:
 
 ```bash
 ldapsearch -x -H ldap://localhost:3890 \
-  -D "uid=admin,ou=people,dc=longerhv,dc=xyz" \
+  -D "uid=admin,ou=people,dc=labhome,dc=work" \
   -W \
-  -b "ou=people,dc=longerhv,dc=xyz" \
+  -b "ou=people,dc=labhome,dc=work" \
   "(uid=zeev)"
 ```
 
@@ -363,7 +363,7 @@ sudo iptables -L -n | grep 17170
 ss -tlnp | grep 3890
 
 # Test local connection
-ldapsearch -x -H ldap://localhost:3890 -b "dc=longerhv,dc=xyz"
+ldapsearch -x -H ldap://localhost:3890 -b "dc=labhome,dc=work"
 ```
 
 ### Service Won't Authenticate
@@ -450,7 +450,7 @@ To add a new service to Authelia OIDC:
      authorization_policy = "one_factor";
      client_id = "myservice";
      client_secret = "$pbkdf2-sha512$..."; # from step 1
-     redirect_uris = ["https://myservice.longerhv.xyz/callback"];
+     redirect_uris = ["https://myservice.example.com/callback"];
      scopes = ["openid" "profile" "email" "groups"];
    }
    ```
@@ -461,7 +461,7 @@ To add a new service to Authelia OIDC:
    ```
 
 4. **Configure service** to use:
-   - Discovery URL: `https://auth.longerhv.xyz/.well-known/openid-configuration`
+   - Discovery URL: `https://auth.example.com/.well-known/openid-configuration`
    - Client ID: `myservice`
    - Client Secret: Your plaintext secret (not the hash)
 
@@ -471,20 +471,20 @@ To add a new service to Authelia OIDC:
 ```nix
 # Allow specific service without auth
 {
-  domain = "public.longerhv.xyz";
+  domain = "public.example.com";
   policy = "bypass";
 }
 
 # Require 2FA for sensitive service
 {
-  domain = "admin.longerhv.xyz";
+  domain = "admin.example.com";
   policy = "two_factor";
   subject = ["group:admins"];
 }
 
 # Allow specific users
 {
-  domain = "personal.longerhv.xyz";
+  domain = "personal.example.com";
   policy = "one_factor";
   subject = ["user:zeev"];
 }
@@ -496,7 +496,7 @@ Authelia uses msmtp for sending emails (password resets, 2FA setup):
 
 **Configuration** (already set up):
 - SMTP: Gmail (smtp.gmail.com:587)
-- From: `authelia@longerhv.xyz`
+- From: `authelia@example.com`
 - Password: Stored in `secrets/gmail_conf.yaml`
 
 **Test email**:
@@ -547,14 +547,14 @@ echo "Test email" | mail -s "Authelia Test" your-email@example.com
 ### URLs
 | Service | URL |
 |---------|-----|
-| LLDAP | https://ldap.longerhv.xyz |
-| Authelia | https://auth.longerhv.xyz |
-| Jellyfin | https://jellyfin.longerhv.xyz |
-| Grafana | https://grafana.longerhv.xyz |
-| Miniflux | https://miniflux.longerhv.xyz |
-| Kavita | https://kavita.longerhv.xyz |
-| Audiobookshelf | https://audiobookshelf.longerhv.xyz |
-| Deluge | https://deluge.longerhv.xyz |
+| LLDAP | https://lldap.example.com |
+| Authelia | https://auth.example.com |
+| Jellyfin | https://jellyfin.example.com |
+| Grafana | https://grafana.example.com |
+| Miniflux | https://miniflux.example.com |
+| Kavita | https://kavita.example.com |
+| Audiobookshelf | https://audiobookshelf.example.com |
+| Deluge | https://deluge.example.com |
 
 ### Default Credentials
 | Service | Username | Password Location |
@@ -580,7 +580,7 @@ sudo authelia validate-config /etc/authelia/config.yml
 
 ### LDAP Structure
 ```
-dc=longerhv,dc=xyz
+dc=labhome,dc=work
 ├── ou=people
 │   ├── uid=admin
 │   ├── uid=zeev

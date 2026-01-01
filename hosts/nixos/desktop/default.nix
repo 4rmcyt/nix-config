@@ -303,13 +303,10 @@
         # Secure Boot & EFI Tools
         # =============================================================
         efibootmgr
-        efitools
         ifrextractor-rs
         sbctl
         sbsigntool
         shim-unsigned
-        uefitool
-        uefitoolPackages.old-engine
         optnix
         ventoy-full-qt
       ]

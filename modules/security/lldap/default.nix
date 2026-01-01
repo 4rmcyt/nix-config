@@ -30,9 +30,9 @@ in {
   services.lldap = {
     enable = true;
     settings = {
-      http_url = "https://ldap.${domain}";
+      http_url = "https://lldap.${domain}";
       http_port = 17170;
-      ldap_base_dn = "dc=longerhv,dc=xyz";
+      ldap_base_dn = "dc=labhome,dc=work";
       # Let LLDAP generate its own private key for JWT signing
     };
     environment = {
