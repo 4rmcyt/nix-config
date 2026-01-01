@@ -58,6 +58,7 @@ in {
   # Authelia service configuration (proxied by Traefik)
   services.authelia.instances.main = {
     enable = true;
+    user = "authelia";
     secrets = {
       jwtSecretFile = config.sops.secrets.authelia_jwt_secret.path;
       oidcHmacSecretFile = config.sops.secrets.authelia_hmac_secret.path;

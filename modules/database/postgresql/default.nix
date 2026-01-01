@@ -179,7 +179,6 @@ in {
       # ArbitraryMapName systemUser DBUser
          superuser_map      root      postgres
          superuser_map      postgres  postgres
-         superuser_map      authelia-main  authelia
          # Let other names login as themselves
          superuser_map      /^(.*)$   \1
     '';
