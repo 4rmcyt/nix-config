@@ -21,7 +21,7 @@
     extraGroups = ["oauth2-proxy"]; # Add service groups that need access
   };
   users.groups.redis = {
-    members = ["oauth2-proxy"]; # Services that need Redis access
+    members = ["oauth2-proxy" "authelia-main"]; # Services that need Redis access
   };
 
   # =================================================================
