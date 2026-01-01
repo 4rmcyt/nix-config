@@ -36,11 +36,6 @@ in {
       key = "ldap_password";
       mode = "0400";
     };
-    authelia_db_password = {
-      sopsFile = ../../../secrets/authelia.yaml;
-      key = "db_password";
-      mode = "0400";
-    };
     msmtp_gmail_password = {
       sopsFile = ../../../secrets/common.yaml;
       key = "msmtp_gmail_password";
