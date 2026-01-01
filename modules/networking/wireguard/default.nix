@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   lib,
   ...
 }:
@@ -8,150 +7,59 @@ with lib; let
   cfg = config.my.wireguard;
 in {
   options.my.wireguard = {
-    enable = mkEnableOption "WireGuard VPN with network namespace";
+    enable = mkEnableOption "WireGuard VPN using VPN-Confinement (via nixarr)";
 
     forwardedPort = mkOption {
       type = types.nullOr types.port;
       default = null;
       description = "Port forwarded by VPN provider for incoming connections";
-      example = 51820;
+      example = 63998;
     };
   };
 
   config = mkIf cfg.enable {
     # SOPS secrets for WireGuard
-    sops.secrets = {
-      wg_conf = {
-        sopsFile = ../../../secrets/wg.conf;
-        format = "binary";
-        mode = "0600";
-      };
+    sops.secrets.wg_conf = {
+      sopsFile = ../../../secrets/wg.conf;
+      format = "binary";
+      mode = "0600";
     };
 
-    # Install required packages
-    environment.systemPackages = with pkgs; [
-      wireguard-tools
-      iproute2
-    ];
+    # VPN namespace configuration using VPN-Confinement
+    # (nixarr reexports this module)
+    vpnNamespaces.wg = {
+      enable = true;
+      wireguardConfigFile = config.sops.secrets.wg_conf.path;
 
-    # Firewall rules for port forwarding
+      # Make VPN namespace accessible from local network
+      accessibleFrom = [
+        "192.168.0.0/24"
+        "10.0.0.0/8"
+        "127.0.0.1/32"
+      ];
+
+      # Port forwarding from host to VPN namespace (if configured)
+      portMappings = mkIf (cfg.forwardedPort != null) [
+        {
+          from = cfg.forwardedPort;
+          to = cfg.forwardedPort;
+          protocol = "both";
+        }
+      ];
+
+      # Open ports through the VPN interface (if configured)
+      openVPNPorts = mkIf (cfg.forwardedPort != null) [
+        {
+          port = cfg.forwardedPort;
+          protocol = "both";
+        }
+      ];
+    };
+
+    # Firewall rules to allow access to forwarded port (if configured)
     networking.firewall = mkIf (cfg.forwardedPort != null) {
       allowedTCPPorts = [cfg.forwardedPort];
       allowedUDPPorts = [cfg.forwardedPort];
-    };
-
-    # NAT to forward traffic from root namespace to VPN namespace
-    networking.nat = mkIf (cfg.forwardedPort != null) {
-      enable = true;
-      internalInterfaces = ["veth-wg"];
-    };
-
-    # Create network namespace
-    systemd.services."netns@" = {
-      description = "%I network namespace";
-      before = ["network.target"];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStart = "${pkgs.iproute2}/bin/ip netns add %I";
-        ExecStop = "${pkgs.iproute2}/bin/ip netns del %I";
-      };
-    };
-
-    # Setup WireGuard in namespace with optional veth pair for port forwarding
-    systemd.services.wg = {
-      description = "WireGuard VPN in network namespace";
-      after = ["netns@wg.service"];
-      requires = ["netns@wg.service"];
-      wantedBy = ["multi-user.target"];
-
-      path = with pkgs; [
-        iproute2
-        wireguard-tools
-        procps
-        gnugrep
-        iptables
-      ];
-
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-
-        ExecStart = pkgs.writeShellScript "wg-up" ''
-          set -e
-
-          # Clean up any existing wg0 interface (from failed previous attempts)
-          ${pkgs.iproute2}/bin/ip netns exec wg ${pkgs.iproute2}/bin/ip link del wg0 2>/dev/null || true
-          ${pkgs.iproute2}/bin/ip link del wg0 2>/dev/null || true
-
-          # Extract addresses from config (AirVPN uses comma-separated format)
-          ADDRS=$(grep -E '^Address' ${config.sops.secrets.wg_conf.path} | cut -d'=' -f2 | tr -d ' ')
-
-          # Create temporary config without Address, DNS, and MTU lines
-          # (wg setconf only accepts PrivateKey, [Peer], PublicKey, PresharedKey, Endpoint, AllowedIPs, PersistentKeepalive)
-          TEMP_CONF=$(mktemp)
-          trap "rm -f $TEMP_CONF" EXIT
-          grep -vE '^(Address|DNS|MTU)' ${config.sops.secrets.wg_conf.path} > "$TEMP_CONF"
-
-          # Move WireGuard interface to namespace
-          ${pkgs.iproute2}/bin/ip link add wg0 type wireguard
-          ${pkgs.iproute2}/bin/ip link set wg0 netns wg
-
-          # Configure WireGuard in namespace (without Address line)
-          ${pkgs.iproute2}/bin/ip netns exec wg ${pkgs.wireguard-tools}/bin/wg setconf wg0 "$TEMP_CONF"
-
-          # Add addresses to interface (handles comma-separated values from AirVPN)
-          IFS=',' read -ra ADDR_ARRAY <<< "$ADDRS"
-          for ADDR in "''${ADDR_ARRAY[@]}"; do
-            ${pkgs.iproute2}/bin/ip netns exec wg ${pkgs.iproute2}/bin/ip addr add ''${ADDR} dev wg0
-          done
-
-          # Bring up interface
-          ${pkgs.iproute2}/bin/ip netns exec wg ${pkgs.iproute2}/bin/ip link set wg0 up
-          ${pkgs.iproute2}/bin/ip netns exec wg ${pkgs.iproute2}/bin/ip link set lo up
-
-          # Set default route through VPN
-          ${pkgs.iproute2}/bin/ip netns exec wg ${pkgs.iproute2}/bin/ip route add default dev wg0
-
-          ${optionalString (cfg.forwardedPort != null) ''
-            # Create veth pair for port forwarding
-            ${pkgs.iproute2}/bin/ip link add veth-wg type veth peer name veth-ns
-            ${pkgs.iproute2}/bin/ip link set veth-ns netns wg
-
-            # Configure root side
-            ${pkgs.iproute2}/bin/ip addr add 10.200.200.1/24 dev veth-wg
-            ${pkgs.iproute2}/bin/ip link set veth-wg up
-
-            # Configure namespace side
-            ${pkgs.iproute2}/bin/ip netns exec wg ${pkgs.iproute2}/bin/ip addr add 10.200.200.2/24 dev veth-ns
-            ${pkgs.iproute2}/bin/ip netns exec wg ${pkgs.iproute2}/bin/ip link set veth-ns up
-
-            # Add route in namespace to reach root namespace
-            ${pkgs.iproute2}/bin/ip netns exec wg ${pkgs.iproute2}/bin/ip route add 10.200.200.0/24 dev veth-ns
-
-            # Port forwarding rules
-            ${pkgs.iptables}/bin/iptables -t nat -A PREROUTING -p tcp --dport ${toString cfg.forwardedPort} -j DNAT --to-destination 10.200.200.2:${toString cfg.forwardedPort}
-            ${pkgs.iptables}/bin/iptables -t nat -A PREROUTING -p udp --dport ${toString cfg.forwardedPort} -j DNAT --to-destination 10.200.200.2:${toString cfg.forwardedPort}
-            ${pkgs.iptables}/bin/iptables -A FORWARD -p tcp -d 10.200.200.2 --dport ${toString cfg.forwardedPort} -j ACCEPT
-            ${pkgs.iptables}/bin/iptables -A FORWARD -p udp -d 10.200.200.2 --dport ${toString cfg.forwardedPort} -j ACCEPT
-          ''}
-        '';
-
-        ExecStop = pkgs.writeShellScript "wg-down" ''
-          ${optionalString (cfg.forwardedPort != null) ''
-            # Clean up iptables rules
-            ${pkgs.iptables}/bin/iptables -t nat -D PREROUTING -p tcp --dport ${toString cfg.forwardedPort} -j DNAT --to-destination 10.200.200.2:${toString cfg.forwardedPort} 2>/dev/null || true
-            ${pkgs.iptables}/bin/iptables -t nat -D PREROUTING -p udp --dport ${toString cfg.forwardedPort} -j DNAT --to-destination 10.200.200.2:${toString cfg.forwardedPort} 2>/dev/null || true
-            ${pkgs.iptables}/bin/iptables -D FORWARD -p tcp -d 10.200.200.2 --dport ${toString cfg.forwardedPort} -j ACCEPT 2>/dev/null || true
-            ${pkgs.iptables}/bin/iptables -D FORWARD -p udp -d 10.200.200.2 --dport ${toString cfg.forwardedPort} -j ACCEPT 2>/dev/null || true
-
-            # Remove veth pair
-            ${pkgs.iproute2}/bin/ip link del veth-wg 2>/dev/null || true
-          ''}
-
-          ${pkgs.iproute2}/bin/ip netns exec wg ${pkgs.iproute2}/bin/ip link del wg0 || true
-        '';
-      };
     };
   };
 }
