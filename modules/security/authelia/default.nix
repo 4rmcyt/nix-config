@@ -42,13 +42,11 @@ in {
       owner = authelia.user;
       mode = "0400";
     };
-    redis-oauth2-proxy-password = {
-      sopsFile = ../../../secrets/redis.yaml;
-      key = "oauth2_proxy_password";
-      owner = authelia.user;
-      mode = "0400";
-    };
   };
+
+  # Note: redis-oauth2-proxy-password is defined in modules/database/redis/default.nix
+  # Authelia user needs to be in redis group to read it
+  users.users."${authelia.user}".extraGroups = ["redis"];
 
   environment.systemPackages = [config.services.authelia.instances.main.package];
 

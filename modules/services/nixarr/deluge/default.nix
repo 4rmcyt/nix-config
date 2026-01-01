@@ -74,22 +74,6 @@
       ExecStart = "${pkgs.deluge}/bin/deluge-web -d -c /var/lib/deluge/.config/deluge -L warning -l /var/lib/deluge/deluge-web.log";
       Restart = "on-failure";
 
-      # Hardening
-      NoNewPrivileges = true;
-      PrivateTmp = true;
-      PrivateDevices = true;
-      DevicePolicy = "closed";
-      ProtectSystem = "strict";
-      ProtectHome = true;
-      ProtectControlGroups = true;
-      ProtectKernelModules = true;
-      ProtectKernelTunables = true;
-      RestrictAddressFamilies = "AF_UNIX AF_INET AF_INET6";
-      RestrictNamespaces = true;
-      RestrictRealtime = true;
-      RestrictSUIDSGID = true;
-      RemoveIPC = true;
-      LockPersonality = true;
 
       # Read/write access to state directory
       ReadWritePaths = [
