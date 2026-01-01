@@ -87,9 +87,14 @@ in {
           # Configure WireGuard in namespace
           ${pkgs.iproute2}/bin/ip netns exec wg ${pkgs.wireguard-tools}/bin/wg setconf wg0 ${config.sops.secrets.wg_conf.path}
 
-          # Extract IP from config and set it
-          ADDR=$(grep -E '^Address' ${config.sops.secrets.wg_conf.path} | head -n1 | cut -d'=' -f2 | tr -d ' ')
-          ${pkgs.iproute2}/bin/ip netns exec wg ${pkgs.iproute2}/bin/ip addr add ''${ADDR} dev wg0
+          # Extract addresses from config and set them (handles both single and comma-separated addresses)
+          ADDRS=$(grep -E '^Address' ${config.sops.secrets.wg_conf.path} | head -n1 | cut -d'=' -f2 | tr -d ' ')
+
+          # Split comma-separated addresses and add each one
+          IFS=',' read -ra ADDR_ARRAY <<< "$ADDRS"
+          for ADDR in "''${ADDR_ARRAY[@]}"; do
+            ${pkgs.iproute2}/bin/ip netns exec wg ${pkgs.iproute2}/bin/ip addr add ''${ADDR} dev wg0
+          done
 
           # Bring up interface
           ${pkgs.iproute2}/bin/ip netns exec wg ${pkgs.iproute2}/bin/ip link set wg0 up
