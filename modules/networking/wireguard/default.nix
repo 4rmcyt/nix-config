@@ -6,8 +6,6 @@
     mode = "0600";
   };
 
-  # VPN namespace configuration using VPN-Confinement
-  # (reexported by nixarr module)
   vpnNamespaces.wg = {
     enable = true;
     wireguardConfigFile = config.sops.secrets.wg_conf.path;
@@ -17,6 +15,7 @@
       "192.168.0.0/24"
       "10.0.0.0/8"
       "127.0.0.1/32"
+      ""
     ];
 
     # Port forwarding from host to VPN namespace

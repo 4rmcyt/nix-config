@@ -7,33 +7,48 @@ in {
   # SOPS secrets for Authelia
   sops.secrets = {
     authelia_jwt_secret = {
-      sopsFile = ../../../secrets/authelia/jwt_secret;
-      format = "binary";
+      sopsFile = ../../../secrets/authelia.yaml;
+      key = "jwt_secret";
       mode = "0400";
     };
     authelia_hmac_secret = {
-      sopsFile = ../../../secrets/authelia/hmac_secret;
-      format = "binary";
+      sopsFile = ../../../secrets/authelia.yaml;
+      key = "hmac_secret";
       mode = "0400";
     };
     authelia_issuer_priv_key = {
-      sopsFile = ../../../secrets/authelia/issuer_priv_key.pem;
-      format = "binary";
+      sopsFile = ../../../secrets/authelia.yaml;
+      key = "issuer_priv_key";
       mode = "0400";
     };
     authelia_session_secret = {
-      sopsFile = ../../../secrets/authelia/session_secret;
-      format = "binary";
+      sopsFile = ../../../secrets/authelia.yaml;
+      key = "session_secret";
       mode = "0400";
     };
     authelia_storage_encryption_key = {
-      sopsFile = ../../../secrets/authelia/storage_encryption_key;
-      format = "binary";
+      sopsFile = ../../../secrets/authelia.yaml;
+      key = "storage_encryption_key";
       mode = "0400";
     };
     ldap_password = {
-      sopsFile = ../../../secrets/authelia/ldap_password;
-      format = "binary";
+      sopsFile = ../../../secrets/authelia.yaml;
+      key = "ldap_password";
+      mode = "0400";
+    };
+    authelia_db_password = {
+      sopsFile = ../../../secrets/authelia.yaml;
+      key = "db_password";
+      mode = "0400";
+    };
+    msmtp_gmail_password = {
+      sopsFile = ../../../secrets/common.yaml;
+      key = "msmtp_gmail_password";
+      mode = "0400";
+    };
+    redis-oauth2-proxy-password = {
+      sopsFile = ../../../secrets/redis.yaml;
+      key = "oauth2_proxy_password";
       mode = "0400";
     };
   };
