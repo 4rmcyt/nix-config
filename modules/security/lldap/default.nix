@@ -1,6 +1,13 @@
 {config, ...}: let
   inherit (config.my.defaults) domain;
 in {
+  # Create lldap user first (before SOPS tries to set ownership)
+  users.users.lldap = {
+    isSystemUser = true;
+    group = "lldap";
+  };
+  users.groups.lldap = {};
+
   # SOPS secrets for LLDAP
   sops.secrets = {
     lldap_private_key = {
