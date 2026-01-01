@@ -4,17 +4,16 @@
   config,
   ...
 }: {
-  users.users = {
-    deluge = {
-      isSystemUser = true;
-      group = lib.mkForce "deluge";
-      extraGroups = [
-        "users"
-        "media"
-      ];
-    };
-    groups.deluge = {};
+  users.users.deluge = {
+    isSystemUser = true;
+    group = lib.mkForce "deluge";
+    extraGroups = [
+      "users"
+      "media"
+    ];
   };
+
+  users.groups.deluge = {};
 
   sops.secrets.deluge-accounts = {
     sopsFile = ../../../../secrets/deluge.yaml;
