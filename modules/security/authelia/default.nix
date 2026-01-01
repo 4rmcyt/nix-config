@@ -147,8 +147,8 @@ in {
       storage = {
         postgres = {
           address = "unix:///run/postgresql";
-          database = "authelia";
-          username = "authelia";
+          database = "authelia-main";
+          username = "authelia-main";
         };
       };
       notifier = {
