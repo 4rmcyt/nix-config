@@ -71,7 +71,7 @@
       User = "deluge";
       Group = "deluge";
       UMask = "0002";
-      ExecStart = "${pkgs.deluge}/bin/deluge-web -c /var/lib/deluge/.config/deluge -L warning -l /var/lib/deluge/deluge-web.log";
+      ExecStart = "${pkgs.deluge}/bin/deluge-web -d -c /var/lib/deluge/.config/deluge -L warning -l /var/lib/deluge/deluge-web.log";
       Restart = "on-failure";
 
       # Hardening
