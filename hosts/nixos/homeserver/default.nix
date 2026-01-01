@@ -168,9 +168,9 @@
     eval-cache = true; # Cache evaluation results
 
     substituters = [
-      "https://4rmcyt-homeserver.cachix.org?priority=1"
-      "https://cache.lix.systems?priority=2"
-      "https://nix-community.cachix.org?priority=3"
+      "https://4rmcyt-homeserver.cachix.org?priority=2"
+      "https://cache.lix.systems?priority=3"
+      "https://nix-community.cachix.org?priority=1"
       "https://cache.flox.dev?priority=4"
       "https://helix.cachix.org?priority=5"
       "https://yazi.cachix.org?priority=6"
