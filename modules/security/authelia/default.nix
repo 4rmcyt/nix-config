@@ -36,11 +36,6 @@ in {
       key = "ldap_password";
       mode = "0400";
     };
-    msmtp_gmail_password = {
-      sopsFile = ../../../secrets/common.yaml;
-      key = "msmtp_gmail_password";
-      mode = "0400";
-    };
     redis-oauth2-proxy-password = {
       sopsFile = ../../../secrets/redis.yaml;
       key = "oauth2_proxy_password";
