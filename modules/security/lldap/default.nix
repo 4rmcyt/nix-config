@@ -10,12 +10,6 @@ in {
 
   # SOPS secrets for LLDAP
   sops.secrets = {
-    lldap_private_key = {
-      sopsFile = ../../../secrets/lldap.yaml;
-      key = "private_key";
-      owner = "lldap";
-      mode = "0400";
-    };
     lldap_jwt_secret = {
       sopsFile = ../../../secrets/lldap.yaml;
       key = "jwt_secret";
@@ -36,7 +30,7 @@ in {
       http_url = "https://ldap.${domain}";
       http_port = 17170;
       ldap_base_dn = "dc=longerhv,dc=xyz";
-      key_file = config.sops.secrets.lldap_private_key.path;
+      # Let LLDAP generate its own private key for JWT signing
     };
     environment = {
       LLDAP_JWT_SECRET_FILE = config.sops.secrets.lldap_jwt_secret.path;
