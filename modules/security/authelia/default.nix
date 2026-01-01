@@ -18,7 +18,7 @@ in {
     };
     authelia_issuer_priv_key = {
       sopsFile = ../../../secrets/authelia.yaml;
-      key = "issuer_priv_key";
+      key = "issuer_priv_key.pem";
       mode = "0400";
     };
     authelia_session_secret = {
