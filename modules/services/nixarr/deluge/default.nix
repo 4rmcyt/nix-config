@@ -1,55 +1,68 @@
 {
   pkgs,
+  lib,
+  config,
   ...
 }: {
-  # Deluge user and group
-  users.users.deluge = {
-    isSystemUser = true;
-    group = "deluge";
-    extraGroups = [
-      "users"
-      "media"
-    ];
+  users.users = {
+    deluge = {
+      isSystemUser = true;
+      group = lib.mkForce "deluge";
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+    groups.deluge = {};
   };
 
-  users.groups.deluge = {};
+  sops.secrets.deluge-accounts = {
+    sopsFile = ../../../../secrets/deluge.yaml;
+    key = "auth";
+    owner = config.users.users.deluge.name;
+    group = config.users.groups.deluge.name;
+    mode = "0600";
+  };
 
-  # Deluge daemon running in VPN namespace
+  services.deluge = {
+    enable = true;
+    declarative = true;
+    authFile = config.sops.secrets.deluge-accounts.path;
+    config = {
+      enabled_plugins = ["Label"];
+      torrentfiles_location = "/data/Downloads/torrents";
+      download_location = "/data/Downloads";
+      dont_count_slow_torrents = true;
+      max_active_seeding = 5;
+      max_active_limit = -1;
+      max_active_downloading = 8;
+      max_connections_global = -1;
+      allow_remote = true;
+      daemon_port = 58846;
+      random_port = false;
+      listen_ports = [
+        63998
+      ];
+      random_outgoing_ports = false;
+    };
+    # Publicly opens listen_ports only
+    openFirewall = true;
+    web = {
+      enable = true;
+      port = 8112;
+    };
+  };
+
+  # Override deluged service to run in VPN namespace
   systemd.services.deluged = {
-    description = "Deluge BitTorrent Daemon";
     after = ["wg.service"];
     requires = ["wg.service"];
-    wantedBy = ["multi-user.target"];
 
     serviceConfig = {
-      Type = "simple";
-      User = "deluge";
-      Group = "deluge";
-      UMask = "0002";
       NetworkNamespacePath = "/run/netns/wg";
       BindReadOnlyPaths = [
         "/etc/netns/wg/resolv.conf:/etc/resolv.conf:norbind"
       ];
-      ExecStart = "${pkgs.deluge}/bin/deluged -d -c /var/lib/deluge/.config/deluge -L warning -l /var/lib/deluge/deluged.log";
-      Restart = "on-failure";
-
-      # Hardening
-      NoNewPrivileges = true;
-      PrivateTmp = true;
-      PrivateDevices = true;
-      DevicePolicy = "closed";
-      ProtectSystem = "strict";
-      ProtectHome = true;
-      ProtectControlGroups = true;
-      ProtectKernelModules = true;
-      ProtectKernelTunables = true;
-      RestrictAddressFamilies = "AF_UNIX AF_INET AF_INET6 AF_NETLINK";
-      RestrictNamespaces = true;
-      RestrictRealtime = true;
-      RestrictSUIDSGID = true;
-      RemoveIPC = true;
-      LockPersonality = true;
-
       # Read/write access to state and download directories
       ReadWritePaths = [
         "/var/lib/deluge"
@@ -59,24 +72,7 @@
     };
   };
 
-  # Deluge web UI (runs in root namespace, connects to daemon via proxy)
-  systemd.services.deluge-web = {
-    description = "Deluge BitTorrent Web UI";
-    after = ["deluged.service" "proxy-to-deluge-daemon.service"];
-    requires = ["deluged.service" "proxy-to-deluge-daemon.service"];
-    wantedBy = ["multi-user.target"];
-
-    serviceConfig = {
-      Type = "simple";
-      User = "deluge";
-      Group = "deluge";
-      UMask = "0002";
-      ExecStart = "${pkgs.deluge}/bin/deluge-web -d -c /var/lib/deluge/.config/deluge -L warning -l /var/lib/deluge/deluge-web.log";
-      Restart = "on-failure";
-    };
-  };
-
-  # Socket for daemon proxy
+  # Socket for daemon proxy (web UI connects to this instead of daemon directly)
   systemd.sockets.proxy-to-deluge-daemon = {
     description = "Socket for Deluge daemon proxy";
     wantedBy = ["sockets.target"];
@@ -97,21 +93,20 @@
     };
   };
 
-  # Create state and download directories
+  # Override deluge-web service to depend on proxy
+  systemd.services.deluge-web = {
+    after = [
+      "deluged.service"
+      "proxy-to-deluge-daemon.service"
+    ];
+    requires = [
+      "deluged.service"
+      "proxy-to-deluge-daemon.service"
+    ];
+  };
+
+  # Create additional directories
   systemd.tmpfiles.rules = [
-    "d /var/lib/deluge 775 deluge deluge -"
-    "d /var/lib/deluge/.config 775 deluge deluge -"
-    "d /var/lib/deluge/.config/deluge 775 deluge deluge -"
     "d /data/media/.state/nixarr/deluge 775 deluge deluge -"
-  ];
-
-  # Firewall rules for web UI (8112) and peer port (to be configured in Deluge)
-  networking.firewall.allowedTCPPorts = [
-    8112 # Deluge web UI
-  ];
-
-  # Install Deluge package
-  environment.systemPackages = with pkgs; [
-    deluge
   ];
 }
