@@ -36,10 +36,10 @@ in {
       owner = authelia.user;
       mode = "0400";
     };
-    ldap_password = {
-      sopsFile = ../../../secrets/authelia.yaml;
-      key = "ldap_password";
-      owner = authelia.user;
+    lldap_user_pass = {
+      sopsFile = ../../../secrets/lldap.yaml;
+      key = "user_pass";
+      owner = "authelia";
       mode = "0400";
     };
   };
@@ -74,7 +74,7 @@ in {
       storageEncryptionKeyFile = config.sops.secrets.authelia_storage_encryption_key.path;
     };
     environmentVariables = {
-      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE = config.sops.secrets.ldap_password.path;
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE = config.sops.secrets.lldap_user_pass.path;
       AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE = config.sops.secrets.msmtp_gmail_password.path;
       AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE = config.sops.secrets.authelia_db_password.path;
       AUTHELIA_SESSION_REDIS_PASSWORD_FILE = config.sops.secrets.redis-oauth2-proxy-password.path;
