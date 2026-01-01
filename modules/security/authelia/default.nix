@@ -38,15 +38,9 @@ in {
     };
   };
 
-  # Authelia needs access to secrets and sockets from other services
-  # - redis-oauth2-proxy-password secret (redis:redis - for secret file access)
-  # - redis socket (redis-homeserver:redis-homeserver - for socket access)
-  # - authelia_db_password secret (postgres:postgres)
-  # - msmtp_gmail_password secret (msmtp:msmtp)
 
   environment.systemPackages = [config.services.authelia.instances.main.package];
 
-  # Create authelia user and group
   users.users.authelia = {
     isSystemUser = true;
     group = "authelia";
