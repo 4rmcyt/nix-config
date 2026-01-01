@@ -6,16 +6,19 @@ in {
     lldap_private_key = {
       sopsFile = ../../../secrets/lldap.yaml;
       key = "private_key";
+      owner = "lldap";
       mode = "0400";
     };
     lldap_jwt_secret = {
       sopsFile = ../../../secrets/lldap.yaml;
       key = "jwt_secret";
+      owner = "lldap";
       mode = "0400";
     };
     lldap_user_pass = {
       sopsFile = ../../../secrets/lldap.yaml;
       key = "user_pass";
+      owner = "lldap";
       mode = "0400";
     };
   };
