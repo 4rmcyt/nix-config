@@ -36,12 +36,6 @@ in {
       owner = authelia.user;
       mode = "0400";
     };
-    lldap_user_pass = {
-      sopsFile = ../../../secrets/lldap.yaml;
-      key = "user_pass";
-      owner = "authelia";
-      mode = "0400";
-    };
   };
 
   # Authelia needs access to secrets and sockets from other services
@@ -56,7 +50,7 @@ in {
   users.users.authelia = {
     isSystemUser = true;
     group = "authelia";
-    extraGroups = ["redis" "postgres" "msmtp"];
+    extraGroups = ["redis" "postgres" "msmtp" "lldap"];
   };
   users.groups.authelia = {};
 

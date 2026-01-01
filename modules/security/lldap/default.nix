@@ -6,7 +6,9 @@ in {
     isSystemUser = true;
     group = "lldap";
   };
-  users.groups.lldap = {};
+  users.groups.lldap = {
+    members = ["authelia"]; # Authelia needs to read LLDAP password
+  };
 
   # SOPS secrets for LLDAP
   sops.secrets = {
@@ -20,7 +22,8 @@ in {
       sopsFile = ../../../secrets/lldap.yaml;
       key = "user_pass";
       owner = "lldap";
-      mode = "0400";
+      group = "lldap";
+      mode = "0440";  # Group-readable so authelia can access
     };
   };
 
