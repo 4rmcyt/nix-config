@@ -8,7 +8,7 @@
       key = "oauth2_proxy_password";
       owner = "redis";
       group = "redis";
-      mode = "0440";  # Group-readable so authelia user can access
+      mode = "0440"; # Group-readable so authelia user can access
     };
   };
 
@@ -144,3 +144,4 @@
 #
 # Connection format:
 # - TCP: redis://127.0.0.1:6379/0 + redis-password-file option
+

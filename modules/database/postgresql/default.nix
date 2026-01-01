@@ -114,7 +114,7 @@ in {
       key = "authelia_db_password";
       owner = config.users.users.postgres.name;
       group = config.users.groups.postgres.name;
-      mode = "0440";  # Group-readable so authelia user can access
+      mode = "0440"; # Group-readable so authelia user can access
     };
   };
 

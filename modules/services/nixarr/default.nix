@@ -21,7 +21,6 @@ in {
     ./jellyfin
     ./deluge
   ];
-  # SOPS secrets are now managed in the wireguard module
 
   users.users = {
     audiobookshelf = {

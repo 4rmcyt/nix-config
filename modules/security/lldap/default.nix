@@ -23,7 +23,7 @@ in {
       key = "user_pass";
       owner = "lldap";
       group = "lldap";
-      mode = "0440";  # Group-readable so authelia can access
+      mode = "0440"; # Group-readable so authelia can access
     };
   };
 
