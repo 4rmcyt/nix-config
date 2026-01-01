@@ -132,8 +132,8 @@
   # nix.package is set by lix-module
 
   nix.settings = {
-    cores = 2;         # Use 2 cores per build job (was 0 = all cores)
-    max-jobs = 2;      # Run 2 jobs in parallel (was "auto" = 8 jobs)
+    cores = 2; # Use 2 cores per build job (was 0 = all cores)
+    max-jobs = 2; # Run 2 jobs in parallel (was "auto" = 8 jobs)
     access-tokens = "github.com=REDACTED";
     experimental-features = [
       "flakes"

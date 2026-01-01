@@ -80,6 +80,10 @@ in {
         ExecStart = pkgs.writeShellScript "wg-up" ''
           set -e
 
+          # Clean up any existing wg0 interface (from failed previous attempts)
+          ${pkgs.iproute2}/bin/ip netns exec wg ${pkgs.iproute2}/bin/ip link del wg0 2>/dev/null || true
+          ${pkgs.iproute2}/bin/ip link del wg0 2>/dev/null || true
+
           # Move WireGuard interface to namespace
           ${pkgs.iproute2}/bin/ip link add wg0 type wireguard
           ${pkgs.iproute2}/bin/ip link set wg0 netns wg
