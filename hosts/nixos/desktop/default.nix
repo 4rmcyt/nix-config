@@ -10,9 +10,12 @@
   # 0. Nixpkgs Configuration
   # =================================================================
   nixpkgs.overlays = [
+    # Disable ffado in pipewire to avoid nodejs ia32 cross-compilation issues
+    # ffado is for FireWire audio devices which are rarely used
+    # Use nodejs_22 instead of nodejs_24 for better stability
     (final: prev: {
       pipewire = prev.pipewire.override { ffadoSupport = false; };
-      nodejs = prev.nodejs.override { package = "nodejs-22_x"; };
+      nodejs = prev.nodejs_22;
     })
   ];
 
