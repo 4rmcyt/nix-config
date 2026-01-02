@@ -10,6 +10,7 @@
     };
     grafana_admin_password = {
       sopsFile = ../../secrets/grafana.yaml;
+      key = "grafana_admin_password";
       owner = config.users.users.grafana.name;
     };
     grafana_db_password = {

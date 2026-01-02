@@ -34,7 +34,7 @@ in {
       http_url = "https://lldap.${domain}";
       http_port = 17170;
       ldap_base_dn = "dc=labhome,dc=work";
-      force_ldap_user_pass_reset = true;
+      force_ldap_user_pass_reset = false;
       database_url = "postgres://lldap:$(cat ${config.sops.secrets.lldap_user_pass.path})@/run/postgresql/lldap";
     };
     environment = {
