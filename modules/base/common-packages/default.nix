@@ -165,7 +165,7 @@
       nodePackages.npm
 
       ## Python
-      poetry # python tools # TODO tests failing
+      poetry 
       python3
       uv # workspace management tool
 
