@@ -48,13 +48,6 @@ in
 {
   # Database secrets configuration
   sops.secrets = {
-    postgres_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "postgres_password";
-      owner = config.users.users.postgres.name;
-      group = config.users.groups.postgres.name;
-      mode = "0400";
-    };
     miniflux_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "miniflux_db_password";
