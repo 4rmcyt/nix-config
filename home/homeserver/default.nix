@@ -20,7 +20,6 @@
 
       # Audio tools
       cuetools
-      shntool
       flac
 
       # Fonts
