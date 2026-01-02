@@ -16,8 +16,7 @@ _: {
     "hyprctl setcursor Bibata-Modern-Ice 24 &"
     "init-wallpaper &"
 
-    "ghostty --gtk-single-instance=true --quit-after-last-window-closed=false --initial-window=false"
-    "[workspace 1 silent] zen-beta"
-    "[workspace 2 silent] ghostty"
+    "wezterm --config-file /home/zeev/.config/wezterm/wezterm.lua"
+    "[workspace 1 silent] chromium"
   ];
 }

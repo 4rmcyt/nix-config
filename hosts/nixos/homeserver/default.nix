@@ -40,6 +40,12 @@
   nixpkgs.overlays = [
     (_final: prev: {
       nodejs = prev.nodejs_22;
+
+      # Fix intel-compute-runtime-legacy1 missing cstdint header
+      # See: https://discourse.nixos.org/t/env-nix-cflags-compile-vs-cxxflags/39192
+      intel-compute-runtime-legacy1 = prev.intel-compute-runtime-legacy1.overrideAttrs (oldAttrs: {
+        NIX_CFLAGS_COMPILE = (oldAttrs.NIX_CFLAGS_COMPILE or "") + " -include cstdint";
+      });
     })
   ];
   # =================================================================

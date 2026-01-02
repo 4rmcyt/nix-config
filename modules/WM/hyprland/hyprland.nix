@@ -11,6 +11,12 @@
     glib
     wayland
     direnv
+    hyprland-guiutils
+    kdePackages.dolphin
+    kdePackages.kate
+    kdePackages.okular
+    kdePackages.ark
+    kdePackages.gwenview
   ];
   systemd.user.targets.hyprland-session.Unit.Wants = [
     "xdg-desktop-autostart.target"

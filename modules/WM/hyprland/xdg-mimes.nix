@@ -1,16 +1,15 @@
 {lib, ...}:
 with lib; let
   defaultApps = {
-    text = ["org.gnome.TextEditor.desktop"];
-    image = ["imv-dir.desktop"];
+    text = ["org.kde.kate.desktop"];
+    image = ["org.kde.gwenview.desktop"];
     audio = ["mpv.desktop"];
     video = ["mpv.desktop"];
-    directory = ["nemo.desktop"];
-    office = ["libreoffice.desktop"];
-    pdf = ["org.gnome.Evince.desktop"];
-    terminal = ["ghostty.desktop"];
-    archive = ["org.gnome.FileRoller.desktop"];
-    discord = ["webcord.desktop"];
+    directory = ["org.kde.dolphin.desktop"];
+    pdf = ["org.kde.okular.desktop"];
+    terminal = ["org.wezfurlong.wezterm.desktop"];
+    archive = ["org.kde.ark.desktop"];
+    telegram = ["ayugram-desktop.desktop"];
   };
 
   mimeMap = {
@@ -66,7 +65,7 @@ with lib; let
       "application/7z"
       "application/*tar"
     ];
-    discord = ["x-scheme-handler/discord"];
+    telegram = ["x-scheme-handler/tg"];
   };
 
   associations = with lists;

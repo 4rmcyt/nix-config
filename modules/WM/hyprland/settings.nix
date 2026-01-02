@@ -35,6 +35,18 @@ _: {
       focus_on_activate = true;
       new_window_takes_over_fullscreen = 2;
       middle_click_paste = false;
+      vfr = true;
+      vrr = 1;
+    };
+
+    render = {
+      explicit_sync = 2;
+      explicit_sync_kms = 2;
+    };
+
+    cursor = {
+      no_hardware_cursors = true;
+      allow_dumb_copy = true;
     };
 
     dwindle = {
@@ -94,8 +106,8 @@ _: {
         # name, enable, speed, curve, style
 
         # Windows
-        "windowsIn,   0, 4, easeOutCubic,  popin 20%" # window open
-        "windowsOut,  0, 4, fluent_decel,  popin 80%" # window close.
+        "windowsIn,   1, 4, easeOutCubic,  popin 20%" # window open
+        "windowsOut,  1, 4, fluent_decel,  popin 80%" # window close.
         "windowsMove, 1, 2, fluent_decel, slide" # everything in between, moving, dragging, resizing.
 
         # Fade
