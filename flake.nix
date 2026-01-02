@@ -202,14 +202,6 @@
       inputs.nix-topology.nixosModules.default
       (
         {pkgs, ...}: {
-          nixpkgs.overlays = [
-            (final: prev: {
-              nodejs_24 = prev.nodejs_24.overrideAttrs (old: {
-                doCheck = false;
-              });
-            })
-          ];
-
           nix.package = pkgs.lixPackageSets.latest.lix;
           environment.systemPackages = with pkgs.lixPackageSets.latest; [
             lix

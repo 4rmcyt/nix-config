@@ -97,32 +97,6 @@
     efi.canTouchEfiVariables = true;
   };
 
-  # =================================================================
-  # 5. Nixpkgs Configuration
-  # =================================================================
-  # Note: allowUnfree is set in lib/flake-helpers.nix
-  nixpkgs.overlays = [
-    (_final: prev: {
-      python3 = prev.python3.override {
-        packageOverrides = _pySelf: pySuper: {
-          pyrate-limiter = pySuper.pyrate-limiter.overridePythonAttrs (_oldAttrs: {
-            doCheck = false;
-          });
-          img2pdf = pySuper.img2pdf.overridePythonAttrs (_oldAttrs: {
-            doCheck = false;
-          });
-        };
-      };
-      # Override libutp to work around CMake issues
-      libutp = prev.libutp.overrideAttrs (oldAttrs: {
-        meta =
-          oldAttrs.meta
-          // {
-            broken = false;
-          };
-      });
-    })
-  ];
 
   # =================================================================
   # 6. Nix Configuration
@@ -179,11 +153,11 @@
     ];
 
     # Homeserver system features
-    system-features = [
-      "big-parallel"
-      # "gccarch-skylake"
-      "kvm"
-    ];
+    # system-features = [
+    #   "big-parallel"
+    #   # "gccarch-skylake"
+    #   "kvm"
+    # ];
 
     trusted-public-keys = [
       "4rmcyt-homeserver.cachix.org-1:SmDepzJsgaofX57WoXmDu+HRJl/Koh90UWsZO0k2Nkg="
