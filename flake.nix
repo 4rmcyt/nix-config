@@ -7,26 +7,29 @@
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     nur.url = "github:nix-community/NUR";
     nixos-hardware.url = "github:nixos/nixos-hardware";
-
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     ucodenix.url = "github:e-tho/ucodenix";
+    lix = {
+      url = "https://git.lix.systems/lix-project/lix/archive/main.tar.gz";
+      flake = false;
+    };
 
+    lix-module = {
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/main.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.lix.follows = "lix";
+    };
+    
     # System management
     disko = {
       url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-wsl = {
@@ -46,11 +49,6 @@
       inputs.home-manager.follows = "home-manager";
     };
     flatpaks.url = "github:in-a-dil-emma/declarative-flatpak/latest";
-
-    cosmic-applets-collection = {
-      url = "github:wingej0/ext-cosmic-applets-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     cosmic-manager = {
       url = "github:HeitorAugustoLN/cosmic-manager";
@@ -77,11 +75,6 @@
     };
 
     # Services & applications
-    authentik-nix = {
-      url = "github:nix-community/authentik-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nixarr = {
       url = "github:rasmus-kirk/nixarr";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -94,7 +87,10 @@
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
+    devshell = {
+      url = "github:numtide/devshell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -114,10 +110,6 @@
     };
     firefox-addons = {
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    firefox-nightly = {
-      url = "github:nix-community/flake-firefox-nightly";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -179,91 +171,78 @@
     };
   };
 
-  outputs = inputs @ {
-    nixpkgs,
-    home-manager,
-    ...
-  }: let
-    userName = "zeev";
-    system = "x86_64-linux";
+  outputs =
+    inputs@{
+      nixpkgs,
+      home-manager,
+      ...
+    }:
+    let
+      userName = "zeev";
+      system = "x86_64-linux";
 
-    commonNixosModules = [
-      inputs.sops-nix.nixosModules.sops
-      inputs.home-manager.nixosModules.home-manager
-      inputs.nix-index-database.nixosModules.nix-index
-      inputs.nixos-facter-modules.nixosModules.facter
-      inputs.agenix.nixosModules.default
-      inputs.vscode-server.nixosModules.default
-      inputs.chaotic.nixosModules.nyx-cache
-      inputs.chaotic.nixosModules.nyx-overlay
-      inputs.ucodenix.nixosModules.default
-      inputs.disko.nixosModules.disko
-      inputs.nixos-jellyfin.nixosModules.default
-      inputs.nix-topology.nixosModules.default
-      (
-        {pkgs, ...}: {
-          nix.package = pkgs.lixPackageSets.stable.lix;
-          environment.systemPackages = with pkgs.lixPackageSets.stable; [
-            lix
-            nix-update
-            nix-direnv
-            nix-init
-            editline
-            boehmgc
-            nix-eval-jobs
-            nix-fast-build
-            colmena
-          ];
-        }
-      )
-    ];
+      commonNixosModules = [
+        inputs.sops-nix.nixosModules.sops
+        inputs.home-manager.nixosModules.home-manager
+        inputs.nix-index-database.nixosModules.nix-index
+        inputs.nixos-facter-modules.nixosModules.facter
+        inputs.agenix.nixosModules.default
+        inputs.vscode-server.nixosModules.default
+        inputs.chaotic.nixosModules.nyx-cache
+        inputs.chaotic.nixosModules.nyx-overlay
+        inputs.ucodenix.nixosModules.default
+        inputs.disko.nixosModules.disko
+        inputs.nixos-jellyfin.nixosModules.default
+        inputs.nix-topology.nixosModules.default
+        inputs.lix-module.nixosModules.default
+      ];
 
-    commonHomeManagerModules = [
-      inputs.sops-nix.homeManagerModules.sops
-      inputs.agenix.homeManagerModules.default
-    ];
+      commonHomeManagerModules = [
+        inputs.sops-nix.homeManagerModules.sops
+        inputs.agenix.homeManagerModules.default
+      ];
 
-    commonHomeManagerNixosConfig = {
-      home-manager.useGlobalPkgs = false;
-      home-manager.useUserPackages = true;
-      home-manager.backupFileExtension = "backup";
-      home-manager.sharedModules = [{home.enableNixpkgsReleaseCheck = false;}];
-      home-manager.extraSpecialArgs = {inherit inputs;};
-    };
+      commonHomeManagerNixosConfig = {
+        home-manager.useGlobalPkgs = false;
+        home-manager.useUserPackages = true;
+        home-manager.backupFileExtension = "backup";
+        home-manager.sharedModules = [ { home.enableNixpkgsReleaseCheck = false; } ];
+        home-manager.extraSpecialArgs = { inherit inputs; };
+      };
 
-    commonHomeManagerUserConfig = {
-      nixpkgs.config.allowUnfree = true;
-      sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
-    };
-
-    mkNixosConfig = hostName: {hasFacter ? true}:
-      {
+      commonHomeManagerUserConfig = {
         nixpkgs.config.allowUnfree = true;
-        sops.age.keyFile = nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
-      }
-      // (
-        if hasFacter
-        then {facter.reportPath = ./hosts/nixos + "/${hostName}/facter.json";}
-        else {}
-      );
+        sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
+      };
 
-    homeFlakeHelper = import ./homeFlakeHelper.nix {
-      inherit
-        inputs
-        nixpkgs
-        home-manager
-        userName
-        system
-        commonHomeManagerModules
-        ;
-    };
-  in {
-    nixosConfigurations = {
-      desktop = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = {inherit inputs;};
-        modules =
-          [
+      mkNixosConfig =
+        hostName:
+        {
+          hasFacter ? true,
+        }:
+        {
+          nixpkgs.config.allowUnfree = true;
+          sops.age.keyFile = nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
+        }
+        // (if hasFacter then { facter.reportPath = ./hosts/nixos + "/${hostName}/facter.json"; } else { });
+
+      homeFlakeHelper = import ./homeFlakeHelper.nix {
+        inherit
+          inputs
+          nixpkgs
+          home-manager
+          userName
+          system
+          commonHomeManagerModules
+          ;
+      };
+    in
+    {
+      nixosConfigurations = {
+        desktop = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [
             ./hosts/nixos/desktop
             ./modules/disko/desktop
 
@@ -271,36 +250,33 @@
             inputs.nix-gaming.nixosModules.pipewireLowLatency
             inputs.lanzaboote.nixosModules.lanzaboote
 
-            (mkNixosConfig "desktop" {})
+            (mkNixosConfig "desktop" { })
             ./modules/users/${userName}
             (
               commonHomeManagerNixosConfig
               // {
-                home-manager.users.${userName} =
-                  {
-                    imports =
-                      [
-                        ./home/desktop
-                        inputs.betterfox-nix.homeModules.betterfox
-                        inputs.plasma-manager.homeModules.plasma-manager
-                        inputs.noctalia.homeModules.default
-                        inputs.stylix.homeModules.stylix
-                        inputs.pam-shim.homeModules.default
-                      ]
-                      ++ commonHomeManagerModules;
-                  }
-                  // commonHomeManagerUserConfig;
+                home-manager.users.${userName} = {
+                  imports = [
+                    ./home/desktop
+                    inputs.betterfox-nix.homeModules.betterfox
+                    inputs.plasma-manager.homeModules.plasma-manager
+                    inputs.noctalia.homeModules.default
+                    inputs.stylix.homeModules.stylix
+                    inputs.pam-shim.homeModules.default
+                  ]
+                  ++ commonHomeManagerModules;
+                }
+                // commonHomeManagerUserConfig;
               }
             )
           ]
           ++ commonNixosModules;
-      };
+        };
 
-      homeserver = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = {inherit inputs;};
-        modules =
-          [
+        homeserver = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [
             # Host configuration
             ./hosts/nixos/homeserver
             ./modules/disko/homeserver
@@ -308,100 +284,95 @@
             inputs.nixarr.nixosModules.default
             inputs.authentik-nix.nixosModules.default
 
-            (mkNixosConfig "homeserver" {})
+            (mkNixosConfig "homeserver" { })
             ./modules/users/${userName}
             (
               commonHomeManagerNixosConfig
               // {
-                home-manager.users.${userName} =
-                  {
-                    imports = [./home/homeserver] ++ commonHomeManagerModules;
-                  }
-                  // commonHomeManagerUserConfig;
+                home-manager.users.${userName} = {
+                  imports = [ ./home/homeserver ] ++ commonHomeManagerModules;
+                }
+                // commonHomeManagerUserConfig;
               }
             )
           ]
           ++ commonNixosModules;
-      };
+        };
 
-      wsl = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = {inherit inputs;};
-        modules =
-          [
+        wsl = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [
             ./hosts/nixos/wsl
 
             inputs.nixos-wsl.nixosModules.wsl
 
-            (mkNixosConfig "wsl" {hasFacter = false;})
+            (mkNixosConfig "wsl" { hasFacter = false; })
             ./modules/users/${userName}
             (
               commonHomeManagerNixosConfig
               // {
-                home-manager.users.${userName} =
-                  {
-                    imports = [./home/wsl] ++ commonHomeManagerModules;
-                  }
-                  // commonHomeManagerUserConfig;
+                home-manager.users.${userName} = {
+                  imports = [ ./home/wsl ] ++ commonHomeManagerModules;
+                }
+                // commonHomeManagerUserConfig;
               }
             )
           ]
           ++ commonNixosModules;
-      };
+        };
 
-      matebook = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = {inherit inputs;};
-        modules =
-          [
+        matebook = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [
             ./hosts/nixos/matebook
             ./modules/disko/matebook
             inputs.flatpaks.nixosModules.default
-            (mkNixosConfig "matebook" {})
+            (mkNixosConfig "matebook" { })
             ./modules/users/${userName}
             (
               commonHomeManagerNixosConfig
               // {
-                home-manager.users.${userName} =
-                  {
-                    imports =
-                      [
-                        ./home/matebook
-                        inputs.betterfox-nix.homeModules.betterfox
-                      ]
-                      ++ commonHomeManagerModules;
-                  }
-                  // commonHomeManagerUserConfig;
+                home-manager.users.${userName} = {
+                  imports = [
+                    ./home/matebook
+                    inputs.betterfox-nix.homeModules.betterfox
+                  ]
+                  ++ commonHomeManagerModules;
+                }
+                // commonHomeManagerUserConfig;
               }
             )
           ]
           ++ commonNixosModules;
-      };
-    };
-
-    inherit (homeFlakeHelper) homeConfigurations;
-
-    formatter.${system} = let
-      pkgs = nixpkgs.legacyPackages.${system};
-      treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs (import ./treefmt.nix);
-    in
-      treefmtEval.config.build.wrapper;
-
-    devShells.${system} = {
-      default = import ./devshell.nix {
-        pkgs = nixpkgs.legacyPackages.${system};
-        inherit inputs;
+        };
       };
 
-      cuda = import ./shells/cuda-shell.nix {
-        pkgs = import nixpkgs {
-          inherit system;
-          config = {
-            allowUnfree = true;
-            cudaSupport = true;
+      inherit (homeFlakeHelper) homeConfigurations;
+
+      formatter.${system} =
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs (import ./treefmt.nix);
+        in
+        treefmtEval.config.build.wrapper;
+
+      devShells.${system} = {
+        default = import ./devshell.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+          inherit inputs;
+        };
+
+        cuda = import ./shells/cuda-shell.nix {
+          pkgs = import nixpkgs {
+            inherit system;
+            config = {
+              allowUnfree = true;
+              cudaSupport = true;
+            };
           };
         };
       };
     };
-  };
 }
