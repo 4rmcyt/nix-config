@@ -10,6 +10,7 @@
     # Hardware and system base
     ./hardware-configuration.nix
     ../../../modules/base
+    ../../../modules/base/package-fixes.nix
     ../../../modules/disko/homeserver
     ../../../modules/options
 
