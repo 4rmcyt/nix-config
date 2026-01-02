@@ -168,7 +168,7 @@
       ];
 
       # Desktop-specific system features
-      system-features = [
+      extra-system-features = [
         "big-parallel"
         "kvm"
       ];
