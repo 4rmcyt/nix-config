@@ -159,6 +159,7 @@
       eval-cache = true; # Cache evaluation results
 
       substituters = [
+        "https://cache.nixos.org"
         "https://4rmcyt-desktop.cachix.org?priority=1"
         "https://cache.lix.systems?priority=2"
         "https://cache.flox.dev?priority=3"
@@ -174,6 +175,7 @@
 
       # Additional trusted public keys for gaming and CUDA caches
       trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
