@@ -157,29 +157,12 @@
       # Evaluation performance
       eval-cache = true; # Cache evaluation results
 
-      extra-substituters = [
-        "https://4rmcyt-all.cachix.org?priority=1"
-        "https://cache.lix.systems?priority=1"
-        "https://cache.nixos.org?priority=1"
-        "https://cache.flox.dev?priority=3"
-        "https://nix-community.cachix.org?priority=4"
-        "https://chaotic-nyx.cachix.org?priority=5"
-      ];
+      # Substituters and trusted keys are centralized in flake.nix
 
       # Desktop-specific system features
       extra-system-features = [
         "big-parallel"
         "kvm"
-      ];
-
-      # Additional trusted public keys for gaming and CUDA caches
-      extra-trusted-public-keys = [
-        "4rmcyt-all.cachix.org-1:DCOfHNuSgUNpHS/BwN8zz6zxw4D6izI3VXBDf/vucDc="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
-        "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
-        "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       ];
 
       trusted-users = [

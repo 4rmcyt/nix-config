@@ -176,6 +176,31 @@
     let
       userName = "zeev";
       system = "x86_64-linux";
+      commonSubstituters = [
+        "https://4rmcyt-all.cachix.org?priority=1"
+        "https://cache.lix.systems?priority=1"
+        "https://nix-community.cachix.org?priority=1"
+        "https://cache.nixos.org?priority=1"
+        "https://cache.flox.dev?priority=4"
+        "https://nix-gaming.cachix.org?priority=5"
+        "https://devenv.cachix.org?priority=7"
+        "https://nixpkgs-unfree.cachix.org?priority=8"
+        "https://chaotic-nyx.cachix.org?priority=9"
+      ];
+
+      commonTrustedPublicKeys = [
+        "4rmcyt-all.cachix.org-1:DCOfHNuSgUNpHS/BwN8zz6zxw4D6izI3VXBDf/vucDc="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+        "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
+        "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
+        "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
+        "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
+        "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
+        "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
+        "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      ];
 
       commonNixosModules = [
         inputs.sops-nix.nixosModules.sops
@@ -219,6 +244,10 @@
         {
           nixpkgs.config.allowUnfree = true;
           sops.age.keyFile = nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
+          nix.settings = {
+            extra-substituters = commonSubstituters;
+            extra-trusted-public-keys = commonTrustedPublicKeys;
+          };
         }
         // (if hasFacter then { facter.reportPath = ./hosts/nixos + "/${hostName}/facter.json"; } else { });
 
@@ -353,6 +382,7 @@
         default = import ./devshell.nix {
           pkgs = nixpkgs.legacyPackages.${system};
           inherit inputs;
+          cachix.pull = [ "4rmcyt-all" ];
         };
 
         cuda = import ./shells/cuda-shell.nix {

@@ -119,7 +119,6 @@
 
     substituters = [
       "https://cache.nixos.org"
-      "https://install.determinate.systems"
       "https://4rmcyt-all.cachix.org"
       "https://nix-community.cachix.org"
       "https://numtide.cachix.org"
