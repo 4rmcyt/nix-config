@@ -9,8 +9,8 @@
   nixpkgs.overlays = [
     # Disable ffado in pipewire to avoid nodejs ia32 cross-compilation issues
     # ffado is for FireWire audio devices which are rarely used
-    (final: prev: {
-      pipewire = prev.pipewire.override { ffadoSupport = false; };
+    (_final: prev: {
+      pipewire = prev.pipewire.override {ffadoSupport = false;};
     })
   ];
 

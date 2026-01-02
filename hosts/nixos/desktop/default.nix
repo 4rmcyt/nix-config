@@ -4,17 +4,13 @@
   lib,
   inputs,
   ...
-}:
-{
+}: {
   # =================================================================
   # 0. Nixpkgs Configuration
   # =================================================================
   nixpkgs.overlays = [
-    # Disable ffado in pipewire to avoid nodejs ia32 cross-compilation issues
-    # ffado is for FireWire audio devices which are rarely used
-    # Use nodejs_22 instead of nodejs_24 for better stability
-    (final: prev: {
-      pipewire = prev.pipewire.override { ffadoSupport = false; };
+    (_final: prev: {
+      pipewire = prev.pipewire.override {ffadoSupport = false;};
       nodejs = prev.nodejs_22;
     })
   ];
@@ -224,16 +220,14 @@
     };
 
     shells = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         zsh
         nushell
       ]
     );
 
     systemPackages = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -340,7 +334,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
+      allowedTCPPorts = [9100]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -461,10 +455,10 @@
 
     pcscd = {
       enable = true;
-      plugins = [ pkgs.ccid ];
+      plugins = [pkgs.ccid];
     };
 
-    dbus.packages = [ pkgs.gcr ];
+    dbus.packages = [pkgs.gcr];
 
     power-profiles-daemon.enable = false;
 
@@ -534,7 +528,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = [ "nvidia" ];
+      videoDrivers = ["nvidia"];
       xkb.layout = "us";
     };
   };
@@ -543,10 +537,10 @@
   # =================================================================
   users = {
     groups = {
-      git = { };
-      plugdev = { };
-      prometheus = { };
-      nix-builder = { };
+      git = {};
+      plugdev = {};
+      prometheus = {};
+      nix-builder = {};
     };
 
     users = {

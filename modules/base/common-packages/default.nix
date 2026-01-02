@@ -165,7 +165,7 @@
       nodePackages.npm
 
       ## Python
-      poetry 
+      poetry
       python3
       uv # workspace management tool
 
