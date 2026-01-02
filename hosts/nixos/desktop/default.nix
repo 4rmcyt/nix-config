@@ -164,6 +164,7 @@
         "https://cache.flox.dev?priority=3"
         "https://nix-community.cachix.org?priority=4"
         "https://chaotic-nyx.cachix.org?priority=5"
+        "https://lix"
       ];
 
       # Desktop-specific system features

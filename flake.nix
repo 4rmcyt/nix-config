@@ -202,8 +202,8 @@
       inputs.nix-topology.nixosModules.default
       (
         {pkgs, ...}: {
-          nix.package = pkgs.lixPackageSets.latest.lix;
-          environment.systemPackages = with pkgs.lixPackageSets.latest; [
+          nix.package = pkgs.lixPackageSets.stable.lix;
+          environment.systemPackages = with pkgs.lixPackageSets.stable; [
             lix
             nix-update
             nix-direnv
