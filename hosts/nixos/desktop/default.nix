@@ -12,6 +12,7 @@
   nixpkgs.overlays = [
     (final: prev: {
       pipewire = prev.pipewire.override { ffadoSupport = false; };
+      nodejs = prev.nodejs.override { package = "nodejs-22_x"; };
     })
   ];
 

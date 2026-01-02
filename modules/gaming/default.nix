@@ -39,7 +39,6 @@
       # Gaming utilities
       # lutris # Disabled due to allegro CMake compatibility issue in current nixpkgs
       # Re-enable when fixed: https://github.com/NixOS/nixpkgs/issues/...
-      bottles
       heroic
       wine
       winetricks
@@ -48,6 +47,9 @@
       gamemode
       gamescope
       mangohud
+      vesktop
+      lutris
+      protonup-qt
     ]
     ++ lib.optionals (inputs ? nix-gaming) [
       inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.wine-ge

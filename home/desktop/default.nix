@@ -41,13 +41,6 @@
       nu_scripts
       devenv
 
-      # Gaming
-      vesktop
-      gamescope
-      mangohud
-      lutris
-      protonup-qt
-
       # Containerization
       distrobox
 
