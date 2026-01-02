@@ -28,7 +28,8 @@
         quickConnectAvailable = false;
         isStartupWizardCompleted = true;
 
-        enableGroupingIntoCollections = false;
+        enableGroupingMoviesIntoCollections = false;
+        enableGroupingShowsIntoCollections = false;
         enableExternalContentInSuggestions = false;
 
         metadataPath = "/data/media/.state/nixarr/jellyfin/data/metadata";

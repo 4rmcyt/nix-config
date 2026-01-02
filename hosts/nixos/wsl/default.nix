@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -44,8 +45,8 @@
   # 4. Boot Configuration
   # =================================================================
   boot = {
-    kernelModules = ["nvidia"];
-    extraModulePackages = [pkgs.linuxPackages.nvidia_x11];
+    kernelModules = [ "nvidia" ];
+    extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
 
     # System control parameters for WSL
     kernel.sysctl = {
@@ -119,7 +120,7 @@
     substituters = [
       "https://cache.nixos.org"
       "https://install.determinate.systems"
-      "https://4rmcyt-wsl.cachix.org"
+      "https://4rmcyt-all.cachix.org"
       "https://nix-community.cachix.org"
       "https://numtide.cachix.org"
       "https://cache.flox.dev"
@@ -129,7 +130,7 @@
 
     trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "4rmcyt-wsl.cachix.org-1:6Z2J6lPY35L3qxBgEYzyN0Q3Y6LCJhtz/YeY4VQ29BU="
+      "4rmcyt-all.cachix.org-1:DCOfHNuSgUNpHS/BwN8zz6zxw4D6izI3VXBDf/vucDc="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
       "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
@@ -168,7 +169,7 @@
       /usr/lib/wsl/lib
     '';
 
-    shells = with pkgs; [zsh];
+    shells = with pkgs; [ zsh ];
 
     # System packages
     systemPackages = with pkgs; [
@@ -224,7 +225,7 @@
     useNetworkd = false;
     useDHCP = false;
     dhcpcd.enable = false;
-    interfaces = {};
+    interfaces = { };
     firewall.allowedTCPPorts = [
       4242 # Kavita
     ];
@@ -273,7 +274,7 @@
 
     # System services
     resolved.enable = false;
-    xserver.videoDrivers = ["nvidia"];
+    xserver.videoDrivers = [ "nvidia" ];
   };
 
   # =================================================================
@@ -290,7 +291,7 @@
       description = "Git user";
     };
     users.zeev.shell = pkgs.zsh;
-    groups.git = {};
+    groups.git = { };
   };
 
   # =================================================================

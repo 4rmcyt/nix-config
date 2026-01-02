@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -10,7 +11,6 @@
     # Hardware and system base
     ./hardware-configuration.nix
     ../../../modules/base
-    ../../../modules/base/package-fixes.nix
     ../../../modules/disko/homeserver
     ../../../modules/options
 
@@ -141,7 +141,7 @@
 
     extra-substituters = [
       "https://nix-community.cachix.org?priority=1"
-      "https://4rmcyt-homeserver.cachix.org?priority=1"
+      "https://4rmcyt-all.cachix.org?priority=1"
       "https://cache.lix.systems?priority=1"
       "https://cache.nixos.org?priority=1"
       "https://cache.flox.dev?priority=4"
@@ -157,7 +157,7 @@
     ];
 
     extra-trusted-public-keys = [
-      "4rmcyt-homeserver.cachix.org-1:SmDepzJsgaofX57WoXmDu+HRJl/Koh90UWsZO0k2Nkg="
+      "4rmcyt-all.cachix.org-1:DCOfHNuSgUNpHS/BwN8zz6zxw4D6izI3VXBDf/vucDc="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
       "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
@@ -215,7 +215,7 @@
     betula
   ];
 
-  environment.shells = with pkgs; [zsh];
+  environment.shells = with pkgs; [ zsh ];
 
   # =================================================================
   # 8. Home Manager
@@ -356,6 +356,6 @@
       group = "git";
     };
     users.zeev.shell = pkgs.zsh;
-    groups.git = {};
+    groups.git = { };
   };
 }

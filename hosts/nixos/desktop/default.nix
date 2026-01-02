@@ -4,7 +4,8 @@
   lib,
   inputs,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -157,7 +158,7 @@
       eval-cache = true; # Cache evaluation results
 
       extra-substituters = [
-        "https://4rmcyt-desktop.cachix.org?priority=1"
+        "https://4rmcyt-all.cachix.org?priority=1"
         "https://cache.lix.systems?priority=1"
         "https://cache.nixos.org?priority=1"
         "https://cache.flox.dev?priority=3"
@@ -173,7 +174,7 @@
 
       # Additional trusted public keys for gaming and CUDA caches
       extra-trusted-public-keys = [
-        "4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs="
+        "4rmcyt-all.cachix.org-1:DCOfHNuSgUNpHS/BwN8zz6zxw4D6izI3VXBDf/vucDc="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
         "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
@@ -227,14 +228,16 @@
     };
 
     shells = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         zsh
         nushell
       ]
     );
 
     systemPackages = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -341,7 +344,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -462,10 +465,10 @@
 
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
-    dbus.packages = [pkgs.gcr];
+    dbus.packages = [ pkgs.gcr ];
 
     power-profiles-daemon.enable = false;
 
@@ -535,7 +538,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
   };
@@ -544,10 +547,10 @@
   # =================================================================
   users = {
     groups = {
-      git = {};
-      plugdev = {};
-      prometheus = {};
-      nix-builder = {};
+      git = { };
+      plugdev = { };
+      prometheus = { };
+      nix-builder = { };
     };
 
     users = {

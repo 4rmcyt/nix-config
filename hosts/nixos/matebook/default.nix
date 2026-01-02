@@ -95,7 +95,7 @@
       eval-cache = true; # Cache evaluation results
 
       extra-substituters = [
-        "https://4rmcyt-matebook.cachix.org?priority=1"
+        "https://4rmcyt-all.cachix.org?priority=1"
         "https://cache.lix.systems?priority=2"
         "https://nix-community.cachix.org?priority=3"
         "https://nix-gaming.cachix.org?priority=4"
@@ -107,7 +107,7 @@
       ];
 
       extra-trusted-public-keys = [
-        "4rmcyt-matebook.cachix.org-1:OG8MqlfrDlyperVhYk2+va8Cwo/vE6tG/VbTlvq4I0I="
+        "4rmcyt-all.cachix.org-1:DCOfHNuSgUNpHS/BwN8zz6zxw4D6izI3VXBDf/vucDc="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
         "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="

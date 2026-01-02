@@ -7,6 +7,10 @@
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     nur.url = "github:nix-community/NUR";
     nixos-hardware.url = "github:nixos/nixos-hardware";
+    home-manager = {
+      url = "github:nix-community/home-manager/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -26,19 +30,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.lix.follows = "lix";
     };
-    
-    # System management
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    # Home Manager
-    home-manager = {
-      url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -97,7 +94,6 @@
     };
 
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
-
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -248,7 +244,6 @@
 
             inputs.flatpaks.nixosModules.default
             inputs.nix-gaming.nixosModules.pipewireLowLatency
-            inputs.lanzaboote.nixosModules.lanzaboote
 
             (mkNixosConfig "desktop" { })
             ./modules/users/${userName}
@@ -277,13 +272,9 @@
           inherit system;
           specialArgs = { inherit inputs; };
           modules = [
-            # Host configuration
             ./hosts/nixos/homeserver
             ./modules/disko/homeserver
-
             inputs.nixarr.nixosModules.default
-            inputs.authentik-nix.nixosModules.default
-
             (mkNixosConfig "homeserver" { })
             ./modules/users/${userName}
             (
