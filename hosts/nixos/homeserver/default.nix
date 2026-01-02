@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -97,7 +98,6 @@
     efi.canTouchEfiVariables = true;
   };
 
-
   # =================================================================
   # 6. Nix Configuration
   # =================================================================
@@ -111,7 +111,6 @@
     experimental-features = [
       "flakes"
       "nix-command"
-      "flake-self-attrs"
       "lix-custom-sub-commands"
       "auto-allocate-uids"
     ];
@@ -142,8 +141,9 @@
 
     extra-substituters = [
       "https://nix-community.cachix.org?priority=1"
-      "https://4rmcyt-homeserver.cachix.org?priority=2"
-      "https://cache.lix.systems?priority=3"
+      "https://4rmcyt-homeserver.cachix.org?priority=1"
+      "https://cache.lix.systems?priority=1"
+      "https://cache.nixos.org?priority=1"
       "https://cache.flox.dev?priority=4"
       "https://helix.cachix.org?priority=5"
       "https://yazi.cachix.org?priority=6"
@@ -167,6 +167,7 @@
       "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
       "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
       "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
     ];
 
     trusted-users = [
@@ -214,7 +215,7 @@
     betula
   ];
 
-  environment.shells = with pkgs; [zsh];
+  environment.shells = with pkgs; [ zsh ];
 
   # =================================================================
   # 8. Home Manager
@@ -355,6 +356,6 @@
       group = "git";
     };
     users.zeev.shell = pkgs.zsh;
-    groups.git = {};
+    groups.git = { };
   };
 }
