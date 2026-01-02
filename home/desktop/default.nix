@@ -10,7 +10,7 @@
     ../../modules/GUI/vscode
     ../../modules/GUI/ghostty
     ../../modules/GUI/wezterm
-    ../../modules/GUI/zed
+    # ../../modules/GUI/zed
     ../../modules/GUI/mpv
     ../../modules/GUI/obsidian
     # ../../modules/GUI/noctalia

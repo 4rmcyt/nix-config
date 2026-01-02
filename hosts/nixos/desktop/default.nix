@@ -135,7 +135,7 @@
       auto-optimise-store = true;
 
       warn-dirty = false;
-      max-jobs = "auto"; # Auto-detect job count
+      max-jobs = 8;
       keep-going = true; # Continue building other derivations on failure
 
       # Network optimization for faster downloads
@@ -168,9 +168,7 @@
 
       # Desktop-specific system features
       system-features = [
-        "benchmark"
         "big-parallel"
-        "gccarch-znver4"
         "kvm"
       ];
 

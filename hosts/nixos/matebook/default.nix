@@ -94,12 +94,6 @@
       # Evaluation performance
       eval-cache = true; # Cache evaluation results
 
-      system-features = [
-        "big-parallel"
-        "gccarch-znver1"
-        "kvm"
-      ];
-
       substituters = [
         "https://4rmcyt-matebook.cachix.org?priority=1"
         "https://cache.lix.systems?priority=2"

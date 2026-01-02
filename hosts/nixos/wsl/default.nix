@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{config, pkgs, ...}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -27,6 +27,14 @@
       };
     };
   };
+
+  # =================================================================
+  # 3.5. Systemd Services - Nix Daemon GitHub Token
+  # =================================================================
+  # Note: The git_access_token secret should contain: NIX_CONFIG="access-tokens = github.com=<token>"
+  systemd.services.nix-daemon.serviceConfig.Environment = [
+    "NIX_CONFIG=access-tokens = github.com=$(cat ${config.sops.secrets.git_access_token.path})"
+  ];
 
   # =================================================================
   # 4. Boot Configuration
@@ -72,8 +80,7 @@
   # =================================================================
 
   nix.settings = {
-    access-tokens = "github.com=REDACTED";
-    cores = 0;
+    cores = 4;
 
     experimental-features = [
       "flakes"
@@ -104,13 +111,6 @@
     # Build performance improvements
     builders-use-substitutes = true; # Allow builders to use substitutes
     require-sigs = true; # Security: require signatures
-
-    system-features = [
-      "benchmark"
-      "big-parallel"
-      # "gccarch-znver3"
-      "kvm"
-    ];
 
     substituters = [
       "https://cache.nixos.org"

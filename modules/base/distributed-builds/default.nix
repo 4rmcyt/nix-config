@@ -40,7 +40,7 @@
 
           supportedFeatures = lib.mkOption {
             type = lib.types.listOf lib.types.str;
-            default = ["nixos-test" "benchmark" "big-parallel" "kvm"];
+            default = [ "big-parallel" ];
             description = "List of supported features";
           };
 

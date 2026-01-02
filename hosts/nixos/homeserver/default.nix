@@ -106,9 +106,8 @@
   # nix.package is set by lix-module
 
   nix.settings = {
-    cores = 2; # Use 2 cores per build job (was 0 = all cores)
-    max-jobs = 2; # Run 2 jobs in parallel (was "auto" = 8 jobs)
-    access-tokens = "github.com=REDACTED";
+    cores = 4;
+    max-jobs = 4;
     experimental-features = [
       "flakes"
       "nix-command"
@@ -152,12 +151,9 @@
       "https://nixpkgs-unfree.cachix.org?priority=8"
     ];
 
-    # Homeserver system features
-    # system-features = [
-    #   "big-parallel"
-    #   # "gccarch-skylake"
-    #   "kvm"
-    # ];
+    system-features = [
+      "big-parallel"
+    ];
 
     trusted-public-keys = [
       "4rmcyt-homeserver.cachix.org-1:SmDepzJsgaofX57WoXmDu+HRJl/Koh90UWsZO0k2Nkg="
@@ -338,6 +334,14 @@
     # Development services
     vscode-server.enable = true;
   };
+
+  # =================================================================
+  # 11.5. Systemd Services - Nix Daemon GitHub Token
+  # =================================================================
+  # Note: The git_access_token secret should contain: NIX_CONFIG="access-tokens = github.com=<token>"
+  systemd.services.nix-daemon.serviceConfig.Environment = [
+    "NIX_CONFIG=access-tokens = github.com=$(cat ${config.sops.secrets.git_access_token.path})"
+  ];
 
   # =================================================================
   # 12. Users & Groups
