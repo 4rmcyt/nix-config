@@ -1,5 +1,4 @@
-{ config, ... }:
-{
+{config, ...}: {
   # =================================================================
   # 1. SOPS Secrets
   # =================================================================
@@ -52,9 +51,9 @@
   };
 
   users.groups = {
-    grafana = { };
-    prometheus = { };
-    uptime-kuma = { };
+    grafana = {};
+    prometheus = {};
+    uptime-kuma = {};
   };
 
   # =================================================================
@@ -136,7 +135,7 @@
       port = 9090;
       retentionTime = "30d";
       globalConfig.scrape_interval = "1m";
-      ruleFiles = [ ./alerts/homeserver.yaml ];
+      ruleFiles = [./alerts/homeserver.yaml];
 
       exporters = {
         node = {
@@ -177,7 +176,7 @@
       scrapeConfigs = [
         {
           job_name = "cloudflare-exporter";
-          static_configs = [ { targets = [ "localhost:8081" ]; } ];
+          static_configs = [{targets = ["localhost:8081"];}];
         }
         {
           job_name = "desktop-node";
@@ -192,13 +191,13 @@
         {
           job_name = "homeserver-node";
           static_configs = [
-            { targets = [ "localhost:9100" ]; }
+            {targets = ["localhost:9100"];}
           ];
         }
         {
           job_name = "nut-exporter";
           static_configs = [
-            { targets = [ "localhost:9199" ]; }
+            {targets = ["localhost:9199"];}
           ];
           metrics_path = "/ups_metrics";
         }
@@ -210,7 +209,7 @@
         # }
         {
           job_name = "prometheus";
-          static_configs = [ { targets = [ "localhost:${toString config.my.network.ports.prometheus}" ]; } ];
+          static_configs = [{targets = ["localhost:${toString config.my.network.ports.prometheus}"];}];
         }
       ];
     };
@@ -322,12 +321,12 @@
             };
             relabel_configs = [
               {
-                source_labels = [ "__journal__systemd_unit" ];
+                source_labels = ["__journal__systemd_unit"];
                 regex = "(.*)\\.service";
                 target_label = "service";
               }
               {
-                source_labels = [ "__journal__hostname" ];
+                source_labels = ["__journal__hostname"];
                 target_label = "hostname";
               }
             ];

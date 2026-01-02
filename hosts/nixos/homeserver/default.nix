@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -215,7 +214,7 @@
     betula
   ];
 
-  environment.shells = with pkgs; [ zsh ];
+  environment.shells = with pkgs; [zsh];
 
   # =================================================================
   # 8. Home Manager
@@ -356,6 +355,6 @@
       group = "git";
     };
     users.zeev.shell = pkgs.zsh;
-    groups.git = { };
+    groups.git = {};
   };
 }

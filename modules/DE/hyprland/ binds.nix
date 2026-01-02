@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   wayland.windowManager.hyprland.settings = {
     binds = {
       movefocus_cycles_fullscreen = true;

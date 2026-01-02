@@ -1,21 +1,20 @@
-{ lib, ... }:
-with lib;
-let
+{lib, ...}:
+with lib; let
   defaultApps = {
-    text = [ "org.gnome.TextEditor.desktop" ];
-    image = [ "imv-dir.desktop" ];
-    audio = [ "mpv.desktop" ];
-    video = [ "mpv.desktop" ];
-    directory = [ "nemo.desktop" ];
-    office = [ "libreoffice.desktop" ];
-    pdf = [ "org.gnome.Evince.desktop" ];
-    terminal = [ "ghostty.desktop" ];
-    archive = [ "org.gnome.FileRoller.desktop" ];
-    discord = [ "webcord.desktop" ];
+    text = ["org.gnome.TextEditor.desktop"];
+    image = ["imv-dir.desktop"];
+    audio = ["mpv.desktop"];
+    video = ["mpv.desktop"];
+    directory = ["nemo.desktop"];
+    office = ["libreoffice.desktop"];
+    pdf = ["org.gnome.Evince.desktop"];
+    terminal = ["ghostty.desktop"];
+    archive = ["org.gnome.FileRoller.desktop"];
+    discord = ["webcord.desktop"];
   };
 
   mimeMap = {
-    text = [ "text/plain" ];
+    text = ["text/plain"];
     image = [
       "image/bmp"
       "image/gif"
@@ -46,7 +45,7 @@ let
       "video/x-matroska"
       "video/x-msvideo"
     ];
-    directory = [ "inode/directory" ];
+    directory = ["inode/directory"];
     office = [
       "application/vnd.oasis.opendocument.text"
       "application/vnd.oasis.opendocument.spreadsheet"
@@ -59,28 +58,27 @@ let
       "application/vnd.ms-powerpoint"
       "application/rtf"
     ];
-    pdf = [ "application/pdf" ];
-    terminal = [ "terminal" ];
+    pdf = ["application/pdf"];
+    terminal = ["terminal"];
     archive = [
       "application/zip"
       "application/rar"
       "application/7z"
       "application/*tar"
     ];
-    discord = [ "x-scheme-handler/discord" ];
+    discord = ["x-scheme-handler/discord"];
   };
 
-  associations =
-    with lists;
+  associations = with lists;
     listToAttrs (
       flatten (
         mapAttrsToList (
           key: map (type: attrsets.nameValuePair type defaultApps."${key}")
-        ) mimeMap
+        )
+        mimeMap
       )
     );
-in
-{
+in {
   xdg.configFile."mimeapps.list".force = true;
   xdg.mimeApps.enable = true;
   xdg.mimeApps.associations.added = associations;
