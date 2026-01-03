@@ -15,7 +15,6 @@
   # =================================================================
   boot = {
     kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-server-lto;
-    zfs.package = pkgs.cachyosKernels.zfs-cachyos-server-lto;
 
     # Kernel modules
     initrd.availableKernelModules = [
