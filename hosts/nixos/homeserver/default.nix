@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -36,7 +37,6 @@
   # 2. System Configuration
   # =================================================================
   system.stateVersion = "25.05";
-
 
   # =================================================================
   # 2.5. Distributed Builds Configuration
@@ -98,7 +98,6 @@
     efi.canTouchEfiVariables = true;
   };
 
-
   nixpkgs.overlays = [
     (_final: prev: {
       python3 = prev.python3.override {
@@ -113,11 +112,9 @@
       };
       # Override libutp to work around CMake issues
       libutp = prev.libutp.overrideAttrs (oldAttrs: {
-        meta =
-          oldAttrs.meta
-          // {
-            broken = false;
-          };
+        meta = oldAttrs.meta // {
+          broken = false;
+        };
       });
     })
   ];
@@ -221,7 +218,7 @@
     lixPackageSets.latest.nix-direnv
   ];
 
-  environment.shells = with pkgs; [zsh];
+  environment.shells = with pkgs; [ zsh ];
 
   # =================================================================
   # 8. Home Manager
@@ -362,6 +359,6 @@
       group = "git";
     };
     users.zeev.shell = pkgs.zsh;
-    groups.git = {};
+    groups.git = { };
   };
 }
