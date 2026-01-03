@@ -4,7 +4,10 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     systems.url = "github:nix-systems/default";
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    cachyos-kernel = {
+      url = "github:xddxdd/nix-cachyos-kernel";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nur.url = "github:nix-community/NUR";
     nixos-hardware.url = "github:nixos/nixos-hardware";
     home-manager = {
@@ -179,24 +182,24 @@
       "https://cache.lix.systems?priority=1"
       "https://nix-community.cachix.org?priority=1"
       "https://cache.nixos.org?priority=1"
+      "https://attic.xuyh0120.win/lantian?priority=3"
       "https://cache.flox.dev?priority=4"
       "https://nix-gaming.cachix.org?priority=5"
       "https://devenv.cachix.org?priority=7"
       "https://nixpkgs-unfree.cachix.org?priority=8"
-      "https://chaotic-nyx.cachix.org?priority=9"
     ];
 
     commonTrustedPublicKeys = [
       "4rmcyt-all.cachix.org-1:DCOfHNuSgUNpHS/BwN8zz6zxw4D6izI3VXBDf/vucDc="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+      "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
       "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
       "helix.cachix.org-1:ejp9KQpR1FBI2onstMQ34yogDm4OgU2ru6lIwPvuCVs="
       "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
       "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
       "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
       "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
-      "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
     ];
 
@@ -207,8 +210,6 @@
       inputs.nixos-facter-modules.nixosModules.facter
       inputs.agenix.nixosModules.default
       inputs.vscode-server.nixosModules.default
-      inputs.chaotic.nixosModules.nyx-cache
-      inputs.chaotic.nixosModules.nyx-overlay
       inputs.ucodenix.nixosModules.default
       inputs.disko.nixosModules.disko
       inputs.nixos-jellyfin.nixosModules.default
@@ -237,6 +238,7 @@
     mkNixosConfig = hostName: {hasFacter ? true}:
       {
         nixpkgs.config.allowUnfree = true;
+        nixpkgs.overlays = [inputs.cachyos-kernel.overlays.pinned];
         sops.age.keyFile = nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
         nix.settings = {
           extra-substituters = commonSubstituters;

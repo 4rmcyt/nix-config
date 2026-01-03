@@ -64,8 +64,8 @@
     '';
 
     # Kernel configuration - CachyOS with LTO and Zen4 optimizations
-    kernelPackages = pkgs.linuxPackages_cachyos-lto-znver4;
-    zfs.package = pkgs.zfs_cachyos;
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-lto-znver4;
+    zfs.package = pkgs.cachyosKernels.zfs-cachyos;
     supportedFilesystems = ["zfs"];
 
     # Kernel parameters
