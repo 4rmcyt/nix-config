@@ -14,7 +14,8 @@
   # 2. Boot Configuration
   # =================================================================
   boot = {
-    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-server-lto;
+    # TODO: Switch back to linuxPackages-cachyos-server-lto when 6.18 + ZFS is fixed
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-lts-lto;
 
     # Kernel modules
     initrd.availableKernelModules = [
