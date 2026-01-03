@@ -214,7 +214,6 @@
       inputs.disko.nixosModules.disko
       inputs.nixos-jellyfin.nixosModules.default
       inputs.nix-topology.nixosModules.default
-      inputs.lix-module.nixosModules.default
     ];
 
     commonHomeManagerModules = [
@@ -273,7 +272,7 @@
 
             inputs.flatpaks.nixosModules.default
             inputs.nix-gaming.nixosModules.pipewireLowLatency
-
+            inputs.lix-module.nixosModules.default
             (mkNixosConfig "desktop" {})
             ./modules/users/${userName}
             (
