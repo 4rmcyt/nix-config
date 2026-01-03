@@ -5,8 +5,8 @@
 }: {
   imports = [
     ../../modules/DE/kde/plasma-manager.nix
-    ../../modules/GUI/firefox
-    ../../modules/GUI/thunderbird
+    # ../../modules/GUI/firefox
+    # ../../modules/GUI/thunderbird
     ../../modules/GUI/vscode
     ../../modules/GUI/ghostty
     ../../modules/GUI/wezterm
@@ -18,8 +18,8 @@
     ../../modules/TUI/common
     ../../modules/TUI/zsh
     # ../../modules/TUI/tmux
-    ../../modules/TUI/nushell
-    ../../modules/TUI/starship
+    # ../../modules/TUI/nushell
+    # ../../modules/TUI/starship
     ../../modules/TUI/atuin
     ../../modules/TUI/zellij
   ];
