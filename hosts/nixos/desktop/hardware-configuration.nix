@@ -11,9 +11,6 @@
   # =================================================================
   imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
-  # Apply cachyos-kernel pinned overlay for binary cache support
-  nixpkgs.overlays = [inputs.cachyos-kernel.overlays.pinned];
-
   # =================================================================
   # 2. Boot Configuration
   # =================================================================
@@ -68,7 +65,8 @@
     '';
 
     # TODO: Switch back to linuxPackages-cachyos-latest-lto-zen4 when patches are fixed
-    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-lts-lto;
+    # Use cachyos kernel directly from input for binary cache support
+    kernelPackages = inputs.cachyos-kernel.packages.${pkgs.system}.linuxPackages-cachyos-lts-lto;
     supportedFilesystems = ["zfs"];
 
     # Kernel parameters
