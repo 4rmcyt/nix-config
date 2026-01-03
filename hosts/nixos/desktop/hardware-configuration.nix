@@ -3,12 +3,16 @@
   lib,
   pkgs,
   modulesPath,
+  inputs,
   ...
 }: {
   # =================================================================
   # 1. Imports
   # =================================================================
   imports = [(modulesPath + "/installer/scan/not-detected.nix")];
+
+  # Apply cachyos-kernel pinned overlay for binary cache support
+  nixpkgs.overlays = [inputs.cachyos-kernel.overlays.pinned];
 
   # =================================================================
   # 2. Boot Configuration

@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     systems.url = "github:nix-systems/default";
+     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel";
     cachyos-kernel = {
       url = "github:xddxdd/nix-cachyos-kernel";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -237,7 +238,9 @@
     mkNixosConfig = hostName: {hasFacter ? true}:
       {
         nixpkgs.config.allowUnfree = true;
-        nixpkgs.overlays = [inputs.cachyos-kernel.overlays.default];
+        # Don't apply cachyos overlay globally - it causes all packages to rebuild
+        # Instead, set the kernel directly in host configs that need it
+        # nixpkgs.overlays = [inputs.cachyos-kernel.overlays.default];
         sops.age.keyFile = nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
         nix.settings = {
           extra-substituters = commonSubstituters;
