@@ -37,15 +37,7 @@
   # =================================================================
   system.stateVersion = "25.05";
 
-  nixpkgs.overlays = [
-    (_final: prev: {
-      # Fix intel-compute-runtime-legacy1 missing cstdint header
-      # See: https://discourse.nixos.org/t/env-nix-cflags-compile-vs-cxxflags/39192
-      intel-compute-runtime-legacy1 = prev.intel-compute-runtime-legacy1.overrideAttrs (oldAttrs: {
-        NIX_CFLAGS_COMPILE = (oldAttrs.NIX_CFLAGS_COMPILE or "") + " -include cstdint";
-      });
-    })
-  ];
+
   # =================================================================
   # 2.5. Distributed Builds Configuration
   # =================================================================
@@ -105,6 +97,30 @@
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
+
+
+  nixpkgs.overlays = [
+    (_final: prev: {
+      python3 = prev.python3.override {
+        packageOverrides = _pySelf: pySuper: {
+          pyrate-limiter = pySuper.pyrate-limiter.overridePythonAttrs (_oldAttrs: {
+            doCheck = false;
+          });
+          img2pdf = pySuper.img2pdf.overridePythonAttrs (_oldAttrs: {
+            doCheck = false;
+          });
+        };
+      };
+      # Override libutp to work around CMake issues
+      libutp = prev.libutp.overrideAttrs (oldAttrs: {
+        meta =
+          oldAttrs.meta
+          // {
+            broken = false;
+          };
+      });
+    })
+  ];
 
   # =================================================================
   # 6. Nix Configuration
