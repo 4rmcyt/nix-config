@@ -3,24 +3,49 @@
   lib,
   pkgs,
   modulesPath,
-  inputs,
   ...
-}: {
+}:
+let
+  # Find the latest ZFS-compatible kernel
+  # Prefer LTS kernel for server stability, otherwise use latest compatible kernel
+  zfsCompatibleKernelPackages = lib.filterAttrs (
+    name: kernelPackages:
+    (builtins.match "linux_(lts|[0-9]+_[0-9]+)" name) != null
+    && (builtins.tryEval kernelPackages).success
+    && kernelPackages ? ${config.boot.zfs.package.kernelModuleAttribute}
+    && !(kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken or true)
+  ) pkgs.linuxKernel.packages;
+
+  # Sort and get the latest compatible kernel, preferring LTS
+  latestKernelPackage =
+    let
+      ltsKernel = lib.attrByPath ["linux_lts"] null pkgs.linuxKernel.packages;
+      ltsCompatible =
+        ltsKernel != null
+        && (builtins.tryEval ltsKernel).success
+        && ltsKernel ? ${config.boot.zfs.package.kernelModuleAttribute}
+        && !(ltsKernel.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken or true);
+    in
+      if ltsCompatible then ltsKernel
+      else lib.last (
+        lib.sort (a: b: (lib.versionOlder a.kernel.version b.kernel.version)) (
+          builtins.attrValues zfsCompatibleKernelPackages
+        )
+      );
+in
+{
   # =================================================================
   # 1. Imports
   # =================================================================
   imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
-  # Apply cachyos-kernel pinned overlay (localized to this host)
-  nixpkgs.overlays = [inputs.nix-cachyos-kernel.overlays.pinned];
-
-
   # =================================================================
   # 2. Boot Configuration
   # =================================================================
   boot = {
-    # TODO: Switch back to linuxPackages-cachyos-server-lto when 6.18 + ZFS is fixed
-    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-lts-lto;
+    # Use latest ZFS-compatible kernel (prefers LTS for server stability)
+    # Automatically selects LTS kernel if ZFS supports it, otherwise latest compatible
+    kernelPackages = latestKernelPackage;
 
     # Kernel modules
     initrd.availableKernelModules = [
@@ -36,6 +61,7 @@
       "fuse"
       "iTCO_wdt"
       "kvm-intel"
+      "wireguard"
     ];
 
     # Kernel parameters

@@ -244,6 +244,7 @@
         bluez # Bluetooth support
         bluez-tools # Bluetooth tools
         sof-firmware
+        deepcool-digital-linux
         inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-desktop
 
         # =============================================================

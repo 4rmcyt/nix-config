@@ -139,7 +139,6 @@
         '';
       };
       plugins = with pkgs.nushellPlugins; [
-        desktop_notifications
         formats
         gstat
         highlight
