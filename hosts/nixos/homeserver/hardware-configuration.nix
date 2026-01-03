@@ -13,7 +13,7 @@
 
   # Apply cachyos-kernel pinned overlay (localized to this host)
   nixpkgs.overlays = [inputs.nix-cachyos-kernel.overlays.pinned];
-  
+
 
   # =================================================================
   # 2. Boot Configuration
