@@ -11,7 +11,6 @@
   nixpkgs.overlays = [
     (_final: prev: {
       pipewire = prev.pipewire.override {ffadoSupport = false;};
-      nodejs = prev.nodejs_22;
     })
   ];
 
