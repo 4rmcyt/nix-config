@@ -36,7 +36,6 @@
   # Gaming packages
   environment.systemPackages = with pkgs;
     [
-
       heroic
       wine
       winetricks

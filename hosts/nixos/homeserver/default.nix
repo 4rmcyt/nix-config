@@ -3,8 +3,7 @@
   pkgs,
   inputs,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -113,9 +112,11 @@
       };
       # Override libutp to work around CMake issues
       libutp = prev.libutp.overrideAttrs (oldAttrs: {
-        meta = oldAttrs.meta // {
-          broken = false;
-        };
+        meta =
+          oldAttrs.meta
+          // {
+            broken = false;
+          };
       });
     })
   ];
@@ -221,7 +222,7 @@
     lixPackageSets.latest.nix-direnv
   ];
 
-  environment.shells = with pkgs; [ zsh ];
+  environment.shells = with pkgs; [zsh];
 
   # =================================================================
   # 8. Home Manager
@@ -362,6 +363,6 @@
       group = "git";
     };
     users.zeev.shell = pkgs.zsh;
-    groups.git = { };
+    groups.git = {};
   };
 }
