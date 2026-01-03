@@ -129,6 +129,10 @@
 
   nix = {
     channel.enable = true;
+
+    # Override the registry to use our flake's nixpkgs instead of the channel
+    registry.nixpkgs.flake = inputs.nixpkgs;
+
     settings = {
       cores = 0;
 
