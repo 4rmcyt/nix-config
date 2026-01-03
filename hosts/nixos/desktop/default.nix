@@ -190,22 +190,22 @@
       SSH_AUTH_SOCK = "/run/user/\${UID}/gnupg/S.gpg-agent.ssh";
 
       # General nvidia settings
-      GBM_BACKEND = "nvidia-drm";
-      LIBVA_DRIVER_NAME = "nvidia";
-      NVD_BACKEND = "direct";
-      XDG_CURRENT_DESKTOP = "KDE";
-      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      # GBM_BACKEND = "nvidia-drm";
+      # LIBVA_DRIVER_NAME = "nvidia";
+      # NVD_BACKEND = "direct";
+      # XDG_CURRENT_DESKTOP = "KDE";
+      # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
 
-      # Wayland
-      NIXOS_OZONE_WL = "1";
-      XDG_SESSION_TYPE = "wayland";
+      # # Wayland
+      # NIXOS_OZONE_WL = "1";
+      # XDG_SESSION_TYPE = "wayland";
 
-      # Qt Wayland - Disable client-side decorations to fix QWaylandGLContext errors
-      QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+      # # Qt Wayland - Disable client-side decorations to fix QWaylandGLContext errors
+      # QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
 
-      # Additional Wayland optimizations for NVIDIA
-      KWIN_DRM_USE_MODIFIERS = "1";
-      WLR_NO_HARDWARE_CURSORS = "1";
+      # # Additional Wayland optimizations for NVIDIA
+      # KWIN_DRM_USE_MODIFIERS = "1";
+      # WLR_NO_HARDWARE_CURSORS = "1";
 
       # Cursor theme
       XCURSOR_THEME = "breeze_cursors";
