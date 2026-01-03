@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  inputs,
   ...
 }: {
   # =================================================================
@@ -127,8 +126,6 @@
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
   nix.package = pkgs.lixPackageSets.latest.lix;
-
-  nix.registry.nixpkgs.flake = inputs.nixpkgs;
 
   nix.settings = {
     cores = 4;
