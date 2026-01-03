@@ -68,8 +68,7 @@
     '';
 
     # TODO: Switch back to linuxPackages-cachyos-latest-lto-zen4 when patches are fixed
-    # Use cachyos kernel directly from input for binary cache support
-    kernelPackages = inputs.cachyos-kernel.packages.${pkgs.system}.linuxPackages-cachyos-lts-lto;
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-lts-lto;
     supportedFilesystems = ["zfs"];
 
     # Kernel parameters
