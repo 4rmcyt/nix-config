@@ -45,6 +45,15 @@
         NIX_CFLAGS_COMPILE = (oldAttrs.NIX_CFLAGS_COMPILE or "") + " -include cstdint";
       });
     })
+    (_final: prev: {
+      inherit
+        (prev.lixPackageSets.latest)
+        nixpkgs-review
+        nix-eval-jobs
+        nix-fast-build
+        colmena
+        ;
+    })
   ];
   # =================================================================
   # 2.5. Distributed Builds Configuration
@@ -111,7 +120,7 @@
   # =================================================================
   # Note: Base nix settings are in modules/base/nix-settings.nix
   # Only host-specific overrides are defined here
-  # nix.package is set by lix-module
+  nix.package = pkgs.lixPackageSets.latest.lix;
 
   nix.settings = {
     cores = 4;
