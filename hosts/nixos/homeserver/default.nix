@@ -127,7 +127,6 @@
   # Only host-specific overrides are defined here
   nix.package = pkgs.lixPackageSets.latest.lix;
 
-  # Override the registry to use our flake's nixpkgs instead of the channel
   nix.registry.nixpkgs.flake = inputs.nixpkgs;
 
   nix.settings = {
