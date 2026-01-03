@@ -44,23 +44,23 @@ _: {
       focus_on_activate = true;
       new_window_takes_over_fullscreen = 2;
       middle_click_paste = false;
-      vfr = true;  # Variable Frame Rate (power saving)
-      vrr = 1;     # Variable Refresh Rate (Nvidia VRR/G-Sync)
+      vfr = true; # Variable Frame Rate (power saving)
+      vrr = 1; # Variable Refresh Rate (Nvidia VRR/G-Sync)
     };
 
     # ============================================
     # RENDER (Nvidia Optimizations)
     # ============================================
     render = {
-      explicit_sync = 2;      # Fixes screen tearing on Nvidia
-      explicit_sync_kms = 2;  # KMS explicit sync
+      explicit_sync = 2; # Fixes screen tearing on Nvidia
+      explicit_sync_kms = 2; # KMS explicit sync
     };
 
     # ============================================
     # CURSOR (Nvidia Compatibility)
     # ============================================
     cursor = {
-      no_hardware_cursors = true;  # Required for Nvidia
+      no_hardware_cursors = true; # Required for Nvidia
       allow_dumb_copy = true;
     };
 
@@ -98,8 +98,8 @@ _: {
         contrast = 1.4;
         ignore_opacity = true;
         noise = 0;
-        new_optimizations = true;  # Performance optimization
-        xray = true;               # See through floating windows
+        new_optimizations = true; # Performance optimization
+        xray = true; # See through floating windows
       };
 
       shadow = {
