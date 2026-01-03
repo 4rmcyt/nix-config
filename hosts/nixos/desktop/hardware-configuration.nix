@@ -63,9 +63,12 @@
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
     '';
 
-    # Kernel configuration - CachyOS with LTO and Zen4 optimizations
-    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-zen4;
-    zfs.package = pkgs.cachyosKernels.zfs-cachyos-lto;
+    # TODO: Switch back to linux-cachyos-latest-zen4 when patches are fixed
+
+    kernelPackages = pkgs.linuxKernel.packagesFor pkgs.cachyosKernels.linux-cachyos-lts-lto;
+    zfs.package = pkgs.cachyosKernels.zfs-cachyos-lto.override {
+      inherit (config.boot.kernelPackages) kernel;
+    };
     supportedFilesystems = ["zfs"];
 
     # Kernel parameters

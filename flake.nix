@@ -238,7 +238,7 @@
     mkNixosConfig = hostName: {hasFacter ? true}:
       {
         nixpkgs.config.allowUnfree = true;
-        nixpkgs.overlays = [inputs.cachyos-kernel.overlays.pinned];
+        nixpkgs.overlays = [inputs.cachyos-kernel.overlays.default];
         sops.age.keyFile = nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
         nix.settings = {
           extra-substituters = commonSubstituters;

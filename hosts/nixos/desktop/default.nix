@@ -261,12 +261,10 @@
         cifs-utils
         fwupd
         microcode-amd
-        nvtopPackages.nvidia
         openrgb-with-all-plugins
         powertop
         # ryzen-monitor-ng
         samba
-        headset-charge-indicator
         yubikey-personalization
         limine-full
         # clan-cli
