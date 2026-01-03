@@ -4,36 +4,39 @@
   pkgs,
   modulesPath,
   ...
-}:
-let
+}: let
   # Find the latest ZFS-compatible kernel
   # Prefer Zen kernel if available, otherwise use latest compatible kernel
-  zfsCompatibleKernelPackages = lib.filterAttrs (
-    name: kernelPackages:
-    (builtins.match "linux_(zen|[0-9]+_[0-9]+)" name) != null
-    && (builtins.tryEval kernelPackages).success
-    && kernelPackages ? ${config.boot.zfs.package.kernelModuleAttribute}
-    && !(kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken or true)
-  ) pkgs.linuxKernel.packages;
+  zfsCompatibleKernelPackages =
+    lib.filterAttrs (
+      name: kernelPackages:
+        (builtins.match "linux_(zen|[0-9]+_[0-9]+)" name)
+        != null
+        && (builtins.tryEval kernelPackages).success
+        && kernelPackages ? ${config.boot.zfs.package.kernelModuleAttribute}
+        && !(kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken or true)
+    )
+    pkgs.linuxKernel.packages;
 
   # Sort and get the latest compatible kernel, preferring Zen
-  latestKernelPackage =
-    let
-      zenKernel = lib.attrByPath ["linux_zen"] null pkgs.linuxKernel.packages;
-      zenCompatible =
-        zenKernel != null
-        && (builtins.tryEval zenKernel).success
-        && zenKernel ? ${config.boot.zfs.package.kernelModuleAttribute}
-        && !(zenKernel.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken or true);
-    in
-      if zenCompatible then zenKernel
-      else lib.last (
+  latestKernelPackage = let
+    zenKernel = lib.attrByPath ["linux_zen"] null pkgs.linuxKernel.packages;
+    zenCompatible =
+      zenKernel
+      != null
+      && (builtins.tryEval zenKernel).success
+      && zenKernel ? ${config.boot.zfs.package.kernelModuleAttribute}
+      && !(zenKernel.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken or true);
+  in
+    if zenCompatible
+    then zenKernel
+    else
+      lib.last (
         lib.sort (a: b: (lib.versionOlder a.kernel.version b.kernel.version)) (
           builtins.attrValues zfsCompatibleKernelPackages
         )
       );
-in
-{
+in {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -79,10 +82,11 @@ in
       "snd_hda_codec_realtek"
       "snd_hda_intel"
       "v4l2loopback"
+      "nct6687d"
+      "zenergy"
     ];
 
-    # Use latest ZFS-compatible kernel (prefers Zen if compatible)
-    # Automatically selects Zen kernel if ZFS supports it, otherwise latest compatible
+   
     kernelPackages = latestKernelPackage;
 
     extraModulePackages = with config.boot.kernelPackages; [

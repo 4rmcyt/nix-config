@@ -4,36 +4,39 @@
   pkgs,
   modulesPath,
   ...
-}:
-let
+}: let
   # Find the latest ZFS-compatible kernel
   # Prefer LTS kernel for server stability, otherwise use latest compatible kernel
-  zfsCompatibleKernelPackages = lib.filterAttrs (
-    name: kernelPackages:
-    (builtins.match "linux_(lts|[0-9]+_[0-9]+)" name) != null
-    && (builtins.tryEval kernelPackages).success
-    && kernelPackages ? ${config.boot.zfs.package.kernelModuleAttribute}
-    && !(kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken or true)
-  ) pkgs.linuxKernel.packages;
+  zfsCompatibleKernelPackages =
+    lib.filterAttrs (
+      name: kernelPackages:
+        (builtins.match "linux_(lts|[0-9]+_[0-9]+)" name)
+        != null
+        && (builtins.tryEval kernelPackages).success
+        && kernelPackages ? ${config.boot.zfs.package.kernelModuleAttribute}
+        && !(kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken or true)
+    )
+    pkgs.linuxKernel.packages;
 
   # Sort and get the latest compatible kernel, preferring LTS
-  latestKernelPackage =
-    let
-      ltsKernel = lib.attrByPath ["linux_lts"] null pkgs.linuxKernel.packages;
-      ltsCompatible =
-        ltsKernel != null
-        && (builtins.tryEval ltsKernel).success
-        && ltsKernel ? ${config.boot.zfs.package.kernelModuleAttribute}
-        && !(ltsKernel.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken or true);
-    in
-      if ltsCompatible then ltsKernel
-      else lib.last (
+  latestKernelPackage = let
+    ltsKernel = lib.attrByPath ["linux_lts"] null pkgs.linuxKernel.packages;
+    ltsCompatible =
+      ltsKernel
+      != null
+      && (builtins.tryEval ltsKernel).success
+      && ltsKernel ? ${config.boot.zfs.package.kernelModuleAttribute}
+      && !(ltsKernel.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken or true);
+  in
+    if ltsCompatible
+    then ltsKernel
+    else
+      lib.last (
         lib.sort (a: b: (lib.versionOlder a.kernel.version b.kernel.version)) (
           builtins.attrValues zfsCompatibleKernelPackages
         )
       );
-in
-{
+in {
   # =================================================================
   # 1. Imports
   # =================================================================
