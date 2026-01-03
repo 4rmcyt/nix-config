@@ -36,9 +36,7 @@
   # Gaming packages
   environment.systemPackages = with pkgs;
     [
-      # Gaming utilities
-      # lutris # Disabled due to allegro CMake compatibility issue in current nixpkgs
-      # Re-enable when fixed: https://github.com/NixOS/nixpkgs/issues/...
+
       heroic
       wine
       winetricks
@@ -48,7 +46,7 @@
       gamescope
       mangohud
       vesktop
-      lutris
+      # lutris
       protonup-qt
     ]
     ++ lib.optionals (inputs ? nix-gaming) [
