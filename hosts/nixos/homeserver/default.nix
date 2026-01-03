@@ -45,15 +45,6 @@
         NIX_CFLAGS_COMPILE = (oldAttrs.NIX_CFLAGS_COMPILE or "") + " -include cstdint";
       });
     })
-    (_final: prev: {
-      inherit
-        (prev.lixPackageSets.latest)
-        nixpkgs-review
-        nix-eval-jobs
-        nix-fast-build
-        colmena
-        ;
-    })
   ];
   # =================================================================
   # 2.5. Distributed Builds Configuration
@@ -205,6 +196,13 @@
     # Build & deployment tools
     prometheus-cloudflare-exporter
     betula
+
+    # Lix tooling
+    lixPackageSets.latest.nixpkgs-review
+    lixPackageSets.latest.nix-eval-jobs
+    lixPackageSets.latest.nix-fast-build
+    lixPackageSets.latest.colmena
+    lixPackageSets.latest.nix-direnv
   ];
 
   environment.shells = with pkgs; [zsh];
