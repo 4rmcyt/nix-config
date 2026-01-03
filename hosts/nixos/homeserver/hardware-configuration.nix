@@ -14,8 +14,8 @@
   # 2. Boot Configuration
   # =================================================================
   boot = {
-    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest;
-    zfs.package = pkgs.cachyosKernels.zfs-cachyos;
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto;
+    zfs.package = pkgs.cachyosKernels.zfs-cachyos-lto;
 
     # Kernel modules
     initrd.availableKernelModules = [
