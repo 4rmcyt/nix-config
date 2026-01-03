@@ -11,13 +11,15 @@
   # =================================================================
   imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
+  # Apply cachyos-kernel pinned overlay (localized to this host)
+  nixpkgs.overlays = [inputs.cachyos-kernel.overlays.pinned];
+
   # =================================================================
   # 2. Boot Configuration
   # =================================================================
   boot = {
     # TODO: Switch back to linuxPackages-cachyos-server-lto when 6.18 + ZFS is fixed
-    # Use cachyos kernel directly from input for binary cache support
-    kernelPackages = inputs.cachyos-kernel.packages.${pkgs.system}.linuxPackages-cachyos-lts-lto;
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-lts-lto;
 
     # Kernel modules
     initrd.availableKernelModules = [

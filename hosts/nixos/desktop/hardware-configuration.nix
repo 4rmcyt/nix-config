@@ -11,6 +11,9 @@
   # =================================================================
   imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
+  # Apply cachyos-kernel pinned overlay (localized to this host)
+  nixpkgs.overlays = [inputs.cachyos-kernel.overlays.pinned];
+
   # =================================================================
   # 2. Boot Configuration
   # =================================================================
