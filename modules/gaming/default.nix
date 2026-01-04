@@ -44,7 +44,7 @@
       gamemode
       gamescope
       mangohud
-      vesktop
+      # vesktop
       # lutris
       protonup-qt
     ]

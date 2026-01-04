@@ -8,15 +8,15 @@
   # =================================================================
   # 0. Nixpkgs Configuration
   # =================================================================
-  nixpkgs.overlays = [
-    (_final: prev: {
-      pipewire = prev.pipewire.override {ffadoSupport = false;};
-      # Disable gjs tests due to failing CommandLine test
-      gjs = prev.gjs.overrideAttrs (_oldAttrs: {
-        doCheck = false;
-      });
-    })
-  ];
+  # nixpkgs.overlays = [
+  #   (_final: prev: {
+  #     pipewire = prev.pipewire.override {ffadoSupport = false;};
+  #     # Disable gjs tests due to failing CommandLine test
+  #     gjs = prev.gjs.overrideAttrs (_oldAttrs: {
+  #       doCheck = false;
+  #     });
+  #   })
+  # ];
 
   # =================================================================
   # 1. Imports

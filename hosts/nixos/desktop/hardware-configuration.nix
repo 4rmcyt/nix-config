@@ -86,7 +86,6 @@ in {
       "zenergy"
     ];
 
-   
     kernelPackages = latestKernelPackage;
 
     extraModulePackages = with config.boot.kernelPackages; [
