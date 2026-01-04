@@ -109,7 +109,7 @@
     requires = ["deluged.service"];
 
     serviceConfig = {
-      ExecStart = "${pkgs.nsenter}/bin/nsenter --net=/run/netns/wg ${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:58846";
+      ExecStart = "${pkgs.util-linux}/bin/nsenter --net=/run/netns/wg ${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:58846";
     };
   };
 
