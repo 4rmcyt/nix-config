@@ -86,7 +86,7 @@
       keep-going = true; # Continue building other derivations on failure
 
       # Network optimization for faster downloads
-      max-substitution-jobs = 4; # Parallel downloads
+      max-substitution-jobs = 16; # Parallel downloads
       http-connections = 25; # More HTTP connections
       connect-timeout = 5; # Faster timeout
 

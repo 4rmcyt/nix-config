@@ -177,10 +177,10 @@
       "https://nix-community.cachix.org?priority=1"
       "https://cache.nixos.org?priority=1"
       "https://cache.lix.systems?priority=1"
-      "https://cache.flox.dev?priority=4"
-      "https://nix-gaming.cachix.org?priority=5"
-      "https://devenv.cachix.org?priority=6"
-      "https://nixpkgs-unfree.cachix.org?priority=7"
+      "https://cache.flox.dev?priority=1"
+      "https://nix-gaming.cachix.org?priority=3"
+      "https://devenv.cachix.org?priority=4"
+      "https://nixpkgs-unfree.cachix.org?priority=5"
     ];
 
     commonTrustedPublicKeys = [
