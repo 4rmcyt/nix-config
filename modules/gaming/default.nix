@@ -43,10 +43,10 @@
       # Performance tools
       gamemode
       gamescope
-      mangohud
+      # mangohud
       # vesktop
       # lutris
-      protonup-qt
+      # protonup-qt
     ]
     ++ lib.optionals (inputs ? nix-gaming) [
       inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.wine-ge
