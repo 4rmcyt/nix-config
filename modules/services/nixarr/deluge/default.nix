@@ -4,10 +4,15 @@
   config,
   ...
 }: {
-  users.users.deluge.extraGroups = [
-    "users"
-    "media"
-  ];
+  users.users.deluge = {
+    uid = lib.mkForce 962;
+    extraGroups = [
+      "users"
+      "media"
+    ];
+  };
+
+  users.groups.deluge.gid = lib.mkForce 940;
 
   sops.secrets.deluge-accounts = {
     sopsFile = ../../../../secrets/deluge.yaml;
