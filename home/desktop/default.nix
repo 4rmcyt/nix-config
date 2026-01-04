@@ -4,7 +4,7 @@
   ...
 }: {
   imports = [
-    ../../modules/DE/kde/plasma-manager.nix
+    # ../../modules/DE/kde/plasma-manager.nix
     # ../../modules/GUI/firefox
     # ../../modules/GUI/thunderbird
     ../../modules/GUI/vscode
@@ -22,6 +22,8 @@
     # ../../modules/TUI/starship
     ../../modules/TUI/atuin
     ../../modules/TUI/zellij
+    ../../modules/WM/hyprland
+    ../../modules/WM/hyprland/gtk.nix
   ];
 
   home = {

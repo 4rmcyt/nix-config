@@ -17,7 +17,7 @@
 
     # Additional Fonts
     fantasque-sans-mono
-    maple-mono-custom
+    maple-mono.NF
   ];
 
   # ============================================

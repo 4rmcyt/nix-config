@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   # ============================================
   # MODULE IMPORTS
   # ============================================
@@ -8,7 +12,6 @@
     ./binds.nix
     ./windowrules.nix
     ./hyprlock.nix
-    ./gtk.nix
     ./waypaper
   ];
 
@@ -67,7 +70,6 @@
 
     # Hyprland Utilities
     hyprpicker
-    hyprland-guiutils
 
     # System Libraries
     glib
@@ -93,17 +95,10 @@
   ];
 
   # ============================================
-  # HYPRLAND CONFIGURATION
-  # ============================================
-  programs.hyprland = {
-    enable = true;
-  };
-
-  # ============================================
   # XDG DESKTOP PORTAL
   # ============================================
   xdg.portal = {
-    enable = true;
+    enable = lib.mkForce true;
     xdgOpenUsePortal = true;
 
     config = {

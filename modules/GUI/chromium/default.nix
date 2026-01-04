@@ -1,12 +1,21 @@
-_: {
-  # Use chromium from binary cache without rebuilding.
-  # Note: WideVine support is enabled by default in nixpkgs chromium since 2022.
-  # The wrapper script adds runtime flags without requiring a rebuild.
-  nixpkgs.config.chromium.commandLineArgs =
-    "--enable-features=VaapiVideoDecoder,VaapiIgnoreDriverChecks "
-    + "--ignore-gpu-blocklist "
-    + "--ozone-platform=wayland "
-    + "--disable-features=WaylandOverlayDelegation";
+{
+  pkgs,
+  lib,
+  ...
+}: {
+  environment.systemPackages = lib.mkBefore (
+    with pkgs; [
+      (chromium.override {
+        enableWideVine = true;
+        commandLineArgs = [
+          "--enable-features=VaapiVideoDecoder,VaapiIgnoreDriverChecks"
+          "--ignore-gpu-blocklist"
+          "--ozone-platform=wayland"
+          "--disable-features=WaylandOverlayDelegation"
+        ];
+      })
+    ]
+  );
 
   # Set Google API credentials for Chromium sync
   environment.sessionVariables = {

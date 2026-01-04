@@ -29,7 +29,7 @@
     ../../../modules/options
 
     # Desktop environment
-    ../../../modules/DE/kde
+    # ../../../modules/DE/kde
 
     # Features and roles
     ../../../modules/gaming
