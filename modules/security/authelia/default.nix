@@ -184,6 +184,7 @@ in {
           authorization_policy = "one_factor";
           client_id = "grafana";
           client_secret = "$pbkdf2-sha512$310000$2h6vczoKorfBcG/H9ZDqNA$EV9OqqWrMlRoTflmZMYj9rDUjr6LrbDgx/G9YJRGgG7zKeekWOBnFH8SvEzzg4L/NFyZ7u1AjolksUzOIMnmvQ";
+          redirect_uris = ["https://grafana.${domain}/login/generic_oauth"];
           scopes = [
             "openid"
             "profile"
@@ -229,7 +230,7 @@ in {
             "profile"
             "email"
           ];
-          token_endpoint_auth_method = "client_secret_post";
+          token_endpoint_auth_method = "client_secret_basic";
         }
       ];
     };
