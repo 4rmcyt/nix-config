@@ -159,15 +159,15 @@
       kotlin
       ktlint
 
-      ## Node/JavaScript
-      deno # node runtime
-      nodejs
-      nodePackages.npm
+      # ## Node/JavaScript
+      # deno # node runtime
+      # nodejs
+      # nodePackages.npm
 
-      ## Python
-      poetry
-      python3
-      uv # workspace management tool
+      # ## Python
+      # poetry
+      # python3
+      # uv # workspace management tool
 
       ## Rust
       rustup

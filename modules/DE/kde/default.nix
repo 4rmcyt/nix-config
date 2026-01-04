@@ -76,4 +76,9 @@
 
   # Enable dbus for proper portal communication
   services.dbus.enable = true;
+
+  # Disable problematic drkonqi coredump service that times out
+  systemd.user.services.drkonqi-coredump-pickup = {
+    enable = false;
+  };
 }

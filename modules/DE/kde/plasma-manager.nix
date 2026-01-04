@@ -5,7 +5,6 @@
     NIXOS_OZONE_WL = "1";
     CLUTTER_BACKEND = "wayland";
     SDL_VIDEODRIVER = "wayland";
-    ELECTRON_OZONE_PLATFORM_HINT = "auto";
 
     # Browser Optimization
     MOZ_ENABLE_WAYLAND = "1";
