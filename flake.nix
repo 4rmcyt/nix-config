@@ -165,226 +165,232 @@
     };
   };
 
-  outputs =
-    inputs@{
-      nixpkgs,
-      home-manager,
-      ...
-    }:
-    let
-      userName = "zeev";
-      system = "x86_64-linux";
-      commonSubstituters = [
-        "https://4rmcyt.cachix.org?priority=0"
-        "https://nix-community.cachix.org?priority=1"
-        "https://cache.nixos.org?priority=1"
-        "https://cache.lix.systems?priority=1"
-        "https://cache.flox.dev?priority=4"
-        "https://nix-gaming.cachix.org?priority=5"
-        "https://devenv.cachix.org?priority=6"
-        "https://nixpkgs-unfree.cachix.org?priority=7"
-      ];
+  outputs = inputs @ {
+    nixpkgs,
+    home-manager,
+    ...
+  }: let
+    userName = "zeev";
+    system = "x86_64-linux";
+    commonSubstituters = [
+      "https://4rmcyt.cachix.org?priority=0"
+      "https://nix-community.cachix.org?priority=1"
+      "https://cache.nixos.org?priority=1"
+      "https://cache.lix.systems?priority=1"
+      "https://cache.flox.dev?priority=4"
+      "https://nix-gaming.cachix.org?priority=5"
+      "https://devenv.cachix.org?priority=6"
+      "https://nixpkgs-unfree.cachix.org?priority=7"
+    ];
 
-      commonTrustedPublicKeys = [
-        "4rmcyt.cachix.org-1:yHVDqXs6TDmfSOuPbl4gcfomDK9gzTmK8FabfHLi+d8="
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
-        "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
-        "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
-        "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
-        "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
-      ];
+    commonTrustedPublicKeys = [
+      "4rmcyt.cachix.org-1:yHVDqXs6TDmfSOuPbl4gcfomDK9gzTmK8FabfHLi+d8="
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+      "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
+      "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
+      "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
+      "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
+    ];
 
-      commonNixosModules = [
-        inputs.sops-nix.nixosModules.sops
-        inputs.home-manager.nixosModules.home-manager
-        inputs.nix-index-database.nixosModules.nix-index
-        inputs.nixos-facter-modules.nixosModules.facter
-        inputs.agenix.nixosModules.default
-        inputs.vscode-server.nixosModules.default
-        inputs.ucodenix.nixosModules.default
-        inputs.disko.nixosModules.disko
-        inputs.nixos-jellyfin.nixosModules.default
-        inputs.nix-topology.nixosModules.default
-      ];
+    commonNixosModules = [
+      inputs.sops-nix.nixosModules.sops
+      inputs.home-manager.nixosModules.home-manager
+      inputs.nix-index-database.nixosModules.nix-index
+      inputs.nixos-facter-modules.nixosModules.facter
+      inputs.agenix.nixosModules.default
+      inputs.vscode-server.nixosModules.default
+      inputs.ucodenix.nixosModules.default
+      inputs.disko.nixosModules.disko
+      inputs.nixos-jellyfin.nixosModules.default
+      inputs.nix-topology.nixosModules.default
+    ];
 
-      commonHomeManagerModules = [
-        inputs.sops-nix.homeManagerModules.sops
-        inputs.agenix.homeManagerModules.default
-      ];
+    commonHomeManagerModules = [
+      inputs.sops-nix.homeManagerModules.sops
+      inputs.agenix.homeManagerModules.default
+    ];
 
-      commonHomeManagerNixosConfig = {
-        home-manager.useGlobalPkgs = false;
-        home-manager.useUserPackages = true;
-        home-manager.backupFileExtension = "backup";
-        home-manager.sharedModules = [ { home.enableNixpkgsReleaseCheck = false; } ];
-        home-manager.extraSpecialArgs = { inherit inputs; };
-      };
+    commonHomeManagerNixosConfig = {
+      home-manager.useGlobalPkgs = false;
+      home-manager.useUserPackages = true;
+      home-manager.backupFileExtension = "backup";
+      home-manager.sharedModules = [{home.enableNixpkgsReleaseCheck = false;}];
+      home-manager.extraSpecialArgs = {inherit inputs;};
+    };
 
-      commonHomeManagerUserConfig = {
+    commonHomeManagerUserConfig = {
+      nixpkgs.config.allowUnfree = true;
+      sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
+    };
+
+    mkNixosConfig = hostName: {hasFacter ? true}:
+      {
         nixpkgs.config.allowUnfree = true;
-        sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
-      };
+        sops.age.keyFile = nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
+        nix.settings = {
+          extra-substituters = commonSubstituters;
+          extra-trusted-public-keys = commonTrustedPublicKeys;
+        };
+      }
+      // (
+        if hasFacter
+        then {facter.reportPath = ./hosts/nixos + "/${hostName}/facter.json";}
+        else {}
+      );
 
-      mkNixosConfig =
-        hostName:
-        {
-          hasFacter ? true,
-        }:
-        {
-          nixpkgs.config.allowUnfree = true;
-          sops.age.keyFile = nixpkgs.lib.mkDefault "/root/.config/sops/age/keys.txt";
-          nix.settings = {
-            extra-substituters = commonSubstituters;
-            extra-trusted-public-keys = commonTrustedPublicKeys;
-          };
-        }
-        // (if hasFacter then { facter.reportPath = ./hosts/nixos + "/${hostName}/facter.json"; } else { });
-
-      homeFlakeHelper = import ./homeFlakeHelper.nix {
-        inherit
-          inputs
-          nixpkgs
-          home-manager
-          userName
-          system
-          commonHomeManagerModules
-          ;
-      };
-    in
-    {
-      nixosConfigurations = {
-        desktop = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs; };
-          modules = [
+    homeFlakeHelper = import ./homeFlakeHelper.nix {
+      inherit
+        inputs
+        nixpkgs
+        home-manager
+        userName
+        system
+        commonHomeManagerModules
+        ;
+    };
+  in {
+    nixosConfigurations = {
+      desktop = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs;};
+        modules =
+          [
             ./hosts/nixos/desktop
             ./modules/disko/desktop
 
             inputs.flatpaks.nixosModules.default
             inputs.nix-gaming.nixosModules.pipewireLowLatency
             inputs.lix-module.nixosModules.default
-            (mkNixosConfig "desktop" { })
+            (mkNixosConfig "desktop" {})
             ./modules/users/${userName}
             (
               commonHomeManagerNixosConfig
               // {
-                home-manager.users.${userName} = {
-                  imports = [
-                    ./home/desktop
-                    inputs.betterfox-nix.homeModules.betterfox
-                    inputs.plasma-manager.homeModules.plasma-manager
-                    inputs.noctalia.homeModules.default
-                    inputs.stylix.homeModules.stylix
-                    inputs.pam-shim.homeModules.default
-                  ]
-                  ++ commonHomeManagerModules;
-                }
-                // commonHomeManagerUserConfig;
+                home-manager.users.${userName} =
+                  {
+                    imports =
+                      [
+                        ./home/desktop
+                        inputs.betterfox-nix.homeModules.betterfox
+                        inputs.plasma-manager.homeModules.plasma-manager
+                        inputs.noctalia.homeModules.default
+                        inputs.stylix.homeModules.stylix
+                        inputs.pam-shim.homeModules.default
+                      ]
+                      ++ commonHomeManagerModules;
+                  }
+                  // commonHomeManagerUserConfig;
               }
             )
           ]
           ++ commonNixosModules;
-        };
+      };
 
-        homeserver = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs; };
-          modules = [
+      homeserver = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs;};
+        modules =
+          [
             ./hosts/nixos/homeserver
             ./modules/disko/homeserver
             inputs.nixarr.nixosModules.default
-            (mkNixosConfig "homeserver" { })
+            (mkNixosConfig "homeserver" {})
             ./modules/users/${userName}
             (
               commonHomeManagerNixosConfig
               // {
-                home-manager.users.${userName} = {
-                  imports = [ ./home/homeserver ] ++ commonHomeManagerModules;
-                }
-                // commonHomeManagerUserConfig;
+                home-manager.users.${userName} =
+                  {
+                    imports = [./home/homeserver] ++ commonHomeManagerModules;
+                  }
+                  // commonHomeManagerUserConfig;
               }
             )
           ]
           ++ commonNixosModules;
-        };
+      };
 
-        wsl = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs; };
-          modules = [
+      wsl = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs;};
+        modules =
+          [
             ./hosts/nixos/wsl
 
             inputs.nixos-wsl.nixosModules.wsl
 
-            (mkNixosConfig "wsl" { hasFacter = false; })
+            (mkNixosConfig "wsl" {hasFacter = false;})
             ./modules/users/${userName}
             (
               commonHomeManagerNixosConfig
               // {
-                home-manager.users.${userName} = {
-                  imports = [ ./home/wsl ] ++ commonHomeManagerModules;
-                }
-                // commonHomeManagerUserConfig;
+                home-manager.users.${userName} =
+                  {
+                    imports = [./home/wsl] ++ commonHomeManagerModules;
+                  }
+                  // commonHomeManagerUserConfig;
               }
             )
           ]
           ++ commonNixosModules;
-        };
+      };
 
-        matebook = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs; };
-          modules = [
+      matebook = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs;};
+        modules =
+          [
             ./hosts/nixos/matebook
             ./modules/disko/matebook
             inputs.flatpaks.nixosModules.default
-            (mkNixosConfig "matebook" { })
+            (mkNixosConfig "matebook" {})
             ./modules/users/${userName}
             (
               commonHomeManagerNixosConfig
               // {
-                home-manager.users.${userName} = {
-                  imports = [
-                    ./home/matebook
-                    inputs.betterfox-nix.homeModules.betterfox
-                  ]
-                  ++ commonHomeManagerModules;
-                }
-                // commonHomeManagerUserConfig;
+                home-manager.users.${userName} =
+                  {
+                    imports =
+                      [
+                        ./home/matebook
+                        inputs.betterfox-nix.homeModules.betterfox
+                      ]
+                      ++ commonHomeManagerModules;
+                  }
+                  // commonHomeManagerUserConfig;
               }
             )
           ]
           ++ commonNixosModules;
-        };
+      };
+    };
+
+    inherit (homeFlakeHelper) homeConfigurations;
+
+    formatter.${system} = let
+      pkgs = nixpkgs.legacyPackages.${system};
+      treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs (import ./treefmt.nix);
+    in
+      treefmtEval.config.build.wrapper;
+
+    devShells.${system} = {
+      default = import ./devshell.nix {
+        pkgs = nixpkgs.legacyPackages.${system};
+        inherit inputs;
+        cachix.pull = ["4rmcyt-all"];
       };
 
-      inherit (homeFlakeHelper) homeConfigurations;
-
-      formatter.${system} =
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-          treefmtEval = inputs.treefmt-nix.lib.evalModule pkgs (import ./treefmt.nix);
-        in
-        treefmtEval.config.build.wrapper;
-
-      devShells.${system} = {
-        default = import ./devshell.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-          inherit inputs;
-          cachix.pull = [ "4rmcyt-all" ];
-        };
-
-        cuda = import ./shells/cuda-shell.nix {
-          pkgs = import nixpkgs {
-            inherit system;
-            config = {
-              allowUnfree = true;
-              cudaSupport = true;
-            };
+      cuda = import ./shells/cuda-shell.nix {
+        pkgs = import nixpkgs {
+          inherit system;
+          config = {
+            allowUnfree = true;
+            cudaSupport = true;
           };
         };
       };
     };
+  };
 }
