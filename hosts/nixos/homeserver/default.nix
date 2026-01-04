@@ -339,17 +339,7 @@
     vscode-server.enable = true;
   };
 
-  # =================================================================
-  # 11.5. Nix - GitHub Access via netrc
-  # =================================================================
-  nix.extraOptions = ''
-    netrc-file = ${config.sops.secrets.git_netrc.path}
-  '';
-
-  sops.secrets.git_netrc = {
-    mode = "0440";
-    group = "nixbld";
-  };
+ 
 
   # =================================================================
   # 12. Users & Groups
