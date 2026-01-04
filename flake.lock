@@ -873,11 +873,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1767437240,
-        "narHash": "sha256-OA0dBHhccdupFXp+/eaFfb8K1dQxk61in4aF5ITGVX8=",
+        "lastModified": 1767556355,
+        "narHash": "sha256-RDTUBDQBi9D4eD9iJQWtUDN/13MDLX+KmE+TwwNUp2s=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "1cfa305fba94468f665de1bd1b62dddf2e0cb012",
+        "rev": "f894bc4ffde179d178d8deb374fcf9855d1a82b7",
         "type": "github"
       },
       "original": {
@@ -962,11 +962,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1767474766,
-        "narHash": "sha256-Vkl6ta0Jaim6MvbNKfhb5GR/FtW3NyMRXyioBH1rcC0=",
+        "lastModified": 1767523459,
+        "narHash": "sha256-Z3EijMLd18cg8arhXv+A/tNiknQIYaeWQVoCNUm+c4A=",
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "583c4074a5d4229f841d9e470ab427339773b592",
+        "rev": "0b3b012817ca381e40754cb4408e5c0cd3a2c732",
         "type": "github"
       },
       "original": {
@@ -1224,11 +1224,11 @@
     "lix": {
       "flake": false,
       "locked": {
-        "lastModified": 1767442795,
-        "narHash": "sha256-jYUcmXA4FNwoJtxRgH+Be96wQv8h9Y9dByYf+KmcgK4=",
-        "rev": "d387c9113c73f04bed46dbdd59b6c36de2253d73",
+        "lastModified": 1767551012,
+        "narHash": "sha256-Sf+14NWDPfbCu321NffzfSZa3bRsdtAM9G7yZrlzaX4=",
+        "rev": "5ae8f621467d8ce43efbcfa41c9e3c155ba4d970",
         "type": "tarball",
-        "url": "https://git.lix.systems/api/v1/repos/lix-project/lix/archive/d387c9113c73f04bed46dbdd59b6c36de2253d73.tar.gz?rev=d387c9113c73f04bed46dbdd59b6c36de2253d73"
+        "url": "https://git.lix.systems/api/v1/repos/lix-project/lix/archive/5ae8f621467d8ce43efbcfa41c9e3c155ba4d970.tar.gz?rev=5ae8f621467d8ce43efbcfa41c9e3c155ba4d970"
       },
       "original": {
         "type": "tarball",
@@ -1688,11 +1688,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1767499294,
-        "narHash": "sha256-C63xBo4H9jKJbv5HsAVztJpJ9xfg7U7A8RdhjiogbZo=",
+        "lastModified": 1767560824,
+        "narHash": "sha256-814ggH99axZLjtzCceCUwaEuax2CRdrufdhTbte7f28=",
         "owner": "noctalia-dev",
         "repo": "noctalia-shell",
-        "rev": "c0dff46afb3c6e9fde0e2fea193f69af94b422ff",
+        "rev": "d7e29d778d153e93d35463ea1d10b711f1c5046f",
         "type": "github"
       },
       "original": {
@@ -1994,11 +1994,11 @@
         "tinted-zed": "tinted-zed"
       },
       "locked": {
-        "lastModified": 1767397606,
-        "narHash": "sha256-QA1d/6XzxK3lsMiJ+xiJf340cpNeJs/xIM6D0/yLqs4=",
+        "lastModified": 1767559556,
+        "narHash": "sha256-Pf1d9Hh9UUQ/oS+evq6dU0MiaDczXXNztTlQekaMbW0=",
         "owner": "danth",
         "repo": "stylix",
-        "rev": "6850ad2e9f3f7ff6116e9e6fb73a9cca2d9b1a35",
+        "rev": "b135edbdd403896d1ef507934c045f716deb5609",
         "type": "github"
       },
       "original": {
