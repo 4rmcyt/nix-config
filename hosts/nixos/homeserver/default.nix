@@ -133,7 +133,6 @@
     experimental-features = [
       "flakes"
       "nix-command"
-      "lix-custom-sub-commands"
       "auto-allocate-uids"
     ];
 
@@ -339,7 +338,7 @@
     vscode-server.enable = true;
   };
 
- 
+
 
   # =================================================================
   # 12. Users & Groups
