@@ -340,12 +340,16 @@
   };
 
   # =================================================================
-  # 11.5. Systemd Services - Nix Daemon GitHub Token
+  # 11.5. Nix - GitHub Access via netrc
   # =================================================================
-  # Note: The git_access_token secret should contain: NIX_CONFIG="access-tokens = github.com=<token>"
-  systemd.services.nix-daemon.serviceConfig.Environment = [
-    "NIX_CONFIG=access-tokens = github.com=$(cat ${config.sops.secrets.git_access_token.path})"
-  ];
+  nix.extraOptions = ''
+    netrc-file = ${config.sops.secrets.git_netrc.path}
+  '';
+
+  sops.secrets.git_netrc = {
+    mode = "0440";
+    group = "nixbld";
+  };
 
   # =================================================================
   # 12. Users & Groups

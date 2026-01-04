@@ -1,19 +1,12 @@
 {
   pkgs,
-  lib,
   config,
   ...
 }: {
-  users.users.deluge = {
-    isSystemUser = true;
-    group = lib.mkForce "deluge";
-    extraGroups = [
-      "users"
-      "media"
-    ];
-  };
-
-  users.groups.deluge = {};
+  users.users.deluge.extraGroups = [
+    "users"
+    "media"
+  ];
 
   sops.secrets.deluge-accounts = {
     sopsFile = ../../../../secrets/deluge.yaml;
@@ -25,6 +18,8 @@
 
   services.deluge = {
     enable = true;
+    user = "deluge";
+    group = "deluge";
     declarative = true;
     authFile = config.sops.secrets.deluge-accounts.path;
     config = {
