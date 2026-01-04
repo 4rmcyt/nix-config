@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   config,
   ...
 }: {
@@ -84,7 +85,7 @@
         "/data/Downloads"
         "/data/media"
       ];
-      Restart = "always";
+      Restart = lib.mkForce "always";
       RestartSec = "10s";
     };
   };
