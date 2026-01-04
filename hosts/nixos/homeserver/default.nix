@@ -136,7 +136,7 @@
       "auto-allocate-uids"
     ];
 
-    auto-optimise-store = false; # Disabled during builds (run manually: nix-store --optimise)
+    auto-optimise-store = true; # Disabled during builds (run manually: nix-store --optimise)
     warn-dirty = false;
     keep-going = true; # Continue building other derivations on failure
 
