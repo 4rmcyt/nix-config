@@ -97,28 +97,6 @@
     efi.canTouchEfiVariables = true;
   };
 
-  # nixpkgs.overlays = [
-  #   (_final: prev: {
-  #     python3 = prev.python3.override {
-  #       packageOverrides = _pySelf: pySuper: {
-  #         pyrate-limiter = pySuper.pyrate-limiter.overridePythonAttrs (_oldAttrs: {
-  #           doCheck = false;
-  #         });
-  #         img2pdf = pySuper.img2pdf.overridePythonAttrs (_oldAttrs: {
-  #           doCheck = false;
-  #         });
-  #       };
-  #     };
-  #     # Override libutp to work around CMake issues
-  #     libutp = prev.libutp.overrideAttrs (oldAttrs: {
-  #       meta =
-  #         oldAttrs.meta
-  #         // {
-  #           broken = false;
-  #         };
-  #     });
-  #   })
-  # ];
 
   # =================================================================
   # 6. Nix Configuration
