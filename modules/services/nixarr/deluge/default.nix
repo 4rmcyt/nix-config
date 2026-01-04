@@ -72,6 +72,9 @@
   systemd.services.deluged = {
     after = ["wg.service"];
     requires = ["wg.service"];
+    restartTriggers = [
+      config.environment.etc."deluge/core.conf".source
+    ];
 
     serviceConfig = {
       NetworkNamespacePath = "/run/netns/wg";
@@ -84,6 +87,8 @@
         "/data/Downloads"
         "/data/media"
       ];
+      Restart = "always";
+      RestartSec = "10s";
     };
   };
 
