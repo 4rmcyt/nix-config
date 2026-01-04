@@ -46,10 +46,7 @@ in {
   # 2. Boot Configuration
   # =================================================================
   boot = {
-    # Use latest ZFS-compatible kernel (prefers LTS for server stability)
-    # Automatically selects LTS kernel if ZFS supports it, otherwise latest compatible
     kernelPackages = latestKernelPackage;
-
     # Kernel modules
     initrd.availableKernelModules = [
       "ahci"
