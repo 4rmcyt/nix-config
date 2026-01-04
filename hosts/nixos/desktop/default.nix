@@ -351,6 +351,8 @@
   # 12. Programs
   # =================================================================
   programs = {
+    hyprland.enable = true;
+
     corectrl.enable = true;
 
     gnupg.agent = {
@@ -383,6 +385,19 @@
   # 13. Services
   # =================================================================
   services = {
+    # =============================================================
+    # Display Manager - greetd for Hyprland
+    # =============================================================
+    greetd = {
+      enable = true;
+      settings = {
+        default_session = {
+          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+          user = "greeter";
+        };
+      };
+    };
+
     # =============================================================
     # Audio Services
     pipewire = {
