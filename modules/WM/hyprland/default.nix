@@ -1,8 +1,8 @@
 {
   pkgs,
-  lib,
   ...
-}: {
+}:
+{
   # ============================================
   # MODULE IMPORTS
   # ============================================
@@ -12,7 +12,14 @@
     ./binds.nix
     ./windowrules.nix
     ./hyprlock.nix
+    ./waybar
     ./waypaper
+    ./swayosd.nix
+    ./swaylock.nix
+    ./rofi/rofi.nix
+    ./swaync
+    ./xdg-mimes.nix
+    ./gtk.nix
   ];
 
   home.sessionVariables = {
@@ -70,6 +77,7 @@
 
     # Hyprland Utilities
     hyprpicker
+    hyprpaper
 
     # System Libraries
     glib
@@ -94,24 +102,6 @@
     "xdg-desktop-autostart.target"
   ];
 
-  # ============================================
-  # XDG DESKTOP PORTAL
-  # ============================================
-  xdg.portal = {
-    enable = lib.mkForce true;
-    xdgOpenUsePortal = true;
-
-    config = {
-      common.default = ["gtk"];
-      hyprland.default = [
-        "gtk"
-        "hyprland"
-      ];
-    };
-
-    extraPortals = [pkgs.xdg-desktop-portal-gtk];
-  };
-
   wayland.windowManager.hyprland = {
     enable = true;
     package = null;
@@ -124,8 +114,8 @@
     systemd.enable = true;
 
     settings.monitor = [
-      "DP-4,3840x2160@59.997,0x0,2.1,bitdepth,10"
-      "DP-5,3840x2160@59.997,1829x0,2.1,bitdepth,10"
+      "DP-4,3840x2160@59.997,0x0,2,bitdepth,10"
+      "DP-5,3840x2160@59.997,1920x0,2,bitdepth,10"
     ];
 
     extraConfig = ''

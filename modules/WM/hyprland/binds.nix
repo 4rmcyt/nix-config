@@ -8,204 +8,188 @@ _: {
       # ============================================
       # HELP & UTILITIES
       # ============================================
-      "$mainMod, F1, exec, show-keybinds"
+      "$mod, F1, exec, show-keybinds"
 
       # ============================================
       # APPLICATIONS
       # ============================================
 
       # Terminal
-      "$mainMod, Return, exec, wezterm start --cwd ."
+      "$mod, Return, exec, wezterm start --cwd ."
       "ALT, Return, exec, [float; size 1111 700] wezterm start --cwd ."
-      "$mainMod SHIFT, Return, exec, [fullscreen] wezterm start --cwd ."
+      "$mod SHIFT, Return, exec, [fullscreen] wezterm start --cwd ."
 
       # Browser
-      "$mainMod, B, exec, [workspace 1 silent] zen-beta"
+      "$mod, B, exec, chromium"
 
       # File Manager
-      "$mainMod, E, exec, dolphin"
+      "$mod, E, exec, dolphin"
       "ALT, E, exec, hyprctl dispatch exec '[float; size 1111 700] dolphin'"
 
       # Launcher
-      "$mainMod, D, exec, toggle-rofi rofi -show drun"
+      "$mod, D, exec, toggle-rofi rofi -show drun"
 
       # System Monitor
-      "CTRL SHIFT, Escape, exec, hyprctl dispatch exec '[workspace 9] missioncenter'"
+      "CTRL SHIFT, Escape, exec, missioncenter"
 
       # Communication
-      "$mainMod SHIFT, D, exec, webcord --enable-features=UseOzonePlatform --ozone-platform=wayland"
+      "$mod SHIFT, D, exec, webcord --enable-features=UseOzonePlatform --ozone-platform=wayland"
 
       # Audio
-      "$mainMod SHIFT, S, exec, hyprctl dispatch exec '[workspace 5 silent] SoundWireServer'"
+      "$mod SHIFT, S, exec, SoundWireServer"
 
       # ============================================
       # WINDOW MANAGEMENT
       # ============================================
 
       # Close
-      "$mainMod, Q, killactive,"
+      "$mod, Q, killactive,"
 
       # Fullscreen
-      "$mainMod, F, fullscreen, 0"
-      "$mainMod SHIFT, F, fullscreen, 1"
+      "$mod, F, fullscreen, 0"
+      "$mod SHIFT, F, fullscreen, 1"
 
       # Floating
-      "$mainMod, Space, exec, toggle-float"
+      "$mod, Space, exec, toggle-float"
       "ALT, Space, togglefloating,"
 
       # Layout
-      "$mainMod, P, pseudo,"
-      "$mainMod, X, togglesplit,"
+      "$mod, P, pseudo,"
+      "$mod, X, togglesplit,"
 
       # Opacity
-      "$mainMod, T, exec, toggle-oppacity"
+      "$mod, T, exec, toggle-oppacity"
 
       # ============================================
       # SYSTEM CONTROLS
       # ============================================
 
       # Lock Screen
-      "$mainMod, Escape, exec, swaylock"
+      "$mod, Escape, exec, swaylock"
       "ALT, Escape, exec, hyprlock"
 
       # Power Menu
-      "$mainMod SHIFT, Escape, exec, power-menu"
+      "$mod SHIFT, Escape, exec, power-menu"
 
       # Waybar Toggle
-      "$mainMod SHIFT, B, exec, toggle-waybar"
+      "$mod SHIFT, B, exec, toggle-waybar"
 
       # Notifications
-      "$mainMod, N, exec, swaync-client -t -sw"
+      "$mod, N, exec, swaync-client -t -sw"
 
       # ============================================
       # THEMING & CUSTOMIZATION
       # ============================================
 
       # Color Picker
-      "$mainMod, C ,exec, hyprpicker -a"
+      "$mod, C ,exec, hyprpicker -a"
 
       # Wallpaper
-      "$mainMod, W,exec, wallpaper-picker"
-      "$mainMod SHIFT, W,exec, hyprctl dispatch exec '[float; size 925 615] waypaper'"
+      "$mod, W,exec, wallpaper-picker"
+      "$mod SHIFT, W,exec, hyprctl dispatch exec '[float; size 925 615] waypaper'"
 
       # Zoom
-      "$mainMod, equal, exec, woomer"
+      "$mod, equal, exec, woomer"
 
       # ============================================
       # SCREENSHOTS
       # ============================================
       ",Print, exec, screenshot --copy"
-      "$mainMod, Print, exec, screenshot --save"
-      "$mainMod SHIFT, Print, exec, screenshot --swappy"
+      "$mod, Print, exec, screenshot --save"
+      "$mod SHIFT, Print, exec, screenshot --swappy"
 
       # ============================================
       # FOCUS CONTROL
       # ============================================
 
+      # Alt+Tab window switching with Rofi
+      "ALT, Tab, exec, rofi -show window"
+
       # Arrow Keys
-      "$mainMod, left,  movefocus, l"
-      "$mainMod, right, movefocus, r"
-      "$mainMod, up,    movefocus, u"
-      "$mainMod, down,  movefocus, d"
+      "$mod, left,  movefocus, l"
+      "$mod, right, movefocus, r"
+      "$mod, up,    movefocus, u"
+      "$mod, down,  movefocus, d"
 
       # Vim Keys
-      "$mainMod, h, movefocus, l"
-      "$mainMod, j, movefocus, d"
-      "$mainMod, k, movefocus, u"
-      "$mainMod, l, movefocus, r"
+      "$mod, h, movefocus, l"
+      "$mod, j, movefocus, d"
+      "$mod, k, movefocus, u"
+      "$mod, l, movefocus, r"
 
       # Z-Order (Arrow Keys)
-      "$mainMod, left,  alterzorder, top"
-      "$mainMod, right, alterzorder, top"
-      "$mainMod, up,    alterzorder, top"
-      "$mainMod, down,  alterzorder, top"
+      "$mod, left,  alterzorder, top"
+      "$mod, right, alterzorder, top"
+      "$mod, up,    alterzorder, top"
+      "$mod, down,  alterzorder, top"
 
       # Z-Order (Vim Keys)
-      "$mainMod, h, alterzorder, top"
-      "$mainMod, j, alterzorder, top"
-      "$mainMod, k, alterzorder, top"
-      "$mainMod, l, alterzorder, top"
+      "$mod, h, alterzorder, top"
+      "$mod, j, alterzorder, top"
+      "$mod, k, alterzorder, top"
+      "$mod, l, alterzorder, top"
 
       # Focus Floating/Tiled
       "CTRL ALT, up, exec, hyprctl dispatch focuswindow floating"
       "CTRL ALT, down, exec, hyprctl dispatch focuswindow tiled"
 
       # ============================================
-      # WORKSPACE SWITCHING
+      # WORKSPACE SWITCHING - Disabled (single workspace)
       # ============================================
-      "$mainMod, 1, workspace, 1"
-      "$mainMod, 2, workspace, 2"
-      "$mainMod, 3, workspace, 3"
-      "$mainMod, 4, workspace, 4"
-      "$mainMod, 5, workspace, 5"
-      "$mainMod, 6, workspace, 6"
-      "$mainMod, 7, workspace, 7"
-      "$mainMod, 8, workspace, 8"
-      "$mainMod, 9, workspace, 9"
-      "$mainMod, 0, workspace, 10"
+      # All windows stay on workspace 1
 
       # ============================================
-      # MOVE TO WORKSPACE (SILENT)
+      # MOVE TO WORKSPACE - Disabled (single workspace)
       # ============================================
-      "$mainMod SHIFT, 1, movetoworkspacesilent, 1"
-      "$mainMod SHIFT, 2, movetoworkspacesilent, 2"
-      "$mainMod SHIFT, 3, movetoworkspacesilent, 3"
-      "$mainMod SHIFT, 4, movetoworkspacesilent, 4"
-      "$mainMod SHIFT, 5, movetoworkspacesilent, 5"
-      "$mainMod SHIFT, 6, movetoworkspacesilent, 6"
-      "$mainMod SHIFT, 7, movetoworkspacesilent, 7"
-      "$mainMod SHIFT, 8, movetoworkspacesilent, 8"
-      "$mainMod SHIFT, 9, movetoworkspacesilent, 9"
-      "$mainMod SHIFT, 0, movetoworkspacesilent, 10"
-      "$mainMod CTRL, c, movetoworkspace, empty"
+      # All windows stay on workspace 1
 
       # ============================================
       # MOVE WINDOW
       # ============================================
 
       # Arrow Keys
-      "$mainMod SHIFT, left, movewindow, l"
-      "$mainMod SHIFT, right, movewindow, r"
-      "$mainMod SHIFT, up, movewindow, u"
-      "$mainMod SHIFT, down, movewindow, d"
+      "$mod SHIFT, left, movewindow, l"
+      "$mod SHIFT, right, movewindow, r"
+      "$mod SHIFT, up, movewindow, u"
+      "$mod SHIFT, down, movewindow, d"
 
       # Vim Keys
-      "$mainMod SHIFT, h, movewindow, l"
-      "$mainMod SHIFT, j, movewindow, d"
-      "$mainMod SHIFT, k, movewindow, u"
-      "$mainMod SHIFT, l, movewindow, r"
+      "$mod SHIFT, h, movewindow, l"
+      "$mod SHIFT, j, movewindow, d"
+      "$mod SHIFT, k, movewindow, u"
+      "$mod SHIFT, l, movewindow, r"
 
       # ============================================
       # RESIZE WINDOW
       # ============================================
 
       # Arrow Keys
-      "$mainMod CTRL, left, resizeactive, -80 0"
-      "$mainMod CTRL, right, resizeactive, 80 0"
-      "$mainMod CTRL, up, resizeactive, 0 -80"
-      "$mainMod CTRL, down, resizeactive, 0 80"
+      "$mod CTRL, left, resizeactive, -80 0"
+      "$mod CTRL, right, resizeactive, 80 0"
+      "$mod CTRL, up, resizeactive, 0 -80"
+      "$mod CTRL, down, resizeactive, 0 80"
 
       # Vim Keys
-      "$mainMod CTRL, h, resizeactive, -80 0"
-      "$mainMod CTRL, j, resizeactive, 0 80"
-      "$mainMod CTRL, k, resizeactive, 0 -80"
-      "$mainMod CTRL, l, resizeactive, 80 0"
+      "$mod CTRL, h, resizeactive, -80 0"
+      "$mod CTRL, j, resizeactive, 0 80"
+      "$mod CTRL, k, resizeactive, 0 -80"
+      "$mod CTRL, l, resizeactive, 80 0"
 
       # ============================================
       # MOVE WINDOW (FLOATING)
       # ============================================
 
       # Arrow Keys
-      "$mainMod ALT, left, moveactive,  -80 0"
-      "$mainMod ALT, right, moveactive, 80 0"
-      "$mainMod ALT, up, moveactive, 0 -80"
-      "$mainMod ALT, down, moveactive, 0 80"
+      "$mod ALT, left, moveactive,  -80 0"
+      "$mod ALT, right, moveactive, 80 0"
+      "$mod ALT, up, moveactive, 0 -80"
+      "$mod ALT, down, moveactive, 0 80"
 
       # Vim Keys
-      "$mainMod ALT, h, moveactive,  -80 0"
-      "$mainMod ALT, j, moveactive, 0 80"
-      "$mainMod ALT, k, moveactive, 0 -80"
-      "$mainMod ALT, l, moveactive, 80 0"
+      "$mod ALT, h, moveactive,  -80 0"
+      "$mod ALT, j, moveactive, 0 80"
+      "$mod ALT, k, moveactive, 0 -80"
+      "$mod ALT, l, moveactive, 80 0"
 
       # ============================================
       # MEDIA CONTROLS
@@ -216,23 +200,22 @@ _: {
       ",XF86AudioStop,exec, playerctl stop"
 
       # ============================================
-      # MOUSE WORKSPACE SWITCHING
+      # MOUSE WORKSPACE SWITCHING - Disabled (single workspace)
       # ============================================
-      "$mainMod, mouse_down, workspace, e-1"
-      "$mainMod, mouse_up, workspace, e+1"
+      # All windows stay on workspace 1
 
       # ============================================
       # CLIPBOARD
       # ============================================
-      "$mainMod, V, exec, toggle-rofi \"cliphist list | rofi -dmenu -theme-str 'window {width: 50%;} listview {columns: 1;}' | cliphist decode | wl-copy\""
+      "$mod, V, exec, toggle-rofi \"cliphist list | rofi -dmenu -theme-str 'window {width: 50%;} listview {columns: 1;}' | cliphist decode | wl-copy\""
     ];
 
     # ============================================
     # MOUSE BINDINGS
     # ============================================
     bindm = [
-      "$mainMod, mouse:272, movewindow"
-      "$mainMod, mouse:273, resizewindow"
+      "$mod, mouse:272, movewindow"
+      "$mod, mouse:273, resizewindow"
     ];
   };
 }

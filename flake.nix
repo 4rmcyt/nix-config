@@ -135,6 +135,24 @@
 
     hyprland.url = "github:hyprwm/Hyprland";
 
+    hyprutils = {
+      url = "github:hyprwm/hyprutils";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      };
+    };
+
+    hyprtoolkit = {
+      url = "github:hyprwm/hyprtoolkit";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      };
+    };
+
+    hyprland-guiutils.url = "github:hyprwm/hyprland-guiutils";
+
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";

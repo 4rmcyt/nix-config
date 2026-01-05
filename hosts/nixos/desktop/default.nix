@@ -247,6 +247,11 @@
         inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-desktop
 
         # =============================================================
+        # Hyprland Utilities
+        # =============================================================
+        inputs.hyprland-guiutils.packages.x86_64-linux.default
+
+        # =============================================================
         # Fonts & Themes
         # =============================================================
         fira-code
@@ -316,7 +321,9 @@
   fonts = {
     fontDir.enable = true;
     fontconfig.useEmbeddedBitmaps = true;
-    packages = builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
+    packages = with pkgs; [
+      maple-mono.NF
+    ] ++ (builtins.filter lib.isDerivation (lib.attrValues pkgs.nerd-fonts));
   };
 
   # =================================================================
@@ -382,18 +389,33 @@
   };
 
   # =================================================================
+  # 12.5. XDG Desktop Portal
+  # =================================================================
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-hyprland
+    ];
+  };
+
+  # =================================================================
   # 13. Services
   # =================================================================
   services = {
     # =============================================================
-    # Display Manager - greetd for Hyprland
+    # Display Manager - greetd with hyprlock for Hyprland
     # =============================================================
     greetd = {
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd Hyprland";
           user = "greeter";
+        };
+        initial_session = {
+          command = "Hyprland";
+          user = "zeev";
         };
       };
     };

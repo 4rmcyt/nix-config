@@ -1,7 +1,7 @@
 @theme "theme"
 
 configuration {
-    show-icons: false;
+    show-icons: true;
     font: "Maple Mono Bold 26";
 }
 

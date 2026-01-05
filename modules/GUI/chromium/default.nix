@@ -35,7 +35,6 @@
       "hlepfoohegkhhmjieoechaddaejaokhf" # Refined Github
       "gebbhagfogifgggkldgodflihgfeippi" # Return YouTube Dislike
       "ddkjiahejlhfcafbddmgiahcphecmpfh" # uBlock Origin light
-      "cimiefiiaegbelhefglklhhakcgmhkai" # Plasma integration
       "olnngmhgopdgnfenhimlmnmemadhofdd" # Miniflux injector
     ];
 

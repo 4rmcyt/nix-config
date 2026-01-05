@@ -1,4 +1,4 @@
-{host, ...}: let
+_: let
   custom = {
     font = "Maple Mono";
     font_size = "18px";
@@ -19,7 +19,7 @@
   };
 in {
   programs.waybar.settings.mainBar = with custom; {
-    position = "bottom";
+    position = "top";
     layer = "top";
     height = 28;
     margin-top = 0;
@@ -29,17 +29,14 @@ in {
     modules-left = [
       "custom/launcher"
       "hyprland/workspaces"
-      "tray"
+      "hyprland/window"
     ];
     modules-center = ["clock"];
     modules-right = [
+      "tray"
       "cpu"
       "memory"
-      (
-        if (host == "desktop")
-        then "disk"
-        else ""
-      )
+      "disk"
       "pulseaudio"
       "network"
       "battery"
@@ -78,11 +75,12 @@ in {
       };
       persistent-workspaces = {
         "1" = [];
-        "2" = [];
-        "3" = [];
-        "4" = [];
-        "5" = [];
       };
+    };
+    "hyprland/window" = {
+      format = "{}";
+      max-length = 50;
+      separate-outputs = true;
     };
     cpu = {
       format = "<span foreground='${green}'> </span> {usage}%";
@@ -123,40 +121,18 @@ in {
       on-click = "pamixer -t";
       on-click-right = "pavucontrol";
     };
-    battery = {
-      format = "<span foreground='${yellow}'>{icon}</span> {capacity}%";
-      format-icons = [
-        " "
-        " "
-        " "
-        " "
-        " "
-      ];
-      format-charging = "<span foreground='${yellow}'> </span>{capacity}%";
-      format-full = "<span foreground='${yellow}'> </span>{capacity}%";
-      format-warning = "<span foreground='${yellow}'> </span>{capacity}%";
-      interval = 5;
-      states = {
-        warning = 20;
-      };
-      format-time = "{H}h{M}m";
-      tooltip = true;
-      tooltip-format = "{time}";
-    };
     "hyprland/language" = {
       tooltip = true;
       tooltip-format = "Keyboard layout";
       format = "<span foreground='#FABD2F'> </span> {}";
-      format-fr = "FR";
       format-en = "US";
       on-click = "hyprctl switchxkblayout at-translated-set-2-keyboard next";
     };
     "custom/launcher" = {
       format = "";
-      on-click = "random-wallpaper";
-      on-click-right = "rofi -show drun";
+      on-click = "rofi -show drun";
       tooltip = "true";
-      tooltip-format = "Random Wallpaper";
+      tooltip-format = "Application Launcher";
     };
     "custom/notification" = {
       tooltip = true;

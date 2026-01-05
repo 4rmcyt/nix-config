@@ -19,17 +19,20 @@ _: {
     };
 
     # ============================================
+    # VARIABLES
+    # ============================================
+    "$mod" = "SUPER";
+
+    # ============================================
     # GENERAL
     # ============================================
     general = {
-      "$mainMod" = "SUPER";
       layout = "dwindle";
       gaps_in = 6;
       gaps_out = 12;
       border_size = 2;
       "col.active_border" = "rgb(98971A) rgb(CC241D) 45deg";
       "col.inactive_border" = "0x00000000";
-      no_border_on_floating = false;
     };
 
     # ============================================
@@ -42,18 +45,9 @@ _: {
       animate_manual_resizes = false;
       enable_swallow = true;
       focus_on_activate = true;
-      new_window_takes_over_fullscreen = 2;
       middle_click_paste = false;
       vfr = true; # Variable Frame Rate (power saving)
       vrr = 1; # Variable Refresh Rate (Nvidia VRR/G-Sync)
-    };
-
-    # ============================================
-    # RENDER (Nvidia Optimizations)
-    # ============================================
-    render = {
-      explicit_sync = 2; # Fixes screen tearing on Nvidia
-      explicit_sync_kms = 2; # KMS explicit sync
     };
 
     # ============================================
@@ -61,7 +55,6 @@ _: {
     # ============================================
     cursor = {
       no_hardware_cursors = true; # Required for Nvidia
-      allow_dumb_copy = true;
     };
 
     # ============================================

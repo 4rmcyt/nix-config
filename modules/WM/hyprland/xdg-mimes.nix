@@ -7,6 +7,7 @@ with lib; let
     video = ["mpv.desktop"];
     directory = ["org.kde.dolphin.desktop"];
     pdf = ["org.kde.okular.desktop"];
+    office = ["org.kde.okular.desktop"];
     terminal = ["org.wezfurlong.wezterm.desktop"];
     archive = ["org.kde.ark.desktop"];
     telegram = ["ayugram-desktop.desktop"];
