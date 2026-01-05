@@ -16,7 +16,7 @@
     ./waypaper
     ./swayosd.nix
     ./swaylock.nix
-    ./rofi/rofi.nix
+    ./launcher
     ./swaync
     ./xdg-mimes.nix
     ./gtk.nix
@@ -78,6 +78,9 @@
     # Hyprland Utilities
     hyprpicker
     hyprpaper
+    hyprsunset
+    wlogout
+    swayosd
 
     # System Libraries
     glib

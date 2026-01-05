@@ -1,12 +1,13 @@
 _: let
   custom = {
-    font = "Maple Mono";
-    font_size = "18px";
-    font_weight = "bold";
+    font = "Maple Mono NF";
+    font_size = "14px";
+    font_weight = "600";
     text_color = "#FBF1C7";
     background_0 = "#1D2021";
     background_1 = "#282828";
-    border_color = "#A89984";
+    background_2 = "#3C3836";
+    border_color = "#928374";
     red = "#CC241D";
     green = "#98971A";
     yellow = "#FABD2F";
@@ -16,90 +17,187 @@ _: let
     orange = "#D65D0E";
     orange_bright = "#FE8019";
     opacity = "1";
-    indicator_height = "2px";
   };
 in {
   programs.waybar.style = with custom; ''
     * {
       border: none;
-      border-radius: 0px;
+      border-radius: 8px;
       padding: 0;
       margin: 0;
       font-family: ${font};
       font-weight: ${font_weight};
-      opacity: ${opacity};
       font-size: ${font_size};
+      min-height: 0;
     }
 
     window#waybar {
-      background: ${background_1};
-      border-top: 1px solid ${border_color};
+      background: transparent;
+      color: ${text_color};
     }
 
     tooltip {
       background: ${background_1};
-      border: 1px solid ${border_color};
+      border: 2px solid ${border_color};
+      border-radius: 8px;
     }
     tooltip label {
-      margin: 5px;
+      padding: 5px;
       color: ${text_color};
     }
 
+    /* Launcher */
+    #custom-launcher {
+      background: transparent;
+      color: ${text_color};
+      font-size: 24px;
+      padding: 0 12px;
+      margin: 5px 0;
+    }
+
+    /* Workspaces */
     #workspaces {
-      padding-left: 15px;
+      background: ${background_2};
+      padding: 0 8px;
+      margin: 5px 8px;
     }
     #workspaces button {
+      color: ${text_color};
+      padding: 0 8px;
+      margin: 0 2px;
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+    #workspaces button:hover {
+      background: ${background_1};
       color: ${yellow};
-      padding-left:  5px;
-      padding-right: 5px;
-      margin-right: 10px;
     }
     #workspaces button.empty {
-      color: ${text_color};
+      color: ${border_color};
     }
     #workspaces button.active {
-      color: ${orange_bright};
+      background: ${orange};
+      color: ${background_0};
+      font-weight: bold;
     }
 
+    /* Quicklinks */
+    #custom-quicklinks-browser,
+    #custom-quicklinks-code,
+    #custom-quicklinks-files,
+    #custom-quicklinks-telegram,
+    #custom-quicklinks-terminal,
+    #custom-quicklinks-jellyfin {
+      background: ${background_2};
+      padding: 0 10px;
+      margin: 5px 4px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    #custom-quicklinks-browser { color: ${blue}; }
+    #custom-quicklinks-code { color: ${cyan}; }
+    #custom-quicklinks-files { color: ${yellow}; }
+    #custom-quicklinks-telegram { color: ${cyan}; }
+    #custom-quicklinks-terminal { color: ${green}; }
+    #custom-quicklinks-jellyfin { color: ${magenta}; }
+
+    #custom-quicklinks-browser:hover,
+    #custom-quicklinks-code:hover,
+    #custom-quicklinks-files:hover,
+    #custom-quicklinks-telegram:hover,
+    #custom-quicklinks-terminal:hover,
+    #custom-quicklinks-jellyfin:hover {
+      background: ${background_0};
+    }
+
+    /* Window title */
+    #window {
+      background: ${background_2};
+      padding: 0 12px;
+      margin: 5px 8px;
+      color: ${text_color};
+    }
+
+    /* Clock */
     #clock {
+      background: ${background_2};
       color: ${text_color};
+      padding: 0 12px;
+      margin: 5px 8px;
+      font-weight: bold;
     }
 
+    /* System tray */
     #tray {
-      margin-left: 10px;
-      color: ${text_color};
+      background: ${background_2};
+      padding: 0 8px;
+      margin: 5px 8px;
+    }
+    #tray > .passive {
+      -gtk-icon-effect: dim;
+    }
+    #tray > .needs-attention {
+      -gtk-icon-effect: highlight;
+      color: ${red};
     }
     #tray menu {
       background: ${background_1};
-      border: 1px solid ${border_color};
+      border: 2px solid ${border_color};
       padding: 8px;
     }
-    #tray menuitem {
-      padding: 1px;
+
+    /* System info modules */
+    #cpu,
+    #memory,
+    #disk,
+    #pulseaudio,
+    #network,
+    #battery,
+    #language {
+      background: ${background_2};
+      padding: 0 10px;
+      margin: 5px 4px;
     }
 
-    #pulseaudio, #network, #cpu, #memory, #disk, #battery, #language, #custom-notification, #custom-power-menu {
-      padding-left: 5px;
-      padding-right: 5px;
-      margin-right: 10px;
-      color: ${text_color};
+    #cpu { }
+    #memory { }
+    #disk { }
+
+    #pulseaudio {
+      margin-left: 8px;
     }
 
-    #pulseaudio, #language, #custom-notification {
-      margin-left: 15px;
+    #battery.charging {
+      color: ${green};
+    }
+    #battery.warning:not(.charging) {
+      color: ${yellow};
+    }
+    #battery.critical:not(.charging) {
+      color: ${red};
+      animation: blink 0.5s linear infinite alternate;
     }
 
+    /* Notification center */
+    #custom-notification {
+      background: ${background_2};
+      padding: 0 10px;
+      margin: 5px 4px;
+    }
+
+    /* Power menu */
     #custom-power-menu {
-      padding-right: 2px;
-      margin-right: 5px;
+      background: ${red};
+      color: ${background_0};
+      padding: 0 12px;
+      margin: 5px 8px 5px 4px;
+      font-weight: bold;
     }
 
-    #custom-launcher {
-      font-size: 20px;
-      color: ${text_color};
-      font-weight: bold;
-      margin-left: 15px;
-      padding-right: 10px;
+    @keyframes blink {
+      to {
+        color: ${background_1};
+      }
     }
   '';
 }

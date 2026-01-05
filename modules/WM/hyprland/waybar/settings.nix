@@ -1,6 +1,6 @@
 _: let
   custom = {
-    font = "Maple Mono";
+    font = "Maple Mono NF";
     font_size = "18px";
     font_weight = "bold";
     text_color = "#FBF1C7";
@@ -29,6 +29,12 @@ in {
     modules-left = [
       "custom/launcher"
       "hyprland/workspaces"
+      "custom/quicklinks-browser"
+      "custom/quicklinks-code"
+      "custom/quicklinks-files"
+      "custom/quicklinks-telegram"
+      "custom/quicklinks-terminal"
+      "custom/quicklinks-jellyfin"
       "hyprland/window"
     ];
     modules-center = ["clock"];
@@ -38,8 +44,6 @@ in {
       "memory"
       "disk"
       "pulseaudio"
-      "network"
-      "battery"
       "hyprland/language"
       "custom/notification"
       "custom/power-menu"
@@ -50,10 +54,10 @@ in {
           today = "<span color='#98971A'><b>{}</b></span>";
         };
       };
-      format = "  {:%H:%M}";
+      format = "  {:%H:%M}";
       tooltip = "true";
       tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-      format-alt = "  {:%d/%m}";
+      format-alt = "  {:%d/%m}";
     };
     "hyprland/workspaces" = {
       active-only = false;
@@ -77,20 +81,51 @@ in {
         "1" = [];
       };
     };
+    "custom/quicklinks-browser" = {
+      tooltip = false;
+      format = "🌐";
+      on-click = "chromium";
+    };
+    "custom/quicklinks-code" = {
+      tooltip = false;
+      format = "";
+      on-click = "code";
+    };
+    "custom/quicklinks-files" = {
+      tooltip = false;
+      format = "📁";
+      on-click = "dolphin";
+    };
+    "custom/quicklinks-telegram" = {
+      tooltip = false;
+      format = "";
+      on-click = "ayugram-desktop";
+    };
+    "custom/quicklinks-terminal" = {
+      tooltip = false;
+      format = "";
+      on-click = "wezterm";
+    };
+    "custom/quicklinks-jellyfin" = {
+      tooltip = false;
+      format = "";
+      on-click = "jellyfin-desktop";
+    };
     "hyprland/window" = {
       format = "{}";
       max-length = 50;
-      separate-outputs = true;
+      separate-outputs = false;
+      icon = true;
     };
     cpu = {
-      format = "<span foreground='${green}'> </span> {usage}%";
-      format-alt = "<span foreground='${green}'> </span> {avg_frequency} GHz";
+      format = "<span foreground='${green}'> </span> {usage}%";
+      format-alt = "<span foreground='${green}'> </span> {avg_frequency} GHz";
       interval = 2;
       on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
     };
     memory = {
       format = "<span foreground='${cyan}'>󰟜 </span>{}%";
-      format-alt = "<span foreground='${cyan}'>󰟜 </span>{used} GiB"; # 
+      format-alt = "<span foreground='${cyan}'>󰟜 </span>{used} GiB"; #
       interval = 2;
       on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
     };
@@ -100,22 +135,15 @@ in {
       interval = 60;
       on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
     };
-    network = {
-      format-wifi = "<span foreground='${magenta}'> </span> {signalStrength}%";
-      format-ethernet = "<span foreground='${magenta}'>󰀂 </span>";
-      tooltip-format = "Connected to {essid} {ifname} via {gwaddr}";
-      format-linked = "{ifname} (No IP)";
-      format-disconnected = "<span foreground='${magenta}'>󰖪 </span>";
-    };
     tray = {
       icon-size = 20;
       spacing = 8;
     };
     pulseaudio = {
       format = "{icon} {volume}%";
-      format-muted = "<span foreground='${blue}'> </span> {volume}%";
+      format-muted = "<span foreground='${blue}'> </span> {volume}%";
       format-icons = {
-        default = ["<span foreground='${blue}'> </span>"];
+        default = ["<span foreground='${blue}'> </span>"];
       };
       scroll-step = 2;
       on-click = "pamixer -t";
@@ -124,13 +152,13 @@ in {
     "hyprland/language" = {
       tooltip = true;
       tooltip-format = "Keyboard layout";
-      format = "<span foreground='#FABD2F'> </span> {}";
+      format = "<span foreground='#FABD2F'> </span> {}";
       format-en = "US";
       on-click = "hyprctl switchxkblayout at-translated-set-2-keyboard next";
     };
     "custom/launcher" = {
       format = "";
-      on-click = "rofi -show drun";
+      on-click = "walker";
       tooltip = "true";
       tooltip-format = "Application Launcher";
     };
@@ -139,14 +167,14 @@ in {
       tooltip-format = "Notifications";
       format = "{icon}";
       format-icons = {
-        notification = "<span foreground='red'><sup></sup></span>";
-        none = "";
-        dnd-notification = "<span foreground='red'><sup></sup></span>";
-        dnd-none = "";
-        inhibited-notification = "<span foreground='red'><sup></sup></span>";
-        inhibited-none = "";
-        dnd-inhibited-notification = "<span foreground='red'><sup></sup></span>";
-        dnd-inhibited-none = "";
+        notification = "<span foreground='red'><sup></sup></span>";
+        none = "";
+        dnd-notification = "<span foreground='red'><sup></sup></span>";
+        dnd-none = "";
+        inhibited-notification = "<span foreground='red'><sup></sup></span>";
+        inhibited-none = "";
+        dnd-inhibited-notification = "<span foreground='red'><sup></sup></span>";
+        dnd-inhibited-none = "";
       };
       return-type = "json";
       exec-if = "which swaync-client";
@@ -158,8 +186,8 @@ in {
     "custom/power-menu" = {
       tooltip = true;
       tooltip-format = "Power menu";
-      format = "<span foreground='${red}'> </span>";
-      on-click = "power-menu";
+      format = "⏻";
+      on-click = "wlogout";
     };
   };
 }

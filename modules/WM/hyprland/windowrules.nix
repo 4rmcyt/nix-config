@@ -26,7 +26,7 @@ _: {
       "size 725 330,  class:^(SoundWireServer)$"
 
       # Launchers & Menus
-      "pin,  class:^(rofi)$"
+      "pin,  class:^(walker)$"
       "float,  class:^(zenity)$"
       "size 850 500,  class:^(zenity)$"
 

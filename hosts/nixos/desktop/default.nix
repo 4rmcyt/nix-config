@@ -323,6 +323,7 @@
     fontconfig.useEmbeddedBitmaps = true;
     packages = with pkgs; [
       maple-mono.NF
+      font-awesome
     ] ++ (builtins.filter lib.isDerivation (lib.attrValues pkgs.nerd-fonts));
   };
 

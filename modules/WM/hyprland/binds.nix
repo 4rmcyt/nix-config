@@ -8,7 +8,7 @@ _: {
       # ============================================
       # HELP & UTILITIES
       # ============================================
-      "$mod, F1, exec, show-keybinds"
+      # "$mod, F1, exec, show-keybinds"  # Disabled: script doesn't exist
 
       # ============================================
       # APPLICATIONS
@@ -27,7 +27,7 @@ _: {
       "ALT, E, exec, hyprctl dispatch exec '[float; size 1111 700] dolphin'"
 
       # Launcher
-      "$mod, D, exec, toggle-rofi rofi -show drun"
+      "$mod, D, exec, walker"
 
       # System Monitor
       "CTRL SHIFT, Escape, exec, missioncenter"
@@ -50,7 +50,7 @@ _: {
       "$mod SHIFT, F, fullscreen, 1"
 
       # Floating
-      "$mod, Space, exec, toggle-float"
+      "$mod, Space, togglefloating,"
       "ALT, Space, togglefloating,"
 
       # Layout
@@ -58,7 +58,7 @@ _: {
       "$mod, X, togglesplit,"
 
       # Opacity
-      "$mod, T, exec, toggle-oppacity"
+      # "$mod, T, exec, toggle-oppacity"  # Disabled: script doesn't exist
 
       # ============================================
       # SYSTEM CONTROLS
@@ -89,21 +89,21 @@ _: {
       "$mod SHIFT, W,exec, hyprctl dispatch exec '[float; size 925 615] waypaper'"
 
       # Zoom
-      "$mod, equal, exec, woomer"
+      # "$mod, equal, exec, woomer"  # Disabled: woomer not installed
 
       # ============================================
       # SCREENSHOTS
       # ============================================
-      ",Print, exec, screenshot --copy"
-      "$mod, Print, exec, screenshot --save"
-      "$mod SHIFT, Print, exec, screenshot --swappy"
+      ",Print, exec, grimblast copy area"
+      "$mod, Print, exec, grimblast save area"
+      "$mod SHIFT, Print, exec, grimblast copy area && swappy -f - -o -"
 
       # ============================================
       # FOCUS CONTROL
       # ============================================
 
-      # Alt+Tab window switching with Rofi
-      "ALT, Tab, exec, rofi -show window"
+      # Alt+Tab window switching with Walker
+      "ALT, Tab, exec, walker --modules applications"
 
       # Arrow Keys
       "$mod, left,  movefocus, l"
@@ -207,7 +207,7 @@ _: {
       # ============================================
       # CLIPBOARD
       # ============================================
-      "$mod, V, exec, toggle-rofi \"cliphist list | rofi -dmenu -theme-str 'window {width: 50%;} listview {columns: 1;}' | cliphist decode | wl-copy\""
+      "$mod, V, exec, cliphist list | head -50 | walker --dmenu | cliphist decode | wl-copy"
     ];
 
     # ============================================
