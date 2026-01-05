@@ -1,8 +1,4 @@
-{
-  pkgs,
-  ...
-}:
-{
+{pkgs, ...}: {
   # ============================================
   # MODULE IMPORTS
   # ============================================
@@ -96,6 +92,7 @@
     kdePackages.okular
     kdePackages.ark
     kdePackages.gwenview
+    cosmic-store
   ];
 
   # ============================================
@@ -104,6 +101,8 @@
   systemd.user.targets.hyprland-session.Unit.Wants = [
     "xdg-desktop-autostart.target"
   ];
+
+  gnome.gnome-keyring.enable = true;
 
   wayland.windowManager.hyprland = {
     enable = true;

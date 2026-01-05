@@ -25,9 +25,6 @@
       # Fonts
       meslo-lgs-nf
 
-      # Nix utilities
-      nvd
-
       # System & Network tools
       nextdns
       sudo

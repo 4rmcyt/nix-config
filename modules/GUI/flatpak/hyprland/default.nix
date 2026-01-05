@@ -5,7 +5,7 @@ _: {
       "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
     };
     packages = [
-      # Hyprland Settings GUI - https://github.com/mylinuxforwork/hyprland-settings
+      # Hyprland Settings GUI - https://gb.com/mylinuxforwork/hyprland-settings
       "flathub:app/io.github.linuxforwork.HyprlandSettings//stable"
     ];
   };

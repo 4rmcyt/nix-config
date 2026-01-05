@@ -27,6 +27,7 @@
     ../../../modules/base
     ../../../modules/disko/desktop
     ../../../modules/options
+    ../../../modules/fonts
 
     # Desktop environment
     # ../../../modules/DE/kde
@@ -43,6 +44,8 @@
     # ../../../modules/GUI/OBS
 
     ../../../modules/GUI/chromium
+    ../../../modules/GUI/flatpak/hyprland
+    ../../../modules/GUI/quickshell
   ];
 
   # =================================================================
@@ -321,10 +324,12 @@
   fonts = {
     fontDir.enable = true;
     fontconfig.useEmbeddedBitmaps = true;
-    packages = with pkgs; [
-      maple-mono.NF
-      font-awesome
-    ] ++ (builtins.filter lib.isDerivation (lib.attrValues pkgs.nerd-fonts));
+    packages = with pkgs;
+      [
+        maple-mono.NF
+        font-awesome
+      ]
+      ++ (builtins.filter lib.isDerivation (lib.attrValues pkgs.nerd-fonts));
   };
 
   # =================================================================
@@ -397,6 +402,7 @@
     extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
       xdg-desktop-portal-hyprland
+      xdg-desktop-portal-wlr
     ];
   };
 

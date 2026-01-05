@@ -88,7 +88,7 @@ in {
     };
     "custom/quicklinks-code" = {
       tooltip = false;
-      format = "";
+      format = "⚡";
       on-click = "code";
     };
     "custom/quicklinks-files" = {
@@ -98,17 +98,17 @@ in {
     };
     "custom/quicklinks-telegram" = {
       tooltip = false;
-      format = "";
+      format = "✈️";
       on-click = "ayugram-desktop";
     };
     "custom/quicklinks-terminal" = {
       tooltip = false;
-      format = "";
+      format = ">_";
       on-click = "wezterm";
     };
     "custom/quicklinks-jellyfin" = {
       tooltip = false;
-      format = "";
+      format = "🎬";
       on-click = "jellyfin-desktop";
     };
     "hyprland/window" = {

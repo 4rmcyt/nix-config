@@ -42,6 +42,8 @@
       gomi
       jq
       taplo
+      nix-output-monitor
+      nvd
 
       # =================================================================
       # Development & Nix Tools (alphabetical)

@@ -33,9 +33,6 @@
       ghostty
       ghostty.terminfo
 
-      # Nix utilities
-      nvd
-
       # Security & Crypto
       pass
 
