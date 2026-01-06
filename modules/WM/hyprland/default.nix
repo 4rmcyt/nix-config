@@ -3,18 +3,27 @@
   # MODULE IMPORTS
   # ============================================
   imports = [
-    ./exec-once.nix
+    # Core Hyprland Configuration
     ./settings.nix
     ./binds.nix
     ./windowrules.nix
+    ./exec-once.nix
+
+    # Lock & Security
     ./hyprlock.nix
+    ./swaylock.nix
+
+    # UI Components
     ./waybar
+    ./swaync
+    ./launcher
+    ./wlogout.nix
+
+    # Utilities
     ./waypaper
     ./swayosd.nix
-    ./swaylock.nix
-    ./wlogout.nix
-    ./launcher
-    ./swaync
+
+    # System Integration
     ./xdg-mimes.nix
     ./gtk.nix
   ];
@@ -48,12 +57,10 @@
     QT_STYLE_OVERRIDE = "kvantum";
     DISABLE_QT5_COMPAT = 0;
 
-    # WLR - Removed WLR_DRM_NO_ATOMIC and WLR_NO_HARDWARE_CURSORS for better VRR
-    # Hardware cursors now managed via Hyprland cursor settings
+    # WLR
     WLR_RENDERER = "vulkan";
 
-    # Other
-    SSH_AUTH_SOCK = "/run/user/1000/ssh-agent";
+    # Utilities
     DIRENV_LOG_FORMAT = "";
     GTK_THEME = "Kanagawa-B";
     GRIMBLAST_HIDE_CURSOR = 0;
@@ -63,37 +70,35 @@
   # HYPRLAND PACKAGES
   # ============================================
   home.packages = with pkgs; [
-    # Core Wayland Tools
-    swww
-    grim
-    slurp
-    grimblast
-    wl-clip-persist
-    cliphist
-    wf-recorder
+    # Core Wayland/Hyprland Tools
+    grim # Screenshot utility
+    grimblast # Screenshot wrapper
+    hyprpaper # Wallpaper daemon
+    hyprpicker # Color picker
+    hyprsunset # Blue light filter
+    slurp # Region selector
+    swayosd # OSD daemon
+    swww # Animated wallpaper daemon
+    wf-recorder # Screen recorder
+    wlogout # Logout menu
 
-    # Hyprland Utilities
-    hyprpicker
-    hyprpaper
-    hyprsunset
-    wlogout
-    swayosd
+    # Clipboard Management
+    cliphist # Clipboard history
+    wl-clip-persist # Clipboard persistence
 
-    # System Libraries
-    glib
-    wayland
-    direnv
+    # Display & System
+    direnv # Environment loader
+    glib # System library
+    nwg-displays # Display configuration
+    wayland # Wayland library
 
-    # Display Management
-    nwg-displays
-
-    # KDE Applications
-    kdePackages.dolphin
-    kdePackages.kate
-    kdePackages.okular
-    kdePackages.ark
-    kdePackages.gwenview
+    # File Manager & Applications
     cosmic-store
+    kdePackages.ark # Archive manager
+    kdePackages.dolphin # File manager
+    kdePackages.gwenview # Image viewer
+    kdePackages.kate # Text editor
+    kdePackages.okular # PDF viewer
   ];
 
   # ============================================

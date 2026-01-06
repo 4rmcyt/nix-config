@@ -30,7 +30,12 @@ _: {
     "waybar &"
     "swaync &"
     "hyprctl setcursor Bibata-Modern-Ice 24 &"
-    "init-wallpaper &"
+
+    # ============================================
+    # WALLPAPER
+    # ============================================
+    "swww-daemon &"
+    "sleep 1 && swww img ~/Pictures/Wallpapers/ColorWall-eolmrl.jpg --transition-type fade --transition-duration 2 &"
 
     # ============================================
     # APPLICATIONS

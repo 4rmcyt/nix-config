@@ -6,11 +6,6 @@ _: {
 
     bind = [
       # ============================================
-      # HELP & UTILITIES
-      # ============================================
-      # "$mod, F1, exec, show-keybinds"  # Disabled: script doesn't exist
-
-      # ============================================
       # APPLICATIONS
       # ============================================
 
@@ -57,9 +52,6 @@ _: {
       "$mod, P, pseudo,"
       "$mod, X, togglesplit,"
 
-      # Opacity
-      # "$mod, T, exec, toggle-oppacity"  # Disabled: script doesn't exist
-
       # ============================================
       # SYSTEM CONTROLS
       # ============================================
@@ -85,11 +77,8 @@ _: {
       "$mod, C ,exec, hyprpicker -a"
 
       # Wallpaper
-      "$mod, W,exec, wallpaper-picker"
-      "$mod SHIFT, W,exec, hyprctl dispatch exec '[float; size 925 615] waypaper'"
-
-      # Zoom
-      # "$mod, equal, exec, woomer"  # Disabled: woomer not installed
+      "$mod, W, exec, waypaper"
+      "$mod SHIFT, W, exec, hyprctl dispatch exec '[float; size 925 615] waypaper'"
 
       # ============================================
       # SCREENSHOTS
@@ -132,16 +121,6 @@ _: {
       # Focus Floating/Tiled
       "CTRL ALT, up, exec, hyprctl dispatch focuswindow floating"
       "CTRL ALT, down, exec, hyprctl dispatch focuswindow tiled"
-
-      # ============================================
-      # WORKSPACE SWITCHING - Disabled (single workspace)
-      # ============================================
-      # All windows stay on workspace 1
-
-      # ============================================
-      # MOVE TO WORKSPACE - Disabled (single workspace)
-      # ============================================
-      # All windows stay on workspace 1
 
       # ============================================
       # MOVE WINDOW
@@ -198,11 +177,6 @@ _: {
       ",XF86AudioNext,exec, playerctl next"
       ",XF86AudioPrev,exec, playerctl previous"
       ",XF86AudioStop,exec, playerctl stop"
-
-      # ============================================
-      # MOUSE WORKSPACE SWITCHING - Disabled (single workspace)
-      # ============================================
-      # All windows stay on workspace 1
 
       # ============================================
       # CLIPBOARD
