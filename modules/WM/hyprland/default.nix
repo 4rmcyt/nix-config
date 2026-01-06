@@ -12,6 +12,7 @@
     ./waypaper
     ./swayosd.nix
     ./swaylock.nix
+    ./wlogout.nix
     ./launcher
     ./swaync
     ./xdg-mimes.nix
@@ -54,7 +55,7 @@
     # Other
     SSH_AUTH_SOCK = "/run/user/1000/ssh-agent";
     DIRENV_LOG_FORMAT = "";
-    GTK_THEME = "Colloid-Green-Dark-Gruvbox";
+    GTK_THEME = "Kanagawa-B";
     GRIMBLAST_HIDE_CURSOR = 0;
   };
 
@@ -101,8 +102,6 @@
   systemd.user.targets.hyprland-session.Unit.Wants = [
     "xdg-desktop-autostart.target"
   ];
-
-  gnome.gnome-keyring.enable = true;
 
   wayland.windowManager.hyprland = {
     enable = true;

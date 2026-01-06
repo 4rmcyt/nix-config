@@ -88,10 +88,10 @@ in {
     #custom-quicklinks-telegram,
     #custom-quicklinks-terminal,
     #custom-quicklinks-jellyfin {
-      background: ${background_2};
+      background: transparent;
       padding: 0 10px;
       margin: 5px 4px;
-      font-size: 16px;
+      font-size: 24px;
       transition: all 0.3s ease;
     }
     #custom-quicklinks-browser { color: ${blue}; }
@@ -107,7 +107,7 @@ in {
     #custom-quicklinks-telegram:hover,
     #custom-quicklinks-terminal:hover,
     #custom-quicklinks-jellyfin:hover {
-      background: ${background_0};
+      background: rgba(40, 40, 40, 0.3);
     }
 
     /* Window title */
@@ -120,11 +120,13 @@ in {
 
     /* Clock */
     #clock {
-      background: ${background_2};
       color: ${text_color};
-      padding: 0 12px;
-      margin: 5px 8px;
+      background: transparent;
+      padding: 0 10px;
+      margin: 5px 4px;
       font-weight: bold;
+      font-size: 24px;
+      transition: all 0.3s ease;
     }
 
     /* System tray */

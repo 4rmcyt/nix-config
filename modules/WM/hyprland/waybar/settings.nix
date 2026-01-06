@@ -49,6 +49,7 @@ in {
       "custom/power-menu"
     ];
     clock = {
+      timezone = "America/Edmonton";
       calendar = {
         format = {
           today = "<span color='#98971A'><b>{}</b></span>";
@@ -83,32 +84,32 @@ in {
     };
     "custom/quicklinks-browser" = {
       tooltip = false;
-      format = "🌐";
+      format = "󰊯";
       on-click = "chromium";
     };
     "custom/quicklinks-code" = {
       tooltip = false;
-      format = "⚡";
+      format = "󰨞";
       on-click = "code";
     };
     "custom/quicklinks-files" = {
       tooltip = false;
-      format = "📁";
+      format = "󰉋";
       on-click = "dolphin";
     };
     "custom/quicklinks-telegram" = {
       tooltip = false;
-      format = "✈️";
+      format = "";
       on-click = "ayugram-desktop";
     };
     "custom/quicklinks-terminal" = {
       tooltip = false;
-      format = ">_";
+      format = "󰆍";
       on-click = "wezterm";
     };
     "custom/quicklinks-jellyfin" = {
       tooltip = false;
-      format = "🎬";
+      format = "󰃽";
       on-click = "jellyfin-desktop";
     };
     "hyprland/window" = {
