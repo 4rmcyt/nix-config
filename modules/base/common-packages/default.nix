@@ -70,7 +70,6 @@
       nix-index
       nix-output-monitor
       nixfmt
-      nixfmt-rfc-style
       nixos-rebuild-ng
       nodePackages.prettier
       nufmt

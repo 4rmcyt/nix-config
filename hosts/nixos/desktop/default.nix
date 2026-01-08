@@ -117,9 +117,7 @@
   # =================================================================
   # 6. Nix Configuration
   # =================================================================
-  nixpkgs.config.permittedInsecurePackages = [
-    "ventoy-qt5-1.1.07"
-  ];
+
 
   nix = {
     channel.enable = false;

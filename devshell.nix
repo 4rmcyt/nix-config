@@ -1,11 +1,11 @@
-{pkgs, ...}:
+{ pkgs, ... }:
 pkgs.mkShell {
   name = "nix-config";
 
   packages = with pkgs; [
     zsh
     nix-direnv
-    nixfmt-rfc-style
+    nixfmt
     statix
     deadnix
     nix-tree
