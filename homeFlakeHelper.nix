@@ -37,7 +37,6 @@ in {
     "${userName}@desktop" = mkHomeConfig "desktop" [
       inputs.plasma-manager.homeModules.plasma-manager
       inputs.betterfox-nix.homeModules.betterfox
-      inputs.noctalia.homeModules.default
       inputs.stylix.homeModules.stylix
       inputs.pam-shim.homeModules.default
     ];
