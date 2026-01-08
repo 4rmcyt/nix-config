@@ -153,13 +153,13 @@
 
     hyprland-guiutils.url = "github:hyprwm/hyprland-guiutils";
 
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
+    niri = {
+      url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    quickshell = {
-      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -288,6 +288,7 @@
             inputs.flatpaks.nixosModules.default
             inputs.nix-gaming.nixosModules.pipewireLowLatency
             inputs.lix-module.nixosModules.default
+            inputs.dms.nixosModules.dankMaterialShell
             (mkNixosConfig "desktop" {})
             ./modules/users/${userName}
             (
@@ -300,9 +301,11 @@
                         ./home/desktop
                         inputs.betterfox-nix.homeModules.betterfox
                         inputs.plasma-manager.homeModules.plasma-manager
-                        inputs.noctalia.homeModules.default
                         inputs.stylix.homeModules.stylix
                         inputs.pam-shim.homeModules.default
+                        inputs.niri.homeModules.niri
+                        inputs.dms.homeModules.dankMaterialShell.default
+                        inputs.dms.homeModules.dankMaterialShell.niri
                       ]
                       ++ commonHomeManagerModules;
                   }

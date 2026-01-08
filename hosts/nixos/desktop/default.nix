@@ -32,7 +32,6 @@
 
     ../../../modules/GUI/chromium
     ../../../modules/GUI/flatpak/hyprland
-    ../../../modules/GUI/quickshell
   ];
 
   # =================================================================
@@ -118,57 +117,35 @@
   # 6. Nix Configuration
   # =================================================================
 
-
   nix = {
     channel.enable = false;
-
-    # Override the registry to use our flake's nixpkgs instead of the channel
     registry.nixpkgs.flake = inputs.nixpkgs;
-
     settings = {
       cores = 0;
-
       experimental-features = [
         "flakes"
         "nix-command"
         "lix-custom-sub-commands"
         "auto-allocate-uids"
       ];
-
       auto-optimise-store = true;
-
       warn-dirty = false;
       max-jobs = 8;
       keep-going = true; # Continue building other derivations on failure
-
-      # Network optimization for faster downloads
-      max-substitution-jobs = 16; # Parallel downloads
-      http-connections = 25; # More HTTP connections
-      connect-timeout = 5; # Faster timeout
-
-      # Store optimization for better performance
-      keep-outputs = true; # Keep build dependencies for faster rebuilds
-      keep-derivations = true; # Keep derivations for faster evaluation
-
-      # Disk space management
+      max-substitution-jobs = 16;
+      http-connections = 25;
+      connect-timeout = 5;
+      keep-outputs = true;
+      keep-derivations = true;
       min-free = 5368709120; # 5GB - trigger GC when less than 5GB free
       max-free = 10737418240; # 10GB - stop GC when 10GB free
-
-      # Build performance improvements
-      builders-use-substitutes = true; # Allow builders to use substitutes
-      require-sigs = true; # Security: require signatures
-
-      # Evaluation performance
-      eval-cache = true; # Cache evaluation results
-
-      # Substituters and trusted keys are centralized in flake.nix
-
-      # Desktop-specific system features
+      builders-use-substitutes = true;
+      require-sigs = true;
+      eval-cache = true;
       extra-system-features = [
         "big-parallel"
         "kvm"
       ];
-
       trusted-users = [
         "root"
         "@wheel"
@@ -370,6 +347,7 @@
     extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
       xdg-desktop-portal-hyprland
+      xdg-desktop-portal-gnome
       xdg-desktop-portal-wlr
     ];
   };

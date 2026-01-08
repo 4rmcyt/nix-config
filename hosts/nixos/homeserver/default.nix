@@ -38,24 +38,6 @@
   system.stateVersion = "25.05";
 
   # =================================================================
-  # 2.5. Distributed Builds Configuration
-  # =================================================================
-  # distributed-builds = {
-  #   enable = true;
-  #   role = "client";
-  #   builders = [
-  #     {
-  #       hostName = config.my.network.hosts.desktop_lan;
-  #       system = "x86_64-linux";
-  #       maxJobs = 16;
-  #       speedFactor = 2;
-  #       supportedFeatures = ["nixos-test" "benchmark" "big-parallel" "gccarch-skylake" "kvm"];
-  #       publicHostKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEYURQfg2oU9NsUxV2ru/I/W5/mbUiGYplR1Fdepnole";
-  #     }
-  #   ];
-  # };
-
-  # =================================================================
   # 3. Secrets Management
   # =================================================================
   sops = {
@@ -100,8 +82,6 @@
   # =================================================================
   # 6. Nix Configuration
   # =================================================================
-  # Note: Base nix settings are in modules/base/nix-settings.nix
-  # Only host-specific overrides are defined here
   nix.package = pkgs.lixPackageSets.latest.lix;
 
   nix.settings = {
@@ -112,40 +92,26 @@
       "nix-command"
       "auto-allocate-uids"
     ];
-
-    auto-optimise-store = true; # Disabled during builds (run manually: nix-store --optimise)
+    auto-optimise-store = true;
     warn-dirty = false;
-    keep-going = true; # Continue building other derivations on failure
-
-    # Network optimization for faster downloads
-    max-substitution-jobs = 16; # Parallel downloads
-    http-connections = 25; # More HTTP connections
-    connect-timeout = 5; # Faster timeout
-
-    # Store optimization for better performance
-    keep-outputs = true; # Keep build dependencies for faster rebuilds
-    keep-derivations = true; # Keep derivations for faster evaluation
-
-    # Disk space management
+    keep-going = true;
+    max-substitution-jobs = 16;
+    http-connections = 25;
+    connect-timeout = 5;
+    keep-outputs = true;
+    keep-derivations = true;
     min-free = 5368709120; # 5GB - trigger GC when less than 5GB free
     max-free = 10737418240; # 10GB - stop GC when 10GB free
-
-    # Build performance improvements
-    builders-use-substitutes = true; # Allow builders to use substitutes
-    require-sigs = true; # Security: require signatures
-
-    # Evaluation performance
-    eval-cache = true; # Cache evaluation results
-
-    # Substituters and trusted keys are centralized in flake.nix
-
+    builders-use-substitutes = true;
+    require-sigs = true;
+    eval-cache = true;
     extra-system-features = [
       "big-parallel"
     ];
-
     trusted-users = [
       "root"
       "@wheel"
+      "nix-builder"
     ];
   };
 
@@ -157,7 +123,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    # Core utilities (server-specific)
     lsof
     openssh
 

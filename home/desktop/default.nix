@@ -94,4 +94,6 @@
       uris = ["qemu:///system"];
     };
   };
+
+  # systemd.user.services.niri-flake-polkit.enable = false;
 }
