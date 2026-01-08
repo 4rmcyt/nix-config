@@ -21,7 +21,8 @@ in {
   programs.waybar.settings.mainBar = with custom; {
     position = "top";
     layer = "top";
-    height = 28;
+    height = 24;
+    spacing = 5;
     margin-top = 0;
     margin-bottom = 0;
     margin-left = 0;
@@ -35,17 +36,18 @@ in {
       "custom/quicklinks-telegram"
       "custom/quicklinks-terminal"
       "custom/quicklinks-jellyfin"
-      "hyprland/window"
     ];
-    modules-center = ["clock"];
+    modules-center = ["hyprland/window"];
     modules-right = [
       "tray"
       "cpu"
       "memory"
       "disk"
+      "network"
       "pulseaudio"
-      "hyprland/language"
+      "backlight"
       "custom/notification"
+      "clock"
       "custom/power-menu"
     ];
     clock = {
@@ -120,35 +122,70 @@ in {
     };
     cpu = {
       format = "<span foreground='${green}'> </span> {usage}%";
-      format-alt = "<span foreground='${green}'> </span> {avg_frequency} GHz";
-      interval = 2;
+      format-alt = "<span foreground='${green}'></span> {avg_frequency} GHz";
+      interval = 1;
       on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
     };
     memory = {
       format = "<span foreground='${cyan}'>󰟜 </span>{}%";
-      format-alt = "<span foreground='${cyan}'>󰟜 </span>{used} GiB"; #
-      interval = 2;
+      format-alt = "<span foreground='${cyan}'>󰟜 </span>{used} GiB";
+      interval = 1;
       on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
     };
     disk = {
       # path = "/";
       format = "<span foreground='${orange}'>󰋊 </span>{percentage_used}%";
-      interval = 60;
+      interval = 1;
       on-click-right = "hyprctl dispatch exec '[float; center; size 950 650] kitty --override font_size=14 --title float_kitty btop'";
     };
     tray = {
       icon-size = 20;
       spacing = 8;
     };
-    pulseaudio = {
-      format = "{icon} {volume}%";
-      format-muted = "<span foreground='${blue}'> </span> {volume}%";
+    network = {
+      format = "{icon}";
       format-icons = {
-        default = ["<span foreground='${blue}'> </span>"];
+        wifi = [
+          "󰖩"
+        ];
+        ethernet = [
+          "󰈀"
+        ];
+        disconnected = [
+          "󰈂"
+        ];
       };
-      scroll-step = 2;
-      on-click = "pamixer -t";
-      on-click-right = "pavucontrol";
+      format-click = "<button>{icon}</button>";
+      format-wifi = "󰖩";
+      format-ethernet = "󰈀";
+      format-disconnected = "󰖪";
+      tooltip-format = "{ifname} via {gwaddr}";
+      tooltip-format-wifi = "{essid} 󰘊\n{signalStrength}%";
+      tooltip-format-ethernet = "{ifname} 󰈀";
+      tooltip-format-disconnected = "Disconnected";
+      # on-click = "gnome-control-center network";
+      tooltip = true;
+    };
+    pulseaudio = {
+      format = "{icon} {volume}% {format_source}";
+      format-bluetooth = "{icon} {volume}% {format_source}";
+      format-bluetooth-muted = "󰖁 {format_source}";
+      format-muted = "󰖁 {format_source}";
+      format-source = " {volume}%";
+      format-source-muted = "";
+      on-click = "pavucontrol";
+      format-icons = {
+        default = [
+          "🔈"
+          "🔉"
+          "🔊"
+        ];
+        handsfree = "";
+        headphones = "";
+        headset = "";
+        phone = "";
+        portable = "";
+      };
     };
     "hyprland/language" = {
       tooltip = true;

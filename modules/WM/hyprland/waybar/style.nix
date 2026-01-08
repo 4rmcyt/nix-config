@@ -156,9 +156,11 @@ in {
     #network,
     #battery,
     #language {
-      background: ${background_2};
+      background: transparent;
       padding: 0 10px;
       margin: 5px 4px;
+      font-size: 18px;
+      transition: all 0.3s ease;
     }
 
     #cpu { }

@@ -50,6 +50,7 @@ in {
           "video"
           "wheel"
           "zeev"
+          "libvirtd"
         ];
         hashedPasswordFile = config.sops.secrets.zeev_password.path;
         isNormalUser = true;

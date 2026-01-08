@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   imports = [
     # ../../modules/DE/kde/plasma-manager.nix
     # ../../modules/GUI/firefox
@@ -86,5 +87,12 @@
 
     # Firefox with nightly package
     firefox.package = pkgs.firefox-nightly or pkgs.firefox;
+  };
+
+  dconf.settings = {
+    "org/virt-manager/virt-manager/connections" = {
+      autoconnect = [ "qemu:///system" ];
+      uris = [ "qemu:///system" ];
+    };
   };
 }
