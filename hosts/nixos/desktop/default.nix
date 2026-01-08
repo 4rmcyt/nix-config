@@ -280,7 +280,6 @@
         sbsigntool
         shim-unsigned
         optnix
-        ventoy-full-qt
       ]
     );
   };
