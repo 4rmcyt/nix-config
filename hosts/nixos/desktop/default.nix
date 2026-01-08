@@ -4,8 +4,7 @@
   lib,
   inputs,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -200,16 +199,14 @@
     };
 
     shells = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         zsh
         nushell
       ]
     );
 
     systemPackages = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -296,8 +293,7 @@
   fonts = {
     fontDir.enable = true;
     fontconfig.useEmbeddedBitmaps = true;
-    packages =
-      with pkgs;
+    packages = with pkgs;
       [
         maple-mono.NF
         font-awesome
@@ -325,7 +321,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
+      allowedTCPPorts = [9100]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -481,10 +477,10 @@
 
     pcscd = {
       enable = true;
-      plugins = [ pkgs.ccid ];
+      plugins = [pkgs.ccid];
     };
 
-    dbus.packages = [ pkgs.gcr ];
+    dbus.packages = [pkgs.gcr];
 
     power-profiles-daemon.enable = false;
 
@@ -554,7 +550,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = [ "nvidia" ];
+      videoDrivers = ["nvidia"];
       xkb.layout = "us";
     };
   };
@@ -563,10 +559,10 @@
   # =================================================================
   users = {
     groups = {
-      git = { };
-      plugdev = { };
-      prometheus = { };
-      nix-builder = { };
+      git = {};
+      plugdev = {};
+      prometheus = {};
+      nix-builder = {};
     };
 
     users = {
@@ -609,11 +605,10 @@
     podman.enable = true;
     libvirtd = {
       enable = true;
-      qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
+      qemu.vhostUserPackages = with pkgs; [virtiofsd];
     };
     spiceUSBRedirection.enable = true;
   };
-
 
   systemd.tmpfiles.rules = [
     "d /data/zeev/Taildrive 770 davfs2 users -"
