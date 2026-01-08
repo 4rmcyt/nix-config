@@ -4,7 +4,7 @@
   # ============================================
   imports = [
     # Core Hyprland Configuration
-    # ./binds.nix
+    ./binds.nix
     # ./windowrules.nix
     # ./exec-once.nix
 
@@ -51,18 +51,8 @@
     # Qt
     QT_AUTO_SCREEN_SCALE_FACTOR = 1;
     QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
-    QT_QPA_PLATFORM = "wayland;xcb;qt6ct";
-    QT_QPA_PLATFORMTHEME = "qt5ct";
-    QT_STYLE_OVERRIDE = "kvantum";
-    DISABLE_QT5_COMPAT = 0;
-
-    # WLR
-    WLR_RENDERER = "vulkan";
-
-    # Utilities
-    DIRENV_LOG_FORMAT = "";
-    GTK_THEME = "Kanagawa-B";
-    GRIMBLAST_HIDE_CURSOR = 0;
+    QT_QPA_PLATFORM = "wayland;xcb";
+    QT_QPA_PLATFORMTHEME = "qt6ct";
   };
 
   # ============================================
@@ -72,6 +62,11 @@
     # Display & System
     glib # System library
     wayland # Wayland library
+    niri
+    cliphist # Clipboard manager
+    wl-clip-persist # Clipboard persistence
+    dsearch
+    xwayland-satellite
 
     # File Manager & Applications
     cosmic-store
