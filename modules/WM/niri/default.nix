@@ -4,7 +4,7 @@
   # MODULE IMPORTS
   # ============================================
   imports = [
-    # Core Hyprland Configuration
+    # Core Niri Configuration
     ./binds.nix
     # ./windowrules.nix
     # ./exec-once.nix
@@ -36,9 +36,9 @@
     MOZ_ENABLE_WAYLAND = 1;
     SDL_VIDEODRIVER = "wayland";
     CLUTTER_BACKEND = "wayland";
-    XDG_CURRENT_DESKTOP = "Hyprland";
+    XDG_CURRENT_DESKTOP = "Niri";
     XDG_SESSION_TYPE = "wayland";
-    XDG_SESSION_DESKTOP = "Hyprland";
+    XDG_SESSION_DESKTOP = "Niri";
 
     # Nvidia-specific (hybrid AMD+Nvidia setup)
     LIBVA_DRIVER_NAME = "nvidia";
@@ -57,7 +57,7 @@
   };
 
   # ============================================
-  # HYPRLAND PACKAGES
+  # NIRI PACKAGES
   # ============================================
   home.packages = with pkgs; [
     # Display & System
@@ -78,6 +78,7 @@
     kdePackages.kate # Text editor
     kdePackages.okular # PDF viewer
   ];
+
   programs = {
     dankMaterialShell = {
       enable = true;
@@ -102,31 +103,24 @@
   # ============================================
   # SYSTEMD INTEGRATION
   # ============================================
-  systemd.user.targets.hyprland-session.Unit.Wants = [
+  systemd.user.targets.niri-session.Unit.Wants = [
     "xdg-desktop-autostart.target"
   ];
 
-  wayland.windowManager.hyprland = {
+  programs.niri = {
     enable = true;
-    xwayland = {
-      enable = true;
-    };
-
-    systemd.enable = true;
 
     settings = {
-      monitor = [
-        "DP-4,3840x2160@59.997,0x0,2,bitdepth,10"
-        "DP-5,3840x2160@59.997,1920x0,2,bitdepth,10"
-      ];
-      "$mod" = "SUPER";
+      outputs = {
+        "eDP-4" = {
+          scale = 2.0;
+        };
+        "eDP-5" = {
+          scale = 2.0;
+        };
+      };
     };
-
-    extraConfig = ''
-      # hyprlang noerror true
-        source = ~/.config/hypr/monitors.conf
-        source = ~/.config/hypr/workspaces.conf
-      # hyprlang noerror false
-    '';
   };
+
+  niri-flake.cache.enable = true;
 }

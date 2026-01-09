@@ -47,7 +47,6 @@
       distrobox
 
       # GUI applications
-      ktailctl
       signal-desktop
       slack
       tailscale
