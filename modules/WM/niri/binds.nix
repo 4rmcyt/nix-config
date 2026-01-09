@@ -25,38 +25,50 @@ _: {
         command = "chromium";
       };
 
-      # File Manager
+      # File Manager (GNOME Nautilus - best DMS integration)
       "Super+E" = {
         action = "spawn";
-        command = "dolphin";
+        command = "nautilus";
       };
       "Alt+E" = {
         action = "spawn";
-        command = "dolphin";
+        command = "nautilus";
       };
 
-      # Launcher
+      # DMS Application Launcher (Primary)
+      "Super+Space" = {
+        action = "spawn";
+        command = "quickshell -m dms.overview";
+      };
+
+      # Walker Fallback Launcher
       "Super+D" = {
         action = "spawn";
         command = "walker";
       };
 
-      # System Monitor
+      # System Monitor (Use DMS Task Manager instead)
       "Ctrl+Shift+Escape" = {
         action = "spawn";
-        command = "missioncenter";
+        command = "quickshell -m dms.taskmgr";
+      };
+
+      # DMS Task Manager
+      "Super+M" = {
+        action = "spawn";
+        command = "quickshell -m dms.taskmgr";
+      };
+
+      # DMS Settings
+      "Super+Comma" = {
+        action = "spawn";
+        command = "quickshell -m dms.settings";
       };
 
       # Communication
       "Super+Shift+D" = {
         action = "spawn";
-        command = "webcord --enable-features=UseOzonePlatform --ozone-platform=wayland";
-      };
-
-      # Audio
-      "Super+Shift+S" = {
-        action = "spawn";
-        command = "SoundWireServer";
+        command = "discord --enable-features=UseOzonePlatform --ozone-platform=wayland";
       };
 
       # ============================================
@@ -70,19 +82,11 @@ _: {
 
       # Fullscreen
       "Super+F" = {
-        action = "set-fullscreen";
-        value = false;
-      };
-      "Super+Shift+F" = {
-        action = "set-fullscreen";
-        value = true;
+        action = "fullscreen-window";
       };
 
-      # Floating
-      "Super+Space" = {
-        action = "toggle-floating";
-      };
-      "Alt+Space" = {
+      # Floating (moved from Super+Space to avoid conflict with DMS launcher)
+      "Super+Shift+Space" = {
         action = "toggle-floating";
       };
 
@@ -90,72 +94,94 @@ _: {
       # SYSTEM CONTROLS
       # ============================================
 
-      # Lock Screen
+      # Lock Screen (DMS recommended: swaylock)
       "Super+Escape" = {
         action = "spawn";
         command = "swaylock";
       };
-      "Alt+Escape" = {
-        action = "spawn";
-        command = "hyprlock";
-      };
 
-      # Power Menu
+      # Power Menu (DMS)
       "Super+Shift+Escape" = {
         action = "spawn";
-        command = "power-menu";
+        command = "dms ipc call modal toggle power-menu";
       };
 
-      # Notifications
+      # Notifications (DMS)
       "Super+N" = {
         action = "spawn";
-        command = "swaync-client -t -sw";
+        command = "dms ipc call modal toggle notifications";
+      };
+
+      # Keybinds Cheatsheet
+      "Super+Slash" = {
+        action = "spawn";
+        command = "dms ipc call keybinds toggle niri";
+      };
+
+      # Toggle Theme (Light/Dark)
+      "Super+T" = {
+        action = "spawn";
+        command = "dms ipc call appearance toggle-theme";
+      };
+
+      # Toggle Night Mode
+      "Super+Shift+N" = {
+        action = "spawn";
+        command = "dms ipc call night-mode toggle";
       };
 
       # ============================================
       # THEMING & CUSTOMIZATION
       # ============================================
 
-      # Color Picker
+      # Color Picker (DMS)
       "Super+C" = {
         action = "spawn";
-        command = "hyprpicker -a";
+        command = "dms ipc call modal toggle color-picker";
       };
 
-      # Wallpaper
+      # DMS Wallpaper Selector (Media Hub/DankDash)
       "Super+W" = {
         action = "spawn";
-        command = "waypaper";
-      };
-      "Super+Shift+W" = {
-        action = "spawn";
-        command = "waypaper";
+        command = "dms ipc call modal toggle dashboard";
       };
 
       # ============================================
-      # SCREENSHOTS
+      # SCREENSHOTS - DMS CLI
       # ============================================
+
+      # Region selection (default)
       "Print" = {
         action = "spawn";
-        command = "grimblast copy area";
+        command = "dms screenshot";
       };
+
+      # Full screen of active display
       "Super+Print" = {
         action = "spawn";
-        command = "grimblast save area";
+        command = "dms screenshot full";
       };
+
+      # All displays combined
       "Super+Shift+Print" = {
         action = "spawn";
-        command = "grimblast copy area && swappy -f - -o -";
+        command = "dms screenshot all";
+      };
+
+      # Clipboard only (no file)
+      "Ctrl+Print" = {
+        action = "spawn";
+        command = "dms screenshot --no-file";
       };
 
       # ============================================
       # FOCUS CONTROL
       # ============================================
 
-      # Alt+Tab window switching with Walker
+      # Alt+Tab window switching with DMS
       "Alt+Tab" = {
         action = "spawn";
-        command = "walker --modules applications";
+        command = "quickshell -m dms.alttab";
       };
 
       # Arrow Keys - Focus Movement
@@ -259,29 +285,63 @@ _: {
       };
 
       # ============================================
-      # MEDIA CONTROLS
+      # MEDIA CONTROLS - DMS IPC
       # ============================================
+
+      # Media playback
       "XF86AudioPlay" = {
         action = "spawn";
-        command = "playerctl play-pause";
+        command = "dms ipc call media play-pause";
       };
       "XF86AudioNext" = {
         action = "spawn";
-        command = "playerctl next";
+        command = "dms ipc call media next";
       };
       "XF86AudioPrev" = {
         action = "spawn";
-        command = "playerctl previous";
+        command = "dms ipc call media previous";
       };
       "XF86AudioStop" = {
         action = "spawn";
-        command = "playerctl stop";
+        command = "dms ipc call media stop";
+      };
+
+      # Volume controls
+      "XF86AudioRaiseVolume" = {
+        action = "spawn";
+        command = "dms ipc call audio volume-increment 5";
+      };
+      "XF86AudioLowerVolume" = {
+        action = "spawn";
+        command = "dms ipc call audio volume-decrement 5";
+      };
+      "XF86AudioMute" = {
+        action = "spawn";
+        command = "dms ipc call audio volume-toggle-mute";
+      };
+
+      # Brightness controls (with OSD)
+      "XF86MonBrightnessUp" = {
+        action = "spawn";
+        command = "dms ipc call brightness increment 5";
+      };
+      "XF86MonBrightnessDown" = {
+        action = "spawn";
+        command = "dms ipc call brightness decrement 5";
       };
 
       # ============================================
-      # CLIPBOARD
+      # CLIPBOARD - DMS Integration
       # ============================================
+
+      # DMS Clipboard history
       "Super+V" = {
+        action = "spawn";
+        command = "dms ipc call modal toggle clipboard";
+      };
+
+      # Alternative: Walker with cliphist
+      "Super+Shift+V" = {
         action = "spawn";
         command = "cliphist list | head -50 | walker --dmenu | cliphist decode | wl-copy";
       };

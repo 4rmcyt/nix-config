@@ -1,22 +1,4 @@
-{
-  pkgs,
-  lib,
-  ...
-}: {
-  environment.systemPackages = lib.mkBefore (
-    with pkgs; [
-      (chromium.override {
-        enableWideVine = true;
-        commandLineArgs = [
-          "--enable-features=VaapiVideoDecoder,VaapiIgnoreDriverChecks"
-          "--ignore-gpu-blocklist"
-          "--ozone-platform=wayland"
-          "--disable-features=WaylandOverlayDelegation"
-        ];
-      })
-    ]
-  );
-
+{pkgs, ...}: {
   # Set Google API credentials for Chromium sync
   environment.sessionVariables = {
     GOOGLE_API_KEY = "REDACTED";
@@ -26,7 +8,19 @@
 
   programs.chromium = {
     enable = true;
-    enablePlasmaBrowserIntegration = true;
+
+    # DMS/Wayland optimized package
+    package = pkgs.chromium.override {
+      enableWideVine = true;
+      commandLineArgs = [
+        "--enable-features=VaapiVideoDecoder,VaapiIgnoreDriverChecks"
+        "--ignore-gpu-blocklist"
+        "--ozone-platform=wayland"
+        "--disable-features=WaylandOverlayDelegation"
+      ];
+    };
+
+    # Extensions
     extensions = [
       "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
       "naepdomgkenhinolocfifgehidddafch" # Browserpass
@@ -34,13 +28,26 @@
       "fkagelmloambgokoeokbpihmgpkbgbfm" # Indie Wiki Buddy
       "hlepfoohegkhhmjieoechaddaejaokhf" # Refined Github
       "gebbhagfogifgggkldgodflihgfeippi" # Return YouTube Dislike
-      "ddkjiahejlhfcafbddmgiahcphecmpfh" # uBlock Origin light
+      "ddkjiahejlhfcafbddmgiahcphecmpfh" # uBlock Origin Lite
       "olnngmhgopdgnfenhimlmnmemadhofdd" # Miniflux injector
     ];
 
     extraOpts = {
+      # Sync settings
       "BrowserSignin" = 1;
       "SyncDisabled" = false;
+
+      # Extension settings - Force install extensions
+      "ExtensionInstallForcelist" = [
+        "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
+        "naepdomgkenhinolocfifgehidddafch" # Browserpass
+        "bggfcpfjbdkhfhfmkjpbhnkhnpjjeomc" # Material Icons for GitHub
+        "fkagelmloambgokoeokbpihmgpkbgbfm" # Indie Wiki Buddy
+        "hlepfoohegkhhmjieoechaddaejaokhf" # Refined Github
+        "gebbhagfogifgggkldgodflihgfeippi" # Return YouTube Dislike
+        "ddkjiahejlhfcafbddmgiahcphecmpfh" # uBlock Origin Lite
+        "olnngmhgopdgnfenhimlmnmemadhofdd" # Miniflux injector
+      ];
     };
   };
 }

@@ -17,21 +17,27 @@ _: {
       # Browser
       "$mod, B, exec, chromium"
 
-      # File Manager
-      "$mod, E, exec, dolphin"
-      "ALT, E, exec, hyprctl dispatch exec '[float; size 1111 700] dolphin'"
+      # File Manager (GNOME Nautilus - best DMS integration)
+      "$mod, E, exec, nautilus"
+      "ALT, E, exec, hyprctl dispatch exec '[float; size 1111 700] nautilus'"
 
-      # Launcher
+      # DMS Application Launcher (Primary)
+      "$mod, Space, exec, quickshell -m dms.overview"
+
+      # Walker Fallback Launcher
       "$mod, D, exec, walker"
 
-      # System Monitor
-      "CTRL SHIFT, Escape, exec, missioncenter"
+      # System Monitor (Use DMS Task Manager)
+      "CTRL SHIFT, Escape, exec, quickshell -m dms.taskmgr"
+
+      # DMS Task Manager
+      "$mod, M, exec, quickshell -m dms.taskmgr"
+
+      # DMS Settings
+      "$mod, comma, exec, quickshell -m dms.settings"
 
       # Communication
-      "$mod SHIFT, D, exec, webcord --enable-features=UseOzonePlatform --ozone-platform=wayland"
-
-      # Audio
-      "$mod SHIFT, S, exec, SoundWireServer"
+      "$mod SHIFT, D, exec, discord --enable-features=UseOzonePlatform --ozone-platform=wayland"
 
       # ============================================
       # WINDOW MANAGEMENT
@@ -44,9 +50,8 @@ _: {
       "$mod, F, fullscreen, 0"
       "$mod SHIFT, F, fullscreen, 1"
 
-      # Floating
-      "$mod, Space, togglefloating,"
-      "ALT, Space, togglefloating,"
+      # Floating (moved from Super+Space to avoid conflict with DMS launcher)
+      "$mod SHIFT, Space, togglefloating,"
 
       # Layout
       "$mod, P, pseudo,"
@@ -56,43 +61,56 @@ _: {
       # SYSTEM CONTROLS
       # ============================================
 
-      # Lock Screen
+      # Lock Screen (DMS recommended: swaylock)
       "$mod, Escape, exec, swaylock"
-      "ALT, Escape, exec, hyprlock"
 
-      # Power Menu
-      "$mod SHIFT, Escape, exec, power-menu"
+      # Power Menu (DMS)
+      "$mod SHIFT, Escape, exec, dms ipc call modal toggle power-menu"
 
-      # Waybar Toggle
-      "$mod SHIFT, B, exec, toggle-waybar"
+      # Notifications (DMS)
+      "$mod, N, exec, dms ipc call modal toggle notifications"
 
-      # Notifications
-      "$mod, N, exec, swaync-client -t -sw"
+      # Keybinds Cheatsheet
+      "$mod, slash, exec, dms ipc call keybinds toggle hyprland"
+
+      # Toggle Theme (Light/Dark)
+      "$mod, T, exec, dms ipc call appearance toggle-theme"
+
+      # Toggle Night Mode
+      "$mod SHIFT, N, exec, dms ipc call night-mode toggle"
 
       # ============================================
       # THEMING & CUSTOMIZATION
       # ============================================
 
-      # Color Picker
-      "$mod, C ,exec, hyprpicker -a"
+      # Color Picker (DMS)
+      "$mod, C, exec, dms ipc call modal toggle color-picker"
 
-      # Wallpaper
-      "$mod, W, exec, waypaper"
-      "$mod SHIFT, W, exec, hyprctl dispatch exec '[float; size 925 615] waypaper'"
+      # DMS Wallpaper Selector (Media Hub/DankDash)
+      "$mod, W, exec, dms ipc call modal toggle dashboard"
 
       # ============================================
-      # SCREENSHOTS
+      # SCREENSHOTS - DMS CLI
       # ============================================
-      ",Print, exec, grimblast copy area"
-      "$mod, Print, exec, grimblast save area"
-      "$mod SHIFT, Print, exec, grimblast copy area && swappy -f - -o -"
+
+      # Region selection (default)
+      ",Print, exec, dms screenshot"
+
+      # Full screen of active display
+      "$mod, Print, exec, dms screenshot full"
+
+      # All displays combined
+      "$mod SHIFT, Print, exec, dms screenshot all"
+
+      # Clipboard only (no file)
+      "CTRL, Print, exec, dms screenshot --no-file"
 
       # ============================================
       # FOCUS CONTROL
       # ============================================
 
-      # Alt+Tab window switching with Walker
-      "ALT, Tab, exec, walker --modules applications"
+      # Alt+Tab window switching with DMS
+      "ALT, Tab, exec, quickshell -m dms.alttab"
 
       # Arrow Keys
       "$mod, left,  movefocus, l"
@@ -171,17 +189,33 @@ _: {
       "$mod ALT, l, moveactive, 80 0"
 
       # ============================================
-      # MEDIA CONTROLS
+      # MEDIA CONTROLS - DMS IPC
       # ============================================
-      ",XF86AudioPlay,exec, playerctl play-pause"
-      ",XF86AudioNext,exec, playerctl next"
-      ",XF86AudioPrev,exec, playerctl previous"
-      ",XF86AudioStop,exec, playerctl stop"
+
+      # Media playback
+      ",XF86AudioPlay, exec, dms ipc call media play-pause"
+      ",XF86AudioNext, exec, dms ipc call media next"
+      ",XF86AudioPrev, exec, dms ipc call media previous"
+      ",XF86AudioStop, exec, dms ipc call media stop"
+
+      # Volume controls
+      ",XF86AudioRaiseVolume, exec, dms ipc call audio volume-increment 5"
+      ",XF86AudioLowerVolume, exec, dms ipc call audio volume-decrement 5"
+      ",XF86AudioMute, exec, dms ipc call audio volume-toggle-mute"
+
+      # Brightness controls (with OSD)
+      ",XF86MonBrightnessUp, exec, dms ipc call brightness increment 5"
+      ",XF86MonBrightnessDown, exec, dms ipc call brightness decrement 5"
 
       # ============================================
-      # CLIPBOARD
+      # CLIPBOARD - DMS Integration
       # ============================================
-      "$mod, V, exec, cliphist list | head -50 | walker --dmenu | cliphist decode | wl-copy"
+
+      # DMS Clipboard history
+      "$mod, V, exec, dms ipc call modal toggle clipboard"
+
+      # Alternative: Walker with cliphist
+      "$mod SHIFT, V, exec, cliphist list | head -50 | walker --dmenu | cliphist decode | wl-copy"
     ];
 
     # ============================================

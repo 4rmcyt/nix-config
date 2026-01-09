@@ -1,46 +1,45 @@
 _: {
-  wayland.windowManager.hyprland.settings.exec-once = [
-    # ============================================
-    # ENVIRONMENT SETUP
-    # ============================================
-    "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-    "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+  wayland.windowManager.hyprland.settings = {
+    exec-once = [
+      # ============================================
+      # DMS CORE SERVICES
+      # ============================================
 
-    # ============================================
-    # SECURITY
-    # ============================================
-    "hyprlock"
+      # Start DankMaterialShell
+      "systemctl --user start dms.service"
 
-    # ============================================
-    # SYSTEM TRAY & SERVICES
-    # ============================================
-    "nm-applet &"
-    "poweralertd &"
-    "udiskie --automount --notify --smart-tray &"
+      # ============================================
+      # CLIPBOARD MANAGEMENT
+      # ============================================
 
-    # ============================================
-    # CLIPBOARD
-    # ============================================
-    "wl-clip-persist --clipboard both &"
-    "wl-paste --watch cliphist store &"
+      # Clipboard history daemon (if DMS clipboard is enabled)
+      "wl-paste --type text --watch cliphist store"
+      "wl-paste --type image --watch cliphist store"
 
-    # ============================================
-    # UI COMPONENTS
-    # ============================================
-    "waybar &"
-    "swaync &"
-    "hyprctl setcursor Bibata-Modern-Ice 24 &"
+      # Clipboard persistence
+      "wl-clip-persist --clipboard both"
 
-    # ============================================
-    # WALLPAPER
-    # ============================================
-    "swww-daemon &"
-    "sleep 1 && swww img ~/Pictures/Wallpapers/ColorWall-eolmrl.jpg --transition-type fade --transition-duration 2 &"
+      # ============================================
+      # XWAYLAND SUPPORT
+      # ============================================
 
-    # ============================================
-    # APPLICATIONS
-    # ============================================
-    "wezterm --config-file /home/zeev/.config/wezterm/wezterm.lua"
-    "[workspace 1 silent] chromium"
-  ];
+      # XWayland satellite for X11 app compatibility
+      "xwayland-satellite :0"
+
+      # ============================================
+      # POLKIT AUTHENTICATION
+      # ============================================
+
+      # Polkit authentication agent (if DMS_DISABLE_POLKIT is set)
+      # Uncomment if you're using an alternative polkit agent
+      # "polkit-kde-authentication-agent-1"
+
+      # ============================================
+      # IDLE & POWER MANAGEMENT
+      # ============================================
+
+      # Idle daemon with screen locking
+      # "swayidle -w timeout 300 'swaylock' timeout 600 'hyprctl dispatch dpms off' resume 'hyprctl dispatch dpms on' before-sleep 'swaylock'"
+    ];
+  };
 }

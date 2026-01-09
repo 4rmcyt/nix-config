@@ -31,7 +31,7 @@
     # ../../../modules/GUI/OBS
 
     ../../../modules/GUI/chromium
-    ../../../modules/GUI/flatpak/hyprland
+    ../../../modules/GUI/flatpak/niri
   ];
 
   # =================================================================
@@ -194,11 +194,6 @@
         inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-desktop
 
         # =============================================================
-        # Hyprland Utilities
-        # =============================================================
-        inputs.hyprland-guiutils.packages.x86_64-linux.default
-
-        # =============================================================
         # Fonts & Themes
         # =============================================================
         fira-code
@@ -212,7 +207,6 @@
         # =============================================================
         libva-utils
         nvidia-vaapi-driver
-        atuin
 
         # =============================================================
         # Hardware Support & Monitoring
@@ -307,7 +301,7 @@
   # 12. Programs
   # =================================================================
   programs = {
-    hyprland.enable = true;
+    niri.enable = true;
 
     corectrl.enable = true;
 
@@ -346,10 +340,9 @@
     enable = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
-      xdg-desktop-portal-hyprland
       xdg-desktop-portal-gnome
-      xdg-desktop-portal-wlr
     ];
+    wlr.enable = true;
   };
 
   # =================================================================
@@ -357,17 +350,17 @@
   # =================================================================
   services = {
     # =============================================================
-    # Display Manager - greetd with hyprlock for Hyprland
+    # Display Manager - greetd with niri
     # =============================================================
     greetd = {
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd Hyprland";
+          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd niri-session";
           user = "greeter";
         };
         initial_session = {
-          command = "Hyprland";
+          command = "niri-session";
           user = "zeev";
         };
       };

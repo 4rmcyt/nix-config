@@ -2,36 +2,74 @@ _: {
   wayland.windowManager.hyprland.settings = {
     windowrulev2 = [
       # ============================================
+      # DMS COMPONENTS
+      # ============================================
+
+      # DMS Modals (full-screen overlays)
+      "float, class:^(dms:settings)$"
+      "float, class:^(dms:power-menu)$"
+      "float, class:^(dms:clipboard)$"
+      "float, class:^(dms:spotlight)$"
+      "float, class:^(dms:polkit)$"
+      "float, class:^(dms:modal)$"
+
+      # DMS Popouts (bar-anchored panels)
+      "float, class:^(dms:app-launcher)$"
+      "float, class:^(dms:control-center)$"
+      "float, class:^(dms:notification-center-popout)$"
+      "float, class:^(dms:popout)$"
+
+      # DMS Bar and Misc Components
+      "float, class:^(dms:bar)$"
+      "float, class:^(dms:dock)$"
+      "float, class:^(dms:osd)$"
+      "float, class:^(dms:notification)$"
+      "float, class:^(dms:tooltip)$"
+
+      # QuickShell (DMS runtime)
+      "float, class:^(quickshell)$"
+
+      # ============================================
+      # GNOME APPLICATIONS
+      # ============================================
+
+      # GNOME apps get proper borders
+      "noborder, class:^(org\\.gnome\\..*)$"
+
+      # GNOME Calculator
+      "float, class:^(org.gnome.Calculator)$"
+
+      # GNOME File Roller
+      "float, class:^(org.gnome.FileRoller)$"
+
+      # ============================================
       # FLOATING WINDOWS
       # ============================================
 
       # Image Viewers
-      "float,  class:^(Viewnior)$"
-      "float,  class:^(org.kde.gwenview)$"
+      "float, class:^(Viewnior)$"
+      "float, class:^(loupe)$"
+      "float, class:^(org.gnome.Loupe)$"
 
       # Media Players
-      "float,  class:^(mpv)$"
-      "float,  title:^(Picture-in-Picture)$"
-      "pin,  title:^(Picture-in-Picture)$"
+      "float, class:^(mpv)$"
+      "float, title:^(Picture-in-Picture)$"
+      "pin, title:^(Picture-in-Picture)$"
 
       # File Management
-      "float,  class:^(waypaper)$"
-      "pin,  class:^(waypaper)$"
-      "float,  class:^(org.gnome.FileRoller)$"
+      "float, title:^(Open File)$"
+      "float, title:^(Save File)$"
 
       # System Utilities
-      "float,  class:^(org.gnome.Calculator)$"
-      "float,  class:^(org.pulseaudio.pavucontrol)$"
-      "float,  class:^(SoundWireServer)$"
-      "size 725 330,  class:^(SoundWireServer)$"
+      "float, class:^(org.pulseaudio.pavucontrol)$"
 
       # Launchers & Menus
-      "pin,  class:^(walker)$"
-      "float,  class:^(zenity)$"
-      "size 850 500,  class:^(zenity)$"
+      "pin, class:^(walker)$"
+      "float, class:^(zenity)$"
+      "size 850 500, class:^(zenity)$"
 
       # Gaming
-      "float,  class:^(.sameboy-wrapped)$"
+      "float, class:^(.sameboy-wrapped)$"
 
       # ============================================
       # DIALOG WINDOWS
@@ -43,7 +81,6 @@ _: {
       "float, class:^(notification)$"
       "float, class:^(error)$"
       "float, class:^(confirmreset)$"
-      "float, title:^(Open File)$"
       "float, title:^(File Upload)$"
       "float, title:^(branchdialog)$"
       "float, title:^(Confirm to replace files)$"
@@ -71,15 +108,18 @@ _: {
       "tile, class:^(Aseprite)$"
 
       # ============================================
-      # OPACITY OVERRIDES
+      # OPACITY OVERRIDES (DMS recommended: 0.9 for inactive)
       # ============================================
       "opacity 1.0 override 1.0 override, title:^(Picture-in-Picture)$"
-      "opacity 1.0 override 1.0 override, class:(org.kde.gwenview)"
+      "opacity 1.0 override 1.0 override, class:(loupe)"
+      "opacity 1.0 override 1.0 override, class:(org.gnome.Loupe)"
       "opacity 1.0 override 1.0 override, title:^(.*mpv.*)$"
       "opacity 1.0 override 1.0 override, class:(Aseprite)"
       "opacity 1.0 override 1.0 override, class:(Unity)"
       "opacity 1.0 override 1.0 override, class:(zen)"
-      "opacity 1.0 override 1.0 override, class:(org.kde.okular)"
+      "opacity 1.0 override 1.0 override, class:(evince)"
+      "opacity 1.0 override 1.0 override, class:(org.gnome.Evince)"
+      "opacity 0.9, floating:0" # DMS recommended inactive opacity
 
       # ============================================
       # WORKSPACE ASSIGNMENTS - Disabled (single workspace)

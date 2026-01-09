@@ -22,8 +22,7 @@
     # ../../modules/TUI/starship
     ../../modules/TUI/atuin
     ../../modules/TUI/zellij
-    ../../modules/WM/hyprland
-    ../../modules/WM/hyprland/gtk.nix
+    ../../modules/WM/niri
   ];
 
   home = {
@@ -56,7 +55,6 @@
 
       foliate
       gvfs
-      loupe
       ffmpegthumbnailer
       gst_all_1.gst-libav
 

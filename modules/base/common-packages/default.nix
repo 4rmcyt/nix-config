@@ -68,7 +68,6 @@
       nix-diff
       nix-fast-build
       nix-index
-      nix-output-monitor
       nixfmt
       nixos-rebuild-ng
       nodePackages.prettier

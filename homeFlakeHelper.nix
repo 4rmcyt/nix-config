@@ -39,6 +39,9 @@ in {
       inputs.betterfox-nix.homeModules.betterfox
       inputs.stylix.homeModules.stylix
       inputs.pam-shim.homeModules.default
+      inputs.niri.homeModules.niri
+      inputs.dms.homeModules.dankMaterialShell.default
+      inputs.dms.homeModules.dankMaterialShell.niri
     ];
 
     "${userName}@homeserver" = mkHomeConfig "homeserver" [];

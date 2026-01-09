@@ -1,31 +1,13 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   # ============================================
   # MODULE IMPORTS
   # ============================================
   imports = [
     # Core Hyprland Configuration
     ./binds.nix
-    # ./windowrules.nix
-    # ./exec-once.nix
-
-    # Lock & Security
-    # ./hyprlock.nix
-    # ./swaylock.nix
-
-    # UI Components
-    # ./waybar
-    # ./swaync
-    # ./launcher
-    # ./wlogout.nix
-
-    # Utilities
-    # ./waypaper
-    # ./swayosd.nix
-
-    # System Integration
-    # ./xdg-mimes.nix
-    # ./gtk.nix
+    ./windowrules.nix
+    ./exec-once.nix
+    ./gtk.nix
   ];
 
   home.sessionVariables = {
@@ -53,30 +35,36 @@
     QT_AUTO_SCREEN_SCALE_FACTOR = 1;
     QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
     QT_QPA_PLATFORM = "wayland;xcb";
-    QT_QPA_PLATFORMTHEME = "qt6ct";
+    QT_QPA_PLATFORMTHEME = "gtk3"; # Use GTK3 passthrough for Qt (DMS recommended)
+    ELECTRON_OZONE_PLATFORM_HINT = "auto";
   };
 
   # ============================================
   # HYPRLAND PACKAGES
   # ============================================
+
   home.packages = with pkgs; [
     # Display & System
     glib # System library
     wayland # Wayland library
-    niri
-    cliphist # Clipboard manager
-    wl-clip-persist # Clipboard persistence
-    dsearch
     xwayland-satellite
 
-    # File Manager & Applications
-    cosmic-store
-    kdePackages.qt6ct
-    kdePackages.ark # Archive manager
-    kdePackages.dolphin # File manager
-    kdePackages.gwenview # Image viewer
-    kdePackages.kate # Text editor
-    kdePackages.okular # PDF viewer
+    # Clipboard Management (DMS Integration)
+    cliphist # Clipboard history backend
+    wl-clip-persist # Clipboard persistence
+
+    # DMS Utilities
+    walker # Application launcher (fallback)
+
+    # GNOME Applications (Best integration with DMS)
+    gnome-text-editor # Modern text editor (replaces gedit)
+    nautilus # File manager
+    loupe # Image viewer (replaces eog)
+    evince # PDF/document viewer
+
+    # System Tools
+    swaylock # Screen locker
+    playerctl # Media player control
   ];
   programs = {
     dankMaterialShell = {
@@ -92,9 +80,9 @@
       enableDynamicTheming = true; # Wallpaper-based theming (matugen)
       enableAudioWavelength = false; # Audio visualizer (cava)
       enableCalendarEvents = true; # Calendar integration (khal)
-      niri = {
+      hyprland = {
         enableKeybinds = true; # Sets static preset keybinds
-        enableSpawn = true; # Auto-start DMS with niri and cliphist, if enabled
+        enableSpawn = true; # Auto-start DMS with Hyprland and cliphist, if enabled
       };
     };
   };
@@ -116,8 +104,8 @@
 
     settings = {
       monitor = [
-        "DP-4,3840x2160@59.997,0x0,2,bitdepth,10"
-        "DP-5,3840x2160@59.997,1920x0,2,bitdepth,10"
+        "DP-4,3840x2160@60,0x0,2.0,bitdepth,10"
+        "DP-5,3840x2160@60,1920x0,2.0,bitdepth,10"
       ];
       "$mod" = "SUPER";
     };
