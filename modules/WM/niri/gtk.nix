@@ -5,7 +5,7 @@
 
   home.packages = with pkgs; [
     # GTK Theme Requirements
-    adw-gtk3-theme # Adwaita-based GTK3/4 theme
+    adw-gtk3 # Adwaita-based GTK3/4 theme
     gsettings-desktop-schemas
 
     # Icon Themes (Popular DMS-compatible options)
@@ -20,7 +20,7 @@
     # Theme Configuration
     theme = {
       name = "adw-gtk3-dark"; # Base theme for GTK3/4
-      package = pkgs.adw-gtk3-theme;
+      package = pkgs.adw-gtk3;
     };
 
     # Icon Theme
@@ -54,25 +54,6 @@
       gtk-primary-button-warps-slider = false;
     };
   };
-
-  # ============================================
-  # GTK3/4 Custom CSS - DMS Dynamic Colors
-  # ============================================
-
-  # Import DMS-generated colors (when matugen is enabled)
-  home.file.".config/gtk-3.0/gtk.css".text = ''
-    /* DMS Dynamic Theming Integration */
-    @import url("dank-colors.css");
-
-    /* Additional custom styling can go here */
-  '';
-
-  home.file.".config/gtk-4.0/gtk.css".text = ''
-    /* DMS Dynamic Theming Integration */
-    @import url("dank-colors.css");
-
-    /* Additional custom styling can go here */
-  '';
 
   dconf.settings = {
     "org/gnome/desktop/interface" = {

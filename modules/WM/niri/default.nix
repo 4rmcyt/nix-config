@@ -1,10 +1,11 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # ============================================
   # MODULE IMPORTS
   # ============================================
   imports = [
     # Core Niri Configuration
-    ./binds.nix
+    # ./binds.nix
     ./window-rules.nix
     ./exec-once.nix
     ./gtk.nix
@@ -45,31 +46,11 @@
     # Display & System
     glib # System library
     wayland # Wayland library
-    niri
     xwayland-satellite
 
     # Clipboard Management (DMS Integration)
     cliphist # Clipboard history backend
     wl-clip-persist # Clipboard persistence
-
-    # DMS Utilities
-    walker # Application launcher (fallback)
-
-    # GNOME Applications (Best integration with DMS)
-    gnome-text-editor # Modern text editor (replaces gedit)
-    nautilus # File manager
-    loupe # Image viewer (replaces eog)
-    evince # PDF/document viewer
-
-    # Optional GNOME Apps
-    # gnome-calculator
-    # gnome-calendar
-    # gnome-weather
-    # gnome-clocks
-
-    # System Tools
-    swaylock # Screen locker
-    playerctl # Media player control
   ];
 
   programs = {
@@ -87,7 +68,7 @@
       enableAudioWavelength = false; # Audio visualizer (cava)
       enableCalendarEvents = true; # Calendar integration (khal)
       niri = {
-        enableKeybinds = true; # Sets static preset keybinds
+        enableKeybinds = true; # Using custom keybinds in binds.nix
         enableSpawn = true; # Auto-start DMS with niri and cliphist, if enabled
       };
     };
@@ -108,11 +89,13 @@
       # OUTPUTS
       # ============================================
       outputs = {
-        "eDP-4" = {
-          scale = 2.0;
+        "DP-4" = {
+          mode = "3840x2160@60";
+          scale = 2.25;
         };
-        "eDP-5" = {
-          scale = 2.0;
+        "DP-5" = {
+          mode = "3840x2160@60";
+          scale = 2.25;
         };
       };
 
@@ -123,11 +106,13 @@
         gaps = 5; # DMS recommended: 5px gaps
         center-focused-column = "never";
         preset-column-widths = [
-          {proportion = 0.33333;}
-          {proportion = 0.5;}
-          {proportion = 0.66667;}
+          { proportion = 0.33333; }
+          { proportion = 0.5; }
+          { proportion = 0.66667; }
         ];
-        default-column-width = {proportion = 0.5;};
+        default-column-width = {
+          proportion = 0.5;
+        };
         focus-ring = {
           enable = true;
           width = 2;
@@ -150,6 +135,4 @@
       # Window rules and spawn-at-startup moved to separate modules
     };
   };
-
-  niri-flake.cache.enable = true;
 }

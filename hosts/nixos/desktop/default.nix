@@ -301,8 +301,6 @@
   # 12. Programs
   # =================================================================
   programs = {
-    niri.enable = true;
-
     corectrl.enable = true;
 
     gnupg.agent = {
@@ -343,6 +341,14 @@
       xdg-desktop-portal-gnome
     ];
     wlr.enable = true;
+    config = {
+      common = {
+        default = ["wlr" "gtk"];
+      };
+      niri = {
+        default = ["wlr" "gtk"];
+      };
+    };
   };
 
   # =================================================================

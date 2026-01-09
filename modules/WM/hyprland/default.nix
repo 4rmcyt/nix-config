@@ -52,19 +52,6 @@
     # Clipboard Management (DMS Integration)
     cliphist # Clipboard history backend
     wl-clip-persist # Clipboard persistence
-
-    # DMS Utilities
-    walker # Application launcher (fallback)
-
-    # GNOME Applications (Best integration with DMS)
-    gnome-text-editor # Modern text editor (replaces gedit)
-    nautilus # File manager
-    loupe # Image viewer (replaces eog)
-    evince # PDF/document viewer
-
-    # System Tools
-    swaylock # Screen locker
-    playerctl # Media player control
   ];
   programs = {
     dankMaterialShell = {

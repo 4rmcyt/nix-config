@@ -83,6 +83,21 @@
 
     # Firefox with nightly package
     firefox.package = pkgs.firefox-nightly or pkgs.firefox;
+
+    # Chromium with extensions
+    chromium = {
+      enable = true;
+      extensions = [
+        {id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";} # Dark Reader
+        {id = "naepdomgkenhinolocfifgehidddafch";} # Browserpass
+        {id = "bggfcpfjbdkhfhfmkjpbhnkhnpjjeomc";} # Material Icons for GitHub
+        {id = "fkagelmloambgokoeokbpihmgpkbgbfm";} # Indie Wiki Buddy
+        {id = "hlepfoohegkhhmjieoechaddaejaokhf";} # Refined Github
+        {id = "gebbhagfogifgggkldgodflihgfeippi";} # Return YouTube Dislike
+        {id = "ddkjiahejlhfcafbddmgiahcphecmpfh";} # uBlock Origin Lite
+        {id = "olnngmhgopdgnfenhimlmnmemadhofdd";} # Miniflux injector
+      ];
+    };
   };
 
   dconf.settings = {

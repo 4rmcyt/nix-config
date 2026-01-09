@@ -6,11 +6,9 @@
     GOOGLE_DEFAULT_CLIENT_SECRET = "REDACTED";
   };
 
-  programs.chromium = {
-    enable = true;
-
-    # DMS/Wayland optimized package
-    package = pkgs.chromium.override {
+  # Install Chromium with Wayland/DMS optimizations
+  environment.systemPackages = [
+    (pkgs.chromium.override {
       enableWideVine = true;
       commandLineArgs = [
         "--enable-features=VaapiVideoDecoder,VaapiIgnoreDriverChecks"
@@ -18,7 +16,11 @@
         "--ozone-platform=wayland"
         "--disable-features=WaylandOverlayDelegation"
       ];
-    };
+    })
+  ];
+
+  programs.chromium = {
+    enable = true;
 
     # Extensions
     extensions = [
