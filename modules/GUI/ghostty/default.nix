@@ -12,8 +12,9 @@ _: {
       config-file = "~/.config/ghostty/config-dankcolors"; # DMS-generated theme (synced with wallpaper)
       # Note: In DMS 1.2, this will become: theme = "dankcolors"
 
-      # Background effects - optimized for niri (MUST come AFTER config-file to override)
-      background-opacity = 0.92; # Slightly transparent for DMS overlay visibility
+      # Background effects - MUST come AFTER config-file to override DMS's solid background
+      # Use transparent background instead of DMS's opaque #19120c
+      background = "#19120ceb"; # Same color but with alpha channel (eb = 92% opacity)
       background-blur-radius = 25; # Reduced for better niri performance
 
       # Font configuration

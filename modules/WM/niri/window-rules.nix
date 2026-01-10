@@ -78,7 +78,8 @@ _: {
         clip-to-geometry = true;
       }
 
-      # Inactive window opacity (DMS recommended: 0.9)
+      # Window opacity for all windows (DMS recommended: 0.9)
+      # Applies to both active and inactive windows
       {
         opacity = 0.9;
       }
