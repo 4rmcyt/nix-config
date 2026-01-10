@@ -107,7 +107,8 @@
   # PAM U2F configuration
   security.pam.u2f = {
     enable = true;
-    control = "sufficient";
+    control = "optional";
+    authFile = "/etc/u2f_mappings";
     settings = {
       cue = true;
     };
