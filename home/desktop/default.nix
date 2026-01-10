@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   imports = [
     # ../../modules/DE/kde/plasma-manager.nix
     # ../../modules/GUI/firefox
@@ -88,22 +89,22 @@
     chromium = {
       enable = true;
       extensions = [
-        {id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";} # Dark Reader
-        {id = "naepdomgkenhinolocfifgehidddafch";} # Browserpass
-        {id = "bggfcpfjbdkhfhfmkjpbhnkhnpjjeomc";} # Material Icons for GitHub
-        {id = "fkagelmloambgokoeokbpihmgpkbgbfm";} # Indie Wiki Buddy
-        {id = "hlepfoohegkhhmjieoechaddaejaokhf";} # Refined Github
-        {id = "gebbhagfogifgggkldgodflihgfeippi";} # Return YouTube Dislike
-        {id = "ddkjiahejlhfcafbddmgiahcphecmpfh";} # uBlock Origin Lite
-        {id = "olnngmhgopdgnfenhimlmnmemadhofdd";} # Miniflux injector
+        { id = "eimadpbcbfnmbkopoojfekhnkhdbieeh"; } # Dark Reader
+        { id = "naepdomgkenhinolocfifgehidddafch"; } # Browserpass
+        { id = "bggfcpfjbdkhfhfmkjpbhnkhnpjjeomc"; } # Material Icons for GitHub
+        { id = "fkagelmloambgokoeokbpihmgpkbgbfm"; } # Indie Wiki Buddy
+        { id = "hlepfoohegkhhmjieoechaddaejaokhf"; } # Refined Github
+        { id = "gebbhagfogifgggkldgodflihgfeippi"; } # Return YouTube Dislike
+        { id = "ddkjiahejlhfcafbddmgiahcphecmpfh"; } # uBlock Origin Lite
+        { id = "olnngmhgopdgnfenhimlmnmemadhofdd"; } # Miniflux injector
       ];
     };
   };
 
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
-      autoconnect = ["qemu:///system"];
-      uris = ["qemu:///system"];
+      autoconnect = [ "qemu:///system" ];
+      uris = [ "qemu:///system" ];
     };
   };
 

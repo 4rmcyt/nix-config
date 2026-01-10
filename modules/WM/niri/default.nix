@@ -5,7 +5,7 @@
   # ============================================
   imports = [
     # Core Niri Configuration
-    # ./binds.nix
+    ./binds.nix
     ./window-rules.nix
     ./exec-once.nix
     ./gtk.nix
@@ -43,12 +43,9 @@
   # NIRI PACKAGES
   # ============================================
   home.packages = with pkgs; [
-    # Display & System
     glib # System library
     wayland # Wayland library
     xwayland-satellite
-
-    # Clipboard Management (DMS Integration)
     cliphist # Clipboard history backend
     wl-clip-persist # Clipboard persistence
   ];
@@ -68,7 +65,7 @@
       enableAudioWavelength = false; # Audio visualizer (cava)
       enableCalendarEvents = true; # Calendar integration (khal)
       niri = {
-        enableKeybinds = true; # Using custom keybinds in binds.nix
+        enableKeybinds = false; # Using custom keybinds in binds.nix
         enableSpawn = true; # Auto-start DMS with niri and cliphist, if enabled
       };
     };
@@ -85,17 +82,31 @@
     enable = true;
 
     settings = {
-      # ============================================
-      # OUTPUTS
-      # ============================================
+
       outputs = {
         "DP-4" = {
-          mode = "3840x2160@60";
-          scale = 2.25;
+          mode = {
+            width = 3840;
+            height = 2160;
+            refresh = 60.0;
+          };
+          position = {
+            x = 0;
+            y = 0;
+          };
+          scale = 2.0;
         };
         "DP-5" = {
-          mode = "3840x2160@60";
-          scale = 2.25;
+          mode = {
+            width = 3840;
+            height = 2160;
+            refresh = 60.0;
+          };
+          position = {
+            x = 1920;
+            y = 0;
+          };
+          scale = 2.0;
         };
       };
 
@@ -131,8 +142,6 @@
       # PREFER NO SERVER-SIDE DECORATIONS
       # ============================================
       prefer-no-csd = true;
-
-      # Window rules and spawn-at-startup moved to separate modules
     };
   };
 }

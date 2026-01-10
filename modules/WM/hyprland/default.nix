@@ -67,10 +67,6 @@
       enableDynamicTheming = true; # Wallpaper-based theming (matugen)
       enableAudioWavelength = false; # Audio visualizer (cava)
       enableCalendarEvents = true; # Calendar integration (khal)
-      hyprland = {
-        enableKeybinds = true; # Sets static preset keybinds
-        enableSpawn = true; # Auto-start DMS with Hyprland and cliphist, if enabled
-      };
     };
   };
 

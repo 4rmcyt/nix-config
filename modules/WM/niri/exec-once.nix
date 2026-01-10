@@ -4,16 +4,8 @@ _: {
       # ============================================
       # DMS CORE SERVICES
       # ============================================
-
-      # Start DankMaterialShell
-      {
-        command = [
-          "systemctl"
-          "--user"
-          "start"
-          "dms.service"
-        ];
-      }
+      # DMS is started automatically via systemd service (see default.nix)
+      # with systemd.enable = true and niri.enableSpawn = true
 
       # ============================================
       # CLIPBOARD MANAGEMENT
