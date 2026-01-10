@@ -6,7 +6,7 @@ _: {
       # ============================================
 
       # Terminal
-      "Mod+T".action.spawn = [ "wezterm" ];
+      "Mod+T".action.spawn = ["wezterm"];
       # "Alt+Return".action.spawn = ["wezterm" "start" "--cwd" "."];
 
       # Browser
@@ -53,10 +53,10 @@ _: {
       # ============================================
 
       # Close
-      "Mod+Q".action.close-window = { };
+      "Mod+Q".action.close-window = {};
 
       # Fullscreen
-      "Mod+F".action.fullscreen-window = { };
+      "Mod+F".action.fullscreen-window = {};
 
       # ============================================
       # SYSTEM CONTROLS

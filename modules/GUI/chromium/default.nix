@@ -6,50 +6,38 @@
     GOOGLE_DEFAULT_CLIENT_SECRET = "REDACTED";
   };
 
-  # Install Chromium with Wayland/DMS optimizations
+  # Install Chromium with Wayland/Niri/DMS optimizations
   environment.systemPackages = [
     (pkgs.chromium.override {
       enableWideVine = true;
       commandLineArgs = [
+        # GPU acceleration for Nvidia
         "--enable-features=VaapiVideoDecoder,VaapiIgnoreDriverChecks"
         "--ignore-gpu-blocklist"
+
+        # Wayland support
         "--ozone-platform=wayland"
         "--disable-features=WaylandOverlayDelegation"
+
+        # Better scrolling and performance
+        "--enable-smooth-scrolling"
+        "--enable-gpu-rasterization"
       ];
     })
   ];
 
+  # Chromium policies
   programs.chromium = {
     enable = true;
-
-    # Extensions
-    extensions = [
-      "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
-      "naepdomgkenhinolocfifgehidddafch" # Browserpass
-      "bggfcpfjbdkhfhfmkjpbhnkhnpjjeomc" # Material Icons for GitHub
-      "fkagelmloambgokoeokbpihmgpkbgbfm" # Indie Wiki Buddy
-      "hlepfoohegkhhmjieoechaddaejaokhf" # Refined Github
-      "gebbhagfogifgggkldgodflihgfeippi" # Return YouTube Dislike
-      "ddkjiahejlhfcafbddmgiahcphecmpfh" # uBlock Origin Lite
-      "olnngmhgopdgnfenhimlmnmemadhofdd" # Miniflux injector
-    ];
 
     extraOpts = {
       # Sync settings
       "BrowserSignin" = 1;
       "SyncDisabled" = false;
 
-      # Extension settings - Force install extensions
-      "ExtensionInstallForcelist" = [
-        "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
-        "naepdomgkenhinolocfifgehidddafch" # Browserpass
-        "bggfcpfjbdkhfhfmkjpbhnkhnpjjeomc" # Material Icons for GitHub
-        "fkagelmloambgokoeokbpihmgpkbgbfm" # Indie Wiki Buddy
-        "hlepfoohegkhhmjieoechaddaejaokhf" # Refined Github
-        "gebbhagfogifgggkldgodflihgfeippi" # Return YouTube Dislike
-        "ddkjiahejlhfcafbddmgiahcphecmpfh" # uBlock Origin Lite
-        "olnngmhgopdgnfenhimlmnmemadhofdd" # Miniflux injector
-      ];
+      # Allow manual extension installation
+      "ExtensionInstallBlocklist" = [];
+      "ExtensionInstallAllowlist" = ["*"];
     };
   };
 }

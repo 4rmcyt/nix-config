@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   # ============================================
   # MODULE IMPORTS
   # ============================================
@@ -82,7 +81,6 @@
     enable = true;
 
     settings = {
-
       outputs = {
         "DP-4" = {
           mode = {
@@ -117,9 +115,9 @@
         gaps = 5; # DMS recommended: 5px gaps
         center-focused-column = "never";
         preset-column-widths = [
-          { proportion = 0.33333; }
-          { proportion = 0.5; }
-          { proportion = 0.66667; }
+          {proportion = 0.33333;}
+          {proportion = 0.5;}
+          {proportion = 0.66667;}
         ];
         default-column-width = {
           proportion = 0.5;
@@ -142,6 +140,9 @@
       # PREFER NO SERVER-SIDE DECORATIONS
       # ============================================
       prefer-no-csd = true;
+
+      # Screenshot path
+      screenshot-path = "~/Pictures/Screenshots/niri_%Y-%m-%d_%H-%M-%S.png";
     };
   };
 }
