@@ -81,6 +81,15 @@
     enable = true;
 
     settings = {
+      # ============================================
+      # DMS ENVIRONMENT VARIABLES
+      # ============================================
+      environment = {
+        # DMS_DISABLE_MATUGEN = "1"; # Disable dynamic theming (keep commented - you have enableDynamicTheming = true)
+        # DMS_DANKBAR_LAYER = "overlay"; # Bar layer (default: top)
+        # DMS_HIDE_TRAYIDS = "discord,spotify"; # Hide specific tray icons
+      };
+
       outputs = {
         "DP-4" = {
           mode = {

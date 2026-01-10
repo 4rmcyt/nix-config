@@ -1,17 +1,13 @@
-_: {
+{lib, ...}: {
   programs.niri.settings = {
-    spawn-at-startup = [
-      # ============================================
-      # DMS CORE SERVICES
-      # ============================================
-      # DMS is started automatically via systemd service (see default.nix)
-      # with systemd.enable = true and niri.enableSpawn = true
-
+    # Use mkForce to completely override DMS module's spawn-at-startup
+    # This prevents the DMS module from adding "dms run" despite enableSpawn = false
+    # NOTE: We do NOT spawn DMS here because systemd.enable = true auto-starts it
+    spawn-at-startup = lib.mkForce [
       # ============================================
       # CLIPBOARD MANAGEMENT
       # ============================================
 
-      # Clipboard history daemon (if DMS clipboard is enabled)
       {
         command = [
           "wl-paste"
