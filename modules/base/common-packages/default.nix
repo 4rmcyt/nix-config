@@ -2,11 +2,13 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   # Common system packages shared across all hosts
   # Use lib.mkDefault to allow hosts to override if needed
   environment.systemPackages = lib.mkBefore (
-    with pkgs; [
+    with pkgs;
+    [
       # =================================================================
       # Core System Utilities (alphabetical)
       # =================================================================
@@ -82,6 +84,7 @@
       treefmt
       yamlfmt
       zsh-powerlevel10k
+      nix-sweep
 
       # =================================================================
       # Security & Secrets Management (alphabetical)
