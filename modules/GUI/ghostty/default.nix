@@ -7,9 +7,12 @@ _: {
       # ============================================
       # THEME & APPEARANCE - DMS Compatible
       # ============================================
-      theme = "Dracula+"; # Matches DMS dark theme aesthetic
+      # DMS 1.0.x: Use DankMaterialShell generated colors
+      # Reference: https://danklinux.com/docs/dankmaterialshell/application-themes#ghostty
+      config-file = "~/.config/ghostty/config-dankcolors"; # DMS-generated theme (synced with wallpaper)
+      # Note: In DMS 1.2, this will become: theme = "dankcolors"
 
-      # Background effects - optimized for niri
+      # Background effects - optimized for niri (MUST come AFTER config-file to override)
       background-opacity = 0.92; # Slightly transparent for DMS overlay visibility
       background-blur-radius = 25; # Reduced for better niri performance
 
@@ -30,8 +33,7 @@ _: {
       window-padding-balance = true;
 
       # Tabs
-      window-show-tab-bar = "always";
-      tab-bar-height = 35;
+      window-show-tab-bar = "never";
 
       # ============================================
       # CURSOR
@@ -48,7 +50,7 @@ _: {
       # ============================================
       # PERFORMANCE - Nvidia + Niri
       # ============================================
-      renderer = "auto"; # Let Ghostty pick best renderer for Nvidia
+      # renderer option removed - Ghostty auto-detects renderer
 
       # ============================================
       # MOUSE & CLIPBOARD - Wayland
@@ -105,9 +107,6 @@ _: {
       # Visual improvements
       minimum-contrast = 1.15;
       unfocused-split-opacity = 0.85;
-
-      # Wayland specific
-      wayland-titlebar-color = "system";
     };
   };
 }

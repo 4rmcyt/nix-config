@@ -65,7 +65,7 @@
       enableCalendarEvents = true; # Calendar integration (khal)
       niri = {
         enableKeybinds = false; # Using custom keybinds in binds.nix
-        enableSpawn = true; # Auto-start DMS with niri and cliphist, if enabled
+        enableSpawn = false; # DISABLED - Using systemd.enable instead to avoid duplicate instances
       };
     };
   };
@@ -143,6 +143,12 @@
 
       # Screenshot path
       screenshot-path = "~/Pictures/Screenshots/niri_%Y-%m-%d_%H-%M-%S.png";
+
+      # ============================================
+      # DEBUG - DMS Configuration
+      # ============================================
+      # Note: No debug section needed for DMS
+      # The second bar issue is resolved through DMS configuration
     };
   };
 }
