@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   users.users.qbittorrent = {
     extraGroups = [
       "users"
@@ -14,14 +15,46 @@
     enable = true;
     user = "qbittorrent";
     group = "qbittorrent";
-    port = 8080;
-    openFirewall = false;
+    webuiPort = 8080;
+    torrentingPort = 63998;
+    openFirewall = true;
+
+    serverConfig = {
+      Preferences = {
+        Downloads = {
+          SavePath = "/data/Downloads";
+          TorrentExportDir = "/data/Downloads/torrents";
+          TempPath = "/data/Downloads/.incomplete";
+          PreAllocation = true;
+          UseIncompleteExtension = true;
+        };
+        Queueing = {
+          QueueingEnabled = true;
+          MaxActiveDownloads = 8;
+          MaxActiveTorrents = -1;
+          MaxActiveUploads = -1;
+        };
+        BitTorrent = {
+          Session = {
+            Port = 63998;
+            UPnP = false;
+            GlobalDLSpeedLimit = -1;
+            GlobalUPSpeedLimit = -1;
+          };
+        };
+        Connection = {
+          PortRangeMin = 63998;
+          GlobalDLSpeedLimit = 0;
+          GlobalUPSpeedLimit = 0;
+        };
+      };
+    };
   };
 
   # Override qBittorrent service to run in VPN namespace
   systemd.services.qbittorrent = {
-    after = ["wg.service"];
-    requires = ["wg.service"];
+    after = [ "wg.service" ];
+    requires = [ "wg.service" ];
 
     serviceConfig = {
       NetworkNamespacePath = "/run/netns/wg";
@@ -42,8 +75,8 @@
   # Socket for qBittorrent proxy (allows access from host network)
   systemd.sockets.proxy-to-qbittorrent = {
     description = "Socket for qBittorrent proxy";
-    wantedBy = ["sockets.target"];
-    requires = ["qbittorrent.service"];
+    wantedBy = [ "sockets.target" ];
+    requires = [ "qbittorrent.service" ];
     socketConfig = {
       ListenStream = "127.0.0.1:8080";
     };
@@ -52,8 +85,8 @@
   # Proxy service to connect to qBittorrent in VPN namespace
   systemd.services.proxy-to-qbittorrent = {
     description = "Proxy to qBittorrent in VPN namespace";
-    after = ["qbittorrent.service"];
-    requires = ["qbittorrent.service"];
+    after = [ "qbittorrent.service" ];
+    requires = [ "qbittorrent.service" ];
 
     serviceConfig = {
       ExecStart = "${pkgs.util-linux}/bin/nsenter --net=/run/netns/wg ${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:8080";
