@@ -142,7 +142,7 @@
           originRequest:
             httpHostHeader: livesync.${config.my.defaults.domain}
         - hostname: sabnzbd.${config.my.defaults.domain}
-          service: http://localhost:8082
+          service: http://localhost:8083
           originRequest:
             httpHostHeader: sabnzbd.${config.my.defaults.domain}
 

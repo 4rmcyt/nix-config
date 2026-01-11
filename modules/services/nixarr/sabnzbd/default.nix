@@ -56,13 +56,13 @@
     };
   };
 
-  # Socket for SABnzbd proxy (allows access from host network on port 8082)
+  # Socket for SABnzbd proxy (allows access from host network on port 8083)
   systemd.sockets.proxy-to-sabnzbd = {
     description = "Socket for SABnzbd proxy";
     wantedBy = ["sockets.target"];
     requires = ["sabnzbd.service"];
     socketConfig = {
-      ListenStream = "8082"; # Listen on port 8082 on host
+      ListenStream = "8083"; # Listen on port 8083 on host (8082 already in use)
     };
   };
 
