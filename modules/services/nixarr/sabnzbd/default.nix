@@ -21,6 +21,17 @@
     after = ["wg.service"];
     requires = ["wg.service"];
 
+    # Configure SABnzbd to use port 8090 and proper directories
+    preStart = ''
+      CONFIG_FILE=/var/lib/sabnzbd/sabnzbd.ini
+      if [ -f "$CONFIG_FILE" ]; then
+        # Set port to 8090 to avoid conflict with qBittorrent
+        ${pkgs.gnused}/bin/sed -i 's|^port = .*|port = 8090|' "$CONFIG_FILE"
+        ${pkgs.gnused}/bin/sed -i 's|^download_dir = .*|download_dir = /data/Downloads/usenet/incomplete|' "$CONFIG_FILE"
+        ${pkgs.gnused}/bin/sed -i 's|^complete_dir = .*|complete_dir = /data/Downloads/usenet/complete|' "$CONFIG_FILE"
+      fi
+    '';
+
     serviceConfig = {
       # Clear BindPaths from parent nixarr config - they conflict with NetworkNamespacePath
       BindPaths = lib.mkForce [];
@@ -52,15 +63,15 @@
     };
   };
 
-  # Proxy service to connect to SABnzbd in VPN namespace (on port 8080)
+  # Proxy service to connect to SABnzbd in VPN namespace (on port 8090)
   systemd.services.proxy-to-sabnzbd = {
     description = "Proxy to SABnzbd in VPN namespace";
     after = ["sabnzbd.service"];
     requires = ["sabnzbd.service"];
 
     serviceConfig = {
-      # Enter VPN namespace and proxy to SABnzbd on port 8080
-      ExecStart = "${pkgs.util-linux}/bin/nsenter --net=/run/netns/wg ${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:8080";
+      # Enter VPN namespace and proxy to SABnzbd on port 8090 (different from qBittorrent's 8080)
+      ExecStart = "${pkgs.util-linux}/bin/nsenter --net=/run/netns/wg ${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:8090";
     };
   };
 
