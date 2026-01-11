@@ -60,10 +60,12 @@
       # Clear BindPaths from parent nixarr config - they conflict with NetworkNamespacePath
       BindPaths = lib.mkForce [ ];
 
+      # VPN namespace configuration
       NetworkNamespacePath = "/run/netns/wg";
       BindReadOnlyPaths = [
         "/etc/netns/wg/resolv.conf:/etc/resolv.conf:norbind"
       ];
+
       # Read/write access to state and download directories
       ReadWritePaths = [
         "/var/lib/qbittorrent"
@@ -71,14 +73,53 @@
         "/data/media"
       ];
 
-      # Disable hardening options that conflict with network namespaces
-      RestrictNamespaces = lib.mkForce false;
-      PrivateNetwork = lib.mkForce false;
-      PrivateUsers = lib.mkForce false;
-      PrivateDevices = lib.mkForce false;
-      ProtectHome = lib.mkForce false;
-      ProtectSystem = lib.mkForce false;
+      # Adjusted hardening for network namespace compatibility
+      # Network & Namespace settings
+      RestrictNamespaces = lib.mkForce false;  # Required for NetworkNamespacePath
+      PrivateNetwork = lib.mkForce false;      # Must be false when using NetworkNamespacePath
 
+      # Filesystem protection (adjusted for data access)
+      ProtectSystem = lib.mkForce "strict";    # Protect /usr /boot /efi but allow /etc writes via BindReadOnlyPaths
+      ProtectHome = lib.mkForce "tmpfs";       # Mount empty tmpfs over /home but allow explicit paths
+      ReadOnlyPaths = [ "/etc" ];              # Make /etc read-only except for our bind mounts
+
+      # User/Device isolation
+      PrivateUsers = lib.mkForce false;        # Required for namespace operations
+      PrivateDevices = lib.mkForce true;       # Can be enabled - doesn't need device access
+      PrivateTmp = lib.mkForce true;           # Isolate /tmp (note: qbittorrent module sets this to false, we override)
+
+      # Process protection
+      NoNewPrivileges = lib.mkForce true;
+      ProtectProc = lib.mkForce "invisible";
+      ProcSubset = lib.mkForce "pid";
+
+      # Kernel protection
+      ProtectKernelTunables = lib.mkForce true;
+      ProtectKernelModules = lib.mkForce true;
+      ProtectKernelLogs = lib.mkForce true;
+      ProtectClock = lib.mkForce true;
+      ProtectControlGroups = lib.mkForce true;
+      ProtectHostname = lib.mkForce true;
+
+      # System call restrictions
+      SystemCallArchitectures = lib.mkForce "native";
+      SystemCallFilter = lib.mkForce [ "@system-service" "~@privileged" "~@resources" ];
+
+      # Address family restrictions
+      RestrictAddressFamilies = lib.mkForce [ "AF_INET" "AF_INET6" "AF_NETLINK" ];
+
+      # Other restrictions
+      RestrictRealtime = lib.mkForce true;
+      RestrictSUIDSGID = lib.mkForce true;
+      LockPersonality = lib.mkForce true;
+      MemoryDenyWriteExecute = lib.mkForce true;
+      RemoveIPC = lib.mkForce true;
+
+      # Capabilities
+      CapabilityBoundingSet = lib.mkForce "";
+      AmbientCapabilities = lib.mkForce "";
+
+      # Service management
       Restart = lib.mkForce "always";
       RestartSec = "10s";
     };
