@@ -79,40 +79,42 @@
       PrivateNetwork = lib.mkForce false;      # Must be false when using NetworkNamespacePath
 
       # Filesystem protection (adjusted for data access)
-      ProtectSystem = lib.mkForce "strict";    # Protect /usr /boot /efi but allow /etc writes via BindReadOnlyPaths
-      ProtectHome = lib.mkForce "tmpfs";       # Mount empty tmpfs over /home but allow explicit paths
-      ReadOnlyPaths = [ "/etc" ];              # Make /etc read-only except for our bind mounts
+      ProtectSystem = lib.mkForce false;       # Must be disabled - creates mount namespace
+      ProtectHome = lib.mkForce false;         # Must be disabled - creates mount namespace
 
       # User/Device isolation
       PrivateUsers = lib.mkForce false;        # Required for namespace operations
-      PrivateDevices = lib.mkForce true;       # Can be enabled - doesn't need device access
-      PrivateTmp = lib.mkForce true;           # Isolate /tmp (note: qbittorrent module sets this to false, we override)
+      PrivateDevices = lib.mkForce false;      # Must be disabled - may interfere with namespace
+      PrivateTmp = lib.mkForce false;          # Must be disabled - creates mount namespace
 
       # Process protection
       NoNewPrivileges = lib.mkForce true;
-      ProtectProc = lib.mkForce "invisible";
-      ProcSubset = lib.mkForce "pid";
+      # ProtectProc and ProcSubset disabled - may create mount namespace issues
+      # ProtectProc = lib.mkForce "invisible";
+      # ProcSubset = lib.mkForce "pid";
 
-      # Kernel protection
-      ProtectKernelTunables = lib.mkForce true;
-      ProtectKernelModules = lib.mkForce true;
-      ProtectKernelLogs = lib.mkForce true;
-      ProtectClock = lib.mkForce true;
-      ProtectControlGroups = lib.mkForce true;
-      ProtectHostname = lib.mkForce true;
+      # Kernel protection - some disabled due to mount namespace conflicts
+      # ProtectKernelTunables = lib.mkForce true;
+      # ProtectKernelModules = lib.mkForce true;
+      # ProtectKernelLogs = lib.mkForce true;
+      # ProtectClock = lib.mkForce true;
+      # ProtectControlGroups = lib.mkForce true;
+      ProtectHostname = lib.mkForce false;  # May interfere with namespace
 
       # System call restrictions
       SystemCallArchitectures = lib.mkForce "native";
-      SystemCallFilter = lib.mkForce [ "@system-service" "~@privileged" "~@resources" ];
+      # SystemCallFilter disabled - setns() needed for namespace entry may be blocked
+      # SystemCallFilter = lib.mkForce [ "@system-service" "~@privileged" "~@resources" ];
 
       # Address family restrictions
       RestrictAddressFamilies = lib.mkForce [ "AF_INET" "AF_INET6" "AF_NETLINK" ];
 
-      # Other restrictions
+      # Other restrictions - keeping only the safe ones
       RestrictRealtime = lib.mkForce true;
       RestrictSUIDSGID = lib.mkForce true;
-      LockPersonality = lib.mkForce true;
-      MemoryDenyWriteExecute = lib.mkForce true;
+      # LockPersonality and MemoryDenyWriteExecute disabled for compatibility
+      # LockPersonality = lib.mkForce true;
+      # MemoryDenyWriteExecute = lib.mkForce true;
       RemoveIPC = lib.mkForce true;
 
       # Capabilities
