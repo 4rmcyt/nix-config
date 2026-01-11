@@ -57,6 +57,9 @@
     requires = [ "wg.service" ];
 
     serviceConfig = {
+      # Clear BindPaths from parent nixarr config - they conflict with NetworkNamespacePath
+      BindPaths = lib.mkForce [ ];
+
       NetworkNamespacePath = "/run/netns/wg";
       BindReadOnlyPaths = [
         "/etc/netns/wg/resolv.conf:/etc/resolv.conf:norbind"
@@ -72,6 +75,9 @@
       RestrictNamespaces = lib.mkForce false;
       PrivateNetwork = lib.mkForce false;
       PrivateUsers = lib.mkForce false;
+      PrivateDevices = lib.mkForce false;
+      ProtectHome = lib.mkForce false;
+      ProtectSystem = lib.mkForce false;
 
       Restart = lib.mkForce "always";
       RestartSec = "10s";
