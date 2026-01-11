@@ -4,6 +4,7 @@
     ./exec-once.nix
     ./gtk.nix
     ./window-rules.nix
+    ./vdirsyncer
   ];
 
   home.sessionVariables = {

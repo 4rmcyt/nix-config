@@ -67,6 +67,12 @@
         "/data/Downloads"
         "/data/media"
       ];
+
+      # Disable hardening options that conflict with network namespaces
+      RestrictNamespaces = lib.mkForce false;
+      PrivateNetwork = lib.mkForce false;
+      PrivateUsers = lib.mkForce false;
+
       Restart = lib.mkForce "always";
       RestartSec = "10s";
     };
