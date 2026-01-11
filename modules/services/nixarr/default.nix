@@ -11,7 +11,7 @@
     "radarr"
     "readarr"
     "sonarr"
-    "deluge"
+    "qbittorrent"
     "audiobookshelf"
     "jellyfin"
   ];
@@ -19,7 +19,7 @@ in {
   imports = [
     ./upnp-fix.nix
     ./jellyfin
-    ./deluge
+    ./qbittorrent
   ];
 
   users.users = {

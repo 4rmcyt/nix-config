@@ -84,10 +84,10 @@
           service: https://localhost:8443
           originRequest:
             httpHostHeader: jellyfin.${config.my.defaults.domain}
-        - hostname: deluge.${config.my.defaults.domain}
-          service: https://localhost:8443
+        - hostname: qb.${config.my.defaults.domain}
+          service: https://localhost:8080
           originRequest:
-            httpHostHeader: deluge.${config.my.defaults.domain}
+            httpHostHeader: qb.${config.my.defaults.domain}
         - hostname: grafana.${config.my.defaults.domain}
           service: https://localhost:8443
           originRequest:

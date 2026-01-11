@@ -23,7 +23,7 @@
 
     packages = with pkgs; [
       azure-cli
-      ayugram-desktop
+      materialgram
       bat
       busybox
       devenv
