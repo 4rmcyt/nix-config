@@ -138,8 +138,14 @@
             httpHostHeader: atuin.${config.my.defaults.domain}
         - hostname: livesync.${config.my.defaults.domain}
           service: https://localhost:8443
+        - hostname: livesync.${config.my.defaults.domain}
           originRequest:
             httpHostHeader: livesync.${config.my.defaults.domain}
+        - hostname: sabnzbd.${config.my.defaults.domain}
+          service: https://localhost:6336
+        - hostname: sabnzbd.${config.my.defaults.domain}
+          originRequest:
+            httpHostHeader: sabnzbd.${config.my.defaults.domain}
 
         # Catch-all
         - service: http_status:404
