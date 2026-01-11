@@ -47,6 +47,10 @@
           GlobalDLSpeedLimit = 0;
           GlobalUPSpeedLimit = 0;
         };
+        WebUI = {
+          # Bypass authentication from localhost
+          LocalHostAuth = false;
+        };
       };
     };
   };
