@@ -172,6 +172,8 @@ in {
     sabnzbd = {
       enable = true;
       # vpn.enable = true;
+      whitelistHostnames = [  "sabnzbd.${config.my.defaults.domain}" ];
+      whitelistRanges = [ "192.168.1.0/24" ];
     };
     recyclarr = {
       enable = true;
