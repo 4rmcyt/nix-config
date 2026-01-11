@@ -12,6 +12,7 @@
     "readarr"
     "sonarr"
     "qbittorrent"
+    "sabnzbd"
     "audiobookshelf"
     "jellyfin"
   ];
@@ -20,6 +21,7 @@ in {
     ./upnp-fix.nix
     ./jellyfin
     ./qbittorrent
+    ./sabnzbd
   ];
 
   users.users = {
@@ -96,14 +98,6 @@ in {
         "media"
       ];
     };
-    sabnzbd = {
-      isSystemUser = true;
-      group = lib.mkForce "sabnzbd";
-      extraGroups = [
-        "users"
-        "media"
-      ];
-    };
   };
   users.groups = {
     audiobookshelf = {};
@@ -115,7 +109,6 @@ in {
     sonarr = {};
     readarr = {};
     recyclarr = {};
-    sabnzbd = {};
     # headphones = { };
   };
 
@@ -146,7 +139,6 @@ in {
       8920 # Jellyfin HTTPS
       9292 # Audiobookshelf
       5055 # Jellyseerr
-      6336 # Sabnzbd
     ];
     openUdpPorts = [
       1900 # Jellyfin DLNA
@@ -169,12 +161,6 @@ in {
     radarr.enable = true;
     sonarr.enable = true;
     readarr.enable = true;
-    sabnzbd = {
-      enable = true;
-      # vpn.enable = true;
-      whitelistHostnames = [  "sabnzbd.${config.my.defaults.domain}" ];
-      whitelistRanges = [ "192.168.1.0/24" ];
-    };
     recyclarr = {
       enable = true;
       configFile = ./recyclarr.yaml;
