@@ -4,11 +4,14 @@
   ...
 }: {
   users.users.sabnzbd = {
+    uid = lib.mkForce 961;
     extraGroups = [
       "users"
       "media"
     ];
   };
+
+  users.groups.sabnzbd.gid = lib.mkForce 961;
 
   services.sabnzbd = {
     enable = true;
