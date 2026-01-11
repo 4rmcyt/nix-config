@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  config,
   ...
 }: {
   users.users.sabnzbd = {
@@ -24,7 +25,6 @@
     after = ["wg.service"];
     requires = ["wg.service"];
 
-    # Configure SABnzbd to use port 8090 and proper directories
     preStart = ''
       CONFIG_FILE=/var/lib/sabnzbd/sabnzbd.ini
       if [ -f "$CONFIG_FILE" ]; then
@@ -32,6 +32,9 @@
         ${pkgs.gnused}/bin/sed -i 's|^port = .*|port = 8090|' "$CONFIG_FILE"
         ${pkgs.gnused}/bin/sed -i 's|^download_dir = .*|download_dir = /data/Downloads/usenet/incomplete|' "$CONFIG_FILE"
         ${pkgs.gnused}/bin/sed -i 's|^complete_dir = .*|complete_dir = /data/Downloads/usenet/complete|' "$CONFIG_FILE"
+
+        # Add hostname whitelist to allow access from Cloudflare tunnel
+        ${pkgs.gnused}/bin/sed -i 's|^host_whitelist =.*|host_whitelist = sabnzbd.${config.my.defaults.domain}, localhost, 127.0.0.1, ::1|' "$CONFIG_FILE"
       fi
     '';
 
