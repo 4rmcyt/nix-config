@@ -36,14 +36,23 @@
     '';
 
     serviceConfig = {
-      # Clear BindPaths from parent nixarr config - they conflict with NetworkNamespacePath
-      BindPaths = lib.mkForce [];
-
       # VPN namespace configuration
       NetworkNamespacePath = "/run/netns/wg";
       BindReadOnlyPaths = lib.mkForce [
         "/etc/netns/wg/resolv.conf:/etc/resolv.conf:norbind"
       ];
+
+      # SABnzbd needs access to download directories
+      ReadWritePaths = [
+        "/data/Downloads"
+        "/data/Downloads/usenet"
+        "/data/Downloads/usenet/incomplete"
+        "/data/Downloads/usenet/complete"
+      ];
+
+      # Run in foreground mode for namespace compatibility (daemon mode doesn't work in namespaces)
+      Type = lib.mkForce "simple";
+      ExecStart = lib.mkForce "${pkgs.sabnzbd}/bin/sabnzbd -f /var/lib/sabnzbd -s 0.0.0.0:8090 --browser 0";
 
       # Essential overrides for namespace compatibility
       RestrictNamespaces = lib.mkForce false;
