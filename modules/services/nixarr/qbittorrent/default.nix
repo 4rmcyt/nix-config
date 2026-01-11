@@ -77,23 +77,24 @@
     };
   };
 
-  # Socket for qBittorrent proxy (allows access from host network)
+  # Socket for qBittorrent proxy (allows access from host network on port 8081)
   systemd.sockets.proxy-to-qbittorrent = {
     description = "Socket for qBittorrent proxy";
     wantedBy = [ "sockets.target" ];
     requires = [ "qbittorrent.service" ];
     socketConfig = {
-      ListenStream = "127.0.0.1:8080";
+      ListenStream = "8081";  # Listen on port 8081 on host
     };
   };
 
-  # Proxy service to connect to qBittorrent in VPN namespace
+  # Proxy service to connect to qBittorrent in VPN namespace (on port 8080)
   systemd.services.proxy-to-qbittorrent = {
     description = "Proxy to qBittorrent in VPN namespace";
     after = [ "qbittorrent.service" ];
     requires = [ "qbittorrent.service" ];
 
     serviceConfig = {
+      # Enter VPN namespace and proxy to qBittorrent on port 8080
       ExecStart = "${pkgs.util-linux}/bin/nsenter --net=/run/netns/wg ${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:8080";
     };
   };

@@ -85,7 +85,7 @@
           originRequest:
             httpHostHeader: jellyfin.${config.my.defaults.domain}
         - hostname: qb.${config.my.defaults.domain}
-          service: https://localhost:8080
+          service: https://localhost:8081
           originRequest:
             httpHostHeader: qb.${config.my.defaults.domain}
         - hostname: grafana.${config.my.defaults.domain}
@@ -187,4 +187,3 @@
 # #   service: http://localhost:8265
 # - hostname: cal.${config.my.defaults.domain}
 #           service: http://localhost:5232
-
