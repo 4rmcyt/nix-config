@@ -12,7 +12,6 @@
     "readarr"
     "sonarr"
     "qbittorrent"
-    "sabnzbd"
     "audiobookshelf"
     "jellyfin"
   ];
@@ -21,7 +20,6 @@ in {
     ./upnp-fix.nix
     ./jellyfin
     ./qbittorrent
-    ./sabnzbd
   ];
 
   users.users = {
@@ -222,7 +220,6 @@ in {
     "d /data/media/.state/nixarr/prowlarr 775 prowlarr prowlarr -"
     "d /data/media/.state/nixarr/radarr 775 radarr radarr -"
     "d /data/media/.state/nixarr/sonarr 775 sonarr sonarr -"
-    "d /data/media/.state/nixarr/sabnzbd 775 sabnzbd sabnzbd -"
     "d /data/media/.state/nixarr/bazarr 775 bazarr bazarr -"
     "d /data/media/.state/headphones 775 headphones headphones -"
     # Add rules to fix ownership of existing directories

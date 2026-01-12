@@ -85,7 +85,7 @@
           originRequest:
             httpHostHeader: jellyfin.${config.my.defaults.domain}
         - hostname: qb.${config.my.defaults.domain}
-          service: https://localhost:8081
+          service: http://localhost:8081
           originRequest:
             httpHostHeader: qb.${config.my.defaults.domain}
         - hostname: grafana.${config.my.defaults.domain}
@@ -141,10 +141,6 @@
         - hostname: livesync.${config.my.defaults.domain}
           originRequest:
             httpHostHeader: livesync.${config.my.defaults.domain}
-        - hostname: sabnzbd.${config.my.defaults.domain}
-          service: http://localhost:8083
-          originRequest:
-            httpHostHeader: sabnzbd.${config.my.defaults.domain}
 
         # Catch-all
         - service: http_status:404
