@@ -14,7 +14,7 @@ _: {
     # DUAL 4K MONITORS @ 60Hz (matching Hyprland/Niri setup)
     # ============================================
 
-    # Primary Monitor: DP-4
+    # Left Monitor: DP-4
     # - Resolution: 3840x2160 @ 60Hz
     # - Position: 0,0 (left monitor)
     # - Scale: 2.0 (for HiDPI)
@@ -23,9 +23,9 @@ _: {
     # - nmaster: 1 (one window in master by default)
     monitorrule=DP-4,0.5,1,tile,0,2,0,0,3840,2160,60
 
-    # Secondary Monitor: DP-5
+    # Right Monitor: DP-5
     # - Resolution: 3840x2160 @ 60Hz
-    # - Position: 1920,0 (right of DP-4, considering 2x scale = 1920px effective width)
+    # - Position: 1920,0 (right of DP-4, considering 2.0x scale = 1920px effective width)
     # - Scale: 2.0 (for HiDPI)
     # - Layout: tile (default tiling layout)
     # - mfact: 0.5 (50% master area)

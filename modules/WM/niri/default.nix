@@ -45,10 +45,6 @@
     enableDynamicTheming = true;
     enableSystemMonitoring = true;
     enableVPN = false;
-    niri = {
-      enableKeybinds = false;
-      enableSpawn = false;
-    };
     systemd = {
       enable = true;
       restartIfChanged = true;

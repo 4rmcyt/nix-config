@@ -5,7 +5,7 @@ _: {
 
   programs.niri.settings = {
     outputs = {
-      # Primary Monitor: DP-4
+      # Left Monitor: DP-4
       "DP-4" = {
         mode = {
           width = 3840;
@@ -20,7 +20,7 @@ _: {
         # VRR is enabled globally via layout settings
       };
 
-      # Secondary Monitor: DP-5
+      # Right Monitor: DP-5
       "DP-5" = {
         mode = {
           width = 3840;
@@ -28,7 +28,7 @@ _: {
           refresh = 60.0;
         };
         position = {
-          x = 1920; # Effective width after 2x scaling: 3840÷2 = 1920
+          x = 1920; # Effective width after 2.0x scaling: 3840÷2 = 1920
           y = 0;
         };
         scale = 2.0;

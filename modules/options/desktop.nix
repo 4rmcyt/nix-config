@@ -12,7 +12,12 @@ in {
     # Window Manager / Desktop Environment Selection
     # =================================================================
     windowManager = mkOption {
-      type = types.enum ["hyprland" "niri" "mangowc" "none"];
+      type = types.enum [
+        "hyprland"
+        "niri"
+        "mangowc"
+        "none"
+      ];
       default = "none";
       description = ''
         Which window manager to use as the default session.
@@ -24,7 +29,11 @@ in {
     };
 
     desktopEnvironment = mkOption {
-      type = types.enum ["kde" "gnome" "none"];
+      type = types.enum [
+        "kde"
+        "gnome"
+        "none"
+      ];
       default = "none";
       description = ''
         Which desktop environment to use.
@@ -106,7 +115,12 @@ in {
     # Display Manager Configuration
     # =================================================================
     displayManager = mkOption {
-      type = types.enum ["greetd" "sddm" "gdm" "none"];
+      type = types.enum [
+        "greetd"
+        "sddm"
+        "gdm"
+        "none"
+      ];
       default = "greetd";
       description = ''
         Which display manager to use for login.
@@ -135,11 +149,11 @@ in {
     services.greetd = mkIf (cfg.displayManager == "greetd") {
       enable = true;
       settings = let
-        # Window manager start commands
+        # Window manager start commands (using dms-greeter)
         wmCommands = {
-          hyprland = "start-hyprland";
-          niri = "niri-session";
-          mangowc = "mangowc";
+          hyprland = "dms-greeter --command hyprland";
+          niri = "dms-greeter --command niri";
+          mangowc = "dms-greeter --command mangowc";
           none = "sh";
         };
         wmCommand = wmCommands.${cfg.windowManager};
@@ -150,7 +164,7 @@ in {
         };
         initial_session = mkIf (cfg.windowManager != "none") {
           command = wmCommand;
-          user = config.my.defaults.username;
+          inherit (config.my.defaults) user;
         };
       };
     };

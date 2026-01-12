@@ -2,8 +2,7 @@
   pkgs,
   lib,
   ...
-}:
-{
+}: {
   users.users.qbittorrent = {
     extraGroups = [
       "users"
@@ -57,12 +56,12 @@
 
   # Override qBittorrent service to run in VPN namespace
   systemd.services.qbittorrent = {
-    after = [ "wg.service" ];
-    requires = [ "wg.service" ];
+    after = ["wg.service"];
+    requires = ["wg.service"];
 
     serviceConfig = {
       # Clear BindPaths from parent nixarr config - they conflict with NetworkNamespacePath
-      BindPaths = lib.mkForce [ ];
+      BindPaths = lib.mkForce [];
 
       # VPN namespace configuration
       NetworkNamespacePath = "/run/netns/wg";
@@ -84,18 +83,18 @@
   # Socket for qBittorrent proxy (allows access from host network on port 8081)
   systemd.sockets.proxy-to-qbittorrent = {
     description = "Socket for qBittorrent proxy";
-    wantedBy = [ "sockets.target" ];
-    requires = [ "qbittorrent.service" ];
+    wantedBy = ["sockets.target"];
+    requires = ["qbittorrent.service"];
     socketConfig = {
-      ListenStream = "8081";  # Listen on port 8081 on host
+      ListenStream = "8081"; # Listen on port 8081 on host
     };
   };
 
   # Proxy service to connect to qBittorrent in VPN namespace (on port 8080)
   systemd.services.proxy-to-qbittorrent = {
     description = "Proxy to qBittorrent in VPN namespace";
-    after = [ "qbittorrent.service" ];
-    requires = [ "qbittorrent.service" ];
+    after = ["qbittorrent.service"];
+    requires = ["qbittorrent.service"];
 
     serviceConfig = {
       # Enter VPN namespace and proxy to qBittorrent on port 8080

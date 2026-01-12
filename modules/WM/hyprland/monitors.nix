@@ -5,7 +5,7 @@ _: {
 
   wayland.windowManager.hyprland.settings = {
     monitor = [
-      # Primary Monitor: DP-4
+      # Left Monitor: DP-4
       # - Resolution: 3840x2160 @ 60Hz
       # - Position: 0,0 (left monitor)
       # - Scale: 2.0 (for HiDPI)
@@ -13,9 +13,9 @@ _: {
       # - VRR enabled
       "DP-4,3840x2160@60,0x0,2.0,bitdepth,10,vrr,1"
 
-      # Secondary Monitor: DP-5
+      # Right Monitor: DP-5
       # - Resolution: 3840x2160 @ 60Hz
-      # - Position: 1920,0 (right of DP-4, considering 2x scale = 1920px effective width)
+      # - Position: 1920,0 (right of DP-4, considering 2.0x scale = 1920px effective width)
       # - Scale: 2.0 (for HiDPI)
       # - 10-bit color depth
       # - VRR enabled

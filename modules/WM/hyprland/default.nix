@@ -103,11 +103,11 @@
       plugin = {
         scroller = {
           # Column layout settings
-          column_default_width = "onehalf";  # 50% width, matching niri's 0.5 proportion
-          focus_wrap = false;  # Don't wrap focus at edges
+          column_default_width = "onehalf"; # 50% width, matching niri's 0.5 proportion
+          focus_wrap = false; # Don't wrap focus at edges
 
           # Column width cycling (matches niri preset-column-widths)
-          column_widths = "onethird onehalf twothirds one";  # 33%, 50%, 66%, 100%
+          column_widths = "onethird onehalf twothirds one"; # 33%, 50%, 66%, 100%
 
           # Window/column gaps (matching niri's gaps = 5)
           gaps_in = 5;

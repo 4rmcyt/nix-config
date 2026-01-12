@@ -4,8 +4,17 @@
   lib,
   inputs,
   ...
-}:
-{
+}: {
+  # =================================================================
+  # Desktop Configuration
+  # =================================================================
+  # Choose your window manager/desktop environment here
+  my.desktop = {
+    windowManager = "niri"; # Options: "hyprland", "niri", "mangowc", "none"
+    # desktopEnvironment = "none";  # Options: "kde", "gnome", "none"
+    displayManager = "greetd"; # Options: "greetd", "sddm", "gdm", "none"
+  };
+
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -172,16 +181,14 @@
     };
 
     shells = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         zsh
         nushell
       ]
     );
 
     systemPackages = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -264,14 +271,16 @@
       enable = true;
       useEmbeddedBitmaps = true;
       defaultFonts = {
-        monospace = [ "JetBrainsMono Nerd Font" "Fira Code" ];
-        sansSerif = [ "Noto Sans" ];
-        serif = [ "Noto Serif" ];
-        emoji = [ "Noto Color Emoji" ];
+        monospace = [
+          "JetBrainsMono Nerd Font"
+          "Fira Code"
+        ];
+        sansSerif = ["Noto Sans"];
+        serif = ["Noto Serif"];
+        emoji = ["Noto Color Emoji"];
       };
     };
-    packages =
-      with pkgs;
+    packages = with pkgs;
       [
         maple-mono.NF
         font-awesome
@@ -301,7 +310,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
+      allowedTCPPorts = [9100]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -374,21 +383,9 @@
   # =================================================================
   services = {
     # =============================================================
-    # Display Manager - greetd with niri
+    # Display Manager - Configured via my.desktop.displayManager
     # =============================================================
-    greetd = {
-      enable = true;
-      settings = {
-        default_session = {
-          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd Hyprland";
-          user = "greeter";
-        };
-        initial_session = {
-          command = "Hyprland";
-          user = "zeev";
-        };
-      };
-    };
+    # greetd configuration is now handled by modules/options/desktop.nix
 
     gnome.gnome-keyring.enable = true;
 
@@ -469,10 +466,10 @@
 
     pcscd = {
       enable = true;
-      plugins = [ pkgs.ccid ];
+      plugins = [pkgs.ccid];
     };
 
-    dbus.packages = [ pkgs.gcr ];
+    dbus.packages = [pkgs.gcr];
 
     power-profiles-daemon.enable = false;
 
@@ -542,7 +539,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = [ "nvidia" ];
+      videoDrivers = ["nvidia"];
       xkb.layout = "us";
     };
   };
@@ -551,10 +548,10 @@
   # =================================================================
   users = {
     groups = {
-      git = { };
-      plugdev = { };
-      prometheus = { };
-      nix-builder = { };
+      git = {};
+      plugdev = {};
+      prometheus = {};
+      nix-builder = {};
     };
 
     users = {
@@ -597,7 +594,7 @@
     podman.enable = true;
     libvirtd = {
       enable = true;
-      qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
+      qemu.vhostUserPackages = with pkgs; [virtiofsd];
     };
     spiceUSBRedirection.enable = true;
   };

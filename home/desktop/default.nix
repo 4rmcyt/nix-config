@@ -2,8 +2,7 @@
   pkgs,
   lib,
   ...
-}:
-{
+}: {
   imports = [
     ../../modules/GUI/vscode
     ../../modules/GUI/ghostty
@@ -14,9 +13,9 @@
     ../../modules/TUI/zsh
     ../../modules/TUI/atuin
     ../../modules/TUI/zellij
-    # ../../modules/WM/hyprland
-    # ../../modules/WM/niri
-    ../../modules/WM/mangowc
+
+    # Automatically imports the correct WM based on my.desktop.windowManager
+    ../../modules/home-manager/desktop.nix
   ];
 
   home = {
@@ -67,8 +66,8 @@
 
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
-      autoconnect = [ "qemu:///system" ];
-      uris = [ "qemu:///system" ];
+      autoconnect = ["qemu:///system"];
+      uris = ["qemu:///system"];
     };
   };
 }
