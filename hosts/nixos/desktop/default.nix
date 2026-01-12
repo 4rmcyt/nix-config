@@ -4,7 +4,8 @@
   lib,
   inputs,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -87,20 +88,9 @@
   nixpkgs.config.cudaSupport = true;
 
   # =================================================================
-  # 5.5. Security - PAM U2F for KWallet
   # =================================================================
   security.pam.services = {
-    # Enable U2F authentication for login
     login.u2fAuth = true;
-
-    # Enable U2F for KWallet unlock
-    kwallet = {
-      allowNullPassword = true;
-      enableKwallet = true;
-      u2fAuth = true;
-    };
-
-    # Enable U2F for sudo
     sudo.u2fAuth = true;
   };
 
@@ -175,14 +165,16 @@
     };
 
     shells = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         zsh
         nushell
       ]
     );
 
     systemPackages = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -262,7 +254,8 @@
   fonts = {
     fontDir.enable = true;
     fontconfig.useEmbeddedBitmaps = true;
-    packages = with pkgs;
+    packages =
+      with pkgs;
       [
         maple-mono.NF
         font-awesome
@@ -290,7 +283,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -344,10 +337,16 @@
     wlr.enable = true;
     config = {
       common = {
-        default = ["wlr" "gtk"];
+        default = [
+          "wlr"
+          "gtk"
+        ];
       };
       niri = {
-        default = ["wlr" "gtk"];
+        default = [
+          "wlr"
+          "gtk"
+        ];
       };
     };
   };
@@ -452,10 +451,10 @@
 
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
-    dbus.packages = [pkgs.gcr];
+    dbus.packages = [ pkgs.gcr ];
 
     power-profiles-daemon.enable = false;
 
@@ -525,7 +524,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
   };
@@ -534,10 +533,10 @@
   # =================================================================
   users = {
     groups = {
-      git = {};
-      plugdev = {};
-      prometheus = {};
-      nix-builder = {};
+      git = { };
+      plugdev = { };
+      prometheus = { };
+      nix-builder = { };
     };
 
     users = {
@@ -580,7 +579,7 @@
     podman.enable = true;
     libvirtd = {
       enable = true;
-      qemu.vhostUserPackages = with pkgs; [virtiofsd];
+      qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
     };
     spiceUSBRedirection.enable = true;
   };
