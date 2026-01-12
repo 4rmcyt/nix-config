@@ -98,8 +98,8 @@
   security.pam.u2f = {
     enable = true;
     control = "optional";
-    authFile = "/etc/u2f_mappings";
     settings = {
+      authfile = "/etc/u2f_mappings";
       cue = true;
     };
   };
@@ -162,6 +162,13 @@
       XDG_CONFIG_HOME = "$HOME/.config";
       XDG_DATA_HOME = "$HOME/.local/share";
       XDG_STATE_HOME = "$HOME/.local/state";
+
+      # Add home-manager and flatpak paths for fonts and icons in all sessions (including TTY)
+      XDG_DATA_DIRS = lib.mkAfter [
+        "$HOME/.nix-profile/share"
+        "$HOME/.local/share/flatpak/exports/share"
+        "/var/lib/flatpak/exports/share"
+      ];
     };
 
     shells = lib.mkBefore (
@@ -253,12 +260,23 @@
   # =================================================================
   fonts = {
     fontDir.enable = true;
-    fontconfig.useEmbeddedBitmaps = true;
+    fontconfig = {
+      enable = true;
+      useEmbeddedBitmaps = true;
+      defaultFonts = {
+        monospace = [ "JetBrainsMono Nerd Font" "Fira Code" ];
+        sansSerif = [ "Noto Sans" ];
+        serif = [ "Noto Serif" ];
+        emoji = [ "Noto Color Emoji" ];
+      };
+    };
     packages =
       with pkgs;
       [
         maple-mono.NF
         font-awesome
+        noto-fonts
+        noto-fonts-color-emoji
       ]
       ++ (builtins.filter lib.isDerivation (lib.attrValues pkgs.nerd-fonts));
   };
@@ -362,11 +380,11 @@
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd niri-session";
+          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd Hyprland";
           user = "greeter";
         };
         initial_session = {
-          command = "niri-session";
+          command = "Hyprland";
           user = "zeev";
         };
       };

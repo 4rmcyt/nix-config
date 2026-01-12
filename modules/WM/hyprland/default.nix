@@ -5,9 +5,10 @@
   imports = [
     # Core Hyprland Configuration
     ./binds.nix
-    ./windowrules.nix
     ./exec-once.nix
     ./gtk.nix
+    ./monitors.nix
+    ./windowrules.nix
   ];
 
   home.sessionVariables = {
@@ -85,12 +86,37 @@
 
     systemd.enable = true;
 
+    plugins = [
+      pkgs.hyprlandPlugins.hyprscrolling
+    ];
+
     settings = {
-      monitor = [
-        "DP-4,3840x2160@60,0x0,2.0,bitdepth,10"
-        "DP-5,3840x2160@60,1920x0,2.0,bitdepth,10"
-      ];
+      # Monitor configuration moved to ./monitors.nix
       "$mod" = "SUPER";
+
+      # Enable VRR globally
+      misc = {
+        vrr = 1;
+      };
+
+      # Hyprscroller plugin settings (matching niri layout)
+      plugin = {
+        scroller = {
+          # Column layout settings
+          column_default_width = "onehalf";  # 50% width, matching niri's 0.5 proportion
+          focus_wrap = false;  # Don't wrap focus at edges
+
+          # Column width cycling (matches niri preset-column-widths)
+          column_widths = "onethird onehalf twothirds one";  # 33%, 50%, 66%, 100%
+
+          # Window/column gaps (matching niri's gaps = 5)
+          gaps_in = 5;
+          gaps_out = 5;
+
+          # Center focused column behavior (matching niri center-focused-column = "never")
+          center_column = false;
+        };
+      };
     };
 
     extraConfig = ''

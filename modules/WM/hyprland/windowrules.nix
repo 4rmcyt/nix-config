@@ -119,6 +119,9 @@ _: {
       "opacity 1.0 override 1.0 override, class:(zen)"
       "opacity 1.0 override 1.0 override, class:(evince)"
       "opacity 1.0 override 1.0 override, class:(org.gnome.Evince)"
+      "opacity 1.0 override 1.0 override, class:(jellyfin-desktop)"
+      "opacity 1.0 override 1.0 override, class:(com.github.iwalton3.jellyfin-media-player)"
+      "opacity 1.0 override 1.0 override, class:(chromium-browser)"
       "opacity 0.9, floating:0" # DMS recommended inactive opacity
 
       # ============================================
@@ -131,6 +134,16 @@ _: {
       # ============================================
       "idleinhibit focus, class:^(mpv)$"
       "idleinhibit fullscreen, class:^(firefox)$"
+      "idleinhibit fullscreen, class:^(jellyfin-desktop)$"
+      "idleinhibit fullscreen, class:^(chromium-browser)$"
+
+      # ============================================
+      # HDR SUPPORT
+      # ============================================
+      "hdr, class:^(jellyfin-desktop)$"
+      "hdr, class:^(com.github.iwalton3.jellyfin-media-player)$"
+      "hdr, class:^(chromium-browser)$"
+      "hdr, class:^(chromium)$"
 
       # ============================================
       # XWAYLAND VIDEO BRIDGE

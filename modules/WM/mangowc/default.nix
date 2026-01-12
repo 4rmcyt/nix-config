@@ -3,6 +3,7 @@
     ./binds.nix
     ./exec-once.nix
     ./gtk.nix
+    ./monitors.nix
     ./window-rules.nix
   ];
 

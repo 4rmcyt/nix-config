@@ -3,6 +3,7 @@
     ./binds.nix
     ./exec-once.nix
     ./gtk.nix
+    ./monitors.nix
     ./window-rules.nix
     ./vdirsyncer
   ];
@@ -64,32 +65,7 @@
     settings = {
       environment = {};
 
-      outputs = {
-        "DP-4" = {
-          mode = {
-            height = 2160;
-            refresh = 60.0;
-            width = 3840;
-          };
-          position = {
-            x = 0;
-            y = 0;
-          };
-          scale = 2.0;
-        };
-        "DP-5" = {
-          mode = {
-            height = 2160;
-            refresh = 60.0;
-            width = 3840;
-          };
-          position = {
-            x = 1920;
-            y = 0;
-          };
-          scale = 2.0;
-        };
-      };
+      # Monitor configuration moved to ./monitors.nix
 
       layout = {
         border = {

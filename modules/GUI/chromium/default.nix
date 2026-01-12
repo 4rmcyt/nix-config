@@ -12,16 +12,23 @@
       enableWideVine = true;
       commandLineArgs = [
         # GPU acceleration for Nvidia
-        "--enable-features=VaapiVideoDecoder,VaapiIgnoreDriverChecks"
+        "--enable-features=VaapiVideoDecoder,VaapiIgnoreDriverChecks,Vulkan,DefaultANGLEVulkan,VulkanFromANGLE"
         "--ignore-gpu-blocklist"
+        "--use-vulkan"
 
         # Wayland support
         "--ozone-platform=wayland"
         "--disable-features=WaylandOverlayDelegation"
 
+        # HDR and Wide Color Gamut support
+        "--enable-features=UseSkiaRenderer"
+        "--force-color-profile=hdr10"
+        "--enable-hdr"
+
         # Better scrolling and performance
         "--enable-smooth-scrolling"
         "--enable-gpu-rasterization"
+        "--enable-zero-copy"
       ];
     })
   ];
