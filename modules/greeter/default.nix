@@ -24,7 +24,7 @@ in {
         default_session = {
           command = let
             greeterScript = pkgs.writeShellScript "dms-greeter-mangowc" ''
-              export PATH=$PATH:${lib.makeBinPath [quickshell pkgs.mangowc]}
+              export PATH=${lib.makeBinPath [quickshell pkgs.mangowc dmsShell]}:$PATH
               exec ${dmsShell}/share/quickshell/dms/Modules/Greetd/assets/dms-greeter --command mangowc -C /etc/greetd/mangowc.conf
             '';
           in toString greeterScript;
