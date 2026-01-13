@@ -41,7 +41,6 @@
     enable = true;
     enableAudioWavelength = false;
     enableCalendarEvents = true;
-    enableClipboard = true;
     enableDynamicTheming = true;
     enableSystemMonitoring = true;
     enableVPN = false;
