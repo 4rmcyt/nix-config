@@ -74,7 +74,6 @@
       experimental-features = [
         "flakes"
         "nix-command"
-        "flake-self-attrs"
         "auto-allocate-uids"
       ];
 
