@@ -19,7 +19,7 @@
       -- Fonts
       --------
       config.font = wezterm.font_with_fallback({
-         "MesloLGS Nerd Font",
+         "MesloLGS NF",
          "Symbols Nerd Font",
          "Material Design Icons",
       })
@@ -28,7 +28,7 @@
       config.bold_brightens_ansi_colors = true
       config.font_rules = {
         {
-          font = wezterm.font("MesloLGS Nerd Font", { italic = false })
+          font = wezterm.font("MesloLGS NF", { italic = false })
         }
       }
       --config.font_antialias = "Subpixel"
