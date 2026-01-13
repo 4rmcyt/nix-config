@@ -69,7 +69,6 @@
   # nix.package is set by lix-module
   nix = {
     settings = {
-      access-tokens = "github.com=REDACTED";
       cores = 0;
 
       experimental-features = [
@@ -112,6 +111,11 @@
         "@wheel"
       ];
     };
+
+    # Access tokens configured via sops secret
+    extraOptions = ''
+      access-tokens = github.com=$(cat ${config.sops.secrets.git_access_token.path})
+    '';
   };
 
   # =================================================================
