@@ -3,16 +3,6 @@
   config,
   ...
 }: {
-  # =================================================================
-  # 0. Nixpkgs Configuration
-  # =================================================================
-  # nixpkgs.overlays = [
-  #   # Disable ffado in pipewire to avoid nodejs ia32 cross-compilation issues
-  #   # ffado is for FireWire audio devices which are rarely used
-  #   (_final: prev: {
-  #     pipewire = prev.pipewire.override {ffadoSupport = false;};
-  #   })
-  # ];
 
   # =================================================================
   # 1. Imports
@@ -74,8 +64,8 @@
       experimental-features = [
         "flakes"
         "nix-command"
-        "flake-self-attrs"
-        "lix-custom-sub-commands"
+        # "flake-self-attrs"
+        # "lix-custom-sub-commands"
         "auto-allocate-uids"
       ];
 
