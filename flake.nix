@@ -283,6 +283,7 @@
             inputs.dms.nixosModules.dankMaterialShell
             inputs.dms.nixosModules.greeter
             inputs.mango.nixosModules.mango
+            ./modules/greeter
             (mkNixosConfig "desktop" {})
             ./modules/users/${userName}
             (

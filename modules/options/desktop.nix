@@ -2,12 +2,10 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }:
 with lib; let
   cfg = config.my.desktop;
-  dmsShell = inputs.dms.packages.${pkgs.system}.dms-shell;
 in {
   options.my.desktop = {
     # =================================================================
@@ -146,70 +144,6 @@ in {
     # Auto-enable DEs based on desktopEnvironment selection
     my.desktop.kde.enable = mkDefault (cfg.desktopEnvironment == "kde");
     my.desktop.gnome.enable = mkDefault (cfg.desktopEnvironment == "gnome");
-
-    # DankMaterialShell Greeter configuration for niri, hyprland, sway
-    programs.dank-material-shell.greeter = mkIf (cfg.displayManager == "greetd" && elem cfg.windowManager ["niri" "hyprland" "sway"]) {
-      enable = true;
-      compositor.name = cfg.windowManager;
-      configHome = "/home/${config.my.defaults.user}";
-    };
-
-    # Manual greetd configuration for mangowc with dms-greeter
-    services.greetd = mkIf (cfg.displayManager == "greetd" && cfg.windowManager == "mangowc") {
-      enable = true;
-      settings = {
-        default_session = {
-          command = let
-            quickshell = inputs.dms.packages.${pkgs.system}.quickshell;
-            greeterScript = pkgs.writeShellScript "dms-greeter-mangowc" ''
-              export PATH=$PATH:${lib.makeBinPath [quickshell pkgs.mangowc]}
-              exec sh ${dmsShell}/share/dms/assets/dms-greeter \
-                --cache-dir /var/lib/dms-greeter \
-                --command mangowc \
-                -C /etc/greetd/mangowc.conf \
-                -p ${dmsShell}/share/quickshell/dms
-            '';
-          in toString greeterScript;
-          user = "greeter";
-        };
-      };
-    };
-
-    # Create MangoWC configuration file for greeter
-    environment.etc."greetd/mangowc.conf" = mkIf (cfg.displayManager == "greetd" && cfg.windowManager == "mangowc") {
-      text = ''
-        # MangoWC greeter configuration
-        # Managed by NixOS configuration
-      '';
-    };
-
-    # Setup cache directory and config sync for mangowc greeter
-    systemd.tmpfiles.settings."10-dmsgreeter-mangowc" = mkIf (cfg.displayManager == "greetd" && cfg.windowManager == "mangowc") {
-      "/var/lib/dms-greeter".d = {
-        user = "greeter";
-        group = "greeter";
-        mode = "0750";
-      };
-    };
-
-    systemd.services.greetd.preStart = mkIf (cfg.displayManager == "greetd" && cfg.windowManager == "mangowc") (
-      let
-        username = config.my.defaults.user;
-        configHome = "/home/${username}";
-      in ''
-        cd /var/lib/dms-greeter
-
-        # Copy DMS config files if they exist
-        [ -f "${configHome}/.config/DankMaterialShell/settings.json" ] && \
-          cp "${configHome}/.config/DankMaterialShell/settings.json" . || true
-        [ -f "${configHome}/.local/state/DankMaterialShell/session.json" ] && \
-          cp "${configHome}/.local/state/DankMaterialShell/session.json" . || true
-        [ -f "${configHome}/.cache/DankMaterialShell/dms-colors.json" ] && \
-          cp "${configHome}/.cache/DankMaterialShell/dms-colors.json" colors.json || true
-
-        chown greeter: * || true
-      ''
-    );
 
 
     # Add window manager packages
