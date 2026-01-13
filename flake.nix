@@ -280,7 +280,7 @@
             inputs.flatpaks.nixosModules.default
             inputs.nix-gaming.nixosModules.pipewireLowLatency
             inputs.lix-module.nixosModules.default
-            inputs.dms.nixosModules.dankMaterialShell
+            inputs.dms.nixosModules.dank-material-shell
             inputs.dms.nixosModules.greeter
             inputs.mango.nixosModules.mango
             ./modules/greeter
