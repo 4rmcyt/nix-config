@@ -98,8 +98,13 @@
           auto-format = true;
           formatter.command = lib.getExe pkgs.nixfmt;
           name = "nix";
+          language-servers = ["nil" "claude-code"];
         }
       ];
+      languages.language-server.claude-code = {
+        command = "claude-code";
+        args = ["lsp"];
+      };
       settings = {
         editor = {
           bufferline = "multiple";

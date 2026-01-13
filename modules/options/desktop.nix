@@ -145,21 +145,19 @@ in {
     my.desktop.kde.enable = mkDefault (cfg.desktopEnvironment == "kde");
     my.desktop.gnome.enable = mkDefault (cfg.desktopEnvironment == "gnome");
 
-    # Configure greetd if selected
     services.greetd = mkIf (cfg.displayManager == "greetd") {
       enable = true;
       settings = let
-        # Window manager start commands (using dms-greeter)
         wmCommands = {
-          hyprland = "dms-greeter --command hyprland";
+          hyprland = "dms-greeter --command Hyprland";
           niri = "dms-greeter --command niri";
-          mangowc = "dms-greeter --command mangowc -C /etc/greetd/mangowc.conf";
+          mangowc = "dms-greeter --command mangowc";
           none = "sh";
         };
         wmCommand = wmCommands.${cfg.windowManager};
       in {
         default_session = {
-          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd ${wmCommand}";
+          command = wmCommand;
           user = "greeter";
         };
         initial_session = mkIf (cfg.windowManager != "none") {
