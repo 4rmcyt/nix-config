@@ -47,7 +47,7 @@
     wl-clip-persist # Clipboard persistence
   ];
 
-  programs.dankMaterialShell = {
+  programs.dank-material-shell = {
     enable = true;
     systemd = {
       enable = true; # Systemd service for auto-start

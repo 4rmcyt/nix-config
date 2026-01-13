@@ -40,8 +40,8 @@ in {
       inputs.stylix.homeModules.stylix
       inputs.pam-shim.homeModules.default
       inputs.niri.homeModules.niri
-      inputs.dms.homeModules.dankMaterialShell.default
-      inputs.dms.homeModules.dankMaterialShell.niri
+      inputs.dms.homeModules.dank-material-shell
+      inputs.dms.homeModules.niri
     ];
 
     "${userName}@homeserver" = mkHomeConfig "homeserver" [];

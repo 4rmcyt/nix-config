@@ -37,7 +37,7 @@
     xwayland-satellite
   ];
 
-  programs.dankMaterialShell = {
+  programs.dank-material-shell = {
     enable = true;
     enableAudioWavelength = false;
     enableCalendarEvents = true;
