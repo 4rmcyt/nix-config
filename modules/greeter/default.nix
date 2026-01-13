@@ -24,9 +24,8 @@ in {
         default_session = {
           command = let
             greeterScript = pkgs.writeShellScript "dms-greeter-mangowc" ''
-              export PATH=${lib.makeBinPath [quickshell pkgs.mangowc dmsShell]}:$PATH
-              export XDG_CONFIG_DIRS=/etc/xdg
-              exec ${dmsShell}/share/quickshell/dms/Modules/Greetd/assets/dms-greeter --command mangowc -C /etc/greetd/mangowc.conf --cache-dir /var/lib/dms-greeter
+              export PATH=${lib.makeBinPath [quickshell pkgs.mangowc]}:$PATH
+              exec sh ${dmsShell}/share/quickshell/dms/Modules/Greetd/assets/dms-greeter --cache-dir /var/lib/dms-greeter --command mangowc -p ${dmsShell}/share/quickshell/dms -C /etc/greetd/mangowc.conf
             '';
           in toString greeterScript;
           user = "greeter";
@@ -39,9 +38,6 @@ in {
       # MangoWC greeter configuration
       # Managed by NixOS configuration
     '';
-
-    # Symlink DMS config so dms-greeter can find it
-    environment.etc."xdg/quickshell/dms-greeter".source = "${dmsShell}/share/quickshell/dms";
 
     # Setup cache directory and config sync for mangowc greeter
     systemd.tmpfiles.settings."10-dmsgreeter-mangowc" = {
