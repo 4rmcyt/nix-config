@@ -42,7 +42,9 @@ in {
           "corectrl"
           "docker"
           "gamemode"
+          "greeter"
           "input"
+          "libvirtd"
           "media"
           "networkmanager"
           "podman"
@@ -50,7 +52,6 @@ in {
           "video"
           "wheel"
           "zeev"
-          "libvirtd"
         ];
         hashedPasswordFile = config.sops.secrets.zeev_password.path;
         isNormalUser = true;

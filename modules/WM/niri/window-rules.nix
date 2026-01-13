@@ -53,8 +53,6 @@ _: {
           top-left = 12.0;
           top-right = 12.0;
         };
-      }
-      {
         opacity = 0.9;
       }
       {

@@ -107,7 +107,6 @@ in {
     sonarr = {};
     readarr = {};
     recyclarr = {};
-    # headphones = { };
   };
 
   networking.firewall.allowedTCPPorts = [
@@ -221,7 +220,6 @@ in {
     "d /data/media/.state/nixarr/radarr 775 radarr radarr -"
     "d /data/media/.state/nixarr/sonarr 775 sonarr sonarr -"
     "d /data/media/.state/nixarr/bazarr 775 bazarr bazarr -"
-    "d /data/media/.state/headphones 775 headphones headphones -"
     # Add rules to fix ownership of existing directories
     "Z /data/media/movies 775 zeev media -"
     "Z /data/media/shows 775 zeev media -"
