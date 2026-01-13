@@ -7,17 +7,20 @@
 }:
 with lib; let
   cfg = config.my.desktop;
-  system = pkgs.stdenv.hostPlatform.system;
-  dmsShell = inputs.dms.packages.${system}.dms-shell;
-  quickshell = inputs.dms.packages.${system}.quickshell;
 in {
   config = mkIf (cfg.displayManager == "greetd" && cfg.windowManager == "mangowc") {
     # Manual greetd configuration for mangowc using dms-greeter
+    # Note: This requires the dms.nixosModules.dankMaterialShell to be imported
+    # which provides the dms package with the greeter script
     services.greetd = {
       enable = true;
       settings = {
         default_session = {
           command = let
+            # Get DMS and quickshell packages from inputs
+            system = pkgs.stdenv.hostPlatform.system;
+            dmsShell = inputs.dms.packages.${system}.default;
+            quickshell = inputs.quickshell.packages.${system}.default or inputs.dms.packages.${system}.default.passthru.quickshell or pkgs.quickshell;
             greeterScript = pkgs.writeShellScript "dms-greeter-mangowc" ''
               export PATH=$PATH:${lib.makeBinPath [quickshell pkgs.mangowc]}
               exec sh ${dmsShell}/share/quickshell/dms/Modules/Greetd/assets/dms-greeter \
