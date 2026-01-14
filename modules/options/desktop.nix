@@ -151,6 +151,24 @@ in {
       compositor.name = cfg.windowManager;
       configHome = "/home/${config.my.defaults.user}";
       compositor.customConfig = mkIf (cfg.windowManager == "niri") ''
+        hotkey-overlay {
+          skip-at-startup
+        }
+
+        environment {
+          DMS_RUN_GREETER "1"
+        }
+
+        gestures {
+          hot-corners {
+            off
+          }
+        }
+
+        layout {
+          background-color "#000000"
+        }
+
         output "DP-4" {
           mode "3840x2160@60.000000"
           position x=0 y=0
