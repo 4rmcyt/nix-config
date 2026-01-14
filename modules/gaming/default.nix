@@ -29,7 +29,7 @@
   programs.steam = {
     dedicatedServer.openFirewall = true;
     enable = true;
-    gamescopeSession.enable = true;
+    gamescopeSession.enable = false;
     remotePlay.openFirewall = true;
   };
 
