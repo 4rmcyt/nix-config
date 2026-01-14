@@ -29,6 +29,10 @@
         "--enable-smooth-scrolling"
         "--enable-gpu-rasterization"
         "--enable-zero-copy"
+
+        # GTK Theme support
+        "--gtk-version=4"
+        "--force-dark-mode"
       ];
     })
   ];

@@ -118,6 +118,7 @@
   # =================================================================
 
   nix = {
+    package = pkgs.lixPackageSets.latest.lix;
     channel.enable = false;
     registry.nixpkgs.flake = inputs.nixpkgs;
     settings = {
@@ -125,7 +126,6 @@
       experimental-features = [
         "flakes"
         "nix-command"
-        "lix-custom-sub-commands"
         "auto-allocate-uids"
       ];
       auto-optimise-store = true;
@@ -258,6 +258,15 @@
         sbsigntool
         shim-unsigned
         optnix
+
+        # =============================================================
+        # Lix Tooling
+        # =============================================================
+        lixPackageSets.latest.nixpkgs-review
+        lixPackageSets.latest.nix-eval-jobs
+        lixPackageSets.latest.nix-fast-build
+        lixPackageSets.latest.colmena
+        lixPackageSets.latest.nix-direnv
       ]
     );
   };

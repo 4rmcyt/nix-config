@@ -14,22 +14,19 @@
     # adwaita-icon-theme # Fallback: GNOME default
   ];
 
-  # Force overwrite GTK config files to avoid conflicts
-  xdg.configFile."gtk-3.0/settings.ini".force = true;
-  xdg.configFile."gtk-4.0/settings.ini".force = true;
-
+  # Let DMS handle GTK theme configuration via matugen
+  # Home-manager only provides the base packages
   gtk = {
     enable = true;
 
-    # Theme Configuration
+    # Theme Configuration - DMS will override these with dynamic themes
     theme = {
-      name = "adw-gtk3-dark"; # Base theme for GTK3/4
       package = pkgs.adw-gtk3;
     };
 
-    # Icon Theme
+    # Icon Theme - Static configuration
     iconTheme = {
-      name = "Papirus-Dark"; # DMS-recommended icon theme
+      name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
     };
 
@@ -62,7 +59,7 @@
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
-      gtk-theme = "adw-gtk3-dark";
+      # gtk-theme is managed by DMS dynamic theming
       icon-theme = "Papirus-Dark";
       font-name = "Inter 11";
       document-font-name = "Inter 11";

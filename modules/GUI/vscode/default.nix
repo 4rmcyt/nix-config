@@ -150,6 +150,7 @@
         };
         "window.menuBarVisibility" = "visible";
         "window.titleBarStyle" = "custom";
+        "window.autoDetectColorScheme" = false;
 
         # ===== Git Settings =====
         "git.autofetch" = true;

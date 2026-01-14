@@ -48,6 +48,13 @@
       enable = true;
       restartIfChanged = true;
     };
+    settings = {
+      # Enable GTK theming for FHS apps (Chromium, VSCode, etc.)
+      gtkThemingEnabled = true;
+      qtThemingEnabled = false; # Using QT_QPA_PLATFORMTHEME=gtk3 instead
+      syncModeWithPortal = true;
+      terminalsAlwaysDark = true;
+    };
   };
 
   systemd.user.targets.niri-session.Unit.Wants = [
