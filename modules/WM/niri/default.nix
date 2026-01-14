@@ -49,8 +49,8 @@
       restartIfChanged = true;
     };
     niri = {
-      enableKeybinds = true;
-      enableSpawn = true;
+      enableKeybinds = false; # Disabled - using custom keybindings in binds.nix
+      enableSpawn = false; # Disabled - using systemd.enable instead
     };
     settings = {
       # Enable GTK theming for FHS apps (Chromium, VSCode, etc.)
