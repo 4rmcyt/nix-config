@@ -60,6 +60,7 @@
           "alttab"
           "binds"
           "colors"
+          "cursor"
           "layout"
           "outputs"
           # "wpblur" - excluded: not using wallpaper blur feature
