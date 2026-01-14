@@ -15,7 +15,7 @@
     ../../modules/TUI/zellij
 
     # Automatically imports the correct WM based on my.desktop.windowManager
-    ../../modules/home-manager/desktop.nix
+    ../../modules/WM
   ];
 
   home = {
@@ -24,6 +24,7 @@
     username = "zeev";
 
     packages = with pkgs; [
+      claude-code
       materialgram
       bat
       busybox
@@ -32,18 +33,13 @@
       ffmpegthumbnailer
       foliate
       gst_all_1.gst-libav
-      gvfs
-      libva-utils
-      nu_scripts
       nvtopPackages.nvidia
-      pam_u2f
       pcsc-tools
       pods
       popsicle
       pyenv
       signal-desktop
       slack
-      tailscale
       tenv
       vdpauinfo
       vulkan-tools
