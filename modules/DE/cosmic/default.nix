@@ -49,9 +49,9 @@
 
   # Wayland environment variables
   environment.sessionVariables = lib.mkBefore {
-    # Qt Wayland Support
+    # Electron Wayland Support
     ELECTRON_FORCE_SAFE_STORAGE_BACKEND = "gnome_libsecret";
-    ELECTRON_OZONE_PLATFORM_HINT = "auto";
+    # Note: ELECTRON_OZONE_PLATFORM_HINT removed - causes warnings in newer Electron versions
 
     # Wayland Support
     CLUTTER_BACKEND = "wayland";

@@ -54,6 +54,16 @@
       qtThemingEnabled = false; # Using QT_QPA_PLATFORMTHEME=gtk3 instead
       syncModeWithPortal = true;
       terminalsAlwaysDark = true;
+
+      # Cursor settings
+      cursorSettings = {
+        theme = "Bibata-Modern-Classic";
+        size = 24;
+        niri = {
+          hideWhenTyping = true;
+          hideAfterInactiveMs = 0;
+        };
+      };
     };
   };
 
@@ -68,12 +78,7 @@
       environment = {};
 
       # Monitor configuration moved to ./monitors.nix
-
-      # Cursor configuration
-      cursor = {
-        xcursor-theme = "Bibata-Modern-Classic";
-        xcursor-size = 24;
-      };
+      # Cursor configuration managed by DMS settings
 
       layout = {
         border = {

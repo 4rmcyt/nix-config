@@ -37,7 +37,7 @@
     QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
     QT_QPA_PLATFORM = "wayland;xcb";
     QT_QPA_PLATFORMTHEME = "gtk3"; # Use GTK3 passthrough for Qt (DMS recommended)
-    ELECTRON_OZONE_PLATFORM_HINT = "auto";
+    # Note: ELECTRON_OZONE_PLATFORM_HINT removed - NIXOS_OZONE_WL handles Electron/Chromium Wayland support
   };
 
   # ============================================
