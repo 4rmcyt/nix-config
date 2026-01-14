@@ -307,7 +307,7 @@
   # =================================================================
   # 10. Home Manager
   # =================================================================
-  home-manager.backupFileExtension = "backup";
+  # backupFileExtension is set in commonHomeManagerNixosConfig with unique timestamp
 
   # =================================================================
   # 11. Networking

@@ -51,24 +51,28 @@
     niri = {
       enableKeybinds = false; # Disabled - using custom keybindings in binds.nix
       enableSpawn = false; # Disabled - using systemd.enable instead
-    };
-    settings = {
-      # Enable GTK theming for FHS apps (Chromium, VSCode, etc.)
-      gtkThemingEnabled = true;
-      qtThemingEnabled = false; # Using QT_QPA_PLATFORMTHEME=gtk3 instead
-      syncModeWithPortal = true;
-      terminalsAlwaysDark = true;
-
-      # Cursor settings
-      cursorSettings = {
-        theme = "Bibata-Modern-Classic";
-        size = 24;
-        niri = {
-          hideWhenTyping = true;
-          hideAfterInactiveMs = 0;
-        };
+      includes = {
+        enable = true;
+        override = true; # DMS settings take priority over niri-flake settings
+        originalFileName = "hm";
+        # Remove "wpblur" from default list since wallpaper blur is not used
+        # This prevents niri from erroring on missing wpblur.kdl file
+        filesToInclude = [
+          "alttab"
+          "binds"
+          "colors"
+          "layout"
+          "outputs"
+          # "wpblur" - excluded: not using wallpaper blur feature
+        ];
       };
     };
+    # NOTE: `settings` block intentionally omitted to allow DMS to manage
+    # ~/.config/DankMaterialShell/settings.json at runtime.
+    # When using `settings`, home-manager creates a read-only symlink to the Nix store,
+    # preventing DMS from saving any settings changes (display scale, layout, cursor, etc.)
+    # Configure DMS settings via the DMS Settings app (Mod+Comma) instead.
+    # See: https://danklinux.com/docs/dankmaterialshell/nixos-flake#settings-home-manager-only
   };
 
   systemd.user.targets.niri-session.Unit.Wants = [

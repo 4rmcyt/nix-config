@@ -1,15 +1,12 @@
 {
   lib,
   pkgs,
-  inputs,
   ...
-}:
-{
+}: {
   # Common system packages shared across all hosts
   # Use lib.mkDefault to allow hosts to override if needed
   environment.systemPackages = lib.mkBefore (
-    with pkgs;
-    [
+    with pkgs; [
       # =================================================================
       # Core System Utilities (alphabetical)
       # =================================================================
@@ -87,9 +84,6 @@
       yamlfmt
       zsh-powerlevel10k
       nix-sweep
-
-      # System monitoring & maintenance
-      inputs.nixos-needsreboot.packages.${pkgs.system}.default
 
       # =================================================================
       # Security & Secrets Management (alphabetical)

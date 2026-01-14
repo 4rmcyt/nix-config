@@ -96,11 +96,6 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-needsreboot = {
-      url = "github:wimpysworld/nixos-needsreboot";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Browser extensions
     betterfox-nix = {
       url = "github:HeitorAugustoLN/betterfox-nix";
@@ -233,7 +228,7 @@
     commonHomeManagerNixosConfig = {
       home-manager.useGlobalPkgs = false;
       home-manager.useUserPackages = true;
-      home-manager.backupFileExtension = "backup";
+      home-manager.backupFileExtension = "hm-backup";
       home-manager.sharedModules = [{home.enableNixpkgsReleaseCheck = false;}];
       home-manager.extraSpecialArgs = {inherit inputs;};
     };

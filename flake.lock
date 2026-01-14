@@ -657,20 +657,6 @@
         "type": "github"
       }
     },
-    "flake-schemas": {
-      "locked": {
-        "lastModified": 1721999734,
-        "narHash": "sha256-G5CxYeJVm4lcEtaO87LKzOsVnWeTcHGKbKxNamNWgOw=",
-        "rev": "0a5c42297d870156d9c57d8f99e476b738dcd982",
-        "revCount": 75,
-        "type": "tarball",
-        "url": "https://api.flakehub.com/f/pinned/DeterminateSystems/flake-schemas/0.1.5/0190ef2f-61e0-794b-ba14-e82f225e55e6/source.tar.gz"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://flakehub.com/f/DeterminateSystems/flake-schemas/%2A.tar.gz"
-      }
-    },
     "flake-utils": {
       "inputs": {
         "systems": "systems_6"
@@ -1627,28 +1613,6 @@
         "type": "github"
       }
     },
-    "nixos-needsreboot": {
-      "inputs": {
-        "flake-schemas": "flake-schemas",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "rust-overlay": "rust-overlay"
-      },
-      "locked": {
-        "lastModified": 1756241134,
-        "narHash": "sha256-dZSYXpTQPk0Yu8Hhb85Ti4AsG7Q69GMDDIVNsuCJcaE=",
-        "owner": "wimpysworld",
-        "repo": "nixos-needsreboot",
-        "rev": "a4d36a2fed856757690036979035f97ffc7a8d2d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "wimpysworld",
-        "repo": "nixos-needsreboot",
-        "type": "github"
-      }
-    },
     "nixos-stable": {
       "locked": {
         "lastModified": 1749086602,
@@ -1989,14 +1953,13 @@
         "nixos-generators": "nixos-generators",
         "nixos-hardware": "nixos-hardware",
         "nixos-jellyfin": "nixos-jellyfin",
-        "nixos-needsreboot": "nixos-needsreboot",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_2",
         "nushell-scripts": "nushell-scripts",
         "pam-shim": "pam-shim",
         "plasma-manager": "plasma-manager",
         "quickshell": "quickshell_2",
-        "rust-overlay": "rust-overlay_2",
+        "rust-overlay": "rust-overlay",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "systems": "systems_9",
@@ -2028,27 +1991,6 @@
     "rust-overlay": {
       "inputs": {
         "nixpkgs": [
-          "nixos-needsreboot",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1756175826,
-        "narHash": "sha256-cQNnntKWve+vnqo6pGGXl4NFT4dgnMKXl4+bpwLELvU=",
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "rev": "d137b47bde8a6783b961db81254013b454eab46a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "oxalica",
-        "repo": "rust-overlay",
-        "type": "github"
-      }
-    },
-    "rust-overlay_2": {
-      "inputs": {
-        "nixpkgs": [
           "nixpkgs"
         ]
       },
@@ -2066,7 +2008,7 @@
         "type": "github"
       }
     },
-    "rust-overlay_3": {
+    "rust-overlay_2": {
       "inputs": {
         "nixpkgs": [
           "zed",
@@ -2087,7 +2029,7 @@
         "type": "github"
       }
     },
-    "rust-overlay_4": {
+    "rust-overlay_3": {
       "inputs": {
         "nixpkgs": [
           "zellij-nix",
@@ -2108,7 +2050,7 @@
         "type": "github"
       }
     },
-    "rust-overlay_5": {
+    "rust-overlay_4": {
       "inputs": {
         "nixpkgs": [
           "zjstatus",
@@ -2673,14 +2615,14 @@
         "crane": "crane",
         "flake-compat": "flake-compat_5",
         "nixpkgs": "nixpkgs_4",
-        "rust-overlay": "rust-overlay_3"
+        "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1768416591,
-        "narHash": "sha256-rW9Z7y3u6DQXlr3u/PWwHsyhquSIwFus3LOee3gdLPo=",
+        "lastModified": 1768419682,
+        "narHash": "sha256-M5vA+s1/RVxBDFVGs/FtvHAdW6lqlYQjxWLzlf5xeeg=",
         "owner": "zed-industries",
         "repo": "zed",
-        "rev": "581e559002bbcf9ea3611fdafc89c20a82abca39",
+        "rev": "cd41a21ca7a442c30bcb2767263f48df38a6e5fc",
         "type": "github"
       },
       "original": {
@@ -2713,7 +2655,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "rust-overlay": "rust-overlay_4",
+        "rust-overlay": "rust-overlay_3",
         "zellij": "zellij"
       },
       "locked": {
@@ -2735,7 +2677,7 @@
         "crane": "crane_2",
         "flake-utils": "flake-utils_4",
         "nixpkgs": "nixpkgs_5",
-        "rust-overlay": "rust-overlay_5"
+        "rust-overlay": "rust-overlay_4"
       },
       "locked": {
         "lastModified": 1766016463,

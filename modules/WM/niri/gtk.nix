@@ -3,6 +3,11 @@
   # GTK THEMING - DMS Integration
   # ============================================
 
+  # Force overwrite GTK config files to avoid backup conflicts
+  xdg.configFile."gtk-3.0/settings.ini".force = true;
+  xdg.configFile."gtk-4.0/settings.ini".force = true;
+  xdg.configFile."gtk-4.0/gtk.css".force = true;
+
   home.packages = with pkgs; [
     # GTK Theme Requirements
     adw-gtk3 # Adwaita-based GTK3/4 theme
