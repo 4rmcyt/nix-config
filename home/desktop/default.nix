@@ -24,7 +24,6 @@
     username = "zeev";
 
     packages = with pkgs; [
-      azure-cli
       materialgram
       bat
       busybox

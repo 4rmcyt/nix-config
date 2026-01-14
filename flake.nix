@@ -157,6 +157,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    zed.url = "github:zed-industries/zed";
+    
     zjstatus.url = "github:dj95/zjstatus";
 
     nixos-jellyfin = {
