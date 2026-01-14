@@ -104,5 +104,13 @@ in {
       (mkIf cfg.hyprland.enable [pkgs.hyprland])
       (mkIf cfg.niri.enable [pkgs.niri])
     ];
+
+    # Configure greetd display manager
+    services.greetd = mkIf (cfg.displayManager == "greetd") {
+      enable = true;
+      settings = {
+        default_session.user = "greeter";
+      };
+    };
   };
 }
