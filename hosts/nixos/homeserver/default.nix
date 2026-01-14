@@ -22,14 +22,9 @@
     ../../../modules/networking/nut-server
     ../../../modules/security
     ../../../modules/services
-    # Distributed builds
+
     # ../../../modules/base/distributed-builds
-
-    # User configuration
     ../../../modules/users/zeev
-
-    # Disabled - uncomment when needed
-    # ../../../modules/backup  # borgmatic config exists but not active
   ];
 
   # =================================================================

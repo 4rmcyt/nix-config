@@ -96,6 +96,10 @@
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-needsreboot = {
+      url = "github:wimpysworld/nixos-needsreboot";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Browser extensions
     betterfox-nix = {
@@ -219,6 +223,7 @@
       inputs.disko.nixosModules.disko
       inputs.nixos-jellyfin.nixosModules.default
       inputs.nix-topology.nixosModules.default
+      inputs.nixos-needsreboot.nixosModules.default
     ];
 
     commonHomeManagerModules = [

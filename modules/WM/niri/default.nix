@@ -78,7 +78,7 @@
       environment = {};
 
       # Monitor configuration moved to ./monitors.nix
-      # Cursor configuration managed by DMS settings
+      # Note: Cursor configuration is set below to include DMS-generated config
 
       layout = {
         border = {
