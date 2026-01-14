@@ -18,6 +18,9 @@ with lib; {
         niri = ../WM/niri;
       };
     in
-      [../GUI/zed]
+      [
+        ../GUI/zed
+        ./xdg.nix
+      ]
       ++ optional (wm != "none" && hasAttr wm wmModules) wmModules.${wm};
 }
