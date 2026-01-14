@@ -21,6 +21,11 @@
       vo = "gpu-next";
       gpu-context = "wayland";
       hwdec = "vdpau";
+
+      # HDR support
+      target-colorspace-hint = true;
+      target-prim = "auto";
+      target-trc = "auto";
     };
     bindings = {
       "ctrl+f" = "script-binding quality_menu/video_formats_toggle";
