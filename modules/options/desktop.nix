@@ -104,43 +104,5 @@ in {
       (mkIf cfg.hyprland.enable [pkgs.hyprland])
       (mkIf cfg.niri.enable [pkgs.niri])
     ];
-
-    # Configure DMS greeter for greetd
-    programs.dank-material-shell.greeter = mkIf (cfg.displayManager == "greetd" && (cfg.windowManager == "hyprland" || cfg.windowManager == "niri")) {
-      enable = true;
-      compositor.name = cfg.windowManager;
-      configHome = "/home/${config.my.defaults.user}";
-      compositor.customConfig = mkIf (cfg.windowManager == "niri") ''
-        hotkey-overlay {
-          skip-at-startup
-        }
-
-        environment {
-          DMS_RUN_GREETER "1"
-        }
-
-        gestures {
-          hot-corners {
-            off
-          }
-        }
-
-        layout {
-          background-color "#000000"
-        }
-
-        output "DP-4" {
-          mode "3840x2160@60.000000"
-          position x=0 y=0
-          scale 2.0
-        }
-
-        output "DP-5" {
-          mode "3840x2160@60.000000"
-          position x=1920 y=0
-          scale 2.0
-        }
-      '';
-    };
   };
 }

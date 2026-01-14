@@ -381,12 +381,50 @@
   # =================================================================
   # 13. Services
   # =================================================================
+  # DMS Greeter Configuration
+  # =================================================================
+  programs.dank-material-shell.greeter = {
+    enable = true;
+    compositor.name = "niri";
+    configHome = "/home/zeev";
+    compositor.customConfig = ''
+      hotkey-overlay {
+        skip-at-startup
+      }
+
+      environment {
+        DMS_RUN_GREETER "1"
+      }
+
+      gestures {
+        hot-corners {
+          off
+        }
+      }
+
+      layout {
+        background-color "#000000"
+      }
+
+      output "DP-4" {
+        mode "3840x2160@60.000000"
+        position x=0 y=0
+        scale 2.0
+      }
+
+      output "DP-5" {
+        mode "3840x2160@60.000000"
+        position x=1920 y=0
+        scale 2.0
+      }
+    '';
+  };
+
+  # =================================================================
   services = {
     # =============================================================
-    # Display Manager - Configured via my.desktop.displayManager
+    # Display Manager
     # =============================================================
-    # greetd configuration is now handled by modules/options/desktop.nix
-
     gnome.gnome-keyring.enable = true;
 
     # =============================================================
