@@ -20,8 +20,8 @@ in {
       default = "none";
       description = ''
         Which window manager to use as the default session.
-        - hyprland: Hyprland with DMS (start-hyprland)
-        - niri: Niri with systemd integration (niri-session)
+        - hyprland: Hyprland
+        - niri: Niri scrollable-tiling compositor
         - none: No window manager configured
       '';
     };
@@ -52,58 +52,12 @@ in {
       enable = mkEnableOption "Niri scrollable-tiling compositor";
     };
 
-
     kde = {
       enable = mkEnableOption "KDE Plasma desktop environment";
     };
 
     gnome = {
       enable = mkEnableOption "GNOME desktop environment";
-    };
-
-    # =================================================================
-    # DMS (DankMaterialShell) Configuration
-    # =================================================================
-    dms = {
-      enable = mkEnableOption "DankMaterialShell integration";
-
-      features = {
-        systemMonitoring = mkOption {
-          type = types.bool;
-          default = true;
-          description = "Enable system monitoring widgets (dgop)";
-        };
-
-        clipboard = mkOption {
-          type = types.bool;
-          default = true;
-          description = "Enable clipboard history manager";
-        };
-
-        vpn = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Enable VPN management widget";
-        };
-
-        dynamicTheming = mkOption {
-          type = types.bool;
-          default = true;
-          description = "Enable wallpaper-based theming (matugen)";
-        };
-
-        audioWavelength = mkOption {
-          type = types.bool;
-          default = false;
-          description = "Enable audio visualizer (cava)";
-        };
-
-        calendarEvents = mkOption {
-          type = types.bool;
-          default = true;
-          description = "Enable calendar integration (khal)";
-        };
-      };
     };
 
     # =================================================================
@@ -145,42 +99,10 @@ in {
       (mkIf cfg.niri.enable [pkgs.niri])
     ];
 
-    # Configure DMS greeter for greetd
-    programs.dank-material-shell.greeter = mkIf (cfg.displayManager == "greetd" && (cfg.windowManager == "hyprland" || cfg.windowManager == "niri")) {
-      enable = true;
-      compositor.name = cfg.windowManager;
-      configHome = "/home/${config.my.defaults.user}";
-      compositor.customConfig = mkIf (cfg.windowManager == "niri") ''
-        hotkey-overlay {
-          skip-at-startup
-        }
-
-        environment {
-          DMS_RUN_GREETER "1"
-        }
-
-        gestures {
-          hot-corners {
-            off
-          }
-        }
-
-        layout {
-          background-color "#000000"
-        }
-
-        output "DP-4" {
-          mode "3840x2160@60.000000"
-          position x=0 y=0
-          scale 2.0
-        }
-
-        output "DP-5" {
-          mode "3840x2160@60.000000"
-          position x=1920 y=0
-          scale 2.0
-        }
-      '';
-    };
+    # Expose window manager sessions to display manager
+    services.displayManager.sessionPackages = mkMerge [
+      (mkIf cfg.hyprland.enable [pkgs.hyprland])
+      (mkIf cfg.niri.enable [pkgs.niri])
+    ];
   };
 }
