@@ -21,6 +21,7 @@
 
     # Theme Configuration - DMS will override these with dynamic themes
     theme = {
+      name = "adw-gtk3-dark";
       package = pkgs.adw-gtk3;
     };
 

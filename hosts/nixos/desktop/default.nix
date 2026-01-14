@@ -373,18 +373,17 @@
     wlr.enable = true;
     config = {
       common = {
-        default = [
-          "wlr"
-          "gtk"
-        ];
+        default = ["gtk"];
+        "org.freedesktop.impl.portal.Settings" = ["gtk"];
       };
       niri = {
-        default = [
-          "wlr"
-          "gtk"
-        ];
+        default = ["gtk"];
+        "org.freedesktop.impl.portal.Settings" = ["gtk"];
+        "org.freedesktop.impl.portal.ScreenCast" = ["wlr"];
+        "org.freedesktop.impl.portal.Screenshot" = ["wlr"];
       };
     };
+    xdgOpenUsePortal = true;
   };
 
   # =================================================================
@@ -518,7 +517,20 @@
 
     dbus.packages = [pkgs.gcr];
 
+    # Power management
     power-profiles-daemon.enable = false;
+    upower.enable = true;
+
+    # Printing
+    printing = {
+      enable = true;
+      drivers = []; # Add printer drivers if needed
+    };
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      openFirewall = true;
+    };
 
     usbmuxd.enable = true;
 

@@ -69,6 +69,12 @@
 
       # Monitor configuration moved to ./monitors.nix
 
+      # Cursor configuration
+      cursor = {
+        xcursor-theme = "Bibata-Modern-Classic";
+        xcursor-size = 24;
+      };
+
       layout = {
         border = {
           active.color = "#7dcfff";
