@@ -152,14 +152,14 @@ in {
       configHome = "/home/${config.my.defaults.user}";
       compositor.customConfig = mkIf (cfg.windowManager == "niri") ''
         output "DP-4" {
-          mode 3840x2160@60
-          position 0 0
+          mode "3840x2160@60.000000"
+          position x=0 y=0
           scale 2.0
         }
 
         output "DP-5" {
-          mode 3840x2160@60
-          position 1920 0
+          mode "3840x2160@60.000000"
+          position x=1920 y=0
           scale 2.0
         }
       '';

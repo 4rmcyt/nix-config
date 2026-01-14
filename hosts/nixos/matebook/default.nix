@@ -44,6 +44,14 @@
   };
 
   # =================================================================
+  # 3.5. Systemd Services - Nix Daemon GitHub Token
+  # =================================================================
+  # Inject GitHub token into nix-daemon at runtime (not build time)
+  systemd.services.nix-daemon.serviceConfig.Environment = [
+    "NIX_CONFIG=access-tokens = github.com=$(cat ${config.sops.secrets.git_access_token.path})"
+  ];
+
+  # =================================================================
   # 4. Boot Configuration
   # =================================================================
   boot = {
@@ -102,10 +110,6 @@
       ];
     };
 
-    # Access tokens configured via sops secret
-    extraOptions = ''
-      access-tokens = github.com=$(cat ${config.sops.secrets.git_access_token.path})
-    '';
   };
 
   # =================================================================
