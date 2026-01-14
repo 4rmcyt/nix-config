@@ -10,7 +10,7 @@
   # =================================================================
   # Choose your window manager/desktop environment here
   my.desktop = {
-    windowManager = "mangowc"; # Options: "hyprland", "niri", "mangowc", "none"
+    windowManager = "niri"; # Options: "hyprland", "niri", "none"
     # desktopEnvironment = "none";  # Options: "kde", "gnome", "none"
     displayManager = "greetd"; # Options: "greetd", "sddm", "gdm", "none"
   };

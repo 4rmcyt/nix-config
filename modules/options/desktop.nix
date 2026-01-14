@@ -15,7 +15,6 @@ in {
       type = types.enum [
         "hyprland"
         "niri"
-        "mangowc"
         "none"
       ];
       default = "none";
@@ -23,7 +22,6 @@ in {
         Which window manager to use as the default session.
         - hyprland: Hyprland with DMS (start-hyprland)
         - niri: Niri with systemd integration (niri-session)
-        - mangowc: MangoWC compositor (mangowc)
         - none: No window manager configured
       '';
     };
@@ -54,9 +52,6 @@ in {
       enable = mkEnableOption "Niri scrollable-tiling compositor";
     };
 
-    mangowc = {
-      enable = mkEnableOption "MangoWC (dwl-based) compositor";
-    };
 
     kde = {
       enable = mkEnableOption "KDE Plasma desktop environment";
@@ -139,18 +134,22 @@ in {
     # Auto-enable components based on windowManager selection
     my.desktop.hyprland.enable = mkDefault (cfg.windowManager == "hyprland");
     my.desktop.niri.enable = mkDefault (cfg.windowManager == "niri");
-    my.desktop.mangowc.enable = mkDefault (cfg.windowManager == "mangowc");
 
     # Auto-enable DEs based on desktopEnvironment selection
     my.desktop.kde.enable = mkDefault (cfg.desktopEnvironment == "kde");
     my.desktop.gnome.enable = mkDefault (cfg.desktopEnvironment == "gnome");
 
-
     # Add window manager packages
     environment.systemPackages = mkMerge [
       (mkIf cfg.hyprland.enable [pkgs.hyprland])
       (mkIf cfg.niri.enable [pkgs.niri])
-      (mkIf cfg.mangowc.enable [pkgs.mangowc])
     ];
+
+    # Configure DMS greeter for greetd
+    programs.dank-material-shell.greeter = mkIf (cfg.displayManager == "greetd" && (cfg.windowManager == "hyprland" || cfg.windowManager == "niri")) {
+      enable = true;
+      compositor.name = cfg.windowManager;
+      configHome = "/home/${config.my.defaults.user}";
+    };
   };
 }

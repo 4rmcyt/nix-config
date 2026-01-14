@@ -135,11 +135,6 @@
 
     hyprland.url = "github:hyprwm/Hyprland";
 
-    mango = {
-      url = "github:DreamMaoMao/mango";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     niri = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -282,8 +277,6 @@
             inputs.lix-module.nixosModules.default
             inputs.dms.nixosModules.dank-material-shell
             inputs.dms.nixosModules.greeter
-            inputs.mango.nixosModules.mango
-            ./modules/greeter
             (mkNixosConfig "desktop" {})
             ./modules/users/${userName}
             (
@@ -300,7 +293,6 @@
                         inputs.pam-shim.homeModules.default
                         inputs.niri.homeModules.niri
                         inputs.dms.homeModules.dank-material-shell
-                        inputs.mango.hmModules.mango
                       ]
                       ++ commonHomeManagerModules;
                   }
