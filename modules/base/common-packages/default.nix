@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  inputs,
   ...
 }: {
   # Common system packages shared across all hosts
@@ -83,6 +84,9 @@
       yamlfmt
       zsh-powerlevel10k
       nix-sweep
+
+      # System monitoring & maintenance
+      inputs.nixos-needsreboot.packages.${pkgs.system}.default
 
       # =================================================================
       # Security & Secrets Management (alphabetical)

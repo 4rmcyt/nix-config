@@ -223,7 +223,6 @@
       inputs.disko.nixosModules.disko
       inputs.nixos-jellyfin.nixosModules.default
       inputs.nix-topology.nixosModules.default
-      inputs.nixos-needsreboot.nixosModules.default
     ];
 
     commonHomeManagerModules = [
