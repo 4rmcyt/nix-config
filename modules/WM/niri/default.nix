@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./binds.nix
     ./exec-once.nix
@@ -55,8 +56,6 @@
         enable = true;
         override = true; # DMS settings take priority over niri-flake settings
         originalFileName = "hm";
-        # Remove "wpblur" from default list since wallpaper blur is not used
-        # This prevents niri from erroring on missing wpblur.kdl file
         filesToInclude = [
           "alttab"
           "binds"
@@ -81,9 +80,11 @@
 
   programs.niri = {
     enable = true;
+    # Use niri 25.11 from nixpkgs (supports include directive) instead of niri-flake's 25.08
+    package = pkgs.niri;
 
     settings = {
-      environment = {};
+      environment = { };
 
       # Monitor configuration moved to ./monitors.nix
       # Note: Cursor configuration is set below to include DMS-generated config
@@ -107,9 +108,9 @@
         };
         gaps = 5;
         preset-column-widths = [
-          {proportion = 0.33333;}
-          {proportion = 0.5;}
-          {proportion = 0.66667;}
+          { proportion = 0.33333; }
+          { proportion = 0.5; }
+          { proportion = 0.66667; }
         ];
       };
 
