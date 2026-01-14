@@ -48,6 +48,10 @@
       enable = true;
       restartIfChanged = true;
     };
+    niri = {
+      enableKeybinds = true;
+      enableSpawn = true;
+    };
     settings = {
       # Enable GTK theming for FHS apps (Chromium, VSCode, etc.)
       gtkThemingEnabled = true;

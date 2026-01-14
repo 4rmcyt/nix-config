@@ -299,6 +299,7 @@
                         inputs.stylix.homeModules.stylix
                         inputs.pam-shim.homeModules.default
                         inputs.niri.homeModules.niri
+                        inputs.dms.homeModules.niri
                         inputs.dms.homeModules.dank-material-shell
                       ]
                       ++ commonHomeManagerModules;
