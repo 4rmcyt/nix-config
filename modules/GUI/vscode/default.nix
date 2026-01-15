@@ -178,6 +178,7 @@
         "nix.serverPath" = "nil";
         "nix.serverSettings" = {
           formatting.command = ["alejandra"];
+          nix.flake.autoArchive = true;
         };
         "nix.formatterPath" = "alejandra";
         "nixEnvSelector.useFlakes" = true;

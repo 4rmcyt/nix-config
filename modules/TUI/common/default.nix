@@ -101,6 +101,11 @@
           language-servers = ["nil" "claude-code"];
         }
       ];
+      languages.language-server.nil = {
+        config = {
+          nix.flake.autoArchive = true;
+        };
+      };
       languages.language-server.claude-code = {
         command = "claude-code";
         args = ["lsp"];

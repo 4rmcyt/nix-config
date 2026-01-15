@@ -216,6 +216,29 @@ _: {
 
       # Alternative: Walker with cliphist
       "$mod SHIFT, V, exec, cliphist list | head -50 | walker --dmenu | cliphist decode | wl-copy"
+
+      # ============================================
+      # SCROLLER LAYOUT
+      # ============================================
+
+      # Move focus between columns
+      "$mod, bracketleft, layoutmsg, move -col"
+      "$mod, bracketright, layoutmsg, move +col"
+
+      # Move window to column
+      "$mod SHIFT, bracketleft, layoutmsg, movewindowto l"
+      "$mod SHIFT, bracketright, layoutmsg, movewindowto r"
+
+      # Swap columns
+      "$mod CTRL, bracketleft, layoutmsg, swapcol l"
+      "$mod CTRL, bracketright, layoutmsg, swapcol r"
+
+      # Cycle column widths
+      "$mod, equal, layoutmsg, colresize +conf"
+      "$mod, minus, layoutmsg, colresize -conf"
+
+      # Toggle fit/center
+      "$mod, backslash, layoutmsg, togglefit"
     ];
 
     # ============================================

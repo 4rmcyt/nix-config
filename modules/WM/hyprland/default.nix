@@ -1,5 +1,8 @@
-{ pkgs, ... }:
 {
+  pkgs,
+  inputs,
+  ...
+}: {
   # ============================================
   # MODULE IMPORTS
   # ============================================
@@ -56,6 +59,7 @@
     # Clipboard Management (DMS Integration)
     cliphist # Clipboard history backend
     wl-clip-persist # Clipboard persistence
+    inputs.hyprsession.packages.${pkgs.system}.default
   ];
   programs = {
     dank-material-shell = {
@@ -164,14 +168,46 @@
 
         # ===== Control Center Widgets =====
         controlCenterWidgets = [
-          { id = "volumeSlider"; enabled = true; width = 50; }
-          { id = "brightnessSlider"; enabled = true; width = 50; }
-          { id = "wifi"; enabled = true; width = 50; }
-          { id = "bluetooth"; enabled = true; width = 50; }
-          { id = "audioOutput"; enabled = true; width = 50; }
-          { id = "audioInput"; enabled = true; width = 50; }
-          { id = "nightMode"; enabled = true; width = 50; }
-          { id = "darkMode"; enabled = true; width = 50; }
+          {
+            id = "volumeSlider";
+            enabled = true;
+            width = 50;
+          }
+          {
+            id = "brightnessSlider";
+            enabled = true;
+            width = 50;
+          }
+          {
+            id = "wifi";
+            enabled = true;
+            width = 50;
+          }
+          {
+            id = "bluetooth";
+            enabled = true;
+            width = 50;
+          }
+          {
+            id = "audioOutput";
+            enabled = true;
+            width = 50;
+          }
+          {
+            id = "audioInput";
+            enabled = true;
+            width = 50;
+          }
+          {
+            id = "nightMode";
+            enabled = true;
+            width = 50;
+          }
+          {
+            id = "darkMode";
+            enabled = true;
+            width = 50;
+          }
         ];
 
         # ===== Workspace Settings =====
@@ -207,11 +243,31 @@
 
         # ===== App ID Substitutions =====
         appIdSubstitutions = [
-          { pattern = "Spotify"; replacement = "spotify"; type = "exact"; }
-          { pattern = "beepertexts"; replacement = "beeper"; type = "exact"; }
-          { pattern = "home assistant desktop"; replacement = "homeassistant-desktop"; type = "exact"; }
-          { pattern = "com.transmissionbt.transmission"; replacement = "transmission-gtk"; type = "contains"; }
-          { pattern = "^steam_app_(\\d+)$"; replacement = "steam_icon_$1"; type = "regex"; }
+          {
+            pattern = "Spotify";
+            replacement = "spotify";
+            type = "exact";
+          }
+          {
+            pattern = "beepertexts";
+            replacement = "beeper";
+            type = "exact";
+          }
+          {
+            pattern = "home assistant desktop";
+            replacement = "homeassistant-desktop";
+            type = "exact";
+          }
+          {
+            pattern = "com.transmissionbt.transmission";
+            replacement = "transmission-gtk";
+            type = "contains";
+          }
+          {
+            pattern = "^steam_app_(\\d+)$";
+            replacement = "steam_icon_$1";
+            type = "regex";
+          }
         ];
 
         # ===== App Launcher =====
@@ -355,14 +411,38 @@
             leftWidgets = ["launcherButton" "workspaceSwitcher" "focusedWindow"];
             centerWidgets = ["music" "clock" "weather"];
             rightWidgets = [
-              { id = "tailscale"; enabled = true; }
-              { id = "systemTray"; enabled = true; }
-              { id = "clipboard"; enabled = true; }
-              { id = "cpuUsage"; enabled = true; }
-              { id = "memUsage"; enabled = true; }
-              { id = "notificationButton"; enabled = true; }
-              { id = "controlCenterButton"; enabled = true; }
-              { id = "powerMenuButton"; enabled = true; }
+              {
+                id = "tailscale";
+                enabled = true;
+              }
+              {
+                id = "systemTray";
+                enabled = true;
+              }
+              {
+                id = "clipboard";
+                enabled = true;
+              }
+              {
+                id = "cpuUsage";
+                enabled = true;
+              }
+              {
+                id = "memUsage";
+                enabled = true;
+              }
+              {
+                id = "notificationButton";
+                enabled = true;
+              }
+              {
+                id = "controlCenterButton";
+                enabled = true;
+              }
+              {
+                id = "powerMenuButton";
+                enabled = true;
+              }
             ];
             spacing = 4;
             innerPadding = 4;

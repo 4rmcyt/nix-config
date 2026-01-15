@@ -2,6 +2,13 @@ _: {
   wayland.windowManager.hyprland.settings = {
     exec-once = [
       # ============================================
+      # SESSION MANAGEMENT
+      # ============================================
+
+      # Hyprland session manager
+      "hyprsession"
+
+      # ============================================
       # DMS CORE SERVICES
       # ============================================
 
