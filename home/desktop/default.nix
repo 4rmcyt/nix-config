@@ -24,6 +24,7 @@
     username = "zeev";
 
     packages = with pkgs; [
+      nautilus
       gemini-cli
       materialgram
       bat
