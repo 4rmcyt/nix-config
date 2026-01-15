@@ -1,8 +1,4 @@
-{
-  pkgs,
-  inputs,
-  ...
-}: {
+{pkgs, ...}: {
   # ============================================
   # MODULE IMPORTS
   # ============================================
@@ -59,7 +55,7 @@
     # Clipboard Management (DMS Integration)
     cliphist # Clipboard history backend
     wl-clip-persist # Clipboard persistence
-    inputs.hyprsession.packages.${pkgs.system}.default
+    pkgs.hyprsession
   ];
   programs = {
     dank-material-shell = {

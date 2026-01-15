@@ -234,9 +234,13 @@
 
     commonHomeManagerUserConfig = {
       nixpkgs.config.allowUnfree = true;
+      nixpkgs.overlays = [
+        (final: prev: {
+          hyprsession = inputs.hyprsession.packages.${system}.default;
+        })
+      ];
       sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
     };
-
     mkNixosConfig = hostName: {hasFacter ? true}:
       {
         nixpkgs.config.allowUnfree = true;
