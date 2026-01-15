@@ -4,13 +4,14 @@
   lib,
   inputs,
   ...
-}: {
+}:
+{
   # =================================================================
   # Desktop Configuration
   # =================================================================
   # Choose your window manager/desktop environment here
   my.desktop = {
-    windowManager = "niri"; # Options: "hyprland", "niri", "none"
+    windowManager = "hyprland"; # Options: "hyprland", "niri", "none"
     # desktopEnvironment = "none";  # Options: "kde", "gnome", "none"
     displayManager = "greetd"; # Options: "greetd", "sddm", "gdm", "none"
   };
@@ -41,7 +42,7 @@
     # ../../../modules/GUI/OBS
 
     ../../../modules/GUI/chromium
-    ../../../modules/GUI/flatpak/niri
+    ../../../modules/GUI/flatpak/hyprland
   ];
 
   # =================================================================
@@ -181,14 +182,16 @@
     };
 
     shells = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         zsh
         nushell
       ]
     );
 
     systemPackages = lib.mkBefore (
-      with pkgs; [
+      with pkgs;
+      [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -284,12 +287,13 @@
           "JetBrainsMono Nerd Font"
           "Fira Code"
         ];
-        sansSerif = ["Noto Sans"];
-        serif = ["Noto Serif"];
-        emoji = ["Noto Color Emoji"];
+        sansSerif = [ "Noto Sans" ];
+        serif = [ "Noto Serif" ];
+        emoji = [ "Noto Color Emoji" ];
       };
     };
-    packages = with pkgs;
+    packages =
+      with pkgs;
       [
         maple-mono.NF
         font-awesome
@@ -319,7 +323,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -373,14 +377,17 @@
     wlr.enable = true;
     config = {
       common = {
-        default = ["gtk"];
-        "org.freedesktop.impl.portal.Settings" = ["gtk"];
+        default = [ "gtk" ];
+        "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
       };
-      niri = {
-        default = ["gtk"];
-        "org.freedesktop.impl.portal.Settings" = ["gtk"];
-        "org.freedesktop.impl.portal.ScreenCast" = ["wlr"];
-        "org.freedesktop.impl.portal.Screenshot" = ["wlr"];
+      hyprland = {
+        default = [
+          "hyprland"
+          "gtk"
+        ];
+        "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
+        "org.freedesktop.impl.portal.ScreenCast" = [ "hyprland" ];
+        "org.freedesktop.impl.portal.Screenshot" = [ "hyprland" ];
       };
     };
     xdgOpenUsePortal = true;
@@ -389,43 +396,16 @@
   # =================================================================
   # 13. Services
   # =================================================================
-  # DMS Greeter Configuration
+  # Greetd Autologin Configuration
   # =================================================================
-  programs.dank-material-shell.greeter = {
+  services.greetd = {
     enable = true;
-    compositor.name = "niri";
-    configHome = "/home/zeev";
-    compositor.customConfig = ''
-      hotkey-overlay {
-        skip-at-startup
-      }
-
-      environment {
-        DMS_RUN_GREETER "1"
-      }
-
-      gestures {
-        hot-corners {
-          off
-        }
-      }
-
-      layout {
-        background-color "#000000"
-      }
-
-      output "DP-4" {
-        mode "3840x2160@60.000000"
-        position x=0 y=0
-        scale 2.0
-      }
-
-      output "DP-5" {
-        mode "3840x2160@60.000000"
-        position x=1920 y=0
-        scale 2.0
-      }
-    '';
+    settings = {
+      default_session = {
+        command = "${pkgs.hyprland}/bin/start-hyprland";
+        user = "zeev";
+      };
+    };
   };
 
   # =================================================================
@@ -512,10 +492,10 @@
 
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
-    dbus.packages = [pkgs.gcr];
+    dbus.packages = [ pkgs.gcr ];
 
     # Power management
     power-profiles-daemon.enable = false;
@@ -524,7 +504,7 @@
     # Printing
     printing = {
       enable = true;
-      drivers = []; # Add printer drivers if needed
+      drivers = [ ]; # Add printer drivers if needed
     };
     avahi = {
       enable = true;
@@ -598,7 +578,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
   };
@@ -607,10 +587,10 @@
   # =================================================================
   users = {
     groups = {
-      git = {};
-      plugdev = {};
-      prometheus = {};
-      nix-builder = {};
+      git = { };
+      plugdev = { };
+      prometheus = { };
+      nix-builder = { };
     };
 
     users = {
@@ -653,7 +633,7 @@
     podman.enable = true;
     libvirtd = {
       enable = true;
-      qemu.vhostUserPackages = with pkgs; [virtiofsd];
+      qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
     };
     spiceUSBRedirection.enable = true;
   };

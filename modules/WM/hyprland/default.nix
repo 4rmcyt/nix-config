@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # ============================================
   # MODULE IMPORTS
   # ============================================
@@ -55,7 +56,7 @@
     wl-clip-persist # Clipboard persistence
   ];
   programs = {
-    dankMaterialShell = {
+    dank-material-shell = {
       enable = true;
       systemd = {
         enable = true; # Systemd service for auto-start

@@ -5,10 +5,11 @@
   userName,
   system,
   commonHomeManagerModules,
-}: let
+}:
+let
   # Common home configuration for standalone home-manager
   commonHomeConfig = {
-    _module.args = {inherit inputs;};
+    _module.args = { inherit inputs; };
     home = {
       username = userName;
       homeDirectory = "/home/${userName}";
@@ -26,27 +27,32 @@
   };
 
   # Helper function to create a home-manager configuration
-  mkHomeConfig = hostName: extraModules:
+  mkHomeConfig =
+    hostName: extraModules:
     home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages.${system};
-      extraSpecialArgs = {inherit inputs;};
-      modules = [./home/${hostName}] ++ extraModules ++ commonHomeManagerModules ++ [commonHomeConfig];
+      extraSpecialArgs = { inherit inputs; };
+      modules = [
+        ./home/${hostName}
+      ]
+      ++ extraModules
+      ++ commonHomeManagerModules
+      ++ [ commonHomeConfig ];
     };
-in {
+in
+{
   homeConfigurations = {
     "${userName}@desktop" = mkHomeConfig "desktop" [
       inputs.plasma-manager.homeModules.plasma-manager
       inputs.betterfox-nix.homeModules.betterfox
       inputs.stylix.homeModules.stylix
       inputs.pam-shim.homeModules.default
-      inputs.niri.homeModules.niri
       inputs.dms.homeModules.dank-material-shell
-      inputs.dms.homeModules.niri
     ];
 
-    "${userName}@homeserver" = mkHomeConfig "homeserver" [];
+    "${userName}@homeserver" = mkHomeConfig "homeserver" [ ];
 
-    "${userName}@wsl" = mkHomeConfig "wsl" [];
+    "${userName}@wsl" = mkHomeConfig "wsl" [ ];
 
     "${userName}@matebook" = mkHomeConfig "matebook" [
       inputs.betterfox-nix.homeModules.betterfox
