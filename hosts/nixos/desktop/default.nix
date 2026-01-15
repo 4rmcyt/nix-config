@@ -4,8 +4,7 @@
   lib,
   inputs,
   ...
-}:
-{
+}: {
   # =================================================================
   # Desktop Configuration
   # =================================================================
@@ -35,6 +34,9 @@
     ../../../modules/networking/dnssec
     ../../../modules/networking/ssh
     ../../../modules/networking/nut-client
+
+    # TUI
+    ../../../modules/TUI/tty.nix
 
     # User configuration
     ../../../modules/users/zeev
@@ -182,16 +184,14 @@
     };
 
     shells = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         zsh
         nushell
       ]
     );
 
     systemPackages = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -287,13 +287,12 @@
           "JetBrainsMono Nerd Font"
           "Fira Code"
         ];
-        sansSerif = [ "Noto Sans" ];
-        serif = [ "Noto Serif" ];
-        emoji = [ "Noto Color Emoji" ];
+        sansSerif = ["Noto Sans"];
+        serif = ["Noto Serif"];
+        emoji = ["Noto Color Emoji"];
       };
     };
-    packages =
-      with pkgs;
+    packages = with pkgs;
       [
         maple-mono.NF
         font-awesome
@@ -323,7 +322,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
+      allowedTCPPorts = [9100]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -377,19 +376,19 @@
     wlr.enable = false; # hyprland portal handles this
     config = {
       common = {
-        default = [ "gtk" ];
-        "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
-        "org.freedesktop.impl.portal.OpenURI" = [ "gtk" ];
+        default = ["gtk"];
+        "org.freedesktop.impl.portal.Settings" = ["gtk"];
+        "org.freedesktop.impl.portal.OpenURI" = ["gtk"];
       };
       hyprland = {
         default = [
           "hyprland"
           "gtk"
         ];
-        "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
-        "org.freedesktop.impl.portal.OpenURI" = [ "gtk" ];
-        "org.freedesktop.impl.portal.ScreenCast" = [ "hyprland" ];
-        "org.freedesktop.impl.portal.Screenshot" = [ "hyprland" ];
+        "org.freedesktop.impl.portal.Settings" = ["gtk"];
+        "org.freedesktop.impl.portal.OpenURI" = ["gtk"];
+        "org.freedesktop.impl.portal.ScreenCast" = ["hyprland"];
+        "org.freedesktop.impl.portal.Screenshot" = ["hyprland"];
       };
     };
     xdgOpenUsePortal = true;
@@ -494,10 +493,10 @@
 
     pcscd = {
       enable = true;
-      plugins = [ pkgs.ccid ];
+      plugins = [pkgs.ccid];
     };
 
-    dbus.packages = [ pkgs.gcr ];
+    dbus.packages = [pkgs.gcr];
 
     # Power management
     power-profiles-daemon.enable = false;
@@ -506,7 +505,7 @@
     # Printing
     printing = {
       enable = true;
-      drivers = [ ]; # Add printer drivers if needed
+      drivers = []; # Add printer drivers if needed
     };
     avahi = {
       enable = true;
@@ -580,7 +579,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = [ "nvidia" ];
+      videoDrivers = ["nvidia"];
       xkb.layout = "us";
     };
   };
@@ -589,10 +588,10 @@
   # =================================================================
   users = {
     groups = {
-      git = { };
-      plugdev = { };
-      prometheus = { };
-      nix-builder = { };
+      git = {};
+      plugdev = {};
+      prometheus = {};
+      nix-builder = {};
     };
 
     users = {
@@ -635,7 +634,7 @@
     podman.enable = true;
     libvirtd = {
       enable = true;
-      qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
+      qemu.vhostUserPackages = with pkgs; [virtiofsd];
     };
     spiceUSBRedirection.enable = true;
   };
