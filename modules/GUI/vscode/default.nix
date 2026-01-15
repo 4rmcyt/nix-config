@@ -47,7 +47,7 @@
           github.copilot
 
           # AI Code Assist
-          google.gemini-cli-vscode-ide-companion
+          Google.gemini-cli-vscode-ide-companion
         ]
         ++ (with pkgs.vscode-utils; [
           # Extensions from marketplace
