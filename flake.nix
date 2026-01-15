@@ -387,6 +387,10 @@
           cachix.pull = [ "4rmcyt-all" ];
         };
 
+        ide = import ./shells/ide.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
         cuda = import ./shells/cuda-shell.nix {
           pkgs = import nixpkgs {
             inherit system;
