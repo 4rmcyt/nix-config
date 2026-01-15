@@ -7,17 +7,20 @@
                     args "."
                 }
             }
-            pane size="35%" split_direction="horizontal" {
-                pane command="gemini" {
-                    args "chat"
+            pane size="35%" {
+                pane command="zsh" {
+                    args "-i" "-c" "gemini chat; exec zsh"
                 }
-                pane
             }
         }
         pane size=1 borderless=true {
             plugin location="zellij:compact-bar"
         }
     }
+  '';
+  zellijConfig = pkgs.writeText "ide-config.kdl" ''
+    mouse_mode true
+    copy_on_select true
   '';
 in
   pkgs.mkShell {
@@ -27,12 +30,13 @@ in
       helix
       zellij
       gemini-cli
+      zsh
     ];
 
     shellHook = ''
       echo "🚀 Terminal IDE Environment"
       echo "Run 'ide' to start the full environment."
 
-      alias ide="zellij --layout ${zellijLayout}"
+      alias ide="zellij --layout ${zellijLayout} --config ${zellijConfig}"
     '';
   }
