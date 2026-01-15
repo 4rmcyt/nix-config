@@ -10,6 +10,8 @@
     ./gtk.nix
     ./monitors.nix
     ./windowrules.nix
+    # Shared modules
+    ../matugen
   ];
 
   home.sessionVariables = {
@@ -74,6 +76,8 @@
         qtThemingEnabled = false; # Using QT_QPA_PLATFORMTHEME=gtk3 instead
         syncModeWithPortal = true;
         terminalsAlwaysDark = true;
+        # Run user-defined matugen templates (Zed, Materialgram)
+        runUserMatugenTemplates = true;
       };
     };
   };

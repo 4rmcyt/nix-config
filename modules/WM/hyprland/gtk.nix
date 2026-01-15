@@ -27,6 +27,7 @@
   # Force overwrite GTK config files to avoid conflicts
   xdg.configFile."gtk-3.0/settings.ini".force = true;
   xdg.configFile."gtk-4.0/settings.ini".force = true;
+  xdg.configFile."gtk-4.0/gtk.css".force = true;
 
   gtk = {
     enable = true;
