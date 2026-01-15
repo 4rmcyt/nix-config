@@ -130,6 +130,11 @@
       # hyprlang noerror true
         source = ~/.config/hypr/monitors.conf
         source = ~/.config/hypr/workspaces.conf
+        # DMS-generated configs
+        source = ~/.config/hypr/dms/colors.conf
+        source = ~/.config/hypr/dms/cursor.conf
+        source = ~/.config/hypr/dms/layout.conf
+        source = ~/.config/hypr/dms/outputs.conf
       # hyprlang noerror false
     '';
   };
