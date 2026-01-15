@@ -7,9 +7,13 @@
         name = "MesloLGS Nerd Font";
         package = pkgs.meslo-lgs-nf;
       }
+      {
+        name = "Symbols Nerd Font Mono";
+        package = pkgs.nerd-fonts.symbols-only;
+      }
     ];
     extraConfig = ''
-      font-size=14
+      font-size=16
     '';
   };
 }

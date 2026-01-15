@@ -13,6 +13,7 @@
     ../../modules/TUI/zsh
     ../../modules/TUI/atuin
     ../../modules/TUI/zellij
+    ../../modules/TUI/calendar
 
     # Automatically imports the correct WM based on my.desktop.windowManager
     ../../modules/WM

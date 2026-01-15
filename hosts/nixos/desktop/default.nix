@@ -76,6 +76,8 @@
   boot = {
     kernelParams = [
       "usbcore.quirks=1462:7d75:k" # Disable autosuspend for MSI MYSTIC LIGHT
+      "video=DP-4:1920x1080@60"
+      "video=DP-5:1920x1080@60"
     ];
 
     loader = {
