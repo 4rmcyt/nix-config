@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   imports = [
     ./binds.nix
     ./exec-once.nix
@@ -85,7 +84,7 @@
     package = pkgs.niri;
 
     settings = {
-      environment = { };
+      environment = {};
 
       # Monitor configuration moved to ./monitors.nix
       # Note: Cursor configuration is set below to include DMS-generated config
@@ -109,9 +108,9 @@
         };
         gaps = 5;
         preset-column-widths = [
-          { proportion = 0.33333; }
-          { proportion = 0.5; }
-          { proportion = 0.66667; }
+          {proportion = 0.33333;}
+          {proportion = 0.5;}
+          {proportion = 0.66667;}
         ];
       };
 

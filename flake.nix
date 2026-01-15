@@ -235,7 +235,7 @@
     commonHomeManagerUserConfig = {
       nixpkgs.config.allowUnfree = true;
       nixpkgs.overlays = [
-        (final: prev: {
+        (_final: _prev: {
           hyprsession = inputs.hyprsession.packages.${system}.default;
         })
       ];
