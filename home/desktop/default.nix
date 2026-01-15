@@ -24,7 +24,7 @@
     username = "zeev";
 
     packages = with pkgs; [
-      claude-code
+      gemini-cligemini-cli
       materialgram
       bat
       busybox

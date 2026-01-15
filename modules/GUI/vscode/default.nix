@@ -45,17 +45,11 @@
 
           # Git & SCM
           github.copilot
+
+          # AI Code Assist
+          google.gemini-cli-vscode-ide-companion
         ]
         ++ (with pkgs.vscode-utils; [
-          # Claude Code with correct hash
-          (buildVscodeMarketplaceExtension {
-            mktplcRef = {
-              publisher = "anthropic";
-              name = "claude-code";
-              version = "2.0.65";
-              sha256 = "sha256-nHZCEEWEgBdxAzpLFkQsTwNPx3JxuwhgwxKgW8LJ450=";
-            };
-          })
           # Extensions from marketplace
           (buildVscodeMarketplaceExtension {
             mktplcRef = {
