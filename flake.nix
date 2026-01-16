@@ -56,7 +56,7 @@
     };
     mcp-nixos = {
       url = "github:utensils/mcp-nixos";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # Don't follow nixpkgs - mcp-nixos dependencies don't support Python 3.14 yet
     };
     agenix = {
       url = "github:ryantm/agenix";
