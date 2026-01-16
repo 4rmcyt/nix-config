@@ -367,34 +367,8 @@
   };
 
   # =================================================================
-  # 12.5. XDG Desktop Portal
+  # 12.5. XDG Desktop Portal - REMOVED (Handled in HM)
   # =================================================================
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-      xdg-desktop-portal-hyprland
-    ];
-    wlr.enable = false; # hyprland portal handles this
-    config = {
-      common = {
-        default = ["gtk"];
-        "org.freedesktop.impl.portal.Settings" = ["gtk"];
-        "org.freedesktop.impl.portal.OpenURI" = ["gtk"];
-      };
-      hyprland = {
-        default = [
-          "hyprland"
-          "gtk"
-        ];
-        "org.freedesktop.impl.portal.Settings" = ["gtk"];
-        "org.freedesktop.impl.portal.OpenURI" = ["gtk"];
-        "org.freedesktop.impl.portal.ScreenCast" = ["hyprland"];
-        "org.freedesktop.impl.portal.Screenshot" = ["hyprland"];
-      };
-    };
-    xdgOpenUsePortal = true;
-  };
 
   # =================================================================
   # 13. Services

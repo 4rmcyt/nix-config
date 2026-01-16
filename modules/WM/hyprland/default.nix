@@ -58,6 +58,19 @@
     wl-clip-persist # Clipboard persistence
   ];
 
+  xdg.portal = {
+    enable = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-hyprland
+    ];
+    configPackages = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-hyprland
+    ];
+    xdgOpenUsePortal = true;
+  };
+
   programs = {
     dank-material-shell = {
       enable = true;

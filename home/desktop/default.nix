@@ -14,6 +14,7 @@
     ../../modules/TUI/atuin
     ../../modules/TUI/zellij
     ../../modules/TUI/calendar
+    ../../modules/TUI/gemini-cli
 
     # Automatically imports the correct WM based on my.desktop.windowManager
     ../../modules/WM
@@ -26,7 +27,6 @@
 
     packages = with pkgs; [
       nautilus
-      gemini-cli
       mcp-nixos
       materialgram
       bat

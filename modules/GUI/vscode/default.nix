@@ -243,6 +243,15 @@
 
         # ===== Extension-Specific Settings =====
 
+        # MCP Settings
+        "mcp.marketplace.enabled" = true;
+        "mcpServers" = {
+          "mcp-nixos" = {
+            "command" = "mcp-nixos";
+            "args" = [];
+          };
+        };
+
         # GitHub Copilot
         "github.copilot.nextEditSuggestions.enabled" = true;
 
