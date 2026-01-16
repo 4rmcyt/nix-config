@@ -15,6 +15,7 @@
 
     # Networking
     ../../../modules/networking/ssh
+    ../../../modules/networking/avahi
 
     # User configuration
     ../../../modules/users/zeev

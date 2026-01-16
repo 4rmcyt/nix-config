@@ -10,6 +10,7 @@
     ../../../modules/base
     ../../../modules/options
     ../../../modules/networking/ssh
+    ../../../modules/networking/avahi
     ../../../modules/users/zeev
   ];
 

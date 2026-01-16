@@ -34,6 +34,8 @@
     ../../../modules/networking/dnssec
     ../../../modules/networking/ssh
     ../../../modules/networking/nut-client
+    ../../../modules/networking/avahi
+
 
     # TUI
     ../../../modules/TUI/tty.nix
@@ -308,6 +310,11 @@
   # 9. Hardware
   # =================================================================
   hardware.amdgpu.overdrive.enable = true;
+
+  # Firmware packages (includes MT7922 WiFi firmware)
+  hardware.firmware = with pkgs; [
+    linux-firmware
+  ];
 
   # =================================================================
   # 10. Home Manager
