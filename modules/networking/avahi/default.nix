@@ -1,4 +1,4 @@
-{...}: {
+_: {
   # Avahi - mDNS/DNS-SD service discovery
   # Enables .local hostname resolution and service discovery across the network
   services.avahi = {
