@@ -7,6 +7,7 @@
     ./binds.nix
     ./exec-once.nix
     ./gtk.nix
+    ./hyprsession.nix
     ./monitors.nix
     ./windowrules.nix
     # Shared modules
@@ -55,8 +56,8 @@
     # Clipboard Management (DMS Integration)
     cliphist # Clipboard history backend
     wl-clip-persist # Clipboard persistence
-    pkgs.hyprsession
   ];
+
   programs = {
     dank-material-shell = {
       enable = true;

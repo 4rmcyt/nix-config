@@ -6,7 +6,7 @@ _: {
       # ============================================
 
       # Hyprland session manager
-      "hyprsession"
+      # "hyprsession" moved to hyprsession.nix
 
       # ============================================
       # DMS CORE SERVICES

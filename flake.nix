@@ -54,6 +54,10 @@
       url = "github:joshurtree/hyprsession";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    mcp-nixos = {
+      url = "github:utensils/mcp-nixos";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -237,6 +241,7 @@
       nixpkgs.overlays = [
         (_final: _prev: {
           hyprsession = inputs.hyprsession.packages.${system}.default;
+          mcp-nixos = inputs.mcp-nixos.packages.${system}.default;
         })
       ];
       sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";

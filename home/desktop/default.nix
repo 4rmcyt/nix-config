@@ -27,6 +27,7 @@
     packages = with pkgs; [
       nautilus
       gemini-cli
+      mcp-nixos
       materialgram
       bat
       busybox
