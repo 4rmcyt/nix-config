@@ -288,25 +288,23 @@
             inputs.dms.nixosModules.greeter
             (mkNixosConfig "desktop" {})
             ./modules/users/${userName}
-            (
-              commonHomeManagerNixosConfig
-              // {
-                home-manager.users.${userName} =
-                  {
-                    imports =
-                      [
-                        ./home/desktop
-                        inputs.betterfox-nix.homeModules.betterfox
-                        inputs.plasma-manager.homeModules.plasma-manager
-                        inputs.stylix.homeModules.stylix
-                        inputs.pam-shim.homeModules.default
-                        inputs.dms.homeModules.dank-material-shell
-                      ]
-                      ++ commonHomeManagerModules;
-                  }
-                  // commonHomeManagerUserConfig;
-              }
-            )
+            commonHomeManagerNixosConfig
+            {
+              home-manager.users.${userName} =
+                {
+                  imports =
+                    [
+                      ./home/desktop
+                      inputs.betterfox-nix.homeModules.betterfox
+                      inputs.plasma-manager.homeModules.plasma-manager
+                      inputs.stylix.homeModules.stylix
+                      inputs.pam-shim.homeModules.default
+                      inputs.dms.homeModules.dank-material-shell
+                    ]
+                    ++ commonHomeManagerModules;
+                }
+                // commonHomeManagerUserConfig;
+            }
           ]
           ++ commonNixosModules;
       };
@@ -321,16 +319,14 @@
             inputs.nixarr.nixosModules.default
             (mkNixosConfig "homeserver" {})
             ./modules/users/${userName}
-            (
-              commonHomeManagerNixosConfig
-              // {
-                home-manager.users.${userName} =
-                  {
-                    imports = [./home/homeserver] ++ commonHomeManagerModules;
-                  }
-                  // commonHomeManagerUserConfig;
-              }
-            )
+            commonHomeManagerNixosConfig
+            {
+              home-manager.users.${userName} =
+                {
+                  imports = [./home/homeserver] ++ commonHomeManagerModules;
+                }
+                // commonHomeManagerUserConfig;
+            }
           ]
           ++ commonNixosModules;
       };
@@ -346,16 +342,14 @@
 
             (mkNixosConfig "wsl" {hasFacter = false;})
             ./modules/users/${userName}
-            (
-              commonHomeManagerNixosConfig
-              // {
-                home-manager.users.${userName} =
-                  {
-                    imports = [./home/wsl] ++ commonHomeManagerModules;
-                  }
-                  // commonHomeManagerUserConfig;
-              }
-            )
+            commonHomeManagerNixosConfig
+            {
+              home-manager.users.${userName} =
+                {
+                  imports = [./home/wsl] ++ commonHomeManagerModules;
+                }
+                // commonHomeManagerUserConfig;
+            }
           ]
           ++ commonNixosModules;
       };
@@ -370,21 +364,19 @@
             inputs.flatpaks.nixosModules.default
             (mkNixosConfig "matebook" {})
             ./modules/users/${userName}
-            (
-              commonHomeManagerNixosConfig
-              // {
-                home-manager.users.${userName} =
-                  {
-                    imports =
-                      [
-                        ./home/matebook
-                        inputs.betterfox-nix.homeModules.betterfox
-                      ]
-                      ++ commonHomeManagerModules;
-                  }
-                  // commonHomeManagerUserConfig;
-              }
-            )
+            commonHomeManagerNixosConfig
+            {
+              home-manager.users.${userName} =
+                {
+                  imports =
+                    [
+                      ./home/matebook
+                      inputs.betterfox-nix.homeModules.betterfox
+                    ]
+                    ++ commonHomeManagerModules;
+                }
+                // commonHomeManagerUserConfig;
+            }
           ]
           ++ commonNixosModules;
       };
