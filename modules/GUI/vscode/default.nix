@@ -1,9 +1,34 @@
 {
   pkgs,
-  osConfig ? null,
+  config,
   lib,
   ...
-}: {
+}: let
+  cfg = config.programs.vscode.profiles.default;
+  configDir = "Code";
+  userDir = "${config.xdg.configHome}/${configDir}/User";
+
+  # List of files to make mutable
+  filesToMakeMutable = lib.flatten [
+    (lib.optional (cfg.userSettings != {}) "${userDir}/settings.json")
+    (lib.optional (cfg.keybindings != []) "${userDir}/keybindings.json")
+    (lib.optional (cfg.userTasks != {}) "${userDir}/tasks.json")
+  ];
+
+  # Generate the shell commands to replace symlinks with copies
+  makeFileMutable = file: ''
+    target="${file}"
+    if [ -L "$target" ]; then
+      real_source=$(readlink "$target")
+      echo "Making mutable: $target"
+      rm "$target"
+      cp "$real_source" "$target"
+      chmod u+w "$target"
+    elif [ -f "$target" ]; then
+      echo "Already mutable: $target"
+    fi
+  '';
+in {
   programs.vscode = {
     enable = true;
     package = pkgs.vscode-fhs;
@@ -53,6 +78,14 @@
           # Extensions from marketplace
           (buildVscodeMarketplaceExtension {
             mktplcRef = {
+              publisher = "Google";
+              name = "geminicodeassist";
+              version = "2.67.0";
+              sha256 = "sha256-pAbAXPosrL+b5FmjaqGviaVR9rGTsgAgZqaU7EsPKLA=";
+            };
+          })
+          (buildVscodeMarketplaceExtension {
+            mktplcRef = {
               publisher = "BeardedBear";
               name = "beardedtheme";
               version = "10.1.0";
@@ -70,139 +103,6 @@
         ]);
 
       userSettings = {
-        "editor.fontFamily" = "'Maple Mono NF', 'MesloLGS NF', 'FiraCode Nerd Font', monospace";
-        "editor.fontLigatures" = true;
-        "editor.fontSize" = 16;
-        "editor.quickSuggestions" = {
-          "other" = true;
-          "comments" = false;
-          "strings" = true;
-        };
-        "files.enableTrash" = false;
-        "files.exclude" = {
-          "**/.classpath" = true;
-          "**/.devenv" = true;
-          "**/.direnv" = true;
-          "**/.factorypath" = true;
-          "**/.project" = true;
-          "**/.settings" = true;
-        };
-        "files.watcherExclude" = {
-          "**/.devenv" = true;
-          "**/.direnv" = true;
-        };
-
-        "editor.bracketPairColorization.enabled" = true;
-        "editor.defaultFormatter" = "ibecker.treefmt-vscode";
-        "editor.formatOnSave" = true;
-        "editor.guides.bracketPairs" = "active";
-        "editor.rulers" = [
-          80
-          120
-        ];
-
-        # ===== File Settings =====
-        "files.autoSave" = "afterDelay";
-        "files.eol" = "\n";
-        "files.insertFinalNewline" = true;
-        "files.trimFinalNewlines" = true;
-        "files.trimTrailingWhitespace" = true;
-
-        # ===== Workbench Settings =====
-        "workbench.colorTheme" = "Bearded Theme Arc Reversed";
-        "workbench.editor.enablePreview" = false;
-        "workbench.editor.limit.perEditorGroup" = true;
-        "workbench.iconTheme" = "material-icon-theme";
-        "workbench.startupEditor" = "none";
-        "workbench.settings.applyToAllProfiles" = [];
-        "extensions.ignoreRecommendations" = true;
-
-        # ===== Explorer Settings =====
-        "explorer.confirmDelete" = false;
-        "explorer.confirmDragAndDrop" = false;
-
-        # ===== Diff Editor Settings =====
-        "diffEditor.ignoreTrimWhitespace" = true;
-
-        "search.exclude" = {
-          "**/.devenv" = true;
-          "**/.direnv" = true;
-        };
-        # ===== Terminal Settings =====
-        "terminal.integrated.defaultProfile.linux" = "zsh";
-        "terminal.integrated.defaultProfile.osx" = "zsh";
-        "terminal.integrated.fontFamily" = "MesloLGS NF";
-        "terminal.integrated.tabs.defaultColor" = "terminal.ansiBlack";
-        "terminal.integrated.fontWeight" = "500";
-        "terminal.integrated.profiles.linux".nu.path = "/etc/profiles/per-user/zeev/bin/nu";
-        "terminal.integrated.scrollback" = 100000;
-        "todo-tree.regex.regex" = "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!";
-        "update.mode" = "none";
-        "[nix]" = {
-          "editor.tabSize" = 2;
-          "editor.detectIndentation" = true;
-        };
-        "window.menuBarVisibility" = "visible";
-        "window.titleBarStyle" = "custom";
-        "window.autoDetectColorScheme" = false;
-
-        # ===== Git Settings =====
-        "git.autofetch" = true;
-        "git.confirmSync" = false;
-        "git.enableCommitSigning" = true;
-        "git.enableSmartCommit" = true;
-        "git.ignoreRebaseWarning" = true;
-        "github.gitProtocol" = "ssh";
-
-        # ===== Security Settings =====
-        "security.allowedUNCHosts" = ["wsl.localhost"];
-        "security.workspace.trust.untrustedFiles" = "open";
-        "telemetry.telemetryLevel" = "off";
-
-        # ===== Remote SSH Settings =====
-        "remote.SSH.remotePlatform" =
-          {
-            "wsl.localhost" = "linux";
-          }
-          // lib.optionalAttrs (osConfig != null && osConfig ? my.defaults) {
-            "${osConfig.my.defaults.homeserver_lan}" = "linux";
-            "${osConfig.my.defaults.matebook_wifi}" = "linux";
-            "${osConfig.my.defaults.desktop_lan}" = "linux";
-          };
-
-        # ===== Language-Specific Settings =====
-
-        # Nix
-        "[nix]"."editor.defaultFormatter" = "jnoortheen.nix-ide";
-        "nix.enableLanguageServer" = true;
-        "nix.serverPath" = "nil";
-        "nix.serverSettings" = {
-          formatting.command = ["alejandra"];
-          nix.flake.autoArchive = true;
-        };
-        "nix.formatterPath" = "alejandra";
-        "nixEnvSelector.useFlakes" = true;
-
-        # Shell
-        "[shellscript]" = {
-          "editor.defaultFormatter" = "foxundermoon.shell-format";
-          "files.autoSave" = "afterDelay";
-        };
-
-        # YAML
-        "[yaml]" = {
-          "diffEditor.ignoreTrimWhitespace" = false;
-          "editor.autoIndent" = "keep";
-          "editor.insertSpaces" = true;
-          "editor.quickSuggestions" = {
-            "comments" = false;
-            "other" = true;
-            "strings" = true;
-          };
-          "editor.tabSize" = 2;
-        };
-
-        # Docker Compose
         "[dockercompose]" = {
           "editor.autoIndent" = "advanced";
           "editor.defaultFormatter" = "redhat.vscode-yaml";
@@ -214,57 +114,133 @@
           };
           "editor.tabSize" = 2;
         };
-
-        # GitHub Actions
         "[github-actions-workflow]"."editor.defaultFormatter" = "redhat.vscode-yaml";
-
-        # JSON
-        "[json]"."editor.defaultFormatter" = "vscode.json-language-features";
-        "[jsonc]"."editor.defaultFormatter" = "vscode.json-language-features";
-
-        # JavaScript/TypeScript
         "[javascript]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
         "[javascriptreact]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
-        "[typescript]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
-        "[typescriptreact]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
-
-        # Markdown
+        "[json]"."editor.defaultFormatter" = "vscode.json-language-features";
+        "[jsonc]"."editor.defaultFormatter" = "vscode.json-language-features";
         "[markdown]" = {
           "editor.defaultFormatter" = "esbenp.prettier-vscode";
           "files.trimTrailingWhitespace" = false;
         };
-
-        # Python
+        "[nix]" = {
+          "editor.defaultFormatter" = "jnoortheen.nix-ide";
+          "editor.detectIndentation" = true;
+          "editor.tabSize" = 2;
+        };
         "[python]"."editor.defaultFormatter" = "ms-python.python";
-        "python.analysis.enableTroubleshootMissingImports" = true;
-
-        # TOML
+        "[shellscript]" = {
+          "editor.defaultFormatter" = "foxundermoon.shell-format";
+          "files.autoSave" = "afterDelay";
+        };
         "[toml]"."editor.defaultFormatter" = "tamasfe.even-better-toml";
-
-        # ===== Extension-Specific Settings =====
-
-        # MCP Settings
-        "mcp.marketplace.enabled" = true;
-        "mcpServers" = {
-          "mcp-nixos" = {
-            "command" = "mcp-nixos";
-            "args" = [];
+        "[typescript]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+        "[typescriptreact]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+        "[yaml]" = {
+          "diffEditor.ignoreTrimWhitespace" = false;
+          "editor.autoIndent" = "keep";
+          "editor.insertSpaces" = true;
+          "editor.quickSuggestions" = {
+            "comments" = false;
+            "other" = true;
+            "strings" = true;
           };
+          "editor.tabSize" = 2;
         };
-
-        # GitHub Copilot
+        "chat.mcp.gallery.enabled" = true;
+        "diffEditor.ignoreTrimWhitespace" = true;
+        "editor.bracketPairColorization.enabled" = true;
+        "editor.fontFamily" = "'Maple Mono NF', 'MesloLGS NF', 'FiraCode Nerd Font', monospace";
+        "editor.fontLigatures" = true;
+        "editor.fontSize" = 16;
+        "editor.formatOnSave" = true;
+        "editor.guides.bracketPairs" = "active";
+        "editor.quickSuggestions" = {
+          "comments" = false;
+          "other" = true;
+          "strings" = true;
+        };
+        "editor.rulers" = [80 120];
+        "explorer.confirmDelete" = false;
+        "explorer.confirmDragAndDrop" = false;
+        "extensions.autoCheckUpdates" = false;
+        "extensions.ignoreRecommendations" = true;
+        "files.autoSave" = "afterDelay";
+        "files.enableTrash" = false;
+        "files.eol" = "\n";
+        "files.exclude" = {
+          "**/.classpath" = true;
+          "**/.devenv" = true;
+          "**/.direnv" = true;
+          "**/.factorypath" = true;
+          "**/.project" = true;
+          "**/.settings" = true;
+        };
+        "files.insertFinalNewline" = true;
+        "files.trimFinalNewlines" = true;
+        "files.trimTrailingWhitespace" = true;
+        "files.watcherExclude" = {
+          "**/.devenv" = true;
+          "**/.direnv" = true;
+        };
+        "geminicodeassist.cloudcode.duetAI.project" = "";
+        "geminicodeassist.project" = "inner-radius-484521-p2";
+        "git.autofetch" = true;
+        "git.confirmSync" = false;
+        "git.enableCommitSigning" = true;
+        "git.enableSmartCommit" = true;
+        "git.ignoreRebaseWarning" = true;
         "github.copilot.nextEditSuggestions.enabled" = true;
+        "github.gitProtocol" = "ssh";
         "http.systemCertificatesNode" = true;
-        # Red Hat
-        "redhat.telemetry.enabled" = false;
-
-        "yaml.schemas" = {
-          "kubernetes" = [
-            "k3s/*.yaml"
-            "k8s/*.yaml"
-          ];
+        "nix.enableLanguageServer" = true;
+        "nix.formatterPath" = "alejandra";
+        "nix.serverPath" = "nil";
+        "nix.serverSettings" = {
+          "formatting"."command" = ["alejandra"];
+          "nix"."flake"."autoArchive" = true;
         };
+        "python.analysis.enableTroubleshootMissingImports" = true;
+        "redhat.telemetry.enabled" = false;
+        "remote.SSH.remotePlatform" = {
+          "192.168.1.118" = "linux";
+          "192.168.1.132" = "linux";
+          "192.168.1.165" = "linux";
+          "wsl.localhost" = "linux";
+        };
+        "search.exclude" = {
+          "**/.devenv" = true;
+          "**/.direnv" = true;
+        };
+        "security.workspace.trust.untrustedFiles" = "open";
+        "telemetry.telemetryLevel" = "off";
+        "terminal.integrated.defaultProfile.linux" = "zsh";
+        "terminal.integrated.defaultProfile.osx" = "zsh";
+        "terminal.integrated.fontFamily" = "MesloLGS NF";
+        "terminal.integrated.fontWeight" = "500";
+        "terminal.integrated.profiles.linux"."nu"."path" = "/etc/profiles/per-user/zeev/bin/nu";
+        "terminal.integrated.scrollback" = 100000;
+        "terminal.integrated.tabs.defaultColor" = "terminal.ansiBlack";
+        "todo-tree.regex.regex" = "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!";
+        "update.mode" = "none";
+        "window.autoDetectColorScheme" = false;
+        "window.menuBarVisibility" = "visible";
+        "window.titleBarStyle" = "custom";
+        "workbench.colorTheme" = "Bearded Theme Arc Reversed";
+        "workbench.editor.enablePreview" = false;
+        "workbench.editor.limit.perEditorGroup" = true;
+        "workbench.iconTheme" = "material-icon-theme";
+        "workbench.settings.applyToAllProfiles" = [];
+        "workbench.startupEditor" = "none";
+        "yaml.schemas"."kubernetes" = ["k3s/*.yaml" "k8s/*.yaml"];
       };
     };
   };
+
+  # Make VS Code config files mutable (editable after generation)
+  # This replaces the nix-store symlinks with writable copies after home-manager creates them
+  home.activation.vscodeFileMutability = lib.hm.dag.entryAfter ["linkGeneration"] ''
+    echo "Making VS Code config files mutable..."
+    ${lib.concatMapStrings makeFileMutable filesToMakeMutable}
+  '';
 }

@@ -2,6 +2,14 @@ _: {
   wayland.windowManager.hyprland.settings = {
     exec-once = [
       # ============================================
+      # XDG PORTAL SERVICES
+      # ============================================
+
+      # Ensure portal services are running for xdg-open, file dialogs, etc.
+      "systemctl --user start xdg-desktop-portal-gtk.service"
+      "systemctl --user restart xdg-desktop-portal.service"
+
+      # ============================================
       # SESSION MANAGEMENT
       # ============================================
 
