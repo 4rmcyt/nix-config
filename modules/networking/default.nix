@@ -1,5 +1,6 @@
 {...}: {
   imports = [
+    ./avahi
     ./cloudflared
     ./dnssec
     ./tailscale

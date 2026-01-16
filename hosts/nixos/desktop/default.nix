@@ -509,11 +509,6 @@
       enable = true;
       drivers = []; # Add printer drivers if needed
     };
-    avahi = {
-      enable = true;
-      nssmdns4 = true;
-      openFirewall = true;
-    };
 
     usbmuxd.enable = true;
 
