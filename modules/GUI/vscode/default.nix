@@ -254,7 +254,7 @@
 
         # GitHub Copilot
         "github.copilot.nextEditSuggestions.enabled" = true;
-
+        "http.systemCertificatesNode" = true;
         # Red Hat
         "redhat.telemetry.enabled" = false;
 
