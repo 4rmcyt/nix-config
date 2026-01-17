@@ -46,6 +46,7 @@ in {
           "input"
           "libvirtd"
           "media"
+          "ollama"
           "networkmanager"
           "podman"
           "samba"
