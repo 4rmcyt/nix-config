@@ -21,7 +21,7 @@
       enable = true;
       package = pkgs.ollama-cuda;
       loadModels = [
-        "deepseek-r1:8b"
+        "deepseek-coder"
       ];
     };
     # open-webui.enable = true;

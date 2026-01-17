@@ -39,12 +39,9 @@
 
     # TUI
     ../../../modules/TUI/tty.nix
-
-    # User configuration
     ../../../modules/users/zeev
-    # ../../../modules/GUI/ollama
+    ../../../modules/TUI/ollama
     # ../../../modules/GUI/OBS
-
     ../../../modules/GUI/chromium
     ../../../modules/GUI/flatpak/hyprland
   ];
