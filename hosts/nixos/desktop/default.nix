@@ -36,7 +36,6 @@
     ../../../modules/networking/nut-client
     ../../../modules/networking/avahi
 
-
     # TUI
     ../../../modules/TUI/tty.nix
     ../../../modules/users/zeev

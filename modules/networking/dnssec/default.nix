@@ -28,15 +28,17 @@ in {
 
     services.resolved = {
       enable = true;
-      dnssec = "true";
-      domains = ["~."];
-      fallbackDns = [
-        "45.90.28.0#${nextdnsHost}"
-        "2a07:a8c0::#${nextdnsHost}"
-        "45.90.30.0#${nextdnsHost}"
-        "2a07:a8c1::#${nextdnsHost}"
-      ];
-      dnsovertls = "true";
+      settings.Resolve = {
+        DNSSEC = "true";
+        Domains = ["~."];
+        FallbackDNS = [
+          "45.90.28.0#${nextdnsHost}"
+          "2a07:a8c0::#${nextdnsHost}"
+          "45.90.30.0#${nextdnsHost}"
+          "2a07:a8c1::#${nextdnsHost}"
+        ];
+        DNSOverTLS = "true";
+      };
     };
   };
 }
