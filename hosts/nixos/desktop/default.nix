@@ -308,8 +308,23 @@
   hardware.amdgpu.overdrive.enable = true;
 
   # Firmware packages (includes MT7922 WiFi firmware)
-  hardware.firmware = with pkgs; [
-    linux-firmware
+  # Custom uncompressed MT7922 firmware to avoid "Direct firmware load failed" warnings
+  hardware.firmware = let
+    mt7922-firmware-uncompressed = pkgs.runCommand "mt7922-firmware-uncompressed" {
+      nativeBuildInputs = [pkgs.zstd];
+    } ''
+      mkdir -p $out/lib/firmware/mediatek
+      for file in ${pkgs.linux-firmware}/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922*.bin.zst \
+                  ${pkgs.linux-firmware}/lib/firmware/mediatek/WIFI_MT7922*.bin.zst; do
+        if [ -f "$file" ]; then
+          base=$(basename "$file" .zst)
+          zstd -d "$file" -o "$out/lib/firmware/mediatek/$base"
+        fi
+      done
+    '';
+  in [
+    mt7922-firmware-uncompressed
+    pkgs.linux-firmware
   ];
 
   # =================================================================
