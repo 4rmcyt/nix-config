@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   users = {
     users.ollama = {
       isSystemUser = true;
@@ -7,7 +8,7 @@
         "users"
       ];
     };
-    groups.ollama = {};
+    groups.ollama = { };
   };
   networking.firewall = {
     allowedTCPPorts = [
@@ -21,7 +22,7 @@
       enable = true;
       package = pkgs.ollama-cuda;
       loadModels = [
-        "deepseek-coder"
+        "deepseek-coder-v2"
       ];
     };
     open-webui.enable = true;
