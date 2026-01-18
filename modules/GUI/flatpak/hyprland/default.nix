@@ -5,8 +5,8 @@ _: {
       "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
     };
     packages = [
-      # Hyprland Settings GUI - https://gb.com/mylinuxforwork/hyprland-settings
-      "flathub:app/io.github.linuxforwork.HyprlandSettings//stable"
+      # Hyprland Settings GUI - removed, no longer available on Flathub
+      # "flathub:app/io.github.linuxforwork.HyprlandSettings//stable"
     ];
   };
 }

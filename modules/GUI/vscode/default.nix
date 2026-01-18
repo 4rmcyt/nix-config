@@ -201,6 +201,8 @@ in {
           "nix"."flake"."autoArchive" = true;
         };
         "python.analysis.enableTroubleshootMissingImports" = true;
+        "python.defaultInterpreterPath" = "python3";
+        "python.languageServer" = "Pylance";
         "redhat.telemetry.enabled" = false;
         "remote.SSH.remotePlatform" = {
           "192.168.1.118" = "linux";

@@ -63,6 +63,12 @@
         sopsFile = ../../../secrets/common.yaml;
         key = "git_access_token";
       };
+      gemini_api_key = {
+        sopsFile = ../../../secrets/common.yaml;
+        key = "gemini_api_key";
+        owner = "zeev";
+        group = "users";
+      };
     };
 
     age.keyFile = "/root/.config/sops/age/keys.txt";

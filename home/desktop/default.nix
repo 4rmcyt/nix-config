@@ -47,6 +47,16 @@
       vdpauinfo
       vulkan-tools
       ytmdesktop
+
+      # Python with common packages
+      (python3.withPackages (ps: with ps; [
+        pip
+        pydantic
+        requests
+        black
+        pylint
+        python-lsp-server
+      ]))
     ];
 
     sessionVariables = {
