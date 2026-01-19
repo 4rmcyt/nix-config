@@ -42,7 +42,6 @@
 
           # AI
           github.copilot
-          google.gemini-cli-vscode-ide-companion
         ]
         ++ (with pkgs.vscode-utils; [
           # Optimized Agent for VS Code
