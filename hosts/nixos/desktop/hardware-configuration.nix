@@ -323,7 +323,8 @@ in {
   zramSwap = {
     enable = true;
     algorithm = "zstd";
-    memoryPercent = 15; # 15% of 62GB = ~9GB compressed swap (reduced from 30%)
+    memoryPercent = 25; # Use 25% of RAM for zram swap
+    priority = 100; # High priority to prefer zram over disk swap
   };
 
   # =================================================================
