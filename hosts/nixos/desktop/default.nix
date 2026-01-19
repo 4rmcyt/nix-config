@@ -39,9 +39,9 @@
     # TUI
     ../../../modules/TUI/tty.nix
     ../../../modules/users/zeev
-    # ../../../modules/TUI/ollama
-    # ../../../modules/TUI/routellm
-    # ../../../modules/TUI/mcp
+    ../../../modules/TUI/ollama
+    ../../../modules/TUI/litellm
+    ../../../modules/TUI/mcp
     # ../../../modules/GUI/OBS
     ../../../modules/GUI/chromium
     ../../../modules/GUI/flatpak/hyprland

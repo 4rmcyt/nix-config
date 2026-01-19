@@ -16,9 +16,7 @@
     enable = true;
     package = pkgs.ollama-cuda;
     loadModels = [
-      "qwen2.5-coder:14b"
-      "qwen2.5-coder:3b"
-      "deepseek-r1:14b"
+      "qwen2.5-coder:7b"
     ];
   };
 }

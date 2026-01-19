@@ -1,4 +1,53 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
+  # Continue.dev config for LiteLLM
+  home.activation.continueConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        mkdir -p "$HOME/.continue"
+        cat > "$HOME/.continue/config.json" << 'EOF'
+    {
+      "models": [
+        {
+          "title": "Gemini Flash (LiteLLM)",
+          "provider": "openai",
+          "model": "gemini-flash",
+          "apiBase": "http://localhost:4000/v1",
+          "apiKey": "not-needed"
+        },
+        {
+          "title": "Gemini Pro (LiteLLM)",
+          "provider": "openai",
+          "model": "gemini-pro",
+          "apiBase": "http://localhost:4000/v1",
+          "apiKey": "not-needed"
+        },
+        {
+          "title": "Qwen Coder (LiteLLM)",
+          "provider": "openai",
+          "model": "qwen-coder",
+          "apiBase": "http://localhost:4000/v1",
+          "apiKey": "not-needed"
+        },
+        {
+          "title": "Qwen Coder (Ollama Direct)",
+          "provider": "ollama",
+          "model": "qwen2.5-coder:7b",
+          "apiBase": "http://localhost:11434"
+        }
+      ],
+      "tabAutocompleteModel": {
+        "title": "Qwen Coder Autocomplete",
+        "provider": "ollama",
+        "model": "qwen2.5-coder:7b",
+        "apiBase": "http://localhost:11434"
+      },
+      "allowAnonymousTelemetry": false
+    }
+    EOF
+  '';
+
   programs.vscode = {
     enable = true;
     package = pkgs.vscode;
@@ -41,40 +90,15 @@
           pkief.material-icon-theme
 
           # AI
-          github.copilot
+          continue.continue
         ]
         ++ (with pkgs.vscode-utils; [
-          # Optimized Agent for VS Code
-          (buildVscodeMarketplaceExtension {
-            mktplcRef = {
-              publisher = "rooveterinaryinc";
-              name = "roo-cline";
-              version = "3.2.14";
-              sha256 = "sha256-R7R2CqfQJmN+Xp8LwZqE5O8uX/S3D5g5L8nS8L8L8L8=";
-            };
-          })
-          (buildVscodeMarketplaceExtension {
-            mktplcRef = {
-              publisher = "Google";
-              name = "geminicodeassist";
-              version = "2.67.0";
-              sha256 = "sha256-pAbAXPosrL+b5FmjaqGviaVR9rGTsgAgZqaU7EsPKLA=";
-            };
-          })
           (buildVscodeMarketplaceExtension {
             mktplcRef = {
               publisher = "BeardedBear";
               name = "beardedtheme";
               version = "10.1.0";
               sha256 = "0c0kcl08j8ii65h5mkpgssgqgshhkf49adgxd5xh1klx8qn2zjgc";
-            };
-          })
-          (buildVscodeMarketplaceExtension {
-            mktplcRef = {
-              publisher = "BeardedBear";
-              name = "beardedicons";
-              version = "1.22.0";
-              sha256 = "1aaxbrbss3ck9pab3fz55xkkwm1qc1dgq6aypfh7fl2qakfv0r0f";
             };
           })
         ]);
@@ -92,7 +116,10 @@
           other = true;
           strings = true;
         };
-        "editor.rulers" = [80 120];
+        "editor.rulers" = [
+          80
+          120
+        ];
 
         # ===== Files =====
         "files.autoSave" = "afterDelay";
@@ -121,19 +148,17 @@
         "workbench.iconTheme" = "material-icon-theme";
         "workbench.startupEditor" = "none";
 
-        # ===== AI Routing (RouteLLM Integration via OpenAI API) =====
-        "roo-cline.apiProvider" = "openai";
-        "roo-cline.openAiBaseUrl" = "http://localhost:6000/v1";
-        "roo-cline.openAiModelId" = "routellm";
-        "geminicodeassist.project" = "inner-radius-484521-p2";
-
-        # ===== System MCP Configuration =====
+        # ===== MCP Configuration =====
         "chat.mcp.discovery.enabled" = true;
-        "chat.mcp.configPath" = "/etc/mcp/config.json"; # Points to our system-wide config
+        "chat.mcp.configPath" = "/etc/mcp/config.json";
+
+        # ===== Continue.dev (LiteLLM) =====
+        "continue.enableTabAutocomplete" = true;
+        "continue.telemetryEnabled" = false;
 
         # ===== Language: Nix =====
         "nix.enableLanguageServer" = true;
-        "nix.formatterPath" = "${pkgs.nixfmt-rfc-style}/bin/nixfmt";
+        "nix.formatterPath" = "${pkgs.nixfmt}/bin/nixfmt";
         "nix.serverPath" = "${pkgs.nixd}/bin/nixd";
         "[nix]" = {
           "editor.defaultFormatter" = "jnoortheen.nix-ide";
@@ -146,9 +171,14 @@
         "[python]"."editor.defaultFormatter" = "ms-python.python";
 
         # ===== Language: YAML & Kubernetes =====
-        "[yaml]" = {"editor.tabSize" = 2;};
+        "[yaml]" = {
+          "editor.tabSize" = 2;
+        };
         "yaml.schemas" = {
-          "kubernetes" = ["k3s/*.yaml" "k8s/*.yaml"];
+          "kubernetes" = [
+            "k3s/*.yaml"
+            "k8s/*.yaml"
+          ];
         };
 
         # ===== Remote SSH =====
