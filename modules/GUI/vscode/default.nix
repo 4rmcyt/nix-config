@@ -1,10 +1,12 @@
 {
   pkgs,
+  osConfig ? null,
   lib,
   ...
-}: {
+}:
+{
   # Continue.dev config for LiteLLM
-  home.activation.continueConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  home.activation.continueConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         mkdir -p "$HOME/.continue"
         cat > "$HOME/.continue/config.json" << 'EOF'
     {
@@ -50,26 +52,24 @@
 
   programs.vscode = {
     enable = true;
-    package = pkgs.vscode;
+    package = pkgs.vscode-fhs;
 
     profiles.default = {
       enableExtensionUpdateCheck = false;
       enableUpdateCheck = false;
 
-      extensions = with pkgs.vscode-extensions;
+      extensions =
+        with pkgs.vscode-extensions;
         [
           # Formatters & Editing
-          aaron-bond.better-comments
-          christian-kohler.path-intellisense
           codezombiech.gitignore
-          esbenp.prettier-vscode
-          foxundermoon.shell-format
+          christian-kohler.path-intellisense
           gruntfuggly.todo-tree
           irongeek.vscode-env
+          esbenp.prettier-vscode
+          foxundermoon.shell-format
           redhat.vscode-yaml
           tamasfe.even-better-toml
-          usernamehw.errorlens
-          yzhang.markdown-all-in-one
 
           # Languages
           jnoortheen.nix-ide
@@ -78,7 +78,6 @@
           ms-python.python
           ms-python.vscode-pylance
           nefrob.vscode-just-syntax
-          thenuprojectcontributors.vscode-nushell-lang
 
           # DevOps
           ms-azuretools.vscode-docker
@@ -104,94 +103,189 @@
         ]);
 
       userSettings = {
-        # ===== Editor =====
-        "editor.bracketPairColorization.enabled" = true;
         "editor.fontFamily" = "'Maple Mono NF', 'MesloLGS NF', 'FiraCode Nerd Font', monospace";
         "editor.fontLigatures" = true;
         "editor.fontSize" = 16;
+        "editor.quickSuggestions" = {
+          "other" = true;
+          "comments" = false;
+          "strings" = true;
+        };
+        "files.enableTrash" = false;
+        "files.exclude" = {
+          "**/.classpath" = true;
+          "**/.devenv" = true;
+          "**/.direnv" = true;
+          "**/.factorypath" = true;
+          "**/.project" = true;
+          "**/.settings" = true;
+        };
+        "files.watcherExclude" = {
+          "**/.devenv" = true;
+          "**/.direnv" = true;
+        };
+
+        "editor.bracketPairColorization.enabled" = true;
+        "editor.defaultFormatter" = "ibecker.treefmt-vscode";
         "editor.formatOnSave" = true;
         "editor.guides.bracketPairs" = "active";
-        "editor.quickSuggestions" = {
-          comments = false;
-          other = true;
-          strings = true;
-        };
         "editor.rulers" = [
           80
           120
         ];
 
-        # ===== Files =====
+        # ===== File Settings =====
         "files.autoSave" = "afterDelay";
+        "files.eol" = "\n";
         "files.insertFinalNewline" = true;
         "files.trimFinalNewlines" = true;
         "files.trimTrailingWhitespace" = true;
-        "files.exclude" = {
-          "**/.devenv" = true;
-          "**/.direnv" = true;
-          "**/node_modules" = true;
-          "**/target" = true;
-        };
 
-        # ===== Git =====
-        "git.autofetch" = true;
-        "git.enableCommitSigning" = true;
-        "github.gitProtocol" = "ssh";
-
-        # ===== Terminal =====
-        "terminal.integrated.defaultProfile.linux" = "zsh";
-        "terminal.integrated.fontFamily" = "MesloLGS NF";
-        "terminal.integrated.scrollback" = 100000;
-
-        # ===== Workbench =====
+        # ===== Workbench Settings =====
         "workbench.colorTheme" = "Bearded Theme Arc Reversed";
+        "workbench.editor.enablePreview" = false;
+        "workbench.editor.limit.perEditorGroup" = true;
         "workbench.iconTheme" = "material-icon-theme";
         "workbench.startupEditor" = "none";
+        "workbench.settings.applyToAllProfiles" = [ ];
+        "extensions.ignoreRecommendations" = true;
 
-        # ===== MCP Configuration =====
-        "chat.mcp.discovery.enabled" = true;
-        "chat.mcp.configPath" = "/etc/mcp/config.json";
+        # ===== Explorer Settings =====
+        "explorer.confirmDelete" = false;
+        "explorer.confirmDragAndDrop" = false;
 
-        # ===== Continue.dev (LiteLLM) =====
-        "continue.enableTabAutocomplete" = true;
-        "continue.telemetryEnabled" = false;
+        # ===== Diff Editor Settings =====
+        "diffEditor.ignoreTrimWhitespace" = true;
 
-        # ===== Language: Nix =====
-        "nix.enableLanguageServer" = true;
-        "nix.formatterPath" = "${pkgs.nixfmt}/bin/nixfmt";
-        "nix.serverPath" = "${pkgs.nixd}/bin/nixd";
+        "search.exclude" = {
+          "**/.devenv" = true;
+          "**/.direnv" = true;
+        };
+        # ===== Terminal Settings =====
+        "terminal.integrated.defaultProfile.linux" = "zsh";
+        "terminal.integrated.defaultProfile.osx" = "zsh";
+        "terminal.integrated.fontFamily" = "MesloLGS NF";
+        "terminal.integrated.tabs.defaultColor" = "terminal.ansiBlack";
+        "terminal.integrated.fontWeight" = "500";
+        "terminal.integrated.profiles.linux".nu.path = "/etc/profiles/per-user/zeev/bin/nu";
+        "terminal.integrated.scrollback" = 100000;
+        "todo-tree.regex.regex" = "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!";
+        "update.mode" = "none";
         "[nix]" = {
-          "editor.defaultFormatter" = "jnoortheen.nix-ide";
           "editor.tabSize" = 2;
+          "editor.detectIndentation" = true;
+        };
+        "window.menuBarVisibility" = "visible";
+        "window.titleBarStyle" = "custom";
+        "window.autoDetectColorScheme" = false;
+
+        # ===== Git Settings =====
+        "git.autofetch" = true;
+        "git.confirmSync" = false;
+        "git.enableCommitSigning" = true;
+        "git.enableSmartCommit" = true;
+        "git.ignoreRebaseWarning" = true;
+        "github.gitProtocol" = "ssh";
+
+        # ===== Security Settings =====
+        "security.allowedUNCHosts" = [ "wsl.localhost" ];
+        "security.workspace.trust.untrustedFiles" = "open";
+        "telemetry.telemetryLevel" = "off";
+
+        # ===== Remote SSH Settings =====
+        "remote.SSH.remotePlatform" = {
+          "wsl.localhost" = "linux";
+        }
+        // lib.optionalAttrs (osConfig != null && osConfig ? my.defaults) {
+          "${osConfig.my.defaults.homeserver_lan}" = "linux";
+          "${osConfig.my.defaults.matebook_wifi}" = "linux";
+          "${osConfig.my.defaults.desktop_lan}" = "linux";
         };
 
-        # ===== Language: Python =====
-        "python.defaultInterpreterPath" = "${pkgs.python3}/bin/python3";
-        "python.languageServer" = "Pylance";
-        "[python]"."editor.defaultFormatter" = "ms-python.python";
+        # ===== Language-Specific Settings =====
 
-        # ===== Language: YAML & Kubernetes =====
+        # Nix
+        "[nix]"."editor.defaultFormatter" = "jnoortheen.nix-ide";
+        "nix.enableLanguageServer" = true;
+        "nix.serverPath" = "nil";
+        "nix.serverSettings" = {
+          formatting.command = [ "alejandra" ];
+        };
+        "nix.formatterPath" = "alejandra";
+        "nixEnvSelector.useFlakes" = true;
+
+        # Shell
+        "[shellscript]" = {
+          "editor.defaultFormatter" = "foxundermoon.shell-format";
+          "files.autoSave" = "afterDelay";
+        };
+
+        # YAML
         "[yaml]" = {
+          "diffEditor.ignoreTrimWhitespace" = false;
+          "editor.autoIndent" = "keep";
+          "editor.insertSpaces" = true;
+          "editor.quickSuggestions" = {
+            "comments" = false;
+            "other" = true;
+            "strings" = true;
+          };
           "editor.tabSize" = 2;
         };
+
+        # Docker Compose
+        "[dockercompose]" = {
+          "editor.autoIndent" = "advanced";
+          "editor.defaultFormatter" = "redhat.vscode-yaml";
+          "editor.insertSpaces" = true;
+          "editor.quickSuggestions" = {
+            "comments" = false;
+            "other" = true;
+            "strings" = true;
+          };
+          "editor.tabSize" = 2;
+        };
+
+        # GitHub Actions
+        "[github-actions-workflow]"."editor.defaultFormatter" = "redhat.vscode-yaml";
+
+        # JSON
+        "[json]"."editor.defaultFormatter" = "vscode.json-language-features";
+        "[jsonc]"."editor.defaultFormatter" = "vscode.json-language-features";
+
+        # JavaScript/TypeScript
+        "[javascript]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+        "[javascriptreact]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+        "[typescript]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+        "[typescriptreact]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+
+        # Markdown
+        "[markdown]" = {
+          "editor.defaultFormatter" = "esbenp.prettier-vscode";
+          "files.trimTrailingWhitespace" = false;
+        };
+
+        # Python
+        "[python]"."editor.defaultFormatter" = "ms-python.python";
+        "python.analysis.enableTroubleshootMissingImports" = true;
+
+        # TOML
+        "[toml]"."editor.defaultFormatter" = "tamasfe.even-better-toml";
+
+        # ===== Extension-Specific Settings =====
+
+        # GitHub Copilot
+        "github.copilot.nextEditSuggestions.enabled" = true;
+
+        # Red Hat
+        "redhat.telemetry.enabled" = false;
+
         "yaml.schemas" = {
           "kubernetes" = [
             "k3s/*.yaml"
             "k8s/*.yaml"
           ];
         };
-
-        # ===== Remote SSH =====
-        "remote.SSH.remotePlatform" = {
-          "192.168.1.118" = "linux";
-          "192.168.1.132" = "linux";
-          "192.168.1.165" = "linux";
-        };
-
-        # ===== Privacy & Telemetry =====
-        "telemetry.telemetryLevel" = "off";
-        "redhat.telemetry.enabled" = false;
-        "update.mode" = "none";
       };
     };
   };
