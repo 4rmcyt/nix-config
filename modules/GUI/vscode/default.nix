@@ -4,51 +4,7 @@
   lib,
   ...
 }: {
-  # Continue.dev config for LiteLLM
-  home.activation.continueConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        mkdir -p "$HOME/.continue"
-        cat > "$HOME/.continue/config.json" << 'EOF'
-    {
-      "models": [
-        {
-          "title": "Gemini Flash (LiteLLM)",
-          "provider": "openai",
-          "model": "gemini-flash",
-          "apiBase": "http://localhost:4000/v1",
-          "apiKey": "not-needed"
-        },
-        {
-          "title": "Gemini Pro (LiteLLM)",
-          "provider": "openai",
-          "model": "gemini-pro",
-          "apiBase": "http://localhost:4000/v1",
-          "apiKey": "not-needed"
-        },
-        {
-          "title": "Qwen Coder (LiteLLM)",
-          "provider": "openai",
-          "model": "qwen-coder",
-          "apiBase": "http://localhost:4000/v1",
-          "apiKey": "not-needed"
-        },
-        {
-          "title": "Qwen Coder (Ollama Direct)",
-          "provider": "ollama",
-          "model": "qwen2.5-coder:7b",
-          "apiBase": "http://localhost:11434"
-        }
-      ],
-      "tabAutocompleteModel": {
-        "title": "Qwen Coder Autocomplete",
-        "provider": "ollama",
-        "model": "qwen2.5-coder:7b",
-        "apiBase": "http://localhost:11434"
-      },
-      "allowAnonymousTelemetry": false
-    }
-    EOF
-  '';
-
+  
   programs.vscode = {
     enable = true;
     package = pkgs.vscode-fhs;

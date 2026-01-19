@@ -40,7 +40,7 @@
     ../../../modules/TUI/tty.nix
     ../../../modules/users/zeev
     ../../../modules/TUI/ollama
-    ../../../modules/TUI/litellm
+    # ../../../modules/TUI/litellm
     ../../../modules/TUI/mcp
     # ../../../modules/GUI/OBS
     ../../../modules/GUI/chromium
