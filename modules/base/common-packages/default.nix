@@ -163,13 +163,13 @@
 
       # ## Node/JavaScript
       # deno # node runtime
-      # nodejs
+      nodejs_22
       # nodePackages.npm
 
       # ## Python
       # poetry
-      # python3
-      # uv # workspace management tool
+      python3
+      uv
 
       ## Rust
       rustup
