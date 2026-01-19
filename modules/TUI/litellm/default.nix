@@ -33,16 +33,13 @@
     exec ${pythonWithLitellm}/bin/litellm --config ${litellmConfig} --port 4000
   '';
 in {
-  sops.secrets.gemini_api_key = {
-    sopsFile = ../../../secrets/common.yaml;
-    owner = "litellm";
-    group = "litellm";
-  };
+  # Note: gemini_api_key secret must be defined elsewhere with group "users"
 
   users = {
     users.litellm = {
       isSystemUser = true;
       group = "litellm";
+      extraGroups = ["users"]; # To read gemini_api_key secret
     };
     groups.litellm = {};
   };
@@ -59,7 +56,7 @@ in {
     serviceConfig = {
       Type = "simple";
       User = "litellm";
-      Group = "litellm";
+      Group = "users"; # Run as users group to read secret
       ExecStart = startScript;
       Restart = "on-failure";
       RestartSec = "5s";
