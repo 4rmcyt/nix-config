@@ -46,6 +46,8 @@
     "workbench.iconTheme" = "material-icon-theme";
     "workbench.startupEditor" = "none";
     "workbench.settings.applyToAllProfiles" = [];
+    "workbench.settings.useSplitJSON" = true;
+    "settingsSync.keybindingsPerPlatform" = false; # Disable settings sync writes
     "extensions.ignoreRecommendations" = true;
 
     # ===== Explorer Settings =====
@@ -104,7 +106,19 @@
     "update.mode" = "none";
 
     # ===== Extension-Specific Settings =====
-    "github.copilot.nextEditSuggestions.enabled" = true;
+    # Disable Copilot, use Continue instead
+    "github.copilot.enable" = {
+      "*" = false;
+    };
+    "github.copilot.nextEditSuggestions.enabled" = false;
+
+    # Continue settings
+    "continue.enableTabAutocomplete" = true;
+    "continue.showInlineTip" = false;
+
+    # Use Continue for git commit messages
+    "git.experimental.commitMessageProvider" = "continue.continue";
+
     "redhat.telemetry.enabled" = false;
 
     "yaml.schemas" = {

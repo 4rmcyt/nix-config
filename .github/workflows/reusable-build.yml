@@ -65,8 +65,8 @@ jobs:
             cores = 0
             builders-use-substitutes = true
             # Caching configuration
-            substituters = https://cache.nixos.org https://4rmcyt-desktop.cachix.org https://4rmcyt-homeserver.cachix.org https://4rmcyt-matebook.cachix.org https://4rmcyt-wsl.cachix.org https://nix-community.cachix.org https://cache.garnix.io
-            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= 4rmcyt-desktop.cachix.org-1:XqynXv73YM3p1hYM/LpGCRGNCcA8adK8WoSpXfOCZQs= 4rmcyt-homeserver.cachix.org-1:SmDepzJsgaofX57WoXmDu+HRJl/Koh90UWsZO0k2Nkg= 4rmcyt-matebook.cachix.org-1:OG8MqlfrDlyperVhYk2+va8Cwo/vE6tG/VbTlvq4I0I= 4rmcyt-wsl.cachix.org-1:6Z2J6lPY35L3qxBgEYzyN0Q3Y6LCJhtz/YeY4VQ29BU= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
+            substituters = https://cache.nixos.org https://4rmcyt.cachix.org https://nix-community.cachix.org https://cache.garnix.io
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= 4rmcyt.cachix.org-1:yHVDqXs6TDmfSOuPbl4gcfomDK9gzTmK8FabfHLi+d8= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@v4
       - name: Update flake inputs (in-memory)
@@ -74,7 +74,7 @@ jobs:
       - name: Setup Cachix for ${{ inputs.system }} (Push)
         uses: cachix/cachix-action@v15
         with:
-          name: 4rmcyt-${{ inputs.system }}
+          name: 4rmcyt
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
           skipPush: ${{ inputs.ref_type != 'branch' || inputs.ref_name != 'main' }}
       - name: Validate Home Manager config for ${{ inputs.system }}

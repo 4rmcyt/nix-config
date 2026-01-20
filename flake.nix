@@ -400,7 +400,7 @@
       default = import ./devshell.nix {
         pkgs = nixpkgs.legacyPackages.${system};
         inherit inputs;
-        cachix.pull = ["4rmcyt-all"];
+        cachix.pull = ["4rmcyt"];
       };
 
       ide = import ./shells/ide.nix {

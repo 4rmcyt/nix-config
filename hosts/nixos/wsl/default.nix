@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -45,8 +46,8 @@
   # 4. Boot Configuration
   # =================================================================
   boot = {
-    kernelModules = ["nvidia"];
-    extraModulePackages = [pkgs.linuxPackages.nvidia_x11];
+    kernelModules = [ "nvidia" ];
+    extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
 
     # System control parameters for WSL
     kernel.sysctl = {
@@ -90,8 +91,6 @@
     experimental-features = [
       "flakes"
       "nix-command"
-      "flake-self-attrs"
-      "lix-custom-sub-commands"
       "auto-allocate-uids"
     ];
 
@@ -147,7 +146,7 @@
       /usr/lib/wsl/lib
     '';
 
-    shells = with pkgs; [zsh];
+    shells = with pkgs; [ zsh ];
 
     # System packages
     systemPackages = with pkgs; [
@@ -203,7 +202,7 @@
     useNetworkd = false;
     useDHCP = false;
     dhcpcd.enable = false;
-    interfaces = {};
+    interfaces = { };
     firewall.allowedTCPPorts = [
       4242 # Kavita
     ];
@@ -252,7 +251,7 @@
 
     # System services
     resolved.enable = false;
-    xserver.videoDrivers = ["nvidia"];
+    xserver.videoDrivers = [ "nvidia" ];
   };
 
   # =================================================================
@@ -269,7 +268,7 @@
       description = "Git user";
     };
     users.zeev.shell = pkgs.zsh;
-    groups.git = {};
+    groups.git = { };
   };
 
   # =================================================================

@@ -1,10 +1,13 @@
 {
   pkgs,
-  inputs,
   ...
 }:
 let
-  llama-cpp-cuda = inputs.llama-cpp.packages.${pkgs.system}.cuda;
+  # Use nixpkgs llama-cpp with CUDA + BLAS for optimal performance
+  llama-cpp-cuda = pkgs.llama-cpp.override {
+    cudaSupport = true;
+    blasSupport = true; # OpenBLAS for fast CPU layer computation
+  };
 
   glm-model = pkgs.fetchurl {
     url = "https://huggingface.co/unsloth/GLM-4.7-Flash-GGUF/resolve/main/GLM-4.7-Flash-Q4_K_M.gguf";
@@ -18,7 +21,8 @@ in
 
   systemd.services.llama-cpp = {
     description = "llama.cpp Server with GLM-4.7-Flash-Q4";
-    wantedBy = [ "multi-user.target" ];
+    # Don't start automatically - use: sudo systemctl start llama-cpp
+    wantedBy = [];
     after = [ "network.target" ];
 
     serviceConfig = {
@@ -30,10 +34,17 @@ in
           --port 8080 \
           --n-gpu-layers 10 \
           --ctx-size 8192 \
-          --threads 12
+          --threads 12 \
+          --cont-batching \
+          --no-mmap \
+          --slots 1
       '';
       Restart = "on-failure";
       RestartSec = 5;
+
+      # Memory limits - prevent eating all RAM
+      MemoryMax = "20G";
+      MemoryHigh = "18G";
 
       # Security hardening
       DynamicUser = true;
@@ -57,6 +68,7 @@ in
 
     environment = {
       CUDA_VISIBLE_DEVICES = "0";
+      LD_LIBRARY_PATH = "/run/opengl-driver/lib";
     };
   };
 
