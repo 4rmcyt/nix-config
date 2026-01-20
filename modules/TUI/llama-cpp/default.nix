@@ -18,9 +18,8 @@ in {
     llama-cpp-cuda
   ];
 
-  # Systemd service for llama-cpp server
   systemd.services.llama-cpp = {
-    description = "llama.cpp Server with GLM-4-9B-Chat";
+    description = "llama.cpp Server with GLM-4.7-Flash-Q4";
     wantedBy = ["multi-user.target"];
     after = ["network.target"];
 
