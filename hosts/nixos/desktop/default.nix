@@ -39,7 +39,7 @@
     # TUI
     ../../../modules/TUI/tty.nix
     ../../../modules/users/zeev
-    ../../../modules/TUI/ollama
+    ../../../modules/TUI/llama-cpp
     # ../../../modules/TUI/litellm
     ../../../modules/TUI/mcp
     # ../../../modules/GUI/OBS

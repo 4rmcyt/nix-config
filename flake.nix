@@ -170,6 +170,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    llama-cpp.url = "github:ggml-org/llama.cpp";
+    
     # Non-flake inputs
     cpu-microcodes = {
       url = "github:platomav/CPUMicrocodes";

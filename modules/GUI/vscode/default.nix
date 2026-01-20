@@ -4,7 +4,85 @@
   lib,
   ...
 }: {
-  
+  # Continue extension configuration
+  home.file.".continue/config.json".text = builtins.toJSON {
+    models = [
+      {
+        title = "Gemini 2.5 Pro";
+        provider = "google";
+        model = "gemini-2.5-pro";
+      }
+      {
+        title = "Gemini 2.5 Flash";
+        provider = "google";
+        model = "gemini-2.5-flash";
+      }
+      {
+        title = "GLM-4.7-Flash (Local)";
+        provider = "openai";
+        model = "glm-4.7-flash";
+        apiBase = "http://127.0.0.1:8080/v1";
+        apiKey = "not-needed";
+      }
+    ];
+    tabAutocompleteModel = {
+      title = "GLM-4.7-Flash Autocomplete";
+      provider = "openai";
+      model = "glm-4.7-flash";
+      apiBase = "http://127.0.0.1:8080/v1";
+      apiKey = "not-needed";
+    };
+    experimental = {
+      modelContextProtocolServers = [
+        {
+          name = "mcp-nixos";
+          command = "nix";
+          args = ["run" "github:utensils/mcp-nixos" "--"];
+        }
+        {
+          name = "filesystem";
+          command = "npx";
+          args = ["-y" "@modelcontextprotocol/server-filesystem" "/etc/nixos" "/home/zeev/src/nix-config"];
+        }
+        {
+          name = "sequential-thinking";
+          command = "npx";
+          args = ["-y" "@modelcontextprotocol/server-sequential-thinking"];
+        }
+        {
+          name = "terraform";
+          command = "npx";
+          args = ["-y" "terraform-mcp-server"];
+        }
+        {
+          name = "kubernetes";
+          command = "uvx";
+          args = ["-y" "mcp-server-kubernetes"];
+        }
+        {
+          name = "memory";
+          command = "npx";
+          args = ["-y" "@modelcontextprotocol/server-memory"];
+        }
+        {
+          name = "fetch";
+          command = "npx";
+          args = ["-y" "@modelcontextprotocol/server-fetch"];
+        }
+        {
+          name = "chrome-devtools";
+          command = "npx";
+          args = ["-y" "chrome-devtools-mcp@latest"];
+        }
+        {
+          name = "llama-cpp";
+          command = "npx";
+          args = ["-y" "mcp-server-openai" "--base-url" "http://127.0.0.1:8080/v1" "--api-key" "not-needed" "--model" "glm-4.7-flash"];
+        }
+      ];
+    };
+  };
+
   programs.vscode = {
     enable = true;
     package = pkgs.vscode-fhs;
