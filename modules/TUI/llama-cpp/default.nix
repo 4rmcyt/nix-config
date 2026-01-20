@@ -8,7 +8,7 @@ let
 
   glm-model = pkgs.fetchurl {
     url = "https://huggingface.co/unsloth/GLM-4.7-Flash-GGUF/resolve/main/GLM-4.7-Flash-Q4_K_M.gguf";
-    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # TODO: Update with correct hash after first build
+    hash = "sha256-yQ0UIkP3AU7B+Ch9QGz76HUxZZ+1ph5elQOl5JPFJNI=";
   };
 in
 {
