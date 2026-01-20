@@ -28,7 +28,7 @@ in
           --model ${glm-model} \
           --host 127.0.0.1 \
           --port 8080 \
-          --n-gpu-layers 20 \
+          --n-gpu-layers 10 \
           --ctx-size 8192 \
           --threads 12
       '';

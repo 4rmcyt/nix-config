@@ -43,28 +43,16 @@ _: {
         command: npx
         args: ["-y", "@modelcontextprotocol/server-sequential-thinking"]
 
-      - name: terraform
-        command: npx
-        args: ["-y", "terraform-mcp-server"]
-
-      - name: kubernetes
-        command: uvx
-        args: ["-y", "mcp-server-kubernetes"]
-
       - name: memory
         command: npx
         args: ["-y", "@modelcontextprotocol/server-memory"]
 
       - name: fetch
-        command: npx
-        args: ["-y", "@modelcontextprotocol/server-fetch"]
+        command: uvx
+        args: ["mcp-server-fetch"]
 
       - name: chrome-devtools
         command: npx
         args: ["-y", "chrome-devtools-mcp@latest"]
-
-      - name: llama-cpp
-        command: npx
-        args: ["-y", "mcp-server-openai", "--base-url", "http://127.0.0.1:8080/v1", "--api-key", "not-needed", "--model", "glm-4.7-flash"]
   '';
 }
