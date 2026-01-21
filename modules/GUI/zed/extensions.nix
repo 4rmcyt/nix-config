@@ -10,6 +10,7 @@
     extensions = [
       "basher"
       "bearded"
+      "claude"
       "docker-compose"
       "dockerfile"
       "gemini"
