@@ -3,6 +3,7 @@ result
 core
 core.*
 .vscode
+.idea
 .claude
 .flake-inputs
 .direnv
