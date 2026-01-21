@@ -172,6 +172,11 @@
 
     llama-cpp.url = "github:ggml-org/llama.cpp";
 
+    nix-jetbrains-plugins = {
+      url = "github:nix-community/nix-jetbrains-plugins";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Non-flake inputs
     cpu-microcodes = {
       url = "github:platomav/CPUMicrocodes";
