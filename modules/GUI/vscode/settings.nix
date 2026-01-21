@@ -47,10 +47,8 @@
     "workbench.startupEditor" = "none";
     "workbench.settings.applyToAllProfiles" = [];
     "workbench.settings.useSplitJSON" = true;
-    "settingsSync.keybindingsPerPlatform" = false; # Disable settings sync writes
-    "sync.enable" = false; # Disable Settings Sync entirely
-    "settings.json.autoUpdate" = false; # Don't auto-update settings.json
-    "workbench.settings.openDefaultSettings" = true; # Open default settings instead of user settings
+    "settingsSync.ignoredExtensions" = ["*"]; # Ignore all extensions for sync
+    "settingsSync.ignoredSettings" = ["*"]; # Ignore all settings for sync
     "extensions.ignoreRecommendations" = true;
 
     # ===== Explorer Settings =====
@@ -117,14 +115,13 @@
     "github.copilot.chat.commitMessageGeneration.instructions" = [];
     "github.copilot.chat.generateCommitMessage" = false;
 
-    # Continue settings
-    "continue.enableTabAutocomplete" = true;
-    "continue.showInlineTip" = false;
-
-    # Use Continue for git commit messages
-    "git.experimental.commitMessageProvider" = "continue.continue";
-
     "redhat.telemetry.enabled" = false;
+
+    # Prevent extensions from writing to settings
+    "python.experiments.enabled" = false;
+    "python.experiments.optOutFrom" = ["All"];
+    "extensions.autoUpdate" = false;
+    "extensions.autoCheckUpdates" = false;
 
     "yaml.schemas" = {
       "kubernetes" = [

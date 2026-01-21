@@ -1,5 +1,7 @@
-{pkgs, ...}: {
-  programs.vscode.profiles.default.extensions = with pkgs.vscode-extensions;
+{ pkgs, ... }:
+{
+  programs.vscode.profiles.default.extensions =
+    with pkgs.vscode-extensions;
     [
       # Formatters & Editing
       codezombiech.gitignore
@@ -29,7 +31,7 @@
       pkief.material-icon-theme
 
       # AI
-      continue.continue
+      anthropic.claude-code
     ]
     ++ (with pkgs.vscode-utils; [
       (buildVscodeMarketplaceExtension {

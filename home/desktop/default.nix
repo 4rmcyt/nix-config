@@ -5,6 +5,7 @@
 }: {
   imports = [
     ../../modules/GUI/vscode
+    ../../modules/GUI/pycharm
     ../../modules/GUI/ghostty
     ../../modules/GUI/wezterm
     ../../modules/GUI/mpv
