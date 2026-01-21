@@ -48,6 +48,9 @@
     "workbench.settings.applyToAllProfiles" = [];
     "workbench.settings.useSplitJSON" = true;
     "settingsSync.keybindingsPerPlatform" = false; # Disable settings sync writes
+    "sync.enable" = false; # Disable Settings Sync entirely
+    "settings.json.autoUpdate" = false; # Don't auto-update settings.json
+    "workbench.settings.openDefaultSettings" = true; # Open default settings instead of user settings
     "extensions.ignoreRecommendations" = true;
 
     # ===== Explorer Settings =====
@@ -111,6 +114,8 @@
       "*" = false;
     };
     "github.copilot.nextEditSuggestions.enabled" = false;
+    "github.copilot.chat.commitMessageGeneration.instructions" = [];
+    "github.copilot.chat.generateCommitMessage" = false;
 
     # Continue settings
     "continue.enableTabAutocomplete" = true;

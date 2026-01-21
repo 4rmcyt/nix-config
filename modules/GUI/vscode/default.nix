@@ -8,7 +8,8 @@
 
   programs.vscode = {
     enable = true;
-    package = pkgs.vscode-fhs;
+    package = pkgs.vscode;
+    mutableExtensionsDir = false; # Prevent manual extension installs (stops Copilot from being synced)
 
     profiles.default = {
       enableExtensionUpdateCheck = false;
