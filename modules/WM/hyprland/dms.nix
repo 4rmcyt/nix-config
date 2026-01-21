@@ -8,7 +8,7 @@ _: {
     # Core features
     enableSystemMonitoring = true;
     enableVPN = false;
-    enableDynamicTheming = true;
+    enableDynamicTheming = false;
     enableAudioWavelength = false;
     enableCalendarEvents = true;
     settings = {
@@ -317,7 +317,14 @@ _: {
       # ===== Power Menu =====
       powerActionConfirm = true;
       powerActionHoldDuration = 0.5;
-      powerMenuActions = ["reboot" "logout" "poweroff" "lock" "suspend" "restart"];
+      powerMenuActions = [
+        "reboot"
+        "logout"
+        "poweroff"
+        "lock"
+        "suspend"
+        "restart"
+      ];
       powerMenuDefaultAction = "logout";
       powerMenuGridLayout = false;
 
@@ -343,10 +350,18 @@ _: {
           name = "Main Bar";
           enabled = true;
           position = 0;
-          screenPreferences = ["all"];
+          screenPreferences = [ "all" ];
           showOnLastDisplay = true;
-          leftWidgets = ["launcherButton" "workspaceSwitcher" "focusedWindow"];
-          centerWidgets = ["music" "clock" "weather"];
+          leftWidgets = [
+            "launcherButton"
+            "workspaceSwitcher"
+            "focusedWindow"
+          ];
+          centerWidgets = [
+            "music"
+            "clock"
+            "weather"
+          ];
           rightWidgets = [
             {
               id = "tailscale";
@@ -444,7 +459,7 @@ _: {
       desktopClockY = -1;
       desktopClockWidth = 280;
       desktopClockHeight = 180;
-      desktopClockDisplayPreferences = ["all"];
+      desktopClockDisplayPreferences = [ "all" ];
 
       # ===== System Monitor =====
       systemMonitorEnabled = false;
@@ -469,7 +484,7 @@ _: {
       systemMonitorY = -1;
       systemMonitorWidth = 320;
       systemMonitorHeight = 480;
-      systemMonitorDisplayPreferences = ["all"];
+      systemMonitorDisplayPreferences = [ "all" ];
 
       # ===== Plugin Settings =====
       builtInPluginSettings = {
