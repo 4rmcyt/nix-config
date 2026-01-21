@@ -32,6 +32,7 @@
 
       # AI
       anthropic.claude-code
+      continue.continue
     ]
     ++ (with pkgs.vscode-utils; [
       (buildVscodeMarketplaceExtension {

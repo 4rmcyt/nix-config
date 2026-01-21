@@ -3,6 +3,7 @@
     ./extensions.nix
     ./settings.nix
     ./languages.nix
+    ./ai.nix
   ];
 
   programs.vscode = {

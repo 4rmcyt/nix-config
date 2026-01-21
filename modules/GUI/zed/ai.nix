@@ -1,36 +1,40 @@
 _: {
   programs.zed-editor.userSettings = {
-    # ===== AI Features =====
     features.copilot = false;
 
     assistant = {
       version = "2";
       default_model = {
-        provider = "google";
-        model = "gemini-2.5-pro";
+        provider = "anthropic";
+        model = "claude-3-5-sonnet-latest";
       };
     };
 
     language_models = {
-      google = {
-        available_models = [
-          {
-            name = "gemini-2.5-pro";
-            display_name = "Gemini 2.5 Pro";
-            max_tokens = 1000000;
-          }
-        ];
-      };
-      ollama = {
-        api_url = "http://localhost:11434";
-        available_models = [
-          {
-            name = "qwen2.5-coder:7b";
-            display_name = "Qwen 2.5 Coder 7B (Direct)";
-            max_tokens = 32000;
-          }
-        ];
-      };
+      anthropic.available_models = [
+        {
+          name = "claude-3-5-sonnet-latest";
+          display_name = "Claude 3.5 Sonnet";
+          max_tokens = 200000;
+        }
+        {
+          name = "claude-3-opus-latest";
+          display_name = "Claude 3 Opus";
+          max_tokens = 200000;
+        }
+      ];
+      google.available_models = [
+        {
+          name = "gemini-1.5-pro-latest";
+          display_name = "Gemini 1.5 Pro";
+          max_tokens = 2000000;
+        }
+        {
+          name = "gemini-1.5-flash-latest";
+          display_name = "Gemini 1.5 Flash";
+          max_tokens = 1000000;
+        }
+      ];
       openai = {
         api_url = "http://127.0.0.1:8080/v1";
         available_models = [
@@ -40,12 +44,6 @@ _: {
             max_tokens = 8192;
           }
         ];
-      };
-    };
-
-    agent_servers = {
-      "gemini" = {
-        "ignore_system_version" = false;
       };
     };
   };
