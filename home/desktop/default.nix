@@ -49,6 +49,7 @@
       vulkan-tools
       mise
       ytmdesktop
+      playwright
 
       # Python with common packages
       (python3.withPackages (ps:
