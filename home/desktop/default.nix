@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   imports = [
     ../../modules/GUI/vscode
     ../../modules/GUI/pycharm
@@ -50,17 +51,21 @@
       mise
       ytmdesktop
       playwright
+      python313Packages.playwright
+      python313Packages.pytest-playwright
+      playwright-mcp
 
       # Python with common packages
-      (python3.withPackages (ps:
-        with ps; [
+      (python3.withPackages (
+        ps: with ps; [
           pip
           pydantic
           requests
           black
           pylint
           python-lsp-server
-        ]))
+        ]
+      ))
     ];
 
     sessionVariables = {
@@ -78,8 +83,8 @@
 
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
-      autoconnect = ["qemu:///system"];
-      uris = ["qemu:///system"];
+      autoconnect = [ "qemu:///system" ];
+      uris = [ "qemu:///system" ];
     };
   };
 }
