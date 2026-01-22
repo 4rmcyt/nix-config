@@ -47,6 +47,7 @@
       tenv
       vdpauinfo
       vulkan-tools
+      mise
       ytmdesktop
 
       # Python with common packages
