@@ -1,5 +1,6 @@
 {pkgs, ...}: {
   home.packages = [
+    # hyprsession from flake input (added via overlay in flake.nix)
     pkgs.hyprsession
 
     # Bridge script for Zed Editor

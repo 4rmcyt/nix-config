@@ -6,7 +6,7 @@
   ...
 }: {
   my.desktop = {
-    windowManager = "hyprland"; # Options: "hyprland", "niri", "none"
+    windowManager = "hyprland"; # Options: "hyprland", "none"
     # desktopEnvironment = "none";  # Options: "kde", "gnome", "none"
     displayManager = "greetd"; # Options: "greetd", "sddm", "gdm", "none"
   };

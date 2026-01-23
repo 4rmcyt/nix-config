@@ -14,14 +14,12 @@ in {
     windowManager = mkOption {
       type = types.enum [
         "hyprland"
-        "niri"
         "none"
       ];
       default = "none";
       description = ''
         Which window manager to use as the default session.
         - hyprland: Hyprland
-        - niri: Niri scrollable-tiling compositor
         - none: No window manager configured
       '';
     };
@@ -46,10 +44,6 @@ in {
     # =================================================================
     hyprland = {
       enable = mkEnableOption "Hyprland window manager";
-    };
-
-    niri = {
-      enable = mkEnableOption "Niri scrollable-tiling compositor";
     };
 
     kde = {
@@ -87,7 +81,6 @@ in {
   config = mkIf (cfg.windowManager != "none" || cfg.desktopEnvironment != "none") {
     # Auto-enable components based on windowManager selection
     my.desktop.hyprland.enable = mkDefault (cfg.windowManager == "hyprland");
-    my.desktop.niri.enable = mkDefault (cfg.windowManager == "niri");
 
     # Auto-enable DEs based on desktopEnvironment selection
     my.desktop.kde.enable = mkDefault (cfg.desktopEnvironment == "kde");
@@ -96,13 +89,11 @@ in {
     # Add window manager packages
     environment.systemPackages = mkMerge [
       (mkIf cfg.hyprland.enable [pkgs.hyprland])
-      (mkIf cfg.niri.enable [pkgs.niri])
     ];
 
     # Expose window manager sessions to display manager
     services.displayManager.sessionPackages = mkMerge [
       (mkIf cfg.hyprland.enable [pkgs.hyprland])
-      (mkIf cfg.niri.enable [pkgs.niri])
     ];
   };
 }

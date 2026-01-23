@@ -27,12 +27,17 @@
     XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "Hyprland";
 
-    # Nvidia-specific (hybrid AMD+Nvidia setup)
+    # NVIDIA for display (monitors connected to NVIDIA GPU)
     LIBVA_DRIVER_NAME = "nvidia";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     NVD_BACKEND = "direct";
+    GBM_BACKEND = "nvidia-drm";
+    __EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/10_nvidia.json";
 
-    # VRR/G-Sync - Enable for Nvidia
+    # Multi-GPU: Use NVIDIA (card2) for display
+    AQ_DRM_DEVICES = "/dev/dri/card2:/dev/dri/card1";
+
+    # VRR/G-Sync for NVIDIA
     __GL_GSYNC_ALLOWED = 1;
     __GL_VRR_ALLOWED = 1;
 

@@ -17,8 +17,10 @@
     ../../modules/TUI/calendar
     ../../modules/TUI/gemini-cli
 
-    # Automatically imports the correct WM based on my.desktop.windowManager
+    # WM base config (XDG, zed, etc.)
     ../../modules/WM
+    # Hyprland window manager config
+    ../../modules/WM/hyprland
   ];
 
   home = {

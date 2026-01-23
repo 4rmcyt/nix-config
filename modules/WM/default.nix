@@ -1,27 +1,13 @@
-{
-  lib,
-  config,
-  osConfig,
-  ...
-}:
-with lib; {
+{config, ...}: {
   # =================================================================
-  # Automatic Window Manager Module Loading
+  # Window Manager Base Module
   # =================================================================
-  # This module automatically imports the correct WM configuration
-  # based on the system's my.desktop.windowManager setting
+  # This module provides common WM configuration (XDG, etc.)
+  # Hyprland module should be imported directly in host-specific home configs.
 
-  imports = let
-    wm = osConfig.my.desktop.windowManager or "none";
-    wmModules = {
-      hyprland = ./hyprland;
-      niri = ./niri;
-    };
-  in
-    [
-      ../GUI/zed
-    ]
-    ++ optional (wm != "none" && hasAttr wm wmModules) wmModules.${wm};
+  imports = [
+    ../GUI/zed
+  ];
 
   # =================================================================
   # XDG Configuration

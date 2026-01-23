@@ -17,10 +17,12 @@
     nixpkgs.config.allowUnfree = true;
     sops.age.keyFile = "/home/${userName}/.config/sops/age/keys.txt";
 
-    # Add firefox-nightly to pkgs via overlay
+    # Add packages via overlay
     nixpkgs.overlays = [
       (_final: prev: {
         firefox-nightly = inputs.firefox-nightly.packages.${system}.firefox-nightly-bin or prev.firefox;
+        hyprsession = inputs.hyprsession.packages.${system}.default;
+        mcp-nixos = inputs.mcp-nixos.packages.${system}.default;
       })
     ];
   };
