@@ -108,6 +108,11 @@
     "update.mode" = "none";
 
     # ===== Extension-Specific Settings =====
+    # Continue
+    "continue.enableTabAutocomplete" = true;
+    "continue.showInlineTip" = false;
+    "git.experimental.commitMessageProvider" = "continue.continue";
+
     # Disable Copilot, use Continue instead
     "github.copilot.enable" = {
       "*" = false;
