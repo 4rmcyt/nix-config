@@ -350,7 +350,7 @@ _: {
           name = "Main Bar";
           enabled = true;
           position = 0;
-          screenPreferences = [ "all" ];
+          screenPreferences = ["all"];
           showOnLastDisplay = true;
           leftWidgets = [
             "launcherButton"
@@ -459,7 +459,7 @@ _: {
       desktopClockY = -1;
       desktopClockWidth = 280;
       desktopClockHeight = 180;
-      desktopClockDisplayPreferences = [ "all" ];
+      desktopClockDisplayPreferences = ["all"];
 
       # ===== System Monitor =====
       systemMonitorEnabled = false;
@@ -484,7 +484,7 @@ _: {
       systemMonitorY = -1;
       systemMonitorWidth = 320;
       systemMonitorHeight = 480;
-      systemMonitorDisplayPreferences = [ "all" ];
+      systemMonitorDisplayPreferences = ["all"];
 
       # ===== Plugin Settings =====
       builtInPluginSettings = {

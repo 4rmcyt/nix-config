@@ -4,8 +4,7 @@
   lib,
   inputs,
   ...
-}:
-{
+}: {
   my.desktop = {
     windowManager = "hyprland"; # Options: "hyprland", "niri", "none"
     # desktopEnvironment = "none";  # Options: "kde", "gnome", "none"
@@ -189,16 +188,14 @@
     };
 
     shells = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         zsh
         nushell
       ]
     );
 
     systemPackages = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         # =============================================================
         # Audio & Multimedia
         # =============================================================
@@ -295,13 +292,12 @@
           "JetBrainsMono Nerd Font"
           "Fira Code"
         ];
-        sansSerif = [ "Noto Sans" ];
-        serif = [ "Noto Serif" ];
-        emoji = [ "Noto Color Emoji" ];
+        sansSerif = ["Noto Sans"];
+        serif = ["Noto Serif"];
+        emoji = ["Noto Color Emoji"];
       };
     };
-    packages =
-      with pkgs;
+    packages = with pkgs;
       [
         maple-mono.NF
         font-awesome
@@ -318,28 +314,26 @@
 
   # Firmware packages (includes MT7922 WiFi firmware)
   # Custom uncompressed MT7922 firmware to avoid "Direct firmware load failed" warnings
-  hardware.firmware =
-    let
-      mt7922-firmware-uncompressed =
-        pkgs.runCommand "mt7922-firmware-uncompressed"
-          {
-            nativeBuildInputs = [ pkgs.zstd ];
-          }
-          ''
-            mkdir -p $out/lib/firmware/mediatek
-            for file in ${pkgs.linux-firmware}/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922*.bin.zst \
-                        ${pkgs.linux-firmware}/lib/firmware/mediatek/WIFI_MT7922*.bin.zst; do
-              if [ -f "$file" ]; then
-                base=$(basename "$file" .zst)
-                zstd -d "$file" -o "$out/lib/firmware/mediatek/$base"
-              fi
-            done
-          '';
-    in
-    [
-      mt7922-firmware-uncompressed
-      pkgs.linux-firmware
-    ];
+  hardware.firmware = let
+    mt7922-firmware-uncompressed =
+      pkgs.runCommand "mt7922-firmware-uncompressed"
+      {
+        nativeBuildInputs = [pkgs.zstd];
+      }
+      ''
+        mkdir -p $out/lib/firmware/mediatek
+        for file in ${pkgs.linux-firmware}/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922*.bin.zst \
+                    ${pkgs.linux-firmware}/lib/firmware/mediatek/WIFI_MT7922*.bin.zst; do
+          if [ -f "$file" ]; then
+            base=$(basename "$file" .zst)
+            zstd -d "$file" -o "$out/lib/firmware/mediatek/$base"
+          fi
+        done
+      '';
+  in [
+    mt7922-firmware-uncompressed
+    pkgs.linux-firmware
+  ];
 
   # =================================================================
   # 10. Home Manager
@@ -356,7 +350,7 @@
     };
     enableIPv6 = false;
     firewall = {
-      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
+      allowedTCPPorts = [9100]; # Prometheus node exporter
       enable = true;
     };
     hostId = "e134040f";
@@ -410,19 +404,19 @@
     wlr.enable = false; # hyprland portal handles this
     config = {
       common = {
-        default = [ "gtk" ];
-        "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
-        "org.freedesktop.impl.portal.OpenURI" = [ "gtk" ];
+        default = ["gtk"];
+        "org.freedesktop.impl.portal.Settings" = ["gtk"];
+        "org.freedesktop.impl.portal.OpenURI" = ["gtk"];
       };
       hyprland = {
         default = [
           "hyprland"
           "gtk"
         ];
-        "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
-        "org.freedesktop.impl.portal.OpenURI" = [ "gtk" ];
-        "org.freedesktop.impl.portal.ScreenCast" = [ "hyprland" ];
-        "org.freedesktop.impl.portal.Screenshot" = [ "hyprland" ];
+        "org.freedesktop.impl.portal.Settings" = ["gtk"];
+        "org.freedesktop.impl.portal.OpenURI" = ["gtk"];
+        "org.freedesktop.impl.portal.ScreenCast" = ["hyprland"];
+        "org.freedesktop.impl.portal.Screenshot" = ["hyprland"];
       };
     };
     xdgOpenUsePortal = true;
@@ -527,10 +521,10 @@
 
     pcscd = {
       enable = true;
-      plugins = [ pkgs.ccid ];
+      plugins = [pkgs.ccid];
     };
 
-    dbus.packages = [ pkgs.gcr ];
+    dbus.packages = [pkgs.gcr];
 
     # Power management
     power-profiles-daemon.enable = false;
@@ -539,7 +533,7 @@
     # Printing
     printing = {
       enable = true;
-      drivers = [ ]; # Add printer drivers if needed
+      drivers = []; # Add printer drivers if needed
     };
 
     usbmuxd.enable = true;
@@ -608,7 +602,7 @@
     # =============================================================
     xserver = {
       enable = true;
-      videoDrivers = [ "nvidia" ];
+      videoDrivers = ["nvidia"];
       xkb.layout = "us";
     };
   };
@@ -617,10 +611,10 @@
   # =================================================================
   users = {
     groups = {
-      git = { };
-      plugdev = { };
-      prometheus = { };
-      nix-builder = { };
+      git = {};
+      plugdev = {};
+      prometheus = {};
+      nix-builder = {};
     };
 
     users = {
@@ -663,7 +657,7 @@
     podman.enable = true;
     libvirtd = {
       enable = true;
-      qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
+      qemu.vhostUserPackages = with pkgs; [virtiofsd];
     };
     spiceUSBRedirection.enable = true;
   };

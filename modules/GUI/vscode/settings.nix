@@ -21,6 +21,7 @@
 
     # ===== File Settings =====
     "files.autoSave" = "afterDelay";
+    "files.autoSaveDelay" = 1000;
     "files.enableTrash" = false;
     "files.eol" = "\n";
     "files.insertFinalNewline" = true;
@@ -127,6 +128,9 @@
       "kubernetes" = [
         "k3s/*.yaml"
         "k8s/*.yaml"
+      ];
+      "file:///home/zeev/.vscode/extensions/Continue.continue/config-yaml-schema.json" = [
+        ".continue/**/*.yaml"
       ];
     };
   };

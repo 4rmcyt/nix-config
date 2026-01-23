@@ -1,8 +1,4 @@
-{
-  pkgs,
-  ...
-}:
-let
+{pkgs, ...}: let
   # Use nixpkgs llama-cpp with CUDA + BLAS for optimal performance
   llama-cpp-cuda = pkgs.llama-cpp.override {
     cudaSupport = true;
@@ -38,8 +34,7 @@ let
     CUDA_VISIBLE_DEVICES = "0";
     LD_LIBRARY_PATH = "/run/opengl-driver/lib";
   };
-in
-{
+in {
   environment.systemPackages = [
     llama-cpp-cuda
   ];
@@ -47,30 +42,32 @@ in
   # GLM-4.7-Flash for chat (port 8080)
   systemd.services.llama-cpp = {
     description = "llama.cpp Server with GLM-4.7-Flash-Q4 (Chat)";
-    wantedBy = [];
+    wantedBy = ["multi-user.target"];
     after = ["network.target"];
 
-    serviceConfig = gpuServiceConfig // {
-      Type = "simple";
-      ExecStart = ''
-        ${llama-cpp-cuda}/bin/llama-server \
-          --model ${glm-model} \
-          --host 127.0.0.1 \
-          --port 8080 \
-          --n-gpu-layers 10 \
-          --ctx-size 8192 \
-          --threads 12 \
-          --cont-batching \
-          --no-mmap \
-          --parallel 1
-      '';
-      Restart = "on-failure";
-      RestartSec = 5;
-      MemoryMax = "20G";
-      MemoryHigh = "18G";
-      StateDirectory = "llama-cpp";
-      CacheDirectory = "llama-cpp";
-    };
+    serviceConfig =
+      gpuServiceConfig
+      // {
+        Type = "simple";
+        ExecStart = ''
+          ${llama-cpp-cuda}/bin/llama-server \
+            --model ${glm-model} \
+            --host 127.0.0.1 \
+            --port 8080 \
+            --n-gpu-layers 10 \
+            --ctx-size 8192 \
+            --threads 12 \
+            --cont-batching \
+            --no-mmap \
+            --parallel 1
+        '';
+        Restart = "on-failure";
+        RestartSec = 5;
+        MemoryMax = "20G";
+        MemoryHigh = "18G";
+        StateDirectory = "llama-cpp";
+        CacheDirectory = "llama-cpp";
+      };
 
     environment = gpuEnvironment;
   };
@@ -78,30 +75,32 @@ in
   # Qwen2.5-Coder 1.5B for autocomplete (port 8081)
   systemd.services.llama-cpp-autocomplete = {
     description = "llama.cpp Server with Qwen2.5-Coder-1.5B (Autocomplete)";
-    wantedBy = [];
+    wantedBy = ["multi-user.target"];
     after = ["network.target"];
 
-    serviceConfig = gpuServiceConfig // {
-      Type = "simple";
-      ExecStart = ''
-        ${llama-cpp-cuda}/bin/llama-server \
-          --model ${qwen-coder-model} \
-          --host 127.0.0.1 \
-          --port 8081 \
-          --n-gpu-layers 99 \
-          --ctx-size 4096 \
-          --threads 8 \
-          --cont-batching \
-          --no-mmap \
-          --parallel 4
-      '';
-      Restart = "on-failure";
-      RestartSec = 5;
-      MemoryMax = "4G";
-      MemoryHigh = "3G";
-      StateDirectory = "llama-cpp-autocomplete";
-      CacheDirectory = "llama-cpp-autocomplete";
-    };
+    serviceConfig =
+      gpuServiceConfig
+      // {
+        Type = "simple";
+        ExecStart = ''
+          ${llama-cpp-cuda}/bin/llama-server \
+            --model ${qwen-coder-model} \
+            --host 127.0.0.1 \
+            --port 8081 \
+            --n-gpu-layers 99 \
+            --ctx-size 4096 \
+            --threads 8 \
+            --cont-batching \
+            --no-mmap \
+            --parallel 4
+        '';
+        Restart = "on-failure";
+        RestartSec = 5;
+        MemoryMax = "4G";
+        MemoryHigh = "3G";
+        StateDirectory = "llama-cpp-autocomplete";
+        CacheDirectory = "llama-cpp-autocomplete";
+      };
 
     environment = gpuEnvironment;
   };

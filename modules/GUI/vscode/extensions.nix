@@ -1,7 +1,5 @@
-{ pkgs, ... }:
-{
-  programs.vscode.profiles.default.extensions =
-    with pkgs.vscode-extensions;
+{pkgs, ...}: {
+  programs.vscode.profiles.default.extensions = with pkgs.vscode-extensions;
     [
       # Formatters & Editing
       codezombiech.gitignore
@@ -29,6 +27,9 @@
 
       # Theme & Icons
       pkief.material-icon-theme
+
+      # Utilities
+      tomoki1207.pdf
 
       # AI
       anthropic.claude-code
