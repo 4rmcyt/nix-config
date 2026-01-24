@@ -43,10 +43,9 @@ in
           --host 127.0.0.1 \
           --port 8080 \
           --n-gpu-layers 100 \
-          --flash-attn \
           --cache-type-k q4_0 \
           --cache-type-v q4_0 \
-          --ctx-size 65536 \
+          --ctx-size 40960 \
           --threads 12 \
           --cont-batching \
           --no-mmap \

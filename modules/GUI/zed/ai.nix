@@ -15,6 +15,7 @@ _: {
         provider = "local";
         model = "Qwen2.5-Coder-7B";
       };
+      always_allow_tool_actions = true;
     };
 
     language_models = {
