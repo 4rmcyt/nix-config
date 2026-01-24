@@ -42,6 +42,7 @@ in
           --model ${qwen-model} \
           --host 127.0.0.1 \
           --port 8080 \
+          --alias Qwen2.5-Coder-7B \
           --n-gpu-layers 100 \
           --flash-attn on \
           --cache-type-k q4_0 \
