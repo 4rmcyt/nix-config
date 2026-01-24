@@ -5,8 +5,8 @@ _: {
     assistant = {
       version = "2";
       default_model = {
-        provider = "zed.dev";
-        model = "claude-3-5-sonnet-latest";
+        provider = "local";
+        model = "Qwen2.5-Coder-7B";
       };
     };
 
@@ -31,7 +31,28 @@ _: {
 
     language_models = {
       anthropic.available_models = [ ];
-      openai.available_models = [ ];
+      openai.available_models = [
+        {
+          name = "gpt-4o";
+          display_name = "GPT-4o";
+          max_tokens = 128000;
+        }
+        {
+          name = "gpt-4o-mini";
+          display_name = "GPT-4o Mini";
+          max_tokens = 128000;
+        }
+        {
+          name = "o1-preview";
+          display_name = "o1 Preview";
+          max_tokens = 128000;
+        }
+        {
+          name = "o1-mini";
+          display_name = "o1 Mini";
+          max_tokens = 128000;
+        }
+      ];
       ollama.available_models = [ ];
       google.available_models = [
         {
