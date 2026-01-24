@@ -24,8 +24,8 @@ _: {
       openai.available_models = [ ];
       google.available_models = [
         {
-          name = "gemini-3.0-pro-latest";
-          display_name = "Gemini 3.0 Pro";
+          name = "gemini-3-pro-latest";
+          display_name = "Gemini 3 Pro";
           max_tokens = 2000000;
         }
         {
