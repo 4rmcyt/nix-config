@@ -2,19 +2,21 @@ _: {
   programs.zed-editor.userSettings = {
     features.copilot = false;
 
-    assistant = {
-      version = "2";
+    agent = {
       default_model = {
         provider = "local";
         model = "Qwen2.5-Coder-7B";
       };
-    };
-
-    agent = {
-      commit_message_model = {
-        provider = "local";
-        model = "Qwen2.5-Coder-7B";
-      };
+      favorite_models = [
+        {
+          provider = "local";
+          model = "Qwen2.5-Coder-7B";
+        }
+        {
+          provider = "google";
+          model = "gemini-3-pro-preview";
+        }
+      ];
       always_allow_tool_actions = true;
       system_prompt = "You are an expert software engineer. When solving complex problems, use the `sequentialthinking` tool to break down your thought process step-by-step before providing a final answer.";
     };
@@ -22,11 +24,17 @@ _: {
     language_models = {
       anthropic.available_models = [ ];
       openai.available_models = [ ];
+      ollama.available_models = [ ];
       google.available_models = [
         {
-          name = "gemini-3-pro-latest";
+          name = "gemini-3-pro-preview";
           display_name = "Gemini 3 Pro";
           max_tokens = 2000000;
+        }
+        {
+          name = "gemini-3-flash-preview";
+          display_name = "Gemini 3 Flash";
+          max_tokens = 1000000;
         }
         {
           name = "gemini-2.5-pro-latest";
