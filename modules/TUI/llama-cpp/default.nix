@@ -46,7 +46,7 @@ in
           --flash-attn \
           --cache-type-k q4_0 \
           --cache-type-v q4_0 \
-          --ctx-size 32768 \
+          --ctx-size 65536 \
           --threads 12 \
           --cont-batching \
           --no-mmap \

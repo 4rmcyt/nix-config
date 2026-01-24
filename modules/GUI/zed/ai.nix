@@ -18,6 +18,8 @@ _: {
     };
 
     language_models = {
+      anthropic.available_models = [ ];
+      openai.available_models = [ ];
       google.available_models = [
         {
           name = "gemini-1.5-pro-latest";
@@ -37,7 +39,7 @@ _: {
             {
               name = "Qwen2.5-Coder-7B";
               display_name = "Qwen2.5-Coder-7B (Local)";
-              max_tokens = 32768;
+              max_tokens = 65536;
             }
           ];
         };
