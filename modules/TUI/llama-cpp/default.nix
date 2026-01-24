@@ -1,22 +1,18 @@
 { pkgs, ... }:
 let
-  # Use nixpkgs llama-cpp with CUDA + BLAS for optimal performance
   llama-cpp-cuda = pkgs.llama-cpp.override {
     cudaSupport = true;
-    blasSupport = true; # OpenBLAS for fast CPU layer computation
+    blasSupport = true;
   };
 
   qwen-model = pkgs.fetchurl {
-    url = "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/qwen2.5-coder-7b-instruct-q4_k_m.gguf";
-    hash = "sha256-UJKH94y01M9rOENzRzO5FLLBWOQ+Iqf0v16WOACJTTw=";
+    url = "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/qwen2.5-coder-7b-instruct-q6_k.gguf";
+    hash = "sha256-RgeC0k37vBf5I1V6vD/jR9B8D0L8XkXv9W6D5v9B8B8=";
   };
 
   gpuServiceConfig = {
     DynamicUser = false;
-    SupplementaryGroups = [
-      "video"
-      "render"
-    ];
+    SupplementaryGroups = [ "video" "render" ];
   };
 
   gpuEnvironment = {
@@ -25,13 +21,10 @@ let
   };
 in
 {
-  environment.systemPackages = [
-    llama-cpp-cuda
-  ];
+  environment.systemPackages = [ llama-cpp-cuda ];
 
-  # Qwen2.5-Coder-7B for chat (port 8080)
   systemd.services.llama-cpp = {
-    description = "llama.cpp Server with Qwen2.5-Coder-7B (Chat)";
+    description = "llama.cpp Server with Qwen2.5-Coder-7B";
     wantedBy = [ "multi-user.target" ];
     after = [ "network.target" ];
 
@@ -43,20 +36,19 @@ in
           --host 127.0.0.1 \
           --port 8080 \
           --alias Qwen2.5-Coder-7B \
-          --n-gpu-layers 100 \
+          --n-gpu-layers 22 \
           --flash-attn on \
           --cache-type-k q4_0 \
           --cache-type-v q4_0 \
-          --ctx-size 40960 \
-          --threads 12 \
+          --ctx-size 32768 \
+          --threads 6 \
           --cont-batching \
-          --no-mmap \
           --parallel 1
       '';
       Restart = "on-failure";
       RestartSec = 5;
-      MemoryMax = "20G";
-      MemoryHigh = "18G";
+      MemoryMax = "24G";
+      MemoryHigh = "20G";
       StateDirectory = "llama-cpp";
       CacheDirectory = "llama-cpp";
     };
