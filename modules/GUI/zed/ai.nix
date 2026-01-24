@@ -5,8 +5,15 @@ _: {
     assistant = {
       version = "2";
       default_model = {
-        provider = "openai";
-        model = "glm-4.7-flash";
+        provider = "local";
+        model = "Qwen2.5-Coder-7B";
+      };
+    };
+
+    agent = {
+      commit_message_model = {
+        provider = "local";
+        model = "Qwen2.5-Coder-7B";
       };
     };
 
@@ -35,15 +42,17 @@ _: {
           max_tokens = 1000000;
         }
       ];
-      openai = {
-        api_url = "http://127.0.0.1:8080/v1";
-        available_models = [
-          {
-            name = "glm-4.7-flash";
-            display_name = "GLM-4.7-Flash (Local)";
-            max_tokens = 8192;
-          }
-        ];
+      openai_compatible = {
+        local = {
+          api_url = "http://127.0.0.1:8080/v1";
+          available_models = [
+            {
+              name = "Qwen2.5-Coder-7B";
+              display_name = "Qwen2.5-Coder-7B (Local)";
+              max_tokens = 32768;
+            }
+          ];
+        };
       };
     };
   };
