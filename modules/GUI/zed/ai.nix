@@ -5,8 +5,8 @@ _: {
     assistant = {
       version = "2";
       default_model = {
-        provider = "anthropic";
-        model = "claude-3-5-sonnet-latest";
+        provider = "openai";
+        model = "glm-4.7-flash";
       };
     };
 
