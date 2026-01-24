@@ -11,7 +11,6 @@ let
     hash = "sha256-UJKH94y01M9rOENzRzO5FLLBWOQ+Iqf0v16WOACJTTw=";
   };
 
-  # Common systemd service config for GPU access
   gpuServiceConfig = {
     DynamicUser = true;
     SupplementaryGroups = [
