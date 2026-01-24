@@ -18,18 +18,6 @@ _: {
     };
 
     language_models = {
-      anthropic.available_models = [
-        {
-          name = "claude-3-5-sonnet-latest";
-          display_name = "Claude 3.5 Sonnet";
-          max_tokens = 200000;
-        }
-        {
-          name = "claude-3-opus-latest";
-          display_name = "Claude 3 Opus";
-          max_tokens = 200000;
-        }
-      ];
       google.available_models = [
         {
           name = "gemini-1.5-pro-latest";

@@ -1,4 +1,5 @@
-{pkgs, ...}: let
+{ pkgs, ... }:
+let
   # Use nixpkgs llama-cpp with CUDA + BLAS for optimal performance
   llama-cpp-cuda = pkgs.llama-cpp.override {
     cudaSupport = true;
@@ -22,7 +23,8 @@
     CUDA_VISIBLE_DEVICES = "0";
     LD_LIBRARY_PATH = "/run/opengl-driver/lib";
   };
-in {
+in
+{
   environment.systemPackages = [
     llama-cpp-cuda
   ];
@@ -30,35 +32,36 @@ in {
   # Qwen2.5-Coder-7B for chat (port 8080)
   systemd.services.llama-cpp = {
     description = "llama.cpp Server with Qwen2.5-Coder-7B (Chat)";
-    wantedBy = ["multi-user.target"];
-    after = ["network.target"];
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network.target" ];
 
-    serviceConfig =
-      gpuServiceConfig
-      // {
-        Type = "simple";
-        ExecStart = ''
-          ${llama-cpp-cuda}/bin/llama-server \
-            --model ${qwen-model} \
-            --host 127.0.0.1 \
-            --port 8080 \
-            --n-gpu-layers 100 \
-            --ctx-size 32768 \
-            --threads 12 \
-            --cont-batching \
-            --no-mmap \
-            --parallel 1
-        '';
-        Restart = "on-failure";
-        RestartSec = 5;
-        MemoryMax = "20G";
-        MemoryHigh = "18G";
-        StateDirectory = "llama-cpp";
-        CacheDirectory = "llama-cpp";
-      };
+    serviceConfig = gpuServiceConfig // {
+      Type = "simple";
+      ExecStart = ''
+        ${llama-cpp-cuda}/bin/llama-server \
+          --model ${qwen-model} \
+          --host 127.0.0.1 \
+          --port 8080 \
+          --n-gpu-layers 100 \
+          --flash-attn \
+          --cache-type-k q4_0 \
+          --cache-type-v q4_0 \
+          --ctx-size 32768 \
+          --threads 12 \
+          --cont-batching \
+          --no-mmap \
+          --parallel 1
+      '';
+      Restart = "on-failure";
+      RestartSec = 5;
+      MemoryMax = "20G";
+      MemoryHigh = "18G";
+      StateDirectory = "llama-cpp";
+      CacheDirectory = "llama-cpp";
+    };
 
     environment = gpuEnvironment;
   };
 
-  networking.firewall.allowedTCPPorts = [8080];
+  networking.firewall.allowedTCPPorts = [ 8080 ];
 }
