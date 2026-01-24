@@ -12,7 +12,7 @@ let
   };
 
   gpuServiceConfig = {
-    DynamicUser = true;
+    DynamicUser = false;
     SupplementaryGroups = [
       "video"
       "render"
