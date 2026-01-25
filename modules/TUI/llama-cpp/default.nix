@@ -7,7 +7,7 @@ let
 
   qwen-model = pkgs.fetchurl {
     url = "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/qwen2.5-coder-7b-instruct-q6_k.gguf";
-    hash = "sha256-RgeC0k37vBf5I1V6vD/jR9B8D0L8XkXv9W6D5v9B8B8=";
+    hash = "sha256-Rikd3qG/tgj+Y9mhkH7qaRi9qHp2Jlk+3Ev5fF/XP50=";
   };
 
   gpuServiceConfig = {
