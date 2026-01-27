@@ -2,8 +2,7 @@
   pkgs,
   lib,
   ...
-}:
-{
+}: {
   imports = [
     ../../modules/GUI/vscode
     ../../modules/GUI/pycharm
@@ -61,14 +60,15 @@
 
       # Python with common packages
       (python3.withPackages (
-        ps: with ps; [
-          pip
-          pydantic
-          requests
-          black
-          pylint
-          python-lsp-server
-        ]
+        ps:
+          with ps; [
+            pip
+            pydantic
+            requests
+            black
+            pylint
+            python-lsp-server
+          ]
       ))
     ];
 
@@ -87,8 +87,8 @@
 
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
-      autoconnect = [ "qemu:///system" ];
-      uris = [ "qemu:///system" ];
+      autoconnect = ["qemu:///system"];
+      uris = ["qemu:///system"];
     };
   };
 }

@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   llama-cpp-cuda = pkgs.llama-cpp.override {
     cudaSupport = true;
     blasSupport = true;
@@ -12,49 +11,52 @@ let
 
   gpuServiceConfig = {
     DynamicUser = false;
-    SupplementaryGroups = [ "video" "render" ];
+    SupplementaryGroups = [
+      "video"
+      "render"
+    ];
   };
 
   gpuEnvironment = {
     CUDA_VISIBLE_DEVICES = "0";
     LD_LIBRARY_PATH = "/run/opengl-driver/lib";
   };
-in
-{
-  environment.systemPackages = [ llama-cpp-cuda ];
+in {
+  environment.systemPackages = [llama-cpp-cuda];
 
   systemd.services.llama-cpp = {
     description = "llama.cpp Server with Qwen2.5-Coder-7B";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network.target" ];
+    wantedBy = ["multi-user.target"];
+    after = ["network.target"];
 
-    serviceConfig = gpuServiceConfig // {
-      Type = "simple";
-      ExecStart = ''
-        ${llama-cpp-cuda}/bin/llama-server \
-          --model ${qwen-model} \
-          --host 127.0.0.1 \
-          --port 8080 \
-          --alias Qwen2.5-Coder-7B \
-          --n-gpu-layers 22 \
-          --flash-attn on \
-          --cache-type-k q4_0 \
-          --cache-type-v q4_0 \
-          --ctx-size 32768 \
-          --threads 6 \
-          --cont-batching \
-          --parallel 1
-      '';
-      Restart = "on-failure";
-      RestartSec = 5;
-      MemoryMax = "24G";
-      MemoryHigh = "20G";
-      StateDirectory = "llama-cpp";
-      CacheDirectory = "llama-cpp";
-    };
+    serviceConfig =
+      gpuServiceConfig
+      // {
+        Type = "simple";
+        ExecStart = ''
+          ${llama-cpp-cuda}/bin/llama-server \
+            --model ${qwen-model} \
+            --n-gpu-layers 28 \
+            --ctx-size 16384 \
+            --batch-size 512 \
+            --ubatch-size 128 \
+            --cache-type-k q4_0 \
+            --cache-type-v q4_0 \
+            --flash-attn on \
+            --no-mmap \
+            --host 127.0.0.1 \
+            --port 8080
+        '';
+        Restart = "on-failure";
+        RestartSec = 5;
+        MemoryMax = "24G";
+        MemoryHigh = "20G";
+        StateDirectory = "llama-cpp";
+        CacheDirectory = "llama-cpp";
+      };
 
     environment = gpuEnvironment;
   };
 
-  networking.firewall.allowedTCPPorts = [ 8080 ];
+  networking.firewall.allowedTCPPorts = [8080];
 }

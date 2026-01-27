@@ -20,20 +20,21 @@
       nefrob.vscode-just-syntax
 
       # DevOps
-      ms-azuretools.vscode-docker
-      ms-kubernetes-tools.vscode-kubernetes-tools
-      ms-vscode-remote.remote-containers
-      ms-vscode-remote.remote-ssh
+      # ms-azuretools.vscode-docker
+      # ms-kubernetes-tools.vscode-kubernetes-tools
+      # ms-vscode-remote.remote-containers
+      # ms-vscode-remote.remote-ssh
 
       # Theme & Icons
       pkief.material-icon-theme
 
       # Utilities
+      # ibecker.treefmt-vscode - moved to marketplace extensions below
       tomoki1207.pdf
 
       # AI
       anthropic.claude-code
-      continue.continue
+      saoudrizwan.claude-dev
     ]
     ++ (with pkgs.vscode-utils; [
       (buildVscodeMarketplaceExtension {
@@ -44,5 +45,6 @@
           sha256 = "0c0kcl08j8ii65h5mkpgssgqgshhkf49adgxd5xh1klx8qn2zjgc";
         };
       })
+      # treefmt-vscode extension temporarily removed due to build issues
     ]);
 }

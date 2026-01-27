@@ -14,10 +14,13 @@
       "strings" = true;
     };
     "editor.bracketPairColorization.enabled" = true;
-    "editor.defaultFormatter" = "ibecker.treefmt-vscode";
+    # "editor.defaultFormatter" = "ibecker.treefmt-vscode"; # Extension temporarily removed
     "editor.formatOnSave" = true;
     "editor.guides.bracketPairs" = "active";
-    "editor.rulers" = [80 120];
+    "editor.rulers" = [
+      80
+      120
+    ];
 
     # ===== File Settings =====
     "files.autoSave" = "afterDelay";
@@ -48,9 +51,6 @@
     "workbench.startupEditor" = "none";
     "workbench.settings.applyToAllProfiles" = [];
     "workbench.settings.useSplitJSON" = true;
-    "settingsSync.ignoredExtensions" = ["*"]; # Ignore all extensions for sync
-    "settingsSync.ignoredSettings" = ["*"]; # Ignore all settings for sync
-    "extensions.ignoreRecommendations" = true;
 
     # ===== Explorer Settings =====
     "explorer.confirmDelete" = false;
@@ -108,10 +108,6 @@
     "update.mode" = "none";
 
     # ===== Extension-Specific Settings =====
-    # Continue
-    "continue.enableTabAutocomplete" = true;
-    "continue.showInlineTip" = false;
-    "git.experimental.commitMessageProvider" = "continue.continue";
 
     # Disable Copilot, use Continue instead
     "github.copilot.enable" = {
@@ -123,11 +119,45 @@
 
     "redhat.telemetry.enabled" = false;
 
-    # Prevent extensions from writing to settings
-    "python.experiments.enabled" = false;
-    "python.experiments.optOutFrom" = ["All"];
-    "extensions.autoUpdate" = false;
-    "extensions.autoCheckUpdates" = false;
+    "claude.code.autoApplyEdits" = false;
+    "claude.code.enableMCP" = true;
+    "claude.code.terminal.shell" = "zsh";
+
+    # Cline (Claude Dev) System Prompt
+    "cline.customSystemPrompt" = ''
+      # Role: Senior Systems Architect (zeev)
+      # Environment: NixOS (Canada)
+
+      ## Operational Rules
+      - Priority: Always use NixOS-idiomatic solutions (Flakes, modules).
+      - Brevity: Extreme brevity. No conversational filler.
+      - Context: Primary configs are in /etc/nixos and /home/zeev/src/nix-config.
+
+      ## Available MCP Tools
+      - `brave-search`: Web search and information gathering
+      - `git`: Git repository operations and history analysis
+      - `podman`: Docker/Podman container management and operations
+      - `playwright`: Browser automation and web testing
+      - `kubernetes`: Kubernetes cluster management and operations
+      - `terraform`: Infrastructure as Code with Terraform
+      - `chrome-devtools`: Chrome DevTools integration and debugging
+      - `fetch`: Web content fetching and analysis
+      - `filesystem`: File system operations (limited to /etc/nixos, /home/zeev/src/nix-config)
+      - `github`: GitHub API integration and repository management
+      - `mcp-nixos`: NixOS package search and information
+      - `memory`: Knowledge graph and memory management
+      - `sequential-thinking`: Complex problem solving and analysis
+      - `python`: Python code execution, environment management, and package installation
+
+      ## Tool Usage Guidelines
+      - Use `sequential-thinking` for all complex architectural changes.
+      - Use `mcp-nixos` to search packages before suggesting Nix installs.
+      - Use `terraform` for Infrastructure as Code tasks.
+      - Use `brave-search` for current information and web research.
+      - Use `git` for repository analysis and version control operations.
+      - Use `filesystem` for file operations within allowed directories.
+      - Use `python` for code execution and package management tasks.
+    '';
 
     "yaml.schemas" = {
       "kubernetes" = [

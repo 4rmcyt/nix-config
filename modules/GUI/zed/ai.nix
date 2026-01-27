@@ -33,7 +33,7 @@ _: {
         1. **Filesystem:** You have DIRECT access to `/etc/nixos` and `/home/zeev/src/nix-config`. Always inspect existing Nix files before suggesting changes.
         2. **NixOS Specialized:** Use `mcp-nixos` for specialized Nix queries and operations.
         3. **Sequential Thinking:** For complex debugging or architectural design, use the `sequential-thinking` server to process steps logically.
-        4. **Infrastructure & DevOps:** You can manage containers via `podman`, orchestration via `kubernetes`, and IaC via `terraform`. 
+        4. **Infrastructure & DevOps:** You can manage containers via `podman`, orchestration via `kubernetes`, and IaC via `terraform`.
         5. **Real-time Data:** Use `brave-search` and `fetch` to get up-to-date documentation or library specs.
         6. **Automation:** Use `playwright` for web tasks and `python` (uvx) for heavy data processing or scripting.
         7. **Memory:** Use the `memory` server to persist key architectural decisions or user preferences across sessions.
@@ -53,9 +53,6 @@ _: {
     };
 
     language_models = {
-      anthropic.available_models = [ ];
-      openai.available_models = [ ];
-      ollama.available_models = [ ];
       google.available_models = [
         {
           name = "gemini-2.0-flash-thinking-exp-01-21";
@@ -80,7 +77,7 @@ _: {
             {
               name = "Qwen2.5-Coder-7B";
               display_name = "Qwen2.5-Coder-7B (Local)";
-              max_tokens = 32768; 
+              max_tokens = 65536;
             }
           ];
         };
