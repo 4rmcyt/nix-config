@@ -524,6 +524,7 @@
       plugins = [pkgs.ccid];
     };
 
+    accounts-daemon.enable = true;
     dbus.packages = [pkgs.gcr];
 
     # Power management

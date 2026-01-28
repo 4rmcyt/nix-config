@@ -64,6 +64,9 @@
     # Clipboard Management (DMS Integration)
     cliphist # Clipboard history backend
     wl-clip-persist # Clipboard persistence
+
+    # DMS Optional Features
+    danksearch # Indexed filesystem search for DMS launcher
   ];
 
   xdg.portal = {

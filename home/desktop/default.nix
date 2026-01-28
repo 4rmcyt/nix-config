@@ -59,7 +59,7 @@
       nodejs
       uv
       antigravity-fhs
-
+      claude-code
       # Python with common packages
       (python3.withPackages (
         ps: with ps; [
