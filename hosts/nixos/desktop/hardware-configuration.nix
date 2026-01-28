@@ -243,7 +243,7 @@ in {
       nvidiaSettings = true;
       open = false;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
-      powerManagement.enable = false;
+      powerManagement.enable = true;
     };
   };
 
