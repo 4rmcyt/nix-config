@@ -5,7 +5,9 @@
   ...
 }:
 let
-  llama-cpp-cuda = inputs.llama-cpp.packages.${pkgs.stdenv.hostPlatform.system}.cuda;
+  llama-cpp-cuda = (inputs.llama-cpp.packages.${pkgs.stdenv.hostPlatform.system}.cuda).overrideAttrs {
+    version = inputs.llama-cpp.shortRev or "unstable";
+  };
   qwen-model = pkgs.fetchurl {
     url = "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/qwen2.5-coder-7b-instruct-q5_k_m.gguf";
     hash = "sha256-WGhE6sTW1jIWifAZLIqo5pzYYll0pcwtklsaAzZuTRY=";

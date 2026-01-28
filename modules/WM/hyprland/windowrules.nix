@@ -1,6 +1,6 @@
 _: {
   wayland.windowManager.hyprland.settings = {
-    windowrulev2 = [
+    windowrule = [
       # ============================================
       # DMS COMPONENTS
       # ============================================
@@ -122,7 +122,7 @@ _: {
       "opacity 1.0 override 1.0 override, class:(jellyfin-desktop)"
       "opacity 1.0 override 1.0 override, class:(com.github.iwalton3.jellyfin-media-player)"
       "opacity 1.0 override 1.0 override, class:(chromium-browser)"
-      "opacity 0.9, floating:0" # DMS recommended inactive opacity
+      "opacity 0.9, tiled:1" # DMS recommended inactive opacity
 
       # ============================================
       # WORKSPACE ASSIGNMENTS - Disabled (single workspace)
@@ -157,12 +157,12 @@ _: {
       # ============================================
       # NO GAPS/BORDERS FOR FULLSCREEN WORKSPACES
       # ============================================
-      "bordersize 0, floating:0,onworkspace:w[t1]"
-      "rounding 0, floating:0,onworkspace:w[t1]"
-      "bordersize 0, floating:0,onworkspace:w[tg1]"
-      "rounding 0, floating:0,onworkspace:w[tg1]"
-      "bordersize 0, floating:0,onworkspace:f[1]"
-      "rounding 0, floating:0,onworkspace:f[1]"
+      "bordersize 0, tiled:1,onworkspace:w[t1]"
+      "rounding 0, tiled:1,onworkspace:w[t1]"
+      "bordersize 0, tiled:1,onworkspace:w[tg1]"
+      "rounding 0, tiled:1,onworkspace:w[tg1]"
+      "bordersize 0, tiled:1,onworkspace:f[1]"
+      "rounding 0, tiled:1,onworkspace:f[1]"
 
       # ============================================
       # CHROMIUM CONTEXT MENU FIX

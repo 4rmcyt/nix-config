@@ -4,7 +4,7 @@
     # ./paperless
     # ./radicale
     # ./tdarr
-    # ./vaultwarden
+    ./vaultwarden
     ./homepage
     ./kavita
     ./miniflux

@@ -193,6 +193,13 @@ in {
 
           # Routers for ALL services (forward auth OR OIDC)
           routers = {
+            traefik-dashboard = {
+              rule = "Host(`traefik.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "api@internal";
+              middlewares = ["authelia" "security-headers"];
+              tls = {};
+            };
             # Nixarr services (forward auth via Authelia)
             sonarr = {
               rule = "Host(`sonarr.${domain}`)";
@@ -319,11 +326,11 @@ in {
               middlewares = ["authelia" "security-headers"];
               tls = {};
             };
-            vault = {
+            vaultwarden = {
               rule = "Host(`vault.${domain}`)";
               entryPoints = ["websecure"];
-              service = "vault";
-              middlewares = ["authelia" "security-headers"];
+              service = "vaultwarden";
+              middlewares = ["security-headers"];
               tls = {};
             };
             kuma = {
@@ -375,7 +382,7 @@ in {
             # Infrastructure
             authelia.loadBalancer.servers = [{url = "http://localhost:9000";}];
             lldap.loadBalancer.servers = [{url = "http://localhost:17170";}];
-            vault.loadBalancer.servers = [{url = "http://localhost:8222";}];
+            vaultwarden.loadBalancer.servers = [{url = "http://localhost:8222";}];
             kuma.loadBalancer.servers = [{url = "http://localhost:3001";}];
             atuin.loadBalancer.servers = [{url = "http://localhost:8881";}];
             livesync.loadBalancer.servers = [{url = "http://localhost:5984";}];
