@@ -7,7 +7,6 @@
 }: {
   my.desktop = {
     windowManager = "hyprland"; # Options: "hyprland", "none"
-    # desktopEnvironment = "none";  # Options: "kde", "gnome", "none"
     displayManager = "greetd"; # Options: "greetd", "sddm", "gdm", "none"
   };
 
@@ -37,7 +36,7 @@
     ../../../modules/users/zeev
     ../../../modules/TUI/llama-cpp
     # ../../../modules/TUI/litellm
-    ../../../modules/TUI/mcp
+    # mcp moved to HM-level (home/desktop)
     # ../../../modules/GUI/OBS
     ../../../modules/GUI/chromium
     ../../../modules/GUI/flatpak/hyprland

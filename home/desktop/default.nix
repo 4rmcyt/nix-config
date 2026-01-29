@@ -17,10 +17,9 @@
     ../../modules/TUI/zellij
     ../../modules/TUI/calendar
     ../../modules/TUI/gemini-cli
-
-    # WM base config (XDG, zed, etc.)
+    ../../modules/TUI/mcp
+    ../../modules/TUI/claude-code
     ../../modules/WM
-    # Hyprland window manager config
     ../../modules/WM/hyprland
   ];
 
@@ -56,10 +55,13 @@
       python313Packages.playwright
       python313Packages.pytest-playwright
       playwright-mcp
+      github-mcp-server
+      terraform-mcp-server
+      mcp-k8s-go
+      mcp-grafana
       nodejs
       uv
       antigravity-fhs
-      claude-code
       # Python with common packages
       (python3.withPackages (
         ps: with ps; [
@@ -82,6 +84,7 @@
 
   programs = {
     browserpass.enable = true;
+    claude-code.enable = true;
     firefox.package = pkgs.firefox-nightly or pkgs.firefox;
     nushell.enable = true;
   };

@@ -174,6 +174,8 @@
       url = "github:ggml-org/llama.cpp";
     };
 
+    mcp-servers-nix.url = "github:natsukium/mcp-servers-nix";
+
     nix-jetbrains-plugins = {
       url = "github:nix-community/nix-jetbrains-plugins";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -256,9 +258,9 @@
       commonHomeManagerUserConfig = {
         nixpkgs.config.allowUnfree = true;
         nixpkgs.overlays = [
+          inputs.mcp-servers-nix.overlays.default
           (_final: _prev: {
             hyprsession = inputs.hyprsession.packages.${system}.default;
-            mcp-nixos = inputs.mcp-nixos.packages.${system}.default;
             danksearch = inputs.danksearch.packages.${system}.default;
           })
         ];

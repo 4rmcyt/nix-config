@@ -105,6 +105,7 @@
 
     # ===== Misc Settings =====
     "todo-tree.regex.regex" = "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!";
+    "extensions.autoCheckUpdates" = false;
     "update.mode" = "none";
 
     # ===== Extension-Specific Settings =====
