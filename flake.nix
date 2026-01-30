@@ -170,10 +170,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    llama-cpp = {
-      url = "github:ggml-org/llama.cpp";
-    };
-
     mcp-servers-nix.url = "github:natsukium/mcp-servers-nix";
 
     nix-jetbrains-plugins = {
