@@ -2,9 +2,9 @@
   config,
   lib,
   ...
-}: {
-  imports = [../../shared/ai-system-prompt.nix];
-
+}: let
+  mkSystemPrompt = import ../../shared/ai-system-prompt.nix;
+in {
   programs.zed-editor.userSettings = {
     features.copilot = false;
 
@@ -32,7 +32,7 @@
         }
       ];
       always_allow_tool_actions = false;
-      system_prompt = lib.ai.mkSystemPrompt config.programs.mcp.servers;
+      system_prompt = mkSystemPrompt lib config.programs.mcp.servers;
     };
 
     language_models = {

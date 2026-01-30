@@ -2,14 +2,14 @@
   config,
   lib,
   ...
-}: {
-  imports = [../../shared/ai-system-prompt.nix];
-
+}: let
+  mkSystemPrompt = import ../../shared/ai-system-prompt.nix;
+in {
   programs.claude-code = {
     enableMcpIntegration = true;
 
     settings = {
-      systemPrompt = lib.ai.mkSystemPrompt config.programs.mcp.servers;
+      systemPrompt = mkSystemPrompt lib config.programs.mcp.servers;
     };
   };
 }
