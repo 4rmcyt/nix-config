@@ -1,7 +1,4 @@
-{
-  config,
-  ...
-}: {
+{config, ...}: {
   sops.secrets.vaultwarden_env = {
     sopsFile = ../../../secrets/vaultwarden.env;
     owner = "vaultwarden";

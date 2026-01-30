@@ -1,8 +1,12 @@
 {
   osConfig ? null,
+  config,
   lib,
   ...
-}: {
+}: let
+  mcpServerNames = builtins.attrNames config.programs.mcp.servers;
+  mcpList = lib.concatMapStringsSep "\n" (name: "- `${name}`") mcpServerNames;
+in {
   programs.vscode.profiles.default.userSettings = {
     # ===== Editor Settings =====
     "editor.fontFamily" = "'Maple Mono NF', 'MesloLGS NF', 'FiraCode Nerd Font', monospace";
@@ -134,28 +138,12 @@
       - Brevity: Extreme brevity. No conversational filler.
       - Context: Primary configs are in /etc/nixos and /home/zeev/src/nix-config.
 
-      ## Available MCP Tools
-      - `brave-search`: Web search and information gathering
-      - `git`: Git repository operations and history analysis
-      - `podman`: Docker/Podman container management and operations
-      - `playwright`: Browser automation and web testing
-      - `kubernetes`: Kubernetes cluster management and operations
-      - `terraform`: Infrastructure as Code with Terraform
-      - `chrome-devtools`: Chrome DevTools integration and debugging
-      - `fetch`: Web content fetching and analysis
-      - `filesystem`: File system operations (limited to /etc/nixos, /home/zeev/src/nix-config)
-      - `github`: GitHub API integration and repository management
-      - `mcp-nixos`: NixOS package search and information
-      - `memory`: Knowledge graph and memory management
-      - `sequential-thinking`: Complex problem solving and analysis
-      - `python`: Python code execution, environment management, and package installation
+      ## Available MCP Servers
+      ${mcpList}
 
       ## Tool Usage Guidelines
       - Use `sequential-thinking` for all complex architectural changes.
       - Use `mcp-nixos` to search packages before suggesting Nix installs.
-      - Use `terraform` for Infrastructure as Code tasks.
-      - Use `brave-search` for current information and web research.
-      - Use `git` for repository analysis and version control operations.
       - Use `filesystem` for file operations within allowed directories.
       - Use `python` for code execution and package management tasks.
     '';
