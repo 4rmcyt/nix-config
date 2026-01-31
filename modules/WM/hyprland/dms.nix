@@ -46,12 +46,14 @@ _: {
       matugenTemplateDgop = true;
       matugenTemplateKcolorscheme = true;
       matugenTemplateVscode = true;
+      matugenTemplateEmacs = true;
 
       # ===== Appearance =====
       popupTransparency = 1;
       dockTransparency = 1;
       widgetBackgroundColor = "sc";
       widgetColorMode = "colorful";
+      controlCenterTileColorMode = "primary";
       cornerRadius = 12;
       nightModeEnabled = false;
       customAnimationDuration = 500;
@@ -60,6 +62,7 @@ _: {
       use24HourClock = true;
       showSeconds = false;
       useFahrenheit = false;
+      windSpeedUnit = "kmh";
       animationSpeed = 1;
 
       # ===== Wallpaper =====
@@ -102,6 +105,7 @@ _: {
       controlCenterShowMicPercent = false;
       controlCenterShowBatteryIcon = false;
       controlCenterShowPrinterIcon = false;
+      controlCenterShowScreenSharingIcon = true;
 
       # ===== Control Center Widgets =====
       controlCenterWidgets = [
@@ -154,11 +158,13 @@ _: {
       workspaceScrolling = false;
       showWorkspaceApps = false;
       maxWorkspaceIcons = 3;
+      workspaceAppIconSizeOffset = 0;
       groupWorkspaceApps = true;
       workspaceFollowFocus = false;
       showOccupiedWorkspacesOnly = false;
       reverseScrolling = false;
       workspaceColorMode = "default";
+      workspaceOccupiedColorMode = "none";
       workspaceUnfocusedColorMode = "default";
       workspaceUrgentColorMode = "default";
       workspaceFocusedBorderEnabled = false;
@@ -173,6 +179,9 @@ _: {
       clockCompactMode = false;
       focusedWindowCompactMode = false;
       runningAppsCompactMode = true;
+      barMaxVisibleApps = 0;
+      barMaxVisibleRunningApps = 0;
+      barShowOverflowBadge = true;
       keyboardLayoutNameCompactMode = false;
       runningAppsCurrentWorkspace = false;
       runningAppsGroupByApp = false;
@@ -211,10 +220,17 @@ _: {
       centeringMode = "index";
       appLauncherViewMode = "list";
       spotlightModalViewMode = "list";
+      browserPickerViewMode = "grid";
+      appPickerViewMode = "grid";
       sortAppsAlphabetically = false;
       appLauncherGridColumns = 4;
       spotlightCloseNiriOverview = true;
       niriOverviewOverlayEnabled = true;
+      dankLauncherV2Size = "compact";
+      dankLauncherV2BorderEnabled = false;
+      dankLauncherV2BorderThickness = 2;
+      dankLauncherV2BorderColor = "primary";
+      dankLauncherV2ShowFooter = true;
 
       # ===== Weather =====
       useAutoLocation = false;
@@ -263,6 +279,8 @@ _: {
       lockScreenShowDate = true;
       lockScreenShowProfileImage = true;
       lockScreenShowPasswordField = true;
+      lockScreenShowMediaPlayer = true;
+      lockScreenPowerOffMonitorsOnLock = false;
       enableFprint = false;
       maxFprintTries = 15;
       lockScreenActiveMonitor = "all";
@@ -273,6 +291,7 @@ _: {
       # ===== Dock =====
       showDock = false;
       dockAutoHide = false;
+      dockSmartAutoHide = false;
       dockGroupByApp = false;
       dockOpenOnOverview = false;
       dockPosition = 1;
@@ -286,6 +305,16 @@ _: {
       dockBorderOpacity = 1;
       dockBorderThickness = 1;
       dockIsolateDisplays = false;
+      dockLauncherEnabled = false;
+      dockLauncherLogoMode = "apps";
+      dockLauncherLogoCustomPath = "";
+      dockLauncherLogoColorOverride = "";
+      dockLauncherLogoSizeOffset = 0;
+      dockLauncherLogoBrightness = 0.5;
+      dockLauncherLogoContrast = 1;
+      dockMaxVisibleApps = 0;
+      dockMaxVisibleRunningApps = 0;
+      dockShowOverflowBadge = true;
 
       # ===== Notifications =====
       notificationOverlayEnabled = false;
@@ -330,6 +359,9 @@ _: {
 
       # ===== Display Settings =====
       displayNameMode = "system";
+      displayShowDisconnected = false;
+      displaySnapToEdge = true;
+      displayProfileAutoSelect = false;
 
       # ===== Hyprland Output Settings =====
       hyprlandOutputSettings = {
@@ -361,18 +393,34 @@ _: {
             "music"
             "clock"
             "weather"
-          ];
-          rightWidgets = [
             {
               id = "tailscale";
               enabled = true;
             }
+          ];
+          rightWidgets = [
             {
-              id = "systemTray";
+              id = "grimblast";
               enabled = true;
             }
             {
-              id = "clipboard";
+              id = "vpn";
+              enabled = true;
+            }
+            {
+              id = "dankPomodoroTimer";
+              enabled = true;
+            }
+            {
+              id = "dockerManager";
+              enabled = true;
+            }
+            {
+              id = "privacyIndicator";
+              enabled = true;
+            }
+            {
+              id = "systemTray";
               enabled = true;
             }
             {
@@ -385,6 +433,10 @@ _: {
             }
             {
               id = "notificationButton";
+              enabled = true;
+            }
+            {
+              id = "powerUsagePlugin";
               enabled = true;
             }
             {
