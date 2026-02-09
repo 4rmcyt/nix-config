@@ -33,7 +33,6 @@
       mcp-nixos
       materialgram
       bat
-      busybox
       devenv
       distrobox
       ffmpegthumbnailer
@@ -74,6 +73,9 @@
           python-lsp-server
         ]
       ))
+
+      opencode
+      opencode-desktop
     ];
 
     sessionVariables = {

@@ -12,7 +12,7 @@
       # =================================================================
       btop
       cpuid
-      coreutils-full
+      uutils-coreutils
       curl
       direnv
       duf # disk usage
