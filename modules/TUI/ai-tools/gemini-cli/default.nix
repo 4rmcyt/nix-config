@@ -4,13 +4,13 @@
   lib,
   ...
 }: let
-  mkSystemPrompt = import ../system-prompt;
+  systemPrompts = import ../system-prompt;
   geminiSettingsJson = pkgs.writeText "gemini-settings.json" (builtins.toJSON {
     mcpServers = config.programs.mcp.servers;
     security.auth.selectedType = "gemini-api-key";
     general.previewFeatures = true;
   });
-  geminiMd = pkgs.writeText "GEMINI.md" (mkSystemPrompt lib config.programs.mcp.servers);
+  geminiMd = pkgs.writeText "GEMINI.md" (systemPrompts.gemini lib config.programs.mcp.servers);
 in {
   home.packages = [pkgs.gemini-cli];
 

@@ -4,24 +4,55 @@
   pkgs,
   ...
 }: let
-  mkSystemPrompt = import ../system-prompt;
-  mcpConfigJson = pkgs.writeText "mcp-config.json" (builtins.toJSON {
-    mcpServers = config.programs.mcp.servers;
-  });
+  systemPrompts = import ../system-prompt;
 in {
   programs.claude-code = {
     enable = true;
     package = pkgs.claude-code;
+    enableMcpIntegration = true;
 
-    settings = {
-      systemPrompt = mkSystemPrompt lib config.programs.mcp.servers;
+    memory.text = systemPrompts.claude lib config.programs.mcp.servers;
+
+    hooks = {
+      SessionStart = [
+        {
+          matcher = "";
+          hooks = [
+            {
+              type = "command";
+              command = "${lib.getExe pkgs.beads} prime";
+            }
+          ];
+        }
+      ];
+      PreCompact = [
+        {
+          matcher = "";
+          hooks = [
+            {
+              type = "command";
+              command = "${lib.getExe pkgs.beads} prime";
+            }
+          ];
+        }
+      ];
+    };
+
+    agents = {
+      "nixos-config" = builtins.readFile ../agents/nixos-config.md;
+      "homeserver-admin" = builtins.readFile ../agents/homeserver-admin.md;
+      "code-reviewer" = builtins.readFile ../agents/code-reviewer.md;
+    };
+
+    commands = {
+      "commit" = builtins.readFile ../commands/commit.md;
+      "create-plan" = builtins.readFile ../commands/create-plan.md;
+      "review-code" = builtins.readFile ../commands/review-code.md;
+    };
+
+    skills = {
+      "nixos-advisor" = builtins.readFile ../skills/nixos-advisor/SKILL.md;
+      "nixos-command-not-found" = builtins.readFile ../skills/nixos-command-not-found/SKILL.md;
     };
   };
-
-  # Copy MCP config instead of symlinking (Claude has bug with symlinks)
-  home.activation.claudeMcpConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    mkdir -p "$HOME/.claude"
-    cp -f ${mcpConfigJson} "$HOME/.claude/mcp.json"
-    chmod 600 "$HOME/.claude/mcp.json"
-  '';
 }

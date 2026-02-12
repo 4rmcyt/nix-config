@@ -3,7 +3,7 @@
   lib,
   ...
 }: let
-  mkSystemPrompt = import ../../../TUI/ai-tools/system-prompt;
+  systemPrompts = import ../../../TUI/ai-tools/system-prompt;
 in {
   programs.zed-editor.userSettings = {
     features.copilot = false;
@@ -32,7 +32,7 @@ in {
         }
       ];
       always_allow_tool_actions = false;
-      system_prompt = mkSystemPrompt lib config.programs.mcp.servers;
+      system_prompt = systemPrompts.llm lib config.programs.mcp.servers;
     };
 
     language_models = {

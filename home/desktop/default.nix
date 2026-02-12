@@ -8,7 +8,7 @@
     ../../modules/GUI/terminal
     ../../modules/GUI/IDE
     ../../modules/TUI/ai-tools
-    
+
     ../../modules/GUI/mpv
     ../../modules/GUI/obsidian
     ../../modules/TUI/common
@@ -71,9 +71,6 @@
           python-lsp-server
         ]
       ))
-
-      opencode
-      opencode-desktop
     ];
 
     sessionVariables = {

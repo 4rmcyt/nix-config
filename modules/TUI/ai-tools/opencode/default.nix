@@ -11,9 +11,7 @@ in {
     package = pkgs.opencode;
     enableMcpIntegration = true;
 
-    rules = {
-      "system" = systemPrompts.llm lib config.programs.mcp.servers;
-    };
+    rules = systemPrompts.llm lib config.programs.mcp.servers;
 
     agents = {
       "nixos-config" = builtins.readFile ../agents/nixos-config.md;
