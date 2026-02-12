@@ -34,7 +34,7 @@
     # TUI
     ../../../modules/TUI/tty.nix
     ../../../modules/users/zeev
-    ../../../modules/TUI/llama-cpp
+    # llama-cpp moved to HM-level (modules/TUI/ai-tools/llama-cpp)
     # ../../../modules/TUI/litellm
     # mcp moved to HM-level (home/desktop)
     # ../../../modules/GUI/OBS

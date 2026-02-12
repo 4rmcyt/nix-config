@@ -1,0 +1,8 @@
+{ ... }:
+{
+  imports = [
+    # ./pycharm
+    ./vscode
+    ./zed
+  ];
+}

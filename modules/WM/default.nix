@@ -1,17 +1,4 @@
 {config, ...}: {
-  # =================================================================
-  # Window Manager Base Module
-  # =================================================================
-  # This module provides common WM configuration (XDG, etc.)
-  # Hyprland module should be imported directly in host-specific home configs.
-
-  imports = [
-    ../GUI/zed
-  ];
-
-  # =================================================================
-  # XDG Configuration
-  # =================================================================
   xdg = {
     enable = true;
 

@@ -5,9 +5,10 @@
 }:
 {
   imports = [
-    ../../modules/GUI/vscode
-    # ../../modules/GUI/pycharm
     ../../modules/GUI/terminal
+    ../../modules/GUI/IDE
+    ../../modules/TUI/ai-tools
+    
     ../../modules/GUI/mpv
     ../../modules/GUI/obsidian
     ../../modules/TUI/common
@@ -15,9 +16,7 @@
     ../../modules/TUI/atuin
     ../../modules/TUI/zellij
     ../../modules/TUI/calendar
-    ../../modules/TUI/gemini-cli
-    ../../modules/TUI/mcp
-    ../../modules/TUI/claude-code
+
     ../../modules/WM
     ../../modules/WM/hyprland
   ];
