@@ -13,29 +13,31 @@ in {
 
     memory.text = systemPrompts.claude lib config.programs.mcp.servers;
 
-    hooks = {
-      SessionStart = [
-        {
-          matcher = "";
-          hooks = [
-            {
-              type = "command";
-              command = "${lib.getExe pkgs.beads} prime";
-            }
-          ];
-        }
-      ];
-      PreCompact = [
-        {
-          matcher = "";
-          hooks = [
-            {
-              type = "command";
-              command = "${lib.getExe pkgs.beads} prime";
-            }
-          ];
-        }
-      ];
+    settings = {
+      hooks = {
+        SessionStart = [
+          {
+            matcher = "";
+            hooks = [
+              {
+                type = "command";
+                command = "${lib.getExe pkgs.beads} prime";
+              }
+            ];
+          }
+        ];
+        PreCompact = [
+          {
+            matcher = "";
+            hooks = [
+              {
+                type = "command";
+                command = "${lib.getExe pkgs.beads} prime";
+              }
+            ];
+          }
+        ];
+      };
     };
 
     agents = {
