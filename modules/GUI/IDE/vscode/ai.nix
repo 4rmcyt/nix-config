@@ -5,7 +5,7 @@
   ...
 }: let
   mcpConfig = {mcpServers = config.programs.mcp.servers;};
-  mkSystemPrompt = import ../../shared/ai-system-prompt.nix;
+  mkSystemPrompt = import ../../../TUI/ai-tools/system-prompt;
   mcpConfigJson = pkgs.writeText "mcp-config.json" (builtins.toJSON mcpConfig);
   claudeMd = pkgs.writeText "CLAUDE.md" (mkSystemPrompt lib config.programs.mcp.servers);
 in {

@@ -5,6 +5,5 @@
     ./claude-code
     ./gemini-cli
     ./mcp
-    ./system-prompt
   ];
 }
