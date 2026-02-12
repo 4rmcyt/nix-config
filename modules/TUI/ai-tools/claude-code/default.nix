@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  mkSystemPrompt = import ../../shared/ai-system-prompt.nix;
+  mkSystemPrompt = import ../system-prompt;
   mcpConfigJson = pkgs.writeText "mcp-config.json" (builtins.toJSON {
     mcpServers = config.programs.mcp.servers;
   });
