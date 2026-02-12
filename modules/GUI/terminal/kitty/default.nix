@@ -16,9 +16,14 @@
       confirm_os_window_close = 0;
       dynamic_background_opacity = true;
       enable_audio_bell = false;
-      tab_bar_style = "powerline";
-      tab_powerline_style = "round";
+      tab_bar_style = "fade";
       tab_bar_edge = "bottom";
+      active_tab_foreground = "#000";
+      active_tab_background = "#73D216";
+      active_tab_font_style = "italic";
+      inactive_tab_foreground = "#444";
+      inactive_tab_background = "#999";
+      inactive_tab_font_style = "normal";
       cursor_trail = 200;
       cursor_trail_decay = "0.1 0.4";
       cursor_trail_start_threshold = 2;
