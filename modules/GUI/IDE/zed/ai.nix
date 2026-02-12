@@ -3,7 +3,7 @@
   lib,
   ...
 }: let
-  mkSystemPrompt = import ../../shared/ai-system-prompt.nix;
+  mkSystemPrompt = import ../../../TUI/ai-tools/system-prompt;
 in {
   programs.zed-editor.userSettings = {
     features.copilot = false;
