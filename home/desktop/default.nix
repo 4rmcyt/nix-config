@@ -9,6 +9,7 @@
     # ../../modules/GUI/pycharm
     ../../modules/GUI/ghostty
     ../../modules/GUI/wezterm
+    ../../modules/GUI/kitty
     ../../modules/GUI/mpv
     ../../modules/GUI/obsidian
     ../../modules/TUI/common

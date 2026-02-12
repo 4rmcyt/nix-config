@@ -416,10 +416,6 @@ _: {
               enabled = true;
             }
             {
-              id = "privacyIndicator";
-              enabled = true;
-            }
-            {
               id = "systemTray";
               enabled = true;
             }
@@ -433,10 +429,6 @@ _: {
             }
             {
               id = "notificationButton";
-              enabled = true;
-            }
-            {
-              id = "powerUsagePlugin";
               enabled = true;
             }
             {
