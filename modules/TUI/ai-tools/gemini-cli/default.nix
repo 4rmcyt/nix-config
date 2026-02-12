@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  mkSystemPrompt = import ../../shared/ai-system-prompt.nix;
+  mkSystemPrompt = import ../system-prompt;
   geminiSettingsJson = pkgs.writeText "gemini-settings.json" (builtins.toJSON {
     mcpServers = config.programs.mcp.servers;
     security.auth.selectedType = "gemini-api-key";
