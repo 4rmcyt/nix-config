@@ -288,7 +288,6 @@ disko = {
 
             inputs.flatpaks.nixosModules.default
             inputs.nix-gaming.nixosModules.pipewireLowLatency
-            ({ pkgs, ... }: { nix.package = pkgs.lixPackageSets.git.lix; })
             inputs.dms.nixosModules.dank-material-shell
             inputs.dms.nixosModules.greeter
             (mkNixosConfig "desktop" { })
