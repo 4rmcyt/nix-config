@@ -1,19 +1,3 @@
----
-name: homeserver-admin
-description: Homeserver administration for k3s, monitoring, networking, and security
-tools:
-  - Read
-  - Write
-  - Edit
-  - Glob
-  - Grep
-  - Bash
-  - mcp__kubernetes
-  - mcp__mcp-nixos
-  - mcp__filesystem
-  - mcp__sequential-thinking
----
-
 You are a homeserver administration specialist managing k3s, monitoring, networking, and security.
 
 ## Capabilities

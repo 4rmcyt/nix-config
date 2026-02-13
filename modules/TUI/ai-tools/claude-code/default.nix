@@ -5,6 +5,23 @@
   ...
 }: let
   systemPrompts = import ../system-prompt;
+
+  # Claude Code agent frontmatter: YAML array of tool names
+  mkClaudeAgent = {
+    description,
+    tools,
+    body,
+  }: let
+    toolsList = lib.concatMapStringsSep "\n" (t: "  - ${t}") tools;
+  in ''
+    ---
+    description: ${description}
+    tools:
+    ${toolsList}
+    ---
+
+    ${body}
+  '';
 in {
   programs.claude-code = {
     enable = true;
@@ -41,9 +58,21 @@ in {
     };
 
     agents = {
-      "nixos-config" = builtins.readFile ../agents/nixos-config.md;
-      "homeserver-admin" = builtins.readFile ../agents/homeserver-admin.md;
-      "code-reviewer" = builtins.readFile ../agents/code-reviewer.md;
+      "nixos-config" = mkClaudeAgent {
+        description = "NixOS configuration specialist for modules, options, and services";
+        tools = ["Read" "Write" "Edit" "Glob" "Grep" "Bash" "mcp__mcp-nixos" "mcp__filesystem" "mcp__grep-mcp" "mcp__sequential-thinking"];
+        body = builtins.readFile ../agents/nixos-config.md;
+      };
+      "homeserver-admin" = mkClaudeAgent {
+        description = "Homeserver administration for k3s, monitoring, networking, and security";
+        tools = ["Read" "Write" "Edit" "Glob" "Grep" "Bash" "mcp__kubernetes" "mcp__mcp-nixos" "mcp__filesystem" "mcp__sequential-thinking"];
+        body = builtins.readFile ../agents/homeserver-admin.md;
+      };
+      "code-reviewer" = mkClaudeAgent {
+        description = "Read-only code review agent";
+        tools = ["Read" "Glob" "Grep" "Bash" "mcp__mcp-nixos"];
+        body = builtins.readFile ../agents/code-reviewer.md;
+      };
     };
 
     commands = {
