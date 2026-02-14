@@ -13,11 +13,13 @@
     denyPermissions ? {},
     body,
   }: let
-    toolsLines = lib.optionalString (disableTools != {})
+    toolsLines =
+      lib.optionalString (disableTools != {})
       (let
         entries = lib.concatStringsSep "\n" (lib.mapAttrsToList (k: v: "  ${k}: ${lib.boolToString v}") disableTools);
       in "tools:\n${entries}\n");
-    permLines = lib.optionalString (denyPermissions != {})
+    permLines =
+      lib.optionalString (denyPermissions != {})
       (let
         entries = lib.concatStringsSep "\n" (lib.mapAttrsToList (k: v: "  ${k}: ${v}") denyPermissions);
       in "permission:\n${entries}\n");
@@ -76,7 +78,10 @@ in {
       };
       "code-reviewer" = mkOpenCodeAgent {
         description = "Read-only code review agent";
-        disableTools = {write = false; edit = false;};
+        disableTools = {
+          write = false;
+          edit = false;
+        };
         denyPermissions = {edit = "deny";};
         body = builtins.readFile ../agents/code-reviewer.md;
       };

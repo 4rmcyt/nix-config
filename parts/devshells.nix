@@ -1,28 +1,29 @@
 # Development shells via flake-parts perSystem.
-{ inputs, ... }:
-{
-  perSystem =
-    { pkgs, system, ... }:
-    {
-      devShells = {
-        default = import ../devshell.nix {
-          inherit pkgs inputs;
-          cachix.pull = [ "4rmcyt" ];
-        };
+{inputs, ...}: {
+  perSystem = {
+    pkgs,
+    system,
+    ...
+  }: {
+    devShells = {
+      default = import ../devshell.nix {
+        inherit pkgs inputs;
+        cachix.pull = ["4rmcyt"];
+      };
 
-        ide = import ../shells/ide.nix {
-          inherit pkgs;
-        };
+      ide = import ../shells/ide.nix {
+        inherit pkgs;
+      };
 
-        cuda = import ../shells/cuda-shell.nix {
-          pkgs = import inputs.nixpkgs {
-            inherit system;
-            config = {
-              allowUnfree = true;
-              cudaSupport = true;
-            };
+      cuda = import ../shells/cuda-shell.nix {
+        pkgs = import inputs.nixpkgs {
+          inherit system;
+          config = {
+            allowUnfree = true;
+            cudaSupport = true;
           };
         };
       };
     };
+  };
 }

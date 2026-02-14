@@ -1,11 +1,13 @@
 # Wires home-manager into NixOS as a module.
 # Imports HM NixOS module, configures shared settings,
 # and imports homeManager.base for the owner user.
-{ config, inputs, ... }:
-let
-  owner = config.meta.owner;
-in
 {
+  config,
+  inputs,
+  ...
+}: let
+  inherit (config.meta) owner;
+in {
   modules.nixos.base = {
     imports = [
       inputs.home-manager.nixosModules.home-manager
@@ -24,8 +26,8 @@ in
       useGlobalPkgs = false;
       useUserPackages = true;
       backupFileExtension = "hm-backup";
-      sharedModules = [ { home.enableNixpkgsReleaseCheck = false; } ];
-      extraSpecialArgs = { inherit inputs; };
+      sharedModules = [{home.enableNixpkgsReleaseCheck = false;}];
+      extraSpecialArgs = {inherit inputs;};
 
       users.${owner.username} = {
         imports = [

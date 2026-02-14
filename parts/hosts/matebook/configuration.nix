@@ -1,11 +1,13 @@
 # Matebook host definition via Dendritic configurations.nixos option.
-{ config, inputs, ... }:
-let
-  owner = config.meta.owner;
-  nixosBase = config.modules.nixos.base;
-in
 {
-  configurations.nixos.matebook.module = { ... }: {
+  config,
+  inputs,
+  ...
+}: let
+  inherit (config.meta) owner;
+  nixosBase = config.modules.nixos.base;
+in {
+  configurations.nixos.matebook.module = {...}: {
     imports = [
       nixosBase
       ../../../hosts/nixos/matebook

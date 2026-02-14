@@ -1,10 +1,13 @@
 # Shared NixOS settings applied to all hosts via modules.nixos.base.
 # Merges with the HM integration in home-manager-integration.nix.
-{ inputs, lib, ... }:
 {
+  inputs,
+  lib,
+  ...
+}: {
   modules.nixos.base = {
     # Thread flake inputs into NixOS module args (replaces specialArgs)
-    _module.args = { inherit inputs; };
+    _module.args = {inherit inputs;};
 
     # Common nixpkgs config
     nixpkgs.config.allowUnfree = true;

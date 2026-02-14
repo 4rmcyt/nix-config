@@ -1,11 +1,18 @@
 # WSL host definition via Dendritic configurations.nixos option.
-{ config, inputs, ... }:
-let
-  owner = config.meta.owner;
-  nixosBase = config.modules.nixos.base;
-in
 {
-  configurations.nixos.wsl.module = { config, pkgs, lib, ... }: {
+  config,
+  inputs,
+  ...
+}: let
+  inherit (config.meta) owner;
+  nixosBase = config.modules.nixos.base;
+in {
+  configurations.nixos.wsl.module = {
+    config,
+    pkgs,
+    lib,
+    ...
+  }: {
     imports = [
       nixosBase
 
@@ -70,8 +77,8 @@ in
 
     # Boot
     boot = {
-      kernelModules = [ "nvidia" ];
-      extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
+      kernelModules = ["nvidia"];
+      extraModulePackages = [pkgs.linuxPackages.nvidia_x11];
       kernel.sysctl = {
         "kernel.nmi_watchdog" = 0;
         "vm.swappiness" = 10;
@@ -104,7 +111,7 @@ in
       etc."ld.so.conf.d/wsl-nvidia.conf".text = ''
         /usr/lib/wsl/lib
       '';
-      shells = with pkgs; [ zsh ];
+      shells = with pkgs; [zsh];
       systemPackages = with pkgs; [
         rsync
         util-linux
@@ -141,8 +148,8 @@ in
       useNetworkd = false;
       useDHCP = false;
       dhcpcd.enable = false;
-      interfaces = { };
-      firewall.allowedTCPPorts = [ 4242 ];
+      interfaces = {};
+      firewall.allowedTCPPorts = [4242];
     };
     systemd.network.enable = false;
 
@@ -177,7 +184,7 @@ in
       };
       vscode-server.enable = true;
       resolved.enable = false;
-      xserver.videoDrivers = [ "nvidia" ];
+      xserver.videoDrivers = ["nvidia"];
       timesyncd.enable = lib.mkForce false;
     };
 
@@ -189,7 +196,7 @@ in
         group = "git";
       };
       users.${owner.username}.shell = pkgs.zsh;
-      groups.git = { };
+      groups.git = {};
     };
 
     # WSL

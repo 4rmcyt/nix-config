@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   imports = [
     ./llama-cpp
     ./claude-code

@@ -18,7 +18,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     ucodenix.url = "github:e-tho/ucodenix";
-disko = {
+    disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -184,9 +184,8 @@ disko = {
     import-tree.url = "github:vic/import-tree";
   };
 
-  outputs =
-    inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
       imports = [
         (inputs.import-tree ./parts)
       ];

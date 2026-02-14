@@ -1,11 +1,13 @@
 # Base home-manager configuration applied to all hosts.
 # Provides: sops, agenix, allowUnfree, overlays, stateVersion.
-{ config, inputs, ... }:
-let
-  owner = config.meta.owner;
-  system = "x86_64-linux";
-in
 {
+  config,
+  inputs,
+  ...
+}: let
+  inherit (config.meta) owner;
+  system = "x86_64-linux";
+in {
   modules.homeManager.base = {
     imports = [
       inputs.sops-nix.homeManagerModules.sops
@@ -13,7 +15,7 @@ in
     ];
 
     home = {
-      username = owner.username;
+      inherit (owner) username;
       homeDirectory = "/home/${owner.username}";
       stateVersion = "24.11";
     };

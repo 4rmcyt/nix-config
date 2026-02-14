@@ -1,8 +1,11 @@
 # Provides the configurations.nixos option.
 # Each entry produces a flake.nixosConfigurations.<name> output
 # and a corresponding check for the toplevel derivation.
-{ lib, config, ... }:
 {
+  lib,
+  config,
+  ...
+}: {
   options.configurations.nixos = lib.mkOption {
     type = lib.types.lazyAttrsOf (
       lib.types.submodule {
@@ -11,13 +14,15 @@
         };
       }
     );
-    default = { };
+    default = {};
   };
 
   config.flake = {
-    nixosConfigurations = lib.mapAttrs (
-      _name: { module }: lib.nixosSystem { modules = [ module ]; }
-    ) config.configurations.nixos;
+    nixosConfigurations =
+      lib.mapAttrs (
+        _name: {module}: lib.nixosSystem {modules = [module];}
+      )
+      config.configurations.nixos;
 
     checks = lib.mkMerge (
       lib.mapAttrsToList (
@@ -26,7 +31,8 @@
             "configurations/nixos/${name}" = nixos.config.system.build.toplevel;
           };
         }
-      ) config.flake.nixosConfigurations
+      )
+      config.flake.nixosConfigurations
     );
   };
 }

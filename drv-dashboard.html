@@ -1,307 +1,670 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NixOS System Derivation — desktop</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #1a1a2e; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 24px; min-height: 100vh; }
-  h1 { font-size: 1.1rem; color: #fff; margin-bottom: 4px; }
-  .subtitle { font-size: 0.8rem; color: #888; margin-bottom: 20px; font-family: monospace; }
-  .grid { display: grid; gap: 20px; }
-  .top-stats { grid-template-columns: repeat(4, 1fr); }
-  .main-grid { grid-template-columns: 1fr 1fr; margin-top: 20px; }
-  .full-width { grid-column: 1 / -1; }
-  .card {
-    background: #16213e;
-    border-radius: 12px;
-    padding: 24px;
-    border: 1px solid #1a1a4e;
-  }
-  .stat-card .value { font-size: 1.8rem; font-weight: 700; font-family: 'JetBrains Mono', 'Fira Code', monospace; color: #fff; }
-  .stat-card .label { font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
-  .card h3 { font-size: 0.85rem; color: #aaa; margin-bottom: 16px; letter-spacing: 0.5px; }
-  .bar-row { display: flex; align-items: center; margin-bottom: 10px; }
-  .bar-label { width: 200px; font-size: 0.78rem; color: #ccc; flex-shrink: 0; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .bar-track { flex: 1; height: 22px; background: #0f3460; border-radius: 6px; overflow: hidden; margin: 0 12px; }
-  .bar-fill { height: 100%; border-radius: 6px; transition: width 0.6s ease; min-width: 2px; }
-  .bar-value { font-size: 0.78rem; color: #aaa; width: 60px; text-align: right; font-family: monospace; flex-shrink: 0; }
-  .param-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-  .param-tag {
-    background: #0f3460;
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 0.72rem;
-    font-family: monospace;
-    color: #ccc;
-    border: 1px solid #1a1a4e;
-  }
-  .param-tag .key { color: #4ecca3; }
-  .param-tag .eq { color: #666; }
-  .param-tag .val { color: #f9a825; }
-  .param-tag.flag { color: #48b1e0; }
-  .category { margin-bottom: 16px; }
-  .category-label { font-size: 0.7rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-  .component-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-  .component-box {
-    background: #0f3460;
-    border-radius: 8px;
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .component-box .name { font-size: 0.8rem; color: #fff; font-weight: 600; }
-  .component-box .detail { font-size: 0.7rem; color: #888; }
-  .component-box .icon { font-size: 1.2rem; margin-bottom: 4px; }
-  .tree-node { padding-left: 20px; border-left: 1px solid #1a1a4e; margin-left: 8px; }
-  .tree-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 0.78rem; font-family: monospace; }
-  .tree-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .tree-name { color: #ccc; }
-  .tree-count { color: #888; font-size: 0.7rem; }
-  .donut-container { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
-  .donut-legend { display: flex; flex-direction: column; gap: 8px; }
-  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; }
-  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .legend-name { color: #ccc; min-width: 180px; font-family: monospace; }
-  .legend-val { color: #888; font-family: monospace; }
-  .build-script { background: #0a0e1a; border-radius: 8px; padding: 16px; font-family: monospace; font-size: 0.72rem; color: #8892b0; line-height: 1.6; overflow-x: auto; max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; }
-  .build-script .cmd { color: #4ecca3; }
-  .build-script .path { color: #48b1e0; }
-  .build-script .var { color: #f9a825; }
-</style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NixOS System Derivation — desktop</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: #1a1a2e;
+        color: #e0e0e0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        padding: 24px;
+        min-height: 100vh;
+      }
+      h1 {
+        font-size: 1.1rem;
+        color: #fff;
+        margin-bottom: 4px;
+      }
+      .subtitle {
+        font-size: 0.8rem;
+        color: #888;
+        margin-bottom: 20px;
+        font-family: monospace;
+      }
+      .grid {
+        display: grid;
+        gap: 20px;
+      }
+      .top-stats {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .main-grid {
+        grid-template-columns: 1fr 1fr;
+        margin-top: 20px;
+      }
+      .full-width {
+        grid-column: 1 / -1;
+      }
+      .card {
+        background: #16213e;
+        border-radius: 12px;
+        padding: 24px;
+        border: 1px solid #1a1a4e;
+      }
+      .stat-card .value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        font-family: "JetBrains Mono", "Fira Code", monospace;
+        color: #fff;
+      }
+      .stat-card .label {
+        font-size: 0.7rem;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 4px;
+      }
+      .card h3 {
+        font-size: 0.85rem;
+        color: #aaa;
+        margin-bottom: 16px;
+        letter-spacing: 0.5px;
+      }
+      .bar-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .bar-label {
+        width: 200px;
+        font-size: 0.78rem;
+        color: #ccc;
+        flex-shrink: 0;
+        font-family: monospace;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .bar-track {
+        flex: 1;
+        height: 22px;
+        background: #0f3460;
+        border-radius: 6px;
+        overflow: hidden;
+        margin: 0 12px;
+      }
+      .bar-fill {
+        height: 100%;
+        border-radius: 6px;
+        transition: width 0.6s ease;
+        min-width: 2px;
+      }
+      .bar-value {
+        font-size: 0.78rem;
+        color: #aaa;
+        width: 60px;
+        text-align: right;
+        font-family: monospace;
+        flex-shrink: 0;
+      }
+      .param-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .param-tag {
+        background: #0f3460;
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-size: 0.72rem;
+        font-family: monospace;
+        color: #ccc;
+        border: 1px solid #1a1a4e;
+      }
+      .param-tag .key {
+        color: #4ecca3;
+      }
+      .param-tag .eq {
+        color: #666;
+      }
+      .param-tag .val {
+        color: #f9a825;
+      }
+      .param-tag.flag {
+        color: #48b1e0;
+      }
+      .category {
+        margin-bottom: 16px;
+      }
+      .category-label {
+        font-size: 0.7rem;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+      }
+      .component-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+      }
+      .component-box {
+        background: #0f3460;
+        border-radius: 8px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .component-box .name {
+        font-size: 0.8rem;
+        color: #fff;
+        font-weight: 600;
+      }
+      .component-box .detail {
+        font-size: 0.7rem;
+        color: #888;
+      }
+      .component-box .icon {
+        font-size: 1.2rem;
+        margin-bottom: 4px;
+      }
+      .tree-node {
+        padding-left: 20px;
+        border-left: 1px solid #1a1a4e;
+        margin-left: 8px;
+      }
+      .tree-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 0;
+        font-size: 0.78rem;
+        font-family: monospace;
+      }
+      .tree-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .tree-name {
+        color: #ccc;
+      }
+      .tree-count {
+        color: #888;
+        font-size: 0.7rem;
+      }
+      .donut-container {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+      .donut-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.78rem;
+      }
+      .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .legend-name {
+        color: #ccc;
+        min-width: 180px;
+        font-family: monospace;
+      }
+      .legend-val {
+        color: #888;
+        font-family: monospace;
+      }
+      .build-script {
+        background: #0a0e1a;
+        border-radius: 8px;
+        padding: 16px;
+        font-family: monospace;
+        font-size: 0.72rem;
+        color: #8892b0;
+        line-height: 1.6;
+        overflow-x: auto;
+        max-height: 300px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+      .build-script .cmd {
+        color: #4ecca3;
+      }
+      .build-script .path {
+        color: #48b1e0;
+      }
+      .build-script .var {
+        color: #f9a825;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>nixos-system-desktop-26.05.20260208.d6c7193</h1>
+    <div class="subtitle">
+      /nix/store/8hvcsvh0h6mhcnsb9b24890ry7gqz4cq-…drv →
+      /nix/store/9dfkqibwhnbwwbsq6ay7f6phch2n2w54-…
+    </div>
 
-<h1>nixos-system-desktop-26.05.20260208.d6c7193</h1>
-<div class="subtitle">/nix/store/8hvcsvh0h6mhcnsb9b24890ry7gqz4cq-…drv → /nix/store/9dfkqibwhnbwwbsq6ay7f6phch2n2w54-…</div>
+    <div class="grid top-stats" id="topStats"></div>
+    <div class="grid main-grid" id="mainGrid"></div>
 
-<div class="grid top-stats" id="topStats"></div>
-<div class="grid main-grid" id="mainGrid"></div>
+    <script>
+      const data = {
+        name: "nixos-system-desktop-26.05.20260208.d6c7193",
+        system: "x86_64-linux",
+        builder: "bash-5.3p9",
+        nixosLabel: "26.05.20260208.d6c7193",
+        closureSize: 430582536,
+        totalDeps: 18148,
+        directInputDrvs: 25,
+        directInputSrcs: 2,
+        inputDrvs: [
+          { name: "etc", deps: 17992, color: "#4ecca3", category: "system" },
+          {
+            name: "activate",
+            deps: 18006,
+            color: "#48b1e0",
+            category: "system",
+          },
+          {
+            name: "system-path",
+            deps: 11828,
+            color: "#7c4dff",
+            category: "system",
+          },
+          {
+            name: "ensure-all-wrappers-paths-exist",
+            deps: 4289,
+            color: "#f9a825",
+            category: "checks",
+          },
+          {
+            name: "limine-install.py",
+            deps: 2864,
+            color: "#e91e63",
+            category: "boot",
+          },
+          { name: "boot.json", deps: 2668, color: "#ff6e40", category: "boot" },
+          {
+            name: "initrd-linux-zen-6.18.7",
+            deps: 2667,
+            color: "#26c6da",
+            category: "kernel",
+          },
+          {
+            name: "linux-zen-6.18.7-modules",
+            deps: 2430,
+            color: "#ab47bc",
+            category: "kernel",
+          },
+          {
+            name: "firmware",
+            deps: 2356,
+            color: "#66bb6a",
+            category: "kernel",
+          },
+          {
+            name: "switch-to-configuration-0.1.0",
+            deps: 1642,
+            color: "#5c6bc0",
+            category: "system",
+          },
+          {
+            name: "dry-activate",
+            deps: 1476,
+            color: "#78909c",
+            category: "system",
+          },
+          {
+            name: "systemd-258.3",
+            deps: 1439,
+            color: "#ef5350",
+            category: "system",
+          },
+          {
+            name: "xkb-validated",
+            deps: 1157,
+            color: "#8d6e63",
+            category: "checks",
+          },
+          {
+            name: "check-sshd-config",
+            deps: 941,
+            color: "#ffca28",
+            category: "checks",
+          },
+          {
+            name: "stage-2-init.sh",
+            deps: 961,
+            color: "#29b6f6",
+            category: "boot",
+          },
+          {
+            name: "linux-zen-6.18.7",
+            deps: 941,
+            color: "#ce93d8",
+            category: "kernel",
+          },
+          {
+            name: "switch-inhibitors",
+            deps: 346,
+            color: "#a1887f",
+            category: "system",
+          },
+          { name: "jq-1.8.1", deps: 345, color: "#4db6ac", category: "tools" },
+          {
+            name: "glibc-locales-2.42-47",
+            deps: 326,
+            color: "#aed581",
+            category: "tools",
+          },
+          {
+            name: "perl-5.42.0-env",
+            deps: 323,
+            color: "#90a4ae",
+            category: "tools",
+          },
+          {
+            name: "make-shell-wrapper-hook",
+            deps: 278,
+            color: "#ffab91",
+            category: "tools",
+          },
+          {
+            name: "stdenv-linux",
+            deps: 276,
+            color: "#80cbc4",
+            category: "tools",
+          },
+          {
+            name: "gnused-4.9",
+            deps: 194,
+            color: "#b0bec5",
+            category: "tools",
+          },
+          {
+            name: "bash-5.3p9",
+            deps: 193,
+            color: "#bcaaa4",
+            category: "tools",
+          },
+          {
+            name: "pre-switch-checks",
+            deps: 0,
+            color: "#9e9e9e",
+            category: "checks",
+          },
+        ],
+        kernelParams:
+          "amd_pstate=active amd_prefcore=1 microcode.amd_sha_check=off amdgpu.dpm=1 amdgpu.ppfeaturemask=0xfffd7fff mitigations=auto net.core.default_qdisc=fq net.ipv4.tcp_congestion_control=bbr nvidia-drm.fbdev=1 nvidia-drm.modeset=1 nvidia.NVreg_PreserveVideoMemoryAllocations=1 preempt=full zfs.zfs_arc_max=25769803776 cfg80211.ieee80211_regdom=CA loglevel=4 nohibernate rd.systemd.show_status=auto rd.udev.log_priority=3 systemd.unified_cgroup_hierarchy=1 usb-storage.delay_use=0 usbcore.autosuspend=-1 usbcore.quirks=1462:7d75:gki video=DP-4:1920x1080@60 video=DP-5:1920x1080@60 nohibernate loglevel=4 amdgpu.ppfeaturemask=0xfffd7fff lsm=landlock,yama,bpf nvidia-drm.modeset=1 nvidia-drm.fbdev=1 nvidia.NVreg_PreserveVideoMemoryAllocations=1",
+        passedChecks: [
+          "xkb-validated",
+          "check-sshd-config",
+          "ensure-all-wrappers-paths-exist",
+        ],
+      };
 
-<script>
-const data = {
-  name: "nixos-system-desktop-26.05.20260208.d6c7193",
-  system: "x86_64-linux",
-  builder: "bash-5.3p9",
-  nixosLabel: "26.05.20260208.d6c7193",
-  closureSize: 430582536,
-  totalDeps: 18148,
-  directInputDrvs: 25,
-  directInputSrcs: 2,
-  inputDrvs: [
-    { name: "etc", deps: 17992, color: "#4ecca3", category: "system" },
-    { name: "activate", deps: 18006, color: "#48b1e0", category: "system" },
-    { name: "system-path", deps: 11828, color: "#7c4dff", category: "system" },
-    { name: "ensure-all-wrappers-paths-exist", deps: 4289, color: "#f9a825", category: "checks" },
-    { name: "limine-install.py", deps: 2864, color: "#e91e63", category: "boot" },
-    { name: "boot.json", deps: 2668, color: "#ff6e40", category: "boot" },
-    { name: "initrd-linux-zen-6.18.7", deps: 2667, color: "#26c6da", category: "kernel" },
-    { name: "linux-zen-6.18.7-modules", deps: 2430, color: "#ab47bc", category: "kernel" },
-    { name: "firmware", deps: 2356, color: "#66bb6a", category: "kernel" },
-    { name: "switch-to-configuration-0.1.0", deps: 1642, color: "#5c6bc0", category: "system" },
-    { name: "dry-activate", deps: 1476, color: "#78909c", category: "system" },
-    { name: "systemd-258.3", deps: 1439, color: "#ef5350", category: "system" },
-    { name: "xkb-validated", deps: 1157, color: "#8d6e63", category: "checks" },
-    { name: "check-sshd-config", deps: 941, color: "#ffca28", category: "checks" },
-    { name: "stage-2-init.sh", deps: 961, color: "#29b6f6", category: "boot" },
-    { name: "linux-zen-6.18.7", deps: 941, color: "#ce93d8", category: "kernel" },
-    { name: "switch-inhibitors", deps: 346, color: "#a1887f", category: "system" },
-    { name: "jq-1.8.1", deps: 345, color: "#4db6ac", category: "tools" },
-    { name: "glibc-locales-2.42-47", deps: 326, color: "#aed581", category: "tools" },
-    { name: "perl-5.42.0-env", deps: 323, color: "#90a4ae", category: "tools" },
-    { name: "make-shell-wrapper-hook", deps: 278, color: "#ffab91", category: "tools" },
-    { name: "stdenv-linux", deps: 276, color: "#80cbc4", category: "tools" },
-    { name: "gnused-4.9", deps: 194, color: "#b0bec5", category: "tools" },
-    { name: "bash-5.3p9", deps: 193, color: "#bcaaa4", category: "tools" },
-    { name: "pre-switch-checks", deps: 0, color: "#9e9e9e", category: "checks" },
-  ],
-  kernelParams: "amd_pstate=active amd_prefcore=1 microcode.amd_sha_check=off amdgpu.dpm=1 amdgpu.ppfeaturemask=0xfffd7fff mitigations=auto net.core.default_qdisc=fq net.ipv4.tcp_congestion_control=bbr nvidia-drm.fbdev=1 nvidia-drm.modeset=1 nvidia.NVreg_PreserveVideoMemoryAllocations=1 preempt=full zfs.zfs_arc_max=25769803776 cfg80211.ieee80211_regdom=CA loglevel=4 nohibernate rd.systemd.show_status=auto rd.udev.log_priority=3 systemd.unified_cgroup_hierarchy=1 usb-storage.delay_use=0 usbcore.autosuspend=-1 usbcore.quirks=1462:7d75:gki video=DP-4:1920x1080@60 video=DP-5:1920x1080@60 nohibernate loglevel=4 amdgpu.ppfeaturemask=0xfffd7fff lsm=landlock,yama,bpf nvidia-drm.modeset=1 nvidia-drm.fbdev=1 nvidia.NVreg_PreserveVideoMemoryAllocations=1",
-  passedChecks: ["xkb-validated", "check-sshd-config", "ensure-all-wrappers-paths-exist"],
-};
+      function fmtN(n) {
+        if (n >= 1e6) return (n / 1e6).toFixed(2) + "M";
+        if (n >= 1e3) return (n / 1e3).toFixed(1) + "K";
+        return n.toString();
+      }
+      function fmt(n) {
+        if (n >= 1e9) return (n / 1e9).toFixed(2) + " GB";
+        if (n >= 1e6) return (n / 1e6).toFixed(1) + " MB";
+        if (n >= 1e3) return (n / 1e3).toFixed(1) + " KB";
+        return n + " B";
+      }
 
-function fmtN(n) {
-  if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
-  if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
-  return n.toString();
-}
-function fmt(n) {
-  if (n >= 1e9) return (n / 1e9).toFixed(2) + ' GB';
-  if (n >= 1e6) return (n / 1e6).toFixed(1) + ' MB';
-  if (n >= 1e3) return (n / 1e3).toFixed(1) + ' KB';
-  return n + ' B';
-}
+      // Top stats
+      document.getElementById("topStats").innerHTML = [
+        { v: data.system, l: "Platform" },
+        { v: fmtN(data.totalDeps), l: "Total Dependency Closure" },
+        { v: data.directInputDrvs.toString(), l: "Direct Input Derivations" },
+        { v: fmt(data.closureSize), l: "Closure Size (drv refs)" },
+      ]
+        .map(
+          (s) =>
+            `<div class="card stat-card"><div class="value">${s.v}</div><div class="label">${s.l}</div></div>`,
+        )
+        .join("");
 
-// Top stats
-document.getElementById('topStats').innerHTML = [
-  { v: data.system, l: 'Platform' },
-  { v: fmtN(data.totalDeps), l: 'Total Dependency Closure' },
-  { v: data.directInputDrvs.toString(), l: 'Direct Input Derivations' },
-  { v: fmt(data.closureSize), l: 'Closure Size (drv refs)' },
-].map(s => `<div class="card stat-card"><div class="value">${s.v}</div><div class="label">${s.l}</div></div>`).join('');
-
-// Dependency bar chart
-const maxDeps = Math.max(...data.inputDrvs.map(d => d.deps));
-const depBars = data.inputDrvs.map(d =>
-  `<div class="bar-row">
+      // Dependency bar chart
+      const maxDeps = Math.max(...data.inputDrvs.map((d) => d.deps));
+      const depBars = data.inputDrvs
+        .map(
+          (d) =>
+            `<div class="bar-row">
     <span class="bar-label">${d.name}</span>
-    <div class="bar-track"><div class="bar-fill" style="width:${Math.max((d.deps/maxDeps*100), 0.5)}%;background:${d.color}"></div></div>
+    <div class="bar-track"><div class="bar-fill" style="width:${Math.max((d.deps / maxDeps) * 100, 0.5)}%;background:${d.color}"></div></div>
     <span class="bar-value">${fmtN(d.deps)}</span>
-  </div>`
-).join('');
+  </div>`,
+        )
+        .join("");
 
-const depCard = `<div class="card full-width">
+      const depCard = `<div class="card full-width">
   <h3>Input Derivations — Recursive Dependency Count</h3>
   ${depBars}
 </div>`;
 
-// Donut by category
-const categories = {};
-data.inputDrvs.forEach(d => {
-  if (!categories[d.category]) categories[d.category] = { deps: 0, count: 0 };
-  categories[d.category].deps += d.deps;
-  categories[d.category].count += 1;
-});
-const catColors = { system: '#4ecca3', kernel: '#48b1e0', boot: '#f9a825', checks: '#e91e63', tools: '#7c4dff' };
-const catSlices = Object.entries(categories).map(([k, v]) => ({ label: k, deps: v.deps, count: v.count, color: catColors[k] || '#888' }));
-catSlices.sort((a, b) => b.deps - a.deps);
-const totalCatDeps = catSlices.reduce((s, c) => s + c.deps, 0);
+      // Donut by category
+      const categories = {};
+      data.inputDrvs.forEach((d) => {
+        if (!categories[d.category])
+          categories[d.category] = { deps: 0, count: 0 };
+        categories[d.category].deps += d.deps;
+        categories[d.category].count += 1;
+      });
+      const catColors = {
+        system: "#4ecca3",
+        kernel: "#48b1e0",
+        boot: "#f9a825",
+        checks: "#e91e63",
+        tools: "#7c4dff",
+      };
+      const catSlices = Object.entries(categories).map(([k, v]) => ({
+        label: k,
+        deps: v.deps,
+        count: v.count,
+        color: catColors[k] || "#888",
+      }));
+      catSlices.sort((a, b) => b.deps - a.deps);
+      const totalCatDeps = catSlices.reduce((s, c) => s + c.deps, 0);
 
-function donutSVG(slices, total, valFn, size = 170) {
-  const cx = size/2, cy = size/2, r = size/2 - 10, ri = r * 0.6;
-  let angle = -90, paths = '';
-  slices.forEach(s => {
-    const pct = valFn(s) / total;
-    if (pct <= 0) return;
-    const a1 = angle * Math.PI / 180;
-    const a2 = (angle + pct * 360) * Math.PI / 180;
-    const large = pct > 0.5 ? 1 : 0;
-    const x1o = cx + r * Math.cos(a1), y1o = cy + r * Math.sin(a1);
-    const x2o = cx + r * Math.cos(a2), y2o = cy + r * Math.sin(a2);
-    const x1i = cx + ri * Math.cos(a2), y1i = cy + ri * Math.sin(a2);
-    const x2i = cx + ri * Math.cos(a1), y2i = cy + ri * Math.sin(a1);
-    paths += `<path d="M${x1o},${y1o} A${r},${r} 0 ${large} 1 ${x2o},${y2o} L${x1i},${y1i} A${ri},${ri} 0 ${large} 0 ${x2i},${y2i} Z" fill="${s.color}"/>`;
-    angle += pct * 360;
-  });
-  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+      function donutSVG(slices, total, valFn, size = 170) {
+        const cx = size / 2,
+          cy = size / 2,
+          r = size / 2 - 10,
+          ri = r * 0.6;
+        let angle = -90,
+          paths = "";
+        slices.forEach((s) => {
+          const pct = valFn(s) / total;
+          if (pct <= 0) return;
+          const a1 = (angle * Math.PI) / 180;
+          const a2 = ((angle + pct * 360) * Math.PI) / 180;
+          const large = pct > 0.5 ? 1 : 0;
+          const x1o = cx + r * Math.cos(a1),
+            y1o = cy + r * Math.sin(a1);
+          const x2o = cx + r * Math.cos(a2),
+            y2o = cy + r * Math.sin(a2);
+          const x1i = cx + ri * Math.cos(a2),
+            y1i = cy + ri * Math.sin(a2);
+          const x2i = cx + ri * Math.cos(a1),
+            y2i = cy + ri * Math.sin(a1);
+          paths += `<path d="M${x1o},${y1o} A${r},${r} 0 ${large} 1 ${x2o},${y2o} L${x1i},${y1i} A${ri},${ri} 0 ${large} 0 ${x2i},${y2i} Z" fill="${s.color}"/>`;
+          angle += pct * 360;
+        });
+        return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
     ${paths}
     <text x="${cx}" y="${cy - 4}" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="monospace">${data.directInputDrvs}</text>
     <text x="${cx}" y="${cy + 12}" text-anchor="middle" fill="#888" font-size="9">INPUTS</text>
   </svg>`;
-}
+      }
 
-const catCard = `<div class="card">
+      const catCard = `<div class="card">
   <h3>Dependencies by Category</h3>
   <div class="donut-container">
-    ${donutSVG(catSlices, totalCatDeps, s => s.deps)}
+    ${donutSVG(catSlices, totalCatDeps, (s) => s.deps)}
     <div class="donut-legend">
-      ${catSlices.map(s => {
-        const pct = ((s.deps / totalCatDeps) * 100).toFixed(1);
-        return `<div class="legend-item">
+      ${catSlices
+        .map((s) => {
+          const pct = ((s.deps / totalCatDeps) * 100).toFixed(1);
+          return `<div class="legend-item">
           <span class="legend-dot" style="background:${s.color}"></span>
           <span class="legend-name">${s.label} (${s.count} drvs)</span>
           <span class="legend-val">${fmtN(s.deps)} deps · ${pct}%</span>
         </div>`;
-      }).join('')}
+        })
+        .join("")}
     </div>
   </div>
 </div>`;
 
-// Key components
-const components = [
-  { icon: '🐧', name: 'linux-zen 6.18.7', detail: 'Kernel + modules + initrd' },
-  { icon: '⚙️', name: 'systemd 258.3', detail: 'Init system' },
-  { icon: '🔧', name: 'limine', detail: 'Bootloader installer' },
-  { icon: '📦', name: 'system-path', detail: '11.8K dep closure' },
-  { icon: '📋', name: '/etc', detail: '18K dep closure' },
-  { icon: '🔄', name: 'switch-to-configuration', detail: 'System activation' },
-  { icon: '🔒', name: 'Checks (3)', detail: 'xkb, sshd, wrappers' },
-  { icon: '📡', name: 'firmware', detail: '2.4K dep closure' },
-];
-const compCard = `<div class="card">
+      // Key components
+      const components = [
+        {
+          icon: "🐧",
+          name: "linux-zen 6.18.7",
+          detail: "Kernel + modules + initrd",
+        },
+        { icon: "⚙️", name: "systemd 258.3", detail: "Init system" },
+        { icon: "🔧", name: "limine", detail: "Bootloader installer" },
+        { icon: "📦", name: "system-path", detail: "11.8K dep closure" },
+        { icon: "📋", name: "/etc", detail: "18K dep closure" },
+        {
+          icon: "🔄",
+          name: "switch-to-configuration",
+          detail: "System activation",
+        },
+        { icon: "🔒", name: "Checks (3)", detail: "xkb, sshd, wrappers" },
+        { icon: "📡", name: "firmware", detail: "2.4K dep closure" },
+      ];
+      const compCard = `<div class="card">
   <h3>Key Components</h3>
   <div class="component-grid">
-    ${components.map(c => `<div class="component-box">
+    ${components
+      .map(
+        (c) => `<div class="component-box">
       <span class="icon">${c.icon}</span>
       <span class="name">${c.name}</span>
       <span class="detail">${c.detail}</span>
-    </div>`).join('')}
+    </div>`,
+      )
+      .join("")}
   </div>
 </div>`;
 
-// Kernel params
-const params = data.kernelParams.split(' ');
-const seen = new Set();
-const unique = params.filter(p => { if (seen.has(p)) return false; seen.add(p); return true; });
-const paramCategories = {
-  'CPU / Power': p => /^(amd_pstate|amd_prefcore|preempt|microcode)/.test(p),
-  'GPU': p => /^(amdgpu|nvidia|video=)/.test(p),
-  'Network': p => /^(net\.|cfg80211)/.test(p),
-  'Storage / ZFS': p => /^(zfs|usb-storage)/.test(p),
-  'USB': p => /^usbcore/.test(p),
-  'Security': p => /^(mitigations|lsm=)/.test(p),
-  'Systemd / Boot': p => /^(rd\.|systemd\.|loglevel|nohibernate)/.test(p),
-};
-const categorized = {};
-const uncategorized = [];
-unique.forEach(p => {
-  let found = false;
-  for (const [cat, fn] of Object.entries(paramCategories)) {
-    if (fn(p)) {
-      if (!categorized[cat]) categorized[cat] = [];
-      categorized[cat].push(p);
-      found = true;
-      break;
-    }
-  }
-  if (!found) uncategorized.push(p);
-});
-if (uncategorized.length) categorized['Other'] = uncategorized;
+      // Kernel params
+      const params = data.kernelParams.split(" ");
+      const seen = new Set();
+      const unique = params.filter((p) => {
+        if (seen.has(p)) return false;
+        seen.add(p);
+        return true;
+      });
+      const paramCategories = {
+        "CPU / Power": (p) =>
+          /^(amd_pstate|amd_prefcore|preempt|microcode)/.test(p),
+        GPU: (p) => /^(amdgpu|nvidia|video=)/.test(p),
+        Network: (p) => /^(net\.|cfg80211)/.test(p),
+        "Storage / ZFS": (p) => /^(zfs|usb-storage)/.test(p),
+        USB: (p) => /^usbcore/.test(p),
+        Security: (p) => /^(mitigations|lsm=)/.test(p),
+        "Systemd / Boot": (p) =>
+          /^(rd\.|systemd\.|loglevel|nohibernate)/.test(p),
+      };
+      const categorized = {};
+      const uncategorized = [];
+      unique.forEach((p) => {
+        let found = false;
+        for (const [cat, fn] of Object.entries(paramCategories)) {
+          if (fn(p)) {
+            if (!categorized[cat]) categorized[cat] = [];
+            categorized[cat].push(p);
+            found = true;
+            break;
+          }
+        }
+        if (!found) uncategorized.push(p);
+      });
+      if (uncategorized.length) categorized["Other"] = uncategorized;
 
-function renderParam(p) {
-  const eq = p.indexOf('=');
-  if (eq === -1) return `<span class="param-tag flag">${p}</span>`;
-  return `<span class="param-tag"><span class="key">${p.slice(0, eq)}</span><span class="eq">=</span><span class="val">${p.slice(eq+1)}</span></span>`;
-}
+      function renderParam(p) {
+        const eq = p.indexOf("=");
+        if (eq === -1) return `<span class="param-tag flag">${p}</span>`;
+        return `<span class="param-tag"><span class="key">${p.slice(0, eq)}</span><span class="eq">=</span><span class="val">${p.slice(eq + 1)}</span></span>`;
+      }
 
-const paramCard = `<div class="card full-width">
+      const paramCard = `<div class="card full-width">
   <h3>Kernel Parameters (${unique.length} unique, ${params.length - unique.length} duplicates removed)</h3>
-  ${Object.entries(categorized).map(([cat, ps]) => `
+  ${Object.entries(categorized)
+    .map(
+      ([cat, ps]) => `
     <div class="category">
       <div class="category-label">${cat}</div>
-      <div class="param-grid">${ps.map(renderParam).join('')}</div>
+      <div class="param-grid">${ps.map(renderParam).join("")}</div>
     </div>
-  `).join('')}
+  `,
+    )
+    .join("")}
 </div>`;
 
-// Build script summary
-const buildSteps = [
-  { cmd: 'mkdir', desc: '$out' },
-  { cmd: 'cp', desc: 'stage-2-init.sh → $out/init' },
-  { cmd: 'substituteInPlace', desc: '$out/init (systemConfig)' },
-  { cmd: 'ln -s', desc: '/etc, /sw, /systemd, /kernel, /kernel-modules, /initrd, /firmware, /switch-inhibitors' },
-  { cmd: 'echo', desc: 'init-interface-version, nixos-version, system, kernel-params' },
-  { cmd: 'wrapProgram', desc: 'switch-to-configuration (OUT, TOPLEVEL, DISTRO_ID, INSTALL_BOOTLOADER, ...)' },
-  { cmd: 'cp', desc: 'activate, dry-activate' },
-  { cmd: 'sed', desc: 'Patch @out@ in activate scripts' },
-  { cmd: 'jq', desc: 'Generate boot.json with bootspec v1 + specialisations' },
-];
+      // Build script summary
+      const buildSteps = [
+        { cmd: "mkdir", desc: "$out" },
+        { cmd: "cp", desc: "stage-2-init.sh → $out/init" },
+        { cmd: "substituteInPlace", desc: "$out/init (systemConfig)" },
+        {
+          cmd: "ln -s",
+          desc: "/etc, /sw, /systemd, /kernel, /kernel-modules, /initrd, /firmware, /switch-inhibitors",
+        },
+        {
+          cmd: "echo",
+          desc: "init-interface-version, nixos-version, system, kernel-params",
+        },
+        {
+          cmd: "wrapProgram",
+          desc: "switch-to-configuration (OUT, TOPLEVEL, DISTRO_ID, INSTALL_BOOTLOADER, ...)",
+        },
+        { cmd: "cp", desc: "activate, dry-activate" },
+        { cmd: "sed", desc: "Patch @out@ in activate scripts" },
+        {
+          cmd: "jq",
+          desc: "Generate boot.json with bootspec v1 + specialisations",
+        },
+      ];
 
-const scriptCard = `<div class="card full-width">
+      const scriptCard = `<div class="card full-width">
   <h3>Build Script Steps</h3>
   <div style="display:grid;gap:8px;">
-    ${buildSteps.map((s, i) => `
+    ${buildSteps
+      .map(
+        (s, i) => `
       <div style="display:flex;align-items:flex-start;gap:12px;padding:8px 12px;background:#0f3460;border-radius:6px;">
-        <span style="color:#666;font-family:monospace;font-size:0.7rem;min-width:20px;">${i+1}</span>
+        <span style="color:#666;font-family:monospace;font-size:0.7rem;min-width:20px;">${i + 1}</span>
         <span style="color:#4ecca3;font-family:monospace;font-size:0.78rem;min-width:140px;">${s.cmd}</span>
         <span style="color:#aaa;font-size:0.78rem;">${s.desc}</span>
       </div>
-    `).join('')}
+    `,
+      )
+      .join("")}
   </div>
 </div>`;
 
-document.getElementById('mainGrid').innerHTML = depCard + catCard + compCard + paramCard + scriptCard;
-</script>
-</body>
+      document.getElementById("mainGrid").innerHTML =
+        depCard + catCard + compCard + paramCard + scriptCard;
+    </script>
+  </body>
 </html>

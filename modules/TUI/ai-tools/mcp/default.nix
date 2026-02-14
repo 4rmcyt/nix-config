@@ -4,38 +4,36 @@
   inputs,
   lib,
   ...
-}:
-let
+}: let
   inherit (pkgs.stdenv.hostPlatform) system;
-in
-{
+in {
   programs.mcp = {
     enable = true;
     servers = {
       fetch = {
         type = "stdio";
         command = lib.getExe pkgs.mcp-server-fetch;
-        args = [ ];
+        args = [];
       };
       memory = {
         type = "stdio";
         command = lib.getExe pkgs.mcp-server-memory;
-        args = [ ];
+        args = [];
       };
       sequential-thinking = {
         type = "stdio";
         command = lib.getExe pkgs.mcp-server-sequential-thinking;
-        args = [ ];
+        args = [];
       };
       playwright = {
         type = "stdio";
         command = lib.getExe pkgs.playwright-mcp;
-        args = [ ];
+        args = [];
       };
       tavily = {
         type = "stdio";
         command = "${config.home.homeDirectory}/.local/bin/tavily-mcp-wrapped";
-        args = [ ];
+        args = [];
       };
       filesystem = {
         type = "stdio";
@@ -48,29 +46,28 @@ in
       mcp-nixos = {
         type = "stdio";
         command = lib.getExe inputs.mcp-nixos.packages.${system}.default;
-        args = [ ];
+        args = [];
       };
       github = {
         type = "stdio";
         command = "${config.home.homeDirectory}/.local/bin/github-mcp-wrapped";
-        args = [ "stdio" ];
+        args = ["stdio"];
       };
       kubernetes = {
         type = "stdio";
         command = lib.getExe pkgs.mcp-k8s-go;
-        args = [ ];
+        args = [];
       };
       python = {
         type = "stdio";
         command = "${pkgs.uv}/bin/uvx";
-        args = [ "mcp-python-interpreter" ];
+        args = ["mcp-python-interpreter"];
       };
-
     };
   };
 
   # Create wrapper scripts with decrypted secrets
-  home.activation.mcpWrappers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  home.activation.mcpWrappers = lib.hm.dag.entryAfter ["writeBoundary"] ''
         mkdir -p "$HOME/.local/bin"
 
         # GitHub wrapper
