@@ -1,10 +1,9 @@
 {pkgs, ...}: {
   imports = [
-    ../../modules/GUI/ghostty
     ../../modules/TUI/common
     ../../modules/TUI/zsh
     ../../modules/TUI/atuin
-    ../../modules/GUI/wezterm
+    ../../modules/GUI/terminal/wezterm
   ];
 
   home = {
@@ -30,8 +29,6 @@
 
       # GUI applications (with Start Menu shortcuts)
       firefox
-      ghostty
-      ghostty.terminfo
 
       # Security & Crypto
       pass

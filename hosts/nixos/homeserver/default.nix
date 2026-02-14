@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   pkgs,
   ...
 }: {
@@ -78,7 +79,11 @@
   # =================================================================
   # 6. Nix Configuration
   # =================================================================
-  nix.package = pkgs.lixPackageSets.latest.lix;
+  nix = {
+    package = pkgs.lixPackageSets.latest.lix;
+    channel.enable = false;
+    registry.nixpkgs.flake = inputs.nixpkgs;
+  };
 
   nix.settings = {
     cores = 4;

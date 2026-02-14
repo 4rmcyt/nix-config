@@ -352,11 +352,11 @@
         "quickshell": "quickshell"
       },
       "locked": {
-        "lastModified": 1771022301,
-        "narHash": "sha256-FQGma4Nm5WSHo95THbdvOazG5K5XdGL0mO7tL27nK04=",
+        "lastModified": 1771023874,
+        "narHash": "sha256-S6cc5BEjUK9gRfvFvkN6CJDDAZSRIo/cHGR29+XDMqo=",
         "owner": "AvengeMedia",
         "repo": "DankMaterialShell",
-        "rev": "acdc531dca1aacb171a8569c018ea91b75fb9f7c",
+        "rev": "59d37847ec3e7bf745607afb1e436be32eec8484",
         "type": "github"
       },
       "original": {
@@ -550,6 +550,26 @@
     },
     "flake-parts_3": {
       "inputs": {
+        "nixpkgs-lib": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1769996383,
+        "narHash": "sha256-AnYjnFWgS49RlqX7LrC4uA+sCCDBj0Ry/WOJ5XWAsa0=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "57928607ea566b5db3ad13af0e57e921e6b12381",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
+    "flake-parts_4": {
+      "inputs": {
         "nixpkgs-lib": "nixpkgs-lib"
       },
       "locked": {
@@ -566,7 +586,7 @@
         "type": "github"
       }
     },
-    "flake-parts_4": {
+    "flake-parts_5": {
       "inputs": {
         "nixpkgs-lib": "nixpkgs-lib_2"
       },
@@ -584,7 +604,7 @@
         "type": "github"
       }
     },
-    "flake-parts_5": {
+    "flake-parts_6": {
       "inputs": {
         "nixpkgs-lib": "nixpkgs-lib_3"
       },
@@ -602,7 +622,7 @@
         "type": "github"
       }
     },
-    "flake-parts_6": {
+    "flake-parts_7": {
       "inputs": {
         "nixpkgs-lib": [
           "nixos-anywhere",
@@ -623,7 +643,7 @@
         "type": "github"
       }
     },
-    "flake-parts_7": {
+    "flake-parts_8": {
       "inputs": {
         "nixpkgs-lib": [
           "stylix",
@@ -644,7 +664,7 @@
         "type": "github"
       }
     },
-    "flake-parts_8": {
+    "flake-parts_9": {
       "inputs": {
         "nixpkgs-lib": "nixpkgs-lib_4"
       },
@@ -884,9 +904,24 @@
         "type": "github"
       }
     },
+    "import-tree_2": {
+      "locked": {
+        "lastModified": 1763762820,
+        "narHash": "sha256-ZvYKbFib3AEwiNMLsejb/CWs/OL/srFQ8AogkebEPF0=",
+        "owner": "vic",
+        "repo": "import-tree",
+        "rev": "3c23749d8013ec6daa1d7255057590e9ca726646",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vic",
+        "repo": "import-tree",
+        "type": "github"
+      }
+    },
     "mcp-nixos": {
       "inputs": {
-        "flake-parts": "flake-parts_3",
+        "flake-parts": "flake-parts_4",
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
@@ -962,7 +997,7 @@
     },
     "nix-gaming": {
       "inputs": {
-        "flake-parts": "flake-parts_4",
+        "flake-parts": "flake-parts_5",
         "nixpkgs": [
           "nixpkgs"
         ]
@@ -1025,7 +1060,7 @@
     },
     "nix-topology": {
       "inputs": {
-        "flake-parts": "flake-parts_5",
+        "flake-parts": "flake-parts_6",
         "nixpkgs": [
           "nixpkgs"
         ]
@@ -1128,7 +1163,7 @@
         "disko": [
           "disko"
         ],
-        "flake-parts": "flake-parts_6",
+        "flake-parts": "flake-parts_7",
         "nix-vm-test": "nix-vm-test",
         "nixos-images": "nixos-images",
         "nixos-stable": "nixos-stable",
@@ -1599,9 +1634,11 @@
         "disko": "disko",
         "dms": "dms",
         "firefox-addons": "firefox-addons",
+        "flake-parts": "flake-parts_3",
         "flatpaks": "flatpaks",
         "home-manager": "home-manager_3",
         "hyprsession": "hyprsession",
+        "import-tree": "import-tree_2",
         "mcp-nixos": "mcp-nixos",
         "mcp-servers-nix": "mcp-servers-nix",
         "nix-gaming": "nix-gaming",
@@ -1760,7 +1797,7 @@
         "base16-helix": "base16-helix",
         "base16-vim": "base16-vim",
         "firefox-gnome-theme": "firefox-gnome-theme",
-        "flake-parts": "flake-parts_7",
+        "flake-parts": "flake-parts_8",
         "gnome-shell": "gnome-shell",
         "nixpkgs": "nixpkgs_5",
         "nur": "nur",
@@ -2201,16 +2238,16 @@
     "zed": {
       "inputs": {
         "crane": "crane",
-        "flake-parts": "flake-parts_8",
+        "flake-parts": "flake-parts_9",
         "nixpkgs": "nixpkgs_6",
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1771019791,
-        "narHash": "sha256-cqFNM3eYbnWNd9rvBp436rvVLO7takBa/vPO2kQ1FJQ=",
+        "lastModified": 1771026670,
+        "narHash": "sha256-3G/5kQ+AbrM1ZQL6mf3171KULEnvdcZZFn5IMrBGY0k=",
         "owner": "zed-industries",
         "repo": "zed",
-        "rev": "6db4a25b37905972cc7f45f60ad984d2f19f0b14",
+        "rev": "21bc4f13b8749c5a617edb9a351b1674a4e8f228",
         "type": "github"
       },
       "original": {

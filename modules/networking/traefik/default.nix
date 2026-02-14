@@ -87,7 +87,7 @@ in {
       services.traefik = {
         enable = true;
 
-        staticConfigOptions = {
+        static.settings = {
           # Entry points
           entryPoints = {
             web = {
