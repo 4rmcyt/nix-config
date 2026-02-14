@@ -1518,22 +1518,6 @@
         "type": "github"
       }
     },
-    "nushell-scripts": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1770900822,
-        "narHash": "sha256-KRZtbZTzkQvizZSkorLnYpqI70lE8y4ERtbPQkb6ALo=",
-        "owner": "nushell",
-        "repo": "nu_scripts",
-        "rev": "cc94140f4942116e065a97d73c3ce430a092fef2",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nushell",
-        "repo": "nu_scripts",
-        "type": "github"
-      }
-    },
     "pam-shim": {
       "inputs": {
         "nixpkgs": [
@@ -1654,7 +1638,6 @@
         "nixos-jellyfin": "nixos-jellyfin",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_4",
-        "nushell-scripts": "nushell-scripts",
         "pam-shim": "pam-shim",
         "plasma-manager": "plasma-manager",
         "quickshell": "quickshell_2",
