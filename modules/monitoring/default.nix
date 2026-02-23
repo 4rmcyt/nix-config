@@ -21,6 +21,11 @@
       key = "grafana_oidc_client_secret";
       owner = config.users.users.grafana.name;
     };
+    grafana_secret_key = {
+      sopsFile = ../../secrets/grafana.yaml;
+      key = "grafana_secret_key";
+      owner = config.users.users.grafana.name;
+    };
     loki_github_actions_token = {
       sopsFile = ../../secrets/loki.yaml;
       key = "github_actions_token";
@@ -85,7 +90,10 @@
           user = "grafana";
           passwordFile = config.sops.secrets.grafana_db_password.path;
         };
-        security.admin_password_file = config.sops.secrets.grafana_admin_password.path;
+        security = {
+          admin_password_file = config.sops.secrets.grafana_admin_password.path;
+          secret_key = "$__file{${config.sops.secrets.grafana_secret_key.path}}";
+        };
         server = {
           http_addr = "127.0.0.1";
           http_port = 3003;
