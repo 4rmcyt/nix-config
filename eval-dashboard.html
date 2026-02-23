@@ -179,25 +179,31 @@
     </style>
   </head>
   <body>
+    <div style="margin-bottom:16px;display:flex;gap:12px">
+      <a href="eval-desktop.html" style="color:#48b1e0;text-decoration:none;font-family:monospace;font-size:0.85rem;padding:4px 12px;border:1px solid #1a1a4e;border-radius:6px">desktop</a>
+      <a href="eval-homeserver.html" style="color:#48b1e0;text-decoration:none;font-family:monospace;font-size:0.85rem;padding:4px 12px;border:1px solid #1a1a4e;border-radius:6px">homeserver</a>
+      <a href="eval-matebook.html" style="color:#48b1e0;text-decoration:none;font-family:monospace;font-size:0.85rem;padding:4px 12px;border:1px solid #1a1a4e;border-radius:6px">matebook</a>
+      <a href="eval-wsl.html" style="color:#48b1e0;text-decoration:none;font-family:monospace;font-size:0.85rem;padding:4px 12px;border:1px solid #1a1a4e;border-radius:6px">wsl</a>
+    </div>
     <div class="grid top-stats" id="topStats"></div>
     <div class="grid main-grid" id="mainGrid"></div>
 
     <script>
       const raw = `{
-  "cpuTime": 18.40687370300293,
-  "envs": { "bytes": 520289840, "elements": 38331443, "number": 26704787 },
-  "gc": { "heapSize": 2634285056, "totalBytes": 4268307680 },
-  "list": { "bytes": 77874376, "concats": 1299945, "elements": 9734297 },
-  "nrAvoided": 30551648,
-  "nrFunctionCalls": 23854589,
-  "nrLookups": 13446691,
-  "nrOpUpdateValuesCopied": 101377200,
-  "nrOpUpdates": 2159282,
-  "nrPrimOpCalls": 11878286,
-  "nrThunks": 34574394,
-  "sets": { "bytes": 2222591032, "elements": 135554836, "number": 6714207 },
+  "cpuTime": 26.949867248535156,
+  "envs": { "bytes": 517556384, "elements": 38131052, "number": 26563496 },
+  "gc": { "heapSize": 2617507840, "totalBytes": 4232703728 },
+  "list": { "bytes": 77425776, "concats": 1289285, "elements": 9678222 },
+  "nrAvoided": 30327204,
+  "nrFunctionCalls": 23720766,
+  "nrLookups": 13415999,
+  "nrOpUpdateValuesCopied": 99918631,
+  "nrOpUpdates": 2144901,
+  "nrPrimOpCalls": 11776480,
+  "nrThunks": 34426532,
+  "sets": { "bytes": 2197631384, "elements": 134004910, "number": 6694103 },
   "sizes": { "Attr": 16, "Bindings": 8, "Env": 8, "Value": 8 },
-  "symbols": { "bytes": 1660416, "number": 126182 },
+  "symbols": { "bytes": 1627073, "number": 124172 },
   "values": { "bytes": 0, "number": 0 }
 }`;
       const d = JSON.parse(raw);
