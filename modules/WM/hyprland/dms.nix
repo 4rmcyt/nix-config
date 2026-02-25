@@ -10,7 +10,7 @@ _: {
     enableVPN = false;
     enableDynamicTheming = false;
     enableAudioWavelength = false;
-    enableCalendarEvents = true;
+    enableCalendarEvents = false; # khal broken in nixpkgs (sphinx-feed)
     settings = {
       # ===== Theme Settings =====
       currentThemeName = "dynamic";
