@@ -27,7 +27,6 @@
 
     packages = with pkgs; [
       nautilus
-      mcp-nixos
       materialgram
       bat
       devenv

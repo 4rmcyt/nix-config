@@ -5,7 +5,8 @@
 }: {
   home.packages = with pkgs; [
     vdirsyncer
-    khal
+    # khal disabled: Sphinx doc build broken in nixpkgs (sphinx-feed extension)
+    # khal
   ];
 
   # Secrets for Google Calendar Authentication
