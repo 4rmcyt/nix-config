@@ -7,7 +7,7 @@
   inherit (config.meta) owner;
   nixosBase = config.modules.nixos.base;
 in {
-  configurations.nixos.desktop.module = {...}: {
+  configurations.nixos.desktop.module = {pkgs, ...}: {
     imports = [
       nixosBase
       ../../../hosts/nixos/desktop
@@ -15,7 +15,15 @@ in {
       inputs.nix-gaming.nixosModules.pipewireLowLatency
       inputs.dms.nixosModules.dank-material-shell
       inputs.dms.nixosModules.greeter
+      inputs.niri-flake.nixosModules.niri
     ];
+
+    # Niri via niri-flake NixOS module (uses nixpkgs niri 25.11, not niri-flake's stable)
+    programs.niri.enable = true;
+    programs.niri.package = pkgs.niri;
+
+    # Disable niri-flake's polkit agent (DMS provides its own)
+    systemd.user.services.niri-flake-polkit.enable = false;
 
     # Facter
     facter.reportPath = ../../../hosts/nixos/desktop/facter.json;
@@ -28,6 +36,7 @@ in {
       inputs.stylix.homeModules.stylix
       inputs.pam-shim.homeModules.default
       inputs.dms.homeModules.dank-material-shell
+      inputs.dms.homeModules.niri
     ];
   };
 }

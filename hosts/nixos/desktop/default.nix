@@ -6,7 +6,7 @@
   ...
 }: {
   my.desktop = {
-    windowManager = "hyprland"; # Options: "hyprland", "none"
+    windowManager = "niri"; # Options: "hyprland", "niri", "none"
     displayManager = "greetd"; # Options: "greetd", "sddm", "gdm", "none"
   };
 
@@ -398,24 +398,24 @@
     enable = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
-      xdg-desktop-portal-hyprland
+      xdg-desktop-portal-gnome
     ];
-    wlr.enable = false; # hyprland portal handles this
+    wlr.enable = false;
     config = {
       common = {
         default = ["gtk"];
         "org.freedesktop.impl.portal.Settings" = ["gtk"];
         "org.freedesktop.impl.portal.OpenURI" = ["gtk"];
       };
-      hyprland = {
+      niri = {
         default = [
-          "hyprland"
+          "gnome"
           "gtk"
         ];
         "org.freedesktop.impl.portal.Settings" = ["gtk"];
         "org.freedesktop.impl.portal.OpenURI" = ["gtk"];
-        "org.freedesktop.impl.portal.ScreenCast" = ["hyprland"];
-        "org.freedesktop.impl.portal.Screenshot" = ["hyprland"];
+        "org.freedesktop.impl.portal.ScreenCast" = ["gnome"];
+        "org.freedesktop.impl.portal.Screenshot" = ["gnome"];
       };
     };
     xdgOpenUsePortal = true;
@@ -430,7 +430,7 @@
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.hyprland}/bin/start-hyprland";
+        command = "${pkgs.niri}/bin/niri-session";
         user = "zeev";
       };
     };

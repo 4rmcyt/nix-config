@@ -17,7 +17,7 @@
     ../../modules/TUI/calendar
 
     ../../modules/WM
-    ../../modules/WM/hyprland
+    ../../modules/WM/niri
   ];
 
   home = {
