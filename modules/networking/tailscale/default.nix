@@ -11,12 +11,17 @@ in {
     enable = mkEnableOption "Tailscale with SOPS authentication";
     sopsFile = mkOption {
       type = types.path;
-      description = "Path to the SOPS file containing the Tailscale auth key";
+      description = "Path to the SOPS file containing the auth key";
     };
     key = mkOption {
       type = types.str;
       default = "tailscale_auth_key";
-      description = "YAML key for the Tailscale auth key";
+      description = "YAML key for the auth key in the SOPS file";
+    };
+    loginServer = mkOption {
+      type = types.str;
+      default = "https://controlplane.tailscale.com";
+      description = "Login server URL (use headscale URL for self-hosted coordination)";
     };
   };
 
@@ -67,7 +72,10 @@ in {
         if [ $status = "Running" ]; then
           exit 0
         fi
-        ${tailscale}/bin/tailscale up --authkey file:${config.sops.secrets.tailscale_auth_key.path} --accept-routes
+        ${tailscale}/bin/tailscale up \
+          --authkey file:${config.sops.secrets.tailscale_auth_key.path} \
+          --login-server ${cfg.loginServer} \
+          --accept-routes
       '';
     };
   };

@@ -34,8 +34,8 @@
   # =================================================================
   sops.secrets = {
     tailscale_auth_key = {
-      sopsFile = ../../../secrets/tailscale-matebook.yaml;
-      key = "tailscale_auth_key";
+      sopsFile = ../../../secrets/headscale-matebook.yaml;
+      key = "preauth_key";
     };
     git_access_token = {
       sopsFile = ../../../secrets/common.yaml;
@@ -318,6 +318,7 @@
       enable = true;
       useRoutingFeatures = "both";
       authKeyFile = config.sops.secrets.tailscale_auth_key.path;
+      extraUpFlags = ["--login-server" "https://head.example.com" "--accept-routes"];
     };
   };
 

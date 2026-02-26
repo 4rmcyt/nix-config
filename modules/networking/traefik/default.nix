@@ -354,6 +354,24 @@ in {
               middlewares = ["authelia" "security-headers"];
               tls = {};
             };
+
+            # Headscale coordination server (no auth — Tailscale clients connect here)
+            headscale = {
+              rule = "Host(`head.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "headscale";
+              middlewares = ["security-headers"];
+              tls = {};
+            };
+
+            # Headplane web UI (Authelia protected)
+            headplane = {
+              rule = "Host(`headplane.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "headplane";
+              middlewares = ["authelia" "security-headers"];
+              tls = {};
+            };
           };
 
           # Services (backend servers)
@@ -386,6 +404,10 @@ in {
             kuma.loadBalancer.servers = [{url = "http://localhost:3001";}];
             atuin.loadBalancer.servers = [{url = "http://localhost:8881";}];
             livesync.loadBalancer.servers = [{url = "http://localhost:5984";}];
+
+            # Headscale + Headplane
+            headscale.loadBalancer.servers = [{url = "http://localhost:8765";}];
+            headplane.loadBalancer.servers = [{url = "http://localhost:3050";}];
           };
         };
       };

@@ -179,6 +179,9 @@
       profileId = "nextdns0";
     };
 
+    # TODO: migrate to headscale after first boot:
+    # sopsFile = ../../../secrets/headscale-homeserver.yaml; key = "preauth_key";
+    # loginServer = "https://head.example.com";
     tailscaleAuth = {
       enable = true;
       sopsFile = ../../../secrets/tailscale-homeserver.yaml;
@@ -221,6 +224,7 @@
   # 9.5. Traefik Reverse Proxy
   # =================================================================
   my.traefik.enable = true;
+  my.headscale.enable = true;
 
   # =================================================================
   # 10. Programs

@@ -20,6 +20,7 @@ in {
       nixosBase
       ../../../hosts/nixos/homeserver
       inputs.nixarr.nixosModules.default
+      inputs.headplane.nixosModules.headplane
     ];
 
     # Facter

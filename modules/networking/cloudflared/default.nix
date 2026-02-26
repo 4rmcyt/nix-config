@@ -145,6 +145,16 @@
           originRequest:
             httpHostHeader: hass.${config.my.defaults.domain}
 
+        # Headscale coordination server + Headplane web UI
+        - hostname: head.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: head.${config.my.defaults.domain}
+        - hostname: headplane.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: headplane.${config.my.defaults.domain}
+
         # Catch-all
         - service: http_status:404
     '';
@@ -191,4 +201,3 @@
 # #   service: http://localhost:8265
 # - hostname: cal.${config.my.defaults.domain}
 #           service: http://localhost:5232
-

@@ -1,5 +1,6 @@
 {...}: {
   imports = [
+    ./headscale
     ./home-assistant
     # ./paperless
     # ./radicale
