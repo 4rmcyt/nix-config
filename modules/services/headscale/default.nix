@@ -18,7 +18,15 @@ in {
       sopsFile = ../../../secrets/headscale.yaml;
       key = "headplane_cookie_secret";
       owner = config.services.headscale.user;
-      group = config.services.headscale.group;
+      inherit (config.services.headscale) group;
+      mode = "0400";
+    };
+
+    sops.secrets.headplane_agent_preauth_key = {
+      sopsFile = ../../../secrets/headscale.yaml;
+      key = "headplane_agent_preauth_key";
+      owner = config.services.headscale.user;
+      inherit (config.services.headscale) group;
       mode = "0400";
     };
 
@@ -60,7 +68,13 @@ in {
           config_path = "/etc/headscale/settings.yaml";
           config_strict = false;
         };
-        integration.proc.enabled = true;
+        integration = {
+          proc.enabled = true;
+          agent = {
+            enabled = true;
+            pre_authkey_path = config.sops.secrets.headplane_agent_preauth_key.path;
+          };
+        };
       };
     };
 
