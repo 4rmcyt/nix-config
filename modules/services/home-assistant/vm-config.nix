@@ -1,30 +1,23 @@
-# Standalone NixOS module for the Home Assistant microvm guest.
-# Referenced as a separate nixosConfiguration (nixosConfigurations.hass)
-# and consumed by the homeserver host via `microvm.vms.hass.flake = inputs.self`.
 {
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   vmIp = "192.168.200.2";
-  bridgeIp = "192.168.200.1"; # host bridge IP — gateway, Mosquitto, PostgreSQL
+  bridgeIp = "192.168.200.1";
   vmMac = "02:00:00:00:00:01";
-
-  # Mirror of my.defaults.* values on the host — update here if those change.
   domain = "example.com";
   tz = "America/Edmonton";
   homeserverLan = "192.168.1.165";
-in {
-  # Required for the nixosConfigurations build check
+in
+{
   nixpkgs.hostPlatform = "x86_64-linux";
 
-  # ── microvm hypervisor settings ───────────────────────────────────────────
   microvm = {
     hypervisor = "qemu";
     vcpu = 2;
     mem = 2047; # 2048 (exact 2GB) causes QEMU hang, see microvm.nix#171
-
-    # Share the host Nix store read-only — fast rebuilds, no per-VM squashfs
     shares = [
       {
         proto = "virtiofs";
@@ -32,7 +25,6 @@ in {
         source = "/nix/store";
         mountPoint = "/nix/.ro-store";
       }
-      # Persistent HA state on host filesystem (ZFS-snapshotable)
       {
         proto = "virtiofs";
         tag = "hass-data";
@@ -61,21 +53,28 @@ in {
     ];
   };
 
-  # ── Filesystem ────────────────────────────────────────────────────────────
   fileSystems."/" = {
     device = "rootfs";
     fsType = "tmpfs";
-    options = ["defaults" "mode=755"];
+    options = [
+      "defaults"
+      "mode=755"
+    ];
   };
 
-  # ── Networking — static IP on the host bridge ─────────────────────────────
   networking = {
     hostName = "hass-vm";
     useDHCP = false;
     usePredictableInterfaceNames = false; # forces eth0, avoids networkd MAC-match issues in microvm
     enableIPv6 = false;
-    nameservers = ["1.1.1.1" "8.8.8.8"];
-    firewall.allowedTCPPorts = [22 8123];
+    nameservers = [
+      "1.1.1.1"
+      "8.8.8.8"
+    ];
+    firewall.allowedTCPPorts = [
+      22
+      8123
+    ];
     interfaces.eth0.ipv4.addresses = [
       {
         address = vmIp;
@@ -85,16 +84,15 @@ in {
     # defaultGateway = bridgeIp;
   };
 
-  # ── Home Assistant ────────────────────────────────────────────────────────
   services.home-assistant = {
     enable = true;
     configDir = "/var/lib/hass";
     configWritable = true;
 
-    extraPackages = ps:
-      with ps; [
-        psycopg2 # PostgreSQL driver
-        pyatv # Apple TV
+    extraPackages =
+      ps: with ps; [
+        psycopg2
+        pyatv
       ];
 
     extraComponents = [
@@ -153,11 +151,11 @@ in {
         }
       ];
 
-      default_config = {};
+      default_config = { };
       frontend.themes = "!include_dir_merge_named themes";
-      shopping_list = {};
-      map = {};
-      system_health = {};
+      shopping_list = { };
+      map = { };
+      system_health = { };
       logger = {
         default = "info";
         logs."homeassistant.core" = "debug";
@@ -174,11 +172,9 @@ in {
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyieBFROVPWmH3iC2ZAE+5zofMd6mnunBzfObEwMgFx"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks redacted@example.com"
   ];
-  # ── Base VM settings ──────────────────────────────────────────────────────
-  # nsncd is not needed in a minimal VM and causes cascade failures.
-  # system.nssModules must also be cleared or NixOS asserts nscd must be enabled.
+
   services.nscd.enable = false;
-  system.nssModules = lib.mkForce [];
+  system.nssModules = lib.mkForce [ ];
 
   time.timeZone = tz;
   system.stateVersion = "25.05";
