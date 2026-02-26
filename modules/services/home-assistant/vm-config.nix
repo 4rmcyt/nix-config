@@ -65,8 +65,7 @@ in
   networking = {
     hostName = "hass-vm";
     useDHCP = false;
-    usePredictableInterfaceNames = false; # forces eth0, avoids networkd MAC-match issues in microvm
-    enableIPv6 = false;
+    usePredictableInterfaceNames = false;
     nameservers = [
       "1.1.1.1"
       "8.8.8.8"
