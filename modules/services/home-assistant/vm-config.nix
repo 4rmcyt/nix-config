@@ -1,7 +1,11 @@
 # Standalone NixOS module for the Home Assistant microvm guest.
 # Referenced as a separate nixosConfiguration (nixosConfigurations.hass)
 # and consumed by the homeserver host via `microvm.vms.hass.flake = inputs.self`.
-{pkgs, ...}: let
+{
+  pkgs,
+  lib,
+  ...
+}: let
   vmIp = "192.168.200.2";
   bridgeIp = "192.168.200.1"; # host bridge IP — gateway, Mosquitto, PostgreSQL
   vmMac = "02:00:00:00:00:01";
@@ -164,8 +168,10 @@ in {
   };
 
   # ── Base VM settings ──────────────────────────────────────────────────────
-  # nsncd is not needed in a minimal VM and causes cascade failures
+  # nsncd is not needed in a minimal VM and causes cascade failures.
+  # system.nssModules must also be cleared or NixOS asserts nscd must be enabled.
   services.nscd.enable = false;
+  system.nssModules = lib.mkForce [];
 
   time.timeZone = tz;
   system.stateVersion = "25.05";
