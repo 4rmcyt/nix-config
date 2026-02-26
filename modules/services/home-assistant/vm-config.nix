@@ -144,7 +144,12 @@ in {
         port = 1883;
       };
 
-      tts = [{platform = "google_translate"; language = "en";}];
+      tts = [
+        {
+          platform = "google_translate";
+          language = "en";
+        }
+      ];
 
       default_config = {};
       frontend.themes = "!include_dir_merge_named themes";

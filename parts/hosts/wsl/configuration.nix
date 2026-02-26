@@ -8,7 +8,6 @@
   nixosBase = config.modules.nixos.base;
 in {
   configurations.nixos.wsl.module = {
-    config,
     pkgs,
     lib,
     ...

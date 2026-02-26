@@ -7,7 +7,7 @@
   inherit (config.meta) owner;
   nixosBase = config.modules.nixos.base;
 in {
-  configurations.nixos.matebook.module = {pkgs, ...}: {
+  configurations.nixos.matebook.module = { ...}: {
     imports = [
       nixosBase
       ../../../hosts/nixos/matebook

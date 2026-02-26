@@ -21,10 +21,11 @@
   config.flake = {
     nixosConfigurations =
       lib.mapAttrs (
-        _name: {module}: lib.nixosSystem {
-        modules = [module];
-        specialArgs = {inherit inputs;};
-      }
+        _name: {module}:
+          lib.nixosSystem {
+            modules = [module];
+            specialArgs = {inherit inputs;};
+          }
       )
       config.configurations.nixos;
 
