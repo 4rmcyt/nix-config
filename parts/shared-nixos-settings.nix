@@ -5,7 +5,7 @@
   lib,
   ...
 }: {
-  modules.nixos.base = {
+  modules.nixos.base = {config, ...}: {
     # Thread flake inputs into NixOS module args (replaces specialArgs)
     _module.args = {inherit inputs;};
 
@@ -14,6 +14,14 @@
 
     # Sops defaults
     sops.age.keyFile = lib.mkDefault "/root/.config/sops/age/keys.txt";
+
+    # GitHub access token for nix daemon (rate limiting / private flake inputs)
+    sops.secrets.nix_access_token = {
+      sopsFile = ../secrets/common.yaml;
+      key = "nix_access_token";
+    };
+    sops.templates."nix-daemon-env".content = "NIX_CONFIG=${config.sops.placeholder.nix_access_token}";
+    systemd.services.nix-daemon.serviceConfig.EnvironmentFile = config.sops.templates."nix-daemon-env".path;
 
     # Binary caches
     nix.settings = {

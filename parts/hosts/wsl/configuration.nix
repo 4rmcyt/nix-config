@@ -37,10 +37,6 @@ in {
     sops = {
       age.keyFile = "/home/${owner.username}/.config/sops/age/keys.txt";
       defaultSopsFormat = "yaml";
-      secrets.git_access_token = {
-        sopsFile = ../../../secrets/common.yaml;
-        key = "git_access_token";
-      };
     };
 
     # Nix settings (host-specific)
@@ -69,11 +65,6 @@ in {
         "@wheel"
       ];
     };
-
-    # Nix daemon github token
-    systemd.services.nix-daemon.serviceConfig.Environment = [
-      "NIX_CONFIG=access-tokens = github.com=$(cat ${config.sops.secrets.git_access_token.path})"
-    ];
 
     # Boot
     boot = {

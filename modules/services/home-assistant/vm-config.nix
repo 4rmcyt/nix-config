@@ -17,7 +17,7 @@ in {
   # ── microvm hypervisor settings ───────────────────────────────────────────
   microvm = {
     hypervisor = "qemu";
-    vcpus = 2;
+    vcpu = 2;
     mem = 2048;
 
     # Share the host Nix store read-only — fast rebuilds, no per-VM squashfs
