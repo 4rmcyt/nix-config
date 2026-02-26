@@ -74,7 +74,7 @@ in {
     useDHCP = false;
     enableIPv6 = false;
     nameservers = ["1.1.1.1" "8.8.8.8"];
-    firewall.allowedTCPPorts = [8123];
+    firewall.allowedTCPPorts = [22 8123];
   };
 
   systemd.network = {
@@ -167,6 +167,15 @@ in {
     };
   };
 
+  # ── Debugging access ──────────────────────────────────────────────────────
+  services.openssh = {
+    enable = true;
+    settings.PermitRootLogin = "yes";
+  };
+  users.users.root.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyieBFROVPWmH3iC2ZAE+5zofMd6mnunBzfObEwMgFx"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks redacted@example.com"
+  ];
   # ── Base VM settings ──────────────────────────────────────────────────────
   # nsncd is not needed in a minimal VM and causes cascade failures.
   # system.nssModules must also be cleared or NixOS asserts nscd must be enabled.
