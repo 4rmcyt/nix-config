@@ -44,11 +44,11 @@
     enable = true;
     extraPortals = [
       pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-gnome
     ];
-    configPackages = [
-      pkgs.xdg-desktop-portal-gnome
-    ];
+    config = {
+      niri.default = ["gtk"];
+      common.default = ["gtk"];
+    };
     xdgOpenUsePortal = true;
   };
 

@@ -16,7 +16,10 @@ in {
       inputs.dms.nixosModules.dank-material-shell
       inputs.dms.nixosModules.greeter
       inputs.niri-flake.nixosModules.niri
+      inputs.nirinit.nixosModules.nirinit
     ];
+
+    services.nirinit.enable = true;
 
     # Niri via niri-flake NixOS module (uses nixpkgs niri 25.11, not niri-flake's stable)
     programs.niri.enable = true;
@@ -37,6 +40,7 @@ in {
       inputs.pam-shim.homeModules.default
       inputs.dms.homeModules.dank-material-shell
       inputs.dms.homeModules.niri
+      inputs.nirinit.homeModules.nirinit
     ];
   };
 }
