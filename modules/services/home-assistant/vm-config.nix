@@ -164,6 +164,9 @@ in {
   };
 
   # ── Base VM settings ──────────────────────────────────────────────────────
+  # nsncd is not needed in a minimal VM and causes cascade failures
+  services.nscd.enable = false;
+
   time.timeZone = tz;
   system.stateVersion = "25.05";
 
