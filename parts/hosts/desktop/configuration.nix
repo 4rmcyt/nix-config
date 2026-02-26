@@ -40,7 +40,6 @@ in {
       inputs.pam-shim.homeModules.default
       inputs.dms.homeModules.dank-material-shell
       inputs.dms.homeModules.niri
-      inputs.nirinit.homeModules.nirinit
     ];
   };
 }
