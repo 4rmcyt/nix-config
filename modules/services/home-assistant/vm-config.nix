@@ -18,7 +18,7 @@ in {
   microvm = {
     hypervisor = "qemu";
     vcpu = 2;
-    mem = 2048;
+    mem = 2047; # 2048 (exact 2GB) causes QEMU hang, see microvm.nix#171
 
     # Share the host Nix store read-only — fast rebuilds, no per-VM squashfs
     shares = [
@@ -77,8 +77,8 @@ in {
     enable = true;
     networks."10-eth" = {
       matchConfig.MACAddress = vmMac;
-      addresses = [{addressConfig.Address = "${vmIp}/24";}];
-      routes = [{routeConfig.Gateway = bridgeIp;}];
+      addresses = [{Address = "${vmIp}/24";}];
+      routes = [{Gateway = bridgeIp;}];
       linkConfig.RequiredForOnline = "routable";
     };
   };

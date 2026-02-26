@@ -33,7 +33,7 @@ in {
     # Assign static IP to bridge
     networks."10-br-hass" = {
       matchConfig.Name = "br-hass";
-      addresses = [{addressConfig.Address = "${bridgeIp}/24";}];
+      addresses = [{Address = "${bridgeIp}/24";}];
       networkConfig = {
         ConfigureWithoutCarrier = true;
         IPv4Forwarding = true;
