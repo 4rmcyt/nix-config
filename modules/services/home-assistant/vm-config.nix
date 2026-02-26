@@ -76,10 +76,12 @@ in {
     enableIPv6 = false;
     nameservers = ["1.1.1.1" "8.8.8.8"];
     firewall.allowedTCPPorts = [22 8123];
-    interfaces.eth0.ipv4.addresses = [{
-      address = vmIp;
-      prefixLength = 24;
-    }];
+    interfaces.eth0.ipv4.addresses = [
+      {
+        address = vmIp;
+        prefixLength = 24;
+      }
+    ];
     # defaultGateway = bridgeIp;
   };
 
