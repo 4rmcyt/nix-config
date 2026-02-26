@@ -4,6 +4,7 @@
 {
   lib,
   config,
+  inputs,
   ...
 }: {
   options.configurations.nixos = lib.mkOption {
@@ -20,7 +21,10 @@
   config.flake = {
     nixosConfigurations =
       lib.mapAttrs (
-        _name: {module}: lib.nixosSystem {modules = [module];}
+        _name: {module}: lib.nixosSystem {
+        modules = [module];
+        specialArgs = {inherit inputs;};
+      }
       )
       config.configurations.nixos;
 
