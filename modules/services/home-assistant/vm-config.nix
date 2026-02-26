@@ -72,20 +72,15 @@ in {
   networking = {
     hostName = "hass-vm";
     useDHCP = false;
-    useNetworkd = true; # required to disable traditional stack when using systemd.network
+    usePredictableInterfaceNames = false; # forces eth0, avoids networkd MAC-match issues in microvm
     enableIPv6 = false;
     nameservers = ["1.1.1.1" "8.8.8.8"];
     firewall.allowedTCPPorts = [22 8123];
-  };
-
-  systemd.network = {
-    enable = true;
-    networks."10-eth" = {
-      matchConfig.MACAddress = vmMac;
-      addresses = [{Address = "${vmIp}/24";}];
-      routes = [{Gateway = bridgeIp;}];
-      linkConfig.RequiredForOnline = "routable";
-    };
+    interfaces.eth0.ipv4.addresses = [{
+      address = vmIp;
+      prefixLength = 24;
+    }];
+    defaultGateway = bridgeIp;
   };
 
   # ── Home Assistant ────────────────────────────────────────────────────────
