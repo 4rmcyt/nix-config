@@ -72,6 +72,7 @@ in {
   networking = {
     hostName = "hass-vm";
     useDHCP = false;
+    useNetworkd = true; # required to disable traditional stack when using systemd.network
     enableIPv6 = false;
     nameservers = ["1.1.1.1" "8.8.8.8"];
     firewall.allowedTCPPorts = [22 8123];
