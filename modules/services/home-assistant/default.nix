@@ -33,7 +33,7 @@ in {
     # Assign static IP to bridge
     networks."10-br-hass" = {
       matchConfig.Name = "br-hass";
-      addresses = [{Address = "${bridgeIp}/24";}];
+      addresses = [{addressConfig.Address = "${bridgeIp}/24";}];
       networkConfig = {
         ConfigureWithoutCarrier = true;
         IPv4Forwarding = true;
@@ -58,11 +58,8 @@ in {
     externalInterface = "enp0s31f6";
   };
 
-  # Allow MQTT from bridge subnet; PostgreSQL access is gated in pg_hba
-  networking.firewall.extraInputRules = ''
-    ip saddr 192.168.200.0/24 tcp dport 1883 accept
-    ip saddr 192.168.200.0/24 tcp dport 5432 accept
-  '';
+  # Allow MQTT and PostgreSQL from bridge subnet only (not exposed on WAN)
+  networking.firewall.interfaces."br-hass".allowedTCPPorts = [1883 5432];
 
   # ── Mosquitto on host (VM connects via bridge IP) ─────────────────────────
   users.users.mosquitto = {

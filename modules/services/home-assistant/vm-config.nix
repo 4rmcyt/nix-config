@@ -77,8 +77,8 @@ in {
     enable = true;
     networks."10-eth" = {
       matchConfig.MACAddress = vmMac;
-      addresses = [{Address = "${vmIp}/24";}];
-      routes = [{Gateway = bridgeIp;}];
+      addresses = [{addressConfig.Address = "${vmIp}/24";}];
+      routes = [{routeConfig.Gateway = bridgeIp;}];
       linkConfig.RequiredForOnline = "routable";
     };
   };
