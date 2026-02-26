@@ -10,6 +10,9 @@ _: {
 
       # XWayland support
       {command = ["xwayland-satellite" ":0"];}
+
+      # Session manager (started via systemd for lifecycle management)
+      {command = ["systemctl" "--user" "start" "nirinit.service"];}
     ];
   };
 }
