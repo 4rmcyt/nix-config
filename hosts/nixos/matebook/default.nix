@@ -181,7 +181,12 @@
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
-      pinentryPackage = pkgs.pinentry-gnome3;
+      pinentryPackage = pkgs.pinentry-qt;
+    };
+
+    niri = {
+      enable = true;
+      package = pkgs.niri;
     };
 
     light.enable = true;
@@ -223,10 +228,17 @@
     };
 
     # =============================================================
-    # Desktop Environment - GNOME
+    # Display Manager - greetd + niri
     # =============================================================
-    desktopManager.gnome.enable = true;
-    displayManager.gdm.enable = true;
+    greetd = {
+      enable = true;
+      settings = {
+        default_session = {
+          command = "${pkgs.niri}/bin/niri --session";
+          user = "zeev";
+        };
+      };
+    };
 
     libinput.enable = true;
     libinput.touchpad = {

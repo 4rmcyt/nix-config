@@ -18,6 +18,8 @@
 
     ../../modules/WM
     ../../modules/WM/niri
+    ../../modules/WM/niri/nvidia.nix
+    ../../modules/WM/niri/monitors.nix
   ];
 
   home = {

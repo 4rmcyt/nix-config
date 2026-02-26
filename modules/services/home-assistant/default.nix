@@ -6,10 +6,7 @@
 }: let
   vmIp = "192.168.200.2";
   bridgeIp = "192.168.200.1";
-  vmMac = "02:00:00:00:00:01";
   inherit (config.my.defaults) domain;
-  hsLan = config.my.defaults.homeserver_lan;
-  tz = config.my.defaults.timezone;
 in {
   imports = [inputs.microvm.nixosModules.host];
 
@@ -120,11 +117,10 @@ in {
   # 4. Uncomment zwave_js / zha in vm-config.nix extraComponents
 
   # ── microvm definition ────────────────────────────────────────────────────
+  # The hass guest is defined as nixosConfigurations.hass in the flake.
+  # Using flake = inputs.self avoids inline evaluation cycles.
   microvm.vms.hass = {
     autostart = true;
-    config = import ./vm-config.nix {
-      inherit inputs domain tz bridgeIp vmIp vmMac;
-      homeserverLan = hsLan;
-    };
+    flake = inputs.self;
   };
 }

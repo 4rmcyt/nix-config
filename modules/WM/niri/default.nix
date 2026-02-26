@@ -3,7 +3,6 @@
     ./binds.nix
     ./dms.nix
     ./startup.nix
-    ./monitors.nix
     ./windowrules.nix
     ../hyprland/gtk.nix
     ../matugen
@@ -20,17 +19,6 @@
     XDG_CURRENT_DESKTOP = "niri";
     XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "niri";
-
-    # NVIDIA for display (monitors connected to NVIDIA GPU)
-    LIBVA_DRIVER_NAME = "nvidia";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    NVD_BACKEND = "direct";
-    GBM_BACKEND = "nvidia-drm";
-    __EGL_VENDOR_LIBRARY_FILENAMES = "/run/opengl-driver/share/glvnd/egl_vendor.d/10_nvidia.json";
-
-    # VRR/G-Sync for NVIDIA
-    __GL_GSYNC_ALLOWED = 1;
-    __GL_VRR_ALLOWED = 1;
 
     # Qt
     QT_AUTO_SCREEN_SCALE_FACTOR = 1;

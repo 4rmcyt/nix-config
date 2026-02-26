@@ -1,18 +1,19 @@
-# Guest NixOS module for the Home Assistant microvm.
-# Called as a function from default.nix so host-level values (domain,
-# bridgeIp, etc.) can be captured via closure without needing my.defaults.*
-# inside the guest's independent module system.
-{
-  domain,
-  tz,
-  bridgeIp, # host bridge IP — gateway, Mosquitto broker, PostgreSQL
-  vmIp, # this VM's static IP
-  vmMac, # MAC address matching the TAP definition on the host
-  homeserverLan, # host LAN IP — used for internal_url
-}: {
-  pkgs,
-  ...
-}: {
+# Standalone NixOS module for the Home Assistant microvm guest.
+# Referenced as a separate nixosConfiguration (nixosConfigurations.hass)
+# and consumed by the homeserver host via `microvm.vms.hass.flake = inputs.self`.
+{pkgs, ...}: let
+  vmIp = "192.168.200.2";
+  bridgeIp = "192.168.200.1"; # host bridge IP — gateway, Mosquitto, PostgreSQL
+  vmMac = "02:00:00:00:00:01";
+
+  # Mirror of my.defaults.* values on the host — update here if those change.
+  domain = "example.com";
+  tz = "America/Edmonton";
+  homeserverLan = "192.168.1.165";
+in {
+  # Required for the nixosConfigurations build check
+  nixpkgs.hostPlatform = "x86_64-linux";
+
   # ── microvm hypervisor settings ───────────────────────────────────────────
   microvm = {
     hypervisor = "qemu";
@@ -40,7 +41,7 @@
     interfaces = [
       {
         type = "tap";
-        id = "vm-hass0"; # must match the TAP name in the host's systemd.network
+        id = "vm-hass0"; # must match TAP name in host's systemd.network
         mac = vmMac;
       }
     ];
@@ -105,7 +106,7 @@
       "paperless_ngx"
       "playstation_network"
       "jellyfin"
-      # Uncomment after filling in USB device IDs above:
+      # Uncomment after filling in USB device IDs in qemu.extraArgs above:
       # "zwave_js"
       # "zha"
     ];
@@ -118,11 +119,10 @@
         country = "CA";
         currency = "CAD";
         external_url = "https://hass.${domain}";
-        # Internal URL uses the host LAN IP via Traefik
         internal_url = "http://${homeserverLan}:8123";
       };
 
-      # PostgreSQL on host, trusted from bridge subnet (no password needed)
+      # PostgreSQL on host, trusted from bridge subnet — no password needed
       recorder.db_url = "postgresql://hass@${bridgeIp}/hass";
 
       http = {
@@ -131,25 +131,20 @@
         use_x_forwarded_for = true;
         trusted_proxies = [
           "127.0.0.1"
-          bridgeIp # Traefik runs on the host bridge gateway
+          bridgeIp # Traefik on the host bridge gateway
           homeserverLan # direct LAN access
         ];
         ip_ban_enabled = true;
         login_attempts_threshold = 5;
       };
 
-      # Mosquitto is on the host, reachable via bridge gateway IP
+      # Mosquitto on the host, reachable via bridge gateway IP
       mqtt = {
         broker = bridgeIp;
         port = 1883;
       };
 
-      tts = [
-        {
-          platform = "google_translate";
-          language = "en";
-        }
-      ];
+      tts = [{platform = "google_translate"; language = "en";}];
 
       default_config = {};
       frontend.themes = "!include_dir_merge_named themes";
