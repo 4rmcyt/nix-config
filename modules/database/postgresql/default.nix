@@ -186,9 +186,13 @@ in {
          superuser_map      /^(.*)$   \1
     '';
 
+    settings.listen_addresses = "localhost,192.168.200.1";
+
     authentication = pkgs.lib.mkOverride 10 ''
       # Use peer authentication for local socket connections (maps system users to DB users)
       local all       all     peer map=superuser_map
+      # Trust hass user from microvm bridge (home-assistant VM, internal bridge only)
+      host  hass hass 192.168.200.0/24 trust
       # Require password authentication for network connections (both IPv4 and IPv6)
       host  all all 127.0.0.1/32 scram-sha-256
       host  all all ::1/128      scram-sha-256

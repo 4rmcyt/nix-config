@@ -15,10 +15,6 @@ let
       maxretry = 3;
       bantime = "1h";
     };
-    homeassistant = {
-      filter = "homeassistant";
-      journalmatch = "_SYSTEMD_UNIT=home-assistant.service";
-    };
     jellyfin = {
       filter = "jellyfin";
       journalmatch = "_SYSTEMD_UNIT=jellyfin.service";
@@ -116,12 +112,6 @@ in {
 
   # Your custom filter and action definitions are excellent and need no changes.
   environment.etc = {
-    "fail2ban/filter.d/homeassistant.conf".text = ''
-      [Definition]
-      failregex = Login attempt or request with invalid authentication from <HOST>
-      # ... your other filters
-    '';
-
     "fail2ban/action.d/cloudflare-token-custom.conf" = {
       mode = "0644";
       text = let

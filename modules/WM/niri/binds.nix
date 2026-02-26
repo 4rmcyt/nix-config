@@ -6,14 +6,14 @@ in {
     # APPLICATIONS
     # ============================================
 
-    "Mod+Return".action = a.spawn "wezterm" "start" "--cwd" ".";
+    "Mod+Return".action = a.spawn "kitty";
     "Mod+B".action = a.spawn "chromium";
     "Mod+E".action = a.spawn "nautilus";
-    "Mod+Space".action = a.spawn "quickshell" "-m" "dms.overview";
-    "Mod+D".action = a.spawn "walker";
-    "Mod+M".action = a.spawn "quickshell" "-m" "dms.taskmgr";
-    "Ctrl+Shift+Escape".action = a.spawn "quickshell" "-m" "dms.taskmgr";
-    "Mod+Comma".action = a.spawn "quickshell" "-m" "dms.settings";
+    "Mod+Space".action = a.spawn "dms" "ipc" "spotlight" "toggle";
+    "Mod+D".action = a.spawn "dms" "ipc" "launcher" "toggle";
+    "Mod+M".action = a.spawn "dms" "ipc" "processlist" "toggle";
+    "Ctrl+Shift+Escape".action = a.spawn "dms" "ipc" "processlist" "toggle";
+    "Mod+Comma".action = a.spawn "dms" "ipc" "settings" "toggle";
     "Mod+Shift+D".action = a.spawn "discord" "--enable-features=UseOzonePlatform" "--ozone-platform=wayland";
 
     # ============================================
@@ -29,18 +29,18 @@ in {
     # SYSTEM CONTROLS
     # ============================================
 
-    "Mod+Escape".action = a.spawn "swaylock";
-    "Mod+Shift+Escape".action = a.spawn "dms" "ipc" "call" "modal" "toggle" "power-menu";
-    "Mod+N".action = a.spawn "dms" "ipc" "call" "modal" "toggle" "notifications";
-    "Mod+T".action = a.spawn "dms" "ipc" "call" "appearance" "toggle-theme";
-    "Mod+Shift+N".action = a.spawn "dms" "ipc" "call" "night-mode" "toggle";
+    "Mod+Escape".action = a.spawn "dms" "ipc" "lock" "lock";
+    "Mod+Shift+Escape".action = a.spawn "dms" "ipc" "powermenu" "toggle";
+    "Mod+N".action = a.spawn "dms" "ipc" "notifications" "toggle";
+    "Mod+T".action = a.spawn "dms" "ipc" "theme" "toggle";
+    "Mod+Shift+N".action = a.spawn "dms" "ipc" "night" "toggle";
 
     # ============================================
     # THEMING & CUSTOMIZATION
     # ============================================
 
-    "Mod+C".action = a.spawn "dms" "ipc" "call" "modal" "toggle" "color-picker";
-    "Mod+W".action = a.spawn "dms" "ipc" "call" "modal" "toggle" "dashboard";
+    "Mod+C".action = a.spawn "dms" "ipc" "color-picker" "toggle";
+    "Mod+W".action = a.spawn "dms" "ipc" "dash" "toggle";
 
     # ============================================
     # SCREENSHOTS - DMS CLI
@@ -55,7 +55,7 @@ in {
     # FOCUS CONTROL
     # ============================================
 
-    "Alt+Tab".action = a.spawn "quickshell" "-m" "dms.alttab";
+    "Alt+Tab".action = a.focus-window-previous;
 
     # Arrow Keys
     "Mod+Left".action = a.focus-column-left;
@@ -158,22 +158,21 @@ in {
     # MEDIA CONTROLS - DMS IPC
     # ============================================
 
-    "XF86AudioPlay".action = a.spawn "dms" "ipc" "call" "media" "play-pause";
-    "XF86AudioNext".action = a.spawn "dms" "ipc" "call" "media" "next";
-    "XF86AudioPrev".action = a.spawn "dms" "ipc" "call" "media" "previous";
-    "XF86AudioStop".action = a.spawn "dms" "ipc" "call" "media" "stop";
-    "XF86AudioRaiseVolume".action = a.spawn "dms" "ipc" "call" "audio" "volume-increment" "5";
-    "XF86AudioLowerVolume".action = a.spawn "dms" "ipc" "call" "audio" "volume-decrement" "5";
-    "XF86AudioMute".action = a.spawn "dms" "ipc" "call" "audio" "volume-toggle-mute";
-    "XF86MonBrightnessUp".action = a.spawn "dms" "ipc" "call" "brightness" "increment" "5";
-    "XF86MonBrightnessDown".action = a.spawn "dms" "ipc" "call" "brightness" "decrement" "5";
+    "XF86AudioPlay".action = a.spawn "dms" "ipc" "mpris" "playPause";
+    "XF86AudioNext".action = a.spawn "dms" "ipc" "mpris" "next";
+    "XF86AudioPrev".action = a.spawn "dms" "ipc" "mpris" "previous";
+    "XF86AudioStop".action = a.spawn "dms" "ipc" "mpris" "stop";
+    "XF86AudioRaiseVolume".action = a.spawn "dms" "ipc" "audio" "increment" "5";
+    "XF86AudioLowerVolume".action = a.spawn "dms" "ipc" "audio" "decrement" "5";
+    "XF86AudioMute".action = a.spawn "dms" "ipc" "audio" "mute";
+    "XF86MonBrightnessUp".action = a.spawn "dms" "ipc" "brightness" "increment" "5";
+    "XF86MonBrightnessDown".action = a.spawn "dms" "ipc" "brightness" "decrement" "5";
 
     # ============================================
     # CLIPBOARD - DMS Integration
     # ============================================
 
-    "Mod+V".action = a.spawn "dms" "ipc" "call" "modal" "toggle" "clipboard";
-    "Mod+Shift+V".action = a.spawn "bash" "-c" "cliphist list | head -50 | walker --dmenu | cliphist decode | wl-copy";
+    "Mod+V".action = a.spawn "dms" "ipc" "clipboard" "toggle";
 
     # ============================================
     # SYSTEM

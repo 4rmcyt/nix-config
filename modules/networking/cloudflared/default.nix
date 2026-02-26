@@ -140,6 +140,10 @@
           service: https://localhost:8443
           originRequest:
             httpHostHeader: livesync.${config.my.defaults.domain}
+        - hostname: hass.${config.my.defaults.domain}
+          service: https://localhost:8443
+          originRequest:
+            httpHostHeader: hass.${config.my.defaults.domain}
 
         # Catch-all
         - service: http_status:404

@@ -45,7 +45,6 @@
       nix-output-monitor
       nvd
       reptyr
-      
 
       # =================================================================
       # Development & Nix Tools (alphabetical)
