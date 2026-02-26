@@ -179,13 +179,11 @@
       profileId = "nextdns0";
     };
 
-    # TODO: migrate to headscale after first boot:
-    # sopsFile = ../../../secrets/headscale-homeserver.yaml; key = "preauth_key";
-    # loginServer = "https://head.example.com";
     tailscaleAuth = {
       enable = true;
-      sopsFile = ../../../secrets/tailscale-homeserver.yaml;
-      key = "tailscale_auth_key";
+      sopsFile = ../../../secrets/headscale-homeserver.yaml;
+      key = "preauth_key";
+      loginServer = "https://head.example.com";
     };
 
     firewall = {
