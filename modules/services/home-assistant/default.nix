@@ -54,7 +54,6 @@ in {
   # NAT masquerade so the VM can reach the internet
   networking.nat = {
     enable = true;
-    enableIPMasquerade = true;
     internalInterfaces = ["br-hass"];
     externalInterface = "enp0s31f6";
   };
