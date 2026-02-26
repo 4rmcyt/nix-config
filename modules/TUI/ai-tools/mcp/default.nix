@@ -66,6 +66,10 @@ in {
     };
   };
 
+  # Symlink project .mcp.json to the HM-managed global config so it stays current after rebuilds
+  home.file."src/nix-config/.mcp.json".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/mcp/mcp.json";
+
   # Create wrapper scripts with decrypted secrets
   home.activation.mcpWrappers = lib.hm.dag.entryAfter ["writeBoundary"] ''
         mkdir -p "$HOME/.local/bin"

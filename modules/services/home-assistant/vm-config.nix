@@ -32,7 +32,7 @@ in {
       {
         proto = "virtiofs";
         tag = "hass-data";
-        source = "/var/lib/microvms/hass/data";
+        source = "/var/lib/hass-data";
         mountPoint = "/var/lib/hass";
       }
     ];

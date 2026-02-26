@@ -84,8 +84,7 @@ in {
 
   # ── Persistent directories and Traefik dynamic config ────────────────────
   systemd.tmpfiles.rules = [
-    "d /var/lib/microvms/hass      0755 root root -"
-    "d /var/lib/microvms/hass/data 0755 root root -"
+    "d /var/lib/hass-data          0755 root root -"
     "L+ /var/lib/traefik/hass.yml - - - - /etc/traefik/hass.yml"
   ];
 
