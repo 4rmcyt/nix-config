@@ -80,7 +80,7 @@ in {
       address = vmIp;
       prefixLength = 24;
     }];
-    defaultGateway = bridgeIp;
+    # defaultGateway = bridgeIp;
   };
 
   # ── Home Assistant ────────────────────────────────────────────────────────
