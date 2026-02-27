@@ -180,6 +180,16 @@ in
   services.nscd.enable = false;
   system.nssModules = lib.mkForce [ ];
 
+  # ── Systemd sandbox overrides for microvm/virtiofs compatibility ──────────
+  # dbus: AmbientCapabilities=CAP_AUDIT_WRITE fails in QEMU microvm (ENOTSUP)
+  systemd.services.dbus.serviceConfig.AmbientCapabilities = lib.mkForce "";
+
+  # home-assistant: ProtectSystem=strict causes CHDIR failure on virtiofs mount
+  systemd.services.home-assistant.serviceConfig = {
+    ProtectSystem = lib.mkForce false;
+    PrivateTmp = lib.mkForce false;
+  };
+
   time.timeZone = tz;
   system.stateVersion = "25.05";
 
