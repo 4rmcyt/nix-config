@@ -69,8 +69,11 @@ in {
       script = with pkgs; ''
         sleep 2
         status="$(${tailscale}/bin/tailscale status -json | ${jq}/bin/jq -r .BackendState)"
-        if [ $status = "Running" ]; then
-          exit 0
+        if [ "$status" = "Running" ]; then
+          current_url="$(${tailscale}/bin/tailscale debug prefs | ${jq}/bin/jq -r .ControlURL)"
+          if [ "$current_url" = "${cfg.loginServer}" ]; then
+            exit 0
+          fi
         fi
         ${tailscale}/bin/tailscale up \
           --authkey file:${config.sops.secrets.tailscale_auth_key.path} \
