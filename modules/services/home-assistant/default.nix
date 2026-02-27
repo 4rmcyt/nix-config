@@ -6,8 +6,8 @@
 }: let
   # HAOS gets its own IP from router DHCP via br0.
   # Set a static DHCP reservation on your router and update this value.
-  hassIp = "192.168.1.150";
-  hassVersion = "15.2";
+  hassIp = "192.168.1.235";
+  hassVersion = "17.1";
   hassImageUrl = "https://github.com/home-assistant/operating-system/releases/download/${hassVersion}/haos_ova-${hassVersion}.qcow2.xz";
   hassImage = "/var/lib/libvirt/images/haos_ova-${hassVersion}.qcow2";
   inherit (config.my.defaults) domain homeserver_lan gateway;
