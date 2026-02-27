@@ -875,11 +875,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1772086982,
-        "narHash": "sha256-PUyZd3lKFN40ExC+ogQorjUwRcjKuOOxdoHRNQis47A=",
+        "lastModified": 1772148132,
+        "narHash": "sha256-2C/Pn2M2aHADtoljSFg9hz6xOaZp6IRI77jjy+LDAgw=",
         "owner": "tale",
         "repo": "headplane",
-        "rev": "ab3c4f7819a6f43834ca996cced29817509c31f3",
+        "rev": "0cff3890510dfb33e09b2ed3ad78319a2d59b276",
         "type": "github"
       },
       "original": {
@@ -2524,11 +2524,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1772143426,
-        "narHash": "sha256-Cib/2U7p86cNmSaoFQq3LQq5C0aZ0zI9ehp3E9vsVfc=",
+        "lastModified": 1772148989,
+        "narHash": "sha256-2ErmQJoW2SOr8cVwmRQSYmOyRP/1guz8NM637hH4POw=",
         "owner": "zed-industries",
         "repo": "zed",
-        "rev": "cbbcb1e10165e11df3e23d0defb1d58ec954b277",
+        "rev": "d4e89f9587f66ca277fc662dbeb45324d91952bb",
         "type": "github"
       },
       "original": {

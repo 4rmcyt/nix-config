@@ -65,7 +65,7 @@ in
   networking = {
     hostName = "hass-vm";
     useDHCP = false;
-    usePredictableInterfaceNames = false;
+    useNetworkd = true;
     nameservers = [
       "1.1.1.1"
       "8.8.8.8"
@@ -74,13 +74,16 @@ in
       22
       8123
     ];
-    interfaces.eth0.ipv4.addresses = [
-      {
-        address = vmIp;
-        prefixLength = 24;
-      }
-    ];
-    # defaultGateway = bridgeIp;
+  };
+
+  # virtio-net TAP inside microvm guests appears as "e*" regardless of predictable naming
+  systemd.network = {
+    enable = true;
+    networks."10-e" = {
+      matchConfig.Name = "e*";
+      addresses = [ { Address = "${vmIp}/24"; } ];
+      routes = [ { Gateway = bridgeIp; } ];
+    };
   };
 
   services.home-assistant = {
