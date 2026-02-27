@@ -14,18 +14,36 @@
 in {
   # ── Networking: bridge host NIC so HAOS appears on the LAN ───────────────
   # enp0s31f6 becomes a bridge port; host and HAOS each get separate LAN IPs.
+  # Using networkd (consistent with previous config that had systemd.network.enable = true).
   networking.useDHCP = lib.mkForce false;
-  networking.bridges.br0.interfaces = ["enp0s31f6"];
-  networking.interfaces.br0 = {
-    useDHCP = false;
-    ipv4.addresses = [
-      {
-        address = homeserver_lan;
-        prefixLength = 24;
-      }
-    ];
+
+  systemd.network = {
+    enable = true;
+
+    # Bridge netdev
+    netdevs."10-br0".netdevConfig = {
+      Kind = "bridge";
+      Name = "br0";
+    };
+
+    # Enslave physical NIC into bridge — no IP on this interface
+    networks."05-enp0s31f6" = {
+      matchConfig.Name = "enp0s31f6";
+      networkConfig.Bridge = "br0";
+      linkConfig = {
+        ActivationPolicy = "always-up";
+        RequiredForOnline = "no";
+      };
+    };
+
+    # Bridge gets the host's static LAN IP
+    networks."10-br0" = {
+      matchConfig.Name = "br0";
+      address = ["${homeserver_lan}/24"];
+      routes = [{Gateway = gateway;}];
+      networkConfig.ConfigureWithoutCarrier = true;
+    };
   };
-  networking.defaultGateway = gateway;
 
   # ── libvirt ───────────────────────────────────────────────────────────────
   virtualisation.libvirtd = {
