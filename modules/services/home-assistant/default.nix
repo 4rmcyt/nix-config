@@ -1,67 +1,109 @@
 {
   config,
-  inputs,
   lib,
+  pkgs,
   ...
 }: let
-  vmIp = "192.168.200.2";
-  bridgeIp = "192.168.200.1";
-  inherit (config.my.defaults) domain;
+  # HAOS gets its own IP from router DHCP via br0.
+  # Set a static DHCP reservation on your router and update this value.
+  hassIp = "192.168.1.150";
+  hassVersion = "15.2";
+  hassImageUrl = "https://github.com/home-assistant/operating-system/releases/download/${hassVersion}/haos_ova-${hassVersion}.qcow2.xz";
+  hassImage = "/var/lib/libvirt/images/haos_ova-${hassVersion}.qcow2";
+  inherit (config.my.defaults) domain homeserver_lan gateway;
 in {
-  imports = [inputs.microvm.nixosModules.host];
-
-  # ── Networking: bridge for host ↔ VM ──────────────────────────────────────
-  # Switch from dhcpcd to systemd-networkd (required by microvm host module).
+  # ── Networking: bridge host NIC so HAOS appears on the LAN ───────────────
+  # enp0s31f6 becomes a bridge port; host and HAOS each get separate LAN IPs.
   networking.useDHCP = lib.mkForce false;
+  networking.bridges.br0.interfaces = ["enp0s31f6"];
+  networking.interfaces.br0 = {
+    useDHCP = false;
+    ipv4.addresses = [
+      {
+        address = homeserver_lan;
+        prefixLength = 24;
+      }
+    ];
+  };
+  networking.defaultGateway = gateway;
 
-  systemd.network = {
+  # ── libvirt ───────────────────────────────────────────────────────────────
+  virtualisation.libvirtd = {
     enable = true;
-
-    # Physical NIC — keep DHCP for WAN connectivity
-    networks."05-wan" = {
-      matchConfig.Name = "enp0s31f6";
-      networkConfig.DHCP = "ipv4";
-      dhcpV4Config.RouteMetric = 100;
-    };
-
-    # Bridge netdev for VM
-    netdevs."10-br-hass".netdevConfig = {
-      Kind = "bridge";
-      Name = "br-hass";
-    };
-
-    # Assign static IP to bridge
-    networks."10-br-hass" = {
-      matchConfig.Name = "br-hass";
-      addresses = [{Address = "${bridgeIp}/24";}];
-      networkConfig = {
-        ConfigureWithoutCarrier = true;
-        IPv4Forwarding = true;
-      };
-    };
-
-    # Wire the VM's TAP interface into the bridge
-    networks."20-vm-hass0" = {
-      matchConfig.Name = "vm-hass0";
-      networkConfig.Bridge = "br-hass";
-      linkConfig = {
-        ActivationPolicy = "always-up";
-        RequiredForOnline = "no";
-      };
-    };
+    qemu.package = pkgs.qemu_kvm;
   };
 
-  # NAT masquerade so the VM can reach the internet
-  networking.nat = {
-    enable = true;
-    internalInterfaces = ["br-hass"];
-    externalInterface = "enp0s31f6";
+  environment.systemPackages = with pkgs; [
+    bridge-utils
+    virt-manager # provides virt-install
+    libvirt # provides virsh
+  ];
+
+  # libvirt bridged-network XML — forward mode=bridge ties into host br0
+  environment.etc."libvirt/bridged-network.xml".text = ''
+    <network>
+      <name>bridged-network</name>
+      <forward mode="bridge"/>
+      <bridge name="br0"/>
+    </network>
+  '';
+
+  # ── Bootstrap HAOS VM (idempotent oneshot) ───────────────────────────────
+  systemd.services.hass-vm-setup = {
+    description = "Bootstrap Home Assistant OS VM via libvirt";
+    after = ["libvirtd.service" "network-online.target"];
+    wants = ["libvirtd.service" "network-online.target"];
+    wantedBy = ["multi-user.target"];
+    path = with pkgs; [curl xz coreutils libvirt virt-manager];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      set -euo pipefail
+
+      # Idempotent: skip if VM already exists
+      if virsh --connect qemu:///system list --all | grep -qw "hass"; then
+        echo "hass VM already exists, nothing to do"
+        exit 0
+      fi
+
+      # Define bridged network if not present
+      if ! virsh --connect qemu:///system net-list --all | grep -qw "bridged-network"; then
+        virsh --connect qemu:///system net-define /etc/libvirt/bridged-network.xml
+        virsh --connect qemu:///system net-start bridged-network
+        virsh --connect qemu:///system net-autostart bridged-network
+      fi
+
+      # Download HAOS image
+      if [ ! -f "${hassImage}" ]; then
+        echo "Downloading HAOS ${hassVersion}..."
+        mkdir -p "$(dirname "${hassImage}")"
+        curl -L -o "${hassImage}.xz" "${hassImageUrl}"
+        xz -d "${hassImage}.xz"
+      fi
+
+      # Create VM
+      virt-install \
+        --connect qemu:///system \
+        --name hass \
+        --boot uefi \
+        --import \
+        --disk "${hassImage},format=qcow2,bus=virtio" \
+        --cpu host \
+        --vcpus 2 \
+        --memory 2048 \
+        --network network=bridged-network \
+        --graphics spice,listen=127.0.0.1 \
+        --noautoconsole \
+        --os-variant generic
+
+      virsh --connect qemu:///system autostart hass
+      echo "Done — hass VM created and set to autostart"
+    '';
   };
 
-  # Allow MQTT and PostgreSQL from bridge subnet only (not exposed on WAN)
-  networking.firewall.interfaces."br-hass".allowedTCPPorts = [1883 5432];
-
-  # ── Mosquitto on host (VM connects via bridge IP) ─────────────────────────
+  # ── Mosquitto on host (HAOS connects via host LAN IP) ────────────────────
   users.users.mosquitto = {
     isSystemUser = true;
     group = "mosquitto";
@@ -72,8 +114,7 @@ in {
     enable = true;
     listeners = [
       {
-        # Bound to bridge IP only — not exposed on the public LAN
-        address = bridgeIp;
+        address = homeserver_lan;
         port = 1883;
         acl = ["pattern readwrite #"];
         omitPasswordAuth = true;
@@ -82,13 +123,13 @@ in {
     ];
   };
 
-  # ── Persistent directories and Traefik dynamic config ────────────────────
+  networking.firewall.interfaces."br0".allowedTCPPorts = [1883];
+
+  # ── Traefik dynamic config ────────────────────────────────────────────────
   systemd.tmpfiles.rules = [
-    "d /var/lib/hass-data          0755 root root -"
     "L+ /var/lib/traefik/hass.yml - - - - /etc/traefik/hass.yml"
   ];
 
-  # Traefik file provider picks this up from the watched directory
   environment.etc."traefik/hass.yml".text = lib.generators.toYAML {} {
     http = {
       routers.hass = {
@@ -98,24 +139,10 @@ in {
         middlewares = ["security-headers"];
         tls = {};
       };
-      services.hass.loadBalancer.servers = [{url = "http://${vmIp}:8123";}];
+      services.hass.loadBalancer.servers = [{url = "http://${hassIp}:8123";}];
     };
   };
 
-  # ── USB passthrough (add when stick is connected) ────────────────────────
-  # 1. Plug in the Z-Wave/Zigbee stick, run `lsusb`, note idVendor:idProduct
-  # 2. Add udev rule here:
-  #    services.udev.extraRules = ''
-  #      SUBSYSTEM=="usb", ATTRS{idVendor}=="XXXX", ATTRS{idProduct}=="XXXX", MODE="0664", GROUP="kvm"
-  #    '';
-  # 3. Uncomment qemu.extraArgs in vm-config.nix with the same IDs
-  # 4. Uncomment zwave_js / zha in vm-config.nix extraComponents
-
-  # ── microvm definition ────────────────────────────────────────────────────
-  # The hass guest is defined as nixosConfigurations.hass in the flake.
-  # Using flake = inputs.self avoids inline evaluation cycles.
-  microvm.vms.hass = {
-    autostart = true;
-    flake = inputs.self;
-  };
+  # ── USB passthrough (Zigbee/Z-Wave dongle) ───────────────────────────────
+  # virsh --connect qemu:///system attach-device hass usb-device.xml --persistent
 }

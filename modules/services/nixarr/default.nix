@@ -127,8 +127,9 @@ in {
     7359 # Jellyfin discovery
   ];
 
+  # UPnP disabled — all external access goes through Cloudflare tunnels
   util-nixarr.upnp = {
-    enable = true;
+    enable = false;
     openTcpPorts = [
       # 80    # HTTP - conflicts with existing router mapping
       # 443   # HTTPS - conflicts with existing router mapping
