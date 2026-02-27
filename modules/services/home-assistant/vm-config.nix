@@ -65,24 +65,26 @@ in
   networking = {
     hostName = "hass-vm";
     useDHCP = false;
-    useNetworkd = true;
+    useNetworkd = false;
+    # Disable predictable naming so the virtio-net TAP is always eth0
+    usePredictableInterfaceNames = false;
+    nameservers = [
+      "1.1.1.1"
+      "8.8.8.8"
+    ];
+    defaultGateway = bridgeIp;
     firewall.allowedTCPPorts = [
       22
       8123
     ];
-  };
-
-  # virtio-net TAP inside microvm guests: match by type, not name
-  systemd.network = {
-    enable = true;
-    networks."20-lan" = {
-      matchConfig.Type = "ether";
-      networkConfig = {
-        Address = "${vmIp}/24";
-        Gateway = bridgeIp;
-        DNS = "1.1.1.1";
-        DHCP = "no";
-      };
+    interfaces.eth0 = {
+      useDHCP = false;
+      ipv4.addresses = [
+        {
+          address = vmIp;
+          prefixLength = 24;
+        }
+      ];
     };
   };
 
