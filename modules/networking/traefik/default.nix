@@ -364,12 +364,12 @@ in {
               tls = {};
             };
 
-            # Headplane web UI (Authelia protected)
+            # Headplane web UI
             headplane = {
               rule = "Host(`headplane.${domain}`)";
               entryPoints = ["websecure"];
               service = "headplane";
-              middlewares = ["authelia" "security-headers"];
+              middlewares = ["security-headers"];
               tls = {};
             };
           };
