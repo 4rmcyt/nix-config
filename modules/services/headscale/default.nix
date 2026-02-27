@@ -65,7 +65,7 @@ in {
         };
         headscale = {
           url = "http://127.0.0.1:8765";
-          config_path = "/etc/headscale/settings.yaml";
+          config_path = "/etc/headscale/config.yaml";
           config_strict = false;
         };
         integration = {
