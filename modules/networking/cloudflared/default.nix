@@ -150,6 +150,8 @@
           service: http://localhost:8765
         - hostname: headplane.${config.my.defaults.domain}
           service: http://localhost:3050
+          originRequest:
+            httpHostHeader: headplane.${config.my.defaults.domain}
 
         # Catch-all
         - service: http_status:404
