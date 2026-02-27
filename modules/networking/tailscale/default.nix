@@ -65,7 +65,10 @@ in {
         "tailscale.service"
       ];
       wantedBy = ["multi-user.target"];
-      serviceConfig.Type = "oneshot";
+      serviceConfig = {
+        Type = "oneshot";
+        TimeoutStartSec = "30";
+      };
       script = with pkgs; ''
         sleep 2
         status="$(${tailscale}/bin/tailscale status -json | ${jq}/bin/jq -r .BackendState)"

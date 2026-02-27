@@ -183,7 +183,7 @@
       enable = true;
       sopsFile = ../../../secrets/headscale-homeserver.yaml;
       key = "preauth_key";
-      loginServer = "https://head.example.com";
+      loginServer = "http://127.0.0.1:8765";
     };
 
     firewall = {
