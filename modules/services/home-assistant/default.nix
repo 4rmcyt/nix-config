@@ -13,6 +13,7 @@ in {
   # ── Networking: bridge for host ↔ VM ──────────────────────────────────────
   # Switch from dhcpcd to systemd-networkd (required by microvm host module).
   networking.useDHCP = lib.mkForce false;
+  networking.useNetworkd = true;
 
   systemd.network = {
     enable = true;

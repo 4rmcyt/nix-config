@@ -66,23 +66,23 @@ in
     hostName = "hass-vm";
     useDHCP = false;
     useNetworkd = true;
-    nameservers = [
-      "1.1.1.1"
-      "8.8.8.8"
-    ];
     firewall.allowedTCPPorts = [
       22
       8123
     ];
   };
 
-  # virtio-net TAP inside microvm guests appears as "e*" regardless of predictable naming
+  # virtio-net TAP inside microvm guests: match by type, not name
   systemd.network = {
     enable = true;
-    networks."10-e" = {
-      matchConfig.Name = "e*";
-      addresses = [ { Address = "${vmIp}/24"; } ];
-      routes = [ { Gateway = bridgeIp; } ];
+    networks."20-lan" = {
+      matchConfig.Type = "ether";
+      networkConfig = {
+        Address = "${vmIp}/24";
+        Gateway = bridgeIp;
+        DNS = "1.1.1.1";
+        DHCP = "no";
+      };
     };
   };
 
