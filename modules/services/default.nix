@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   imports = [
     ./headscale
     # ./home-assistant
