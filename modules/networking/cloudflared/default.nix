@@ -145,10 +145,6 @@
           originRequest:
             httpHostHeader: hass.${config.my.defaults.domain}
 
-        # Headscale coordination server
-        - hostname: head.${config.my.defaults.domain}
-          service: http://localhost:8765
-
         # Catch-all
         - service: http_status:404
     '';

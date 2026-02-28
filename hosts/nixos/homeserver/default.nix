@@ -181,9 +181,7 @@
 
     tailscaleAuth = {
       enable = true;
-      sopsFile = ../../../secrets/headscale-homeserver.yaml;
-      key = "preauth_key";
-      loginServer = "http://127.0.0.1:8765";
+      sopsFile = ../../../secrets/tailscale-homeserver.yaml;
     };
 
     firewall = {
@@ -222,7 +220,7 @@
   # 9.5. Traefik Reverse Proxy
   # =================================================================
   my.traefik.enable = true;
-  my.headscale.enable = true;
+  my.headscale.enable = false;
 
   # =================================================================
   # 10. Programs
