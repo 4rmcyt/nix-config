@@ -23,6 +23,12 @@ in {
       default = "https://controlplane.tailscale.com";
       description = "Login server URL (use headscale URL for self-hosted coordination)";
     };
+
+    advertiseExitNode = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Advertise this node as a Tailscale exit node";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -82,7 +88,8 @@ in {
         ${tailscale}/bin/tailscale up \
           --authkey file:${config.sops.secrets.tailscale_auth_key.path} \
           --login-server ${cfg.loginServer} \
-          --accept-routes
+          --accept-routes \
+          ${optionalString cfg.advertiseExitNode "--advertise-exit-node"}
       '';
     };
   };

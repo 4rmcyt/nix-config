@@ -182,6 +182,15 @@
     tailscaleAuth = {
       enable = true;
       sopsFile = ../../../secrets/tailscale-homeserver.yaml;
+      advertiseExitNode = true;
+    };
+
+    # DNS server on tailscale0 for Tailscale split DNS.
+    # Tailscale admin: set nameserver 100.64.0.2 for domain example.com.
+    # All *.example.com queries from Tailscale clients resolve to this host.
+    firewall.interfaces.tailscale0 = {
+      allowedTCPPorts = [53 80 443];
+      allowedUDPPorts = [53];
     };
 
     firewall = {
@@ -279,6 +288,20 @@
 
     # Development services
     vscode-server.enable = true;
+
+    # Split DNS for Tailscale: resolves *.example.com → 100.64.0.2 (homeserver Tailscale IP)
+    # Only listens on tailscale0; does not interfere with systemd-resolved
+    dnsmasq = {
+      enable = true;
+      settings = {
+        interface = "tailscale0";
+        listen-address = "100.64.0.2";
+        bind-interfaces = true;
+        no-resolv = true;
+        no-hosts = true;
+        address = "/.${config.my.defaults.domain}/100.64.0.2";
+      };
+    };
   };
 
   # =================================================================
