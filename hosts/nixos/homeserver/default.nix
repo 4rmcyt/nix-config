@@ -305,8 +305,9 @@
   systemd.services.dnsmasq = {
     after = ["tailscale-autoconnect.service"];
     wants = ["tailscale-autoconnect.service"];
+    # RuntimeDirectory creates /run/dnsmasq before ExecStartPre runs (dnsmasq --test validates conf-dir)
+    serviceConfig.RuntimeDirectory = "dnsmasq";
     preStart = ''
-      mkdir -p /run/dnsmasq
       TSIP=$(${pkgs.tailscale}/bin/tailscale ip -4 2>/dev/null || true)
       if [ -n "$TSIP" ]; then
         echo "address=/.${config.my.defaults.domain}/$TSIP" > /run/dnsmasq/address.conf
