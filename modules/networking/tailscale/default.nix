@@ -77,6 +77,7 @@ in {
           if [ "$current_url" = "${cfg.loginServer}" ]; then
             exit 0
           fi
+          ${tailscale}/bin/tailscale logout || true
         fi
         ${tailscale}/bin/tailscale up \
           --authkey file:${config.sops.secrets.tailscale_auth_key.path} \
