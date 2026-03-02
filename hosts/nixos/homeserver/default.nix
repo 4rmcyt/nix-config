@@ -310,7 +310,6 @@
       TSIP=$(${pkgs.tailscale}/bin/tailscale ip -4 2>/dev/null || true)
       if [ -n "$TSIP" ]; then
         echo "address=/.${config.my.defaults.domain}/$TSIP" > /run/dnsmasq/address.conf
-        echo "listen-address=$TSIP" >> /run/dnsmasq/address.conf
       fi
     '';
   };
