@@ -287,19 +287,32 @@
     # Development services
     vscode-server.enable = true;
 
-    # Split DNS for Tailscale: resolves *.example.com → 100.64.0.2 (homeserver Tailscale IP)
-    # Only listens on tailscale0; does not interfere with systemd-resolved
+    # Split DNS for Tailscale: resolves *.example.com → homeserver's Tailscale IP
+    # Binds to tailscale0 only; address is resolved dynamically at service start
     dnsmasq = {
       enable = true;
       settings = {
         interface = "tailscale0";
-        listen-address = "100.64.0.2";
         bind-interfaces = true;
         no-resolv = true;
         no-hosts = true;
-        address = "/.${config.my.defaults.domain}/100.64.0.2";
+        conf-dir = "/run/dnsmasq";
       };
     };
+  };
+
+  # Write dnsmasq address config dynamically from Tailscale IP at service start
+  systemd.services.dnsmasq = {
+    after = ["tailscale-autoconnect.service"];
+    wants = ["tailscale-autoconnect.service"];
+    preStart = ''
+      mkdir -p /run/dnsmasq
+      TSIP=$(${pkgs.tailscale}/bin/tailscale ip -4 2>/dev/null || true)
+      if [ -n "$TSIP" ]; then
+        echo "address=/.${config.my.defaults.domain}/$TSIP" > /run/dnsmasq/address.conf
+        echo "listen-address=$TSIP" >> /run/dnsmasq/address.conf
+      fi
+    '';
   };
 
   # =================================================================
