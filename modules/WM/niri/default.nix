@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   imports = [
     ./binds.nix
     ./dms.nix
@@ -40,7 +39,6 @@
     danksearch
   ];
 
-
   programs.niri.settings = {
     prefer-no-csd = true;
     screenshot-path = "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png";
@@ -69,9 +67,9 @@
       };
       focus-ring.enable = false;
       preset-column-widths = [
-        { proportion = 1.0 / 3.0; }
-        { proportion = 1.0 / 2.0; }
-        { proportion = 2.0 / 3.0; }
+        {proportion = 1.0 / 3.0;}
+        {proportion = 1.0 / 2.0;}
+        {proportion = 2.0 / 3.0;}
       ];
       default-column-width = {
         proportion = 1.0 / 2.0;
