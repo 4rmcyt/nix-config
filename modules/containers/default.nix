@@ -11,13 +11,6 @@
       owner = config.users.users.podman.name;
       sopsFile = ../../secrets/.env;
     };
-    flare_env = {
-      format = "dotenv";
-      group = config.users.groups.podman.name;
-      mode = "0400";
-      owner = config.users.users.podman.name;
-      sopsFile = ../../secrets/flare.env;
-    };
   };
 
   environment.systemPackages = [
@@ -50,7 +43,6 @@
       # 2375 # Podman API (insecure, for local use only - NOT RECOMMENDED)
       # 2376 # Podman API (secure with TLS, for local use only)
       # Container services
-      3033 # Flare
       8191 # FlareSolverr
       8265 # Tdarr Web UI
       8266 # Tdarr Server
@@ -68,18 +60,6 @@
     oci-containers = {
       backend = "podman";
       containers = {
-        flare = {
-          autoStart = true;
-          environment = {
-            TZ = "America/Edmonton";
-          };
-          environmentFiles = [config.sops.secrets.flare_env.path];
-          image = "ghcr.io/flintsh/flare:latest";
-          ports = ["127.0.0.1:3033:3000/tcp"];
-          volumes = [
-            "/data/media:/media"
-          ];
-        };
         flaresolverr = {
           autoStart = true;
           environment = {

@@ -48,6 +48,7 @@ in {
       tailscale = {
         enable = true;
         useRoutingFeatures = "both";
+        disableUpstreamLogging = true;
       };
       networkd-dispatcher = {
         enable = true;

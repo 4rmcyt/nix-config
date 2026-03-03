@@ -32,6 +32,14 @@
       owner = "loki";
       mode = "0400";
     };
+    tailscale_prometheus_client_id = {
+      sopsFile = ../../secrets/tailscale-prometheus-exporter.yaml;
+      key = "tailscale_client_id";
+    };
+    tailscale_prometheus_client_secret = {
+      sopsFile = ../../secrets/tailscale-prometheus-exporter.yaml;
+      key = "tailscale_client_secret";
+    };
   };
 
   # =================================================================
@@ -74,6 +82,7 @@
     9100 # Node Exporter
     9187 # PostgreSQL Exporter
     9199 # NUT Exporter
+    9001 # Tailscale Exporter
   ];
 
   # =================================================================
@@ -179,6 +188,13 @@
         # postgres = {
         #   enable = true;
         # };
+        tailscale = {
+          enable = true;
+          extraFlags = [
+            "--tailscale-oauth-client-id=\${TAILSCALE_CLIENT_ID}"
+            "--tailscale-oauth-client-secret=\${TAILSCALE_CLIENT_SECRET}"
+          ];
+        };
       };
 
       scrapeConfigs = [
@@ -218,6 +234,10 @@
         {
           job_name = "prometheus";
           static_configs = [{targets = ["localhost:${toString config.my.network.ports.prometheus}"];}];
+        }
+        {
+          job_name = "tailscale";
+          static_configs = [{targets = ["localhost:9001"];}];
         }
       ];
     };
@@ -373,4 +393,19 @@
   #     RestartSec = 10;
   #   };
   # };
+
+  # Inject Tailscale OAuth credentials into the exporter service via env file
+  systemd.services.prometheus-tailscale-exporter = {
+    serviceConfig = {
+      RuntimeDirectory = "prometheus-tailscale-exporter";
+      EnvironmentFile = "/run/prometheus-tailscale-exporter/credentials.env";
+    };
+    preStart = ''
+      printf 'TAILSCALE_CLIENT_ID=%s\nTAILSCALE_CLIENT_SECRET=%s\n' \
+        "$(cat ${config.sops.secrets.tailscale_prometheus_client_id.path})" \
+        "$(cat ${config.sops.secrets.tailscale_prometheus_client_secret.path})" \
+        > /run/prometheus-tailscale-exporter/credentials.env
+      chmod 600 /run/prometheus-tailscale-exporter/credentials.env
+    '';
+  };
 }

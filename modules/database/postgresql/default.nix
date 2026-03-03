@@ -27,10 +27,6 @@
       secret = "vaultwarden_db_password";
     }
     {
-      name = "flare";
-      secret = "flare_db_password";
-    }
-    {
       name = "atuin";
       secret = "atuin_db_password";
     }
@@ -81,13 +77,6 @@ in {
       group = config.users.groups.postgres.name;
       mode = "0400";
     };
-    flare_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "flare_db_password";
-      owner = config.users.users.postgres.name;
-      group = config.users.groups.postgres.name;
-      mode = "0400";
-    };
     atuin_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "atuin_db_password";
@@ -133,7 +122,6 @@ in {
       "grafana"
       "vaultwarden"
       "lldap"
-      "flare"
       "atuin"
       "authelia"
     ];
@@ -158,10 +146,6 @@ in {
       }
       {
         name = "vaultwarden";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "flare";
         ensureDBOwnership = true;
       }
       {
