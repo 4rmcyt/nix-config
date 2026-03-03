@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./binds.nix
     ./dms.nix
@@ -42,15 +43,23 @@
 
   xdg.portal = {
     enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-gnome
     ];
+    wlr.enable = false;
     config = {
-      niri.default = ["gtk"];
-      common.default = ["gtk"];
+      default = [
+        "gnome"
+        "gtk"
+      ];
+      "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
+      "org.freedesktop.impl.portal.OpenURI" = [ "gtk" ];
+      "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
+      "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
     };
-    xdgOpenUsePortal = true;
   };
+  xdgOpenUsePortal = true;
 
   # Package set by niri-flake NixOS module in parts/hosts/desktop/configuration.nix
 
@@ -82,11 +91,13 @@
       };
       focus-ring.enable = false;
       preset-column-widths = [
-        {proportion = 1.0 / 3.0;}
-        {proportion = 1.0 / 2.0;}
-        {proportion = 2.0 / 3.0;}
+        { proportion = 1.0 / 3.0; }
+        { proportion = 1.0 / 2.0; }
+        { proportion = 2.0 / 3.0; }
       ];
-      default-column-width = {proportion = 1.0 / 2.0;};
+      default-column-width = {
+        proportion = 1.0 / 2.0;
+      };
     };
   };
 }
