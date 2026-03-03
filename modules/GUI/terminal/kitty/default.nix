@@ -12,7 +12,6 @@
       include dank-tabs.conf
     '';
     settings = {
-      open_url_with = "chromium";
       term = "xterm-256color";
       confirm_os_window_close = 0;
       dynamic_background_opacity = true;
