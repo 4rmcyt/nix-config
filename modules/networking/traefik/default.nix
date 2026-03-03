@@ -57,13 +57,6 @@ in {
           insecure = false;
         };
 
-        providers = {
-          file = {
-            filename = "/etc/traefik/dynamic.yml";
-            watch = false;
-          };
-        };
-
         certificatesResolvers.default.acme = {
           inherit (config.my.defaults) email;
           storage = "/var/lib/traefik/acme.json";
@@ -82,14 +75,12 @@ in {
           filePath = "/var/log/traefik/access.log";
         };
       };
-    };
 
-    # Dynamic configuration — routers and services
-    environment.etc."traefik/dynamic.yml".text = lib.generators.toYAML {} {
-      http = {
-        middlewares = {
-          security-headers = {
-            headers = {
+      # NixOS writes this to a file and wires the file provider automatically
+      dynamicConfigOptions = {
+        http = {
+          middlewares = {
+            security-headers.headers = {
               frameDeny = true;
               browserXssFilter = true;
               contentTypeNosniff = true;
@@ -100,190 +91,190 @@ in {
               customFrameOptionsValue = "SAMEORIGIN";
             };
           };
-        };
 
-        routers = {
-          traefik-dashboard = {
-            rule = "Host(`traefik.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "api@internal";
-            middlewares = ["security-headers"];
-            tls = {};
+          routers = {
+            traefik-dashboard = {
+              rule = "Host(`traefik.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "api@internal";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+
+            # Nixarr
+            sonarr = {
+              rule = "Host(`sonarr.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "sonarr";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+            radarr = {
+              rule = "Host(`radarr.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "radarr";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+            prowlarr = {
+              rule = "Host(`prowlarr.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "prowlarr";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+            bazarr = {
+              rule = "Host(`bazarr.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "bazarr";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+            lidarr = {
+              rule = "Host(`lidarr.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "lidarr";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+            readarr = {
+              rule = "Host(`readarr.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "readarr";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+            jellyseerr = {
+              rule = "Host(`jellyseerr.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "jellyseerr";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+
+            # Media
+            jellyfin = {
+              rule = "Host(`jellyfin.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "jellyfin";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+            deluge = {
+              rule = "Host(`deluge.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "deluge";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+
+            # Monitoring
+            grafana = {
+              rule = "Host(`grafana.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "grafana";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+            kuma = {
+              rule = "Host(`kuma.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "kuma";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+
+            # Reading
+            miniflux = {
+              rule = "Host(`miniflux.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "miniflux";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+            kavita = {
+              rule = "Host(`kavita.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "kavita";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+            audiobookshelf = {
+              rule = "Host(`audiobookshelf.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "audiobookshelf";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+
+            # Productivity
+            homepage = {
+              rule = "Host(`home.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "homepage";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+            microbin = {
+              rule = "Host(`microbin.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "microbin";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+            vaultwarden = {
+              rule = "Host(`vault.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "vaultwarden";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+            atuin = {
+              rule = "Host(`atuin.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "atuin";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+            livesync = {
+              rule = "Host(`livesync.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "livesync";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
           };
 
-          # Nixarr
-          sonarr = {
-            rule = "Host(`sonarr.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "sonarr";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
-          radarr = {
-            rule = "Host(`radarr.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "radarr";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
-          prowlarr = {
-            rule = "Host(`prowlarr.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "prowlarr";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
-          bazarr = {
-            rule = "Host(`bazarr.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "bazarr";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
-          lidarr = {
-            rule = "Host(`lidarr.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "lidarr";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
-          readarr = {
-            rule = "Host(`readarr.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "readarr";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
-          jellyseerr = {
-            rule = "Host(`jellyseerr.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "jellyseerr";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
+          services = {
+            # Nixarr
+            sonarr.loadBalancer.servers = [{url = "http://localhost:8989";}];
+            radarr.loadBalancer.servers = [{url = "http://localhost:7878";}];
+            prowlarr.loadBalancer.servers = [{url = "http://localhost:9696";}];
+            bazarr.loadBalancer.servers = [{url = "http://localhost:6767";}];
+            lidarr.loadBalancer.servers = [{url = "http://localhost:8686";}];
+            readarr.loadBalancer.servers = [{url = "http://localhost:8787";}];
+            jellyseerr.loadBalancer.servers = [{url = "http://localhost:5055";}];
 
-          # Media
-          jellyfin = {
-            rule = "Host(`jellyfin.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "jellyfin";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
-          deluge = {
-            rule = "Host(`deluge.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "deluge";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
+            # Media
+            jellyfin.loadBalancer.servers = [{url = "http://localhost:8096";}];
+            deluge.loadBalancer.servers = [{url = "http://localhost:8112";}];
 
-          # Monitoring
-          grafana = {
-            rule = "Host(`grafana.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "grafana";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
-          kuma = {
-            rule = "Host(`kuma.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "kuma";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
+            # Monitoring
+            grafana.loadBalancer.servers = [{url = "http://localhost:3003";}];
+            kuma.loadBalancer.servers = [{url = "http://localhost:3001";}];
 
-          # Reading
-          miniflux = {
-            rule = "Host(`miniflux.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "miniflux";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
-          kavita = {
-            rule = "Host(`kavita.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "kavita";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
-          audiobookshelf = {
-            rule = "Host(`audiobookshelf.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "audiobookshelf";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
+            # Reading
+            miniflux.loadBalancer.servers = [{url = "http://localhost:8086";}];
+            kavita.loadBalancer.servers = [{url = "http://localhost:5000";}];
+            audiobookshelf.loadBalancer.servers = [{url = "http://localhost:9292";}];
 
-          # Productivity
-          homepage = {
-            rule = "Host(`home.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "homepage";
-            middlewares = ["security-headers"];
-            tls = {};
+            # Productivity
+            homepage.loadBalancer.servers = [{url = "http://localhost:8082";}];
+            microbin.loadBalancer.servers = [{url = "http://localhost:8069";}];
+            vaultwarden.loadBalancer.servers = [{url = "http://localhost:8222";}];
+            atuin.loadBalancer.servers = [{url = "http://localhost:8881";}];
+            livesync.loadBalancer.servers = [{url = "http://localhost:5984";}];
           };
-          microbin = {
-            rule = "Host(`microbin.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "microbin";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
-          vaultwarden = {
-            rule = "Host(`vault.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "vaultwarden";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
-          atuin = {
-            rule = "Host(`atuin.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "atuin";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
-          livesync = {
-            rule = "Host(`livesync.${domain}`)";
-            entryPoints = ["websecure"];
-            service = "livesync";
-            middlewares = ["security-headers"];
-            tls = {};
-          };
-        };
-
-        services = {
-          # Nixarr
-          sonarr.loadBalancer.servers = [{url = "http://localhost:8989";}];
-          radarr.loadBalancer.servers = [{url = "http://localhost:7878";}];
-          prowlarr.loadBalancer.servers = [{url = "http://localhost:9696";}];
-          bazarr.loadBalancer.servers = [{url = "http://localhost:6767";}];
-          lidarr.loadBalancer.servers = [{url = "http://localhost:8686";}];
-          readarr.loadBalancer.servers = [{url = "http://localhost:8787";}];
-          jellyseerr.loadBalancer.servers = [{url = "http://localhost:5055";}];
-
-          # Media
-          jellyfin.loadBalancer.servers = [{url = "http://localhost:8096";}];
-          deluge.loadBalancer.servers = [{url = "http://localhost:8112";}];
-
-          # Monitoring
-          grafana.loadBalancer.servers = [{url = "http://localhost:3003";}];
-          kuma.loadBalancer.servers = [{url = "http://localhost:3001";}];
-
-          # Reading
-          miniflux.loadBalancer.servers = [{url = "http://localhost:8086";}];
-          kavita.loadBalancer.servers = [{url = "http://localhost:5000";}];
-          audiobookshelf.loadBalancer.servers = [{url = "http://localhost:9292";}];
-
-          # Productivity
-          homepage.loadBalancer.servers = [{url = "http://localhost:8082";}];
-          microbin.loadBalancer.servers = [{url = "http://localhost:8069";}];
-          vaultwarden.loadBalancer.servers = [{url = "http://localhost:8222";}];
-          atuin.loadBalancer.servers = [{url = "http://localhost:8881";}];
-          livesync.loadBalancer.servers = [{url = "http://localhost:5984";}];
         };
       };
     };

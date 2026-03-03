@@ -29,6 +29,12 @@ in {
       default = false;
       description = "Advertise this node as a Tailscale exit node";
     };
+
+    advertiseRoutes = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      description = "Subnet routes to advertise (e.g. [\"192.168.1.0/24\"])";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -90,7 +96,8 @@ in {
           --authkey file:${config.sops.secrets.tailscale_auth_key.path} \
           --login-server ${cfg.loginServer} \
           --accept-routes \
-          ${optionalString cfg.advertiseExitNode "--advertise-exit-node"}
+          ${optionalString cfg.advertiseExitNode "--advertise-exit-node"} \
+          ${optionalString (cfg.advertiseRoutes != []) "--advertise-routes=${lib.concatStringsSep "," cfg.advertiseRoutes}"}
       '';
     };
   };

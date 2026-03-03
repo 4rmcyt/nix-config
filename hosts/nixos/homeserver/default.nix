@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  lib,
   pkgs,
   ...
 }: {
@@ -183,6 +184,13 @@
       enable = true;
       sopsFile = ../../../secrets/tailscale-homeserver.yaml;
       advertiseExitNode = true;
+      advertiseRoutes = [
+        (
+          let
+            parts = lib.splitString "." config.my.defaults.homeserver_lan;
+          in "${lib.concatStringsSep "." (lib.take 3 parts)}.0/24"
+        )
+      ];
     };
 
     firewall.interfaces.tailscale0 = {
