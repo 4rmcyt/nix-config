@@ -2,6 +2,18 @@
   # =================================================================
   # 1. SOPS Secrets
   # =================================================================
+  # Env file for Tailscale exporter — rendered at activation, before any service starts
+  # Uses "-" as tailnet (Tailscale API convention for "current user's tailnet")
+  sops.templates.tailscale-exporter-env = {
+    content = ''
+      TAILSCALE_TAILNET=dhole-piano.ts.net
+      TAILSCALE_OAUTH_CLIENT_ID=${config.sops.placeholder.tailscale_prometheus_client_id}
+      TAILSCALE_OAUTH_CLIENT_SECRET=${config.sops.placeholder.tailscale_prometheus_client_secret}
+    '';
+    owner = config.users.users.prometheus.name;
+    mode = "0400";
+  };
+
   sops.secrets = {
     cloudflare_prometheus_exporter_token = {
       sopsFile = ../../secrets/cloudflare-prometheus-exporter.yaml;
@@ -32,13 +44,9 @@
       owner = "loki";
       mode = "0400";
     };
-    tailscale_prometheus_client_id = {
-      sopsFile = ../../secrets/tailscale-prometheus-exporter.yaml;
-      key = "tailscale_client_id";
-    };
-    tailscale_prometheus_client_secret = {
-      sopsFile = ../../secrets/tailscale-prometheus-exporter.yaml;
-      key = "tailscale_client_secret";
+    tailscale_prometheus_exporter_env = {
+      sopsFile = ../../secrets/tailscale-prometheus-exporter.env;
+      format = "dotenv";
     };
   };
 
@@ -190,10 +198,7 @@
         # };
         tailscale = {
           enable = true;
-          extraFlags = [
-            "--tailscale-oauth-client-id=\${TAILSCALE_CLIENT_ID}"
-            "--tailscale-oauth-client-secret=\${TAILSCALE_CLIENT_SECRET}"
-          ];
+          environmentFile = config.sops.secrets.tailscale_prometheus_exporter_env.path;
         };
       };
 
@@ -374,7 +379,7 @@
   };
 
   # =================================================================
-  # 5. Custom Systemd Services for Exporters
+  # 5. Custom Systemd Services for Exporters (future)
   # =================================================================
   # systemd.services.cloudflare-exporter = {
   #   description = "Cloudflare Prometheus Exporter";
@@ -394,18 +399,4 @@
   #   };
   # };
 
-  # Inject Tailscale OAuth credentials into the exporter service via env file
-  systemd.services.prometheus-tailscale-exporter = {
-    serviceConfig = {
-      RuntimeDirectory = "prometheus-tailscale-exporter";
-      EnvironmentFile = "/run/prometheus-tailscale-exporter/credentials.env";
-    };
-    preStart = ''
-      printf 'TAILSCALE_CLIENT_ID=%s\nTAILSCALE_CLIENT_SECRET=%s\n' \
-        "$(cat ${config.sops.secrets.tailscale_prometheus_client_id.path})" \
-        "$(cat ${config.sops.secrets.tailscale_prometheus_client_secret.path})" \
-        > /run/prometheus-tailscale-exporter/credentials.env
-      chmod 600 /run/prometheus-tailscale-exporter/credentials.env
-    '';
-  };
 }

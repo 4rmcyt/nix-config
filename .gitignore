@@ -15,3 +15,4 @@ core.*
 secrets/*.backup
 secrets/*.tmp
 secrets/*.unencrypted
+secrets/*.env
