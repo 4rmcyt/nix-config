@@ -47,7 +47,6 @@
       xdg-desktop-portal-gtk
       xdg-desktop-portal-gnome
     ];
-    wlr.enable = false;
     config = {
       default = [
         "gnome"
