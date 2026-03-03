@@ -87,17 +87,28 @@ in {
         status="$(${tailscale}/bin/tailscale status -json | ${jq}/bin/jq -r .BackendState)"
         if [ "$status" = "Running" ]; then
           current_url="$(${tailscale}/bin/tailscale debug prefs | ${jq}/bin/jq -r .ControlURL)"
-          if [ "$current_url" = "${cfg.loginServer}" ]; then
-            exit 0
+          if [ "$current_url" != "${cfg.loginServer}" ]; then
+            ${tailscale}/bin/tailscale logout || true
+            ${tailscale}/bin/tailscale up \
+              --authkey file:${config.sops.secrets.tailscale_auth_key.path} \
+              --login-server ${cfg.loginServer} \
+              --accept-routes \
+              ${optionalString cfg.advertiseExitNode "--advertise-exit-node"} \
+              ${optionalString (cfg.advertiseRoutes != []) "--advertise-routes=${lib.concatStringsSep "," cfg.advertiseRoutes}"}
+          else
+            ${tailscale}/bin/tailscale set \
+              --accept-routes=true \
+              ${optionalString cfg.advertiseExitNode "--advertise-exit-node"} \
+              ${optionalString (cfg.advertiseRoutes != []) "--advertise-routes=${lib.concatStringsSep "," cfg.advertiseRoutes}"}
           fi
-          ${tailscale}/bin/tailscale logout || true
+        else
+          ${tailscale}/bin/tailscale up \
+            --authkey file:${config.sops.secrets.tailscale_auth_key.path} \
+            --login-server ${cfg.loginServer} \
+            --accept-routes \
+            ${optionalString cfg.advertiseExitNode "--advertise-exit-node"} \
+            ${optionalString (cfg.advertiseRoutes != []) "--advertise-routes=${lib.concatStringsSep "," cfg.advertiseRoutes}"}
         fi
-        ${tailscale}/bin/tailscale up \
-          --authkey file:${config.sops.secrets.tailscale_auth_key.path} \
-          --login-server ${cfg.loginServer} \
-          --accept-routes \
-          ${optionalString cfg.advertiseExitNode "--advertise-exit-node"} \
-          ${optionalString (cfg.advertiseRoutes != []) "--advertise-routes=${lib.concatStringsSep "," cfg.advertiseRoutes}"}
       '';
     };
   };
