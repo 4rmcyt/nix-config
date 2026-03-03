@@ -41,6 +41,7 @@
     # ../../../modules/GUI/OBS
     ../../../modules/GUI/chromium
     ../../../modules/GUI/flatpak/hyprland
+    ../../../modules/xdg
   ];
 
   # =================================================================
@@ -395,41 +396,6 @@
     # vscode.enable = true;
 
     virt-manager.enable = true;
-  };
-
-  # =================================================================
-  # 12.5. XDG Desktop Portal
-  # =================================================================
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-      xdg-desktop-portal-gnome
-    ];
-    wlr.enable = false;
-    config = {
-      common = {
-        default = [
-          "gnome"
-          "gtk"
-        ];
-        "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
-        "org.freedesktop.impl.portal.OpenURI" = [ "gtk" ];
-        "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
-        "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
-      };
-      niri = {
-        default = [
-          "gnome"
-          "gtk"
-        ];
-        "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
-        "org.freedesktop.impl.portal.OpenURI" = [ "gtk" ];
-        "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
-        "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
-      };
-    };
-    xdgOpenUsePortal = true;
   };
 
   # =================================================================

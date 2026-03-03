@@ -97,7 +97,6 @@ in {
             };
             websecure = {
               address = ":443";
-              http.tls.certResolver = "default";
             };
           };
 
@@ -111,12 +110,6 @@ in {
               directory = "/var/lib/traefik";
               watch = true;
             };
-          };
-
-          certificatesResolvers.default.acme = {
-            inherit (config.my.defaults) email;
-            storage = "/var/lib/traefik/acme.json";
-            tlsChallenge = {};
           };
 
           log = {
