@@ -4,15 +4,6 @@
   # =================================================================
   # Env file for Tailscale exporter — rendered at activation, before any service starts
   # Uses "-" as tailnet (Tailscale API convention for "current user's tailnet")
-  sops.templates.tailscale-exporter-env = {
-    content = ''
-      TAILSCALE_TAILNET=dhole-piano.ts.net
-      TAILSCALE_OAUTH_CLIENT_ID=${config.sops.placeholder.tailscale_prometheus_client_id}
-      TAILSCALE_OAUTH_CLIENT_SECRET=${config.sops.placeholder.tailscale_prometheus_client_secret}
-    '';
-    owner = config.users.users.prometheus.name;
-    mode = "0400";
-  };
 
   sops.secrets = {
     cloudflare_prometheus_exporter_token = {
