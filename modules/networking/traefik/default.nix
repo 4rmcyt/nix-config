@@ -160,10 +160,10 @@ in {
               middlewares = ["security-headers"];
               tls.certResolver = "default";
             };
-            deluge = {
-              rule = "Host(`deluge.${domain}`)";
+            qb = {
+              rule = "Host(`qb.${domain}`)";
               entryPoints = ["websecure"];
-              service = "deluge";
+              service = "qb";
               middlewares = ["security-headers"];
               tls.certResolver = "default";
             };
@@ -257,7 +257,7 @@ in {
 
             # Media
             jellyfin.loadBalancer.servers = [{url = "http://localhost:8096";}];
-            deluge.loadBalancer.servers = [{url = "http://localhost:8112";}];
+            qb.loadBalancer.servers = [{url = "http://localhost:8081";}];
 
             # Monitoring
             grafana.loadBalancer.servers = [{url = "http://localhost:3003";}];
