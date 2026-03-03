@@ -41,26 +41,6 @@
     danksearch
   ];
 
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-      xdg-desktop-portal-gnome
-    ];
-    config = {
-      default = [
-        "gnome"
-        "gtk"
-      ];
-      "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
-      "org.freedesktop.impl.portal.OpenURI" = [ "gtk" ];
-      "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
-      "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
-    };
-  };
-  xdgOpenUsePortal = true;
-
-  # Package set by niri-flake NixOS module in parts/hosts/desktop/configuration.nix
 
   programs.niri.settings = {
     prefer-no-csd = true;
