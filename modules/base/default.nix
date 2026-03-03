@@ -1,4 +1,4 @@
-{...}: {
+{config, ...}: {
   imports = [
     ../lib
     ../roles
@@ -8,7 +8,7 @@
   ];
 
   i18n = {
-    defaultLocale = "en_US.UTF-8";
+    defaultLocale = config.my.defaults.locale;
     supportedLocales = [
       "en_US.UTF-8/UTF-8"
       "en_CA.UTF-8/UTF-8"
@@ -37,5 +37,5 @@
   };
 
   console.keyMap = "us";
-  time.timeZone = "America/Edmonton";
+  time.timeZone = config.my.defaults.timezone;
 }

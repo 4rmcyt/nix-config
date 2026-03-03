@@ -17,8 +17,10 @@ _: {
           "alttab"
           "binds"
           "colors"
+          "cursor"
           "layout"
           "outputs"
+          "windowrules"
           "wpblur"
         ];
       };

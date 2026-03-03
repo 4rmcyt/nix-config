@@ -59,8 +59,8 @@ in {
 
         providers = {
           file = {
-            directory = "/var/lib/traefik";
-            watch = true;
+            filename = "/etc/traefik/dynamic.yml";
+            watch = false;
           };
         };
 
@@ -291,7 +291,6 @@ in {
     systemd.tmpfiles.rules = [
       "d /var/lib/traefik 0755 traefik traefik -"
       "d /var/log/traefik 0755 traefik traefik -"
-      "L+ /var/lib/traefik/dynamic.yml - - - - /etc/traefik/dynamic.yml"
     ];
 
     # Cloudflare credentials injected as environment variables
