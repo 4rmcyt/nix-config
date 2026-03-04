@@ -77,35 +77,6 @@
           networks = ["podman"];
           ports = ["127.0.0.1:9948:9948/tcp"];
         };
-        # tdarr = {
-        #   autoStart = true;
-        #   environment = {
-        #     TZ = "America/Edmonton";
-        #     ffmpegVersion = "7";
-        #     inContainer = "true";
-        #     internalNode = "true";
-        #     nodeName = "homeserver";
-        #     serverIP = "0.0.0.0";
-        #     serverPort = "8266";
-        #     webUIPort = "8265";
-        #   };
-        #   extraOptions = [
-        #     "--device=/dev/dri:/dev/dri"
-        #   ];
-        #   image = "ghcr.io/haveagitgat/tdarr:latest";
-        #   ports = [
-        #     "8265:8265"
-        #     "8266:8266"
-        #     "8267:8267"
-        #   ];
-        #   volumes = [
-        #     "/data/media:/media"
-        #     "/var/lib/tdarr/configs:/app/configs"
-        #     "/var/lib/tdarr/data/cache:/temp"
-        #     "/var/lib/tdarr/data/server:/app/server"
-        #     "/var/lib/tdarr/logs:/app/logs"
-        #   ];
-        # };
       };
     };
     podman = {

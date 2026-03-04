@@ -127,6 +127,7 @@ in {
     "claude.code.autoApplyEdits" = false;
     "claude.code.enableMCP" = true;
     "claude.code.terminal.shell" = "zsh";
+    "claudeCode.hideOnboarding" = true;
 
     # Cline (Claude Dev) System Prompt
     "cline.customSystemPrompt" = ''
