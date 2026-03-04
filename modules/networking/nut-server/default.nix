@@ -43,6 +43,10 @@
       upsmon = "primary";
     };
 
+    users.homeassistant = {
+      passwordFile = config.sops.secrets.nut_ha_password.path;
+    };
+
     upsmon = {
       monitor.apc = {
         system = "apc@localhost";
@@ -53,6 +57,13 @@
   };
 
   sops.secrets.nut_password = {
+    sopsFile = ../../../secrets/nut.yaml;
+    owner = "root";
+    group = "nut";
+    mode = "0440";
+  };
+
+  sops.secrets.nut_ha_password = {
     sopsFile = ../../../secrets/nut.yaml;
     owner = "root";
     group = "nut";
