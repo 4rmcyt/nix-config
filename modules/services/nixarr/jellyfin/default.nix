@@ -4,6 +4,9 @@
   inputs,
   ...
 }: {
+  # chromaprint (fpcalc) required by Intro Skipper for audio fingerprinting
+  systemd.services.jellyfin.path = [pkgs.chromaprint];
+
   users.users.jellyfin = {
     isSystemUser = true;
     group = lib.mkForce "jellyfin";
