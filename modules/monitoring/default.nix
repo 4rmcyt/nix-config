@@ -81,7 +81,7 @@
     9100 # Node Exporter
     9187 # PostgreSQL Exporter
     9199 # NUT Exporter
-    9001 # Tailscale Exporter
+    9250 # Tailscale Exporter
   ];
 
   # =================================================================
