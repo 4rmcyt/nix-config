@@ -2,10 +2,35 @@
   config,
   ...
 }: let
-  inherit (config.my.defaults) homeserver_lan timezone;
+  inherit (config.my.defaults) domain homeserver_lan timezone;
 in {
   # ── OCI Container ─────────────────────────────────────────────────────────
   # Backend (podman) is set in modules/containers/default.nix — no need to repeat.
+  # Declarative configuration.yaml — mounted read-only into the container.
+  # HA never writes to this file; automations/scripts/scenes go to separate includes.
+  environment.etc."homeassistant/configuration.yaml".text = ''
+    # Loads default set of integrations. Do not remove.
+    default_config:
+
+    homeassistant:
+      external_url: "https://hass.${domain}"
+      internal_url: "http://localhost:8123"
+
+    frontend:
+      themes: !include_dir_merge_named themes
+
+    automation: !include automations.yaml
+    script: !include scripts.yaml
+    scene: !include scenes.yaml
+
+    # Required for Traefik reverse proxy
+    http:
+      use_x_forwarded_for: true
+      trusted_proxies:
+        - 127.0.0.1
+        - ::1
+  '';
+
   virtualisation.oci-containers.containers.homeassistant = {
     autoStart = true;
     environment.TZ = timezone;
@@ -15,7 +40,10 @@ in {
       # "--device=/dev/ttyACM0:/dev/ttyACM0"
     ];
     image = "ghcr.io/home-assistant/home-assistant:stable";
-    volumes = ["/var/lib/hass:/config"];
+    volumes = [
+      "/var/lib/hass:/config"
+      "/etc/homeassistant/configuration.yaml:/config/configuration.yaml:ro"
+    ];
   };
 
   systemd.tmpfiles.rules = [
