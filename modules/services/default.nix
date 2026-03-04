@@ -1,7 +1,7 @@
 {...}: {
   imports = [
     ./headscale
-    # ./home-assistant
+    ./home-assistant
     # ./paperless
     # ./radicale
     # ./tdarr

@@ -207,6 +207,15 @@ in {
               tls.certResolver = "default";
             };
 
+            # Smart home
+            hass = {
+              rule = "Host(`hass.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "hass";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+
             # Productivity
             homepage = {
               rule = "Host(`home.${domain}`)";
@@ -267,6 +276,9 @@ in {
             miniflux.loadBalancer.servers = [{url = "http://localhost:8086";}];
             kavita.loadBalancer.servers = [{url = "http://localhost:5000";}];
             audiobookshelf.loadBalancer.servers = [{url = "http://localhost:9292";}];
+
+            # Smart home
+            hass.loadBalancer.servers = [{url = "http://localhost:8123";}];
 
             # Productivity
             homepage.loadBalancer.servers = [{url = "http://localhost:8082";}];
