@@ -41,6 +41,7 @@
     ../../../modules/GUI/chromium
     ../../../modules/GUI/flatpak/hyprland
     ../../../modules/xdg
+    ../../../modules/services/tdarr-node
   ];
 
   # =================================================================

@@ -44,9 +44,6 @@
       # 2376 # Podman API (secure with TLS, for local use only)
       # Container services
       8191 # FlareSolverr
-      8265 # Tdarr Web UI
-      8266 # Tdarr Server
-      8267 # Tdarr Node
       9948 # NextDNS Exporter
     ];
     allowedUDPPorts = [
@@ -90,10 +87,4 @@
     };
   };
 
-  systemd.tmpfiles.rules = [
-    "d /var/lib/tdarr/configs 775 root media -"
-    "d /var/lib/tdarr/data/cache 775 root media -"
-    "d /var/lib/tdarr/data/server 775 root media -"
-    "d /var/lib/tdarr/logs 775 root media -"
-  ];
 }

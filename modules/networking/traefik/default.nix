@@ -167,6 +167,13 @@ in {
               middlewares = ["security-headers"];
               tls.certResolver = "default";
             };
+            tdarr = {
+              rule = "Host(`tdarr.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "tdarr";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
 
             # Monitoring
             grafana = {
@@ -267,6 +274,7 @@ in {
             # Media
             jellyfin.loadBalancer.servers = [{url = "http://localhost:8096";}];
             qb.loadBalancer.servers = [{url = "http://localhost:8081";}];
+            tdarr.loadBalancer.servers = [{url = "http://localhost:8265";}];
 
             # Monitoring
             grafana.loadBalancer.servers = [{url = "http://localhost:3003";}];

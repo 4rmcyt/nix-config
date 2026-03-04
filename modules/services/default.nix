@@ -4,7 +4,7 @@
     ./home-assistant
     # ./paperless
     # ./radicale
-    # ./tdarr
+    ./tdarr
     # ./vaultwarden
     ./homepage
     ./kavita
