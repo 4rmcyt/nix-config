@@ -233,7 +233,7 @@
         }
         {
           job_name = "tailscale";
-          static_configs = [{targets = ["localhost:9001"];}];
+          static_configs = [{targets = ["localhost:9250"];}];
         }
       ];
     };
