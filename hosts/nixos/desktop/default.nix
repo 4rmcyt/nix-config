@@ -203,7 +203,7 @@
         bluez # Bluetooth support
         bluez-tools # Bluetooth tools
         sof-firmware
-        pkgs.jellyfinDesktop
+        pkgs.jellyfin-desktop
 
         # =============================================================
         # Fonts & Themes
