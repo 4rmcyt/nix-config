@@ -1,9 +1,303 @@
 {
   lib,
   pkgs,
-  inputs,
+  config,
   ...
-}: {
+}: let
+  cfg = config.services.jellyfin;
+
+  systemXml = pkgs.writeText "jellyfin-system.xml" ''
+    <?xml version="1.0" encoding="utf-8"?>
+    <ServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <LogFileRetentionDays>3</LogFileRetentionDays>
+      <IsStartupWizardCompleted>true</IsStartupWizardCompleted>
+      <CachePath>/data/media/.state/nixarr/jellyfin/cache</CachePath>
+      <EnableMetrics>false</EnableMetrics>
+      <EnableNormalizedItemByNameIds>true</EnableNormalizedItemByNameIds>
+      <IsPortAuthorized>true</IsPortAuthorized>
+      <QuickConnectAvailable>true</QuickConnectAvailable>
+      <EnableCaseSensitiveItemIds>true</EnableCaseSensitiveItemIds>
+      <DisableLiveTvChannelUserDataName>true</DisableLiveTvChannelUserDataName>
+      <MetadataPath>/data/media/.state/nixarr/jellyfin/data/metadata</MetadataPath>
+      <PreferredMetadataLanguage>en</PreferredMetadataLanguage>
+      <MetadataCountryCode>CA</MetadataCountryCode>
+      <SortReplaceCharacters>
+        <string>.</string>
+        <string>+</string>
+        <string>%</string>
+      </SortReplaceCharacters>
+      <SortRemoveCharacters>
+        <string>,</string>
+        <string>&amp;</string>
+        <string>-</string>
+        <string>{</string>
+        <string>}</string>
+        <string>'</string>
+      </SortRemoveCharacters>
+      <SortRemoveWords>
+        <string>the</string>
+        <string>a</string>
+        <string>an</string>
+      </SortRemoveWords>
+      <MinResumePct>5</MinResumePct>
+      <MaxResumePct>90</MaxResumePct>
+      <MinResumeDurationSeconds>300</MinResumeDurationSeconds>
+      <MinAudiobookResume>5</MinAudiobookResume>
+      <MaxAudiobookResume>5</MaxAudiobookResume>
+      <InactiveSessionThreshold>0</InactiveSessionThreshold>
+      <LibraryMonitorDelay>60</LibraryMonitorDelay>
+      <LibraryUpdateDuration>30</LibraryUpdateDuration>
+      <CacheSize>800</CacheSize>
+      <ImageSavingConvention>Legacy</ImageSavingConvention>
+      <MetadataOptions>
+        <MetadataOptions>
+          <ItemType>Book</ItemType>
+          <DisabledMetadataSavers />
+          <LocalMetadataReaderOrder />
+          <DisabledMetadataFetchers />
+          <MetadataFetcherOrder />
+          <DisabledImageFetchers />
+          <ImageFetcherOrder />
+        </MetadataOptions>
+        <MetadataOptions>
+          <ItemType>Movie</ItemType>
+          <DisabledMetadataSavers />
+          <LocalMetadataReaderOrder />
+          <DisabledMetadataFetchers />
+          <MetadataFetcherOrder />
+          <DisabledImageFetchers />
+          <ImageFetcherOrder />
+        </MetadataOptions>
+        <MetadataOptions>
+          <ItemType>MusicVideo</ItemType>
+          <DisabledMetadataSavers />
+          <LocalMetadataReaderOrder />
+          <DisabledMetadataFetchers>
+            <string>The Open Movie Database</string>
+          </DisabledMetadataFetchers>
+          <MetadataFetcherOrder />
+          <DisabledImageFetchers>
+            <string>The Open Movie Database</string>
+          </DisabledImageFetchers>
+          <ImageFetcherOrder />
+        </MetadataOptions>
+        <MetadataOptions>
+          <ItemType>Series</ItemType>
+          <DisabledMetadataSavers />
+          <LocalMetadataReaderOrder />
+          <DisabledMetadataFetchers />
+          <MetadataFetcherOrder />
+          <DisabledImageFetchers />
+          <ImageFetcherOrder />
+        </MetadataOptions>
+        <MetadataOptions>
+          <ItemType>MusicAlbum</ItemType>
+          <DisabledMetadataSavers />
+          <LocalMetadataReaderOrder />
+          <DisabledMetadataFetchers>
+            <string>TheAudioDB</string>
+          </DisabledMetadataFetchers>
+          <MetadataFetcherOrder />
+          <DisabledImageFetchers />
+          <ImageFetcherOrder />
+        </MetadataOptions>
+        <MetadataOptions>
+          <ItemType>MusicArtist</ItemType>
+          <DisabledMetadataSavers />
+          <LocalMetadataReaderOrder />
+          <DisabledMetadataFetchers>
+            <string>TheAudioDB</string>
+          </DisabledMetadataFetchers>
+          <MetadataFetcherOrder />
+          <DisabledImageFetchers />
+          <ImageFetcherOrder />
+        </MetadataOptions>
+        <MetadataOptions>
+          <ItemType>BoxSet</ItemType>
+          <DisabledMetadataSavers />
+          <LocalMetadataReaderOrder />
+          <DisabledMetadataFetchers />
+          <MetadataFetcherOrder />
+          <DisabledImageFetchers />
+          <ImageFetcherOrder />
+        </MetadataOptions>
+        <MetadataOptions>
+          <ItemType>Season</ItemType>
+          <DisabledMetadataSavers />
+          <LocalMetadataReaderOrder />
+          <DisabledMetadataFetchers />
+          <MetadataFetcherOrder />
+          <DisabledImageFetchers />
+          <ImageFetcherOrder />
+        </MetadataOptions>
+        <MetadataOptions>
+          <ItemType>Episode</ItemType>
+          <DisabledMetadataSavers />
+          <LocalMetadataReaderOrder />
+          <DisabledMetadataFetchers />
+          <MetadataFetcherOrder />
+          <DisabledImageFetchers />
+          <ImageFetcherOrder />
+        </MetadataOptions>
+      </MetadataOptions>
+      <SkipDeserializationForBasicTypes>true</SkipDeserializationForBasicTypes>
+      <ServerName>Jellyfin Homeserver</ServerName>
+      <UICulture>en-US</UICulture>
+      <SaveMetadataHidden>false</SaveMetadataHidden>
+      <ContentTypes />
+      <RemoteClientBitrateLimit>120000000</RemoteClientBitrateLimit>
+      <EnableFolderView>false</EnableFolderView>
+      <EnableGroupingMoviesIntoCollections>false</EnableGroupingMoviesIntoCollections>
+      <EnableGroupingShowsIntoCollections>false</EnableGroupingShowsIntoCollections>
+      <DisplaySpecialsWithinSeasons>true</DisplaySpecialsWithinSeasons>
+      <CodecsUsed />
+      <PluginRepositories>
+        <RepositoryInfo>
+          <Name>Jellyfin Stable</Name>
+          <Url>https://repo.jellyfin.org/files/plugin/manifest.json</Url>
+          <Enabled>true</Enabled>
+        </RepositoryInfo>
+        <RepositoryInfo>
+          <Name>danieladov</Name>
+          <Url>https://raw.githubusercontent.com/danieladov/JellyfinPluginManifest/master/manifest.json</Url>
+          <Enabled>true</Enabled>
+        </RepositoryInfo>
+        <RepositoryInfo>
+          <Name>jellyfin-unstable</Name>
+          <Url>https://repo.jellyfin.org/files/plugin-unstable/manifest.json</Url>
+          <Enabled>true</Enabled>
+        </RepositoryInfo>
+        <RepositoryInfo>
+          <Name>jellyfin-plugin-cinemamode</Name>
+          <Url>https://raw.githubusercontent.com/CherryFloors/jellyfin-plugin-cinemamode/main/manifest.json</Url>
+          <Enabled>true</Enabled>
+        </RepositoryInfo>
+        <RepositoryInfo>
+          <Name>jellyfin-plugin-sso</Name>
+          <Url>https://raw.githubusercontent.com/9p4/jellyfin-plugin-sso/manifest-release/manifest.json</Url>
+          <Enabled>true</Enabled>
+        </RepositoryInfo>
+        <RepositoryInfo>
+          <Name>Intro skipper</Name>
+          <Url>https://intro-skipper.org/manifest.json</Url>
+          <Enabled>true</Enabled>
+        </RepositoryInfo>
+        <RepositoryInfo>
+          <Name>Jellyfin-Enhanced</Name>
+          <Url>https://raw.githubusercontent.com/n00bcodr/jellyfin-plugins/main/10.11/manifest.json</Url>
+          <Enabled>true</Enabled>
+        </RepositoryInfo>
+        <RepositoryInfo>
+          <Name>File Transformation</Name>
+          <Url>https://www.iamparadox.dev/jellyfin/plugins/manifest.json</Url>
+          <Enabled>true</Enabled>
+        </RepositoryInfo>
+      </PluginRepositories>
+      <EnableExternalContentInSuggestions>true</EnableExternalContentInSuggestions>
+      <ImageExtractionTimeoutMs>0</ImageExtractionTimeoutMs>
+      <PathSubstitutions />
+      <EnableSlowResponseWarning>true</EnableSlowResponseWarning>
+      <SlowResponseThresholdMs>500</SlowResponseThresholdMs>
+      <CorsHosts>
+        <string>*</string>
+      </CorsHosts>
+      <ActivityLogRetentionDays>30</ActivityLogRetentionDays>
+      <LibraryScanFanoutConcurrency>2</LibraryScanFanoutConcurrency>
+      <LibraryMetadataRefreshConcurrency>0</LibraryMetadataRefreshConcurrency>
+      <AllowClientLogUpload>true</AllowClientLogUpload>
+      <DummyChapterDuration>0</DummyChapterDuration>
+      <ChapterImageResolution>MatchSource</ChapterImageResolution>
+      <ParallelImageEncodingLimit>2</ParallelImageEncodingLimit>
+      <CastReceiverApplications>
+        <CastReceiverApplication>
+          <Id>F007D354</Id>
+          <Name>Stable</Name>
+        </CastReceiverApplication>
+        <CastReceiverApplication>
+          <Id>6F511C87</Id>
+          <Name>Unstable</Name>
+        </CastReceiverApplication>
+      </CastReceiverApplications>
+      <TrickplayOptions>
+        <EnableHwAcceleration>true</EnableHwAcceleration>
+        <EnableHwEncoding>true</EnableHwEncoding>
+        <EnableKeyFrameOnlyExtraction>false</EnableKeyFrameOnlyExtraction>
+        <ScanBehavior>NonBlocking</ScanBehavior>
+        <ProcessPriority>BelowNormal</ProcessPriority>
+        <Interval>10000</Interval>
+        <WidthResolutions>
+          <int>320</int>
+        </WidthResolutions>
+        <TileWidth>10</TileWidth>
+        <TileHeight>10</TileHeight>
+        <Qscale>4</Qscale>
+        <JpegQuality>90</JpegQuality>
+        <ProcessThreads>1</ProcessThreads>
+      </TrickplayOptions>
+      <EnableLegacyAuthorization>true</EnableLegacyAuthorization>
+    </ServerConfiguration>
+  '';
+
+  encodingXml = pkgs.writeText "jellyfin-encoding.xml" ''
+    <?xml version="1.0" encoding="utf-8"?>
+    <EncodingOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <EncodingThreadCount>4</EncodingThreadCount>
+      <TranscodingTempPath>/data/media/.state/nixarr/jellyfin/cache/transcodes</TranscodingTempPath>
+      <FallbackFontPath />
+      <EnableFallbackFont>false</EnableFallbackFont>
+      <EnableAudioVbr>false</EnableAudioVbr>
+      <DownMixAudioBoost>2</DownMixAudioBoost>
+      <DownMixStereoAlgorithm>None</DownMixStereoAlgorithm>
+      <MaxMuxingQueueSize>2048</MaxMuxingQueueSize>
+      <EnableThrottling>true</EnableThrottling>
+      <ThrottleDelaySeconds>180</ThrottleDelaySeconds>
+      <EnableSegmentDeletion>true</EnableSegmentDeletion>
+      <SegmentKeepSeconds>720</SegmentKeepSeconds>
+      <HardwareAccelerationType>vaapi</HardwareAccelerationType>
+      <VaapiDevice>/dev/dri/renderD128</VaapiDevice>
+      <QsvDevice>/dev/dri/renderD128</QsvDevice>
+      <EnableTonemapping>true</EnableTonemapping>
+      <EnableVppTonemapping>false</EnableVppTonemapping>
+      <EnableVideoToolboxTonemapping>false</EnableVideoToolboxTonemapping>
+      <TonemappingAlgorithm>bt2390</TonemappingAlgorithm>
+      <TonemappingMode>auto</TonemappingMode>
+      <TonemappingRange>auto</TonemappingRange>
+      <TonemappingDesat>0</TonemappingDesat>
+      <TonemappingPeak>100</TonemappingPeak>
+      <TonemappingParam>0</TonemappingParam>
+      <VppTonemappingBrightness>16</VppTonemappingBrightness>
+      <VppTonemappingContrast>1</VppTonemappingContrast>
+      <H264Crf>23</H264Crf>
+      <H265Crf>28</H265Crf>
+      <EncoderPreset>superfast</EncoderPreset>
+      <DeinterlaceDoubleRate>false</DeinterlaceDoubleRate>
+      <DeinterlaceMethod>yadif</DeinterlaceMethod>
+      <EnableDecodingColorDepth10Hevc>true</EnableDecodingColorDepth10Hevc>
+      <EnableDecodingColorDepth10Vp9>true</EnableDecodingColorDepth10Vp9>
+      <EnableDecodingColorDepth10HevcRext>false</EnableDecodingColorDepth10HevcRext>
+      <EnableDecodingColorDepth12HevcRext>false</EnableDecodingColorDepth12HevcRext>
+      <EnableEnhancedNvdecDecoder>true</EnableEnhancedNvdecDecoder>
+      <PreferSystemNativeHwDecoder>true</PreferSystemNativeHwDecoder>
+      <EnableIntelLowPowerH264HwEncoder>true</EnableIntelLowPowerH264HwEncoder>
+      <EnableIntelLowPowerHevcHwEncoder>false</EnableIntelLowPowerHevcHwEncoder>
+      <EnableHardwareEncoding>true</EnableHardwareEncoding>
+      <AllowHevcEncoding>true</AllowHevcEncoding>
+      <AllowAv1Encoding>false</AllowAv1Encoding>
+      <EnableSubtitleExtraction>true</EnableSubtitleExtraction>
+      <HardwareDecodingCodecs>
+        <string>h264</string>
+        <string>hevc</string>
+        <string>mpeg2video</string>
+        <string>vp8</string>
+        <string>vp9</string>
+        <string>vc1</string>
+      </HardwareDecodingCodecs>
+      <AllowOnDemandMetadataBasedKeyframeExtractionForExtensions>
+        <string>mkv</string>
+      </AllowOnDemandMetadataBasedKeyframeExtractionForExtensions>
+    </EncodingOptions>
+  '';
+in {
   # chromaprint (fpcalc) required by Intro Skipper for audio fingerprinting
   systemd.services.jellyfin.path = [pkgs.chromaprint];
 
@@ -21,129 +315,26 @@
 
   services.jellyfin = {
     enable = true;
-    package = inputs.nixos-jellyfin.packages.${pkgs.system}.jellyfin;
-    ffmpegPackage = inputs.nixos-jellyfin.packages.${pkgs.system}.jellyfin-ffmpeg;
-    webPackage = inputs.nixos-jellyfin.packages.${pkgs.system}.jellyfin-web;
 
-    settings = {
-      system = {
-        serverName = "Jellyfin Homeserver";
-        quickConnectAvailable = false;
-        isStartupWizardCompleted = true;
+    dataDir = "/data/media/.state/nixarr/jellyfin/data";
+    configDir = "/data/media/.state/nixarr/jellyfin/config";
+    cacheDir = "/data/media/.state/nixarr/jellyfin/cache";
+    logDir = "/data/media/.state/nixarr/jellyfin/log";
 
-        enableGroupingMoviesIntoCollections = false;
-        enableGroupingShowsIntoCollections = false;
-        enableExternalContentInSuggestions = false;
-
-        metadataPath = "/data/media/.state/nixarr/jellyfin/data/metadata";
-        cachePath = "/data/media/.state/nixarr/jellyfin/cache";
-
-        pluginRepositories = [
-          {
-            name = "Jellyfin Stable";
-            url = "https://repo.jellyfin.org/releases/plugin/manifest-stable.json";
-          }
-          {
-            name = "Intro Skipper";
-            url = "https://manifest.intro-skipper.org/manifest.json";
-          }
-          {
-            name = "Merge Versions Plugin";
-            url = "https://raw.githubusercontent.com/danieladov/JellyfinPluginManifest/master/manifest.json";
-          }
-          {
-            name = "Meilisearch";
-            url = "https://raw.githubusercontent.com/arnesacnussem/jellyfin-plugin-meilisearch/refs/heads/master/manifest.json";
-          }
-          {
-            name = "Air Times";
-            url = "https://raw.githubusercontent.com/apteryxxyz/jellyfin-plugin-airtimes/main/manifest.json";
-          }
-          {
-            name = "InPlayerEpisodePreview";
-            url = "https://raw.githubusercontent.com/Namo2/InPlayerEpisodePreview/master/manifest.json";
-          }
-          {
-            name = "Streamyfin";
-            url = "https://raw.githubusercontent.com/streamyfin/jellyfin-plugin-streamyfin/main/manifest.json";
-          }
-          {
-            name = "danieladov";
-            url = "https://raw.githubusercontent.com/danieladov/JellyfinPluginManifest/master/manifest.json";
-          }
-          {
-            name = "jellyfin-unstable";
-            url = "https://repo.jellyfin.org/files/plugin-unstable/manifest.json";
-          }
-          {
-            name = "jellyfin-plugin-cinemamode";
-            url = "https://raw.githubusercontent.com/CherryFloors/jellyfin-plugin-cinemamode/main/manifest.json";
-          }
-          {
-            name = "jellyfin-plugin-sso";
-            url = "https://raw.githubusercontent.com/9p4/jellyfin-plugin-sso/manifest-release/manifest.json";
-          }
-          {
-            name = "Intro skipper";
-            url = "https://intro-skipper.org/manifest.json";
-          }
-          {
-            name = "File Transformation";
-            url = "https://www.iamparadox.dev/jellyfin/plugins/manifest.json";
-          }
-        ];
-
-        enableSlowResponseWarning = false;
-      };
-
-      encoding = {
-        hardwareAccelerationType = "vaapi";
-        vaapiDevice = "/dev/dri/renderD128";
-        enableHardwareEncoding = true;
-        preferSystemNativeHwDecoder = true;
-        hardwareDecodingCodecs = [
-          "h264"
-          "hevc"
-          "mpeg2video"
-          "mpeg4"
-          "vc1"
-          "vp8"
-          "vp9"
-        ];
-        allowHevcEncoding = true;
-        enableThrottling = true;
-        enableTonemapping = true;
-        tonemappingAlgorithm = "bt2390";
-        tonemappingMode = "auto";
-        tonemappingRange = "auto";
-        tonemappingDesat = 0;
-        tonemappingPeak = 100;
-        tonemappingParam = 0;
-
-        encodingThreadCount = 4;
-        encoderPreset = "superfast";
-
-        # Enable 10-bit codec support
-        enableDecodingColorDepth10Hevc = true;
-        enableDecodingColorDepth10Vp9 = true;
-
-        # Intel low-power encoders
-        enableIntelLowPowerH264HwEncoder = true;
-        enableIntelLowPowerHevcHwEncoder = false;
-
-        transcodingTempPath = "/data/media/.state/nixarr/jellyfin/cache/transcodes";
-        maxMuxingQueueSize = 2048;
-        throttleDelaySeconds = 180;
-        enableSegmentDeletion = true;
-        segmentKeepSeconds = 720;
-
-        # Subtitle extraction
-        enableSubtitleExtraction = true;
-        enableFallbackFont = false;
-
-        # Keyframe extraction
-        allowOnDemandMetadataBasedKeyframeExtractionForExtensions = ["mkv"];
-      };
+    # Hardware acceleration — enables DeviceAllow + preStart encoding.xml handling.
+    # We manage encoding.xml ourselves below, so forceEncodingConfig is disabled.
+    hardwareAcceleration = {
+      enable = true;
+      type = "vaapi";
+      device = "/dev/dri/renderD128";
     };
+    forceEncodingConfig = false;
   };
+
+  # Overwrite system.xml and encoding.xml on every service restart.
+  # lib.mkAfter ensures this runs after nixpkgs' own preStart for encoding.xml.
+  systemd.services.jellyfin.preStart = lib.mkAfter ''
+    install -m 640 ${systemXml} "${cfg.configDir}/system.xml"
+    install -m 640 ${encodingXml} "${cfg.configDir}/encoding.xml"
+  '';
 }

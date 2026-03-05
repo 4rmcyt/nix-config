@@ -167,9 +167,6 @@
   # =================================================================
   environment = {
     sessionVariables = lib.mkBefore {
-      # GPG Agent for SSH (uses gpg-agent socket)
-      SSH_AUTH_SOCK = "/run/user/\${UID}/gnupg/S.gpg-agent.ssh";
-
       # Cursor theme
       XCURSOR_THEME = "breeze_cursors";
       XCURSOR_SIZE = "24";
@@ -206,7 +203,7 @@
         bluez # Bluetooth support
         bluez-tools # Bluetooth tools
         sof-firmware
-        inputs.nixos-jellyfin.packages.x86_64-linux.jellyfin-desktop
+        pkgs.jellyfinDesktop
 
         # =============================================================
         # Fonts & Themes
@@ -639,11 +636,20 @@
     "d /data/zeev/Taildrive 770 davfs2 users -"
   ];
 
-  # libvirt's upstream unit hardcodes /usr/bin/sh which doesn't exist on NixOS
-  systemd.services.virt-secret-init-encryption.serviceConfig.ExecStart = lib.mkForce (
-    pkgs.writeShellScript "virt-secret-init-encryption" ''
-      umask 0077
-      dd if=/dev/random status=none bs=32 count=1 | ${pkgs.systemd}/bin/systemd-creds encrypt --name=secrets-encryption-key - /var/lib/libvirt/secrets/secrets-encryption-key
-    ''
-  );
+  # libvirt's upstream unit hardcodes /usr/bin/sh which doesn't exist on NixOS.
+  # Use systemd.units with raw drop-in text so ExecStart= (empty) clears the original
+  # before setting ours — otherwise both run and /usr/bin/sh fails first.
+  systemd.units."virt-secret-init-encryption.service" = {
+    overrideStrategy = "asDropin";
+    text = ''
+      [Service]
+      ExecStart=
+      ExecStart=${pkgs.writeShellScript "virt-secret-init-encryption" ''
+        umask 0077
+        ${pkgs.coreutils}/bin/dd if=/dev/random status=none bs=32 count=1 | \
+          ${pkgs.systemd}/bin/systemd-creds encrypt --name=secrets-encryption-key - \
+          /var/lib/libvirt/secrets/secrets-encryption-key
+      ''}
+    '';
+  };
 }

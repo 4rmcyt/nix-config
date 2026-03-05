@@ -165,10 +165,6 @@
       url = "github:rasmus-kirk/nixarr";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-jellyfin = {
-      url = "github:matt1432/nixos-jellyfin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     headplane = {
       url = "github:tale/headplane";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -135,8 +135,6 @@
     };
 
     sessionVariables = {
-      # GPG Agent for SSH (uses gpg-agent socket)
-      SSH_AUTH_SOCK = "/run/user/$UID/gnupg/S.gpg-agent.ssh";
       LD_LIBRARY_PATH = "/usr/lib/wsl/lib";
     };
 

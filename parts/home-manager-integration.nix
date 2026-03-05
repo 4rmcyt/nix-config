@@ -18,7 +18,6 @@ in {
       inputs.vscode-server.nixosModules.default
       inputs.ucodenix.nixosModules.default
       inputs.disko.nixosModules.disko
-      inputs.nixos-jellyfin.nixosModules.default
       inputs.nix-topology.nixosModules.default
     ];
 
