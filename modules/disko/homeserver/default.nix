@@ -103,7 +103,13 @@
           };
           "log" = {
             type = "zfs_fs";
-            options."com.sun:auto-snapshot" = "false";
+            options = {
+              "com.sun:auto-snapshot" = "false";
+              # Required for systemd-journald to set per-user ACLs on journal
+              # files (avoids "Failed to set ACL … Operation not supported")
+              acltype = "posixacl";
+              xattr = "sa";
+            };
             mountpoint = "/var/log";
           };
           "postgresql" = {

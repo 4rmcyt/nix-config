@@ -68,6 +68,7 @@ in {
     kernelParams = [
       # Intel GPU optimizations
       "i915.enable_guc=3" # GuC firmware and HuC authentication
+      "video=eDP-1:d"
 
       # ZFS ARC
       "zfs.zfs_arc_max=13421772800" # 12.5GB (40% of 32GB RAM)
@@ -258,6 +259,13 @@ in {
   # 8. MCE & Reliability
   # =================================================================
 
+  # Enable rasdaemon to properly decode and handle MCE (Machine Check Exception)
+  # events. The MCE errors logged at TSC=0 (Banks 10–13, ADDR ~0xFEF1D500) are
+  # stale BIOS-generated events in the MMIO region logged before OS handoff —
+  # rasdaemon decodes them and records them in a structured SQLite database
+  # instead of leaving raw hex in dmesg.
+  hardware.rasdaemon.enable = true;
+
   # Journald: reduce I/O pressure to prevent watchdog timeouts under ZFS load
   services.journald.extraConfig = ''
     Storage=persistent
@@ -267,7 +275,24 @@ in {
     RuntimeMaxUse=200M
   '';
 
-  # Journal ACL workaround: add zeev to systemd-journal group
-  # (ZFS dataset lacks acltype=posixacl so ACL-based access fails silently)
+  # Journal ACL: set acltype=posixacl on the ZFS log dataset so journald can
+  # grant per-user read access via POSIX ACLs.  The disko config now declares
+  # these options for fresh installs; this oneshot applies them to the already-
+  # existing dataset on the running system (idempotent — zfs set is safe to
+  # repeat).
+  systemd.services.zfs-log-acl = {
+    description = "Set POSIX ACL support on ZFS log dataset";
+    wantedBy = ["local-fs.target"];
+    after = ["zfs-import-zroot.service"];
+    requires = ["zfs-import-zroot.service"];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.zfs}/bin/zfs set acltype=posixacl xattr=sa zroot/log";
+    };
+  };
+
+  # Keep zeev in systemd-journal as belt-and-suspenders (allows fallback
+  # group-based access if ACLs are unavailable for any reason).
   users.users.zeev.extraGroups = ["systemd-journal"];
 }

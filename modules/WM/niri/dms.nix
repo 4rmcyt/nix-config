@@ -1,9 +1,6 @@
 _: {
   programs.dank-material-shell = {
     enable = true;
-
-    # For niri: use enableSpawn, NOT systemd.enable
-    # These are mutually exclusive per DMS docs
     systemd.enable = false;
 
     niri = {

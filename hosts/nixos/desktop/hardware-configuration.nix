@@ -293,7 +293,7 @@ in {
   # 5. Security (hardware-tied: PAM U2F / YubiKey)
   # =================================================================
   security = {
-    polkit.enable = true;
+    polkit.enable = false;
     rtkit.enable = true;
     pam.services = {
       login.u2fAuth = true;
