@@ -147,9 +147,4 @@
   # =================================================================
   networking.useDHCP = lib.mkDefault true;
   # networking.interfaces.wlp13s0.useDHCP = lib.mkDefault true;
-
-  # =================================================================
-  # 7. Platform Configuration
-  # =================================================================
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }

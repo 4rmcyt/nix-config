@@ -25,6 +25,14 @@ in {
     programs.niri.enable = true;
     programs.niri.package = pkgs.niri;
 
+    services.greetd = {
+      enable = true;
+      settings.default_session = {
+        command = "${pkgs.niri}/bin/niri --session";
+        user = owner.username;
+      };
+    };
+
     # Disable niri-flake's polkit agent (DMS provides its own)
     systemd.user.services.niri-flake-polkit.enable = false;
 

@@ -76,6 +76,9 @@ in {
       "nohz_full=1-7" # Updated to match 8-core CPU
       "rcu_nocbs=1-7"
       "isolcpus=1-7"
+
+      # Raise hung task timeout to avoid false positives from ZFS / k3s I/O
+      "hung_task_timeout_secs=300"
     ];
 
     # Boot loader configuration
@@ -180,9 +183,21 @@ in {
       LIBVA_DRIVER_NAME = "iHD";
     };
 
-    # System packages
+    # System packages (hardware monitoring & management)
     systemPackages = with pkgs; [
-      clinfo # For testing OpenCL
+      apcupsd
+      auto-cpufreq
+      clinfo
+      cpuid
+      fwupd
+      intel-gpu-tools
+      libva-utils
+      lm_sensors
+      microcode-intel
+      powertop
+      prometheus-apcupsd-exporter
+      smartmontools
+      zfs
     ];
   };
 
@@ -237,4 +252,24 @@ in {
     coredump.enable = false;
     oomd.enable = true;
   };
+
+  # =================================================================
+  # 8. MCE & Reliability
+  # =================================================================
+
+  # Structured MCE logging (Banks 10-13 IMC errors detected at boot)
+  services.rasdaemon.enable = true;
+
+  # Journald: reduce I/O pressure to prevent watchdog timeouts under ZFS load
+  services.journald.extraConfig = ''
+    Storage=persistent
+    RateLimitIntervalSec=30s
+    RateLimitBurst=10000
+    SystemMaxUse=2G
+    RuntimeMaxUse=200M
+  '';
+
+  # Journal ACL workaround: add zeev to systemd-journal group
+  # (ZFS dataset lacks acltype=posixacl so ACL-based access fails silently)
+  users.users.zeev.extraGroups = ["systemd-journal"];
 }

@@ -24,7 +24,7 @@
 
   home = {
     homeDirectory = "/home/zeev";
-    stateVersion = "24.11";
+
     username = "zeev";
 
     packages = with pkgs; [

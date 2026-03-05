@@ -141,6 +141,11 @@ in {
       "systemd.unified_cgroup_hierarchy=1"
       "usb-storage.delay_use=0"
       "usbcore.autosuspend=-1"
+      "usbcore.quirks=1462:7d75:bkgi" # MSI MYSTIC LIGHT: b=avoid reset, k=no autosuspend, g=ignore GetStringDescriptor, i=ignore device
+
+      # Display output hints for early modesetting
+      "video=DP-4:1920x1080@60"
+      "video=DP-5:1920x1080@60"
     ];
 
     # ZFS configuration
@@ -224,6 +229,25 @@ in {
     # Firmware
     enableRedistributableFirmware = lib.mkDefault true;
 
+    # Custom uncompressed MT7922 firmware to avoid "Direct firmware load failed with error -2"
+    # linux-firmware ships .bin.zst but kernel needs uncompressed .bin if CONFIG_FW_LOADER_COMPRESS_ZSTD is unset
+    firmware = let
+      mt7922-firmware-uncompressed =
+        pkgs.runCommand "mt7922-firmware-uncompressed"
+        {nativeBuildInputs = [pkgs.zstd];}
+        ''
+          mkdir -p $out/lib/firmware/mediatek
+          for file in ${pkgs.linux-firmware}/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922*.bin.zst \
+                      ${pkgs.linux-firmware}/lib/firmware/mediatek/WIFI_MT7922*.bin.zst; do
+            [ -f "$file" ] || continue
+            zstd -d "$file" -o "$out/lib/firmware/mediatek/$(basename "$file" .zst)"
+          done
+        '';
+    in [
+      mt7922-firmware-uncompressed
+      pkgs.linux-firmware
+    ];
+
     # GPG Smartcards
     gpgSmartcards.enable = true;
 
@@ -248,15 +272,55 @@ in {
   };
 
   # =================================================================
-  # 4. Security
+  # 4. Boot Loader
+  # =================================================================
+  boot.loader = {
+    efi.canTouchEfiVariables = true;
+    systemd-boot.enable = false;
+    limine = {
+      enable = true;
+      enableEditor = false;
+      maxGenerations = 10;
+      validateChecksums = true;
+      panicOnChecksumMismatch = true;
+      efiSupport = true;
+      efiInstallAsRemovable = false;
+      biosSupport = false;
+    };
+  };
+
+  # =================================================================
+  # 5. Security (hardware-tied: PAM U2F / YubiKey)
   # =================================================================
   security = {
     polkit.enable = true;
     rtkit.enable = true;
+    pam.services = {
+      login.u2fAuth = true;
+      sudo.u2fAuth = true;
+    };
+    pam.u2f = {
+      enable = true;
+      control = "optional";
+      settings = {
+        authfile = "/etc/u2f_mappings";
+        cue = true;
+      };
+    };
+  };
+
+  nixpkgs.config.cudaSupport = true;
+
+  # =================================================================
+  # 6. Hardware Programs
+  # =================================================================
+  programs = {
+    corectrl.enable = true; # AMD GPU / CPU control
+    noisetorch.enable = true; # Noise suppression (audio hardware)
   };
 
   # =================================================================
-  # 5. Services
+  # 7. Services
   # =================================================================
   services = {
     # OpenRGB for RGB control
@@ -308,12 +372,209 @@ in {
         interval = "weekly";
       };
     };
+
+    # CPU frequency scaling
+    auto-cpufreq = {
+      enable = true;
+      settings.charger = {
+        governor = "performance";
+        turbo = "auto";
+      };
+    };
+
+    # Firmware updates
+    fwupd = {
+      enable = true;
+      extraRemotes = [
+        "lvfs-testing"
+        "vendor"
+      ];
+    };
+
+    # Smartcard / YubiKey
+    pcscd = {
+      enable = true;
+      plugins = [pkgs.ccid];
+    };
+
+    # iOS device support
+    usbmuxd.enable = true;
+
+    # Audio
+    pipewire = {
+      enable = true;
+      alsa = {
+        enable = true;
+        support32Bit = true;
+      };
+      pulse.enable = true;
+      wireplumber.enable = true;
+      jack.enable = true;
+      extraConfig.pipewire."92-low-latency" = {
+        context.properties = {
+          default.clock.max-quantum = 32;
+          default.clock.min-quantum = 32;
+          default.clock.quantum = 32;
+          default.clock.rate = 48000;
+        };
+      };
+      extraConfig.pipewire."93-screen-share" = {
+        "stream.properties"."node.max-latency" = "1/60";
+        context.spa-libs = {
+          "api.libcamera.*" = "libcamera/libspa-libcamera";
+          "support.*" = "support/libspa-support";
+        };
+      };
+      extraConfig.pipewire."99-usb-audio-fix" = {
+        "context.properties" = {
+          "default.clock.rate" = 48000;
+          "default.clock.quantum" = 512;
+          "default.clock.min-quantum" = 64;
+          "default.clock.max-quantum" = 4096;
+        };
+      };
+    };
+    pulseaudio.enable = false;
+
+    # X server (required for NVIDIA compatibility with Wayland)
+    xserver = {
+      enable = true;
+      videoDrivers = ["nvidia"];
+      xkb.layout = "us";
+    };
+
+    accounts-daemon.enable = true;
+    dbus.packages = [pkgs.gcr];
+
+    power-profiles-daemon.enable = false;
+    upower.enable = true;
+
+    printing = {
+      enable = true;
+      drivers = [];
+    };
+
+    prometheus.exporters.node = {
+      enable = true;
+      enabledCollectors = [
+        "cpu"
+        "diskstats"
+        "filesystem"
+        "netdev"
+        "stat"
+        "textfile"
+        "time"
+        "zfs"
+      ];
+      listenAddress = "0.0.0.0";
+      port = 9100;
+    };
+
+    # udev rules for hardware peripherals
+    udev = {
+      extraRules = ''
+        # QMK keyboard rules
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ff4", MODE="0666", GROUP="plugdev"
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ffb", MODE="0666", GROUP="plugdev"
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="174c", ATTRS{idProduct}=="2074", MODE="0666", GROUP="plugdev"
+
+        # Gaming device rules
+        SUBSYSTEM=="input", ATTRS{name}=="Rapoo Rapoo Gaming Device", TAG+="uaccess"
+
+        # MSI MYSTIC LIGHT - Keep power management disabled (handled by kernel quirk)
+        ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="1462", ATTRS{idProduct}=="7d75", TEST=="power/control", ATTR{power/control}="on"
+
+        # Lock PC on yubikey removal
+        ACTION=="remove",\
+         ENV{ID_BUS}=="usb",\
+         ENV{ID_MODEL_ID}=="0407",\
+         ENV{ID_VENDOR_ID}=="1050",\
+         ENV{ID_VENDOR}=="Yubico",\
+         RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
+      '';
+      packages = with pkgs; [
+        yubioath-flutter
+        yubikey-manager
+        yubikey-personalization
+      ];
+    };
   };
 
   # =================================================================
-  # 6. Networking
+  # 6. System Packages (hardware tools)
   # =================================================================
-  networking.useDHCP = lib.mkDefault true;
+  environment.systemPackages = with pkgs; [
+    # Audio & Multimedia
+    helvum
+    pavucontrol
+    pamixer
+    bluez
+    bluez-tools
+    sof-firmware
+    jellyfin-desktop
+
+    # Graphics & GPU
+    libva-utils
+    nvidia-vaapi-driver
+    vulkan-tools
+
+    # Hardware Support & Monitoring
+    apcupsd
+    cifs-utils
+    fwupd
+    microcode-amd
+    openrgb-with-all-plugins
+    powertop
+    samba
+    yubikey-personalization
+    limine-full
+
+    # Security & Encryption (hardware-backed)
+    ccid
+    libfido2
+    pinentry-all
+    yubico-pam
+    yubico-piv-tool
+    yubioath-flutter
+    (pass.withExtensions (exts: [
+      exts.pass-checkup
+      exts.pass-file
+      exts.pass-genphrase
+      exts.pass-import
+      exts.pass-otp
+      exts.pass-update
+    ]))
+    pass-wayland
+
+    # Secure Boot & EFI Tools
+    efibootmgr
+    ifrextractor-rs
+    sbctl
+    sbsigntool
+    shim-unsigned
+    optnix
+  ];
+
+  # =================================================================
+  # 7. Networking (host identity & hardware networking)
+  # =================================================================
+  networking = {
+    useDHCP = lib.mkDefault true;
+    hostId = "e134040f";
+    hostName = "desktop";
+    networkmanager = {
+      enable = true;
+      wifi.backend = "iwd"; # nl80211-only, avoids WEXT deprecation warnings on MT7922
+    };
+    wireless.iwd = {
+      enable = true;
+      settings.General.EnableNetworkConfiguration = false; # NM manages connections
+    };
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [9100]; # Prometheus node exporter
+    };
+  };
 
   # =================================================================
   # 7. Swap Configuration
@@ -334,9 +595,4 @@ in {
     coredump.enable = false;
     oomd.enable = true;
   };
-
-  # =================================================================
-  # 9. Platform Configuration
-  # =================================================================
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }

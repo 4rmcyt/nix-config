@@ -1,6 +1,8 @@
 # Owner metadata — non-secret values used for flake-level wiring.
 # Secret-backed values (API keys, etc.) stay in NixOS module options via sops.
 _: {
+  meta.stateVersion = "25.11";
+
   meta.owner = {
     username = "zeev";
     email = "redacted@example.com";

@@ -1,11 +1,16 @@
 # Shared NixOS settings applied to all hosts via modules.nixos.base.
 # Merges with the HM integration in home-manager-integration.nix.
 {
+  config,
   inputs,
   lib,
   ...
-}: {
+}: let
+  inherit (config.meta) stateVersion;
+in {
   modules.nixos.base = {config, ...}: {
+    system.stateVersion = lib.mkDefault stateVersion;
+    nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
     # Thread flake inputs into NixOS module args (replaces specialArgs)
     _module.args = {inherit inputs;};
 

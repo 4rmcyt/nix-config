@@ -31,11 +31,6 @@
   ];
 
   # =================================================================
-  # 2. System Configuration
-  # =================================================================
-  system.stateVersion = "25.05";
-
-  # =================================================================
   # 3. Secrets Management
   # =================================================================
   sops = {
@@ -67,14 +62,6 @@
         path = "/root/.ssh/nix-builder";
       };
     };
-  };
-
-  # =================================================================
-  # 4. Boot Configuration
-  # =================================================================
-  boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
   };
 
   # =================================================================
@@ -123,21 +110,6 @@
   environment.systemPackages = with pkgs; [
     lsof
     openssh
-
-    # System monitoring & hardware
-    apcupsd
-    auto-cpufreq
-    cpuid
-    fwupd
-    intel-gpu-tools
-    libva-utils
-    lm_sensors
-    microcode-intel
-    powertop
-    prometheus-apcupsd-exporter
-    smartmontools
-    zfs
-    clinfo
 
     # Network tools
     iproute2

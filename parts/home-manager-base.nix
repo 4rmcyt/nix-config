@@ -5,7 +5,7 @@
   inputs,
   ...
 }: let
-  inherit (config.meta) owner;
+  inherit (config.meta) owner stateVersion;
   system = "x86_64-linux";
 in {
   modules.homeManager.base = {
@@ -17,7 +17,7 @@ in {
     home = {
       inherit (owner) username;
       homeDirectory = "/home/${owner.username}";
-      stateVersion = "24.11";
+      inherit stateVersion;
     };
 
     nixpkgs.config.allowUnfree = true;

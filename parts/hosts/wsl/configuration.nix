@@ -27,8 +27,6 @@ in {
     ];
 
     # System
-    system.stateVersion = "25.05";
-    nixpkgs.hostPlatform = "x86_64-linux";
     nixpkgs.config.cudaSupport = true;
     time.timeZone = owner.timezone;
 
