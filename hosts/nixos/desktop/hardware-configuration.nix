@@ -293,7 +293,7 @@ in {
   # 5. Security (hardware-tied: PAM U2F / YubiKey)
   # =================================================================
   security = {
-    polkit.enable = false;
+    polkit.enable = true;
     rtkit.enable = true;
     pam.services = {
       login.u2fAuth = true;
@@ -595,4 +595,9 @@ in {
     coredump.enable = false;
     oomd.enable = true;
   };
+
+  # =================================================================
+  # 9. Platform Configuration
+  # =================================================================
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }
