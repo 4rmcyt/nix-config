@@ -40,6 +40,7 @@
     # ../../../modules/GUI/OBS
     ../../../modules/GUI/chromium
     ../../../modules/GUI/flatpak/hyprland
+    ../../../modules/GUI/virt-manager
     ../../../modules/xdg
     ../../../modules/services/tdarr-node
   ];
@@ -387,7 +388,6 @@
     noisetorch.enable = true;
     # vscode.enable = true;
 
-    virt-manager.enable = true;
   };
 
   # =================================================================
@@ -620,36 +620,7 @@
     };
   };
 
-  # =================================================================
-  # 15. Virtualization
-  # =================================================================
-  virtualisation = {
-    podman.enable = true;
-    libvirtd = {
-      enable = true;
-      qemu.vhostUserPackages = with pkgs; [virtiofsd];
-    };
-    spiceUSBRedirection.enable = true;
-  };
-
   systemd.tmpfiles.rules = [
     "d /data/zeev/Taildrive 770 davfs2 users -"
   ];
-
-  # libvirt's upstream unit hardcodes /usr/bin/sh which doesn't exist on NixOS.
-  # Use systemd.units with raw drop-in text so ExecStart= (empty) clears the original
-  # before setting ours — otherwise both run and /usr/bin/sh fails first.
-  systemd.units."virt-secret-init-encryption.service" = {
-    overrideStrategy = "asDropin";
-    text = ''
-      [Service]
-      ExecStart=
-      ExecStart=${pkgs.writeShellScript "virt-secret-init-encryption" ''
-        umask 0077
-        ${pkgs.coreutils}/bin/dd if=/dev/random status=none bs=32 count=1 | \
-          ${pkgs.systemd}/bin/systemd-creds encrypt --name=secrets-encryption-key - \
-          /var/lib/libvirt/secrets/secrets-encryption-key
-      ''}
-    '';
-  };
 }
