@@ -215,7 +215,7 @@
   # =================================================================
   # 13. Services
   # =================================================================
-  
+
   security.pam.services.greetd.enableGnomeKeyring = true;
 
   environment.etc."xdg/autostart/gnome-keyring-secrets.desktop".text = ''
