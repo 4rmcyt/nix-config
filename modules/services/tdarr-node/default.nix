@@ -31,7 +31,8 @@ in {
   systemd.services.tdarr-node = {
     description = "Tdarr Node (desktop worker)";
     wantedBy = ["multi-user.target"];
-    after = ["network.target" "network-online.target"];
+    after = ["network-online.target"];
+    wants = ["network-online.target"];
 
     environment = {
       rootDataPath = "/var/lib/tdarr-node";

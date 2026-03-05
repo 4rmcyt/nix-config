@@ -196,6 +196,7 @@ in {
       microcode-intel
       powertop
       prometheus-apcupsd-exporter
+      rasdaemon
       smartmontools
       zfs
     ];
@@ -256,9 +257,6 @@ in {
   # =================================================================
   # 8. MCE & Reliability
   # =================================================================
-
-  # Structured MCE logging (Banks 10-13 IMC errors detected at boot)
-  services.rasdaemon.enable = true;
 
   # Journald: reduce I/O pressure to prevent watchdog timeouts under ZFS load
   services.journald.extraConfig = ''
