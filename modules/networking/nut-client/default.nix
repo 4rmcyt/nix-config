@@ -1,4 +1,6 @@
 {config, ...}: {
+  users.groups.nut = {};
+
   power.ups = {
     enable = true;
     mode = "netclient";

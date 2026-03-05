@@ -638,4 +638,12 @@
   systemd.tmpfiles.rules = [
     "d /data/zeev/Taildrive 770 davfs2 users -"
   ];
+
+  # libvirt's upstream unit hardcodes /usr/bin/sh which doesn't exist on NixOS
+  systemd.services.virt-secret-init-encryption.serviceConfig.ExecStart = lib.mkForce (
+    pkgs.writeShellScript "virt-secret-init-encryption" ''
+      umask 0077
+      dd if=/dev/random status=none bs=32 count=1 | ${pkgs.systemd}/bin/systemd-creds encrypt --name=secrets-encryption-key - /var/lib/libvirt/secrets/secrets-encryption-key
+    ''
+  );
 }

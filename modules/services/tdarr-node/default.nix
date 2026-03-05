@@ -21,7 +21,11 @@ in {
     "d /var/lib/tdarr-node 0755 tdarr tdarr -"
     "d /var/lib/tdarr-node/configs 0755 tdarr tdarr -"
     "d /var/lib/tdarr-node/logs 0755 tdarr tdarr -"
+    "d /var/lib/tdarr-node/assets 0755 tdarr tdarr -"
+    "d /var/lib/tdarr-node/assets/app 0755 tdarr tdarr -"
     "d /var/lib/tdarr-node/assets/app/plugins 0755 tdarr tdarr -"
+    # Fix ownership of any existing paths created with wrong owner (e.g. root)
+    "Z /var/lib/tdarr-node - tdarr tdarr -"
   ];
 
   systemd.services.tdarr-node = {
