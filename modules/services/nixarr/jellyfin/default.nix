@@ -3,11 +3,12 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   cfg = config.services.jellyfin;
 
   systemXml = pkgs.writeText "jellyfin-system.xml" ''
-    <?xml version="1.0" encoding="utf-8"?>
+        <?xml version="1.0" encoding="utf-8"?>
     <ServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
       <LogFileRetentionDays>3</LogFileRetentionDays>
       <IsStartupWizardCompleted>true</IsStartupWizardCompleted>
@@ -239,7 +240,7 @@
   '';
 
   encodingXml = pkgs.writeText "jellyfin-encoding.xml" ''
-    <?xml version="1.0" encoding="utf-8"?>
+        <?xml version="1.0" encoding="utf-8"?>
     <EncodingOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
       <EncodingThreadCount>4</EncodingThreadCount>
       <TranscodingTempPath>/data/media/.state/nixarr/jellyfin/cache/transcodes</TranscodingTempPath>
@@ -254,6 +255,7 @@
       <EnableSegmentDeletion>true</EnableSegmentDeletion>
       <SegmentKeepSeconds>720</SegmentKeepSeconds>
       <HardwareAccelerationType>vaapi</HardwareAccelerationType>
+      <EncoderAppPathDisplay>/nix/store/sps7ckk68sx8q4nvh8rcbqpyq9g4802y-jellyfin-ffmpeg-7.1.2-2-bin/bin/ffmpeg</EncoderAppPathDisplay>
       <VaapiDevice>/dev/dri/renderD128</VaapiDevice>
       <QsvDevice>/dev/dri/renderD128</QsvDevice>
       <EnableTonemapping>true</EnableTonemapping>
@@ -297,9 +299,10 @@
       </AllowOnDemandMetadataBasedKeyframeExtractionForExtensions>
     </EncodingOptions>
   '';
-in {
+in
+{
   # chromaprint (fpcalc) required by Intro Skipper for audio fingerprinting
-  systemd.services.jellyfin.path = [pkgs.chromaprint];
+  systemd.services.jellyfin.path = [ pkgs.chromaprint ];
 
   users.users.jellyfin = {
     isSystemUser = true;
