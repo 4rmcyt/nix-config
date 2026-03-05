@@ -8,7 +8,7 @@ let
   cfg = config.services.jellyfin;
 
   systemXml = pkgs.writeText "jellyfin-system.xml" ''
-        <?xml version="1.0" encoding="utf-8"?>
+            <?xml version="1.0" encoding="utf-8"?>
     <ServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
       <LogFileRetentionDays>3</LogFileRetentionDays>
       <IsStartupWizardCompleted>true</IsStartupWizardCompleted>
@@ -255,7 +255,7 @@ let
       <EnableSegmentDeletion>true</EnableSegmentDeletion>
       <SegmentKeepSeconds>720</SegmentKeepSeconds>
       <HardwareAccelerationType>vaapi</HardwareAccelerationType>
-      <EncoderAppPathDisplay>/nix/store/sps7ckk68sx8q4nvh8rcbqpyq9g4802y-jellyfin-ffmpeg-7.1.2-2-bin/bin/ffmpeg</EncoderAppPathDisplay>
+      <EncoderAppPathDisplay>${pkgs.jellyfin-ffmpeg}/bin/ffmpeg</EncoderAppPathDisplay>
       <VaapiDevice>/dev/dri/renderD128</VaapiDevice>
       <QsvDevice>/dev/dri/renderD128</QsvDevice>
       <EnableTonemapping>true</EnableTonemapping>
