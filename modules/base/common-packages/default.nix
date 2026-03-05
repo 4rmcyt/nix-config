@@ -25,7 +25,6 @@
       gzip
       htop
       mc
-      neofetch
       openssl
       p7zip
       unrar
