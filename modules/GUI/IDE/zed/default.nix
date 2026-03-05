@@ -1,4 +1,4 @@
-_: {
+{pkgs, ...}: {
   imports = [
     ./extensions.nix
     ./ai.nix
@@ -9,6 +9,7 @@ _: {
 
   programs.zed-editor = {
     enable = true;
+    package = pkgs.zed-editor-fhs;
     installRemoteServer = true;
   };
 }
