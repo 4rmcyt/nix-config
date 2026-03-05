@@ -28,7 +28,10 @@
     "d /var/lib/tdarr/node 0755 tdarr tdarr -"
     "d /var/lib/tdarr/node/configs 0755 tdarr tdarr -"
     "d /var/lib/tdarr/node/logs 0755 tdarr tdarr -"
+    "d /var/lib/tdarr/node/assets 0755 tdarr tdarr -"
+    "d /var/lib/tdarr/node/assets/app 0755 tdarr tdarr -"
     "d /var/lib/tdarr/node/assets/app/plugins 0755 tdarr tdarr -"
+    "Z /var/lib/tdarr/node - tdarr tdarr -"
     "d /var/lib/tdarr/cache 0775 tdarr media -"
   ];
 
