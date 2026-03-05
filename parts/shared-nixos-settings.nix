@@ -20,13 +20,17 @@ in {
     # Sops defaults
     sops.age.keyFile = lib.mkDefault "/root/.config/sops/age/keys.txt";
 
-    # GitHub access token for nix daemon (rate limiting / private flake inputs)
+    # GitHub access token for nix daemon and CLI (rate limiting / private flake inputs)
+    # nix_access_token is pre-formatted as: access-tokens = github.com=<token>
     sops.secrets.nix_access_token = {
       sopsFile = ../secrets/common.yaml;
       key = "nix_access_token";
     };
-    sops.templates."nix-daemon-env".content = "NIX_CONFIG=${config.sops.placeholder.nix_access_token}";
-    systemd.services.nix-daemon.serviceConfig.EnvironmentFile = config.sops.templates."nix-daemon-env".path;
+    sops.templates."nix-access-tokens.conf" = {
+      content = config.sops.placeholder.nix_access_token;
+      path = "/etc/nix/access-tokens.conf";
+    };
+    nix.extraOptions = "!include /etc/nix/access-tokens.conf";
 
     # Binary caches
     nix.settings = {
