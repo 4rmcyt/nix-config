@@ -2511,11 +2511,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1772737141,
-        "narHash": "sha256-0b/OFODRXoqAKtErK+YTp6KMFoNXr+3/zJ9PtbR8RwQ=",
+        "lastModified": 1772743114,
+        "narHash": "sha256-TAJes5nC6j4/BZRY0pBuq+ZGGi7J/l2EHcKDNDPzR6o=",
         "owner": "zed-industries",
         "repo": "zed",
-        "rev": "94154aae6fb7d712ee3a333fcc544c615d015d8f",
+        "rev": "6c914add260b9b4305189ec455cdd370fd0a1db6",
         "type": "github"
       },
       "original": {
