@@ -37,8 +37,6 @@
     enable = true;
 
     initContent = ''
-      autoload -Uz compinit && compinit
-
       bindkey '^f' autosuggest-accept
       bindkey '^p' history-search-backward
       bindkey '^n' history-search-forward
