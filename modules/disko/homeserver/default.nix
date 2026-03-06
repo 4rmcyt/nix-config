@@ -141,6 +141,7 @@
           "data" = {
             type = "zfs_fs";
             options."com.sun:auto-snapshot" = "false";
+            options.sync = "disabled";
             mountpoint = "/data";
           };
         };

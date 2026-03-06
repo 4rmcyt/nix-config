@@ -200,7 +200,7 @@
       DIR="$1"
       echo "media-cleaner-scan: scanning $DIR"
       find "$DIR" -type f -name "*.mkv" -print0 | while IFS= read -r -d "" FILE; do
-        nice -n 10 media-cleaner "$FILE" || echo "media-cleaner-scan: failed on $FILE, continuing"
+        nice -n 19 media-cleaner "$FILE" || echo "media-cleaner-scan: failed on $FILE, continuing"
       done
       echo "media-cleaner-scan: done $DIR"
     '';
@@ -304,9 +304,11 @@ in {
         ExecStart = "${scanScript}/bin/media-cleaner-scan ${cfg.moviesDir}";
         # Give it time to finish large libraries
         TimeoutStartSec = "6h";
-        IOWeight = 50;
-        CPUWeight = 50;
-        Nice = 10;
+        IOWeight = 10;
+        CPUWeight = 10;
+        Nice = 19;
+        IOSchedulingClass = "idle";
+        IOSchedulingPriority = 7;
       };
     };
 
@@ -319,9 +321,11 @@ in {
         Group = "media";
         ExecStart = "${scanScript}/bin/media-cleaner-scan ${cfg.showsDir}";
         TimeoutStartSec = "6h";
-        IOWeight = 50;
-        CPUWeight = 50;
-        Nice = 10;
+        IOWeight = 10;
+        CPUWeight = 10;
+        Nice = 19;
+        IOSchedulingClass = "idle";
+        IOSchedulingPriority = 7;
       };
     };
   };

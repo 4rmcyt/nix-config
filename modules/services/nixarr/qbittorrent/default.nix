@@ -39,7 +39,7 @@
             UPnP = false;
             GlobalDLSpeedLimit = -1;
             GlobalUPSpeedLimit = -1;
-            DiskCacheSize = 3072;
+            DiskCacheSize = 1024;
             DiskCacheTTL = 60;
             UseOSCache = false;
             # Always announce to all trackers/tiers (important for private trackers)

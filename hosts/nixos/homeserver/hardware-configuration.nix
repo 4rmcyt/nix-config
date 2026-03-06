@@ -111,12 +111,14 @@ in {
       options i915 enable_guc=3
 
       # ZFS performance tuning
-      # Increase txg timeout to reduce sync frequency (default: 5s)
-      options zfs zfs_txg_timeout=30
+      # Use default txg timeout (5s) — 30s causes massive blocking syncs
+      options zfs zfs_txg_timeout=5
+
+      # More concurrent I/O operations (NixOS NAS recommendation)
+      options zfs zfs_vdev_max_active=3000
 
       # Increase dirty data limit to allow more write coalescing
-      # Default is 10% of ARC, increase to 20% for better write performance
-      options zfs zfs_dirty_data_max_percent=20
+      options zfs zfs_dirty_data_max_percent=25
 
       # Async write tuning - allow more pending writes
       options zfs zfs_vdev_async_write_min_active=2
