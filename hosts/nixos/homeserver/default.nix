@@ -105,7 +105,23 @@
   };
 
   # =================================================================
-  # 7. Environment
+  # 7. Users (server overrides)
+  # =================================================================
+  # Strip desktop-only groups inherited from modules/users/zeev
+  users.users.zeev.extraGroups = lib.mkForce [
+    "docker"
+    "libvirtd"
+    "media"
+    "ollama"
+    "networkmanager"
+    "podman"
+    "samba"
+    "wheel"
+    "zeev"
+  ];
+
+  # =================================================================
+  # 8. Environment
   # =================================================================
   environment.systemPackages = with pkgs; [
     lsof
@@ -266,8 +282,7 @@
       };
     };
 
-    # Development services
-    vscode-server.enable = true;
+    vscode-server.enable = false;
 
     # Split DNS for Tailscale: resolves *.example.com → homeserver's Tailscale IP
     # Binds to tailscale0 only; address is resolved dynamically at service start
