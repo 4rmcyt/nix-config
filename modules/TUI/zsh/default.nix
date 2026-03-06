@@ -58,6 +58,8 @@
       zstyle ':completion:*:*:docker:*' option-stacking yes
       zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
+      # Disable gitstatus on headless hosts — it fails to initialize and hangs the prompt
+      [[ $HOST == homeserver ]] && typeset -g POWERLEVEL9K_DISABLE_GITSTATUS=true
       [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
     '';
 
