@@ -183,13 +183,7 @@ in {
               middlewares = ["security-headers"];
               tls.certResolver = "default";
             };
-            kuma = {
-              rule = "Host(`kuma.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "kuma";
-              middlewares = ["security-headers"];
-              tls.certResolver = "default";
-            };
+
 
             # Reading
             miniflux = {
@@ -278,7 +272,6 @@ in {
 
             # Monitoring
             grafana.loadBalancer.servers = [{url = "http://localhost:3003";}];
-            kuma.loadBalancer.servers = [{url = "http://localhost:3001";}];
 
             # Reading
             miniflux.loadBalancer.servers = [{url = "http://localhost:8086";}];

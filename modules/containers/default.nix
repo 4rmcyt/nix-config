@@ -24,7 +24,7 @@
     extraGroups.podman.members = [
       config.my.defaults.user
       "podman"
-      "uptime-kuma"
+
     ];
     groups.podman = {};
     users.podman = {

@@ -277,12 +277,6 @@
         description = "Prometheus node exporter";
       };
 
-      uptime-kuma = lib.mkOption {
-        type = lib.types.port;
-        default = 3001;
-        description = "Uptime Kuma uptime monitoring";
-      };
-
       # Productivity & Document Management
       paperless = lib.mkOption {
         type = lib.types.port;

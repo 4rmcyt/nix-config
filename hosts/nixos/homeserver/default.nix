@@ -189,8 +189,6 @@
         # 8000  # TP-Link Exporter
         # 9948  # Nextdns Exporter
         27196 # Cloudflare Exporter
-        3001 # Uptime Kuma
-
         # Database & Infrastructure
         9091
       ];

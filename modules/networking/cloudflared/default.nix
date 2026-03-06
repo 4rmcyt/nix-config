@@ -124,10 +124,7 @@
           service: https://localhost:8443
           originRequest:
             httpHostHeader: vault.${config.my.defaults.domain}
-        - hostname: kuma.${config.my.defaults.domain}
-          service: https://localhost:8443
-          originRequest:
-            httpHostHeader: kuma.${config.my.defaults.domain}
+
         - hostname: lldap.${config.my.defaults.domain}
           service: https://localhost:8443
           originRequest:

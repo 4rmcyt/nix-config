@@ -55,17 +55,11 @@
       description = "Prometheus daemon user";
       group = "prometheus";
     };
-    uptime-kuma = {
-      isSystemUser = true;
-      description = "Uptime Kuma user";
-      group = "uptime-kuma";
-    };
   };
 
   users.groups = {
     grafana = {};
     prometheus = {};
-    uptime-kuma = {};
   };
 
   # =================================================================
@@ -73,7 +67,6 @@
   # =================================================================
   networking.firewall.allowedTCPPorts = [
     3003 # Grafana
-    3001 # Uptime Kuma
     3100 # Loki
     28183 # Promtail
     8081 # Cloudflare Exporter
@@ -359,14 +352,6 @@
       };
     };
 
-    # --- Uptime Kuma Status Monitoring ---
-    uptime-kuma = {
-      enable = true;
-      settings = {
-        hostname = "127.0.0.1";
-        port = "3001";
-      };
-    };
   };
 
   # =================================================================
