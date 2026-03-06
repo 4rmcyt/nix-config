@@ -9,7 +9,7 @@
   # Script that processes a single MKV file
   cleanerScript = pkgs.writeShellApplication {
     name = "media-cleaner";
-    runtimeInputs = with pkgs; [mkvtoolnix-cli jq curl];
+    runtimeInputs = with pkgs; [mkvtoolnix-cli jq curl util-linux];
     text = ''
       set -euo pipefail
 
@@ -180,7 +180,7 @@
       fi
       MKVMERGE_ARGS+=("$FILE")
 
-      if mkvmerge "''${MKVMERGE_ARGS[@]}"; then
+      if ionice -c 3 mkvmerge "''${MKVMERGE_ARGS[@]}"; then
         mv "$TMP_FILE" "$FILE"
         echo "media-cleaner: done $FILE"
       else
@@ -304,6 +304,8 @@ in {
         ExecStart = "${scanScript}/bin/media-cleaner-scan ${cfg.moviesDir}";
         # Give it time to finish large libraries
         TimeoutStartSec = "6h";
+        IOWeight = 50;
+        CPUWeight = 50;
       };
     };
 
@@ -316,6 +318,8 @@ in {
         Group = "media";
         ExecStart = "${scanScript}/bin/media-cleaner-scan ${cfg.showsDir}";
         TimeoutStartSec = "6h";
+        IOWeight = 50;
+        CPUWeight = 50;
       };
     };
   };
