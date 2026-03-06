@@ -194,13 +194,13 @@
   # Script that scans a directory for all MKVs and processes each one
   scanScript = pkgs.writeShellApplication {
     name = "media-cleaner-scan";
-    runtimeInputs = [cleanerScript pkgs.findutils];
+    runtimeInputs = [cleanerScript pkgs.findutils pkgs.coreutils];
     text = ''
       set -euo pipefail
       DIR="$1"
       echo "media-cleaner-scan: scanning $DIR"
       find "$DIR" -type f -name "*.mkv" -print0 | while IFS= read -r -d "" FILE; do
-        media-cleaner "$FILE" || echo "media-cleaner-scan: failed on $FILE, continuing"
+        nice -n 10 media-cleaner "$FILE" || echo "media-cleaner-scan: failed on $FILE, continuing"
       done
       echo "media-cleaner-scan: done $DIR"
     '';
@@ -306,6 +306,7 @@ in {
         TimeoutStartSec = "6h";
         IOWeight = 50;
         CPUWeight = 50;
+        Nice = 10;
       };
     };
 
@@ -320,6 +321,7 @@ in {
         TimeoutStartSec = "6h";
         IOWeight = 50;
         CPUWeight = 50;
+        Nice = 10;
       };
     };
   };
