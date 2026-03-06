@@ -33,17 +33,34 @@
         };
       };
 
+      corsair = {
+        type = "disk";
+        device = "/dev/disk/by-id/nvme-Corsair_MP600_PRO_LPX_222879690001314211EE";
+        content = {
+          type = "gpt";
+          partitions = {
+            ZFS = {
+              size = "100%";
+              content = {
+                type = "zfs";
+                pool = "zdata";
+              };
+            };
+          };
+        };
+      };
+
       ssd = {
         type = "disk";
         device = "/dev/disk/by-id/ata-Patriot_P210_1024GB_P210EDCB23011109345";
         content = {
           type = "gpt";
           partitions = {
-            DATA = {
+            ZFS = {
               size = "100%";
               content = {
                 type = "zfs";
-                pool = "zroot";
+                pool = "zbackup";
               };
             };
           };
@@ -138,11 +155,56 @@
             mountpoint = "/var/lib/vaultwarden";
             postCreateHook = "zfs snapshot zroot/vaultwarden@empty";
           };
+        };
+      };
+
+      zdata = {
+        type = "zpool";
+        rootFsOptions = {
+          canmount = "off";
+          checksum = "edonr";
+          compression = "zstd";
+          dnodesize = "auto";
+          mountpoint = "none";
+          normalization = "formD";
+          relatime = "on";
+          "com.sun:auto-snapshot" = "false";
+        };
+        options = {
+          ashift = "12";
+          autotrim = "on";
+        };
+        datasets = {
           "data" = {
             type = "zfs_fs";
             options."com.sun:auto-snapshot" = "false";
             options.sync = "disabled";
             mountpoint = "/data";
+          };
+        };
+      };
+
+      zbackup = {
+        type = "zpool";
+        rootFsOptions = {
+          canmount = "off";
+          checksum = "edonr";
+          compression = "zstd";
+          dnodesize = "auto";
+          mountpoint = "none";
+          normalization = "formD";
+          relatime = "on";
+          "com.sun:auto-snapshot" = "false";
+        };
+        options = {
+          ashift = "12";
+          autotrim = "off";
+        };
+        datasets = {
+          "data" = {
+            type = "zfs_fs";
+            options."com.sun:auto-snapshot" = "false";
+            mountpoint = "/backup";
           };
         };
       };

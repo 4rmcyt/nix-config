@@ -28,6 +28,7 @@
       openssl
       p7zip
       unrar
+      nvme-cli
       pciutils
       procs # better ps
       unixtools.watch # watches commands
