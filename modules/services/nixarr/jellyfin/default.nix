@@ -35,7 +35,7 @@ in {
     forceEncodingConfig = true;
   };
   systemd.services.jellyfin.preStart = lib.mkAfter ''
-    test -f "${cfg.configDir}/system.xml" || install -m 640 ${systemXml} "${cfg.configDir}/system.xml"
+    install -m 640 ${systemXml} "${cfg.configDir}/system.xml"
     install -m 640 ${encodingXml} "${cfg.configDir}/encoding.xml"
   '';
 }
