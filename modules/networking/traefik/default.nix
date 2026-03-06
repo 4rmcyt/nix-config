@@ -184,7 +184,6 @@ in {
               tls.certResolver = "default";
             };
 
-
             # Reading
             miniflux = {
               rule = "Host(`miniflux.${domain}`)";

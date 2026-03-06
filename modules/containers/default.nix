@@ -24,7 +24,6 @@
     extraGroups.podman.members = [
       config.my.defaults.user
       "podman"
-
     ];
     groups.podman = {};
     users.podman = {

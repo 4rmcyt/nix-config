@@ -195,7 +195,6 @@
       foot.terminfo # foot terminfo
       wezterm.terminfo # wezterm terminfo
 
-
       # Nix utilities
       optinix # Nix flake utilities
     ]

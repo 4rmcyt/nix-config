@@ -3,8 +3,7 @@
   pkgs,
   config,
   ...
-}:
-let
+}: let
   cfg = config.services.jellyfin;
 
   systemXml = pkgs.writeText "jellyfin-system.xml" ''
@@ -299,10 +298,9 @@ let
       </AllowOnDemandMetadataBasedKeyframeExtractionForExtensions>
     </EncodingOptions>
   '';
-in
-{
+in {
   # chromaprint (fpcalc) required by Intro Skipper for audio fingerprinting
-  systemd.services.jellyfin.path = [ pkgs.chromaprint ];
+  systemd.services.jellyfin.path = [pkgs.chromaprint];
 
   users.users.jellyfin = {
     isSystemUser = true;
