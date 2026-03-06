@@ -21,9 +21,7 @@
       enable = true;
       enableZshIntegration = true;
       enableNushellIntegration = true;
-
-      flags = ["--disable-up-arrow"]; # or --disable-ctrl-r
-
+      flags = ["--disable-up-arrow"];
       settings =
         {
           auto_sync = true;
@@ -33,7 +31,6 @@
           enter_accept = true;
           show_help = true;
           prefers_reduced_motion = true;
-
           style = "compact";
           inline_height = 10;
           search_mode = "fuzzy";
