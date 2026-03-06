@@ -217,7 +217,7 @@ in {
 
     sonarrUrl = lib.mkOption {
       type = lib.types.str;
-      default = "http://localhost:8989";
+      default = "http://localhost:8990";
       description = "Sonarr API base URL";
     };
 
