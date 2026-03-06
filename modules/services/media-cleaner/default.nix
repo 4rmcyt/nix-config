@@ -46,8 +46,9 @@
           -H "X-Api-Key: $RADARR_KEY" \
           "$RADARR_URL/api/v3/movie" 2>/dev/null || true)
         if [[ -n "$RESPONSE" ]]; then
+          # Movies: Radarr .path == movie folder (exact match)
           ORIG_LANG=$(echo "$RESPONSE" | jq -r --arg dir "$FILE_DIR" \
-            '[.[] | select(.path == $dir or (.path != null and ($dir | startswith(.path))))] | first | .originalLanguage.name // ""' 2>/dev/null || true)
+            '[.[] | select(.path != null and (.path == $dir or .path == ($dir + "/") or ((.path + "/") as $p | $dir | startswith($p))))] | first | .originalLanguage.name // ""' 2>/dev/null || true)
         fi
       fi
 
@@ -57,9 +58,9 @@
           -H "X-Api-Key: $SONARR_KEY" \
           "$SONARR_URL/api/v3/series" 2>/dev/null || true)
         if [[ -n "$RESPONSE" ]]; then
-          # Shows: path is the series root dir, FILE_DIR is season dir inside it
+          # Shows: Sonarr .path == series root dir, FILE_DIR is season subdir inside it
           ORIG_LANG=$(echo "$RESPONSE" | jq -r --arg dir "$FILE_DIR" \
-            '[.[] | select($dir | startswith(.path))] | first | .originalLanguage.name // ""' 2>/dev/null || true)
+            '[.[] | select(.path != null and ($dir == .path or ((.path + "/") as $p | $dir | startswith($p))))] | first | .originalLanguage.name // ""' 2>/dev/null || true)
         fi
       fi
 
