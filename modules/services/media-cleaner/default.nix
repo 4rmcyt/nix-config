@@ -194,10 +194,19 @@
   # Script that scans a directory for all MKVs and processes each one
   scanScript = pkgs.writeShellApplication {
     name = "media-cleaner-scan";
-    runtimeInputs = [cleanerScript pkgs.findutils pkgs.coreutils];
+    runtimeInputs = [cleanerScript pkgs.findutils pkgs.coreutils pkgs.util-linux];
     text = ''
       set -euo pipefail
       DIR="$1"
+      LOCK="/run/lock/media-cleaner-scan-$(systemd-escape "$DIR").lock"
+      exec 9>"$LOCK"
+      if ! flock -n 9; then
+        echo "media-cleaner-scan: already running for $DIR, skipping"
+        exit 0
+      fi
+      # Clean up stale temp files left by previously killed runs
+      find "$DIR" -type f -name ".*.tmp.mkv" -delete -print | sed 's/^/media-cleaner-scan: removed stale tmp: /'
+
       echo "media-cleaner-scan: scanning $DIR"
       find "$DIR" -type f -name "*.mkv" ! -name ".*.tmp.mkv" -print0 | while IFS= read -r -d "" FILE; do
         nice -n 19 media-cleaner "$FILE" || echo "media-cleaner-scan: failed on $FILE, continuing"
