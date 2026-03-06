@@ -21,6 +21,7 @@
           PasswordAuthentication = lib.mkDefault false;
           PermitRootLogin = lib.mkDefault "no";
           X11Forwarding = lib.mkDefault false;
+          UseDNS = false;
         };
       };
 
