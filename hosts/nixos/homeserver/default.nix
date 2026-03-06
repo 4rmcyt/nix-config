@@ -105,22 +105,6 @@
   };
 
   # =================================================================
-  # 7. Users (server overrides)
-  # =================================================================
-  # Strip desktop-only groups inherited from modules/users/zeev
-  users.users.zeev.extraGroups = lib.mkForce [
-    "docker"
-    "libvirtd"
-    "media"
-    "ollama"
-    "networkmanager"
-    "podman"
-    "samba"
-    "wheel"
-    "zeev"
-  ];
-
-  # =================================================================
   # 8. Environment
   # =================================================================
   environment.systemPackages = with pkgs; [
@@ -321,7 +305,19 @@
       description = "Git user";
       group = "git";
     };
-    users.zeev.shell = pkgs.zsh;
+    users.zeev = {
+      shell = pkgs.zsh;
+      extraGroups = lib.mkForce [
+        "docker"
+        "media"
+        "ollama"
+        "networkmanager"
+        "podman"
+        "samba"
+        "wheel"
+        "zeev"
+      ];
+    };
     groups.git = {};
   };
 }
