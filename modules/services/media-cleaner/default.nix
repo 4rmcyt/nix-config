@@ -168,7 +168,7 @@
 
       AUDIO_IDS_ARG=$(IFS=,; echo "''${KEEP_AUDIO_IDS[*]}")
       SUB_IDS_ARG=$(IFS=,; echo "''${KEEP_SUB_IDS[*]:-}")
-      TMP_FILE="''${FILE}.tmp.mkv"
+      TMP_FILE="''${FILE%/*}/.''${FILE##*/}.tmp.mkv"
 
       echo "media-cleaner: rewriting $FILE (keeping audio: $AUDIO_IDS_ARG, subs: ''${SUB_IDS_ARG:-none})"
 
@@ -199,7 +199,7 @@
       set -euo pipefail
       DIR="$1"
       echo "media-cleaner-scan: scanning $DIR"
-      find "$DIR" -type f -name "*.mkv" -print0 | while IFS= read -r -d "" FILE; do
+      find "$DIR" -type f -name "*.mkv" ! -name ".*.tmp.mkv" -print0 | while IFS= read -r -d "" FILE; do
         nice -n 19 media-cleaner "$FILE" || echo "media-cleaner-scan: failed on $FILE, continuing"
       done
       echo "media-cleaner-scan: done $DIR"
