@@ -12,7 +12,7 @@
       include dank-tabs.conf
     '';
     settings = {
-      term = "xterm-256color";
+      term = "xterm-kitty";
       confirm_os_window_close = 0;
       dynamic_background_opacity = true;
       enable_audio_bell = false;

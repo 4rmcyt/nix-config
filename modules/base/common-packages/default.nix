@@ -190,6 +190,11 @@
 
       # Core Unix utilities
       moreutils # Additional Unix utilities (sponge, vidir, etc)
+      kitty.terminfo # kitty terminfo for xterm-kitty over SSH
+      alacritty.terminfo # alacritty terminfo
+      foot.terminfo # foot terminfo
+      wezterm.terminfo # wezterm terminfo
+
 
       # Nix utilities
       optinix # Nix flake utilities

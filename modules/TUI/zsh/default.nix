@@ -67,6 +67,7 @@
       LEDGER_COLOR = "true";
       LESS = "-FRSXM";
       LESSCHARSET = "utf-8";
+      SYSTEMD_LESS = "FRSXMK";
       PAGER = "less";
     };
 
