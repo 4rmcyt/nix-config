@@ -16,7 +16,6 @@ in {
     enable = true;
 
     nativeMessagingHosts = [
-      pkgs.browserpass
       pkgs.firefoxpwa
     ];
     betterfox.enable = true;

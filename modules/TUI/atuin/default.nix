@@ -17,8 +17,6 @@
     };
   };
   programs = {
-    browserpass.enable = true;
-    nushell.enable = true;
     atuin = {
       enable = true;
       enableZshIntegration = true;
