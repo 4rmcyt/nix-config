@@ -228,6 +228,10 @@ in {
 
     # Firmware
     enableRedistributableFirmware = lib.mkDefault true;
+    # Explicitly include uncompressed linux-firmware: the zen kernel has
+    # CONFIG_FW_LOADER_COMPRESS_ZSTD=y but the MT7922 driver fails to find
+    # .bin.zst at load time. The uncompressed variant resolves this.
+    firmware = [pkgs.linux-firmware];
 
     # GPG Smartcards
     gpgSmartcards.enable = true;
