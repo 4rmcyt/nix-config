@@ -252,12 +252,6 @@
         description = "Prowlarr indexer manager";
       };
 
-      jellyseerr = lib.mkOption {
-        type = lib.types.port;
-        default = 5055;
-        description = "Jellyseerr media requests";
-      };
-
       # Monitoring & Observability
       prometheus = lib.mkOption {
         type = lib.types.port;
