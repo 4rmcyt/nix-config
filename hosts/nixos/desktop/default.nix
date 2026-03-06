@@ -189,11 +189,7 @@
   # 12. Programs
   # =================================================================
   programs = {
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-      pinentryPackage = pkgs.pinentry-all;
-    };
+    gnupg.agent.enable = true;
 
     nh = {
       clean.enable = true;
