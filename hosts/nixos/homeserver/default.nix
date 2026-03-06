@@ -110,6 +110,7 @@
   environment.systemPackages = with pkgs; [
     lsof
     openssh
+    sysstat
 
     # Network tools
     iproute2
