@@ -229,25 +229,6 @@ in {
     # Firmware
     enableRedistributableFirmware = lib.mkDefault true;
 
-    # Custom uncompressed MT7922 firmware to avoid "Direct firmware load failed with error -2"
-    # linux-firmware ships .bin.zst but kernel needs uncompressed .bin if CONFIG_FW_LOADER_COMPRESS_ZSTD is unset
-    firmware = let
-      mt7922-firmware-uncompressed =
-        pkgs.runCommand "mt7922-firmware-uncompressed"
-        {nativeBuildInputs = [pkgs.zstd];}
-        ''
-          mkdir -p $out/lib/firmware/mediatek
-          for file in ${pkgs.linux-firmware}/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922*.bin.zst \
-                      ${pkgs.linux-firmware}/lib/firmware/mediatek/WIFI_MT7922*.bin.zst; do
-            [ -f "$file" ] || continue
-            zstd -d "$file" -o "$out/lib/firmware/mediatek/$(basename "$file" .zst)"
-          done
-        '';
-    in [
-      mt7922-firmware-uncompressed
-      pkgs.linux-firmware
-    ];
-
     # GPG Smartcards
     gpgSmartcards.enable = true;
 
