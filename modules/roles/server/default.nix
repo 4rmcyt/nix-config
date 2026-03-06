@@ -22,6 +22,13 @@
           PermitRootLogin = lib.mkDefault "no";
           X11Forwarding = lib.mkDefault false;
           UseDNS = false;
+          # Faster connection multiplexing
+          GSSAPIAuthentication = false;
+          # Keep idle connections alive
+          ClientAliveInterval = 60;
+          ClientAliveCountMax = 3;
+          # Limit auth attempts
+          MaxAuthTries = 3;
         };
       };
 

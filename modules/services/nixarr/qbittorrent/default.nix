@@ -42,12 +42,25 @@
             DiskCacheSize = 3072;
             DiskCacheTTL = 60;
             UseOSCache = false;
+            # Always announce to all trackers/tiers (important for private trackers)
+            AnnounceToAllTrackers = true;
+            AnnounceToAllTiers = true;
+            # Reannounce on IP/port change
+            ReannounceWhenAddressChanged = true;
+            # Async IO threads for ZFS (more threads = better with ZFS ARC)
+            AsyncIOThreads = 10;
+            # Faster piece verification
+            HashingThreads = 2;
           };
         };
         Connection = {
           PortRangeMin = 63998;
           GlobalDLSpeedLimit = 0;
           GlobalUPSpeedLimit = 0;
+          GlobalMaxConnections = 500;
+          GlobalMaxUploads = 50;
+          MaxConnections = 100;
+          MaxUploads = 8;
         };
         WebUI = {
           # Bypass authentication from localhost
