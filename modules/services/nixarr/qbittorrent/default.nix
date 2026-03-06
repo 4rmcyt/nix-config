@@ -39,6 +39,9 @@
             UPnP = false;
             GlobalDLSpeedLimit = -1;
             GlobalUPSpeedLimit = -1;
+            DiskCacheSize = 3072;
+            DiskCacheTTL = 60;
+            UseOSCache = false;
           };
         };
         Connection = {
