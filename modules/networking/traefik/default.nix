@@ -263,7 +263,7 @@ in {
 
           services = {
             # Nixarr
-            sonarr.loadBalancer.servers = [{url = "http://localhost:8989";}];
+            sonarr.loadBalancer.servers = [{url = "http://localhost:8990";}];
             radarr.loadBalancer.servers = [{url = "http://localhost:7878";}];
             prowlarr.loadBalancer.servers = [{url = "http://localhost:9696";}];
             bazarr.loadBalancer.servers = [{url = "http://localhost:6767";}];

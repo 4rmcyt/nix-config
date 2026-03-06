@@ -117,7 +117,7 @@ in {
     8686 # Lidarr
     9696 # Prowlarr
     7878 # Radarr
-    8989 # Sonarr
+    8990 # Sonarr
     8787 # Readarr
     5055 # Jellyseerr
   ];
@@ -157,7 +157,10 @@ in {
     lidarr.enable = true;
     prowlarr.enable = true;
     radarr.enable = true;
-    sonarr.enable = true;
+    sonarr = {
+      enable = true;
+      port = 8990;
+    };
     readarr.enable = true;
     recyclarr = {
       enable = true;

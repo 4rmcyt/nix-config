@@ -4,7 +4,7 @@
     ./home-assistant
     # ./paperless
     # ./radicale
-    ./tdarr
+    ./media-cleaner
     # ./vaultwarden
     ./homepage
     ./kavita

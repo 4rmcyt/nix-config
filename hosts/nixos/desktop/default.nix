@@ -38,7 +38,6 @@
     ../../../modules/GUI/flatpak/hyprland
     ../../../modules/GUI/virt-manager
     ../../../modules/xdg
-    ../../../modules/services/tdarr-node
   ];
 
   # =================================================================
