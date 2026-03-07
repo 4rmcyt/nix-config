@@ -5,37 +5,17 @@
   modulesPath,
   ...
 }: let
-  # Find the latest ZFS-compatible kernel
-  # Prefer Zen kernel if available, otherwise use latest compatible kernel
-  zfsCompatibleKernelPackages =
-    lib.filterAttrs (
-      name: kernelPackages:
-        (builtins.match "linux_(zen|[0-9]+_[0-9]+)" name)
-        != null
-        && (builtins.tryEval kernelPackages).success
-        && kernelPackages ? ${config.boot.zfs.package.kernelModuleAttribute}
-        && !(kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken or true)
+  zfsCompatibleKernelPackages = lib.filterAttrs (
+    name: kernelPackages:
+      (builtins.match "linux_(xanmod_latest|[0-9]+_[0-9]+)" name) != null
+      && (builtins.tryEval kernelPackages).success
+      && (!kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
+  ) pkgs.linuxKernel.packages;
+  latestKernelPackage = lib.last (
+    lib.sort (a: b: lib.versionOlder a.kernel.version b.kernel.version) (
+      builtins.attrValues zfsCompatibleKernelPackages
     )
-    pkgs.linuxKernel.packages;
-
-  # Sort and get the latest compatible kernel, preferring Zen
-  latestKernelPackage = let
-    zenKernel = lib.attrByPath ["linux_zen"] null pkgs.linuxKernel.packages;
-    zenCompatible =
-      zenKernel
-      != null
-      && (builtins.tryEval zenKernel).success
-      && zenKernel ? ${config.boot.zfs.package.kernelModuleAttribute}
-      && !(zenKernel.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken or true);
-  in
-    if zenCompatible
-    then zenKernel
-    else
-      lib.last (
-        lib.sort (a: b: (lib.versionOlder a.kernel.version b.kernel.version)) (
-          builtins.attrValues zfsCompatibleKernelPackages
-        )
-      );
+  );
 in {
   # =================================================================
   # 1. Imports
