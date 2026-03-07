@@ -29,7 +29,7 @@
   home.packages = with pkgs; [
     glib
     wayland
-    cosmic-store
+    gnome-software
 
     # Clipboard Management (DMS Integration)
     cliphist
