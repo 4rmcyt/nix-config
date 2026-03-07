@@ -228,10 +228,6 @@ in {
 
     # Firmware
     enableRedistributableFirmware = lib.mkDefault true;
-    # Explicitly include uncompressed linux-firmware: the zen kernel has
-    # CONFIG_FW_LOADER_COMPRESS_ZSTD=y but the MT7922 driver fails to find
-    # .bin.zst at load time. The uncompressed variant resolves this.
-    firmware = [pkgs.linux-firmware];
 
     # GPG Smartcards
     gpgSmartcards.enable = true;
@@ -585,4 +581,19 @@ in {
   # 9. Platform Configuration
   # =================================================================
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+
+  # =================================================================
+  # 10. Activation Scripts
+  # =================================================================
+  # MT7922 firmware: zen kernel has CONFIG_FW_LOADER_COMPRESS_ZSTD=y but
+  # does not fall back to .bin.zst when .bin is missing. Decompress on activation.
+  system.activationScripts.mt7922-firmware = ''
+    mkdir -p /lib/firmware/mediatek
+    fw=/run/current-system/firmware/mediatek
+    for f in WIFI_RAM_CODE_MT7922_1 WIFI_MT7922_patch_mcu_1_1_hdr BT_RAM_CODE_MT7922_1_1_hdr; do
+      if [ ! -f /lib/firmware/mediatek/$f.bin ]; then
+        ${pkgs.zstd}/bin/zstd -d $fw/$f.bin.zst -o /lib/firmware/mediatek/$f.bin
+      fi
+    done
+  '';
 }
