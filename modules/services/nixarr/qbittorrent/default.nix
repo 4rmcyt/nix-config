@@ -67,6 +67,16 @@
           LocalHostAuth = false;
         };
       };
+      Network = {
+        Proxy = {
+          Type = "None";
+          Profiles = {
+            BitTorrent = false;
+            Misc = false;
+            RSS = false;
+          };
+        };
+      };
     };
   };
 
