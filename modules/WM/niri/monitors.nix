@@ -11,7 +11,7 @@ _: {
         x = 0;
         y = 0;
       };
-      variable-refresh-rate = true;
+      variable-refresh-rate = false;
     };
     "DP-5" = {
       mode = {
@@ -24,7 +24,7 @@ _: {
         x = 1920;
         y = 0;
       };
-      variable-refresh-rate = true;
+      variable-refresh-rate = false;
     };
   };
 }
