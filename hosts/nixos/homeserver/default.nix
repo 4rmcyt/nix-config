@@ -117,7 +117,6 @@
     wireguard-tools
 
     # Build & deployment tools
-    prometheus-cloudflare-exporter
     betula
 
     # Lix tooling
