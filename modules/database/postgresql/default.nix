@@ -180,7 +180,7 @@ in {
       # Require password authentication for network connections (both IPv4 and IPv6)
       host  all all 127.0.0.1/32 scram-sha-256
       host  all all ::1/128      scram-sha-256
-      host  all all ${config.virtualisation.podman.defaultNetwork.settings.subnet} scram-sha-256
+      host  all all 10.88.0.0/16 scram-sha-256
     '';
   };
 
