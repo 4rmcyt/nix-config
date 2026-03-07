@@ -198,7 +198,7 @@
     text = ''
       set -euo pipefail
       DIR="$1"
-      LOCK="/run/lock/media-cleaner-scan-$(systemd-escape "$DIR").lock"
+      LOCK="/tmp/media-cleaner-scan-$(systemd-escape "$DIR").lock"
       exec 9>"$LOCK"
       if ! flock -n 9; then
         echo "media-cleaner-scan: already running for $DIR, skipping"

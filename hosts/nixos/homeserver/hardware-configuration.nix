@@ -104,11 +104,14 @@ in {
     zfs = {
       devNodes = "/dev/disk/by-id/";
       forceImportAll = true;
-      extraPools = [
-        "zdata"
-        "zbackup"
-      ];
+      extraPools = ["zdata"];
     };
+
+    # Import zbackup post-boot so a missing/broken SSD never blocks startup
+    postBootCommands = ''
+      ${pkgs.zfs}/bin/zpool import -N -d /dev/disk/by-id zbackup 2>/dev/null || true
+      ${pkgs.zfs}/bin/zfs mount zbackup/backup 2>/dev/null || true
+    '';
 
     extraModprobeConfig = ''
       # Intel iGPU GuC/HuC firmware
