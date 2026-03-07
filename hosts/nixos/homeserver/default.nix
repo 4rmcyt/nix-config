@@ -188,7 +188,6 @@
         9090 # Prometheus
         9100 # Node Exporter
         # 8000  # TP-Link Exporter
-        # 9948  # Nextdns Exporter
         27196 # Cloudflare Exporter
         # Database & Infrastructure
         9091
