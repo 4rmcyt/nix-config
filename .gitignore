@@ -4,7 +4,10 @@ core
 core.*
 .vscode
 .idea
-.claude
+.claude/*
+!.claude/memory/
+!.claude/CLAUDE.md
+!.claude/settings.json
 .flake-inputs
 .mcp.json
 .direnv
