@@ -180,9 +180,6 @@
       enable = true;
       package = pkgs.niri;
     };
-
-    light.enable = true;
-
     nh = {
       clean.enable = true;
       clean.extraArgs = "--keep-since 10d --keep 3";
@@ -310,7 +307,11 @@
       enable = true;
       useRoutingFeatures = "both";
       authKeyFile = config.sops.secrets.tailscale_auth_key.path;
-      extraUpFlags = ["--login-server" "https://head.example.com" "--accept-routes"];
+      extraUpFlags = [
+        "--login-server"
+        "https://head.example.com"
+        "--accept-routes"
+      ];
     };
   };
 
