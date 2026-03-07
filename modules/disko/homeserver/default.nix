@@ -60,7 +60,7 @@
               size = "100%";
               content = {
                 type = "zfs";
-                pool = "zbackup";
+                pool = "zroot";
               };
             };
           };
@@ -180,31 +180,6 @@
             options."com.sun:auto-snapshot" = "false";
             options.sync = "disabled";
             mountpoint = "/data";
-          };
-        };
-      };
-
-      zbackup = {
-        type = "zpool";
-        rootFsOptions = {
-          canmount = "off";
-          checksum = "edonr";
-          compression = "zstd";
-          dnodesize = "auto";
-          mountpoint = "none";
-          normalization = "formD";
-          relatime = "on";
-          "com.sun:auto-snapshot" = "false";
-        };
-        options = {
-          ashift = "12";
-          autotrim = "off";
-        };
-        datasets = {
-          "data" = {
-            type = "zfs_fs";
-            options."com.sun:auto-snapshot" = "false";
-            mountpoint = "/backup";
           };
         };
       };
