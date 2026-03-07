@@ -466,7 +466,6 @@ in {
   # =================================================================
   environment.systemPackages = with pkgs; [
     # Audio & Multimedia
-    helvum
     pavucontrol
     pamixer
     bluez
