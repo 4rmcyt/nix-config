@@ -198,7 +198,7 @@
     text = ''
       set -euo pipefail
       DIR="$1"
-      LOCK="/tmp/media-cleaner-scan-$(systemd-escape "$DIR").lock"
+      LOCK="''${XDG_RUNTIME_DIR:-/tmp}/media-cleaner-scan-$(systemd-escape "$DIR").lock"
       exec 9>"$LOCK"
       if ! flock -n 9; then
         echo "media-cleaner-scan: already running for $DIR, skipping"
@@ -318,6 +318,8 @@ in {
         Nice = 19;
         IOSchedulingClass = "idle";
         IOSchedulingPriority = 7;
+        RuntimeDirectory = "media-cleaner";
+        Environment = "XDG_RUNTIME_DIR=/run/media-cleaner";
       };
     };
 
@@ -335,6 +337,8 @@ in {
         Nice = 19;
         IOSchedulingClass = "idle";
         IOSchedulingPriority = 7;
+        RuntimeDirectory = "media-cleaner";
+        Environment = "XDG_RUNTIME_DIR=/run/media-cleaner";
       };
     };
   };
