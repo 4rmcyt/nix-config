@@ -86,7 +86,7 @@ in {
       description = "Periodically scan music dir for APE files";
       wantedBy = ["timers.target"];
       timerConfig = {
-        OnBootSec = "2min";
+        OnBootSec = "30s";
         OnUnitActiveSec = "5min";
         Unit = "ape-converter.service";
       };
@@ -94,7 +94,8 @@ in {
 
     systemd.services.ape-converter = {
       description = "Convert APE files to FLAC in music library";
-      after = ["local-fs.target"];
+      after = ["local-fs.target" "data.mount"];
+      requires = ["data.mount"];
       serviceConfig = {
         Type = "oneshot";
         User = config.my.defaults.user;
