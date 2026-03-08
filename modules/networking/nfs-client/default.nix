@@ -11,6 +11,8 @@ _: {
       "x-systemd.idle-timeout=600"
       "x-systemd.mount-timeout=10"
       "x-systemd.requires=network-online.target"
+      "x-gvfs-show"
+      "x-gvfs-name=Media"
     ];
   };
 }
