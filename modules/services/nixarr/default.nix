@@ -5,7 +5,7 @@
 }: let
   servicesWithMediaAccess = [
     "bazarr"
-
+    "jellyseerr"
     "lidarr"
     "prowlarr"
     "radarr"
@@ -34,6 +34,15 @@ in {
     bazarr = {
       isSystemUser = true;
       group = lib.mkForce "bazarr";
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    };
+
+    jellyseerr = {
+      isSystemUser = true;
+      group = lib.mkForce "jellyseerr";
       extraGroups = [
         "users"
         "media"
@@ -92,7 +101,7 @@ in {
   users.groups = {
     audiobookshelf = {};
     bazarr = {};
-
+    jellyseerr = {};
     lidarr = {};
     prowlarr = {};
     radarr = {};
@@ -143,6 +152,7 @@ in {
     stateDir = "/data/media/.state/nixarr";
 
     audiobookshelf.enable = true;
+    jellyseerr.enable = true;
 
     jellyfin.enable = false;
     bazarr.enable = true;
@@ -206,6 +216,9 @@ in {
     "d /data/media/.state/nixarr/jellyfin/config 755 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/cache 775 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyfin/log 775 jellyfin jellyfin -"
+    "d /data/media/.state/nixarr/jellyseerr 775 jellyseerr jellyseerr -"
+    "d /data/media/.state/nixarr/jellyseerr/db 775 jellyseerr jellyseerr -"
+    "d /data/media/.state/nixarr/jellyseerr/logs 775 jellyseerr jellyseerr -"
 
     "d /data/media/.state/nixarr/audiobookshelf/metadata 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/audiobookshelf/config 775 audiobookshelf audiobookshelf -"
