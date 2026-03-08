@@ -36,6 +36,7 @@ in {
     libheif
     libheif.out
     localsearch
+    code-nautilus
   ];
 
   environment.pathsToLink = ["/share/thumbnailers"];
