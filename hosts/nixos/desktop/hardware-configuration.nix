@@ -82,6 +82,9 @@ in {
     extraModprobeConfig = ''
       # Enable v4l2loopback for virtual camera
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
+      # MT7922: disable CLC feature broken in linux-firmware >= 20250917
+      # https://github.com/NixOS/nixpkgs/issues/444538
+      options mt7921_common disable_clc=1
     '';
 
     supportedFilesystems = ["zfs"];
@@ -563,19 +566,4 @@ in {
   # 9. Platform Configuration
   # =================================================================
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-
-  # =================================================================
-  # 10. Activation Scripts
-  # =================================================================
-  # MT7922 firmware: zen kernel has CONFIG_FW_LOADER_COMPRESS_ZSTD=y but
-  # does not fall back to .bin.zst when .bin is missing. Decompress on activation.
-  system.activationScripts.mt7922-firmware = ''
-    mkdir -p /lib/firmware/mediatek
-    fw=/run/current-system/firmware/mediatek
-    for f in WIFI_RAM_CODE_MT7922_1 WIFI_MT7922_patch_mcu_1_1_hdr BT_RAM_CODE_MT7922_1_1_hdr; do
-      if [ ! -f /lib/firmware/mediatek/$f.bin ]; then
-        ${pkgs.zstd}/bin/zstd -d $fw/$f.bin.zst -o /lib/firmware/mediatek/$f.bin
-      fi
-    done
-  '';
 }
