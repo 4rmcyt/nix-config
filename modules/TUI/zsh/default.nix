@@ -28,15 +28,8 @@
 
     enable = true;
 
-    # Skip compaudit and only rebuild completion cache once per day
-    completionInit = ''
-      autoload -Uz compinit
-      if [[ -n "''${ZDOTDIR:-$HOME}/.zcompdump"(#qN.mh+20) ]]; then
-        compinit
-      else
-        compinit -C
-      fi
-    '';
+    # Skip compaudit — completions are Nix-managed, always safe
+    completionInit = "autoload -Uz compinit && compinit -C";
 
     # p10k instant prompt must be first — before any output
     initContent = lib.mkMerge [
