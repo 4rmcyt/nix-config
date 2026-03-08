@@ -33,12 +33,18 @@
       if [[ -n "$CUE" ]]; then
         echo "ape-converter: splitting $FILE with cue sheet $CUE"
 
-        # shnsplit outputs split.flac files named by track number+title from the cue
-        # Use a temp subdir to avoid collisions, then move results up
         TMPDIR=$(mktemp -d "$DIR/.shnsplit-XXXXXX")
         trap 'rm -rf "$TMPDIR"' EXIT
 
-        if shnsplit -f "$CUE" -o flac -d "$TMPDIR" "$FILE"; then
+        # Decode APE → WAV first (shnsplit can't use ffmpeg as APE decoder directly)
+        WAV="$TMPDIR/decoded.wav"
+        echo "ape-converter: decoding APE to WAV..."
+        ffmpeg -i "$FILE" -c:a pcm_s16le -y "$WAV" 2>&1
+
+        # Split WAV by cue sheet into individual FLACs
+        if shnsplit -f "$CUE" -o flac -d "$TMPDIR" "$WAV"; then
+          rm "$WAV"
+
           # Tag each split track with metadata from the cue sheet
           cuetag "$CUE" "$TMPDIR"/*.flac
 
