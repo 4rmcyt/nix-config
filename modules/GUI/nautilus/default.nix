@@ -25,8 +25,9 @@ in {
 
   # Give gvfsd-nfs cap_net_bind_service so it can connect to NFS servers
   # that don't have the `insecure` export flag (gvfsd-nfs uses unprivileged ports).
+  # Source must point to original pkgs.gvfs binary (gvfsPkg replaced it with a symlink).
   security.wrappers.gvfsd-nfs = {
-    source = "${gvfsPkg}/libexec/gvfsd-nfs";
+    source = "${pkgs.gvfs}/libexec/gvfsd-nfs";
     owner = "nobody";
     group = "nogroup";
     capabilities = "cap_net_bind_service+ep";
