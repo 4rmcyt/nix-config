@@ -41,6 +41,7 @@
       tailspin
       gomi
       jq
+      sqlite
       taplo
       nix-output-monitor
       nvd
