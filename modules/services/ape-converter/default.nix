@@ -74,11 +74,15 @@ in {
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [convertScript scanScript];
 
-    systemd.paths.ape-converter = {
-      description = "Watch music dir for APE files";
-      wantedBy = ["multi-user.target"];
-      pathConfig = {
-        PathChanged = cfg.musicDir;
+    # Timer triggers a scan every 5 minutes.
+    # Path units only watch immediate directory entries, not recursive subdirs,
+    # so a timer is used instead for music libraries with artist/album/ structure.
+    systemd.timers.ape-converter = {
+      description = "Periodically scan music dir for APE files";
+      wantedBy = ["timers.target"];
+      timerConfig = {
+        OnBootSec = "2min";
+        OnUnitActiveSec = "5min";
         Unit = "ape-converter.service";
       };
     };
