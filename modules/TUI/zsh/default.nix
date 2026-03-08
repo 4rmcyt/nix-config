@@ -18,8 +18,7 @@
       plugins = [
         "Aloxaf/fzf-tab"
         "MichaelAquilina/zsh-you-should-use"
-        "ohmyzsh/ohmyzsh path:plugins/direnv"
-        "ohmyzsh/ohmyzsh path:plugins/docker"
+        "getantidote/use-omz"
         "ohmyzsh/ohmyzsh path:plugins/git"
         "ohmyzsh/ohmyzsh path:plugins/safe-paste"
         "ohmyzsh/ohmyzsh path:plugins/sudo"
