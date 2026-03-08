@@ -30,6 +30,7 @@ in {
   };
 
   services.gnome.sushi.enable = true;
+  services.udisks2.enable = true;
 
   programs.dconf.profiles.user.databases = [
     {
@@ -42,7 +43,11 @@ in {
   environment.systemPackages = with pkgs; [
     nautilus
     gnome-autoar
+    libheif
+    libheif.out
   ];
+
+  environment.pathsToLink = ["/share/thumbnailers"];
 
   home-manager.users.${config.my.defaults.user}.xdg.configFile."gtk-3.0/bookmarks".text = ''
     nfs://homeserver:/data/media Media
