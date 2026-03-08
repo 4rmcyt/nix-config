@@ -172,7 +172,7 @@ in {
 
   systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
     serviceConfig = {
-      UMask = "0002";
+      UMask = lib.mkDefault "0002";
       BindPaths = [
         "/data/Downloads"
         "/data/media"
