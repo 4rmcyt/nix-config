@@ -18,8 +18,6 @@
       plugins = [
         "Aloxaf/fzf-tab"
         "MichaelAquilina/zsh-you-should-use"
-        "ohmyzsh/ohmyzsh path:plugins/safe-paste"
-        "ohmyzsh/ohmyzsh path:plugins/sudo"
         "romkatv/powerlevel10k"
         "zdharma-continuum/fast-syntax-highlighting"
         "zsh-users/zsh-autosuggestions"
@@ -55,6 +53,35 @@
         bindkey '\e[H' beginning-of-line
         bindkey '\e[F' end-of-line
         bindkey '\e[1~' beginning-of-line
+
+        # safe-paste: bracketed paste (zsh >= 5.1 built-in)
+        set zle_bracketed_paste
+        autoload -Uz bracketed-paste-magic
+        zle -N bracketed-paste bracketed-paste-magic
+
+        # sudo: Esc-Esc to prepend sudo
+        __sudo-replace-buffer() {
+          local old=$1 new=$2 space=''${2:+ }
+          if [[ $CURSOR -le ''${#old} ]]; then
+            BUFFER="''${new}''${space}''${BUFFER#$old }"
+            CURSOR=''${#new}
+          else
+            LBUFFER="''${new}''${space}''${LBUFFER#$old }"
+          fi
+        }
+        sudo-command-line() {
+          [[ -z $BUFFER ]] && LBUFFER="$(fc -ln -1)"
+          local WHITESPACE=""
+          if [[ ''${LBUFFER:0:1} = " " ]]; then WHITESPACE=" "; LBUFFER="''${LBUFFER:1}"; fi
+          case "$BUFFER" in
+            sudo\ *) __sudo-replace-buffer "sudo" "" ;;
+            *) LBUFFER="sudo $LBUFFER" ;;
+          esac
+          LBUFFER="''${WHITESPACE}''${LBUFFER}"
+          zle && zle redisplay
+        }
+        zle -N sudo-command-line
+        bindkey '\e\e' sudo-command-line
 
         zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
         zstyle ':completion:*' menu no
