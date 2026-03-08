@@ -105,9 +105,9 @@ in {
     bazarr_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "bazarr_db_password";
-      owner = config.users.users.bazarr.name;
+      owner = config.users.users.postgres.name;
       group = config.users.groups.bazarr.name;
-      mode = "0400";
+      mode = "0440";
     };
   };
 
