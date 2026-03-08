@@ -1,4 +1,4 @@
-{...}: {
+_: {
   services.rpcbind.enable = true;
 
   fileSystems."/mnt/media" = {
