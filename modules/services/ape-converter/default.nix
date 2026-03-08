@@ -8,7 +8,7 @@
 
   convertScript = pkgs.writeShellApplication {
     name = "ape-converter";
-    runtimeInputs = with pkgs; [ffmpeg-headless shntool cuetools coreutils util-linux];
+    runtimeInputs = with pkgs; [ffmpeg-headless flac shntool cuetools coreutils util-linux];
     text = ''
       set -euo pipefail
 
