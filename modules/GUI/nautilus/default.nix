@@ -11,10 +11,17 @@
   services.gnome.sushi.enable = true;
   services.gvfs = {
     enable = true;
-    package = pkgs.gvfs;
+    # Patch nfs.mount to use the capability wrapper so gvfsd-nfs can bind privileged ports
+    package = pkgs.gvfs.overrideAttrs (old: {
+      postInstall =
+        (old.postInstall or "")
+        + ''
+          substituteInPlace $out/share/gvfs/mounts/nfs.mount \
+            --replace-fail "${pkgs.gvfs}/libexec/gvfsd-nfs" "/run/wrappers/bin/gvfsd-nfs"
+        '';
+    });
   };
 
-  # gvfsd-nfs needs cap_net_bind_service to bind to privileged NFS ports
   security.wrappers.gvfsd-nfs = {
     source = "${pkgs.gvfs}/libexec/gvfsd-nfs";
     capabilities = "cap_net_bind_service=+ep";
