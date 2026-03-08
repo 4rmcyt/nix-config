@@ -33,7 +33,18 @@
 
     enable = true;
 
+    # Must run before anything else — p10k instant prompt requires this at the very top
+    initExtraFirst = ''
+      skip_global_compinit=1
+      if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+        source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+      fi
+    '';
+
     initContent = ''
+      # Skip compaudit security check — completions are Nix-managed, always safe
+      autoload -Uz compinit && compinit -C
+
       bindkey '^f' autosuggest-accept
       bindkey '^p' history-search-backward
       bindkey '^n' history-search-forward
