@@ -3,7 +3,7 @@ _: {
   boot.supportedFilesystems = ["nfs"];
 
   fileSystems."/mnt/media" = {
-    device = "homeserver:/data/media";
+    device = "homeserver:/data";
     fsType = "nfs";
     options = [
       "nfsvers=4.2"
