@@ -86,8 +86,8 @@ in {
       description = "Periodically scan music dir for APE files";
       wantedBy = ["timers.target"];
       timerConfig = {
-        OnBootSec = "30s";
-        OnUnitActiveSec = "5min";
+        OnCalendar = "*:0/5"; # every 5 minutes
+        Persistent = true;    # catch up if the system was down, but won't fire on switch
         Unit = "ape-converter.service";
       };
     };
