@@ -1,4 +1,4 @@
-{pkgs, config, ...}: let
+{pkgs, ...}: let
   nautilusPkg = pkgs.nautilus.overrideAttrs (old: {
     buildInputs =
       old.buildInputs
@@ -36,7 +36,4 @@ in {
 
   environment.pathsToLink = ["/share/thumbnailers"];
 
-  home-manager.users.${config.my.defaults.user}.xdg.configFile."gtk-3.0/bookmarks".text = ''
-    file:///mnt/media Media
-  '';
 }

@@ -2,7 +2,7 @@ _: {
   services.rpcbind.enable = true;
 
   fileSystems."/mnt/media" = {
-    device = "homeserver:/";
+    device = "homeserver:/data/media";
     fsType = "nfs";
     options = [
       "vers=4.2"
