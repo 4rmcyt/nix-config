@@ -8,7 +8,7 @@
 
   convertScript = pkgs.writeShellApplication {
     name = "ape-converter";
-    runtimeInputs = with pkgs; [ffmpeg-headless coreutils util-linux];
+    runtimeInputs = with pkgs; [ffmpeg-headless shntool cuetools coreutils util-linux];
     text = ''
       set -euo pipefail
 
@@ -25,17 +25,46 @@
         exit 0
       fi
 
-      DEST="''${FILE%.ape}.flac"
+      DIR=$(dirname "$FILE")
 
-      echo "ape-converter: converting $FILE → $DEST"
+      # Look for a .cue file in the same directory
+      CUE=$(find "$DIR" -maxdepth 1 -name "*.cue" | head -1)
 
-      if ffmpeg -i "$FILE" -c:a flac -y "$DEST" 2>&1; then
-        rm "$FILE"
-        echo "ape-converter: done, removed original $FILE"
+      if [[ -n "$CUE" ]]; then
+        echo "ape-converter: splitting $FILE with cue sheet $CUE"
+
+        # shnsplit outputs split.flac files named by track number+title from the cue
+        # Use a temp subdir to avoid collisions, then move results up
+        TMPDIR=$(mktemp -d "$DIR/.shnsplit-XXXXXX")
+        trap 'rm -rf "$TMPDIR"' EXIT
+
+        if shnsplit -f "$CUE" -o flac -d "$TMPDIR" "$FILE"; then
+          # Tag each split track with metadata from the cue sheet
+          cuetag "$CUE" "$TMPDIR"/*.flac
+
+          # Move completed FLACs into the album directory
+          mv "$TMPDIR"/*.flac "$DIR/"
+
+          # Remove originals
+          rm "$FILE"
+          echo "ape-converter: done splitting, removed $FILE"
+        else
+          echo "ape-converter: ERROR: shnsplit failed for $FILE" >&2
+          exit 1
+        fi
       else
-        rm -f "$DEST"
-        echo "ape-converter: ERROR: ffmpeg failed for $FILE" >&2
-        exit 1
+        # No cue sheet — convert whole file to single FLAC
+        DEST="''${FILE%.ape}.flac"
+        echo "ape-converter: converting $FILE → $DEST (no cue sheet)"
+
+        if ffmpeg -i "$FILE" -c:a flac -y "$DEST" 2>&1; then
+          rm "$FILE"
+          echo "ape-converter: done, removed original $FILE"
+        else
+          rm -f "$DEST"
+          echo "ape-converter: ERROR: ffmpeg failed for $FILE" >&2
+          exit 1
+        fi
       fi
     '';
   };
