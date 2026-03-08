@@ -42,7 +42,7 @@
         ffmpeg -nostdin -i "$FILE" -c:a flac -y "$TMPFLAC" 2>&1
 
         # Split FLAC by cue sheet into individual FLACs
-        if shnsplit -f "$CUE" -o flac -d "$TMPDIR" "$TMPFLAC"; then
+        if shnsplit -f "$CUE" -o flac -d "$TMPDIR" -t "%n - %t" "$TMPFLAC"; then
           rm "$TMPFLAC"
 
           # Tag each split track with metadata from the cue sheet
