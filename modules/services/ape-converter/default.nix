@@ -36,14 +36,14 @@
         TMPDIR=$(mktemp -d "$DIR/.shnsplit-XXXXXX")
         trap 'rm -rf "$TMPDIR"' EXIT
 
-        # Decode APE → WAV first (shnsplit can't use ffmpeg as APE decoder directly)
-        WAV="$TMPDIR/decoded.wav"
-        echo "ape-converter: decoding APE to WAV..."
-        ffmpeg -i "$FILE" -c:a pcm_s16le -y "$WAV" 2>&1
+        # Convert APE → single FLAC first (shnsplit handles FLAC natively, no mac binary needed)
+        TMPFLAC="$TMPDIR/decoded.flac"
+        echo "ape-converter: converting APE to FLAC..."
+        ffmpeg -i "$FILE" -c:a flac -y "$TMPFLAC" 2>&1
 
-        # Split WAV by cue sheet into individual FLACs
-        if shnsplit -f "$CUE" -o flac -d "$TMPDIR" "$WAV"; then
-          rm "$WAV"
+        # Split FLAC by cue sheet into individual FLACs
+        if shnsplit -f "$CUE" -o flac -d "$TMPDIR" "$TMPFLAC"; then
+          rm "$TMPFLAC"
 
           # Tag each split track with metadata from the cue sheet
           cuetag "$CUE" "$TMPDIR"/*.flac
