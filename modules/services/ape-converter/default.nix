@@ -54,9 +54,14 @@
       fi
 
       echo "ape-converter-scan: scanning $DIR"
-      find "$DIR" -type f -name "*.ape" -print0 | while IFS= read -r -d "" FILE; do
+      # Use a temp file to collect paths — avoids pipe subshell issues with set -e
+      # and broken reads caused by the pipe closing when a file is deleted mid-stream.
+      TMPLIST=$(mktemp)
+      trap 'rm -f "$TMPLIST"' EXIT
+      find "$DIR" -type f -name "*.ape" -print0 > "$TMPLIST"
+      while IFS= read -r -d "" FILE; do
         nice -n 19 ape-converter "$FILE" || echo "ape-converter-scan: failed on $FILE, continuing"
-      done
+      done < "$TMPLIST"
       echo "ape-converter-scan: done $DIR"
     '';
   };
