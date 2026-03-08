@@ -9,9 +9,6 @@
   };
 
   services.gnome.sushi.enable = true;
-  services.gvfs.enable = true;
-
-  # gvfs user session daemon — required for trash:/// and nfs:// backends
   systemd.user.services.gvfs-daemon = {
     description = "GVfs daemon";
     wantedBy = ["graphical-session.target"];
