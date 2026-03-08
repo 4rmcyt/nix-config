@@ -18,8 +18,6 @@
       plugins = [
         "Aloxaf/fzf-tab"
         "MichaelAquilina/zsh-you-should-use"
-        "getantidote/use-omz"
-        "ohmyzsh/ohmyzsh path:plugins/git"
         "ohmyzsh/ohmyzsh path:plugins/safe-paste"
         "ohmyzsh/ohmyzsh path:plugins/sudo"
         "romkatv/powerlevel10k"
@@ -86,6 +84,36 @@
       "..." = "cd ../..";
       ll = "ls -la";
       mc = "mc --nosubshell";
+      # git
+      g = "git";
+      ga = "git add";
+      gaa = "git add --all";
+      gapa = "git add --patch";
+      gb = "git branch";
+      gba = "git branch --all";
+      gbd = "git branch --delete";
+      gbD = "git branch --delete --force";
+      gcb = "git checkout -b";
+      gcl = "git clone --recurse-submodules";
+      gcm = "git checkout main";
+      gco = "git checkout";
+      gd = "git diff";
+      gds = "git diff --staged";
+      gl = "git pull";
+      glog = "git log --oneline --decorate --graph";
+      gp = "git push";
+      gpf = "git push --force-with-lease";
+      grb = "git rebase";
+      grba = "git rebase --abort";
+      grbc = "git rebase --continue";
+      grbi = "git rebase --interactive";
+      grh = "git reset";
+      grhh = "git reset --hard";
+      gst = "git status";
+      gsta = "git stash push";
+      gstp = "git stash pop";
+      gsw = "git switch";
+      gswc = "git switch --create";
     };
   };
 }
