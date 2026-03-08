@@ -3,8 +3,8 @@ _: {
     enable = true;
     nproc = 8;
     exports = ''
-      /data/media  192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash,insecure,fsid=0,crossmnt)
-      /data/media  100.64.0.0/10(rw,sync,no_subtree_check,no_root_squash,insecure,fsid=0,crossmnt)
+      /data/media  192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash,insecure)
+      /data/media  100.64.0.0/10(rw,sync,no_subtree_check,no_root_squash,insecure)
     '';
   };
 
