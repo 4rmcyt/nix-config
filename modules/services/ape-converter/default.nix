@@ -39,7 +39,7 @@
         # Convert APE → single FLAC first (shnsplit handles FLAC natively, no mac binary needed)
         TMPFLAC="$TMPDIR/decoded.flac"
         echo "ape-converter: converting APE to FLAC..."
-        ffmpeg -i "$FILE" -c:a flac -y "$TMPFLAC" 2>&1
+        ffmpeg -nostdin -i "$FILE" -c:a flac -y "$TMPFLAC" 2>&1
 
         # Split FLAC by cue sheet into individual FLACs
         if shnsplit -f "$CUE" -o flac -d "$TMPDIR" "$TMPFLAC"; then
@@ -63,7 +63,7 @@
         DEST="''${FILE%.ape}.flac"
         echo "ape-converter: converting $FILE → $DEST (no cue sheet)"
 
-        if ffmpeg -i "$FILE" -c:a flac -y "$DEST" 2>&1; then
+        if ffmpeg -nostdin -i "$FILE" -c:a flac -y "$DEST" 2>&1; then
           rm "$FILE"
           echo "ape-converter: done, removed original $FILE"
         else
