@@ -10,6 +10,8 @@
     extraConfig = ''
       include dank-theme.conf
       include dank-tabs.conf
+      map end scroll_end
+      map home scroll_home
     '';
     settings = {
       term = "xterm-kitty";
