@@ -102,6 +102,7 @@ in {
         Group = "media";
         ExecStart = "${scanScript}/bin/ape-converter-scan ${cfg.musicDir}";
         TimeoutStartSec = "6h";
+        TimeoutStopSec = 5;
         Nice = 19;
         IOWeight = 10;
         CPUWeight = 10;
