@@ -283,6 +283,9 @@
   };
 
   systemd.tmpfiles.rules = [
+    "d /home/zeev/.local/share/Trash 0700 zeev users -"
+    "d /home/zeev/.local/share/Trash/files 0700 zeev users -"
+    "d /home/zeev/.local/share/Trash/info 0700 zeev users -"
     "d /data/zeev/Taildrive 770 davfs2 users -"
   ];
 }

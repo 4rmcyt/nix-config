@@ -8,6 +8,11 @@ _: {
     '';
   };
 
+  # gvfs trash support on NFS: XDG trash spec requires $topdir/.Trash-<uid>
+  systemd.tmpfiles.rules = [
+    "d /data/media/.Trash-1000 0700 zeev users -"
+  ];
+
   networking.firewall = {
     allowedTCPPorts = [2049];
     allowedUDPPorts = [2049];
