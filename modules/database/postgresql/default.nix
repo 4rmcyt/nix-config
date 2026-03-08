@@ -105,8 +105,8 @@ in {
     bazarr_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "bazarr_db_password";
-      owner = config.users.users.postgres.name;
-      group = config.users.groups.postgres.name;
+      owner = config.users.users.bazarr.name;
+      group = config.users.groups.bazarr.name;
       mode = "0400";
     };
   };
@@ -213,6 +213,10 @@ in {
       Group = "postgres";
     };
     script = ''
+      # Refresh collation version to avoid mismatch errors after OS upgrades
+      ${pkgs.postgresql}/bin/psql -c "ALTER DATABASE template1 REFRESH COLLATION VERSION;" || true
+      ${pkgs.postgresql}/bin/psql -c "ALTER DATABASE postgres REFRESH COLLATION VERSION;" || true
+
       # Wait for all secrets to be available
       ${lib.concatMapStringsSep "\n      " (user: ''
           while [ ! -f ${config.sops.secrets.${user.secret}.path} ]; do
