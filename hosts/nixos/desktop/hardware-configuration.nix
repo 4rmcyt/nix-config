@@ -286,6 +286,7 @@ in {
           url = "https://gitlab.com/kernel-firmware/linux-firmware/-/archive/20250808/linux-firmware-20250808.tar.gz";
           sha256 = "1s886j4ynaalr2ljv03dwa3zy6kdxvamlih5wrb0g2yrwpnb0m3i";
         };
+        patches = [];
       };
     })
   ];
