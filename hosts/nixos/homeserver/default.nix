@@ -210,6 +210,8 @@
     sonarrApiKeyFile = config.sops.secrets.sonarr_api_key.path;
   };
 
+  services.ape-converter.enable = true;
+
   # =================================================================
   # 10. Programs
   # =================================================================

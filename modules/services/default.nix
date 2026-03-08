@@ -4,6 +4,7 @@
     ./home-assistant
     # ./paperless
     # ./radicale
+    ./ape-converter
     ./media-cleaner
     # ./vaultwarden
     ./homepage
