@@ -1,8 +1,4 @@
-{
-  lib,
-  pkgs,
-  ...
-}: let
+{pkgs, ...}: let
   nautilusPkg = pkgs.nautilus.overrideAttrs (old: {
     buildInputs =
       old.buildInputs
@@ -11,31 +7,14 @@
         gst-plugins-bad
       ]);
   });
-  gvfsPkg = pkgs.gvfs.overrideAttrs (_old: {
-    postInstall = ''
-      ln -sf /run/wrappers/bin/gvfsd-nfs $out/libexec/gvfsd-nfs
-    '';
-  });
 in {
   programs.nautilus-open-any-terminal = {
     enable = true;
     terminal = "kitty";
   };
 
-  # Give gvfsd-nfs cap_net_bind_service so it can connect to NFS servers
-  # that don't have the `insecure` export flag (gvfsd-nfs uses unprivileged ports).
-  # Source must point to original pkgs.gvfs binary (gvfsPkg replaced it with a symlink).
-  security.wrappers.gvfsd-nfs = {
-    source = "${pkgs.gvfs}/libexec/gvfsd-nfs";
-    owner = "nobody";
-    group = "nogroup";
-    capabilities = "cap_net_bind_service+ep";
-  };
-
-  services.gvfs = {
-    enable = true;
-    package = lib.mkForce gvfsPkg;
-  };
+  # gvfs for trash, MTP, SFTP etc. NFS is handled via fstab automount (nfs-client module).
+  services.gvfs.enable = true;
 
   services.gnome.sushi.enable = true;
   services.udisks2.enable = true;
@@ -56,5 +35,4 @@ in {
   ];
 
   environment.pathsToLink = ["/share/thumbnailers"];
-
 }
