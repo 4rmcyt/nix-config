@@ -35,8 +35,8 @@ in {
     gnome-autoar
     libheif
     libheif.out
+    localsearch
   ];
 
   environment.pathsToLink = ["/share/thumbnailers"];
-
 }
