@@ -13,7 +13,7 @@
   services.qbittorrent = {
     enable = true;
     user = "qbittorrent";
-    group = "qbittorrent";
+    group = "media";
     webuiPort = 8080;
     torrentingPort = 63998;
     openFirewall = true;
