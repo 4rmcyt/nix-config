@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }: {
@@ -36,40 +37,41 @@
     # Skip compaudit — completions are Nix-managed, always safe
     completionInit = "autoload -U compinit && compinit -C";
 
-    # Must run before anything else — p10k instant prompt requires this at the very top
-    initExtraFirst = ''
-      skip_global_compinit=1
-      if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-        source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-      fi
-    '';
+    # p10k instant prompt must be first — before any output
+    initContent = lib.mkMerge [
+      (lib.mkBefore ''
+        skip_global_compinit=1
+        if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
+          source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
+        fi
+      '')
+      ''
+        bindkey '^f' autosuggest-accept
+        bindkey '^p' history-search-backward
+        bindkey '^n' history-search-forward
+        bindkey '^[w' kill-region
 
-    initContent = ''
-      bindkey '^f' autosuggest-accept
-      bindkey '^p' history-search-backward
-      bindkey '^n' history-search-forward
-      bindkey '^[w' kill-region
+        bindkey '^[[A' history-substring-search-up
+        bindkey '^[[B' history-substring-search-down
+        HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
-      bindkey '^[[A' history-substring-search-up
-      bindkey '^[[B' history-substring-search-down
-      HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
+        # Fix Home/End/Delete keys
+        bindkey '\e[H' beginning-of-line
+        bindkey '\e[F' end-of-line
+        bindkey '\e[1~' beginning-of-line
 
-      # Fix Home/End/Delete keys
-      bindkey '\e[H' beginning-of-line
-      bindkey '\e[F' end-of-line
-      bindkey '\e[1~' beginning-of-line
+        zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+        zstyle ':completion:*' menu no
+        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+        zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+        zstyle ':completion:*:*:docker:*' option-stacking yes
+        zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
-      zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-      zstyle ':completion:*' menu no
-      zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-      zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
-      zstyle ':completion:*:*:docker:*' option-stacking yes
-      zstyle ':completion:*:*:docker-*:*' option-stacking yes
-
-      # Disable gitstatus on headless hosts — it fails to initialize and hangs the prompt
-      [[ $HOST == homeserver ]] && typeset -g POWERLEVEL9K_DISABLE_GITSTATUS=true
-      [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-    '';
+        # Disable gitstatus on headless hosts — it fails to initialize and hangs the prompt
+        [[ $HOST == homeserver ]] && typeset -g POWERLEVEL9K_DISABLE_GITSTATUS=true
+        [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+      ''
+    ];
 
     sessionVariables = {
       ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi";
