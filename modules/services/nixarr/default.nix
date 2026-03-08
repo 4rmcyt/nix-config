@@ -170,30 +170,45 @@ in {
     };
   };
 
-  systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
-    serviceConfig = {
-      UMask = lib.mkDefault "0002";
-      BindPaths = [
-        "/data/Downloads"
-        "/data/media"
-        "/data/media/movies"
-        "/data/media/audiobooks"
-        "/data/media/music"
-        "/data/media/shows"
-        "/data/media/books"
-        "/data/media/comics"
-        "/data/media/manga"
-        "/data/media/torrents"
-        "/data/media/usenet"
-        "/data/media/audiobooks"
-        "/data/Downloads/radarr"
-        "/data/Downloads/lidarr"
-        "/data/Downloads/tv-sonarr"
-        "/data/media/.state"
-        # "/data/media/torrents/.incomplete"
-      ];
-    };
-  });
+  systemd.services = lib.mkMerge [
+    (lib.genAttrs servicesWithMediaAccess (_serviceName: {
+      serviceConfig = {
+        UMask = lib.mkDefault "0002";
+        BindPaths = [
+          "/data/Downloads"
+          "/data/media"
+          "/data/media/movies"
+          "/data/media/audiobooks"
+          "/data/media/music"
+          "/data/media/shows"
+          "/data/media/books"
+          "/data/media/comics"
+          "/data/media/manga"
+          "/data/media/torrents"
+          "/data/media/usenet"
+          "/data/media/audiobooks"
+          "/data/Downloads/radarr"
+          "/data/Downloads/lidarr"
+          "/data/Downloads/tv-sonarr"
+          "/data/media/.state"
+          # "/data/media/torrents/.incomplete"
+        ];
+      };
+    }))
+    {
+      bazarr = {
+        after = ["postgresql.service"];
+        requires = ["postgresql.service"];
+        serviceConfig.EnvironmentFile = "/run/bazarr-pg-env";
+        preStart = lib.mkBefore ''
+          printf 'POSTGRES_ENABLED=true\nPOSTGRES_HOST=127.0.0.1\nPOSTGRES_PORT=5432\nPOSTGRES_DATABASE=bazarr\nPOSTGRES_USERNAME=bazarr\nPOSTGRES_PASSWORD=%s\n' \
+            "$(cat ${config.sops.secrets.bazarr_db_password.path} | tr -d '\n\r')" \
+            > /run/bazarr-pg-env
+          chmod 600 /run/bazarr-pg-env
+        '';
+      };
+    }
+  ];
 
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"

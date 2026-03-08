@@ -38,6 +38,10 @@
       name = "lldap";
       secret = "lldap_db_password";
     }
+    {
+      name = "bazarr";
+      secret = "bazarr_db_password";
+    }
   ];
 in {
   # Database secrets configuration
@@ -98,6 +102,13 @@ in {
       group = config.users.groups.postgres.name;
       mode = "0400";
     };
+    bazarr_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "bazarr_db_password";
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.postgres.name;
+      mode = "0400";
+    };
   };
 
   users.users.postgres = {
@@ -124,6 +135,7 @@ in {
       "lldap"
       "atuin"
       "authelia"
+      "bazarr"
     ];
 
     # Automatically create users with DB ownership
@@ -158,6 +170,10 @@ in {
       }
       {
         name = "lldap";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "bazarr";
         ensureDBOwnership = true;
       }
     ];
