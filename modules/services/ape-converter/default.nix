@@ -46,7 +46,7 @@
     text = ''
       set -euo pipefail
       DIR="$1"
-      LOCK="''${XDG_RUNTIME_DIR:-/tmp}/ape-converter-scan-$(systemd-escape "$DIR").lock"
+      LOCK="/run/ape-converter.lock"
       exec 9>"$LOCK"
       if ! flock -n 9; then
         echo "ape-converter-scan: already running for $DIR, skipping"
@@ -87,7 +87,6 @@ in {
       wantedBy = ["timers.target"];
       timerConfig = {
         OnCalendar = "*:0/5"; # every 5 minutes
-        Persistent = true;    # catch up if the system was down, but won't fire on switch
         Unit = "ape-converter.service";
       };
     };
