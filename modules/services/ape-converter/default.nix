@@ -46,7 +46,7 @@
     text = ''
       set -euo pipefail
       DIR="$1"
-      LOCK="/run/ape-converter.lock"
+      LOCK="/run/ape-converter/scan.lock"
       exec 9>"$LOCK"
       if ! flock -n 9; then
         echo "ape-converter-scan: already running for $DIR, skipping"
@@ -108,6 +108,7 @@ in {
         IOSchedulingClass = "idle";
         IOSchedulingPriority = 7;
         RuntimeDirectory = "ape-converter";
+        RuntimeDirectoryPreserve = "yes";
         Environment = "XDG_RUNTIME_DIR=/run/ape-converter";
       };
     };
