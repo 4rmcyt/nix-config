@@ -111,6 +111,7 @@
     lsof
     openssh
     sysstat
+    sqlite
 
     # Network tools
     iproute2

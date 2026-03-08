@@ -172,6 +172,7 @@ in {
 
   systemd.services = lib.genAttrs servicesWithMediaAccess (_serviceName: {
     serviceConfig = {
+      UMask = "0002";
       BindPaths = [
         "/data/Downloads"
         "/data/media"
@@ -196,10 +197,10 @@ in {
 
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
-    "d /data/media/movies 775 zeev media -" # Changed from 770 to 775
+    "d /data/media/movies 2775 zeev media -"
     "d /data/media/audiobooks 775 zeev media -"
     "d /data/media/music 775 zeev media -"
-    "d /data/media/shows 775 zeev media -" # Changed from 770 to 775
+    "d /data/media/shows 2775 zeev media -"
     "d /data/media/books 775 zeev media -"
     "d /data/media/comics 775 zeev media -"
     "d /data/media/manga 775 zeev media -"
@@ -228,8 +229,8 @@ in {
     "d /data/media/.state/nixarr/sonarr 775 sonarr sonarr -"
     "d /data/media/.state/nixarr/bazarr 775 bazarr bazarr -"
     # Add rules to fix ownership of existing directories
-    "Z /data/media/movies 775 zeev media -"
-    "Z /data/media/shows 775 zeev media -"
+    "Z /data/media/movies 2775 zeev media -"
+    "Z /data/media/shows 2775 zeev media -"
     "Z /data/media/music 775 zeev media -"
     "Z /data/media/audiobooks 775 zeev media -"
     "Z /data/media/books 775 zeev media -"
