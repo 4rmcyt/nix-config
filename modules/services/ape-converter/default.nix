@@ -103,10 +103,7 @@ in {
         TimeoutStartSec = "6h";
         TimeoutStopSec = 5;
         Nice = 19;
-        IOWeight = 10;
         CPUWeight = 10;
-        IOSchedulingClass = "idle";
-        IOSchedulingPriority = 7;
         RuntimeDirectory = "ape-converter";
         RuntimeDirectoryPreserve = "yes";
         Environment = "XDG_RUNTIME_DIR=/run/ape-converter";
