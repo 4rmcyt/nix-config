@@ -314,7 +314,6 @@
         "ollama"
         "networkmanager"
         "podman"
-        "samba"
         "wheel"
         "zeev"
       ];

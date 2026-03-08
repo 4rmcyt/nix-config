@@ -82,9 +82,6 @@ in {
     extraModprobeConfig = ''
       # Enable v4l2loopback for virtual camera
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
-      # MT7922: disable CLC feature broken in linux-firmware >= 20250917
-      # https://github.com/NixOS/nixpkgs/issues/444538
-      options mt7921_common disable_clc=1
     '';
 
     supportedFilesystems = ["zfs"];
@@ -277,6 +274,21 @@ in {
   };
 
   nixpkgs.config.cudaSupport = true;
+
+  # MT7922: linux-firmware >= 20250917 breaks mt7921e firmware init (WM Version: ____000000)
+  # Pin to last known-good version 20250808 until upstream fixes the regression.
+  # https://github.com/NixOS/nixpkgs/issues/444538
+  nixpkgs.overlays = [
+    (_final: prev: {
+      linux-firmware = prev.linux-firmware.overrideAttrs {
+        version = "20250808";
+        src = prev.fetchurl {
+          url = "https://gitlab.com/kernel-firmware/linux-firmware/-/archive/20250808/linux-firmware-20250808.tar.gz";
+          sha256 = "1s886j4ynaalr2ljv03dwa3zy6kdxvamlih5wrb0g2yrwpnb0m3i";
+        };
+      };
+    })
+  ];
 
   # =================================================================
   # 6. Hardware Programs

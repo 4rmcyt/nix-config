@@ -14,6 +14,7 @@
     ../../../modules/options
 
     # Networking
+    ../../../modules/networking/nfs-client
     ../../../modules/networking/ssh
     ../../../modules/networking/avahi
 

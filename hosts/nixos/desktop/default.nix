@@ -27,6 +27,7 @@
     # Features and roles
     ../../../modules/gaming
     ../../../modules/networking/dnssec
+    ../../../modules/networking/nfs-client
     ../../../modules/networking/ssh
     ../../../modules/networking/nut-client
     ../../../modules/networking/avahi
