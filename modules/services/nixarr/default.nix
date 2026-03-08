@@ -222,6 +222,7 @@ in {
         requires = ["postgresql.service" "bazarr-pg-env.service"];
         serviceConfig = {
           EnvironmentFile = "/run/bazarr-secrets/pg-env";
+          TimeoutStopSec = 15;
         };
       };
     }
