@@ -31,8 +31,9 @@
       window_padding_width = 10;
       background_opacity = "0.4";
       background_blur = 5;
-      scrollback_lines = 5000;
-      scrollback_pager_history_size = 10;
+      scrollback_lines = 50000;
+      scrollback_pager_history_size = 100;
+      scrollback_pager = "less --chop-long-lines --RAW-CONTROL-CHARS +INPUT_LINE_NUMBER";
       symbol_map = let
         mappings = [
           "U+23FB-U+23FE"
