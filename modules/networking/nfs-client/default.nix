@@ -5,7 +5,6 @@ _: {
     device = "homeserver:/data/media";
     fsType = "nfs";
     options = [
-      "vers=4.2"
       "noauto"
       "x-systemd.automount"
       "x-systemd.idle-timeout=600"

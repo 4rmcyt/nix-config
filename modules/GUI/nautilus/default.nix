@@ -24,6 +24,9 @@ in {
       settings."org/gnome/nautilus/preferences" = {
         show-delete-permanently = true;
       };
+      settings."org/gnome/desktop/search-providers" = {
+        disable-external = true;
+      };
     }
   ];
 
