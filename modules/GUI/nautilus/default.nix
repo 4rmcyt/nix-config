@@ -9,24 +9,17 @@
   };
 
   services.gnome.sushi.enable = true;
-  services.gvfs = {
-    enable = true;
-    # Patch nfs.mount to use the capability wrapper so gvfsd-nfs can bind privileged ports
-    package = pkgs.gvfs.overrideAttrs (old: {
-      postInstall =
-        (old.postInstall or "")
-        + ''
-          substituteInPlace $out/share/gvfs/mounts/nfs.mount \
-            --replace-fail "${pkgs.gvfs}/libexec/gvfsd-nfs" "/run/wrappers/bin/gvfsd-nfs"
-        '';
-    });
-  };
+  services.gvfs.enable = true;
 
-  security.wrappers.gvfsd-nfs = {
-    source = "${pkgs.gvfs}/libexec/gvfsd-nfs";
-    capabilities = "cap_net_bind_service=+ep";
-    owner = "root";
-    group = "root";
+  # gvfs user session daemon — required for trash:/// and nfs:// backends
+  systemd.user.services.gvfs-daemon = {
+    description = "GVfs daemon";
+    wantedBy = ["graphical-session.target"];
+    partOf = ["graphical-session.target"];
+    serviceConfig = {
+      ExecStart = "${pkgs.gvfs}/libexec/gvfsd";
+      Restart = "on-failure";
+    };
   };
 
   programs.dconf.profiles.user.databases = [
