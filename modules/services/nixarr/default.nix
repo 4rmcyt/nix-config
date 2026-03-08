@@ -199,12 +199,15 @@ in {
       bazarr = {
         after = ["postgresql.service"];
         requires = ["postgresql.service"];
-        serviceConfig.EnvironmentFile = "/run/bazarr-pg-env";
+        serviceConfig = {
+          RuntimeDirectory = "bazarr-secrets";
+          EnvironmentFile = "/run/bazarr-secrets/pg-env";
+        };
         preStart = lib.mkBefore ''
           printf 'POSTGRES_ENABLED=true\nPOSTGRES_HOST=127.0.0.1\nPOSTGRES_PORT=5432\nPOSTGRES_DATABASE=bazarr\nPOSTGRES_USERNAME=bazarr\nPOSTGRES_PASSWORD=%s\n' \
             "$(cat ${config.sops.secrets.bazarr_db_password.path} | tr -d '\n\r')" \
-            > /run/bazarr-pg-env
-          chmod 600 /run/bazarr-pg-env
+            > /run/bazarr-secrets/pg-env
+          chmod 600 /run/bazarr-secrets/pg-env
         '';
       };
     }
