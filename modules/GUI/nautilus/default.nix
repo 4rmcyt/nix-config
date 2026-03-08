@@ -4,6 +4,14 @@
   config,
   ...
 }: let
+  nautilusPkg = pkgs.nautilus.overrideAttrs (old: {
+    buildInputs =
+      old.buildInputs
+      ++ (with pkgs.gst_all_1; [
+        gst-plugins-good
+        gst-plugins-bad
+      ]);
+  });
   gvfsPkg = pkgs.gvfs.overrideAttrs (_old: {
     postInstall = ''
       ln -sf /run/wrappers/bin/gvfsd-nfs $out/libexec/gvfsd-nfs
@@ -41,7 +49,7 @@ in {
   ];
 
   environment.systemPackages = with pkgs; [
-    nautilus
+    nautilusPkg
     gnome-autoar
     libheif
     libheif.out
