@@ -28,7 +28,6 @@
     username = "zeev";
 
     packages = with pkgs; [
-      nautilus
       materialgram
       bat
       devenv

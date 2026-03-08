@@ -37,6 +37,7 @@
     ../../../modules/users/zeev
     ../../../modules/GUI/chromium
     ../../../modules/GUI/flatpak/hyprland
+    ../../../modules/GUI/nautilus
     ../../../modules/GUI/virt-manager
     ../../../modules/xdg
   ];
