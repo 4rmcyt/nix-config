@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   users.users.qbittorrent = {
     extraGroups = [
       "users"
@@ -103,6 +104,12 @@
       curl -sSL "https://github.com/Naunter/BT_BlockLists/raw/master/bt_blocklists.gz" | zcat > "$STATE_DIR/ipfilter.p2p"
       chown -R qbittorrent:media "$STATE_DIR"
       chmod 644 "$STATE_DIR/ipfilter.p2p"
+
+      nsenter --net=/run/netns/wg curl -s -X POST "http://localhost:8080/api/v2/app/setPreferences" \
+        --data "json={\"ip_filter_enabled\":false}"
+
+      nsenter --net=/run/netns/wg curl -s -X POST "http://localhost:8080/api/v2/app/setPreferences" \
+        --data "json={\"ip_filter_enabled\":true}"
     '';
     serviceConfig = {
       Type = "oneshot";
@@ -112,12 +119,12 @@
 
   # Override qBittorrent service to run in VPN namespace
   systemd.services.qbittorrent = {
-    after = ["wg.service"];
-    requires = ["wg.service"];
+    after = [ "wg.service" ];
+    requires = [ "wg.service" ];
 
     serviceConfig = {
       # Clear BindPaths from parent nixarr config - they conflict with NetworkNamespacePath
-      BindPaths = lib.mkForce [];
+      BindPaths = lib.mkForce [ ];
 
       # VPN namespace configuration
       NetworkNamespacePath = "/run/netns/wg";
@@ -139,8 +146,8 @@
   # Socket for qBittorrent proxy (allows access from host network on port 8081)
   systemd.sockets.proxy-to-qbittorrent = {
     description = "Socket for qBittorrent proxy";
-    wantedBy = ["sockets.target"];
-    requires = ["qbittorrent.service"];
+    wantedBy = [ "sockets.target" ];
+    requires = [ "qbittorrent.service" ];
     socketConfig = {
       ListenStream = "8081"; # Listen on port 8081 on host
     };
@@ -149,8 +156,8 @@
   # Proxy service to connect to qBittorrent in VPN namespace (on port 8080)
   systemd.services.proxy-to-qbittorrent = {
     description = "Proxy to qBittorrent in VPN namespace";
-    after = ["qbittorrent.service"];
-    requires = ["qbittorrent.service"];
+    after = [ "qbittorrent.service" ];
+    requires = [ "qbittorrent.service" ];
 
     serviceConfig = {
       # Enter VPN namespace and proxy to qBittorrent on port 8080
