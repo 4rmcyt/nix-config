@@ -17,6 +17,7 @@
     webuiPort = 8080;
     torrentingPort = 63998;
     openFirewall = true;
+    dataDir = "/data/media/.state/nixarr/qbittorrent";
 
     serverConfig = {
       Preferences = {
