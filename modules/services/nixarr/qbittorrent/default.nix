@@ -72,12 +72,8 @@
           MaxRatioEnforcement = true;
           MaxRatioAction = 0;
           AddTrackersEnabled = true;
-          AdditionalTrackers = "";
           AddTrackersFromURLEnabled = true;
           AdditionalTrackersURL = "https://newtrackon.com/api/stable";
-        };
-        State = {
-          BannedIPs = "";
         };
       };
       Network = {
