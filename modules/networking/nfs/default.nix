@@ -14,8 +14,8 @@ _: {
   ];
 
   networking.firewall = {
-    allowedTCPPorts = [ 2049 ];
-    allowedUDPPorts = [ 2049 ];
-    interfaces.tailscale0.allowedTCPPorts = [ 2049 ];
+    allowedTCPPorts = [2049];
+    allowedUDPPorts = [2049];
+    interfaces.tailscale0.allowedTCPPorts = [2049];
   };
 }

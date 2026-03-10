@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }: let
   servicesWithMediaAccess = [
@@ -15,6 +16,33 @@
     "audiobookshelf"
     "jellyfin"
   ];
+
+  # Сервисы, запускающие скрипты (нужен доступ к API ключам и PATH)
+  servicesWithScripts = ["bazarr" "lidarr" "radarr" "sonarr"];
+
+  movieCleaner = pkgs.writeShellApplication {
+    name = "movie-cleaner";
+    runtimeInputs = with pkgs; [mkvtoolnix-cli jq curl coreutils];
+    text = builtins.readFile ./scripts/movie-cleaner.sh;
+  };
+
+  showCleaner = pkgs.writeShellApplication {
+    name = "show-cleaner";
+    runtimeInputs = with pkgs; [mkvtoolnix-cli jq curl coreutils];
+    text = builtins.readFile ./scripts/show-cleaner.sh;
+  };
+
+  musicConverter = pkgs.writeShellApplication {
+    name = "music-converter";
+    runtimeInputs = with pkgs; [ffmpeg-headless flac shntool cuetools curl coreutils util-linux];
+    text = builtins.readFile ./scripts/music-converter.sh;
+  };
+
+  bazarrBridge = pkgs.writeShellApplication {
+    name = "bazarr-bridge";
+    runtimeInputs = [movieCleaner showCleaner];
+    text = builtins.readFile ./scripts/bazarr-bridge.sh;
+  };
 in {
   imports = [
     ./upnp-fix.nix
@@ -22,129 +50,65 @@ in {
     ./qbittorrent
   ];
 
-  users.users = {
-    audiobookshelf = {
-      isSystemUser = true;
-      group = lib.mkForce "audiobookshelf";
-      extraGroups = [
-        "users"
-        "media"
-      ];
+  # --- Secrets Configuration ---
+  sops.secrets = {
+    bazarr_db_password = {
+      sopsFile = ../../../secrets/recyclarr.yaml;
+      owner = "bazarr";
     };
-    bazarr = {
-      isSystemUser = true;
-      group = lib.mkForce "bazarr";
-      extraGroups = [
-        "users"
-        "media"
-      ];
+    jellyfin_api_key = {
+      sopsFile = ../../../secrets/recyclarr.yaml;
+      owner = config.my.defaults.user;
+      group = "media";
+      mode = "0440";
     };
-
-    jellyseerr = {
-      isSystemUser = true;
-      group = lib.mkForce "jellyseerr";
-      extraGroups = [
-        "users"
-        "media"
-      ];
-    };
-
-    lidarr = {
-      isSystemUser = true;
-      group = lib.mkForce "lidarr";
-      extraGroups = [
-        "users"
-        "media"
-      ];
-    };
-    prowlarr = {
-      isSystemUser = true;
-      group = lib.mkForce "prowlarr";
-      extraGroups = [
-        "users"
-        "media"
-      ];
-    };
-    radarr = {
-      isSystemUser = true;
-      group = lib.mkForce "radarr";
-      extraGroups = [
-        "users"
-        "media"
-      ];
-    };
-    sonarr = {
-      isSystemUser = true;
-      group = lib.mkForce "sonarr";
-      extraGroups = [
-        "users"
-        "media"
-      ];
-    };
-    readarr = {
-      isSystemUser = true;
-      group = lib.mkForce "readarr";
-      extraGroups = [
-        "users"
-        "media"
-      ];
-    };
-    recyclarr = {
-      isSystemUser = true;
-      group = lib.mkForce "recyclarr";
-      extraGroups = [
-        "users"
-        "media"
-      ];
+    lidarr_api_key = {
+      sopsFile = ../../../secrets/recyclarr.yaml;
+      owner = config.my.defaults.user;
+      group = "media";
+      mode = "0440";
     };
   };
-  users.groups = {
-    audiobookshelf = {};
-    bazarr = {};
-    jellyseerr = {};
-    lidarr = {};
-    prowlarr = {};
-    radarr = {};
-    sonarr = {};
-    readarr = {};
-    recyclarr = {};
-  };
 
-  networking.firewall.allowedTCPPorts = [
-    9292 # Audiobookshelf
-    8096 # Jellyfin
-    8920 # Jellyfin HTTPS
-    6767 # Bazarr
-    8686 # Lidarr
-    9696 # Prowlarr
-    7878 # Radarr
-    8990 # Sonarr
-    8787 # Readarr
-    5055 # Jellyseerr
+  # --- Users and Groups ---
+  users.users =
+    lib.genAttrs [
+      "audiobookshelf"
+      "bazarr"
+      "jellyseerr"
+      "lidarr"
+      "prowlarr"
+      "radarr"
+      "sonarr"
+      "readarr"
+      "recyclarr"
+    ] (name: {
+      isSystemUser = true;
+      group = lib.mkForce name;
+      extraGroups = ["users" "media"];
+    });
+
+  users.groups = lib.genAttrs [
+    "audiobookshelf"
+    "bazarr"
+    "jellyseerr"
+    "lidarr"
+    "prowlarr"
+    "radarr"
+    "sonarr"
+    "readarr"
+    "recyclarr"
+  ] (_: {});
+
+  # --- System Packages ---
+  environment.systemPackages = [
+    movieCleaner
+    showCleaner
+    musicConverter
+    bazarrBridge
   ];
 
-  networking.firewall.allowedUDPPorts = [
-    1900 # Jellyfin DLNA
-    7359 # Jellyfin discovery
-  ];
-
-  # UPnP disabled — all external access goes through Cloudflare tunnels
-  util-nixarr.upnp = {
-    enable = false;
-    openTcpPorts = [
-      # 80    # HTTP - conflicts with existing router mapping
-      # 443   # HTTPS - conflicts with existing router mapping
-      8096 # Jellyfin
-      8920 # Jellyfin HTTPS
-      9292 # Audiobookshelf
-      5055 # Jellyseerr
-    ];
-    openUdpPorts = [
-      1900 # Jellyfin DLNA
-      7359 # Jellyfin discovery
-    ];
-  };
-
+  # --- Nixarr Core ---
   nixarr = {
     enable = true;
     mediaUsers = [config.my.defaults.user];
@@ -153,8 +117,7 @@ in {
 
     audiobookshelf.enable = true;
     jellyseerr.enable = true;
-
-    jellyfin.enable = false;
+    jellyfin.enable = false; # Handled by ./jellyfin
     bazarr.enable = true;
     lidarr.enable = true;
     prowlarr.enable = true;
@@ -170,31 +133,30 @@ in {
     };
   };
 
+  # --- Systemd Services Overrides ---
   systemd.services = lib.mkMerge [
-    (lib.genAttrs servicesWithMediaAccess (_serviceName: {
+    # Глобальные права и маунты для всех
+    (lib.genAttrs servicesWithMediaAccess (_name: {
       serviceConfig = {
         UMask = lib.mkDefault "0002";
         BindPaths = [
           "/data/Downloads"
           "/data/media"
-          "/data/media/movies"
-          "/data/media/audiobooks"
-          "/data/media/music"
-          "/data/media/shows"
-          "/data/media/books"
-          "/data/media/comics"
-          "/data/media/manga"
-          "/data/media/torrents"
-          "/data/media/usenet"
-          "/data/media/audiobooks"
-          "/data/Downloads/radarr"
-          "/data/Downloads/lidarr"
-          "/data/Downloads/tv-sonarr"
           "/data/media/.state"
-          # "/data/media/torrents/.incomplete"
         ];
       };
     }))
+    # Специфичные настройки для сервисов со скриптами
+    (lib.genAttrs servicesWithScripts (_name: {
+      path = [movieCleaner showCleaner musicConverter bazarrBridge];
+      serviceConfig.Environment = [
+        "JF_URL=http://localhost:8096"
+        "JF_API_KEY_FILE=${config.sops.secrets.jellyfin_api_key.path}"
+        "LIDARR_URL=http://localhost:8686"
+        "LIDARR_API_KEY_FILE=${config.sops.secrets.lidarr_api_key.path}"
+      ];
+    }))
+    # Настройка базы данных Bazarr
     {
       bazarr-pg-env = {
         description = "Write Bazarr PostgreSQL environment file";
@@ -217,43 +179,36 @@ in {
           chmod 600 /run/bazarr-secrets/pg-env
         '';
       };
-      bazarr = {
-        after = ["postgresql.service" "bazarr-pg-env.service"];
-        requires = ["postgresql.service" "bazarr-pg-env.service"];
-        serviceConfig = {
-          EnvironmentFile = "/run/bazarr-secrets/pg-env";
-          TimeoutStopSec = 15;
-        };
-      };
+      bazarr.serviceConfig.EnvironmentFile = "/run/bazarr-secrets/pg-env";
     }
   ];
 
+  # --- Filesystem Structure and Permissions ---
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
-    "d /data/media/movies 2775 zeev media -"
-    "d /data/media/audiobooks 775 zeev media -"
-    "d /data/media/music 775 zeev media -"
-    "d /data/media/shows 2775 zeev media -"
-    "d /data/media/books 775 zeev media -"
-    "d /data/media/comics 775 zeev media -"
-    "d /data/media/manga 775 zeev media -"
-    "d /data/media/torrents 775 zeev media -"
-    "d /data/media/usenet 775 zeev media -"
-    "d /data/Downloads 775 zeev users -" # Changed from 770 to 775
+    "d /data/media 775 ${config.my.defaults.user} media -"
+    "d /data/Downloads 775 ${config.my.defaults.user} media -"
 
+    # Root Folders (Separate Downloads from Media)
+    "d /data/media/movies 2775 ${config.my.defaults.user} media -"
+    "d /data/media/shows 2775 ${config.my.defaults.user} media -"
+    "d /data/media/music 775 ${config.my.defaults.user} media -"
+    "d /data/media/audiobooks 775 ${config.my.defaults.user} media -"
+    "d /data/media/books 775 ${config.my.defaults.user} media -"
+    "d /data/media/comics 775 ${config.my.defaults.user} media -"
+    "d /data/media/manga 775 ${config.my.defaults.user} media -"
+
+    # Categories for qBittorrent
+    "d /data/Downloads/tv-sonarr 775 ${config.my.defaults.user} media -"
+    "d /data/Downloads/radarr 775 ${config.my.defaults.user} media -"
+    "d /data/Downloads/lidarr 775 ${config.my.defaults.user} media -"
+    "d /data/Downloads/audiobooks 775 ${config.my.defaults.user} media -"
+
+    # States
     "d /data/media/.state 770 root media -"
     "d /data/media/.state/nixarr 770 root media -"
-
-    "d /data/media/.state/nixarr/audiobookshelf 775 audiobookshelf audiobookshelf -"
-    "d /data/media/.state/nixarr/jellyfin 755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/jellyfin/data 755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/jellyfin/config 755 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/jellyfin/cache 775 jellyfin jellyfin -"
-    "d /data/media/.state/nixarr/jellyfin/log 775 jellyfin jellyfin -"
     "d /data/media/.state/nixarr/jellyseerr 775 jellyseerr jellyseerr -"
-    "d /data/media/.state/nixarr/jellyseerr/db 775 jellyseerr jellyseerr -"
-    "d /data/media/.state/nixarr/jellyseerr/logs 775 jellyseerr jellyseerr -"
-
+    "d /data/media/.state/nixarr/audiobookshelf 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/audiobookshelf/metadata 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/audiobookshelf/config 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/lidarr 775 lidarr lidarr -"
@@ -261,15 +216,19 @@ in {
     "d /data/media/.state/nixarr/radarr 775 radarr radarr -"
     "d /data/media/.state/nixarr/sonarr 775 sonarr sonarr -"
     "d /data/media/.state/nixarr/bazarr 775 bazarr bazarr -"
-    # Add rules to fix ownership of existing directories
-    "Z /data/media/movies 2775 zeev media -"
-    "Z /data/media/shows 2775 zeev media -"
-    "Z /data/media/music 775 zeev media -"
-    "Z /data/media/audiobooks 775 zeev media -"
-    "Z /data/media/books 775 zeev media -"
-    "Z /data/media/comics 775 zeev media -"
-    "Z /data/media/manga 775 zeev media -"
 
-    "d /data/Downloads 775 zeev media -"
+    # Recursive ownership correction
+    "Z /data/media/movies 2775 ${config.my.defaults.user} media -"
+    "Z /data/media/shows 2775 ${config.my.defaults.user} media -"
+    "Z /data/media/music 775 ${config.my.defaults.user} media -"
+    "Z /data/media/audiobooks 775 ${config.my.defaults.user} media -"
+    "Z /data/media/books 775 ${config.my.defaults.user} media -"
+    "Z /data/media/comics 775 ${config.my.defaults.user} media -"
+    "Z /data/media/manga 775 ${config.my.defaults.user} media -"
+    "Z /data/Downloads 775 ${config.my.defaults.user} media -"
   ];
+
+  # --- Firewall ---
+  networking.firewall.allowedTCPPorts = [9292 8096 8920 6767 8686 9696 7878 8990 8787 5055];
+  networking.firewall.allowedUDPPorts = [1900 7359];
 }
