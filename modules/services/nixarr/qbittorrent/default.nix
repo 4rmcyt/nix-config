@@ -34,6 +34,8 @@
           MaxActiveUploads = -1;
         };
         BitTorrent = {
+          MaxRatioEnforcement = true;
+          MaxRatioAction = 0;
           Session = {
             Port = 63998;
             UPnP = false;
@@ -42,14 +44,10 @@
             DiskCacheSize = 1024;
             DiskCacheTTL = 60;
             UseOSCache = false;
-            # Always announce to all trackers/tiers (important for private trackers)
             AnnounceToAllTrackers = true;
             AnnounceToAllTiers = true;
-            # Reannounce on IP/port change
             ReannounceWhenAddressChanged = true;
-            # Async IO threads for ZFS (more threads = better with ZFS ARC)
             AsyncIOThreads = 10;
-            # Faster piece verification
             HashingThreads = 2;
           };
         };
