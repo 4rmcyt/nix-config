@@ -7,9 +7,11 @@ TARGET="${BAZARR_MOVIE_FILEPATH:-${BAZARR_EPISODE_FILEPATH:-${Radarr_Movie_File_
 [[ "${Radarr_EventType:-}" == "Test" || "${Sonarr_EventType:-}" == "Test" ]] && exit 0
 
 JF_KEY=$(cat "$JF_API_KEY_FILE")
+BAZARR_KEY=$(cat "$BAZARR_API_KEY_FILE")
 DIR=$(dirname "$TARGET")
 BASE_NAME=$(basename "$TARGET" .mkv)
 
+# 1. Поиск и вшивание субтитров (Remux)
 TRACK_JSON=$(mkvmerge -J "$TARGET")
 EXT_ARGS=()
 SRTS_TO_DELETE=()
@@ -20,7 +22,7 @@ while IFS= read -r -d "" SRT; do
     en|eng) ISO="eng" ;;
     ru|rus) ISO="rus" ;;
     uk|ukr) ISO="ukr" ;;
-    he|heb) ISO="heb" ;; 
+    he|heb) ISO="heb" ;;
     *) continue ;;
   esac
 
@@ -40,4 +42,12 @@ if [[ ${#EXT_ARGS[@]} -gt 0 ]]; then
     rm -f "$TMP"
     exit 1
   fi
+fi
+
+if [[ -z "${BAZARR_MOVIE_FILEPATH:-}" && -z "${BAZARR_EPISODE_FILEPATH:-}" ]]; then
+  echo "Triggering Bazarr API..."
+  curl -sf -X POST -H "X-Api-Key: $BAZARR_KEY" "$BAZARR_URL/api/system/scan" > /dev/null || true
+  curl -sf -X POST -H "X-Api-Key: $BAZARR_KEY" "$BAZARR_URL/api/subtitles/search/missing" > /dev/null || true
+else
+  echo "Running under Bazarr. Skipping API callback to prevent loops."
 fi

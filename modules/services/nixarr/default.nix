@@ -53,14 +53,23 @@ in {
   # --- Secrets Configuration ---
   sops.secrets = {
     jellyfin_api_key = {
-      sopsFile = ../../../secrets/recyclarr.yaml;
+      sopsFile = ../../../secrets/medialib.yaml;
       owner = config.my.defaults.user;
+      key = "jellyfin_api_key";
       group = "media";
       mode = "0440";
     };
     lidarr_api_key = {
-      sopsFile = ../../../secrets/recyclarr.yaml;
+      sopsFile = ../../../secrets/medialib.yaml;
       owner = config.my.defaults.user;
+      key = "lidarr_api_key";
+      group = "media";
+      mode = "0440";
+    };
+    bazarr_api_key = {
+      sopsFile = ../../../secrets/medialib.yaml;
+      owner = config.my.defaults.user;
+      key = "bazarr_api_key";
       group = "media";
       mode = "0440";
     };
@@ -150,6 +159,8 @@ in {
         "JF_API_KEY_FILE=${config.sops.secrets.jellyfin_api_key.path}"
         "LIDARR_URL=http://localhost:8686"
         "LIDARR_API_KEY_FILE=${config.sops.secrets.lidarr_api_key.path}"
+        "BAZARR_URL=http://localhost:6767"
+        "BAZARR_API_KEY_FILE=${config.sops.secrets.bazarr_api_key.path}"
       ];
     }))
     # Настройка базы данных Bazarr
