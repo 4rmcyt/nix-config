@@ -33,9 +33,16 @@
           MaxActiveTorrents = -1;
           MaxActiveUploads = -1;
         };
+        IPFilter = {
+          Enabled = true;
+          FilterTracker = true;
+          File = "/data/media/.state/nixarr/qbittorrent/ipfilter.p2p";
+        };
         BitTorrent = {
           MaxRatioEnforcement = true;
           MaxRatioAction = 0;
+          AddTrackersFromURLEnabled = true;
+          AddTrackersFromURL = "https://newtrackon.com/api/stable";
           Session = {
             Port = 63998;
             UPnP = false;
@@ -80,26 +87,29 @@
 
   systemd.services.qbittorrent-blocklist-update = {
     description = "Update qBittorrent IP blocklist and Tracker list";
-    after = [ "network.target" "wg.service" ];
+    after = [
+      "network.target"
+      "wg.service"
+    ];
     startAt = "daily";
-    path = with pkgs; [ curl gzip util-linux ];
+    path = with pkgs; [
+      curl
+      gzip
+      util-linux
+    ];
     script = ''
       set -euo pipefail
       STATE_DIR="/data/media/.state/nixarr/qbittorrent"
       curl -sSL "https://github.com/Naunter/BT_BlockLists/raw/master/bt_blocklists.gz" | zcat > "$STATE_DIR/ipfilter.p2p"
-      curl -sSL "https://newtrackon.com/api/stable" -o "$STATE_DIR/trackers.txt"
       chown -R qbittorrent:media "$STATE_DIR"
-      chmod 644 "$STATE_DIR/ipfilter.p2p" "$STATE_DIR/trackers.txt"
-      TRACKERS=$(cat "$STATE_DIR/trackers.txt" | tr '\n' '%0A')
-      nsenter --net=/run/netns/wg curl -s -X POST "http://localhost:8080/api/v2/app/setPreferences" \
-        --data "json={\"add_trackers\":\"$TRACKERS\",\"add_trackers_enabled\":true}"
+      chmod 644 "$STATE_DIR/ipfilter.p2p"
     '';
     serviceConfig = {
       Type = "oneshot";
       User = "root";
     };
   };
-  
+
   # Override qBittorrent service to run in VPN namespace
   systemd.services.qbittorrent = {
     after = ["wg.service"];

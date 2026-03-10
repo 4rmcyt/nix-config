@@ -2,7 +2,7 @@
 set -euo pipefail
 
 TARGET_DIR="${Lidarr_Album_Path:-${1:-}}"
-[[ -z "$TARGET_DIR" || ! -d "$TARGET_DIR" || "${Lidarr_EventType:-}" == "Test" ]] && exit 0
+[[ -z $TARGET_DIR || ! -d $TARGET_DIR || ${Lidarr_EventType:-} == "Test" ]] && exit 0
 
 JF_KEY=$(cat "$JF_API_KEY_FILE")
 L_KEY=$(cat "$LIDARR_API_KEY_FILE")
@@ -16,7 +16,7 @@ while IFS= read -r -d "" APE; do
   DIR=$(dirname "$APE")
   CUE=$(find "$DIR" -maxdepth 1 -name "*.cue" | head -1)
 
-  if [[ -n "$CUE" ]]; then
+  if [[ -n $CUE ]]; then
     TMP_D=$(mktemp -d "$DIR/.split-XXXX")
     # -nostdin важен, чтобы ffmpeg не читал из пайпа find
     ffmpeg -nostdin -i "$APE" -c:a flac -y "$TMP_D/f.flac" 2>/dev/null
@@ -32,7 +32,7 @@ while IFS= read -r -d "" APE; do
   fi
 done < <(find "$TARGET_DIR" -type f -name "*.ape" -print0)
 
-if [[ "$found" -eq 1 ]]; then
+if [[ $found -eq 1 ]]; then
   # Уведомляем Lidarr о необходимости пересканировать конкретную папку артиста
   curl -sf -X POST -H "X-Api-Key: $L_KEY" -d "{\"name\": \"RescanArtist\", \"path\": \"$(dirname "$TARGET_DIR")\"}" "$LIDARR_URL/api/v1/command" >/dev/null || true
   # Уведомляем Jellyfin
