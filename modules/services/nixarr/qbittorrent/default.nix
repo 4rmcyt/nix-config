@@ -71,8 +71,13 @@
           HashingThreads = 2;
           MaxRatioEnforcement = true;
           MaxRatioAction = 0;
+          AddTrackersEnabled = true;
+          AdditionalTrackers = "";
           AddTrackersFromURLEnabled = true;
-          AddTrackersFromURL = "https://newtrackon.com/api/stable";
+          AdditionalTrackersURL = "https://newtrackon.com/api/stable";
+        };
+        State = {
+          BannedIPs = "";
         };
       };
       Network = {
