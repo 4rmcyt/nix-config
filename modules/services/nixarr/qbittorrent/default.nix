@@ -3,16 +3,6 @@
   lib,
   ...
 }: {
-  users.users.qbittorrent = {
-    home = "/data/media/.state/nixarr/qbittorrent";
-    createHome = true;
-    isSystemUser = true;
-    extraGroups = [
-      "users"
-      "media"
-    ];
-  };
-
   services.qbittorrent = {
     enable = true;
     user = "qbittorrent";

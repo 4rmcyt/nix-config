@@ -106,11 +106,12 @@ in {
   ] (_: {});
 
   # --- System Packages ---
-  environment.systemPackages = [
+  environment.systemPackages = with pkgs; [
     movieCleaner
     showCleaner
     musicConverter
     bazarrBridge
+    mkvtoolnix-cli
   ];
 
   # --- Nixarr Core ---

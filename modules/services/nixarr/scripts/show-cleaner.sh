@@ -11,11 +11,52 @@ BAZARR_KEY=$(cat "$BAZARR_API_KEY_FILE")
 DIR=$(dirname "$TARGET")
 BASE_NAME=$(basename "$TARGET" .mkv)
 
-# 1. Поиск и вшивание субтитров (Remux)
+ALLOWED_LANGS=("eng" "rus" "ukr" "heb" "und")
+
 TRACK_JSON=$(mkvmerge -J "$TARGET")
+
+# Helper: check if a language is allowed
+is_allowed() {
+  local lang="$1"
+  for a in "${ALLOWED_LANGS[@]}"; do
+    [[ $lang == "$a" ]] && return 0
+  done
+  return 1
+}
+
+REMOVE_ARGS=()
+
+# 1. Find subtitle tracks to remove (not in allowed list)
+while IFS= read -r track_id; do
+  lang=$(echo "$TRACK_JSON" | jq -r ".tracks[] | select(.id == $track_id) | .properties.language // \"und\"")
+  if ! is_allowed "$lang"; then
+    REMOVE_ARGS+=("--exclude-track" "$track_id")
+  fi
+done < <(echo "$TRACK_JSON" | jq -r '.tracks[] | select(.type == "subtitles") | .id')
+
+# 2. Find audio tracks to remove (not in allowed list) — but only if at least one audio track remains
+AUDIO_IDS=()
+AUDIO_REMOVE=()
+while IFS= read -r track_id; do
+  lang=$(echo "$TRACK_JSON" | jq -r ".tracks[] | select(.id == $track_id) | .properties.language // \"und\"")
+  AUDIO_IDS+=("$track_id")
+  if ! is_allowed "$lang"; then
+    AUDIO_REMOVE+=("$track_id")
+  fi
+done < <(echo "$TRACK_JSON" | jq -r '.tracks[] | select(.type == "audio") | .id')
+
+# Safety: only remove audio tracks if at least one would remain
+if [[ ${#AUDIO_REMOVE[@]} -gt 0 && ${#AUDIO_REMOVE[@]} -lt ${#AUDIO_IDS[@]} ]]; then
+  for track_id in "${AUDIO_REMOVE[@]}"; do
+    REMOVE_ARGS+=("--exclude-track" "$track_id")
+  done
+elif [[ ${#AUDIO_REMOVE[@]} -gt 0 && ${#AUDIO_REMOVE[@]} -eq ${#AUDIO_IDS[@]} ]]; then
+  echo "Skipping audio removal: all audio tracks would be removed (no allowed language found)"
+fi
+
+# 3. Find external SRTs to embed (only if not already present)
 EXT_ARGS=()
 SRTS_TO_DELETE=()
-
 while IFS= read -r -d "" SRT; do
   LANG=$(basename "$SRT" | rev | cut -d. -f2 | rev | tr '[:upper:]' '[:lower:]')
   case "$LANG" in
@@ -32,11 +73,12 @@ while IFS= read -r -d "" SRT; do
   fi
 done < <(find "$DIR" -maxdepth 1 -name "${BASE_NAME}*.srt" -print0)
 
-if [[ ${#EXT_ARGS[@]} -gt 0 ]]; then
+# 4. Remux if anything needs to change
+if [[ ${#REMOVE_ARGS[@]} -gt 0 || ${#EXT_ARGS[@]} -gt 0 ]]; then
   TMP="$DIR/.tmp.$(basename "$TARGET")"
-  if mkvmerge -o "$TMP" "$TARGET" "${EXT_ARGS[@]}"; then
+  if mkvmerge -o "$TMP" "${REMOVE_ARGS[@]}" "$TARGET" "${EXT_ARGS[@]}"; then
     mv "$TMP" "$TARGET"
-    rm -f "${SRTS_TO_DELETE[@]}"
+    [[ ${#SRTS_TO_DELETE[@]} -gt 0 ]] && rm -f "${SRTS_TO_DELETE[@]}"
     curl -sf -X POST -H "X-MediaBrowser-Token: $JF_KEY" "$JF_URL/Library/Refresh" >/dev/null || true
   else
     rm -f "$TMP"
