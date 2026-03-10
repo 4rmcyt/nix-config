@@ -87,9 +87,12 @@ if [[ ${#REMOVE_ARGS[@]} -gt 0 || ${#EXT_ARGS[@]} -gt 0 ]]; then
 fi
 
 if [[ -z ${BAZARR_MOVIE_FILEPATH:-} && -z ${BAZARR_EPISODE_FILEPATH:-} ]]; then
-  echo "Triggering Bazarr API..."
-  curl -sf -X POST -H "X-Api-Key: $BAZARR_KEY" "$BAZARR_URL/api/system/scan" >/dev/null || true
-  curl -sf -X POST -H "X-Api-Key: $BAZARR_KEY" "$BAZARR_URL/api/subtitles/search/missing" >/dev/null || true
+  echo "Triggering Bazarr subtitle search..."
+  SONARR_ID="${Sonarr_Series_Id:-}"
+  if [[ -n "$SONARR_ID" ]]; then
+    curl -sf -X PATCH -H "X-Api-Key: $BAZARR_KEY" \
+      "$BAZARR_URL/api/series?seriesid=${SONARR_ID}&action=search-missing" >/dev/null || true
+  fi
 else
   echo "Running under Bazarr. Skipping API callback to prevent loops."
 fi
