@@ -275,19 +275,25 @@ in {
 
   nixpkgs.config.cudaSupport = true;
 
-  # MT7922: linux-firmware >= 20250917 breaks mt7921e firmware init (WM Version: ____000000)
-  # Pin to last known-good version 20250808 until upstream fixes the regression.
+  # MT7922: commit ba41835 in linux-firmware broke mt7921e init (WM Version: ____000000).
+  # Replace the two broken firmware blobs with pre-ba41835 versions from 20250808.
   # https://github.com/NixOS/nixpkgs/issues/444538
   nixpkgs.overlays = [
     (_final: prev: {
-      linux-firmware = prev.linux-firmware.overrideAttrs {
-        version = "20250808";
-        src = prev.fetchurl {
-          url = "https://gitlab.com/kernel-firmware/linux-firmware/-/archive/20250808/linux-firmware-20250808.tar.gz";
-          sha256 = "1s886j4ynaalr2ljv03dwa3zy6kdxvamlih5wrb0g2yrwpnb0m3i";
-        };
-        patches = [];
-      };
+      linux-firmware = prev.linux-firmware.overrideAttrs (old: {
+        postInstall =
+          (old.postInstall or "")
+          + ''
+            cp ${prev.fetchurl {
+              url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_RAM_CODE_MT7922_1.bin";
+              sha256 = "19jfkmpqngm0d3wpv2inc9hmmqjfk5nhbw5d6mkvh23idg3w2jm3";
+            }} $out/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin
+            cp ${prev.fetchurl {
+              url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin";
+              sha256 = "1q4irdjmbfpx8fsv8qiprzklvm62z614vchyjnhpbh2745bxl65y";
+            }} $out/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin
+          '';
+      });
     })
   ];
 
@@ -471,6 +477,9 @@ in {
          ENV{ID_VENDOR_ID}=="1050",\
          ENV{ID_VENDOR}=="Yubico",\
          RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
+
+        # MT7922: rename wlan0 → wlp13s0 (cfg80211 registers before udev path rename)
+        SUBSYSTEM=="net", ACTION=="add", DRIVERS=="mt7921e", ATTR{address}=="02:00:00:00:00:00", NAME="wlp13s0"
       '';
       packages = with pkgs; [
         yubioath-flutter
