@@ -52,10 +52,6 @@ in {
 
   # --- Secrets Configuration ---
   sops.secrets = {
-    bazarr_db_password = {
-      sopsFile = ../../../secrets/recyclarr.yaml;
-      owner = "bazarr";
-    };
     jellyfin_api_key = {
       sopsFile = ../../../secrets/recyclarr.yaml;
       owner = config.my.defaults.user;
