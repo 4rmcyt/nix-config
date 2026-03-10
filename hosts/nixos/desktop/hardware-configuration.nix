@@ -124,7 +124,7 @@ in {
       "systemd.unified_cgroup_hierarchy=1"
       "usb-storage.delay_use=0"
       "usbcore.autosuspend=-1"
-      "usbcore.quirks=1462:7d75:bkgi" # MSI MYSTIC LIGHT: b=avoid reset, k=no autosuspend, g=ignore GetStringDescriptor, i=ignore device
+      "usbcore.quirks=1462:7d75:bkgid" # MSI MYSTIC LIGHT: b=avoid reset, k=no autosuspend, g=ignore GetStringDescriptor, i=ignore device, d=delay init
 
       # Display output hints for early modesetting
       "video=DP-4:1920x1080@60"
