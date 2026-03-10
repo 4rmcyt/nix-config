@@ -202,17 +202,6 @@
   my.headscale.enable = false;
 
   # =================================================================
-  # 9.6. Media Cleaner
-  # =================================================================
-  services.media-cleaner = {
-    enable = true;
-    radarrApiKeyFile = config.sops.secrets.radarr_api_key.path;
-    sonarrApiKeyFile = config.sops.secrets.sonarr_api_key.path;
-  };
-
-  services.ape-converter.enable = true;
-
-  # =================================================================
   # 10. Programs
   # =================================================================
   programs = {
