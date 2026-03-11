@@ -29,6 +29,7 @@
 
     packages = with pkgs; [
       easyeffects # PipeWire EQ / audio effects per device
+      lsp-plugins # LSP audio plugins for EasyEffects (advanced EQ, compressor, etc.)
       materialgram
       bat
       devenv
