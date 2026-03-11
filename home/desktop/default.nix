@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   imports = [
     ../../modules/GUI/terminal
     ../../modules/GUI/IDE
@@ -28,8 +29,7 @@
     username = "zeev";
 
     packages = with pkgs; [
-      easyeffects # PipeWire EQ / audio effects per device
-      lsp-plugins # LSP audio plugins for EasyEffects (advanced EQ, compressor, etc.)
+      easyeffects
       materialgram
       bat
       devenv
@@ -63,15 +63,14 @@
       proton-pass
       proton-pass-cli
       (python3.withPackages (
-        ps:
-          with ps; [
-            pip
-            pydantic
-            requests
-            black
-            pylint
-            python-lsp-server
-          ]
+        ps: with ps; [
+          pip
+          pydantic
+          requests
+          black
+          pylint
+          python-lsp-server
+        ]
       ))
     ];
 
@@ -97,8 +96,8 @@
 
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
-      autoconnect = ["qemu:///system"];
-      uris = ["qemu:///system"];
+      autoconnect = [ "qemu:///system" ];
+      uris = [ "qemu:///system" ];
     };
   };
 }
