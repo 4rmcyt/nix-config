@@ -399,11 +399,6 @@ in {
       pulse.enable = true;
       wireplumber.enable = true;
       jack.enable = true;
-      extraPackages = [
-        pkgs.libfreeaptx # aptX / aptX HD codec
-        pkgs.fdk_aac # AAC codec (higher quality than SBC)
-        pkgs.ldacBT # LDAC codec
-      ];
       extraConfig.pipewire."92-low-latency" = {
         context.properties = {
           default.clock.max-quantum = 32;
@@ -508,6 +503,9 @@ in {
     bluez-tools
     sof-firmware
     jellyfin-desktop
+    libfreeaptx # aptX / aptX HD BT codec
+    fdk_aac # AAC BT codec
+    ldacbt # LDAC BT codec
 
     # Graphics & GPU
     libva-utils
