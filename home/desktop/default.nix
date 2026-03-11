@@ -23,6 +23,23 @@
     ../../modules/WM/niri/monitors.nix
   ];
 
+  # WirePlumber: always use SBC-XQ for OpenRun Pro 2 (best codec it supports)
+  xdg.configFile."wireplumber/wireplumber.conf.d/51-shokz-openrun.conf".text = ''
+    monitor.bluez.rules = [
+      {
+        matches = [
+          { device.name = "bluez_card.A0_0C_E2_7B_7F_4A" }
+        ]
+        actions = {
+          update-props = {
+            bluez5.auto-connect = [ "a2dp_sink" ]
+            bluez5.profile = "a2dp-sink-sbc_xq"
+          }
+        }
+      }
+    ]
+  '';
+
   home = {
     homeDirectory = "/home/zeev";
 
