@@ -89,7 +89,7 @@ fi
 if [[ -z ${BAZARR_MOVIE_FILEPATH:-} && -z ${BAZARR_EPISODE_FILEPATH:-} ]]; then
   echo "Triggering Bazarr subtitle search..."
   RADARR_ID="${Radarr_Movie_Id:-}"
-  if [[ -n "$RADARR_ID" ]]; then
+  if [[ -n $RADARR_ID ]]; then
     curl -sf -X PATCH -H "X-Api-Key: $BAZARR_KEY" \
       "$BAZARR_URL/api/movies?radarrid=${RADARR_ID}&action=search-missing" >/dev/null || true
   fi
