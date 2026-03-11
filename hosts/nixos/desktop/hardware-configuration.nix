@@ -124,7 +124,7 @@ in {
       "systemd.unified_cgroup_hierarchy=1"
       "usb-storage.delay_use=0"
       "usbcore.autosuspend=-1"
-      "usbcore.quirks=1462:7d75:bkgid" # MSI MYSTIC LIGHT: b=avoid reset, k=no autosuspend, g=ignore GetStringDescriptor, i=ignore device, d=delay init
+      # MSI MYSTIC LIGHT (1462:7d75) disabled via udev authorized=0 — no kernel quirks needed
 
       # Display output hints for early modesetting
       "video=DP-4:1920x1080@60"
@@ -467,8 +467,8 @@ in {
         # Gaming device rules
         SUBSYSTEM=="input", ATTRS{name}=="Rapoo Rapoo Gaming Device", TAG+="uaccess"
 
-        # MSI MYSTIC LIGHT - Keep power management disabled (handled by kernel quirk)
-        ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="1462", ATTRS{idProduct}=="7d75", TEST=="power/control", ATTR{power/control}="on"
+        # MSI MYSTIC LIGHT - disable entirely (unused, causes continuous EMI hub resets that disconnect keyboard)
+        ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="1462", ATTRS{idProduct}=="7d75", ATTR{authorized}="0"
 
         # Lock PC on yubikey removal
         ACTION=="remove",\
