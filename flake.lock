@@ -373,11 +373,11 @@
         "quickshell": "quickshell"
       },
       "locked": {
-        "lastModified": 1773251204,
-        "narHash": "sha256-EyWGGDz4RdfXfwXdgCEXG/2XxiFHpHgOLtBFvrrTyew=",
+        "lastModified": 1773260557,
+        "narHash": "sha256-5NmJm+EzYkknyAH6oYgrCvtfssBwJCI7uCZMM2GK4O8=",
         "owner": "AvengeMedia",
         "repo": "DankMaterialShell",
-        "rev": "772094eacdfa3776743bfe42f0055e5e84ed87b3",
+        "rev": "76c50a654ae46dea7a6a9a4c39569eeeb593652e",
         "type": "github"
       },
       "original": {
@@ -2511,11 +2511,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1773257179,
-        "narHash": "sha256-CtN0NCX1dR9rL224+BeM2rr0Yt4T7d7mpa05N9h4HOM=",
+        "lastModified": 1773261243,
+        "narHash": "sha256-002H4s9pZmQnCFw/VNVFlUHFHw+H4NaX1uCi4bMUXa0=",
         "owner": "zed-industries",
         "repo": "zed",
-        "rev": "56b2eae745d3ae8317810fa129a633b3268be1d0",
+        "rev": "9d2e2c859b9af0821f2c65a26845b49b571c2433",
         "type": "github"
       },
       "original": {

@@ -30,6 +30,8 @@
 
     packages = with pkgs; [
       easyeffects
+      jellycli
+      supersonic-wayland
       materialgram
       bat
       devenv
