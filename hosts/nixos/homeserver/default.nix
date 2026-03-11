@@ -166,6 +166,11 @@
       allowedUDPPorts = [53];
     };
 
+    firewall.interfaces.enp0s31f6 = {
+      allowedTCPPorts = [53];
+      allowedUDPPorts = [53];
+    };
+
     firewall = {
       enable = true;
 
@@ -263,7 +268,7 @@
     dnsmasq = {
       enable = true;
       settings = {
-        interface = "tailscale0";
+        interface = ["tailscale0" "enp0s31f6"];
         bind-interfaces = true;
         no-resolv = true;
         no-hosts = true;
@@ -273,16 +278,18 @@
   };
 
   # Write dnsmasq address config dynamically from Tailscale IP at service start
+  # Also writes LAN IP entry so local clients get direct access without Tailscale
   systemd.services.dnsmasq = {
     after = ["tailscale-autoconnect.service"];
     wants = ["tailscale-autoconnect.service"];
     # RuntimeDirectory creates /run/dnsmasq before ExecStartPre runs (dnsmasq --test validates conf-dir)
     serviceConfig.RuntimeDirectory = "dnsmasq";
     preStart = ''
-      TSIP=$(${pkgs.tailscale}/bin/tailscale ip -4 2>/dev/null || true)
-      if [ -n "$TSIP" ]; then
-        echo "address=/.${config.my.defaults.domain}/$TSIP" > /run/dnsmasq/address.conf
-      fi
+      {
+        TSIP=$(${pkgs.tailscale}/bin/tailscale ip -4 2>/dev/null || true)
+        [ -n "$TSIP" ] && echo "address=/.${config.my.defaults.domain}/$TSIP"
+        echo "address=/.${config.my.defaults.domain}/${config.my.defaults.homeserver_lan}"
+      } > /run/dnsmasq/address.conf
     '';
   };
 
