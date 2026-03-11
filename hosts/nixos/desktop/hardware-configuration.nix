@@ -499,6 +499,7 @@ in {
     # Audio & Multimedia
     pavucontrol
     pamixer
+    pulseaudio # provides pactl for pipewire-pulse control
     bluez
     bluez-tools
     sof-firmware
