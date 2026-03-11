@@ -28,6 +28,7 @@
     username = "zeev";
 
     packages = with pkgs; [
+      easyeffects # PipeWire EQ / audio effects per device
       materialgram
       bat
       devenv
