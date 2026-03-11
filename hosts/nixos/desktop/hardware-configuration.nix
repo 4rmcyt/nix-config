@@ -203,6 +203,9 @@ in {
         General = {
           Experimental = true;
         };
+        Policy = {
+          AutoEnable = true;
+        };
       };
     };
 
@@ -396,6 +399,11 @@ in {
       pulse.enable = true;
       wireplumber.enable = true;
       jack.enable = true;
+      extraPackages = [
+        pkgs.libfreeaptx # aptX / aptX HD codec
+        pkgs.fdk_aac # AAC codec (higher quality than SBC)
+        pkgs.ldacBT # LDAC codec
+      ];
       extraConfig.pipewire."92-low-latency" = {
         context.properties = {
           default.clock.max-quantum = 32;
@@ -582,6 +590,15 @@ in {
   systemd = {
     coredump.enable = false;
     oomd.enable = true;
+    services.bluetooth-unblock = {
+      description = "Unblock Bluetooth rfkill soft block";
+      wantedBy = ["bluetooth.service"];
+      before = ["bluetooth.service"];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.util-linux}/bin/rfkill unblock bluetooth";
+      };
+    };
   };
 
   # =================================================================
