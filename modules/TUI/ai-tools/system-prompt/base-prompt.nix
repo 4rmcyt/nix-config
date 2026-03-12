@@ -52,4 +52,15 @@ in ''
   - Hardcoding values that exist in `my.defaults.*`
   - Plaintext secrets anywhere
   - Over-engineering or "future-proofing"
+
+  ## CRITICAL: No Guessing on Unfamiliar Tools
+
+  **NEVER make speculative config changes for tools you are not 100% certain about.**
+
+  Before touching any plugin, library, or tool configuration:
+  1. Search with `tavily` for documented behavior and known issues
+  2. Check GitHub issues for known bugs
+  3. Only propose a change backed by an actual source
+
+  This applies to: zsh plugins, fzf integrations, desktop compositors, audio stacks, and any tool with complex interactions. Making wrong guesses that break the user's config is unacceptable. One web search takes seconds and prevents this.
 ''
