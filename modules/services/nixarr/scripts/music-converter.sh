@@ -8,6 +8,29 @@ JF_KEY=$(cat "$JF_API_KEY_FILE")
 L_KEY=$(cat "$LIDARR_API_KEY_FILE")
 
 found=0
+
+# FLAC+CUE → split tracks
+while IFS= read -r -d "" FLAC; do
+  DIR=$(dirname "$FLAC")
+  CUE=$(find "$DIR" -maxdepth 1 -name "*.cue" | head -1)
+  [[ -z $CUE ]] && continue
+
+  # Skip if already split (more than one flac in dir)
+  FLAC_COUNT=$(find "$DIR" -maxdepth 1 -name "*.flac" | wc -l)
+  [[ $FLAC_COUNT -gt 1 ]] && continue
+
+  found=1
+  TMP_D=$(mktemp -d "$DIR/.split-XXXX")
+
+  if shnsplit -f "$CUE" -o flac -d "$TMP_D" -t "%n - %t" "$FLAC"; then
+    cuetag "$CUE" "$TMP_D"/*.flac
+    mv "$TMP_D"/*.flac "$DIR/"
+    rm "$FLAC"
+  fi
+  rm -rf "$TMP_D"
+done < <(find "$TARGET_DIR" -type f -name "*.flac" -print0)
+
+# APE(+CUE) → FLAC
 while IFS= read -r -d "" APE; do
   found=1
   BASE="${APE%.*}"

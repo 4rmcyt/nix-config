@@ -112,6 +112,8 @@ in {
     musicConverter
     bazarrBridge
     mkvtoolnix-cli
+    shntool
+    cuetools
   ];
 
   # --- Nixarr Core ---
