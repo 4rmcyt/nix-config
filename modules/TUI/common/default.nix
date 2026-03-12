@@ -9,7 +9,7 @@
       enableBashIntegration = true;
       enableFishIntegration = true;
       enableNushellIntegration = true;
-      enableZshIntegration = true;
+      enableZshIntegration = false; # conflicts with fzf-tab: double-escapes spaces in paths (Aloxaf/fzf-tab#503)
     };
 
     direnv = {
