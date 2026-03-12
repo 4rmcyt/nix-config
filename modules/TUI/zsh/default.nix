@@ -85,6 +85,9 @@
 
         zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
         zstyle ':completion:*' menu no
+        zstyle ':fzf-tab:*' accept-line enter
+        zstyle ':fzf-tab:*' single-group color header
+        zstyle ':fzf-tab:*' prefix ''''
         zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
         zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
         zstyle ':completion:*:*:docker:*' option-stacking yes
