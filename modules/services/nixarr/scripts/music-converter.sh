@@ -12,12 +12,14 @@ found=0
 # FLAC+CUE → split tracks
 while IFS= read -r -d "" FLAC; do
   DIR=$(dirname "$FLAC")
-  CUE=$(find "$DIR" -maxdepth 1 -name "*.cue" | head -1)
-  [[ -z $CUE ]] && continue
+  BASE="${FLAC%.*}"
 
-  # Skip if already split (more than one flac in dir)
-  FLAC_COUNT=$(find "$DIR" -maxdepth 1 -name "*.flac" | wc -l)
-  [[ $FLAC_COUNT -gt 1 ]] && continue
+  # Prefer stem-matching CUE (e.g. foo.flac → foo.flac.cue or foo.cue)
+  CUE=""
+  for candidate in "${BASE}.cue" "${FLAC}.cue"; do
+    [[ -f $candidate ]] && CUE="$candidate" && break
+  done
+  [[ -z $CUE ]] && continue
 
   found=1
   TMP_D=$(mktemp -d "$DIR/.split-XXXX")
