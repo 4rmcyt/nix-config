@@ -46,6 +46,10 @@
       "BrowserSignin" = 1;
       "SyncDisabled" = false;
 
+      # Always restore last session — suppresses "didn't close properly" dialog
+      # caused by compositor killing Chromium with SIGTERM before it can write exit_type=Normal
+      "RestoreOnStartup" = 1;
+
       # Allow manual extension installation
       "ExtensionInstallBlocklist" = [];
       "ExtensionInstallAllowlist" = ["*"];
