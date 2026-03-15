@@ -2,12 +2,13 @@
   osConfig ? null,
   config,
   lib,
+  pkgs,
   ...
 }: let
   mcpServerNames = builtins.attrNames config.programs.mcp.servers;
   mcpList = lib.concatMapStringsSep "\n" (name: "- `${name}`") mcpServerNames;
-in {
-  programs.vscode.profiles.default.userSettings = {
+
+  settings = {
     # ===== Editor Settings =====
     "editor.fontFamily" = "'Maple Mono NF', 'MesloLGS NF', 'FiraCode Nerd Font', monospace";
     "editor.fontLigatures" = true;
@@ -159,4 +160,17 @@ in {
       ];
     };
   };
+
+  settingsFile = pkgs.writeText "vscode-settings.json" (builtins.toJSON settings);
+  settingsPath = ".config/Code/User/settings.json";
+in {
+  # Seed settings.json on first activation only — VSCode owns the file after that.
+  home.activation.vscodeSettings = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    settings_dest="$HOME/${settingsPath}"
+    if [ ! -f "$settings_dest" ] || [ -L "$settings_dest" ]; then
+      $DRY_RUN_CMD mkdir -p "$(dirname "$settings_dest")"
+      $DRY_RUN_CMD cp ${settingsFile} "$settings_dest"
+      $DRY_RUN_CMD chmod 644 "$settings_dest"
+    fi
+  '';
 }
