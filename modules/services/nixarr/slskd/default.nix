@@ -6,7 +6,7 @@
   slskdPort = 5030;
 in {
   sops.secrets.slskd_env = {
-    sopsFile = ../../../secrets/slskd.env;
+    sopsFile = ../../../../secrets/slskd.env;
     format = "dotenv";
     owner = config.services.slskd.user;
     mode = "0400";
