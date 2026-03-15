@@ -50,6 +50,10 @@
       # caused by compositor killing Chromium with SIGTERM before it can write exit_type=Normal
       "RestoreOnStartup" = 1;
 
+      # Secure DNS via NextDNS
+      "DnsOverHttpsMode" = "secure";
+      "DnsOverHttpsTemplates" = "https://dns.nextdns.io/nextdns0";
+
       # Allow manual extension installation
       "ExtensionInstallBlocklist" = [];
       "ExtensionInstallAllowlist" = ["*"];
