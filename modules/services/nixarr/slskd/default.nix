@@ -13,7 +13,7 @@ in {
   };
 
   services.slskd = {
-    enable = true;
+    enable = false;
     domain = null;
     environmentFile = config.sops.secrets.slskd_env.path;
     settings = {

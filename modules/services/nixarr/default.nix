@@ -17,7 +17,6 @@
     "jellyfin"
   ];
 
-  # Сервисы, запускающие скрипты (нужен доступ к API ключам и PATH)
   servicesWithScripts = ["bazarr" "lidarr" "radarr" "sonarr"];
 
   movieCleaner = pkgs.writeShellApplication {
@@ -48,10 +47,9 @@ in {
     ./upnp-fix.nix
     ./jellyfin
     ./qbittorrent
-    ./slskd
+    # ./slskd
   ];
 
-  # --- Secrets Configuration ---
   sops.secrets = {
     jellyfin_api_key = {
       sopsFile = ../../../secrets/medialib.yaml;
@@ -76,7 +74,6 @@ in {
     };
   };
 
-  # --- Users and Groups ---
   users.users =
     lib.genAttrs [
       "audiobookshelf"
@@ -106,7 +103,6 @@ in {
     "recyclarr"
   ] (_: {});
 
-  # --- System Packages ---
   environment.systemPackages = with pkgs; [
     movieCleaner
     showCleaner
@@ -117,7 +113,6 @@ in {
     cuetools
   ];
 
-  # --- Nixarr Core ---
   nixarr = {
     enable = true;
     mediaUsers = [config.my.defaults.user];
@@ -142,9 +137,7 @@ in {
     };
   };
 
-  # --- Systemd Services Overrides ---
   systemd.services = lib.mkMerge [
-    # Глобальные права и маунты для всех
     (lib.genAttrs servicesWithMediaAccess (_name: {
       serviceConfig = {
         UMask = lib.mkDefault "0002";
@@ -155,7 +148,6 @@ in {
         ];
       };
     }))
-    # Специфичные настройки для сервисов со скриптами
     (lib.genAttrs servicesWithScripts (_name: {
       path = [movieCleaner showCleaner musicConverter bazarrBridge];
       serviceConfig.Environment = [
@@ -167,7 +159,6 @@ in {
         "BAZARR_API_KEY_FILE=${config.sops.secrets.bazarr_api_key.path}"
       ];
     }))
-    # Настройка базы данных Bazarr
     {
       bazarr-pg-env = {
         description = "Write Bazarr PostgreSQL environment file";
@@ -194,13 +185,11 @@ in {
     }
   ];
 
-  # --- Filesystem Structure and Permissions ---
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
     "d /data/media 775 ${config.my.defaults.user} media -"
     "d /data/Downloads 775 ${config.my.defaults.user} media -"
 
-    # Root Folders (Separate Downloads from Media)
     "d /data/media/movies 2775 ${config.my.defaults.user} media -"
     "d /data/media/shows 2775 ${config.my.defaults.user} media -"
     "d /data/media/music 775 ${config.my.defaults.user} media -"
@@ -209,13 +198,11 @@ in {
     "d /data/media/comics 775 ${config.my.defaults.user} media -"
     "d /data/media/manga 775 ${config.my.defaults.user} media -"
 
-    # Categories for qBittorrent
     "d /data/Downloads/tv-sonarr 775 ${config.my.defaults.user} media -"
     "d /data/Downloads/radarr 775 ${config.my.defaults.user} media -"
     "d /data/Downloads/lidarr 775 ${config.my.defaults.user} media -"
     "d /data/Downloads/audiobooks 775 ${config.my.defaults.user} media -"
 
-    # States
     "d /data/media/.state 770 root media -"
     "d /data/media/.state/nixarr 770 root media -"
     "d /data/media/.state/nixarr/jellyseerr 775 jellyseerr jellyseerr -"
@@ -228,7 +215,6 @@ in {
     "d /data/media/.state/nixarr/sonarr 775 sonarr sonarr -"
     "d /data/media/.state/nixarr/bazarr 775 bazarr bazarr -"
 
-    # Recursive ownership correction
     "Z /data/media/movies 2775 ${config.my.defaults.user} media -"
     "Z /data/media/shows 2775 ${config.my.defaults.user} media -"
     "Z /data/media/music 775 ${config.my.defaults.user} media -"
@@ -239,7 +225,6 @@ in {
     "Z /data/Downloads 775 ${config.my.defaults.user} media -"
   ];
 
-  # --- Firewall ---
   networking.firewall.allowedTCPPorts = [9292 8096 8920 6767 8686 9696 7878 8990 8787 5055];
   networking.firewall.allowedUDPPorts = [1900 7359];
 }
