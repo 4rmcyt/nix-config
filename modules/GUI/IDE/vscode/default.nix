@@ -14,6 +14,7 @@
     profiles.default = {
       enableExtensionUpdateCheck = false;
       enableUpdateCheck = false;
+      mutableSettingsFile = true;
     };
   };
 }
