@@ -48,6 +48,7 @@ in {
     ./upnp-fix.nix
     ./jellyfin
     ./qbittorrent
+    ./slskd
   ];
 
   # --- Secrets Configuration ---

@@ -81,6 +81,7 @@
       antigravity-fhs
       proton-pass
       proton-pass-cli
+      texlive.combined.scheme-medium
       (python3.withPackages (
         ps: with ps; [
           pip

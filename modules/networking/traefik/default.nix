@@ -101,6 +101,14 @@ in {
               tls.certResolver = "default";
             };
 
+            slskd = {
+              rule = "Host(`slskd.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "slskd";
+              middlewares = ["security-headers"];
+              tls.certResolver = "default";
+            };
+
             # Nixarr
             sonarr = {
               rule = "Host(`sonarr.${domain}`)";
@@ -256,6 +264,8 @@ in {
           };
 
           services = {
+            slskd.loadBalancer.servers = [{url = "http://localhost:5030";}];
+
             # Nixarr
             sonarr.loadBalancer.servers = [{url = "http://localhost:8990";}];
             radarr.loadBalancer.servers = [{url = "http://localhost:7878";}];
