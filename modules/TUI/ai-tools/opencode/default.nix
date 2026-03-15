@@ -95,8 +95,13 @@ in {
   };
 
   programs.zsh.initContent = ''
-    if [[ -z "$ANTHROPIC_API_KEY" ]]; then
-      export ANTHROPIC_API_KEY="$(${pkgs.sops}/bin/sops -d ${../../../../secrets/common.yaml} | ${pkgs.yq}/bin/yq -r '.claude_api_key')"
-    fi
+    opencode() {
+      if [[ -z "$ANTHROPIC_API_KEY" ]]; then
+        ANTHROPIC_API_KEY="$(${pkgs.sops}/bin/sops -d ${../../../../secrets/common.yaml} | ${pkgs.yq}/bin/yq -r '.claude_api_key')" \
+          command opencode "$@"
+      else
+        command opencode "$@"
+      fi
+    }
   '';
 }
