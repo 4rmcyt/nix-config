@@ -54,9 +54,8 @@
       "DnsOverHttpsMode" = "secure";
       "DnsOverHttpsTemplates" = "https://dns.nextdns.io/nextdns0";
 
-      # Allow manual extension installation
+      # Allow manual extension installation (no blocklist, no allowlist restriction)
       "ExtensionInstallBlocklist" = [];
-      "ExtensionInstallAllowlist" = ["*"];
     };
   };
 }

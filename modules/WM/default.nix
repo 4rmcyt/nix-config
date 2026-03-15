@@ -28,12 +28,12 @@
         "text/x-script" = "dev.zed.Zed.desktop";
         "application/x-shellscript" = "dev.zed.Zed.desktop";
 
-        # Browser — DMS browser picker handles URL dispatch
-        "text/html" = "dms-open.desktop";
-        "x-scheme-handler/http" = "dms-open.desktop";
-        "x-scheme-handler/https" = "dms-open.desktop";
-        "x-scheme-handler/about" = "dms-open.desktop";
-        "x-scheme-handler/unknown" = "dms-open.desktop";
+        # Browser
+        "text/html" = "chromium-browser.desktop";
+        "x-scheme-handler/http" = "chromium-browser.desktop";
+        "x-scheme-handler/https" = "chromium-browser.desktop";
+        "x-scheme-handler/about" = "chromium-browser.desktop";
+        "x-scheme-handler/unknown" = "chromium-browser.desktop";
 
         # PDF
         "application/pdf" = "org.pwmt.zathura.desktop";
