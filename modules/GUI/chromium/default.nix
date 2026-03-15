@@ -50,8 +50,9 @@
       # caused by compositor killing Chromium with SIGTERM before it can write exit_type=Normal
       "RestoreOnStartup" = 1;
 
-      # Secure DNS via NextDNS
-      "DnsOverHttpsMode" = "secure";
+      # Secure DNS via NextDNS — automatic so Chromium falls back to system resolver
+      # (system resolved already uses NextDNS DoH; "secure" causes bootstrap deadlock)
+      "DnsOverHttpsMode" = "automatic";
       "DnsOverHttpsTemplates" = "https://dns.nextdns.io/nextdns0";
 
       # Allow manual extension installation (no blocklist, no allowlist restriction)
