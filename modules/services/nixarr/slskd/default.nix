@@ -14,6 +14,7 @@ in {
 
   services.slskd = {
     enable = true;
+    domain = null;
     environmentFile = config.sops.secrets.slskd_env.path;
     settings = {
       web.port = slskdPort;
