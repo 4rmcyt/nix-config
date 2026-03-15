@@ -167,7 +167,10 @@ in {
   # Seed settings.json on first activation only — VSCode owns the file after that.
   home.activation.vscodeSettings = lib.hm.dag.entryAfter ["writeBoundary"] ''
     settings_dest="$HOME/${settingsPath}"
-    if [ ! -f "$settings_dest" ] || [ -L "$settings_dest" ]; then
+    if [ -L "$settings_dest" ]; then
+      $DRY_RUN_CMD rm "$settings_dest"
+    fi
+    if [ ! -f "$settings_dest" ]; then
       $DRY_RUN_CMD mkdir -p "$(dirname "$settings_dest")"
       $DRY_RUN_CMD cp ${settingsFile} "$settings_dest"
       $DRY_RUN_CMD chmod 644 "$settings_dest"

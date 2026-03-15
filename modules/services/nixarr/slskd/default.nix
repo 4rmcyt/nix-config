@@ -19,10 +19,6 @@ in {
     settings = {
       web.port = slskdPort;
       shares.directories = ["/data/media/music"];
-      downloads = {
-        directory = "/data/Downloads/slskd";
-        incomplete_directory = "/data/Downloads/slskd/incomplete";
-      };
       directories = {
         incomplete = "/data/Downloads/slskd/incomplete";
         downloads = "/data/Downloads/slskd";
@@ -30,12 +26,16 @@ in {
     };
   };
 
-  systemd.services.slskd.serviceConfig = {
-    UMask = lib.mkDefault "0002";
-    BindPaths = [
-      "/data/Downloads"
-      "/data/media/music"
-    ];
+  systemd.services.slskd = {
+    after = ["systemd-tmpfiles-setup.service"];
+    requires = ["systemd-tmpfiles-setup.service"];
+    serviceConfig = {
+      UMask = lib.mkDefault "0002";
+      BindPaths = [
+        "/data/Downloads"
+        "/data/media/music"
+      ];
+    };
   };
 
   systemd.tmpfiles.rules = [
