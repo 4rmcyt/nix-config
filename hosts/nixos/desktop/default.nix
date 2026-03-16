@@ -145,14 +145,16 @@
       lixPackageSets.latest.colmena
       lixPackageSets.latest.nix-direnv
       (texlive.combine {
-        inherit (pkgs.texlive)
+        inherit
+          (pkgs.texlive)
           scheme-medium
           lastpage
           enumitem
           fontawesome
           pgf
           mhchem
-          xcolor;
+          xcolor
+          ;
       })
     ];
   };
