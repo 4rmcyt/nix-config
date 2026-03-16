@@ -80,7 +80,6 @@
       antigravity-fhs
       proton-pass
       proton-pass-cli
-      texlive.combined.scheme-medium
       (python3.withPackages (
         ps:
           with ps; [
@@ -92,7 +91,7 @@
             python-lsp-server
           ]
       ))
-      (texlive.combine {
+      (pkgs.texlive.combine {
         inherit
           (pkgs.texlive)
           scheme-medium
