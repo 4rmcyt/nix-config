@@ -95,6 +95,7 @@
         inherit
           (pkgs.texlive)
           scheme-medium
+          moderncv
           lastpage
           enumitem
           fontawesome
