@@ -92,6 +92,18 @@
             python-lsp-server
           ]
       ))
+      (texlive.combine {
+        inherit
+          (pkgs.texlive)
+          scheme-medium
+          lastpage
+          enumitem
+          fontawesome
+          pgf
+          mhchem
+          xcolor
+          ;
+      })
     ];
 
     sessionVariables = {
