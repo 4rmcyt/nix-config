@@ -1,7 +1,7 @@
 {...}: {
   imports = [
     # ./avahi
-    # ./cloudflared  # Replaced by Tailscale for all internal services
+    ./cloudflared
     ./dnssec
     ./nfs
     ./tailscale
