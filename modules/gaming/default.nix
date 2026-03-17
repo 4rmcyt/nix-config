@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # Programs
   programs.gamemode = {
     enable = true;
@@ -29,20 +30,19 @@
   };
 
   # Gaming packages
-  environment.systemPackages = with pkgs;
-    [
-      heroic
-      wine
-      winetricks
+  environment.systemPackages = with pkgs; [
+    # heroic
+    wine
+    winetricks
 
-      # Performance tools
-      gamemode
-      gamescope
-      # mangohud
-      # vesktop
-      # lutris
-      # protonup-qt
-    ];
+    # Performance tools
+    gamemode
+    gamescope
+    # mangohud
+    # vesktop
+    # lutris
+    # protonup-qt
+  ];
 
   # Enable 32-bit support for games
   hardware.graphics.enable32Bit = true;

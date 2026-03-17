@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   sops.secrets = {
     cloudflare_tunnel_credentials = {
       sopsFile = ../../../secrets/cloudflare_tunnel_credentials.bin;
@@ -59,7 +58,7 @@
     isSystemUser = true;
     group = "cloudflared";
   };
-  users.groups.cloudflared = { };
+  users.groups.cloudflared = {};
 
   systemd.services.cloudflared = {
     after = [
@@ -71,7 +70,7 @@
       "network.target"
       "network-online.target"
     ];
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = ["multi-user.target"];
 
     serviceConfig = {
       User = "cloudflared";
@@ -96,86 +95,83 @@
 # #   service: http://localhost:8265
 # - hostname: cal.${config.my.defaults.domain}
 #           service: http://localhost:5232
- # - hostname: sonarr.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: sonarr.${config.my.defaults.domain}
-        # - hostname: radarr.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: radarr.${config.my.defaults.domain}
-        # - hostname: prowlarr.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: prowlarr.${config.my.defaults.domain}
-        # - hostname: bazarr.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: bazarr.${config.my.defaults.domain}
-        # - hostname: lidarr.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: lidarr.${config.my.defaults.domain}
-        # - hostname: readarr.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: readarr.${config.my.defaults.domain}
+# - hostname: sonarr.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: sonarr.${config.my.defaults.domain}
+# - hostname: radarr.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: radarr.${config.my.defaults.domain}
+# - hostname: prowlarr.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: prowlarr.${config.my.defaults.domain}
+# - hostname: bazarr.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: bazarr.${config.my.defaults.domain}
+# - hostname: lidarr.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: lidarr.${config.my.defaults.domain}
+# - hostname: readarr.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: readarr.${config.my.defaults.domain}
+# # Services with OIDC support (now through Traefik for consistent TLS)
+# - hostname: jellyfin.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: jellyfin.${config.my.defaults.domain}
+# - hostname: qb.${config.my.defaults.domain}
+#   service: http://localhost:8081
+#   originRequest:
+#     httpHostHeader: qb.${config.my.defaults.domain}
+# - hostname: grafana.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: grafana.${config.my.defaults.domain}
+# - hostname: miniflux.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: miniflux.${config.my.defaults.domain}
+# - hostname: kavita.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: kavita.${config.my.defaults.domain}
+# - hostname: audiobookshelf.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: audiobookshelf.${config.my.defaults.domain}
+# # Other services
+# - hostname: home.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: home.${config.my.defaults.domain}
+# - hostname: microbin.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: microbin.${config.my.defaults.domain}
+# - hostname: auth.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: auth.${config.my.defaults.domain}
+# # Infrastructure services (can be added to Traefik later if needed)
+# - hostname: vault.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: vault.${config.my.defaults.domain}
+# - hostname: lldap.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: lldap.${config.my.defaults.domain}
+# - hostname: atuin.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: atuin.${config.my.defaults.domain}
+# - hostname: livesync.${config.my.defaults.domain}
+#   service: https://localhost:8443
+#   originRequest:
+#     httpHostHeader: livesync.${config.my.defaults.domain}
 
-        # # Services with OIDC support (now through Traefik for consistent TLS)
-        # - hostname: jellyfin.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: jellyfin.${config.my.defaults.domain}
-        # - hostname: qb.${config.my.defaults.domain}
-        #   service: http://localhost:8081
-        #   originRequest:
-        #     httpHostHeader: qb.${config.my.defaults.domain}
-        # - hostname: grafana.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: grafana.${config.my.defaults.domain}
-        # - hostname: miniflux.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: miniflux.${config.my.defaults.domain}
-        # - hostname: kavita.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: kavita.${config.my.defaults.domain}
-        # - hostname: audiobookshelf.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: audiobookshelf.${config.my.defaults.domain}
-
-        # # Other services
-        # - hostname: home.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: home.${config.my.defaults.domain}
-        # - hostname: microbin.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: microbin.${config.my.defaults.domain}
-        # - hostname: auth.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: auth.${config.my.defaults.domain}
-
-        # # Infrastructure services (can be added to Traefik later if needed)
-        # - hostname: vault.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: vault.${config.my.defaults.domain}
-
-        # - hostname: lldap.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: lldap.${config.my.defaults.domain}
-        # - hostname: atuin.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: atuin.${config.my.defaults.domain}
-        # - hostname: livesync.${config.my.defaults.domain}
-        #   service: https://localhost:8443
-        #   originRequest:
-        #     httpHostHeader: livesync.${config.my.defaults.domain}

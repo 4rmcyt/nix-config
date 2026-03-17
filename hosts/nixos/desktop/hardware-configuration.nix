@@ -4,26 +4,25 @@
   pkgs,
   modulesPath,
   ...
-}: let
-  zfsCompatibleKernelPackages =
-    lib.filterAttrs (
-      name: kernelPackages:
-        (builtins.match "linux_(xanmod_latest|[0-9]+_[0-9]+)" name)
-        != null
-        && (builtins.tryEval kernelPackages).success
-        && (!kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
-    )
-    pkgs.linuxKernel.packages;
+}:
+let
+  zfsCompatibleKernelPackages = lib.filterAttrs (
+    name: kernelPackages:
+    (builtins.match "linux_(xanmod_latest|[0-9]+_[0-9]+)" name) != null
+    && (builtins.tryEval kernelPackages).success
+    && (!kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
+  ) pkgs.linuxKernel.packages;
   latestKernelPackage = lib.last (
     lib.sort (a: b: lib.versionOlder a.kernel.version b.kernel.version) (
       builtins.attrValues zfsCompatibleKernelPackages
     )
   );
-in {
+in
+{
   # =================================================================
   # 1. Imports
   # =================================================================
-  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   # =================================================================
   # 2. Boot Configuration
@@ -84,7 +83,7 @@ in {
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
     '';
 
-    supportedFilesystems = ["zfs"];
+    supportedFilesystems = [ "zfs" ];
 
     # Kernel parameters
     kernelParams = [
@@ -284,18 +283,20 @@ in {
   nixpkgs.overlays = [
     (_final: prev: {
       linux-firmware = prev.linux-firmware.overrideAttrs (old: {
-        postInstall =
-          (old.postInstall or "")
-          + ''
-            cp ${prev.fetchurl {
+        postInstall = (old.postInstall or "") + ''
+          cp ${
+            prev.fetchurl {
               url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_RAM_CODE_MT7922_1.bin";
               sha256 = "19jfkmpqngm0d3wpv2inc9hmmqjfk5nhbw5d6mkvh23idg3w2jm3";
-            }} $out/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin
-            cp ${prev.fetchurl {
+            }
+          } $out/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin
+          cp ${
+            prev.fetchurl {
               url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin";
               sha256 = "1q4irdjmbfpx8fsv8qiprzklvm62z614vchyjnhpbh2745bxl65y";
-            }} $out/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin
-          '';
+            }
+          } $out/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin
+        '';
       });
     })
   ];
@@ -383,7 +384,7 @@ in {
     # Smartcard / YubiKey
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
     # iOS device support
@@ -428,19 +429,19 @@ in {
     # X server (required for NVIDIA compatibility with Wayland)
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
 
     accounts-daemon.enable = true;
-    dbus.packages = [pkgs.gcr];
+    dbus.packages = [ pkgs.gcr ];
 
     power-profiles-daemon.enable = false;
     upower.enable = true;
 
     printing = {
       enable = true;
-      drivers = [];
+      drivers = [ ];
     };
 
     prometheus.exporters.node = {
@@ -560,6 +561,12 @@ in {
     networkmanager = {
       enable = true;
       wifi.backend = "iwd"; # nl80211-only, avoids WEXT deprecation warnings on MT7922
+      settings = {
+        "connection-enp12s0" = {
+          "match-device" = "interface-name:enp12s0";
+          "ethernet.wake-on-lan" = "magic";
+        };
+      };
     };
     wireless.iwd = {
       enable = true;
@@ -567,14 +574,14 @@ in {
     };
     firewall = {
       enable = true;
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [ 9100 ]; # Prometheus node exporter
     };
   };
 
   # =================================================================
   # 7. Swap Configuration
   # =================================================================
-  swapDevices = [];
+  swapDevices = [ ];
 
   zramSwap = {
     enable = true;
@@ -591,8 +598,8 @@ in {
     oomd.enable = true;
     services.bluetooth-unblock = {
       description = "Unblock Bluetooth rfkill soft block";
-      wantedBy = ["bluetooth.service"];
-      before = ["bluetooth.service"];
+      wantedBy = [ "bluetooth.service" ];
+      before = [ "bluetooth.service" ];
       serviceConfig = {
         Type = "oneshot";
         ExecStart = "${pkgs.util-linux}/bin/rfkill unblock bluetooth";

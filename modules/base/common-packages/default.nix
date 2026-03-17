@@ -132,7 +132,7 @@
       sipcalc # ip subnet calculator
       sshfs # mount folders via ssh
       yq-go # yaml, toml parser
-
+      ethtool
       # =================================================================
       # Media & File Processing (alphabetical)
       # =================================================================
