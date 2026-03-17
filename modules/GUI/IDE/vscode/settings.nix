@@ -167,9 +167,12 @@ in {
   # Seed settings.json on first activation only — VSCode owns the file after that.
   home.activation.vscodeSettings = lib.hm.dag.entryAfter ["writeBoundary"] ''
     settings_dest="$HOME/${settingsPath}"
+    # Remove symlink (leftover from older HM approach) so HM backup won't conflict
     if [ -L "$settings_dest" ]; then
       $DRY_RUN_CMD rm "$settings_dest"
     fi
+    # Remove stale HM backup so HM can re-backup without failing
+    $DRY_RUN_CMD rm -f "$settings_dest.hm-backup"
     if [ ! -f "$settings_dest" ]; then
       $DRY_RUN_CMD mkdir -p "$(dirname "$settings_dest")"
       $DRY_RUN_CMD cp ${settingsFile} "$settings_dest"

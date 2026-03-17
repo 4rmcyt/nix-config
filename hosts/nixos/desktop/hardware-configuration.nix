@@ -615,7 +615,7 @@ in {
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        ExecStart = "${pkgs.iw}/bin/iw phy phy0 wowlan enable magic-pkt";
+        ExecStart = "${pkgs.iw}/bin/iw phy phy0 wowlan enable magic-packet";
       };
     };
   };
