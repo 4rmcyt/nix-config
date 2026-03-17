@@ -12,7 +12,6 @@ in {
       nixosBase
       ../../../hosts/nixos/desktop
       inputs.flatpaks.nixosModules.default
-      inputs.nix-gaming.nixosModules.pipewireLowLatency
       inputs.dms.nixosModules.dank-material-shell
       inputs.dms.nixosModules.greeter
       inputs.niri-flake.nixosModules.niri

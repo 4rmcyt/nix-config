@@ -1,9 +1,4 @@
-{
-  lib,
-  pkgs,
-  inputs,
-  ...
-}: {
+{pkgs, ...}: {
   # Programs
   programs.gamemode = {
     enable = true;
@@ -47,9 +42,6 @@
       # vesktop
       # lutris
       # protonup-qt
-    ]
-    ++ lib.optionals (inputs ? nix-gaming) [
-      inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.wine-ge
     ];
 
   # Enable 32-bit support for games
