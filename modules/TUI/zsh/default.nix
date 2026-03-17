@@ -54,10 +54,9 @@
         bindkey '\e[F' end-of-line
         bindkey '\e[1~' beginning-of-line
 
-        # safe-paste: bracketed paste (zsh >= 5.1 built-in)
+        # bracketed paste: use built-in only — bracketed-paste-magic triggers
+        # syntax highlighting on every pasted character (O(n²) hang on large pastes)
         set zle_bracketed_paste
-        autoload -Uz bracketed-paste-magic
-        zle -N bracketed-paste bracketed-paste-magic
 
         # sudo: Esc-Esc to prepend sudo
         __sudo-replace-buffer() {
