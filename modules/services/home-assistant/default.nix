@@ -1,5 +1,5 @@
 {config, ...}: let
-  inherit (config.my.defaults) domain homeserver_lan timezone;
+  inherit (config.my.defaults) domain homeserver_lan timezone desktop_lan desktop_wifi;
 in {
   sops.secrets.hass_alexa_client_secret = {
     sopsFile = ../../../secrets/hass-alexa.yaml;
@@ -36,6 +36,18 @@ in {
         trusted_proxies:
           - 127.0.0.1
           - ::1
+
+      wake_on_lan:
+
+      switch:
+        - platform: wake_on_lan
+          name: "Desktop (LAN)"
+          mac: "04:7C:16:6F:6F:36"
+          host: ${desktop_lan}
+        - platform: wake_on_lan
+          name: "Desktop (WiFi)"
+          mac: "F0:A6:54:F3:2F:F7"
+          host: ${desktop_wifi}
 
       alexa:
         smart_home:
