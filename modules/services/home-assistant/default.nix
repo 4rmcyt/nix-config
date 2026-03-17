@@ -1,32 +1,49 @@
 {config, ...}: let
   inherit (config.my.defaults) domain homeserver_lan timezone;
 in {
+  sops.secrets.hass_alexa_client_secret = {
+    sopsFile = ../../../secrets/hass-alexa.yaml;
+    key = "alexa_client_secret";
+    owner = "root";
+    mode = "0400";
+  };
+
   # ── OCI Container ─────────────────────────────────────────────────────────
   # Backend (podman) is set in modules/containers/default.nix — no need to repeat.
-  # Declarative configuration.yaml — mounted read-only into the container.
+  # Declarative configuration.yaml — injected via sops template (contains secrets).
   # HA never writes to this file; automations/scripts/scenes go to separate includes.
-  environment.etc."homeassistant/configuration.yaml".text = ''
-    # Loads default set of integrations. Do not remove.
-    default_config:
+  sops.templates."homeassistant-configuration.yaml" = {
+    owner = "root";
+    mode = "0444";
+    content = ''
+      # Loads default set of integrations. Do not remove.
+      default_config:
 
-    homeassistant:
-      external_url: "https://hass.${domain}"
-      internal_url: "http://localhost:8123"
+      homeassistant:
+        external_url: "https://hass.${domain}"
+        internal_url: "http://localhost:8123"
 
-    frontend:
-      themes: !include_dir_merge_named themes
+      frontend:
+        themes: !include_dir_merge_named themes
 
-    automation: !include automations.yaml
-    script: !include scripts.yaml
-    scene: !include scenes.yaml
+      automation: !include automations.yaml
+      script: !include scripts.yaml
+      scene: !include scenes.yaml
 
-    # Required for Traefik reverse proxy
-    http:
-      use_x_forwarded_for: true
-      trusted_proxies:
-        - 127.0.0.1
-        - ::1
-  '';
+      # Required for reverse proxy
+      http:
+        use_x_forwarded_for: true
+        trusted_proxies:
+          - 127.0.0.1
+          - ::1
+
+      alexa:
+        smart_home:
+          endpoint: https://api.amazonalexa.com/v3/events
+          client_id: "https://pitangui.amazon.com/"
+          client_secret: "${config.sops.placeholder.hass_alexa_client_secret}"
+    '';
+  };
 
   virtualisation.oci-containers.containers.homeassistant = {
     autoStart = true;
@@ -39,7 +56,7 @@ in {
     image = "ghcr.io/home-assistant/home-assistant:stable";
     volumes = [
       "/var/lib/hass:/config"
-      "/etc/homeassistant/configuration.yaml:/config/configuration.yaml:ro"
+      "${config.sops.templates."homeassistant-configuration.yaml".path}:/config/configuration.yaml:ro"
     ];
   };
 
