@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   # Programs
   programs.gamemode = {
     enable = true;

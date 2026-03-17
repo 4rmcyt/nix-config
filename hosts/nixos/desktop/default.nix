@@ -184,6 +184,7 @@
       profileId = "nextdns0";
     };
     enableIPv6 = false;
+    interfaces.enp12s0.wakeOnLan.enable = true;
   };
 
   # =================================================================
