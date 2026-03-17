@@ -46,6 +46,7 @@
       nix-output-monitor
       nvd
       reptyr
+      wakeonlan
 
       # =================================================================
       # Development & Nix Tools (alphabetical)

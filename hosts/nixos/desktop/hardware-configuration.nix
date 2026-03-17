@@ -4,26 +4,25 @@
   pkgs,
   modulesPath,
   ...
-}: let
-  zfsCompatibleKernelPackages =
-    lib.filterAttrs (
-      name: kernelPackages:
-        (builtins.match "linux_(xanmod_latest|[0-9]+_[0-9]+)" name)
-        != null
-        && (builtins.tryEval kernelPackages).success
-        && (!kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
-    )
-    pkgs.linuxKernel.packages;
+}:
+let
+  zfsCompatibleKernelPackages = lib.filterAttrs (
+    name: kernelPackages:
+    (builtins.match "linux_(xanmod_latest|[0-9]+_[0-9]+)" name) != null
+    && (builtins.tryEval kernelPackages).success
+    && (!kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
+  ) pkgs.linuxKernel.packages;
   latestKernelPackage = lib.last (
     lib.sort (a: b: lib.versionOlder a.kernel.version b.kernel.version) (
       builtins.attrValues zfsCompatibleKernelPackages
     )
   );
-in {
+in
+{
   # =================================================================
   # 1. Imports
   # =================================================================
-  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   # =================================================================
   # 2. Boot Configuration
@@ -71,7 +70,7 @@ in {
 
     kernelPackages = latestKernelPackage;
 
-    blacklistedKernelModules = ["r8169"];
+    blacklistedKernelModules = [ "r8169" ];
 
     extraModulePackages = with config.boot.kernelPackages; [
       r8125
@@ -89,35 +88,28 @@ in {
       options r8125 disable_wol_support=0 s5wol=1 aspm=0
     '';
 
-    supportedFilesystems = ["zfs"];
+    supportedFilesystems = [ "zfs" ];
 
     # Kernel parameters
     kernelParams = [
-      # AMD CPU optimizations (Zen 4)
       "amd_pstate=active" # Use CPPC EPP driver for best Zen 4 performance
       "amd_prefcore=1" # Prefer highest boost frequency cores
       "microcode.amd_sha_check=off"
 
-      # AMD GPU optimizations (integrated Radeon Graphics)
       "amdgpu.dpm=1" # Enable dynamic power management
       "amdgpu.ppfeaturemask=0xfffd7fff" # Enable all PowerPlay features
 
-      # Security mitigations (Zen 4 benefits from keeping these enabled)
       "mitigations=auto"
 
-      # Network optimizations
       "net.core.default_qdisc=fq"
       "net.ipv4.tcp_congestion_control=bbr"
 
-      # NVIDIA GPU
       "nvidia-drm.fbdev=1"
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
 
-      # Scheduler and preemption
       "preempt=full" # Full preemption for desktop responsiveness
 
-      # ZFS
       "zfs.zfs_arc_max=25769803776" # 24GB ARC (40% of 62GB RAM)
 
       # System configuration
@@ -129,7 +121,6 @@ in {
       "systemd.unified_cgroup_hierarchy=1"
       "usb-storage.delay_use=0"
       "usbcore.autosuspend=-1"
-      # MSI MYSTIC LIGHT (1462:7d75) disabled via udev authorized=0 — no kernel quirks needed
 
       # Display output hints for early modesetting
       "video=DP-4:1920x1080@60"
@@ -289,22 +280,20 @@ in {
   nixpkgs.overlays = [
     (_final: prev: {
       linux-firmware = prev.linux-firmware.overrideAttrs (old: {
-        postInstall =
-          (old.postInstall or "")
-          + ''
-            cp ${
-              prev.fetchurl {
-                url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_RAM_CODE_MT7922_1.bin";
-                sha256 = "19jfkmpqngm0d3wpv2inc9hmmqjfk5nhbw5d6mkvh23idg3w2jm3";
-              }
-            } $out/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin
-            cp ${
-              prev.fetchurl {
-                url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin";
-                sha256 = "1q4irdjmbfpx8fsv8qiprzklvm62z614vchyjnhpbh2745bxl65y";
-              }
-            } $out/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin
-          '';
+        postInstall = (old.postInstall or "") + ''
+          cp ${
+            prev.fetchurl {
+              url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_RAM_CODE_MT7922_1.bin";
+              sha256 = "19jfkmpqngm0d3wpv2inc9hmmqjfk5nhbw5d6mkvh23idg3w2jm3";
+            }
+          } $out/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin
+          cp ${
+            prev.fetchurl {
+              url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin";
+              sha256 = "1q4irdjmbfpx8fsv8qiprzklvm62z614vchyjnhpbh2745bxl65y";
+            }
+          } $out/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin
+        '';
       });
     })
   ];
@@ -392,7 +381,7 @@ in {
     # Smartcard / YubiKey
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
     # iOS device support
@@ -434,22 +423,21 @@ in {
     };
     pulseaudio.enable = false;
 
-    # X server (required for NVIDIA compatibility with Wayland)
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
 
     accounts-daemon.enable = true;
-    dbus.packages = [pkgs.gcr];
+    dbus.packages = [ pkgs.gcr ];
 
     power-profiles-daemon.enable = false;
     upower.enable = true;
 
     printing = {
       enable = true;
-      drivers = [];
+      drivers = [ ];
     };
 
     prometheus.exporters.node = {
@@ -582,14 +570,17 @@ in {
     };
     firewall = {
       enable = true;
-      allowedTCPPorts = [9100]; # Prometheus node exporter
+      allowedTCPPorts = [
+        9100
+        9
+      ]; # Prometheus node exporter
     };
   };
 
   # =================================================================
   # 7. Swap Configuration
   # =================================================================
-  swapDevices = [];
+  swapDevices = [ ];
 
   zramSwap = {
     enable = true;
@@ -606,8 +597,8 @@ in {
     oomd.enable = true;
     services.bluetooth-unblock = {
       description = "Unblock Bluetooth rfkill soft block";
-      wantedBy = ["bluetooth.service"];
-      before = ["bluetooth.service"];
+      wantedBy = [ "bluetooth.service" ];
+      before = [ "bluetooth.service" ];
       serviceConfig = {
         Type = "oneshot";
         ExecStart = "${pkgs.util-linux}/bin/rfkill unblock bluetooth";
