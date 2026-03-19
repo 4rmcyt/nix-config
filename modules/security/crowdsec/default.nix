@@ -50,54 +50,7 @@ in {
     # auto-generates this file on first run via `cscli machine add`
     settings.lapi.credentialsFile = "/var/lib/crowdsec/state/lapi-credentials.yaml";
 
-    # Parser-level whitelist — stops events from ever becoming alerts
-    # Tailscale CGNAT range (100.64.0.0/10) is not RFC1918, not covered by hub whitelists
-    localConfig.parsers.s02Enrich = [
-      {
-        name = "tailscale-whitelist";
-        description = "Whitelist Tailscale CGNAT range";
-        filter = "evt.Meta.source_ip startsWith '100.'";
-        whitelist = {
-          reason = "Tailscale CGNAT";
-          cidr = ["100.64.0.0/10"];
-        };
-      }
-    ];
 
-    localConfig.postOverflows.s01Whitelist = [
-      {
-        name = "local-trusted-networks";
-        description = "Whitelist LAN, Tailscale and Cloudflare IPs";
-        whitelist = {
-          reason = "trusted network";
-          ip = [
-            "127.0.0.1"
-            "192.168.1.1"
-          ];
-          cidr = [
-            "192.168.1.0/24"
-            "10.0.0.0/8"
-            "100.64.0.0/10" # Tailscale CGNAT
-            # Cloudflare proxy IPs
-            "173.245.48.0/20"
-            "103.21.244.0/22"
-            "103.22.200.0/22"
-            "103.31.4.0/22"
-            "141.101.64.0/18"
-            "108.162.192.0/18"
-            "190.93.240.0/20"
-            "188.114.96.0/20"
-            "197.234.240.0/22"
-            "198.41.128.0/17"
-            "162.158.0.0/15"
-            "104.16.0.0/13"
-            "104.24.0.0/14"
-            "172.64.0.0/13"
-            "131.0.72.0/22"
-          ];
-        };
-      }
-    ];
 
     localConfig.acquisitions = [
       {
@@ -112,6 +65,65 @@ in {
         labels.type = "syslog";
       }
     ];
+  };
+
+  # ----------------------------------------------------------------
+  # Parser whitelist — written directly to avoid stale-symlink accumulation
+  # (same issue as postoverflow: localConfig.parsers uses L+ symlinks that accumulate)
+  # Tailscale CGNAT (100.64.0.0/10) is not RFC1918 — must be whitelisted explicitly
+  # ----------------------------------------------------------------
+  environment.etc."crowdsec/parsers/s02-enrich/tailscale-whitelist.yaml" = {
+    user = "crowdsec";
+    group = "crowdsec";
+    mode = "0640";
+    text = ''
+      name: tailscale-whitelist
+      description: "Whitelist Tailscale CGNAT range"
+      filter: "evt.Meta.source_ip startsWith '100.'"
+      whitelist:
+        reason: "Tailscale CGNAT"
+        cidr:
+          - "100.64.0.0/10"
+    '';
+  };
+
+  # ----------------------------------------------------------------
+  # Postoverflow whitelist — written directly to avoid stale-symlink accumulation
+  # (the NixOS crowdsec module's localConfig.postOverflows.s01Whitelist uses
+  # environment.etc with L+ symlinks that are never cleaned up across rebuilds)
+  # ----------------------------------------------------------------
+  environment.etc."crowdsec/postoverflows/s01-whitelist/local-trusted-networks.yaml" = {
+    user = "crowdsec";
+    group = "crowdsec";
+    mode = "0640";
+    text = ''
+      name: local-trusted-networks
+      description: "Whitelist LAN, Tailscale and Cloudflare IPs"
+      whitelist:
+        reason: "trusted network"
+        ip:
+          - "127.0.0.1"
+          - "192.168.1.1"
+        cidr:
+          - "192.168.1.0/24"
+          - "10.0.0.0/8"
+          - "100.64.0.0/10"
+          - "173.245.48.0/20"
+          - "103.21.244.0/22"
+          - "103.22.200.0/22"
+          - "103.31.4.0/22"
+          - "141.101.64.0/18"
+          - "108.162.192.0/18"
+          - "190.93.240.0/20"
+          - "188.114.96.0/20"
+          - "197.234.240.0/22"
+          - "198.41.128.0/17"
+          - "162.158.0.0/15"
+          - "104.16.0.0/13"
+          - "104.24.0.0/14"
+          - "172.64.0.0/13"
+          - "131.0.72.0/22"
+    '';
   };
 
   # ----------------------------------------------------------------
