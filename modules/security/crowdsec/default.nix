@@ -40,19 +40,39 @@ in {
       "crowdsecurity/sshd"
     ];
 
+    hub.postOverflows = [
+      "crowdsecurity/whitelists" # whitelists private/RFC1918 ranges
+    ];
+
     settings.general.api.server = {
       enable = true;
       listen_uri = "127.0.0.1:8088";
     };
 
+
     # lapi.credentialsFile must point to a writable path — CrowdSec
     # auto-generates this file on first run via `cscli machine add`
     settings.lapi.credentialsFile = "/var/lib/crowdsec/state/lapi-credentials.yaml";
+
+    # Parser-level whitelist — stops events from ever becoming alerts
+    # Tailscale CGNAT range (100.64.0.0/10) is not RFC1918, not covered by hub whitelists
+    localConfig.parsers.s02Enrich = [
+      {
+        name = "tailscale-whitelist";
+        description = "Whitelist Tailscale CGNAT range";
+        filter = "evt.Meta.source_ip startsWith '100.'";
+        whitelist = {
+          reason = "Tailscale CGNAT";
+          cidr = ["100.64.0.0/10"];
+        };
+      }
+    ];
 
     localConfig.postOverflows.s01Whitelist = [
       {
         name = "trusted-networks";
         description = "Whitelist LAN, Tailscale and Cloudflare IPs";
+        filter = "Alert.Remediation == true && Alert.GetScopes() contains 'Ip'";
         whitelist = {
           reason = "trusted network";
           ip = [
@@ -62,8 +82,8 @@ in {
           cidr = [
             "192.168.1.0/24"
             "10.0.0.0/8"
-            "100.64.0.0/10"
-            # Cloudflare
+            "100.64.0.0/10" # Tailscale CGNAT
+            # Cloudflare proxy IPs
             "173.245.48.0/20"
             "103.21.244.0/22"
             "103.22.200.0/22"
