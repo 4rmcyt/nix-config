@@ -181,7 +181,7 @@ in {
               databaseFilePath = "/var/lib/traefik/plugins-local/src/github.com/david-garcia-garcia/traefik-geoblock/IP2LOCATION-LITE-DB1.IPV6.BIN";
               databaseAutoUpdate = true;
               databaseAutoUpdateDir = "/var/lib/traefik/geoblock";
-              allowedCountries = ["CA"];
+              allowedCountries = ["CA" "US"];
               allowedIPBlocks = ["100.64.0.0/10" "192.168.1.0/24"]; # Tailscale CGNAT + LAN
               ipHeaders = ["x-forwarded-for" "x-real-ip"];
               disallowedStatusCode = 403;
