@@ -40,10 +40,6 @@ in {
       "crowdsecurity/sshd"
     ];
 
-    hub.postOverflows = [
-      "crowdsecurity/whitelists" # whitelists private/RFC1918 ranges
-    ];
-
     settings.general.api.server = {
       enable = true;
       listen_uri = "127.0.0.1:8088";
@@ -70,7 +66,7 @@ in {
 
     localConfig.postOverflows.s01Whitelist = [
       {
-        name = "trusted-networks";
+        name = "local-trusted-networks";
         description = "Whitelist LAN, Tailscale and Cloudflare IPs";
         filter = "Alert.Remediation == true && Alert.GetScopes() contains 'Ip'";
         whitelist = {
