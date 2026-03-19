@@ -49,6 +49,7 @@ in {
     # lapi.credentialsFile must point to a writable path — CrowdSec
     # auto-generates this file on first run via `cscli machine add`
     settings.lapi.credentialsFile = "/var/lib/crowdsec/state/lapi-credentials.yaml";
+    settings.capi.credentialsFile = "/var/lib/crowdsec/state/online_api_credentials.yaml";
 
 
 
