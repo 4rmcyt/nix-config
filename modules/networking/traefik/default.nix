@@ -110,7 +110,7 @@ in {
         entryPoints.metrics.address = "127.0.0.1:8080";
 
         # Localhost-only entrypoint for the API (used by homepage widget)
-        entryPoints.traefik-api.address = "127.0.0.1:8081";
+        entryPoints.traefik-api.address = "127.0.0.1:8083";
       };
 
       # NixOS writes this to a file and wires the file provider automatically
