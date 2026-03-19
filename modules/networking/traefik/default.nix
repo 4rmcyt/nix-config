@@ -177,6 +177,7 @@ in {
               enabled = true;
               defaultAllow = false;
               allowPrivate = true;
+              databaseFilePath = "/var/lib/traefik/geoblock/IP2LOCATION-LITE-DB1.IPV6.BIN";
               databaseAutoUpdate = true;
               databaseAutoUpdateDir = "/var/lib/traefik/geoblock";
               allowedCountries = ["CA"];
@@ -422,5 +423,9 @@ in {
     # Cloudflare credentials injected as environment variables
     systemd.services.traefik.serviceConfig.EnvironmentFile =
       config.sops.secrets.cloudflare_acme_credentials.path;
+
+    systemd.services.traefik.environment = {
+      TRAEFIK_PLUGIN_GEOBLOCK_PATH = "/var/lib/traefik/geoblock";
+    };
   };
 }
