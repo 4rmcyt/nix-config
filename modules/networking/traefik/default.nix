@@ -177,7 +177,8 @@ in {
               enabled = true;
               defaultAllow = false;
               allowPrivate = true;
-              databaseFilePath = "/var/lib/traefik/geoblock/IP2LOCATION-LITE-DB1.IPV6.BIN";
+              # DB is bundled with the plugin source in the Nix store
+              databaseFilePath = "/var/lib/traefik/plugins-local/src/github.com/david-garcia-garcia/traefik-geoblock/IP2LOCATION-LITE-DB1.IPV6.BIN";
               databaseAutoUpdate = true;
               databaseAutoUpdateDir = "/var/lib/traefik/geoblock";
               allowedCountries = ["CA"];
@@ -424,8 +425,5 @@ in {
     systemd.services.traefik.serviceConfig.EnvironmentFile =
       config.sops.secrets.cloudflare_acme_credentials.path;
 
-    systemd.services.traefik.environment = {
-      TRAEFIK_PLUGIN_GEOBLOCK_PATH = "/var/lib/traefik/geoblock";
-    };
   };
 }
