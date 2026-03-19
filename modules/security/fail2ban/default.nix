@@ -81,18 +81,34 @@ in {
     '';
 
     # ----------------------------------------------------------------
-    # Paperless — logs auth failures via journald
+    # Grafana — logs failed logins with IP to journal
+    # Pattern: level=warn ... msg="Invalid username or password" ... remote_addr=<ip>
     # ----------------------------------------------------------------
-    jails.paperless = ''
+    jails.grafana = ''
       enabled      = true
       backend      = systemd
-      filter       = paperless
-      journalmatch = _SYSTEMD_UNIT=paperless-web.service
+      filter       = grafana
+      journalmatch = _SYSTEMD_UNIT=grafana.service
       maxretry     = 5
       bantime      = 2h
       findtime     = 10m
       action       = cloudflare-waf
     '';
+
+    # ----------------------------------------------------------------
+    # Home Assistant — logs failed logins with IP to journal
+    # ----------------------------------------------------------------
+    jails.home-assistant = ''
+      enabled      = true
+      backend      = systemd
+      filter       = home-assistant
+      journalmatch = _SYSTEMD_UNIT=home-assistant.service
+      maxretry     = 5
+      bantime      = 2h
+      findtime     = 10m
+      action       = cloudflare-waf
+    '';
+
   };
 
   environment.etc = {
@@ -142,6 +158,35 @@ in {
     };
 
     # ----------------------------------------------------------------
+    # Grafana filter — matches failed login log entries.
+    # Grafana logs: level=warn ... msg="Invalid username or password"
+    #               remote_addr=<ip>:<port>
+    # ----------------------------------------------------------------
+    "fail2ban/filter.d/grafana.conf" = {
+      mode = "0644";
+      text = ''
+        [Definition]
+        failregex = ^.* level=warn .* msg="Invalid username or password" .* remote_addr=<HOST>:.*$
+                    ^.* level=warn .* msg="Failed to look up user based on cookie" .* remote_addr=<HOST>:.*$
+        ignoreregex =
+      '';
+    };
+
+    # ----------------------------------------------------------------
+    # Home Assistant filter — matches failed login log entries.
+    # HASS logs: Login attempt or request with invalid authentication
+    # from <ip> (<user agent>)
+    # ----------------------------------------------------------------
+    "fail2ban/filter.d/home-assistant.conf" = {
+      mode = "0644";
+      text = ''
+        [Definition]
+        failregex = ^.*Login attempt or request with invalid authentication from <HOST>.*$
+        ignoreregex =
+      '';
+    };
+
+    # ----------------------------------------------------------------
     # Jellyfin filter — matches journald entries for denied auth.
     # Pattern from upstream jellyfin/jellyfin issue #5057.
     # ----------------------------------------------------------------
@@ -154,18 +199,6 @@ in {
       '';
     };
 
-    # ----------------------------------------------------------------
-    # Paperless filter — matches Django auth failure log lines.
-    # ----------------------------------------------------------------
-    "fail2ban/filter.d/paperless.conf" = {
-      mode = "0644";
-      text = ''
-        [Definition]
-        failregex = ^.*\[ERROR\].*authentication failed.*<HOST>.*$
-                    ^.*Invalid credentials.*<HOST>.*$
-        ignoreregex =
-      '';
-    };
   };
 
   # Ensure /run/fail2ban exists for storing CF rule IDs
