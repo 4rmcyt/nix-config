@@ -64,21 +64,8 @@ in {
       action = "cloudflare-waf";
     };
 
-    # ----------------------------------------------------------------
-    # Traefik access log — catches 401/403 across all reverse-proxied
-    # services where apps log 127.0.0.1 (the real IP is only in Traefik).
-    # Covers: Grafana, Homepage, Kavita, Miniflux, Audiobookshelf, etc.
-    # ----------------------------------------------------------------
-    jails.traefik-auth = ''
-      enabled   = true
-      backend   = auto
-      filter    = traefik-auth
-      logpath   = /var/log/traefik/access.log
-      maxretry  = 5
-      bantime   = 2h
-      findtime  = 10m
-      action    = cloudflare-waf
-    '';
+    # traefik-auth jail removed — CrowdSec handles Traefik log parsing
+    # (access log is now JSON format, parsed by crowdsecurity/traefik collection)
 
     # ----------------------------------------------------------------
     # Jellyfin — logs real IP in its own journal entries

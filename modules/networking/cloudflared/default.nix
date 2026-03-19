@@ -34,20 +34,20 @@
       warp-routing:
         enabled: false
 
-      # Global origin request settings to prevent QUIC timeouts
+      # Global origin request settings
       originRequest:
         connectTimeout: 30s
         tcpKeepAlive: 30s
         keepAliveTimeout: 90s
         keepAliveConnections: 100
         noHappyEyeballs: false
-        # Enable TLS for last-mile encryption to Traefik
-        originServerName: ${config.my.defaults.domain}
-        noTLSVerify: true  # Using self-signed cert, can be set to false with proper CA
 
       ingress:
         - hostname: hass.${config.my.defaults.domain}
-          service: http://localhost:8123
+          service: https://localhost:443
+          originRequest:
+            originServerName: hass.${config.my.defaults.domain}
+            noTLSVerify: true
 
         # Catch-all
         - service: http_status:404

@@ -92,6 +92,7 @@ in {
 
         accessLog = {
           filePath = "/var/log/traefik/access.log";
+          format = "json";
           bufferingSize = 100;
           filters = {
             statusCodes = ["400-599"];
@@ -111,6 +112,19 @@ in {
 
         # Localhost-only entrypoint for the API (used by homepage widget)
         entryPoints.traefik-api.address = "127.0.0.1:8083";
+
+        # ----------------------------------------------------------------
+        # Plugins — local sources, no internet required at startup
+        # ----------------------------------------------------------------
+        experimental.localPlugins = {
+          bouncer = {
+            moduleName = "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin";
+          };
+          geoblock = {
+            moduleName = "github.com/david-garcia-garcia/traefik-geoblock";
+            settings.useunsafe = true;
+          };
+        };
       };
 
       # NixOS writes this to a file and wires the file provider automatically
@@ -132,6 +146,43 @@ in {
               average = 100;
               burst = 50;
             };
+            # CrowdSec bouncer — applied to all routers
+            crowdsec.plugin.bouncer = {
+              enabled = true;
+              crowdsecMode = "stream";
+              crowdsecLapiKeyFile = config.sops.secrets.crowdsec_bouncer_key.path;
+              crowdsecLapiHost = "127.0.0.1:8088";
+              crowdsecLapiScheme = "http";
+              updateIntervalSeconds = 60;
+              forwardedHeadersTrustedIPs = [
+                "173.245.48.0/20"
+                "103.21.244.0/22"
+                "103.22.200.0/22"
+                "103.31.4.0/22"
+                "141.101.64.0/18"
+                "108.162.192.0/18"
+                "190.93.240.0/20"
+                "188.114.96.0/20"
+                "197.234.240.0/22"
+                "198.41.128.0/17"
+                "162.158.0.0/15"
+                "104.16.0.0/13"
+                "104.24.0.0/14"
+                "172.64.0.0/13"
+                "131.0.72.0/22"
+              ];
+            };
+            # Geoblock — Canada only, for public-facing hass
+            geoblock.plugin.geoblock = {
+              enabled = true;
+              defaultAllow = false;
+              allowPrivate = true;
+              databaseAutoUpdate = true;
+              databaseAutoUpdateDir = "/var/lib/traefik/geoblock";
+              allowedCountries = ["CA"];
+              ipHeaders = ["x-forwarded-for" "x-real-ip"];
+              disallowedStatusCode = 403;
+            };
           };
 
           routers = {
@@ -139,7 +190,7 @@ in {
               rule = "Host(`traefik.${domain}`)";
               entryPoints = ["websecure"];
               service = "api@internal";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
 
@@ -154,7 +205,7 @@ in {
               rule = "Host(`slskd.${domain}`)";
               entryPoints = ["websecure"];
               service = "slskd";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
 
@@ -163,42 +214,42 @@ in {
               rule = "Host(`sonarr.${domain}`)";
               entryPoints = ["websecure"];
               service = "sonarr";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
             radarr = {
               rule = "Host(`radarr.${domain}`)";
               entryPoints = ["websecure"];
               service = "radarr";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
             prowlarr = {
               rule = "Host(`prowlarr.${domain}`)";
               entryPoints = ["websecure"];
               service = "prowlarr";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
             bazarr = {
               rule = "Host(`bazarr.${domain}`)";
               entryPoints = ["websecure"];
               service = "bazarr";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
             lidarr = {
               rule = "Host(`lidarr.${domain}`)";
               entryPoints = ["websecure"];
               service = "lidarr";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
             readarr = {
               rule = "Host(`readarr.${domain}`)";
               entryPoints = ["websecure"];
               service = "readarr";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
 
@@ -206,7 +257,7 @@ in {
               rule = "Host(`jellyseerr.${domain}`)";
               entryPoints = ["websecure"];
               service = "jellyseerr";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
 
@@ -215,21 +266,21 @@ in {
               rule = "Host(`jellyfin.${domain}`)";
               entryPoints = ["websecure"];
               service = "jellyfin";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
             qb = {
               rule = "Host(`qb.${domain}`)";
               entryPoints = ["websecure"];
               service = "qb";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
             tdarr = {
               rule = "Host(`tdarr.${domain}`)";
               entryPoints = ["websecure"];
               service = "tdarr";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
 
@@ -238,7 +289,7 @@ in {
               rule = "Host(`grafana.${domain}`)";
               entryPoints = ["websecure"];
               service = "grafana";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
 
@@ -247,21 +298,21 @@ in {
               rule = "Host(`miniflux.${domain}`)";
               entryPoints = ["websecure"];
               service = "miniflux";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
             kavita = {
               rule = "Host(`kavita.${domain}`)";
               entryPoints = ["websecure"];
               service = "kavita";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
             audiobookshelf = {
               rule = "Host(`audiobookshelf.${domain}`)";
               entryPoints = ["websecure"];
               service = "audiobookshelf";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
 
@@ -270,7 +321,7 @@ in {
               rule = "Host(`hass.${domain}`)";
               entryPoints = ["websecure"];
               service = "hass";
-              middlewares = ["security-headers" "rate-limit"];
+              middlewares = ["security-headers" "rate-limit" "crowdsec" "geoblock"];
               tls.certResolver = "default";
             };
 
@@ -279,35 +330,35 @@ in {
               rule = "Host(`home.${domain}`)";
               entryPoints = ["websecure"];
               service = "homepage";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
             microbin = {
               rule = "Host(`microbin.${domain}`)";
               entryPoints = ["websecure"];
               service = "microbin";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
             vaultwarden = {
               rule = "Host(`vault.${domain}`)";
               entryPoints = ["websecure"];
               service = "vaultwarden";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
             atuin = {
               rule = "Host(`atuin.${domain}`)";
               entryPoints = ["websecure"];
               service = "atuin";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
             livesync = {
               rule = "Host(`livesync.${domain}`)";
               entryPoints = ["websecure"];
               service = "livesync";
-              middlewares = ["security-headers"];
+              middlewares = ["security-headers" "crowdsec"];
               tls.certResolver = "default";
             };
           };
