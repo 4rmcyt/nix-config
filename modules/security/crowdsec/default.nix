@@ -68,7 +68,6 @@ in {
       {
         name = "local-trusted-networks";
         description = "Whitelist LAN, Tailscale and Cloudflare IPs";
-        filter = "Alert.Remediation == true && Alert.GetScopes() contains 'Ip'";
         whitelist = {
           reason = "trusted network";
           ip = [
