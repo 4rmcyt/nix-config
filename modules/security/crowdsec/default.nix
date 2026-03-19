@@ -40,12 +40,14 @@ in {
       "crowdsecurity/sshd"
     ];
 
-    settings.general = {
-      api.server = {
-        enable = true;
-        listen_uri = "127.0.0.1:8088";
-      };
+    settings.general.api.server = {
+      enable = true;
+      listen_uri = "127.0.0.1:8088";
     };
+
+    # lapi.credentialsFile must point to a writable path — CrowdSec
+    # auto-generates this file on first run via `cscli machine add`
+    settings.lapi.credentialsFile = "/var/lib/crowdsec/state/lapi-credentials.yaml";
 
     localConfig.acquisitions = [
       {
