@@ -182,6 +182,7 @@ in {
               databaseAutoUpdate = true;
               databaseAutoUpdateDir = "/var/lib/traefik/geoblock";
               allowedCountries = ["CA"];
+              allowedIPBlocks = ["100.64.0.0/10" "192.168.1.0/24"]; # Tailscale CGNAT + LAN
               ipHeaders = ["x-forwarded-for" "x-real-ip"];
               disallowedStatusCode = 403;
             };
