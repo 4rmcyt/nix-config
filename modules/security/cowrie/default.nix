@@ -6,29 +6,11 @@ _: {
     "d /var/log/cowrie 0750 root crowdsec -"
   ];
 
-  # ── Cowrie config ──────────────────────────────────────────────────────────
-  # hostname = "srv" — generic, does not reveal real hostname.
-  # version string mimics Ubuntu OpenSSH (must NOT match real server version).
-  # listen_endpoints binds inside the container on 2222 → mapped to host port 22.
-  environment.etc."cowrie/cowrie.cfg" = {
-    mode = "0644";
-    text = ''
-      [honeypot]
-      hostname = srv
-      log_path = /var/log/cowrie
-      download_path = /var/lib/cowrie/dl
-
-      [ssh]
-      version = SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.6
-      listen_endpoints = tcp:2222:interface=0.0.0.0
-
-      [output_jsonlog]
-      enabled = true
-      logfile = /var/log/cowrie/cowrie.json
-    '';
-  };
-
   # ── OCI container ──────────────────────────────────────────────────────────
+  # Config via env vars — avoids the anonymous volume shadow on /cowrie/cowrie-git/etc.
+  # Cowrie's EnvironmentConfigParser checks COWRIE_<SECTION>_<KEY> before config files.
+  # Log path: bind-mount host /var/log/cowrie → container /var/log/cowrie (absolute path,
+  # outside the /cowrie/cowrie-git/var anonymous volume, so no shadowing).
   # Real sshd is moved to port 2222 in hosts/nixos/homeserver/default.nix.
   # Podman backend is set in modules/containers/default.nix.
   virtualisation.oci-containers.containers.cowrie = {
@@ -37,8 +19,15 @@ _: {
     ports = ["22:2222/tcp"];
     volumes = [
       "/var/log/cowrie:/var/log/cowrie"
-      "/etc/cowrie/cowrie.cfg:/cowrie/cowrie-git/etc/cowrie.cfg:ro"
     ];
+    environment = {
+      COWRIE_HONEYPOT_HOSTNAME = "srv";
+      COWRIE_HONEYPOT_LOG_PATH = "/var/log/cowrie";
+      COWRIE_SSH_VERSION = "SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.6";
+      COWRIE_SSH_LISTEN_ENDPOINTS = "tcp:2222:interface=0.0.0.0";
+      COWRIE_OUTPUT_JSONLOG_ENABLED = "true";
+      COWRIE_OUTPUT_JSONLOG_LOGFILE = "/var/log/cowrie/cowrie.json";
+    };
   };
 
   # ── CrowdSec parser ────────────────────────────────────────────────────────
