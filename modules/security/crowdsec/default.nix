@@ -20,13 +20,14 @@
 in {
   # ----------------------------------------------------------------
   # Sops secrets
+  # Populated after first deploy: cscli bouncers add traefik-bouncer
   # ----------------------------------------------------------------
-  sops.secrets.crowdsec_bouncer_key = {
-    sopsFile = ../../../secrets/crowdsec.yaml;
-    owner = "traefik";
-    group = "traefik";
-    mode = "0400";
-  };
+  # sops.secrets.crowdsec_bouncer_key = {
+  #   sopsFile = ../../../secrets/crowdsec.yaml;
+  #   owner = "traefik";
+  #   group = "traefik";
+  #   mode = "0400";
+  # };
 
   # ----------------------------------------------------------------
   # CrowdSec agent
