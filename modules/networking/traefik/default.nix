@@ -108,6 +108,9 @@ in {
         };
 
         entryPoints.metrics.address = "127.0.0.1:8080";
+
+        # Localhost-only entrypoint for the API (used by homepage widget)
+        entryPoints.traefik-api.address = "127.0.0.1:8081";
       };
 
       # NixOS writes this to a file and wires the file provider automatically
@@ -138,6 +141,13 @@ in {
               service = "api@internal";
               middlewares = ["security-headers"];
               tls.certResolver = "default";
+            };
+
+            # Internal API router for homepage widget (localhost only, no auth)
+            traefik-api-internal = {
+              rule = "PathPrefix(`/`)";
+              entryPoints = ["traefik-api"];
+              service = "api@internal";
             };
 
             slskd = {
