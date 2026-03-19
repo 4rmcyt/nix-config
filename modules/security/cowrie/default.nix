@@ -37,7 +37,7 @@ _: {
     ports = ["22:2222/tcp"];
     volumes = [
       "/var/log/cowrie:/var/log/cowrie"
-      "/etc/cowrie/cowrie.cfg:/cowrie/etc/cowrie.cfg:ro"
+      "/etc/cowrie/cowrie.cfg:/cowrie/cowrie-git/etc/cowrie.cfg:ro"
     ];
   };
 
