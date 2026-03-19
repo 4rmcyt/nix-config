@@ -11,12 +11,7 @@
       "asDropdown": true,
       "includeVars": false,
       "keepTime": true,
-      "tags": [
-        "tailscale",
-        "headscale",
-        "tailscaled",
-        "tailscale-mixin"
-      ],
+      "tags": ["tailscale", "headscale", "tailscaled", "tailscale-mixin"],
       "targetBlank": true,
       "title": "Tailscale",
       "type": "dashboards"
@@ -465,16 +460,12 @@
       },
       "id": 10,
       "options": {
-        "displayLabels": [
-          "percent"
-        ],
+        "displayLabels": ["percent"],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": [
-            "percent"
-          ]
+          "values": ["percent"]
         },
         "tooltip": {
           "mode": "multi",
@@ -516,16 +507,12 @@
       },
       "id": 11,
       "options": {
-        "displayLabels": [
-          "percent"
-        ],
+        "displayLabels": ["percent"],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": [
-            "percent"
-          ]
+          "values": ["percent"]
         },
         "tooltip": {
           "mode": "multi",
@@ -567,16 +554,12 @@
       },
       "id": 12,
       "options": {
-        "displayLabels": [
-          "percent"
-        ],
+        "displayLabels": ["percent"],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": [
-            "percent"
-          ]
+          "values": ["percent"]
         },
         "tooltip": {
           "mode": "multi",
@@ -627,16 +610,12 @@
       },
       "id": 13,
       "options": {
-        "displayLabels": [
-          "percent"
-        ],
+        "displayLabels": ["percent"],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": [
-            "percent"
-          ]
+          "values": ["percent"]
         },
         "tooltip": {
           "mode": "multi",
@@ -1009,10 +988,7 @@
       "id": 16,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
+          "calcs": ["mean", "max"],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
@@ -1063,10 +1039,7 @@
       "id": 17,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
+          "calcs": ["mean", "max"],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
@@ -1125,16 +1098,12 @@
       },
       "id": 19,
       "options": {
-        "displayLabels": [
-          "percent"
-        ],
+        "displayLabels": ["percent"],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": [
-            "percent"
-          ]
+          "values": ["percent"]
         },
         "tooltip": {
           "mode": "multi",
@@ -1176,16 +1145,12 @@
       },
       "id": 20,
       "options": {
-        "displayLabels": [
-          "percent"
-        ],
+        "displayLabels": ["percent"],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": [
-            "percent"
-          ]
+          "values": ["percent"]
         },
         "tooltip": {
           "mode": "multi",
@@ -1227,16 +1192,12 @@
       },
       "id": 21,
       "options": {
-        "displayLabels": [
-          "percent"
-        ],
+        "displayLabels": ["percent"],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": [
-            "percent"
-          ]
+          "values": ["percent"]
         },
         "tooltip": {
           "mode": "multi",
@@ -1278,16 +1239,12 @@
       },
       "id": 22,
       "options": {
-        "displayLabels": [
-          "percent"
-        ],
+        "displayLabels": ["percent"],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": [
-            "percent"
-          ]
+          "values": ["percent"]
         },
         "tooltip": {
           "mode": "multi",
@@ -1606,12 +1563,7 @@
     }
   ],
   "schemaVersion": 39,
-  "tags": [
-    "tailscale",
-    "headscale",
-    "tailscaled",
-    "tailscale-mixin"
-  ],
+  "tags": ["tailscale", "headscale", "tailscaled", "tailscale-mixin"],
   "templating": {
     "list": [
       {

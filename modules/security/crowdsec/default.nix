@@ -1,7 +1,5 @@
 {
-  config,
   pkgs,
-  lib,
   ...
 }: let
   crowdsecPlugin = pkgs.fetchFromGitHub {
@@ -45,12 +43,9 @@ in {
       listen_uri = "127.0.0.1:8088";
     };
 
-
     # lapi.credentialsFile must point to a writable path — CrowdSec
     # auto-generates this file on first run via `cscli machine add`
     settings.lapi.credentialsFile = "/var/lib/crowdsec/state/lapi-credentials.yaml";
-
-
 
     localConfig.acquisitions = [
       {
@@ -63,6 +58,11 @@ in {
         source = "journalctl";
         journalctl_filter = ["_SYSTEMD_UNIT=sshd.service"];
         labels.type = "syslog";
+      }
+      {
+        # Cowrie honeypot JSON log
+        filenames = ["/var/log/cowrie/cowrie.json"];
+        labels.type = "cowrie";
       }
     ];
   };

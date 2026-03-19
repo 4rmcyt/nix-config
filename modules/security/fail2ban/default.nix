@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }: let
   zoneIdFile = config.sops.secrets.cloudflare_zone_id.path;
@@ -109,7 +108,6 @@ in {
       findtime     = 10m
       action       = cloudflare-waf
     '';
-
   };
 
   environment.etc = {
@@ -199,7 +197,6 @@ in {
         ignoreregex =
       '';
     };
-
   };
 
   # Ensure /run/fail2ban exists for storing CF rule IDs

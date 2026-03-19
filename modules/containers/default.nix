@@ -1,7 +1,4 @@
 _: {
-  services.flaresolverr = {
-    enable = true;
-    port = 8191;
-    openFirewall = true;
-  };
+  virtualisation.podman.enable = true;
+  virtualisation.oci-containers.backend = "podman";
 }

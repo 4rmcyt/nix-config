@@ -113,6 +113,12 @@ in {
     cuetools
   ];
 
+  services.flaresolverr = {
+    enable = true;
+    port = 8191;
+    openFirewall = true;
+  };
+
   nixarr = {
     enable = true;
     mediaUsers = [config.my.defaults.user];

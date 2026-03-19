@@ -40,6 +40,7 @@ in {
     Host homeserver
       HostName ${config.my.network.hosts.homeserver_lan}
       User ${user}
+      Port 2222
       IdentityFile ~/.ssh/${user}
       IdentitiesOnly yes
 

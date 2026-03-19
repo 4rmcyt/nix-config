@@ -180,7 +180,8 @@
 
       allowedTCPPorts = [
         # Base services
-        22 # SSH
+        # 22 is handled by Cowrie (Podman DNAT in nat/prerouting, before NIXOS-FW filter)
+        2222 # Real SSH (moved from 22; Cowrie honeypot takes port 22)
         80 # HTTP
         443 # HTTPS
 
@@ -238,6 +239,7 @@
     # SSH configuration
     openssh = {
       enable = true;
+      ports = [2222]; # Moved from 22; Cowrie honeypot listens on port 22
       extraConfig = ''
         # Global Security Settings
         KexAlgorithms sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256

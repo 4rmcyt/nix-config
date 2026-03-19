@@ -425,6 +425,5 @@ in {
     # Cloudflare credentials injected as environment variables
     systemd.services.traefik.serviceConfig.EnvironmentFile =
       config.sops.secrets.cloudflare_acme_credentials.path;
-
   };
 }
