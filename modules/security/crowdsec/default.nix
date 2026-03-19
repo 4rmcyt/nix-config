@@ -49,6 +49,41 @@ in {
     # auto-generates this file on first run via `cscli machine add`
     settings.lapi.credentialsFile = "/var/lib/crowdsec/state/lapi-credentials.yaml";
 
+    localConfig.postOverflows.s01Whitelist = [
+      {
+        name = "trusted-networks";
+        description = "Whitelist LAN, Tailscale and Cloudflare IPs";
+        whitelist = {
+          reason = "trusted network";
+          ip = [
+            "127.0.0.1"
+            "192.168.1.1"
+          ];
+          cidr = [
+            "192.168.1.0/24"
+            "10.0.0.0/8"
+            "100.64.0.0/10"
+            # Cloudflare
+            "173.245.48.0/20"
+            "103.21.244.0/22"
+            "103.22.200.0/22"
+            "103.31.4.0/22"
+            "141.101.64.0/18"
+            "108.162.192.0/18"
+            "190.93.240.0/20"
+            "188.114.96.0/20"
+            "197.234.240.0/22"
+            "198.41.128.0/17"
+            "162.158.0.0/15"
+            "104.16.0.0/13"
+            "104.24.0.0/14"
+            "172.64.0.0/13"
+            "131.0.72.0/22"
+          ];
+        };
+      }
+    ];
+
     localConfig.acquisitions = [
       {
         # Traefik JSON access log
@@ -66,13 +101,16 @@ in {
 
   # ----------------------------------------------------------------
   # Traefik plugin sources (local — no internet required at startup)
+  # Directories owned by traefik to satisfy systemd-tmpfiles path safety checks
   # ----------------------------------------------------------------
   systemd.tmpfiles.rules = [
-    # CrowdSec bouncer plugin
+    "d /var/lib/traefik/plugins-local 0750 traefik traefik -"
+    "d /var/lib/traefik/plugins-local/src 0750 traefik traefik -"
+    "d /var/lib/traefik/plugins-local/src/github.com 0750 traefik traefik -"
+    "d /var/lib/traefik/plugins-local/src/github.com/maxlerebourg 0750 traefik traefik -"
+    "d /var/lib/traefik/plugins-local/src/github.com/david-garcia-garcia 0750 traefik traefik -"
     "L+ /var/lib/traefik/plugins-local/src/github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin - - - - ${crowdsecPlugin}"
-    # Geoblock plugin
     "L+ /var/lib/traefik/plugins-local/src/github.com/david-garcia-garcia/traefik-geoblock - - - - ${geoblockPlugin}"
-    # Geoblock DB directory (auto-update will populate it)
     "d /var/lib/traefik/geoblock 0750 traefik traefik -"
   ];
 }
