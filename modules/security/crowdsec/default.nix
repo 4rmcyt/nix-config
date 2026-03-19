@@ -33,7 +33,6 @@ in {
   # ----------------------------------------------------------------
   services.crowdsec = {
     enable = true;
-    allowLocalJournalAccess = true;
 
     hub.collections = [
       "crowdsecurity/traefik"
