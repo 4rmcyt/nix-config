@@ -291,9 +291,10 @@ in {
   # repeat).
   systemd.services.zfs-log-acl = {
     description = "Set POSIX ACL support on ZFS log dataset";
-    wantedBy = ["local-fs.target"];
-    after = ["zfs-import-zroot.service"];
-    requires = ["zfs-import-zroot.service"];
+    wantedBy = ["zfs.target"];
+    after = ["zfs.target"];
+    requires = ["zfs.target"];
+    before = ["systemd-journald.service"];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
