@@ -49,20 +49,20 @@ _: {
     group = "crowdsec";
     mode = "0640";
     text = ''
-      filter: "evt.Line.Labels.type == 'cowrie'"
       name: crowdsecurity/cowrie
       description: "Parse Cowrie honeypot JSON events"
+      filter: "evt.Line.Labels.type == 'cowrie'"
+      onsuccess: next_stage
       nodes:
-        - json:
-            expression: Line.Raw
-            target: Parsed
-        - meta:
-            source_ip: "{{.Parsed.src_ip}}"
+        - filter: "UnmarshalJSON(evt.Line.Raw, evt.Unmarshaled, 'cowrie') in [\"\", nil]"
+          statics:
+            - meta: log_type
+              value: cowrie
+            - meta: source_ip
+              expression: "evt.Unmarshaled.cowrie.src_ip"
       statics:
-        - meta: log_type
-          value: cowrie
         - meta: source_ip
-          expression: evt.Parsed.src_ip
+          expression: "evt.Unmarshaled.cowrie.src_ip"
     '';
   };
 
@@ -79,7 +79,7 @@ _: {
       name: crowdsecurity/cowrie-honeypot
       description: "Ban any IP that touches the SSH honeypot"
       filter: "evt.Meta.log_type == 'cowrie'"
-      groupby: meta.source_ip
+      groupby: evt.Meta.source_ip
       blackhole: 1m
       labels:
         service: cowrie
