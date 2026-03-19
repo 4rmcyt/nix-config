@@ -4,14 +4,19 @@
   "annotations": {
     "list": []
   },
-  "description": "A dashboard that gives an overview of Tailscale API metrics. The dashboards were generated using [tailscale-mixin](https://github.com/adinhodovic/tailscale-exporter/tree/main/tailscale-mixin). Open issues and create feature requests in the repository.",
+  "description": "An overview of Tailscale API metrics including tailnet settings, devices (OS, version, authorization, routes), users (role, status, login state), and auth keys. The dashboards were generated using [tailscale-mixin](https://github.com/adinhodovic/tailscale-exporter/tree/main/tailscale-mixin). Open issues and create feature requests in the repository.",
   "editable": false,
   "links": [
     {
-      "asDropdown": false,
+      "asDropdown": true,
       "includeVars": false,
       "keepTime": true,
-      "tags": ["tailscale", "tailscale-mixin"],
+      "tags": [
+        "tailscale",
+        "headscale",
+        "tailscaled",
+        "tailscale-mixin"
+      ],
       "targetBlank": true,
       "title": "Tailscale",
       "type": "dashboards"
@@ -20,114 +25,246 @@
   "panels": [
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
       "id": 1,
       "title": "Summary",
       "type": "row"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "The total number of users in the selected tailnet.",
       "fieldConfig": {
         "defaults": {
           "mappings": [],
-          "thresholds": { "steps": [{ "color": "green", "value": 0 }] },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
           "unit": "short"
-        }
+        },
+        "overrides": []
       },
-      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 1 },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
       "id": 2,
+      "options": {
+        "graphMode": "area",
+        "percentChangeColorMode": "standard",
+        "showPercentChange": false
+      },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "sum(\n  tailscale_users_info{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n)\n"
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "sum(\n  tailscale_users_info{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n)\n",
+          "instant": false
         }
       ],
-      "title": "Total Users",
+      "title": "Users",
       "type": "stat"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "The total number of devices in the selected tailnet.",
       "fieldConfig": {
         "defaults": {
           "mappings": [],
-          "thresholds": { "steps": [{ "color": "green", "value": 0 }] },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
           "unit": "short"
-        }
+        },
+        "overrides": []
       },
-      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 1 },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
       "id": 3,
+      "options": {
+        "graphMode": "area",
+        "percentChangeColorMode": "standard",
+        "showPercentChange": false
+      },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "sum(\n  tailscale_devices_info{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n)\n"
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "sum(\n  tailscale_devices_info{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n)\n",
+          "instant": false
         }
       ],
-      "title": "Total Devices",
+      "title": "Devices",
       "type": "stat"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "The total number of devices that are currently online in the selected tailnet.",
       "fieldConfig": {
         "defaults": {
           "mappings": [],
-          "thresholds": { "steps": [{ "color": "green", "value": 0 }] },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
           "unit": "short"
-        }
+        },
+        "overrides": []
       },
-      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 1 },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      },
       "id": 4,
+      "options": {
+        "graphMode": "area",
+        "percentChangeColorMode": "standard",
+        "showPercentChange": false
+      },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "sum(\n  tailscale_devices_online{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n)\n"
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "sum(\n  tailscale_devices_online{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n)\n",
+          "instant": false
         }
       ],
       "title": "Devices Logged In",
       "type": "stat"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "The total number of keys in the selected tailnet.",
       "fieldConfig": {
         "defaults": {
           "mappings": [],
-          "thresholds": { "steps": [{ "color": "green", "value": 0 }] },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
           "unit": "short"
-        }
+        },
+        "overrides": []
       },
-      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 1 },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
       "id": 5,
+      "options": {
+        "graphMode": "area",
+        "percentChangeColorMode": "standard",
+        "showPercentChange": false
+      },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "sum(\n  tailscale_keys_info{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n)\n"
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "sum(\n  tailscale_keys_info{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n)\n",
+          "instant": false
         }
       ],
-      "title": "Total Keys",
+      "title": "Keys",
       "type": "stat"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "A table showing the nameservers configured for the selected tailnet.",
-      "fieldConfig": { "defaults": { "unit": "string" }, "overrides": [] },
-      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 1 },
+      "fieldConfig": {
+        "defaults": {
+          "links": [],
+          "thresholds": {
+            "steps": []
+          },
+          "unit": "string"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      },
       "id": 6,
       "options": {
-        "footer": { "enablePagination": true },
-        "sortBy": [{ "desc": false, "displayName": "Nameserver" }]
+        "footer": {
+          "enablePagination": true
+        },
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "Nameserver"
+          }
+        ]
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "sum(\n  tailscale_dns_nameservers_info{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (nameserver)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "sum(\n  tailscale_dns_nameservers_info{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n) by (nameserver)\n",
           "format": "table",
           "instant": true
         }
@@ -137,58 +274,120 @@
         {
           "id": "organize",
           "options": {
-            "excludeByName": { "Time": true, "Value": true },
-            "indexByName": { "Value": 1, "nameserver": 0 },
-            "renameByName": { "nameserver": "Nameserver" }
+            "excludeByName": {
+              "Time": true,
+              "Value": true
+            },
+            "indexByName": {
+              "Value": 1,
+              "nameserver": 0
+            },
+            "renameByName": {
+              "nameserver": "Nameserver"
+            }
           }
         }
       ],
       "type": "table"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "Whether Magic DNS is enabled for the selected tailnet.",
       "fieldConfig": {
         "defaults": {
           "mappings": [],
-          "thresholds": { "steps": [{ "color": "green", "value": 0 }] },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
           "unit": "bool"
-        }
+        },
+        "overrides": []
       },
-      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 1 },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
       "id": 7,
+      "options": {
+        "graphMode": "area",
+        "percentChangeColorMode": "standard",
+        "showPercentChange": false
+      },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "sum(\n  tailscale_dns_magic_dns{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n)\n"
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "sum(\n  tailscale_dns_magic_dns{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n)\n",
+          "instant": false
         }
       ],
       "title": "Magic DNS Enabled",
       "type": "stat"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "A table showing the current settings for the selected tailnet.",
-      "fieldConfig": { "defaults": { "unit": "bool" }, "overrides": [] },
-      "gridPos": { "h": 5, "w": 24, "x": 0, "y": 5 },
+      "fieldConfig": {
+        "defaults": {
+          "links": [],
+          "thresholds": {
+            "steps": []
+          },
+          "unit": "bool"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
       "id": 8,
       "options": {
-        "footer": { "enablePagination": true },
-        "sortBy": [{ "desc": true, "displayName": "Tailnet" }]
+        "footer": {
+          "enablePagination": true
+        },
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Tailnet"
+          }
+        ]
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "tailscale_tailnet_settings_info{\n  cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n}\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "tailscale_tailnet_settings_info{\njob=\"$job\",\ntailnet=\"$tailnet\"\n}\n",
           "format": "table",
           "instant": true
         }
       ],
       "title": "Tailnet Settings",
       "transformations": [
-        { "id": "merge" },
+        {
+          "id": "merge"
+        },
         {
           "id": "organize",
           "options": {
@@ -236,32 +435,60 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 10 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
       "id": 9,
       "title": "Devices",
       "type": "row"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "A pie chart showing the distribution of devices by operating system in the selected tailnet.",
-      "fieldConfig": { "defaults": { "unit": "short" } },
-      "gridPos": { "h": 5, "w": 6, "x": 0, "y": 11 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 11
+      },
       "id": 10,
       "options": {
-        "displayLabels": ["percent"],
+        "displayLabels": [
+          "percent"
+        ],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": ["percent"]
+          "values": [
+            "percent"
+          ]
         },
-        "tooltip": { "mode": "multi", "sort": "desc" }
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "count(\n  tailscale_devices_info{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (os)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "count(\n  tailscale_devices_info{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n) by (os)\n",
           "instant": true,
           "legendFormat": "{{ os }}"
         }
@@ -270,26 +497,49 @@
       "type": "piechart"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "A pie chart showing the distribution of devices by Tailscale client version in the selected tailnet.",
-      "fieldConfig": { "defaults": { "unit": "short" } },
-      "gridPos": { "h": 5, "w": 6, "x": 6, "y": 11 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 6,
+        "y": 11
+      },
       "id": 11,
       "options": {
-        "displayLabels": ["percent"],
+        "displayLabels": [
+          "percent"
+        ],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": ["percent"]
+          "values": [
+            "percent"
+          ]
         },
-        "tooltip": { "mode": "multi", "sort": "desc" }
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "count(\n  tailscale_devices_info{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (client_version)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "count(\n  tailscale_devices_info{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n) by (client_version)\n",
           "instant": true,
           "legendFormat": "{{ client_version }}"
         }
@@ -298,32 +548,58 @@
       "type": "piechart"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "The total number of devices that have an update available in the selected tailnet.",
-      "fieldConfig": { "defaults": { "unit": "short" } },
-      "gridPos": { "h": 5, "w": 6, "x": 12, "y": 11 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 12,
+        "y": 11
+      },
       "id": 12,
       "options": {
-        "displayLabels": ["percent"],
+        "displayLabels": [
+          "percent"
+        ],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": ["percent"]
+          "values": [
+            "percent"
+          ]
         },
-        "tooltip": { "mode": "multi", "sort": "desc" }
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "count(\n  tailscale_devices_update_available{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } == 1\n)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "count(\n  tailscale_devices_update_available{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  } == 1\n)\n",
           "instant": true,
           "legendFormat": "Update Available"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "count(\n  tailscale_devices_update_available{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } == 0\n)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "count(\n  tailscale_devices_update_available{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  } == 0\n)\n",
           "instant": true,
           "legendFormat": "No Update Available"
         }
@@ -332,32 +608,58 @@
       "type": "piechart"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "The total number of devices that are authorized to access the tailnet.",
-      "fieldConfig": { "defaults": { "unit": "short" } },
-      "gridPos": { "h": 5, "w": 6, "x": 18, "y": 11 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 18,
+        "y": 11
+      },
       "id": 13,
       "options": {
-        "displayLabels": ["percent"],
+        "displayLabels": [
+          "percent"
+        ],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": ["percent"]
+          "values": [
+            "percent"
+          ]
         },
-        "tooltip": { "mode": "multi", "sort": "desc" }
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "count(\n  tailscale_devices_authorized{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } == 1\n)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "count(\n  tailscale_devices_authorized{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  } == 1\n)\n",
           "instant": true,
           "legendFormat": "Authorized"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "count(\n  tailscale_devices_authorized{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } == 0\n)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "count(\n  tailscale_devices_authorized{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  } == 0\n)\n",
           "instant": true,
           "legendFormat": "Not Authorized"
         }
@@ -366,20 +668,47 @@
       "type": "piechart"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "A table showing all devices in the selected tailnet.",
-      "fieldConfig": { "defaults": { "unit": "string" }, "overrides": [] },
-      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 16 },
+      "fieldConfig": {
+        "defaults": {
+          "links": [],
+          "thresholds": {
+            "steps": []
+          },
+          "unit": "string"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
       "id": 14,
       "options": {
-        "footer": { "enablePagination": true },
-        "sortBy": [{ "desc": false, "displayName": "Name" }]
+        "footer": {
+          "enablePagination": true
+        },
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "Name"
+          }
+        ]
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "tailscale_devices_info{\n  cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n}\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "tailscale_devices_info{\njob=\"$job\",\ntailnet=\"$tailnet\"\n}\n",
           "format": "table",
           "instant": true
         }
@@ -434,85 +763,180 @@
       "type": "table"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "A table showing all devices in the selected tailnet.",
       "fieldConfig": {
-        "defaults": { "unit": "bool" },
+        "defaults": {
+          "links": [],
+          "thresholds": {
+            "steps": []
+          },
+          "unit": "bool"
+        },
         "overrides": [
           {
-            "matcher": { "id": "byName", "options": "Created" },
-            "properties": [{ "id": "unit", "value": "dateTimeAsIso" }]
+            "matcher": {
+              "id": "byName",
+              "options": "Created"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              }
+            ]
           },
           {
-            "matcher": { "id": "byName", "options": "Expires" },
-            "properties": [{ "id": "unit", "value": "dateTimeAsIso" }]
+            "matcher": {
+              "id": "byName",
+              "options": "Expires"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              }
+            ]
           },
           {
-            "matcher": { "id": "byName", "options": "ID" },
-            "properties": [{ "id": "unit", "value": "string" }]
+            "matcher": {
+              "id": "byName",
+              "options": "ID"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "string"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Routes Enabled"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Routes Advertised"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
           }
         ]
       },
-      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 26 },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
       "id": 15,
       "options": {
-        "footer": { "enablePagination": true },
-        "sortBy": [{ "desc": false, "displayName": "Name" }]
+        "footer": {
+          "enablePagination": true
+        },
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "Name"
+          }
+        ]
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "min(\n  tailscale_devices_created_timestamp{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } * 1000\n) by (name, id)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "min(\n  tailscale_devices_created_timestamp{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  } * 1000\n) by (name, id)\n",
           "format": "table",
           "instant": true
         },
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "min(\n  tailscale_devices_expires_timestamp{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } * 1000\n) by (name, id)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "min(\n  tailscale_devices_expires_timestamp{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  } * 1000\n) by (name, id)\n",
           "format": "table",
           "instant": true
         },
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "sum(\n  tailscale_devices_authorized{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (name, id)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "sum(\n  tailscale_devices_authorized{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n) by (name, id)\n",
           "format": "table",
           "instant": true
         },
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "sum(\n  tailscale_devices_blocks_incoming{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (name, id)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "sum(\n  tailscale_devices_blocks_incoming{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n) by (name, id)\n",
           "format": "table",
           "instant": true
         },
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "sum(\n  tailscale_devices_routes_enabled{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (name, id)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "sum(\n  tailscale_devices_routes_enabled{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n) by (name, id)\n",
           "format": "table",
           "instant": true
         },
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "sum(\n  tailscale_devices_routes_advertised{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (name, id)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "sum(\n  tailscale_devices_routes_advertised{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n) by (name, id)\n",
           "format": "table",
           "instant": true
         },
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "sum(\n  tailscale_devices_key_expiry_disabled{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (name, id)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "sum(\n  tailscale_devices_key_expiry_disabled{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n) by (name, id)\n",
           "format": "table",
           "instant": true
         },
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "sum(\n  tailscale_devices_external{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (name, id)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "sum(\n  tailscale_devices_external{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n) by (name, id)\n",
           "format": "table",
           "instant": true
         }
       ],
       "title": "Devices Settings",
       "transformations": [
-        { "id": "merge" },
+        {
+          "id": "merge"
+        },
         {
           "id": "organize",
           "options": {
@@ -562,30 +986,53 @@
       "type": "table"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "A timeseries panel showing devices that have an update available.",
       "fieldConfig": {
-        "defaults": { "custom": { "fillOpacity": 10 }, "unit": "bool" }
+        "defaults": {
+          "custom": {
+            "fillOpacity": 10
+          },
+          "unit": "bool"
+        },
+        "overrides": []
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 36 },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 36
+      },
       "id": 16,
       "options": {
         "legend": {
-          "calcs": ["mean", "max"],
+          "calcs": [
+            "mean",
+            "max"
+          ],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
           "sortBy": "Mean",
           "sortDesc": true
         },
-        "tooltip": { "mode": "multi", "sort": "desc" }
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
           "exemplar": false,
-          "expr": "sum(\n  tailscale_devices_update_available{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (name, id)\n== 1\n",
+          "expr": "sum(\n  tailscale_devices_update_available{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n) by (name, id)\n== 1\n",
           "legendFormat": "{{name}}"
         }
       ],
@@ -593,30 +1040,53 @@
       "type": "timeseries"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "A timeseries panel showing the last time a device was seen.",
       "fieldConfig": {
-        "defaults": { "custom": { "fillOpacity": 10 }, "unit": "s" }
+        "defaults": {
+          "custom": {
+            "fillOpacity": 10
+          },
+          "unit": "s"
+        },
+        "overrides": []
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 36 },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 36
+      },
       "id": 17,
       "options": {
         "legend": {
-          "calcs": ["mean", "max"],
+          "calcs": [
+            "mean",
+            "max"
+          ],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
           "sortBy": "Mean",
           "sortDesc": true
         },
-        "tooltip": { "mode": "multi", "sort": "desc" }
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
           "exemplar": false,
-          "expr": "time() -\nmax(\n  tailscale_devices_last_seen_timestamp{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (name, id, client_version)\n",
+          "expr": "time() -\nmax(\n  tailscale_devices_last_seen_timestamp{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n) by (name, id, client_version)\n",
           "legendFormat": "{{name}}"
         }
       ],
@@ -625,32 +1095,60 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 44 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 44
+      },
       "id": 18,
       "title": "Users",
       "type": "row"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "A pie chart showing the distribution of users by role in the selected tailnet.",
-      "fieldConfig": { "defaults": { "unit": "short" } },
-      "gridPos": { "h": 5, "w": 6, "x": 0, "y": 45 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 45
+      },
       "id": 19,
       "options": {
-        "displayLabels": ["percent"],
+        "displayLabels": [
+          "percent"
+        ],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": ["percent"]
+          "values": [
+            "percent"
+          ]
         },
-        "tooltip": { "mode": "multi", "sort": "desc" }
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "count(\n  tailscale_users_info{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (role)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "count(\n  tailscale_users_info{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n) by (role)\n",
           "instant": true,
           "legendFormat": "{{ role }}"
         }
@@ -659,26 +1157,49 @@
       "type": "piechart"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "A pie chart showing the distribution of users by status in the selected tailnet.",
-      "fieldConfig": { "defaults": { "unit": "short" } },
-      "gridPos": { "h": 5, "w": 6, "x": 6, "y": 45 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 6,
+        "y": 45
+      },
       "id": 20,
       "options": {
-        "displayLabels": ["percent"],
+        "displayLabels": [
+          "percent"
+        ],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": ["percent"]
+          "values": [
+            "percent"
+          ]
         },
-        "tooltip": { "mode": "multi", "sort": "desc" }
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "count(\n  tailscale_users_info{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (status)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "count(\n  tailscale_users_info{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n) by (status)\n",
           "instant": true,
           "legendFormat": "{{ status }}"
         }
@@ -687,26 +1208,49 @@
       "type": "piechart"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "A pie chart showing the distribution of users by type in the selected tailnet.",
-      "fieldConfig": { "defaults": { "unit": "short" } },
-      "gridPos": { "h": 5, "w": 6, "x": 12, "y": 45 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 12,
+        "y": 45
+      },
       "id": 21,
       "options": {
-        "displayLabels": ["percent"],
+        "displayLabels": [
+          "percent"
+        ],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": ["percent"]
+          "values": [
+            "percent"
+          ]
         },
-        "tooltip": { "mode": "multi", "sort": "desc" }
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "count(\n  tailscale_users_info{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  }\n) by (type)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "count(\n  tailscale_users_info{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  }\n) by (type)\n",
           "instant": true,
           "legendFormat": "{{ type }}"
         }
@@ -715,32 +1259,58 @@
       "type": "piechart"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "The total number of users that are currently logged in to the selected tailnet.",
-      "fieldConfig": { "defaults": { "unit": "short" } },
-      "gridPos": { "h": 5, "w": 6, "x": 18, "y": 45 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 18,
+        "y": 45
+      },
       "id": 22,
       "options": {
-        "displayLabels": ["percent"],
+        "displayLabels": [
+          "percent"
+        ],
         "legend": {
           "displayMode": "table",
           "placement": "right",
           "showLegend": true,
-          "values": ["percent"]
+          "values": [
+            "percent"
+          ]
         },
-        "tooltip": { "mode": "multi", "sort": "desc" }
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "count(\n  tailscale_users_currently_logged_in{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } == 1\n)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "count(\n  tailscale_users_currently_logged_in{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  } == 1\n)\n",
           "instant": true,
           "legendFormat": "Logged In"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "count(\n  tailscale_users_currently_logged_in{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } == 0\n)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "count(\n  tailscale_users_currently_logged_in{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  } == 0\n)\n",
           "instant": true,
           "legendFormat": "Logged Out"
         }
@@ -749,51 +1319,99 @@
       "type": "piechart"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "A table showing all users in the selected tailnet.",
       "fieldConfig": {
-        "defaults": { "unit": "short" },
+        "defaults": {
+          "links": [],
+          "thresholds": {
+            "steps": []
+          },
+          "unit": "short"
+        },
         "overrides": [
           {
-            "matcher": { "id": "byName", "options": "Created" },
-            "properties": [{ "id": "unit", "value": "dateTimeAsIso" }]
+            "matcher": {
+              "id": "byName",
+              "options": "Created"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              }
+            ]
           },
           {
-            "matcher": { "id": "byName", "options": "Last Seen" },
-            "properties": [{ "id": "unit", "value": "dateTimeAsIso" }]
+            "matcher": {
+              "id": "byName",
+              "options": "Last Seen"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              }
+            ]
           }
         ]
       },
-      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 50 },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 50
+      },
       "id": 23,
       "options": {
-        "footer": { "enablePagination": true },
-        "sortBy": [{ "desc": false, "displayName": "Login Name" }]
+        "footer": {
+          "enablePagination": true
+        },
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "Login Name"
+          }
+        ]
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "tailscale_users_info{\n  cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n}\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "tailscale_users_info{\njob=\"$job\",\ntailnet=\"$tailnet\"\n}\n",
           "format": "table",
           "instant": true
         },
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "min(\n  tailscale_users_created_timestamp{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } * 1000\n) by (name, id)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "min(\n  tailscale_users_created_timestamp{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  } * 1000\n) by (name, id)\n",
           "format": "table",
           "instant": true
         },
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "max(\n  tailscale_users_last_seen_timestamp{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } * 1000\n) by (name, id)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "max(\n  tailscale_users_last_seen_timestamp{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  } * 1000\n) by (name, id)\n",
           "format": "table",
           "instant": true
         }
       ],
       "title": "Users",
       "transformations": [
-        { "id": "merge" },
+        {
+          "id": "merge"
+        },
         {
           "id": "organize",
           "options": {
@@ -841,57 +1459,110 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 60 },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 60
+      },
       "id": 24,
       "title": "Keys",
       "type": "row"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
       "description": "A table showing all keys in the selected tailnet.",
       "fieldConfig": {
-        "defaults": { "unit": "string" },
+        "defaults": {
+          "links": [],
+          "thresholds": {
+            "steps": []
+          },
+          "unit": "string"
+        },
         "overrides": [
           {
-            "matcher": { "id": "byName", "options": "Created" },
-            "properties": [{ "id": "unit", "value": "dateTimeAsIso" }]
+            "matcher": {
+              "id": "byName",
+              "options": "Created"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              }
+            ]
           },
           {
-            "matcher": { "id": "byName", "options": "Expires" },
-            "properties": [{ "id": "unit", "value": "dateTimeAsIso" }]
+            "matcher": {
+              "id": "byName",
+              "options": "Expires"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              }
+            ]
           }
         ]
       },
-      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 61 },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 61
+      },
       "id": 25,
       "options": {
-        "footer": { "enablePagination": true },
-        "sortBy": [{ "desc": false, "displayName": "Name" }]
+        "footer": {
+          "enablePagination": true
+        },
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "Name"
+          }
+        ]
       },
       "pluginVersion": "v11.4.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "tailscale_keys_info{\n  cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n}\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "tailscale_keys_info{\njob=\"$job\",\ntailnet=\"$tailnet\"\n}\n",
           "format": "table",
           "instant": true
         },
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "min(\n  tailscale_keys_created_timestamp{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } * 1000\n) by (name, id, key_type, user_id)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "min(\n  tailscale_keys_created_timestamp{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  } * 1000\n) by (name, id, key_type, user_id)\n",
           "format": "table",
           "instant": true
         },
         {
-          "datasource": { "type": "prometheus", "uid": "$datasource" },
-          "expr": "min(\n  tailscale_keys_expires_timestamp{\n    cluster=\"$cluster\"\n,\nnamespace=\"$namespace\",\njob=\"$job\",\ntailnet=\"$tailnet\"\n\n  } * 1000\n) by (name, id, key_type, user_id)\n",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "expr": "min(\n  tailscale_keys_expires_timestamp{\njob=\"$job\",\ntailnet=\"$tailnet\"\n  } * 1000\n) by (name, id, key_type, user_id)\n",
           "format": "table",
           "instant": true
         }
       ],
       "title": "Keys",
       "transformations": [
-        { "id": "merge" },
+        {
+          "id": "merge"
+        },
         {
           "id": "organize",
           "options": {
@@ -926,7 +1597,6 @@
               "Value #C": "Expires",
               "id": "ID",
               "key_type": "Key Type",
-              "name": "Name",
               "user_id": "User ID"
             }
           }
@@ -936,58 +1606,56 @@
     }
   ],
   "schemaVersion": 39,
-  "tags": ["tailscale", "tailscale-mixin"],
+  "tags": [
+    "tailscale",
+    "headscale",
+    "tailscaled",
+    "tailscale-mixin"
+  ],
   "templating": {
     "list": [
       {
-        "current": { "selected": true, "text": "default", "value": "default" },
+        "current": {
+          "selected": true,
+          "text": "default",
+          "value": "default"
+        },
         "label": "Data source",
         "name": "datasource",
         "query": "prometheus",
         "type": "datasource"
       },
       {
-        "datasource": { "type": "prometheus", "uid": "${datasource}" },
-        "hide": 2,
-        "label": "Cluster",
-        "name": "cluster",
-        "query": "label_values(tailscale_up{}, cluster)",
-        "refresh": 2,
-        "sort": 1,
-        "type": "query"
-      },
-      {
-        "datasource": { "type": "prometheus", "uid": "${datasource}" },
-        "label": "Namespace",
-        "name": "namespace",
-        "query": "label_values(tailscale_up{cluster=\"$cluster\"}, namespace)",
-        "refresh": 2,
-        "sort": 1,
-        "type": "query"
-      },
-      {
-        "datasource": { "type": "prometheus", "uid": "${datasource}" },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${datasource}"
+        },
         "label": "Job",
         "name": "job",
-        "query": "label_values(tailscale_up{cluster=\"$cluster\", namespace=\"$namespace\"}, job)",
+        "query": "label_values(tailscale_up{}, job)",
         "refresh": 2,
         "sort": 1,
         "type": "query"
       },
       {
-        "datasource": { "type": "prometheus", "uid": "${datasource}" },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${datasource}"
+        },
         "label": "Tailnet",
         "name": "tailnet",
-        "query": "label_values(tailscale_up{cluster=\"$cluster\", namespace=\"$namespace\", job=\"$job\"}, tailnet)",
+        "query": "label_values(tailscale_up{job=\"$job\"}, tailnet)",
         "refresh": 2,
         "sort": 1,
         "type": "query"
       }
     ]
   },
-  "time": { "from": "now-24h", "to": "now" },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
   "timezone": "utc",
   "title": "Tailscale / Overview",
-  "uid": "tailscale-mixin-over-k12e",
-  "gnetId": 24177
+  "uid": "tailscale-mixin-over-k12e"
 }
