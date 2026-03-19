@@ -32,23 +32,21 @@ in {
     ignoreIP = [
       "127.0.0.0/8"
       "10.0.0.0/8"
+      "192.168.1.0/24" # LAN
       "100.64.0.0/10" # Tailscale CGNAT range
-      "131.0.72.0/22" # existing entry
     ];
 
     # ----------------------------------------------------------------
-    # SSH — ships with fail2ban, journald backend
+    # SSH — NixOS defines this jail automatically when openssh is enabled.
+    # We override settings to tighten it up and use cloudflare-waf action.
     # ----------------------------------------------------------------
-    jails.sshd = ''
-      enabled   = true
-      backend   = systemd
-      filter    = sshd
-      journalmatch = _SYSTEMD_UNIT=sshd.service + _COMM=sshd
-      maxretry  = 3
-      bantime   = 24h
-      findtime  = 10m
-      action    = cloudflare-waf
-    '';
+    jails.sshd.settings = {
+      enabled = true;
+      maxretry = 3;
+      bantime = "24h";
+      findtime = "10m";
+      action = "cloudflare-waf";
+    };
 
     # ----------------------------------------------------------------
     # Traefik access log — catches 401/403 across all reverse-proxied
