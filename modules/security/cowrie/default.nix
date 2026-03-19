@@ -3,7 +3,8 @@ _: {
   # Owned root:crowdsec so CrowdSec can tail without running as root.
   # crowdsec group exists because ./crowdsec is imported first in security/default.nix.
   systemd.tmpfiles.rules = [
-    "d /var/log/cowrie 0750 root crowdsec -"
+    # 0755 + group/other write: cowrie container (uid 1000) writes, crowdsec reads
+    "d /var/log/cowrie 0777 root root -"
   ];
 
   # ── OCI container ──────────────────────────────────────────────────────────
@@ -16,7 +17,7 @@ _: {
   virtualisation.oci-containers.containers.cowrie = {
     autoStart = true;
     image = "docker.io/cowrie/cowrie:latest";
-    ports = ["22:2222/tcp"];
+    ports = ["22:2222/tcp" "9001:9001/tcp"];
     volumes = [
       "/var/log/cowrie:/var/log/cowrie"
     ];
@@ -27,6 +28,8 @@ _: {
       COWRIE_SSH_LISTEN_ENDPOINTS = "tcp:2222:interface=0.0.0.0";
       COWRIE_OUTPUT_JSONLOG_ENABLED = "true";
       COWRIE_OUTPUT_JSONLOG_LOGFILE = "/var/log/cowrie/cowrie.json";
+      COWRIE_OUTPUT_PROMETHEUS_ENABLED = "yes";
+      COWRIE_OUTPUT_PROMETHEUS_PORT = "9001";
     };
   };
 

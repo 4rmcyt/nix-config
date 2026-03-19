@@ -204,6 +204,10 @@
           job_name = "traefik";
           static_configs = [{targets = ["localhost:8080"];}];
         }
+        {
+          job_name = "cowrie";
+          static_configs = [{targets = ["localhost:9001"];}];
+        }
         # {
         #   job_name = "tailscale";
         #   static_configs = [{targets = ["localhost:9250"];}];
