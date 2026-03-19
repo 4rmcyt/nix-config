@@ -294,7 +294,6 @@ in {
     wantedBy = ["zfs.target"];
     after = ["zfs.target"];
     requires = ["zfs.target"];
-    before = ["systemd-journald.service"];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
