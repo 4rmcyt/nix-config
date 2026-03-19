@@ -281,6 +281,8 @@ in {
     RateLimitIntervalSec=30s
     RateLimitBurst=10000
     SystemMaxUse=2G
+    SystemKeepFree=500M
+    MaxRetentionSec=3month
     RuntimeMaxUse=200M
   '';
 

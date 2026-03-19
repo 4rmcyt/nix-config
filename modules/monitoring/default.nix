@@ -200,6 +200,10 @@
           job_name = "prometheus";
           static_configs = [{targets = ["localhost:${toString config.my.network.ports.prometheus}"];}];
         }
+        {
+          job_name = "traefik";
+          static_configs = [{targets = ["localhost:8080"];}];
+        }
         # {
         #   job_name = "tailscale";
         #   static_configs = [{targets = ["localhost:9250"];}];
