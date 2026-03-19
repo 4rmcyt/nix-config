@@ -3,84 +3,11 @@
   pkgs,
   lib,
   ...
-}:
-# This 'let' block defines our data and helper function.
-let
-  # Step 1: Define a simple list of all the services we want to protect.
-  # We only list the parts that are unique to each service.
-  servicesToProtect = {
-    ssh = {
-      filter = "sshd";
-      journalmatch = "_SYSTEMD_UNIT=sshd.service";
-      maxretry = 3;
-      bantime = "1h";
-    };
-    jellyfin = {
-      filter = "jellyfin";
-      journalmatch = "_SYSTEMD_UNIT=jellyfin.service";
-      bantime = "30m";
-    };
-    audiobookshelf = {
-      filter = "audiobookshelf";
-      journalmatch = "_SYSTEMD_UNIT=audiobookshelf.service";
-    };
-    paperless = {
-      filter = "paperless";
-      journalmatch = "_SYSTEMD_UNIT=paperless.service";
-    };
-    samba = {
-      filter = "samba";
-      journalmatch = "_SYSTEMD_UNIT=smbd.service";
-    };
-    radicale = {
-      filter = "radicale";
-      journalmatch = "_SYSTEMD_UNIT=radicale.service";
-    };
-    homepage = {
-      filter = "homepage";
-      journalmatch = "_SYSTEMD_UNIT=homepage.service";
-    };
-    cloudflared = {
-      filter = "cloudflared";
-      journalmatch = "_SYSTEMD_UNIT=cloudflared.service";
-    };
-    miniflux = {
-      filter = "miniflux";
-      journalmatch = "_SYSTEMD_UNIT=miniflux.service";
-    };
-    yubikey = {
-      filter = "yubikey";
-      journalmatch = "_SYSTEMD_UNIT=yubikey.service";
-    };
-    kavita = {
-      filter = "kavita";
-      journalmatch = "_SYSTEMD_UNIT=kavita.service";
-    };
-    transmission = {
-      filter = "transmission";
-      journalmatch = "_SYSTEMD_UNIT=transmission.service";
-    };
-    tailscale = {
-      filter = "tailscale";
-      journalmatch = "_SYSTEMD_UNIT=tailscaled.service";
-    };
-  };
-
-  # A small helper function to build the jail configuration string.
-  mkJailConfig = service: ''
-    enabled = true
-    backend = systemd
-    action = cloudflare-token-custom
-    filter = ${service.filter}
-    journalmatch = ${service.journalmatch}
-    maxretry = ${toString (service.maxretry or config.services.fail2ban.maxretry)}
-    bantime = ${service.bantime or "1h"}
-    findtime = ${service.findtime or "10m"}
-  '';
+}: let
+  zoneIdFile = config.sops.secrets.cloudflare_zone_id.path;
+  apiKeyFile = config.sops.secrets.cloudflare_api_key.path;
+  notes = "Fail2Ban-${config.networking.hostName}";
 in {
-  # This block was redundant. The 'extraPackages' option below is the correct way.
-  # environment.systemPackages = ...;
-
   sops.secrets = {
     cloudflare_zone_id.sopsFile = ../../../secrets/cloudflare.yaml;
     cloudflare_api_key.sopsFile = ../../../secrets/cloudflare.yaml;
@@ -88,54 +15,161 @@ in {
 
   services.fail2ban = {
     enable = true;
-    maxretry = 5; # A global default for any jail that doesn't specify its own.
+    maxretry = 5;
+    bantime = "1h";
+    bantime-increment = {
+      enable = true;
+      multipliers = "2 4 8 16 32 64";
+      maxtime = "168h"; # 1 week cap
+      overalljails = true;
+    };
 
-    # These packages are needed for your custom Cloudflare action.
     extraPackages = with pkgs; [
       curl
       jq
     ];
 
-    # Your IP whitelist is correct and should be kept.
     ignoreIP = [
       "127.0.0.0/8"
       "10.0.0.0/8"
-      # ... your other IPs
-      "131.0.72.0/22"
+      "100.64.0.0/10" # Tailscale CGNAT range
+      "131.0.72.0/22" # existing entry
     ];
 
-    # Step 2: Use a function to generate the entire 'jails' block automatically.
-    # lib.mapAttrs iterates over our 'servicesToProtect' list and applies
-    # our helper function to each one, creating the final configuration.
-    jails = lib.mapAttrs (_name: mkJailConfig) servicesToProtect;
+    # ----------------------------------------------------------------
+    # SSH — ships with fail2ban, journald backend
+    # ----------------------------------------------------------------
+    jails.sshd = ''
+      enabled   = true
+      backend   = systemd
+      filter    = sshd
+      journalmatch = _SYSTEMD_UNIT=sshd.service + _COMM=sshd
+      maxretry  = 3
+      bantime   = 24h
+      findtime  = 10m
+      action    = cloudflare-waf
+    '';
+
+    # ----------------------------------------------------------------
+    # Traefik access log — catches 401/403 across all reverse-proxied
+    # services where apps log 127.0.0.1 (the real IP is only in Traefik).
+    # Covers: Grafana, Homepage, Kavita, Miniflux, Audiobookshelf, etc.
+    # ----------------------------------------------------------------
+    jails.traefik-auth = ''
+      enabled   = true
+      backend   = auto
+      filter    = traefik-auth
+      logpath   = /var/log/traefik/access.log
+      maxretry  = 5
+      bantime   = 2h
+      findtime  = 10m
+      action    = cloudflare-waf
+    '';
+
+    # ----------------------------------------------------------------
+    # Jellyfin — logs real IP in its own journal entries
+    # ----------------------------------------------------------------
+    jails.jellyfin = ''
+      enabled      = true
+      backend      = systemd
+      filter       = jellyfin
+      journalmatch = _SYSTEMD_UNIT=jellyfin.service
+      maxretry     = 5
+      bantime      = 2h
+      findtime     = 10m
+      action       = cloudflare-waf
+    '';
+
+    # ----------------------------------------------------------------
+    # Paperless — logs auth failures via journald
+    # ----------------------------------------------------------------
+    jails.paperless = ''
+      enabled      = true
+      backend      = systemd
+      filter       = paperless
+      journalmatch = _SYSTEMD_UNIT=paperless-web.service
+      maxretry     = 5
+      bantime      = 2h
+      findtime     = 10m
+      action       = cloudflare-waf
+    '';
   };
 
-  # Your custom filter and action definitions are excellent and need no changes.
   environment.etc = {
-    "fail2ban/action.d/cloudflare-token-custom.conf" = {
+    # ----------------------------------------------------------------
+    # Cloudflare WAF Custom Rules action (replaces deprecated
+    # firewall/access_rules API which stopped working May 2024).
+    # Creates a per-IP block rule in the zone's WAF custom ruleset;
+    # deletes it on unban using the rule ID stored in a temp file.
+    # ----------------------------------------------------------------
+    "fail2ban/action.d/cloudflare-waf.conf" = {
       mode = "0644";
-      text = let
-        notes = "Fail2Ban-${config.networking.hostName}";
-        zoneIdFile = config.sops.secrets.cloudflare_zone_id.path;
-        apiKeyFile = config.sops.secrets.cloudflare_api_key.path;
-      in ''
+      text = ''
         [Definition]
-        actionban = curl -s -X POST "https://api.cloudflare.com/client/v4/zones/$(cat ${zoneIdFile})/firewall/access_rules/rules" \
+        actionban = RULE_ID=$(curl -s -X POST \
+            "https://api.cloudflare.com/client/v4/zones/$(cat ${zoneIdFile})/rulesets/phases/http_request_firewall_custom/entrypoint/rules" \
             -H "Authorization: Bearer $(cat ${apiKeyFile})" \
             -H "Content-Type: application/json" \
-            --data '{"mode":"block","configuration":{"target":"ip","value":"<ip>"},"notes":"${notes}"}'
+            --data "{\"description\":\"${notes} <ip>\",\"expression\":\"(ip.src eq <ip>)\",\"action\":\"block\",\"enabled\":true}" \
+            | jq -r '.result.id // empty'); \
+            [ -n "$RULE_ID" ] && echo "$RULE_ID" > /run/fail2ban/cf-<ip>.id || true
 
-        actionunban = id=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones/$(cat ${zoneIdFile})/firewall/access_rules/rules" \
-            -H "Authorization: Bearer $(cat ${apiKeyFile})" \
-            -H "Content-Type: application/json" \
-            | jq -r '.result[] | select(.notes == "${notes}" and .configuration.value == "<ip>") | .id')
-            if [ -z "$id" ]; then exit 0; fi; \
-            curl -s -X DELETE "https://api.cloudflare.com/client/v4/zones/$(cat ${zoneIdFile})/firewall/access_rules/rules/$id" \
-                -H "Authorization: Bearer $(cat ${apiKeyFile})"
+        actionunban = if [ -f /run/fail2ban/cf-<ip>.id ]; then \
+            RULE_ID=$(cat /run/fail2ban/cf-<ip>.id); \
+            curl -s -X DELETE \
+                "https://api.cloudflare.com/client/v4/zones/$(cat ${zoneIdFile})/rulesets/phases/http_request_firewall_custom/entrypoint/rules/$RULE_ID" \
+                -H "Authorization: Bearer $(cat ${apiKeyFile})" \
+                -H "Content-Type: application/json"; \
+            rm -f /run/fail2ban/cf-<ip>.id; \
+            fi
 
         [Init]
-        name = cloudflare-token-custom
+        name = cloudflare-waf
+      '';
+    };
+
+    # ----------------------------------------------------------------
+    # Traefik access log filter — matches 401/403 responses.
+    # Traefik CLF format: <ip> - - [date] "METHOD path HTTP/x" STATUS ...
+    # ----------------------------------------------------------------
+    "fail2ban/filter.d/traefik-auth.conf" = {
+      mode = "0644";
+      text = ''
+        [Definition]
+        failregex = ^<HOST> - \S+ \[.*\] ".*" (401|403) .*$
+        ignoreregex =
+      '';
+    };
+
+    # ----------------------------------------------------------------
+    # Jellyfin filter — matches journald entries for denied auth.
+    # Pattern from upstream jellyfin/jellyfin issue #5057.
+    # ----------------------------------------------------------------
+    "fail2ban/filter.d/jellyfin.conf" = {
+      mode = "0644";
+      text = ''
+        [Definition]
+        failregex = Authentication request for ".*" has been denied \(IP: "<HOST>"\)\.
+        ignoreregex =
+      '';
+    };
+
+    # ----------------------------------------------------------------
+    # Paperless filter — matches Django auth failure log lines.
+    # ----------------------------------------------------------------
+    "fail2ban/filter.d/paperless.conf" = {
+      mode = "0644";
+      text = ''
+        [Definition]
+        failregex = ^.*\[ERROR\].*authentication failed.*<HOST>.*$
+                    ^.*Invalid credentials.*<HOST>.*$
+        ignoreregex =
       '';
     };
   };
+
+  # Ensure /run/fail2ban exists for storing CF rule IDs
+  systemd.tmpfiles.rules = [
+    "d /run/fail2ban 0750 fail2ban fail2ban -"
+  ];
 }
