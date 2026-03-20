@@ -80,14 +80,14 @@
       ExecStart = pkgs.writeShellScript "geoip-update" ''
         set -euo pipefail
         DEST=/var/lib/geoip/city.mmdb
-        TMP=$(mktemp)
+        YEAR_MONTH=$(${pkgs.coreutils}/bin/date +%Y-%m)
+        URL="https://download.db-ip.com/free/dbip-city-lite-''${YEAR_MONTH}.mmdb.gz"
+        TMP=$(${pkgs.coreutils}/bin/mktemp)
         trap 'rm -f "$TMP" "$TMP.gz"' EXIT
-        ${pkgs.curl}/bin/curl -fsSL \
-          "https://download.db-ip.com/free/dbip-city-lite-latest.mmdb.gz" \
-          -o "$TMP.gz"
+        ${pkgs.curl}/bin/curl -fsSL "$URL" -o "$TMP.gz"
         ${pkgs.gzip}/bin/gunzip -c "$TMP.gz" > "$TMP"
-        install -m 0644 "$TMP" "$DEST"
-        echo "GeoIP DB updated: $(${pkgs.coreutils}/bin/stat -c %s $DEST) bytes"
+        ${pkgs.coreutils}/bin/install -m 0644 "$TMP" "$DEST"
+        echo "GeoIP DB updated from $URL: $(${pkgs.coreutils}/bin/stat -c %s $DEST) bytes"
       '';
     };
   };
@@ -100,6 +100,12 @@
       Persistent = true;
       RandomizedDelaySec = "1h";
     };
+  };
+
+  # Promtail refuses to start without the MMDB — ensure it runs after geoip-update
+  systemd.services.promtail = {
+    after = ["geoip-update.service"];
+    requires = ["geoip-update.service"];
   };
 
   # =================================================================
