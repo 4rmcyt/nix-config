@@ -154,7 +154,6 @@
         }
         {
           name = "Loki";
-          uid = "loki";
           type = "loki";
           access = "proxy";
           url = "http://localhost:3100";
