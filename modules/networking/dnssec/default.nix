@@ -29,7 +29,7 @@ in {
     services.resolved = {
       enable = true;
       settings.Resolve = {
-        DNSSEC = "true";
+        DNSSEC = "allow-downgrade";
         NegativeTrustAnchors = ["example.com"];
         Domains = ["~."];
         FallbackDNS = [
