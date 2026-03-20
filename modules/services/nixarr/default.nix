@@ -72,6 +72,41 @@ in {
       group = "media";
       mode = "0440";
     };
+    radarr_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "radarr_db_password";
+      owner = "radarr";
+      group = "radarr";
+      mode = "0440";
+    };
+    sonarr_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "sonarr_db_password";
+      owner = "sonarr";
+      group = "sonarr";
+      mode = "0440";
+    };
+    prowlarr_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "prowlarr_db_password";
+      owner = "prowlarr";
+      group = "prowlarr";
+      mode = "0440";
+    };
+    lidarr_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "lidarr_db_password";
+      owner = "lidarr";
+      group = "lidarr";
+      mode = "0440";
+    };
+    readarr_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "readarr_db_password";
+      owner = "readarr";
+      group = "readarr";
+      mode = "0440";
+    };
   };
 
   users.users =
@@ -166,6 +201,141 @@ in {
       ];
     }))
     {
+      radarr-pg-config = {
+        description = "Write Radarr PostgreSQL config.xml";
+        after = ["postgresql.service" "postgresql-setup-users.service"];
+        requires = ["postgresql.service"];
+        wantedBy = ["radarr.service"];
+        before = ["radarr.service"];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          User = "radarr";
+          Group = "radarr";
+        };
+        script = ''
+          mkdir -p /data/media/.state/nixarr/radarr
+          cat > /data/media/.state/nixarr/radarr/config.xml <<EOF
+          <Config>
+            <PostgresUser>radarr</PostgresUser>
+            <PostgresPassword>$(cat ${config.sops.secrets.radarr_db_password.path} | tr -d '\n\r')</PostgresPassword>
+            <PostgresPort>5432</PostgresPort>
+            <PostgresHost>127.0.0.1</PostgresHost>
+            <PostgresMainDb>radarr</PostgresMainDb>
+            <PostgresLogDb>radarr-log</PostgresLogDb>
+          </Config>
+          EOF
+          chmod 600 /data/media/.state/nixarr/radarr/config.xml
+        '';
+      };
+      sonarr-pg-config = {
+        description = "Write Sonarr PostgreSQL config.xml";
+        after = ["postgresql.service" "postgresql-setup-users.service"];
+        requires = ["postgresql.service"];
+        wantedBy = ["sonarr.service"];
+        before = ["sonarr.service"];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          User = "sonarr";
+          Group = "sonarr";
+        };
+        script = ''
+          mkdir -p /data/media/.state/nixarr/sonarr
+          cat > /data/media/.state/nixarr/sonarr/config.xml <<EOF
+          <Config>
+            <PostgresUser>sonarr</PostgresUser>
+            <PostgresPassword>$(cat ${config.sops.secrets.sonarr_db_password.path} | tr -d '\n\r')</PostgresPassword>
+            <PostgresPort>5432</PostgresPort>
+            <PostgresHost>127.0.0.1</PostgresHost>
+            <PostgresMainDb>sonarr</PostgresMainDb>
+            <PostgresLogDb>sonarr-log</PostgresLogDb>
+          </Config>
+          EOF
+          chmod 600 /data/media/.state/nixarr/sonarr/config.xml
+        '';
+      };
+      prowlarr-pg-config = {
+        description = "Write Prowlarr PostgreSQL config.xml";
+        after = ["postgresql.service" "postgresql-setup-users.service"];
+        requires = ["postgresql.service"];
+        wantedBy = ["prowlarr.service"];
+        before = ["prowlarr.service"];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          User = "prowlarr";
+          Group = "prowlarr";
+        };
+        script = ''
+          mkdir -p /data/media/.state/nixarr/prowlarr
+          cat > /data/media/.state/nixarr/prowlarr/config.xml <<EOF
+          <Config>
+            <PostgresUser>prowlarr</PostgresUser>
+            <PostgresPassword>$(cat ${config.sops.secrets.prowlarr_db_password.path} | tr -d '\n\r')</PostgresPassword>
+            <PostgresPort>5432</PostgresPort>
+            <PostgresHost>127.0.0.1</PostgresHost>
+            <PostgresMainDb>prowlarr</PostgresMainDb>
+            <PostgresLogDb>prowlarr-log</PostgresLogDb>
+          </Config>
+          EOF
+          chmod 600 /data/media/.state/nixarr/prowlarr/config.xml
+        '';
+      };
+      lidarr-pg-config = {
+        description = "Write Lidarr PostgreSQL config.xml";
+        after = ["postgresql.service" "postgresql-setup-users.service"];
+        requires = ["postgresql.service"];
+        wantedBy = ["lidarr.service"];
+        before = ["lidarr.service"];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          User = "lidarr";
+          Group = "lidarr";
+        };
+        script = ''
+          mkdir -p /data/media/.state/nixarr/lidarr
+          cat > /data/media/.state/nixarr/lidarr/config.xml <<EOF
+          <Config>
+            <PostgresUser>lidarr</PostgresUser>
+            <PostgresPassword>$(cat ${config.sops.secrets.lidarr_db_password.path} | tr -d '\n\r')</PostgresPassword>
+            <PostgresPort>5432</PostgresPort>
+            <PostgresHost>127.0.0.1</PostgresHost>
+            <PostgresMainDb>lidarr</PostgresMainDb>
+            <PostgresLogDb>lidarr-log</PostgresLogDb>
+          </Config>
+          EOF
+          chmod 600 /data/media/.state/nixarr/lidarr/config.xml
+        '';
+      };
+      readarr-pg-config = {
+        description = "Write Readarr PostgreSQL config.xml";
+        after = ["postgresql.service" "postgresql-setup-users.service"];
+        requires = ["postgresql.service"];
+        wantedBy = ["readarr.service"];
+        before = ["readarr.service"];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          User = "readarr";
+          Group = "readarr";
+        };
+        script = ''
+          mkdir -p /data/media/.state/nixarr/readarr
+          cat > /data/media/.state/nixarr/readarr/config.xml <<EOF
+          <Config>
+            <PostgresUser>readarr</PostgresUser>
+            <PostgresPassword>$(cat ${config.sops.secrets.readarr_db_password.path} | tr -d '\n\r')</PostgresPassword>
+            <PostgresPort>5432</PostgresPort>
+            <PostgresHost>127.0.0.1</PostgresHost>
+            <PostgresMainDb>readarr</PostgresMainDb>
+            <PostgresLogDb>readarr-log</PostgresLogDb>
+          </Config>
+          EOF
+          chmod 600 /data/media/.state/nixarr/readarr/config.xml
+        '';
+      };
       bazarr-pg-env = {
         description = "Write Bazarr PostgreSQL environment file";
         after = ["postgresql.service" "postgresql-setup-users.service"];

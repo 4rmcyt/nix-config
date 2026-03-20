@@ -42,6 +42,26 @@
       name = "bazarr";
       secret = "bazarr_db_password";
     }
+    {
+      name = "radarr";
+      secret = "radarr_db_password";
+    }
+    {
+      name = "sonarr";
+      secret = "sonarr_db_password";
+    }
+    {
+      name = "prowlarr";
+      secret = "prowlarr_db_password";
+    }
+    {
+      name = "lidarr";
+      secret = "lidarr_db_password";
+    }
+    {
+      name = "readarr";
+      secret = "readarr_db_password";
+    }
   ];
 in {
   # Database secrets configuration
@@ -109,6 +129,41 @@ in {
       group = config.users.groups.bazarr.name;
       mode = "0440";
     };
+    radarr_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "radarr_db_password";
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.radarr.name;
+      mode = "0440";
+    };
+    sonarr_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "sonarr_db_password";
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.sonarr.name;
+      mode = "0440";
+    };
+    prowlarr_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "prowlarr_db_password";
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.prowlarr.name;
+      mode = "0440";
+    };
+    lidarr_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "lidarr_db_password";
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.lidarr.name;
+      mode = "0440";
+    };
+    readarr_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "readarr_db_password";
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.readarr.name;
+      mode = "0440";
+    };
   };
 
   users.users.postgres = {
@@ -136,6 +191,16 @@ in {
       "atuin"
       "authelia"
       "bazarr"
+      "radarr"
+      "radarr-log"
+      "sonarr"
+      "sonarr-log"
+      "prowlarr"
+      "prowlarr-log"
+      "lidarr"
+      "lidarr-log"
+      "readarr"
+      "readarr-log"
     ];
 
     # Automatically create users with DB ownership
@@ -174,6 +239,26 @@ in {
       }
       {
         name = "bazarr";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "radarr";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "sonarr";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "prowlarr";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "lidarr";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "readarr";
         ensureDBOwnership = true;
       }
     ];
@@ -246,6 +331,14 @@ in {
           fi
         '')
         dbUsers}
+
+      # Grant ownership of log databases to arr users
+      for app in radarr sonarr prowlarr lidarr readarr; do
+        logdb="$app-log"
+        if ${pkgs.postgresql}/bin/psql -lqt | cut -d \| -f 1 | grep -qw "$logdb"; then
+          ${pkgs.postgresql}/bin/psql -c "ALTER DATABASE \"$logdb\" OWNER TO $app;" || true
+        fi
+      done
     '';
   };
 }
