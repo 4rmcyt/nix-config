@@ -59,15 +59,13 @@ in {
         journalctl_filter = ["_SYSTEMD_UNIT=sshd.service"];
         labels.type = "syslog";
       }
-      {
-        # Cowrie honeypot JSON log
-        # poll_without_inotify: read only complete lines (inotify fires mid-write)
-        # max_buffer_size: some cowrie lines with SSH fingerprint data are large
-        filenames = ["/var/log/cowrie/cowrie.json"];
-        labels.type = "cowrie";
-        poll_without_inotify = true;
-        max_buffer_size = 10485760; # 10MB
-      }
+      # Cowrie acquisition disabled
+      # {
+      #   filenames = ["/var/log/cowrie/cowrie.json"];
+      #   labels.type = "cowrie";
+      #   poll_without_inotify = true;
+      #   max_buffer_size = 10485760;
+      # }
     ];
   };
 

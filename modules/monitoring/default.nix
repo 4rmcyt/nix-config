@@ -252,48 +252,6 @@
         clients = [{url = "http://localhost:3100/loki/api/v1/push";}];
 
         scrape_configs = [
-          # Cowrie SSH honeypot JSON log with GeoIP enrichment
-          {
-            job_name = "cowrie";
-            pipeline_stages = [
-              {
-                json.expressions = {
-                  src_ip = "src_ip";
-                  eventid = "eventid";
-                  username = "username";
-                  session = "session";
-                };
-              }
-              {
-                # Requires /var/lib/geoip/city.mmdb (downloaded by geoip-update.service)
-                # Populates: geoip_country_name, geoip_city_name, geoip_continent_code, etc.
-                geoip = {
-                  db = "/var/lib/geoip/city.mmdb";
-                  source = "src_ip";
-                  db_type = "city";
-                };
-              }
-              {
-                labels = {
-                  eventid = null;
-                  username = null;
-                  geoip_country_name = null;
-                  geoip_city_name = null;
-                };
-              }
-            ];
-            static_configs = [
-              {
-                targets = ["localhost"];
-                labels = {
-                  job = "cowrie";
-                  host = "homeserver";
-                  "__path__" = "/var/log/cowrie/cowrie.json";
-                };
-              }
-            ];
-          }
-
           # Traefik access log
           {
             job_name = "traefik";
@@ -402,10 +360,6 @@
         {
           job_name = "traefik";
           static_configs = [{targets = ["localhost:8080"];}];
-        }
-        {
-          job_name = "cowrie";
-          static_configs = [{targets = ["localhost:9001"];}];
         }
         {
           job_name = "crowdsec";
