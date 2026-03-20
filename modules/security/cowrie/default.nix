@@ -82,7 +82,6 @@
       # Submits downloaded malware samples to VirusTotal for analysis.
       COWRIE_OUTPUT_VIRUSTOTAL_ENABLED = "true";
       COWRIE_OUTPUT_VIRUSTOTAL_UPLOAD = "true"; # Upload file content (not just hash)
-      COWRIE_OUTPUT_VIRUSTOTAL_COMMENT = "Cowrie SSH honeypot";
     };
     # API keys from sops-encrypted dotenv file
     # (COWRIE_OUTPUT_ABUSEIPDB_API_KEY and COWRIE_OUTPUT_VIRUSTOTAL_API_KEY)
