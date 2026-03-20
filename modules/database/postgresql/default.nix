@@ -11,10 +11,6 @@
       secret = "miniflux_db_password";
     }
     {
-      name = "paperless";
-      secret = "paperless_db_password";
-    }
-    {
       name = "hass";
       secret = "hass_db_password";
     }
@@ -69,13 +65,6 @@ in {
     miniflux_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "miniflux_db_password";
-      owner = config.users.users.postgres.name;
-      group = config.users.groups.postgres.name;
-      mode = "0400";
-    };
-    paperless_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "paperless_db_password";
       owner = config.users.users.postgres.name;
       group = config.users.groups.postgres.name;
       mode = "0400";
@@ -183,7 +172,6 @@ in {
     # Automatically create databases for all app users
     ensureDatabases = [
       "miniflux"
-      "paperless"
       "hass"
       "grafana"
       "vaultwarden"
@@ -208,10 +196,6 @@ in {
     ensureUsers = [
       {
         name = "miniflux";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "paperless";
         ensureDBOwnership = true;
       }
       {
@@ -326,10 +310,10 @@ in {
             config.sops.secrets.${user.secret}.path
           } | tr -d '\n\r')' CREATEDB;"
           fi
-          if ! ${pkgs.postgresql}/bin/psql -lqt | cut -d \| -f 1 | grep -qw ${user.name}; then
-            echo "Creating database ${user.name}..."
-            ${pkgs.postgresql}/bin/psql -c "CREATE DATABASE ${user.name} OWNER ${user.name};"
-          fi
+          ${pkgs.postgresql}/bin/psql -c "SELECT 'CREATE DATABASE ${user.name} OWNER ${user.name}' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname='${user.name}')" \
+            | grep -q "CREATE DATABASE" \
+            && { echo "Creating database ${user.name}..."; ${pkgs.postgresql}/bin/psql -c "CREATE DATABASE ${user.name} OWNER ${user.name};"; } \
+            || true
         '')
         dbUsers}
 

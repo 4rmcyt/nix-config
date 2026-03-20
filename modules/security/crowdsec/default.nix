@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}: let
+{pkgs, ...}: let
   crowdsecPlugin = pkgs.fetchFromGitHub {
     owner = "maxlerebourg";
     repo = "crowdsec-bouncer-traefik-plugin";
