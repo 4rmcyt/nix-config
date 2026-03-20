@@ -228,8 +228,8 @@
           retention_period = "30d";
           reject_old_samples = true;
           reject_old_samples_max_age = "30d";
-          ingestion_rate_mb = 4;
-          ingestion_burst_size_mb = 8;
+          ingestion_rate_mb = 16;
+          ingestion_burst_size_mb = 32;
         };
 
         query_range.cache_results = true;
