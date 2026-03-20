@@ -167,10 +167,10 @@
             - meta: log_type
               value: cowrie
             - meta: source_ip
-              expression: "evt.Unmarshaled.cowrie.src_ip"
+              expression: "ToString(evt.Unmarshaled.cowrie.src_ip)"
       statics:
         - meta: source_ip
-          expression: "evt.Unmarshaled.cowrie.src_ip"
+          expression: "ToString(evt.Unmarshaled.cowrie.src_ip)"
     '';
   };
 
