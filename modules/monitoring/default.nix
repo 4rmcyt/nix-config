@@ -407,6 +407,10 @@
           job_name = "cowrie";
           static_configs = [{targets = ["localhost:9001"];}];
         }
+        {
+          job_name = "crowdsec";
+          static_configs = [{targets = ["localhost:6060"];}];
+        }
       ];
     };
   };
