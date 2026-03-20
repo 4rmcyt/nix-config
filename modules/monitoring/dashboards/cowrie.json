@@ -847,52 +847,29 @@
       },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
+          "color": { "mode": "palette-classic" },
           "custom": {
             "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
+            "cellOptions": { "type": "auto" },
             "inspect": false
           },
           "unit": "short"
         },
         "overrides": [
           {
-            "matcher": {
-              "id": "byName",
-              "options": "Sessions"
-            },
+            "matcher": { "id": "byName", "options": "Sessions" },
             "properties": [
-              {
-                "id": "custom.width",
-                "value": 100
-              },
+              { "id": "custom.width", "value": 100 },
               {
                 "id": "custom.cellOptions",
-                "value": {
-                  "mode": "basic",
-                  "type": "gauge"
-                }
+                "value": { "mode": "basic", "type": "gauge" }
               },
-              {
-                "id": "color",
-                "value": {
-                  "mode": "continuous-BlYlRd"
-                }
-              }
+              { "id": "color", "value": { "mode": "continuous-BlYlRd" } }
             ]
           }
         ]
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 24
-      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 },
       "id": 31,
       "options": {
         "cellHeight": "sm",
@@ -903,22 +880,14 @@
           "show": false
         },
         "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "Sessions"
-          }
-        ]
+        "sortBy": [{ "desc": true, "displayName": "Sessions" }]
       },
       "title": "Sessions by Country",
       "type": "table",
       "targets": [
         {
-          "datasource": {
-            "type": "loki",
-            "uid": "${loki_datasource}"
-          },
-          "expr": "topk(10, sum by (geoip_country_name) (count_over_time({job=\"cowrie\", eventid=\"cowrie.session.connect\"}[$__range])))",
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "topk(10, sum by (geoip_country_name) (count_over_time({job=\"cowrie\", eventid=\"cowrie.session.connect\"} | geoip_country_name != \"\" [$__range])))",
           "refId": "A",
           "legendFormat": "{{geoip_country_name}}",
           "queryType": "instant"
@@ -928,9 +897,7 @@
         {
           "id": "organize",
           "options": {
-            "excludeByName": {
-              "Time": true
-            },
+            "excludeByName": { "Time": true },
             "renameByName": {
               "geoip_country_name": "Country",
               "Value": "Sessions"
@@ -940,13 +907,346 @@
       ]
     },
     {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 32
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" },
+            "inspect": false
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Sessions" },
+            "properties": [
+              { "id": "custom.width", "value": 100 },
+              {
+                "id": "custom.cellOptions",
+                "value": { "mode": "basic", "type": "gauge" }
+              },
+              { "id": "color", "value": { "mode": "continuous-BlYlRd" } }
+            ]
+          }
+        ]
       },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 32 },
+      "id": 32,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [{ "desc": true, "displayName": "Sessions" }]
+      },
+      "title": "Top Attacking Cities",
+      "type": "table",
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "topk(10, sum by (geoip_city_name, geoip_country_name) (count_over_time({job=\"cowrie\", eventid=\"cowrie.session.connect\"} | geoip_city_name != \"\" [$__range])))",
+          "refId": "A",
+          "legendFormat": "{{geoip_city_name}}",
+          "queryType": "instant"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": { "Time": true },
+            "renameByName": {
+              "geoip_city_name": "City",
+              "geoip_country_name": "Country",
+              "Value": "Sessions"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 40 },
+      "id": 106,
+      "title": "Commands Executed",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" },
+            "inspect": false
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Count" },
+            "properties": [
+              { "id": "custom.width", "value": 100 },
+              {
+                "id": "custom.cellOptions",
+                "value": { "mode": "basic", "type": "gauge" }
+              },
+              { "id": "color", "value": { "mode": "continuous-BlYlRd" } }
+            ]
+          }
+        ]
+      },
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 41 },
+      "id": 60,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [{ "desc": true, "displayName": "Count" }]
+      },
+      "title": "Top Commands",
+      "type": "table",
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "topk(20, sum by (input) (count_over_time({job=\"cowrie\", eventid=\"cowrie.command.input\"} | json | __error__=\"\" [$__range])))",
+          "refId": "A",
+          "legendFormat": "{{input}}",
+          "queryType": "instant"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": { "Time": true },
+            "renameByName": { "input": "Command", "Value": "Count" }
+          }
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 41 },
+      "id": 61,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "title": "Command Log Stream",
+      "type": "logs",
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "{job=\"cowrie\", eventid=\"cowrie.command.input\"}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 51 },
+      "id": 107,
+      "title": "Downloads & Malware",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" },
+            "filterable": true,
+            "inspect": false
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "URL" },
+            "properties": [{ "id": "custom.width", "value": 400 }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "SHA256" },
+            "properties": [
+              { "id": "custom.width", "value": 260 },
+              { "id": "custom.cellOptions", "value": { "type": "color-text" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "IP" },
+            "properties": [{ "id": "custom.width", "value": 140 }]
+          }
+        ]
+      },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 52 },
+      "id": 62,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [{ "desc": true, "displayName": "Time" }]
+      },
+      "title": "Downloaded Files",
+      "type": "table",
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "{job=\"cowrie\", eventid=\"cowrie.session.file_download\"} | json url, shasum, src_ip | __error__=\"\"",
+          "refId": "A",
+          "legendFormat": ""
+        }
+      ],
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": { "source": "labels" }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": false,
+              "Line": true,
+              "id": true,
+              "tsNs": true,
+              "job": true,
+              "host": true,
+              "eventid": true,
+              "geoip_city_name": true,
+              "geoip_continent_code": true,
+              "geoip_country_name": true,
+              "session": true,
+              "username": true
+            },
+            "renameByName": {
+              "url": "URL",
+              "shasum": "SHA256",
+              "src_ip": "IP"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 62 },
+      "id": 108,
+      "title": "Session Recordings (TTY)",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" },
+            "filterable": true,
+            "inspect": false
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Duration" },
+            "properties": [
+              { "id": "custom.width", "value": 100 },
+              { "id": "unit", "value": "s" }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "IP" },
+            "properties": [{ "id": "custom.width", "value": 140 }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Session" },
+            "properties": [{ "id": "custom.width", "value": 160 }]
+          }
+        ]
+      },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 63 },
+      "id": 70,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [{ "desc": true, "displayName": "Time" }]
+      },
+      "title": "Sessions with TTY Recording (replay: podman exec cowrie playlog /var/log/cowrie/tty/<id>)",
+      "type": "table",
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "{job=\"cowrie\", eventid=\"cowrie.log.closed\"} | json ttylog, duration, src_ip | __error__=\"\"",
+          "refId": "A",
+          "legendFormat": ""
+        }
+      ],
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": { "source": "labels" }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Line": true,
+              "id": true,
+              "tsNs": true,
+              "job": true,
+              "host": true,
+              "eventid": true,
+              "geoip_city_name": true,
+              "geoip_continent_code": true,
+              "geoip_country_name": true,
+              "username": true
+            },
+            "renameByName": {
+              "ttylog": "TTY File",
+              "duration": "Duration",
+              "src_ip": "IP",
+              "session": "Session"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 73 },
       "id": 104,
       "title": "Password Analysis",
       "type": "row"
@@ -999,7 +1299,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 33
+        "y": 74
       },
       "id": 40,
       "options": {
@@ -1043,7 +1343,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 41
+        "y": 83
       },
       "id": 105,
       "title": "Process Health",
@@ -1097,7 +1397,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 42
+        "y": 84
       },
       "id": 50,
       "options": {
@@ -1183,7 +1483,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 42
+        "y": 84
       },
       "id": 51,
       "options": {
