@@ -192,15 +192,10 @@ in {
       "authelia"
       "bazarr"
       "radarr"
-      "radarr-log"
       "sonarr"
-      "sonarr-log"
       "prowlarr"
-      "prowlarr-log"
       "lidarr"
-      "lidarr-log"
       "readarr"
-      "readarr-log"
     ];
 
     # Automatically create users with DB ownership
@@ -332,13 +327,6 @@ in {
         '')
         dbUsers}
 
-      # Grant ownership of log databases to arr users
-      for app in radarr sonarr prowlarr lidarr readarr; do
-        logdb="$app-log"
-        if ${pkgs.postgresql}/bin/psql -lqt | cut -d \| -f 1 | grep -qw "$logdb"; then
-          ${pkgs.postgresql}/bin/psql -c "ALTER DATABASE \"$logdb\" OWNER TO $app;" || true
-        fi
-      done
     '';
   };
 }
