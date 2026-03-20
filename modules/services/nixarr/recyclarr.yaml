@@ -1,6 +1,6 @@
 sonarr:
   series:
-    base_url: http://localhost:8989
+    base_url: http://localhost:8990
     api_key: REDACTED
     quality_definition:
       type: series
@@ -261,7 +261,7 @@ sonarr:
 radarr:
   movies:
     base_url: http://localhost:7878
-    api_key: ***REDACTED-RECYCLARR-KEY-2***
+    api_key: REDACTED
     quality_definition:
       type: movie
     delete_old_custom_formats: true
