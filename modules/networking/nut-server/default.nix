@@ -16,7 +16,10 @@
   systemd.services.upsd.wants = ["upsdrv.service"];
 
   # Add prometheus-nut-exporter to nut group for password file access
+  # Start after upsd so the exporter reads the secret after upsd is ready
   systemd.services.prometheus-nut-exporter = lib.mkIf config.services.prometheus.exporters.nut.enable {
+    after = ["upsd.service"];
+    wants = ["upsd.service"];
     serviceConfig = {
       SupplementaryGroups = ["nut"];
     };

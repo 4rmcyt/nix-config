@@ -30,6 +30,7 @@ in {
       enable = true;
       settings.Resolve = {
         DNSSEC = "true";
+        NegativeTrustAnchors = ["example.com"];
         Domains = ["~."];
         FallbackDNS = [
           "45.90.28.0#${nextdnsHost}"

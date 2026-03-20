@@ -134,7 +134,7 @@
       "targets": [
         {
           "datasource": { "type": "loki", "uid": "${loki_datasource}" },
-          "expr": "sum by (unit) (count_over_time({job=\"systemd-journal\", host=\"homeserver\"} |~ \"(?i)(error|failed|fatal|critical)\" [$__range]))",
+          "expr": "sum by (unit) (count_over_time({job=\"systemd-journal\", host=\"homeserver\"} |~ \"(?i)(error|failed|fatal|critical)\" | unit != \"loki.service\" [$__range]))",
           "instant": true,
           "legendFormat": "{{unit}}",
           "refId": "A"
@@ -176,7 +176,7 @@
       "targets": [
         {
           "datasource": { "type": "loki", "uid": "${loki_datasource}" },
-          "expr": "{job=\"systemd-journal\", host=\"homeserver\"} |~ \"(?i)(error|failed|fatal|critical)\"",
+          "expr": "{job=\"systemd-journal\", host=\"homeserver\"} |~ \"(?i)(error|failed|fatal|critical)\" | unit != \"loki.service\"",
           "legendFormat": "",
           "refId": "A"
         }
