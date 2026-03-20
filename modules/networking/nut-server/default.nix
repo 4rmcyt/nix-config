@@ -10,6 +10,10 @@
 
   users.groups.nut = {};
 
+  # upsd must start after upsdrv so the driver socket exists before upsd tries to connect
+  systemd.services.upsd.after = ["upsdrv.service"];
+  systemd.services.upsd.requires = ["upsdrv.service"];
+
   # Add prometheus-nut-exporter to nut group for password file access
   systemd.services.prometheus-nut-exporter = lib.mkIf config.services.prometheus.exporters.nut.enable {
     serviceConfig = {
