@@ -61,8 +61,10 @@ in {
       }
       {
         # Cowrie honeypot JSON log
+        # poll_without_inotify: avoids reading partial lines written by Cowrie
         filenames = ["/var/log/cowrie/cowrie.json"];
         labels.type = "cowrie";
+        poll_without_inotify = true;
       }
     ];
   };
