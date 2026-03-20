@@ -192,10 +192,16 @@ in {
       "authelia"
       "bazarr"
       "radarr"
+      "radarr-log"
       "sonarr"
+      "sonarr-log"
       "prowlarr"
+      "prowlarr-log"
       "lidarr"
+      "lidarr-log"
       "readarr"
+      "readarr-log"
+      "readarr-cache"
     ];
 
     # Automatically create users with DB ownership
