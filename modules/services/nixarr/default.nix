@@ -72,41 +72,6 @@ in {
       group = "media";
       mode = "0440";
     };
-    radarr_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "radarr_db_password";
-      owner = "radarr";
-      group = "radarr";
-      mode = "0440";
-    };
-    sonarr_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "sonarr_db_password";
-      owner = "sonarr";
-      group = "sonarr";
-      mode = "0440";
-    };
-    prowlarr_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "prowlarr_db_password";
-      owner = "prowlarr";
-      group = "prowlarr";
-      mode = "0440";
-    };
-    lidarr_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "lidarr_db_password";
-      owner = "lidarr";
-      group = "lidarr";
-      mode = "0440";
-    };
-    readarr_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "readarr_db_password";
-      owner = "readarr";
-      group = "readarr";
-      mode = "0440";
-    };
   };
 
   users.users =
