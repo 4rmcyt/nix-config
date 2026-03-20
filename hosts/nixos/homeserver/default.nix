@@ -181,6 +181,7 @@
       allowedTCPPorts = [
         # Base services
         # 22 is handled by Cowrie (Podman DNAT in nat/prerouting, before NIXOS-FW filter)
+        # 23 is handled by Cowrie Telnet (same Podman DNAT mechanism)
         2222 # Real SSH (moved from 22; Cowrie honeypot takes port 22)
         80 # HTTP
         443 # HTTPS
