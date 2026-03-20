@@ -60,12 +60,12 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "sum(cs_bucket_overflowed_total)",
+          "expr": "sum(cs_alerts)",
           "instant": true,
           "refId": "A"
         }
       ],
-      "title": "Scenario Triggers",
+      "title": "Alerts (all time)",
       "type": "stat"
     },
     {
@@ -126,12 +126,12 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "rate(cs_bucket_overflowed_total[5m])",
-          "legendFormat": "{{name}}",
+          "expr": "rate(cs_alerts[5m])",
+          "legendFormat": "{{reason}}",
           "refId": "A"
         }
       ],
-      "title": "Scenario Trigger Rate",
+      "title": "Alert Rate by Scenario",
       "type": "timeseries"
     },
     {
@@ -149,12 +149,12 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "${datasource}" },
-          "expr": "rate(cs_filesource_hits_total[5m])",
-          "legendFormat": "{{acquis_type}}",
+          "expr": "rate(cs_parsing_time_seconds_count[5m])",
+          "legendFormat": "{{source}}",
           "refId": "A"
         }
       ],
-      "title": "Log Lines Processed (rate)",
+      "title": "Parsing Rate by Source",
       "type": "timeseries"
     },
     {
