@@ -4,7 +4,10 @@
   # crowdsec reads the log via its acquisition config.
   systemd.tmpfiles.rules = [
     "d /var/log/cowrie 0777 root root -"
-    "d /var/lib/cowrie/downloads 0777 root root -"
+    # /var/lib/cowrie → /cowrie/cowrie-git/var inside container.
+    # Downloads land at var/lib/cowrie/downloads relative to that mount point.
+    "d /var/lib/cowrie/lib/cowrie/downloads 0777 root root -"
+    "d /var/lib/cowrie/log/cowrie/tty 0777 root root -"
   ];
 
   # ── Sops secrets (API keys) ────────────────────────────────────────────────
@@ -17,10 +20,11 @@
   };
 
   # ── OCI container ──────────────────────────────────────────────────────────
-  # Config via env vars — avoids the anonymous volume shadow on /cowrie/cowrie-git/etc.
-  # Cowrie's EnvironmentConfigParser checks COWRIE_<SECTION>_<KEY> before config files.
-  # Log path: bind-mount host /var/log/cowrie → container /var/log/cowrie (absolute path,
-  # outside the /cowrie/cowrie-git/var anonymous volume, so no shadowing).
+  # The Cowrie image declares VOLUME ["/cowrie/cowrie-git/etc", "/cowrie/cowrie-git/var"].
+  # File-level bind mounts inside a VOLUME-declared directory are shadowed by the anonymous
+  # volume Podman creates. Fix: mount the entire directory to replace the anonymous volume.
+  # /etc/cowrie → /cowrie/cowrie-git/etc (contains userdb.txt + honeyfs/)
+  # /var/lib/cowrie → /cowrie/cowrie-git/var (contains tty logs, downloads)
   # Real sshd is moved to port 2222 in hosts/nixos/homeserver/default.nix.
   # Podman backend is set in modules/containers/default.nix.
   virtualisation.oci-containers.containers.cowrie = {
@@ -33,10 +37,13 @@
     ];
     volumes = [
       "/var/log/cowrie:/var/log/cowrie"
-      "/var/lib/cowrie/downloads:/cowrie/cowrie-git/var/lib/cowrie/downloads"
-      # Fake credential list — controls which username/password combos Cowrie accepts
-      "/etc/cowrie/userdb.txt:/cowrie/cowrie-git/etc/userdb.txt:ro"
-      # Fake /etc files served to attackers inside the fake shell
+      # Mount entire dirs to override the image's anonymous VOLUMEs for these paths.
+      # File-level bind mounts inside an image-declared VOLUME dir are shadowed — only
+      # a full directory mount replaces the anonymous volume.
+      "/etc/cowrie:/cowrie/cowrie-git/etc:ro"
+      "/var/lib/cowrie:/cowrie/cowrie-git/var"
+      # Fake /etc files served to attackers inside the fake shell.
+      # honeyfs is at /cowrie/cowrie-git/honeyfs/ (outside the VOLUME dirs above).
       "/etc/cowrie/honeyfs/etc/motd:/cowrie/cowrie-git/honeyfs/etc/motd:ro"
       "/etc/cowrie/honeyfs/etc/issue.net:/cowrie/cowrie-git/honeyfs/etc/issue.net:ro"
       "/etc/cowrie/honeyfs/etc/passwd:/cowrie/cowrie-git/honeyfs/etc/passwd:ro"
@@ -48,7 +55,7 @@
       # Generic Ubuntu server identity — does NOT reveal real hostname/version.
       COWRIE_HONEYPOT_HOSTNAME = "ubuntu-srv";
       COWRIE_HONEYPOT_LOG_PATH = "/var/log/cowrie";
-      COWRIE_HONEYPOT_DOWNLOAD_PATH = "/cowrie/cowrie-git/var/lib/cowrie/downloads";
+      COWRIE_HONEYPOT_DOWNLOAD_PATH = "/cowrie/cowrie-git/var/lib/cowrie/downloads"; # inside container
 
       # ── SSH listener ───────────────────────────────────────────────────────
       # Mimics Ubuntu 22.04 LTS OpenSSH — common enough to attract scanners.
