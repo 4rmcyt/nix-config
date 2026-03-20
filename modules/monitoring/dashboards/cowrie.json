@@ -1204,7 +1204,7 @@
         "showHeader": true,
         "sortBy": [{ "desc": true, "displayName": "Time" }]
       },
-      "title": "Sessions with TTY Recording (replay: podman exec cowrie playlog /var/log/cowrie/tty/<id>)",
+      "title": "Sessions with TTY Recording (replay: podman exec cowrie playlog var/lib/cowrie/tty/<id>)",
       "type": "table",
       "targets": [
         {
