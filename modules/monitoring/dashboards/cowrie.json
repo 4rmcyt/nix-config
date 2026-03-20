@@ -1511,6 +1511,69 @@
           "refId": "A"
         }
       ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 93 },
+      "id": 109,
+      "title": "AbuseIPDB Reports",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 94 },
+      "id": 80,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["sum"] }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({job=\"systemd-journal\", host=\"homeserver\", unit=\"podman-cowrie.service\"} |= \"AbuseIPDB plugin successfully reported\" [$__range]))",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "IPs Reported",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "gridPos": { "h": 12, "w": 18, "x": 6, "y": 94 },
+      "id": 81,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "{job=\"systemd-journal\", host=\"homeserver\", unit=\"podman-cowrie.service\"} |= \"AbuseIPDB plugin successfully reported\"",
+          "refId": "A"
+        }
+      ],
+      "title": "AbuseIPDB Report Log",
+      "type": "logs"
     }
   ],
   "refresh": "1m",
@@ -1549,5 +1612,5 @@
   "timezone": "browser",
   "title": "Cowrie Honeypot",
   "uid": "cowrie-honeypot",
-  "version": 1
+  "version": 2
 }
