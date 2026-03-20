@@ -60,6 +60,11 @@
 
       COWRIE_OUTPUT_VIRUSTOTAL_ENABLED = "true";
       COWRIE_OUTPUT_VIRUSTOTAL_UPLOAD = "true";
+
+      # ── Telegram notifications ─────────────────────────────────────────────
+      # Notifies on: login.success, command.input, session.file_download
+      # Bot token and chat ID injected via environmentFiles (cowrie.env)
+      COWRIE_OUTPUT_TELEGRAM_ENABLED = "true";
     };
     environmentFiles = [config.sops.secrets.cowrie_env.path];
   };
