@@ -48,6 +48,7 @@
       reptyr
       wakeonlan
       pgloader
+      xmlstarlet
 
       # =================================================================
       # Development & Nix Tools (alphabetical)
