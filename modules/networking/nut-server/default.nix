@@ -11,11 +11,10 @@
   users.groups.nut = {};
 
   systemd.services.upsdrv.wantedBy = ["multi-user.target"];
+  systemd.services.upsd.after = lib.mkForce ["network.target" "upsdrv.service"];
   systemd.services.upsmon.after = ["upsd.service"];
   systemd.services.upsmon.wants = ["upsd.service"];
 
-  # Add prometheus-nut-exporter to nut group for password file access
-  # Start after upsd so the exporter reads the secret after upsd is ready
   systemd.services.prometheus-nut-exporter = lib.mkIf config.services.prometheus.exporters.nut.enable {
     after = ["upsd.service"];
     wants = ["upsd.service"];

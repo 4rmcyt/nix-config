@@ -203,6 +203,7 @@ in {
     oomd.enable = true;
 
     services.rasdaemon.serviceConfig.StandardError = "null";
+    services.rasdaemon.serviceConfig.StandardOutput = "null";
 
     services.zfs-log-acl = {
       description = "Set POSIX ACL support on ZFS log dataset";
