@@ -10,12 +10,8 @@
 
   users.groups.nut = {};
 
-  # upsd must start after upsdrv so the driver socket exists before upsd tries to connect
-  # Use wants (not requires) to avoid stop ordering cycle that kills both services on rebuild
-  systemd.services.upsd.after = ["upsdrv.service"];
-  systemd.services.upsd.wants = ["upsdrv.service"];
-
   # upsdrv is not pulled into boot by default — add it explicitly
+  # upsd polls the driver socket and retries, so no explicit ordering needed
   systemd.services.upsdrv.wantedBy = ["multi-user.target"];
 
   # Add prometheus-nut-exporter to nut group for password file access
