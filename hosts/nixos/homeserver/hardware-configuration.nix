@@ -82,6 +82,17 @@ in {
       "hung_task_timeout_secs=300"
     ];
 
+    # Clear stale MCE banks left by modded CoffeeLake-on-KabyLake BIOS
+    # Banks 10-13 (LLC slice banks) are not cleared by the patched BIOS before OS handoff
+    # MSR formula: IA32_MCi_STATUS = 0x401 + (i * 4), so banks 10-13 = 0x429, 0x42d, 0x431, 0x435
+    postBootCommands = ''
+      if ${pkgs.kmod}/bin/modprobe msr 2>/dev/null; then
+        for bank in 0x429 0x42d 0x431 0x435; do
+          ${pkgs.msr-tools}/bin/wrmsr -a $bank 0 2>/dev/null || true
+        done
+      fi
+    '';
+
     # Boot loader configuration
     loader = {
       efi.canTouchEfiVariables = true;

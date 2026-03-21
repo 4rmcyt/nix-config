@@ -51,7 +51,7 @@
       wakeonlan
       pgloader
       xmlstarlet
-      mcelog
+
 
       # =================================================================
       # Development & Nix Tools (alphabetical)
