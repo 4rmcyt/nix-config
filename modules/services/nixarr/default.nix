@@ -170,7 +170,7 @@ in {
         description = "Write Radarr PostgreSQL config.xml";
         after = ["postgresql.service" "postgresql-setup-users.service"];
         requires = ["postgresql.service"];
-        wantedBy = ["radarr.service"];
+        wantedBy = ["multi-user.target"];
         before = ["radarr.service"];
         serviceConfig = {
           Type = "oneshot";
@@ -202,7 +202,7 @@ in {
         description = "Write Sonarr PostgreSQL config.xml";
         after = ["postgresql.service" "postgresql-setup-users.service"];
         requires = ["postgresql.service"];
-        wantedBy = ["sonarr.service"];
+        wantedBy = ["multi-user.target"];
         before = ["sonarr.service"];
         serviceConfig = {
           Type = "oneshot";
@@ -234,7 +234,7 @@ in {
         description = "Write Prowlarr PostgreSQL config.xml";
         after = ["postgresql.service" "postgresql-setup-users.service"];
         requires = ["postgresql.service"];
-        wantedBy = ["prowlarr.service"];
+        wantedBy = ["multi-user.target"];
         before = ["prowlarr.service"];
         serviceConfig = {
           Type = "oneshot";
@@ -266,7 +266,7 @@ in {
         description = "Write Lidarr PostgreSQL config.xml";
         after = ["postgresql.service" "postgresql-setup-users.service"];
         requires = ["postgresql.service"];
-        wantedBy = ["lidarr.service"];
+        wantedBy = ["multi-user.target"];
         before = ["lidarr.service"];
         serviceConfig = {
           Type = "oneshot";
@@ -298,7 +298,7 @@ in {
         description = "Write Readarr PostgreSQL config.xml";
         after = ["postgresql.service" "postgresql-setup-users.service"];
         requires = ["postgresql.service"];
-        wantedBy = ["readarr.service"];
+        wantedBy = ["multi-user.target"];
         before = ["readarr.service"];
         serviceConfig = {
           Type = "oneshot";
