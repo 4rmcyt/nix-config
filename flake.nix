@@ -111,7 +111,7 @@
       url = "github:AvengeMedia/danksearch";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dms.url = "github:AvengeMedia/DankMaterialShell";
+    dms.url = "github:AvengeMedia/DankMaterialShell/stable";
     niri-flake = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
