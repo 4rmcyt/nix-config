@@ -15,6 +15,9 @@
   systemd.services.upsd.after = ["upsdrv.service"];
   systemd.services.upsd.wants = ["upsdrv.service"];
 
+  # upsdrv is not pulled into boot by default — add it explicitly
+  systemd.services.upsdrv.wantedBy = ["multi-user.target"];
+
   # Add prometheus-nut-exporter to nut group for password file access
   # Start after upsd so the exporter reads the secret after upsd is ready
   systemd.services.prometheus-nut-exporter = lib.mkIf config.services.prometheus.exporters.nut.enable {
