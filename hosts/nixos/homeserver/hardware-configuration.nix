@@ -84,14 +84,9 @@ in {
       extraPools = ["zdata"];
     };
 
-    # zbackup imported non-blocking; clear stale MCE banks from CoffeeLake-on-KabyLake BIOS
     postBootCommands = ''
       ${pkgs.zfs}/bin/zpool import -N -d /dev/disk/by-id zbackup 2>/dev/null || true
       ${pkgs.zfs}/bin/zfs mount zbackup/backup 2>/dev/null || true
-      ${pkgs.kmod}/bin/modprobe msr 2>/dev/null || true
-      for bank in 0x429 0x42d 0x431 0x435; do
-        ${pkgs.msr-tools}/bin/wrmsr -a $bank 0 2>/dev/null || true
-      done
     '';
 
     extraModprobeConfig = ''
@@ -206,6 +201,8 @@ in {
   systemd = {
     coredump.enable = false;
     oomd.enable = true;
+
+    services.rasdaemon.serviceConfig.StandardError = "null";
 
     services.zfs-log-acl = {
       description = "Set POSIX ACL support on ZFS log dataset";

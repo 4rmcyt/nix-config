@@ -10,9 +10,9 @@
 
   users.groups.nut = {};
 
-  # upsdrv is not pulled into boot by default — add it explicitly
-  # upsd polls the driver socket and retries, so no explicit ordering needed
   systemd.services.upsdrv.wantedBy = ["multi-user.target"];
+  systemd.services.upsmon.after = ["upsd.service"];
+  systemd.services.upsmon.wants = ["upsd.service"];
 
   # Add prometheus-nut-exporter to nut group for password file access
   # Start after upsd so the exporter reads the secret after upsd is ready
