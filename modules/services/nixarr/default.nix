@@ -178,19 +178,24 @@ in {
           User = "radarr";
           Group = "radarr";
         };
+        path = [pkgs.xmlstarlet];
         script = ''
           mkdir -p /data/media/.state/nixarr/radarr
-          cat > /data/media/.state/nixarr/radarr/config.xml <<EOF
-          <Config>
-            <PostgresUser>radarr</PostgresUser>
-            <PostgresPassword>$(cat ${config.sops.secrets.radarr_db_password.path} | tr -d '\n\r')</PostgresPassword>
-            <PostgresPort>5432</PostgresPort>
-            <PostgresHost>127.0.0.1</PostgresHost>
-            <PostgresMainDb>radarr</PostgresMainDb>
-            <PostgresLogDb>radarr-log</PostgresLogDb>
-          </Config>
-          EOF
-          chmod 600 /data/media/.state/nixarr/radarr/config.xml
+          cfg=/data/media/.state/nixarr/radarr/config.xml
+          if [ ! -f "$cfg" ]; then
+            printf '<Config>\n</Config>\n' > "$cfg"
+          fi
+          PG_PASS=$(cat ${config.sops.secrets.radarr_db_password.path} | tr -d '\n\r')
+          for pair in "PostgresUser:radarr" "PostgresPassword:$PG_PASS" "PostgresPort:5432" "PostgresHost:127.0.0.1" "PostgresMainDb:radarr" "PostgresLogDb:radarr-log"; do
+            key="''${pair%%:*}"
+            val="''${pair#*:}"
+            if xmlstarlet sel -t -v "count(/Config/$key)" "$cfg" 2>/dev/null | grep -q "^0$"; then
+              xmlstarlet ed -L -s /Config -t elem -n "$key" -v "$val" "$cfg"
+            else
+              xmlstarlet ed -L -u "/Config/$key" -v "$val" "$cfg"
+            fi
+          done
+          chmod 600 "$cfg"
         '';
       };
       sonarr-pg-config = {
@@ -205,19 +210,24 @@ in {
           User = "sonarr";
           Group = "sonarr";
         };
+        path = [pkgs.xmlstarlet];
         script = ''
           mkdir -p /data/media/.state/nixarr/sonarr
-          cat > /data/media/.state/nixarr/sonarr/config.xml <<EOF
-          <Config>
-            <PostgresUser>sonarr</PostgresUser>
-            <PostgresPassword>$(cat ${config.sops.secrets.sonarr_db_password.path} | tr -d '\n\r')</PostgresPassword>
-            <PostgresPort>5432</PostgresPort>
-            <PostgresHost>127.0.0.1</PostgresHost>
-            <PostgresMainDb>sonarr</PostgresMainDb>
-            <PostgresLogDb>sonarr-log</PostgresLogDb>
-          </Config>
-          EOF
-          chmod 600 /data/media/.state/nixarr/sonarr/config.xml
+          cfg=/data/media/.state/nixarr/sonarr/config.xml
+          if [ ! -f "$cfg" ]; then
+            printf '<Config>\n</Config>\n' > "$cfg"
+          fi
+          PG_PASS=$(cat ${config.sops.secrets.sonarr_db_password.path} | tr -d '\n\r')
+          for pair in "PostgresUser:sonarr" "PostgresPassword:$PG_PASS" "PostgresPort:5432" "PostgresHost:127.0.0.1" "PostgresMainDb:sonarr" "PostgresLogDb:sonarr-log"; do
+            key="''${pair%%:*}"
+            val="''${pair#*:}"
+            if xmlstarlet sel -t -v "count(/Config/$key)" "$cfg" 2>/dev/null | grep -q "^0$"; then
+              xmlstarlet ed -L -s /Config -t elem -n "$key" -v "$val" "$cfg"
+            else
+              xmlstarlet ed -L -u "/Config/$key" -v "$val" "$cfg"
+            fi
+          done
+          chmod 600 "$cfg"
         '';
       };
       prowlarr-pg-config = {
@@ -232,19 +242,24 @@ in {
           User = "prowlarr";
           Group = "prowlarr";
         };
+        path = [pkgs.xmlstarlet];
         script = ''
           mkdir -p /data/media/.state/nixarr/prowlarr
-          cat > /data/media/.state/nixarr/prowlarr/config.xml <<EOF
-          <Config>
-            <PostgresUser>prowlarr</PostgresUser>
-            <PostgresPassword>$(cat ${config.sops.secrets.prowlarr_db_password.path} | tr -d '\n\r')</PostgresPassword>
-            <PostgresPort>5432</PostgresPort>
-            <PostgresHost>127.0.0.1</PostgresHost>
-            <PostgresMainDb>prowlarr</PostgresMainDb>
-            <PostgresLogDb>prowlarr-log</PostgresLogDb>
-          </Config>
-          EOF
-          chmod 600 /data/media/.state/nixarr/prowlarr/config.xml
+          cfg=/data/media/.state/nixarr/prowlarr/config.xml
+          if [ ! -f "$cfg" ]; then
+            printf '<Config>\n</Config>\n' > "$cfg"
+          fi
+          PG_PASS=$(cat ${config.sops.secrets.prowlarr_db_password.path} | tr -d '\n\r')
+          for pair in "PostgresUser:prowlarr" "PostgresPassword:$PG_PASS" "PostgresPort:5432" "PostgresHost:127.0.0.1" "PostgresMainDb:prowlarr" "PostgresLogDb:prowlarr-log"; do
+            key="''${pair%%:*}"
+            val="''${pair#*:}"
+            if xmlstarlet sel -t -v "count(/Config/$key)" "$cfg" 2>/dev/null | grep -q "^0$"; then
+              xmlstarlet ed -L -s /Config -t elem -n "$key" -v "$val" "$cfg"
+            else
+              xmlstarlet ed -L -u "/Config/$key" -v "$val" "$cfg"
+            fi
+          done
+          chmod 600 "$cfg"
         '';
       };
       lidarr-pg-config = {
@@ -259,19 +274,24 @@ in {
           User = "lidarr";
           Group = "lidarr";
         };
+        path = [pkgs.xmlstarlet];
         script = ''
           mkdir -p /data/media/.state/nixarr/lidarr
-          cat > /data/media/.state/nixarr/lidarr/config.xml <<EOF
-          <Config>
-            <PostgresUser>lidarr</PostgresUser>
-            <PostgresPassword>$(cat ${config.sops.secrets.lidarr_db_password.path} | tr -d '\n\r')</PostgresPassword>
-            <PostgresPort>5432</PostgresPort>
-            <PostgresHost>127.0.0.1</PostgresHost>
-            <PostgresMainDb>lidarr</PostgresMainDb>
-            <PostgresLogDb>lidarr-log</PostgresLogDb>
-          </Config>
-          EOF
-          chmod 600 /data/media/.state/nixarr/lidarr/config.xml
+          cfg=/data/media/.state/nixarr/lidarr/config.xml
+          if [ ! -f "$cfg" ]; then
+            printf '<Config>\n</Config>\n' > "$cfg"
+          fi
+          PG_PASS=$(cat ${config.sops.secrets.lidarr_db_password.path} | tr -d '\n\r')
+          for pair in "PostgresUser:lidarr" "PostgresPassword:$PG_PASS" "PostgresPort:5432" "PostgresHost:127.0.0.1" "PostgresMainDb:lidarr" "PostgresLogDb:lidarr-log"; do
+            key="''${pair%%:*}"
+            val="''${pair#*:}"
+            if xmlstarlet sel -t -v "count(/Config/$key)" "$cfg" 2>/dev/null | grep -q "^0$"; then
+              xmlstarlet ed -L -s /Config -t elem -n "$key" -v "$val" "$cfg"
+            else
+              xmlstarlet ed -L -u "/Config/$key" -v "$val" "$cfg"
+            fi
+          done
+          chmod 600 "$cfg"
         '';
       };
       readarr-pg-config = {
@@ -286,19 +306,24 @@ in {
           User = "readarr";
           Group = "readarr";
         };
+        path = [pkgs.xmlstarlet];
         script = ''
           mkdir -p /data/media/.state/nixarr/readarr
-          cat > /data/media/.state/nixarr/readarr/config.xml <<EOF
-          <Config>
-            <PostgresUser>readarr</PostgresUser>
-            <PostgresPassword>$(cat ${config.sops.secrets.readarr_db_password.path} | tr -d '\n\r')</PostgresPassword>
-            <PostgresPort>5432</PostgresPort>
-            <PostgresHost>127.0.0.1</PostgresHost>
-            <PostgresMainDb>readarr</PostgresMainDb>
-            <PostgresLogDb>readarr-log</PostgresLogDb>
-          </Config>
-          EOF
-          chmod 600 /data/media/.state/nixarr/readarr/config.xml
+          cfg=/data/media/.state/nixarr/readarr/config.xml
+          if [ ! -f "$cfg" ]; then
+            printf '<Config>\n</Config>\n' > "$cfg"
+          fi
+          PG_PASS=$(cat ${config.sops.secrets.readarr_db_password.path} | tr -d '\n\r')
+          for pair in "PostgresUser:readarr" "PostgresPassword:$PG_PASS" "PostgresPort:5432" "PostgresHost:127.0.0.1" "PostgresMainDb:readarr" "PostgresLogDb:readarr-log" "PostgresCacheDb:readarr-cache"; do
+            key="''${pair%%:*}"
+            val="''${pair#*:}"
+            if xmlstarlet sel -t -v "count(/Config/$key)" "$cfg" 2>/dev/null | grep -q "^0$"; then
+              xmlstarlet ed -L -s /Config -t elem -n "$key" -v "$val" "$cfg"
+            else
+              xmlstarlet ed -L -u "/Config/$key" -v "$val" "$cfg"
+            fi
+          done
+          chmod 600 "$cfg"
         '';
       };
       bazarr-pg-env = {
