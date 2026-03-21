@@ -9,8 +9,5 @@ _: {
     __GL_VRR_ALLOWED = 1;
   };
 
-  # QSG_RHI_BACKEND=vulkan must be in niri's environment block so spawned
-  # processes (DMS/quickshell) inherit it — OpenGL context creation fails
-  # on NVIDIA with the default EGL backend
   programs.niri.settings.environment.QSG_RHI_BACKEND = "vulkan";
 }
