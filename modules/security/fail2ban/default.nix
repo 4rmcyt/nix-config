@@ -201,6 +201,6 @@ in {
 
   # Ensure /run/fail2ban exists for storing CF rule IDs
   systemd.tmpfiles.rules = [
-    "d /run/fail2ban 0750 fail2ban fail2ban -"
+    "d /run/fail2ban 0750 root root -"
   ];
 }

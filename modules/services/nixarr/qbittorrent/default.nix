@@ -160,7 +160,7 @@
 
   # Create additional directories
   systemd.tmpfiles.rules = [
-    "d /data/media/.state/nixarr/qbittorrent 775 qbittorrent qbittorrent -"
+    "d /data/media/.state/nixarr/qbittorrent 775 qbittorrent media -"
     "d /data/Downloads/torrents 775 qbittorrent media -"
   ];
 }
