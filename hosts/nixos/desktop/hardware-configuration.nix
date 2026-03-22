@@ -235,6 +235,31 @@ in {
     };
   };
 
+  # Limit NVIDIA GL heap reuse for niri — reduces idle VRAM from ~2.5GiB to ~170MiB
+  # https://github.com/niri-wm/niri/issues/1962
+  environment.etc."nvidia/nvidia-application-profiles-rc.d/50-niri-vram.json".text = builtins.toJSON {
+    rules = [
+      {
+        pattern = {
+          feature = "procname";
+          matches = "niri";
+        };
+        profile = "Limit Free Buffer Pool On Wayland Compositors";
+      }
+    ];
+    profiles = [
+      {
+        name = "Limit Free Buffer Pool On Wayland Compositors";
+        settings = [
+          {
+            key = "GLVidHeapReuseRatio";
+            value = 1;
+          }
+        ];
+      }
+    ];
+  };
+
   # =================================================================
   # 4. Boot Loader
   # =================================================================
@@ -315,17 +340,6 @@ in {
   services = {
     # OpenRGB for RGB control
     hardware.openrgb.enable = true;
-
-    # Journald
-    journald = {
-      extraConfig = ''
-        SystemMaxUse=1G
-        SystemMaxFileSize=100M
-        MaxRetentionSec=1month
-        ForwardToSyslog=no
-        Storage=persistent
-      '';
-    };
 
     # SCX Scheduler
     scx = {

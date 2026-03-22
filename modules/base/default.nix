@@ -4,6 +4,7 @@
     ../roles
     ./common-packages
     ./distributed-builds
+    ./logging
     ./msmtp
   ];
 

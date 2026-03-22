@@ -17,6 +17,7 @@
     # Hardware and system base
     ./hardware-configuration.nix
     ../../../modules/base
+    ../../../modules/base/logging/desktop.nix
     ../../../modules/disko/desktop
     ../../../modules/options
     ../../../modules/fonts

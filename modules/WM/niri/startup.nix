@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   programs.niri.settings = {
     spawn-at-startup = [
       # Clipboard history daemon
@@ -20,6 +20,41 @@
 
       # Session manager (started via systemd for lifecycle management)
       {command = ["systemctl" "--user" "start" "nirinit.service"];}
+
+      # DMS — log to ~/.local/state/dms/dms.log (rotated by dms-logrotate.timer)
+      {command = ["bash" "-c" "exec dms run >> ~/.local/state/dms/dms.log 2>&1"];}
     ];
+  };
+
+  # Ensure DMS log directory exists at login
+  systemd.user.tmpfiles.rules = [
+    "d %h/.local/state/dms 0755 - - - -"
+  ];
+
+  # Rotate DMS log daily: truncate after 10MB, keep 3 compressed rotations
+  systemd.user.services.dms-logrotate = {
+    Unit.Description = "Rotate DMS log";
+    Service = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "dms-logrotate" ''
+        log="$HOME/.local/state/dms/dms.log"
+        [ -f "$log" ] || exit 0
+        size=$(stat -c%s "$log" 2>/dev/null || echo 0)
+        [ "$size" -gt 10485760 ] || exit 0
+        [ -f "$log.2.gz" ] && mv "$log.2.gz" "$log.3.gz"
+        [ -f "$log.1.gz" ] && mv "$log.1.gz" "$log.2.gz"
+        gzip -c "$log" > "$log.1.gz"
+        : > "$log"
+      '';
+    };
+  };
+
+  systemd.user.timers.dms-logrotate = {
+    Unit.Description = "Daily DMS log rotation";
+    Timer = {
+      OnCalendar = "daily";
+      Persistent = true;
+    };
+    Install.WantedBy = ["timers.target"];
   };
 }
