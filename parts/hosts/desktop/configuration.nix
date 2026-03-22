@@ -27,7 +27,11 @@ in {
     services.greetd = {
       enable = true;
       settings.default_session = {
-        command = "${pkgs.niri}/bin/niri --session";
+        command = "${pkgs.writeShellScript "niri-session" ''
+          mkdir -p "$HOME/.local/state/niri"
+          exec ${pkgs.niri}/bin/niri --session \
+            >> "$HOME/.local/state/niri/niri.log" 2>&1
+        ''}";
         user = owner.username;
       };
     };
