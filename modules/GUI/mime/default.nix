@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
     file-roller
-    peazip
     imv
     zathura
   ];
@@ -90,32 +89,33 @@
       "audio/aac" = "mpv.desktop";
       "audio/mp4" = "mpv.desktop";
       "audio/x-m4a" = "mpv.desktop";
-
+ 5s
+┃ │  ┌─ ✔ system-units ⏱ 4s
       # Archives (peazip primary, file-roller fallback)
-      "application/zip" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/gzip" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/bzip2" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-bzip" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-bzip2" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-tar" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-compressed-tar" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-bzip-compressed-tar" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-xz-compressed-tar" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-zstd-compressed-tar" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-7z-compressed" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-rar" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-rar-compressed" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/vnd.rar" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-xz" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/zstd" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-lzma" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-lz4" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-lzip" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-rpm" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-deb" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/vnd.debian.binary-package" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/x-java-archive" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
-      "application/vnd.android.package-archive" = ["peazip.desktop" "org.gnome.FileRoller.desktop"];
+      "application/zip" = "org.gnome.FileRoller.desktop";
+      "application/gzip" = "org.gnome.FileRoller.desktop";
+      "application/bzip2" = "org.gnome.FileRoller.desktop";
+      "application/x-bzip" = "org.gnome.FileRoller.desktop";
+      "application/x-bzip2" = "org.gnome.FileRoller.desktop";
+      "application/x-tar" = "org.gnome.FileRoller.desktop";
+      "application/x-compressed-tar" = "org.gnome.FileRoller.desktop";
+      "application/x-bzip-compressed-tar" = "org.gnome.FileRoller.desktop";
+      "application/x-xz-compressed-tar" = "org.gnome.FileRoller.desktop";
+      "application/x-zstd-compressed-tar" = "org.gnome.FileRoller.desktop";
+      "application/x-7z-compressed" = "org.gnome.FileRoller.desktop";
+      "application/x-rar" = "org.gnome.FileRoller.desktop";
+      "application/x-rar-compressed" = "org.gnome.FileRoller.desktop";
+      "application/vnd.rar" = "org.gnome.FileRoller.desktop";
+      "application/x-xz" = "org.gnome.FileRoller.desktop";
+      "application/zstd" = "org.gnome.FileRoller.desktop";
+      "application/x-lzma" = "org.gnome.FileRoller.desktop";
+      "application/x-lz4" = "org.gnome.FileRoller.desktop";
+      "application/x-lzip" = "org.gnome.FileRoller.desktop";
+      "application/x-rpm" = "org.gnome.FileRoller.desktop";
+      "application/x-deb" = "org.gnome.FileRoller.desktop";
+      "application/vnd.debian.binary-package" = "org.gnome.FileRoller.desktop";
+      "application/x-java-archive" = "org.gnome.FileRoller.desktop";
+      "application/vnd.android.package-archive" = "org.gnome.FileRoller.desktop";
     };
   };
 }
