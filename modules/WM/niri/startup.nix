@@ -21,8 +21,6 @@
       # Session manager (started via systemd for lifecycle management)
       {command = ["systemctl" "--user" "start" "nirinit.service"];}
 
-      # DMS — log to ~/.local/state/dms/dms.log (rotated by dms-logrotate.timer)
-      {command = ["bash" "-c" "exec dms run >> ~/.local/state/dms/dms.log 2>&1"];}
     ];
   };
 
