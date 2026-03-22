@@ -10,6 +10,26 @@ _: {
     GSK_RENDERER = "gl";
   };
 
-  # QSG_RHI_BACKEND intentionally NOT set globally — vulkan breaks quickshell/DMS
-  # input handling and polkit on NVIDIA. Apps that need vulkan should set it themselves.
+  home.file.".nv/nvidia-application-profiles-rc".text = builtins.toJSON {
+    rules = [
+      {
+        pattern = {
+          feature = "procname";
+          matches = "niri";
+        };
+        profile = "No VidMem Reuse";
+      }
+    ];
+    profiles = [
+      {
+        name = "No VidMem Reuse";
+        settings = [
+          {
+            key = "GLVidHeapReuseRatio";
+            value = 0;
+          }
+        ];
+      }
+    ];
+  };
 }
