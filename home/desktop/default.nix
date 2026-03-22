@@ -20,6 +20,7 @@
     ../../modules/WM/niri
     ../../modules/WM/niri/nvidia.nix
     ../../modules/WM/niri/monitors.nix
+    ../../modules/GUI/mime
   ];
 
   # WirePlumber: always use SBC-XQ for OpenRun Pro 2 (best codec it supports)
