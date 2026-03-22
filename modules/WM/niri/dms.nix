@@ -483,7 +483,7 @@ _: {
 
       # ===== Launcher Logo =====
       launcherLogoMode = "os";
-      launcherLogoColorOverride = "surface";
+      launcherLogoColorOverride = "onSurface";
       launcherLogoColorInvertOnMode = false;
       launcherLogoBrightness = 0.5;
       launcherLogoContrast = 1;

@@ -32,7 +32,6 @@ in {
       };
     };
 
-    # Disable niri-flake's polkit agent (polkit-gnome spawned via niri startup.nix)
     systemd.user.services.niri-flake-polkit.enable = false;
 
     # Facter
