@@ -609,6 +609,13 @@ in {
     };
   };
 
+  # Rapoo Gaming Device: disable button debounce to suppress libinput timer lag warnings
+  environment.etc."libinput/local-overrides.quirks".text = ''
+    [Rapoo Gaming Device]
+    MatchName=Rapoo Rapoo Gaming Device
+    ModelBouncingKeys=1
+  '';
+
   # =================================================================
   # 9. Platform Configuration
   # =================================================================
