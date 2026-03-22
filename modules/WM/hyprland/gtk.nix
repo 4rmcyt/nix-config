@@ -32,6 +32,9 @@
   gtk = {
     enable = true;
 
+    gtk3.extraConfig.gtk-decoration-layout = "appmenu:minimize,maximize,close";
+    gtk4.extraConfig.gtk-decoration-layout = "appmenu:minimize,maximize,close";
+
     font = {
       name = "Maple Mono";
       size = 12;
