@@ -89,9 +89,8 @@
       "audio/aac" = "mpv.desktop";
       "audio/mp4" = "mpv.desktop";
       "audio/x-m4a" = "mpv.desktop";
- 5s
-┃ │  ┌─ ✔ system-units ⏱ 4s
-      # Archives (peazip primary, file-roller fallback)
+
+      # Archives
       "application/zip" = "org.gnome.FileRoller.desktop";
       "application/gzip" = "org.gnome.FileRoller.desktop";
       "application/bzip2" = "org.gnome.FileRoller.desktop";
