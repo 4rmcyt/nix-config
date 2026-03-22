@@ -14,6 +14,7 @@
     settings = {
       term = "xterm-kitty";
       confirm_os_window_close = 0;
+      hide_window_decorations = "no";
       dynamic_background_opacity = true;
       enable_audio_bell = false;
       tab_bar_style = "fade";
