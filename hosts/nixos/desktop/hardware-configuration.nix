@@ -4,21 +4,8 @@
   pkgs,
   modulesPath,
   ...
-}: let
-  zfsCompatibleKernelPackages =
-    lib.filterAttrs (
-      name: kernelPackages:
-        (builtins.match "linux_(xanmod_latest|[0-9]+_[0-9]+)" name)
-        != null
-        && (builtins.tryEval kernelPackages).success
-        && (!kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
-    )
-    pkgs.linuxKernel.packages;
-  latestKernelPackage = lib.last (
-    lib.sort (a: b: lib.versionOlder a.kernel.version b.kernel.version) (
-      builtins.attrValues zfsCompatibleKernelPackages
-    )
-  );
+}:  let
+  xanmodKernel = pkgs.linuxKernel.packages.linux_xanmod_latest;
 in {
   # =================================================================
   # 1. Imports
@@ -69,7 +56,7 @@ in {
       "zenergy"
     ];
 
-    kernelPackages = latestKernelPackage;
+    kernelPackages = assert !xanmodKernel.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken; xanmodKernel;
 
     blacklistedKernelModules = ["r8169"];
 
@@ -126,6 +113,9 @@ in {
       # Display output hints for early modesetting
       "video=DP-4:1920x1080@60"
       "video=DP-5:1920x1080@60"
+
+      "amd_iommu=on"
+      "iommu=pt"
     ];
 
     # ZFS configuration
