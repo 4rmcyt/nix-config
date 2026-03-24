@@ -18,6 +18,7 @@
 
     ../../modules/WM
     ../../modules/WM/niri
+    ../../modules/WM/niri/noctalia.nix
     ../../modules/WM/niri/nvidia.nix
     ../../modules/WM/niri/monitors.nix
     ../../modules/GUI/mime

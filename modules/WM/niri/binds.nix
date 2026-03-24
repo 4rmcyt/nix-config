@@ -1,5 +1,8 @@
 {config, ...}: let
   a = config.lib.niri.actions;
+  qs = cmd: {
+    action = a.spawn "qs" "-c" "noctalia-shell" "ipc" "call" cmd;
+  };
 in {
   programs.niri.settings.binds = {
     # ============================================
@@ -9,11 +12,11 @@ in {
     "Mod+Return".action = a.spawn "kitty";
     "Mod+B".action = a.spawn "chromium";
     "Mod+E".action = a.spawn "nautilus";
-    "Mod+Space".action = a.spawn "dms" "ipc" "spotlight" "toggle";
-    "Mod+D".action = a.spawn "dms" "ipc" "launcher" "toggle";
-    "Mod+M".action = a.spawn "dms" "ipc" "processlist" "toggle";
-    "Ctrl+Shift+Escape".action = a.spawn "dms" "ipc" "processlist" "toggle";
-    "Mod+Comma".action = a.spawn "dms" "ipc" "settings" "toggle";
+    "Mod+Space" = qs "launcher toggle";
+    "Mod+D" = qs "launcher toggle";
+    "Mod+M".action = a.spawn "kitty" "-e" "btop";
+    "Ctrl+Shift+Escape".action = a.spawn "kitty" "-e" "btop";
+    "Mod+Comma" = qs "settings toggle";
     "Mod+Shift+D".action = a.spawn "discord" "--enable-features=UseOzonePlatform" "--ozone-platform=wayland";
 
     # ============================================
@@ -29,27 +32,27 @@ in {
     # SYSTEM CONTROLS
     # ============================================
 
-    "Mod+Escape".action = a.spawn "dms" "ipc" "lock" "lock";
-    "Mod+Shift+Escape".action = a.spawn "dms" "ipc" "powermenu" "toggle";
-    "Mod+N".action = a.spawn "dms" "ipc" "notifications" "toggle";
-    "Mod+T".action = a.spawn "dms" "ipc" "theme" "toggle";
-    "Mod+Shift+N".action = a.spawn "dms" "ipc" "night" "toggle";
+    "Mod+Escape" = qs "lockScreen lock";
+    "Mod+Shift+Escape" = qs "sessionMenu toggle";
+    "Mod+N" = qs "notifications toggleHistory";
+    "Mod+T" = qs "darkMode toggle";
+    "Mod+Shift+N" = qs "nightLight toggle";
 
     # ============================================
     # THEMING & CUSTOMIZATION
     # ============================================
 
-    "Mod+C".action = a.spawn "dms" "ipc" "color-picker" "toggle";
-    "Mod+W".action = a.spawn "dms" "ipc" "dash" "toggle";
+    "Mod+C" = qs "colorPicker toggle";
+    "Mod+W" = qs "desktopWidgets toggle";
 
     # ============================================
-    # SCREENSHOTS - DMS CLI
+    # SCREENSHOTS - niri native
     # ============================================
 
-    "Print".action = a.spawn "dms" "screenshot";
-    "Mod+Print".action = a.spawn "dms" "screenshot" "full";
-    "Mod+Shift+Print".action = a.spawn "dms" "screenshot" "all";
-    "Ctrl+Print".action = a.spawn "dms" "screenshot" "--no-file";
+    "Print".action = a.screenshot;
+    "Mod+Print".action = a.screenshot-screen;
+    "Mod+Shift+Print".action = a.screenshot-screen;
+    "Ctrl+Print".action = a.screenshot;
 
     # ============================================
     # FOCUS CONTROL
@@ -155,24 +158,24 @@ in {
     "Mod+Shift+Equal".action = a.set-window-height "+10%";
 
     # ============================================
-    # MEDIA CONTROLS - DMS IPC
+    # MEDIA CONTROLS
     # ============================================
 
-    "XF86AudioPlay".action = a.spawn "dms" "ipc" "mpris" "playPause";
-    "XF86AudioNext".action = a.spawn "dms" "ipc" "mpris" "next";
-    "XF86AudioPrev".action = a.spawn "dms" "ipc" "mpris" "previous";
-    "XF86AudioStop".action = a.spawn "dms" "ipc" "mpris" "stop";
-    "XF86AudioRaiseVolume".action = a.spawn "dms" "ipc" "audio" "increment" "5";
-    "XF86AudioLowerVolume".action = a.spawn "dms" "ipc" "audio" "decrement" "5";
-    "XF86AudioMute".action = a.spawn "dms" "ipc" "audio" "mute";
-    "XF86MonBrightnessUp".action = a.spawn "dms" "ipc" "brightness" "increment" "5";
-    "XF86MonBrightnessDown".action = a.spawn "dms" "ipc" "brightness" "decrement" "5";
+    "XF86AudioPlay".action = a.spawn "playerctl" "play-pause";
+    "XF86AudioNext".action = a.spawn "playerctl" "next";
+    "XF86AudioPrev".action = a.spawn "playerctl" "previous";
+    "XF86AudioStop".action = a.spawn "playerctl" "stop";
+    "XF86AudioRaiseVolume".action = a.spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+";
+    "XF86AudioLowerVolume".action = a.spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-";
+    "XF86AudioMute".action = a.spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle";
+    "XF86MonBrightnessUp".action = a.spawn "brightnessctl" "set" "5%+";
+    "XF86MonBrightnessDown".action = a.spawn "brightnessctl" "set" "5%-";
 
     # ============================================
-    # CLIPBOARD - DMS Integration
+    # CLIPBOARD
     # ============================================
 
-    "Mod+V".action = a.spawn "dms" "ipc" "clipboard" "toggle";
+    "Mod+V" = qs "launcher clipboard";
 
     # ============================================
     # SYSTEM

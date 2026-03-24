@@ -1,11 +1,9 @@
 {pkgs, ...}: {
   imports = [
     ./binds.nix
-    ./dms.nix
     ./startup.nix
     ./windowrules.nix
     ../hyprland/gtk.nix
-    ../matugen
   ];
 
   home.sessionVariables = {
@@ -31,12 +29,9 @@
     wayland
     gnome-software
 
-    # Clipboard Management (DMS Integration)
+    # Clipboard Management
     cliphist
     wl-clip-persist
-
-    # DMS Optional Features
-    danksearch
   ];
 
   programs.niri.settings = {

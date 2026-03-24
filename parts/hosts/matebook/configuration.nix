@@ -13,11 +13,8 @@ in {
       ../../../hosts/nixos/matebook
       inputs.flatpaks.nixosModules.default
       inputs.niri-flake.nixosModules.niri
-      inputs.dms.nixosModules.dank-material-shell
+      inputs.noctalia.nixosModules.default
     ];
-
-    # Disable niri-flake's polkit agent (DMS provides its own)
-    systemd.user.services.niri-flake-polkit.enable = false;
 
     # Facter
     facter.reportPath = ../../../hosts/nixos/matebook/facter.json;
@@ -26,8 +23,7 @@ in {
     home-manager.users.${owner.username}.imports = [
       ../../../home/matebook
       inputs.betterfox-nix.homeModules.betterfox
-      inputs.dms.homeModules.dank-material-shell
-      inputs.dms.homeModules.niri
+      inputs.noctalia.homeModules.default
     ];
   };
 }

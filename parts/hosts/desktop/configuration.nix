@@ -12,8 +12,7 @@ in {
       nixosBase
       ../../../hosts/nixos/desktop
       inputs.flatpaks.nixosModules.default
-      inputs.dms.nixosModules.dank-material-shell
-      inputs.dms.nixosModules.greeter
+      inputs.noctalia.nixosModules.default
       inputs.niri-flake.nixosModules.niri
       inputs.nirinit.nixosModules.nirinit
     ];
@@ -34,8 +33,6 @@ in {
       };
     };
 
-    systemd.user.services.niri-flake-polkit.enable = false;
-
     # Facter
     facter.reportPath = ../../../hosts/nixos/desktop/facter.json;
 
@@ -46,8 +43,7 @@ in {
       inputs.plasma-manager.homeModules.plasma-manager
       inputs.stylix.homeModules.stylix
       inputs.pam-shim.homeModules.default
-      inputs.dms.homeModules.dank-material-shell
-      inputs.dms.homeModules.niri
+      inputs.noctalia.homeModules.default
     ];
   };
 }

@@ -107,11 +107,16 @@
       url = "github:HeitorAugustoLN/cosmic-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    danksearch = {
-      url = "github:AvengeMedia/danksearch";
+    dms.url = "github:AvengeMedia/DankMaterialShell";
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.noctalia-qs.follows = "noctalia-qs";
+    };
+    noctalia-qs = {
+      url = "github:noctalia-dev/noctalia-qs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dms.url = "github:AvengeMedia/DankMaterialShell";
     niri-flake = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";

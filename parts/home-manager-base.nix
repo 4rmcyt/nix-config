@@ -25,7 +25,6 @@ in {
       inputs.mcp-servers-nix.overlays.default
       (_final: _prev: {
         hyprsession = inputs.hyprsession.packages.${system}.default;
-        danksearch = inputs.danksearch.packages.${system}.default;
       })
     ];
 
