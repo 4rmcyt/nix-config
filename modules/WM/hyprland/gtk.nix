@@ -33,7 +33,13 @@
     enable = true;
 
     gtk3.extraConfig.gtk-decoration-layout = "appmenu:minimize,maximize,close";
-    gtk4.extraConfig.gtk-decoration-layout = "appmenu:minimize,maximize,close";
+    gtk4 = {
+      extraConfig.gtk-decoration-layout = "appmenu:minimize,maximize,close";
+      theme = {
+        name = "Kanagawa-B";
+        package = pkgs.kanagawa-gtk-theme;
+      };
+    };
 
     font = {
       name = "Maple Mono";
