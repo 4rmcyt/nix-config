@@ -124,8 +124,6 @@
       # =============================================================
       # Hardware Support & Monitoring
       # =============================================================
-      fwupd
-
       fira-code
       fira-mono
       meslo-lgs-nf
@@ -252,6 +250,8 @@
       enable = true;
       plugins = [pkgs.ccid];
     };
+
+    fwupd.enable = true;
 
     thermald.enable = true;
 
