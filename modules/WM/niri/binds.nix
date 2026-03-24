@@ -1,7 +1,7 @@
 {config, ...}: let
   a = config.lib.niri.actions;
-  qs = cmd: {
-    action = a.spawn "qs" "-c" "noctalia-shell" "ipc" "call" cmd;
+  qs = target: act: {
+    action = a.spawn "qs" "-c" "noctalia-shell" "ipc" "call" target act;
   };
 in {
   programs.niri.settings.binds = {
@@ -12,11 +12,11 @@ in {
     "Mod+Return".action = a.spawn "kitty";
     "Mod+B".action = a.spawn "chromium";
     "Mod+E".action = a.spawn "nautilus";
-    "Mod+Space" = qs "launcher toggle";
-    "Mod+D" = qs "launcher toggle";
+    "Mod+Space" = qs "launcher" "toggle";
+    "Mod+D" = qs "launcher" "toggle";
     "Mod+M".action = a.spawn "kitty" "-e" "btop";
     "Ctrl+Shift+Escape".action = a.spawn "kitty" "-e" "btop";
-    "Mod+Comma" = qs "settings toggle";
+    "Mod+Comma" = qs "settings" "toggle";
     "Mod+Shift+D".action = a.spawn "discord" "--enable-features=UseOzonePlatform" "--ozone-platform=wayland";
 
     # ============================================
@@ -32,18 +32,18 @@ in {
     # SYSTEM CONTROLS
     # ============================================
 
-    "Mod+Escape" = qs "lockScreen lock";
-    "Mod+Shift+Escape" = qs "sessionMenu toggle";
-    "Mod+N" = qs "notifications toggleHistory";
-    "Mod+T" = qs "darkMode toggle";
-    "Mod+Shift+N" = qs "nightLight toggle";
+    "Mod+Escape" = qs "lockScreen" "lock";
+    "Mod+Shift+Escape" = qs "sessionMenu" "toggle";
+    "Mod+N" = qs "notifications" "toggleHistory";
+    "Mod+T" = qs "darkMode" "toggle";
+    "Mod+Shift+N" = qs "nightLight" "toggle";
 
     # ============================================
     # THEMING & CUSTOMIZATION
     # ============================================
 
-    "Mod+C" = qs "colorPicker toggle";
-    "Mod+W" = qs "desktopWidgets toggle";
+    "Mod+C" = qs "colorPicker" "toggle";
+    "Mod+W" = qs "desktopWidgets" "toggle";
 
     # ============================================
     # SCREENSHOTS - niri native
@@ -128,14 +128,12 @@ in {
     "Mod+8".action = a.focus-workspace 8;
     "Mod+9".action = a.focus-workspace 9;
 
-    # Move column to workspace (niri uses relative up/down, not indexed)
     "Mod+Ctrl+Page_Down".action = a.move-column-to-workspace-down;
     "Mod+Ctrl+Page_Up".action = a.move-column-to-workspace-up;
 
     "Mod+Page_Down".action = a.focus-workspace-down;
     "Mod+Page_Up".action = a.focus-workspace-up;
 
-    # Move workspace itself between monitors
     "Mod+Shift+Page_Down".action = a.move-workspace-down;
     "Mod+Shift+Page_Up".action = a.move-workspace-up;
 
@@ -175,7 +173,7 @@ in {
     # CLIPBOARD
     # ============================================
 
-    "Mod+V" = qs "launcher clipboard";
+    "Mod+V" = qs "launcher" "clipboard";
 
     # ============================================
     # SYSTEM
