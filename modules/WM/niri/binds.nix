@@ -49,10 +49,10 @@ in {
     # SCREENSHOTS - niri native
     # ============================================
 
-    "Print".action = a.screenshot;
-    "Mod+Print".action = a.screenshot-screen;
-    "Mod+Shift+Print".action = a.screenshot-screen;
-    "Ctrl+Print".action = a.screenshot;
+    "Print".action.screenshot = {};
+    "Mod+Print".action.screenshot-screen = {};
+    "Mod+Shift+Print".action.screenshot-screen = {};
+    "Ctrl+Print".action.screenshot = {};
 
     # ============================================
     # FOCUS CONTROL
