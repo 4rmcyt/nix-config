@@ -1,8 +1,4 @@
-{
-  lib,
-  pkgs,
-  ...
-}: let
+{pkgs, ...}: let
   # Zed theme template from matugen-themes
   zedTemplate = pkgs.fetchurl {
     url = "https://raw.githubusercontent.com/InioX/matugen-themes/refs/heads/main/templates/zed-colors.json";
