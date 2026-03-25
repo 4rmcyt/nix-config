@@ -107,6 +107,7 @@
       })
       uefitool
       uefitoolPackages.old-engine
+      ifrextractor-rs
     ];
 
     sessionVariables = {
