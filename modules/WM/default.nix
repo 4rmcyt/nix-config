@@ -15,6 +15,5 @@
       templates = "${config.home.homeDirectory}/Templates";
       videos = "${config.home.homeDirectory}/Videos";
     };
-
   };
 }

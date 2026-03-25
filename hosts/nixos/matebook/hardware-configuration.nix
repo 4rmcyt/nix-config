@@ -10,9 +10,11 @@
       builtins.attrValues (
         lib.filterAttrs (
           name: kernelPackages:
-            (builtins.match "linux_(xanmod_latest|[0-9]+_[0-9]+)" name) != null
+            (builtins.match "linux_(xanmod_latest|[0-9]+_[0-9]+)" name)
+            != null
             && (builtins.tryEval kernelPackages).success
-        ) pkgs.linuxKernel.packages
+        )
+        pkgs.linuxKernel.packages
       )
     )
   );
