@@ -154,6 +154,13 @@ in {
       enable = true;
       cpuModelId = ./facter.json;
     };
+    fwupd = {
+      enable = true;
+      extraRemotes = [
+        "lvfs-testing"
+        "vendor"
+      ];
+    };
   };
 
   # =================================================================

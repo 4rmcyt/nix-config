@@ -165,7 +165,6 @@ in {
   };
 
   services = {
-    fwupd.enable = true;
     thermald.enable = lib.mkDefault true;
     scx.enable = false;
 
@@ -173,6 +172,14 @@ in {
       enable = true;
       defaults.autodetected = "-a -o on -s (S/../.././02|L/../../7/04)";
       autodetect = true;
+    };
+
+    fwupd = {
+      enable = true;
+      extraRemotes = [
+        "lvfs-testing"
+        "vendor"
+      ];
     };
 
     zfs = {
