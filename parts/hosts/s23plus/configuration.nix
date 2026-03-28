@@ -9,18 +9,25 @@
   inherit (config.meta) owner;
 in {
   configurations.nixOnDroid.s23plus.module = {pkgs, ...}: {
+    # =================================================================
+    # System
+    # =================================================================
     time.timeZone = owner.timezone;
     system.stateVersion = "24.05";
-
     user.shell = "${pkgs.zsh}/bin/zsh";
 
+    # =================================================================
+    # Networking
+    # =================================================================
     networking.hosts = {
-  "192.168.1.165" = ["homeserver" "serv" "atuin.example.com"];
-  "192.168.1.118" = ["desktop"];
-  "192.168.1.132" = ["matebook"];
-};
+      "192.168.1.165" = ["homeserver" "serv" "atuin.example.com"];
+      "192.168.1.118" = ["desktop"];
+      "192.168.1.132" = ["matebook"];
+    };
 
-    # Nix daemon settings
+    # =================================================================
+    # Nix
+    # =================================================================
     nix.extraOptions = ''
       experimental-features = nix-command flakes
       keep-outputs = true
@@ -49,67 +56,88 @@ in {
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
 
-    # Packages at nix-on-droid level (required for installPackages activation)
+    # =================================================================
+    # Packages
+    # =================================================================
     environment.packages = with pkgs; [
+      # Shell & prompt
       zsh
-      git
-      helix
-      zellij
-      atuin
       starship
-      zoxide
-      fzf
-      yazi
-      eza
-      bat
-      fd
-      ripgrep
       direnv
+      carapace
+
+      # Editors
+      vim
+      helix
+
+      # Terminal multiplexer & file manager
+      zellij
+      yazi
+
+      # Git
+      git
       lazygit
       gh
-      bottom
-      carapace
-      tealdeer
+
+      # Modern CLI replacements
+      eza       # ls
+      bat       # cat
+      fd        # find
+      ripgrep   # grep
+      bottom    # top
+      zoxide    # cd
+      fzf
+
+      # Core Unix utilities
+      uutils-coreutils
+      gnugrep
+      gnused
+      gnutar
+      gawk
+      findutils
+      which
+      less
+      mc
+      procps
+      tree
       ncdu
-      vim
-      jq
-      yq-go
+
+      # Archives
+      unzip
+      zip
+      rsync
+
+      # Network
       curl
       wget
       tailscale
-      tree
-      unzip
-      zip
       openssh
-      rsync
+      traceroute
+      netcat-gnu
+      inetutils
+      dnsutils
+
+      # Data processing
+      jq
+      yq-go
+
+      # Crypto & secrets
+      gnupg
+      pinentry-tty
       age
-      # Core Unix utilities
-gnugrep
-gnused
-gnutar
-gawk
-findutils
-which
-less
-mc
-uutils-coreutils
-procps
 
-# Network
-traceroute
-netcat-gnu
-inetutils
-dnsutils
+      # Shell history
+      atuin
 
-# Crypto
-gnupg
-pinentry-tty
-
+      # Docs
+      tealdeer
     ];
 
     environment.etcBackupExtension = ".bak";
 
-    # Home Manager integration
+    # =================================================================
+    # Home Manager
+    # =================================================================
     home-manager = {
       useGlobalPkgs = true;
       config = {
