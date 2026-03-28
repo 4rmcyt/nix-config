@@ -8,22 +8,13 @@
   home.stateVersion = "24.05";
   programs.home-manager.enable = true;
 
-  # ── Secrets ───────────────────────────────────────────────────────────────────
-  sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+  xdg.enable = true;
 
-  sops.secrets.atuin_key = {
-    sopsFile = ../../secrets/atuin.yaml;
-    key = "atuin_key";
-  };
-  sops.secrets.atuin_session = {
-    sopsFile = ../../secrets/atuin.yaml;
-    key = "atuin_session";
-  };
-  sops.secrets.ssh_private_key = {
-    sopsFile = ../../secrets/ssh.yaml;
-    key = "ssh_private_key";
-    path = "${config.home.homeDirectory}/.ssh/id_ed25519";
-  };
+  # ── Secrets ───────────────────────────────────────────────────────────────────
+  # sops-nix requires systemd which is not available on nix-on-droid.
+  # SSH key: copy manually after deploy:
+  #   mkdir -p ~/.ssh && age -d -i ~/.config/sops/age/keys.txt secrets/ssh.yaml > ~/.ssh/id_ed25519
+  # Atuin: run `atuin login` manually after deploy.
 
   # ── Git ──────────────────────────────────────────────────────────────────────
   # No GPG signing — no hardware key on Android
@@ -97,8 +88,7 @@
       # zellij
       zj = "zellij";
       # nix shortcuts
-      ne = "nix-on-droid switch --flake ~/src/nix-config#s23plus --impure 2>&1 | nom";
-      nom = "${pkgs.nix-output-monitor}/bin/nom";
+      ne = "nix-on-droid switch --flake ~/src/nix-config#s23plus --impure";
     };
   };
 
@@ -164,8 +154,7 @@
       inline_height = 10;
       search_mode = "fuzzy";
       prefers_reduced_motion = true;
-      key_path = config.sops.secrets.atuin_key.path;
-      session_path = config.sops.secrets.atuin_session.path;
+      # After deploy: run `atuin login` manually
     };
   };
 
@@ -267,12 +256,34 @@
     nix-direnv.enable = true;
   };
 
+  # ── Shell completions: Carapace ──────────────────────────────────────────────
+  programs.carapace = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  # ── Git TUI: Lazygit ─────────────────────────────────────────────────────────
+  programs.lazygit.enable = true;
+
+  # ── GitHub CLI ───────────────────────────────────────────────────────────────
+  programs.gh.enable = true;
+
   # ── Offline man pages: Tealdeer ──────────────────────────────────────────────
   programs.tealdeer = {
     enable = true;
     settings.updates = {
       auto_update = true;
       auto_update_interval_hours = 168; # weekly — save mobile data
+    };
+  };
+
+  # ── Bat ──────────────────────────────────────────────────────────────────────
+  programs.bat = {
+    enable = true;
+    config = {
+      theme = "catppuccin-frappe";
+      style = "numbers,changes";
+      pager = "less -FR";
     };
   };
 
@@ -297,7 +308,6 @@
   # ── Extra packages ───────────────────────────────────────────────────────────
   home.packages = with pkgs; [
     # File ops
-    bat
     eza
     fd
     file
@@ -315,12 +325,11 @@
     jq
     yq-go
 
-    # Nix output monitor (pipe: nix-on-droid switch ... 2>&1 | nom)
-    nix-output-monitor
-
     # Misc
-    htop
+    bottom # better htop — CPU/RAM/net TUI
     ncdu # disk usage TUI
     vim # fallback when helix isn't enough
   ];
+
+  home.sessionVariables.TERM = "xterm-256color";
 }

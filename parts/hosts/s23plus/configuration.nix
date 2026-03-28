@@ -45,7 +45,6 @@ in {
       useGlobalPkgs = true;
       config = {
         imports = [
-          inputs.sops-nix.homeManagerModules.sops
           ../../../home/s23plus
         ];
       };
