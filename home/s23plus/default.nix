@@ -30,6 +30,7 @@
       pull.rebase = true;
       core.editor = "hx";
     };
+    signing.format = null;
   };
 
   # ── Shell: Zsh ───────────────────────────────────────────────────────────────
@@ -290,6 +291,7 @@
   # ── SSH ───────────────────────────────────────────────────────────────────────
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;
     extraConfig = "IdentityFile ${config.home.homeDirectory}/.ssh/id_ed25519";
     matchBlocks = {
       homeserver = {
