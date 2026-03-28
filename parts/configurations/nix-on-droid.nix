@@ -25,7 +25,6 @@
           pkgs = import inputs.nixpkgs-stable {system = "aarch64-linux";};
           modules = [module];
           extraSpecialArgs = {inherit inputs;};
-          home-manager-path = inputs.home-manager-stable.outPath;
         }
     )
     config.configurations.nixOnDroid;
