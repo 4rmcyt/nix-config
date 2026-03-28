@@ -36,7 +36,7 @@
   # ── Shell: Zsh ───────────────────────────────────────────────────────────────
   programs.zsh = {
     enable = true;
-    dotDir = "${config.xdg.configHome}/zsh";
+    dotDir = ".config/zsh";
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     # Skip compaudit — completions Nix-managed
