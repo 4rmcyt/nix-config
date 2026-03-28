@@ -217,7 +217,6 @@ session_path = "${config.home.homeDirectory}/.local/share/atuin/session";
   # ── File manager: Yazi ───────────────────────────────────────────────────────
   programs.yazi = {
     enable = true;
-    shellWrapperName = "y";
     enableZshIntegration = true;
     settings = {
       manager = {
