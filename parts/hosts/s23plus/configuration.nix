@@ -8,12 +8,9 @@
 }: let
   inherit (config.meta) owner;
 in {
-  configurations.nixOnDroid.s23plus.module = {pkgs, lib, ...}: {
+  configurations.nixOnDroid.s23plus.module = {pkgs, ...}: {
     time.timeZone = owner.timezone;
     system.stateVersion = "24.05";
-
-    # nix 2.31.3+ broke nix-env on Android — pin to 2.30
-    nix.package = lib.mkForce pkgs.nixVersions.nix_2_30;
 
     user.shell = "${pkgs.zsh}/bin/zsh";
 
