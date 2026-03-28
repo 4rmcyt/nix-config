@@ -83,6 +83,28 @@ in {
       openssh
       rsync
       age
+      # Core Unix utilities
+gnugrep
+gnused
+gnutar
+gawk
+findutils
+which
+less
+mc
+uutils-coreutils
+procps
+
+# Network
+traceroute
+netcat-gnu
+inetutils
+dnsutils
+
+# Crypto
+gnupg
+pinentry-tty
+
     ];
 
     environment.etcBackupExtension = ".bak";
