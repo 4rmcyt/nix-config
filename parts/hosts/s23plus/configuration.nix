@@ -10,6 +10,7 @@
 in {
   configurations.nixOnDroid.s23plus.module = {pkgs, ...}: {
     time.timeZone = owner.timezone;
+    system.stateVersion = "24.05";
 
     user.shell = "${pkgs.zsh}/bin/zsh";
 
