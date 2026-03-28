@@ -101,11 +101,16 @@ in {
       procps
       tree
       ncdu
+      killall
+      tzdata
+      hostname
+      man
 
       # Archives
       unzip
       zip
       rsync
+      cachix
 
       # Network
       curl
