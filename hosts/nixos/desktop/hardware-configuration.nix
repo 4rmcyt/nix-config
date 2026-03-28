@@ -176,6 +176,17 @@ in {
     tmp.tmpfsHugeMemoryPages = "within_size";
   };
 
+  # /var/tmp on tmpfs — compilers (rustc, gcc, clang, go) write large intermediates here
+  fileSystems."/var/tmp" = {
+    device = "tmpfs";
+    fsType = "tmpfs";
+    options = [
+      "size=16G"
+      "mode=1777"
+      "noatime"
+    ];
+  };
+
   # =================================================================
   # 3. Hardware Configuration
   # =================================================================

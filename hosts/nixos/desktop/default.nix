@@ -2,7 +2,6 @@
   pkgs,
   config,
   lib,
-  inputs,
   ...
 }: {
   my.desktop = {
@@ -71,41 +70,18 @@
   # 5. Nix Configuration
   # =================================================================
 
-  nix = {
-    package = pkgs.lixPackageSets.latest.lix;
-    channel.enable = false;
-    registry.nixpkgs.flake = inputs.nixpkgs;
-    settings = {
-      cores = 0;
-      experimental-features = [
-        "flakes"
-        "nix-command"
-        "auto-allocate-uids"
-      ];
-      auto-optimise-store = true;
-      warn-dirty = false;
-      max-jobs = 8;
-      keep-going = true; # Continue building other derivations on failure
-      max-substitution-jobs = 16;
-      http-connections = 25;
-      connect-timeout = 5;
-      keep-outputs = true;
-      keep-derivations = true;
-      min-free = 5368709120; # 5GB - trigger GC when less than 5GB free
-      max-free = 10737418240; # 10GB - stop GC when 10GB free
-      builders-use-substitutes = true;
-      require-sigs = true;
-      eval-cache = true;
-      extra-system-features = [
-        "big-parallel"
-        "kvm"
-      ];
-      trusted-users = [
-        "root"
-        "@wheel"
-        "nix-builder"
-      ];
-    };
+  nix.settings = {
+    cores = 0;
+    max-jobs = "auto";
+    extra-system-features = [
+      "big-parallel"
+      "kvm"
+    ];
+    trusted-users = [
+      "root"
+      "@wheel"
+      "nix-builder"
+    ];
   };
 
   # =================================================================
@@ -191,25 +167,7 @@
   # =================================================================
   # 12. Programs
   # =================================================================
-  programs = {
-    gnupg.agent.enable = true;
-
-    nh = {
-      clean.enable = true;
-      clean.extraArgs = "--keep-since 10d --keep 3";
-      enable = true;
-      flake = "/home/zeev/src/nix-config";
-    };
-
-    nix-index = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-
-    zsh.enable = true;
-
-    nix-ld.enable = true;
-  };
+  programs.nix-ld.enable = true;
 
   # =================================================================
   # 13. Services

@@ -8,7 +8,11 @@
 }: let
   inherit (config.meta) stateVersion;
 in {
-  modules.nixos.base = {config, ...}: {
+  modules.nixos.base = {
+    config,
+    pkgs,
+    ...
+  }: {
     system.stateVersion = lib.mkDefault stateVersion;
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
     # Thread flake inputs into NixOS module args (replaces specialArgs)
@@ -31,6 +35,33 @@ in {
       path = "/etc/nix/access-tokens.conf";
     };
     nix.extraOptions = "!include /etc/nix/access-tokens.conf";
+
+    # Lix as the nix implementation
+    nix.package = lib.mkDefault pkgs.lixPackageSets.latest.lix;
+    nix.channel.enable = false;
+    nix.registry.nixpkgs.flake = inputs.nixpkgs;
+
+    # Common nix daemon settings (host-specific: cores, max-jobs, trusted-users, extra-system-features)
+    nix.settings = {
+      experimental-features = [
+        "flakes"
+        "nix-command"
+        "auto-allocate-uids"
+      ];
+      auto-optimise-store = true;
+      warn-dirty = false;
+      keep-going = true;
+      max-substitution-jobs = 16;
+      http-connections = 25;
+      connect-timeout = 5;
+      keep-outputs = true;
+      keep-derivations = true;
+      min-free = 5368709120; # 5GB
+      max-free = 10737418240; # 10GB
+      builders-use-substitutes = true;
+      require-sigs = true;
+      eval-cache = true;
+    };
 
     # Binary caches
     nix.settings = {

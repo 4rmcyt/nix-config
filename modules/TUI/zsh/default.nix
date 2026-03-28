@@ -98,6 +98,7 @@
     sessionVariables = {
       ALTERNATE_EDITOR = "${pkgs.vim}/bin/vi";
       LC_CTYPE = "en_US.UTF-8";
+      SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt";
       LEDGER_COLOR = "true";
       LESS = "-FRSXM";
       LESSCHARSET = "utf-8";

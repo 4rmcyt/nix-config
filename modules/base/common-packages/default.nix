@@ -73,7 +73,6 @@
       nixd
       nix-diff
       nix-fast-build
-      nix-index
       nixfmt
       nixos-rebuild-ng
       nodePackages.prettier

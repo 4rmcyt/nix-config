@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  config,
   ...
 }: {
   programs = {
@@ -119,7 +118,6 @@
             ]
           }
 
-          $env.config.hooks.command_not_found = source ${config.programs.nix-index.package}/etc/profile.d/command-not-found.nu
           # Highlight plugin config temporarily disabled due to version incompatibility
           # $env.config.plugins.highlight.true_colors = true
           # $env.config.plugins.highlight.theme = "3024-night"

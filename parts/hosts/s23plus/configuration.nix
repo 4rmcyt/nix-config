@@ -1,0 +1,49 @@
+# Galaxy S23+ nix-on-droid configuration.
+# Deploy: nix-on-droid switch --flake .#s23plus --impure
+# Note: tailscale daemon runs as Android app — CLI available via HM packages.
+{
+  config,
+  inputs,
+  ...
+}: let
+  inherit (config.meta) owner;
+in {
+  configurations.nixOnDroid.s23plus.module = {pkgs, ...}: {
+    time.timeZone = owner.timezone;
+
+    user.shell = "${pkgs.zsh}/bin/zsh";
+
+    # Nix daemon settings
+    nix.extraOptions = ''
+      experimental-features = nix-command flakes
+      keep-outputs = true
+      keep-derivations = true
+      connect-timeout = 10
+    '';
+
+    nix.substituters = [
+      "https://4rmcyt.cachix.org"
+      "https://cache.nixos.org"
+      "https://nix-community.cachix.org"
+    ];
+
+    nix.trustedPublicKeys = [
+      "4rmcyt.cachix.org-1:yHVDqXs6TDmfSOuPbl4gcfomDK9gzTmK8FabfHLi+d8="
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+
+    # Home Manager integration
+    home-manager = {
+      useGlobalPkgs = true;
+      config = {
+        imports = [
+          inputs.sops-nix.homeManagerModules.sops
+          ../../../home/s23plus
+        ];
+      };
+      extraSpecialArgs = {inherit inputs;};
+      backupFileExtension = "hm-backup";
+    };
+  };
+}

@@ -1,6 +1,5 @@
 {
   config,
-  inputs,
   lib,
   pkgs,
   ...
@@ -67,36 +66,10 @@
   # =================================================================
   # 6. Nix Configuration
   # =================================================================
-  nix = {
-    package = pkgs.lixPackageSets.latest.lix;
-    channel.enable = false;
-    registry.nixpkgs.flake = inputs.nixpkgs;
-  };
-
   nix.settings = {
     cores = 4;
     max-jobs = 4;
-    experimental-features = [
-      "flakes"
-      "nix-command"
-      "auto-allocate-uids"
-    ];
-    auto-optimise-store = true;
-    warn-dirty = false;
-    keep-going = true;
-    max-substitution-jobs = 16;
-    http-connections = 25;
-    connect-timeout = 5;
-    keep-outputs = true;
-    keep-derivations = true;
-    min-free = 5368709120; # 5GB - trigger GC when less than 5GB free
-    max-free = 10737418240; # 10GB - stop GC when 10GB free
-    builders-use-substitutes = true;
-    require-sigs = true;
-    eval-cache = true;
-    extra-system-features = [
-      "big-parallel"
-    ];
+    extra-system-features = ["big-parallel"];
     trusted-users = [
       "root"
       "@wheel"
@@ -211,26 +184,9 @@
   # =================================================================
   # 10. Programs
   # =================================================================
-  programs = {
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-      pinentryPackage = pkgs.pinentry-tty;
-    };
-
-    nix-index = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-
-    nh = {
-      enable = true;
-      clean.enable = true;
-      clean.extraArgs = "--keep-since 10d --keep 3";
-      flake = "/home/zeev/src/nix-config";
-    };
-
-    zsh.enable = true;
+  programs.gnupg.agent = {
+    enableSSHSupport = true;
+    pinentryPackage = pkgs.pinentry-tty;
   };
 
   # =================================================================

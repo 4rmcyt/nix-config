@@ -156,6 +156,13 @@
     };
     zjstatus.url = "github:dj95/zjstatus";
 
+    # Mobile
+    nix-on-droid = {
+      url = "github:nix-community/nix-on-droid/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     # Services & infrastructure
     mcp-nixos.url = "github:utensils/mcp-nixos";
     mcp-servers-nix.url = "github:natsukium/mcp-servers-nix";
