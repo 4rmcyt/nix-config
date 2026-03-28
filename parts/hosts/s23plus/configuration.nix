@@ -80,12 +80,12 @@ in {
       gh
 
       # Modern CLI replacements
-      eza       # ls
-      bat       # cat
-      fd        # find
-      ripgrep   # grep
-      bottom    # top
-      zoxide    # cd
+      eza # ls
+      bat # cat
+      fd # find
+      ripgrep # grep
+      bottom # top
+      zoxide # cd
       fzf
 
       # Core Unix utilities

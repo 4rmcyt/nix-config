@@ -18,18 +18,18 @@
 
   # ── Git ──────────────────────────────────────────────────────────────────────
   # No GPG signing — no hardware key on Android
-  
-programs.git = {
-  enable = true;
-  userName = "4rmcyt";
-  userEmail = "redacted@example.com";
-  extraConfig = {
-    init.defaultBranch = "main";
-    push.autoSetupRemote = true;
-    pull.rebase = true;
-    core.editor = "hx";
+
+  programs.git = {
+    enable = true;
+    userName = "4rmcyt";
+    userEmail = "redacted@example.com";
+    extraConfig = {
+      init.defaultBranch = "main";
+      push.autoSetupRemote = true;
+      pull.rebase = true;
+      core.editor = "hx";
+    };
   };
-};
   # ── Shell: Zsh ───────────────────────────────────────────────────────────────
   programs.zsh = {
     enable = true;
@@ -153,11 +153,11 @@ programs.git = {
       search_mode = "fuzzy";
       prefers_reduced_motion = true;
       key_path = "${config.home.homeDirectory}/.local/share/atuin/key";
-session_path = "${config.home.homeDirectory}/.local/share/atuin/session";
+      session_path = "${config.home.homeDirectory}/.local/share/atuin/session";
       # After deploy:
       # Atuin: run `atuin login` OR copy.   key+session from another machine:
-#   scp homeserver:~/.local/share/atuin/key ~/.local/share/atuin/key
-#   scp homeserver:~/.local/share/atuin/session ~/.local/share/atuin/session
+      #   scp homeserver:~/.local/share/atuin/key ~/.local/share/atuin/key
+      #   scp homeserver:~/.local/share/atuin/session ~/.local/share/atuin/session
     };
   };
 
