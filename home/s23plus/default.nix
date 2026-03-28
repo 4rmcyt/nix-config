@@ -89,7 +89,7 @@
       # zellij
       zj = "zellij";
       # nix shortcuts
-      ne = "nix-on-droid switch --flake ~/src/nix-config#s23plus --impure";
+      ne = "nix-on-droid switch --flake ~/src/nix-config#s23plus --option pure-eval false --option fallback true; ls /nix/store/*home-manager-generation*/activate 2>/dev/null | sort | tail -1 | sh";
     };
   };
 
