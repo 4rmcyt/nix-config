@@ -18,21 +18,19 @@
 
   # ── Git ──────────────────────────────────────────────────────────────────────
   # No GPG signing — no hardware key on Android
-  programs.git = {
-    enable = true;
-    settings = {
-      user = {
-        name = "4rmcyt";
-        email = "redacted@example.com";
-      };
-      init.defaultBranch = "main";
-      push.autoSetupRemote = true;
-      pull.rebase = true;
-      core.editor = "hx";
-    };
-    signing.format = null;
+  
+programs.git = {
+  enable = true;
+  userName = "4rmcyt";
+  userEmail = "redacted@example.com";
+  signing.format = null;
+  extraConfig = {
+    init.defaultBranch = "main";
+    push.autoSetupRemote = true;
+    pull.rebase = true;
+    core.editor = "hx";
   };
-
+};
   # ── Shell: Zsh ───────────────────────────────────────────────────────────────
   programs.zsh = {
     enable = true;
