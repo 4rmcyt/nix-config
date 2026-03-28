@@ -105,7 +105,7 @@ in {
 
     # Mobile devices
     "${config.my.network.mobile.sophia-s23-ultra}" = ["sophia-phone"];
-    "${config.my.network.mobile.volodymyr-s23}" = ["volodymyr-phone"];
+    "${config.my.network.mobile.volodymyr-s23}" = ["volodymyr-phone" "s23plus"];
   };
 
   # =================================================================
