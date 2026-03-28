@@ -19,6 +19,13 @@ in {
       keep-outputs = true
       keep-derivations = true
       connect-timeout = 10
+      eval-cache = true
+      auto-optimise-store = true
+      max-jobs = 4
+      cores = 4
+      min-free = 1073741824
+      max-free = 3221225472
+      warn-dirty = false
     '';
 
     nix.substituters = [
