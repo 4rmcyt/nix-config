@@ -292,17 +292,18 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    extraConfig = "IdentityFile ${config.home.homeDirectory}/.ssh/id_ed25519";
     matchBlocks = {
       homeserver = {
         hostname = "homeserver";
         user = "zeev";
         compression = true;
+        identityFile = "${config.home.homeDirectory}/.ssh/id_ed25519";
       };
       desktop = {
         hostname = "desktop";
         user = "zeev";
         compression = true;
+        identityFile = "${config.home.homeDirectory}/.ssh/id_ed25519";
       };
     };
   };
