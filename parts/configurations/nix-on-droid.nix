@@ -22,10 +22,10 @@
     lib.mapAttrs (
       _name: {module}:
         inputs.nix-on-droid.lib.nixOnDroidConfiguration {
-          pkgs = import inputs.nixpkgs {system = "aarch64-linux";};
+          pkgs = import inputs.nixpkgs-stable {system = "aarch64-linux";};
           modules = [module];
           extraSpecialArgs = {inherit inputs;};
-          home-manager-path = inputs.home-manager.outPath;
+          home-manager-path = inputs.home-manager-stable.outPath;
         }
     )
     config.configurations.nixOnDroid;

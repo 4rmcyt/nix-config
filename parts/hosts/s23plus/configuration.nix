@@ -30,16 +30,53 @@ in {
     '';
 
     nix.substituters = [
+      "https://nix-on-droid.cachix.org"
       "https://4rmcyt.cachix.org"
       "https://cache.nixos.org"
       "https://nix-community.cachix.org"
     ];
 
     nix.trustedPublicKeys = [
+      "nix-on-droid.cachix.org-1:56snoMJTXmDRC1Ei24CmKoUqvHJ9XCp+nidK7qkMQrU="
       "4rmcyt.cachix.org-1:yHVDqXs6TDmfSOuPbl4gcfomDK9gzTmK8FabfHLi+d8="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
+
+    # Packages at nix-on-droid level (required for installPackages activation)
+    environment.packages = with pkgs; [
+      zsh
+      git
+      helix
+      zellij
+      atuin
+      starship
+      zoxide
+      fzf
+      yazi
+      eza
+      bat
+      fd
+      ripgrep
+      direnv
+      lazygit
+      gh
+      bottom
+      carapace
+      tealdeer
+      ncdu
+      vim
+      jq
+      yq-go
+      curl
+      wget
+      tailscale
+      tree
+      unzip
+      zip
+    ];
+
+    environment.etcBackupExtension = ".bak";
 
     # Home Manager integration
     home-manager = {

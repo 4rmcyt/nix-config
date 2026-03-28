@@ -308,30 +308,10 @@
     };
   };
 
-  # ── Extra packages ───────────────────────────────────────────────────────────
+  # Packages are managed at nix-on-droid level (environment.packages)
+  # Only add packages here that are HM-specific
   home.packages = with pkgs; [
-    # File ops
-    eza
-    fd
     file
-    ripgrep
-    tree
-    unzip
-    zip
-
-    # Network
-    curl
-    wget
-    tailscale # CLI — daemon is Android Tailscale app
-
-    # Data
-    jq
-    yq-go
-
-    # Misc
-    bottom # better htop — CPU/RAM/net TUI
-    ncdu # disk usage TUI
-    vim # fallback when helix isn't enough
   ];
 
   home.sessionVariables.TERM = "xterm-256color";
