@@ -294,7 +294,6 @@ session_path = "${config.home.homeDirectory}/.local/share/atuin/session";
   # ── SSH ───────────────────────────────────────────────────────────────────────
   programs.ssh = {
     enable = true;
-    enableDefaultConfig = false;
     matchBlocks = {
       homeserver = {
         hostname = "homeserver";
