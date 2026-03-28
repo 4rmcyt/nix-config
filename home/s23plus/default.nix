@@ -23,7 +23,6 @@ programs.git = {
   enable = true;
   userName = "4rmcyt";
   userEmail = "redacted@example.com";
-  signing.format = null;
   extraConfig = {
     init.defaultBranch = "main";
     push.autoSetupRemote = true;
