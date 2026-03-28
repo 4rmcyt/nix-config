@@ -155,7 +155,12 @@
       inline_height = 10;
       search_mode = "fuzzy";
       prefers_reduced_motion = true;
-      # After deploy: run `atuin login` manually
+      key_path = "${config.home.homeDirectory}/.local/share/atuin/key";
+session_path = "${config.home.homeDirectory}/.local/share/atuin/session";
+      # After deploy:
+      # Atuin: run `atuin login` OR copy.   key+session from another machine:
+#   scp homeserver:~/.local/share/atuin/key ~/.local/share/atuin/key
+#   scp homeserver:~/.local/share/atuin/session ~/.local/share/atuin/session
     };
   };
 
