@@ -14,6 +14,12 @@ in {
 
     user.shell = "${pkgs.zsh}/bin/zsh";
 
+    networking.hosts = {
+  "192.168.1.165" = ["homeserver" "serv" "atuin.example.com"];
+  "192.168.1.118" = ["desktop"];
+  "192.168.1.132" = ["matebook"];
+};
+
     # Nix daemon settings
     nix.extraOptions = ''
       experimental-features = nix-command flakes
@@ -74,6 +80,9 @@ in {
       tree
       unzip
       zip
+      openssh
+      rsync
+      age
     ];
 
     environment.etcBackupExtension = ".bak";
