@@ -1,10 +1,15 @@
-{lib, ...}: {
-  virtualisation.waydroid.enable = true;
+{
+  pkgs,
+  lib,
+  ...
+}: {
+  virtualisation.waydroid = {
+    enable = true;
+    # xanmod kernel has no ip_tables module — use nftables variant
+    package = pkgs.waydroid-nftables;
+  };
 
   hardware.graphics.enable = lib.mkDefault true;
-
-  # iptables legacy modules required by waydroid networking (xanmod has these as =m)
-  boot.kernelModules = ["ip_tables" "ip6_tables" "iptable_nat" "iptable_filter"];
 
   # Required for waydroid networking
   boot.kernel.sysctl = {
