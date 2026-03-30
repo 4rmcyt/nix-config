@@ -119,7 +119,6 @@
   };
 
   programs = {
-    browserpass.enable = true;
     claude-code.enable = true;
     firefox.package = pkgs.firefox-nightly or pkgs.firefox;
     nushell.enable = true;
