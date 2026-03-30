@@ -95,6 +95,8 @@
             mountpoint = "/home";
             options = {
               atime = "off";
+              acltype = "posixacl";
+              xattr = "sa";
               "com.sun:auto-snapshot" = "false";
             };
           };
