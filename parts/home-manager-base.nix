@@ -29,5 +29,7 @@ in {
     ];
 
     sops.age.keyFile = "/home/${owner.username}/.config/sops/age/keys.txt";
+
+    xdg.userDirs.setSessionVariables = false;
   };
 }
