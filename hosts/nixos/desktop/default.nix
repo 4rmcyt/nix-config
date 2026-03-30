@@ -38,6 +38,7 @@
     ../../../modules/GUI/chromium
     ../../../modules/GUI/flatpak/hyprland
     ../../../modules/GUI/nautilus
+    ../../../modules/GUI/waydroid
     ../../../modules/GUI/virt-manager
     ../../../modules/xdg
   ];
