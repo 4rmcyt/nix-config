@@ -58,11 +58,6 @@ in {
         command = "${pkgs.uv}/bin/uvx";
         args = ["mcp-python-interpreter"];
       };
-      claude-context = {
-        type = "stdio";
-        command = "${config.home.homeDirectory}/.local/bin/claude-context-mcp-wrapped";
-        args = [];
-      };
     };
   };
 
@@ -90,14 +85,5 @@ in {
     EOF
         chmod +x "$HOME/.local/bin/tavily-mcp-wrapped"
 
-        # Claude Context (Zilliz) wrapper
-        cat > "$HOME/.local/bin/claude-context-mcp-wrapped" << 'EOF'
-    #!/usr/bin/env bash
-    export MILVUS_ADDRESS="$(${pkgs.sops}/bin/sops -d ${../../../../secrets/common.yaml} | ${pkgs.yq}/bin/yq -r '.milvus_address')"
-    export MILVUS_TOKEN="$(${pkgs.sops}/bin/sops -d ${../../../../secrets/common.yaml} | ${pkgs.yq}/bin/yq -r '.milvus_token')"
-    export OPENAI_API_KEY="$(${pkgs.sops}/bin/sops -d ${../../../../secrets/common.yaml} | ${pkgs.yq}/bin/yq -r '.openai_api_key')"
-    exec ${pkgs.nodejs}/bin/npx -y @zilliz/claude-context-mcp@latest "$@"
-    EOF
-        chmod +x "$HOME/.local/bin/claude-context-mcp-wrapped"
   '';
 }

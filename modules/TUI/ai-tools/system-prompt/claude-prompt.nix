@@ -20,7 +20,6 @@ in ''
   | Run Python code | `python` | Computation, scripting |
   | Multi-step analysis | `sequential-thinking` | Architecture decisions |
   | Persist context across sessions | `memory` | Decisions, patterns |
-  | Index/search codebase semantically | `claude-context` | Index repos, semantic search |
 
   ${basePrompt}
 ''
