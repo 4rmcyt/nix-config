@@ -11,6 +11,9 @@
 
   hardware.graphics.enable = lib.mkDefault true;
 
+  # clipboard sharing between host and waydroid
+  environment.systemPackages = [pkgs.wl-clipboard];
+
   # Required for waydroid networking
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;

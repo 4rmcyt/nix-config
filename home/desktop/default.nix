@@ -82,6 +82,7 @@
       antigravity-fhs
       proton-pass
       proton-pass-cli
+      seahorse
       (python3.withPackages (
         ps:
           with ps; [
