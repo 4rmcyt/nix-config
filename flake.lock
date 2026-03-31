@@ -651,6 +651,27 @@
     "flake-parts_7": {
       "inputs": {
         "nixpkgs-lib": [
+          "nur",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1733312601,
+        "narHash": "sha256-4pDvzqnegAfRkPwO3wmwBhVi/Sye1mzps0zHWYnP88c=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "205b12d8b7cd4802fbcb8e8ef6a0f1408781a4f9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
+    "flake-parts_8": {
+      "inputs": {
+        "nixpkgs-lib": [
           "stylix",
           "nixpkgs"
         ]
@@ -669,7 +690,7 @@
         "type": "github"
       }
     },
-    "flake-parts_8": {
+    "flake-parts_9": {
       "inputs": {
         "nixpkgs-lib": "nixpkgs-lib_3"
       },
@@ -1623,6 +1644,27 @@
     },
     "nur": {
       "inputs": {
+        "flake-parts": "flake-parts_7",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1774990642,
+        "narHash": "sha256-B+aSPalmg5gn2nAd+bakky+huVMP7hKkHvIlBfBXJwM=",
+        "owner": "nix-community",
+        "repo": "NUR",
+        "rev": "ecea97b963017565708621eec1cb59bba4baaa40",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "NUR",
+        "type": "github"
+      }
+    },
+    "nur_2": {
+      "inputs": {
         "flake-parts": [
           "stylix",
           "flake-parts"
@@ -1768,6 +1810,7 @@
         "nixpkgs": "nixpkgs_4",
         "noctalia": "noctalia",
         "noctalia-qs": "noctalia-qs",
+        "nur": "nur",
         "pam-shim": "pam-shim",
         "plasma-manager": "plasma-manager",
         "quickshell": "quickshell_2",
@@ -1927,10 +1970,10 @@
         "base16-helix": "base16-helix",
         "base16-vim": "base16-vim",
         "firefox-gnome-theme": "firefox-gnome-theme",
-        "flake-parts": "flake-parts_7",
+        "flake-parts": "flake-parts_8",
         "gnome-shell": "gnome-shell",
         "nixpkgs": "nixpkgs_5",
-        "nur": "nur",
+        "nur": "nur_2",
         "systems": "systems_9",
         "tinted-foot": "tinted-foot",
         "tinted-kitty": "tinted-kitty",
@@ -2437,7 +2480,7 @@
     "zed": {
       "inputs": {
         "crane": "crane",
-        "flake-parts": "flake-parts_8",
+        "flake-parts": "flake-parts_9",
         "nixpkgs": "nixpkgs_6",
         "rust-overlay": "rust-overlay_2"
       },

@@ -23,6 +23,7 @@ in {
     nixpkgs.config.allowUnfree = true;
     nixpkgs.overlays = [
       inputs.mcp-servers-nix.overlays.default
+      inputs.nur.overlays.default
       (_final: _prev: {
         hyprsession = inputs.hyprsession.packages.${system}.default;
       })
