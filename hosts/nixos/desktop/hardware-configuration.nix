@@ -107,7 +107,6 @@ in {
       "nohibernate"
       "rd.systemd.show_status=auto"
       "rd.udev.log_priority=3"
-      "systemd.unified_cgroup_hierarchy=1"
       "usb-storage.delay_use=0"
       "usbcore.autosuspend=-1"
 
@@ -321,11 +320,8 @@ in {
     scx = {
       enable = true;
       package = pkgs.scx.full;
-      scheduler = "scx_bpfland";
-      extraArgs = [
-        "-m"
-        "performance"
-      ];
+      scheduler = "scx_lavd";
+      extraArgs = ["--performance"];
     };
 
     # Hardware monitoring
@@ -588,7 +584,7 @@ in {
   # =================================================================
   systemd = {
     coredump.enable = false;
-    oomd.enable = true;
+    oomd.enable = false;
     services.bluetooth-unblock = {
       description = "Unblock Bluetooth rfkill soft block";
       wantedBy = ["bluetooth.service"];
