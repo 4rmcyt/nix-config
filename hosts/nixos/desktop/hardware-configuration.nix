@@ -58,18 +58,6 @@ in {
 
     kernelPackages = assert !xanmodKernel.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken; xanmodKernel;
 
-    # Enable DMA-BUF heaps (required for waydroid on AMD iGPU)
-    kernelPatches = [
-      {
-        name = "dmabuf-heaps";
-        patch = null;
-        extraStructuredConfig = with lib.kernel; {
-          DMABUF_HEAPS = yes;
-          DMABUF_HEAPS_SYSTEM = yes;
-        };
-      }
-    ];
-
     blacklistedKernelModules = ["r8169"];
 
     extraModulePackages = with config.boot.kernelPackages; [

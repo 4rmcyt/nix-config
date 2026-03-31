@@ -110,6 +110,7 @@
       uefitool
       uefitoolPackages.old-engine
       ifrextractor-rs
+      waydroid-helper
     ];
 
     sessionVariables = {
