@@ -20,14 +20,8 @@
     "net.ipv4.ip_forward" = 1;
     "net.ipv4.conf.all.forwarding" = 1;
     "net.ipv6.conf.all.forwarding" = 1;
-    # Fix for waydroid hanging (audio server pid exhaustion)
     "kernel.pid_max" = 65535;
   };
 
-  systemd.services.waydroid-container.serviceConfig = {
-    Delegate = lib.mkDefault true;
-    CPUAccounting = true;
-    MemoryAccounting = true;
-    TasksAccounting = true;
-  };
+  systemd.services.waydroid-container.serviceConfig.Delegate = lib.mkDefault true;
 }
