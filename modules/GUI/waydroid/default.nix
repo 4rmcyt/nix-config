@@ -46,7 +46,7 @@ in {
           echo "$1=$2" >> "$PROP_FILE"
         }
 
-        set_prop ro.hardware.gralloc gbm
+        set_prop ro.hardware.gralloc minigbm_gbm_mesa
         set_prop ro.hardware.egl mesa
         set_prop gralloc.gbm.device ${amdRenderNode}
         ${pkgs.gnused}/bin/sed -i '/^$/d' "$PROP_FILE"
