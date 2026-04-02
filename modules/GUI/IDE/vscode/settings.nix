@@ -125,7 +125,7 @@
 
     "redhat.telemetry.enabled" = false;
 
-    "claude.code.autoApplyEdits" = false;
+    "claude.code.autoApplyEdits" = true;
     "claude.code.enableMCP" = true;
     "claude.code.terminal.shell" = "zsh";
     "claudeCode.hideOnboarding" = true;
