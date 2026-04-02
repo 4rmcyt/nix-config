@@ -33,7 +33,7 @@
       tomoki1207.pdf
 
       # AI
-      anthropic.claude-code
+      # anthropic.claude-code # 2.1.88 removed from npm, re-enable after nixpkgs updates
       saoudrizwan.claude-dev
     ]
     ++ (with pkgs.vscode-utils; [

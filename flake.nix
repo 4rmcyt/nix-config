@@ -99,10 +99,6 @@
       url = "github:HeitorAugustoLN/betterfox-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    cosmic-manager = {
-      url = "github:HeitorAugustoLN/cosmic-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -128,19 +124,12 @@
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flatpaks.url = "github:in-a-dil-emma/declarative-flatpak/latest";
-    hyprsession = {
-      url = "github:joshurtree/hyprsession";
-      inputs.nixpkgs.follows = "nixpkgs";
+    flatpaks = {
+      url = "github:in-a-dil-emma/declarative-flatpak/latest";
     };
     pam-shim = {
       url = "github:Cu3PO42/pam_shim/next";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    plasma-manager = {
-      url = "github:nix-community/plasma-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
     };
     quickshell = {
       url = "git+https://git.outfoxxed.me/quickshell/quickshell";
@@ -164,10 +153,6 @@
     };
     nixarr = {
       url = "github:rasmus-kirk/nixarr";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    headplane = {
-      url = "github:tale/headplane";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

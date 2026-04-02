@@ -40,7 +40,6 @@ in {
     home-manager.users.${owner.username}.imports = [
       ../../../home/desktop
       inputs.betterfox-nix.homeModules.betterfox
-      inputs.plasma-manager.homeModules.plasma-manager
       inputs.stylix.homeModules.stylix
       inputs.pam-shim.homeModules.default
       inputs.noctalia.homeModules.default

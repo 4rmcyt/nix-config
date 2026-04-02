@@ -24,7 +24,7 @@
   '';
 in {
   programs.claude-code = {
-    enable = true;
+    enable = lib.mkForce false; # 2.1.88 removed from npm, re-enable after nixpkgs updates
     package = pkgs.claude-code;
     enableMcpIntegration = true;
 
