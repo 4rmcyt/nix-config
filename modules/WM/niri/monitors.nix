@@ -1,6 +1,6 @@
 _: {
   programs.niri.settings.outputs = {
-    "DP-4" = {
+    "DP-1" = {
       mode = {
         width = 3840;
         height = 2160;
@@ -13,7 +13,7 @@ _: {
       };
       variable-refresh-rate = false;
     };
-    "DP-5" = {
+    "DP-2" = {
       mode = {
         width = 3840;
         height = 2160;
