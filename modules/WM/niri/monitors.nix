@@ -1,6 +1,6 @@
 _: {
   programs.niri.settings.outputs = {
-    "DP-1" = {
+    "ASUSTek COMPUTER INC ASUS VG289 0x00011FC7" = {
       mode = {
         width = 3840;
         height = 2160;
@@ -13,7 +13,7 @@ _: {
       };
       variable-refresh-rate = false;
     };
-    "DP-2" = {
+    "ASUSTek COMPUTER INC ASUS VG289 0x00011E65" = {
       mode = {
         width = 3840;
         height = 2160;

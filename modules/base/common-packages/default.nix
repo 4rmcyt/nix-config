@@ -75,7 +75,7 @@
       nix-fast-build
       nixfmt
       nixos-rebuild-ng
-      nodePackages.prettier
+      prettier
       nufmt
       pinentry-tty
       prek
