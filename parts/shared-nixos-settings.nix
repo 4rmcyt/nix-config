@@ -19,20 +19,16 @@ in
     {
       system.stateVersion = lib.mkDefault stateVersion;
       nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-      # Thread flake inputs into NixOS module args (replaces specialArgs)
       _module.args = { inherit inputs; };
 
-      # Common nixpkgs config
       nixpkgs.config.allowUnfree = true;
 
-      # Sops defaults
       sops.age.keyFile = lib.mkDefault "/root/.config/sops/age/keys.txt";
 
-      # GitHub access token for nix daemon and CLI (rate limiting / private flake inputs)
-      # nix_access_token is pre-formatted as: access-tokens = github.com=<token>
       sops.secrets.nix_access_token = {
         sopsFile = ../secrets/common.yaml;
         key = "nix_access_token";
+        owner = "root";
       };
       sops.templates."nix-access-tokens.conf" = {
         content = config.sops.placeholder.nix_access_token;
@@ -67,7 +63,6 @@ in
         connect-timeout = 5;
         min-free = 5368709120; # 5GB
         max-free = 10737418240; # 10GB
-        download-buffer-size = 128 * 1024 * 1024;
         narinfo-cache-negative-ttl = 0;
         builders-use-substitutes = true;
         require-sigs = true;
