@@ -22,10 +22,21 @@
     };
   };
 
+  sops.templates."google-api-env" = {
+    content = ''
+      GOOGLE_API_KEY=${config.sops.placeholder.google_api_key}
+      GOOGLE_DEFAULT_CLIENT_ID=${config.sops.placeholder.google_client_id}
+      GOOGLE_DEFAULT_CLIENT_SECRET=${config.sops.placeholder.google_client_secret}
+    '';
+    path = "/etc/google-api-env";
+    owner = "root";
+    mode = "0444";
+  };
+
   environment.extraInit = ''
-    export GOOGLE_API_KEY="$(cat ${config.sops.secrets.google_api_key.path})"
-    export GOOGLE_DEFAULT_CLIENT_ID="$(cat ${config.sops.secrets.google_client_id.path})"
-    export GOOGLE_DEFAULT_CLIENT_SECRET="$(cat ${config.sops.secrets.google_client_secret.path})"
+    set -a
+    source /etc/google-api-env
+    set +a
   '';
 
   environment.systemPackages = [
