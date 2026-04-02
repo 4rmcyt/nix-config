@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   # ============================================
   # FONTS
   # ============================================
@@ -50,7 +49,7 @@
 
     iconTheme = {
       name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme.override { color = "green"; };
+      package = pkgs.papirus-icon-theme.override {color = "green";};
     };
 
     cursorTheme = {

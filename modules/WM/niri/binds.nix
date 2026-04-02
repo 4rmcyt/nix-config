@@ -1,11 +1,9 @@
-{ config, ... }:
-let
+{config, ...}: let
   a = config.lib.niri.actions;
   qs = target: act: {
     action = a.spawn "qs" "-c" "noctalia-shell" "ipc" "call" target act;
   };
-in
-{
+in {
   programs.niri.settings.binds = {
     # ============================================
     # APPLICATIONS
@@ -51,8 +49,8 @@ in
     # SCREENSHOTS - niri native
     # ============================================
 
-    "Print".action.screenshot = { };
-    "Mod+Print".action.screenshot-screen = { };
+    "Print".action.screenshot = {};
+    "Mod+Print".action.screenshot-screen = {};
 
     # ============================================
     # FOCUS CONTROL

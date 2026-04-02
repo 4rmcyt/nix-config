@@ -1,17 +1,26 @@
-{ pkgs, config, ... }:
 {
+  pkgs,
+  config,
+  ...
+}: {
   sops.secrets = {
     google_api_key = {
       sopsFile = ../../../secrets/common.yaml;
       key = "google_api_key";
+      owner = "zeev";
+      group = "users";
     };
     google_client_id = {
       sopsFile = ../../../secrets/common.yaml;
       key = "google_client_id";
+      owner = "zeev";
+      group = "users";
     };
     google_client_secret = {
       sopsFile = ../../../secrets/common.yaml;
       key = "google_client_secret";
+      owner = "zeev";
+      group = "users";
     };
   };
 
@@ -53,8 +62,8 @@
 
   systemd.user.services.chromium-graceful-shutdown = {
     description = "Gracefully shutdown Chromium before session ends";
-    wantedBy = [ "graphical-session.target" ];
-    partOf = [ "graphical-session.target" ];
+    wantedBy = ["graphical-session.target"];
+    partOf = ["graphical-session.target"];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
