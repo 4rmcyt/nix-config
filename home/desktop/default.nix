@@ -124,7 +124,7 @@
 
   programs = {
     claude-code.enable = true;
-    firefox.package = pkgs.firefox-nightly or pkgs.firefox;
+    firefox.package = pkgs.firefox;
     nushell.enable = true;
   };
 

@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # ============================================
   # FONTS
   # ============================================
@@ -32,15 +33,6 @@
   gtk = {
     enable = true;
 
-    gtk3.extraConfig.gtk-decoration-layout = "appmenu:minimize,maximize,close";
-    gtk4 = {
-      extraConfig.gtk-decoration-layout = "appmenu:minimize,maximize,close";
-      theme = {
-        name = "Kanagawa-B";
-        package = pkgs.kanagawa-gtk-theme;
-      };
-    };
-
     font = {
       name = "Maple Mono";
       size = 12;
@@ -51,9 +43,14 @@
       package = pkgs.kanagawa-gtk-theme;
     };
 
+    gtk4.theme = {
+      name = "Kanagawa-B";
+      package = pkgs.kanagawa-gtk-theme;
+    };
+
     iconTheme = {
       name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme.override {color = "green";};
+      package = pkgs.papirus-icon-theme.override { color = "green"; };
     };
 
     cursorTheme = {
@@ -70,5 +67,7 @@
     name = "Bibata-Modern-Ice";
     package = pkgs.bibata-cursors;
     size = 24;
+    gtk.enable = true;
+    x11.enable = true;
   };
 }

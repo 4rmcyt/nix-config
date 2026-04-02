@@ -1,62 +1,65 @@
-{pkgs, ...}: {
-  # Set Google API credentials for Chromium sync
-  environment.sessionVariables = {
-    GOOGLE_API_KEY = "REDACTED";
-    GOOGLE_DEFAULT_CLIENT_ID = "839524313676-1k175brl5r4fvmi049iovjht5cqvfkvr.apps.googleusercontent.com";
-    GOOGLE_DEFAULT_CLIENT_SECRET = "REDACTED";
+{ pkgs, config, ... }:
+{
+  sops.secrets = {
+    google_api_key = {
+      sopsFile = ../../../secrets/common.yaml;
+      key = "google_api_key";
+    };
+    google_client_id = {
+      sopsFile = ../../../secrets/common.yaml;
+      key = "google_client_id";
+    };
+    google_client_secret = {
+      sopsFile = ../../../secrets/common.yaml;
+      key = "google_client_secret";
+    };
   };
 
-  # Install Chromium with Wayland/Niri/DMS optimizations
+  environment.extraInit = ''
+    export GOOGLE_API_KEY="$(cat ${config.sops.secrets.google_api_key.path})"
+    export GOOGLE_DEFAULT_CLIENT_ID="$(cat ${config.sops.secrets.google_client_id.path})"
+    export GOOGLE_DEFAULT_CLIENT_SECRET="$(cat ${config.sops.secrets.google_client_secret.path})"
+  '';
+
   environment.systemPackages = [
     (pkgs.chromium.override {
       enableWideVine = true;
       commandLineArgs = [
-        # GPU acceleration for Nvidia
-        "--enable-features=VaapiVideoDecoder,VaapiIgnoreDriverChecks,Vulkan,DefaultANGLEVulkan,VulkanFromANGLE"
+        "--enable-features=Vulkan,DefaultANGLEVulkan,VulkanFromANGLE"
         "--ignore-gpu-blocklist"
-        "--use-vulkan"
-
-        # Wayland support
+        "--use-angle=vulkan"
         "--ozone-platform=wayland"
         "--disable-features=WaylandOverlayDelegation"
-
-        # HDR and Wide Color Gamut support
         "--enable-features=UseSkiaRenderer"
-        "--force-color-profile=hdr10"
-        "--enable-hdr"
-
-        # Better scrolling and performance
         "--enable-smooth-scrolling"
         "--enable-gpu-rasterization"
         "--enable-zero-copy"
-
-        # GTK Theme support
         "--gtk-version=4"
         "--force-dark-mode"
       ];
     })
   ];
 
-  # Chromium policies
   programs.chromium = {
     enable = true;
-
     extraOpts = {
-      # Sync settings
       "BrowserSignin" = 1;
       "SyncDisabled" = false;
-
-      # Always restore last session — suppresses "didn't close properly" dialog
-      # caused by compositor killing Chromium with SIGTERM before it can write exit_type=Normal
       "RestoreOnStartup" = 1;
-
-      # Secure DNS via NextDNS — automatic so Chromium falls back to system resolver
-      # (system resolved already uses NextDNS DoH; "secure" causes bootstrap deadlock)
       "DnsOverHttpsMode" = "automatic";
       "DnsOverHttpsTemplates" = "https://dns.nextdns.io/nextdns0";
+    };
+  };
 
-      # Allow manual extension installation (no blocklist, no allowlist restriction)
-      "ExtensionInstallBlocklist" = [];
+  systemd.user.services.chromium-graceful-shutdown = {
+    description = "Gracefully shutdown Chromium before session ends";
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStop = "${pkgs.procps}/bin/pkill -SIGINT chromium || true";
+      TimeoutStopSec = "5s";
     };
   };
 }

@@ -1,9 +1,11 @@
-{config, ...}: let
+{ config, ... }:
+let
   a = config.lib.niri.actions;
   qs = target: act: {
     action = a.spawn "qs" "-c" "noctalia-shell" "ipc" "call" target act;
   };
-in {
+in
+{
   programs.niri.settings.binds = {
     # ============================================
     # APPLICATIONS
@@ -17,7 +19,7 @@ in {
     "Mod+M".action = a.spawn "kitty" "-e" "btop";
     "Ctrl+Shift+Escape".action = a.spawn "kitty" "-e" "btop";
     "Mod+Comma" = qs "settings" "toggle";
-    "Mod+Shift+D".action = a.spawn "discord" "--enable-features=UseOzonePlatform" "--ozone-platform=wayland";
+    "Mod+Shift+D".action = a.spawn "discord";
 
     # ============================================
     # WINDOW MANAGEMENT
@@ -49,10 +51,8 @@ in {
     # SCREENSHOTS - niri native
     # ============================================
 
-    "Print".action.screenshot = {};
-    "Mod+Print".action.screenshot-screen = {};
-    "Mod+Shift+Print".action.screenshot-screen = {};
-    "Ctrl+Print".action.screenshot = {};
+    "Print".action.screenshot = { };
+    "Mod+Print".action.screenshot-screen = { };
 
     # ============================================
     # FOCUS CONTROL
@@ -166,6 +166,7 @@ in {
     "XF86AudioRaiseVolume".action = a.spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+";
     "XF86AudioLowerVolume".action = a.spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-";
     "XF86AudioMute".action = a.spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle";
+    "XF86AudioMicMute".action = a.spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle";
     "XF86MonBrightnessUp".action = a.spawn "brightnessctl" "set" "5%+";
     "XF86MonBrightnessDown".action = a.spawn "brightnessctl" "set" "5%-";
 

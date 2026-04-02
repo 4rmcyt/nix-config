@@ -511,12 +511,12 @@ in {
     user-templates = {
       templates = {
         zed-dark = {
-          input_path = "~/.config/noctalia/templates/zed-colors.json";
-          output_path = "~/.config/zed/themes/matugen.json";
+          input_path = "$HOME/.config/noctalia/templates/zed-colors.json";
+          output_path = "$HOME/.config/zed/themes/matugen.json";
         };
         materialgram = {
-          input_path = "~/.config/noctalia/templates/materialgram.tdesktop-theme";
-          output_path = "~/.local/share/TelegramDesktop/tdata/matugen.tdesktop-theme";
+          input_path = "$HOME/.config/noctalia/templates/materialgram.tdesktop-theme";
+          output_path = "$HOME/.local/share/TelegramDesktop/tdata/matugen.tdesktop-theme";
         };
       };
     };
