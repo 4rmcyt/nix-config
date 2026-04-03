@@ -37,7 +37,7 @@
       "--env=JAVA_TOOL_OPTIONS=-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC -XX:ShenandoahGCHeuristics=compact -XX:ShenandoahGuaranteedGCInterval=3600000 -XX:TrimNativeHeapInterval=3600000"
     ];
     volumes = [
-      "/var/lib/komf:/config"
+      "/var/lib/komf/database.sqlite:/config/database.sqlite"
       "${config.sops.templates."komf-application.yml".path}:/config/application.yml:ro"
     ];
   };
