@@ -295,10 +295,10 @@ in
               tls.certResolver = "default";
             };
 
-            jellyseerr = {
-              rule = "Host(`jellyseerr.${domain}`)";
+            seerr= {
+              rule = "Host(`seer.${domain}`)";
               entryPoints = [ "websecure" ];
-              service = "jellyseerr";
+              service = "seerr";
               middlewares = [
                 "security-headers"
                 "crowdsec"
@@ -469,7 +469,7 @@ in
             bazarr.loadBalancer.servers = [ { url = "http://localhost:6767"; } ];
             lidarr.loadBalancer.servers = [ { url = "http://localhost:8686"; } ];
             readarr.loadBalancer.servers = [ { url = "http://localhost:8787"; } ];
-            jellyseerr.loadBalancer.servers = [ { url = "http://localhost:5055"; } ];
+            seerr.loadBalancer.servers = [ { url = "http://localhost:5055"; } ];
 
             # Media
             jellyfin.loadBalancer.servers = [ { url = "http://localhost:8096"; } ];

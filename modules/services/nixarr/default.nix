@@ -6,7 +6,7 @@
 }: let
   servicesWithMediaAccess = [
     "bazarr"
-    "jellyseerr"
+    "seerr"
     "lidarr"
     "prowlarr"
     "radarr"
@@ -78,7 +78,7 @@ in {
     lib.genAttrs [
       "audiobookshelf"
       "bazarr"
-      "jellyseerr"
+      "seer"
       "lidarr"
       "prowlarr"
       "radarr"
@@ -94,7 +94,7 @@ in {
   users.groups = lib.genAttrs [
     "audiobookshelf"
     "bazarr"
-    "jellyseerr"
+    "seerr"
     "lidarr"
     "prowlarr"
     "radarr"
@@ -126,7 +126,7 @@ in {
     stateDir = "/data/media/.state/nixarr";
 
     audiobookshelf.enable = true;
-    jellyseerr.enable = true;
+    seerr.enable = true;
     jellyfin.enable = false; # Handled by ./jellyfin
     bazarr.enable = true;
     lidarr.enable = true;
@@ -371,7 +371,7 @@ in {
 
     "d /data/media/.state 770 root media -"
     "d /data/media/.state/nixarr 770 root media -"
-    "d /data/media/.state/nixarr/jellyseerr 775 jellyseerr jellyseerr -"
+    "d /data/media/.state/nixarr/seerr 775 seerr seerr -"
     "d /data/media/.state/nixarr/audiobookshelf 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/audiobookshelf/metadata 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/audiobookshelf/config 775 audiobookshelf audiobookshelf -"
