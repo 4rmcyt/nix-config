@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   imports = [
     ./headscale
     ./home-assistant
@@ -6,12 +7,13 @@
     # ./radicale
     # ./vaultwarden
     ./homepage
-    ./kavita
+    # ./kavita
     ./miniflux
     ./nixarr
     ./atuin_server
     ./microbin
     ./komf
+    ./komga
     # ./k3s
     # ./argocd
   ];

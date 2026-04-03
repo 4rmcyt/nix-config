@@ -386,6 +386,16 @@ in
               ];
               tls.certResolver = "default";
             };
+            komga = {
+              rule = "Host(`komga.${domain}`)";
+              entryPoints = [ "websecure" ];
+              service = "komga";
+              middlewares = [
+                "security-headers"
+                "crowdsec"
+              ];
+              tls.certResolver = "default";
+            };
             komf = {
               rule = "Host(`komf.${domain}`)";
               entryPoints = [ "websecure" ];
@@ -502,6 +512,8 @@ in
             tdarr.loadBalancer.servers = [ { url = "http://localhost:8265"; } ];
             calibre-web.loadBalancer.servers = [ { url = "http://localhost:8084"; } ];
             komf.loadBalancer.servers = [ { url = "http://localhost:8085"; } ];
+            komga.loadBalancer.servers = [{url = "http://localhost:8087";}];
+
 
             # Monitoring
             grafana.loadBalancer.servers = [ { url = "http://localhost:3003"; } ];
