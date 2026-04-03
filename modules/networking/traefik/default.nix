@@ -295,7 +295,7 @@ in
               tls.certResolver = "default";
             };
 
-            seerr= {
+            seerr = {
               rule = "Host(`seerr.${domain}`)";
               entryPoints = [ "websecure" ];
               service = "seerr";
@@ -365,6 +365,16 @@ in
               rule = "Host(`kavita.${domain}`)";
               entryPoints = [ "websecure" ];
               service = "kavita";
+              middlewares = [
+                "security-headers"
+                "crowdsec"
+              ];
+              tls.certResolver = "default";
+            };
+            komf = {
+              rule = "Host(`komf.${domain}`)";
+              entryPoints = [ "websecure" ];
+              service = "komf";
               middlewares = [
                 "security-headers"
                 "crowdsec"
@@ -475,7 +485,8 @@ in
             jellyfin.loadBalancer.servers = [ { url = "http://localhost:8096"; } ];
             qb.loadBalancer.servers = [ { url = "http://localhost:8081"; } ];
             tdarr.loadBalancer.servers = [ { url = "http://localhost:8265"; } ];
-            calibre-web.loadBalancer.servers = [{url = "http://localhost:8084";}];
+            calibre-web.loadBalancer.servers = [ { url = "http://localhost:8084"; } ];
+            komf.loadBalancer.servers = [{url = "http://localhost:8085";}];
 
 
             # Monitoring
