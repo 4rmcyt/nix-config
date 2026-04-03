@@ -3,10 +3,11 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   servicesWithMediaAccess = [
     "bazarr"
-    "seerr"
+    "jellyseerr"
     "lidarr"
     "prowlarr"
     "radarr"
@@ -17,32 +18,59 @@
     "jellyfin"
   ];
 
-  servicesWithScripts = ["bazarr" "lidarr" "radarr" "sonarr"];
+  servicesWithScripts = [
+    "bazarr"
+    "lidarr"
+    "radarr"
+    "sonarr"
+  ];
 
   movieCleaner = pkgs.writeShellApplication {
     name = "movie-cleaner";
-    runtimeInputs = with pkgs; [mkvtoolnix-cli jq curl coreutils];
+    runtimeInputs = with pkgs; [
+      mkvtoolnix-cli
+      jq
+      curl
+      coreutils
+    ];
     text = builtins.readFile ./scripts/movie-cleaner.sh;
   };
 
   showCleaner = pkgs.writeShellApplication {
     name = "show-cleaner";
-    runtimeInputs = with pkgs; [mkvtoolnix-cli jq curl coreutils];
+    runtimeInputs = with pkgs; [
+      mkvtoolnix-cli
+      jq
+      curl
+      coreutils
+    ];
     text = builtins.readFile ./scripts/show-cleaner.sh;
   };
 
   musicConverter = pkgs.writeShellApplication {
     name = "music-converter";
-    runtimeInputs = with pkgs; [ffmpeg-headless flac shntool cuetools curl coreutils util-linux];
+    runtimeInputs = with pkgs; [
+      ffmpeg-headless
+      flac
+      shntool
+      cuetools
+      curl
+      coreutils
+      util-linux
+    ];
     text = builtins.readFile ./scripts/music-converter.sh;
   };
 
   bazarrBridge = pkgs.writeShellApplication {
     name = "bazarr-bridge";
-    runtimeInputs = [movieCleaner showCleaner];
+    runtimeInputs = [
+      movieCleaner
+      showCleaner
+    ];
     text = builtins.readFile ./scripts/bazarr-bridge.sh;
   };
-in {
+in
+{
   imports = [
     ./upnp-fix.nix
     ./jellyfin
@@ -75,33 +103,38 @@ in {
   };
 
   users.users =
-    lib.genAttrs [
-      "audiobookshelf"
-      "bazarr"
-      "seer"
-      "lidarr"
-      "prowlarr"
-      "radarr"
-      "sonarr"
-      "readarr"
-      "recyclarr"
-    ] (name: {
-      isSystemUser = true;
-      group = lib.mkForce name;
-      extraGroups = ["users" "media"];
-    });
+    lib.genAttrs
+      [
+        "audiobookshelf"
+        "bazarr"
+        "jellyseerr"
+        "lidarr"
+        "prowlarr"
+        "radarr"
+        "sonarr"
+        "readarr"
+        "recyclarr"
+      ]
+      (name: {
+        isSystemUser = true;
+        group = lib.mkForce name;
+        extraGroups = [
+          "users"
+          "media"
+        ];
+      });
 
   users.groups = lib.genAttrs [
     "audiobookshelf"
     "bazarr"
-    "seerr"
+    "jellyseerr"
     "lidarr"
     "prowlarr"
     "radarr"
     "sonarr"
     "readarr"
     "recyclarr"
-  ] (_: {});
+  ] (_: { });
 
   environment.systemPackages = with pkgs; [
     movieCleaner
@@ -121,12 +154,12 @@ in {
 
   nixarr = {
     enable = true;
-    mediaUsers = [config.my.defaults.user];
+    mediaUsers = [ config.my.defaults.user ];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
 
     audiobookshelf.enable = true;
-    seerr.enable = true;
+    jellyseerr.enable = true;
     jellyfin.enable = false; # Handled by ./jellyfin
     bazarr.enable = true;
     lidarr.enable = true;
@@ -155,7 +188,12 @@ in {
       };
     }))
     (lib.genAttrs servicesWithScripts (_name: {
-      path = [movieCleaner showCleaner musicConverter bazarrBridge];
+      path = [
+        movieCleaner
+        showCleaner
+        musicConverter
+        bazarrBridge
+      ];
       serviceConfig.Environment = [
         "JF_URL=http://localhost:8096"
         "JF_API_KEY_FILE=${config.sops.secrets.jellyfin_api_key.path}"
@@ -168,17 +206,20 @@ in {
     {
       radarr-pg-config = {
         description = "Write Radarr PostgreSQL config.xml";
-        after = ["postgresql.service" "postgresql-setup-users.service"];
-        requires = ["postgresql.service"];
-        wantedBy = ["multi-user.target"];
-        before = ["radarr.service"];
+        after = [
+          "postgresql.service"
+          "postgresql-setup-users.service"
+        ];
+        requires = [ "postgresql.service" ];
+        wantedBy = [ "multi-user.target" ];
+        before = [ "radarr.service" ];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
           User = "radarr";
           Group = "radarr";
         };
-        path = [pkgs.xmlstarlet];
+        path = [ pkgs.xmlstarlet ];
         script = ''
           mkdir -p /data/media/.state/nixarr/radarr
           cfg=/data/media/.state/nixarr/radarr/config.xml
@@ -200,17 +241,20 @@ in {
       };
       sonarr-pg-config = {
         description = "Write Sonarr PostgreSQL config.xml";
-        after = ["postgresql.service" "postgresql-setup-users.service"];
-        requires = ["postgresql.service"];
-        wantedBy = ["multi-user.target"];
-        before = ["sonarr.service"];
+        after = [
+          "postgresql.service"
+          "postgresql-setup-users.service"
+        ];
+        requires = [ "postgresql.service" ];
+        wantedBy = [ "multi-user.target" ];
+        before = [ "sonarr.service" ];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
           User = "sonarr";
           Group = "sonarr";
         };
-        path = [pkgs.xmlstarlet];
+        path = [ pkgs.xmlstarlet ];
         script = ''
           mkdir -p /data/media/.state/nixarr/sonarr
           cfg=/data/media/.state/nixarr/sonarr/config.xml
@@ -232,17 +276,20 @@ in {
       };
       prowlarr-pg-config = {
         description = "Write Prowlarr PostgreSQL config.xml";
-        after = ["postgresql.service" "postgresql-setup-users.service"];
-        requires = ["postgresql.service"];
-        wantedBy = ["multi-user.target"];
-        before = ["prowlarr.service"];
+        after = [
+          "postgresql.service"
+          "postgresql-setup-users.service"
+        ];
+        requires = [ "postgresql.service" ];
+        wantedBy = [ "multi-user.target" ];
+        before = [ "prowlarr.service" ];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
           User = "prowlarr";
           Group = "prowlarr";
         };
-        path = [pkgs.xmlstarlet];
+        path = [ pkgs.xmlstarlet ];
         script = ''
           mkdir -p /data/media/.state/nixarr/prowlarr
           cfg=/data/media/.state/nixarr/prowlarr/config.xml
@@ -264,17 +311,20 @@ in {
       };
       lidarr-pg-config = {
         description = "Write Lidarr PostgreSQL config.xml";
-        after = ["postgresql.service" "postgresql-setup-users.service"];
-        requires = ["postgresql.service"];
-        wantedBy = ["multi-user.target"];
-        before = ["lidarr.service"];
+        after = [
+          "postgresql.service"
+          "postgresql-setup-users.service"
+        ];
+        requires = [ "postgresql.service" ];
+        wantedBy = [ "multi-user.target" ];
+        before = [ "lidarr.service" ];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
           User = "lidarr";
           Group = "lidarr";
         };
-        path = [pkgs.xmlstarlet];
+        path = [ pkgs.xmlstarlet ];
         script = ''
           mkdir -p /data/media/.state/nixarr/lidarr
           cfg=/data/media/.state/nixarr/lidarr/config.xml
@@ -296,17 +346,20 @@ in {
       };
       readarr-pg-config = {
         description = "Write Readarr PostgreSQL config.xml";
-        after = ["postgresql.service" "postgresql-setup-users.service"];
-        requires = ["postgresql.service"];
-        wantedBy = ["multi-user.target"];
-        before = ["readarr.service"];
+        after = [
+          "postgresql.service"
+          "postgresql-setup-users.service"
+        ];
+        requires = [ "postgresql.service" ];
+        wantedBy = [ "multi-user.target" ];
+        before = [ "readarr.service" ];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
           User = "readarr";
           Group = "readarr";
         };
-        path = [pkgs.xmlstarlet];
+        path = [ pkgs.xmlstarlet ];
         script = ''
           mkdir -p /data/media/.state/nixarr/readarr
           cfg=/data/media/.state/nixarr/readarr/config.xml
@@ -328,10 +381,13 @@ in {
       };
       bazarr-pg-env = {
         description = "Write Bazarr PostgreSQL environment file";
-        after = ["postgresql.service" "postgresql-setup-users.service"];
-        requires = ["postgresql.service"];
-        wantedBy = ["bazarr.service"];
-        before = ["bazarr.service"];
+        after = [
+          "postgresql.service"
+          "postgresql-setup-users.service"
+        ];
+        requires = [ "postgresql.service" ];
+        wantedBy = [ "bazarr.service" ];
+        before = [ "bazarr.service" ];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
@@ -371,7 +427,7 @@ in {
 
     "d /data/media/.state 770 root media -"
     "d /data/media/.state/nixarr 770 root media -"
-    "d /data/media/.state/nixarr/seerr 775 seerr seerr -"
+    "d /data/media/.state/nixarr/jellyseerr 775 jellyseerr jellyseerr -"
     "d /data/media/.state/nixarr/audiobookshelf 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/audiobookshelf/metadata 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/audiobookshelf/config 775 audiobookshelf audiobookshelf -"
@@ -391,6 +447,20 @@ in {
     "Z /data/Downloads 775 ${config.my.defaults.user} media -"
   ];
 
-  networking.firewall.allowedTCPPorts = [9292 8096 8920 6767 8686 9696 7878 8990 8787 5055];
-  networking.firewall.allowedUDPPorts = [1900 7359];
+  networking.firewall.allowedTCPPorts = [
+    9292
+    8096
+    8920
+    6767
+    8686
+    9696
+    7878
+    8990
+    8787
+    5055
+  ];
+  networking.firewall.allowedUDPPorts = [
+    1900
+    7359
+  ];
 }
