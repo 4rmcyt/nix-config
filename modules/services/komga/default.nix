@@ -18,6 +18,7 @@
     port = 8087;
     settings = {
       "spring.datasource.url" = "jdbc:h2:file:/var/lib/komga/database;DB_CLOSE_ON_EXIT=FALSE";
+      server.port =8087;
     };
   };
 
