@@ -1,12 +1,8 @@
 # modules/services/komf/default.nix
 {
   config,
-  lib,
   ...
 }:
-let
-  inherit (config.my.defaults) domain;
-in
 {
   sops.secrets.kavita_api_key = {
     sopsFile = ../../../secrets/medialib.yaml;
@@ -15,15 +11,21 @@ in
     mode = "0400";
   };
 
-  # komf reads /run/secrets/kavita_api_key at startup via env file
-  sops.templates."komf-env" = {
+  sops.templates."komf-application.yml" = {
     owner = "root";
-    mode = "0400";
+    mode = "0444";
     content = ''
-      KOMF_KAVITA_BASE_URI=http://localhost:5000
-      KOMF_KAVITA_API_KEY=${config.sops.placeholder.kavita_api_key}
-      KOMF_LOG_LEVEL=INFO
-      JAVA_TOOL_OPTIONS=-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC -XX:ShenandoahGCHeuristics=compact -XX:ShenandoahGuaranteedGCInterval=3600000 -XX:TrimNativeHeapInterval=3600000
+      kavita:
+        baseUri: "http://localhost:5000"
+        apiKey: "${config.sops.placeholder.kavita_api_key}"
+
+      database:
+        file: /config/database.sqlite
+
+      server:
+        port: 8085
+
+      logLevel: INFO
     '';
   };
 
@@ -32,10 +34,11 @@ in
     image = "sndxr/komf:latest";
     extraOptions = [
       "--network=host"
-      "--env-file=${config.sops.templates."komf-env".path}"
+      "--env=JAVA_TOOL_OPTIONS=-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC -XX:ShenandoahGCHeuristics=compact -XX:ShenandoahGuaranteedGCInterval=3600000 -XX:TrimNativeHeapInterval=3600000"
     ];
     volumes = [
       "/var/lib/komf:/config"
+      "${config.sops.templates."komf-application.yml".path}:/config/application.yml:ro"
     ];
   };
 
