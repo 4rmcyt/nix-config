@@ -11,7 +11,7 @@
     ./nixarr
     ./atuin_server
     ./microbin
-    ./calibre-web
+    ./komf
     # ./k3s
     # ./argocd
   ];
