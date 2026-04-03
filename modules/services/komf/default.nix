@@ -4,12 +4,12 @@
   ...
 }:
 {
-  # sops.secrets.kavita_api_key = {
-  #   sopsFile = ../../../secrets/medialib.yaml;
-  #   key = "kavita_api_key";
-  #   owner = "root";
-  #   mode = "0400";
-  # };
+  sops.secrets.kavita_api_key = {
+    sopsFile = ../../../secrets/medialib.yaml;
+    key = "kavita_api_key";
+    owner = "root";
+    mode = "0400";
+  };
 
   # sops.templates."komf-application.yml" = {
   #   owner = "root";
