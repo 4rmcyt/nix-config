@@ -296,7 +296,7 @@ in
             };
 
             seerr= {
-              rule = "Host(`seer.${domain}`)";
+              rule = "Host(`seerr.${domain}`)";
               entryPoints = [ "websecure" ];
               service = "seerr";
               middlewares = [
