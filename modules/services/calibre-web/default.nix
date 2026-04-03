@@ -19,7 +19,7 @@
   services.calibre-web = {
     enable = true;
     listen = {
-      ip = "0.0.0.0";
+      ip = "127.0.0.1";
       port = 8084;
     };
     options = {
