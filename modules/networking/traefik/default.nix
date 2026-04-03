@@ -200,6 +200,21 @@ in
               ];
               disallowedStatusCode = 403;
             };
+            komf-headers.headers = {
+              accessControlAllowMethods = [
+                "GET"
+                "POST"
+                "PUT"
+                "DELETE"
+                "OPTIONS"
+                "PATCH"
+              ];
+              accessControlAllowHeaders = [ "*" ];
+              accessControlAllowOriginList = [ "https://komf.${domain}" ];
+              accessControlAllowCredentials = true;
+              accessControlMaxAge = 100;
+              addVaryHeader = true;
+            };
           };
 
           routers = {
@@ -376,7 +391,7 @@ in
               entryPoints = [ "websecure" ];
               service = "komf";
               middlewares = [
-                "security-headers"
+                "komf-headers"
                 "crowdsec"
               ];
               tls.certResolver = "default";
@@ -486,8 +501,7 @@ in
             qb.loadBalancer.servers = [ { url = "http://localhost:8081"; } ];
             tdarr.loadBalancer.servers = [ { url = "http://localhost:8265"; } ];
             calibre-web.loadBalancer.servers = [ { url = "http://localhost:8084"; } ];
-            komf.loadBalancer.servers = [{url = "http://localhost:8085";}];
-
+            komf.loadBalancer.servers = [ { url = "http://localhost:8085"; } ];
 
             # Monitoring
             grafana.loadBalancer.servers = [ { url = "http://localhost:3003"; } ];
