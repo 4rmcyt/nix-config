@@ -1,5 +1,7 @@
-{pkgs, ...}: {
-  programs.vscode.profiles.default.extensions = with pkgs.vscode-extensions;
+{ pkgs, ... }:
+{
+  programs.vscode.profiles.default.extensions =
+    with pkgs.vscode-extensions;
     [
       # Formatters & Editing
       codezombiech.gitignore
@@ -39,12 +41,11 @@
     ++ (with pkgs.vscode-utils; [
       (buildVscodeMarketplaceExtension {
         mktplcRef = {
-          publisher = "BeardedBear";
-          name = "beardedtheme";
-          version = "10.1.0";
-          sha256 = "0c0kcl08j8ii65h5mkpgssgqgshhkf49adgxd5xh1klx8qn2zjgc";
+          publisher = "Anthropic";
+          name = "claude-code";
+          version = "2.1.92";
+          sha256 = "sha256-L3W9LoFA6JzsPa20Md9rOJBG/siauIJeuDcE7euZxMg=";
         };
       })
-      # treefmt-vscode extension temporarily removed due to build issues
     ]);
 }
