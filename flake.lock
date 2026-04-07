@@ -756,11 +756,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1775556024,
-        "narHash": "sha256-j1u/859OVS54rGlsvFqJdwKPEnFYCI+4pyfTiSfv1Xc=",
+        "lastModified": 1775587248,
+        "narHash": "sha256-lMdrBTTTUprYOeoxRLmwtQAvyaxkWZtx+EEkeJHGxrY=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "4bdfeff1d9b7473e6e58f73f5809576e8a69e406",
+        "rev": "9cc761169a1bbf1d9787cdbe9abf07f4bae213a1",
         "type": "github"
       },
       "original": {
@@ -1037,6 +1037,26 @@
         "owner": "Enzime",
         "ref": "pr-105-latest",
         "repo": "nix-vm-test",
+        "type": "github"
+      }
+    },
+    "nix-vscode-extensions": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1775530708,
+        "narHash": "sha256-+az4+mibiwi1YjgfCYLG9hNj4Nz3NXI9Zdi7a9ai2to=",
+        "owner": "nix-community",
+        "repo": "nix-vscode-extensions",
+        "rev": "828735c01584dd780b32dde9c2b8c7a968bffb51",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nix-vscode-extensions",
         "type": "github"
       }
     },
@@ -1429,11 +1449,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1775583892,
-        "narHash": "sha256-bgmsMIJKgCa3ABeCbIzRtiTPQ/TB3jGuGfR+VYHgzm4=",
+        "lastModified": 1775589885,
+        "narHash": "sha256-WwZJg9ukaNXWtUOGkme03hfMTsNhOYlVBuGBoJST3VU=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "561f4319c8aac0884402877e1fe3c6b94fcff19d",
+        "rev": "967bc46153c133365decb02316894efac1bd7b6a",
         "type": "github"
       },
       "original": {
@@ -1530,6 +1550,7 @@
         "nix-index-database": "nix-index-database",
         "nix-jetbrains-plugins": "nix-jetbrains-plugins",
         "nix-topology": "nix-topology",
+        "nix-vscode-extensions": "nix-vscode-extensions",
         "nixarr": "nixarr",
         "nixos-anywhere": "nixos-anywhere",
         "nixos-facter-modules": "nixos-facter-modules",
@@ -2165,11 +2186,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1775584715,
-        "narHash": "sha256-Vc7rB+uRToSyXuLopNOfAXzE0Xe1SNUk0bsLvZwxN14=",
+        "lastModified": 1775588221,
+        "narHash": "sha256-nYCZjBS3gqfxACko7/cEgpjzqEc6OpgAUTvkzygPe74=",
         "owner": "zed-industries",
         "repo": "zed",
-        "rev": "358a796a94f62c1acdc13dfd88450d9e20e56364",
+        "rev": "29c965a616bf355015833de216415625aaa34acc",
         "type": "github"
       },
       "original": {

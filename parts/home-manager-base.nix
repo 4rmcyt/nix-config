@@ -4,9 +4,11 @@
   config,
   inputs,
   ...
-}: let
+}:
+let
   inherit (config.meta) owner stateVersion;
-in {
+in
+{
   modules.homeManager.base = {
     imports = [
       inputs.sops-nix.homeManagerModules.sops
@@ -23,6 +25,7 @@ in {
     nixpkgs.overlays = [
       inputs.mcp-servers-nix.overlays.default
       inputs.nur.overlays.default
+      inputs.nix-vscode-extensions.overlays.default
     ];
 
     sops.age.keyFile = "/home/${owner.username}/.config/sops/age/keys.txt";

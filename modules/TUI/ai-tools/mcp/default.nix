@@ -70,18 +70,20 @@ in {
         mkdir -p "$HOME/.local/bin"
 
         # GitHub wrapper
-        cat > "$HOME/.local/bin/github-mcp-wrapped" << 'EOF'
+        cat > "$HOME/.local/bin/github-mcp-wrapped" << EOF
     #!/usr/bin/env bash
-    export GITHUB_PERSONAL_ACCESS_TOKEN="$(${pkgs.sops}/bin/sops -d ${../../../../secrets/common.yaml} | ${pkgs.yq}/bin/yq -r '.git_access_token')"
-    exec ${lib.getExe pkgs.github-mcp-server} "$@"
+    export SOPS_AGE_KEY_FILE="${config.home.homeDirectory}/.config/sops/age/keys.txt"
+    export GITHUB_PERSONAL_ACCESS_TOKEN="\$(${pkgs.sops}/bin/sops -d ${../../../../secrets/common.yaml} | ${pkgs.yq}/bin/yq -r '.git_access_token')"
+    exec ${lib.getExe pkgs.github-mcp-server} "\$@"
     EOF
         chmod +x "$HOME/.local/bin/github-mcp-wrapped"
 
         # Tavily wrapper
-        cat > "$HOME/.local/bin/tavily-mcp-wrapped" << 'EOF'
+        cat > "$HOME/.local/bin/tavily-mcp-wrapped" << EOF
     #!/usr/bin/env bash
-    export TAVILY_API_KEY="$(${pkgs.sops}/bin/sops -d ${../../../../secrets/common.yaml} | ${pkgs.yq}/bin/yq -r '.tavily_api_key')"
-    exec ${lib.getExe pkgs.tavily-mcp} "$@"
+    export SOPS_AGE_KEY_FILE="${config.home.homeDirectory}/.config/sops/age/keys.txt"
+    export TAVILY_API_KEY="\$(${pkgs.sops}/bin/sops -d ${../../../../secrets/common.yaml} | ${pkgs.yq}/bin/yq -r '.tavily_api_key')"
+    exec ${lib.getExe pkgs.tavily-mcp} "\$@"
     EOF
         chmod +x "$HOME/.local/bin/tavily-mcp-wrapped"
 
