@@ -2,12 +2,10 @@
   config,
   lib,
   ...
-}:
-let
+}: let
   cfg = config.my.traefik;
   inherit (config.my.defaults) domain;
-in
-{
+in {
   options.my.traefik = {
     enable = lib.mkEnableOption "Traefik reverse proxy";
   };
@@ -26,7 +24,7 @@ in
       isSystemUser = true;
       group = "traefik";
     };
-    users.groups.traefik = { };
+    users.groups.traefik = {};
 
     services.traefik = {
       enable = true;
@@ -47,7 +45,7 @@ in
               domains = [
                 {
                   main = domain;
-                  sans = [ "*.${domain}" ];
+                  sans = ["*.${domain}"];
                 }
               ];
             };
@@ -100,7 +98,7 @@ in
           format = "json";
           bufferingSize = 100;
           filters = {
-            statusCodes = [ "400-599" ];
+            statusCodes = ["400-599"];
             retryAttempts = true;
             minDuration = "1s";
           };
@@ -209,8 +207,8 @@ in
                 "OPTIONS"
                 "PATCH"
               ];
-              accessControlAllowHeaders = [ "*" ];
-              accessControlAllowOriginList = [ "https://komf.${domain}" ];
+              accessControlAllowHeaders = ["*"];
+              accessControlAllowOriginList = ["https://komf.${domain}"];
               accessControlAllowCredentials = true;
               accessControlMaxAge = 100;
               addVaryHeader = true;
@@ -220,7 +218,7 @@ in
           routers = {
             traefik-dashboard = {
               rule = "Host(`traefik.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "api@internal";
               middlewares = [
                 "security-headers"
@@ -232,14 +230,14 @@ in
             # Internal API router for homepage widget (localhost only, no middleware)
             traefik-api-internal = {
               rule = "PathPrefix(`/`)";
-              entryPoints = [ "traefik-api" ];
+              entryPoints = ["traefik-api"];
               service = "api@internal";
-              middlewares = [ ];
+              middlewares = [];
             };
 
             slskd = {
               rule = "Host(`slskd.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "slskd";
               middlewares = [
                 "security-headers"
@@ -251,7 +249,7 @@ in
             # Nixarr
             sonarr = {
               rule = "Host(`sonarr.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "sonarr";
               middlewares = [
                 "security-headers"
@@ -261,7 +259,7 @@ in
             };
             radarr = {
               rule = "Host(`radarr.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "radarr";
               middlewares = [
                 "security-headers"
@@ -271,7 +269,7 @@ in
             };
             prowlarr = {
               rule = "Host(`prowlarr.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "prowlarr";
               middlewares = [
                 "security-headers"
@@ -281,7 +279,7 @@ in
             };
             bazarr = {
               rule = "Host(`bazarr.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "bazarr";
               middlewares = [
                 "security-headers"
@@ -291,7 +289,7 @@ in
             };
             lidarr = {
               rule = "Host(`lidarr.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "lidarr";
               middlewares = [
                 "security-headers"
@@ -301,7 +299,7 @@ in
             };
             readarr = {
               rule = "Host(`readarr.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "readarr";
               middlewares = [
                 "security-headers"
@@ -312,7 +310,7 @@ in
 
             jellyseerr = {
               rule = "Host(`jellyseerr.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "jellyseerr";
               middlewares = [
                 "security-headers"
@@ -324,7 +322,7 @@ in
             # Media
             jellyfin = {
               rule = "Host(`jellyfin.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "jellyfin";
               middlewares = [
                 "security-headers"
@@ -334,7 +332,7 @@ in
             };
             qb = {
               rule = "Host(`qb.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "qb";
               middlewares = [
                 "security-headers"
@@ -344,7 +342,7 @@ in
             };
             tdarr = {
               rule = "Host(`tdarr.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "tdarr";
               middlewares = [
                 "security-headers"
@@ -356,7 +354,7 @@ in
             # Monitoring
             grafana = {
               rule = "Host(`grafana.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "grafana";
               middlewares = [
                 "security-headers"
@@ -368,7 +366,7 @@ in
             # Reading
             miniflux = {
               rule = "Host(`miniflux.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "miniflux";
               middlewares = [
                 "security-headers"
@@ -378,7 +376,7 @@ in
             };
             kavita = {
               rule = "Host(`kavita.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "kavita";
               middlewares = [
                 "security-headers"
@@ -388,7 +386,7 @@ in
             };
             komga = {
               rule = "Host(`komga.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "komga";
               middlewares = [
                 "security-headers"
@@ -398,7 +396,7 @@ in
             };
             komf = {
               rule = "Host(`komf.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "komf";
               middlewares = [
                 "komf-headers"
@@ -408,7 +406,7 @@ in
             };
             audiobookshelf = {
               rule = "Host(`audiobookshelf.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "audiobookshelf";
               middlewares = [
                 "security-headers"
@@ -420,7 +418,7 @@ in
             # Smart home
             hass = {
               rule = "Host(`hass.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "hass";
               middlewares = [
                 "security-headers"
@@ -434,7 +432,7 @@ in
             # Productivity
             homepage = {
               rule = "Host(`home.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "homepage";
               middlewares = [
                 "security-headers"
@@ -444,7 +442,7 @@ in
             };
             microbin = {
               rule = "Host(`microbin.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "microbin";
               middlewares = [
                 "security-headers"
@@ -454,7 +452,7 @@ in
             };
             vaultwarden = {
               rule = "Host(`vault.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "vaultwarden";
               middlewares = [
                 "security-headers"
@@ -464,7 +462,7 @@ in
             };
             atuin = {
               rule = "Host(`atuin.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "atuin";
               middlewares = [
                 "security-headers"
@@ -474,7 +472,7 @@ in
             };
             livesync = {
               rule = "Host(`livesync.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "livesync";
               middlewares = [
                 "security-headers"
@@ -484,7 +482,7 @@ in
             };
             calibre-web = {
               rule = "Host(`calibre.${domain}`)";
-              entryPoints = [ "websecure" ];
+              entryPoints = ["websecure"];
               service = "calibre-web";
               middlewares = [
                 "security-headers"
@@ -495,43 +493,42 @@ in
           };
 
           services = {
-            slskd.loadBalancer.servers = [ { url = "http://localhost:5030"; } ];
+            slskd.loadBalancer.servers = [{url = "http://localhost:5030";}];
 
             # Nixarr
-            sonarr.loadBalancer.servers = [ { url = "http://localhost:8990"; } ];
-            radarr.loadBalancer.servers = [ { url = "http://localhost:7878"; } ];
-            prowlarr.loadBalancer.servers = [ { url = "http://localhost:9696"; } ];
-            bazarr.loadBalancer.servers = [ { url = "http://localhost:6767"; } ];
-            lidarr.loadBalancer.servers = [ { url = "http://localhost:8686"; } ];
-            readarr.loadBalancer.servers = [ { url = "http://localhost:8787"; } ];
-            jellyseerr.loadBalancer.servers = [ { url = "http://localhost:5055"; } ];
+            sonarr.loadBalancer.servers = [{url = "http://localhost:8990";}];
+            radarr.loadBalancer.servers = [{url = "http://localhost:7878";}];
+            prowlarr.loadBalancer.servers = [{url = "http://localhost:9696";}];
+            bazarr.loadBalancer.servers = [{url = "http://localhost:6767";}];
+            lidarr.loadBalancer.servers = [{url = "http://localhost:8686";}];
+            readarr.loadBalancer.servers = [{url = "http://localhost:8787";}];
+            jellyseerr.loadBalancer.servers = [{url = "http://localhost:5055";}];
 
             # Media
-            jellyfin.loadBalancer.servers = [ { url = "http://localhost:8096"; } ];
-            qb.loadBalancer.servers = [ { url = "http://localhost:8081"; } ];
-            tdarr.loadBalancer.servers = [ { url = "http://localhost:8265"; } ];
-            calibre-web.loadBalancer.servers = [ { url = "http://localhost:8084"; } ];
-            komf.loadBalancer.servers = [ { url = "http://localhost:8085"; } ];
+            jellyfin.loadBalancer.servers = [{url = "http://localhost:8096";}];
+            qb.loadBalancer.servers = [{url = "http://localhost:8081";}];
+            tdarr.loadBalancer.servers = [{url = "http://localhost:8265";}];
+            calibre-web.loadBalancer.servers = [{url = "http://localhost:8084";}];
+            komf.loadBalancer.servers = [{url = "http://localhost:8085";}];
             komga.loadBalancer.servers = [{url = "http://localhost:8087";}];
 
-
             # Monitoring
-            grafana.loadBalancer.servers = [ { url = "http://localhost:3003"; } ];
+            grafana.loadBalancer.servers = [{url = "http://localhost:3003";}];
 
             # Reading
-            miniflux.loadBalancer.servers = [ { url = "http://localhost:8086"; } ];
-            kavita.loadBalancer.servers = [ { url = "http://localhost:5000"; } ];
-            audiobookshelf.loadBalancer.servers = [ { url = "http://localhost:9292"; } ];
+            miniflux.loadBalancer.servers = [{url = "http://localhost:8086";}];
+            kavita.loadBalancer.servers = [{url = "http://localhost:5000";}];
+            audiobookshelf.loadBalancer.servers = [{url = "http://localhost:9292";}];
 
             # Smart home
-            hass.loadBalancer.servers = [ { url = "http://localhost:8123"; } ];
+            hass.loadBalancer.servers = [{url = "http://localhost:8123";}];
 
             # Productivity
-            homepage.loadBalancer.servers = [ { url = "http://localhost:8082"; } ];
-            microbin.loadBalancer.servers = [ { url = "http://localhost:8069"; } ];
-            vaultwarden.loadBalancer.servers = [ { url = "http://localhost:8222"; } ];
-            atuin.loadBalancer.servers = [ { url = "http://localhost:8881"; } ];
-            livesync.loadBalancer.servers = [ { url = "http://localhost:5984"; } ];
+            homepage.loadBalancer.servers = [{url = "http://localhost:8082";}];
+            microbin.loadBalancer.servers = [{url = "http://localhost:8069";}];
+            vaultwarden.loadBalancer.servers = [{url = "http://localhost:8222";}];
+            atuin.loadBalancer.servers = [{url = "http://localhost:8881";}];
+            livesync.loadBalancer.servers = [{url = "http://localhost:5984";}];
           };
         };
       };

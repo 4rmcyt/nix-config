@@ -3,8 +3,7 @@
   config,
   pkgs,
   ...
-}:
-let
+}: let
   servicesWithMediaAccess = [
     "bazarr"
     "jellyseerr"
@@ -69,8 +68,7 @@ let
     ];
     text = builtins.readFile ./scripts/bazarr-bridge.sh;
   };
-in
-{
+in {
   imports = [
     ./upnp-fix.nix
     ./jellyfin
@@ -104,25 +102,25 @@ in
 
   users.users =
     lib.genAttrs
-      [
-        "audiobookshelf"
-        "bazarr"
-        "jellyseerr"
-        "lidarr"
-        "prowlarr"
-        "radarr"
-        "sonarr"
-        "readarr"
-        "recyclarr"
-      ]
-      (name: {
-        isSystemUser = true;
-        group = lib.mkForce name;
-        extraGroups = [
-          "users"
-          "media"
-        ];
-      });
+    [
+      "audiobookshelf"
+      "bazarr"
+      "jellyseerr"
+      "lidarr"
+      "prowlarr"
+      "radarr"
+      "sonarr"
+      "readarr"
+      "recyclarr"
+    ]
+    (name: {
+      isSystemUser = true;
+      group = lib.mkForce name;
+      extraGroups = [
+        "users"
+        "media"
+      ];
+    });
 
   users.groups = lib.genAttrs [
     "audiobookshelf"
@@ -134,7 +132,7 @@ in
     "sonarr"
     "readarr"
     "recyclarr"
-  ] (_: { });
+  ] (_: {});
 
   environment.systemPackages = with pkgs; [
     movieCleaner
@@ -154,7 +152,7 @@ in
 
   nixarr = {
     enable = true;
-    mediaUsers = [ config.my.defaults.user ];
+    mediaUsers = [config.my.defaults.user];
     mediaDir = "/data/media";
     stateDir = "/data/media/.state/nixarr";
 
@@ -210,16 +208,16 @@ in
           "postgresql.service"
           "postgresql-setup-users.service"
         ];
-        requires = [ "postgresql.service" ];
-        wantedBy = [ "multi-user.target" ];
-        before = [ "radarr.service" ];
+        requires = ["postgresql.service"];
+        wantedBy = ["multi-user.target"];
+        before = ["radarr.service"];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
           User = "radarr";
           Group = "radarr";
         };
-        path = [ pkgs.xmlstarlet ];
+        path = [pkgs.xmlstarlet];
         script = ''
           mkdir -p /data/media/.state/nixarr/radarr
           cfg=/data/media/.state/nixarr/radarr/config.xml
@@ -245,16 +243,16 @@ in
           "postgresql.service"
           "postgresql-setup-users.service"
         ];
-        requires = [ "postgresql.service" ];
-        wantedBy = [ "multi-user.target" ];
-        before = [ "sonarr.service" ];
+        requires = ["postgresql.service"];
+        wantedBy = ["multi-user.target"];
+        before = ["sonarr.service"];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
           User = "sonarr";
           Group = "sonarr";
         };
-        path = [ pkgs.xmlstarlet ];
+        path = [pkgs.xmlstarlet];
         script = ''
           mkdir -p /data/media/.state/nixarr/sonarr
           cfg=/data/media/.state/nixarr/sonarr/config.xml
@@ -280,16 +278,16 @@ in
           "postgresql.service"
           "postgresql-setup-users.service"
         ];
-        requires = [ "postgresql.service" ];
-        wantedBy = [ "multi-user.target" ];
-        before = [ "prowlarr.service" ];
+        requires = ["postgresql.service"];
+        wantedBy = ["multi-user.target"];
+        before = ["prowlarr.service"];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
           User = "prowlarr";
           Group = "prowlarr";
         };
-        path = [ pkgs.xmlstarlet ];
+        path = [pkgs.xmlstarlet];
         script = ''
           mkdir -p /data/media/.state/nixarr/prowlarr
           cfg=/data/media/.state/nixarr/prowlarr/config.xml
@@ -315,16 +313,16 @@ in
           "postgresql.service"
           "postgresql-setup-users.service"
         ];
-        requires = [ "postgresql.service" ];
-        wantedBy = [ "multi-user.target" ];
-        before = [ "lidarr.service" ];
+        requires = ["postgresql.service"];
+        wantedBy = ["multi-user.target"];
+        before = ["lidarr.service"];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
           User = "lidarr";
           Group = "lidarr";
         };
-        path = [ pkgs.xmlstarlet ];
+        path = [pkgs.xmlstarlet];
         script = ''
           mkdir -p /data/media/.state/nixarr/lidarr
           cfg=/data/media/.state/nixarr/lidarr/config.xml
@@ -350,16 +348,16 @@ in
           "postgresql.service"
           "postgresql-setup-users.service"
         ];
-        requires = [ "postgresql.service" ];
-        wantedBy = [ "multi-user.target" ];
-        before = [ "readarr.service" ];
+        requires = ["postgresql.service"];
+        wantedBy = ["multi-user.target"];
+        before = ["readarr.service"];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
           User = "readarr";
           Group = "readarr";
         };
-        path = [ pkgs.xmlstarlet ];
+        path = [pkgs.xmlstarlet];
         script = ''
           mkdir -p /data/media/.state/nixarr/readarr
           cfg=/data/media/.state/nixarr/readarr/config.xml
@@ -385,9 +383,9 @@ in
           "postgresql.service"
           "postgresql-setup-users.service"
         ];
-        requires = [ "postgresql.service" ];
-        wantedBy = [ "bazarr.service" ];
-        before = [ "bazarr.service" ];
+        requires = ["postgresql.service"];
+        wantedBy = ["bazarr.service"];
+        before = ["bazarr.service"];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;

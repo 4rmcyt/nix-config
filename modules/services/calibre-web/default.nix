@@ -1,10 +1,7 @@
 {
-  config,
   lib,
-  pkgs,
   ...
-}:
-{
+}: {
   users.users.calibre-web = {
     isSystemUser = true;
     group = "calibre-web";
@@ -14,7 +11,7 @@
     ];
   };
 
-  users.groups.calibre-web = { };
+  users.groups.calibre-web = {};
 
   services.calibre-web = {
     enable = true;
@@ -41,5 +38,4 @@
       ];
     };
   };
-
 }

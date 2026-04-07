@@ -4,11 +4,9 @@
   config,
   inputs,
   ...
-}:
-let
+}: let
   inherit (config.meta) owner stateVersion;
-in
-{
+in {
   modules.homeManager.base = {
     imports = [
       inputs.sops-nix.homeManagerModules.sops

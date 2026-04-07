@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   # =================================================================
   # 1. SOPS Secrets
   # =================================================================
@@ -46,8 +45,8 @@
   };
 
   users.groups = {
-    grafana = { };
-    prometheus = { };
+    grafana = {};
+    prometheus = {};
   };
 
   # =================================================================
@@ -70,8 +69,8 @@
 
   systemd.services.geoip-update = {
     description = "Download db-ip city MMDB for Alloy geoip enrichment";
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
+    after = ["network-online.target"];
+    wants = ["network-online.target"];
     serviceConfig = {
       Type = "oneshot";
       User = "root";
@@ -92,7 +91,7 @@
 
   systemd.timers.geoip-update = {
     description = "Monthly GeoIP DB update";
-    wantedBy = [ "timers.target" ];
+    wantedBy = ["timers.target"];
     timerConfig = {
       OnCalendar = "monthly";
       Persistent = true;
@@ -145,8 +144,8 @@
   '';
 
   systemd.services.alloy = {
-    after = [ "geoip-update.service" ];
-    serviceConfig.SupplementaryGroups = [ "systemd-journal" ];
+    after = ["geoip-update.service"];
+    serviceConfig.SupplementaryGroups = ["systemd-journal"];
   };
 
   # =================================================================
@@ -277,7 +276,7 @@
       port = 9090;
       retentionTime = "30d";
       globalConfig.scrape_interval = "1m";
-      ruleFiles = [ ./alerts/homeserver.yaml ];
+      ruleFiles = [./alerts/homeserver.yaml];
 
       exporters = {
         node = {
@@ -325,24 +324,24 @@
         }
         {
           job_name = "homeserver-node";
-          static_configs = [ { targets = [ "localhost:9100" ]; } ];
+          static_configs = [{targets = ["localhost:9100"];}];
         }
         {
           job_name = "nut-exporter";
-          static_configs = [ { targets = [ "localhost:9199" ]; } ];
+          static_configs = [{targets = ["localhost:9199"];}];
           metrics_path = "/ups_metrics";
         }
         {
           job_name = "prometheus";
-          static_configs = [ { targets = [ "localhost:${toString config.my.network.ports.prometheus}" ]; } ];
+          static_configs = [{targets = ["localhost:${toString config.my.network.ports.prometheus}"];}];
         }
         {
           job_name = "traefik";
-          static_configs = [ { targets = [ "localhost:8080" ]; } ];
+          static_configs = [{targets = ["localhost:8080"];}];
         }
         {
           job_name = "crowdsec";
-          static_configs = [ { targets = [ "localhost:6060" ]; } ];
+          static_configs = [{targets = ["localhost:6060"];}];
         }
       ];
     };

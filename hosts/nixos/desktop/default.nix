@@ -3,8 +3,7 @@
   config,
   lib,
   ...
-}:
-{
+}: {
   my.desktop = {
     windowManager = "niri"; # Options: "hyprland", "niri", "none"
     displayManager = "greetd"; # Options: "greetd", "sddm", "gdm", "none"
@@ -110,8 +109,7 @@
     };
 
     shells = lib.mkBefore (
-      with pkgs;
-      [
+      with pkgs; [
         zsh
         nushell
       ]
@@ -140,13 +138,12 @@
           "JetBrainsMono Nerd Font"
           "Fira Code"
         ];
-        sansSerif = [ "Noto Sans" ];
-        serif = [ "Noto Serif" ];
-        emoji = [ "Noto Color Emoji" ];
+        sansSerif = ["Noto Sans"];
+        serif = ["Noto Serif"];
+        emoji = ["Noto Color Emoji"];
       };
     };
-    packages =
-      with pkgs;
+    packages = with pkgs;
       [
         maple-mono.NF
         font-awesome
@@ -200,7 +197,7 @@
       authKeyFile = config.sops.secrets.tailscale_auth_key.path;
       enable = true;
       useRoutingFeatures = "both";
-      extraUpFlags = [ "--accept-routes" ];
+      extraUpFlags = ["--accept-routes"];
     };
   };
   # =================================================================
@@ -208,10 +205,10 @@
   # =================================================================
   users = {
     groups = {
-      git = { };
-      plugdev = { };
-      prometheus = { };
-      nix-builder = { };
+      git = {};
+      plugdev = {};
+      prometheus = {};
+      nix-builder = {};
     };
 
     users = {

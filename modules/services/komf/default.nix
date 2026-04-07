@@ -1,9 +1,5 @@
 # modules/services/komf/default.nix
-{
-  config,
-  ...
-}:
-{
+{config, ...}: {
   virtualisation.oci-containers.containers.komf = {
     autoStart = true;
     image = "sndxr/komf:latest";
