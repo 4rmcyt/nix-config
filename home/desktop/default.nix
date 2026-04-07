@@ -111,6 +111,7 @@
       uefitoolPackages.old-engine
       ifrextractor-rs
       waydroid-helper
+      claw-code
       pkgs.nur.repos.codgician.samsung-dc-toolkit-3
       pkgs.nur.repos.codgician.waydroid-script
     ];
