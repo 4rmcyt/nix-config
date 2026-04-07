@@ -101,7 +101,56 @@
   };
 
   # =================================================================
-  # 5. Services
+  # 5. Alloy config
+  # =================================================================
+  environment.etc."alloy/config.alloy".text = ''
+    // ── Loki sink ────────────────────────────────────────────────
+    loki.write "default" {
+      endpoint {
+        url = "http://localhost:3100/loki/api/v1/push"
+      }
+    }
+
+    // ── Traefik access log ────────────────────────────────────────
+    local.file_match "traefik" {
+      path_targets = [{
+        __path__ = "/var/log/traefik/access.log",
+        job       = "traefik",
+        host      = "homeserver",
+      }]
+    }
+
+    loki.source.file "traefik" {
+      targets    = local.file_match.traefik.targets
+      forward_to = [loki.write.default.receiver]
+    }
+
+    // ── Systemd journal ───────────────────────────────────────────
+    loki.source.journal "journal" {
+      max_age    = "12h"
+      forward_to = [loki.relabel.journal.receiver]
+      labels     = {
+        job  = "systemd-journal",
+        host = "homeserver",
+      }
+    }
+
+    loki.relabel "journal" {
+      forward_to = [loki.write.default.receiver]
+      rule {
+        source_labels = ["__journal__systemd_unit"]
+        target_label  = "unit"
+      }
+    }
+  '';
+
+  systemd.services.alloy = {
+    after = [ "geoip-update.service" ];
+    serviceConfig.SupplementaryGroups = [ "systemd-journal" ];
+  };
+
+  # =================================================================
+  # 6. Services
   # =================================================================
   services = {
     # --- Grafana Visualization ---
@@ -219,137 +268,83 @@
       };
     };
 
-    # --- Grafana Alloy Log Shipper (replaces promtail) ---
-    alloy = {
+    # --- Grafana Alloy Log Shipper ---
+    alloy.enable = true;
+
+    # --- Prometheus Monitoring Stack ---
+    prometheus = {
       enable = true;
-    };
-  };
+      port = 9090;
+      retentionTime = "30d";
+      globalConfig.scrape_interval = "1m";
+      ruleFiles = [ ./alerts/homeserver.yaml ];
 
-  # Alloy config — equivalent to previous promtail configuration
-  # plus GeoIP enrichment for cowrie logs
-  environment.etc."alloy/config.alloy".text = ''
-    // ── Loki sink ────────────────────────────────────────────────
-    loki.write "default" {
-      endpoint {
-        url = "http://localhost:3100/loki/api/v1/push"
-      }
-    }
-
-    // ── Traefik access log ────────────────────────────────────────
-    local.file_match "traefik" {
-      path_targets = [{
-        __path__ = "/var/log/traefik/access.log",
-        job       = "traefik",
-        host      = "homeserver",
-      }]
-    }
-
-    loki.source.file "traefik" {
-      targets    = local.file_match.traefik.targets
-      forward_to = [loki.write.default.receiver]
-    }
-
-    // ── Systemd journal ───────────────────────────────────────────
-    loki.source.journal "journal" {
-      max_age    = "12h"
-      forward_to = [loki.relabel.journal.receiver]
-      labels     = {
-        job  = "systemd-journal",
-        host = "homeserver",
-      }
-    }
-
-    loki.relabel "journal" {
-      forward_to = [loki.write.default.receiver]
-      rule {
-        source_labels = ["__journal__systemd_unit"]
-        target_label  = "unit"
-      }
-    }
-  '';
-
-  # Alloy needs to read traefik logs and journal
-  systemd.services.alloy = {
-    after = [ "geoip-update.service" ];
-    serviceConfig = {
-      SupplementaryGroups = [ "systemd-journal" ];
-      ExecStart = pkgs.lib.mkForce "${pkgs.grafana-alloy}/bin/alloy run /etc/alloy/config.alloy";
-    };
-  };
-
-  # --- Prometheus Monitoring Stack ---
-  services.prometheus = {
-    enable = true;
-    port = 9090;
-    retentionTime = "30d";
-    globalConfig.scrape_interval = "1m";
-    ruleFiles = [ ./alerts/homeserver.yaml ];
-
-    exporters = {
-      node = {
-        enable = true;
-        enabledCollectors = [
-          "diskstats"
-          "meminfo"
-          "netdev"
-          "pressure"
-          "stat"
-          "systemd"
-          "thermal_zone"
-          "time"
-          "zfs"
-        ];
+      exporters = {
+        node = {
+          enable = true;
+          enabledCollectors = [
+            "diskstats"
+            "meminfo"
+            "netdev"
+            "pressure"
+            "stat"
+            "systemd"
+            "thermal_zone"
+            "time"
+            "zfs"
+          ];
+        };
+        nut = {
+          enable = true;
+          nutServer = "localhost";
+          nutUser = "upsmon";
+          passwordPath = config.sops.secrets.nut_password.path;
+          nutVariables = [
+            "battery.charge"
+            "battery.runtime"
+            "battery.voltage"
+            "battery.voltage.nominal"
+            "input.voltage"
+            "input.voltage.nominal"
+            "ups.load"
+            "ups.status"
+          ];
+        };
       };
-      nut = {
-        enable = true;
-        nutServer = "localhost";
-        nutUser = "upsmon";
-        passwordPath = config.sops.secrets.nut_password.path;
-        nutVariables = [
-          "battery.charge"
-          "battery.runtime"
-          "battery.voltage"
-          "battery.voltage.nominal"
-          "input.voltage"
-          "input.voltage.nominal"
-          "ups.load"
-          "ups.status"
-        ];
-      };
-    };
 
-    scrapeConfigs = [
-      {
-        job_name = "desktop-node";
-        static_configs = [
-          {
-            targets = [
-              "${config.my.network.hosts.desktop_lan}:${toString config.my.network.ports.node-exporter}"
-            ];
-          }
-        ];
-      }
-      {
-        job_name = "homeserver-node";
-        static_configs = [ { targets = [ "localhost:9100" ]; } ];
-      }
-      {
-        job_name = "nut-exporter";
-        static_configs = [ { targets = [ "localhost:9199" ]; } ];
-        metrics_path = "/ups_metrics";
-      }
-      {
-        job_name = "prometheus";
-        static_configs = [ { targets = [ "localhost:${toString config.my.network.ports.prometheus}" ]; } ];
-      }
-      {
-        job_name = "traefik";
-        static_configs = [ { targets = [ "localhost:8080" ]; } ];
-      }
-      {
-        job_name = "crowdsec";
-        static_configs = [ { targets = [ "localhost:6060" ]; } ];
-      }
-    ];
+      scrapeConfigs = [
+        {
+          job_name = "desktop-node";
+          static_configs = [
+            {
+              targets = [
+                "${config.my.network.hosts.desktop_lan}:${toString config.my.network.ports.node-exporter}"
+              ];
+            }
+          ];
+        }
+        {
+          job_name = "homeserver-node";
+          static_configs = [ { targets = [ "localhost:9100" ]; } ];
+        }
+        {
+          job_name = "nut-exporter";
+          static_configs = [ { targets = [ "localhost:9199" ]; } ];
+          metrics_path = "/ups_metrics";
+        }
+        {
+          job_name = "prometheus";
+          static_configs = [ { targets = [ "localhost:${toString config.my.network.ports.prometheus}" ]; } ];
+        }
+        {
+          job_name = "traefik";
+          static_configs = [ { targets = [ "localhost:8080" ]; } ];
+        }
+        {
+          job_name = "crowdsec";
+          static_configs = [ { targets = [ "localhost:6060" ]; } ];
+        }
+      ];
+    };
   };
 }
