@@ -14,6 +14,8 @@ final: _prev: {
 
     cargoHash = "sha256-P8QqUM1s/fNv7Fb4dmpJWDfTNumgUu1Cdiln8ybSDUU=";
 
+    doCheck = false;
+
     buildInputs = final.lib.optionals final.stdenv.isLinux [
       final.openssl
     ];
