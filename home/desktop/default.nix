@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   imports = [
     ../../modules/GUI/terminal
     ../../modules/GUI/IDE
@@ -84,19 +85,17 @@
       proton-pass-cli
       seahorse
       (python3.withPackages (
-        ps:
-          with ps; [
-            pip
-            pydantic
-            requests
-            black
-            pylint
-            python-lsp-server
-          ]
+        ps: with ps; [
+          pip
+          pydantic
+          requests
+          black
+          pylint
+          python-lsp-server
+        ]
       ))
       (pkgs.texlive.combine {
-        inherit
-          (pkgs.texlive)
+        inherit (pkgs.texlive)
           scheme-medium
           moderncv
           lastpage
@@ -114,6 +113,7 @@
       claw-code
       pkgs.nur.repos.codgician.samsung-dc-toolkit-3
       pkgs.nur.repos.codgician.waydroid-script
+      calibre-no-speech
     ];
 
     sessionVariables = {
@@ -137,8 +137,8 @@
 
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
-      autoconnect = ["qemu:///system"];
-      uris = ["qemu:///system"];
+      autoconnect = [ "qemu:///system" ];
+      uris = [ "qemu:///system" ];
     };
   };
 }
