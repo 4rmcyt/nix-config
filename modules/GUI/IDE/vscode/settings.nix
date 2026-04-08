@@ -153,7 +153,7 @@
     # CommitCraft — local llama-cpp commit message generation
     "commitCraft.apiBaseUrl" = "http://127.0.0.1:8080/v1";
     "commitCraft.apiKey" = "dummy";
-    "commitCraft.customModel" = "qwen2.5-coder-7b";
+    "commitCraft.customModel" = "google_gemma-4-E4B-it-Q4_K_M";
     "commitCraft.style" = "conventional";
     "commitCraft.detail" = "concise";
     "commitCraft.language" = "English";

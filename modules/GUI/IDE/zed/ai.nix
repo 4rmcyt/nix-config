@@ -12,19 +12,19 @@ in {
       version = "2";
       default_model = {
         provider = "local";
-        model = "Qwen2.5-Coder-7B";
+        model = "google_gemma-4-E4B-it-Q4_K_M";
       };
     };
 
     agent = {
       default_model = {
         provider = "local";
-        model = "Qwen2.5-Coder-7B";
+        model = "google_gemma-4-E4B-it-Q4_K_M";
       };
       favorite_models = [
         {
           provider = "local";
-          model = "Qwen2.5-Coder-7B";
+          model = "google_gemma-4-E4B-it-Q4_K_M";
         }
         {
           provider = "google";
@@ -58,8 +58,8 @@ in {
           api_url = "http://127.0.0.1:8080/v1";
           available_models = [
             {
-              name = "Qwen2.5-Coder-7B";
-              display_name = "Qwen2.5-Coder-7B (Local)";
+              name = "google_gemma-4-E4B-it-Q4_K_M";
+              display_name = "Gemma 4 E4B (Local)";
               max_tokens = 65536;
             }
           ];
