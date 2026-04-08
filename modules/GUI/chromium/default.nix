@@ -44,9 +44,9 @@
       commandLineArgs = [
         "--ozone-platform=wayland"
         "--ignore-gpu-blocklist"
-        "--use-angle=gl"
-        "--enable-features=VaapiVideoDecoder,VaapiIgnoreDriverChecks"
-        "--disable-features=WaylandOverlayDelegation,UseChromeOSDirectVideoDecoder,Vulkan"
+        "--enable-features=AcceleratedVideoDecodeLinuxGL,AcceleratedVideoDecodeLinuxZeroCopyGL,VaapiIgnoreDriverChecks"
+        "--disable-features=WaylandOverlayDelegation,UseChromeOSDirectVideoDecoder"
+        "--disable-gpu-process-crash-limit"
         "--enable-smooth-scrolling"
         "--enable-gpu-rasterization"
         "--enable-zero-copy"
