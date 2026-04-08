@@ -42,12 +42,11 @@
     (pkgs.chromium.override {
       enableWideVine = true;
       commandLineArgs = [
-        "--enable-features=Vulkan,DefaultANGLEVulkan,VulkanFromANGLE"
-        "--ignore-gpu-blocklist"
-        "--use-angle=vulkan"
         "--ozone-platform=wayland"
-        "--disable-features=WaylandOverlayDelegation"
-        "--enable-features=UseSkiaRenderer"
+        "--ignore-gpu-blocklist"
+        "--use-angle=gl"
+        "--enable-features=VaapiVideoDecoder,VaapiIgnoreDriverChecks"
+        "--disable-features=WaylandOverlayDelegation,UseChromeOSDirectVideoDecoder,Vulkan"
         "--enable-smooth-scrolling"
         "--enable-gpu-rasterization"
         "--enable-zero-copy"

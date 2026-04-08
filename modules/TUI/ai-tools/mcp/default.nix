@@ -20,11 +20,6 @@ in {
         command = lib.getExe pkgs.mcp-server-sequential-thinking;
         args = [];
       };
-      playwright = {
-        type = "stdio";
-        command = lib.getExe pkgs.playwright-mcp;
-        args = [];
-      };
       tavily = {
         type = "stdio";
         command = "${config.home.homeDirectory}/.local/bin/tavily-mcp-wrapped";

@@ -17,7 +17,6 @@ in ''
   - File operations in `/etc/nixos` or `~/src` -> use `filesystem` server
   - Search upstream codebases (nixpkgs, etc.) -> use `grep-mcp` server
   - Kubernetes cluster management -> use `kubernetes` server
-  - Browser automation and testing -> use `playwright` server
   - Run Python code -> use `python` server
   - Complex multi-step reasoning -> use `sequential-thinking` server
   - Store decisions across sessions -> use `memory` server

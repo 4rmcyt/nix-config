@@ -69,10 +69,6 @@
       vulkan-tools
       mise
       ytmdesktop
-      playwright
-      python313Packages.playwright
-      python313Packages.pytest-playwright
-      playwright-mcp
       github-mcp-server
       terraform-mcp-server
       mcp-k8s-go

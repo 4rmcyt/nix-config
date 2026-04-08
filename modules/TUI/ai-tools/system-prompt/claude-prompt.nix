@@ -16,7 +16,6 @@ in ''
   | Files in `/etc/nixos` or `~/src` | `filesystem` MCP | Read/write/search |
   | Search external codebases (nixpkgs, etc.) | `grep-mcp` | grep.app for upstream code |
   | Kubernetes cluster ops | `kubernetes` | k3s management |
-  | Browser automation | `playwright` | Testing, scraping |
   | Run Python code | `python` | Computation, scripting |
   | Multi-step analysis | `sequential-thinking` | Architecture decisions |
   | Persist context across sessions | `memory` | Decisions, patterns |
