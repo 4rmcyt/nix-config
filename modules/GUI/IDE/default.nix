@@ -1,6 +1,5 @@
 {...}: {
   imports = [
-    # ./pycharm
     ./vscode
     ./zed
   ];

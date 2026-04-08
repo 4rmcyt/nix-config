@@ -31,7 +31,7 @@
     tomoki1207.pdf
 
     # AI
-    saoudrizwan.claude-dev
     anthropic.claude-code
+    feiren200.ai-commit-craft
   ];
 }

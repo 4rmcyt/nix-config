@@ -24,7 +24,6 @@ in {
       inputs.mcp-servers-nix.overlays.default
       inputs.nur.overlays.default
       inputs.nix-vscode-extensions.overlays.default
-      (import ../overlays/claw-code.nix)
     ];
 
     sops.age.keyFile = "/home/${owner.username}/.config/sops/age/keys.txt";

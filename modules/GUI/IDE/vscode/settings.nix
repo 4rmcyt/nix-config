@@ -150,6 +150,14 @@
       - Use `python` for code execution and package management tasks.
     '';
 
+    # CommitCraft — local llama-cpp commit message generation
+    "commitCraft.apiBaseUrl" = "http://127.0.0.1:8080/v1";
+    "commitCraft.apiKey" = "dummy";
+    "commitCraft.customModel" = "qwen2.5-coder-7b";
+    "commitCraft.style" = "conventional";
+    "commitCraft.detail" = "concise";
+    "commitCraft.language" = "English";
+
     "yaml.schemas" = {
       "kubernetes" = [
         "k3s/*.yaml"
