@@ -8,7 +8,7 @@
   systemXml = ./system.xml;
   encodingXml = ./encoding.xml;
 in {
-  systemd.services.jellyfin.path = [pkgs.chromaprint];
+  systemd.services.jellyfin.path = [pkgs.chromaprint pkgs.jellyfin-ffmpeg];
   users.users.jellyfin = {
     isSystemUser = true;
     group = lib.mkForce "jellyfin";
