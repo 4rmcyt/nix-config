@@ -62,6 +62,8 @@ in {
         "--port 8081"
         "--host 127.0.0.1"
         "--named-server-config ${config.home.homeDirectory}/.config/mcp/mcp.json"
+        "--allow-origin http://127.0.0.1:8080"
+        "--allow-origin http://localhost:8080"
       ];
       Restart = "on-failure";
       RestartSec = 5;
