@@ -308,6 +308,16 @@ in {
               tls.certResolver = "default";
             };
 
+            kapowarr = {
+              rule = "Host(`kapowarr.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "kapowarr";
+              middlewares = [
+                "security-headers"
+                "crowdsec"
+              ];
+              tls.certResolver = "default";
+            };
             jellyseerr = {
               rule = "Host(`jellyseerr.${domain}`)";
               entryPoints = ["websecure"];
@@ -502,6 +512,7 @@ in {
             bazarr.loadBalancer.servers = [{url = "http://localhost:6767";}];
             lidarr.loadBalancer.servers = [{url = "http://localhost:8686";}];
             readarr.loadBalancer.servers = [{url = "http://localhost:8787";}];
+            kapowarr.loadBalancer.servers = [{url = "http://localhost:5656";}];
             jellyseerr.loadBalancer.servers = [{url = "http://localhost:5055";}];
 
             # Media

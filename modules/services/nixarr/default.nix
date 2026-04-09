@@ -71,6 +71,7 @@
 in {
   imports = [
     ./jellyfin
+    ./kapowarr
     ./qbittorrent
     ./upnp-fix.nix
   ];
