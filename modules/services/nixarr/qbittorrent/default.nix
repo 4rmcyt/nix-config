@@ -94,7 +94,7 @@
     script = ''
       set -euo pipefail
       STATE_DIR="/data/media/.state/nixarr/qbittorrent"
-      curl -sSL "https://github.com/Naunter/BT_BlockLists/raw/master/bt_blocklists.gz" | zcat > "$STATE_DIR/ipfilter.p2p"
+      curl -sSLf "https://github.com/Naunter/BT_BlockLists/raw/master/bt_blocklists.gz" | zcat > "$STATE_DIR/ipfilter.p2p"
       chown -R qbittorrent:media "$STATE_DIR"
       chmod 644 "$STATE_DIR/ipfilter.p2p"
 
