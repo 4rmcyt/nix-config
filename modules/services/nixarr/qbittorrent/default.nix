@@ -32,55 +32,37 @@
           File = "/data/media/.state/nixarr/qbittorrent/ipfilter.p2p";
         };
         Connection = {
-          PortRangeMin = 63998;
-          GlobalDLSpeedLimit = 0;
-          GlobalUPSpeedLimit = 0;
           GlobalMaxConnections = 500;
           GlobalMaxUploads = 50;
           MaxConnections = 100;
           MaxUploads = 8;
         };
-        WebUI = {
-          # Bypass authentication from localhost
-          LocalHostAuth = false;
-        };
+        WebUI.LocalHostAuth = false;
       };
-      BitTorrent = {
-        Session = {
-          Port = 63998;
-          UPnP = false;
-          GlobalDLSpeedLimit = -1;
-          GlobalUPSpeedLimit = -1;
-          DiskCacheSize = 1024;
-          DiskCacheTTL = 60;
-          UseOSCache = false;
-          AnnounceToAllTrackers = true;
-          AnnounceToAllTiers = true;
-          ReannounceWhenAddressChanged = true;
-          AsyncIOThreads = 10;
-          HashingThreads = 2;
-          MaxRatioEnforcement = true;
-          MaxRatioAction = 0;
-          AddTrackersEnabled = true;
-          AddTrackersFromURLEnabled = true;
-          AdditionalTrackersURL = "https://newtrackon.com/api/all";
-        };
-      };
-      Network = {
-        Proxy = {
-          Type = "None";
-          Profiles = {
-            BitTorrent = false;
-            Misc = false;
-            RSS = false;
-          };
-        };
+      BitTorrent.Session = {
+        Port = 63998;
+        UPnP = false;
+        GlobalDLSpeedLimit = -1;
+        GlobalUPSpeedLimit = -1;
+        DiskCacheSize = 1024;
+        DiskCacheTTL = 60;
+        UseOSCache = false;
+        AnnounceToAllTrackers = true;
+        AnnounceToAllTiers = true;
+        ReannounceWhenAddressChanged = true;
+        AsyncIOThreads = 10;
+        HashingThreads = 2;
+        MaxRatioEnforcement = true;
+        MaxRatioAction = 0;
+        AddTrackersEnabled = true;
+        AddTrackersFromURLEnabled = true;
+        AdditionalTrackersURL = "https://newtrackon.com/api/all";
       };
     };
   };
 
   systemd.services.qbittorrent-blocklist-update = {
-    description = "Update qBittorrent IP blocklist and Tracker list";
+    description = "Update qBittorrent IP blocklist";
     after = [
       "network.target"
       "wg.service"
@@ -94,12 +76,10 @@
       set -euo pipefail
       STATE_DIR="/data/media/.state/nixarr/qbittorrent"
       curl -sSLf "https://raw.githubusercontent.com/Naunter/BT_BlockLists/refs/heads/master/bt_blocklists" -o "$STATE_DIR/ipfilter.p2p"
-      chown -R qbittorrent:media "$STATE_DIR"
+      chown qbittorrent:media "$STATE_DIR/ipfilter.p2p"
       chmod 644 "$STATE_DIR/ipfilter.p2p"
-
       nsenter --net=/run/netns/wg curl -s -X POST "http://localhost:8080/api/v2/app/setPreferences" \
         --data "json={\"ip_filter_enabled\":false}"
-
       nsenter --net=/run/netns/wg curl -s -X POST "http://localhost:8080/api/v2/app/setPreferences" \
         --data "json={\"ip_filter_enabled\":true}"
     '';
@@ -113,51 +93,36 @@
   systemd.services.qbittorrent = {
     after = ["wg.service"];
     requires = ["wg.service"];
-
     serviceConfig = {
       # Clear BindPaths from parent nixarr config - they conflict with NetworkNamespacePath
       BindPaths = lib.mkForce [];
-
-      # VPN namespace configuration
       NetworkNamespacePath = "/run/netns/wg";
       BindReadOnlyPaths = lib.mkForce [
         "/etc/netns/wg/resolv.conf:/etc/resolv.conf:norbind"
       ];
-
-      # Essential overrides for namespace compatibility
       RestrictNamespaces = lib.mkForce false;
       PrivateNetwork = lib.mkForce false;
       PrivateUsers = lib.mkForce false;
-
-      # Service management
       Restart = lib.mkForce "always";
       RestartSec = "10s";
     };
   };
 
-  # Socket for qBittorrent proxy (allows access from host network on port 8081)
+  # Proxy to expose qBittorrent WebUI from VPN namespace to host network
   systemd.sockets.proxy-to-qbittorrent = {
     description = "Socket for qBittorrent proxy";
     wantedBy = ["sockets.target"];
     requires = ["qbittorrent.service"];
-    socketConfig = {
-      ListenStream = "8081"; # Listen on port 8081 on host
-    };
+    socketConfig.ListenStream = "8081";
   };
 
-  # Proxy service to connect to qBittorrent in VPN namespace (on port 8080)
   systemd.services.proxy-to-qbittorrent = {
     description = "Proxy to qBittorrent in VPN namespace";
     after = ["qbittorrent.service"];
     requires = ["qbittorrent.service"];
-
-    serviceConfig = {
-      # Enter VPN namespace and proxy to qBittorrent on port 8080
-      ExecStart = "${pkgs.util-linux}/bin/nsenter --net=/run/netns/wg ${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:8080";
-    };
+    serviceConfig.ExecStart = "${pkgs.util-linux}/bin/nsenter --net=/run/netns/wg ${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:8080";
   };
 
-  # Create additional directories
   systemd.tmpfiles.rules = [
     "d /data/media/.state/nixarr/qbittorrent 775 qbittorrent media -"
     "d /data/Downloads/torrents 775 qbittorrent media -"
