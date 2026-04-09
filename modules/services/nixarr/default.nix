@@ -5,16 +5,16 @@
   ...
 }: let
   servicesWithMediaAccess = [
+    "audiobookshelf"
     "bazarr"
+    "jellyfin"
     "jellyseerr"
     "lidarr"
     "prowlarr"
+    "qbittorrent"
     "radarr"
     "readarr"
     "sonarr"
-    "qbittorrent"
-    "audiobookshelf"
-    "jellyfin"
   ];
 
   servicesWithScripts = [
@@ -70,13 +70,19 @@
   };
 in {
   imports = [
-    ./upnp-fix.nix
     ./jellyfin
     ./qbittorrent
-    # ./slskd
+    ./upnp-fix.nix
   ];
 
   sops.secrets = {
+    bazarr_api_key = {
+      sopsFile = ../../../secrets/medialib.yaml;
+      owner = config.my.defaults.user;
+      key = "bazarr_api_key";
+      group = "media";
+      mode = "0440";
+    };
     jellyfin_api_key = {
       sopsFile = ../../../secrets/medialib.yaml;
       owner = config.my.defaults.user;
@@ -88,13 +94,6 @@ in {
       sopsFile = ../../../secrets/medialib.yaml;
       owner = config.my.defaults.user;
       key = "lidarr_api_key";
-      group = "media";
-      mode = "0440";
-    };
-    bazarr_api_key = {
-      sopsFile = ../../../secrets/medialib.yaml;
-      owner = config.my.defaults.user;
-      key = "bazarr_api_key";
       group = "media";
       mode = "0440";
     };
@@ -446,19 +445,19 @@ in {
   ];
 
   networking.firewall.allowedTCPPorts = [
-    9292
-    8096
-    8920
-    6767
-    8686
-    9696
-    7878
-    8990
-    8787
-    5055
+    5055 # Jellyseerr
+    6767 # Bazarr
+    7878 # Radarr
+    8096 # Jellyfin HTTP
+    8686 # Lidarr
+    8787 # Readarr
+    8920 # Jellyfin HTTPS
+    8990 # Sonarr
+    9292 # Audiobookshelf
+    9696 # Prowlarr
   ];
   networking.firewall.allowedUDPPorts = [
-    1900
-    7359
+    1900 # DLNA/UPnP
+    7359 # Jellyfin auto-discovery
   ];
 }

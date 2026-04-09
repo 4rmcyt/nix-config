@@ -5,7 +5,7 @@
   ...
 }: {
   # =================================================================
-  # 1. Imports
+  # Imports
   # =================================================================
   imports = [
     # Hardware and system base
@@ -30,7 +30,7 @@
   ];
 
   # =================================================================
-  # 3. Secrets Management
+  # Secrets Management
   # =================================================================
   sops = {
     defaultSopsFormat = "yaml";
@@ -64,7 +64,7 @@
   };
 
   # =================================================================
-  # 6. Nix Configuration
+  # Nix Configuration
   # =================================================================
   nix.settings = {
     cores = 4;
@@ -78,7 +78,7 @@
   };
 
   # =================================================================
-  # 8. Environment
+  # Environment
   # =================================================================
   environment.systemPackages = with pkgs; [
     lsof
@@ -103,12 +103,7 @@
   environment.shells = with pkgs; [zsh];
 
   # =================================================================
-  # 8. Home Manager
-  # =================================================================
-  # backupFileExtension is set in commonHomeManagerNixosConfig with unique timestamp
-
-  # =================================================================
-  # 9. Networking
+  # Networking
   # =================================================================
   networking = {
     hostName = "homeserver";
@@ -152,37 +147,32 @@
       logRefusedConnections = false; # Avoid log spam
 
       allowedTCPPorts = [
-        # Base services
         # 22 is handled by Cowrie (Podman DNAT in nat/prerouting, before NIXOS-FW filter)
         # 23 is handled by Cowrie Telnet (same Podman DNAT mechanism)
-        2222 # Real SSH (moved from 22; Cowrie honeypot takes port 22)
         80 # HTTP
         443 # HTTPS
-
-        # 11434 # Ollama API
-        # 11435 # Ollama WebUI
-
-        # Monitoring (from monitoring.nix)
+        2222 # Real SSH (moved from 22; Cowrie honeypot takes port 22)
         3000 # Grafana
         9090 # Prometheus
+        9091 # Database & infrastructure
         9100 # Node Exporter
-        # 8000  # TP-Link Exporter
         27196 # Cloudflare Exporter
-        # Database & Infrastructure
-        9091
+        # 8000  # TP-Link Exporter
+        # 11434 # Ollama API
+        # 11435 # Ollama WebUI
       ];
       rejectPackets = true;
     };
   };
 
   # =================================================================
-  # 9.5. Traefik Reverse Proxy
+  # Traefik & Services Toggle
   # =================================================================
   my.traefik.enable = true;
   my.headscale.enable = false;
 
   # =================================================================
-  # 10. Programs
+  # Programs
   # =================================================================
   programs.gnupg.agent = {
     enableSSHSupport = true;
@@ -190,7 +180,7 @@
   };
 
   # =================================================================
-  # 11. Services
+  # Services
   # =================================================================
   services = {
     # SSH configuration
@@ -253,7 +243,7 @@
   };
 
   # =================================================================
-  # 12. Users & Groups
+  # Users & Groups
   # =================================================================
   users = {
     users.git = {

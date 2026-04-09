@@ -3,29 +3,22 @@
 
   inputs = {
     # Core
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    systems.url = "github:nix-systems/default";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
-    import-tree.url = "github:vic/import-tree";
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    import-tree.url = "github:vic/import-tree";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # NixOS infrastructure
-    nixos-hardware.url = "github:nixos/nixos-hardware";
-    nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
-    nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL/main";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -35,8 +28,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.disko.follows = "disko";
     };
+    nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -84,19 +82,33 @@
     };
 
     # IDE & editors
-    vscode-server = {
-      url = "github:nix-community/nixos-vscode-server";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nix-vscode-extensions = {
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    zed.url = "github:zed-industries/zed";
+    vscode-server = {
+      url = "github:nix-community/nixos-vscode-server";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Desktop & GUI
     betterfox-nix = {
       url = "github:HeitorAugustoLN/betterfox-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    flatpaks = {
+      url = "github:in-a-dil-emma/declarative-flatpak/latest";
+    };
+    niri-flake = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nirinit = {
+      url = "github:amaanq/nirinit";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     noctalia = {
@@ -108,24 +120,9 @@
       url = "github:noctalia-dev/noctalia-qs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    niri-flake = {
-      url = "github:sodiboo/niri-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nirinit = {
-      url = "github:amaanq/nirinit";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    firefox-addons = {
-      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    flatpaks = {
-      url = "github:in-a-dil-emma/declarative-flatpak/latest";
     };
     pam-shim = {
       url = "github:Cu3PO42/pam_shim/next";
@@ -142,7 +139,6 @@
       url = "github:a-kenji/zellij-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    zjstatus.url = "github:dj95/zjstatus";
 
     # Services & infrastructure
     mcp-nixos.url = "github:utensils/mcp-nixos";

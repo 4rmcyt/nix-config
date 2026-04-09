@@ -10,7 +10,7 @@
   };
 
   # =================================================================
-  # 1. Imports
+  # Imports
   # =================================================================
   imports = [
     # Hardware and system base
@@ -18,33 +18,30 @@
     ../../../modules/base
     ../../../modules/base/logging/desktop.nix
     ../../../modules/disko/desktop
-    ../../../modules/options
     ../../../modules/fonts
-
-    # Desktop environment
-    # ../../../modules/DE/kde
+    ../../../modules/options
 
     # Features and roles
     ../../../modules/gaming
+    ../../../modules/networking/avahi
     ../../../modules/networking/dnssec
     ../../../modules/networking/nfs-client
-    ../../../modules/networking/ssh
     ../../../modules/networking/nut-client
-    ../../../modules/networking/avahi
+    ../../../modules/networking/ssh
 
-    # TUI
-    ../../../modules/TUI/tty.nix
-    ../../../modules/users/zeev
+    # Users & GUI
     ../../../modules/GUI/chromium
     ../../../modules/GUI/flatpak/hyprland
     ../../../modules/GUI/nautilus
-    ../../../modules/GUI/waydroid
     ../../../modules/GUI/virt-manager
+    ../../../modules/GUI/waydroid
+    ../../../modules/TUI/tty.nix
+    ../../../modules/users/zeev
     ../../../modules/xdg
   ];
 
   # =================================================================
-  # 3. Secrets Management
+  # Secrets Management
   # =================================================================
   sops = {
     secrets = {
@@ -68,7 +65,7 @@
   };
 
   # =================================================================
-  # 5. Nix Configuration
+  # Nix Configuration
   # =================================================================
 
   nix.settings = {
@@ -86,7 +83,7 @@
   };
 
   # =================================================================
-  # 7. Environment
+  # Environment
   # =================================================================
   environment = {
     sessionVariables = lib.mkBefore {
@@ -126,7 +123,7 @@
   };
 
   # =================================================================
-  # 8. Fonts
+  # Fonts
   # =================================================================
   fonts = {
     fontDir.enable = true;
@@ -154,7 +151,7 @@
   };
 
   # =================================================================
-  # 11. Networking
+  # Networking
   # =================================================================
   networking = {
     dnssec = {
@@ -166,12 +163,12 @@
   };
 
   # =================================================================
-  # 12. Programs
+  # Programs
   # =================================================================
   programs.nix-ld.enable = true;
 
   # =================================================================
-  # 13. Services
+  # Services
   # =================================================================
 
   security.pam.services.greetd.enableGnomeKeyring = true;
@@ -201,7 +198,7 @@
     };
   };
   # =================================================================
-  # 14. Users & Groups
+  # Users & Groups
   # =================================================================
   users = {
     groups = {

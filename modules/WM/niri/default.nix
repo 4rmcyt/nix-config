@@ -3,7 +3,7 @@
     ./binds.nix
     ./startup.nix
     ./windowrules.nix
-    ../hyprland/gtk.nix
+    ../gtk.nix
   ];
 
   home.sessionVariables = {
