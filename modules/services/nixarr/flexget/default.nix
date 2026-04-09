@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
+{config, ...}: {
   services.flexget = {
     enable = true;
     inherit (config.my.defaults) user;
@@ -30,10 +25,6 @@
   systemd.services.flexget = {
     after = ["data.mount"];
     requires = ["data.mount"];
-    serviceConfig.ExecStartPre = lib.mkBefore [
-      "+${pkgs.coreutils}/bin/mkdir -p /data/media/.state/nixarr/flexget"
-      "+${pkgs.coreutils}/bin/chown ${config.my.defaults.user}:media /data/media/.state/nixarr/flexget"
-    ];
   };
   systemd.services.flexget-runner = {
     after = ["data.mount"];
