@@ -63,7 +63,7 @@
           MaxRatioAction = 0;
           AddTrackersEnabled = true;
           AddTrackersFromURLEnabled = true;
-          AdditionalTrackersURL = "https://newtrackon.com/api/stable";
+          AdditionalTrackersURL = "https://newtrackon.com/api/all";
         };
       };
       Network = {
@@ -88,13 +88,12 @@
     startAt = "daily";
     path = with pkgs; [
       curl
-      gzip
       util-linux
     ];
     script = ''
       set -euo pipefail
       STATE_DIR="/data/media/.state/nixarr/qbittorrent"
-      curl -sSLf "https://github.com/Naunter/BT_BlockLists/raw/master/bt_blocklists.gz" | zcat > "$STATE_DIR/ipfilter.p2p"
+      curl -sSLf "https://raw.githubusercontent.com/Naunter/BT_BlockLists/refs/heads/master/bt_blocklists" -o "$STATE_DIR/ipfilter.p2p"
       chown -R qbittorrent:media "$STATE_DIR"
       chmod 644 "$STATE_DIR/ipfilter.p2p"
 
