@@ -70,7 +70,6 @@
   };
 in {
   imports = [
-    ./flexget
     ./jellyfin
     ./qbittorrent
     ./upnp-fix.nix

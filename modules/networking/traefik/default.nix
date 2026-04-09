@@ -307,16 +307,6 @@ in {
               ];
               tls.certResolver = "default";
             };
-            flexget = {
-              rule = "Host(`flexget.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "flexget";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
 
             jellyseerr = {
               rule = "Host(`jellyseerr.${domain}`)";
@@ -512,7 +502,6 @@ in {
             bazarr.loadBalancer.servers = [{url = "http://localhost:6767";}];
             lidarr.loadBalancer.servers = [{url = "http://localhost:8686";}];
             readarr.loadBalancer.servers = [{url = "http://localhost:8787";}];
-            flexget.loadBalancer.servers = [{url = "http://localhost:5050";}];
             jellyseerr.loadBalancer.servers = [{url = "http://localhost:5055";}];
 
             # Media
