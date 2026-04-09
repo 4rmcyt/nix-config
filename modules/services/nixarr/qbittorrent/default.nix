@@ -70,12 +70,15 @@
     startAt = "daily";
     path = with pkgs; [
       curl
+      gnugrep
       util-linux
     ];
     script = ''
       set -euo pipefail
       STATE_DIR="/data/media/.state/nixarr/qbittorrent"
-      curl -sSLf "https://raw.githubusercontent.com/Naunter/BT_BlockLists/refs/heads/master/bt_blocklists" -o "$STATE_DIR/ipfilter.p2p"
+      curl -sSLf "https://raw.githubusercontent.com/Naunter/BT_BlockLists/refs/heads/master/bt_blocklists" \
+        | grep -E '^.+:[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}-[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$' \
+        > "$STATE_DIR/ipfilter.p2p"
       chown qbittorrent:media "$STATE_DIR/ipfilter.p2p"
       chmod 644 "$STATE_DIR/ipfilter.p2p"
       nsenter --net=/run/netns/wg curl -s -X POST "http://localhost:8080/api/v2/app/setPreferences" \
