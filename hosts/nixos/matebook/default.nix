@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   config,
   ...
 }: {
@@ -23,6 +24,7 @@
 
     # GUI Applications
     ../../../modules/GUI/chromium
+    ../../../modules/GUI/flatpak/hyprland
   ];
 
   # =================================================================
@@ -30,8 +32,7 @@
   # =================================================================
   sops.secrets = {
     tailscale_auth_key = {
-      sopsFile = ../../../secrets/headscale-matebook.yaml;
-      key = "preauth_key";
+      sopsFile = ../../../secrets/tailscale-matebook.yaml;
     };
     git_access_token = {
       sopsFile = ../../../secrets/common.yaml;
@@ -76,6 +77,12 @@
       CLUTTER_BACKEND = "wayland";
       MOZ_ENABLE_WAYLAND = "1";
     };
+
+    pathsToLink = ["/share/icons" "/share/fonts"];
+    sessionVariables.XDG_DATA_DIRS = [
+      "$HOME/.local/share/flatpak/exports/share"
+      "/var/lib/flatpak/exports/share"
+    ];
 
     systemPackages = with pkgs; [
       # =============================================================
@@ -133,6 +140,18 @@
     niri = {
       enable = true;
       package = pkgs.niri;
+    };
+  };
+
+  # Override niri module default which adds xdg-desktop-portal-gnome (requires GNOME Shell)
+  xdg.portal = {
+    extraPortals = lib.mkForce [pkgs.xdg-desktop-portal-gtk];
+    config.niri = lib.mkForce {
+      default = ["gtk"];
+      "org.freedesktop.impl.portal.Access" = ["gtk"];
+      "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
+      "org.freedesktop.impl.portal.Notification" = ["gtk"];
+      "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
     };
   };
 
