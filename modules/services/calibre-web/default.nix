@@ -1,7 +1,4 @@
-{
-  lib,
-  ...
-}: {
+{lib, ...}: {
   users.users.calibre-web = {
     isSystemUser = true;
     group = "calibre-web";
