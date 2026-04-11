@@ -177,7 +177,7 @@ in {
   systemd.services = lib.mkMerge [
     (lib.genAttrs servicesWithMediaAccess (_name: {
       serviceConfig = {
-        UMask = lib.mkDefault "0002";
+        UMask = lib.mkForce "0002";
         BindPaths = [
           "/data/Downloads"
           "/data/media"
