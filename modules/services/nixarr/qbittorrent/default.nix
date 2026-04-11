@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   services.qbittorrent = {
     enable = true;
     user = "qbittorrent";
@@ -56,7 +57,7 @@
         MaxRatioAction = 0;
         AddTrackersEnabled = true;
         AddTrackersFromURLEnabled = true;
-        AdditionalTrackersURL = "https://newtrackon.com/api/all";
+        AdditionalTrackersURL = "https://newtrackon.com/api/stable";
       };
     };
   };
@@ -94,11 +95,11 @@
 
   # Override qBittorrent service to run in VPN namespace
   systemd.services.qbittorrent = {
-    after = ["wg.service"];
-    requires = ["wg.service"];
+    after = [ "wg.service" ];
+    requires = [ "wg.service" ];
     serviceConfig = {
       # Clear BindPaths from parent nixarr config - they conflict with NetworkNamespacePath
-      BindPaths = lib.mkForce [];
+      BindPaths = lib.mkForce [ ];
       NetworkNamespacePath = "/run/netns/wg";
       BindReadOnlyPaths = lib.mkForce [
         "/etc/netns/wg/resolv.conf:/etc/resolv.conf:norbind"
@@ -114,15 +115,15 @@
   # Proxy to expose qBittorrent WebUI from VPN namespace to host network
   systemd.sockets.proxy-to-qbittorrent = {
     description = "Socket for qBittorrent proxy";
-    wantedBy = ["sockets.target"];
-    requires = ["qbittorrent.service"];
+    wantedBy = [ "sockets.target" ];
+    requires = [ "qbittorrent.service" ];
     socketConfig.ListenStream = "8081";
   };
 
   systemd.services.proxy-to-qbittorrent = {
     description = "Proxy to qBittorrent in VPN namespace";
-    after = ["qbittorrent.service"];
-    requires = ["qbittorrent.service"];
+    after = [ "qbittorrent.service" ];
+    requires = [ "qbittorrent.service" ];
     serviceConfig.ExecStart = "${pkgs.util-linux}/bin/nsenter --net=/run/netns/wg ${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:8080";
   };
 
