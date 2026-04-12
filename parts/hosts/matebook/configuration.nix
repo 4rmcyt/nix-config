@@ -11,7 +11,6 @@ in {
     imports = [
       nixosBase
       ../../../hosts/nixos/matebook
-      inputs.flatpaks.nixosModules.default
       inputs.niri-flake.nixosModules.niri
       inputs.noctalia.nixosModules.default
     ];

@@ -11,7 +11,6 @@
 
     packages = with pkgs; [
       # Development tools
-      deploy-rs
       go
       nix-inspect
       nixfmt-tree

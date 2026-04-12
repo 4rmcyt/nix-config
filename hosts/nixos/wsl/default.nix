@@ -168,7 +168,6 @@
     ];
 
     home.packages = with pkgs; [
-      deploy-rs
       go
       nix-inspect
       nixfmt-tree

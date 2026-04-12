@@ -1,13 +1,12 @@
-_: {
-  services.flatpak = {
-    enable = true;
-    remotes = {
-      "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
-      "flathub-beta" = "https://dl.flathub.org/beta-repo/flathub-beta.flatpakrepo";
-    };
-    packages = [
-      # Hyprland Settings GUI - removed, no longer available on Flathub
-      # "flathub:app/io.github.linuxforwork.HyprlandSettings//stable"
-    ];
+{ pkgs, ... }: {
+  services.flatpak.enable = true;
+
+  systemd.services.flatpak-repo = {
+    wantedBy = [ "multi-user.target" ];
+    path = [ pkgs.flatpak ];
+    script = ''
+      flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+      flatpak remote-add --if-not-exists flathub-beta https://dl.flathub.org/beta-repo/flathub-beta.flatpakrepo
+    '';
   };
 }

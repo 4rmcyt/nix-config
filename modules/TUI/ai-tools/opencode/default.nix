@@ -5,31 +5,6 @@
   ...
 }: let
   systemPrompts = import ../system-prompt;
-
-  # OpenCode agent frontmatter: boolean record for tools, deny-based permissions
-  mkOpenCodeAgent = {
-    description,
-    disableTools ? {},
-    denyPermissions ? {},
-    body,
-  }: let
-    toolsLines =
-      lib.optionalString (disableTools != {})
-      (let
-        entries = lib.concatStringsSep "\n" (lib.mapAttrsToList (k: v: "  ${k}: ${lib.boolToString v}") disableTools);
-      in "tools:\n${entries}\n");
-    permLines =
-      lib.optionalString (denyPermissions != {})
-      (let
-        entries = lib.concatStringsSep "\n" (lib.mapAttrsToList (k: v: "  ${k}: ${v}") denyPermissions);
-      in "permission:\n${entries}\n");
-  in ''
-    ---
-    description: "${description}"
-    ${toolsLines}${permLines}---
-
-    ${body}
-  '';
 in {
   programs.opencode = {
     enable = true;
@@ -61,36 +36,27 @@ in {
           };
         };
       };
-      model = "anthropic/claude-sonnet-4-5";
-      small_model = "anthropic/claude-haiku-4-5";
+      model = "anthropic/claude-sonnet-4-6";
+      small_model = "anthropic/claude-haiku-4-5-20251001";
     };
 
-    rules = systemPrompts.llm lib config.programs.mcp.servers;
+    context = systemPrompts.llm lib config.programs.mcp.servers;
 
     agents = {
-      "nixos-config" = mkOpenCodeAgent {
-        description = "NixOS configuration specialist for modules, options, and services";
-        body = builtins.readFile ../agents/nixos-config.md;
-      };
-      "homeserver-admin" = mkOpenCodeAgent {
-        description = "Homeserver administration for k3s, monitoring, networking, and security";
-        body = builtins.readFile ../agents/homeserver-admin.md;
-      };
-      "code-reviewer" = mkOpenCodeAgent {
-        description = "Read-only code review agent";
-        disableTools = {
-          write = false;
-          edit = false;
-        };
-        denyPermissions = {edit = "deny";};
-        body = builtins.readFile ../agents/code-reviewer.md;
-      };
+      "nixos-config" = ../agents/nixos-config.md;
+      "homeserver-admin" = ../agents/homeserver-admin.md;
+      "code-reviewer" = ../agents/code-reviewer.md;
     };
 
     commands = {
-      "commit" = builtins.readFile ../commands/commit.md;
-      "create-plan" = builtins.readFile ../commands/create-plan.md;
-      "review-code" = builtins.readFile ../commands/review-code.md;
+      "commit" = ../commands/commit.md;
+      "create-plan" = ../commands/create-plan.md;
+      "review-code" = ../commands/review-code.md;
+    };
+
+    skills = {
+      "nixos-advisor" = ../skills/nixos-advisor;
+      "nixos-command-not-found" = ../skills/nixos-command-not-found;
     };
   };
 

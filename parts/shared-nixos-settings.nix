@@ -31,10 +31,10 @@ in
         owner = "root";
       };
       sops.templates."nix-access-tokens.conf" = {
-        content = config.sops.placeholder.nix_access_token;
+        content = "${config.sops.placeholder.nix_access_token}\n";
         path = "/etc/nix/access-tokens.conf";
       };
-      nix.extraOptions = "!include /etc/nix/access-tokens.conf";
+      nix.extraOptions = "include /etc/nix/access-tokens.conf";
 
       # Lix as the nix implementation
       nix.package = lib.mkDefault pkgs.lixPackageSets.latest.lix;

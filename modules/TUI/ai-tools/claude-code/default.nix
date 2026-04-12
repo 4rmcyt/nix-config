@@ -28,7 +28,7 @@ in {
     package = pkgs.claude-code;
     enableMcpIntegration = true;
 
-    memory.text = systemPrompts.claude lib config.programs.mcp.servers;
+    context = systemPrompts.claude lib config.programs.mcp.servers;
 
     settings = {
       hooks = {
