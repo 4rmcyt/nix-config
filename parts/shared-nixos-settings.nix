@@ -32,14 +32,17 @@ in
         restartUnits = [ "nix-daemon.service" ];
       };
       # nix_access_token value format: "access-tokens = github.com=<token>"
-      # NIX_CONFIG env var appends settings to nix-daemon config at runtime
+      # Written to /run/ for nix-daemon and nix CLI client
       systemd.services.nix-daemon.serviceConfig.ExecStartPre =
         pkgs.writeShellScript "nix-daemon-load-tokens" ''
           token=$(cat /run/secrets/nix_access_token)
-          printf '%s' "$token" > /run/nix-access-tokens.conf
-          chmod 600 /run/nix-access-tokens.conf
+          printf '%s\n' "$token" > /run/nix-access-tokens.conf
+          chmod 644 /run/nix-access-tokens.conf
         '';
       systemd.services.nix-daemon.environment.NIX_USER_CONF_FILES =
+        "/run/nix-access-tokens.conf";
+      # nix CLI client also needs the token — point it at the same file
+      environment.sessionVariables.NIX_USER_CONF_FILES =
         "/run/nix-access-tokens.conf";
 
       # Lix as the nix implementation
