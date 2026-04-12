@@ -111,6 +111,8 @@
       pkgs.nur.repos.codgician.waydroid-script
       calibre-no-speech
       mcat
+      nmap
+      arp-scan
     ];
 
     sessionVariables = {
