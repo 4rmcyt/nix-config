@@ -48,10 +48,6 @@ in
           "nix-command"
           "auto-allocate-uids"
         ];
-        deprecated-features = [
-          "broken-string-escape"
-          "or-as-identifier"
-        ];
         auto-optimise-store = true;
         warn-dirty = false;
         keep-going = true;
