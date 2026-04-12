@@ -29,10 +29,6 @@
       inputs.disko.follows = "disko";
     };
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -134,11 +130,16 @@
     };
 
     # Services & infrastructure
-    mcp-nixos.url = "github:utensils/mcp-nixos";
+    mcp-nixos = {
+      url = "github:utensils/mcp-nixos";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+    };
     mcp-servers-nix.url = "github:natsukium/mcp-servers-nix";
     nix-topology = {
       url = "github:oddlama/nix-topology";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
     };
     nixarr = {
       url = "github:rasmus-kirk/nixarr";

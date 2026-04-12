@@ -30,11 +30,14 @@ in
         key = "nix_access_token";
         owner = "root";
       };
-      sops.templates."nix-access-tokens.conf" = {
-        content = "${config.sops.placeholder.nix_access_token}\n";
-        path = "/etc/nix/access-tokens.conf";
+      sops.templates."nix-daemon-access-tokens.env" = {
+        # NIX_CONFIG env var is read by nix-daemon to extend its config
+        content = "NIX_CONFIG=${config.sops.placeholder.nix_access_token}\n";
+        path = "/run/nix-daemon-access-tokens.env";
+        restartUnits = [ "nix-daemon.service" ];
       };
-      nix.extraOptions = "include /etc/nix/access-tokens.conf";
+      systemd.services.nix-daemon.serviceConfig.EnvironmentFile =
+        "/run/nix-daemon-access-tokens.env";
 
       # Lix as the nix implementation
       nix.package = lib.mkDefault pkgs.lixPackageSets.latest.lix;
