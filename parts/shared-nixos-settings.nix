@@ -29,19 +29,25 @@ in
         sopsFile = ../secrets/common.yaml;
         key = "nix_access_token";
         owner = "root";
-        restartUnits = [ "nix-daemon.service" ];
+        restartUnits = [ "nix-access-tokens.service" ];
       };
       # nix_access_token value format: "access-tokens = github.com=<token>"
-      # Written to /run/ for nix-daemon and nix CLI client
-      systemd.services.nix-daemon.serviceConfig.ExecStartPre =
-        pkgs.writeShellScript "nix-daemon-load-tokens" ''
-          token=$(cat /run/secrets/nix_access_token)
-          printf '%s\n' "$token" > /run/nix-access-tokens.conf
-          chmod 644 /run/nix-access-tokens.conf
-        '';
+      # Oneshot service writes token to /run/ early in boot, before any nix client runs
+      systemd.services.nix-access-tokens = {
+        description = "Write nix access tokens to /run";
+        wantedBy = [ "multi-user.target" ];
+        before = [ "nix-daemon.socket" ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStart = pkgs.writeShellScript "nix-access-tokens-write" ''
+            printf '%s\n' "$(cat /run/secrets/nix_access_token)" > /run/nix-access-tokens.conf
+            chmod 644 /run/nix-access-tokens.conf
+          '';
+        };
+      };
       systemd.services.nix-daemon.environment.NIX_USER_CONF_FILES =
         "/run/nix-access-tokens.conf";
-      # nix CLI client also needs the token — point it at the same file
       environment.sessionVariables.NIX_USER_CONF_FILES =
         "/run/nix-access-tokens.conf";
 
