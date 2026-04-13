@@ -252,6 +252,7 @@ in {
       efiInstallAsRemovable = false;
       biosSupport = false;
       secureBoot.enable = true;
+      style.wallpapers = [ ./boot/background.jpg ];
     };
   };
 
