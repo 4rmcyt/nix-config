@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   # =================================================================
   # Imports
   # =================================================================
@@ -69,7 +70,7 @@
   nix.settings = {
     cores = 4;
     max-jobs = 4;
-    extra-system-features = ["big-parallel"];
+    extra-system-features = [ "big-parallel" ];
     trusted-users = [
       "root"
       "@wheel"
@@ -98,9 +99,15 @@
     lixPackageSets.latest.nix-fast-build
     lixPackageSets.latest.colmena
     lixPackageSets.latest.nix-direnv
+    lixPackageSets.latest.nix-serve-ng
+    lixPackageSets.latest.boehmgc
+    lixPackageSets.latest.nil
+    lixPackageSets.latest.nurl
+    lixPackageSets.latest.nix-init
+    lixPackageSets.latest.nix-update
   ];
 
-  environment.shells = with pkgs; [zsh];
+  environment.shells = with pkgs; [ zsh ];
 
   # =================================================================
   # Networking
@@ -124,19 +131,24 @@
         (
           let
             parts = lib.splitString "." config.my.defaults.homeserver_lan;
-          in "${lib.concatStringsSep "." (lib.take 3 parts)}.0/24"
+          in
+          "${lib.concatStringsSep "." (lib.take 3 parts)}.0/24"
         )
       ];
     };
 
     firewall.interfaces.tailscale0 = {
-      allowedTCPPorts = [53 80 443];
-      allowedUDPPorts = [53];
+      allowedTCPPorts = [
+        53
+        80
+        443
+      ];
+      allowedUDPPorts = [ 53 ];
     };
 
     firewall.interfaces.enp0s31f6 = {
-      allowedTCPPorts = [53];
-      allowedUDPPorts = [53];
+      allowedTCPPorts = [ 53 ];
+      allowedUDPPorts = [ 53 ];
     };
 
     firewall = {
@@ -186,7 +198,7 @@
     # SSH configuration
     openssh = {
       enable = true;
-      ports = [2222]; # Moved from 22; Cowrie honeypot listens on port 22
+      ports = [ 2222 ]; # Moved from 22; Cowrie honeypot listens on port 22
       extraConfig = ''
         # Global Security Settings
         KexAlgorithms sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256
@@ -217,7 +229,10 @@
     dnsmasq = {
       enable = true;
       settings = {
-        interface = ["tailscale0" "enp0s31f6"];
+        interface = [
+          "tailscale0"
+          "enp0s31f6"
+        ];
         bind-interfaces = true;
         no-resolv = true;
         no-hosts = true;
@@ -229,8 +244,8 @@
   # Write dnsmasq address config dynamically from Tailscale IP at service start
   # Also writes LAN IP entry so local clients get direct access without Tailscale
   systemd.services.dnsmasq = {
-    after = ["tailscale-autoconnect.service"];
-    wants = ["tailscale-autoconnect.service"];
+    after = [ "tailscale-autoconnect.service" ];
+    wants = [ "tailscale-autoconnect.service" ];
     # RuntimeDirectory creates /run/dnsmasq before ExecStartPre runs (dnsmasq --test validates conf-dir)
     serviceConfig.RuntimeDirectory = "dnsmasq";
     preStart = ''
@@ -263,6 +278,6 @@
         "zeev"
       ];
     };
-    groups.git = {};
+    groups.git = { };
   };
 }

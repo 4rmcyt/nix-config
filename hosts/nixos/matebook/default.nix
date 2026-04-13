@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -78,7 +79,10 @@
       MOZ_ENABLE_WAYLAND = "1";
     };
 
-    pathsToLink = ["/share/icons" "/share/fonts"];
+    pathsToLink = [
+      "/share/icons"
+      "/share/fonts"
+    ];
     sessionVariables.XDG_DATA_DIRS = [
       "$HOME/.local/share/flatpak/exports/share"
       "/var/lib/flatpak/exports/share"
@@ -100,6 +104,18 @@
       meslo-lgs-nf
       nerd-fonts.droid-sans-mono
       nerd-fonts.fira-code
+
+      lixPackageSets.latest.nixpkgs-review
+      lixPackageSets.latest.nix-eval-jobs
+      lixPackageSets.latest.nix-fast-build
+      lixPackageSets.latest.colmena
+      lixPackageSets.latest.nix-direnv
+      lixPackageSets.latest.nix-serve-ng
+      lixPackageSets.latest.boehmgc
+      lixPackageSets.latest.nil
+      lixPackageSets.latest.nurl
+      lixPackageSets.latest.nix-init
+      lixPackageSets.latest.nix-update
     ];
   };
 
@@ -145,13 +161,13 @@
 
   # Override niri module default which adds xdg-desktop-portal-gnome (requires GNOME Shell)
   xdg.portal = {
-    extraPortals = lib.mkForce [pkgs.xdg-desktop-portal-gtk];
+    extraPortals = lib.mkForce [ pkgs.xdg-desktop-portal-gtk ];
     config.niri = lib.mkForce {
-      default = ["gtk"];
-      "org.freedesktop.impl.portal.Access" = ["gtk"];
-      "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
-      "org.freedesktop.impl.portal.Notification" = ["gtk"];
-      "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+      default = [ "gtk" ];
+      "org.freedesktop.impl.portal.Access" = [ "gtk" ];
+      "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
+      "org.freedesktop.impl.portal.Notification" = [ "gtk" ];
+      "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
     };
   };
 
@@ -222,7 +238,7 @@
 
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
     fwupd.enable = true;
@@ -288,7 +304,7 @@
   # =================================================================
   users = {
     groups = {
-      git = {};
+      git = { };
     };
 
     users = {
