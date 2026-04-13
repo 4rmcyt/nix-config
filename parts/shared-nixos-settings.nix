@@ -36,7 +36,6 @@ in
       systemd.services.nix-access-tokens = {
         description = "Write nix access tokens to /run";
         wantedBy = [ "multi-user.target" ];
-        before = [ "nix-daemon.socket" ];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
