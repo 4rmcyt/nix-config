@@ -54,7 +54,7 @@
         efiSupport = true;
         efiInstallAsRemovable = false;
         biosSupport = false;
-        secureBoot.enable = false;
+        secureBoot.enable = true;
       };
     };
   };
