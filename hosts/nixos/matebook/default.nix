@@ -47,7 +47,16 @@
   boot = {
     loader = {
       efi.canTouchEfiVariables = true;
-      systemd-boot.enable = true;
+      systemd-boot.enable = false;
+      limine = {
+        enable = true;
+        enableEditor = false;
+        maxGenerations = 10;
+        efiSupport = true;
+        efiInstallAsRemovable = false;
+        biosSupport = false;
+        secureBoot.enable = false;
+      };
     };
   };
 
