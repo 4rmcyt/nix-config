@@ -119,6 +119,12 @@
       lixPackageSets.latest.nix-fast-build
       lixPackageSets.latest.colmena
       lixPackageSets.latest.nix-direnv
+      lixPackageSets.latest.nix-serve-ng
+      lixPackageSets.latest.boehmgc
+      lixPackageSets.latest.nil
+      lixPackageSets.latest.nurl
+      lixPackageSets.latest.nix-init
+      lixPackageSets.latest.nix-update
     ];
   };
 
