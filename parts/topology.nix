@@ -10,7 +10,7 @@
 
   perSystem = {
     topology.modules = [
-      {nixosConfigurations = config.flake.nixosConfigurations;}
+      {inherit (config.flake) nixosConfigurations;}
     ];
   };
 }
