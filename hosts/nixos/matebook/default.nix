@@ -113,6 +113,7 @@
       nerd-fonts.droid-sans-mono
       nerd-fonts.fira-code
 
+      #Lix tools
       lixPackageSets.latest.nixpkgs-review
       lixPackageSets.latest.nix-eval-jobs
       lixPackageSets.latest.nix-fast-build
@@ -124,6 +125,15 @@
       lixPackageSets.latest.nurl
       lixPackageSets.latest.nix-init
       lixPackageSets.latest.nix-update
+
+      # Secure Boot & EFI Tools
+      efibootmgr
+      efitools
+      ifrextractor-rs
+      sbctl
+      sbsigntool
+      shim-unsigned
+      optnix
     ];
   };
 
