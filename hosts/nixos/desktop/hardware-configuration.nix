@@ -252,7 +252,12 @@ in {
       efiInstallAsRemovable = false;
       biosSupport = false;
       secureBoot.enable = true;
-      style.wallpapers = [ ./boot/background.jpg ];
+      style.wallpapers = [
+        "${builtins.path {
+          path = ./boot/background.jpg;
+          name = "limine-background.jpg";
+        }}"
+      ];
     };
   };
 
