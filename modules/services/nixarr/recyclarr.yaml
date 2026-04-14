@@ -5,6 +5,7 @@ sonarr:
     quality_definition:
       type: series
     delete_old_custom_formats: true
+    replace_existing_custom_formats: true
     quality_profiles:
       - name: All
         reset_unmatched_scores:
@@ -49,28 +50,12 @@ sonarr:
           # 2160p
           - 1bef6c151fa35093015b0bfef18279e5
           # x264
-          - 89e0d7c4680f4a2e8236a3f6c90feab9
+          - cddfb4e32db82151d97352b8e37c648
           # x265
           - c9eafd50846d299b862ca9bb6ea91950
           # Audio Formats
-          # TrueHD ATMOS
-          - 0d7824bb924701997f874e7ff7d4844a
-          # DTS X
-          - 9d00418ba386a083fbf4d58235fc37ef
-          # ATMOS (undefined)
-          - b6fbafa7942952a13e17e2b1152b539a
           # DD+ ATMOS
           - 4232a509ce60c4e208d13825b7c06264
-          # TrueHD
-          - 1808e4b9cee74e064dfae3f1db99dbfe
-          # DTS-HD MA
-          - c429417a57ea8c41d57e6990a8b0033f
-          # FLAC
-          - 851bd64e04c9374c51102be3dd9ae4cc
-          # PCM
-          - 30f70576671ca933adbdcfc736a69718
-          # DTS-HD HRA
-          - cfa5fbd8f02a86fc55d8d223d06a5e1f
           # Audio Channels
           # 5.1 Surround
           - 3fbafa924f361e66fbc6187af82dfa85
@@ -78,6 +63,20 @@ sonarr:
           - 9fb6d778592c293467437593ef394bf1
           # 7.1 Surround
           - 204c8c3e7315bb0ea81332774fa888d6
+          # HDR Formats
+          # DV
+          - 6d0d8de7b57e35518ac0308b0ddf404e
+          # DV HDR10
+          - 7878c33f1963fefb3d6c8657d46c2f0a
+          # DV HDR10+
+          - 2b239ed870daba8126a53bd5dc8dc1c8
+          # DV HLG
+          - 1f733af03141f068a540eec352589a89
+          # DV SDR
+          - 27954b0a80aab882522a88a4d9eae1cd
+          # HDR Optional
+          # DV HDR10+ Boost
+          - 385e9e8581d33133c3961bdcdeffb7b4
         assign_scores_to:
           - name: All
             score: 25
@@ -85,20 +84,25 @@ sonarr:
           # Miscellaneous
           # 720p
           - c99279ee27a154c2f20d1d505cc99e25
+          # HDR Formats
+          # HDR
+          - 3e2c4e748b64a1a1118e0ea3f4cf6875
+          # HDR (undefined)
+          - bb019e1cd00f304f80971c965de064dc
+          # HDR10
+          - 3497799d29a085e2ac2df9d468413c94
+          # HDR10+
+          - a3d82cbef5039f8d295478d28a887159
           # Audio Formats
           # DD+
           - 63487786a8b01b7f20dd2bc90dd4a477
-          # DTS-ES
-          - c1a25cd67b5d2e08287c957b1eb903ec
-          # DTS
-          - 5964f2a8b3be407d083498e4459d05d0
           # Audio Channels
           # 3.0 Sound
           - 42cba7e38c7947a6d1d0a62580ee6d62
           # 4.0 Sound
           - 1895195e84767de180653914ce207245
         assign_scores_to:
-          - name: All
+          - name: Any
             score: 20
       - trash_ids:
           # Audio Formats
@@ -243,14 +247,10 @@ sonarr:
           # INTERNAL
           - 5ab46ff851b76c337e13e81a4353875f
           # Unwanted
-          # AV1
-          - 15a05bc7c1a36e2b57fd628f8977e2fc
           # BR-DISK
           - 85c61753df5da1fb2aab6f2a47426b09
           # Extras
           - fbcb31d8dabd2a319072b84fc0b7249c
-          # LQ
-          - 9c11cd3f07101cdba90a2d81cf0e56b4
           # LQ (Release Title)
           - e2315f990da2e2cbfc9fa5b7a6fcfe48
           # Upscaled
@@ -265,6 +265,7 @@ radarr:
     quality_definition:
       type: movie
     delete_old_custom_formats: true
+    replace_existing_custom_formats: true
     quality_profiles:
       - name: All
         min_format_score: 0
@@ -313,24 +314,8 @@ radarr:
           # x265
           - 9170d55c319f4fe40da8711ba9d8050d
           # Audio Formats
-          # TrueHD ATMOS
-          - 496f355514737f7d83bf7aa4d24f8169
-          # DTS X
-          - 2f22d89048b01681dde8afe203bf2e95
-          # ATMOS (undefined)
-          - 417804f7f2c4308c1f4c5d380d4c4475
           # DD+ ATMOS
           - 1af239278386be2919e1bcee0bde047e
-          # TrueHD
-          - 3cafb66171b47f226146a0770576870f
-          # DTS-HD MA
-          - dcf3ec6938fa32445f590a4da84256cd
-          # FLAC
-          - a570d4a0e56a2874b64e5bfa55202a1b
-          # PCM
-          - e7c2fcae07cbada050a0af3357491d7b
-          # DTS-HD HRA
-          - 8e109e50e0a0b83a5098b056e13bf6db
           # Audio Channels
           # 5.1 Surround
           - 77ff61788dfe1097194fd8743d7b4524
@@ -353,30 +338,10 @@ radarr:
           # DV HDR10+ Boost
           - 55a5b50cb416dea5a50c4955896217ab
           # Movie Versions
-          # Hybrid
-          - 0f12c086e289cf966fa5948eac571f44
           # IMAX
           - eecf3a857724171f968a66cb5719e152
           # IMAX Enhanced
           - 9f6cbff8cfe4ebbc1bde14c7b7bec0de
-          # Open Matte
-          - 4480c1941f1a35d5c1b29b46e71c1e5d
-          # Remaster
-          - 570bc9ebecd92723d2d21500f4be314c
-          # 4K Remaster
-          - eca37840c13c6ef2dd0262b141a5482f
-          # Criterion Collection
-          - e0c07d59beb37348e975a930d5e50319
-          # Masters of Cinema
-          - 9d27d9d2181838f76dee150882bdc58c
-          # Theatrical Cut
-          - edb422d6463fef47f9e8d408f41a787d
-          # Special Edition
-          - 957d0f44b592285f26449575e8b1167e
-          # Vinegar Syndrome
-          - db9b4c4b53d312a3ca5f1378f6440fc9
-          # Proper Masters
-          - afe1b17b7f69da8f7f47a8b4a484f71e
         assign_scores_to:
           - name: All
             score: 25
@@ -396,10 +361,6 @@ radarr:
           # Audio Formats
           # DD+
           - 185f1dd7264c4562b9022d963ac37424
-          # DTS-ES
-          - f9f847ac70a0af62ea4a08280b859636
-          # DTS
-          - 1c1a4c5e823891c75bc50380a6866f73
           # Audio Channels
           # 3.0 Sound
           - 205125755c411c3b8622ca3175d27b37
@@ -418,8 +379,6 @@ radarr:
           # HQ Source Groups
           # HD Bluray Tier 01
           - ed27ebfef2f323e964fb1f61391bcb35
-          # HD Bluray Tier 03
-          - 5608c71bcebba0a5e666223bae8c9227
           # UHD Bluray Tier 01
           - 4d74ac4c4db0b64bff6ce0cffef99bf0
           # WEB Tier 01
@@ -439,8 +398,6 @@ radarr:
           - c20c8647f2746a1f4c4262b0fbbeeeae
           # UHD Bluray Tier 02
           - a58f517a70193f8e578056642178419d
-          # UHD Bluray Tier 03
-          - e71939fae578037e7aed3ee219bbe7c1
           # WEB Tier 02
           - 403816d65392c79236dcb6dd591aeda4
         assign_scores_to:
@@ -453,8 +410,6 @@ radarr:
           # General Streaming Services
           # AMZN
           - b3b3a6ac74ecbd56bcdbefa4799fb9df
-          # ATV
-          - df13ed57843877b21ad969184ab6888f
           # ATVP
           - 40e9380490e748672c2522eaaeb692f7
           # BCORE
@@ -489,6 +444,10 @@ radarr:
           # Uncensored
           - 064af5f084a0a24458cc8ecd3220f93f
           # HQ Source Groups
+          # HD Bluray Tier 03
+          - 5608c71bcebba0a5e666223bae8c9227
+          # UHD Bluray Tier 03
+          - e71939fae578037e7aed3ee219bbe7c1
           # WEB Tier 03
           - af94e0fe497124d1f9ce732069ec8c3b
           # Miscellaneous
@@ -556,8 +515,6 @@ radarr:
           - 0a3f082873eb454bde444150b70253cc
           # Generated Dynamic HDR
           - e6886871085226c3da1830830146846c
-          # Line/Mic Dubbed
-          - 2de5909e13c44cf897903d28e849e0b5
           # LQ (Release Title)
           - e204b80c87be9497a8a6eaff48f72905
           # Sing-Along Versions
