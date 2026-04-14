@@ -174,6 +174,11 @@ in {
     };
   };
 
+  # recyclarr 8.x dropped --app-data; override nixarr's hardcoded ExecStart
+  systemd.services.recyclarr.serviceConfig.ExecStart = lib.mkForce (
+    "${config.nixarr.recyclarr.package}/bin/recyclarr sync --config ${config.nixarr.recyclarr.configFile}"
+  );
+
   systemd.services = lib.mkMerge [
     (lib.genAttrs servicesWithMediaAccess (_name: {
       serviceConfig = {
