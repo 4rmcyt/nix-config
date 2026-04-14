@@ -5,7 +5,6 @@ sonarr:
     quality_definition:
       type: series
     delete_old_custom_formats: true
-    replace_existing_custom_formats: true
     quality_profiles:
       - name: All
         reset_unmatched_scores:
@@ -50,7 +49,7 @@ sonarr:
           # 2160p
           - 1bef6c151fa35093015b0bfef18279e5
           # x264
-          - cddfb4e32db82151d97352b8e37c648
+          - 89e0d7c4680f4a2e8236a3f6c90feab9
           # x265
           - c9eafd50846d299b862ca9bb6ea91950
           # Audio Formats
@@ -79,20 +78,6 @@ sonarr:
           - 9fb6d778592c293467437593ef394bf1
           # 7.1 Surround
           - 204c8c3e7315bb0ea81332774fa888d6
-          # HDR Formats
-          # DV
-          - 6d0d8de7b57e35518ac0308b0ddf404e
-          # DV HDR10
-          - 7878c33f1963fefb3d6c8657d46c2f0a
-          # DV HDR10+
-          - 2b239ed870daba8126a53bd5dc8dc1c8
-          # DV HLG
-          - 1f733af03141f068a540eec352589a89
-          # DV SDR
-          - 27954b0a80aab882522a88a4d9eae1cd
-          # HDR Optional
-          # DV HDR10+ Boost
-          - 385e9e8581d33133c3961bdcdeffb7b4
         assign_scores_to:
           - name: All
             score: 25
@@ -100,15 +85,6 @@ sonarr:
           # Miscellaneous
           # 720p
           - c99279ee27a154c2f20d1d505cc99e25
-          # HDR Formats
-          # HDR
-          - 3e2c4e748b64a1a1118e0ea3f4cf6875
-          # HDR (undefined)
-          - bb019e1cd00f304f80971c965de064dc
-          # HDR10
-          - 3497799d29a085e2ac2df9d468413c94
-          # HDR10+
-          - a3d82cbef5039f8d295478d28a887159
           # Audio Formats
           # DD+
           - 63487786a8b01b7f20dd2bc90dd4a477
@@ -289,7 +265,6 @@ radarr:
     quality_definition:
       type: movie
     delete_old_custom_formats: true
-    replace_existing_custom_formats: true
     quality_profiles:
       - name: All
         min_format_score: 0
