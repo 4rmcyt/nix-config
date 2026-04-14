@@ -308,16 +308,6 @@ in {
               tls.certResolver = "default";
             };
 
-            jackett = {
-              rule = "Host(`jackett.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "jackett";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
             kapowarr = {
               rule = "Host(`kapowarr.${domain}`)";
               entryPoints = ["websecure"];
@@ -516,7 +506,6 @@ in {
             slskd.loadBalancer.servers = [{url = "http://localhost:5030";}];
 
             # Nixarr
-            jackett.loadBalancer.servers = [{url = "http://localhost:9117";}];
             sonarr.loadBalancer.servers = [{url = "http://localhost:8990";}];
             radarr.loadBalancer.servers = [{url = "http://localhost:7878";}];
             prowlarr.loadBalancer.servers = [{url = "http://localhost:9696";}];
