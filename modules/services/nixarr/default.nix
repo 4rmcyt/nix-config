@@ -7,6 +7,7 @@
   servicesWithMediaAccess = [
     "audiobookshelf"
     "bazarr"
+    "jackett"
     "jellyfin"
     "jellyseerr"
     "lidarr"
@@ -70,6 +71,7 @@
   };
 in {
   imports = [
+    ./jackett
     ./jellyfin
     ./kapowarr
     ./qbittorrent
@@ -105,6 +107,7 @@ in {
     [
       "audiobookshelf"
       "bazarr"
+      "jackett"
       "jellyseerr"
       "lidarr"
       "prowlarr"
@@ -125,6 +128,7 @@ in {
   users.groups = lib.genAttrs [
     "audiobookshelf"
     "bazarr"
+    "jackett"
     "jellyseerr"
     "lidarr"
     "prowlarr"
@@ -454,6 +458,7 @@ in {
     8787 # Readarr
     8920 # Jellyfin HTTPS
     8990 # Sonarr
+    9117 # Jackett
     9292 # Audiobookshelf
     9696 # Prowlarr
   ];
