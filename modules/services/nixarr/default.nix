@@ -177,7 +177,7 @@ in {
   systemd.services = lib.mkMerge [
     # recyclarr 8.x dropped --app-data; override nixarr's hardcoded ExecStart
     {
-      recyclarr.serviceConfig.ExecStart = lib.mkForce (
+      recyclarr.serviceConfig.ExecStart = lib.mkOverride 0 (
         "${config.nixarr.recyclarr.package}/bin/recyclarr sync --config ${config.nixarr.recyclarr.configFile}"
       );
     }
