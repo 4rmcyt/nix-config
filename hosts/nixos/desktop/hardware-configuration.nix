@@ -163,10 +163,16 @@ in {
       "net.ipv4.tcp_wmem" = "4096 65536 16777216";
     };
 
-    # Pre-boot commands
-    initrd.preLVMCommands = ''
-      ${pkgs.kbd}/bin/setleds +num
-    '';
+    # Enable numlock in initrd (systemd stage 1)
+    initrd.systemd.services.numlock = {
+      description = "Enable numlock in initrd";
+      wantedBy = [ "initrd.target" ];
+      before = [ "initrd.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.kbd}/bin/setleds +num";
+      };
+    };
 
     # Tmp configuration
     tmp.useTmpfs = true;
