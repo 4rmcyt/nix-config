@@ -87,7 +87,11 @@
 
     # Network tools
     iproute2
+    iw
     wireguard-tools
+
+    # DB tooling
+    pgloader
 
     # Build & deployment tools
     betula

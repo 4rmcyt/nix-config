@@ -125,7 +125,6 @@
   programs = {
     claude-code.enable = true;
     firefox.package = pkgs.firefox;
-    nushell.enable = true;
   };
 
   services.gpg-agent = {

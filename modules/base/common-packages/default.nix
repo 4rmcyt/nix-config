@@ -3,19 +3,18 @@
   pkgs,
   ...
 }: {
-  # Common system packages shared across all hosts
-  # Use lib.mkDefault to allow hosts to override if needed
   environment.systemPackages = lib.mkBefore (
     with pkgs; [
       # =================================================================
-      # Core System Utilities (alphabetical)
+      # Core System Utilities
       # =================================================================
       btop
       cpuid
       uutils-coreutils
       curl
-      direnv
-      duf # disk usage
+      duf
+      eza
+      fd
       findutils
       gawk
       gnugrep
@@ -23,62 +22,54 @@
       gnused
       gnutar
       gzip
-      htop
       mc
+      moreutils
       openssl
       p7zip
       unrar
       nvme-cli
       pciutils
-      procs # better ps
-      unixtools.watch # watches commands
+      procs
+      ripgrep
+      unixtools.watch
       unzip
       usbutils
-      vim
+      neovim
       wget
-      iw
-      fh
-      tailspin
-      gomi
+      bat
       jq
       sqlite
       taplo
-      nix-output-monitor
-      nvd
       reptyr
-      wakeonlan
-      pgloader
       xmlstarlet
 
       # =================================================================
-      # Development & Nix Tools (alphabetical)
+      # Development & Nix Tools
       # =================================================================
       age
       alejandra
-      asdf-vm # managing different versions
       cachix
       cmake-format
-      comma # run nix binaries on demand
+      comma
       deadnix
       dockfmt
       dockerfile-language-server
-      helix
       just
       just-lsp
-      jsonnet-language-server # grafana lsp
+      jsonnet-language-server
       namaka
-      neovim
       nh
       nil
       nixd
       nix-diff
       nix-fast-build
-      nixfmt
+      nix-output-monitor
       nixos-rebuild-ng
+      nvd
+      nix-sweep
+      optinix
       prettier
-      nufmt
       pinentry-tty
-      prek
       rustfmt
       shfmt
       sops
@@ -86,93 +77,82 @@
       toml-sort
       treefmt
       yamlfmt
-      zsh-powerlevel10k
-      nix-sweep
 
       # =================================================================
-      # Security & Secrets Management (alphabetical)
+      # Security & Secrets Management
       # =================================================================
       gnupg
       ssh-to-age
       libargon2
 
       # =================================================================
-      # Git & Version Control (alphabetical)
+      # Git & Version Control
       # =================================================================
       git
       git-crypt
-      delta # pretty diff tool
-      gh # github cli tool
+      delta
+      gh
       gh-dash
-      glab # gitlab cli tool
+      glab
 
       # =================================================================
-      # Productivity & Terminal Tools (alphabetical)
+      # Productivity & Terminal Tools
       # =================================================================
-      cht-sh # cheat sheet -> cht python read file
-      fblog # json log viewer
-      graph-easy # draw graphs in the terminal
-      grc # colored log output
-      mask # taskrunner
-      mob # mob programming tool
-      presenterm # presentation tool
-      slides # terminal presentation tool
-      tealdeer # community driven man pages
-      termdown # terminal countdown
-      tmate # share terminal via web
-      viddy # terminal watch command
-      ytt # yaml templating engine
-      zk # zettelkasten
+      cht-sh
+      fblog
+      graph-easy
+      grc
+      mask
+      mob
+      presenterm
+      slides
+      termdown
+      tmate
+      viddy
+      ytt
+      zk
 
       # =================================================================
-      # Network & System Analysis (alphabetical)
+      # Network & System Analysis
       # =================================================================
-      dive # analyse docker images
-      gping # ping with a graph
-      httpie # awesome alternative to curl
-      hyperfine # benchmark tool
-      sipcalc # ip subnet calculator
-      sshfs # mount folders via ssh
-      yq-go # yaml, toml parser
+      gping
+      httpie
+      hyperfine
+      sipcalc
+      sshfs
+      yq-go
       ethtool
-      # =================================================================
-      # Media & File Processing (alphabetical)
-      # =================================================================
-      ffmpeg # video editing and cutting
-      rclone # sync files
+      wakeonlan
 
       # =================================================================
-      # Infrastructure & DevOps (alphabetical)
+      # Media & File Processing
       # =================================================================
-      opentofu
-      terraform
+      ffmpeg
+      rclone
 
       # =================================================================
-      # Cloud Providers (alphabetical)
+      # Infrastructure & DevOps
       # =================================================================
-      awscli2
-      s3cmd
+      docker-compose
+      kubectl
+      krew
+      kubie
+      kind
+      kubent
+      kubebuilder
+      kubernetes-helm
 
       # =================================================================
       # Programming Languages & Runtimes
       # =================================================================
-
       ## Golang
       cue
       golangci-lint
 
-      ## Kotlin
-      gradle
-      kotlin
-      ktlint
-
-      # ## Node/JavaScript
-      # deno # node runtime
+      ## Node/JavaScript
       nodejs_22
-      # nodePackages.npm
 
-      # ## Python
-      # poetry
+      ## Python
       python3
       uv
 
@@ -180,27 +160,10 @@
       rustup
 
       # =================================================================
-      # Kubernetes (commented out)
+      # Terminal compatibility (SSH sessions)
       # =================================================================
-      docker-compose
-      kubectl
-      krew # kubectl plugins
-      kubie # fzf kubeconfig browser
-      kind # k8s in docker
-      kubent # check for deprecations
-      prometheus # prometheus linter
-      kubebuilder # generate controller
-      kubernetes-helm # deploy applications
-
-      # Core Unix utilities
-      moreutils # Additional Unix utilities (sponge, vidir, etc)
-      kitty.terminfo # kitty terminfo for xterm-kitty over SSH
-      alacritty.terminfo # alacritty terminfo
-      foot.terminfo # foot terminfo
-      wezterm.terminfo # wezterm terminfo
-
-      # Nix utilities
-      optinix # Nix flake utilities
+      kitty.terminfo
+      wezterm.terminfo
     ]
   );
 }

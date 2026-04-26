@@ -105,14 +105,21 @@
       ];
     };
 
-    shells = lib.mkBefore (
-      with pkgs; [
-        zsh
-        nushell
-      ]
-    );
+    shells = lib.mkBefore (with pkgs; [zsh]);
 
     systemPackages = with pkgs; [
+      # Dev workstation tools (not on all hosts)
+      ansible
+      awscli2
+      s3cmd
+      opentofu
+      terraform
+      gradle
+      kotlin
+      ktlint
+      prometheus # promtool linter
+      iw
+
       # Lix Tooling
       lixPackageSets.latest.nixpkgs-review
       lixPackageSets.latest.nix-eval-jobs
@@ -217,7 +224,7 @@
         group = "git";
         home = "/var/lib/git";
         isSystemUser = true;
-        shell = pkgs.nushell;
+        shell = pkgs.bash;
       };
 
       prometheus = {
