@@ -539,11 +539,9 @@ in {
 
     # Secure Boot & EFI Tools
     efibootmgr
-    efitools
     ifrextractor-rs
     sbctl
     sbsigntool
-    shim-unsigned
     optnix
   ];
 

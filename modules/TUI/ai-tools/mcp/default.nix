@@ -1,12 +1,9 @@
 {
   pkgs,
   config,
-  inputs,
   lib,
   ...
-}: let
-  inherit (pkgs.stdenv.hostPlatform) system;
-in {
+}: {
   programs.mcp = {
     enable = true;
     servers = {
@@ -32,11 +29,6 @@ in {
           "/etc/nixos"
           "/home/zeev/src"
         ];
-      };
-      mcp-nixos = {
-        type = "stdio";
-        command = lib.getExe inputs.mcp-nixos.packages.${system}.default;
-        args = [];
       };
       github = {
         type = "stdio";

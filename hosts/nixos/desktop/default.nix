@@ -189,10 +189,6 @@
   services = {
     gnome.gnome-keyring.enable = true;
 
-    davfs2 = {
-      enable = true;
-      settings.sections."/data/zeev/Taildrive".gui_optimize = true;
-    };
 
     openssh.enable = true;
 
@@ -251,6 +247,5 @@
     "d /home/zeev/.local/share/Trash 0700 zeev users -"
     "d /home/zeev/.local/share/Trash/files 0700 zeev users -"
     "d /home/zeev/.local/share/Trash/info 0700 zeev users -"
-    "d /data/zeev/Taildrive 770 davfs2 users -"
   ];
 }
