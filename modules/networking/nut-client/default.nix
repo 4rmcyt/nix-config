@@ -3,9 +3,8 @@
   pkgs,
   lib,
   ...
-}:
-{
-  users.groups.nut = { };
+}: {
+  users.groups.nut = {};
 
   power.ups = {
     enable = true;
@@ -22,8 +21,8 @@
   };
 
   systemd.services.upsmon = {
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
+    after = ["network-online.target"];
+    wants = ["network-online.target"];
     serviceConfig.ExecStartPre = lib.mkDefault "${pkgs.coreutils}/bin/sleep 10";
   };
 
