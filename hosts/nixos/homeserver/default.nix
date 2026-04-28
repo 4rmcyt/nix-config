@@ -153,6 +153,11 @@
       allowedUDPPorts = [53];
     };
 
+    # Allow Podman containers to reach host services (Postgres, Redis)
+    firewall.interfaces.podman0 = {
+      allowedTCPPorts = [5432 6379];
+    };
+
     firewall = {
       enable = true;
 
