@@ -1,18 +1,4 @@
 {config, ...}: {
-  sops.secrets.dispatcharr_db_password = {
-    sopsFile = ../../../secrets/postgresql.yaml;
-    key = "dispatcharr_db_password";
-    owner = "root";
-    mode = "0400";
-  };
-
-  sops.secrets.redis_password = {
-    sopsFile = ../../../secrets/redis.yaml;
-    key = "oauth2_proxy_password";
-    owner = "root";
-    mode = "0400";
-  };
-
   sops.templates."dispatcharr.env" = {
     owner = "root";
     mode = "0400";
@@ -25,7 +11,7 @@
       REDIS_HOST=127.0.0.1
       REDIS_PORT=6379
       REDIS_DB=3
-      REDIS_PASSWORD=${config.sops.placeholder.redis_password}
+      REDIS_PASSWORD=${config.sops.placeholder.redis-oauth2-proxy-password}
     '';
   };
 
