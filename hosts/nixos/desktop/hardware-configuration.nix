@@ -63,33 +63,7 @@ in
     # assert !xanmodKernel.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken;
     # xanmodKernel;
 
-    kernelPackages =
-      let
-        # Create a custom Zen kernel with strict ISO support
-        customZen = (
-          pkgs.linuxKernel.packages.linux_zen.kernel.override {
-            ignoreConfigErrors = true; # Force build even if Nix thinks options are unused
-            structuredExtraConfig = with lib.kernel; {
-              BT_ISO = yes;
-              BT_BAP = yes; # Broadcast Audio Profile
-            };
-          }
-        );
-      in
-      pkgs.linuxKernel.packagesFor customZen;
-
-    # Enable Bluetooth ISO sockets (LE Audio / BAP support)
-    # xanmod disables CONFIG_BT_ISO; without it bluetoothd logs:
-    #   "BAP requires ISO Socket which is not enabled" + "Failed to set default system config for hci0"
-    # kernelPatches = [
-    #   {
-    #     name = "enable-bt-iso";
-    #     patch = null;
-    #     structuredExtraConfig = {
-    #       BT_ISO = lib.kernel.yes;
-    #     };
-    #   }
-    # ];
+    kernelPackages = pkgs.linuxKernel.packages.linux_zen;
 
     blacklistedKernelModules = [
       "r8169"
@@ -156,6 +130,8 @@ in
       "iommu=pt"
 
       "pci-stub.ids=1022:15e3"
+      "transparent_hugepage=madvise"
+      "processor.max_cstate=1"
     ];
 
     # ZFS configuration
@@ -274,6 +250,8 @@ in
       };
     };
   };
+
+  powerManagement.cpuFreqGovernor = "performance";
 
   # =================================================================
   # 4. Boot Loader

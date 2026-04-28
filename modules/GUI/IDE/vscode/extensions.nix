@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs.vscode.profiles.default.extensions = with pkgs.vscode-marketplace; [
     # Formatters & Editing
     codezombiech.gitignore
@@ -9,6 +10,7 @@
     foxundermoon.shell-format
     redhat.vscode-yaml
     tamasfe.even-better-toml
+    vscodevim.vim
 
     # Languages
     jnoortheen.nix-ide
