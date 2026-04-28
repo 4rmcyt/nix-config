@@ -40,6 +40,8 @@
 
     input = {
       keyboard.xkb.layout = "us";
+      mouse.accel-speed = 0.0;
+      mouse.accel-profile = "flat";
       focus-follows-mouse.enable = false;
     };
 
@@ -51,7 +53,8 @@
     environment = {
       NIXOS_OZONE_WL = "1";
       LIBVA_DRIVER_NAME = "nvidia";
-      WLR_NO_HARDWARE_CURSORS = "1";
+      # WLR_NO_HARDWARE_CURSORS = "1";
+      ELECTRON_OZONE_PLATFORM_HINT = "wayland";
     };
 
     layout = {
