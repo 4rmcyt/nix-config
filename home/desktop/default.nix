@@ -112,7 +112,7 @@
       mcat
       nmap
       arp-scan
-      python313Packages.netifaces
+      python313Packages.netifaces-plus
       gcc
       tcpdump
     ];

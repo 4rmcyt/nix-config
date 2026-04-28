@@ -500,6 +500,16 @@ in {
               ];
               tls.certResolver = "default";
             };
+            dispatcharr = {
+              rule = "Host(`dispatcharr.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "dispatcharr";
+              middlewares = [
+                "security-headers"
+                "crowdsec"
+              ];
+              tls.certResolver = "default";
+            };
           };
 
           services = {
@@ -540,6 +550,7 @@ in {
             vaultwarden.loadBalancer.servers = [{url = "http://localhost:8222";}];
             atuin.loadBalancer.servers = [{url = "http://localhost:8881";}];
             livesync.loadBalancer.servers = [{url = "http://localhost:5984";}];
+            dispatcharr.loadBalancer.servers = [{url = "http://localhost:9191";}];
           };
         };
       };

@@ -58,6 +58,10 @@
       name = "readarr";
       secret = "readarr_db_password";
     }
+    {
+      name = "dispatcharr";
+      secret = "dispatcharr_db_password";
+    }
   ];
 in {
   # Database secrets configuration
@@ -153,6 +157,13 @@ in {
       group = config.users.groups.readarr.name;
       mode = "0440";
     };
+    dispatcharr_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "dispatcharr_db_password";
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.postgres.name;
+      mode = "0440";
+    };
   };
 
   users.users.postgres = {
@@ -190,6 +201,7 @@ in {
       "readarr"
       "readarr-log"
       "readarr-cache"
+      "dispatcharr"
     ];
 
     # Automatically create users with DB ownership
@@ -244,6 +256,10 @@ in {
       }
       {
         name = "readarr";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "dispatcharr";
         ensureDBOwnership = true;
       }
     ];

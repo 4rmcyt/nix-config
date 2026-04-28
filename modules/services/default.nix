@@ -10,6 +10,7 @@
     ./miniflux
     ./nixarr
     ./atuin_server
+    ./dispatcharr
     ./microbin
     ./komf
     ./komga
