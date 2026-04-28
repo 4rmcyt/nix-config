@@ -1,4 +1,12 @@
-{config, ...}: {
+{config, ...}: let
+  commonEnv = {
+    TZ = config.my.defaults.timezone;
+    DISPATCHARR_ENV = "modular";
+    DISPATCHARR_PORT = "9191";
+  };
+  commonExtraOptions = ["--add-host=host.containers.internal:host-gateway"];
+  envFile = [config.sops.templates."dispatcharr.env".path];
+in {
   sops.templates."dispatcharr.env" = {
     owner = "root";
     mode = "0400";
@@ -19,18 +27,27 @@
     "d /var/lib/dispatcharr 0755 root root -"
   ];
 
-  virtualisation.oci-containers.containers.dispatcharr = {
-    autoStart = true;
-    image = "ghcr.io/dispatcharr/dispatcharr:latest";
-    environment = {
-      TZ = config.my.defaults.timezone;
-      DISPATCHARR_ENV = "aio";
+  virtualisation.oci-containers.containers = {
+    dispatcharr = {
+      autoStart = true;
+      image = "ghcr.io/dispatcharr/dispatcharr:latest";
+      environment = commonEnv;
+      environmentFiles = envFile;
+      volumes = ["/var/lib/dispatcharr:/data"];
+      ports = ["127.0.0.1:9191:9191"];
+      extraOptions = commonExtraOptions;
     };
-    environmentFiles = [config.sops.templates."dispatcharr.env".path];
-    volumes = [
-      "/var/lib/dispatcharr:/data"
-    ];
-    ports = ["127.0.0.1:9191:9191"];
-    extraOptions = ["--add-host=host.containers.internal:host-gateway"];
+
+    dispatcharr-celery = {
+      autoStart = true;
+      image = "ghcr.io/dispatcharr/dispatcharr:latest";
+      environment = commonEnv // {
+        DJANGO_SETTINGS_MODULE = "dispatcharr.settings";
+        PYTHONUNBUFFERED = "1";
+      };
+      environmentFiles = envFile;
+      volumes = ["/var/lib/dispatcharr:/data"];
+      extraOptions = commonExtraOptions ++ ["--entrypoint=/app/docker/entrypoint.celery.sh"];
+    };
   };
 }
