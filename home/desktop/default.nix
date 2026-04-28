@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   imports = [
     ../../modules/GUI/terminal
     ../../modules/GUI/IDE
@@ -23,6 +24,16 @@
     ../../modules/WM/niri/monitors.nix
     ../../modules/GUI/mime
   ];
+
+  # WirePlumber: upower is disabled on desktop (no battery) — silence the D-Bus NameHasNoOwner errors
+  xdg.configFile."wireplumber/wireplumber.conf.d/50-no-upower.conf".text = ''
+    wireplumber.components.rules = [
+      {
+        matches = [ { name = "upower_monitor" } ]
+        actions = { override = { type = "disabled" } }
+      }
+    ]
+  '';
 
   # WirePlumber: always use SBC-XQ for OpenRun Pro 2 (best codec it supports)
   xdg.configFile."wireplumber/wireplumber.conf.d/51-shokz-openrun.conf".text = ''
@@ -80,19 +91,17 @@
       proton-pass-cli
       seahorse
       (python3.withPackages (
-        ps:
-          with ps; [
-            pip
-            pydantic
-            requests
-            black
-            pylint
-            python-lsp-server
-          ]
+        ps: with ps; [
+          pip
+          pydantic
+          requests
+          black
+          pylint
+          python-lsp-server
+        ]
       ))
       (pkgs.texlive.combine {
-        inherit
-          (pkgs.texlive)
+        inherit (pkgs.texlive)
           scheme-medium
           moderncv
           lastpage
@@ -117,6 +126,7 @@
       gcc
       tcpdump
       foot
+      rt-tests
     ];
 
     sessionVariables = {
@@ -139,8 +149,8 @@
 
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
-      autoconnect = ["qemu:///system"];
-      uris = ["qemu:///system"];
+      autoconnect = [ "qemu:///system" ];
+      uris = [ "qemu:///system" ];
     };
   };
 }

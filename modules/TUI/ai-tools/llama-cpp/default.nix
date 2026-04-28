@@ -53,6 +53,7 @@ in {
     Unit = {
       Description = "MCP proxy (stdio → SSE) for llama-server";
       After = ["default.target"];
+      ConditionPathExists = "%h/.config/mcp/mcp.json";
     };
 
     Service = {

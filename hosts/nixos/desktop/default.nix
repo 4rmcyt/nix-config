@@ -267,6 +267,6 @@
   # No battery on desktop — upower just spams wireplumber with UPower errors
   services.upower.enable = lib.mkForce false;
 
-  # Cups only binds IPv4 — IPv6 loopback is not available early at boot
-  services.printing.listenAddresses = ["localhost:631"];
+  # Cups resolves "localhost" to both 127.0.0.1 and ::1 — IPv6 disabled at kernel level so ::1 bind fails
+  services.printing.listenAddresses = ["127.0.0.1:631"];
 }

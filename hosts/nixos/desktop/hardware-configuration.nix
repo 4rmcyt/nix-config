@@ -4,13 +4,16 @@
   pkgs,
   modulesPath,
   ...
-}: let
-  xanmodKernel = pkgs.linuxKernel.packages.linux_xanmod_latest;
-in {
+}:
+let
+  # xanmodKernel = pkgs.linuxKernel.packages.linux_xanmod_latest;
+  zenKernel = pkgs.linuxKernel.packages.linux_zen;
+in
+{
   # =================================================================
   # 1. Imports
   # =================================================================
-  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   # =================================================================
   # 2. Boot Configuration
@@ -28,6 +31,7 @@ in {
       "usb_storage"
       "usbhid"
       "xhci_pci"
+      "pci-stub"
     ];
 
     initrd.kernelModules = [
@@ -55,9 +59,42 @@ in {
       "zenergy"
     ];
 
-    kernelPackages = assert !xanmodKernel.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken; xanmodKernel;
+    # kernelPackages =
+    # assert !xanmodKernel.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken;
+    # xanmodKernel;
 
-    blacklistedKernelModules = ["r8169" "nct6683"];
+    kernelPackages =
+      let
+        # Create a custom Zen kernel with strict ISO support
+        customZen = (
+          pkgs.linuxKernel.packages.linux_zen.kernel.override {
+            ignoreConfigErrors = true; # Force build even if Nix thinks options are unused
+            structuredExtraConfig = with lib.kernel; {
+              BT_ISO = yes;
+              BT_BAP = yes; # Broadcast Audio Profile
+            };
+          }
+        );
+      in
+      pkgs.linuxKernel.packagesFor customZen;
+
+    # Enable Bluetooth ISO sockets (LE Audio / BAP support)
+    # xanmod disables CONFIG_BT_ISO; without it bluetoothd logs:
+    #   "BAP requires ISO Socket which is not enabled" + "Failed to set default system config for hci0"
+    # kernelPatches = [
+    #   {
+    #     name = "enable-bt-iso";
+    #     patch = null;
+    #     structuredExtraConfig = {
+    #       BT_ISO = lib.kernel.yes;
+    #     };
+    #   }
+    # ];
+
+    blacklistedKernelModules = [
+      "r8169"
+      "nct6683"
+    ];
 
     extraModulePackages = with config.boot.kernelPackages; [
       r8125
@@ -73,9 +110,12 @@ in {
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
       # RTL8125: vendor driver required for WoL (r8169 doesn't support it)
       options r8125 disable_wol_support=0 s5wol=1 aspm=0
+      # Disable snd-hda-intel index 2 (0000:10:00.6, Ryzen HD Audio Controller) — no codec connected
+      # PCI probe order is fixed: 01:00.1=NVIDIA(0), 10:00.1=AMD-HDMI(1), 10:00.6=Ryzen-HDA(2)
+      options snd-hda-intel enable=1,1,0
     '';
 
-    supportedFilesystems = ["zfs"];
+    supportedFilesystems = [ "zfs" ];
 
     # Kernel parameters
     kernelParams = [
@@ -114,6 +154,8 @@ in {
 
       "amd_iommu=on"
       "iommu=pt"
+
+      "pci-stub.ids=1022:15e3"
     ];
 
     # ZFS configuration
@@ -193,6 +235,7 @@ in {
       settings = {
         General = {
           Experimental = true;
+          Enable = "Source,Sink,Media,Socket";
         };
         Policy = {
           AutoEnable = true;
@@ -283,22 +326,20 @@ in {
   nixpkgs.overlays = [
     (_final: prev: {
       linux-firmware = prev.linux-firmware.overrideAttrs (old: {
-        postInstall =
-          (old.postInstall or "")
-          + ''
-            cp ${
-              prev.fetchurl {
-                url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_RAM_CODE_MT7922_1.bin";
-                sha256 = "19jfkmpqngm0d3wpv2inc9hmmqjfk5nhbw5d6mkvh23idg3w2jm3";
-              }
-            } $out/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin
-            cp ${
-              prev.fetchurl {
-                url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin";
-                sha256 = "1q4irdjmbfpx8fsv8qiprzklvm62z614vchyjnhpbh2745bxl65y";
-              }
-            } $out/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin
-          '';
+        postInstall = (old.postInstall or "") + ''
+          cp ${
+            prev.fetchurl {
+              url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_RAM_CODE_MT7922_1.bin";
+              sha256 = "19jfkmpqngm0d3wpv2inc9hmmqjfk5nhbw5d6mkvh23idg3w2jm3";
+            }
+          } $out/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin
+          cp ${
+            prev.fetchurl {
+              url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin";
+              sha256 = "1q4irdjmbfpx8fsv8qiprzklvm62z614vchyjnhpbh2745bxl65y";
+            }
+          } $out/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin
+        '';
       });
     })
   ];
@@ -323,7 +364,7 @@ in {
       enable = true;
       package = pkgs.scx.full;
       scheduler = "scx_bpfland";
-      extraArgs = [];
+      extraArgs = [ ];
     };
 
     # Hardware monitoring
@@ -372,7 +413,7 @@ in {
     # Smartcard / YubiKey
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
     # iOS device support
@@ -389,6 +430,21 @@ in {
       wireplumber.enable = true;
       jack.enable = true;
       extraConfig.pipewire."92-low-latency" = {
+        context.modules = [
+          {
+            name = "libpipewire-module-rt";
+            args = {
+              "nice.level" = -11;
+              "rt.prio" = 88;
+              "rt.time.soft" = 200000;
+              "rt.time.hard" = 200000;
+            };
+            flags = [
+              "ifexists"
+              "nofail"
+            ];
+          }
+        ];
         context.properties = {
           default.clock.rate = 48000;
           default.clock.allowed-rates = [
@@ -412,19 +468,19 @@ in {
 
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
 
     accounts-daemon.enable = true;
-    dbus.packages = [pkgs.gcr];
+    dbus.packages = [ pkgs.gcr ];
 
     power-profiles-daemon.enable = false;
     upower.enable = true;
 
     printing = {
       enable = true;
-      drivers = [];
+      drivers = [ ];
     };
 
     prometheus.exporters.node = {
@@ -454,25 +510,36 @@ in {
         # Gaming device rules
         SUBSYSTEM=="input", ATTRS{name}=="Rapoo Rapoo Gaming Device", TAG+="uaccess"
 
-        # MSI MYSTIC LIGHT - disable entirely (unused, causes continuous EMI hub resets that disconnect keyboard)
-        ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="1462", ATTRS{idProduct}=="7d75", ATTR{authorized}="0"
+        # MSI MYSTIC LIGHT - disable entirely
+        # Changed DEVTYPE to ENV{DEVTYPE} for schema compliance
+        ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="1462", ATTRS{idProduct}=="7d75", ATTR{authorized}="0"
 
         # Lock PC on yubikey removal
-        ACTION=="remove",\
-         ENV{ID_BUS}=="usb",\
-         ENV{ID_MODEL_ID}=="0407",\
-         ENV{ID_VENDOR_ID}=="1050",\
-         ENV{ID_VENDOR}=="Yubico",\
-         RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
-
-        # MT7922: rename wlan0 → wlp13s0 (cfg80211 registers before udev path rename)
-        SUBSYSTEM=="net", ACTION=="add", DRIVERS=="mt7921e", ATTR{address}=="02:00:00:00:00:00", NAME="wlp13s0"
+        # Added spaces after commas and corrected line continuation spacing
+        ACTION=="remove", \
+          ENV{ID_BUS}=="usb", \
+          ENV{ID_MODEL_ID}=="0407", \
+          ENV{ID_VENDOR_ID}=="1050", \
+          ENV{ID_VENDOR}=="Yubico", \
+          RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
       '';
-      packages = with pkgs; [
+      # MT7922 rename must be in a lower-numbered file than 98-ipv6-privacy-extensions.rules
+      # so that $name is already "wlp13s0" when the IPv6 rule's RUN fires.
+      # extraRules goes to 99-local.rules which is too late — use packages instead.
+      packages = [
+        (pkgs.writeTextFile {
+          name = "70-mt7922-rename.rules";
+          destination = "/etc/udev/rules.d/70-mt7922-rename.rules";
+          text = ''
+            SUBSYSTEM=="net", ACTION=="add", DRIVERS=="mt7921e", ATTR{address}=="02:00:00:00:00:00", NAME="wlp13s0"
+          '';
+        })
+      ]
+      ++ (with pkgs; [
         yubioath-flutter
         yubikey-manager
         yubikey-personalization
-      ];
+      ]);
     };
   };
 
@@ -568,7 +635,7 @@ in {
   # =================================================================
   # 7. Swap Configuration
   # =================================================================
-  swapDevices = [];
+  swapDevices = [ ];
 
   zramSwap = {
     enable = true;
@@ -585,8 +652,8 @@ in {
     oomd.enable = false;
     services.bluetooth-unblock = {
       description = "Unblock Bluetooth rfkill soft block";
-      wantedBy = ["bluetooth.service"];
-      before = ["bluetooth.service"];
+      wantedBy = [ "bluetooth.service" ];
+      before = [ "bluetooth.service" ];
       serviceConfig = {
         Type = "oneshot";
         ExecStart = "${pkgs.util-linux}/bin/rfkill unblock bluetooth";
@@ -595,8 +662,8 @@ in {
 
     services.wowlan-enable = {
       description = "Enable Wake-on-Wireless LAN magic packet on wlp13s0";
-      wantedBy = ["multi-user.target"];
-      after = ["network.target"];
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network.target" ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
@@ -619,8 +686,8 @@ in {
 
   systemd.services.numlock = {
     description = "Enable numlock on TTYs";
-    wantedBy = ["multi-user.target"];
-    after = ["systemd-vconsole-setup.service"];
+    wantedBy = [ "multi-user.target" ];
+    after = [ "systemd-vconsole-setup.service" ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;

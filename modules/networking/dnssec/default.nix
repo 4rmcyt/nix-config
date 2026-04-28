@@ -38,6 +38,8 @@ in {
           "2a07:a8c1::#${nextdnsHost}"
         ];
         DNSOverTLS = "true";
+        # avahi handles mDNS — disable resolved's mDNS to avoid the "another IPv4 mDNS stack" warning
+        MulticastDNS = "no";
       };
     };
 
