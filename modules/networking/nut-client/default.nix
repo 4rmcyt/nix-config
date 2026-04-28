@@ -15,6 +15,11 @@
     };
   };
 
+  systemd.services.upsmon = {
+    after = ["network-online.target"];
+    wants = ["network-online.target"];
+  };
+
   sops.secrets.nut_password = {
     sopsFile = ../../../secrets/nut.yaml;
     owner = "root";

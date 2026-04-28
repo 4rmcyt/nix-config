@@ -113,10 +113,10 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pam-shim = {
-      url = "github:Cu3PO42/pam_shim/next";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # pam-shim = {
+    #   url = "github:Cu3PO42/pam_shim/next";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
     quickshell = {
       url = "git+https://git.outfoxxed.me/quickshell/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";

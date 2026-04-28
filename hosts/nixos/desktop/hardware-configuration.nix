@@ -49,16 +49,15 @@ in {
       "r8125"
       "snd-usb-audio"
       "snd_hda_codec_hdmi"
-      "snd_hda_codec_realtek"
       "snd_hda_intel"
       "v4l2loopback"
-      "nct6687d"
+      "nct6687"
       "zenergy"
     ];
 
     kernelPackages = assert !xanmodKernel.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken; xanmodKernel;
 
-    blacklistedKernelModules = ["r8169"];
+    blacklistedKernelModules = ["r8169" "nct6683"];
 
     extraModulePackages = with config.boot.kernelPackages; [
       r8125
@@ -80,6 +79,7 @@ in {
 
     # Kernel parameters
     kernelParams = [
+      "acpi_enforce_resources=lax" # Required for nct6687 hwmon chip access
       "amd_pstate=active" # Use CPPC EPP driver for best Zen 4 performance
       "amd_prefcore=1" # Prefer highest boost frequency cores
       "microcode.amd_sha_check=off"
@@ -166,13 +166,15 @@ in {
     # Enable numlock in initrd (systemd stage 1)
     initrd.systemd.services.numlock = {
       description = "Enable numlock in initrd";
-      wantedBy = [ "initrd.target" ];
-      before = [ "initrd.target" ];
+      wantedBy = ["initrd.target"];
+      before = ["initrd.target"];
+      unitConfig.DefaultDependencies = false;
       serviceConfig = {
         Type = "oneshot";
         ExecStart = "${pkgs.kbd}/bin/setleds +num";
       };
     };
+    initrd.systemd.storePaths = ["${pkgs.kbd}/bin/setleds"];
 
     # Tmp configuration
     tmp.useTmpfs = true;
@@ -543,8 +545,8 @@ in {
     sbctl
     sbsigntool
     optnix
-    efitools
-    shim-unsigned
+    # efitools
+    # shim-unsigned
   ];
 
   # =================================================================

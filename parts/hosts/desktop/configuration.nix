@@ -40,7 +40,7 @@ in {
       ../../../home/desktop
       inputs.betterfox-nix.homeModules.betterfox
       inputs.stylix.homeModules.stylix
-      inputs.pam-shim.homeModules.default
+      # inputs.pam-shim.homeModules.default
       inputs.noctalia.homeModules.default
     ];
   };
