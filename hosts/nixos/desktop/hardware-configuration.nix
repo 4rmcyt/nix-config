@@ -543,6 +543,8 @@ in {
     sbctl
     sbsigntool
     optnix
+    efitools
+    shim-unsigned
   ];
 
   # =================================================================

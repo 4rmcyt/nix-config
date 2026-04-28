@@ -67,6 +67,7 @@
       nixos-rebuild-ng
       nvd
       nix-sweep
+      nixfmt
       optinix
       prettier
       pinentry-tty

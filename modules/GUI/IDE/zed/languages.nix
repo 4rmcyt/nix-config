@@ -6,10 +6,10 @@ _: {
 
       Nix = {
         formatter.external = {
-          command = "nixfmt";
+          command = "alejandra";
           arguments = [
             "--quiet"
-            "--"
+            "-"
           ];
         };
         language_servers = [

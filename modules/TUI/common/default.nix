@@ -96,7 +96,7 @@
       languages.language = [
         {
           auto-format = true;
-          formatter.command = lib.getExe pkgs.nixfmt;
+          formatter.command = lib.getExe pkgs.alejandra;
           name = "nix";
           language-servers = ["nil" "claude-code"];
         }
