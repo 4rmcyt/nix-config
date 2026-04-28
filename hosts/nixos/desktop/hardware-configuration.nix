@@ -211,7 +211,8 @@ in
       settings = {
         General = {
           Experimental = true;
-          Enable = "Source,Sink,Media,Socket";
+          ReconnectAttempts = 3;
+          FastConnectable = true;
         };
         Policy = {
           AutoEnable = true;
