@@ -113,6 +113,8 @@
       nmap
       arp-scan
       python313Packages.netifaces
+      gcc
+      tcpdump
     ];
 
     sessionVariables = {
