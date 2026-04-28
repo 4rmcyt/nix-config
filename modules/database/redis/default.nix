@@ -35,7 +35,7 @@
     enable = true;
 
     # Network configuration
-    bind = "127.0.0.1"; # Local only (IPv4)
+    bind = "127.0.0.1 10.88.0.1";
     port = 6379;
 
     # Unix socket for better performance
