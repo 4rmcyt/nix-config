@@ -3,12 +3,12 @@
     owner = "root";
     mode = "0400";
     content = ''
-      POSTGRES_HOST=127.0.0.1
+      POSTGRES_HOST=host.containers.internal
       POSTGRES_PORT=5432
       POSTGRES_DB=dispatcharr
       POSTGRES_USER=dispatcharr
       POSTGRES_PASSWORD=${config.sops.placeholder.dispatcharr_db_password}
-      REDIS_HOST=127.0.0.1
+      REDIS_HOST=host.containers.internal
       REDIS_PORT=6379
       REDIS_DB=3
       REDIS_PASSWORD=${config.sops.placeholder.redis-oauth2-proxy-password}
@@ -30,6 +30,7 @@
     volumes = [
       "/var/lib/dispatcharr:/data"
     ];
-    extraOptions = ["--network=host"];
+    ports = ["127.0.0.1:9191:9191"];
+    extraOptions = ["--add-host=host.containers.internal:host-gateway"];
   };
 }
