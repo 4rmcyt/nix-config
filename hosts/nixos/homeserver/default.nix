@@ -21,7 +21,7 @@
     ../../../modules/networking
     ../../../modules/networking/ssh
     ../../../modules/networking/nut-server
-    ../../../modules/networking/avahi
+    # ../../../modules/networking/avahi
     ../../../modules/security
     ../../../modules/services
 
