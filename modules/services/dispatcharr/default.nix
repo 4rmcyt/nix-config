@@ -41,10 +41,12 @@ in {
     dispatcharr-celery = {
       autoStart = true;
       image = "ghcr.io/dispatcharr/dispatcharr:latest";
-      environment = commonEnv // {
-        DJANGO_SETTINGS_MODULE = "dispatcharr.settings";
-        PYTHONUNBUFFERED = "1";
-      };
+      environment =
+        commonEnv
+        // {
+          DJANGO_SETTINGS_MODULE = "dispatcharr.settings";
+          PYTHONUNBUFFERED = "1";
+        };
       environmentFiles = envFile;
       volumes = ["/var/lib/dispatcharr:/data"];
       extraOptions = commonExtraOptions ++ ["--entrypoint=/app/docker/entrypoint.celery.sh"];

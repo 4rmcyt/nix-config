@@ -58,7 +58,7 @@
 
         # GitHub wrapper
         cat > "$HOME/.local/bin/github-mcp-wrapped" << EOF
-    #!/usr/bin/env bash
+    #!${pkgs.bash}/bin/bash
     export SOPS_AGE_KEY_FILE="${config.home.homeDirectory}/.config/sops/age/keys.txt"
     export GITHUB_PERSONAL_ACCESS_TOKEN="\$(${pkgs.sops}/bin/sops -d ${../../../../secrets/common.yaml} | ${pkgs.yq}/bin/yq -r '.git_access_token')"
     exec ${lib.getExe pkgs.github-mcp-server} "\$@"
@@ -67,7 +67,7 @@
 
         # Tavily wrapper
         cat > "$HOME/.local/bin/tavily-mcp-wrapped" << EOF
-    #!/usr/bin/env bash
+    #!${pkgs.bash}/bin/bash
     export SOPS_AGE_KEY_FILE="${config.home.homeDirectory}/.config/sops/age/keys.txt"
     export TAVILY_API_KEY="\$(${pkgs.sops}/bin/sops -d ${../../../../secrets/common.yaml} | ${pkgs.yq}/bin/yq -r '.tavily_api_key')"
     exec ${lib.getExe pkgs.tavily-mcp} "\$@"

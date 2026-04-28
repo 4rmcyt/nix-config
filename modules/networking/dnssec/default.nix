@@ -30,7 +30,6 @@ in {
       enable = true;
       settings.Resolve = {
         DNSSEC = "allow-downgrade";
-        NegativeTrustAnchors = ["example.com"];
         Domains = ["~."];
         FallbackDNS = [
           "45.90.28.0#${nextdnsHost}"
@@ -41,5 +40,11 @@ in {
         DNSOverTLS = "true";
       };
     };
+
+    # NegativeTrustAnchors was removed from resolved.conf in systemd 250+
+    # The replacement is /etc/dnssec-trust-anchors.d/*.negative
+    environment.etc."dnssec-trust-anchors.d/local.negative".text = ''
+      example.com
+    '';
   };
 }

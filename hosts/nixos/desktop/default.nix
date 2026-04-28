@@ -259,4 +259,14 @@
     "d /home/zeev/.local/share/Trash/files 0700 zeev users -"
     "d /home/zeev/.local/share/Trash/info 0700 zeev users -"
   ];
+
+  # Restrict avahi to ethernet only — both enp12s0 and wlp13s0 probing simultaneously
+  # causes avahi to see its own mDNS probe on the other interface and conflict with itself
+  services.avahi.allowInterfaces = ["enp12s0"];
+
+  # No battery on desktop — upower just spams wireplumber with UPower errors
+  services.upower.enable = false;
+
+  # Cups only binds IPv4 — IPv6 loopback is not available early at boot
+  services.printing.listenAddresses = ["localhost:631"];
 }

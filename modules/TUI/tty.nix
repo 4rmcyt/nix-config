@@ -14,6 +14,8 @@
     ];
     extraConfig = ''
       font-size=16
+      hwaccel
+      gpus=aux
     '';
   };
 }

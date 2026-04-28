@@ -92,7 +92,6 @@ in {
       "net.core.default_qdisc=fq"
       "net.ipv4.tcp_congestion_control=bbr"
 
-      "nvidia-drm.fbdev=1"
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
 
@@ -162,19 +161,6 @@ in {
       "net.ipv4.tcp_window_scaling" = 1;
       "net.ipv4.tcp_wmem" = "4096 65536 16777216";
     };
-
-    # Enable numlock in initrd (systemd stage 1)
-    initrd.systemd.services.numlock = {
-      description = "Enable numlock in initrd";
-      wantedBy = ["initrd.target"];
-      before = ["initrd.target"];
-      unitConfig.DefaultDependencies = false;
-      serviceConfig = {
-        Type = "oneshot";
-        ExecStart = "${pkgs.kbd}/bin/setleds +num";
-      };
-    };
-    initrd.systemd.storePaths = ["${pkgs.kbd}/bin/setleds"];
 
     # Tmp configuration
     tmp.useTmpfs = true;
@@ -630,4 +616,15 @@ in {
   # 9. Platform Configuration
   # =================================================================
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+
+  systemd.services.numlock = {
+    description = "Enable numlock on TTYs";
+    wantedBy = ["multi-user.target"];
+    after = ["systemd-vconsole-setup.service"];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.bash}/bin/bash -c 'for tty in /dev/tty{1..6}; do ${pkgs.kbd}/bin/setleds -D +num < $tty; done'";
+    };
+  };
 }

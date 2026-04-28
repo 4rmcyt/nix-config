@@ -11,6 +11,10 @@
       btop
       cpuid
       uutils-coreutils
+      uutils-util-linux
+      uutils-tar
+      uutils-login
+      uutils-procps
       curl
       duf
       eza
@@ -42,6 +46,7 @@
       taplo
       reptyr
       xmlstarlet
+      busybox
 
       # =================================================================
       # Development & Nix Tools

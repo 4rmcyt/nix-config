@@ -8,10 +8,7 @@
 }: let
   inherit (config.meta) stateVersion;
 in {
-  modules.nixos.base = {
-    pkgs,
-    ...
-  }: {
+  modules.nixos.base = {pkgs, ...}: {
     system.stateVersion = lib.mkDefault stateVersion;
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
     _module.args = {inherit inputs;};
