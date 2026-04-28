@@ -272,7 +272,7 @@ in {
          superuser_map      /^(.*)$   \1
     '';
 
-    settings.listen_addresses = lib.mkForce "localhost,192.168.200.1";
+    settings.listen_addresses = lib.mkForce "localhost,192.168.200.1,10.88.0.1";
 
     authentication = pkgs.lib.mkOverride 10 ''
       # Use peer authentication for local socket connections (maps system users to DB users)
