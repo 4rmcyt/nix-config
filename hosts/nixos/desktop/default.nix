@@ -265,7 +265,7 @@
   services.avahi.allowInterfaces = ["enp12s0"];
 
   # No battery on desktop — upower just spams wireplumber with UPower errors
-  services.upower.enable = false;
+  services.upower.enable = lib.mkForce false;
 
   # Cups only binds IPv4 — IPv6 loopback is not available early at boot
   services.printing.listenAddresses = ["localhost:631"];
