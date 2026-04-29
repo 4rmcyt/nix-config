@@ -329,6 +329,9 @@ in {
         '')
         dbUsers}
 
+      # Grant dify user full access to dify_plugin schema (plugin daemon connects as dify)
+      ${pkgs.postgresql}/bin/psql -d dify_plugin -c "GRANT ALL ON SCHEMA public TO dify;" || true
+
       # Set passwords for all database users, grant CREATEDB privilege, and ensure database exists
       ${lib.concatMapStringsSep "\n      " (user: ''
           # ${user.name}

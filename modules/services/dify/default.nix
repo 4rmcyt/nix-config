@@ -103,7 +103,7 @@ in {
     dify-weaviate = {
       autoStart = true;
       image = "semitechnologies/weaviate:1.26.1";
-      ports = ["127.0.0.1:8079:8080"];
+      ports = ["8079:8080"];
       environment = {
         QUERY_DEFAULTS_LIMIT = "25";
         AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED = "true";
@@ -119,7 +119,7 @@ in {
       image = "langgenius/dify-plugin-daemon:0.6.0-local";
       environmentFiles = pluginEnvFile;
       volumes = ["/var/lib/dify/plugin-daemon:/app/storage"];
-      ports = ["127.0.0.1:5002:5002"];
+      ports = ["5002:5002"];
       extraOptions = commonExtraOptions;
     };
 
@@ -132,7 +132,7 @@ in {
       };
       environmentFiles = envFile;
       volumes = ["/var/lib/dify/api:/app/api/storage"];
-      ports = ["127.0.0.1:5001:5001"];
+      ports = ["5001:5001"];
       extraOptions = commonExtraOptions;
     };
 
