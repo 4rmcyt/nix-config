@@ -3,10 +3,12 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.my.caddy;
   inherit (config.my.defaults) domain email;
-in {
+in
+{
   options.my.caddy = {
     enable = lib.mkEnableOption "Caddy reverse proxy";
   };
@@ -23,8 +25,8 @@ in {
     services.caddy = {
       enable = true;
       package = pkgs.caddy.withPlugins {
-        plugins = ["github.com/caddy-dns/cloudflare@a8737d095ad5a48ca031cea6ab704057dbc2d250"];
-        hash = "sha256-STs4RGMQCAHBi+5bQN2R94RhOMzAYqBa8GF5l2BZMXE=";
+        plugins = [ "github.com/caddy-dns/cloudflare@v0.2.4" ];
+        hash = "sha256-J0HWjCPoOoARAxDpG2bS9c0x5Wv4Q23qWZbTjd8nW84=";
       };
 
       globalConfig = ''
