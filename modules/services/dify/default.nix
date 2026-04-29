@@ -60,7 +60,7 @@ in {
 
       # Plugin daemon
       PLUGIN_DAEMON_URL=http://host.containers.internal:5002
-      PLUGIN_DAEMON_KEY=${config.sops.placeholder.dify_plugin_inner_api_key}
+      PLUGIN_DAEMON_KEY=${config.sops.placeholder.dify_plugin_server_key}
     '';
   };
 
