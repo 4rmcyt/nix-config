@@ -350,16 +350,6 @@ in {
               ];
               tls.certResolver = "default";
             };
-            tdarr = {
-              rule = "Host(`tdarr.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "tdarr";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
 
             # Monitoring
             grafana = {
@@ -490,16 +480,6 @@ in {
               ];
               tls.certResolver = "default";
             };
-            calibre-web = {
-              rule = "Host(`calibre.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "calibre-web";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
             dispatcharr = {
               rule = "Host(`dispatcharr.${domain}`)";
               entryPoints = ["websecure"];
@@ -531,7 +511,7 @@ in {
                 "crowdsec"
               ];
               tls.certResolver = "default";
-              priority = 10;
+              priority = 1000;
             };
           };
 
@@ -551,8 +531,6 @@ in {
             # Media
             jellyfin.loadBalancer.servers = [{url = "http://localhost:8096";}];
             qb.loadBalancer.servers = [{url = "http://localhost:8081";}];
-            tdarr.loadBalancer.servers = [{url = "http://localhost:8265";}];
-            calibre-web.loadBalancer.servers = [{url = "http://localhost:8084";}];
             komf.loadBalancer.servers = [{url = "http://localhost:8085";}];
             komga.loadBalancer.servers = [{url = "http://localhost:8087";}];
 
