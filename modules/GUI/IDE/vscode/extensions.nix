@@ -10,6 +10,7 @@
     redhat.vscode-yaml
     tamasfe.even-better-toml
     vscodevim.vim
+    yzhang.markdown-all-in-one
 
     # Languages
     jnoortheen.nix-ide
