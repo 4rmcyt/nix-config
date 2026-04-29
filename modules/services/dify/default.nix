@@ -94,7 +94,6 @@ in {
       image = "langgenius/dify-web:1.0.0";
       environment = {
         TZ = timezone;
-        NEXTAUTH_SECRET_KEY = "dify-web-nextauth";
         CONSOLE_API_URL = "https://dify.${domain}";
         APP_API_URL = "https://dify.${domain}";
       };

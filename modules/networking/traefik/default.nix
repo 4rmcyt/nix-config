@@ -521,6 +521,18 @@ in {
               ];
               tls.certResolver = "default";
             };
+
+            dify-api = {
+              rule = "Host(`dify.${domain}`) && (PathPrefix(`/console/api`) || PathPrefix(`/api`) || PathPrefix(`/v1`) || PathPrefix(`/files`))";
+              entryPoints = ["websecure"];
+              service = "dify-api";
+              middlewares = [
+                "security-headers"
+                "crowdsec"
+              ];
+              tls.certResolver = "default";
+              priority = 10;
+            };
           };
 
           services = {
@@ -563,6 +575,7 @@ in {
             livesync.loadBalancer.servers = [{url = "http://localhost:5984";}];
             dispatcharr.loadBalancer.servers = [{url = "http://localhost:9191";}];
             dify.loadBalancer.servers = [{url = "http://localhost:3000";}];
+            dify-api.loadBalancer.servers = [{url = "http://localhost:5001";}];
           };
         };
       };
