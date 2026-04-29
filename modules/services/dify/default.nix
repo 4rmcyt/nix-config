@@ -3,21 +3,12 @@
   envFile = [config.sops.templates."dify.env".path];
   inherit (config.my.defaults) timezone domain;
 in {
-  sops.secrets = {
-    dify_db_password = {
-      sopsFile = ../../../secrets/dify.yaml;
-      key = "dify_db_password";
-      owner = "root";
-      group = "root";
-      mode = "0400";
-    };
-    dify_secret_key = {
-      sopsFile = ../../../secrets/dify.yaml;
-      key = "dify_secret_key";
-      owner = "root";
-      group = "root";
-      mode = "0400";
-    };
+  sops.secrets.dify_secret_key = {
+    sopsFile = ../../../secrets/dify.yaml;
+    key = "dify_secret_key";
+    owner = "root";
+    group = "root";
+    mode = "0400";
   };
 
   sops.templates."dify.env" = {
