@@ -128,6 +128,7 @@
       tcpdump
       foot
       rt-tests
+      claude-agent-acp
     ];
 
     sessionVariables = {
