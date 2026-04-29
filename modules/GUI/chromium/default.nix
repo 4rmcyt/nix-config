@@ -42,14 +42,13 @@
     (pkgs.chromium.override {
       enableWideVine = true;
       commandLineArgs = [
-        "--ozone-platform=wayland"
+        "--ozone-platform-hint=auto"
         "--ignore-gpu-blocklist"
-        "--enable-features=AcceleratedVideoDecodeLinuxGL,AcceleratedVideoDecodeLinuxZeroCopyGL,VaapiIgnoreDriverChecks"
+        "--enable-features=AcceleratedVideoDecodeLinuxGL,AcceleratedVideoDecodeLinuxZeroCopyGL,VaapiIgnoreDriverChecks,WaylandWindowDecorations"
         "--disable-features=WaylandOverlayDelegation,UseChromeOSDirectVideoDecoder"
         "--disable-gpu-process-crash-limit"
         "--enable-smooth-scrolling"
         "--enable-gpu-rasterization"
-        "--enable-zero-copy"
         "--gtk-version=4"
         "--force-dark-mode"
       ];

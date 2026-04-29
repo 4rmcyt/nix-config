@@ -20,7 +20,7 @@
       user-agent = "Mozilla/5.0";
       vo = "gpu-next";
       gpu-context = "wayland";
-      hwdec = "vdpau";
+      hwdec = "nvdec-copy";
 
       # HDR support
       target-colorspace-hint = true;
