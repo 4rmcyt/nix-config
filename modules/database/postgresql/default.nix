@@ -214,6 +214,7 @@ in {
       "readarr-cache"
       "dispatcharr"
       "dify"
+      "dify_plugin"
     ];
 
     # Automatically create users with DB ownership
