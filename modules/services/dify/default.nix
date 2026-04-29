@@ -169,8 +169,8 @@ in {
       image = "langgenius/dify-web:1.0.0";
       environment = {
         TZ = timezone;
-        CONSOLE_API_URL = "https://dify.${domain}";
-        APP_API_URL = "https://dify.${domain}";
+        CONSOLE_API_URL = "http://127.0.0.1:5001";
+        APP_API_URL = "http://127.0.0.1:5001";
       };
       ports = ["127.0.0.1:3000:3000"];
       extraOptions = commonExtraOptions;

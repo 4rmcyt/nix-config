@@ -22,7 +22,7 @@
 
   services.postgresql = {
     enable = true;
-    package = pkgs.postgresql;
+    package = pkgs.postgresql; # Note: Ensure this matches the version in your logs (v17)
     ensureDatabases = [
       "dify"
       "dify_plugin"
@@ -33,7 +33,9 @@
         ensureDBOwnership = true;
       }
     ];
-    settings.listen_addresses = lib.mkForce "localhost,10.88.0.1";
+    # FIXED: Use "*" to resolve the "Cannot assign requested address" race condition
+    settings.listen_addresses = lib.mkForce "*";
+
     authentication = pkgs.lib.mkOverride 10 ''
       local all       all     peer
       host  all all 127.0.0.1/32 scram-sha-256
@@ -53,16 +55,28 @@
       Group = "postgres";
     };
     script = ''
-      while [ ! -f ${config.sops.secrets.dify_db_password_pg.path} ]; do
-        echo "Waiting for dify db secret..."
-        sleep 1
-      done
-      if ${pkgs.postgresql}/bin/psql -c "SELECT 1 FROM pg_roles WHERE rolname='dify'" | grep -q 1; then
-        ${pkgs.postgresql}/bin/psql -c "ALTER USER dify WITH PASSWORD '$(cat ${config.sops.secrets.dify_db_password_pg.path} | tr -d '\n\r')' CREATEDB;"
-      else
-        ${pkgs.postgresql}/bin/psql -c "CREATE USER dify WITH PASSWORD '$(cat ${config.sops.secrets.dify_db_password_pg.path} | tr -d '\n\r')' CREATEDB;"
-      fi
-      ${pkgs.postgresql}/bin/psql -d dify_plugin -c "GRANT ALL ON SCHEMA public TO dify;" || true
+            # Wait for PG socket to be ready
+            until ${pkgs.postgresql}/bin/pg_isready; do
+              sleep 1
+            done
+
+            PASS=$(cat ${config.sops.secrets.dify_db_password_pg.path} | tr -d '\n\r')
+
+            # Use a heredoc for cleaner SQL execution
+            ${pkgs.postgresql}/bin/psql <<EOF
+              DO \$$
+              BEGIN
+                IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'dify') THEN
+                  CREATE ROLE dify WITH LOGIN PASSWORD '$PASS' CREATEDB;
+                ELSE
+                  ALTER ROLE dify WITH PASSWORD '$PASS' CREATEDB;
+                END IF;
+              END
+              \$$;
+      EOF
+            # Grant schema permissions
+            ${pkgs.postgresql}/bin/psql -d dify -c "GRANT ALL ON SCHEMA public TO dify;" || true
+            ${pkgs.postgresql}/bin/psql -d dify_plugin -c "GRANT ALL ON SCHEMA public TO dify;" || true
     '';
   };
 
@@ -94,6 +108,8 @@
       appendfsync = "everysec";
     };
   };
+
+  networking.firewall.trustedInterfaces = [ "podman0" ];
 
   networking.firewall.allowedTCPPorts = [
     5432
