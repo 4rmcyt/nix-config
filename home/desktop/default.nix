@@ -129,6 +129,8 @@
       foot
       rt-tests
       claude-agent-acp
+      opencode-desktop
+      bettercap
     ];
 
     sessionVariables = {

@@ -510,6 +510,17 @@ in {
               ];
               tls.certResolver = "default";
             };
+
+            dify = {
+              rule = "Host(`dify.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "dify";
+              middlewares = [
+                "security-headers"
+                "crowdsec"
+              ];
+              tls.certResolver = "default";
+            };
           };
 
           services = {
@@ -551,6 +562,7 @@ in {
             atuin.loadBalancer.servers = [{url = "http://localhost:8881";}];
             livesync.loadBalancer.servers = [{url = "http://localhost:5984";}];
             dispatcharr.loadBalancer.servers = [{url = "http://localhost:9191";}];
+            dify.loadBalancer.servers = [{url = "http://localhost:3000";}];
           };
         };
       };
