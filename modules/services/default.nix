@@ -11,7 +11,6 @@
     ./nixarr
     ./atuin_server
     ./dispatcharr
-    ./dify
     ./microbin
     ./komf
     ./komga

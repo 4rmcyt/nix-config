@@ -24,7 +24,11 @@
     # Features and roles
     ../../../modules/gaming
     # ../../../modules/networking/avahi
+    ../../../modules/networking/caddy
     ../../../modules/networking/dnssec
+    ../../../modules/containers
+    ../../../modules/services/dify
+    ../../../modules/services/dify/db.nix
     ../../../modules/networking/nfs-client
     ../../../modules/networking/nut-client
     ../../../modules/networking/ssh
@@ -192,6 +196,8 @@
     Name=Secret Storage Service
     Hidden=true
   '';
+
+  my.caddy.enable = true;
 
   services = {
     gnome.gnome-keyring.enable = true;

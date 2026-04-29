@@ -4,6 +4,22 @@
   pluginEnvFile = [config.sops.templates."dify-plugin.env".path];
   inherit (config.my.defaults) timezone domain;
 in {
+  sops.secrets.dify_db_password = {
+    sopsFile = ../../../secrets/dify.yaml;
+    key = "dify_db_password";
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+
+  sops.secrets.dify_redis_password = {
+    sopsFile = ../../../secrets/dify.yaml;
+    key = "dify_redis_password";
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+
   sops.secrets.dify_secret_key = {
     sopsFile = ../../../secrets/dify.yaml;
     key = "dify_secret_key";
@@ -42,9 +58,9 @@ in {
       # Redis
       REDIS_HOST=host.containers.internal
       REDIS_PORT=6379
-      REDIS_DB=4
-      REDIS_PASSWORD=${config.sops.placeholder.redis-oauth2-proxy-password}
-      CELERY_BROKER_URL=redis://:${config.sops.placeholder.redis-oauth2-proxy-password}@host.containers.internal:6379/4
+      REDIS_DB=0
+      REDIS_PASSWORD=${config.sops.placeholder.dify_redis_password}
+      CELERY_BROKER_URL=redis://:${config.sops.placeholder.dify_redis_password}@host.containers.internal:6379/0
 
       # App
       SECRET_KEY=${config.sops.placeholder.dify_secret_key}
@@ -75,7 +91,7 @@ in {
       DB_DATABASE=dify_plugin
       REDIS_HOST=host.containers.internal
       REDIS_PORT=6379
-      REDIS_PASSWORD=${config.sops.placeholder.redis-oauth2-proxy-password}
+      REDIS_PASSWORD=${config.sops.placeholder.dify_redis_password}
       SERVER_PORT=5002
       SERVER_KEY=${config.sops.placeholder.dify_plugin_server_key}
       DIFY_INNER_API_URL=http://host.containers.internal:5001
