@@ -67,6 +67,8 @@ in {
         "--allow-origin http://127.0.0.1:8080"
         "--allow-origin http://localhost:8080"
       ];
+      # mcp-python-interpreter wrapper uses realpath/dirname — ensure coreutils in PATH
+      Environment = ["PATH=${lib.makeBinPath (with pkgs; [coreutils bash])}:/run/current-system/sw/bin"];
       Restart = "on-failure";
       RestartSec = 5;
     };

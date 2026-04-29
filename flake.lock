@@ -326,11 +326,11 @@
       },
       "locked": {
         "dir": "pkgs/firefox-addons",
-        "lastModified": 1777348977,
-        "narHash": "sha256-9aKuCI5TKHKnP073B1VzBdLRLAQJE7R9rbJWaSFXr3M=",
+        "lastModified": 1777435375,
+        "narHash": "sha256-2WRfJbipnTz+EY3rHRnCoG4kWkzPczb/cLcWwhy/0QA=",
         "owner": "rycee",
         "repo": "nur-expressions",
-        "rev": "a314975f42bfa9665bf77d1586ee0e123790ed27",
+        "rev": "4d89e8e2c50711ee3fea3a25e662cfa5c6628e07",
         "type": "gitlab"
       },
       "original": {
@@ -605,11 +605,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777389590,
-        "narHash": "sha256-HWbn7WASXsXGADiBDt6/k9U/HpGBEmoeqIOzrf+z2HE=",
+        "lastModified": 1777434174,
+        "narHash": "sha256-KwTyQ5g2qDhWIs/O6vH8HeF8n4JCzZIT/VYE7nYnukQ=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "8ec5a714dbbeb3fda00bd9758175555ebbad4d07",
+        "rev": "d3b4e4b1bd59aedd3d4eb0a8df7162edb6da4607",
         "type": "github"
       },
       "original": {
@@ -881,11 +881,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777347800,
-        "narHash": "sha256-FO6FRay5PfvJX7Ux4qTCvPfvb/1w5DFbbvHe2bjwNXw=",
+        "lastModified": 1777434090,
+        "narHash": "sha256-i7p7ajtdKF6oVjs3ERyECCg6m1lWEchHNPKQjgRW4h4=",
         "owner": "nix-community",
         "repo": "nix-vscode-extensions",
-        "rev": "de5f0ef30d7c677a06b064d6b390fcddd2bcc503",
+        "rev": "f32bb01e6a12b74fa67261e9d690ff9d0603d86b",
         "type": "github"
       },
       "original": {
@@ -1096,11 +1096,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777253304,
-        "narHash": "sha256-XqSHEKEW5pSAx9MoMo8mKPgkjoy4FEhZ4x0a6hGYrSI=",
+        "lastModified": 1777427472,
+        "narHash": "sha256-kqcfLdxb+CqTroMErCScvx6YQcZYJcf6X+z5I8kBJK8=",
         "owner": "noctalia-dev",
         "repo": "noctalia-shell",
-        "rev": "6773c4750a12c9e9af9c4ce2365e083f1d0d0ad8",
+        "rev": "9f8dd48c8df5ab1f7f87ddf9842627e1e5682186",
         "type": "github"
       },
       "original": {
@@ -1139,11 +1139,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777406849,
-        "narHash": "sha256-PmJM3v7LN3WB2pMI6GOw/P0L2zpXmvp3hSBcS1GNvEo=",
+        "lastModified": 1777444356,
+        "narHash": "sha256-/m/hi9eAhf6XYAyTmMRkixmJdGvAz47D5paHc18mOKw=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "6a424007fd98449129b19f97338a446daf943e42",
+        "rev": "649f3c3708b0817a60426c1f01448b51489b6c8d",
         "type": "github"
       },
       "original": {
@@ -1276,11 +1276,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777346187,
-        "narHash": "sha256-oVxyGjpiIsrXhWTJVUOs38fZQkLjd0nZGOY9K7Kfot8=",
+        "lastModified": 1777432579,
+        "narHash": "sha256-Ce11TStDsqCge2vAAfLKe2+4lDI5cSX5ZYZOuKJBKKQ=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "146e7bf7569b8288f24d41d806b9f584f7cfd5b5",
+        "rev": "3ecb5e6ab380ced3272ef7fcfe398bffbcc0f152",
         "type": "github"
       },
       "original": {
@@ -1721,11 +1721,11 @@
     "zellij": {
       "flake": false,
       "locked": {
-        "lastModified": 1776863427,
-        "narHash": "sha256-FdvvtrfB4LVIKlWGqZ4qCZBAer9qsAQIwmWdGFuaB+Q=",
+        "lastModified": 1777389299,
+        "narHash": "sha256-kY3FpbQQKMkOUU9107V7yIXlNGa0tryE+fe0a6H2YPs=",
         "owner": "zellij-org",
         "repo": "zellij",
-        "rev": "5ab8b6870ccb475ec06fedd7ca3f891ef7bf51ff",
+        "rev": "227142dd567ee72bcc137c116bc1ce2b818975e7",
         "type": "github"
       },
       "original": {
@@ -1746,11 +1746,11 @@
         "zellij": "zellij"
       },
       "locked": {
-        "lastModified": 1777176276,
-        "narHash": "sha256-ORB0oHl3FJx/7NSAWmrVUH1XKnenvkwyp18oaJh+Saw=",
+        "lastModified": 1777431619,
+        "narHash": "sha256-o65P9Ibe0zMTQ31ys8ZbpIhi/AfH9895xu08RW8VAnE=",
         "owner": "a-kenji",
         "repo": "zellij-nix",
-        "rev": "6c14a9a19ef156504d83600f262d8ec627a729f0",
+        "rev": "63a580fc8ada31fd8e83a9e95574755a1ddbdaf1",
         "type": "github"
       },
       "original": {

@@ -43,7 +43,7 @@
       python = {
         type = "stdio";
         command = "${pkgs.uv}/bin/uvx";
-        args = ["mcp-python-interpreter"];
+        args = ["--no-sync" "mcp-python-interpreter"];
       };
     };
   };
