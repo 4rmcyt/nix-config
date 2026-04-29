@@ -23,7 +23,7 @@ in {
     services.caddy = {
       enable = true;
       package = pkgs.caddy.withPlugins {
-        plugins = ["github.com/caddy-dns/cloudflare@v0.0.0-20250210163627-a2b97caf94f3"];
+        plugins = ["github.com/caddy-dns/cloudflare@a8737d095ad5a48ca031cea6ab704057dbc2d250"];
         hash = "sha256-STs4RGMQCAHBi+5bQN2R94RhOMzAYqBa8GF5l2BZMXE=";
       };
 
