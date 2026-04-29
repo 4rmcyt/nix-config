@@ -206,11 +206,11 @@
       settings = {
         General = {
           Experimental = true;
-          ReconnectAttempts = 3;
           FastConnectable = true;
         };
         Policy = {
           AutoEnable = true;
+          ReconnectAttempts = 3;
         };
       };
     };
