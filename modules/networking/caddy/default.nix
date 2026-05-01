@@ -35,9 +35,8 @@ in
 
       virtualHosts."dify.${domain}".extraConfig = ''
         tls {
-          dns cloudflare {env.CLOUDFLARE_DNS_API_TOKEN} {
-            zone_id {env.CLOUDFLARE_ZONE_ID}
-          }
+          dns cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
+          resolvers 1.1.1.1
         }
 
         @api path /console/api* /api* /v1* /files*
