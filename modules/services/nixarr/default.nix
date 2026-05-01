@@ -100,6 +100,12 @@ in {
     };
   };
 
+  services.readarr = {
+    enable = true;
+    dataDir = "/data/media/.state/nixarr/readarr";
+    group = "readarr";
+  };
+
   users.users =
     lib.genAttrs
     [
@@ -167,7 +173,6 @@ in {
       enable = true;
       port = 8990;
     };
-    readarr.enable = true;
     recyclarr = {
       enable = true;
       configFile = ./recyclarr.yaml;
