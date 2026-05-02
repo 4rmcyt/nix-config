@@ -50,7 +50,7 @@ in {
       ];
       # upstream sets ProtectSystem=strict which blocks /data writes
       ProtectSystem = lib.mkForce "false";
-      ReadWritePaths = lib.mkForce [];
+      ReadWritePaths = lib.mkForce [dataDir];
       # Override upstream ExecStart to use writable config path
       ExecStart = lib.mkOverride 0 "${config.services.lazylibrarian.package}/bin/lazylibrarian --datadir=${dataDir} --config=${writableConfig}";
     };
@@ -70,6 +70,7 @@ in {
   systemd.tmpfiles.rules = [
     "d /data/media/.state/nixarr/lazylibrarian 775 lazylibrarian lazylibrarian -"
     "d /data/media/.state/nixarr/lazylibrarian/logs 775 lazylibrarian lazylibrarian -"
+    "d /data/media/.state/nixarr/lazylibrarian/cache 775 lazylibrarian lazylibrarian -"
     "d /data/Downloads/books 775 ${config.my.defaults.user} media -"
   ];
 
