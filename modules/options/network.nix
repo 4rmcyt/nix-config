@@ -234,10 +234,10 @@
         description = "Lidarr music automation";
       };
 
-      readarr = lib.mkOption {
+      lazylibrarian = lib.mkOption {
         type = lib.types.port;
-        default = 8787;
-        description = "Readarr books/ebooks automation";
+        default = 5299;
+        description = "LazyLibrarian ebooks/audiobooks automation";
       };
 
       bazarr = lib.mkOption {

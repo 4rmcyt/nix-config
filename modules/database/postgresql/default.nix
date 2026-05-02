@@ -55,10 +55,6 @@
       secret = "lidarr_db_password";
     }
     {
-      name = "readarr";
-      secret = "readarr_db_password";
-    }
-    {
       name = "dispatcharr";
       secret = "dispatcharr_db_password";
     }
@@ -154,13 +150,6 @@ in {
       group = config.users.groups.lidarr.name;
       mode = "0440";
     };
-    readarr_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "readarr_db_password";
-      owner = config.users.users.postgres.name;
-      group = config.users.groups.readarr.name;
-      mode = "0440";
-    };
     dispatcharr_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "dispatcharr_db_password";
@@ -209,9 +198,6 @@ in {
       "prowlarr-log"
       "lidarr"
       "lidarr-log"
-      "readarr"
-      "readarr-log"
-      "readarr-cache"
       "dispatcharr"
       "dify"
       "dify_plugin"
@@ -265,10 +251,6 @@ in {
       }
       {
         name = "lidarr";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "readarr";
         ensureDBOwnership = true;
       }
       {

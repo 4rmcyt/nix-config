@@ -13,7 +13,6 @@
     "prowlarr"
     "qbittorrent"
     "radarr"
-    "readarr"
     "sonarr"
   ];
 
@@ -72,6 +71,7 @@ in {
   imports = [
     ./jellyfin
     ./kapowarr
+    ./lazylibrarian
     ./qbittorrent
     ./upnp-fix.nix
   ];
@@ -100,12 +100,6 @@ in {
     };
   };
 
-  services.readarr = {
-    enable = true;
-    dataDir = "/data/media/.state/nixarr/readarr";
-    group = "readarr";
-  };
-
   users.users =
     lib.genAttrs
     [
@@ -116,7 +110,6 @@ in {
       "prowlarr"
       "radarr"
       "sonarr"
-      "readarr"
       "recyclarr"
     ]
     (name: {
@@ -136,7 +129,6 @@ in {
     "prowlarr"
     "radarr"
     "sonarr"
-    "readarr"
     "recyclarr"
   ] (_: {});
 
@@ -351,41 +343,6 @@ in {
           chmod 600 "$cfg"
         '';
       };
-      readarr-pg-config = {
-        description = "Write Readarr PostgreSQL config.xml";
-        after = [
-          "postgresql.service"
-          "postgresql-setup-users.service"
-        ];
-        requires = ["postgresql.service"];
-        wantedBy = ["multi-user.target"];
-        before = ["readarr.service"];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          User = "readarr";
-          Group = "readarr";
-        };
-        path = [pkgs.xmlstarlet];
-        script = ''
-          mkdir -p /data/media/.state/nixarr/readarr
-          cfg=/data/media/.state/nixarr/readarr/config.xml
-          if [ ! -f "$cfg" ]; then
-            printf '<Config>\n</Config>\n' > "$cfg"
-          fi
-          PG_PASS=$(cat ${config.sops.secrets.readarr_db_password.path} | tr -d '\n\r')
-          for pair in "PostgresUser:readarr" "PostgresPassword:$PG_PASS" "PostgresPort:5432" "PostgresHost:127.0.0.1" "PostgresMainDb:readarr" "PostgresLogDb:readarr-log" "PostgresCacheDb:readarr-cache"; do
-            key="''${pair%%:*}"
-            val="''${pair#*:}"
-            if xmlstarlet sel -t -v "count(/Config/$key)" "$cfg" 2>/dev/null | grep -q "^0$"; then
-              xmlstarlet ed -L -s /Config -t elem -n "$key" -v "$val" "$cfg"
-            else
-              xmlstarlet ed -L -u "/Config/$key" -v "$val" "$cfg"
-            fi
-          done
-          chmod 600 "$cfg"
-        '';
-      };
       bazarr-pg-env = {
         description = "Write Bazarr PostgreSQL environment file";
         after = [
@@ -460,7 +417,6 @@ in {
     7878 # Radarr
     8096 # Jellyfin HTTP
     8686 # Lidarr
-    8787 # Readarr
     8920 # Jellyfin HTTPS
     8990 # Sonarr
     9292 # Audiobookshelf

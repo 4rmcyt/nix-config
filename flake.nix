@@ -130,6 +130,10 @@
     };
 
     # Services & infrastructure
+    ephraim-nur = {
+      url = "github:EphraimSiegfried/nur-packages";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     mcp-nixos = {
       url = "github:utensils/mcp-nixos";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -297,10 +297,10 @@ in {
               ];
               tls.certResolver = "default";
             };
-            readarr = {
-              rule = "Host(`readarr.${domain}`)";
+            lazylibrarian = {
+              rule = "Host(`lazylibrarian.${domain}`)";
               entryPoints = ["websecure"];
-              service = "readarr";
+              service = "lazylibrarian";
               middlewares = [
                 "security-headers"
                 "crowdsec"
@@ -502,7 +502,7 @@ in {
             prowlarr.loadBalancer.servers = [{url = "http://localhost:9696";}];
             bazarr.loadBalancer.servers = [{url = "http://localhost:6767";}];
             lidarr.loadBalancer.servers = [{url = "http://localhost:8686";}];
-            readarr.loadBalancer.servers = [{url = "http://localhost:8787";}];
+            lazylibrarian.loadBalancer.servers = [{url = "http://localhost:5299";}];
             kapowarr.loadBalancer.servers = [{url = "http://localhost:5656";}];
             jellyseerr.loadBalancer.servers = [{url = "http://localhost:5055";}];
 

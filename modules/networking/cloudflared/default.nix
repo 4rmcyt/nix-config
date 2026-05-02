@@ -115,10 +115,6 @@
 #   service: https://localhost:8443
 #   originRequest:
 #     httpHostHeader: lidarr.${config.my.defaults.domain}
-# - hostname: readarr.${config.my.defaults.domain}
-#   service: https://localhost:8443
-#   originRequest:
-#     httpHostHeader: readarr.${config.my.defaults.domain}
 # # Services with OIDC support (now through Traefik for consistent TLS)
 # - hostname: jellyfin.${config.my.defaults.domain}
 #   service: https://localhost:8443

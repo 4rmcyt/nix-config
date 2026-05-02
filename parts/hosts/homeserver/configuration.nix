@@ -12,6 +12,7 @@ in {
       nixosBase
       ../../../hosts/nixos/homeserver
       inputs.nixarr.nixosModules.default
+      inputs.ephraim-nur.nixosModules.lazylibrarian
     ];
 
     # Facter
