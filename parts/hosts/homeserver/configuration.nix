@@ -12,8 +12,10 @@ in {
       nixosBase
       ../../../hosts/nixos/homeserver
       inputs.nixarr.nixosModules.default
-      inputs.ephraim-nur.nixosModules.lazylibrarian
+      "${inputs.ephraim-nur}/nixos-modules/lazylibrarian.nix"
     ];
+
+    nixpkgs.overlays = [inputs.ephraim-nur.overlays.default];
 
     # Facter
     facter.reportPath = ../../../hosts/nixos/homeserver/facter.json;
