@@ -51,6 +51,7 @@ in {
         "flakes"
         "nix-command"
         "auto-allocate-uids"
+        "pipe-operator"
       ];
       auto-optimise-store = true;
       warn-dirty = false;
