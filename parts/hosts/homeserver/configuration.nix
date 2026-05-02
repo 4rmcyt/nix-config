@@ -15,7 +15,16 @@ in {
       "${inputs.ephraim-nur}/nixos-modules/lazylibrarian.nix"
     ];
 
-    nixpkgs.overlays = [inputs.ephraim-nur.overlays.default];
+    nixpkgs.overlays = [
+      (final: _: {
+        ez_setup = final.callPackage "${inputs.ephraim-nur}/pkgs/ez_setup" {};
+        iso639-lang = final.callPackage "${inputs.ephraim-nur}/pkgs/iso639-lang" {};
+        slskd-api = final.callPackage "${inputs.ephraim-nur}/pkgs/slskd-api" {};
+        lazylibrarian = final.callPackage "${inputs.ephraim-nur}/pkgs/lazylibrarian" {
+          inherit (final) ez_setup iso639-lang slskd-api;
+        };
+      })
+    ];
 
     # Facter
     facter.reportPath = ../../../hosts/nixos/homeserver/facter.json;
