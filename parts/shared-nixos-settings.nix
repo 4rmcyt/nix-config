@@ -53,6 +53,7 @@ in {
         "auto-allocate-uids"
         "pipe-operator"
       ];
+      deprecated-features = ["broken-string-escape"];
       auto-optimise-store = true;
       warn-dirty = false;
       keep-going = true;
