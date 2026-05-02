@@ -80,7 +80,6 @@ in {
 
     zfs = {
       devNodes = "/dev/disk/by-id/";
-      forceImportAll = true;
       forceImportRoot = false;
       extraPools = ["zdata"];
     };
