@@ -71,6 +71,8 @@ in {
     "d /data/media/.state/nixarr/lazylibrarian 775 lazylibrarian lazylibrarian -"
     "d /data/media/.state/nixarr/lazylibrarian/logs 775 lazylibrarian lazylibrarian -"
     "d /data/media/.state/nixarr/lazylibrarian/cache 775 lazylibrarian lazylibrarian -"
+    "d /data/media/.state/nixarr/lazylibrarian/cache/book 775 lazylibrarian lazylibrarian -"
+    "d /data/media/.state/nixarr/lazylibrarian/cache/XMLCache 775 lazylibrarian lazylibrarian -"
     "d /data/Downloads/books 775 ${config.my.defaults.user} media -"
   ];
 
