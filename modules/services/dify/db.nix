@@ -3,8 +3,7 @@
   pkgs,
   lib,
   ...
-}:
-{
+}: {
   # PostgreSQL for Dify
   sops.secrets.dify_db_password_pg = {
     sopsFile = ../../../secrets/dify.yaml;
@@ -18,7 +17,7 @@
     isSystemUser = true;
     group = "postgres";
   };
-  users.groups.postgres = { };
+  users.groups.postgres = {};
 
   services.postgresql = {
     enable = true;
@@ -45,9 +44,9 @@
 
   systemd.services.postgresql-dify-setup = {
     description = "Set up PostgreSQL for Dify";
-    after = [ "postgresql.service" ];
-    requires = [ "postgresql.service" ];
-    wantedBy = [ "multi-user.target" ];
+    after = ["postgresql.service"];
+    requires = ["postgresql.service"];
+    wantedBy = ["multi-user.target"];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
@@ -93,7 +92,7 @@
     isSystemUser = true;
     group = "redis";
   };
-  users.groups.redis = { };
+  users.groups.redis = {};
 
   services.redis.servers.dify = {
     enable = true;
@@ -109,7 +108,7 @@
     };
   };
 
-  networking.firewall.trustedInterfaces = [ "podman0" ];
+  networking.firewall.trustedInterfaces = ["podman0"];
 
   networking.firewall.allowedTCPPorts = [
     5432

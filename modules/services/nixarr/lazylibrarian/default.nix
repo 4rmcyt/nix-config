@@ -27,7 +27,7 @@ in {
   services.lazylibrarian = {
     enable = true;
     port = config.my.network.ports.lazylibrarian;
-    dataDir = dataDir;
+    inherit dataDir;
     openFirewall = false;
     settings = {
       general = {

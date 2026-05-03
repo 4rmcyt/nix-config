@@ -2,7 +2,7 @@
   commonExtraOptions = ["--add-host=host.containers.internal:host-gateway"];
   envFile = [config.sops.templates."dify.env".path];
   pluginEnvFile = [config.sops.templates."dify-plugin.env".path];
-  inherit (config.my.defaults) timezone domain;
+  inherit (config.my.defaults) timezone;
 in {
   sops.secrets.dify_db_password = {
     sopsFile = ../../../secrets/dify.yaml;

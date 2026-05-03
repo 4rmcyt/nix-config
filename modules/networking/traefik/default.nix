@@ -490,7 +490,6 @@ in {
               ];
               tls.certResolver = "default";
             };
-
           };
 
           services = {
