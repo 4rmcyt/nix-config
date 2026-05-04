@@ -106,6 +106,7 @@ in {
             --authkey file:${config.sops.secrets.tailscale_auth_key.path} \
             --login-server ${cfg.loginServer} \
             --accept-routes \
+            --reset \
             ${optionalString cfg.advertiseExitNode "--advertise-exit-node"} \
             ${optionalString (cfg.advertiseRoutes != []) "--advertise-routes=${lib.concatStringsSep "," cfg.advertiseRoutes}"}
         fi

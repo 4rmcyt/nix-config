@@ -318,6 +318,8 @@
         "--login-server"
         "https://head.example.com"
         "--accept-routes"
+        "--operator=zeev"
+        "--reset"
       ];
     };
   };
