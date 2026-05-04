@@ -135,7 +135,6 @@
 
       # Secure Boot & EFI Tools
       efibootmgr
-      efitool
       ifrextractor-rs
       sbctl
       sbsigntool
