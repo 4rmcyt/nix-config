@@ -135,11 +135,10 @@
 
       # Secure Boot & EFI Tools
       efibootmgr
-      efitools
+      efitool
       ifrextractor-rs
       sbctl
       sbsigntool
-      shim-unsigned
       optnix
     ];
   };
