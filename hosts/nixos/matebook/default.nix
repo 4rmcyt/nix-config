@@ -315,10 +315,7 @@
       useRoutingFeatures = "both";
       authKeyFile = config.sops.secrets.tailscale_auth_key.path;
       extraUpFlags = [
-        "--login-server"
-        "https://head.example.com"
         "--accept-routes"
-        "--operator=zeev"
         "--reset"
       ];
     };
