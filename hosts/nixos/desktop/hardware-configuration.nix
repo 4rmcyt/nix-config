@@ -129,6 +129,10 @@ in
       "pci-stub.ids=1022:15e3"
       "transparent_hugepage=madvise"
       "processor.max_cstate=1"
+      "isolcpus=1-11"
+      "nohz_full=1-11"
+      "rcu_nocbs=1-11"
+      "irqaffinity=0" # Force hardware interrupts to Core 0 where possible
     ];
 
     # ZFS configuration
