@@ -20,6 +20,7 @@ _: {
                 mountpoint = "/boot";
                 mountOptions = [
                   "defaults"
+                  "noatime"
                   "umask=0077"
                 ];
               };
@@ -34,6 +35,7 @@ _: {
                 mountOptions = [
                   "defaults"
                   "noatime"
+                  "commit=60"
                   "errors=remount-ro"
                 ];
               };
@@ -49,6 +51,7 @@ _: {
     {
       device = "/swapfile";
       size = 16384; # 16GB in MB
+      options = [ "discard" ]; # TRIM swap pages on NVMe
     }
   ];
 }

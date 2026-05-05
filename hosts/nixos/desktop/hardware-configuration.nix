@@ -30,7 +30,6 @@ in
       "usb_storage"
       "usbhid"
       "xhci_pci"
-      "pci-stub"
     ];
 
     initrd.kernelModules = [
@@ -84,6 +83,8 @@ in
       # Disable snd-hda-intel index 2 (0000:10:00.6, Ryzen HD Audio Controller) — no codec connected
       # PCI probe order is fixed: 01:00.1=NVIDIA(0), 10:00.1=AMD-HDMI(1), 10:00.6=Ryzen-HDA(2)
       options snd-hda-intel enable=1,1,0
+      # ZFS ARC max: 24GB (40% of 62GB RAM) — canonical modprobe form, not cmdline
+      options zfs zfs_arc_max=25769803776
     '';
 
     supportedFilesystems = [ "zfs" ];
@@ -92,7 +93,7 @@ in
     kernelParams = [
       "acpi_enforce_resources=lax" # Required for nct6687 hwmon chip access
       "amd_pstate=active" # Use CPPC EPP driver for best Zen 4 performance
-      "amd_prefcore=1" # Prefer highest boost frequency cores
+      # amd_prefcore: only valid value is "disable"; prefcore is on by default with amd_pstate=active
       "microcode.amd_sha_check=off"
       "random.trust_cpu=on"
 
@@ -100,15 +101,12 @@ in
 
       "mitigations=auto"
 
-      "net.core.default_qdisc=fq"
-      "net.ipv4.tcp_congestion_control=bbr"
-
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
 
       "preempt=full" # Full preemption for desktop responsiveness
 
-      "zfs.zfs_arc_max=25769803776" # 24GB ARC (40% of 62GB RAM)
+
 
       # System configuration
       "cfg80211.ieee80211_regdom=CA"
@@ -129,9 +127,6 @@ in
       "pci-stub.ids=1022:15e3"
       "transparent_hugepage=madvise"
       "processor.max_cstate=1"
-      "isolcpus=1-11"
-      "nohz_full=1-11"
-      "rcu_nocbs=1-11"
       "irqaffinity=0" # Force hardware interrupts to Core 0 where possible
     ];
 
@@ -150,11 +145,15 @@ in
       # VM/Memory optimizations for 62GB RAM system
       "vm.swappiness" = 10; # Reduce swap usage with abundant RAM
       "vm.vfs_cache_pressure" = 50; # Keep more inodes/dentries cached
-      "vm.dirty_ratio" = 10; # Start writing dirty pages at 10% RAM
-      "vm.dirty_background_ratio" = 5; # Background writes at 5% RAM
+      # dirty_ratio omitted: ZFS bypasses the kernel page cache (uses ARC directly);
+      # these only affect tmpfs/non-ZFS paths where defaults are fine
 
       # ZFS-specific optimizations for Zen 4
       "vm.min_free_kbytes" = 1048576; # 1GB min free for ZFS ARC stability
+
+      # Network — moved from kernelParams (these are sysctl values, not boot params)
+      "net.core.default_qdisc" = "fq";
+      "net.ipv4.tcp_congestion_control" = "bbr";
 
       # Network queue and backlog
       "net.core.busy_poll" = 50;
@@ -339,12 +338,13 @@ in
     # OpenRGB for RGB control
     hardware.openrgb.enable = true;
 
-    # SCX Scheduler
+    # SCX Scheduler — scx_lavd: LAVD algorithm, designed for gaming/interactive
+    # workloads on single-CCX Zen 4; --performance disables DVFS throttling
     scx = {
       enable = true;
       package = pkgs.scx.full;
-      scheduler = "scx_bpfland";
-      extraArgs = [ ];
+      scheduler = "scx_lavd";
+      extraArgs = [ "--performance" ];
     };
 
     # Hardware monitoring
@@ -455,6 +455,9 @@ in
     accounts-daemon.enable = true;
     dbus.packages = [ pkgs.gcr ];
 
+    # irqbalance fights isolcpus=1-11 + irqaffinity=0 — disable it
+    irqbalance.enable = false;
+
     power-profiles-daemon.enable = false;
     upower.enable = true;
 
@@ -502,6 +505,14 @@ in
           ENV{ID_VENDOR_ID}=="1050", \
           ENV{ID_VENDOR}=="Yubico", \
           RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
+
+        # I/O scheduler: kyber for NVMe/SSD (low-latency), bfq for HDD
+        ACTION=="add|change", KERNEL=="nvme[0-9]*n[0-9]*", ATTR{queue/scheduler}="kyber"
+        ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="kyber"
+        ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
+
+        # NVMe queue depth: increase from default 128 for better throughput under ZFS
+        ACTION=="add|change", KERNEL=="nvme[0-9]*n[0-9]*", ATTR{queue/nr_requests}="1024"
       '';
       # MT7922 rename must be in a lower-numbered file than 98-ipv6-privacy-extensions.rules
       # so that $name is already "wlp13s0" when the IPv6 rule's RUN fires.
@@ -524,7 +535,7 @@ in
   };
 
   # =================================================================
-  # 6. System Packages (hardware tools)
+  # 8. System Packages (hardware tools)
   # =================================================================
   environment.systemPackages = with pkgs; [
     # Audio & Multimedia
@@ -583,7 +594,7 @@ in
   ];
 
   # =================================================================
-  # 7. Networking (host identity & hardware networking)
+  # 9. Networking (host identity & hardware networking)
   # =================================================================
   networking = {
     useDHCP = lib.mkDefault true;
@@ -613,7 +624,7 @@ in
   };
 
   # =================================================================
-  # 7. Swap Configuration
+  # 10. Swap Configuration
   # =================================================================
   swapDevices = [ ];
 
@@ -625,7 +636,7 @@ in
   };
 
   # =================================================================
-  # 8. Systemd Configuration
+  # 11. Systemd Configuration
   # =================================================================
   systemd = {
     coredump.enable = false;

@@ -48,7 +48,7 @@ in {
     kernelParams = [
       # AMD GPU optimizations (Vega 8 iGPU)
       "amdgpu.gpu_recovery=1"
-      "amdgpu.ppfeaturemask=0xffffffff"
+      # ppfeaturemask=0xffffffff enables OC features, raises idle power on 15W iGPU — omit
       "amdgpu.dpm=1" # Dynamic power management for battery life
 
       # AMD CPU (Zen+ - prioritize battery life over security)
@@ -60,6 +60,10 @@ in {
       "spectre_v2=off" # Save 5-15% performance
       "spec_store_bypass_disable=off" # Save 2-5% performance
       "pti=off" # AMD not affected by Meltdown
+
+      # PCIe ASPM: force L1 on devices where firmware left it disabled — saves 1-2W
+      "pcie_aspm=force"
+      "pcie_aspm.policy=powersupersave"
 
       # System configuration
       "quiet"
@@ -137,7 +141,9 @@ in {
   # =================================================================
   powerManagement = {
     enable = true;
-    powertop.enable = true;
+    # powertop autotune disabled: conflicts with auto-cpufreq (both fight over USB
+    # autosuspend and runtime PM); auto-cpufreq covers these tunables already
+    powertop.enable = false;
     # cpuFreqGovernor = "schedutil"; # Removed, as auto-cpufreq manages this
   };
 
@@ -145,6 +151,15 @@ in {
   # 5. Services
   # =================================================================
   services = {
+    # SCX Scheduler — scx_bpfland: general low-latency, good desktop interactivity
+    # scx_lavd skipped: targets Zen 4+ preferred-core topology, not Zen+
+    scx = {
+      enable = true;
+      package = pkgs.scx.full;
+      scheduler = "scx_bpfland";
+      extraArgs = [ ];
+    };
+
     # Battery optimization
     upower.enable = true;
     # TLP conflicts with auto-cpufreq, using auto-cpufreq instead
