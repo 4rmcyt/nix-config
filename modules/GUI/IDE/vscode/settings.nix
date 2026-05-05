@@ -4,7 +4,8 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   mcpServerNames = builtins.attrNames config.programs.mcp.servers;
   mcpList = lib.concatMapStringsSep "\n" (name: "- `${name}`") mcpServerNames;
 
@@ -54,7 +55,7 @@
     "workbench.editor.limit.perEditorGroup" = true;
     "workbench.iconTheme" = "material-icon-theme";
     "workbench.startupEditor" = "none";
-    "workbench.settings.applyToAllProfiles" = [];
+    "workbench.settings.applyToAllProfiles" = [ ];
     "workbench.settings.useSplitJSON" = true;
 
     # ===== Explorer Settings =====
@@ -93,20 +94,19 @@
     "github.gitProtocol" = "ssh";
 
     # ===== Security Settings =====
-    "security.allowedUNCHosts" = ["wsl.localhost"];
+    "security.allowedUNCHosts" = [ "wsl.localhost" ];
     "security.workspace.trust.untrustedFiles" = "open";
     "telemetry.telemetryLevel" = "off";
 
     # ===== Remote SSH Settings =====
-    "remote.SSH.remotePlatform" =
-      {
-        "wsl.localhost" = "linux";
-      }
-      // lib.optionalAttrs (osConfig != null && osConfig ? my.defaults) {
-        "${osConfig.my.defaults.homeserver_lan}" = "linux";
-        "${osConfig.my.defaults.matebook_wifi}" = "linux";
-        "${osConfig.my.defaults.desktop_lan}" = "linux";
-      };
+    "remote.SSH.remotePlatform" = {
+      "wsl.localhost" = "linux";
+    }
+    // lib.optionalAttrs (osConfig != null && osConfig ? my.defaults) {
+      "${osConfig.my.defaults.homeserver_lan}" = "linux";
+      "${osConfig.my.defaults.matebook_wifi}" = "linux";
+      "${osConfig.my.defaults.desktop_lan}" = "linux";
+    };
 
     # ===== Misc Settings =====
     "todo-tree.regex.regex" = "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!";
@@ -120,7 +120,7 @@
       "*" = false;
     };
     "github.copilot.nextEditSuggestions.enabled" = false;
-    "github.copilot.chat.commitMessageGeneration.instructions" = [];
+    "github.copilot.chat.commitMessageGeneration.instructions" = [ ];
     "github.copilot.chat.generateCommitMessage" = false;
 
     "redhat.telemetry.enabled" = false;
@@ -167,13 +167,19 @@
         ".continue/**/*.yaml"
       ];
     };
+    "sops.binPath" = "${pkgs.sops}/bin/sops";
+    "sops.defaults.configPath" = ".sops.yaml";
+    "sops.saveAsAsDefault" = false;
+    "sops.tempDir" = "/tmp";
+    "sops.logLevel" = "error";
   };
 
   settingsFile = pkgs.writeText "vscode-settings.json" (builtins.toJSON settings);
   settingsPath = ".config/Code/User/settings.json";
-in {
+in
+{
   # Seed settings.json on first activation only — VSCode owns the file after that.
-  home.activation.vscodeSettings = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  home.activation.vscodeSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     settings_dest="$HOME/${settingsPath}"
     # Remove symlink (leftover from older HM approach) so HM backup won't conflict
     if [ -L "$settings_dest" ]; then

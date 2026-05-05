@@ -18,3 +18,5 @@ core.*
 secrets/*.backup
 secrets/*.tmp
 secrets/*.unencrypted
+*.decrypted.*
+*.sopsbak
