@@ -1,0 +1,5 @@
+{
+  "configPath": ".sops.yaml",
+  "decryptionOrder": ["age"],
+  "encryptionOrder": ["age"]
+}
