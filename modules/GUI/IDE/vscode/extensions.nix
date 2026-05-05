@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   programs.vscode.profiles.default.extensions = with pkgs.vscode-marketplace; [
     # Formatters & Editing
     codezombiech.gitignore
