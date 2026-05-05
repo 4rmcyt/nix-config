@@ -157,7 +157,7 @@ in {
       enable = true;
       package = pkgs.scx.full;
       scheduler = "scx_bpfland";
-      extraArgs = [ ];
+      extraArgs = [];
     };
 
     # Battery optimization
