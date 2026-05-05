@@ -318,10 +318,10 @@ in {
               ];
               tls.certResolver = "default";
             };
-            jellyseerr = {
-              rule = "Host(`jellyseerr.${domain}`)";
+            seerr = {
+              rule = "Host(`seerr.${domain}`)";
               entryPoints = ["websecure"];
-              service = "jellyseerr";
+              service = "seerr";
               middlewares = [
                 "security-headers"
                 "crowdsec"
@@ -503,7 +503,7 @@ in {
             lidarr.loadBalancer.servers = [{url = "http://localhost:8686";}];
             lazylibrarian.loadBalancer.servers = [{url = "http://localhost:5299";}];
             kapowarr.loadBalancer.servers = [{url = "http://localhost:5656";}];
-            jellyseerr.loadBalancer.servers = [{url = "http://localhost:5055";}];
+            seerr.loadBalancer.servers = [{url = "http://localhost:5055";}];
 
             # Media
             jellyfin.loadBalancer.servers = [{url = "http://localhost:8096";}];
