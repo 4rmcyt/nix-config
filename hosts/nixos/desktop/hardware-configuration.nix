@@ -4,7 +4,9 @@
   pkgs,
   modulesPath,
   ...
-}: {
+}: let
+  zenKernel = pkgs.linuxKernel.packages.linux_xanmod;
+in {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -53,9 +55,10 @@
       "zenergy"
     ];
 
+    # linux_zen 7.x has no ZFS support yet — staying on xanmod (6.18) until ZFS catches up
     kernelPackages =
-      assert !pkgs.linuxKernel.packages.linux_zen.${pkgs.zfs.kernelModuleAttribute}.meta.broken;
-      pkgs.linuxKernel.packages.linux_zen;
+      assert !zenKernel.${pkgs.zfs.kernelModuleAttribute}.meta.broken;
+      zenKernel;
 
     blacklistedKernelModules = [
       "r8169"
