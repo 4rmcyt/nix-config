@@ -4,21 +4,7 @@
   pkgs,
   modulesPath,
   ...
-}: let
-  latestKernelPackage = lib.last (
-    lib.sort (a: b: lib.versionOlder a.kernel.version b.kernel.version) (
-      builtins.attrValues (
-        lib.filterAttrs (
-          name: kernelPackages:
-            (builtins.match "linux_(xanmod_latest|[0-9]+_[0-9]+)" name)
-            != null
-            && (builtins.tryEval kernelPackages).success
-        )
-        pkgs.linuxKernel.packages
-      )
-    )
-  );
-in {
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -74,7 +60,7 @@ in {
       "rd.udev.log_level=3"
     ];
 
-    kernelPackages = latestKernelPackage;
+    kernelPackages = pkgs.linuxKernel.packages.linux_zen;
 
     # System control parameters
     kernel.sysctl = {

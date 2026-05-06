@@ -4,9 +4,7 @@
   pkgs,
   modulesPath,
   ...
-}: let
-  xanmodKernel = pkgs.linuxKernel.packages.linux_xanmod;
-in {
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -55,7 +53,9 @@ in {
       "zenergy"
     ];
 
-    kernelPackages = assert !xanmodKernel.${pkgs.zfs.kernelModuleAttribute}.meta.broken; xanmodKernel;
+    kernelPackages =
+      assert !pkgs.linuxKernel.packages.linux_zen.${pkgs.zfs.kernelModuleAttribute}.meta.broken;
+      pkgs.linuxKernel.packages.linux_zen;
 
     blacklistedKernelModules = [
       "r8169"
