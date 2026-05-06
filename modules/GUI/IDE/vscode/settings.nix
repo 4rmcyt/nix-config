@@ -50,7 +50,7 @@ let
     };
 
     # ===== Workbench Settings =====
-    "workbench.colorTheme" = "Bearded Theme Arc Reversed";
+    "workbench.colorTheme" = "Kanagawa Wave";
     "workbench.editor.enablePreview" = false;
     "workbench.editor.limit.perEditorGroup" = true;
     "workbench.iconTheme" = "material-icon-theme";

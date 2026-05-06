@@ -25,6 +25,7 @@
 
     # Theme & Icons
     pkief.material-icon-theme
+    qufiwefefwoyn.kanagawa
 
     # Utilities
     tomoki1207.pdf
