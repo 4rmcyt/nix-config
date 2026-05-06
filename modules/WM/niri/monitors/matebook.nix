@@ -5,6 +5,6 @@ _: {
       height = 1080;
       refresh = 60.0;
     };
-    scale = 1.25;
+    scale = 1.5;
   };
 }
