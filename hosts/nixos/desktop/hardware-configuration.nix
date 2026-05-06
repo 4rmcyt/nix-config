@@ -4,13 +4,15 @@
   pkgs,
   modulesPath,
   ...
-}: let
-  zenKernel = pkgs.linuxKernel.packages.linux_xanmod;
-in {
+}:
+let
+  xanmodKernel = pkgs.linuxKernel.packages.linux_xanmod;
+in
+{
   # =================================================================
   # 1. Imports
   # =================================================================
-  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   # =================================================================
   # 2. Boot Configuration
@@ -55,10 +57,9 @@ in {
       "zenergy"
     ];
 
-    # linux_zen 7.x has no ZFS support yet — staying on xanmod (6.18) until ZFS catches up
     kernelPackages =
-      assert !zenKernel.${pkgs.zfs.kernelModuleAttribute}.meta.broken;
-      zenKernel;
+      assert !xanmodKernel.${pkgs.zfs.kernelModuleAttribute}.meta.broken;
+      xanmodKernel;
 
     blacklistedKernelModules = [
       "r8169"
@@ -86,7 +87,7 @@ in {
       options zfs zfs_arc_max=25769803776
     '';
 
-    supportedFilesystems = ["zfs"];
+    supportedFilesystems = [ "zfs" ];
 
     # Kernel parameters
     kernelParams = [
@@ -302,22 +303,20 @@ in {
   nixpkgs.overlays = [
     (_final: prev: {
       linux-firmware = prev.linux-firmware.overrideAttrs (old: {
-        postInstall =
-          (old.postInstall or "")
-          + ''
-            cp ${
-              prev.fetchurl {
-                url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_RAM_CODE_MT7922_1.bin";
-                sha256 = "19jfkmpqngm0d3wpv2inc9hmmqjfk5nhbw5d6mkvh23idg3w2jm3";
-              }
-            } $out/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin
-            cp ${
-              prev.fetchurl {
-                url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin";
-                sha256 = "1q4irdjmbfpx8fsv8qiprzklvm62z614vchyjnhpbh2745bxl65y";
-              }
-            } $out/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin
-          '';
+        postInstall = (old.postInstall or "") + ''
+          cp ${
+            prev.fetchurl {
+              url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_RAM_CODE_MT7922_1.bin";
+              sha256 = "19jfkmpqngm0d3wpv2inc9hmmqjfk5nhbw5d6mkvh23idg3w2jm3";
+            }
+          } $out/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin
+          cp ${
+            prev.fetchurl {
+              url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin";
+              sha256 = "1q4irdjmbfpx8fsv8qiprzklvm62z614vchyjnhpbh2745bxl65y";
+            }
+          } $out/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin
+        '';
       });
     })
   ];
@@ -343,7 +342,7 @@ in {
       enable = true;
       package = pkgs.scx.full;
       scheduler = "scx_lavd";
-      extraArgs = ["--performance"];
+      extraArgs = [ "--performance" ];
     };
 
     # Hardware monitoring
@@ -392,7 +391,7 @@ in {
     # Smartcard / YubiKey
     pcscd = {
       enable = true;
-      plugins = [pkgs.ccid];
+      plugins = [ pkgs.ccid ];
     };
 
     # iOS device support
@@ -447,12 +446,12 @@ in {
 
     xserver = {
       enable = true;
-      videoDrivers = ["nvidia"];
+      videoDrivers = [ "nvidia" ];
       xkb.layout = "us";
     };
 
     accounts-daemon.enable = true;
-    dbus.packages = [pkgs.gcr];
+    dbus.packages = [ pkgs.gcr ];
 
     # irqbalance fights isolcpus=1-11 + irqaffinity=0 — disable it
     irqbalance.enable = false;
@@ -462,7 +461,7 @@ in {
 
     printing = {
       enable = true;
-      drivers = [];
+      drivers = [ ];
     };
 
     prometheus.exporters.node = {
@@ -516,21 +515,20 @@ in {
       # MT7922 rename must be in a lower-numbered file than 98-ipv6-privacy-extensions.rules
       # so that $name is already "wlp13s0" when the IPv6 rule's RUN fires.
       # extraRules goes to 99-local.rules which is too late — use packages instead.
-      packages =
-        [
-          (pkgs.writeTextFile {
-            name = "70-mt7922-rename.rules";
-            destination = "/etc/udev/rules.d/70-mt7922-rename.rules";
-            text = ''
-              SUBSYSTEM=="net", ACTION=="add", DRIVERS=="mt7921e", ATTR{address}=="02:00:00:00:00:00", NAME="wlp13s0"
-            '';
-          })
-        ]
-        ++ (with pkgs; [
-          yubioath-flutter
-          yubikey-manager
-          yubikey-personalization
-        ]);
+      packages = [
+        (pkgs.writeTextFile {
+          name = "70-mt7922-rename.rules";
+          destination = "/etc/udev/rules.d/70-mt7922-rename.rules";
+          text = ''
+            SUBSYSTEM=="net", ACTION=="add", DRIVERS=="mt7921e", ATTR{address}=="02:00:00:00:00:00", NAME="wlp13s0"
+          '';
+        })
+      ]
+      ++ (with pkgs; [
+        yubioath-flutter
+        yubikey-manager
+        yubikey-personalization
+      ]);
     };
   };
 
@@ -626,7 +624,7 @@ in {
   # =================================================================
   # 10. Swap Configuration
   # =================================================================
-  swapDevices = [];
+  swapDevices = [ ];
 
   zramSwap = {
     enable = true;
@@ -643,8 +641,8 @@ in {
     oomd.enable = false;
     services.bluetooth-unblock = {
       description = "Unblock Bluetooth rfkill soft block";
-      wantedBy = ["bluetooth.service"];
-      before = ["bluetooth.service"];
+      wantedBy = [ "bluetooth.service" ];
+      before = [ "bluetooth.service" ];
       serviceConfig = {
         Type = "oneshot";
         ExecStart = "${pkgs.util-linux}/bin/rfkill unblock bluetooth";
@@ -653,8 +651,8 @@ in {
 
     services.wowlan-enable = {
       description = "Enable Wake-on-Wireless LAN magic packet on wlp13s0";
-      wantedBy = ["multi-user.target"];
-      after = ["network.target"];
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network.target" ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
@@ -677,8 +675,8 @@ in {
 
   systemd.services.numlock = {
     description = "Enable numlock on TTYs";
-    wantedBy = ["multi-user.target"];
-    after = ["systemd-vconsole-setup.service"];
+    wantedBy = [ "multi-user.target" ];
+    after = [ "systemd-vconsole-setup.service" ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
