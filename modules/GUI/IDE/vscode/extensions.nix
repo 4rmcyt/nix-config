@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   programs.vscode.profiles.default.extensions = with pkgs.vscode-marketplace; [
     # Formatters & Editing
     irongeek.vscode-env
@@ -26,6 +25,7 @@
     # Theme & Icons
     pkief.material-icon-theme
     qufiwefefwoyn.kanagawa
+    metaphore.kanagawa-vscode-color-theme
 
     # Utilities
     tomoki1207.pdf
