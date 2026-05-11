@@ -23,7 +23,7 @@
     ../../../modules/users/zeev
 
     # GUI Applications
-    ../../../modules/GUI/chromium
+    ../../../modules/GUI/chrome
     ../../../modules/GUI/flatpak/hyprland
   ];
 

@@ -8,6 +8,7 @@
     ../../modules/GUI/IDE
     ../../modules/TUI/ai-tools
 
+    ../../modules/GUI/chrome/home.nix
     ../../modules/GUI/mpv
     ../../modules/GUI/obsidian
     ../../modules/TUI/common
@@ -134,7 +135,7 @@
     ];
 
     sessionVariables = {
-      BROWSER = lib.mkForce "chromium";
+      BROWSER = lib.mkForce "google-chrome-stable";
       EDITOR = lib.mkForce "hx";
       VISUAL = lib.mkForce "code";
     };

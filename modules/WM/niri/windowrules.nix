@@ -73,7 +73,7 @@ _: {
         matches = [
           {app-id = "^jellyfin-desktop$";}
           {app-id = "^com\\.github\\.iwalton3\\.jellyfin-media-player$";}
-          {app-id = "^chromium-browser$";}
+          {app-id = "^google-chrome$";}
           {app-id = "^zen$";}
           {app-id = "^evince$";}
           {app-id = "^org\\.gnome\\.Evince$";}
