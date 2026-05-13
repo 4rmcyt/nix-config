@@ -244,6 +244,8 @@ in {
         finegrained = false;
       };
     };
+
+    uinput.enable = true;
   };
 
   powerManagement.cpuFreqGovernor = "performance";
@@ -527,6 +529,7 @@ in {
           yubioath-flutter
           yubikey-manager
           yubikey-personalization
+          game-devices-udev-rules
         ]);
     };
   };
