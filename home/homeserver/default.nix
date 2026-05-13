@@ -34,6 +34,7 @@
       tree
       yamllint
       zip
+      claude-code
     ];
   };
 

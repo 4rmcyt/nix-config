@@ -132,6 +132,7 @@
       opencode-desktop
       bettercap
       pnpm
+      supabase-cli
     ];
 
     sessionVariables = {
