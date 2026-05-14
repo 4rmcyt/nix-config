@@ -3,76 +3,90 @@
   config,
   lib,
   ...
-}: {
-  programs.mcp = {
-    enable = true;
-    servers = {
-      memory = {
-        type = "stdio";
-        command = lib.getExe pkgs.mcp-server-memory;
-        args = [];
-      };
-      sequential-thinking = {
-        type = "stdio";
-        command = lib.getExe pkgs.mcp-server-sequential-thinking;
-        args = [];
-      };
-      tavily = {
-        type = "stdio";
-        command = "${config.home.homeDirectory}/.local/bin/tavily-mcp-wrapped";
-        args = [];
-      };
-      filesystem = {
-        type = "stdio";
-        command = lib.getExe pkgs.mcp-server-filesystem;
-        args = [
-          "/etc/nixos"
-          "/home/zeev/src"
-        ];
-      };
-      github = {
-        type = "stdio";
-        command = "${config.home.homeDirectory}/.local/bin/github-mcp-wrapped";
-        args = ["stdio"];
-      };
-      kubernetes = {
-        type = "stdio";
-        command = lib.getExe pkgs.mcp-k8s-go;
-        args = [];
-      };
-      python = {
-        type = "stdio";
-        command = "${pkgs.uv}/bin/uvx";
-        args = ["--no-sync" "mcp-python-interpreter"];
-      };
+}: let
+  secretsFile = toString ./../../../../secrets/common.yaml;
+  sops = lib.getExe pkgs.sops;
+  yq = lib.getExe pkgs.yq;
+  jq = lib.getExe pkgs.jq;
+
+  staticServers = {
+    memory = {
+      type = "stdio";
+      command = lib.getExe pkgs.mcp-server-memory;
+      args = [];
+    };
+    sequential-thinking = {
+      type = "stdio";
+      command = lib.getExe pkgs.mcp-server-sequential-thinking;
+      args = [];
+    };
+    filesystem = {
+      type = "stdio";
+      command = lib.getExe pkgs.mcp-server-filesystem;
+      args = [
+        "/etc/nixos"
+        "/home/zeev/src"
+      ];
+    };
+    kubernetes = {
+      type = "stdio";
+      command = lib.getExe pkgs.mcp-k8s-go;
+      args = [];
+    };
+    python = {
+      type = "stdio";
+      command = "${pkgs.uv}/bin/uvx";
+      args = ["--no-sync" "mcp-python-interpreter"];
+    };
+    fetch = {
+      type = "stdio";
+      command = lib.getExe pkgs.mcp-server-fetch;
+      args = [];
+    };
+    mcp-nixos = {
+      type = "stdio";
+      command = lib.getExe pkgs.mcp-nixos;
+      args = [];
+    };
+    tavily = {
+      type = "stdio";
+      command = "${config.home.homeDirectory}/.local/bin/tavily-mcp-wrapped";
+      args = [];
     };
   };
 
-  # Symlink project .mcp.json to the HM-managed global config so it stays current after rebuilds
-  home.file."src/nix-config/.mcp.json".source =
-    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/mcp/mcp.json";
+  staticMcpJson = pkgs.writeText "mcp-static.json" (builtins.toJSON {mcpServers = staticServers;});
+in {
+  home.packages = with pkgs; [
+    nodejs
+    uv
+  ];
 
-  # Create wrapper scripts with decrypted secrets
-  home.activation.mcpWrappers = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  home.activation.mcpConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        mkdir -p "$HOME/.config/mcp"
         mkdir -p "$HOME/.local/bin"
 
-        # GitHub wrapper
-        cat > "$HOME/.local/bin/github-mcp-wrapped" << EOF
-    #!${pkgs.bash}/bin/bash
-    export SOPS_AGE_KEY_FILE="${config.home.homeDirectory}/.config/sops/age/keys.txt"
-    export GITHUB_PERSONAL_ACCESS_TOKEN="\$(${pkgs.sops}/bin/sops -d ${../../../../secrets/common.yaml} | ${pkgs.yq}/bin/yq -r '.git_access_token')"
-    exec ${lib.getExe pkgs.github-mcp-server} "\$@"
-    EOF
-        chmod +x "$HOME/.local/bin/github-mcp-wrapped"
+        export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
+
+        GITHUB_PAT="$(${sops} -d ${secretsFile} | ${yq} -r '.git_access_token')"
+        TAVILY_KEY="$(${sops} -d ${secretsFile} | ${yq} -r '.tavily_api_key')"
+
+        # Generate final mcp.json with github HTTP entry
+        ${jq} --arg pat "$GITHUB_PAT" \
+          '.mcpServers.github = {"type":"http","url":"https://api.githubcopilot.com/mcp/x/all","headers":{"Authorization":"Bearer \($pat)"}}' \
+          ${staticMcpJson} > "$HOME/.config/mcp/mcp.json"
+        chmod 600 "$HOME/.config/mcp/mcp.json"
 
         # Tavily wrapper
         cat > "$HOME/.local/bin/tavily-mcp-wrapped" << EOF
     #!${pkgs.bash}/bin/bash
-    export SOPS_AGE_KEY_FILE="${config.home.homeDirectory}/.config/sops/age/keys.txt"
-    export TAVILY_API_KEY="\$(${pkgs.sops}/bin/sops -d ${../../../../secrets/common.yaml} | ${pkgs.yq}/bin/yq -r '.tavily_api_key')"
+    export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
+    export TAVILY_API_KEY="$TAVILY_KEY"
     exec ${lib.getExe pkgs.tavily-mcp} "\$@"
     EOF
         chmod +x "$HOME/.local/bin/tavily-mcp-wrapped"
 
+        # Symlink into project
+        ln -sf "$HOME/.config/mcp/mcp.json" "$HOME/src/nix-config/.mcp.json"
   '';
 }
