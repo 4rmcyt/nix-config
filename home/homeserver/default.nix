@@ -1,5 +1,6 @@
 {pkgs, ...}: {
   imports = [
+    ../../modules/TUI/ai-tools
     ../../modules/TUI/common
     ../../modules/TUI/zsh
     ../../modules/TUI/atuin
@@ -34,7 +35,6 @@
       tree
       yamllint
       zip
-      claude-code
     ];
   };
 
