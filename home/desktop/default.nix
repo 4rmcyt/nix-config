@@ -133,6 +133,7 @@
       bettercap
       pnpm
       supabase-cli
+      wrangler
     ];
 
     sessionVariables = {
