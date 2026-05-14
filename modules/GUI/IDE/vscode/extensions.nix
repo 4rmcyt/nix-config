@@ -29,7 +29,7 @@
 
     # Utilities
     tomoki1207.pdf
-    GitHub.vscode-github-actions
+    github.vscode-github-actions
 
     # AI
     anthropic.claude-code
