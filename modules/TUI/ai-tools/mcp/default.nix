@@ -75,7 +75,8 @@ in {
         # Generate final mcp.json with HTTP entries
         ${jq} --arg gh "$GITHUB_PAT" --arg fizzy "$FIZZY_TOKEN" \
           '.mcpServers.github = {"type":"http","url":"https://api.githubcopilot.com/mcp/x/all","headers":{"Authorization":"Bearer \($gh)"}} |
-           .mcpServers.fizzy = {"type":"http","url":"https://fizzy.fabric.pro/mcp","headers":{"Authorization":"Bearer \($fizzy)"}}' \
+           .mcpServers.fizzy = {"type":"http","url":"https://fizzy.fabric.pro/mcp","headers":{"Authorization":"Bearer \($fizzy)"}} |
+           .mcpServers.supabase = {"type":"http","url":"https://mcp.supabase.com/mcp"}' \
           ${staticMcpJson} > "$HOME/.config/mcp/mcp.json"
         chmod 600 "$HOME/.config/mcp/mcp.json"
 
