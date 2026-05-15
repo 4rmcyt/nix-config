@@ -505,12 +505,13 @@ in {
           RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
 
         # I/O scheduler: kyber for NVMe/SSD (low-latency), bfq for HDD
-        ACTION=="add|change", KERNEL=="nvme[0-9]*n[0-9]*", ATTR{queue/scheduler}="kyber"
-        ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="kyber"
-        ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
+        # ENV{DEVTYPE}!="partition" prevents errors on partition nodes which have no queue/ sysfs dir
+        ACTION=="add|change", KERNEL=="nvme[0-9]*n[0-9]*", ENV{DEVTYPE}!="partition", ATTR{queue/scheduler}="kyber"
+        ACTION=="add|change", KERNEL=="sd[a-z]", ENV{DEVTYPE}!="partition", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="kyber"
+        ACTION=="add|change", KERNEL=="sd[a-z]", ENV{DEVTYPE}!="partition", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
 
         # NVMe queue depth: increase from default 128 for better throughput under ZFS
-        ACTION=="add|change", KERNEL=="nvme[0-9]*n[0-9]*", ATTR{queue/nr_requests}="1024"
+        ACTION=="add|change", KERNEL=="nvme[0-9]*n[0-9]*", ENV{DEVTYPE}!="partition", ATTR{queue/nr_requests}="1024"
       '';
       # MT7922 rename must be in a lower-numbered file than 98-ipv6-privacy-extensions.rules
       # so that $name is already "wlp13s0" when the IPv6 rule's RUN fires.

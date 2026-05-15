@@ -62,7 +62,7 @@ in {
     uv
   ];
 
-  home.activation.mcpConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  home.activation.mcpConfig = lib.hm.dag.entryAfter ["writeBoundary" "sops-nix"] ''
         mkdir -p "$HOME/.config/mcp"
         mkdir -p "$HOME/.local/bin"
 
