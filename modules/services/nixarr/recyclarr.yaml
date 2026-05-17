@@ -53,7 +53,7 @@ sonarr:
           # 2160p
           - 1bef6c151fa35093015b0bfef18279e5
           # x264
-          - cddfb4e32db82151d97352b8e37c648
+          - cddfb4e32db826151d97352b8e37c648
           # x265
           - c9eafd50846d299b862ca9bb6ea91950
           # Audio Formats
@@ -67,19 +67,12 @@ sonarr:
           # 7.1 Surround
           - 204c8c3e7315bb0ea81332774fa888d6
           # HDR Formats
-          # DV
-          - 6d0d8de7b57e35518ac0308b0ddf404e
-          # DV HDR10
-          - 7878c33f1963fefb3d6c8657d46c2f0a
-          # DV HDR10+
-          - 2b239ed870daba8126a53bd5dc8dc1c8
-          # DV HLG
-          - 1f733af03141f068a540eec352589a89
-          # DV SDR
-          - 27954b0a80aab882522a88a4d9eae1cd
-          # HDR Optional
-          # DV HDR10+ Boost
-          - 385e9e8581d33133c3961bdcdeffb7b4
+          # HDR (catch-all: HDR10, HDR10+, DV HDR10, DV HDR10+, HLG, PQ)
+          - 505d871304820ba7106b693be6fe4a9e
+          # DV Boost (prioritize DV over HDR)
+          - 7c3a61a9c6cb04f52f1544be6d44a026
+          # HDR10+ Boost
+          - 0c4b99df9206d2cfac3c05ab897dd62a
         assign_scores_to:
           - name: All
             score: 25
@@ -89,15 +82,6 @@ sonarr:
           # Miscellaneous
           # 720p
           - c99279ee27a154c2f20d1d505cc99e25
-          # HDR Formats
-          # HDR
-          - 3e2c4e748b64a1a1118e0ea3f4cf6875
-          # HDR (undefined)
-          - bb019e1cd00f304f80971c965de064dc
-          # HDR10
-          - 3497799d29a085e2ac2df9d468413c94
-          # HDR10+
-          - a3d82cbef5039f8d295478d28a887159
           # Audio Formats
           # DD+
           - 63487786a8b01b7f20dd2bc90dd4a477
@@ -238,11 +222,6 @@ sonarr:
           - name: Ultra-HD
             score: -5
       - trash_ids:
-          # HDR Formats
-          # HLG
-          - 17e889ce13117940092308f48b48b45b
-          # PQ
-          - 2a7e3be05d3861d6df7171ec74cad727
           # HDR Optional
           # DV (Disk)
           - ef4963043b0987f8485bc9106f16db38
