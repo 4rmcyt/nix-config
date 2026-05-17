@@ -41,6 +41,9 @@ sonarr:
               - WEBRip-480p
               - DVD
               - SDTV
+      - name: Ultra-HD
+        reset_unmatched_scores:
+          enabled: true
     custom_formats:
       # Wanted
       - trash_ids:
@@ -80,6 +83,8 @@ sonarr:
         assign_scores_to:
           - name: All
             score: 25
+          - name: Ultra-HD
+            score: 25
       - trash_ids:
           # Miscellaneous
           # 720p
@@ -102,7 +107,9 @@ sonarr:
           # 4.0 Sound
           - 1895195e84767de180653914ce207245
         assign_scores_to:
-          - name: Any
+          - name: All
+            score: 20
+          - name: Ultra-HD
             score: 20
       - trash_ids:
           # Audio Formats
@@ -119,6 +126,8 @@ sonarr:
         assign_scores_to:
           - name: All
             score: 15
+          - name: Ultra-HD
+            score: 15
       - trash_ids:
           # Audio Formats
           # Opus
@@ -133,6 +142,8 @@ sonarr:
           - 58790d4e2fdcd9733aa7ae68ba2bb503
         assign_scores_to:
           - name: All
+            score: 10
+          - name: Ultra-HD
             score: 10
       - trash_ids:
           # Audio Formats
@@ -193,6 +204,8 @@ sonarr:
         assign_scores_to:
           - name: All
             score: 5
+          - name: Ultra-HD
+            score: 5
       - trash_ids:
           # Miscellaneous
           # Repack v2
@@ -203,6 +216,7 @@ sonarr:
           - ec8fa7296b64e8cd390a1600981f3923
         assign_scores_to:
           - name: All
+          - name: Ultra-HD
       - trash_ids:
           # Miscellaneous
           # No-RlsGroup
@@ -220,6 +234,8 @@ sonarr:
           - 4a20cfb76b5f92a8ca22b894b32e71be
         assign_scores_to:
           - name: All
+            score: -5
+          - name: Ultra-HD
             score: -5
       - trash_ids:
           # HDR Formats
@@ -257,6 +273,8 @@ sonarr:
           - 23297a736ca77c0fc8e70f8edd7ee56c
         assign_scores_to:
           - name: All
+            score: -10000
+          - name: Ultra-HD
             score: -10000
 radarr:
   movies:
