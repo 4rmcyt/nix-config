@@ -5,7 +5,6 @@ sonarr:
     quality_definition:
       type: series
     delete_old_custom_formats: true
-    replace_existing_custom_formats: true
     quality_profiles:
       - name: All
         reset_unmatched_scores:
@@ -262,7 +261,6 @@ radarr:
     quality_definition:
       type: movie
     delete_old_custom_formats: true
-    replace_existing_custom_formats: true
     quality_profiles:
       - name: All
         min_format_score: 0
