@@ -135,6 +135,7 @@
       supabase-cli
       wrangler
       chromium
+      firefox
     ];
 
     sessionVariables = {
