@@ -136,6 +136,7 @@
       wrangler
       chromium
       firefox
+      deno
     ];
 
     sessionVariables = {
