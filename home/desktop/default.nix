@@ -23,6 +23,7 @@
     ../../modules/WM/niri/nvidia.nix
     ../../modules/WM/niri/monitors/desktop.nix
     ../../modules/GUI/mime
+    ../../modules/GUI/discord
   ];
 
   # WirePlumber: upower is disabled on desktop (no battery) — silence the D-Bus NameHasNoOwner errors
