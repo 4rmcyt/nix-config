@@ -5,7 +5,7 @@
   modulesPath,
   ...
 }: let
-  xanmodKernel = pkgs.linuxKernel.packages.linux_xanmod;
+  xanmodKernel = pkgs.linuxKernel.packages.linux_xanmod_latest;
 in {
   # =================================================================
   # 1. Imports
