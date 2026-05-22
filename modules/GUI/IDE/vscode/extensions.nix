@@ -7,7 +7,6 @@
     tamasfe.even-better-toml
     vscodevim.vim
     yzhang.markdown-all-in-one
-    signageos.signageos-vscode-sops
     mikestead.dotenv
 
     # Languages
