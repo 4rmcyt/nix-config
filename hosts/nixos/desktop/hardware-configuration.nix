@@ -297,6 +297,7 @@ in {
 
   # MT7922: commit ba41835 in linux-firmware broke mt7921e init (WM Version: ____000000).
   # Replace the two broken firmware blobs with pre-ba41835 versions from 20250808.
+  # linux-firmware uses .zst compression, so we fetch the pre-compressed blobs.
   # https://github.com/NixOS/nixpkgs/issues/444538
   nixpkgs.overlays = [
     (_final: prev: {
@@ -309,13 +310,17 @@ in {
                 url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_RAM_CODE_MT7922_1.bin";
                 sha256 = "19jfkmpqngm0d3wpv2inc9hmmqjfk5nhbw5d6mkvh23idg3w2jm3";
               }
-            } $out/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin
+            } $out/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin.tmp
+            ${prev.zstd}/bin/zstd -f -19 $out/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin.tmp -o $out/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin.zst
+            rm $out/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin.tmp
             cp ${
               prev.fetchurl {
                 url = "https://gitlab.com/kernel-firmware/linux-firmware/-/raw/20250808/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin";
                 sha256 = "1q4irdjmbfpx8fsv8qiprzklvm62z614vchyjnhpbh2745bxl65y";
               }
-            } $out/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin
+            } $out/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin.tmp
+            ${prev.zstd}/bin/zstd -f -19 $out/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin.tmp -o $out/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin.zst
+            rm $out/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin.tmp
           '';
       });
     })

@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  secretsFile = toString ./../../../../secrets/common.yaml;
+  secretsFile = ./../../../../secrets/common.yaml;
   sops = lib.getExe pkgs.sops;
   yq = lib.getExe pkgs.yq;
   jq = lib.getExe pkgs.jq;
