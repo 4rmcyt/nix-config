@@ -616,6 +616,11 @@ in {
           "match-device" = "interface-name:enp12s0";
           "ethernet.wake-on-lan" = "magic";
         };
+        # Prevent NM from managing iwd P2P devices — avoids IPv4 forwarding race at boot
+        "device-iwd-p2p" = {
+          "match-device" = "interface-name:p2p-dev-*";
+          "managed" = "false";
+        };
       };
     };
     wireless.iwd = {
