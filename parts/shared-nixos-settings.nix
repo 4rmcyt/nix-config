@@ -62,7 +62,7 @@ in {
       stalled-download-timeout = 60;
       keep-outputs = true;
       keep-derivations = true;
-      connect-timeout = 5;
+      connect-timeout = 30;
       min-free = 5368709120; # 5GB
       max-free = 10737418240; # 10GB
       narinfo-cache-negative-ttl = 0;
