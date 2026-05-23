@@ -266,6 +266,7 @@
     "d /home/zeev/.local/share/Trash/info 0700 zeev users -"
   ];
 
+
   # Restrict avahi to ethernet only — both enp12s0 and wlp13s0 probing simultaneously
   # causes avahi to see its own mDNS probe on the other interface and conflict with itself
   services.avahi.allowInterfaces = ["enp12s0"];
