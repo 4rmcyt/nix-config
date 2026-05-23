@@ -270,8 +270,11 @@
   # causes avahi to see its own mDNS probe on the other interface and conflict with itself
   services.avahi.allowInterfaces = ["enp12s0"];
 
-  # No battery on desktop — upower just spams wireplumber with UPower errors
+  # No battery on desktop — disable upower entirely and suppress wireplumber upower monitor
   services.upower.enable = lib.mkForce false;
+  services.pipewire.wireplumber.extraConfig."10-no-upower" = {
+    "wireplumber.profiles".main."monitor.upower" = "disabled";
+  };
 
   # Cups resolves "localhost" to both 127.0.0.1 and ::1 — IPv6 disabled at kernel level so ::1 bind fails
   services.printing.listenAddresses = ["127.0.0.1:631"];

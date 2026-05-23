@@ -2,6 +2,9 @@ _: {
   services.rpcbind.enable = true;
   boot.supportedFilesystems = ["nfs"];
 
+  # rpcbind unit references $RPCBIND_OPTIONS but never sets it — silence systemd warning
+  systemd.services.rpcbind.serviceConfig.Environment = ["RPCBIND_OPTIONS="];
+
   fileSystems."/mnt/media" = {
     device = "homeserver:/data";
     fsType = "nfs";
