@@ -266,6 +266,23 @@
     "d /home/zeev/.local/share/Trash/info 0700 zeev users -"
   ];
 
+  # NixOS sets "h /var/empty +i" (chattr immutable) which ZFS does not support (no FS_IOC_SETFLAGS).
+  # This causes "Protocol driver not attached" warnings from systemd-tmpfiles on every run.
+  # Suppress by passing --exclude-prefix=/var/empty to all tmpfiles services.
+  systemd.services.systemd-tmpfiles-setup.serviceConfig.ExecStart = [
+    ""
+    "systemd-tmpfiles --create --remove --boot --exclude-prefix=/dev --exclude-prefix=/var/empty"
+  ];
+  systemd.services.systemd-tmpfiles-resetup.serviceConfig.ExecStart = [
+    ""
+    "systemd-tmpfiles --create --exclude-prefix=/dev --exclude-prefix=/var/empty"
+  ];
+  systemd.services.systemd-tmpfiles-clean.serviceConfig.ExecStart = [
+    ""
+    "systemd-tmpfiles --clean --exclude-prefix=/dev --exclude-prefix=/var/empty"
+  ];
+
+
 
   # Restrict avahi to ethernet only — both enp12s0 and wlp13s0 probing simultaneously
   # causes avahi to see its own mDNS probe on the other interface and conflict with itself

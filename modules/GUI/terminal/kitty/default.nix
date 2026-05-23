@@ -10,6 +10,7 @@
     extraConfig = ''
       include dank-theme.conf
       include dank-tabs.conf
+      mouse_map right press ungrabbed paste_from_clipboard
     '';
     settings = {
       term = "xterm-kitty";
