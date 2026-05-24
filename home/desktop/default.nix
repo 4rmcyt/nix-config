@@ -9,6 +9,7 @@
     ../../modules/TUI/ai-tools
 
     ../../modules/GUI/chrome/home.nix
+    ../../modules/GUI/chromium
     ../../modules/GUI/mpv
     ../../modules/GUI/obsidian
     ../../modules/TUI/common
@@ -126,7 +127,6 @@
       pnpm
       supabase-cli
       wrangler
-      chromium
       firefox
       deno
       libreoffice

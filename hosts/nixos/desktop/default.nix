@@ -9,6 +9,8 @@
     "/var/empty"
     "/nix/var/nix/temproots"
     "/nix/var/nix/b"
+    "/var/lib/containers/storage/tmp"
+    "/var/lib/cni/networks"
     "/var/lib/systemd/ephemeral-trees"
     "/var/lib/systemd/coredump"
   ];
@@ -289,15 +291,12 @@ in {
   # causes avahi to see its own mDNS probe on the other interface and conflict with itself
   services.avahi.allowInterfaces = ["enp12s0"];
 
-  # No battery on desktop — disable upower entirely and suppress wireplumber upower monitor
-  services.upower.enable = lib.mkForce false;
-  services.pipewire.wireplumber.extraConfig."10-no-upower" = {
-    "wireplumber.components.rules" = [
-      {
-        matches = [{name = "upower_monitor";}];
-        actions.override.type = "disabled";
-      }
-    ];
+  # No battery on desktop — keep UPower running (wireplumber needs it for BT headset battery)
+  # but disable all power management polling since there's no battery
+  services.upower = {
+    enable = true;
+    ignoreLid = true;
+    noPollBatteries = true;
   };
 
   # Cups resolves "localhost" to both 127.0.0.1 and ::1 — IPv6 disabled at kernel level so ::1 bind fails

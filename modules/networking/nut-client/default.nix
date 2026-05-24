@@ -27,7 +27,7 @@
     wantedBy = ["upsmon.service"];
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.bash}/bin/bash -c 'until ${pkgs.netcat-gnu}/bin/nc -z homeserver 3493; do sleep 2; done'";
+      ExecStart = "${pkgs.bash}/bin/bash -c 'until ${pkgs.nut}/bin/upsc apc@homeserver &>/dev/null; do sleep 2; done'";
     };
   };
 
