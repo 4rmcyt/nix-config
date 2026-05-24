@@ -206,12 +206,12 @@ in {
         General = {
           Experimental = true;
           FastConnectable = true;
-          # BAP requires BT_ISO kernel socket (not in zen kernel) — disable to suppress errors
-          DisablePlugins = "bap";
         };
         Policy = {
           AutoEnable = true;
           ReconnectAttempts = 3;
+          # BAP requires BT_ISO kernel socket (not in zen kernel) — disable to suppress errors
+          DisablePlugins = "bap";
         };
       };
     };
