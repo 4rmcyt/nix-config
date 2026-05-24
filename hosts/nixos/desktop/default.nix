@@ -3,7 +3,20 @@
   config,
   lib,
   ...
-}: {
+}:
+let
+  zfsExcludes = lib.concatMapStringsSep " " (p: "--exclude-prefix=${p}") [
+    "/dev"
+    "/var/empty"
+    "/nix/var/nix/temproots"
+    "/nix/var/nix/b"
+    "/var/lib/containers/storage/tmp"
+    "/var/lib/cni/networks"
+    "/var/lib/systemd/ephemeral-trees"
+    "/var/lib/systemd/coredump"
+  ];
+in
+{
   my.desktop = {
     windowManager = "niri"; # Options: "hyprland", "niri", "none"
     displayManager = "greetd"; # Options: "greetd", "sddm", "gdm", "none"
@@ -266,23 +279,21 @@
     "d /home/zeev/.local/share/Trash/info 0700 zeev users -"
   ];
 
-  # NixOS sets "h /var/empty +i" (chattr immutable) which ZFS does not support (no FS_IOC_SETFLAGS).
-  # This causes "Protocol driver not attached" warnings from systemd-tmpfiles on every run.
-  # Suppress by passing --exclude-prefix=/var/empty to all tmpfiles services.
+  # ZFS does not support FS_IOC_SETFLAGS (chattr), causing "Protocol driver not attached"
+  # warnings from systemd-tmpfiles for any path that uses the 'h' rule (chattr immutable).
+  # Suppress by excluding all such paths from all tmpfiles services.
   systemd.services.systemd-tmpfiles-setup.serviceConfig.ExecStart = [
     ""
-    "systemd-tmpfiles --create --remove --boot --exclude-prefix=/dev --exclude-prefix=/var/empty"
+    "systemd-tmpfiles --create --remove --boot ${zfsExcludes}"
   ];
   systemd.services.systemd-tmpfiles-resetup.serviceConfig.ExecStart = [
     ""
-    "systemd-tmpfiles --create --exclude-prefix=/dev --exclude-prefix=/var/empty"
+    "systemd-tmpfiles --create ${zfsExcludes}"
   ];
   systemd.services.systemd-tmpfiles-clean.serviceConfig.ExecStart = [
     ""
-    "systemd-tmpfiles --clean --exclude-prefix=/dev --exclude-prefix=/var/empty"
+    "systemd-tmpfiles --clean ${zfsExcludes}"
   ];
-
-
 
   # Restrict avahi to ethernet only — both enp12s0 and wlp13s0 probing simultaneously
   # causes avahi to see its own mDNS probe on the other interface and conflict with itself
