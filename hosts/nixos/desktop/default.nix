@@ -291,7 +291,12 @@
   # No battery on desktop — disable upower entirely and suppress wireplumber upower monitor
   services.upower.enable = lib.mkForce false;
   services.pipewire.wireplumber.extraConfig."10-no-upower" = {
-    "wireplumber.profiles".main."monitor.upower" = "disabled";
+    "wireplumber.components.rules" = [
+      {
+        matches = [{name = "upower_monitor";}];
+        actions.override.type = "disabled";
+      }
+    ];
   };
 
   # Cups resolves "localhost" to both 127.0.0.1 and ::1 — IPv6 disabled at kernel level so ::1 bind fails
