@@ -19,10 +19,22 @@
     };
   };
 
-  systemd.services.upsmon = {
+  systemd.services.nut-wait-homeserver = {
+    description = "Wait for NUT server on homeserver:3493";
     after = ["network-online.target"];
     wants = ["network-online.target"];
-    serviceConfig.ExecStartPre = "${pkgs.bash}/bin/bash -c 'until ${pkgs.netcat-gnu}/bin/nc -z homeserver 3493; do sleep 2; done'";
+    before = ["upsmon.service"];
+    wantedBy = ["upsmon.service"];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.bash}/bin/bash -c 'until ${pkgs.netcat-gnu}/bin/nc -z homeserver 3493; do sleep 2; done'";
+    };
+  };
+
+  systemd.services.upsmon = {
+    after = ["network-online.target" "nut-wait-homeserver.service"];
+    wants = ["network-online.target"];
+    requires = ["nut-wait-homeserver.service"];
   };
 
   sops.secrets.nut_password = {

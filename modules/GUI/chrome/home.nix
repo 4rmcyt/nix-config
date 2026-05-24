@@ -12,6 +12,7 @@
       "--enable-gpu-rasterization"
       "--gtk-version=4"
       "--force-dark-mode"
+      "--no-wifi"
     ];
   };
 
