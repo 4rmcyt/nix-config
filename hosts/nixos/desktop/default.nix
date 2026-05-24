@@ -3,8 +3,7 @@
   config,
   lib,
   ...
-}:
-let
+}: let
   zfsExcludes = lib.concatMapStringsSep " " (p: "--exclude-prefix=${p}") [
     "/dev"
     "/var/empty"
@@ -13,8 +12,7 @@ let
     "/var/lib/systemd/ephemeral-trees"
     "/var/lib/systemd/coredump"
   ];
-in
-{
+in {
   my.desktop = {
     windowManager = "niri"; # Options: "hyprland", "niri", "none"
     displayManager = "greetd"; # Options: "greetd", "sddm", "gdm", "none"
