@@ -210,7 +210,6 @@ in {
         Policy = {
           AutoEnable = true;
           ReconnectAttempts = 3;
-          DisablePlugins = "bap"; # LE Audio not needed
         };
       };
     };
@@ -248,6 +247,12 @@ in {
 
     uinput.enable = true;
   };
+
+  # bap plugin disabled via -P flag — DisablePlugins is not a valid main.conf key
+  systemd.services.bluetooth.serviceConfig.ExecStart = [
+    ""
+    "${pkgs.bluez}/libexec/bluetooth/bluetoothd -f /etc/bluetooth/main.conf -P bap"
+  ];
 
   powerManagement.cpuFreqGovernor = "performance";
 
@@ -617,7 +622,7 @@ in {
         };
         # Prevent NM from managing iwd P2P devices — avoids IPv4 forwarding race at boot
         "device-iwd-p2p" = {
-          "match-device" = "interface-name:p2p-dev-*";
+          "match-device" = "type:wifi-p2p";
           "managed" = "false";
         };
       };

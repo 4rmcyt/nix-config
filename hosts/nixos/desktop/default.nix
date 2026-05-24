@@ -10,8 +10,6 @@ let
     "/var/empty"
     "/nix/var/nix/temproots"
     "/nix/var/nix/b"
-    "/var/lib/containers/storage/tmp"
-    "/var/lib/cni/networks"
     "/var/lib/systemd/ephemeral-trees"
     "/var/lib/systemd/coredump"
   ];
@@ -37,11 +35,7 @@ in
     # Features and roles
     ../../../modules/gaming
     # ../../../modules/networking/avahi
-    ../../../modules/networking/caddy
     ../../../modules/networking/dnssec
-    ../../../modules/containers
-    ../../../modules/services/dify
-    ../../../modules/services/dify/db.nix
     ../../../modules/networking/nfs-client
     ../../../modules/networking/nut-client
     ../../../modules/networking/ssh
@@ -209,8 +203,6 @@ in
     Name=Secret Storage Service
     Hidden=true
   '';
-
-  my.caddy.enable = true;
 
   services = {
     gnome.gnome-keyring.enable = true;

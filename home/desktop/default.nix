@@ -26,16 +26,6 @@
     ../../modules/GUI/discord
   ];
 
-  # WirePlumber: upower is disabled on desktop (no battery) — silence the D-Bus NameHasNoOwner errors
-  xdg.configFile."wireplumber/wireplumber.conf.d/50-no-upower.conf".text = ''
-    wireplumber.components.rules = [
-      {
-        matches = [ { name = "upower_monitor" } ]
-        actions = { override = { type = "disabled" } }
-      }
-    ]
-  '';
-
   # WirePlumber: always use SBC-XQ for OpenRun Pro 2 (best codec it supports)
   xdg.configFile."wireplumber/wireplumber.conf.d/51-shokz-openrun.conf".text = ''
     monitor.bluez.rules = [
