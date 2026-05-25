@@ -344,9 +344,6 @@ in {
   # 7. Services
   # =================================================================
   services = {
-    # OpenRGB for RGB control
-    hardware.openrgb.enable = true;
-
     # SCX Scheduler — scx_lavd: LAVD algorithm, designed for gaming/interactive
     # workloads on single-CCX Zen 4; --performance disables DVFS throttling
     scx = {
@@ -572,7 +569,6 @@ in {
     cifs-utils
     fwupd
     microcode-amd
-    openrgb-with-all-plugins
     powertop
     samba
     yubikey-personalization
