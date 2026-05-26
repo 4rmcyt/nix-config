@@ -500,6 +500,16 @@ in {
               ];
               tls.certResolver = "default";
             };
+            ntfy = {
+              rule = "Host(`ntfy.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "ntfy";
+              middlewares = [
+                "security-headers"
+                "crowdsec"
+              ];
+              tls.certResolver = "default";
+            };
           };
 
           services = {
@@ -540,6 +550,7 @@ in {
             livesync.loadBalancer.servers = [{url = "http://localhost:5984";}];
             dispatcharr.loadBalancer.servers = [{url = "http://localhost:9191";}];
             radicale.loadBalancer.servers = [{url = "http://localhost:5232";}];
+            ntfy.loadBalancer.servers = [{url = "http://localhost:9991";}];
           };
         };
       };

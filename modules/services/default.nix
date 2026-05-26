@@ -14,6 +14,7 @@
     ./microbin
     ./komf
     ./komga
+    ./ntfy
     # ./k3s
     # ./argocd
   ];

@@ -61,6 +61,12 @@
             originServerName: cal.${config.my.defaults.domain}
             noTLSVerify: true
 
+        - hostname: ntfy.${config.my.defaults.domain}
+          service: https://localhost:443
+          originRequest:
+            originServerName: ntfy.${config.my.defaults.domain}
+            noTLSVerify: true
+
         # Catch-all
         - service: http_status:404
     '';
