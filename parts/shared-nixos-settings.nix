@@ -60,14 +60,16 @@ in {
         "flakes"
         "nix-command"
         "auto-allocate-uids"
+        "cgroups"
         "pipe-operator"
       ];
       deprecated-features = ["broken-string-escape"];
       auto-optimise-store = true;
       warn-dirty = false;
       keep-going = true;
-      max-substitution-jobs = 16;
-      http-connections = 25;
+      fallback = true;
+      flake-registry = "";
+      fsync-metadata = false;
       stalled-download-timeout = 60;
       keep-outputs = true;
       keep-derivations = true;
@@ -75,10 +77,7 @@ in {
       initial-connect-timeout = 15;
       min-free = 5368709120; # 5GB
       max-free = 10737418240; # 10GB
-      narinfo-cache-negative-ttl = 0;
       builders-use-substitutes = true;
-      require-sigs = true;
-      eval-cache = true;
     };
 
     # Binary caches
