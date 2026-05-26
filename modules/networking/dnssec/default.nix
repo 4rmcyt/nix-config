@@ -42,13 +42,6 @@ in {
       };
     };
 
-    # Route Tailscale MagicDNS domains through 100.100.100.100 (MagicDNS resolver)
-    # without letting Tailscale register itself as a global DefaultRoute DNS via D-Bus
-    environment.etc."systemd/resolved.conf.d/tailscale.conf".text = ''
-      [Resolve]
-      DNS=100.100.100.100
-      Domains=~ts.net ~dhole-piano.ts.net
-    '';
 
     # NegativeTrustAnchors was removed from resolved.conf in systemd 250+
     # The replacement is /etc/dnssec-trust-anchors.d/*.negative
