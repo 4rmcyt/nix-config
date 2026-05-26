@@ -1,5 +1,5 @@
 # Base home-manager configuration applied to all hosts.
-# Provides: sops, agenix, allowUnfree, overlays, stateVersion.
+# Provides: sops, allowUnfree, overlays, stateVersion.
 {
   config,
   inputs,
@@ -10,7 +10,6 @@ in {
   modules.homeManager.base = {
     imports = [
       inputs.sops-nix.homeManagerModules.sops
-      inputs.agenix.homeManagerModules.default
     ];
 
     home = {

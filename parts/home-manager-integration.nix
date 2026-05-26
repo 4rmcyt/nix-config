@@ -12,7 +12,6 @@ in {
     imports = [
       inputs.home-manager.nixosModules.home-manager
       inputs.sops-nix.nixosModules.sops
-      inputs.agenix.nixosModules.default
       inputs.nixos-facter-modules.nixosModules.facter
       inputs.vscode-server.nixosModules.default
       inputs.ucodenix.nixosModules.default
