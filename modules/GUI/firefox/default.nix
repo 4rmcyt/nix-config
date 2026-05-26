@@ -19,8 +19,6 @@ in {
     nativeMessagingHosts = [
       pkgs.firefoxpwa
     ];
-    betterfox.enable = true;
-
     policies.ExtensionSettings = {
       # === AD BLOCKING & PRIVACY ===
       "addon@darkreader.org" = {

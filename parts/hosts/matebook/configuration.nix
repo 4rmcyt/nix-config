@@ -21,7 +21,6 @@ in {
     # Host-specific HM imports
     home-manager.users.${owner.username}.imports = [
       ../../../home/matebook
-      inputs.betterfox-nix.homeModules.betterfox
       inputs.noctalia.homeModules.default
     ];
   };
