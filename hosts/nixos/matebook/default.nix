@@ -314,6 +314,7 @@
       authKeyFile = config.sops.secrets.tailscale_auth_key.path;
       extraUpFlags = [
         "--accept-routes"
+        "--accept-dns=false"
         "--reset"
       ];
     };
