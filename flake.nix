@@ -42,7 +42,7 @@
 
     # Hardware & system
     auto-cpufreq = {
-      url = "github:AdnanHodzic/auto-cpufreq";
+      url = "git+https://github.com/AdnanHodzic/auto-cpufreq";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     cpu-microcodes = {
@@ -125,7 +125,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixos-needsreboot.url = "https://codeberg.org/Mynacol/nixos-needsreboot/archive/HEAD.tar.gz";
+    nixos-needsreboot.url = "git+https://codeberg.org/Mynacol/nixos-needsreboot";
 
     # Services & infrastructure
     ephraim-nur = {

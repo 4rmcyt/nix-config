@@ -9,15 +9,15 @@
       "locked": {
         "lastModified": 1778403279,
         "narHash": "sha256-qOn95CiAxdt+x0YV5Qrc039HFpByEvURVCHPzCVr8tE=",
-        "owner": "AdnanHodzic",
-        "repo": "auto-cpufreq",
+        "ref": "refs/heads/master",
         "rev": "c1ba0fe5df2542681e8dfcef6b0aa0217cf9edb4",
-        "type": "github"
+        "revCount": 578,
+        "type": "git",
+        "url": "https://github.com/AdnanHodzic/auto-cpufreq"
       },
       "original": {
-        "owner": "AdnanHodzic",
-        "repo": "auto-cpufreq",
-        "type": "github"
+        "type": "git",
+        "url": "https://github.com/AdnanHodzic/auto-cpufreq"
       }
     },
     "base16": {
@@ -952,6 +952,24 @@
         "type": "github"
       }
     },
+    "nixos-needsreboot": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1779472211,
+        "narHash": "sha256-fNocxqRuz369IjypAWDStF3B9Wnu/4bujPbR+ktXsPg=",
+        "ref": "refs/heads/main",
+        "rev": "a0586fc9cad833fdff77800c6b0ed008d6380d90",
+        "revCount": 83,
+        "type": "git",
+        "url": "https://codeberg.org/Mynacol/nixos-needsreboot"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/Mynacol/nixos-needsreboot"
+      }
+    },
     "nixos-stable": {
       "locked": {
         "lastModified": 1779622335,
@@ -1039,6 +1057,19 @@
     },
     "nixpkgs_2": {
       "locked": {
+        "lastModified": 1778869304,
+        "narHash": "sha256-VdRy3A14M5vIE882DJcaaR+5wrss9Qsg4YNVbr7uj3k=",
+        "rev": "d233902339c02a9c334e7e593de68855ad26c4cb",
+        "type": "tarball",
+        "url": "https://releases.nixos.org/nixos/unstable/nixos-26.05pre998534.d233902339c0/nixexprs.tar.xz?lastModified=1778869304&rev=d233902339c02a9c334e7e593de68855ad26c4cb"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
         "lastModified": 1779560665,
         "narHash": "sha256-tpyBcxPpcQb8ukyNF7DoCwfSY3VPsxHoYwj00Cayv5o=",
         "owner": "nixos",
@@ -1053,7 +1084,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_3": {
+    "nixpkgs_4": {
       "locked": {
         "lastModified": 1778869304,
         "narHash": "sha256-30sZNZoA1cqF5JNO9fVX+wgiQYjB7HJqqJ4ztCDeBZE=",
@@ -1203,8 +1234,9 @@
         "nixarr": "nixarr",
         "nixos-anywhere": "nixos-anywhere",
         "nixos-facter-modules": "nixos-facter-modules",
+        "nixos-needsreboot": "nixos-needsreboot",
         "nixos-wsl": "nixos-wsl",
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": "nixpkgs_3",
         "noctalia": "noctalia",
         "noctalia-qs": "noctalia-qs",
         "nur": "nur",
@@ -1322,7 +1354,7 @@
         "firefox-gnome-theme": "firefox-gnome-theme",
         "flake-parts": "flake-parts_5",
         "gnome-shell": "gnome-shell",
-        "nixpkgs": "nixpkgs_3",
+        "nixpkgs": "nixpkgs_4",
         "nur": "nur_2",
         "systems": "systems_4",
         "tinted-kitty": "tinted-kitty",

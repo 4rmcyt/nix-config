@@ -1,4 +1,8 @@
-{pkgs, lib, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   xdg.configFile."chromium/policies/managed/hardening.json".text = lib.generators.toJSON {} {
     BrowserSignin = 1;
     SyncDisabled = false;
