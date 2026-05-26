@@ -55,6 +55,12 @@
             originServerName: livesync.${config.my.defaults.domain}
             noTLSVerify: true
 
+        - hostname: cal.${config.my.defaults.domain}
+          service: https://localhost:443
+          originRequest:
+            originServerName: cal.${config.my.defaults.domain}
+            noTLSVerify: true
+
         # Catch-all
         - service: http_status:404
     '';

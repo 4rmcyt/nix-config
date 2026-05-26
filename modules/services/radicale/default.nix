@@ -4,11 +4,11 @@
   ...
 }: {
   sops.secrets.radicale_users = {
-    sopsFile = ../../../secrets/radicale_users.txt;
+    sopsFile = ../../../secrets/radicale.yaml;
+    key = "radicale_users";
     owner = config.users.users.radicale.name;
     group = config.users.groups.radicale.name;
     mode = "0440";
-    format = "binary";
   };
 
   users.users.radicale = {
@@ -19,9 +19,6 @@
   users.groups.radicale = {};
 
   networking.firewall.allowedTCPPorts = [5232];
-
-  # Radicale is exposed via Traefik - see modules/networking/traefik/default.nix
-  # Traefik handles TLS termination and security headers
 
   environment.systemPackages = [pkgs.radicale];
   services.radicale = {

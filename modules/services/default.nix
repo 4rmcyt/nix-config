@@ -3,7 +3,7 @@
     ./headscale
     ./home-assistant
     # ./paperless
-    # ./radicale
+    ./radicale
     # ./vaultwarden
     ./homepage
     # ./kavita

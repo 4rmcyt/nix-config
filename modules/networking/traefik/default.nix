@@ -490,6 +490,16 @@ in {
               ];
               tls.certResolver = "default";
             };
+            radicale = {
+              rule = "Host(`cal.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "radicale";
+              middlewares = [
+                "security-headers"
+                "crowdsec"
+              ];
+              tls.certResolver = "default";
+            };
           };
 
           services = {
@@ -529,6 +539,7 @@ in {
             atuin.loadBalancer.servers = [{url = "http://localhost:8881";}];
             livesync.loadBalancer.servers = [{url = "http://localhost:5984";}];
             dispatcharr.loadBalancer.servers = [{url = "http://localhost:9191";}];
+            radicale.loadBalancer.servers = [{url = "http://localhost:5232";}];
           };
         };
       };
