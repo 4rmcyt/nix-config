@@ -344,13 +344,10 @@ in {
   # 7. Services
   # =================================================================
   services = {
-    # SCX Scheduler — scx_lavd: LAVD algorithm, designed for gaming/interactive
-    # workloads on single-CCX Zen 4; --performance disables DVFS throttling
     scx = {
       enable = true;
       package = pkgs.scx.full;
-      scheduler = "scx_lavd";
-      extraArgs = ["--performance"];
+      scheduler = "scx_bpfland";
     };
 
     # Hardware monitoring
