@@ -125,6 +125,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixos-needsreboot.url = "https://codeberg.org/Mynacol/nixos-needsreboot/archive/HEAD.tar.gz";
+
     # Services & infrastructure
     ephraim-nur = {
       url = "github:EphraimSiegfried/nur-packages";

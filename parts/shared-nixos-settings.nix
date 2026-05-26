@@ -40,6 +40,15 @@ in {
     systemd.services.nix-daemon.environment.NIX_USER_CONF_FILES = "/run/nix-access-tokens.conf";
     environment.sessionVariables.NIX_USER_CONF_FILES = "/run/nix-access-tokens.conf";
 
+    environment.systemPackages = [
+      inputs.nixos-needsreboot.packages.${pkgs.system}.default
+    ];
+
+    system.activationScripts.nixos-needsreboot = {
+      supportsDryActivation = true;
+      text = "${lib.getExe inputs.nixos-needsreboot.packages.${pkgs.system}.default} \"$systemConfig\" || true";
+    };
+
     # Lix as the nix implementation
     nix.package = lib.mkDefault pkgs.lixPackageSets.latest.lix;
     nix.channel.enable = false;

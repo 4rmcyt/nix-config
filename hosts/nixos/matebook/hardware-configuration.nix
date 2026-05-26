@@ -137,13 +137,10 @@
   # 5. Services
   # =================================================================
   services = {
-    # SCX Scheduler — scx_bpfland: general low-latency, good desktop interactivity
-    # scx_lavd skipped: targets Zen 4+ preferred-core topology, not Zen+
     scx = {
       enable = true;
       package = pkgs.scx.full;
       scheduler = "scx_bpfland";
-      extraArgs = [];
     };
 
     # Battery optimization

@@ -266,8 +266,6 @@
 
     fwupd.enable = true;
 
-    thermald.enable = true;
-
     udisks2.enable = true;
     usbmuxd.enable = true;
 
