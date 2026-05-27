@@ -25,6 +25,7 @@
     ../../modules/WM/niri/monitors/desktop.nix
     ../../modules/GUI/mime
     ../../modules/GUI/discord
+    ../../modules/dev
   ];
 
   # WirePlumber: always use SBC-XQ for OpenRun Pro 2 (best codec it supports)
@@ -55,7 +56,6 @@
       supersonic-wayland
       materialgram
       bat
-      devenv
       distrobox
       ffmpegthumbnailer
       foliate
@@ -64,35 +64,19 @@
       pcsc-tools
       pods
       popsicle
-      pyenv
       signal-desktop
       slack
-      tenv
       vdpauinfo
       vulkan-tools
-      mise
       ytmdesktop
       github-mcp-server
       terraform-mcp-server
       mcp-k8s-go
       mcp-grafana
-      nodejs
-      uv
       antigravity-fhs
       proton-pass
       proton-pass-cli
       seahorse
-      (python3.withPackages (
-        ps:
-          with ps; [
-            pip
-            pydantic
-            requests
-            black
-            pylint
-            python-lsp-server
-          ]
-      ))
       (pkgs.texlive.combine {
         inherit
           (pkgs.texlive)
@@ -117,18 +101,13 @@
       nmap
       arp-scan
       python313Packages.netifaces-plus
-      gcc
       tcpdump
       foot
       rt-tests
       claude-agent-acp
       opencode-desktop
       bettercap
-      pnpm
-      supabase-cli
-      wrangler
       firefox
-      deno
       libreoffice
     ];
 

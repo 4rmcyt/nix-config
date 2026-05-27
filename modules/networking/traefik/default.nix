@@ -576,7 +576,10 @@ in {
     systemd.services.traefik.serviceConfig.EnvironmentFile =
       config.sops.secrets.cloudflare_acme_credentials.path;
 
-    systemd.services.traefik.after = ["crowdsec.service"];
-    systemd.services.traefik.wants = ["crowdsec.service"];
+    # CrowdSec bouncer runs in stream mode and caches decisions locally —
+    # Traefik does not need to wait for it. crowdsec-setup takes ~2min on
+    # boot (hub sync) which caused Traefik to delay that long.
+    systemd.services.traefik.after = ["network-online.target" "sops-nix.service"];
+    systemd.services.traefik.wants = ["network-online.target"];
   };
 }

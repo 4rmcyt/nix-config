@@ -57,11 +57,6 @@
 
   staticMcpJson = pkgs.writeText "mcp-static.json" (builtins.toJSON {mcpServers = staticServers;});
 in {
-  home.packages = with pkgs; [
-    nodejs
-    uv
-  ];
-
   home.activation.mcpConfig = lib.hm.dag.entryAfter ["writeBoundary" "sops-nix"] ''
         mkdir -p "$HOME/.config/mcp"
         mkdir -p "$HOME/.local/bin"
