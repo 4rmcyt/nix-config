@@ -26,6 +26,30 @@ in {
           inherit (final) ez_setup iso639-lang slskd-api;
         };
       })
+      (final: prev: {
+        homepage-dashboard = prev.homepage-dashboard.overrideAttrs (_old: {
+          version = "1.13.1";
+          src = final.fetchFromGitHub {
+            owner = "gethomepage";
+            repo = "homepage";
+            tag = "v1.13.1";
+            hash = "sha256-RKvBzHtxK/VNdSRoJSUiVmckG7jTTH75SEe6aX2xq1E=";
+          };
+          pnpmDeps = prev.fetchPnpmDeps {
+            pname = "homepage-dashboard";
+            version = "1.13.1";
+            src = final.fetchFromGitHub {
+              owner = "gethomepage";
+              repo = "homepage";
+              tag = "v1.13.1";
+              hash = "sha256-RKvBzHtxK/VNdSRoJSUiVmckG7jTTH75SEe6aX2xq1E=";
+            };
+            pnpm = final.pnpm_10;
+            fetcherVersion = 3;
+            hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+          };
+        });
+      })
     ];
 
     # Facter
