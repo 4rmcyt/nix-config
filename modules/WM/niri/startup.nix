@@ -20,6 +20,10 @@ _: {
 
       # Desktop shell
       {command = ["noctalia-shell"];}
+
+      # Messaging apps
+      {command = ["materialgram"];}
+      {command = ["vesktop" "--start-minimized"];}
     ];
   };
 }
