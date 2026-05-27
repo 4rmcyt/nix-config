@@ -1,4 +1,8 @@
-{config, pkgs, ...}: let
+{
+  config,
+  pkgs,
+  ...
+}: let
   bouncerKeyFile = config.sops.secrets.crowdsec_bouncer_api_key_oracle.path;
 in {
   sops.secrets.crowdsec_bouncer_api_key_oracle = {
