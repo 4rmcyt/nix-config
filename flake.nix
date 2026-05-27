@@ -123,6 +123,12 @@
 
     nixos-needsreboot.url = "https://codeberg.org/Mynacol/nixos-needsreboot/archive/HEAD.tar.gz";
 
+    # Headscale web UI
+    headplane = {
+      url = "github:tale/headplane/v0.6.3";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Services & infrastructure
     ephraim-nur = {
       url = "github:EphraimSiegfried/nur-packages";

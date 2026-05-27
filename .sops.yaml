@@ -2,7 +2,22 @@ keys:
   - &homeserver_key age18pkk5washz5p8vl4tkemulvv8x23deaqwqqvfmwu7r7vwvjfwdqsg657vd
   - &desktop_key age156neere9qg5ry92ru8tckjcf9h2zn3xdrs6ywzq7cuhg7v8m3s0qka8p8k
   - &matebook_key age1mnavzptapglqmf4pmvecdhdrysykwhxk0u5mef5rvhjtqdrxcckszqsav6
+  # oracle-relay: replace with real key after first nixos-anywhere deploy
+  # Run: ssh oracle-relay "cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age"
+  - &oracle_key age1REPLACE_AFTER_FIRST_DEPLOY
 creation_rules:
+  - path_regex: "secrets/oracle\\.yaml"
+    key_groups:
+      - age:
+          - *homeserver_key
+          - *desktop_key
+          - *oracle_key
+  - path_regex: "secrets/headscale\\.yaml"
+    key_groups:
+      - age:
+          - *homeserver_key
+          - *desktop_key
+          - *oracle_key
   - path_regex: "secrets/.*"
     key_groups:
       - age:
