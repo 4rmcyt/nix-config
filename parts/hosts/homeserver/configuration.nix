@@ -46,7 +46,7 @@ in {
             };
             pnpm = final.pnpm_10;
             fetcherVersion = 3;
-            hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+            hash = "sha256-xd7F39WBSAy3ozJjI12XB+oGvijSGHIMYwQhdpaO/l8=";
           };
         });
       })
