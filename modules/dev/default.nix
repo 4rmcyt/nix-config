@@ -1,17 +1,15 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    # Runtime managers
+    # Runtime/env managers
     mise
     devenv
+    pyenv
 
     # Node
-    nodejs
     pnpm
     deno
 
-    # Python
-    uv
-    pyenv
+    # Python extras (base has python3+uv, this adds dev packages)
     (python3.withPackages (
       ps:
         with ps; [
