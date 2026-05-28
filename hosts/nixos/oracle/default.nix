@@ -20,12 +20,15 @@
   # =================================================================
   # System
   # =================================================================
-  networking.hostName = "oracle-relay";
+  networking.hostName = "gcp-relay";
   time.timeZone = config.my.defaults.timezone;
   i18n.defaultLocale = config.my.defaults.locale;
 
   boot.loader.grub.enable = lib.mkDefault true;
-  boot.loader.grub.device = lib.mkDefault "/dev/sda";
+  boot.loader.grub.device = lib.mkDefault "/dev/vda";
+
+  # zram swap — safety net for 1 GB RAM e2-micro
+  zramSwap.enable = true;
 
   # =================================================================
   # Nix

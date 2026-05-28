@@ -13,6 +13,6 @@ in {
       inputs.headplane.nixosModules.headplane
     ];
 
-    nixpkgs.hostPlatform = lib.mkForce "aarch64-linux";
+    nixpkgs.hostPlatform = lib.mkForce "x86_64-linux";
   };
 }
