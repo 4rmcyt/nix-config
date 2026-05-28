@@ -37,13 +37,13 @@ in {
         search_domains = [];
       };
 
-      # Embedded DERP — Oracle Cloud is a good relay location
+      # Embedded DERP — gcp Cloud is a good relay location
       derp = {
         server = {
           enabled = true;
           region_id = 901;
-          region_code = "oracle-ca";
-          region_name = "Oracle CA Toronto";
+          region_code = "us-central1-a";
+          region_name = "GCP US Central 1 (Iowa, Zone A)";
           stun_listen_addr = "0.0.0.0:3478";
         };
         auto_update_enabled = false;

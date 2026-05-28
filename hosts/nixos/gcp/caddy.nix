@@ -7,8 +7,8 @@
 in {
   # Cloudflare API token for DNS-01 ACME challenge.
   # File format: CLOUDFLARE_API_TOKEN=<token>
-  sops.secrets.cloudflare_api_token_oracle = {
-    sopsFile = ../../../secrets/oracle.yaml;
+  sops.secrets.gcp = {
+    # sopsFile = ../../../secrets/gcp.yaml;
     owner = "caddy";
     group = "caddy";
     mode = "0400";
@@ -48,5 +48,5 @@ in {
   };
 
   systemd.services.caddy.serviceConfig.EnvironmentFile =
-    config.sops.secrets.cloudflare_api_token_oracle.path;
+    config.sops.secrets.gcp.path;
 }

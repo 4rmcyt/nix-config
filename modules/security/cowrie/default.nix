@@ -91,7 +91,6 @@
       guest:0:guest
       test:0:test
       support:0:support
-      oracle:0:oracle
       postgres:0:postgres
       git:0:git
     '';

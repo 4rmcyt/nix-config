@@ -3,10 +3,10 @@
   pkgs,
   ...
 }: let
-  bouncerKeyFile = config.sops.secrets.crowdsec_bouncer_api_key_oracle.path;
+  bouncerKeyFile = config.sops.secrets.gcp.path;
 in {
-  sops.secrets.crowdsec_bouncer_api_key_oracle = {
-    sopsFile = ../../../secrets/oracle.yaml;
+  sops.secrets.gcp = {
+    sopsFile = ../../../secrets/gcp.yaml;
     owner = "root";
     mode = "0400";
   };

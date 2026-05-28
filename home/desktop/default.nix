@@ -109,6 +109,7 @@
       bettercap
       firefox
       libreoffice
+      nixos-anywhere
     ];
 
     sessionVariables = {
