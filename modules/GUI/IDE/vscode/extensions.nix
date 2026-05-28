@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs.vscode.profiles.default.extensions = with pkgs.vscode-marketplace; [
     # Formatters & Editing
     irongeek.vscode-env
@@ -13,6 +14,8 @@
     jnoortheen.nix-ide
     mkhl.direnv
     ms-python.isort
+    ms-python.python
+    ms-python.vscode-python-envs
     nefrob.vscode-just-syntax
 
     # DevOps
