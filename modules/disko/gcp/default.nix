@@ -7,7 +7,7 @@
       partitions = {
         boot = {
           size = "1M";
-          type = "EF02"; # BIOS boot partition for GRUB on GPT
+          type = "EF02";
         };
         root = {
           size = "100%";
