@@ -19,6 +19,8 @@
       "virtio_net"
       "9p"
       "9pnet_virtio"
+      "sd_mod"
+      "ata_piix"
     ];
     initrd.kernelModules = [];
     kernelModules = [];
@@ -26,7 +28,7 @@
     loader = {
       grub = {
         enable = true;
-        device = "/dev/vda";
+        device = "/dev/sda";
         efiSupport = false;
       };
       efi.canTouchEfiVariables = lib.mkDefault false;
@@ -34,12 +36,7 @@
   };
 
   fileSystems."/" = {
-    device = "/dev/vda2";
-    fsType = "ext4";
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/vda1";
+    device = "/dev/sda1";
     fsType = "ext4";
   };
 

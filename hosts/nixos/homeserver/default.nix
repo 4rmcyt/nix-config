@@ -189,6 +189,7 @@
   # =================================================================
   my.traefik.enable = true;
   my.headscale.enable = false;
+  my.crowdsec.traefik.enable = true;
 
   # =================================================================
   # Programs

@@ -8,13 +8,10 @@
     ./hardware-configuration.nix
     ../../../modules/base
     ../../../modules/options
-
-    ./headscale.nix
-    ./headplane.nix
-    ./caddy.nix
-    ./crowdsec.nix
-    ./fail2ban.nix
-    ./monitoring.nix
+    ../../../modules/networking/caddy
+    ../../../modules/security/crowdsec
+    ../../../modules/security/fail2ban
+    ../../../modules/services/headscale
   ];
 
   # =================================================================
@@ -25,9 +22,8 @@
   i18n.defaultLocale = config.my.defaults.locale;
 
   boot.loader.grub.enable = lib.mkDefault true;
-  boot.loader.grub.device = lib.mkDefault "/dev/vda";
+  boot.loader.grub.device = lib.mkDefault "/dev/sda";
 
-  # zram swap — safety net for 1 GB RAM e2-micro
   zramSwap.enable = true;
 
   # =================================================================
@@ -48,11 +44,11 @@
   };
 
   # =================================================================
-  # Networking & firewall
+  # Networking
   # =================================================================
   networking = {
     useNetworkd = true;
-    useDHCP = lib.mkDefault false;
+    useDHCP = lib.mkForce false;
   };
 
   systemd.network = {
@@ -65,12 +61,7 @@
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [
-      22 # SSH
-      80 # Caddy HTTP (ACME redirect)
-      443 # Caddy HTTPS
-    ];
-    # headscale STUN (embedded DERP)
+    allowedTCPPorts = [22 80 443];
     allowedUDPPorts = [3478];
   };
 
@@ -85,6 +76,107 @@
       PermitRootLogin = "prohibit-password";
       KbdInteractiveAuthentication = false;
     };
+  };
+
+  # =================================================================
+  # Service toggles
+  # =================================================================
+  my.headscale = {
+    enable = true;
+    subdomain = "hs";
+    port = 8080;
+    metricsPort = 9091;
+    derp = {
+      regionId = 901;
+      regionCode = "gcp-us-central1";
+      regionName = "GCP US Central (Iowa)";
+    };
+  };
+
+  my.caddy = {
+    enable = true;
+    headscale.enable = true;
+  };
+
+  my.crowdsec = {
+    caddy.enable = true;
+    nftables = {
+      enable = true;
+      secretsFile = ../../../secrets/gcp.yaml;
+    };
+  };
+
+  services.headplane = {
+    enable = true;
+    settings = {
+      server = {
+        host = "127.0.0.1";
+        port = 3000;
+        base_url = "https://hs.${config.my.defaults.domain}";
+        cookie_secret_path = config.sops.secrets.headplane_cookie_secret.path;
+        cookie_secure = true;
+        data_path = "/var/lib/headplane";
+      };
+      headscale = {
+        url = "http://127.0.0.1:${toString config.services.headscale.port}";
+        public_url = "https://hs.${config.my.defaults.domain}";
+        config_path = "/etc/headscale/config.yaml";
+        config_strict = false;
+      };
+      integration = {
+        proc.enabled = true;
+        agent.enabled = false;
+      };
+    };
+  };
+
+  sops.secrets.headplane_cookie_secret = {
+    sopsFile = ../../../secrets/headplane.yaml;
+    owner = config.services.headscale.user;
+    group = config.services.headscale.group;
+    mode = "0400";
+  };
+
+  services.fail2ban = {
+    enable = true;
+    maxretry = 5;
+    bantime = "1h";
+    bantime-increment = {
+      enable = true;
+      multipliers = "2 4 8 16 32 64";
+      maxtime = "168h";
+      overalljails = true;
+    };
+    ignoreIP = ["127.0.0.0/8" "100.64.0.0/10"];
+    jails.sshd.settings = {
+      enabled = true;
+      maxretry = 3;
+      bantime = "24h";
+      findtime = "10m";
+    };
+  };
+
+  # =================================================================
+  # Prometheus — homeserver Grafana scrapes via Tailscale after mesh is up
+  # =================================================================
+  services.prometheus = {
+    enable = true;
+    listenAddress = "127.0.0.1";
+    port = 9090;
+    retentionTime = "30d";
+    globalConfig.scrape_interval = "1m";
+    exporters.node = {
+      enable = true;
+      listenAddress = "127.0.0.1";
+      port = 9100;
+      enabledCollectors = ["cpu" "diskstats" "filesystem" "loadavg" "meminfo" "netdev" "stat" "time"];
+    };
+    scrapeConfigs = [
+      {job_name = "gcp-relay-node"; static_configs = [{targets = ["127.0.0.1:9100"];}];}
+      {job_name = "headscale"; static_configs = [{targets = ["127.0.0.1:${toString config.my.headscale.metricsPort}"];}];}
+      {job_name = "crowdsec"; static_configs = [{targets = ["127.0.0.1:6060"];}];}
+      {job_name = "prometheus"; static_configs = [{targets = ["127.0.0.1:9090"];}];}
+    ];
   };
 
   # =================================================================
@@ -105,20 +197,7 @@
 
   security.sudo.wheelNeedsPassword = false;
 
-  # =================================================================
-  # Packages
-  # =================================================================
-  environment.systemPackages = with pkgs; [
-    curl
-    htop
-    jq
-    nftables
-    tcpdump
-    vim
-  ];
+  environment.systemPackages = with pkgs; [curl htop jq nftables tcpdump vim];
 
-  # =================================================================
-  # State version
-  # =================================================================
   system.stateVersion = "25.11";
 }

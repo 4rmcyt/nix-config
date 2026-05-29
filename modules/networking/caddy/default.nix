@@ -8,7 +8,9 @@
   inherit (config.my.defaults) domain email;
 in {
   options.my.caddy = {
-    enable = lib.mkEnableOption "Caddy reverse proxy";
+    enable = lib.mkEnableOption "Caddy reverse proxy with Cloudflare DNS-01";
+
+    headscale.enable = lib.mkEnableOption "Caddy vhost for headscale + headplane";
   };
 
   config = lib.mkIf cfg.enable {
@@ -26,22 +28,37 @@ in {
         plugins = ["github.com/caddy-dns/cloudflare@v0.2.4"];
         hash = "sha256-VHm9POg2KixGsMsAcfFFDMK9x6niRJ1iJV9kkSwkSjc=";
       };
-
       globalConfig = ''
         email ${email}
       '';
 
-      virtualHosts."dify.${domain}".extraConfig = ''
-        tls {
-          dns cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
-          resolvers 1.1.1.1
-        }
+      # https://hs.<domain>/        → headscale  :8080 (Tailscale control protocol)
+      # https://hs.<domain>/admin* → headplane  :3000 (Web UI)
+      #
+      # Caddy instead of Traefik: Traefik drops the non-standard Upgrade header
+      # required by the Tailscale control protocol.
+      # Headplane is always served under /admin per upstream docs.
+      virtualHosts."hs.${domain}" = lib.mkIf cfg.headscale.enable {
+        extraConfig = ''
+          tls {
+            dns cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
+            resolvers 1.1.1.1
+          }
 
-        @api path /console/api* /api* /v1* /files*
-        reverse_proxy @api localhost:5001
+          handle /admin* {
+            reverse_proxy 127.0.0.1:${toString config.services.headplane.settings.server.port}
+          }
 
-        reverse_proxy localhost:3000
-      '';
+          handle {
+            reverse_proxy 127.0.0.1:${toString config.services.headscale.port} {
+              transport http {
+                keepalive off
+                compression off
+              }
+            }
+          }
+        '';
+      };
     };
 
     systemd.services.caddy.serviceConfig.EnvironmentFile =
