@@ -8,6 +8,7 @@
     ./hardware-configuration.nix
     ../../../modules/base
     ../../../modules/options
+    ../../../modules/disko/gcp
     ../../../modules/networking/caddy
     ../../../modules/security/crowdsec
     ../../../modules/security/fail2ban
