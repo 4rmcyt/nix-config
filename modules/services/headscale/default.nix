@@ -76,7 +76,7 @@ in {
 
       settings = {
         server_url = "https://${cfg.subdomain}.${domain}";
-        private_key_path = config.sops.secrets.${cfg.privateKeySecret}.path;
+        noise.private_key_path = config.sops.secrets.${cfg.privateKeySecret}.path;
 
         log = {
           level = "info";
