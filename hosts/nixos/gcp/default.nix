@@ -182,10 +182,22 @@
       enabledCollectors = ["cpu" "diskstats" "filesystem" "loadavg" "meminfo" "netdev" "stat" "time"];
     };
     scrapeConfigs = [
-      {job_name = "gcp-relay-node"; static_configs = [{targets = ["127.0.0.1:9100"];}];}
-      {job_name = "headscale"; static_configs = [{targets = ["127.0.0.1:${toString config.my.headscale.metricsPort}"];}];}
-      {job_name = "crowdsec"; static_configs = [{targets = ["127.0.0.1:6060"];}];}
-      {job_name = "prometheus"; static_configs = [{targets = ["127.0.0.1:9090"];}];}
+      {
+        job_name = "gcp-relay-node";
+        static_configs = [{targets = ["127.0.0.1:9100"];}];
+      }
+      {
+        job_name = "headscale";
+        static_configs = [{targets = ["127.0.0.1:${toString config.my.headscale.metricsPort}"];}];
+      }
+      {
+        job_name = "crowdsec";
+        static_configs = [{targets = ["127.0.0.1:6060"];}];
+      }
+      {
+        job_name = "prometheus";
+        static_configs = [{targets = ["127.0.0.1:9090"];}];
+      }
     ];
   };
 

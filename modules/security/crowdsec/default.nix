@@ -19,8 +19,6 @@
     rev = "v1.1.4";
     hash = "sha256-qgLM6nrlDXLS7OsLw6cDKjhx9B+CnJR4TB32pg/MvEo=";
   };
-
-
 in {
   options.my.crowdsec = {
     traefik.enable = lib.mkEnableOption "CrowdSec Traefik bouncer plugin wiring";

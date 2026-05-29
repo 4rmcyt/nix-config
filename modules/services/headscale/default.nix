@@ -72,7 +72,7 @@ in {
     services.headscale = {
       enable = true;
       address = "127.0.0.1";
-      port = cfg.port;
+      inherit (cfg) port;
 
       settings = {
         server_url = "https://${cfg.subdomain}.${domain}";
