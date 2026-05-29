@@ -24,14 +24,6 @@
     initrd.kernelModules = [];
     kernelModules = [];
     extraModulePackages = [];
-    loader = {
-      grub = {
-        enable = true;
-        device = "/dev/sda";
-        efiSupport = false;
-      };
-      efi.canTouchEfiVariables = lib.mkDefault false;
-    };
   };
 
   swapDevices = [];
