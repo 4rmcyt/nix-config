@@ -12,7 +12,7 @@
     ../../../modules/networking/caddy
     ../../../modules/security/crowdsec
     ../../../modules/security/fail2ban
-    ../../../modules/security/hardening
+    ../../../modules/security/hardening.nix
     ../../../modules/services/headscale
   ];
 
