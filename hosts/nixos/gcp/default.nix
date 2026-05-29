@@ -11,6 +11,7 @@
     ../../../modules/networking/caddy
     ../../../modules/security/crowdsec
     ../../../modules/security/fail2ban
+    ../../../modules/security/hardening
     ../../../modules/services/headscale
   ];
 
@@ -81,6 +82,17 @@
   # =================================================================
   # Service toggles
   # =================================================================
+  my.hardening = {
+    enable = true;
+    autoUpgrade = {
+      enable = true;
+      flake = "github:4rmcyt/nix-config#gcp-relay";
+      operation = "boot";
+      dates = "04:00";
+      randomizedDelaySec = "30min";
+    };
+  };
+
   my.headscale = {
     enable = true;
     subdomain = "hs";
