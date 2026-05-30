@@ -7,8 +7,8 @@
 }: {
   imports = [
     "${modulesPath}/virtualisation/google-compute-image.nix"
-    ../../../modules/base
     ../../../modules/options
+    ../../../modules/base/logging
     ../../../modules/networking/caddy
     ../../../modules/security/fail2ban
     ../../../modules/security/hardening.nix
