@@ -23,11 +23,8 @@
   time.timeZone = config.my.defaults.timezone;
   i18n.defaultLocale = config.my.defaults.locale;
 
-  boot.loader.grub = {
-    enable = true;
-    device = "/dev/sda";
-    efiSupport = false;
-  };
+  # disko (EF02 partition) sets up grub mirroredBoots automatically
+  boot.loader.grub.efiSupport = false;
 
   zramSwap.enable = true;
 
