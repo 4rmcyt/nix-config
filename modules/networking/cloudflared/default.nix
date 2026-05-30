@@ -43,11 +43,8 @@
         noHappyEyeballs: false
 
       ingress:
-        - hostname: headplane.${config.my.defaults.domain}
-          service: https://localhost:443
-          originRequest:
-            originServerName: headplane.${config.my.defaults.domain}
-            noTLSVerify: true
+        - hostname: hp.${config.my.defaults.domain}
+          service: http://localhost:3004
 
         - hostname: hass.${config.my.defaults.domain}
           service: https://localhost:443

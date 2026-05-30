@@ -196,8 +196,8 @@
     settings = {
       server = {
         host = "127.0.0.1";
-        port = 3000;
-        base_url = "https://headplane.${config.my.defaults.domain}";
+        port = 3004;
+        base_url = "https://hp.${config.my.defaults.domain}";
         cookie_secret_path = config.sops.secrets.headplane_cookie_secret.path;
         cookie_secure = true;
         data_path = "/var/lib/headplane";
