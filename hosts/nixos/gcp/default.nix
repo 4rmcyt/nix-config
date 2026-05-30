@@ -2,13 +2,13 @@
   config,
   lib,
   pkgs,
+  modulesPath,
   ...
 }: {
   imports = [
-    ./hardware-configuration.nix
+    "${modulesPath}/virtualisation/google-compute-image.nix"
     ../../../modules/base
     ../../../modules/options
-    ../../../modules/disko/gcp
     ../../../modules/networking/caddy
     ../../../modules/security/fail2ban
     ../../../modules/security/hardening.nix
@@ -18,12 +18,15 @@
   # =================================================================
   # System
   # =================================================================
-  networking.hostName = "gcp-relay";
   time.timeZone = config.my.defaults.timezone;
   i18n.defaultLocale = config.my.defaults.locale;
 
-  # disko (EF02 partition) sets up grub mirroredBoots automatically
-  boot.loader.grub.efiSupport = false;
+  # google-compute-config.nix overrides
+  security.googleOsLogin.enable = lib.mkForce false;
+  networking.hostName = lib.mkForce "gcp-relay";
+  boot.loader.grub.configurationLimit = lib.mkForce 2;
+
+  virtualisation.diskSize = 10 * 1024; # 10 GB — GCP expands on first boot
 
   zramSwap.enable = true;
 
@@ -50,6 +53,11 @@
   networking = {
     useNetworkd = true;
     useDHCP = lib.mkForce false;
+    firewall = {
+      enable = lib.mkForce true;
+      allowedTCPPorts = [22 80 443];
+      allowedUDPPorts = [3478];
+    };
   };
 
   systemd.network = {
@@ -58,12 +66,6 @@
       matchConfig.Name = "en*";
       networkConfig.DHCP = "yes";
     };
-  };
-
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [22 80 443];
-    allowedUDPPorts = [3478];
   };
 
   # =================================================================
