@@ -216,6 +216,14 @@ in {
           };
 
           routers = {
+            headplane = {
+              rule = "Host(`hs.${domain}`) && PathPrefix(`/admin`)";
+              entryPoints = ["websecure"];
+              service = "headplane";
+              middlewares = ["security-headers" "crowdsec"];
+              tls.certResolver = "default";
+            };
+
             traefik-dashboard = {
               rule = "Host(`traefik.${domain}`)";
               entryPoints = ["websecure"];
@@ -513,6 +521,8 @@ in {
           };
 
           services = {
+            headplane.loadBalancer.servers = [{url = "http://localhost:3000";}];
+
             slskd.loadBalancer.servers = [{url = "http://localhost:5030";}];
 
             # Nixarr

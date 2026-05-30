@@ -43,6 +43,12 @@
         noHappyEyeballs: false
 
       ingress:
+        - hostname: hs.${config.my.defaults.domain}
+          service: https://localhost:443
+          originRequest:
+            originServerName: hs.${config.my.defaults.domain}
+            noTLSVerify: true
+
         - hostname: hass.${config.my.defaults.domain}
           service: https://localhost:443
           originRequest:
