@@ -32,12 +32,10 @@ in {
         email ${email}
       '';
 
-      # https://hs.<domain>/        → headscale  :8080 (Tailscale control protocol)
-      # https://hs.<domain>/admin* → headplane  :3000 (Web UI)
+      # https://hs.<domain> → headscale :8080 (Tailscale control protocol)
       #
       # Caddy instead of Traefik: Traefik drops the non-standard Upgrade header
       # required by the Tailscale control protocol.
-      # Headplane is always served under /admin per upstream docs.
       virtualHosts."hs.${domain}" = lib.mkIf cfg.headscale.enable {
         extraConfig = ''
           tls {
@@ -45,16 +43,10 @@ in {
             resolvers 1.1.1.1
           }
 
-          handle /admin* {
-            reverse_proxy 127.0.0.1:${toString config.services.headplane.settings.server.port}
-          }
-
-          handle {
-            reverse_proxy 127.0.0.1:${toString config.services.headscale.port} {
-              transport http {
-                keepalive off
-                compression off
-              }
+          reverse_proxy 127.0.0.1:${toString config.services.headscale.port} {
+            transport http {
+              keepalive off
+              compression off
             }
           }
         '';
