@@ -25,6 +25,10 @@
   security.googleOsLogin.enable = lib.mkForce false;
   networking.hostName = lib.mkForce "gcp-relay";
   boot.loader.grub.configurationLimit = lib.mkForce 2;
+  security.sudo.wheelNeedsPassword = lib.mkForce true;
+  # google-compute-config.nix adds NOPASSWD for google-sudoers — kill it
+  security.sudo.extraRules = lib.mkForce [];
+  security.sudo-rs.extraRules = lib.mkForce [];
 
   virtualisation.diskSize = 10 * 1024; # 10 GB — GCP expands on first boot
 
@@ -154,8 +158,6 @@
   users.users.root.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyieBFROVPWmH3iC2ZAE+5zofMd6mnunBzfObEwMgFx"
   ];
-
-  security.sudo.wheelNeedsPassword = false;
 
   environment.systemPackages = with pkgs; [curl htop jq tcpdump vim];
 
