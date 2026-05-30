@@ -26,7 +26,6 @@
   networking.hostName = lib.mkForce "gcp-relay";
   boot.loader.grub.configurationLimit = lib.mkForce 2;
   security.sudo.wheelNeedsPassword = lib.mkForce true;
-  # google-compute-config.nix adds NOPASSWD for google-sudoers — kill it
   security.sudo.extraRules = lib.mkForce [];
   security.sudo-rs.extraRules = lib.mkForce [];
 
@@ -41,6 +40,8 @@
     cores = 2;
     max-jobs = "auto";
     trusted-users = ["root" "@wheel"];
+    # Allow unsigned paths from nixos-rebuild --target-host (local builds aren't cache-signed)
+    require-sigs = false;
   };
 
   # =================================================================
