@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  modulesPath,
   ...
 }: {
   imports = [
@@ -13,6 +14,7 @@
     ../../../modules/security/fail2ban
     ../../../modules/security/hardening.nix
     ../../../modules/services/headscale
+    (modulesPath + "/virtualisation/google-compute-image.nix")
   ];
 
   # =================================================================
