@@ -217,7 +217,7 @@ in {
 
           routers = {
             headplane = {
-              rule = "Host(`hs.${domain}`) && PathPrefix(`/admin`)";
+              rule = "Host(`headplane.${domain}`)";
               entryPoints = ["websecure"];
               service = "headplane";
               middlewares = ["security-headers" "crowdsec"];

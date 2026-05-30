@@ -197,7 +197,7 @@
       server = {
         host = "127.0.0.1";
         port = 3000;
-        base_url = "https://hs.${config.my.defaults.domain}";
+        base_url = "https://headplane.${config.my.defaults.domain}";
         cookie_secret_path = config.sops.secrets.headplane_cookie_secret.path;
         cookie_secure = true;
         data_path = "/var/lib/headplane";
