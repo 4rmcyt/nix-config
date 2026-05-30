@@ -221,6 +221,12 @@
   };
   users.groups.headscale = {};
 
+  # headscale runs on GCP — override the after/requires so headplane starts without it
+  systemd.services.headplane = {
+    after = lib.mkForce ["network-online.target" "sops-nix.service"];
+    requires = lib.mkForce [];
+  };
+
   sops.secrets.headplane_cookie_secret = {
     sopsFile = ../../../secrets/headplane.yaml;
     owner = "headscale";
