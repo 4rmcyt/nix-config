@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   home.packages = with pkgs; [
     # Runtime/env managers
     mise
@@ -12,14 +11,15 @@
 
     # Python extras (base has python3+uv, this adds dev packages)
     (python3.withPackages (
-      ps: with ps; [
-        pip
-        pydantic
-        requests
-        black
-        pylint
-        python-lsp-server
-      ]
+      ps:
+        with ps; [
+          pip
+          pydantic
+          requests
+          black
+          pylint
+          python-lsp-server
+        ]
     ))
 
     # Infrastructure

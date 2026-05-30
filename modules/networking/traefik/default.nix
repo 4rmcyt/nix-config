@@ -216,7 +216,6 @@ in {
           };
 
           routers = {
-
             traefik-dashboard = {
               rule = "Host(`traefik.${domain}`)";
               entryPoints = ["websecure"];
