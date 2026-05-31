@@ -47,10 +47,38 @@
   # =================================================================
   # Sops
   # =================================================================
-  sops = {
-    defaultSopsFormat = "yaml";
-    age.keyFile = "/root/.config/sops/age/keys.txt";
+  sops.age.keyFile = "/root/.config/sops/age/keys.txt";
+
+  # Fixed SSH host key — same fingerprint across VM rebuilds
+  sops.secrets.gcp_relay_host_ed25519 = {
+    sopsFile = ../../../secrets/gcp-relay-host-ed25519;
+    format = "binary";
+    path = "/etc/ssh/ssh_host_ed25519_key";
+    owner = "root";
+    group = "root";
+    mode = "0600";
   };
+
+  services.openssh.hostKeys = [
+    {
+      path = "/etc/ssh/ssh_host_ed25519_key";
+      type = "ed25519";
+    }
+  ];
+
+  # Age key baked into the image — bootstraps sops on first boot.
+  # Safe: image is private in GCS, key only decrypts secrets for this host.
+  virtualisation.googleComputeImage.contents = [
+    {
+      source = pkgs.runCommand "gcp-relay-age-key" {} ''
+        mkdir -p $out
+        ${pkgs.sops}/bin/sops -d ${../../../secrets/gcp-relay-age-key} > $out/keys.txt
+        chmod 600 $out/keys.txt
+      '';
+      target = "/root/.config/sops/age";
+      mode = "0700";
+    }
+  ];
 
   # =================================================================
   # Networking
@@ -149,6 +177,7 @@
   # =================================================================
   users.users.${config.my.defaults.user} = {
     isNormalUser = true;
+    shell = pkgs.zsh;
     extraGroups = ["wheel"];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyieBFROVPWmH3iC2ZAE+5zofMd6mnunBzfObEwMgFx"
@@ -160,7 +189,9 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyieBFROVPWmH3iC2ZAE+5zofMd6mnunBzfObEwMgFx"
   ];
 
-  environment.systemPackages = with pkgs; [curl htop jq tcpdump vim];
+  programs.zsh.enable = true;
+
+  environment.systemPackages = with pkgs; [curl htop jq tcpdump vim kitty.terminfo wezterm.terminfo];
 
   system.stateVersion = "25.11";
 }
