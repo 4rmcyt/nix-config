@@ -1,3 +1,5 @@
+# GCP e2-micro relay: headscale control plane + DERP server + Caddy TLS termination.
+# See gcp.md for deploy and first-boot instructions.
 {
   config,
   lib,
@@ -25,7 +27,8 @@
   security.googleOsLogin.enable = lib.mkForce false;
   networking.hostName = lib.mkForce "gcp-relay";
   boot.loader.grub.configurationLimit = lib.mkForce 2;
-  security.sudo.wheelNeedsPassword = lib.mkForce true;
+  security.sudo.wheelNeedsPassword = lib.mkForce false;
+  # google-compute-config.nix adds NOPASSWD for google-sudoers — kill it, wheel is enough
   security.sudo.extraRules = lib.mkForce [];
   security.sudo-rs.extraRules = lib.mkForce [];
 
@@ -66,19 +69,6 @@
     }
   ];
 
-  # Age key baked into the image — bootstraps sops on first boot.
-  # Safe: image is private in GCS, key only decrypts secrets for this host.
-  virtualisation.googleComputeImage.contents = [
-    {
-      source = pkgs.runCommand "gcp-relay-age-key" {} ''
-        mkdir -p $out
-        ${pkgs.sops}/bin/sops -d ${../../../secrets/gcp-relay-age-key} > $out/keys.txt
-        chmod 600 $out/keys.txt
-      '';
-      target = "/root/.config/sops/age";
-      mode = "0700";
-    }
-  ];
 
   # =================================================================
   # Networking
