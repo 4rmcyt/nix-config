@@ -116,9 +116,6 @@ in {
         # Localhost-only entrypoint for the API (used by homepage widget)
         entryPoints.traefik-api.address = "127.0.0.1:8083";
 
-        # Localhost-only entrypoint for cloudflared → headplane
-        entryPoints.headplane-cf.address = "127.0.0.1:3005";
-
         # ----------------------------------------------------------------
         # Plugins — local sources, no internet required at startup
         # ----------------------------------------------------------------
@@ -137,12 +134,6 @@ in {
       dynamicConfigOptions = {
         http = {
           middlewares = {
-            headplane-redirect.redirectRegex = {
-              regex = "^(https?://hp\\.${domain})/?$";
-              replacement = "$${1}/admin/";
-              permanent = true;
-            };
-
             security-headers.headers = {
               frameDeny = true;
               browserXssFilter = true;
@@ -519,21 +510,6 @@ in {
               ];
               tls.certResolver = "default";
             };
-
-            headplane-redirect = {
-              rule = "Host(`hp.${domain}`) && Path(`/`)";
-              entryPoints = ["headplane-cf"];
-              service = "headplane";
-              middlewares = ["headplane-redirect"];
-              priority = 20;
-            };
-
-            headplane = {
-              rule = "Host(`hp.${domain}`)";
-              entryPoints = ["headplane-cf"];
-              service = "headplane";
-              middlewares = ["security-headers"];
-            };
           };
 
           services = {
@@ -575,7 +551,6 @@ in {
             dispatcharr.loadBalancer.servers = [{url = "http://localhost:9191";}];
             radicale.loadBalancer.servers = [{url = "http://localhost:5232";}];
             ntfy.loadBalancer.servers = [{url = "http://localhost:9991";}];
-            headplane.loadBalancer.servers = [{url = "http://localhost:3004";}];
           };
         };
       };

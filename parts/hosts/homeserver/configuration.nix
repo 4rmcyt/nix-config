@@ -13,14 +13,12 @@ in {
       ../../../hosts/nixos/homeserver
       inputs.nixarr.nixosModules.default
       "${inputs.ephraim-nur}/nixos-modules/lazylibrarian.nix"
-      inputs.headplane.nixosModules.headplane
     ];
 
-    disabledModules = ["services/networking/headplane.nix"];
+    disabledModules = [];
 
     nixpkgs.overlays = [
       (final: _: {
-        headplane = inputs.headplane.packages.${final.system}.headplane;
         ez_setup = final.callPackage "${inputs.ephraim-nur}/pkgs/ez_setup" {};
         iso639-lang = (final.callPackage "${inputs.ephraim-nur}/pkgs/iso639-lang" {}).overrideAttrs (_: {
           meta.description = "A fast, comprehensive, ISO 639 library";

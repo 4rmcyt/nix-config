@@ -27,7 +27,6 @@
 
     # ../../../modules/base/distributed-builds
     ../../../modules/users/zeev
-    ../../../modules/services/headplane
   ];
 
   # =================================================================
@@ -192,7 +191,6 @@
   my.traefik.enable = true;
   my.headscale.enable = false;
   my.crowdsec.traefik.enable = true;
-
 
   # =================================================================
   # Programs

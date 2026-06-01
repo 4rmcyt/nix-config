@@ -15,7 +15,7 @@
         data_path = "/var/lib/headplane";
       };
       headscale = {
-        url = "https://hs.${config.my.defaults.domain}";
+        url = "http://127.0.0.1:${toString config.services.headscale.port}";
         config_strict = false;
       };
       integration = {
@@ -25,19 +25,10 @@
     };
   };
 
-  # headplane runs under headscale user (upstream module hardcodes this)
-  # headscale itself is disabled on this host — create the user manually
-  users.users.headscale = {
-    isSystemUser = true;
-    group = "headscale";
-  };
-  users.groups.headscale = {};
-
-  # headscale runs on GCP — start headplane without waiting for local headscale
+  # headscale runs locally — headplane starts after it
   systemd.services.headplane = {
-    after = lib.mkForce ["sops-nix.service"];
-    requires = lib.mkForce [];
-    wants = lib.mkForce [];
+    after = lib.mkForce ["sops-nix.service" "headscale.service"];
+    requires = lib.mkForce ["headscale.service"];
   };
 
   sops.secrets.headplane_cookie_secret = {

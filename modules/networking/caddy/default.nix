@@ -10,7 +10,8 @@ in {
   options.my.caddy = {
     enable = lib.mkEnableOption "Caddy reverse proxy with Cloudflare DNS-01";
 
-    headscale.enable = lib.mkEnableOption "Caddy vhost for headscale + headplane";
+    headscale.enable = lib.mkEnableOption "Caddy vhost for headscale";
+    headplane.enable = lib.mkEnableOption "Caddy vhost for headplane UI";
   };
 
   config = lib.mkIf cfg.enable {
@@ -49,6 +50,19 @@ in {
               compression off
             }
           }
+        '';
+      };
+
+      virtualHosts."hp.${domain}" = lib.mkIf cfg.headplane.enable {
+        extraConfig = ''
+          tls {
+            dns cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
+            resolvers 1.1.1.1
+          }
+
+          redir / /admin/ permanent
+
+          reverse_proxy 127.0.0.1:${toString config.services.headplane.settings.server.port}
         '';
       };
     };

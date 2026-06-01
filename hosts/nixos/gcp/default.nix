@@ -15,6 +15,7 @@
     ../../../modules/security/fail2ban
     ../../../modules/security/hardening.nix
     ../../../modules/services/headscale
+    ../../../modules/services/headplane
   ];
 
   # =================================================================
@@ -65,7 +66,6 @@
       type = "ed25519";
     }
   ];
-
 
   # =================================================================
   # Networking
@@ -130,6 +130,7 @@
   my.caddy = {
     enable = true;
     headscale.enable = true;
+    headplane.enable = true;
   };
 
   services.fail2ban = {
