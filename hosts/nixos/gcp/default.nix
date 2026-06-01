@@ -166,6 +166,8 @@ in {
         regionId = 901;
         regionCode = "gcp-us-central1";
         regionName = "GCP US Central (Iowa)";
+        latitude = 41.878;
+        longitude = -93.097;
       };
     };
 

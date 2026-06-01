@@ -62,6 +62,16 @@ in {
         default = "Relay";
         description = "Human-readable DERP region name.";
       };
+      latitude = mkOption {
+        type = types.float;
+        default = 0.0;
+        description = "DERP server latitude (used by clients for latency-based selection).";
+      };
+      longitude = mkOption {
+        type = types.float;
+        default = 0.0;
+        description = "DERP server longitude (used by clients for latency-based selection).";
+      };
     };
   };
 
@@ -105,6 +115,8 @@ in {
             region_code = cfg.derp.regionCode;
             region_name = cfg.derp.regionName;
             stun_listen_addr = "0.0.0.0:3478";
+            latitude = cfg.derp.latitude;
+            longitude = cfg.derp.longitude;
           };
           auto_update_enabled = true;
           urls = ["https://controlplane.tailscale.com/derpmap/default"];
