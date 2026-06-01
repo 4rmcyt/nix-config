@@ -144,7 +144,8 @@ resource "google_compute_instance" "relay" {
   }
 
   metadata = {
-    enable-oslogin = "FALSE"
+    enable-oslogin        = "FALSE"
+    serial-port-enable    = "TRUE"
   }
 
   lifecycle {

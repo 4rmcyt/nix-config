@@ -62,6 +62,10 @@ in {
 
     # google-compute-image.nix overrides
     security.googleOsLogin.enable = lib.mkForce false;
+
+    # Serial console access (GCP serial port)
+    boot.kernelParams = ["console=ttyS0,38400n8d"];
+    systemd.services."serial-getty@ttyS0".enable = true;
     networking.hostName = lib.mkForce "gcp-relay";
     boot.loader.grub.configurationLimit = lib.mkForce 2;
     security.sudo.wheelNeedsPassword = lib.mkForce false;
