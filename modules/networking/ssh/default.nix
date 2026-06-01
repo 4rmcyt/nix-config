@@ -63,6 +63,12 @@ in {
       IdentitiesOnly yes
 
     # External services
+    Host gcp-relay
+      HostName 35.209.0.21
+      User ${user}
+      IdentityFile ~/.ssh/${user}
+      IdentitiesOnly yes
+
     Host github.com
       IdentityFile ~/.ssh/${user}
       IdentitiesOnly yes
@@ -112,6 +118,11 @@ in {
   # SSH Known Hosts
   # =================================================================
   programs.ssh.knownHosts = {
+    "gcp-relay" = {
+      hostNames = ["35.209.0.21" "gcp-relay"];
+      publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJM6PdGMBKVCzUboMTKIw6Dbdmy8HM8QVFibWy7PBVZZ";
+    };
+
     "github.com-ecdsa-sha2-nistp256" = {
       hostNames = ["github.com"];
       publicKey = "AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=";
