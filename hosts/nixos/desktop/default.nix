@@ -218,7 +218,7 @@ in {
       authKeyFile = config.sops.secrets.tailscale_auth_key.path;
       enable = true;
       useRoutingFeatures = "both";
-      extraUpFlags = ["--accept-routes" "--accept-dns=false"];
+      extraUpFlags = ["--accept-routes" "--accept-dns=false" "--login-server=https://hs.example.com"];
     };
   };
   # =================================================================

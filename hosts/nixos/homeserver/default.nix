@@ -130,6 +130,7 @@
     tailscaleAuth = {
       enable = true;
       sopsFile = ../../../secrets/tailscale-homeserver.yaml;
+      loginServer = "https://hs.example.com";
       advertiseExitNode = true;
       advertiseRoutes = [
         (

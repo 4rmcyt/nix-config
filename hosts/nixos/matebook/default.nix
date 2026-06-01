@@ -316,6 +316,7 @@
         "--accept-routes"
         "--accept-dns=false"
         "--reset"
+        "--login-server=https://hs.example.com"
       ];
     };
   };
