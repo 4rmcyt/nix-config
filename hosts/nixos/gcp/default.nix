@@ -159,7 +159,7 @@ in {
       port = 8080;
       metricsPort = 9091;
       dns = {
-        nameservers = ["100.64.0.3"];
+        splitNameservers = ["100.64.0.3"];
         splitDomains = ["example.com"];
       };
       derp = {

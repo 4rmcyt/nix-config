@@ -32,12 +32,17 @@ in {
       nameservers = mkOption {
         type = types.listOf types.str;
         default = ["45.90.28.163" "45.90.30.163"];
-        description = "NextDNS nameservers pushed to Tailnet nodes.";
+        description = "Global nameservers pushed to Tailnet nodes (e.g. NextDNS).";
+      };
+      splitNameservers = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        description = "Nameservers used for split DNS domains. Defaults to nameservers if empty.";
       };
       splitDomains = mkOption {
         type = types.listOf types.str;
         default = [];
-        description = "Domains to resolve via global nameservers (split DNS).";
+        description = "Domains to resolve via splitNameservers.";
       };
     };
 
@@ -84,9 +89,10 @@ in {
         dns = {
           magic_dns = true;
           base_domain = "ts.${domain}";
+          nameservers.global = cfg.dns.nameservers;
           nameservers.split = listToAttrs (map (d: {
               name = d;
-              value = cfg.dns.nameservers;
+              value = if cfg.dns.splitNameservers != [] then cfg.dns.splitNameservers else cfg.dns.nameservers;
             })
             cfg.dns.splitDomains);
           search_domains = [];
