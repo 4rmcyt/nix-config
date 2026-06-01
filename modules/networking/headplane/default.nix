@@ -2,7 +2,7 @@
   config,
   lib,
   ...
-}: {
+}: lib.mkIf config.my.headscale.enable {
   services.headplane = {
     enable = true;
     settings = {
