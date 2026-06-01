@@ -44,9 +44,7 @@
 
       ingress:
         - hostname: hp.${config.my.defaults.domain}
-          service: http://localhost:3004
-          originRequest:
-            httpHostHeader: hp.${config.my.defaults.domain}
+          service: http://localhost:3005
 
         - hostname: hass.${config.my.defaults.domain}
           service: https://localhost:443
