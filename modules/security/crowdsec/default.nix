@@ -5,12 +5,13 @@
   ...
 }: let
   cfg = config.my.crowdsec;
+  isRemoteLapi = cfg.nftables.lapiUrl != "http://127.0.0.1:8088";
 
   crowdsecPlugin = pkgs.fetchFromGitHub {
     owner = "maxlerebourg";
     repo = "crowdsec-bouncer-traefik-plugin";
-    rev = "v1.5.1";
-    hash = "sha256-w4tQjJjcHg6P5ew7kkj4j5cduLIrs5BiQlvxkJFi6So=";
+    rev = "v1.6.0";
+    hash = "sha256-Wf2R2vgwBzUxuk96njtGFu8w7mdP5bm+5ZuO3D1+AbA=";
   };
 
   geoblockPlugin = pkgs.fetchFromGitHub {
@@ -25,6 +26,11 @@ in {
     caddy.enable = lib.mkEnableOption "CrowdSec Caddy log acquisition";
     nftables = {
       enable = lib.mkEnableOption "CrowdSec nftables firewall bouncer";
+      lapiUrl = lib.mkOption {
+        type = lib.types.str;
+        default = "http://127.0.0.1:8088";
+        description = "CrowdSec LAPI URL (local or remote via Tailscale).";
+      };
       secretsFile = lib.mkOption {
         type = lib.types.path;
         default = ../../../secrets/crowdsec.yaml;
@@ -47,7 +53,7 @@ in {
       mode = "0400";
     };
 
-    services.crowdsec = {
+    services.crowdsec = lib.mkIf (!isRemoteLapi) {
       enable = true;
 
       hub.collections =
@@ -88,9 +94,7 @@ in {
         ];
     };
 
-    # Parser whitelist — Tailscale CGNAT is not RFC1918, must be explicit.
-    # Written directly to avoid stale-symlink accumulation (nixpkgs crowdsec module L+ issue).
-    environment.etc."crowdsec/parsers/s02-enrich/tailscale-whitelist.yaml" = {
+    environment.etc."crowdsec/parsers/s02-enrich/tailscale-whitelist.yaml" = lib.mkIf (!isRemoteLapi) {
       user = "crowdsec";
       group = "crowdsec";
       mode = "0640";
@@ -105,7 +109,7 @@ in {
       '';
     };
 
-    environment.etc."crowdsec/postoverflows/s01-whitelist/local-trusted-networks.yaml" = {
+    environment.etc."crowdsec/postoverflows/s01-whitelist/local-trusted-networks.yaml" = lib.mkIf (!isRemoteLapi) {
       user = "crowdsec";
       group = "crowdsec";
       mode = "0640";
@@ -139,13 +143,12 @@ in {
       '';
     };
 
-    # nftables firewall bouncer — workaround for nixpkgs#476253
     services.crowdsec-firewall-bouncer = lib.mkIf cfg.nftables.enable {
       enable = true;
       settings = {
         mode = "nftables";
         api_key_path = "/run/crowdsec-bouncer/api_key";
-        api_url = "http://127.0.0.1:8088";
+        api_url = cfg.nftables.lapiUrl;
       };
     };
 
@@ -164,13 +167,12 @@ in {
     };
 
     systemd.services.crowdsec-firewall-bouncer = lib.mkIf cfg.nftables.enable {
-      after = ["nftables.service" "crowdsec.service"];
-      requires = ["crowdsec.service"];
+      after = ["nftables.service"] ++ lib.optionals (!isRemoteLapi) ["crowdsec.service"];
+      requires = lib.optionals (!isRemoteLapi) ["crowdsec.service"];
     };
 
     networking.nftables.enable = lib.mkIf cfg.nftables.enable true;
 
-    # Traefik plugin sources — only needed when Traefik bouncer is active
     systemd.tmpfiles.rules = lib.mkIf cfg.traefik.enable [
       "d /var/lib/traefik/plugins-local 0750 traefik traefik -"
       "d /var/lib/traefik/plugins-local/src 0750 traefik traefik -"

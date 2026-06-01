@@ -31,8 +31,13 @@ in {
     dns = {
       nameservers = mkOption {
         type = types.listOf types.str;
-        default = ["1.1.1.1" "1.0.0.1"];
-        description = "Global DNS nameservers pushed to Tailnet nodes.";
+        default = ["45.90.28.163" "45.90.30.163"];
+        description = "NextDNS nameservers pushed to Tailnet nodes.";
+      };
+      splitDomains = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        description = "Domains to resolve via global nameservers (split DNS).";
       };
     };
 
@@ -80,6 +85,11 @@ in {
           magic_dns = true;
           base_domain = "ts.${domain}";
           nameservers.global = cfg.dns.nameservers;
+          nameservers.split = listToAttrs (map (d: {
+              name = d;
+              value = cfg.dns.nameservers;
+            })
+            cfg.dns.splitDomains);
           search_domains = [];
         };
 
@@ -91,7 +101,8 @@ in {
             region_name = cfg.derp.regionName;
             stun_listen_addr = "0.0.0.0:3478";
           };
-          auto_update_enabled = false;
+          auto_update_enabled = true;
+          urls = ["https://controlplane.tailscale.com/derpmap/default"];
         };
 
         metrics_listen_addr = "127.0.0.1:${toString cfg.metricsPort}";
