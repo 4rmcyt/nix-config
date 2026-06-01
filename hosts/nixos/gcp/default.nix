@@ -21,6 +21,10 @@
     hash = "sha256-qgLM6nrlDXLS7OsLw6cDKjhx9B+CnJR4TB32pg/MvEo=";
   };
 in {
+  imports = [
+    ../../../modules/disko/gcp
+  ];
+
   options.my.crowdsec = {
     traefik.enable = lib.mkEnableOption "CrowdSec Traefik bouncer plugin wiring";
     caddy.enable = lib.mkEnableOption "CrowdSec Caddy log acquisition";
@@ -182,5 +186,10 @@ in {
       "L+ /var/lib/traefik/plugins-local/src/github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin - - - - ${crowdsecPlugin}"
       "L+ /var/lib/traefik/plugins-local/src/github.com/david-garcia-garcia/traefik-geoblock - - - - ${geoblockPlugin}"
     ];
+
+    users.users.zeev = {
+      isNormalUser = true;
+      home = "/home/zeev";
+    };
   };
 }

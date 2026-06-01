@@ -16,5 +16,9 @@ in {
 
     nixpkgs.hostPlatform = lib.mkForce "x86_64-linux";
     nixpkgs.overlays = [inputs.headplane.overlays.default];
+
+    home-manager.users.zeev.imports = [
+      ../../../modules/TUI/starship
+    ];
   };
 }
