@@ -28,12 +28,6 @@ in {
       description = "Port for Prometheus metrics endpoint (127.0.0.1 only).";
     };
 
-    privateKeySecret = mkOption {
-      type = types.str;
-      default = "headscale_private_key";
-      description = "Name of the sops secret containing the headscale private key.";
-    };
-
     dns = {
       nameservers = mkOption {
         type = types.listOf types.str;
@@ -62,13 +56,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    sops.secrets.${cfg.privateKeySecret} = {
-      sopsFile = ../../../secrets/headscale.yaml;
-      owner = "headscale";
-      group = "headscale";
-      mode = "0400";
-    };
-
     services.headscale = {
       enable = true;
       address = "127.0.0.1";
@@ -76,7 +63,7 @@ in {
 
       settings = {
         server_url = "https://${cfg.subdomain}.${domain}";
-        noise.private_key_path = config.sops.secrets.${cfg.privateKeySecret}.path;
+        noise.private_key_path = "/var/lib/headscale/noise_private.key";
 
         log = {
           level = "info";
