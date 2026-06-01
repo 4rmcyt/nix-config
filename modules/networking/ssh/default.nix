@@ -120,7 +120,7 @@ in {
   programs.ssh.knownHosts = {
     "gcp-relay" = {
       hostNames = ["203.0.113.1" "gcp-relay"];
-      publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJM6PdGMBKVCzUboMTKIw6Dbdmy8HM8QVFibWy7PBVZZ";
+      publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEbxs41SR0FA6rVN4/KcGcAOVMlLS2IfKfmIG07sboyg";
     };
 
     "github.com-ecdsa-sha2-nistp256" = {
