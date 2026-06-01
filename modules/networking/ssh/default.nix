@@ -64,7 +64,7 @@ in {
 
     # External services
     Host gcp-relay
-      HostName 35.209.0.21
+      HostName 203.0.113.1
       User ${user}
       IdentityFile ~/.ssh/${user}
       IdentitiesOnly yes
@@ -119,7 +119,7 @@ in {
   # =================================================================
   programs.ssh.knownHosts = {
     "gcp-relay" = {
-      hostNames = ["35.209.0.21" "gcp-relay"];
+      hostNames = ["203.0.113.1" "gcp-relay"];
       publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJM6PdGMBKVCzUboMTKIw6Dbdmy8HM8QVFibWy7PBVZZ";
     };
 

@@ -19,4 +19,5 @@ variable "zone" {
 variable "image_date" {
   type        = string
   description = "Date suffix for the NixOS image (YYYYMMDD), matches the GCS object name"
+  default     = "20260601"
 }

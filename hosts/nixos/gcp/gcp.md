@@ -4,7 +4,7 @@
 
 | Property       | Value                                                                |
 |----------------|----------------------------------------------------------------------|
-| IP             | 35.209.0.21 (static, reserved as `gcp-relay-ip`)                    |
+| IP             | 203.0.113.1 (static, reserved as `gcp-relay-ip`)                    |
 | Zone           | us-central1-a                                                        |
 | Machine        | e2-micro (free tier)                                                 |
 | GCS bucket     | gcp-relay-nixos-images                                               |
