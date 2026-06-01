@@ -47,7 +47,7 @@ sudo systemctl restart headscale caddy
 ## Ongoing Deploys (after first boot)
 
 ```bash
-nixos-rebuild switch --flake .#gcp-relay --target-host zeev@35.209.0.21 --sudo --build-host localhost
+nixos-rebuild switch --flake .#gcp-relay --target-host zeev@gcp-relay --use-remote-sudo --build-host localhost
 ```
 
 ## Key Facts
