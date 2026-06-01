@@ -84,7 +84,6 @@ in {
         dns = {
           magic_dns = true;
           base_domain = "ts.${domain}";
-          nameservers.global = cfg.dns.nameservers;
           nameservers.split = listToAttrs (map (d: {
               name = d;
               value = cfg.dns.nameservers;
