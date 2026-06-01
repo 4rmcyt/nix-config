@@ -2,14 +2,15 @@
 
 ## Key Facts
 
-| Property       | Value                                                              |
-|----------------|--------------------------------------------------------------------|
-| IP             | 35.209.0.21 (static, reserved as `gcp-relay-ip`)                  |
-| Zone           | us-central1-a                                                      |
-| Machine        | e2-micro (free tier)                                               |
-| GCS bucket     | gcp-relay-nixos-images                                             |
+| Property       | Value                                                                |
+|----------------|----------------------------------------------------------------------|
+| IP             | 35.209.0.21 (static, reserved as `gcp-relay-ip`)                    |
+| Zone           | us-central1-a                                                        |
+| Machine        | e2-micro (free tier)                                                 |
+| GCS bucket     | gcp-relay-nixos-images                                               |
 | SSH host key   | `secrets/gcp-relay-host-ed25519` — fixed fingerprint across rebuilds |
-| Age key        | `age1fsjqjx77t6yhfvdgq8a69aggh36jv0fjm53u26tlqvs73lkpgutsssdttd` |
+| Age key        | `age1fsjqjx77t6yhfvdgq8a69aggh36jv0fjm53u26tlqvs73lkpgutsssdttd`   |
+| Tofu config    | `infra/tf/gcp-relay/`                                                |
 
 ---
 
@@ -27,8 +28,15 @@ nh os build-image --image-variant google-compute --hostname gcp-relay ~/src/nix-
 gsutil cp result/nixos-*.raw.tar.gz gs://gcp-relay-nixos-images/nixos-gcp-relay-v$(date +%Y%m%d).raw.tar.gz
 ```
 
-### 3. Register as GCP image
+### 3. Register image & recreate VM
 
+**Option A — OpenTofu (recommended):**
+```bash
+cd infra/tf/gcp-relay
+tofu apply -var="image_date=$(date +%Y%m%d)"
+```
+
+**Option B — gcloud:**
 ```bash
 gcloud compute images delete \
   $(gcloud compute images list --filter="family=nixos-gcp-relay" --format="value(name)") \
@@ -37,11 +45,7 @@ gcloud compute images delete \
 gcloud compute images create gcp-relay-$(date +%Y%m%d) \
   --source-uri gs://gcp-relay-nixos-images/nixos-gcp-relay-v$(date +%Y%m%d).raw.tar.gz \
   --family nixos-gcp-relay
-```
 
-### 4. Recreate the VM
-
-```bash
 gcloud compute instances delete gcp-relay --zone=us-central1-a --quiet
 
 gcloud compute instances create gcp-relay \
@@ -54,7 +58,7 @@ gcloud compute instances create gcp-relay \
   --tags http-server,https-server
 ```
 
-### 5. Cleanup
+### 4. Cleanup
 
 ```bash
 gsutil rm gs://gcp-relay-nixos-images/nixos-gcp-relay-v$(date +%Y%m%d).raw.tar.gz
@@ -86,4 +90,14 @@ sudo systemctl restart headscale headplane caddy
 
 ```bash
 nh os switch --hostname gcp-relay --target-host zeev@gcp-relay ~/src/nix-config
+```
+
+---
+
+## Tofu Setup (first time)
+
+```bash
+cd infra/tf/gcp-relay
+tofu init
+gcloud auth application-default login
 ```
