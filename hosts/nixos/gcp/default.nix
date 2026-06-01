@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  modulesPath,
   ...
 }: let
   cfg = config.my.crowdsec;
@@ -22,7 +23,8 @@
   };
 in {
   imports = [
-    ../../../modules/disko/gcp
+    "${modulesPath}/virtualisation/google-compute-image.nix"
+    ../../../modules/options
   ];
 
   options.my.crowdsec = {

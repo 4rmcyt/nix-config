@@ -1,18 +1,47 @@
 # GCP Relay — Operations Guide
 
-## Build & Deploy
+## Key Facts
+
+| Property       | Value                                                              |
+|----------------|--------------------------------------------------------------------|
+| IP             | 35.209.0.21 (static, reserved as `gcp-relay-ip`)                  |
+| Zone           | us-central1-a                                                      |
+| Machine        | e2-micro (free tier)                                               |
+| GCS bucket     | gcp-relay-nixos-images                                             |
+| SSH host key   | `secrets/gcp-relay-host-ed25519` — fixed fingerprint across rebuilds |
+| Age key        | `age1fsjqjx77t6yhfvdgq8a69aggh36jv0fjm53u26tlqvs73lkpgutsssdttd` |
+
+---
+
+## Full Rebuild (new image)
+
+### 1. Build the GCP image
 
 ```bash
-nix build .#nixosConfigurations.gcp-relay.config.system.build.googleComputeImage
+nh os build-image --image-variant google-compute --hostname gcp-relay ~/src/nix-config
+```
 
-gsutil cp result/nixos-*.raw.tar.gz gs://gcp-relay-nixos-images/nixos-gcp-relay-vN.raw.tar.gz
+### 2. Upload to GCS
 
-gcloud compute images delete $(gcloud compute images list --filter="family=nixos-gcp-relay" --format="value(name)") --quiet
+```bash
+gsutil cp result/nixos-*.raw.tar.gz gs://gcp-relay-nixos-images/nixos-gcp-relay-v$(date +%Y%m%d).raw.tar.gz
+```
+
+### 3. Register as GCP image
+
+```bash
+gcloud compute images delete \
+  $(gcloud compute images list --filter="family=nixos-gcp-relay" --format="value(name)") \
+  --quiet
 
 gcloud compute images create gcp-relay-$(date +%Y%m%d) \
-  --source-uri gs://gcp-relay-nixos-images/nixos-gcp-relay-vN.raw.tar.gz \
+  --source-uri gs://gcp-relay-nixos-images/nixos-gcp-relay-v$(date +%Y%m%d).raw.tar.gz \
   --family nixos-gcp-relay
+```
 
+### 4. Recreate the VM
+
+```bash
 gcloud compute instances delete gcp-relay --zone=us-central1-a --quiet
 
 gcloud compute instances create gcp-relay \
@@ -23,38 +52,38 @@ gcloud compute instances create gcp-relay \
   --address gcp-relay-ip \
   --network-tier=STANDARD \
   --tags http-server,https-server
-
-gsutil rm gs://gcp-relay-nixos-images/nixos-gcp-relay-vN.raw.tar.gz
 ```
+
+### 5. Cleanup
+
+```bash
+gsutil rm gs://gcp-relay-nixos-images/nixos-gcp-relay-v$(date +%Y%m%d).raw.tar.gz
+```
+
+---
 
 ## First Boot Setup
 
-After VM is up, copy the age key and activate secrets:
+After the VM is up, copy the age key and activate secrets:
 
 ```bash
 gcloud compute scp ~/.config/sops/age/keys.txt gcp-relay:/tmp/keys.txt --zone=us-central1-a
 ```
 
 On the VM:
+
 ```bash
 sudo mkdir -p /root/.config/sops/age
 sudo mv /tmp/keys.txt /root/.config/sops/age/keys.txt
 sudo chmod 600 /root/.config/sops/age/keys.txt
 sudo /run/current-system/activate
-sudo systemctl restart headscale caddy
+sudo systemctl restart headscale headplane caddy
 ```
 
-## Ongoing Deploys (after first boot)
+---
+
+## Ongoing Deploys
 
 ```bash
-nixos-rebuild switch --flake .#gcp-relay --target-host zeev@gcp-relay --use-remote-sudo --build-host localhost
+nh os switch --hostname gcp-relay --target-host zeev@gcp-relay ~/src/nix-config
 ```
-
-## Key Facts
-
-- **IP**: 35.209.0.21 (static, reserved as `gcp-relay-ip`)
-- **Zone**: us-central1-a
-- **Machine**: e2-micro (free tier)
-- **GCS bucket**: gcp-relay-nixos-images
-- **SSH host key**: fixed in `secrets/gcp-relay-host-ed25519` — same fingerprint across rebuilds
-- **Age key fingerprint**: age1fsjqjx77t6yhfvdgq8a69aggh36jv0fjm53u26tlqvs73lkpgutsssdttd

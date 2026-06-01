@@ -51,6 +51,10 @@
     # ===== Workbench Settings =====
     "workbench.colorTheme" = "Kanagawa";
     "workbench.editor.enablePreview" = false;
+    "workbench.editorAssociations" = {
+      "*.md" = "vscode.markdown.preview.editor";
+    };
+    "vim.enable" = false;
     "workbench.editor.limit.perEditorGroup" = true;
     "workbench.iconTheme" = "material-icon-theme";
     "workbench.startupEditor" = "none";
