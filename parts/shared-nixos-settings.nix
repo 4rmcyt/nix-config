@@ -63,6 +63,7 @@ in {
         "cgroups"
         "pipe-operator"
       ];
+      allow-import-from-derivation = true;
       deprecated-features = ["broken-string-escape"];
       auto-optimise-store = true;
       warn-dirty = false;

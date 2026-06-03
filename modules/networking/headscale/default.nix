@@ -102,7 +102,10 @@ in {
           nameservers.global = cfg.dns.nameservers;
           nameservers.split = listToAttrs (map (d: {
               name = d;
-              value = if cfg.dns.splitNameservers != [] then cfg.dns.splitNameservers else cfg.dns.nameservers;
+              value =
+                if cfg.dns.splitNameservers != []
+                then cfg.dns.splitNameservers
+                else cfg.dns.nameservers;
             })
             cfg.dns.splitDomains);
           search_domains = [];

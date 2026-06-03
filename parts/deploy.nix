@@ -6,13 +6,15 @@
   inherit (config.meta) owner;
   deployLib = inputs.deploy-rs.lib.x86_64-linux;
 
-  mkNode = hostname: targetHost: extraArgs: {
+  mkNode = hostname: _targetHost: extraArgs: {
     inherit hostname;
     sshUser = owner.username;
-    profiles.system = {
-      user = "root";
-      path = deployLib.activate.nixos config.flake.nixosConfigurations.${hostname};
-    } // extraArgs;
+    profiles.system =
+      {
+        user = "root";
+        path = deployLib.activate.nixos config.flake.nixosConfigurations.${hostname};
+      }
+      // extraArgs;
   };
 in {
   flake.deploy.nodes = {
@@ -37,5 +39,4 @@ in {
       sshOpts = ["-p" "22"];
     };
   };
-
 }
