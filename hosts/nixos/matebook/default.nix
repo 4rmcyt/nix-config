@@ -284,14 +284,10 @@
       settings = {
         battery = {
           governor = "powersave";
-          scaling_min_freq = 1400000;
-          scaling_max_freq = 3500000;
           turbo = "never";
         };
         charger = {
           governor = "performance";
-          scaling_min_freq = 1400000;
-          scaling_max_freq = 4700000;
           turbo = "auto";
         };
       };

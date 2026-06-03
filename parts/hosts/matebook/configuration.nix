@@ -11,7 +11,6 @@ in {
     imports = [
       nixosBase
       ../../../hosts/nixos/matebook
-      inputs.auto-cpufreq.nixosModules.default
       inputs.niri-flake.nixosModules.niri
       inputs.noctalia.nixosModules.default
     ];
