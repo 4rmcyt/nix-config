@@ -277,7 +277,25 @@
     # =============================================================
     # Power Management
     # =============================================================
-    power-profiles-daemon.enable = true;
+    power-profiles-daemon.enable = false;
+
+    auto-cpufreq = {
+      enable = true;
+      settings = {
+        battery = {
+          governor = "powersave";
+          scaling_min_freq = 1400000;
+          scaling_max_freq = 3500000;
+          turbo = "never";
+        };
+        charger = {
+          governor = "performance";
+          scaling_min_freq = 1400000;
+          scaling_max_freq = 4700000;
+          turbo = "auto";
+        };
+      };
+    };
 
     logind.settings.Login = {
       lidSwitch = "suspend";
