@@ -7,6 +7,7 @@
     ../../modules/GUI/terminal
     ../../modules/GUI/IDE
     ../../modules/TUI/ai-tools
+    ../../modules/TUI/ai-tools/llama-cpp
 
     ../../modules/GUI/chrome/home.nix
     ../../modules/GUI/chromium
