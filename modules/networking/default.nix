@@ -6,6 +6,7 @@
     ./headplane
     ./headscale
     ./nfs
+    ./unbound
     ./tailscale
     ./traefik
     ./wireguard

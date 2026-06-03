@@ -232,45 +232,14 @@
     };
 
     vscode-server.enable = false;
-
-    # Split DNS for Tailscale: resolves *.example.com → homeserver's Tailscale IP
-    # Binds to tailscale0 only; address is resolved dynamically at service start
-    dnsmasq = {
-      enable = true;
-      settings = {
-        interface = [
-          "tailscale0"
-          "enp0s31f6"
-        ];
-        bind-interfaces = true;
-        no-resolv = true;
-        no-hosts = true;
-        conf-dir = "/run/dnsmasq";
-        server = ["tls://nextdns0.dns.nextdns.io"];
-        cache-size = 1000;
-        min-cache-ttl = 300;
-        neg-ttl = 60;
-      };
-    };
   };
 
-  # Write dnsmasq address config dynamically from Tailscale IP at service start
-  # Also writes LAN IP entry so local clients get direct access without Tailscale
-  systemd.services.dnsmasq = {
-    after = ["tailscale-autoconnect.service"];
-    wants = ["tailscale-autoconnect.service"];
-    # RuntimeDirectory creates /run/dnsmasq before ExecStartPre runs (dnsmasq --test validates conf-dir)
-    serviceConfig.RuntimeDirectory = "dnsmasq";
-    preStart = ''
-      {
-        TSIP=$(${pkgs.tailscale}/bin/tailscale ip -4 2>/dev/null || true)
-        [ -n "$TSIP" ] && echo "address=/.${config.my.defaults.domain}/$TSIP"
-        echo "address=/.${config.my.defaults.domain}/${config.my.defaults.homeserver_lan}"
-        # GCP relay services — override wildcard with specific entries
-        echo "address=/hs.${config.my.defaults.domain}/203.0.113.1"
-        echo "address=/hp.${config.my.defaults.domain}/203.0.113.1"
-      } > /run/dnsmasq/address.conf
-    '';
+  my.unbound = {
+    enable = true;
+    interfaces = ["tailscale0" "enp0s31f6"];
+    tailscaleIp = "100.64.0.3";
+    gcpRelayIp = "203.0.113.1";
+    nextdnsProfileId = "nextdns0";
   };
 
   # =================================================================
