@@ -129,6 +129,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Deployment
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Services & infrastructure
     ephraim-nur = {
       url = "github:EphraimSiegfried/nur-packages";
