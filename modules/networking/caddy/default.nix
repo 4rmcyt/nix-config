@@ -60,9 +60,16 @@ in {
             resolvers 1.1.1.1
           }
 
-          redir / /admin/ permanent
+          @tailscale remote_ip 100.64.0.0/10
 
-          reverse_proxy 127.0.0.1:${toString config.services.headplane.settings.server.port}
+          handle @tailscale {
+            redir / /admin/ permanent
+            reverse_proxy 127.0.0.1:${toString config.services.headplane.settings.server.port}
+          }
+
+          handle {
+            respond "Access denied" 403
+          }
         '';
       };
     };
