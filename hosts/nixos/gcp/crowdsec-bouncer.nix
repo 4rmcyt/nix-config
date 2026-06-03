@@ -1,4 +1,4 @@
-# CrowdSec nftables bouncer — connects to a remote LAPI over Tailscale.
+# CrowdSec nftables bouncer — connects to a remote LAPI over Headscale.
 # No local CrowdSec agent is run on this host.
 {
   config,
@@ -14,7 +14,7 @@ in
 
     lapiUrl = lib.mkOption {
       type = lib.types.str;
-      description = "CrowdSec LAPI URL (remote host over Tailscale).";
+      description = "CrowdSec LAPI URL (remote host over headscale).";
       example = "http://100.64.0.3:8088";
     };
 
@@ -44,8 +44,8 @@ in
     };
 
     systemd.services.crowdsec-firewall-bouncer = {
-      after = [ "nftables.service" "tailscaled.service" ];
-      requires = [ "tailscaled.service" ];
+      after = [ "nftables.service" "headscale.service" ];
+      requires = [ "headscale.service" ];
     };
 
     networking.nftables.enable = true;
