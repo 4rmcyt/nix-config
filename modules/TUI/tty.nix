@@ -1,21 +1,17 @@
 {pkgs, ...}: {
+  fonts.packages = [
+    pkgs.meslo-lgs-nf
+    pkgs.nerd-fonts.symbols-only
+  ];
+
   services.kmscon = {
     enable = true;
     hwRender = true;
-    fonts = [
-      {
-        name = "MesloLGS Nerd Font";
-        package = pkgs.meslo-lgs-nf;
-      }
-      {
-        name = "Symbols Nerd Font Mono";
-        package = pkgs.nerd-fonts.symbols-only;
-      }
-    ];
-    extraConfig = ''
-      font-size=16
-      hwaccel
-      gpus=aux
-    '';
+    config = {
+      font-name = "MesloLGS Nerd Font";
+      font-size = 16;
+      hwaccel = true;
+      gpus = "aux";
+    };
   };
 }
