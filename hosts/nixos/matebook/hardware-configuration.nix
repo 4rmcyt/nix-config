@@ -125,13 +125,7 @@
   # =================================================================
   # 4. Power Management
   # =================================================================
-  powerManagement = {
-    enable = true;
-    # powertop autotune disabled: conflicts with auto-cpufreq (both fight over USB
-    # autosuspend and runtime PM); auto-cpufreq covers these tunables already
-    powertop.enable = false;
-    # cpuFreqGovernor = "schedutil"; # Removed, as auto-cpufreq manages this
-  };
+  powerManagement.enable = true;
 
   # =================================================================
   # 5. Services
@@ -143,10 +137,7 @@
       scheduler = "scx_bpfland";
     };
 
-    # Battery optimization
     upower.enable = true;
-    # TLP conflicts with auto-cpufreq, using auto-cpufreq instead
-    tlp.enable = false;
 
     ucodenix = {
       enable = true;

@@ -272,30 +272,12 @@
     # =============================================================
     # Power Management
     # =============================================================
-    auto-cpufreq = {
-      enable = true;
-      settings = {
-        battery = {
-          governor = "powersave";
-          scaling_min_freq = 1400000;
-          scaling_max_freq = 3500000;
-          turbo = "never";
-        };
-        charger = {
-          governor = "performance";
-          scaling_min_freq = 1400000;
-          scaling_max_freq = 4700000;
-          turbo = "auto";
-        };
-      };
-    };
+    power-profiles-daemon.enable = true;
 
     logind.settings.Login = {
       lidSwitch = "suspend";
       lidSwitchDocked = "ignore";
     };
-
-    power-profiles-daemon.enable = false; # Conflicts with auto-cpufreq
 
     # =============================================================
     # System Services
