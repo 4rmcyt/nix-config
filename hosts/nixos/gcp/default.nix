@@ -10,20 +10,6 @@
 let
   cfg = config.my.crowdsec;
   isRemoteLapi = cfg.nftables.lapiUrl != "http://127.0.0.1:8088";
-
-  crowdsecPlugin = pkgs.fetchFromGitHub {
-    owner = "maxlerebourg";
-    repo = "crowdsec-bouncer-traefik-plugin";
-    rev = "v1.5.1";
-    hash = "sha256-w4tQjJjcHg6P5ew7kkj4j5cduLIrs5BiQlvxkJFi6So=";
-  };
-
-  geoblockPlugin = pkgs.fetchFromGitHub {
-    owner = "david-garcia-garcia";
-    repo = "traefik-geoblock";
-    rev = "v1.1.4";
-    hash = "sha256-qgLM6nrlDXLS7OsLw6cDKjhx9B+CnJR4TB32pg/MvEo=";
-  };
 in
 {
   imports = [
@@ -39,7 +25,6 @@ in
   ];
 
   options.my.crowdsec = {
-    traefik.enable = lib.mkEnableOption "CrowdSec Traefik bouncer plugin wiring";
     caddy.enable = lib.mkEnableOption "CrowdSec Caddy log acquisition";
     nftables = {
       enable = lib.mkEnableOption "CrowdSec nftables firewall bouncer";
@@ -229,13 +214,6 @@ in
     # =================================================================
     # CrowdSec
     # =================================================================
-    sops.secrets.crowdsec_bouncer_key = lib.mkIf cfg.traefik.enable {
-      sopsFile = ../../../secrets/crowdsec.yaml;
-      owner = "traefik";
-      group = "traefik";
-      mode = "0400";
-    };
-
     sops.secrets.crowdsec_bouncer_key_nftables = lib.mkIf cfg.nftables.enable {
       sopsFile = cfg.nftables.secretsFile;
       owner = "root";
@@ -249,7 +227,6 @@ in
         "crowdsecurity/linux"
         "crowdsecurity/sshd"
       ]
-      ++ lib.optionals cfg.traefik.enable [ "crowdsecurity/traefik" ]
       ++ lib.optionals cfg.caddy.enable [ "crowdsecurity/caddy" ];
 
       settings.general.api.server = {
@@ -264,12 +241,6 @@ in
           source = "journalctl";
           journalctl_filter = [ "_SYSTEMD_UNIT=sshd.service" ];
           labels.type = "syslog";
-        }
-      ]
-      ++ lib.optionals cfg.traefik.enable [
-        {
-          filenames = [ "/var/log/traefik/access.log" ];
-          labels.type = "traefik";
         }
       ]
       ++ lib.optionals cfg.caddy.enable [
@@ -353,16 +324,6 @@ in
     };
 
     networking.nftables.enable = lib.mkIf cfg.nftables.enable true;
-
-    systemd.tmpfiles.rules = lib.mkIf cfg.traefik.enable [
-      "d /var/lib/traefik/plugins-local 0750 traefik traefik -"
-      "d /var/lib/traefik/plugins-local/src 0750 traefik traefik -"
-      "d /var/lib/traefik/plugins-local/src/github.com 0750 traefik traefik -"
-      "d /var/lib/traefik/plugins-local/src/github.com/maxlerebourg 0750 traefik traefik -"
-      "d /var/lib/traefik/plugins-local/src/github.com/david-garcia-garcia 0750 traefik traefik -"
-      "L+ /var/lib/traefik/plugins-local/src/github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin - - - - ${crowdsecPlugin}"
-      "L+ /var/lib/traefik/plugins-local/src/github.com/david-garcia-garcia/traefik-geoblock - - - - ${geoblockPlugin}"
-    ];
 
     # =================================================================
     # User
