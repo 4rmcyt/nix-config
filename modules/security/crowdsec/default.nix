@@ -66,7 +66,7 @@ in {
 
       settings.general.api.server = {
         enable = true;
-        listen_uri = "127.0.0.1:8088";
+        listen_uri = "0.0.0.0:8088";
       };
 
       settings.lapi.credentialsFile = "/var/lib/crowdsec/state/lapi-credentials.yaml";

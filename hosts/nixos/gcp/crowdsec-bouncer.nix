@@ -1,3 +1,5 @@
+# CrowdSec nftables bouncer — connects to a remote LAPI over Tailscale.
+# No local CrowdSec agent is run on this host.
 {
   config,
   lib,
@@ -11,12 +13,12 @@ in {
     lapiUrl = lib.mkOption {
       type = lib.types.str;
       description = "CrowdSec LAPI URL (remote host over Tailscale).";
-      example = "http://100.64.0.3:8080";
+      example = "http://100.64.0.3:8088";
     };
 
     secretsFile = lib.mkOption {
       type = lib.types.path;
-      default = ../../../secrets/crowdsec.yaml;
+      default = ../../../secrets/crowdsec-gcp.yaml;
       description = "Sops file containing crowdsec_bouncer_key_nftables.";
     };
   };

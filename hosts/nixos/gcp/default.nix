@@ -130,7 +130,7 @@
 
     my.crowdsecBouncer = {
       enable = true;
-      lapiUrl = "http://<home-server-tailscale-ip>:<lapi-port>";
+      lapiUrl = "http://100.64.0.3:8088";
     };
 
     my.nodeExporter.enable = true;
