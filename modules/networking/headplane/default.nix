@@ -27,7 +27,7 @@
 
   # headscale runs locally — headplane starts after it
   systemd.services.headplane = {
-    after = lib.mkForce ["sops-nix.service" "headscale.service"];
+    after = lib.mkForce ["headscale.service"];
     requires = lib.mkForce ["headscale.service"];
   };
 
