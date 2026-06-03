@@ -42,6 +42,9 @@ in {
       };
     };
 
+    # Prevent dhcpcd from pushing router-provided DNS into resolved
+    networking.dhcpcd.extraConfig = "nohook resolv.conf";
+
     # NegativeTrustAnchors was removed from resolved.conf in systemd 250+
     # The replacement is /etc/dnssec-trust-anchors.d/*.negative
     environment.etc."dnssec-trust-anchors.d/local.negative".text = ''
