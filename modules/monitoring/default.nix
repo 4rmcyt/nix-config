@@ -29,27 +29,7 @@
   };
 
   # =================================================================
-  # 2. NixOS generation tracking (textfile collector)
-  # =================================================================
-  services.prometheus.exporters.node.extraFlags = [
-    "--collector.textfile.directory=/var/lib/prometheus-node-exporter-text-files"
-  ];
-
-  system.activationScripts.node-exporter-system-version = {
-    supportsDryActivation = true;
-    text = ''
-      mkdir -pm 0775 /var/lib/prometheus-node-exporter-text-files
-      (
-        echo -n "system_version "
-        readlink /nix/var/nix/profiles/system | cut -d- -f2
-      ) > /var/lib/prometheus-node-exporter-text-files/system-version.prom.next
-      mv /var/lib/prometheus-node-exporter-text-files/system-version.prom.next \
-         /var/lib/prometheus-node-exporter-text-files/system-version.prom
-    '';
-  };
-
-  # =================================================================
-  # 3. Users and Groups
+  # 2. Users and Groups
   # =================================================================
   users.users = {
     grafana = {
@@ -299,21 +279,6 @@
       ruleFiles = [./alerts/homeserver.yaml];
 
       exporters = {
-        node = {
-          enable = true;
-          enabledCollectors = [
-            "diskstats"
-            "meminfo"
-            "netdev"
-            "pressure"
-            "stat"
-            "systemd"
-            "textfile"
-            "thermal_zone"
-            "time"
-            "zfs"
-          ];
-        };
         nut = {
           enable = true;
           nutServer = "localhost";

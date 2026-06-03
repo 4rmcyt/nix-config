@@ -18,6 +18,7 @@
     ../../../modules/containers
     ../../../modules/database
     ../../../modules/monitoring
+    ../../../modules/monitoring/node-exporter-client.nix
     ../../../modules/networking
     ../../../modules/networking/ssh
     ../../../modules/networking/nut-server
@@ -191,6 +192,12 @@
   my.traefik.enable = true;
   my.headscale.enable = false;
   my.crowdsec.traefik.enable = true;
+
+  my.nodeExporter = {
+    enable = true;
+    openFirewall = false; # port already open in networking.firewall
+    extraCollectors = ["pressure" "thermal_zone" "zfs"];
+  };
 
   # =================================================================
   # Programs
