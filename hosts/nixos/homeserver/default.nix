@@ -246,6 +246,10 @@
         no-resolv = true;
         no-hosts = true;
         conf-dir = "/run/dnsmasq";
+        server = ["tls://nextdns0.dns.nextdns.io"];
+        cache-size = 1000;
+        min-cache-ttl = 300;
+        neg-ttl = 60;
       };
     };
   };
