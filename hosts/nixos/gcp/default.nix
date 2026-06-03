@@ -159,6 +159,8 @@ in {
       secretsFile = ../../../secrets/crowdsec-gcp.yaml;
     };
 
+    my.crowdsec.caddy.enable = true;
+
     my.nodeExporter.enable = true;
 
     my.headscale = {
