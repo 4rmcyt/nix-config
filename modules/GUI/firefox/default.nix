@@ -1,5 +1,4 @@
 {
-  pkgs,
   lib,
   ...
 }: let
@@ -16,9 +15,6 @@ in {
     enable = true;
     configPath = ".mozilla/firefox";
 
-    nativeMessagingHosts = [
-      pkgs.firefoxpwa
-    ];
     policies.ExtensionSettings = {
       # === AD BLOCKING & PRIVACY ===
       "addon@darkreader.org" = {
