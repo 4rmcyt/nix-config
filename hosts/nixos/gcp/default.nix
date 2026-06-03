@@ -9,6 +9,21 @@
 }:
 let
   cfg = config.my.crowdsec;
+  isRemoteLapi = cfg.nftables.lapiUrl != "http://127.0.0.1:8088";
+
+  crowdsecPlugin = pkgs.fetchFromGitHub {
+    owner = "maxlerebourg";
+    repo = "crowdsec-bouncer-traefik-plugin";
+    rev = "v1.5.1";
+    hash = "sha256-w4tQjJjcHg6P5ew7kkj4j5cduLIrs5BiQlvxkJFi6So=";
+  };
+
+  geoblockPlugin = pkgs.fetchFromGitHub {
+    owner = "david-garcia-garcia";
+    repo = "traefik-geoblock";
+    rev = "v1.1.4";
+    hash = "sha256-qgLM6nrlDXLS7OsLw6cDKjhx9B+CnJR4TB32pg/MvEo=";
+  };
 in
 {
   imports = [
@@ -24,6 +39,7 @@ in
   ];
 
   options.my.crowdsec = {
+    traefik.enable = lib.mkEnableOption "CrowdSec Traefik bouncer plugin wiring";
     caddy.enable = lib.mkEnableOption "CrowdSec Caddy log acquisition";
     nftables = {
       enable = lib.mkEnableOption "CrowdSec nftables firewall bouncer";
@@ -47,8 +63,10 @@ in
     time.timeZone = config.my.defaults.timezone;
     i18n.defaultLocale = config.my.defaults.locale;
 
+    # google-compute-image.nix overrides
     security.googleOsLogin.enable = lib.mkForce false;
 
+    # Serial console access (GCP serial port)
     boot.kernelParams = [ "console=ttyS0,38400n8d" ];
     systemd.services."serial-getty@ttyS0".enable = true;
     networking.hostName = lib.mkForce "gcp-relay";
@@ -146,11 +164,10 @@ in
       };
     };
 
-    my.crowdsec.nftables = {
-      enable = true;
-      secretsFile = ../../../secrets/crowdsec.yaml;
-      lapiUrl = "http://<IP_ТВОЕГО_ДОМАШНЕГО_СЕРВЕРА_В_ХВОСТЕ>:8088";
-    };
+    # my.crowdsec.nftables = {
+    #   enable = true;
+    #   secretsFile = ../../../secrets/crowdsec.yaml;
+    # };
 
     my.nodeExporter.enable = true;
 
@@ -200,6 +217,7 @@ in
       };
     };
 
+    # Limit journal size — 30GB root disk
     services.journald.extraConfig = ''
       SystemMaxUse=500M
       SystemKeepFree=2G
@@ -207,43 +225,150 @@ in
     '';
 
     # =================================================================
-    # CrowdSec Bouncer
+    # CrowdSec
     # =================================================================
-    sops.secrets.crowdsec_bouncer_key_nftables = lib.mkIf cfg.nftables.enable {
-      sopsFile = cfg.nftables.secretsFile;
-      owner = "root";
-      mode = "0400";
-    };
+    # sops.secrets.crowdsec_bouncer_key = lib.mkIf cfg.traefik.enable {
+    #   sopsFile = ../../../secrets/crowdsec.yaml;
+    #   owner = "traefik";
+    #   group = "traefik";
+    #   mode = "0400";
+    # };
 
-    services.crowdsec-firewall-bouncer = lib.mkIf cfg.nftables.enable {
-      enable = true;
-      secrets.apiKeyPath = "/run/crowdsec-bouncer/api_key";
-      settings = {
-        mode = "nftables";
-        api_key_path = "/run/crowdsec-bouncer/api_key";
-        api_url = cfg.nftables.lapiUrl;
-      };
-    };
+    # sops.secrets.crowdsec_bouncer_key_nftables = lib.mkIf cfg.nftables.enable {
+    #   sopsFile = cfg.nftables.secretsFile;
+    #   owner = "root";
+    #   mode = "0400";
+    # };
 
-    systemd.services.crowdsec-firewall-bouncer-key = lib.mkIf cfg.nftables.enable {
-      description = "Write CrowdSec nftables bouncer API key to /run";
-      before = [ "crowdsec-firewall-bouncer.service" ];
-      wantedBy = [ "crowdsec-firewall-bouncer.service" ];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStart = pkgs.writeShellScript "crowdsec-bouncer-key" ''
-          install -d -m 0700 /run/crowdsec-bouncer
-          install -m 0600 ${config.sops.secrets.crowdsec_bouncer_key_nftables.path} /run/crowdsec-bouncer/api_key
-        '';
-      };
-    };
+    # services.crowdsec = lib.mkIf (!isRemoteLapi) {
+    #   enable = true;
 
-    systemd.services.crowdsec-firewall-bouncer = lib.mkIf cfg.nftables.enable {
-      after = [ "nftables.service" ];
-    };
+    #   hub.collections = [
+    #     "crowdsecurity/linux"
+    #     "crowdsecurity/sshd"
+    #   ]
+    #   ++ lib.optionals cfg.traefik.enable [ "crowdsecurity/traefik" ]
+    #   ++ lib.optionals cfg.caddy.enable [ "crowdsecurity/caddy" ];
 
-    networking.nftables.enable = lib.mkIf cfg.nftables.enable true;
+    #   settings.general.api.server = {
+    #     enable = true;
+    #     listen_uri = "127.0.0.1:8088";
+    #   };
+
+    #   settings.lapi.credentialsFile = "/var/lib/crowdsec/state/lapi-credentials.yaml";
+
+    #   localConfig.acquisitions = [
+    #     {
+    #       source = "journalctl";
+    #       journalctl_filter = [ "_SYSTEMD_UNIT=sshd.service" ];
+    #       labels.type = "syslog";
+    #     }
+    #   ]
+    #   ++ lib.optionals cfg.traefik.enable [
+    #     {
+    #       filenames = [ "/var/log/traefik/access.log" ];
+    #       labels.type = "traefik";
+    #     }
+    #   ]
+    #   ++ lib.optionals cfg.caddy.enable [
+    #     {
+    #       source = "journalctl";
+    #       journalctl_filter = [ "_SYSTEMD_UNIT=caddy.service" ];
+    #       labels.type = "caddy";
+    #     }
+    #   ];
+    # };
+
+    # environment.etc."crowdsec/parsers/s02-enrich/tailscale-whitelist.yaml" = lib.mkIf (!isRemoteLapi) {
+    #   user = "crowdsec";
+    #   group = "crowdsec";
+    #   mode = "0640";
+    #   text = ''
+    #     name: tailscale-whitelist
+    #     description: "Whitelist Tailscale CGNAT range"
+    #     filter: "evt.Meta.source_ip startsWith '100.'"
+    #     whitelist:
+    #       reason: "Tailscale CGNAT"
+    #       cidr:
+    #         - "100.64.0.0/10"
+    #   '';
+    # };
+
+    # environment.etc."crowdsec/postoverflows/s01-whitelist/local-trusted-networks.yaml" =
+    #   lib.mkIf (!isRemoteLapi)
+    #     {
+    #       user = "crowdsec";
+    #       group = "crowdsec";
+    #       mode = "0640";
+    #       text = ''
+    #         name: local-trusted-networks
+    #         description: "Whitelist LAN, Tailscale and Cloudflare IPs"
+    #         whitelist:
+    #           reason: "trusted network"
+    #           ip:
+    #             - "127.0.0.1"
+    #             - "192.168.1.1"
+    #           cidr:
+    #             - "192.168.1.0/24"
+    #             - "10.0.0.0/8"
+    #             - "100.64.0.0/10"
+    #             - "173.245.48.0/20"
+    #             - "103.21.244.0/22"
+    #             - "103.22.200.0/22"
+    #             - "103.31.4.0/22"
+    #             - "141.101.64.0/18"
+    #             - "108.162.192.0/18"
+    #             - "190.93.240.0/20"
+    #             - "188.114.96.0/20"
+    #             - "197.234.240.0/22"
+    #             - "198.41.128.0/17"
+    #             - "162.158.0.0/15"
+    #             - "104.16.0.0/13"
+    #             - "104.24.0.0/14"
+    #             - "172.64.0.0/13"
+    #             - "131.0.72.0/22"
+    #       '';
+    #     };
+
+    # services.crowdsec-firewall-bouncer = lib.mkIf cfg.nftables.enable {
+    #   enable = true;
+    #   settings = {
+    #     mode = "nftables";
+    #     api_key_path = "/run/crowdsec-bouncer/api_key";
+    #     api_url = cfg.nftables.lapiUrl;
+    #   };
+    # };
+
+    # systemd.services.crowdsec-firewall-bouncer-key = lib.mkIf cfg.nftables.enable {
+    #   description = "Write CrowdSec nftables bouncer API key to /run";
+    #   before = [ "crowdsec-firewall-bouncer.service" ];
+    #   wantedBy = [ "crowdsec-firewall-bouncer.service" ];
+    #   serviceConfig = {
+    #     Type = "oneshot";
+    #     RemainAfterExit = true;
+    #     ExecStart = pkgs.writeShellScript "crowdsec-bouncer-key" ''
+    #       install -d -m 0700 /run/crowdsec-bouncer
+    #       install -m 0600 ${config.sops.secrets.crowdsec_bouncer_key_nftables.path} /run/crowdsec-bouncer/api_key
+    #     '';
+    #   };
+    # };
+
+    # systemd.services.crowdsec-firewall-bouncer = lib.mkIf cfg.nftables.enable {
+    #   after = [ "nftables.service" ] ++ lib.optionals (!isRemoteLapi) [ "crowdsec.service" ];
+    #   requires = lib.optionals (!isRemoteLapi) [ "crowdsec.service" ];
+    # };
+
+    # networking.nftables.enable = lib.mkIf cfg.nftables.enable true;
+
+    # systemd.tmpfiles.rules = lib.mkIf cfg.traefik.enable [
+    #   "d /var/lib/traefik/plugins-local 0750 traefik traefik -"
+    #   "d /var/lib/traefik/plugins-local/src 0750 traefik traefik -"
+    #   "d /var/lib/traefik/plugins-local/src/github.com 0750 traefik traefik -"
+    #   "d /var/lib/traefik/plugins-local/src/github.com/maxlerebourg 0750 traefik traefik -"
+    #   "d /var/lib/traefik/plugins-local/src/github.com/david-garcia-garcia 0750 traefik traefik -"
+    #   "L+ /var/lib/traefik/plugins-local/src/github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin - - - - ${crowdsecPlugin}"
+    #   "L+ /var/lib/traefik/plugins-local/src/github.com/david-garcia-garcia/traefik-geoblock - - - - ${geoblockPlugin}"
+    # ];
 
     # =================================================================
     # User
