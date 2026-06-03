@@ -16,7 +16,7 @@ in
     lapiUrl = lib.mkOption {
       type = lib.types.str;
       description = "CrowdSec LAPI URL (e.g. remote host over Tailscale).";
-      example = "http://100.64.0.1:8080";
+      example = "http://100.64.0.3:8080";
     };
 
     secretsFile = lib.mkOption {
