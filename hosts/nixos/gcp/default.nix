@@ -81,7 +81,10 @@ in {
     nix.settings = {
       cores = 2;
       max-jobs = "auto";
-      trusted-users = ["root" "@wheel"];
+      trusted-users = [
+        "root"
+        "@wheel"
+      ];
       require-sigs = false;
     };
 
@@ -114,7 +117,12 @@ in {
       useDHCP = lib.mkForce false;
       firewall = {
         enable = lib.mkForce true;
-        allowedTCPPorts = [22 80 443 9100];
+        allowedTCPPorts = [
+          22
+          80
+          443
+          9100
+        ];
         allowedUDPPorts = [3478];
       };
     };
@@ -197,7 +205,10 @@ in {
         maxtime = "168h";
         overalljails = true;
       };
-      ignoreIP = ["127.0.0.0/8" "100.64.0.0/10"];
+      ignoreIP = [
+        "127.0.0.0/8"
+        "100.64.0.0/10"
+      ];
       jails.sshd.settings = {
         enabled = true;
         maxretry = 3;
@@ -285,42 +296,45 @@ in {
       '';
     };
 
-    environment.etc."crowdsec/postoverflows/s01-whitelist/local-trusted-networks.yaml" = lib.mkIf (!isRemoteLapi) {
-      user = "crowdsec";
-      group = "crowdsec";
-      mode = "0640";
-      text = ''
-        name: local-trusted-networks
-        description: "Whitelist LAN, Tailscale and Cloudflare IPs"
-        whitelist:
-          reason: "trusted network"
-          ip:
-            - "127.0.0.1"
-            - "192.168.1.1"
-          cidr:
-            - "192.168.1.0/24"
-            - "10.0.0.0/8"
-            - "100.64.0.0/10"
-            - "173.245.48.0/20"
-            - "103.21.244.0/22"
-            - "103.22.200.0/22"
-            - "103.31.4.0/22"
-            - "141.101.64.0/18"
-            - "108.162.192.0/18"
-            - "190.93.240.0/20"
-            - "188.114.96.0/20"
-            - "197.234.240.0/22"
-            - "198.41.128.0/17"
-            - "162.158.0.0/15"
-            - "104.16.0.0/13"
-            - "104.24.0.0/14"
-            - "172.64.0.0/13"
-            - "131.0.72.0/22"
-      '';
-    };
+    environment.etc."crowdsec/postoverflows/s01-whitelist/local-trusted-networks.yaml" =
+      lib.mkIf (!isRemoteLapi)
+      {
+        user = "crowdsec";
+        group = "crowdsec";
+        mode = "0640";
+        text = ''
+          name: local-trusted-networks
+          description: "Whitelist LAN, Tailscale and Cloudflare IPs"
+          whitelist:
+            reason: "trusted network"
+            ip:
+              - "127.0.0.1"
+              - "192.168.1.1"
+            cidr:
+              - "192.168.1.0/24"
+              - "10.0.0.0/8"
+              - "100.64.0.0/10"
+              - "173.245.48.0/20"
+              - "103.21.244.0/22"
+              - "103.22.200.0/22"
+              - "103.31.4.0/22"
+              - "141.101.64.0/18"
+              - "108.162.192.0/18"
+              - "190.93.240.0/20"
+              - "188.114.96.0/20"
+              - "197.234.240.0/22"
+              - "198.41.128.0/17"
+              - "162.158.0.0/15"
+              - "104.16.0.0/13"
+              - "104.24.0.0/14"
+              - "172.64.0.0/13"
+              - "131.0.72.0/22"
+        '';
+      };
 
     services.crowdsec-firewall-bouncer = lib.mkIf cfg.nftables.enable {
       enable = true;
+      registerBouncer.enable = false;
       settings = {
         mode = "nftables";
         api_url = cfg.nftables.lapiUrl;
@@ -367,7 +381,15 @@ in {
 
     programs.zsh.enable = true;
 
-    environment.systemPackages = with pkgs; [curl htop jq tcpdump vim kitty.terminfo wezterm.terminfo];
+    environment.systemPackages = with pkgs; [
+      curl
+      htop
+      jq
+      tcpdump
+      vim
+      kitty.terminfo
+      wezterm.terminfo
+    ];
 
     system.stateVersion = "25.11";
   };
