@@ -7,24 +7,6 @@
   modulesPath,
   ...
 }:
-let
-  cfg = config.my.crowdsec;
-  isRemoteLapi = cfg.nftables.lapiUrl != "http://127.0.0.1:8088";
-
-  crowdsecPlugin = pkgs.fetchFromGitHub {
-    owner = "maxlerebourg";
-    repo = "crowdsec-bouncer-traefik-plugin";
-    rev = "v1.5.1";
-    hash = "sha256-w4tQjJjcHg6P5ew7kkj4j5cduLIrs5BiQlvxkJFi6So=";
-  };
-
-  geoblockPlugin = pkgs.fetchFromGitHub {
-    owner = "david-garcia-garcia";
-    repo = "traefik-geoblock";
-    rev = "v1.1.4";
-    hash = "sha256-qgLM6nrlDXLS7OsLw6cDKjhx9B+CnJR4TB32pg/MvEo=";
-  };
-in
 {
   imports = [
     "${modulesPath}/virtualisation/google-compute-image.nix"
@@ -37,24 +19,6 @@ in
     ../../../modules/security/fail2ban
     ../../../modules/security/hardening.nix
   ];
-
-  options.my.crowdsec = {
-    traefik.enable = lib.mkEnableOption "CrowdSec Traefik bouncer plugin wiring";
-    caddy.enable = lib.mkEnableOption "CrowdSec Caddy log acquisition";
-    nftables = {
-      enable = lib.mkEnableOption "CrowdSec nftables firewall bouncer";
-      lapiUrl = lib.mkOption {
-        type = lib.types.str;
-        default = "http://127.0.0.1:8088";
-        description = "CrowdSec LAPI URL (local or remote via Tailscale).";
-      };
-      secretsFile = lib.mkOption {
-        type = lib.types.path;
-        default = ../../../secrets/crowdsec.yaml;
-        description = "Sops file containing crowdsec_bouncer_key_nftables.";
-      };
-    };
-  };
 
   config = {
     # =================================================================
@@ -164,10 +128,7 @@ in
       };
     };
 
-    # my.crowdsec.nftables = {
-    #   enable = true;
-    #   secretsFile = ../../../secrets/crowdsec.yaml;
-    # };
+
 
     my.nodeExporter.enable = true;
 

@@ -1,0 +1,164 @@
+{
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}:
+let
+  cfg = config.my.crowdsec;
+  isRemoteLapi = cfg.nftables.lapiUrl != "http://127.0.0.1:8088";
+in
+{
+  options.my.crowdsec = {
+    caddy.enable = lib.mkEnableOption "CrowdSec Caddy log acquisition";
+    nftables = {
+      enable = lib.mkEnableOption "CrowdSec nftables firewall bouncer";
+      lapiUrl = lib.mkOption {
+        type = lib.types.str;
+        default = "http://127.0.0.1:8088";
+        description = "CrowdSec LAPI URL (local or remote via Tailscale).";
+      };
+      secretsFile = lib.mkOption {
+        type = lib.types.path;
+        default = ../../../secrets/crowdsec.yaml;
+        description = "Sops file containing crowdsec_bouncer_key_nftables.";
+      };
+    };
+  };
+  # =================================================================
+  # CrowdSec
+  # =================================================================
+
+  sops.secrets.crowdsec_bouncer_key = {
+    sopsFile = ../../../secrets/crowdsec.yaml;
+    owner = "crowdsec";
+    group = "crowdsec";
+    mode = "0400";
+  };
+
+  sops.secrets.crowdsec_bouncer_key_nftables =  {
+    sopsFile = cfg.nftables.secretsFile;
+    owner = "root";
+    mode = "0400";
+  };
+
+  my.crowdsec.nftables = {
+    enable = true;
+    secretsFile = ../../../secrets/crowdsec.yaml;
+  };
+
+  services.crowdsec = lib.mkIf (!isRemoteLapi) {
+    enable = true;
+
+    hub.collections = [
+      "crowdsecurity/linux"
+      "crowdsecurity/sshd"
+    ]
+    ++ lib.optionals cfg.caddy.enable [ "crowdsecurity/caddy" ];
+
+    settings.general.api.server = {
+      enable = true;
+      listen_uri = "127.0.0.1:8088";
+    };
+
+    settings.lapi.credentialsFile = "/var/lib/crowdsec/state/lapi-credentials.yaml";
+
+    localConfig.acquisitions = [
+      {
+        source = "journalctl";
+        journalctl_filter = [ "_SYSTEMD_UNIT=sshd.service" ];
+        labels.type = "syslog";
+      }
+    ]
+    ++ lib.optionals cfg.caddy.enable [
+      {
+        source = "journalctl";
+        journalctl_filter = [ "_SYSTEMD_UNIT=caddy.service" ];
+        labels.type = "caddy";
+      }
+    ];
+  };
+
+  environment.etc."crowdsec/parsers/s02-enrich/tailscale-whitelist.yaml" = lib.mkIf (!isRemoteLapi) {
+    user = "crowdsec";
+    group = "crowdsec";
+    mode = "0640";
+    text = ''
+      name: tailscale-whitelist
+      description: "Whitelist Tailscale CGNAT range"
+      filter: "evt.Meta.source_ip startsWith '100.'"
+      whitelist:
+        reason: "Tailscale CGNAT"
+        cidr:
+          - "100.64.0.0/10"
+    '';
+  };
+
+  environment.etc."crowdsec/postoverflows/s01-whitelist/local-trusted-networks.yaml" =
+    lib.mkIf (!isRemoteLapi)
+      {
+        user = "crowdsec";
+        group = "crowdsec";
+        mode = "0640";
+        text = ''
+          name: local-trusted-networks
+          description: "Whitelist LAN, Tailscale and Cloudflare IPs"
+          whitelist:
+            reason: "trusted network"
+            ip:
+              - "127.0.0.1"
+              - "192.168.1.1"
+            cidr:
+              - "192.168.1.0/24"
+              - "10.0.0.0/8"
+              - "100.64.0.0/10"
+              - "173.245.48.0/20"
+              - "103.21.244.0/22"
+              - "103.22.200.0/22"
+              - "103.31.4.0/22"
+              - "141.101.64.0/18"
+              - "108.162.192.0/18"
+              - "190.93.240.0/20"
+              - "188.114.96.0/20"
+              - "197.234.240.0/22"
+              - "198.41.128.0/17"
+              - "162.158.0.0/15"
+              - "104.16.0.0/13"
+              - "104.24.0.0/14"
+              - "172.64.0.0/13"
+              - "131.0.72.0/22"
+        '';
+      };
+
+  services.crowdsec-firewall-bouncer = lib.mkIf cfg.nftables.enable {
+    enable = true;
+    settings = {
+      mode = "nftables";
+      api_key_path = "/run/crowdsec-bouncer/api_key";
+      api_url = cfg.nftables.lapiUrl;
+    };
+  };
+
+  systemd.services.crowdsec-firewall-bouncer-key = lib.mkIf cfg.nftables.enable {
+    description = "Write CrowdSec nftables bouncer API key to /run";
+    before = [ "crowdsec-firewall-bouncer.service" ];
+    wantedBy = [ "crowdsec-firewall-bouncer.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = pkgs.writeShellScript "crowdsec-bouncer-key" ''
+        install -d -m 0700 /run/crowdsec-bouncer
+        install -m 0600 ${config.sops.secrets.crowdsec_bouncer_key_nftables.path} /run/crowdsec-bouncer/api_key
+      '';
+    };
+  };
+
+  systemd.services.crowdsec-firewall-bouncer = lib.mkIf cfg.nftables.enable {
+    after = [ "nftables.service" ] ++ lib.optionals (!isRemoteLapi) [ "crowdsec.service" ];
+    requires = lib.optionals (!isRemoteLapi) [ "crowdsec.service" ];
+  };
+
+  networking.nftables.enable = lib.mkIf cfg.nftables.enable true;
+
+}
