@@ -20,6 +20,11 @@ in {
     displayManager = "greetd"; # Options: "greetd", "sddm", "gdm", "none"
   };
 
+  my.nodeExporter = {
+    enable = true;
+    extraCollectors = ["zfs"];
+  };
+
   # =================================================================
   # Imports
   # =================================================================
@@ -31,6 +36,9 @@ in {
     ../../../modules/disko/desktop
     ../../../modules/fonts
     ../../../modules/options
+
+    # Monitoring
+    ../../../modules/monitoring/node-exporter-client.nix
 
     # Features and roles
     ../../../modules/gaming

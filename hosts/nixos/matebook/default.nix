@@ -14,6 +14,9 @@
     ../../../modules/disko/matebook
     ../../../modules/options
 
+    # Monitoring
+    ../../../modules/monitoring/node-exporter-client.nix
+
     # Networking
     ../../../modules/networking/nfs-client
     ../../../modules/networking/ssh
@@ -151,6 +154,8 @@
   # 8. Home Manager
   # =================================================================
   # backupFileExtension is set in commonHomeManagerNixosConfig with unique timestamp
+
+  my.nodeExporter.enable = true;
 
   # =================================================================
   # 9. Networking

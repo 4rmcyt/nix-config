@@ -29,7 +29,27 @@
   };
 
   # =================================================================
-  # 2. Users and Groups
+  # 2. NixOS generation tracking (textfile collector)
+  # =================================================================
+  services.prometheus.exporters.node.extraFlags = [
+    "--collector.textfile.directory=/var/lib/prometheus-node-exporter-text-files"
+  ];
+
+  system.activationScripts.node-exporter-system-version = {
+    supportsDryActivation = true;
+    text = ''
+      mkdir -pm 0775 /var/lib/prometheus-node-exporter-text-files
+      (
+        echo -n "system_version "
+        readlink /nix/var/nix/profiles/system | cut -d- -f2
+      ) > /var/lib/prometheus-node-exporter-text-files/system-version.prom.next
+      mv /var/lib/prometheus-node-exporter-text-files/system-version.prom.next \
+         /var/lib/prometheus-node-exporter-text-files/system-version.prom
+    '';
+  };
+
+  # =================================================================
+  # 3. Users and Groups
   # =================================================================
   users.users = {
     grafana = {
@@ -288,6 +308,7 @@
             "pressure"
             "stat"
             "systemd"
+            "textfile"
             "thermal_zone"
             "time"
             "zfs"
@@ -342,6 +363,14 @@
         {
           job_name = "crowdsec";
           static_configs = [{targets = ["localhost:6060"];}];
+        }
+        {
+          job_name = "gcp-relay-node";
+          static_configs = [{targets = ["203.0.113.1:9100"];}];
+        }
+        {
+          job_name = "matebook-node";
+          static_configs = [{targets = ["${config.my.defaults.matebook_wifi}:9100"];}];
         }
       ];
     };

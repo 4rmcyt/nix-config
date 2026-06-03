@@ -469,22 +469,6 @@ in {
       drivers = [];
     };
 
-    prometheus.exporters.node = {
-      enable = true;
-      enabledCollectors = [
-        "cpu"
-        "diskstats"
-        "filesystem"
-        "netdev"
-        "stat"
-        "textfile"
-        "time"
-        "zfs"
-      ];
-      listenAddress = "0.0.0.0";
-      port = 9100;
-    };
-
     # udev rules for hardware peripherals
     udev = {
       extraRules = ''

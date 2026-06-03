@@ -28,6 +28,7 @@ in {
     "${modulesPath}/virtualisation/google-compute-image.nix"
     ../../../modules/options
     ../../../modules/base/logging
+    ../../../modules/monitoring/node-exporter-client.nix
     ../../../modules/networking/caddy
     ../../../modules/networking/headscale
     ../../../modules/networking/headplane
@@ -113,7 +114,7 @@ in {
       useDHCP = lib.mkForce false;
       firewall = {
         enable = lib.mkForce true;
-        allowedTCPPorts = [22 80 443];
+        allowedTCPPorts = [22 80 443 9100];
         allowedUDPPorts = [3478];
       };
     };
@@ -152,6 +153,13 @@ in {
         randomizedDelaySec = "30min";
       };
     };
+
+    my.crowdsec.nftables = {
+      enable = true;
+      secretsFile = ../../../secrets/crowdsec.yaml;
+    };
+
+    my.nodeExporter.enable = true;
 
     my.headscale = {
       enable = true;
@@ -196,12 +204,12 @@ in {
       };
     };
 
-    services.prometheus.exporters.node = {
-      enable = true;
-      listenAddress = "127.0.0.1";
-      port = 9100;
-      enabledCollectors = ["cpu" "diskstats" "filesystem" "loadavg" "meminfo" "netdev" "stat" "time"];
-    };
+    # Limit journal size — 30GB root disk
+    services.journald.extraConfig = ''
+      SystemMaxUse=500M
+      SystemKeepFree=2G
+      MaxRetentionSec=14day
+    '';
 
     # =================================================================
     # CrowdSec
