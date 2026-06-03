@@ -43,9 +43,6 @@
       tree
       yamllint
       zip
-
-      # WSL-specific tools
-      wslu
     ];
   };
 

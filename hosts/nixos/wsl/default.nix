@@ -187,7 +187,6 @@
       tree
       yamllint
       zip
-      wslu
     ];
 
     programs.zsh.enable = true;
