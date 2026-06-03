@@ -156,7 +156,7 @@ in {
 
     my.crowdsec.nftables = {
       enable = true;
-      secretsFile = ../../../secrets/crowdsec.yaml;
+      secretsFile = ../../../secrets/crowdsec-gcp.yaml;
     };
 
     my.nodeExporter.enable = true;
