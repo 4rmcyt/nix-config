@@ -262,6 +262,9 @@
         TSIP=$(${pkgs.tailscale}/bin/tailscale ip -4 2>/dev/null || true)
         [ -n "$TSIP" ] && echo "address=/.${config.my.defaults.domain}/$TSIP"
         echo "address=/.${config.my.defaults.domain}/${config.my.defaults.homeserver_lan}"
+        # GCP relay services — override wildcard with specific entries
+        echo "address=/hs.${config.my.defaults.domain}/203.0.113.1"
+        echo "address=/hp.${config.my.defaults.domain}/203.0.113.1"
       } > /run/dnsmasq/address.conf
     '';
   };
