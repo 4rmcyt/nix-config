@@ -331,7 +331,7 @@
         }
         {
           job_name = "gcp-relay-node";
-          static_configs = [{targets = ["203.0.113.1:9100"];}];
+          static_configs = [{targets = ["100.64.0.5:9100"];}];
         }
         {
           job_name = "matebook-node";
