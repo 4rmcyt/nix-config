@@ -116,7 +116,6 @@
     "todo-tree.regex.regex" = "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!";
     "extensions.autoCheckUpdates" = false;
     "update.mode" = "none";
-    "settingsSync.ignoredResources" = ["settings"];
 
     # ===== Extension-Specific Settings =====
 
