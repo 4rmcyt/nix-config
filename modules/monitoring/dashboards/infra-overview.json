@@ -33,7 +33,7 @@
       "gridPos": {
         "x": 0,
         "y": 1,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -81,9 +81,9 @@
       "type": "stat",
       "title": "gcp-relay \u2014 NixOS Gen",
       "gridPos": {
-        "x": 3,
+        "x": 6,
         "y": 1,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -131,9 +131,9 @@
       "type": "stat",
       "title": "gcp-relay \u2014 CPU",
       "gridPos": {
-        "x": 6,
+        "x": 12,
         "y": 1,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -189,9 +189,9 @@
       "type": "stat",
       "title": "gcp-relay \u2014 RAM",
       "gridPos": {
-        "x": 9,
+        "x": 18,
         "y": 1,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -249,7 +249,7 @@
       "gridPos": {
         "x": 0,
         "y": 4,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
@@ -284,9 +284,9 @@
       "type": "timeseries",
       "title": "gcp-relay \u2014 RAM",
       "gridPos": {
-        "x": 6,
+        "x": 12,
         "y": 4,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
@@ -328,7 +328,7 @@
       "gridPos": {
         "x": 0,
         "y": 11,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
@@ -368,9 +368,9 @@
       "type": "timeseries",
       "title": "gcp-relay \u2014 Network",
       "gridPos": {
-        "x": 6,
+        "x": 12,
         "y": 11,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
@@ -424,7 +424,7 @@
       "gridPos": {
         "x": 0,
         "y": 19,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -472,9 +472,9 @@
       "type": "stat",
       "title": "homeserver \u2014 NixOS Gen",
       "gridPos": {
-        "x": 3,
+        "x": 6,
         "y": 19,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -522,9 +522,9 @@
       "type": "stat",
       "title": "homeserver \u2014 CPU",
       "gridPos": {
-        "x": 6,
+        "x": 12,
         "y": 19,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -580,9 +580,9 @@
       "type": "stat",
       "title": "homeserver \u2014 RAM",
       "gridPos": {
-        "x": 9,
+        "x": 18,
         "y": 19,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -640,7 +640,7 @@
       "gridPos": {
         "x": 0,
         "y": 22,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
@@ -675,9 +675,9 @@
       "type": "timeseries",
       "title": "homeserver \u2014 RAM",
       "gridPos": {
-        "x": 6,
+        "x": 12,
         "y": 22,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
@@ -719,7 +719,7 @@
       "gridPos": {
         "x": 0,
         "y": 29,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
@@ -759,9 +759,9 @@
       "type": "timeseries",
       "title": "homeserver \u2014 Network",
       "gridPos": {
-        "x": 6,
+        "x": 12,
         "y": 29,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
@@ -815,7 +815,7 @@
       "gridPos": {
         "x": 0,
         "y": 37,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -863,9 +863,9 @@
       "type": "stat",
       "title": "desktop \u2014 NixOS Gen",
       "gridPos": {
-        "x": 3,
+        "x": 6,
         "y": 37,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -913,9 +913,9 @@
       "type": "stat",
       "title": "desktop \u2014 CPU",
       "gridPos": {
-        "x": 6,
+        "x": 12,
         "y": 37,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -971,9 +971,9 @@
       "type": "stat",
       "title": "desktop \u2014 RAM",
       "gridPos": {
-        "x": 9,
+        "x": 18,
         "y": 37,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -1031,7 +1031,7 @@
       "gridPos": {
         "x": 0,
         "y": 40,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
@@ -1066,9 +1066,9 @@
       "type": "timeseries",
       "title": "desktop \u2014 RAM",
       "gridPos": {
-        "x": 6,
+        "x": 12,
         "y": 40,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
@@ -1110,7 +1110,7 @@
       "gridPos": {
         "x": 0,
         "y": 47,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
@@ -1150,9 +1150,9 @@
       "type": "timeseries",
       "title": "desktop \u2014 Network",
       "gridPos": {
-        "x": 6,
+        "x": 12,
         "y": 47,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
@@ -1206,7 +1206,7 @@
       "gridPos": {
         "x": 0,
         "y": 55,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -1254,9 +1254,9 @@
       "type": "stat",
       "title": "matebook \u2014 NixOS Gen",
       "gridPos": {
-        "x": 3,
+        "x": 6,
         "y": 55,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -1304,9 +1304,9 @@
       "type": "stat",
       "title": "matebook \u2014 CPU",
       "gridPos": {
-        "x": 6,
+        "x": 12,
         "y": 55,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -1362,9 +1362,9 @@
       "type": "stat",
       "title": "matebook \u2014 RAM",
       "gridPos": {
-        "x": 9,
+        "x": 18,
         "y": 55,
-        "w": 3,
+        "w": 6,
         "h": 3
       },
       "options": {
@@ -1422,7 +1422,7 @@
       "gridPos": {
         "x": 0,
         "y": 58,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
@@ -1457,9 +1457,9 @@
       "type": "timeseries",
       "title": "matebook \u2014 RAM",
       "gridPos": {
-        "x": 6,
+        "x": 12,
         "y": 58,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
@@ -1501,7 +1501,7 @@
       "gridPos": {
         "x": 0,
         "y": 65,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
@@ -1541,9 +1541,9 @@
       "type": "timeseries",
       "title": "matebook \u2014 Network",
       "gridPos": {
-        "x": 6,
+        "x": 12,
         "y": 65,
-        "w": 6,
+        "w": 12,
         "h": 7
       },
       "options": {
