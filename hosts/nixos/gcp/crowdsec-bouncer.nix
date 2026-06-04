@@ -4,11 +4,9 @@
   config,
   lib,
   ...
-}:
-let
+}: let
   cfg = config.my.crowdsecBouncer;
-in
-{
+in {
   options.my.crowdsecBouncer = {
     enable = lib.mkEnableOption "CrowdSec nftables bouncer (remote LAPI)";
 
@@ -26,7 +24,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-
     sops.secrets.crowdsec_bouncer_key_nftables = {
       sopsFile = cfg.secretsFile;
       owner = "root";
@@ -44,8 +41,8 @@ in
     };
 
     systemd.services.crowdsec-firewall-bouncer = {
-      after = [ "nftables.service" "headscale.service" ];
-      requires = [ "headscale.service" ];
+      after = ["nftables.service" "tailscale-autoconnect.service"];
+      requires = ["tailscale-autoconnect.service"];
     };
 
     networking.nftables.enable = true;

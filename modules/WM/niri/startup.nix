@@ -24,12 +24,6 @@ _: {
       # Messaging apps
       {command = ["materialgram"];}
       {command = ["vesktop" "--start-minimized"];}
-
-      # Browser
-      {command = ["google-chrome-stable"];}
-
-      # Terminal
-      {command = ["kitty"];}
     ];
   };
 }

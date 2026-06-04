@@ -35,6 +35,12 @@ in {
       default = [];
       description = "Subnet routes to advertise (e.g. [\"192.168.1.0/24\"])";
     };
+
+    networkInterface = mkOption {
+      type = types.str;
+      default = "eth0";
+      description = "Network interface for ethtool GRO offload tuning.";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -61,7 +67,7 @@ in {
         rules."50-tailscale" = {
           onState = ["routable"];
           script = ''
-            ${pkgs.ethtool} -K eth0 rx-udp-gro-forwarding on rx-gro-list off
+            ${pkgs.ethtool} -K ${cfg.networkInterface} rx-udp-gro-forwarding on rx-gro-list off
           '';
         };
       };

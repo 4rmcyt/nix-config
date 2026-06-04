@@ -21,9 +21,6 @@
       "sd_mod"
       "ata_piix"
     ];
-    initrd.kernelModules = [];
-    kernelModules = [];
-    extraModulePackages = [];
   };
 
   swapDevices = [];

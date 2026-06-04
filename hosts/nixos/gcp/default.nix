@@ -15,49 +15,43 @@
     ../../../modules/networking/caddy
     ../../../modules/networking/headscale
     ../../../modules/networking/headplane
+    ../../../modules/networking/tailscale
     ./crowdsec-bouncer.nix
     ../../../modules/security/fail2ban
     ../../../modules/security/hardening.nix
   ];
 
   config = {
-    # =================================================================
-    # System
-    # =================================================================
     time.timeZone = config.my.defaults.timezone;
     i18n.defaultLocale = config.my.defaults.locale;
 
     # google-compute-image.nix overrides
     security.googleOsLogin.enable = lib.mkForce false;
-
-    # Serial console access (GCP serial port)
-    boot.kernelParams = ["console=ttyS0,38400n8d"];
-    systemd.services."serial-getty@ttyS0".enable = true;
     networking.hostName = lib.mkForce "gcp-relay";
     boot.loader.grub.configurationLimit = lib.mkForce 2;
     security.sudo.wheelNeedsPassword = lib.mkForce false;
 
-    virtualisation.diskSize = 10 * 1024;
+    boot.kernelParams = ["console=ttyS0,38400n8d"];
+    systemd.services."serial-getty@ttyS0".enable = true;
 
+    virtualisation.diskSize = 10 * 1024;
     zramSwap.enable = true;
 
-    # =================================================================
-    # Nix
-    # =================================================================
     nix.settings = {
       cores = 2;
       max-jobs = "auto";
-      trusted-users = [
-        "root"
-        "@wheel"
-      ];
+      trusted-users = ["root" "@wheel"];
       require-sigs = false;
     };
 
-    # =================================================================
-    # Sops
-    # =================================================================
     sops.age.keyFile = "/root/.config/sops/age/keys.txt";
+
+    networking.tailscaleAuth = {
+      enable = true;
+      sopsFile = ../../../secrets/tailscale-gcp.yaml;
+      loginServer = "https://hs.${config.my.defaults.domain}";
+      networkInterface = "ens4";
+    };
 
     sops.secrets.gcp_relay_host_ed25519 = {
       sopsFile = ../../../secrets/gcp-relay-host-ed25519;
@@ -68,28 +62,32 @@
       mode = "0600";
     };
 
-    services.openssh.hostKeys = [
-      {
-        path = "/etc/ssh/ssh_host_ed25519_key";
-        type = "ed25519";
-      }
-    ];
+    services.openssh = {
+      enable = true;
+      ports = [22];
+      hostKeys = [
+        {
+          path = "/etc/ssh/ssh_host_ed25519_key";
+          type = "ed25519";
+        }
+      ];
+      settings = {
+        PasswordAuthentication = false;
+        PermitRootLogin = "prohibit-password";
+        KbdInteractiveAuthentication = false;
+        UseDNS = false;
+      };
+    };
 
-    # =================================================================
-    # Networking
-    # =================================================================
     networking = {
       useNetworkd = true;
       useDHCP = lib.mkForce false;
       firewall = {
         enable = lib.mkForce true;
-        allowedTCPPorts = [
-          22
-          80
-          443
-          9100
-        ];
+        allowedTCPPorts = [22 80 443 9100];
         allowedUDPPorts = [3478];
+        # Tailscale traffic is trusted — allow LAPI and metrics from homeserver
+        trustedInterfaces = ["tailscale0"];
       };
     };
 
@@ -101,22 +99,6 @@
       };
     };
 
-    # =================================================================
-    # SSH
-    # =================================================================
-    services.openssh = {
-      enable = true;
-      ports = [22];
-      settings = {
-        PasswordAuthentication = false;
-        PermitRootLogin = "prohibit-password";
-        KbdInteractiveAuthentication = false;
-      };
-    };
-
-    # =================================================================
-    # Services
-    # =================================================================
     my.hardening = {
       enable = true;
       autoUpgrade = {
@@ -169,10 +151,7 @@
         maxtime = "168h";
         overalljails = true;
       };
-      ignoreIP = [
-        "127.0.0.0/8"
-        "100.64.0.0/10"
-      ];
+      ignoreIP = ["127.0.0.0/8" "100.64.0.0/10"];
       jails.sshd.settings = {
         enabled = true;
         maxretry = 3;
@@ -181,16 +160,13 @@
       };
     };
 
-    # Limit journal size — 30GB root disk
+    # 30 GB root disk — cap journal
     services.journald.extraConfig = ''
       SystemMaxUse=500M
       SystemKeepFree=2G
       MaxRetentionSec=14day
     '';
 
-    # =================================================================
-    # User
-    # =================================================================
     users.users.${config.my.defaults.user} = {
       isNormalUser = true;
       shell = pkgs.zsh;
