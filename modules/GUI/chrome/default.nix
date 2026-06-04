@@ -1,41 +1,37 @@
-{
-  pkgs,
-  lib,
-  ...
-}: {
-  environment.systemPackages = lib.mkBefore (
-    with pkgs; [
-      (google-chrome.override {
-        enableWideVine = true;
-        commandLineArgs = [
-          "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo"
-          "--ignore-gpu-blocklist"
-          "--enable-zero-copy"
-          "--enable-features=UseOzonePlatform"
-          "--ozone-platform=wayland"
-          "--oauth2-client-id=839524313676-1k175brl5r4fvmi049iovjht5cqvfkvr.apps.googleusercontent.com"
-          "--oauth2-api-key=***REDACTED-GOOGLE-OAUTH-SECRET***"
-        ];
-      })
-    ]
-  );
-  programs.google-chrome = {
-    enable = true;
-    enablePlasmaBrowserIntegration = true;
-    extensions = [
-      "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
-      "naepdomgkenhinolocfifgehidddafch" # Browserpass
-      "bggfcpfjbdkhfhfmkjpbhnkhnpjjeomc" # Material Icons for GitHub
-      "fkagelmloambgokoeokbpihmgpkbgbfm" # Indie Wiki Buddy
-      "hlepfoohegkhhmjieoechaddaejaokhf" # Refined Github
-      "gebbhagfogifgggkldgodflihgfeippi" # Return YouTube Dislike
-      "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
-      "cimiefiiaegbelhefglklhhakcgmhkai" # Plasma integration
-    ];
+{lib, ...}: {
+  # Chrome managed policies — written to /etc/opt/chrome/policies/managed/
+  # These cannot be overridden by the user in Chrome UI.
+  environment.etc."opt/chrome/policies/managed/hardening.json".text = lib.generators.toJSON {} {
+    # Account & sync
+    BrowserSignin = 1;
+    SyncDisabled = false;
+    RestoreOnStartup = 1;
 
-    extraOpts = {
-      "BrowserSignin" = 1;
-      "SyncDisabled" = false;
-    };
+    # Privacy: disable telemetry & UMA reporting
+    MetricsReportingEnabled = false;
+    CloudReportingEnabled = false;
+
+    # Privacy: SafeBrowsing standard only (enhanced sends URL hashes to Google)
+    SafeBrowsingEnabled = true;
+    SafeBrowsingProtectionLevel = 1;
+
+    # Privacy: disable sending text to Google for spell-check
+    SpellCheckServiceEnabled = false;
+
+    # Security: DNS-over-HTTPS via NextDNS
+    DnsOverHttpsMode = "automatic";
+    DnsOverHttpsTemplates = "https://dns.nextdns.io/nextdns0";
+
+    # Security: prevent internal IP leak via WebRTC
+    WebRtcIPHandling = "default_public_interface_only";
+
+    # Security: force HTTPS-only mode
+    HttpsOnlyMode = "force_enabled";
+
+    # Security: minimum TLS version
+    SSLVersionMin = "tls1.2";
+
+    # Security: block mixed content
+    DefaultInsecureContentSetting = 2;
   };
 }
