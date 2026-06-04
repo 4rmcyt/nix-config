@@ -9,6 +9,7 @@ repos:
     rev: v0.21.0
     hooks:
       - id: yamlfmt
+        exclude: ^secrets/
   - repo: https://github.com/sirwart/ripsecrets
     rev: v0.1.11
     hooks:
@@ -18,6 +19,7 @@ repos:
             \.ripsecrets\.toml|
             modules/users/zeev/default\.nix|
             modules/networking/ssh-hosts\.nix|
+            modules/networking/ssh/default\.nix|
             modules/TUI/common/default\.nix|
             modules/GUI/thunderbird/default\.nix|
             modules/options/defaults\.nix|
@@ -28,12 +30,17 @@ repos:
             modules/security/keycloak/default\.nix|
             hosts/nixos/wsl/default\.nix|
             hosts/nixos/homeserver/default\.nix|
-            hosts/nixos/matebook/default\.nix
+            hosts/nixos/matebook/default\.nix|
+            hosts/nixos/gcp/default\.nix|
+            parts/owner\.nix
           )$
-  - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.30.1
+  - repo: local
     hooks:
-      - id: gitleaks-system
+      - id: gitleaks
+        name: Detect hardcoded secrets
+        entry: gitleaks protect --staged --redact --verbose
+        language: system
+        pass_filenames: false
   # Nix tools (local hooks using system binaries from nix shell)
   - repo: local
     hooks:

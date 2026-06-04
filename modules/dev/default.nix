@@ -33,5 +33,6 @@
 
     # CI/CD
     actionlint
+    pre-commit
   ];
 }

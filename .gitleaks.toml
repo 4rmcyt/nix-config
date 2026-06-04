@@ -28,10 +28,7 @@ regexes = [
 # secrets/ directory — all files are sops-encrypted
 [[allowlists]]
 description = "secrets/ directory is fully sops-encrypted"
-paths = [
-  '''secrets/.*''',
-  '''secrets\.yaml''',
-]
+paths = ['''secrets/.*''', '''secrets\.yaml''']
 
 # False positives — config values that match secret patterns
 [[allowlists]]
@@ -59,4 +56,3 @@ paths = ['''\.ripsecrets\.toml''']
 description = "sops secret path references in nix"
 regexTarget = "line"
 regexes = ['''config\.sops\.secrets\.[^.]+\.path''']
-
