@@ -75,7 +75,7 @@
         PasswordAuthentication = false;
         PermitRootLogin = "prohibit-password";
         KbdInteractiveAuthentication = false;
-        UseDNS = false;
+        UseDns = false;
       };
     };
 
