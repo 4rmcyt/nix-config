@@ -42,6 +42,7 @@ pkgs.mkShell {
       taplo
       yamlfmt
       ripsecrets
+      gitleaks
       pre-commit-hook-ensure-sops
     ]);
 

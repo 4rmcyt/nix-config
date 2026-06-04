@@ -6,7 +6,7 @@ exclude: |
 repos:
   # File format validation and formatting
   - repo: https://github.com/google/yamlfmt
-    rev: v0.20.0
+    rev: v0.21.0
     hooks:
       - id: yamlfmt
   - repo: https://github.com/sirwart/ripsecrets
@@ -30,6 +30,10 @@ repos:
             hosts/nixos/homeserver/default\.nix|
             hosts/nixos/matebook/default\.nix
           )$
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks-system
   # Nix tools (local hooks using system binaries from nix shell)
   - repo: local
     hooks:
