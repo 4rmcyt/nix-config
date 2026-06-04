@@ -4,7 +4,10 @@
   "schemaVersion": 38,
   "version": 1,
   "refresh": "1m",
-  "tags": ["infrastructure", "overview"],
+  "tags": [
+    "infrastructure",
+    "overview"
+  ],
   "time": {
     "from": "now-1h",
     "to": "now"
@@ -26,7 +29,7 @@
     {
       "id": 2,
       "type": "stat",
-      "title": "homeserver \u2014 Uptime",
+      "title": "homeserver — Uptime",
       "gridPos": {
         "x": 0,
         "y": 1,
@@ -74,7 +77,7 @@
     {
       "id": 3,
       "type": "stat",
-      "title": "homeserver \u2014 NixOS Gen",
+      "title": "homeserver — NixOS Gen",
       "gridPos": {
         "x": 3,
         "y": 1,
@@ -122,7 +125,7 @@
     {
       "id": 4,
       "type": "stat",
-      "title": "homeserver \u2014 CPU",
+      "title": "homeserver — CPU",
       "gridPos": {
         "x": 6,
         "y": 1,
@@ -178,7 +181,7 @@
     {
       "id": 5,
       "type": "stat",
-      "title": "homeserver \u2014 RAM",
+      "title": "homeserver — RAM",
       "gridPos": {
         "x": 9,
         "y": 1,
@@ -234,7 +237,7 @@
     {
       "id": 6,
       "type": "timeseries",
-      "title": "homeserver \u2014 CPU %",
+      "title": "homeserver — CPU %",
       "gridPos": {
         "x": 0,
         "y": 4,
@@ -271,7 +274,7 @@
     {
       "id": 7,
       "type": "timeseries",
-      "title": "homeserver \u2014 RAM",
+      "title": "homeserver — RAM",
       "gridPos": {
         "x": 6,
         "y": 4,
@@ -313,7 +316,7 @@
     {
       "id": 8,
       "type": "timeseries",
-      "title": "homeserver \u2014 Disk I/O",
+      "title": "homeserver — Disk I/O",
       "gridPos": {
         "x": 0,
         "y": 11,
@@ -355,7 +358,7 @@
     {
       "id": 9,
       "type": "timeseries",
-      "title": "homeserver \u2014 Network",
+      "title": "homeserver — Network",
       "gridPos": {
         "x": 6,
         "y": 11,
@@ -397,7 +400,7 @@
     {
       "id": 10,
       "type": "stat",
-      "title": "desktop \u2014 Uptime",
+      "title": "desktop — Uptime",
       "gridPos": {
         "x": 12,
         "y": 1,
@@ -445,7 +448,7 @@
     {
       "id": 11,
       "type": "stat",
-      "title": "desktop \u2014 NixOS Gen",
+      "title": "desktop — NixOS Gen",
       "gridPos": {
         "x": 15,
         "y": 1,
@@ -493,7 +496,7 @@
     {
       "id": 12,
       "type": "stat",
-      "title": "desktop \u2014 CPU",
+      "title": "desktop — CPU",
       "gridPos": {
         "x": 18,
         "y": 1,
@@ -549,7 +552,7 @@
     {
       "id": 13,
       "type": "stat",
-      "title": "desktop \u2014 RAM",
+      "title": "desktop — RAM",
       "gridPos": {
         "x": 21,
         "y": 1,
@@ -605,7 +608,7 @@
     {
       "id": 14,
       "type": "timeseries",
-      "title": "desktop \u2014 CPU %",
+      "title": "desktop — CPU %",
       "gridPos": {
         "x": 12,
         "y": 4,
@@ -642,7 +645,7 @@
     {
       "id": 15,
       "type": "timeseries",
-      "title": "desktop \u2014 RAM",
+      "title": "desktop — RAM",
       "gridPos": {
         "x": 18,
         "y": 4,
@@ -684,7 +687,7 @@
     {
       "id": 16,
       "type": "timeseries",
-      "title": "desktop \u2014 Disk I/O",
+      "title": "desktop — Disk I/O",
       "gridPos": {
         "x": 12,
         "y": 11,
@@ -726,7 +729,7 @@
     {
       "id": 17,
       "type": "timeseries",
-      "title": "desktop \u2014 Network",
+      "title": "desktop — Network",
       "gridPos": {
         "x": 18,
         "y": 11,
@@ -771,7 +774,7 @@
       "title": "MATEBOOK",
       "gridPos": {
         "x": 0,
-        "y": 22,
+        "y": 18,
         "w": 24,
         "h": 1
       },
@@ -780,10 +783,10 @@
     {
       "id": 19,
       "type": "stat",
-      "title": "matebook \u2014 Uptime",
+      "title": "matebook — Uptime",
       "gridPos": {
         "x": 0,
-        "y": 23,
+        "y": 19,
         "w": 3,
         "h": 3
       },
@@ -828,10 +831,10 @@
     {
       "id": 20,
       "type": "stat",
-      "title": "matebook \u2014 NixOS Gen",
+      "title": "matebook — NixOS Gen",
       "gridPos": {
         "x": 3,
-        "y": 23,
+        "y": 19,
         "w": 3,
         "h": 3
       },
@@ -876,10 +879,10 @@
     {
       "id": 21,
       "type": "stat",
-      "title": "matebook \u2014 CPU",
+      "title": "matebook — CPU",
       "gridPos": {
         "x": 6,
-        "y": 23,
+        "y": 19,
         "w": 3,
         "h": 3
       },
@@ -932,10 +935,10 @@
     {
       "id": 22,
       "type": "stat",
-      "title": "matebook \u2014 RAM",
+      "title": "matebook — RAM",
       "gridPos": {
         "x": 9,
-        "y": 23,
+        "y": 19,
         "w": 3,
         "h": 3
       },
@@ -988,10 +991,10 @@
     {
       "id": 23,
       "type": "timeseries",
-      "title": "matebook \u2014 CPU %",
+      "title": "matebook — CPU %",
       "gridPos": {
         "x": 0,
-        "y": 26,
+        "y": 22,
         "w": 6,
         "h": 7
       },
@@ -1025,10 +1028,10 @@
     {
       "id": 24,
       "type": "timeseries",
-      "title": "matebook \u2014 RAM",
+      "title": "matebook — RAM",
       "gridPos": {
         "x": 6,
-        "y": 26,
+        "y": 22,
         "w": 6,
         "h": 7
       },
@@ -1067,10 +1070,10 @@
     {
       "id": 25,
       "type": "timeseries",
-      "title": "matebook \u2014 Disk I/O",
+      "title": "matebook — Disk I/O",
       "gridPos": {
         "x": 0,
-        "y": 33,
+        "y": 29,
         "w": 6,
         "h": 7
       },
@@ -1109,10 +1112,10 @@
     {
       "id": 26,
       "type": "timeseries",
-      "title": "matebook \u2014 Network",
+      "title": "matebook — Network",
       "gridPos": {
         "x": 6,
-        "y": 33,
+        "y": 29,
         "w": 6,
         "h": 7
       },
@@ -1150,11 +1153,23 @@
     },
     {
       "id": 27,
+      "type": "row",
+      "title": "GCP RELAY",
+      "gridPos": {
+        "x": 0,
+        "y": 36,
+        "w": 24,
+        "h": 1
+      },
+      "collapsed": false
+    },
+    {
+      "id": 28,
       "type": "stat",
-      "title": "gcp-relay \u2014 Uptime",
+      "title": "gcp-relay — Uptime",
       "gridPos": {
         "x": 12,
-        "y": 23,
+        "y": 19,
         "w": 3,
         "h": 3
       },
@@ -1197,12 +1212,12 @@
       }
     },
     {
-      "id": 28,
+      "id": 29,
       "type": "stat",
-      "title": "gcp-relay \u2014 NixOS Gen",
+      "title": "gcp-relay — NixOS Gen",
       "gridPos": {
         "x": 15,
-        "y": 23,
+        "y": 19,
         "w": 3,
         "h": 3
       },
@@ -1245,12 +1260,12 @@
       }
     },
     {
-      "id": 29,
+      "id": 30,
       "type": "stat",
-      "title": "gcp-relay \u2014 CPU",
+      "title": "gcp-relay — CPU",
       "gridPos": {
         "x": 18,
-        "y": 23,
+        "y": 19,
         "w": 3,
         "h": 3
       },
@@ -1301,12 +1316,12 @@
       }
     },
     {
-      "id": 30,
+      "id": 31,
       "type": "stat",
-      "title": "gcp-relay \u2014 RAM",
+      "title": "gcp-relay — RAM",
       "gridPos": {
         "x": 21,
-        "y": 23,
+        "y": 19,
         "w": 3,
         "h": 3
       },
@@ -1357,12 +1372,12 @@
       }
     },
     {
-      "id": 31,
+      "id": 32,
       "type": "timeseries",
-      "title": "gcp-relay \u2014 CPU %",
+      "title": "gcp-relay — CPU %",
       "gridPos": {
         "x": 12,
-        "y": 26,
+        "y": 22,
         "w": 6,
         "h": 7
       },
@@ -1394,12 +1409,12 @@
       }
     },
     {
-      "id": 32,
+      "id": 33,
       "type": "timeseries",
-      "title": "gcp-relay \u2014 RAM",
+      "title": "gcp-relay — RAM",
       "gridPos": {
         "x": 18,
-        "y": 26,
+        "y": 22,
         "w": 6,
         "h": 7
       },
@@ -1434,119 +1449,6 @@
         "type": "prometheus",
         "uid": "${datasource}"
       }
-    },
-    {
-      "id": 33,
-      "type": "timeseries",
-      "title": "gcp-relay \u2014 Disk I/O",
-      "gridPos": {
-        "x": 12,
-        "y": 33,
-        "w": 6,
-        "h": 7
-      },
-      "options": {
-        "tooltip": {
-          "mode": "multi"
-        },
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom"
-        }
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "Bps"
-        },
-        "overrides": []
-      },
-      "targets": [
-        {
-          "expr": "rate(node_disk_read_bytes_total{job=\"gcp-relay-node\"}[5m])",
-          "legendFormat": "read {{device}}",
-          "refId": "A"
-        },
-        {
-          "expr": "rate(node_disk_written_bytes_total{job=\"gcp-relay-node\"}[5m])",
-          "legendFormat": "write {{device}}",
-          "refId": "B"
-        }
-      ],
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${datasource}"
-      }
-    },
-    {
-      "id": 34,
-      "type": "timeseries",
-      "title": "gcp-relay \u2014 Network",
-      "gridPos": {
-        "x": 18,
-        "y": 33,
-        "w": 6,
-        "h": 7
-      },
-      "options": {
-        "tooltip": {
-          "mode": "multi"
-        },
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom"
-        }
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "Bps"
-        },
-        "overrides": []
-      },
-      "targets": [
-        {
-          "expr": "rate(node_network_receive_bytes_total{job=\"gcp-relay-node\",device!~\"lo|tailscale.*\"}[5m])",
-          "legendFormat": "rx {{device}}",
-          "refId": "A"
-        },
-        {
-          "expr": "rate(node_network_transmit_bytes_total{job=\"gcp-relay-node\",device!~\"lo|tailscale.*\"}[5m])",
-          "legendFormat": "tx {{device}}",
-          "refId": "B"
-        }
-      ],
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${datasource}"
-      }
     }
-  ],
-  "templating": {
-    "list": [
-      {
-        "name": "datasource",
-        "type": "datasource",
-        "pluginId": "prometheus",
-        "label": "Datasource",
-        "hide": 0
-      }
-    ]
-  },
-  "annotations": {
-    "list": [
-      {
-        "name": "Deployments",
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${datasource}"
-        },
-        "expr": "changes(system_version[5m]) > 0",
-        "step": "60s",
-        "titleFormat": "Deploy",
-        "tagKeys": "job",
-        "enable": true,
-        "hide": false,
-        "iconColor": "blue"
-      }
-    ]
-  }
+  ]
 }
