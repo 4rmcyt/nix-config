@@ -84,6 +84,25 @@
   # 6. Environment
   # =================================================================
   environment = {
+    etc."polkit-1/actions/org.auto-cpufreq.pkexec.policy".text = ''
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE policyconfig PUBLIC
+       "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+       "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+      <policyconfig>
+        <action id="org.auto-cpufreq.pkexec">
+          <description>Run auto-cpufreq</description>
+          <message>Authentication is required to run auto-cpufreq</message>
+          <defaults>
+            <allow_any>auth_admin</allow_any>
+            <allow_inactive>auth_admin</allow_inactive>
+            <allow_active>auth_admin</allow_active>
+          </defaults>
+          <annotate key="org.freedesktop.policykit.exec.path">${pkgs.auto-cpufreq}/bin/auto-cpufreq</annotate>
+          <annotate key="org.freedesktop.policykit.exec.allow_gui">false</annotate>
+        </action>
+      </policyconfig>
+    '';
     sessionVariables = {
       # AMD GPU variables
       LIBVA_DRIVER_NAME = "radeonsi";
@@ -205,6 +224,14 @@
   security = {
     rtkit.enable = true;
     polkit.enable = true;
+    polkit.extraConfig = ''
+      polkit.addRule(function(action, subject) {
+        if (action.id === "org.auto-cpufreq.pkexec" &&
+            subject.isInGroup("wheel")) {
+          return polkit.Result.YES;
+        }
+      });
+    '';
   };
 
   # =================================================================
