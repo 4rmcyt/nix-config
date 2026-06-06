@@ -96,7 +96,7 @@
           <defaults>
             <allow_any>auth_admin</allow_any>
             <allow_inactive>auth_admin</allow_inactive>
-            <allow_active>auth_admin</allow_active>
+            <allow_active>auth_admin_keep</allow_active>
           </defaults>
           <annotate key="org.freedesktop.policykit.exec.path">${pkgs.auto-cpufreq}/bin/auto-cpufreq</annotate>
           <annotate key="org.freedesktop.policykit.exec.allow_gui">false</annotate>
@@ -224,14 +224,6 @@
   security = {
     rtkit.enable = true;
     polkit.enable = true;
-    polkit.extraConfig = ''
-      polkit.addRule(function(action, subject) {
-        if (action.id === "org.auto-cpufreq.pkexec" &&
-            subject.isInGroup("wheel")) {
-          return polkit.Result.YES;
-        }
-      });
-    '';
   };
 
   # =================================================================

@@ -131,6 +131,14 @@
     pinentry.package = pkgs.pinentry-gnome3;
   };
 
+  # Break the cyclic ordering: set-SSH_AUTH_SOCK → Before=gpg-agent-ssh.socket
+  # which is in sockets.target → basic.target → set-SSH_AUTH_SOCK (implicit After=basic.target).
+  # Removing the socket-level Before/WantedBy; default.target is sufficient.
+  systemd.user.services.set-SSH_AUTH_SOCK = {
+    Unit.Before = lib.mkForce [];
+    Install.WantedBy = lib.mkForce ["default.target"];
+  };
+
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
       autoconnect = ["qemu:///system"];
