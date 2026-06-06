@@ -338,6 +338,7 @@
         "--reset"
         "--login-server=https://hs.example.com"
       ];
+      extraSetFlags = ["--operator=${config.my.defaults.user}"];
     };
   };
 

@@ -227,6 +227,7 @@ in {
       enable = true;
       useRoutingFeatures = "both";
       extraUpFlags = ["--accept-routes" "--accept-dns=false" "--login-server=https://hs.example.com"];
+      extraSetFlags = ["--operator=${config.my.defaults.user}"];
     };
   };
   # =================================================================
