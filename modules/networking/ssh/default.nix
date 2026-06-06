@@ -38,14 +38,14 @@ in {
 
     # Internal hosts
     Host homeserver
-      HostName ${config.my.network.hosts.homeserver_lan}
+      HostName homeserver.ts.example.com
       User ${user}
       Port 2222
       IdentityFile ~/.ssh/${user}
       IdentitiesOnly yes
 
     Host desktop
-      HostName ${config.my.network.hosts.desktop_lan}
+      HostName desktop.ts.example.com
       User ${user}
       IdentityFile ~/.ssh/${user}
       IdentitiesOnly yes
@@ -57,14 +57,14 @@ in {
       IdentitiesOnly yes
 
     Host matebook
-      HostName ${config.my.network.hosts.matebook_wifi}
+      HostName matebook.ts.example.com
       User ${user}
       IdentityFile ~/.ssh/${user}
       IdentitiesOnly yes
 
     # External services
     Host gcp-relay
-      HostName 203.0.113.1
+      HostName gcp-relay.ts.example.com
       User ${user}
       IdentityFile ~/.ssh/${user}
       IdentitiesOnly yes
@@ -118,8 +118,18 @@ in {
   # SSH Known Hosts
   # =================================================================
   programs.ssh.knownHosts = {
+    "homeserver" = {
+      hostNames = ["homeserver.ts.example.com" "100.64.0.3"];
+      publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJV+/pct8PNZhUqvnflYY5auIE1zTl3sPtCfVynTnajN";
+    };
+
+    "matebook" = {
+      hostNames = ["matebook.ts.example.com" "100.64.0.4"];
+      publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILMexDvsxSWoErrJDM++L2N0dJxKc3ro7sIezfYIWFH2";
+    };
+
     "gcp-relay" = {
-      hostNames = ["203.0.113.1" "gcp-relay"];
+      hostNames = ["203.0.113.1" "gcp-relay" "gcp-relay.ts.example.com" "100.64.0.5"];
       publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJM6PdGMBKVCzUboMTKIw6Dbdmy8HM8QVFibWy7PBVZZ";
     };
 
