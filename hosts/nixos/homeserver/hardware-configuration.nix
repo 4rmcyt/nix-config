@@ -205,6 +205,16 @@ in {
     '';
   };
 
+  security.polkit.enable = true;
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      if (action.id === "org.freedesktop.fwupd.refresh-remote" &&
+          subject.user === "fwupd-refresh") {
+        return polkit.Result.YES;
+      }
+    });
+  '';
+
   systemd = {
     coredump.enable = false;
     oomd.enable = true;
