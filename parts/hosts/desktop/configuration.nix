@@ -11,7 +11,6 @@ in {
     imports = [
       nixosBase
       ../../../hosts/nixos/desktop
-      inputs.noctalia.nixosModules.default
       inputs.niri-flake.nixosModules.niri
       inputs.nirinit.nixosModules.nirinit
     ];

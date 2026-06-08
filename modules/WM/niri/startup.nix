@@ -19,7 +19,7 @@ _: {
       {command = ["systemctl" "--user" "start" "nirinit.service"];}
 
       # Desktop shell
-      {command = ["noctalia-shell"];}
+      {command = ["noctalia"];}
 
       # Messaging apps
       {command = ["materialgram"];}

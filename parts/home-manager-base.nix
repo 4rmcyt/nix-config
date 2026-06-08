@@ -23,6 +23,7 @@ in {
       inputs.mcp-servers-nix.overlays.default
       inputs.nur.overlays.default
       inputs.nix-vscode-extensions.overlays.default
+      inputs.noctalia.overlays.default
       (_final: prev: {
         mcp-server-fetch = prev.mcp-server-fetch.overrideAttrs (old: {
           postPatch =

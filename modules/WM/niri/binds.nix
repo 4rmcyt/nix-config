@@ -1,7 +1,7 @@
 {config, ...}: let
   a = config.lib.niri.actions;
-  qs = target: act: {
-    action = a.spawn "qs" "-c" "noctalia-shell" "ipc" "call" target act;
+  msg = target: act: {
+    action = a.spawn "noctalia" "msg " target act;
   };
 in {
   programs.niri.settings.binds = {
@@ -12,11 +12,11 @@ in {
     "Mod+Return".action = a.spawn "kitty";
     "Mod+B".action = a.spawn "google-chrome-stable";
     "Mod+E".action = a.spawn "nautilus";
-    "Mod+Space" = qs "launcher" "toggle";
-    "Mod+D" = qs "launcher" "toggle";
+    "Mod+Space" = msg "launcher" "toggle";
+    "Mod+D" = msg "launcher" "toggle";
     "Mod+M".action = a.spawn "kitty" "-e" "btop";
     "Ctrl+Shift+Escape".action = a.spawn "kitty" "-e" "btop";
-    "Mod+Comma" = qs "settings" "toggle";
+    "Mod+Comma" = msg "settings" "toggle";
     "Mod+Shift+D".action = a.spawn "discord";
 
     # ============================================
@@ -32,18 +32,18 @@ in {
     # SYSTEM CONTROLS
     # ============================================
 
-    "Mod+Escape" = qs "lockScreen" "lock";
-    "Mod+Shift+Escape" = qs "sessionMenu" "toggle";
-    "Mod+N" = qs "notifications" "toggleHistory";
-    "Mod+T" = qs "darkMode" "toggle";
-    "Mod+Shift+N" = qs "nightLight" "toggle";
+    "Mod+Escape" = msg "lockScreen" "lock";
+    "Mod+Shift+Escape" = msg "sessionMenu" "toggle";
+    "Mod+N" = msg "notifications" "toggleHistory";
+    "Mod+T" = msg "darkMode" "toggle";
+    "Mod+Shift+N" = msg "nightLight" "toggle";
 
     # ============================================
     # THEMING & CUSTOMIZATION
     # ============================================
 
-    "Mod+C" = qs "colorPicker" "toggle";
-    "Mod+W" = qs "desktopWidgets" "toggle";
+    "Mod+C" = msg "colorPicker" "toggle";
+    "Mod+W" = msg "desktopWidgets" "toggle";
 
     # ============================================
     # SCREENSHOTS - niri native
@@ -172,7 +172,7 @@ in {
     # CLIPBOARD
     # ============================================
 
-    "Mod+V" = qs "launcher" "clipboard";
+    "Mod+V" = msg "launcher" "clipboard";
 
     # ============================================
     # SYSTEM

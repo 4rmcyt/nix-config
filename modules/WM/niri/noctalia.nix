@@ -502,29 +502,11 @@ in {
     "noctalia/templates/materialgram.tdesktop-theme".source = materialgramTemplate;
   };
 
-  programs.noctalia-shell = {
+  programs.noctalia = {
     enable = true;
-    # systemd startup is deprecated in noctalia; spawn is configured in startup.nix
-
-    # Custom matugen templates — run by noctalia after wallpaper/color changes
-    # NOTE: verify input_path convention with: qs -c noctalia-shell ipc show
-    user-templates = {
-      templates = {
-        zed-dark = {
-          input_path = "$HOME/.config/noctalia/templates/zed-colors.json";
-          output_path = "$HOME/.config/zed/themes/matugen.json";
-        };
-        materialgram = {
-          input_path = "$HOME/.config/noctalia/templates/materialgram.tdesktop-theme";
-          output_path = "$HOME/.local/share/TelegramDesktop/tdata/matugen.tdesktop-theme";
-        };
-      };
-    };
-
-    settings = {
-      # Minimal bootstrap — configure via noctalia UI on first boot,
-      # then export with: qs -c noctalia-shell ipc call state all | jq .settings
-    };
+    package = pkgs.noctalia;
+    # spawn-at-startup configured in startup.nix; systemd service not used
+    settings = { };
   };
 
   # playerctl for media key bindings (replaces dms ipc mpris)

@@ -54,7 +54,7 @@ ZFS root pool with systemd-tmpfiles suppression (`--exclude-prefix`) to avoid `c
 
 - **WM:** Niri (niri-flake NixOS module, `pkgs.niri` 25.11, not niri-flake stable)
 - **DM:** greetd (auto-login into Niri session)
-- **Shell:** Noctalia (DMS-based shell)
+- **Shell:** noctalia-shell (quickshell-based bar/shell)
 - **Theming:** Stylix + matugen dynamic colors
 - **Portal:** `xdg-desktop-portal-gnome` + `xdg-desktop-portal-gtk`
 
@@ -70,7 +70,7 @@ ZFS root pool with systemd-tmpfiles suppression (`--exclude-prefix`) to avoid `c
 **Role:** Laptop — portable workstation  
 **WiFi IP:** `192.168.1.132`
 
-- Niri WM + Noctalia
+- Niri WM + noctalia-shell
 - Tailscale client with magic rollback enabled for remote deploys
 
 ---
@@ -116,6 +116,8 @@ ZFS root pool with systemd-tmpfiles suppression (`--exclude-prefix`) to avoid `c
 
 Running on GCP relay. Split DNS: `example.com` → `100.64.0.3` (homeserver Tailscale IP).  
 Magic DNS base domain: `ts.example.com`. DERP: GCP US Central + Tailscale default map.
+
+SSH config uses MagicDNS hostnames (`homeserver.ts.example.com`, `matebook.ts.example.com`, `gcp-relay.ts.example.com`) so SSH works from any network without hardcoded LAN IPs. Operator mode enabled on desktop + matebook (`extraSetFlags = ["--operator=zeev"]`) so `tailscale file cp` works without sudo.
 
 ### Unbound (recursive DNS)
 
@@ -245,6 +247,7 @@ secrets/
   system.yaml                     # homeserver SSH host keys
   tailscale-homeserver.yaml       # Tailscale auth key (homeserver)
   tailscale-desktop.yaml          # Tailscale auth key (desktop)
+  tailscale-matebook.yaml         # Tailscale auth key (matebook)
   cloudflare_acme_credentials.env # CF_DNS_API_TOKEN for Traefik ACME
   grafana.yaml                    # admin password, OIDC secret, secret key
   postgresql.yaml                 # DB passwords (grafana, etc.)

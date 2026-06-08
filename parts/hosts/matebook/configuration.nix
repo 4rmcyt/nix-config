@@ -12,7 +12,6 @@ in {
       nixosBase
       ../../../hosts/nixos/matebook
       inputs.niri-flake.nixosModules.niri
-      inputs.noctalia.nixosModules.default
     ];
 
     # Facter
