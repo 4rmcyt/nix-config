@@ -502,10 +502,23 @@ in {
     "noctalia/templates/materialgram.tdesktop-theme".source = materialgramTemplate;
   };
 
-  programs.noctalia = {
+  programs.noctalia-shell = {
     enable = true;
-    package = pkgs.noctalia;
     # spawn-at-startup configured in startup.nix; systemd service not used
+
+    user-templates = {
+      templates = {
+        zed-dark = {
+          input_path = "$HOME/.config/noctalia/templates/zed-colors.json";
+          output_path = "$HOME/.config/zed/themes/matugen.json";
+        };
+        materialgram = {
+          input_path = "$HOME/.config/noctalia/templates/materialgram.tdesktop-theme";
+          output_path = "$HOME/.local/share/TelegramDesktop/tdata/matugen.tdesktop-theme";
+        };
+      };
+    };
+
     settings = { };
   };
 

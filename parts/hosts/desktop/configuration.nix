@@ -13,6 +13,7 @@ in {
       ../../../hosts/nixos/desktop
       inputs.niri-flake.nixosModules.niri
       inputs.nirinit.nixosModules.nirinit
+      inputs.noctalia.nixosModules.default
     ];
 
     services.nirinit.enable = true;
