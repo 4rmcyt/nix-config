@@ -1,9 +1,12 @@
 {
   inputs,
   config,
+  lib,
   ...
 }: {
   perSystem = {system, ...}: {
-    checks = inputs.deploy-rs.lib.${system}.deployChecks config.flake.deploy;
+    checks = lib.filterAttrs (_: lib.isDerivation) (
+      inputs.deploy-rs.lib.${system}.deployChecks config.flake.deploy
+    );
   };
 }
