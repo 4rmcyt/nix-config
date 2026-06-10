@@ -4,6 +4,7 @@
   inputs = {
     # Core
     determinate.url = "github:DeterminateSystems/determinate";
+    flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/0";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
