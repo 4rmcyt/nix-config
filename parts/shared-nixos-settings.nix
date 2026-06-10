@@ -61,10 +61,8 @@ in {
         "nix-command"
         "auto-allocate-uids"
         "cgroups"
-        "pipe-operator"
       ];
       allow-import-from-derivation = true;
-      deprecated-features = ["broken-string-escape"];
       auto-optimise-store = true;
       warn-dirty = false;
       keep-going = true;
@@ -75,7 +73,6 @@ in {
       keep-outputs = true;
       keep-derivations = true;
       connect-timeout = 30;
-      initial-connect-timeout = 15;
       min-free = 5368709120; # 5GB
       max-free = 10737418240; # 10GB
       builders-use-substitutes = true;
