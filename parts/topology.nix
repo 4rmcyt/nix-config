@@ -10,7 +10,17 @@
 
   perSystem = {
     topology.modules = [
-      {inherit (config.flake) nixosConfigurations;}
+      {
+        nixosConfigurations = {
+          inherit
+            (config.flake.nixosConfigurations)
+            desktop
+            homeserver
+            matebook
+            gcp-relay
+            ;
+        };
+      }
     ];
   };
 }
