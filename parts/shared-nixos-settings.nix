@@ -49,8 +49,8 @@ in {
       text = "${lib.getExe inputs.nixos-needsreboot.packages.${pkgs.system}.default} \"$systemConfig\" || true";
     };
 
-    # Lix as the nix implementation
-    nix.package = lib.mkDefault pkgs.lixPackageSets.latest.lix;
+    imports = [../../../modules/nix/lix];
+
     nix.channel.enable = false;
     nix.registry.nixpkgs.flake = inputs.nixpkgs;
 
@@ -87,7 +87,6 @@ in {
         "https://4rmcyt.cachix.org?priority=0"
         "https://nix-community.cachix.org?priority=1"
         "https://cache.nixos.org?priority=1"
-        "https://cache.lix.systems?priority=1"
         "https://cache.flox.dev?priority=1"
         "https://cache.nixos-cuda.org?priority=1"
         "https://cuda-maintainers.cachix.org?priority=1"
@@ -103,7 +102,6 @@ in {
         "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
         "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
         "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
-        "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
         "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
         "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
         "llama-cpp.cachix.org-1:H75X+w83wUKTIPSO1KWy9ADUrzThyGs8P5tmAbkWhQc="
