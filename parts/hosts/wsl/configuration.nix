@@ -6,6 +6,7 @@ in {
     imports = [
       nixosBase
       ../../../hosts/nixos/wsl
+      ../../../modules/nix/lix
     ];
   };
 }

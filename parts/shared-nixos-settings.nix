@@ -49,8 +49,6 @@ in {
       text = "${lib.getExe inputs.nixos-needsreboot.packages.${pkgs.system}.default} \"$systemConfig\" || true";
     };
 
-    imports = [../modules/nix/lix];
-
     nix.channel.enable = false;
     nix.registry.nixpkgs.flake = inputs.nixpkgs;
 

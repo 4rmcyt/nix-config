@@ -14,6 +14,7 @@ in {
       inputs.niri-flake.nixosModules.niri
       inputs.nirinit.nixosModules.nirinit
       inputs.noctalia.nixosModules.default
+      ../../../modules/nix/lix
     ];
 
     services.nirinit.enable = true;

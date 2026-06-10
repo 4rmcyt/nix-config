@@ -13,6 +13,7 @@ in {
       ../../../hosts/nixos/homeserver
       inputs.nixarr.nixosModules.default
       "${inputs.ephraim-nur}/nixos-modules/lazylibrarian.nix"
+      ../../../modules/nix/lix
     ];
 
     disabledModules = [];
