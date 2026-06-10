@@ -27,7 +27,6 @@
     supabase-cli
     wrangler
     google-cloud-sdk
-    deploy-rs
     # C/system
     gcc
 

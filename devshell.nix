@@ -1,14 +1,8 @@
-{
-  pkgs,
-  inputs,
-  ...
-}:
+{pkgs, ...}:
 pkgs.mkShell {
   name = "nix-config";
 
-  packages =
-    [inputs.deploy-rs.packages.${pkgs.system}.deploy-rs]
-    ++ (with pkgs; [
+  packages = with pkgs; [
       zsh
       nix-direnv
       nixfmt
@@ -44,7 +38,7 @@ pkgs.mkShell {
       ripsecrets
       gitleaks
       pre-commit-hook-ensure-sops
-    ]);
+  ];
 
   shellHook = ''
     echo "🔨 NixOS Config Development Shell"

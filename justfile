@@ -1,10 +1,10 @@
+# Deploy to gcp-relay
+deploy-gcp:
+    nh os switch --hostname gcp-relay --target-host zeev@gcp-relay --elevation-strategy passwordless ~/src/nix-config
+
 # Deploy to homeserver
 deploy-homeserver:
     ./deploy.sh homeserver
-
-# Deploy to macbook
-deploy-macbook:
-    ./deploy.sh macbook
 
 # Deploy to WSL
 deploy-wsl:
@@ -33,18 +33,13 @@ check:
 
 # Run all tests
 test:
-    nix flake check  
-    just test-homeserver  
-    just test-macbook
+    nix flake check
+    just test-homeserver
     just test-wsl
 
 # Test homeserver configuration
 test-homeserver:
-    nix build .#checks.x86_64-linux.homeserver-tests  
-
-# Test macbook configuration
-test-macbook:
-    nix build .#checks.aarch64-darwin.macbook-tests
+    nix build .#checks.x86_64-linux.homeserver-tests
 
 # Test WSL configuration
 test-wsl:
