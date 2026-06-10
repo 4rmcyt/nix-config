@@ -1141,7 +1141,7 @@
         "narHash": "sha256-LS35d2cSte4cCvelMpzSynGxLhnw62WQ7F0Hkg+BAQA=",
         "rev": "997ed198e7722f15b11be5b22b2a17991b77d15c",
         "type": "tarball",
-        "url": "https://codeberg.org/api/v1/repos/Mynacol/nixos-needsreboot/archive/997ed198e7722f15b11be5b22b2a17991b77d15c.tar.gz?rev=997ed198e7722f15b11be5b22b2a17991b77d15c"
+        "url": "https://codeberg.org/api/v1/repos/Mynacol/nixos-needsreboot/archive/997ed198e7722f15b11be5b22b2a17991b77d15c.tar.gz"
       },
       "original": {
         "type": "tarball",
