@@ -83,8 +83,6 @@ in {
         "https://nix-community.cachix.org?priority=1"
         "https://cache.nixos.org?priority=1"
         "https://cache.flox.dev?priority=1"
-        "https://cache.nixos-cuda.org?priority=1"
-        "https://cuda-maintainers.cachix.org?priority=1"
         "https://llama-cpp.cachix.org?priority=1"
         "https://noctalia.cachix.org?priority=2"
         "https://devenv.cachix.org?priority=3"
@@ -97,8 +95,6 @@ in {
         "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
         "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
         "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nqlt4="
-        "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
-        "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
         "llama-cpp.cachix.org-1:H75X+w83wUKTIPSO1KWy9ADUrzThyGs8P5tmAbkWhQc="
         "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
       ];
