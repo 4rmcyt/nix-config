@@ -11,6 +11,11 @@
       include dank-theme.conf
       include dank-tabs.conf
       mouse_map right press ungrabbed paste_from_clipboard
+      map media_pause no_op
+      map media_play no_op
+      map media_stop no_op
+      map media_next no_op
+      map media_previous no_op
     '';
     settings = {
       term = "xterm-kitty";
