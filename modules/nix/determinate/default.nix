@@ -7,6 +7,7 @@
     extra-experimental-features = [
       "lazy-trees"
       "flake-schemas"
+      "ca-derivations"
     ];
   };
 }
