@@ -156,6 +156,7 @@ in {
       lixPackageSets.latest.nurl
       lixPackageSets.latest.nix-init
       lixPackageSets.latest.nix-update
+      inputs.nix-auth.packages.${system}.default
     ];
   };
 
