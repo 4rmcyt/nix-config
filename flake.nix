@@ -124,7 +124,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixos-needsreboot.url = "https://codeberg.org/Mynacol/nixos-needsreboot/archive/HEAD.tar.gz";
+    nixos-needsreboot.url = "git+https://codeberg.org/Mynacol/nixos-needsreboot.git";
 
     # Headscale web UI
     headplane = {
