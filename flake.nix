@@ -4,6 +4,7 @@
   inputs = {
     # Core
     determinate.url = "github:DeterminateSystems/determinate";
+    nix-auth.url = "github:numtide/nix-auth";
     flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/0";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -153,8 +154,9 @@
     };
   };
 
-  outputs = inputs:
-    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+  outputs =
+    inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         (inputs.import-tree ./parts)
       ];
