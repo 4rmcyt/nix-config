@@ -1153,13 +1153,15 @@
       "locked": {
         "lastModified": 1780681877,
         "narHash": "sha256-LS35d2cSte4cCvelMpzSynGxLhnw62WQ7F0Hkg+BAQA=",
+        "ref": "refs/heads/main",
         "rev": "997ed198e7722f15b11be5b22b2a17991b77d15c",
-        "type": "tarball",
-        "url": "https://codeberg.org/api/v1/repos/Mynacol/nixos-needsreboot/archive/997ed198e7722f15b11be5b22b2a17991b77d15c.tar.gz?rev=997ed198e7722f15b11be5b22b2a17991b77d15c"
+        "revCount": 85,
+        "type": "git",
+        "url": "https://codeberg.org/Mynacol/nixos-needsreboot.git"
       },
       "original": {
-        "type": "tarball",
-        "url": "https://codeberg.org/Mynacol/nixos-needsreboot/archive/HEAD.tar.gz"
+        "type": "git",
+        "url": "https://codeberg.org/Mynacol/nixos-needsreboot.git"
       }
     },
     "nixos-stable": {
@@ -1453,11 +1455,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781190730,
-        "narHash": "sha256-lAjKtEWY2I60r0Xq3dtPncbQ6Iuer7LWdRC9kLSBdZg=",
+        "lastModified": 1781204108,
+        "narHash": "sha256-vGT5KheFGpMppQrEOUdvkuVKQ0MmYtMPI4Xgago+6dM=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "f00efb9499e8542e0e97a68ec08ecbbfff28ed6f",
+        "rev": "601514d2cddc32a1f81785282b5120f2b0217400",
         "type": "github"
       },
       "original": {
