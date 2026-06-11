@@ -42,6 +42,7 @@ in {
 
     environment.systemPackages = [
       inputs.nixos-needsreboot.packages.${pkgs.system}.default
+      inputs.nix-auth.packages.${pkgs.system}.default
     ];
 
     system.activationScripts.nixos-needsreboot = {
