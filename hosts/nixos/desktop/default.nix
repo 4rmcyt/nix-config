@@ -73,6 +73,11 @@ in {
         key = "git_access_token";
         owner = "root";
       };
+      codeberg_access_token = {
+        sopsFile = ../../../secrets/common.yaml;
+        key = "codeberg_access_token";
+        owner = "root";
+      };
       gemini_api_key = {
         sopsFile = ../../../secrets/common.yaml;
         key = "gemini_api_key";
