@@ -144,34 +144,6 @@ in {
     };
 
     # ----------------------------------------------------------------
-    # Traefik access log filter — matches 401/403 responses.
-    # Traefik CLF format: <ip> - - [date] "METHOD path HTTP/x" STATUS ...
-    # ----------------------------------------------------------------
-    "fail2ban/filter.d/traefik-auth.conf" = {
-      mode = "0644";
-      text = ''
-        [Definition]
-        failregex = ^<HOST> - \S+ \[.*\] ".*" (401|403) .*$
-        ignoreregex =
-      '';
-    };
-
-    # ----------------------------------------------------------------
-    # Grafana filter — matches failed login log entries.
-    # Grafana logs: level=warn ... msg="Invalid username or password"
-    #               remote_addr=<ip>:<port>
-    # ----------------------------------------------------------------
-    "fail2ban/filter.d/grafana.conf" = {
-      mode = "0644";
-      text = ''
-        [Definition]
-        failregex = ^.* level=warn .* msg="Invalid username or password" .* remote_addr=<HOST>:.*$
-                    ^.* level=warn .* msg="Failed to look up user based on cookie" .* remote_addr=<HOST>:.*$
-        ignoreregex =
-      '';
-    };
-
-    # ----------------------------------------------------------------
     # Home Assistant filter — matches failed login log entries.
     # HASS logs: Login attempt or request with invalid authentication
     # from <ip> (<user agent>)
