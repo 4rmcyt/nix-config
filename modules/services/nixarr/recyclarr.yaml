@@ -222,12 +222,19 @@ sonarr:
             score: -5
       - trash_ids:
           # HDR Optional
+          # SDR
+          - 2016d1676f5ee13a5b7257ff86ac9a93
+        assign_scores_to:
+          - name: All
+            score: -100
+          - name: Ultra-HD
+            score: -100
+      - trash_ids:
+          # HDR Optional
           # DV (Disk)
           - ef4963043b0987f8485bc9106f16db38
           # DV (WEBDL)
           - 9b27ab6498ec0f31a3353992e19434ca
-          # SDR
-          - 2016d1676f5ee13a5b7257ff86ac9a93
           # Language profiles
           # Language: Not Original
           - ae575f95ab639ba5d15f663bf019e3e8
@@ -452,12 +459,19 @@ radarr:
             score: -5
       - trash_ids:
           # HDR Optional
+          # SDR
+          - 9c38ebb7384dada637be8899efa68e6f
+        assign_scores_to:
+          - name: All
+            score: -100
+          - name: Ultra-HD
+            score: -100
+      - trash_ids:
+          # HDR Optional
           # DV (Disk)
           - f700d29429c023a5734505e77daeaea7
           # DV (WEBDL)
           - 923b6abef9b17f937fab56cfcf89e1f1
-          # SDR
-          - 9c38ebb7384dada637be8899efa68e6f
           # Language profiles
           # Language: Not Original
           - d6e9318c875905d6cfb5bee961afcea9
