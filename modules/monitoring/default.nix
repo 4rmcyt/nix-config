@@ -143,6 +143,43 @@
         source_labels = ["__journal__systemd_unit"]
         target_label  = "unit"
       }
+      // syslog priority: 0=emerg,1=alert,2=crit,3=err,4=warn,5=notice,6=info,7=debug
+      rule {
+        source_labels = ["__journal__priority"]
+        regex         = "0|1|2"
+        target_label  = "level"
+        replacement   = "critical"
+      }
+      rule {
+        source_labels = ["__journal__priority"]
+        regex         = "3"
+        target_label  = "level"
+        replacement   = "error"
+      }
+      rule {
+        source_labels = ["__journal__priority"]
+        regex         = "4"
+        target_label  = "level"
+        replacement   = "warning"
+      }
+      rule {
+        source_labels = ["__journal__priority"]
+        regex         = "5"
+        target_label  = "level"
+        replacement   = "notice"
+      }
+      rule {
+        source_labels = ["__journal__priority"]
+        regex         = "6"
+        target_label  = "level"
+        replacement   = "info"
+      }
+      rule {
+        source_labels = ["__journal__priority"]
+        regex         = "7"
+        target_label  = "level"
+        replacement   = "debug"
+      }
     }
   '';
 
@@ -381,9 +418,9 @@
     enable = true;
     extraConfigFiles = [config.sops.secrets.ntfy_alertmanager_config.path];
     settings = {
-      http.listen-address = "127.0.0.1:${toString config.my.network.ports.alertmanager-ntfy}";
+      http."listen-address" = "127.0.0.1:${toString config.my.network.ports.alertmanager-ntfy}";
       ntfy = {
-        base-url = "https://ntfy.${config.my.defaults.domain}";
+        "base-url" = "https://ntfy.${config.my.defaults.domain}";
         topic = "alerts";
       };
     };
