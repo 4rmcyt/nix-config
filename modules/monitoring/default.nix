@@ -438,7 +438,7 @@
     settings = {
       http.addr = "127.0.0.1:${toString config.my.network.ports.alertmanager-ntfy}";
       ntfy = {
-        baseurl = "https://ntfy.${config.my.defaults.domain}";
+        baseurl = "http://127.0.0.1:9991";
         notification.topic = "alerts";
       };
     };
