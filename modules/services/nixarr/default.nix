@@ -176,6 +176,11 @@ in {
     {
       recyclarr.serviceConfig.ExecStart = lib.mkOverride 0 "${config.nixarr.recyclarr.package}/bin/recyclarr sync --config ${config.nixarr.recyclarr.configFile}";
     }
+    # nixarr passes an absolute path to StateDirectory= which systemd rejects with a warning.
+    # StateDirectory= must be relative. Clear it — the dir already exists via tmpfiles.
+    {
+      audiobookshelf.serviceConfig.StateDirectory = lib.mkForce "";
+    }
     (lib.genAttrs servicesWithMediaAccess (_name: {
       serviceConfig = {
         UMask = lib.mkForce "0002";
