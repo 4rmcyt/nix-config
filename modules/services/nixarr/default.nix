@@ -313,41 +313,6 @@ in {
           chmod 600 "$cfg"
         '';
       };
-      lidarr-pg-config = {
-        description = "Write Lidarr PostgreSQL config.xml";
-        after = [
-          "postgresql.service"
-          "postgresql-setup-users.service"
-        ];
-        requires = ["postgresql.service"];
-        wantedBy = ["multi-user.target"];
-        before = ["lidarr.service"];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          User = "lidarr";
-          Group = "lidarr";
-        };
-        path = [pkgs.xmlstarlet];
-        script = ''
-          mkdir -p /data/media/.state/nixarr/lidarr
-          cfg=/data/media/.state/nixarr/lidarr/config.xml
-          if [ ! -f "$cfg" ]; then
-            printf '<Config>\n</Config>\n' > "$cfg"
-          fi
-          PG_PASS=$(cat ${config.sops.secrets.lidarr_db_password.path} | tr -d '\n\r')
-          for pair in "PostgresUser:lidarr" "PostgresPassword:$PG_PASS" "PostgresPort:5432" "PostgresHost:127.0.0.1" "PostgresMainDb:lidarr" "PostgresLogDb:lidarr-log"; do
-            key="''${pair%%:*}"
-            val="''${pair#*:}"
-            if xmlstarlet sel -t -v "count(/Config/$key)" "$cfg" 2>/dev/null | grep -q "^0$"; then
-              xmlstarlet ed -L -s /Config -t elem -n "$key" -v "$val" "$cfg"
-            else
-              xmlstarlet ed -L -u "/Config/$key" -v "$val" "$cfg"
-            fi
-          done
-          chmod 600 "$cfg"
-        '';
-      };
       bazarr-pg-env = {
         description = "Write Bazarr PostgreSQL environment file";
         after = [
