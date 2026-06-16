@@ -180,10 +180,31 @@
     loki.source.journal "journal" {
       max_age       = "12h"
       relabel_rules = loki.relabel.journal.rules
-      forward_to    = [loki.write.default.receiver]
+      forward_to    = [loki.process.fix_container_level.receiver]
       labels        = {
         job  = "systemd-journal",
         host = "homeserver",
+      }
+    }
+
+    // Containers (Python/celery) write INFO/DEBUG/WARNING to stderr → journald
+    // marks them priority=error. Fix: for logs labelled error, check if the
+    // line text starts with a Python log level and downgrade accordingly.
+    loki.process "fix_container_level" {
+      forward_to = [loki.write.default.receiver]
+
+      stage.match {
+        selector = "{level=\"error\"}"
+        stage.regex {
+          expression = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}[,.]\\d+ (?P<text_level>DEBUG|INFO|WARNING)"
+        }
+        stage.template {
+          source   = "text_level"
+          template = "{{ ToLower .Value }}"
+        }
+        stage.labels {
+          values = { level = "text_level" }
+        }
       }
     }
   '';
