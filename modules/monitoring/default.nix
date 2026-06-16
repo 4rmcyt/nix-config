@@ -131,57 +131,59 @@
     }
 
     // ── Systemd journal ───────────────────────────────────────────
-    loki.source.journal "journal" {
-      max_age    = "12h"
-      forward_to = [loki.relabel.journal.receiver]
-      labels     = {
-        job  = "systemd-journal",
-        host = "homeserver",
-      }
-    }
-
+    // relabel rules stored here, applied via relabel_rules= in source.journal
     loki.relabel "journal" {
-      forward_to = [loki.write.default.receiver]
+      forward_to = []
       rule {
         source_labels = ["__journal__systemd_unit"]
         target_label  = "unit"
       }
-      // syslog priority: 0=emerg,1=alert,2=crit,3=err,4=warn,5=notice,6=info,7=debug
+      // __journal_priority_keyword: emerg, alert, crit, error, warning, notice, info, debug
       rule {
-        source_labels = ["__journal__priority"]
-        regex         = "^[012]$"
+        source_labels = ["__journal_priority_keyword"]
+        regex         = "emerg|alert|crit"
         target_label  = "level"
         replacement   = "critical"
       }
       rule {
-        source_labels = ["__journal__priority"]
-        regex         = "^3$"
+        source_labels = ["__journal_priority_keyword"]
+        regex         = "error"
         target_label  = "level"
         replacement   = "error"
       }
       rule {
-        source_labels = ["__journal__priority"]
-        regex         = "^4$"
+        source_labels = ["__journal_priority_keyword"]
+        regex         = "warning"
         target_label  = "level"
         replacement   = "warning"
       }
       rule {
-        source_labels = ["__journal__priority"]
-        regex         = "^5$"
+        source_labels = ["__journal_priority_keyword"]
+        regex         = "notice"
         target_label  = "level"
         replacement   = "notice"
       }
       rule {
-        source_labels = ["__journal__priority"]
-        regex         = "^6$"
+        source_labels = ["__journal_priority_keyword"]
+        regex         = "info"
         target_label  = "level"
         replacement   = "info"
       }
       rule {
-        source_labels = ["__journal__priority"]
-        regex         = "^7$"
+        source_labels = ["__journal_priority_keyword"]
+        regex         = "debug"
         target_label  = "level"
         replacement   = "debug"
+      }
+    }
+
+    loki.source.journal "journal" {
+      max_age       = "12h"
+      relabel_rules = loki.relabel.journal.rules
+      forward_to    = [loki.write.default.receiver]
+      labels        = {
+        job  = "systemd-journal",
+        host = "homeserver",
       }
     }
   '';
@@ -305,6 +307,7 @@
           reject_old_samples_max_age = "30d";
           ingestion_rate_mb = 16;
           ingestion_burst_size_mb = 32;
+          allow_structured_metadata = false;
         };
         query_range.cache_results = true;
         frontend.scheduler_address = "";

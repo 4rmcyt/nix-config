@@ -78,6 +78,11 @@ in {
             journalctl_filter = ["_SYSTEMD_UNIT=sshd.service"];
             labels.type = "syslog";
           }
+          {
+            source = "journalctl";
+            journalctl_filter = ["SYSLOG_IDENTIFIER=sshd-session"];
+            labels.type = "syslog";
+          }
         ]
         ++ lib.optionals cfg.traefik.enable [
           {
