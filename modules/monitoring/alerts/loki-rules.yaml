@@ -1,0 +1,53 @@
+groups:
+  - name: loki-error-rate
+    interval: 2m
+    rules:
+      - alert: HighErrorRate
+        expr: |
+          sum(rate({job="systemd-journal", host="homeserver", level=~"error|critical"}[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate in systemd journal"
+          description: "More than 0.5 error/critical log lines per second over the last 5 minutes."
+
+      - alert: ServiceCrashLoop
+        expr: |
+          count_over_time({job="systemd-journal", host="homeserver"} |= "Start request repeated too quickly" [10m]) > 3
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service crash loop detected on homeserver"
+          description: "A systemd service is crashing repeatedly (>3 times in 10 minutes)."
+
+      - alert: OOMKilled
+        expr: |
+          count_over_time({job="systemd-journal", host="homeserver"} |~ "Out of memory|oom.kill|Memory cgroup out of memory" [10m]) > 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "OOM kill detected on homeserver"
+          description: "A process was killed by the OOM killer in the last 10 minutes."
+
+      - alert: SshAuthFailures
+        expr: |
+          sum(rate({job="systemd-journal", host="homeserver", unit="sshd.service"} |~ "Failed password|Invalid user|authentication failure" [5m])) > 1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High SSH authentication failure rate"
+          description: "More than 1 SSH auth failure per second — possible brute force attempt."
+
+      - alert: DiskIoErrors
+        expr: |
+          count_over_time({job="systemd-journal", host="homeserver"} |~ "I/O error|blk_update_request|Buffer I/O error" [5m]) > 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Disk I/O errors detected on homeserver"
+          description: "Kernel reported block device I/O errors — possible disk failure."

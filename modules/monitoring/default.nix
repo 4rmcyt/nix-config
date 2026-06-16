@@ -68,6 +68,9 @@
   # =================================================================
   systemd.tmpfiles.rules = [
     "d /var/lib/geoip 0755 root root -"
+    "d /var/lib/loki/rules/fake 0755 loki loki -"
+    "d /var/lib/loki/rules-temp 0755 loki loki -"
+    "L+ /var/lib/loki/rules/fake/homeserver.yaml - - - - ${./alerts/loki-rules.yaml}"
   ];
 
   systemd.services.geoip-update = {
@@ -146,37 +149,37 @@
       // syslog priority: 0=emerg,1=alert,2=crit,3=err,4=warn,5=notice,6=info,7=debug
       rule {
         source_labels = ["__journal__priority"]
-        regex         = "0|1|2"
+        regex         = "^[012]$"
         target_label  = "level"
         replacement   = "critical"
       }
       rule {
         source_labels = ["__journal__priority"]
-        regex         = "3"
+        regex         = "^3$"
         target_label  = "level"
         replacement   = "error"
       }
       rule {
         source_labels = ["__journal__priority"]
-        regex         = "4"
+        regex         = "^4$"
         target_label  = "level"
         replacement   = "warning"
       }
       rule {
         source_labels = ["__journal__priority"]
-        regex         = "5"
+        regex         = "^5$"
         target_label  = "level"
         replacement   = "notice"
       }
       rule {
         source_labels = ["__journal__priority"]
-        regex         = "6"
+        regex         = "^6$"
         target_label  = "level"
         replacement   = "info"
       }
       rule {
         source_labels = ["__journal__priority"]
-        regex         = "7"
+        regex         = "^7$"
         target_label  = "level"
         replacement   = "debug"
       }
@@ -306,6 +309,17 @@
         query_range.cache_results = true;
         frontend.scheduler_address = "";
         frontend_worker.scheduler_address = "";
+        ruler = {
+          storage = {
+            type = "local";
+            local.directory = "/var/lib/loki/rules";
+          };
+          rule_path = "/var/lib/loki/rules-temp";
+          alertmanager_url = "http://127.0.0.1:${toString config.my.network.ports.alertmanager}";
+          enable_alertmanager_v2 = true;
+          enable_api = true;
+          ring.kvstore.store = "inmemory";
+        };
       };
     };
 

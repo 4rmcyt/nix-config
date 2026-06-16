@@ -9,27 +9,104 @@ groups:
         annotations:
           summary: "High CPU usage on {{ $labels.instance }}"
           description: "CPU usage has been over 80% for the last 5 minutes."
-      - alert: LowDiskSpace
+
+      - alert: HighLoadAverage
+        expr: node_load15 > count without(cpu, mode) (node_cpu_seconds_total{mode="idle"}) * 2
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High load average on {{ $labels.instance }}"
+          description: "15-minute load average is {{ $value | humanize }}, more than 2x CPU count for 10 minutes."
+
+      - alert: HighMemoryUsage
+        expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low available memory on {{ $labels.instance }}"
+          description: "Less than 10% memory available ({{ $value | humanize }}% free)."
+
+      - alert: LowDiskSpaceRoot
         expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100 < 15
         for: 10m
         labels:
           severity: critical
         annotations:
-          summary: "Low disk space on {{ $labels.instance }}"
-          description: "The root filesystem has less than 15% free space remaining."
+          summary: "Low disk space on / ({{ $labels.instance }})"
+          description: "Root filesystem has less than 15% free space."
+
+      - alert: LowDiskSpaceData
+        expr: node_filesystem_avail_bytes{mountpoint="/data"} / node_filesystem_size_bytes{mountpoint="/data"} * 100 < 10
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low disk space on /data ({{ $labels.instance }})"
+          description: "/data filesystem has less than 10% free space ({{ $value | humanize }}% remaining)."
+
+      - alert: LowDiskSpaceBackup
+        expr: node_filesystem_avail_bytes{mountpoint="/backup"} / node_filesystem_size_bytes{mountpoint="/backup"} * 100 < 10
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low disk space on /backup ({{ $labels.instance }})"
+          description: "/backup filesystem has less than 10% free space ({{ $value | humanize }}% remaining)."
+
       - alert: ZfsPoolUnhealthy
-        expr: zfs_pool_health{pool!~"dpool|rpool"} != 0
+        expr: node_zfs_zpool_state{state!="online"} == 1
         for: 0m
         labels:
           severity: critical
         annotations:
-          summary: "ZFS pool {{ $labels.pool }} is unhealthy on {{ $labels.instance }}"
-          description: "The ZFS pool '{{ $labels.pool }}' is in an unhealthy state. Immediate investigation is required."
+          summary: "ZFS pool {{ $labels.zpool }} is {{ $labels.state }} on {{ $labels.instance }}"
+          description: "ZFS pool '{{ $labels.zpool }}' is not online. Immediate investigation required."
+
       - alert: ServiceDown
-        expr: up == 0
-        for: 1m
+        expr: up{job!~"gcp-relay-node|matebook-node"} == 0
+        for: 2m
         labels:
           severity: critical
         annotations:
           summary: "Service {{ $labels.job }} is down on {{ $labels.instance }}"
-          description: "The Prometheus job '{{ $labels.job }}' has been down for more than 1 minute."
+          description: "Prometheus job '{{ $labels.job }}' has been unreachable for more than 2 minutes."
+
+  - name: UPS Alerts
+    rules:
+      - alert: UpsOnBattery
+        expr: network_ups_tools_ups_status{flag="OB"} == 1
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "UPS is on battery"
+          description: "UPS lost line power (OB flag set). Running on battery."
+
+      - alert: UpsLowBattery
+        expr: network_ups_tools_battery_charge < 30
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "UPS battery low: {{ $value }}%"
+          description: "UPS battery charge is critically low. Graceful shutdown may be imminent."
+
+      - alert: UpsHighLoad
+        expr: network_ups_tools_ups_load > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "UPS load high: {{ $value }}%"
+          description: "UPS load has been above 80% for 5 minutes."
+
+      - alert: UpsForcedShutdown
+        expr: network_ups_tools_ups_status{flag="FSD"} == 1
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: "UPS forced shutdown in progress"
+          description: "UPS FSD (Forced Shutdown) flag is set — imminent power loss."
