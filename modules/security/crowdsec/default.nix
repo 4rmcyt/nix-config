@@ -75,12 +75,18 @@ in {
         [
           {
             source = "journalctl";
-            journalctl_filter = ["_SYSTEMD_UNIT=sshd.service"];
+            journalctl_filter = [
+              "_TRANSPORT=syslog"
+              "SYSLOG_IDENTIFIER=sshd"
+            ];
             labels.type = "syslog";
           }
           {
             source = "journalctl";
-            journalctl_filter = ["SYSLOG_IDENTIFIER=sshd-session"];
+            journalctl_filter = [
+              "_TRANSPORT=syslog"
+              "SYSLOG_IDENTIFIER=sshd-session"
+            ];
             labels.type = "syslog";
           }
         ]
