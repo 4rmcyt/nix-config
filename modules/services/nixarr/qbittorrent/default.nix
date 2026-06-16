@@ -108,6 +108,7 @@
       PrivateUsers = lib.mkForce false;
       Restart = lib.mkForce "always";
       RestartSec = "10s";
+      UMask = "0002";
     };
   };
 
