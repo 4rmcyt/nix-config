@@ -418,10 +418,10 @@
     enable = true;
     extraConfigFiles = [config.sops.secrets.ntfy_alertmanager_config.path];
     settings = {
-      http."listen-address" = "127.0.0.1:${toString config.my.network.ports.alertmanager-ntfy}";
+      http.addr = "127.0.0.1:${toString config.my.network.ports.alertmanager-ntfy}";
       ntfy = {
-        "base-url" = "https://ntfy.${config.my.defaults.domain}";
-        topic = "alerts";
+        baseurl = "https://ntfy.${config.my.defaults.domain}";
+        notification.topic = "alerts";
       };
     };
   };
