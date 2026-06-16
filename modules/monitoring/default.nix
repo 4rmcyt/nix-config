@@ -407,6 +407,7 @@
     enable = true;
     port = config.my.network.ports.alertmanager;
     listenAddress = "127.0.0.1";
+    extraFlags = ["--cluster.listen-address="];
     configuration = {
       route = {
         receiver = "ntfy";
