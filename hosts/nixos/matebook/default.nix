@@ -16,6 +16,7 @@
 
     # Monitoring
     ../../../modules/monitoring/node-exporter-client.nix
+    ../../../modules/monitoring/alloy-client.nix
 
     # Networking
     ../../../modules/networking/nfs-client
@@ -175,6 +176,7 @@
   # backupFileExtension is set in commonHomeManagerNixosConfig with unique timestamp
 
   my.nodeExporter.enable = true;
+  my.alloyClient.enable = true;
 
   # =================================================================
   # 9. Networking

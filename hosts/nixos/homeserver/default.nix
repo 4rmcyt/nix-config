@@ -146,6 +146,8 @@
         53
         80
         443
+        3100 # Loki (gcp-relay alloy-client)
+        9090 # Prometheus
       ];
       allowedUDPPorts = [53];
     };

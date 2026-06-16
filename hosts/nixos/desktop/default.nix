@@ -27,6 +27,8 @@ in
     extraCollectors = [ "zfs" ];
   };
 
+  my.alloyClient.enable = true;
+
   # =================================================================
   # Imports
   # =================================================================
@@ -41,6 +43,7 @@ in
 
     # Monitoring
     ../../../modules/monitoring/node-exporter-client.nix
+    ../../../modules/monitoring/alloy-client.nix
 
     # Features and roles
     ../../../modules/gaming

@@ -12,6 +12,7 @@
     ../../../modules/options
     ../../../modules/base/logging
     ../../../modules/monitoring/node-exporter-client.nix
+    ../../../modules/monitoring/alloy-client.nix
     ../../../modules/networking/caddy
     ../../../modules/networking/headscale
     ../../../modules/networking/headplane
@@ -116,6 +117,10 @@
     };
 
     my.nodeExporter.enable = true;
+    my.alloyClient = {
+      enable = true;
+      lokiUrl = "http://100.64.0.3:3100/loki/api/v1/push";
+    };
 
     my.headscale = {
       enable = true;
