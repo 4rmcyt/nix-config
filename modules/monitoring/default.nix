@@ -7,6 +7,9 @@
   # 1. SOPS Secrets
   # =================================================================
   sops.secrets = {
+    ntfy_alertmanager_config = {
+      sopsFile = ../../secrets/ntfy.yaml;
+    };
     grafana_admin_password = {
       sopsFile = ../../secrets/grafana.yaml;
       key = "grafana_admin_password";
@@ -264,6 +267,8 @@
           ingestion_burst_size_mb = 32;
         };
         query_range.cache_results = true;
+        frontend.scheduler_address = "";
+        frontend_worker.scheduler_address = "";
       };
     };
 
@@ -277,6 +282,9 @@
       retentionTime = "30d";
       globalConfig.scrape_interval = "1m";
       ruleFiles = [./alerts/homeserver.yaml];
+      alertmanagers = [{
+        static_configs = [{targets = ["127.0.0.1:${toString config.my.network.ports.alertmanager}"];}];
+      }];
 
       exporters = {
         nut = {
@@ -338,6 +346,46 @@
           static_configs = [{targets = ["${config.my.defaults.matebook_wifi}:9100"];}];
         }
       ];
+    };
+  };
+
+  # =================================================================
+  # 7. Alertmanager + ntfy bridge
+  # =================================================================
+  services.prometheus.alertmanager = {
+    enable = true;
+    port = config.my.network.ports.alertmanager;
+    listenAddress = "127.0.0.1";
+    configuration = {
+      route = {
+        receiver = "ntfy";
+        group_wait = "30s";
+        group_interval = "5m";
+        repeat_interval = "4h";
+      };
+      receivers = [
+        {
+          name = "ntfy";
+          webhook_configs = [
+            {
+              url = "http://127.0.0.1:${toString config.my.network.ports.alertmanager-ntfy}/hook";
+              send_resolved = true;
+            }
+          ];
+        }
+      ];
+    };
+  };
+
+  services.prometheus.alertmanager-ntfy = {
+    enable = true;
+    extraConfigFiles = [config.sops.secrets.ntfy_alertmanager_config.path];
+    settings = {
+      http.listen-address = "127.0.0.1:${toString config.my.network.ports.alertmanager-ntfy}";
+      ntfy = {
+        base-url = "https://ntfy.${config.my.defaults.domain}";
+        topic = "alerts";
+      };
     };
   };
 }

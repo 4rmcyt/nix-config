@@ -334,6 +334,19 @@
         default = 11434;
         description = "Ollama AI/LLM model server";
       };
+
+      # Alerting
+      alertmanager = lib.mkOption {
+        type = lib.types.port;
+        default = 9093;
+        description = "Prometheus Alertmanager";
+      };
+
+      alertmanager-ntfy = lib.mkOption {
+        type = lib.types.port;
+        default = 9094;
+        description = "alertmanager-ntfy bridge";
+      };
     };
   };
 }
