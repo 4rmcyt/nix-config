@@ -11,7 +11,13 @@ in {
     enable = lib.mkEnableOption "Caddy reverse proxy with Cloudflare DNS-01";
 
     headscale.enable = lib.mkEnableOption "Caddy vhost for headscale";
-    headplane.enable = lib.mkEnableOption "Caddy vhost for headplane UI";
+    headplane = {
+      enable = lib.mkEnableOption "Caddy vhost for headplane UI";
+      tailscaleIp = lib.mkOption {
+        type = lib.types.str;
+        description = "Tailscale IP of this host — headplane vhost binds here so remote_ip is always 100.64.x.x";
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -53,23 +59,17 @@ in {
         '';
       };
 
+      # Tailscale-only vhost: binds on tailscale0, so remote_ip is always 100.64.x.x
       virtualHosts."hp.${domain}" = lib.mkIf cfg.headplane.enable {
+        listenAddresses = [cfg.headplane.tailscaleIp];
         extraConfig = ''
           tls {
             dns cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
             resolvers 1.1.1.1
           }
 
-          @tailscale remote_ip 100.64.0.0/10
-
-          handle @tailscale {
-            redir / /admin/ permanent
-            reverse_proxy 127.0.0.1:${toString config.services.headplane.settings.server.port}
-          }
-
-          handle {
-            respond "Access denied" 403
-          }
+          redir / /admin/ permanent
+          reverse_proxy 127.0.0.1:${toString config.services.headplane.settings.server.port}
         '';
       };
     };

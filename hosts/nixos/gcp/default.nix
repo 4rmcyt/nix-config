@@ -143,7 +143,10 @@
     my.caddy = {
       enable = true;
       headscale.enable = true;
-      headplane.enable = true;
+      headplane = {
+        enable = true;
+        tailscaleIp = "100.64.0.5";
+      };
     };
 
     services.fail2ban = {
