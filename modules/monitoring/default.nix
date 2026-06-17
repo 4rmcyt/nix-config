@@ -68,6 +68,7 @@
   # =================================================================
   systemd.tmpfiles.rules = [
     "d /var/lib/geoip 0755 root root -"
+    "d /var/lib/loki/rules 0755 loki loki -"
     "d /var/lib/loki/rules/fake 0755 loki loki -"
     "d /var/lib/loki/rules-temp 0755 loki loki -"
     "L+ /var/lib/loki/rules/fake/homeserver.yaml - - - - ${./alerts/loki-rules.yaml}"
@@ -357,9 +358,11 @@
       retentionTime = "30d";
       globalConfig.scrape_interval = "1m";
       ruleFiles = [./alerts/homeserver.yaml];
-      alertmanagers = [{
-        static_configs = [{targets = ["127.0.0.1:${toString config.my.network.ports.alertmanager}"];}];
-      }];
+      alertmanagers = [
+        {
+          static_configs = [{targets = ["127.0.0.1:${toString config.my.network.ports.alertmanager}"];}];
+        }
+      ];
 
       exporters = {
         nut = {
