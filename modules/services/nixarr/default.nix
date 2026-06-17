@@ -359,8 +359,8 @@ in {
     "d /data/Downloads/lidarr 775 ${config.my.defaults.user} media -"
     "d /data/Downloads/audiobooks 775 ${config.my.defaults.user} media -"
 
-    "d /data/media/.state 770 root media -"
-    "d /data/media/.state/nixarr 770 root media -"
+    "d /data/media/.state 770 ${config.my.defaults.user} media -"
+    "d /data/media/.state/nixarr 770 ${config.my.defaults.user} media -"
     "d /data/media/.state/nixarr/seerr 775 seerr seerr -"
     "d /data/media/.state/nixarr/audiobookshelf 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/audiobookshelf/metadata 775 audiobookshelf audiobookshelf -"

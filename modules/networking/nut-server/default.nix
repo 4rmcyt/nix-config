@@ -10,6 +10,10 @@
 
   users.groups.nut = {};
 
+  systemd.tmpfiles.rules = [
+    "z /etc/nut/upsd.conf 0640 root nut -"
+  ];
+
   systemd.services.upsdrv.wantedBy = ["multi-user.target"];
   systemd.services.upsd.after = lib.mkForce ["network.target" "upsdrv.service"];
   systemd.services.upsmon.after = ["upsd.service"];
