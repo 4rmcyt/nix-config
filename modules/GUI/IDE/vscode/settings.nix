@@ -236,6 +236,15 @@
     # TOML
     "[toml]"."editor.defaultFormatter" = "tamasfe.even-better-toml";
 
+    "yaml.disableSchemaDetection" = [
+      "**/.github/workflows/*.yml"
+      "**/.github/workflows/*.yaml"
+      "**/.gitea/workflows/*.yml"
+      "**/.gitea/workflows/*.yaml"
+      "**/.forgejo/workflows/*.yml"
+      "**/.forgejo/workflows/*.yaml"
+    ];
+
     "yaml.schemas" = {
       "kubernetes" = [
         "k3s/*.yaml"
