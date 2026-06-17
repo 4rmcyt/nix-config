@@ -455,7 +455,7 @@ in {
       xkb.layout = "us";
     };
 
-    accounts-daemon.enable = false;
+    accounts-daemon.enable = true;
     dbus.packages = [pkgs.gcr];
 
     # irqbalance fights isolcpus=1-11 + irqaffinity=0 — disable it
