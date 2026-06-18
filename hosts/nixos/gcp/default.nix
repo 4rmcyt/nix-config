@@ -30,7 +30,7 @@
     security.googleOsLogin.enable = lib.mkForce false;
     networking.hostName = lib.mkForce "gcp-relay";
     boot.loader.grub.configurationLimit = lib.mkForce 2;
-    security.sudo.wheelNeedsPassword = lib.mkForce false;
+    security.sudo.wheelNeedsPassword = lib.mkForce true;
 
     boot.kernelParams = ["console=ttyS0,38400n8d"];
     systemd.services."serial-getty@ttyS0".enable = true;

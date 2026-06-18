@@ -89,7 +89,7 @@ sudo systemctl restart headscale headplane caddy
 ## Ongoing Deploys
 
 ```bash
-nh os switch --hostname gcp-relay --target-host zeev@gcp-relay --elevation-strategy passwordless ~/src/nix-config
+nh os switch --hostname gcp-relay --target-host zeev@gcp-relay ~/src/nix-config
 ```
 
 ---
