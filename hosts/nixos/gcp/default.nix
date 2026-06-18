@@ -78,13 +78,13 @@
         PermitRootLogin = "prohibit-password";
         KbdInteractiveAuthentication = false;
         UseDns = false;
-        AllowUsers = config.my.defaults.user;
+        AllowUsers = [config.my.defaults.user];
       };
     };
 
     # SSH must start after Tailscale — it only listens on the Tailscale IP
-    systemd.services.sshd.after = ["tailscaled.service" "tailscale-auth.service"];
-    systemd.services.sshd.wants = ["tailscaled.service"];
+    systemd.services.sshd.after = ["tailscaled.service" "tailscale-autoconnect.service"];
+    systemd.services.sshd.wants = ["tailscaled.service" "tailscale-autoconnect.service"];
 
     networking = {
       useNetworkd = true;
