@@ -519,7 +519,7 @@ in {
       };
     };
 
-    settings = { };
+    settings = {};
   };
 
   # playerctl for media key bindings (replaces dms ipc mpris)

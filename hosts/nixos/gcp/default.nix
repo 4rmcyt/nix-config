@@ -66,6 +66,7 @@
     services.openssh = {
       enable = true;
       ports = [22];
+      listenAddresses = [{addr = "100.64.0.5";}];
       hostKeys = [
         {
           path = "/etc/ssh/ssh_host_ed25519_key";
@@ -77,15 +78,20 @@
         PermitRootLogin = "prohibit-password";
         KbdInteractiveAuthentication = false;
         UseDns = false;
+        AllowUsers = config.my.defaults.user;
       };
     };
+
+    # SSH must start after Tailscale — it only listens on the Tailscale IP
+    systemd.services.sshd.after = ["tailscaled.service" "tailscale-auth.service"];
+    systemd.services.sshd.wants = ["tailscaled.service"];
 
     networking = {
       useNetworkd = true;
       useDHCP = lib.mkForce false;
       firewall = {
         enable = lib.mkForce true;
-        allowedTCPPorts = [22 80 443 9100];
+        allowedTCPPorts = [80 443 9100];
         allowedUDPPorts = [3478];
         # Tailscale traffic is trusted — allow LAPI and metrics from homeserver
         trustedInterfaces = ["tailscale0"];
@@ -175,10 +181,16 @@
       MaxRetentionSec=14day
     '';
 
+    sops.secrets.zeev_password = {
+      sopsFile = ../../../secrets/common.yaml;
+      neededForUsers = true;
+    };
+
     users.users.${config.my.defaults.user} = {
       isNormalUser = true;
       shell = pkgs.zsh;
       extraGroups = ["wheel"];
+      hashedPasswordFile = config.sops.secrets.zeev_password.path;
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyieBFROVPWmH3iC2ZAE+5zofMd6mnunBzfObEwMgFx"
         "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7QtXHGjNp8yxRIbMwb605n3fqFoq+PxOzbq6i2dEr6YDIKqajRNBHiEHjV3z7ABLpi2cfHPcw8Cgg/esD/98uGM9lKxdCev1VEubmsTmZAuDBz04p/S/yB7UBc5muHJLkzFNjlwMYP3x3JAr9if3nmrAZNh5qOrymZndJ7h9IT9WZNvvgFW2I+S/Ugi7eq5yRIDm5S7ADW/9wThfvG8ZqhMXDvvKXHJYx/O8D8th1ffN5l8pAJZkiV21zW0pu4od4iAaVM531H22FORAq6PbHAwr5u8a0jBlTqkwlo9x3O+hdKBVhW1XQfeRqg69lJtmUUFipl4viBj9Rpz+gtv4BjKL9ChCgqVLMLPe/bviRjqx3bvC2I78H0N51SvAh0QOj1ByAk3Xvj3R2qwk7LAmLgSlPoOsGpkbILhudF7KLJ/Uh2kpZI3NOcYdy9TYMws97zCvevgqw07HEEOydYpPB4+ml8Zzb+Tcw0U7yLRWMAB1VP1WE1vM0U6XQa7CRhcU="

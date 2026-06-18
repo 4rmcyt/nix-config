@@ -3,13 +3,11 @@
   config,
   inputs,
   ...
-}:
-let
+}: let
   inherit (config.meta) owner;
   nixosBase = config.modules.nixos.base;
-in
-{
-  configurations.nixos.desktop.module = { pkgs, ... }: {
+in {
+  configurations.nixos.desktop.module = {pkgs, ...}: {
     imports = [
       nixosBase
       ../../../hosts/nixos/desktop

@@ -3,8 +3,7 @@
   config,
   lib,
   ...
-}:
-let
+}: let
   zfsExcludes = lib.concatMapStringsSep " " (p: "--exclude-prefix=${p}") [
     "/dev"
     "/var/empty"
@@ -15,8 +14,7 @@ let
     "/var/lib/systemd/ephemeral-trees"
     "/var/lib/systemd/coredump"
   ];
-in
-{
+in {
   my.desktop = {
     windowManager = "niri"; # Options: "hyprland", "niri", "none"
     displayManager = "greetd"; # Options: "greetd", "sddm", "gdm", "none"
@@ -24,7 +22,7 @@ in
 
   my.nodeExporter = {
     enable = true;
-    extraCollectors = [ "zfs" ];
+    extraCollectors = ["zfs"];
   };
 
   my.alloyClient.enable = true;
@@ -134,7 +132,7 @@ in
       ];
     };
 
-    shells = lib.mkBefore (with pkgs; [ zsh ]);
+    shells = lib.mkBefore (with pkgs; [zsh]);
 
     systemPackages = with pkgs; [
       # Dev workstation tools (not on all hosts)
@@ -177,13 +175,12 @@ in
           "JetBrainsMono Nerd Font"
           "Fira Code"
         ];
-        sansSerif = [ "Noto Sans" ];
-        serif = [ "Noto Serif" ];
-        emoji = [ "Noto Color Emoji" ];
+        sansSerif = ["Noto Sans"];
+        serif = ["Noto Serif"];
+        emoji = ["Noto Color Emoji"];
       };
     };
-    packages =
-      with pkgs;
+    packages = with pkgs;
       [
         maple-mono.NF
         font-awesome
@@ -242,7 +239,7 @@ in
         "--accept-dns=false"
         "--login-server=https://hs.example.com"
       ];
-      extraSetFlags = [ "--operator=${config.my.defaults.user}" ];
+      extraSetFlags = ["--operator=${config.my.defaults.user}"];
     };
   };
   # =================================================================
@@ -250,10 +247,10 @@ in
   # =================================================================
   users = {
     groups = {
-      git = { };
-      plugdev = { };
-      prometheus = { };
-      nix-builder = { };
+      git = {};
+      plugdev = {};
+      prometheus = {};
+      nix-builder = {};
     };
 
     users = {
@@ -313,7 +310,7 @@ in
 
   # Restrict avahi to ethernet only — both enp12s0 and wlp13s0 probing simultaneously
   # causes avahi to see its own mDNS probe on the other interface and conflict with itself
-  services.avahi.allowInterfaces = [ "enp12s0" ];
+  services.avahi.allowInterfaces = ["enp12s0"];
 
   # No battery on desktop — keep UPower running (wireplumber needs it for BT headset battery)
   # but disable all power management polling since there's no battery
@@ -324,5 +321,5 @@ in
   };
 
   # Cups resolves "localhost" to both 127.0.0.1 and ::1 — IPv6 disabled at kernel level so ::1 bind fails
-  services.printing.listenAddresses = [ "127.0.0.1:631" ];
+  services.printing.listenAddresses = ["127.0.0.1:631"];
 }

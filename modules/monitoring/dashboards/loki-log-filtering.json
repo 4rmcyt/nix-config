@@ -208,11 +208,51 @@
           "custom": { "drawStyle": "bars", "fillOpacity": 40 }
         },
         "overrides": [
-          { "matcher": { "id": "byName", "options": "error" },   "properties": [{ "id": "color", "value": { "fixedColor": "red",    "mode": "fixed" } }] },
-          { "matcher": { "id": "byName", "options": "critical" }, "properties": [{ "id": "color", "value": { "fixedColor": "dark-red", "mode": "fixed" } }] },
-          { "matcher": { "id": "byName", "options": "warning" },  "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }] },
-          { "matcher": { "id": "byName", "options": "info" },     "properties": [{ "id": "color", "value": { "fixedColor": "blue",   "mode": "fixed" } }] },
-          { "matcher": { "id": "byName", "options": "debug" },    "properties": [{ "id": "color", "value": { "fixedColor": "gray",   "mode": "fixed" } }] }
+          {
+            "matcher": { "id": "byName", "options": "error" },
+            "properties": [
+              {
+                "id": "color",
+                "value": { "fixedColor": "red", "mode": "fixed" }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "critical" },
+            "properties": [
+              {
+                "id": "color",
+                "value": { "fixedColor": "dark-red", "mode": "fixed" }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "warning" },
+            "properties": [
+              {
+                "id": "color",
+                "value": { "fixedColor": "orange", "mode": "fixed" }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "info" },
+            "properties": [
+              {
+                "id": "color",
+                "value": { "fixedColor": "blue", "mode": "fixed" }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "debug" },
+            "properties": [
+              {
+                "id": "color",
+                "value": { "fixedColor": "gray", "mode": "fixed" }
+              }
+            ]
+          }
         ]
       },
       "targets": [
@@ -293,13 +333,13 @@
         "name": "level",
         "type": "custom",
         "options": [
-          { "text": "All",      "value": ".+",              "selected": true },
+          { "text": "All", "value": ".+", "selected": true },
           { "text": "critical", "value": "critical" },
-          { "text": "error",    "value": "error" },
-          { "text": "warning",  "value": "warning" },
-          { "text": "notice",   "value": "notice" },
-          { "text": "info",     "value": "info" },
-          { "text": "debug",    "value": "debug" }
+          { "text": "error", "value": "error" },
+          { "text": "warning", "value": "warning" },
+          { "text": "notice", "value": "notice" },
+          { "text": "info", "value": "info" },
+          { "text": "debug", "value": "debug" }
         ],
         "multi": false,
         "includeAll": false,
