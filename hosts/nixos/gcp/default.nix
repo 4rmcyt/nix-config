@@ -66,7 +66,6 @@
     services.openssh = {
       enable = true;
       ports = [22];
-      listenAddresses = [{addr = "100.64.0.5";}];
       hostKeys = [
         {
           path = "/etc/ssh/ssh_host_ed25519_key";
@@ -81,10 +80,6 @@
         AllowUsers = [config.my.defaults.user];
       };
     };
-
-    # SSH must start after Tailscale — it only listens on the Tailscale IP
-    systemd.services.sshd.after = ["tailscaled.service" "tailscale-autoconnect.service"];
-    systemd.services.sshd.wants = ["tailscaled.service" "tailscale-autoconnect.service"];
 
     networking = {
       useNetworkd = true;
