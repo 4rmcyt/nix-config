@@ -38,6 +38,10 @@
     screenshot-path = "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png";
     hotkey-overlay.skip-at-startup = true;
 
+    debug = {
+      honor-xdg-activation-with-invalid-serial = true;
+    };
+
     input = {
       keyboard.xkb.layout = "us";
       mouse.accel-speed = 0.0;
