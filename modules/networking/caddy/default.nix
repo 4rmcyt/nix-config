@@ -11,13 +11,7 @@ in {
     enable = lib.mkEnableOption "Caddy reverse proxy with Cloudflare DNS-01";
 
     headscale.enable = lib.mkEnableOption "Caddy vhost for headscale";
-    headplane = {
-      enable = lib.mkEnableOption "Caddy vhost for headplane UI";
-      tailscaleIp = lib.mkOption {
-        type = lib.types.str;
-        description = "Tailscale IP of this host — headplane vhost binds here so remote_ip is always 100.64.x.x";
-      };
-    };
+    headplane.enable = lib.mkEnableOption "Caddy vhost for headplane UI";
   };
 
   config = lib.mkIf cfg.enable {
@@ -59,9 +53,9 @@ in {
         '';
       };
 
-      # Tailscale-only vhost: binds on tailscale0, so remote_ip is always 100.64.x.x
+      # hp.<domain> → headplane UI, access restricted by firewall (trustedInterfaces = tailscale0)
+      # and Cloudflare A record pointing to Tailscale IP — no listenAddresses so Caddy starts before Tailscale
       virtualHosts."hp.${domain}" = lib.mkIf cfg.headplane.enable {
-        listenAddresses = [cfg.headplane.tailscaleIp];
         extraConfig = ''
           tls {
             dns cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}

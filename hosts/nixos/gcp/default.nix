@@ -50,7 +50,8 @@
     networking.tailscaleAuth = {
       enable = true;
       sopsFile = ../../../secrets/tailscale-gcp.yaml;
-      loginServer = "https://hs.${config.my.defaults.domain}";
+      # Connect directly to local headscale — no dependency on Caddy/DNS
+      loginServer = "http://127.0.0.1:${toString config.my.headscale.port}";
       networkInterface = "ens4";
     };
 
@@ -86,7 +87,7 @@
       useDHCP = lib.mkForce false;
       firewall = {
         enable = lib.mkForce true;
-        allowedTCPPorts = [80 443 9100];
+        allowedTCPPorts = [80 443];
         allowedUDPPorts = [3478];
         # Tailscale traffic is trusted — allow LAPI and metrics from homeserver
         trustedInterfaces = ["tailscale0"];
@@ -144,10 +145,7 @@
     my.caddy = {
       enable = true;
       headscale.enable = true;
-      headplane = {
-        enable = true;
-        tailscaleIp = "100.64.0.5";
-      };
+      headplane.enable = true;
     };
 
     services.fail2ban = {
