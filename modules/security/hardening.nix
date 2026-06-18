@@ -174,10 +174,8 @@ in {
       randomizedDelaySec = cfg.autoUpgrade.randomizedDelaySec;
       persistent = true;
       allowReboot = true;
+      # GC after upgrade — 30GB disk, keep it clean
       runGarbageCollection = true;
-      # Pin to flake.lock — do not auto-follow HEAD on every run.
-      # Update flake.lock explicitly via `nix flake update` before deploying.
-      flags = ["--no-update-input"];
     };
   };
 }
