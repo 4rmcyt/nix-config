@@ -75,7 +75,7 @@
       ];
       settings = {
         PasswordAuthentication = false;
-        PermitRootLogin = "prohibit-password";
+        PermitRootLogin = "no";
         KbdInteractiveAuthentication = false;
         UseDns = false;
         AllowUsers = [config.my.defaults.user];
@@ -191,11 +191,6 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO+zhOyZtuInZJpTXcqN5+HBatvOn8Ud2hGRZGuFkkQc u0_a765@localhost"
       ];
     };
-
-    users.users.root.openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyieBFROVPWmH3iC2ZAE+5zofMd6mnunBzfObEwMgFx"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks redacted@example.com"
-    ];
 
     programs.zsh.enable = true;
 
