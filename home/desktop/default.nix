@@ -97,7 +97,6 @@
       waydroid-helper
       pkgs.nur.repos.codgician.samsung-dc-toolkit-3
       pkgs.nur.repos.codgician.waydroid-script
-      calibre-no-speech
       mcat
       nmap
       arp-scan
