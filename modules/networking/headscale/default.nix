@@ -126,7 +126,21 @@ in {
         };
 
         metrics_listen_addr = "127.0.0.1:${toString cfg.metricsPort}";
+
+        oidc = {
+          issuer = "https://idm.${domain}";
+          client_id = "headscale";
+          client_secret_path = config.sops.secrets.kanidm_headscale_secret.path;
+          scope = ["openid" "profile" "email"];
+          strip_email_domain = false;
+        };
       };
+    };
+
+    sops.secrets.kanidm_headscale_secret = {
+      sopsFile = ../../../secrets/kanidm.yaml;
+      owner = "headscale";
+      mode = "0400";
     };
 
     networking.firewall.allowedUDPPorts = [3478];
