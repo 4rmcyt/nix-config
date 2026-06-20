@@ -13,7 +13,7 @@ groups:
           description: "More than 0.5 error/critical log lines per second over the last 5 minutes."
       - alert: ServiceCrashLoop
         expr: |
-          count_over_time({job="systemd-journal", host="homeserver"} |= "Start request repeated too quickly" [10m]) > 3
+          count_over_time({job="systemd-journal", host="homeserver", unit!="loki.service"} |= "Start request repeated too quickly" [10m]) > 3
         for: 0m
         labels:
           severity: critical
@@ -22,7 +22,7 @@ groups:
           description: "A systemd service is crashing repeatedly (>3 times in 10 minutes)."
       - alert: OOMKilled
         expr: |
-          count_over_time({job="systemd-journal", host="homeserver"} |~ "Out of memory|oom.kill|Memory cgroup out of memory" [10m]) > 0
+          count_over_time({job="systemd-journal", host="homeserver", unit!="loki.service"} |~ "Out of memory|oom_kill|Memory cgroup out of memory" [10m]) > 0
         for: 0m
         labels:
           severity: critical
@@ -40,7 +40,7 @@ groups:
           description: "More than 1 SSH auth failure per second — possible brute force attempt."
       - alert: DiskIoErrors
         expr: |
-          count_over_time({job="systemd-journal", host="homeserver"} |~ "I/O error|blk_update_request|Buffer I/O error" [5m]) > 0
+          count_over_time({job="systemd-journal", host="homeserver", unit!="loki.service"} |~ "I/O error|blk_update_request|Buffer I/O error" [5m]) > 0
         for: 0m
         labels:
           severity: critical

@@ -27,6 +27,7 @@
     ../../../modules/services
 
     # ../../../modules/base/distributed-builds
+    ../../../modules/backup
     ../../../modules/users/zeev
   ];
 
@@ -191,6 +192,39 @@
   # =================================================================
   # Traefik & Services Toggle
   # =================================================================
+  my.backup = {
+    enable = true;
+    repository = "rclone:homeserver:restic/homeserver";
+    passwordFile = config.sops.secrets.restic_password.path;
+    rcloneConfigFile = config.sops.secrets.rclone_config.path;
+    postgresqlDatabases = [
+      "miniflux"
+      "atuin"
+      "bazarr"
+      "radarr"
+      "radarr-log"
+      "sonarr"
+      "sonarr-log"
+      "prowlarr"
+      "prowlarr-log"
+      "dispatcharr"
+    ];
+    paths = [
+      "/data/media/.state/nixarr/jellyfin"
+      "/data/media/.state/nixarr/audiobookshelf"
+      "/var/lib/kanidm"
+    ];
+  };
+
+  sops.secrets.restic_password = {
+    sopsFile = ../../../secrets/restic.yaml;
+    mode = "0400";
+  };
+  sops.secrets.rclone_config = {
+    sopsFile = ../../../secrets/restic.yaml;
+    mode = "0400";
+  };
+
   my.traefik.enable = true;
   my.headscale.enable = false;
   my.crowdsec.traefik.enable = true;

@@ -18,6 +18,7 @@
     ../../../modules/networking/headplane
     ../../../modules/networking/tailscale
     ./crowdsec-bouncer.nix
+    ../../../modules/backup
     ../../../modules/security/fail2ban
     ../../../modules/security/hardening.nix
   ];
@@ -100,6 +101,27 @@
         matchConfig.Name = "en*";
         networkConfig.DHCP = "yes";
       };
+    };
+
+    my.backup = {
+      enable = true;
+      repository = "rclone:homeserver:restic/gcp-relay";
+      passwordFile = config.sops.secrets.restic_password.path;
+      rcloneConfigFile = config.sops.secrets.rclone_config.path;
+      paths = [
+        "/var/lib/headscale"
+        "/var/lib/caddy"
+        "/var/lib/headplane"
+      ];
+    };
+
+    sops.secrets.restic_password = {
+      sopsFile = ../../../secrets/restic.yaml;
+      mode = "0400";
+    };
+    sops.secrets.rclone_config = {
+      sopsFile = ../../../secrets/restic.yaml;
+      mode = "0400";
     };
 
     my.hardening = {
