@@ -132,7 +132,6 @@ in {
           client_id = "headscale";
           client_secret_path = config.sops.secrets.kanidm_headscale_secret.path;
           scope = ["openid" "profile" "email"];
-          strip_email_domain = false;
         };
       };
     };

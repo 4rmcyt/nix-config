@@ -34,6 +34,11 @@ in {
   services.kanidm = {
     package = pkgs.kanidmWithSecretProvisioning_1_10;
 
+    client = {
+      enable = true;
+      settings.uri = "https://idm.${domain}";
+    };
+
     server = {
       enable = true;
       settings = {
