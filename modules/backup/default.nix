@@ -59,16 +59,18 @@ in {
         RuntimeDirectory = "backup-pg-dumps";
         RuntimeDirectoryMode = "0700";
       };
-      script = lib.concatMapStringsSep "\n" (db: ''
-        ${pkgs.postgresql}/bin/pg_dump -Fc ${db} > /run/backup-pg-dumps/${db}.dump
-      '') cfg.postgresqlDatabases;
+      script =
+        lib.concatMapStringsSep "\n" (db: ''
+          ${pkgs.postgresql}/bin/pg_dump -Fc ${db} > /run/backup-pg-dumps/${db}.dump
+        '')
+        cfg.postgresqlDatabases;
     };
 
     services.restic.backups.main = {
       initialize = true;
-      repository = cfg.repository;
-      passwordFile = cfg.passwordFile;
-      rcloneConfigFile = cfg.rcloneConfigFile;
+      inherit (cfg) repository;
+      inherit (cfg) passwordFile;
+      inherit (cfg) rcloneConfigFile;
 
       paths =
         cfg.paths
