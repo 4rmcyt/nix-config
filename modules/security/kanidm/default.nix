@@ -43,6 +43,7 @@ in {
         tls_chain = "${certDir}/cert.pem";
         tls_key = "${certDir}/key.pem";
         log_level = "info";
+        http_client_address_info.x-forward-for = ["127.0.0.1"];
         online_backup = {
           path = "/var/lib/kanidm/backups";
           schedule = "0 3 * * *";
