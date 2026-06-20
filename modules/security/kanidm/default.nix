@@ -40,7 +40,6 @@ in {
         bindaddress = "127.0.0.1:${toString port}";
         origin = "https://idm.${domain}";
         domain = "idm.${domain}";
-        db_path = "/var/lib/kanidm/db.sqlite";
         tls_chain = "${certDir}/cert.pem";
         tls_key = "${certDir}/key.pem";
         log_level = "info";
@@ -54,7 +53,7 @@ in {
 
     provision = {
       enable = true;
-      instanceUrl = "https://idm.${domain}";
+      acceptInvalidCerts = true;
       adminPasswordFile = config.sops.secrets.kanidm_admin_password.path;
       idmAdminPasswordFile = config.sops.secrets.kanidm_idm_admin_password.path;
 
