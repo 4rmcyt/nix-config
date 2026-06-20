@@ -58,10 +58,14 @@ in {
       adminPasswordFile = config.sops.secrets.kanidm_admin_password.path;
       idmAdminPasswordFile = config.sops.secrets.kanidm_idm_admin_password.path;
 
+      groups.users = {
+        members = [config.my.defaults.user];
+      };
+
       persons.${config.my.defaults.user} = {
         displayName = config.my.defaults.user;
         mailAddresses = [config.my.defaults.email];
-        groups = ["idm_admins"];
+        groups = ["users"];
       };
 
       systems.oauth2.headscale = {
@@ -70,7 +74,7 @@ in {
         originLanding = "https://hs.${domain}";
         basicSecretFile = config.sops.secrets.kanidm_headscale_secret.path;
         preferShortUsername = true;
-        scopeMaps."idm_all_persons" = [
+        scopeMaps.users = [
           "openid"
           "profile"
           "email"
