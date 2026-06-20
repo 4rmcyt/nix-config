@@ -5,7 +5,32 @@
 }: let
   inherit (config.my.defaults) domain;
   port = 3013;
+  certDir = "/var/lib/kanidm/tls";
 in {
+  # Generate self-signed TLS cert for kanidm (it requires HTTPS natively)
+  systemd.services.kanidm-tls-cert = {
+    description = "Generate self-signed TLS certificate for Kanidm";
+    before = ["kanidm.service"];
+    wantedBy = ["kanidm.service"];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      mkdir -p ${certDir}
+      if [ ! -f ${certDir}/cert.pem ]; then
+        ${pkgs.openssl}/bin/openssl req -x509 -newkey rsa:4096 -nodes \
+          -keyout ${certDir}/key.pem \
+          -out ${certDir}/cert.pem \
+          -days 3650 \
+          -subj "/CN=idm.${domain}"
+        chown -R kanidm:kanidm ${certDir}
+        chmod 750 ${certDir}
+        chmod 640 ${certDir}/cert.pem ${certDir}/key.pem
+      fi
+    '';
+  };
+
   services.kanidm = {
     package = pkgs.kanidmWithSecretProvisioning_1_10;
 
@@ -16,6 +41,8 @@ in {
         origin = "https://idm.${domain}";
         domain = "idm.${domain}";
         db_path = "/var/lib/kanidm/db.sqlite";
+        tls_chain = "${certDir}/cert.pem";
+        tls_key = "${certDir}/key.pem";
         log_level = "info";
         online_backup = {
           path = "/var/lib/kanidm/backups";
@@ -73,6 +100,7 @@ in {
   systemd.tmpfiles.rules = [
     "d /var/lib/kanidm 0750 kanidm kanidm -"
     "d /var/lib/kanidm/backups 0750 kanidm kanidm -"
+    "d /var/lib/kanidm/tls 0750 kanidm kanidm -"
   ];
 
   services.traefik.dynamicConfigOptions.http = {
@@ -86,6 +114,12 @@ in {
       ];
       tls.certResolver = "default";
     };
-    services.kanidm.loadBalancer.servers = [{url = "http://127.0.0.1:${toString port}";}];
+    services.kanidm = {
+      loadBalancer = {
+        servers = [{url = "https://127.0.0.1:${toString port}";}];
+        serversTransport = "kanidm-transport";
+      };
+    };
+    serversTransports.kanidm-transport.insecureSkipVerify = true;
   };
 }
