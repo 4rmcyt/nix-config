@@ -225,6 +225,7 @@
     mode = "0400";
   };
 
+  my.kanidmClient.enable = true;
   my.traefik.enable = true;
   my.headscale.enable = false;
   my.crowdsec.traefik.enable = true;

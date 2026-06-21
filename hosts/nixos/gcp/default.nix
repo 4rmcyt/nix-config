@@ -21,6 +21,7 @@
     ../../../modules/backup
     ../../../modules/security/fail2ban
     ../../../modules/security/hardening.nix
+    ../../../modules/security/kanidm/unix-client.nix
   ];
 
   config = {
@@ -102,6 +103,8 @@
         networkConfig.DHCP = "yes";
       };
     };
+
+    my.kanidmClient.enable = true;
 
     my.backup = {
       enable = true;
