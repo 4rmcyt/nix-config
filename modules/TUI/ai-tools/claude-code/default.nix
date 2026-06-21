@@ -31,6 +31,8 @@ in {
     context = systemPrompts.claude lib config.programs.mcp.servers;
 
     settings = {
+      alwaysThinkingEnabled = false;
+      effortLevel = "medium";
       hooks = {
         SessionStart = [
           {
