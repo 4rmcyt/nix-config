@@ -28,8 +28,7 @@ in {
         settings = {
           version = "2";
           kanidm = {
-            # Only members of this group can use PAM login (not needed for SSH keys,
-            # but required by kanidm_unixd config schema)
+            uri = "https://idm.${domain}";
             pam_allowed_login_groups = ["users"];
           };
         };
