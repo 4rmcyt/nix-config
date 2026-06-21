@@ -11,10 +11,10 @@
 
     # Languages
     jnoortheen.nix-ide
-    mkhl.direnv
     ms-python.isort
     ms-python.python
     ms-python.vscode-python-envs
+    mkhl.direnv
     nefrob.vscode-just-syntax
 
     # DevOps
