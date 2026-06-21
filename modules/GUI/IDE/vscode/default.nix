@@ -6,7 +6,7 @@
     ./ai.nix
   ];
 
-  programs.vscode = {
+  programs.vscodium = {
     enable = true;
     package = pkgs.vscodium-fhs;
 

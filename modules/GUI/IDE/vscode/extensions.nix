@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  programs.vscode.profiles.default.extensions = with pkgs.vscode-marketplace; [
+  programs.vscodium.profiles.default.extensions = with pkgs.vscode-marketplace; [
     # Formatters & Editing
     irongeek.vscode-env
     foxundermoon.shell-format

@@ -4,6 +4,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   inherit (config.my.defaults) domain;
@@ -14,6 +15,8 @@ in {
 
   config = lib.mkIf config.my.kanidmClient.enable {
     services.kanidm = {
+      package = lib.mkDefault pkgs.kanidm_1_10;
+
       client = {
         enable = true;
         settings.uri = "https://idm.${domain}";
