@@ -58,7 +58,6 @@
     "workbench.iconTheme" = "material-icon-theme";
     "workbench.startupEditor" = "none";
     "workbench.settings.applyToAllProfiles" = [];
-    "workbench.settings.useSplitJSON" = true;
 
     # ===== Explorer Settings =====
     "explorer.confirmDelete" = false;

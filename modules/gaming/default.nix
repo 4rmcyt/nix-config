@@ -1,4 +1,10 @@
 {pkgs, ...}: {
+  # Steam needs system fonts to render UI text (especially non-Latin scripts)
+  fonts.packages = with pkgs; [
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-color-emoji
+  ];
   # Programs
   programs.gamemode = {
     enable = true;
