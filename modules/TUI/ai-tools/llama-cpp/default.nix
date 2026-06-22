@@ -8,8 +8,8 @@
     cudaSupport = true;
   };
   gemma-model = pkgs.fetchurl {
-    url = "https://huggingface.co/bartowski/google_gemma-4-E4B-it-GGUF/resolve/main/google_gemma-4-E4B-it-Q4_K_M.gguf";
-    hash = "sha256-bfvbD/+CAl74im/5EvkdFB9yK12V8U1hsQ8OCIORhcg=";
+    url = "https://huggingface.co/unsloth/gemma-4-E4B-it-GGUF/resolve/main/gemma-4-E4B-it-UD-Q4_K_XL.gguf";
+    hash = "sha256-MNHnlJWXo0RnJgZOgLh2/Rtcukqm7sU9J6+kIOcx+zY=";
   };
 in {
   home.packages = [llama-cpp-cuda];
