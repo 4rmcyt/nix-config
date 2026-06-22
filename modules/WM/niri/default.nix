@@ -30,6 +30,9 @@
     # Clipboard Management
     cliphist
     wl-clip-persist
+
+    # XWayland bridge for X11 apps (e.g. Steam update UI)
+    xwayland-satellite
   ];
 
   programs.niri.settings = {

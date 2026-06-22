@@ -32,6 +32,7 @@
     enable = true;
     gamescopeSession.enable = false;
     remotePlay.openFirewall = true;
+    extraCompatPackages = with pkgs; [ proton-ge-bin ];
   };
 
   # Gaming packages
