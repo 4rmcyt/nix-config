@@ -115,7 +115,10 @@ in {
 
       systems.oauth2.audiobookshelf = {
         displayName = "Audiobookshelf";
-        originUrl = "https://audiobookshelf.${domain}/auth/openid/callback";
+        originUrl = [
+          "https://audiobookshelf.${domain}/auth/openid/callback"
+          "audiobookshelf://oauth"
+        ];
         originLanding = "https://audiobookshelf.${domain}";
         basicSecretFile = config.sops.secrets.kanidm_audiobookshelf_secret.path;
         preferShortUsername = true;

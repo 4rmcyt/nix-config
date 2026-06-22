@@ -1,7 +1,7 @@
 {config, ...}: {
   virtualisation.oci-containers.containers.kapowarr = {
     autoStart = true;
-    image = "mrcas/kapowarr:latest";
+    image = "docker.io/mrcas/kapowarr:latest";
     extraOptions = [
       "--network=host"
       "--label=io.containers.autoupdate=registry"

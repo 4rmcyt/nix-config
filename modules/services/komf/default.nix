@@ -2,7 +2,7 @@
 {config, ...}: {
   virtualisation.oci-containers.containers.komf = {
     autoStart = true;
-    image = "sndxr/komf:latest";
+    image = "docker.io/sndxr/komf:latest";
     extraOptions = [
       "--network=host"
       "--label=io.containers.autoupdate=registry"
