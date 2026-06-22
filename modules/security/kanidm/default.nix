@@ -85,6 +85,59 @@ in {
           "email"
         ];
       };
+
+      systems.oauth2.grafana = {
+        displayName = "Grafana";
+        originUrl = "https://grafana.${domain}/login/generic_oauth";
+        originLanding = "https://grafana.${domain}";
+        basicSecretFile = config.sops.secrets.kanidm_grafana_secret.path;
+        preferShortUsername = true;
+        scopeMaps.users = [
+          "openid"
+          "profile"
+          "email"
+          "groups"
+        ];
+      };
+
+      systems.oauth2.miniflux = {
+        displayName = "Miniflux";
+        originUrl = "https://miniflux.${domain}/oauth2/oidc/callback";
+        originLanding = "https://miniflux.${domain}";
+        basicSecretFile = config.sops.secrets.kanidm_miniflux_secret.path;
+        preferShortUsername = true;
+        scopeMaps.users = [
+          "openid"
+          "profile"
+          "email"
+        ];
+      };
+
+      systems.oauth2.audiobookshelf = {
+        displayName = "Audiobookshelf";
+        originUrl = "https://audiobookshelf.${domain}/auth/openid/callback";
+        originLanding = "https://audiobookshelf.${domain}";
+        basicSecretFile = config.sops.secrets.kanidm_audiobookshelf_secret.path;
+        preferShortUsername = true;
+        scopeMaps.users = [
+          "openid"
+          "profile"
+          "email"
+        ];
+      };
+
+      systems.oauth2.jellyfin = {
+        displayName = "Jellyfin";
+        originUrl = "https://jellyfin.${domain}/sso/OID/redirect/kanidm";
+        originLanding = "https://jellyfin.${domain}";
+        basicSecretFile = config.sops.secrets.kanidm_jellyfin_secret.path;
+        preferShortUsername = true;
+        scopeMaps.users = [
+          "openid"
+          "profile"
+          "email"
+        ];
+      };
     };
   };
 
@@ -100,6 +153,26 @@ in {
       mode = "0400";
     };
     kanidm_headscale_secret = {
+      sopsFile = ../../../secrets/kanidm.yaml;
+      owner = "kanidm";
+      mode = "0400";
+    };
+    kanidm_grafana_secret = {
+      sopsFile = ../../../secrets/kanidm.yaml;
+      owner = "kanidm";
+      mode = "0400";
+    };
+    kanidm_miniflux_secret = {
+      sopsFile = ../../../secrets/kanidm.yaml;
+      owner = "kanidm";
+      mode = "0400";
+    };
+    kanidm_audiobookshelf_secret = {
+      sopsFile = ../../../secrets/kanidm.yaml;
+      owner = "kanidm";
+      mode = "0400";
+    };
+    kanidm_jellyfin_secret = {
       sopsFile = ../../../secrets/kanidm.yaml;
       owner = "kanidm";
       mode = "0400";

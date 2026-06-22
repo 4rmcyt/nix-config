@@ -20,8 +20,8 @@
       owner = config.users.users.postgres.name;
     };
     grafana_oidc_client_secret = {
-      sopsFile = ../../secrets/grafana.yaml;
-      key = "grafana_oidc_client_secret";
+      sopsFile = ../../secrets/kanidm.yaml;
+      key = "kanidm_grafana_secret";
       owner = config.users.users.grafana.name;
     };
     grafana_secret_key = {
@@ -240,14 +240,15 @@
         };
         "auth.generic_oauth" = {
           enabled = true;
-          name = "Authelia";
+          name = "Kanidm";
           client_id = "grafana";
           client_secret = "$__file{${config.sops.secrets.grafana_oidc_client_secret.path}}";
           scopes = "openid profile email groups";
-          auth_url = "https://auth.${config.my.defaults.domain}/api/oidc/authorization";
-          token_url = "https://auth.${config.my.defaults.domain}/api/oidc/token";
-          api_url = "https://auth.${config.my.defaults.domain}/api/oidc/userinfo";
-          role_attribute_path = "contains(groups[*], 'admin') && 'Admin' || 'Viewer'";
+          auth_url = "https://idm.${config.my.defaults.domain}/ui/oauth2";
+          token_url = "https://idm.${config.my.defaults.domain}/oauth2/token";
+          api_url = "https://idm.${config.my.defaults.domain}/oauth2/openid/grafana/userinfo";
+          use_pkce = true;
+          role_attribute_path = "contains(groups[*], 'idm_admins') && 'Admin' || 'Viewer'";
           allow_sign_up = true;
         };
       };

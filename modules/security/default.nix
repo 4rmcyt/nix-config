@@ -1,7 +1,6 @@
 {...}: {
   imports = [
     ./crowdsec
-    # ./cowrie  # Disabled
     ./fail2ban
     ./kanidm
     ./kanidm/unix-client.nix

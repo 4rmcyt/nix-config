@@ -62,6 +62,7 @@ in {
     environment.TZ = timezone;
     extraOptions = [
       "--network=host"
+      "--label=io.containers.autoupdate=registry"
       "--cap-add=NET_ADMIN"
       "--cap-add=NET_RAW"
       # USB passthrough for Zigbee/Z-Wave dongle (uncomment + adjust device path):

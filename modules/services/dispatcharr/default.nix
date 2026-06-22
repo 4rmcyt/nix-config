@@ -4,7 +4,10 @@
     DISPATCHARR_ENV = "modular";
     DISPATCHARR_PORT = "9191";
   };
-  commonExtraOptions = ["--add-host=host.containers.internal:host-gateway"];
+  commonExtraOptions = [
+    "--add-host=host.containers.internal:host-gateway"
+    "--label=io.containers.autoupdate=registry"
+  ];
   envFile = [config.sops.templates."dispatcharr.env".path];
 in {
   sops.templates."dispatcharr.env" = {

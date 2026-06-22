@@ -5,6 +5,7 @@
     image = "sndxr/komf:latest";
     extraOptions = [
       "--network=host"
+      "--label=io.containers.autoupdate=registry"
       "--user=0:${toString config.users.groups.media.gid}"
       "--env=TZ=${config.my.defaults.timezone}"
       "--env=JAVA_TOOL_OPTIONS=-XX:+UnlockExperimentalVMOptions -XX:+UseShenandoahGC -XX:ShenandoahGCHeuristics=compact -XX:ShenandoahGuaranteedGCInterval=3600000 -XX:TrimNativeHeapInterval=3600000"

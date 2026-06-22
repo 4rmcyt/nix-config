@@ -4,6 +4,7 @@
     image = "mrcas/kapowarr:latest";
     extraOptions = [
       "--network=host"
+      "--label=io.containers.autoupdate=registry"
       "--env=PUID=1000"
       "--env=PGID=${toString config.users.groups.media.gid}"
       "--env=TZ=${config.my.defaults.timezone}"

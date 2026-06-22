@@ -54,10 +54,6 @@
       name = "dispatcharr";
       secret = "dispatcharr_db_password";
     }
-    {
-      name = "dify";
-      secret = "dify_db_password";
-    }
   ];
 in {
   # Database secrets configuration
@@ -146,13 +142,6 @@ in {
       group = config.users.groups.postgres.name;
       mode = "0440";
     };
-    dify_db_password = {
-      sopsFile = ../../../secrets/dify.yaml;
-      key = "dify_db_password";
-      owner = config.users.users.postgres.name;
-      group = config.users.groups.postgres.name;
-      mode = "0400";
-    };
   };
 
   users.users.postgres = {
@@ -186,8 +175,6 @@ in {
       "prowlarr"
       "prowlarr-log"
       "dispatcharr"
-      "dify"
-      "dify_plugin"
     ];
 
     # Automatically create users with DB ownership
@@ -240,10 +227,6 @@ in {
         name = "dispatcharr";
         ensureDBOwnership = true;
       }
-      {
-        name = "dify";
-        ensureDBOwnership = true;
-      }
     ];
 
     identMap = ''
@@ -293,9 +276,6 @@ in {
           done
         '')
         dbUsers}
-
-      # Grant dify user full access to dify_plugin schema (plugin daemon connects as dify)
-      ${pkgs.postgresql}/bin/psql -d dify_plugin -c "GRANT ALL ON SCHEMA public TO dify;" || true
 
       # Set passwords for all database users, grant CREATEDB privilege, and ensure database exists
       ${lib.concatMapStringsSep "\n      " (user: ''
