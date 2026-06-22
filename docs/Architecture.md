@@ -41,7 +41,7 @@ modules/
   monitoring/               # Prometheus + Grafana + Loki + Alloy stack; node-exporter-client
   networking/               # ssh, tailscale, traefik, headscale, headplane, cloudflared,
                             #   unbound, wireguard, caddy, dnssec, nfs, nut-client/server, avahi
-  security/                 # crowdsec, fail2ban, hardening (authelia/lldap/cowrie disabled)
+  security/                 # crowdsec, fail2ban, hardening (authelia/lldap disabled — Tailscale handles access control)
   services/                 # Application services: nixarr, homepage, miniflux, home-assistant,
                             #   atuin_server, komga, komf, kavita, dispatcharr, microbin, ntfy,
                             #   radicale, ollama, vaultwarden, mautrix-telegram, dify, calibre-web
@@ -114,6 +114,43 @@ Binary caches (priority order):
 1. `4rmcyt.cachix.org` (personal, priority 0)
 2. `nix-community.cachix.org`, `cache.nixos.org`, `cache.lix.systems`
 3. CUDA, llama-cpp, noctalia, devenv caches
+
+## Desktop WM Stack
+
+Desktop and matebook use **niri** as WM with **noctalia-shell** (quickshell-based) as bar/shell. DMS is not used.
+
+| File | Purpose |
+|------|---------|
+| `modules/WM/niri/default.nix` | niri settings, session vars, input/layout |
+| `modules/WM/niri/noctalia.nix` | noctalia-shell HM config, matugen templates (zed, materialgram) |
+| `modules/WM/niri/binds.nix` | keybindings — uses `qs -c noctalia-shell ipc call` for shell actions |
+| `modules/WM/niri/startup.nix` | spawn-at-startup: noctalia-shell, cliphist, wl-clip-persist, xwayland-satellite |
+| `modules/WM/niri/windowrules.nix` | floating rules |
+| `modules/WM/niri/monitors.nix` | DP-4 and DP-5: 4K@60Hz, 2× scale, VRR |
+| `modules/WM/niri/nvidia.nix` | NVIDIA env vars |
+
+**niri version:** `pkgs.niri` (25.11) via `niri-flake` NixOS module — NOT `niri-flake`'s own stable package.
+
+**noctalia inputs:**
+- `inputs.noctalia` = `github:noctalia-dev/noctalia/legacy-v4`
+- Exports: `homeModules.default`, `overlays.default` — **no `nixosModules`**
+- HM import: `inputs.noctalia.homeModules.default` on desktop + matebook
+
+**greetd** auto-logs into Niri session as `owner.username`. Session command logs to `~/.local/state/niri/niri.log`.
+
+## Critical Patterns
+
+### Verify daemon config keys before writing
+
+Before writing any key for a daemon config file (bluetoothd `main.conf`, pipewire, wireplumber, etc.):
+1. Check the actual config schema in the store: `find /nix/store -name "*.conf" -path "*<pkg>*" | head`
+2. Or check the binary's `--help`
+
+Example: `DisablePlugins` is **not** a valid `main.conf` key for bluetoothd — it's a CLI flag `-P`. Use `systemd.services.bluetooth.serviceConfig.ExecStart` override instead.
+
+### journalctl warnings are not "expected"
+
+Every warning and error in `journalctl -b 0 -p warning` is worth investigating. Do not dismiss as "harmless" — present findings and let the user decide.
 
 ## Formatting
 

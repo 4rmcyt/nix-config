@@ -20,14 +20,25 @@ Tailnet login server: `https://hs.example.com` (self-hosted Headscale)
 |----------|------------------------------------|------------|-------------------------------------|
 | `zroot`  | Samsung 256GB NVMe (`nvme1`)       | `/`        | OS, `/nix`, `/home`, `/var/log`, PostgreSQL, containers |
 | `zdata`  | Corsair MP600 Pro LPX 2TB NVMe     | `/data`    | Media, downloads. `autotrim=on`, `sync=disabled` |
-| `zbackup`| Patriot P210 1TB SATA SSD          | `/backup`  | Local backups. Non-blocking import via `boot.postBootCommands` |
+| `zbackup`| Patriot P210 1TB SATA SSD          | `/backup`  | Local backups. Imported non-blocking via `boot.postBootCommands` (not `extraPools`) so failure doesn't block boot |
 
 `zroot` datasets: `reserved` (20G), `nix`, `root`, `home`, `log`, `postgresql`, `containers`, `authentik`, `vaultwarden`  
 `zroot/nix` and `zroot/home` have `@empty` snapshots for rollback.
 
+#### ZFS Safety Rules
+
+**NEVER `nixos-rebuild switch` when `zfs send` is in progress** — it restarts mount units, kills the transfer, crashes the server.
+
+**When config changes affect active mount units** (`data.mount`, etc.) — use `nixos-rebuild boot` + reboot instead. `switch` restarts mounts live → kills services with open handles (jellyfin, qbittorrent, radarr, sonarr) → SSH drops.
+
+**When adding a new ZFS pool:**
+1. Add `boot.zfs.extraPools = ["poolname"]` to `hardware-configuration.nix` first
+2. Then `nixos-rebuild boot` + reboot — never `switch`
+3. Without `extraPools`, NixOS won't generate `zfs-import-<pool>.service` → mount fails
+
 #### Networking
 
-- SSH on port **2222** (port 22 is Cowrie honeypot DNAT via Podman)
+- SSH on port **2222**
 - Unbound DNS resolver: interfaces `tailscale0`, `enp0s31f6`; NextDNS profile `nextdns0`
 - Tailscale with DNSSEC: NextDNS upstream, split DNS for `example.com` → homeserver
 
@@ -180,12 +191,18 @@ Tunnel credentials in `secrets/cloudflare_tunnel_credentials.bin` + `secrets/clo
 
 ### Reading / Library
 
-| Service   | Port  | URL                      |
-|-----------|-------|--------------------------|
-| Kavita    | 5000  | `kavita.example.com`    |
-| Komga     | 8087  | `komga.example.com`     |
-| Komf      | 8085  | `komf.example.com`      |
-| Miniflux  | 8086  | `miniflux.example.com`  |
+| Service   | Port  | URL                      | Notes        |
+|-----------|-------|--------------------------|--------------|
+| Komga     | 8087  | `komga.example.com`     |              |
+| Komf      | 8085  | `komf.example.com`      |              |
+| Miniflux  | 8086  | `miniflux.example.com`  |              |
+| Kavita    | 5000  | `kavita.example.com`    | disabled     |
+
+### Identity / SSO
+
+| Service  | Port  | URL                    | Notes                                                     |
+|----------|-------|------------------------|-----------------------------------------------------------|
+| Kanidm   | 3013  | `idm.example.com`     | OIDC provider for Grafana, Miniflux, Jellyfin, Audiobookshelf, Headscale. Self-signed TLS internally, Traefik terminates externally via `insecureSkipVerify`. Provisioned declaratively via sops secrets. |
 
 ### Productivity / Home
 
@@ -196,7 +213,7 @@ Tunnel credentials in `secrets/cloudflare_tunnel_credentials.bin` + `secrets/clo
 | Radicale       | 5232  | `cal.example.com`         | CalDAV/CardDAV                |
 | ntfy           | 9991  | `ntfy.example.com`        | Push notifications            |
 | Microbin       | 8069  | `microbin.example.com`    | Paste bin                     |
-| Vaultwarden    | 8222  | `vault.example.com`       | Password manager              |
+| Vaultwarden    | 8222  | `vault.example.com`       | Password manager — disabled   |
 | Atuin server   | 8881  | `atuin.example.com`       | Shell history sync            |
 | CouchDB        | 5984  | `livesync.example.com`    | Obsidian LiveSync backend     |
 
@@ -220,7 +237,7 @@ Systemd journal ────────────┘          Traefik access.
 ```
 
 - **Prometheus** scrape targets: homeserver, desktop, matebook, gcp-relay node exporters; NUT; Traefik; CrowdSec; Prometheus self
-- **Grafana** OIDC via Authelia; backend PostgreSQL; datasources: Prometheus + Loki
+- **Grafana** OIDC via Kanidm; backend PostgreSQL; datasources: Prometheus + Loki
 - **Loki** retention 30 days; TSDB schema v13; filesystem storage
 - **Alloy** ships: Traefik access log, systemd journal (last 12h)
 - **GeoIP** monthly auto-update from db-ip.com (city MMDB, no account required)

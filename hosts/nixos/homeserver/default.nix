@@ -171,11 +171,9 @@
       logRefusedConnections = false; # Avoid log spam
 
       allowedTCPPorts = [
-        # 22 is handled by Cowrie (Podman DNAT in nat/prerouting, before NIXOS-FW filter)
-        # 23 is handled by Cowrie Telnet (same Podman DNAT mechanism)
         80 # HTTP
         443 # HTTPS
-        2222 # Real SSH (moved from 22; Cowrie honeypot takes port 22)
+        2222 # SSH
         3000 # Grafana
         9090 # Prometheus
         9091 # Database & infrastructure
@@ -251,7 +249,7 @@
     # SSH configuration
     openssh = {
       enable = true;
-      ports = [2222]; # Moved from 22; Cowrie honeypot listens on port 22
+      ports = [2222];
       extraConfig = ''
         # Global Security Settings
         KexAlgorithms sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256
@@ -275,7 +273,6 @@
       };
     };
 
-    vscode-server.enable = false;
   };
 
   my.unbound = {
