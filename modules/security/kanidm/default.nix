@@ -127,6 +127,10 @@ in {
           "profile"
           "email"
         ];
+        claimMaps.groups = {
+          joinType = "array";
+          valuesByGroup.users = ["admin"];
+        };
       };
 
       systems.oauth2.jellyfin = {
