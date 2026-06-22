@@ -248,7 +248,7 @@
           token_url = "https://idm.${config.my.defaults.domain}/oauth2/token";
           api_url = "https://idm.${config.my.defaults.domain}/oauth2/openid/grafana/userinfo";
           use_pkce = true;
-          role_attribute_path = "contains(groups[*], 'idm_admins') && 'Admin' || 'Viewer'";
+          role_attribute_path = "contains(groups[*], 'admin') && 'Admin' || 'Viewer'";
           allow_sign_up = true;
         };
       };

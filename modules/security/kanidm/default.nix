@@ -98,6 +98,10 @@ in {
           "email"
           "groups"
         ];
+        claimMaps.groups = {
+          joinType = "array";
+          valuesByGroup.users = ["admin"];
+        };
       };
 
       systems.oauth2.miniflux = {
@@ -111,6 +115,10 @@ in {
           "profile"
           "email"
         ];
+        claimMaps.groups = {
+          joinType = "array";
+          valuesByGroup.users = ["admin"];
+        };
       };
 
       systems.oauth2.audiobookshelf = {
@@ -144,6 +152,10 @@ in {
           "profile"
           "email"
         ];
+        claimMaps.groups = {
+          joinType = "array";
+          valuesByGroup.users = ["admin"];
+        };
       };
     };
   };

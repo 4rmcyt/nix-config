@@ -26,11 +26,13 @@ in {
       ExecStart = lib.concatStringsSep " " [
         "${llama-cpp-cuda}/bin/llama-server"
         "--model ${gemma-model}"
+        "--alias gemma-local"
         "--host 127.0.0.1"
         "--port 8080"
         "--n-gpu-layers 99"
         "--ctx-size 16384"
         "--webui-mcp-proxy"
+        "--reasoning off"
         "--flash-attn on"
         "--cache-type-k q8_0"
         "--cache-type-v q8_0"

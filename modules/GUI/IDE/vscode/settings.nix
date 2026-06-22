@@ -2,7 +2,6 @@
   osConfig ? null,
   config,
   lib,
-  pkgs,
   ...
 }: let
   mcpServerNames = builtins.attrNames config.programs.mcp.servers;
@@ -157,7 +156,7 @@
     # CommitCraft — local llama-cpp commit message generation
     "commitCraft.apiBaseUrl" = "http://127.0.0.1:8080/v1";
     "commitCraft.apiKey" = "dummy";
-    "commitCraft.customModel" = "google_gemma-4-E4B-it-Q4_K_M";
+    "commitCraft.customModel" = "gemma-local";
     "commitCraft.style" = "conventional";
     "commitCraft.detail" = "concise";
     "commitCraft.language" = "English";
@@ -255,14 +254,6 @@
       ];
     };
   };
-  settingsFile = pkgs.writeText "vscode-settings.json" (builtins.toJSON settings);
-  settingsPath = ".config/VSCodium/User/settings.json";
 in {
-  home.activation.vscodeSettings = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    settings_dest="$HOME/${settingsPath}"
-    $DRY_RUN_CMD mkdir -p "$(dirname "$settings_dest")"
-    [[ -L "$settings_dest" ]] && $DRY_RUN_CMD rm "$settings_dest"
-    $DRY_RUN_CMD cp ${settingsFile} "$settings_dest"
-    $DRY_RUN_CMD chmod 644 "$settings_dest"
-  '';
+  programs.vscodium.profiles.default.userSettings = settings;
 }

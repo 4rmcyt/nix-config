@@ -16,6 +16,7 @@ _: {
       RateLimitInterval=30s
       RateLimitBurst=10000
       Compress=yes
+      LineMax=0
     '';
   };
 }
