@@ -10,7 +10,6 @@
     # Wayland/Ozone
     ANKI_WAYLAND = "1";
     MOZ_ENABLE_WAYLAND = "1";
-    SDL_VIDEODRIVER = "wayland";
     CLUTTER_BACKEND = "wayland";
     XDG_CURRENT_DESKTOP = "niri";
     XDG_SESSION_TYPE = "wayland";
@@ -57,6 +56,7 @@
     environment = {
       NIXOS_OZONE_WL = "1";
       ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+      DISPLAY = ":0";
     };
 
     layout = {
