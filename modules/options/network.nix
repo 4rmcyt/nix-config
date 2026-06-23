@@ -290,7 +290,6 @@
         description = "Homepage application dashboard";
       };
 
-
       # Home Automation
       home-assistant = lib.mkOption {
         type = lib.types.port;
@@ -305,7 +304,6 @@
       };
 
       # Security & Authentication
-
 
       # Alerting
       alertmanager = lib.mkOption {
