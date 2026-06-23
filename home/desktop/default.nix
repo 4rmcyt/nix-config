@@ -111,6 +111,7 @@
       libreoffice
       nixos-anywhere
       pmbootstrap
+      fastboot
     ];
 
     sessionVariables = {
