@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   imports = [
     ../../modules/GUI/terminal
     ../../modules/GUI/IDE
@@ -79,8 +80,7 @@
       proton-pass-cli
       seahorse
       (pkgs.texlive.combine {
-        inherit
-          (pkgs.texlive)
+        inherit (pkgs.texlive)
           scheme-medium
           moderncv
           lastpage
@@ -111,7 +111,7 @@
       libreoffice
       nixos-anywhere
       pmbootstrap
-      fastboot
+      android-tools
     ];
 
     sessionVariables = {
@@ -136,14 +136,14 @@
   # which is in sockets.target → basic.target → set-SSH_AUTH_SOCK (implicit After=basic.target).
   # Removing the socket-level Before/WantedBy; default.target is sufficient.
   systemd.user.services.set-SSH_AUTH_SOCK = {
-    Unit.Before = lib.mkForce [];
-    Install.WantedBy = lib.mkForce ["default.target"];
+    Unit.Before = lib.mkForce [ ];
+    Install.WantedBy = lib.mkForce [ "default.target" ];
   };
 
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
-      autoconnect = ["qemu:///system"];
-      uris = ["qemu:///system"];
+      autoconnect = [ "qemu:///system" ];
+      uris = [ "qemu:///system" ];
     };
   };
 }
