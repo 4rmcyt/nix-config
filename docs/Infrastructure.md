@@ -38,7 +38,7 @@ Tailnet login server: `https://hs.example.com` (self-hosted Headscale)
 
 #### Networking
 
-- SSH on port **2222**
+- SSH on port **2222** (port 22 has no listener)
 - Unbound DNS resolver: interfaces `tailscale0`, `enp0s31f6`; NextDNS profile `nextdns0`
 - Tailscale with DNSSEC: NextDNS upstream, split DNS for `example.com` → homeserver
 

@@ -30,7 +30,7 @@ nix build .#nixosConfigurations.<host>.config.system.build.toplevel  # Build a h
 | `home-manager-base.nix` | Defines `modules.homeManager.base`: sops HM, overlays, stateVersion |
 | `configurations/nixos.nix` | Defines `options.configurations.nixos` (lazyAttrsOf deferredModule → `flake.nixosConfigurations`) |
 | `systems.nix` | `systems = ["x86_64-linux"]` |
-| `hosts/{desktop,homeserver,matebook,wsl}/configuration.nix` | Per-host definitions using `configurations.nixos.<name>.module` |
+| `hosts/{desktop,gcp,homeserver,matebook,wsl}/configuration.nix` | Per-host definitions using `configurations.nixos.<name>.module` |
 
 ### Host definition pattern
 
@@ -67,12 +67,12 @@ modules/
   options/              # my.defaults.* options (user, email, domain, IPs, timezone, locale)
   roles/                # Role compositions (desktop, server, media-server, monitoring)
   DE/                   # Desktop environments (KDE, COSMIC)
-  WM/                   # Window managers (niri + noctalia-shell, Hyprland)
+  WM/                   # Window managers (niri + noctalia-shell)
   GUI/                  # GUI apps (firefox, kitty, zed, obsidian, etc.)
   TUI/                  # Terminal tools (zsh, zellij, atuin, ai-tools)
   services/             # k3s, nixarr, homepage, ollama, paperless, etc.
   networking/           # SSH, tailscale, wireguard, traefik, cloudflared
-  security/             # authelia, lldap, fail2ban
+  security/             # kanidm, crowdsec, fail2ban
   monitoring/           # prometheus, grafana, loki
   database/             # postgresql, redis, couchdb
   disko/                # Declarative disk partitioning per host

@@ -147,8 +147,12 @@
         53
         80
         443
+        3000 # Grafana
         3100 # Loki (gcp-relay alloy-client)
         9090 # Prometheus
+        9091 # Database & infrastructure
+        9100 # Node Exporter
+        27196 # Cloudflare Exporter
       ];
       allowedUDPPorts = [53];
     };
@@ -171,14 +175,9 @@
       logRefusedConnections = false; # Avoid log spam
 
       allowedTCPPorts = [
-        80 # HTTP
-        443 # HTTPS
+        80 # HTTP (traefik)
+        443 # HTTPS (traefik)
         2222 # SSH
-        3000 # Grafana
-        9090 # Prometheus
-        9091 # Database & infrastructure
-        9100 # Node Exporter
-        27196 # Cloudflare Exporter
         # 8000  # TP-Link Exporter
         # 11434 # Ollama API
         # 11435 # Ollama WebUI

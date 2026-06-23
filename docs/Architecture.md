@@ -133,7 +133,8 @@ Desktop and matebook use **niri** as WM with **noctalia-shell** (quickshell-base
 
 **noctalia inputs:**
 - `inputs.noctalia` = `github:noctalia-dev/noctalia/legacy-v4`
-- Exports: `homeModules.default`, `overlays.default` — **no `nixosModules`**
+- Exports: `homeModules.default`, `nixosModules.default`, `overlays.default`
+- NixOS import: `inputs.noctalia.nixosModules.default` on desktop + matebook
 - HM import: `inputs.noctalia.homeModules.default` on desktop + matebook
 
 **greetd** auto-logs into Niri session as `owner.username`. Session command logs to `~/.local/state/niri/niri.log`.
