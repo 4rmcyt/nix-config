@@ -110,6 +110,7 @@
       firefox
       libreoffice
       nixos-anywhere
+      pmbootstrap
     ];
 
     sessionVariables = {
