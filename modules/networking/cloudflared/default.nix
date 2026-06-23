@@ -107,12 +107,6 @@
 #   service: http://localhost:11434
 # - hostname: hass.${config.my.defaults.domain}
 #   service: http://localhost:8123
-# - hostname: paperless.${config.my.defaults.domain}
-#   service: http://localhost:8888
-# - hostname: tdarr.${config.my.defaults.domain}
-# #   service: http://localhost:8265
-# - hostname: cal.${config.my.defaults.domain}
-#           service: http://localhost:5232
 # - hostname: sonarr.${config.my.defaults.domain}
 #   service: https://localhost:8443
 #   originRequest:
@@ -150,10 +144,6 @@
 #   service: https://localhost:8443
 #   originRequest:
 #     httpHostHeader: miniflux.${config.my.defaults.domain}
-# - hostname: kavita.${config.my.defaults.domain}
-#   service: https://localhost:8443
-#   originRequest:
-#     httpHostHeader: kavita.${config.my.defaults.domain}
 # - hostname: audiobookshelf.${config.my.defaults.domain}
 #   service: https://localhost:8443
 #   originRequest:
@@ -167,25 +157,8 @@
 #   service: https://localhost:8443
 #   originRequest:
 #     httpHostHeader: microbin.${config.my.defaults.domain}
-# - hostname: auth.${config.my.defaults.domain}
-#   service: https://localhost:8443
-#   originRequest:
-#     httpHostHeader: auth.${config.my.defaults.domain}
 # # Infrastructure services (can be added to Traefik later if needed)
-# - hostname: vault.${config.my.defaults.domain}
-#   service: https://localhost:8443
-#   originRequest:
-#     httpHostHeader: vault.${config.my.defaults.domain}
-# - hostname: lldap.${config.my.defaults.domain}
-#   service: https://localhost:8443
-#   originRequest:
-#     httpHostHeader: lldap.${config.my.defaults.domain}
-# - hostname: atuin.${config.my.defaults.domain}
-#   service: https://localhost:8443
-#   originRequest:
-#     httpHostHeader: atuin.${config.my.defaults.domain}
 # - hostname: livesync.${config.my.defaults.domain}
 #   service: https://localhost:8443
 #   originRequest:
 #     httpHostHeader: livesync.${config.my.defaults.domain}
-

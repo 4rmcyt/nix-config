@@ -8,7 +8,7 @@
       key = "oauth2_proxy_password";
       owner = "redis";
       group = "redis";
-      mode = "0440"; # Group-readable so authelia user can access
+      mode = "0440";
     };
   };
 
@@ -23,9 +23,9 @@
   users.groups.redis = {};
 
   # NixOS Redis module creates dynamic user/group: redis-homeserver
-  # Add authelia to redis-homeserver group for socket access
+  # Add services to redis-homeserver group for socket access
   users.groups.redis-homeserver = {
-    members = ["authelia"]; # Services that need Redis socket access
+    members = []; # Services that need Redis socket access
   };
 
   # =================================================================
@@ -137,7 +137,6 @@
 # Database allocation:
 # - oauth2-proxy: database 0
 # - paperless: database 1 (when enabled)
-# - authelia: database 2 (when enabled)
 #
 # All services use the same password (oauth2_proxy_password from secrets)
 # Isolation is achieved through different database numbers

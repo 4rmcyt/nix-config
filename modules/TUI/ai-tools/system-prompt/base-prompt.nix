@@ -20,7 +20,7 @@ in ''
     WM/                   # Window managers (Hyprland + plugins)
     GUI/                  # GUI apps (firefox, kitty, zed, obsidian, etc.)
     TUI/                  # Terminal tools (zsh, zellij, atuin, ai-tools)
-    services/             # k3s, nixarr, homepage, ollama, paperless, etc.
+    services/             # k3s, nixarr, homepage, etc.
     networking/           # SSH, tailscale, wireguard, traefik, cloudflared
     security/             # authelia, lldap, fail2ban
     monitoring/           # prometheus, grafana, loki

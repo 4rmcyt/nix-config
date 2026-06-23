@@ -9,7 +9,7 @@
       key = "gmail_password";
       owner = config.users.users.msmtp.name;
       group = config.users.groups.msmtp.name;
-      mode = "0640"; # Group-readable so authelia user can access
+      mode = "0400";
     };
   };
 

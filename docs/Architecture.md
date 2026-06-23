@@ -126,7 +126,7 @@ Desktop and matebook use **niri** as WM with **noctalia-shell** (quickshell-base
 | `modules/WM/niri/binds.nix` | keybindings — uses `qs -c noctalia-shell ipc call` for shell actions |
 | `modules/WM/niri/startup.nix` | spawn-at-startup: noctalia-shell, cliphist, wl-clip-persist, xwayland-satellite |
 | `modules/WM/niri/windowrules.nix` | floating rules |
-| `modules/WM/niri/monitors.nix` | DP-4 and DP-5: 4K@60Hz, 2× scale, VRR |
+| `modules/WM/niri/monitors/` | DP-4 and DP-5: 4K@60Hz, 2× scale, VRR (desktop.nix + matebook.nix) |
 | `modules/WM/niri/nvidia.nix` | NVIDIA env vars |
 
 **niri version:** `pkgs.niri` (25.11) via `niri-flake` NixOS module — NOT `niri-flake`'s own stable package.

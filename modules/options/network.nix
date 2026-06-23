@@ -272,12 +272,6 @@
       };
 
       # Productivity & Document Management
-      paperless = lib.mkOption {
-        type = lib.types.port;
-        default = 8888;
-        description = "Paperless-ngx document management";
-      };
-
       miniflux = lib.mkOption {
         type = lib.types.port;
         default = 8086;
@@ -296,11 +290,6 @@
         description = "Homepage application dashboard";
       };
 
-      flare = lib.mkOption {
-        type = lib.types.port;
-        default = 3033;
-        description = "Flare bookmarks manager";
-      };
 
       # Home Automation
       home-assistant = lib.mkOption {
@@ -316,24 +305,7 @@
       };
 
       # Security & Authentication
-      vaultwarden = lib.mkOption {
-        type = lib.types.port;
-        default = 8222;
-        description = "Vaultwarden password manager";
-      };
 
-      authelia = lib.mkOption {
-        type = lib.types.port;
-        default = 9000;
-        description = "Authelia SSO/identity provider";
-      };
-
-      # AI & Development
-      ollama = lib.mkOption {
-        type = lib.types.port;
-        default = 11434;
-        description = "Ollama AI/LLM model server";
-      };
 
       # Alerting
       alertmanager = lib.mkOption {

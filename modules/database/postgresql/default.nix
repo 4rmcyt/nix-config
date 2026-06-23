@@ -19,20 +19,8 @@
       secret = "grafana_db_password";
     }
     {
-      name = "vaultwarden";
-      secret = "vaultwarden_db_password";
-    }
-    {
       name = "atuin";
       secret = "atuin_db_password";
-    }
-    {
-      name = "authelia";
-      secret = "authelia_db_password";
-    }
-    {
-      name = "lldap";
-      secret = "lldap_db_password";
     }
     {
       name = "bazarr";
@@ -79,30 +67,9 @@ in {
       group = config.users.groups.postgres.name;
       mode = "0400";
     };
-    vaultwarden_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "vaultwarden_db_password";
-      owner = config.users.users.postgres.name;
-      group = config.users.groups.postgres.name;
-      mode = "0400";
-    };
     atuin_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "atuin_db_password";
-      owner = config.users.users.postgres.name;
-      group = config.users.groups.postgres.name;
-      mode = "0400";
-    };
-    authelia_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "authelia_db_password";
-      owner = config.users.users.postgres.name;
-      group = config.users.groups.postgres.name;
-      mode = "0440"; # Group-readable so authelia user can access
-    };
-    lldap_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "lldap_db_password";
       owner = config.users.users.postgres.name;
       group = config.users.groups.postgres.name;
       mode = "0400";
@@ -163,10 +130,7 @@ in {
       "miniflux"
       "hass"
       "grafana"
-      "vaultwarden"
-      "lldap"
       "atuin"
-      "authelia"
       "bazarr"
       "radarr"
       "radarr-log"
@@ -192,19 +156,7 @@ in {
         ensureDBOwnership = true;
       }
       {
-        name = "vaultwarden";
-        ensureDBOwnership = true;
-      }
-      {
         name = "atuin";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "authelia";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "lldap";
         ensureDBOwnership = true;
       }
       {

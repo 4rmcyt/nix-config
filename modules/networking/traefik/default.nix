@@ -450,16 +450,6 @@ in {
               ];
               tls.certResolver = "default";
             };
-            vaultwarden = {
-              rule = "Host(`vault.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "vaultwarden";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
             atuin = {
               rule = "Host(`atuin.${domain}`)";
               entryPoints = ["websecure"];
@@ -545,7 +535,6 @@ in {
             # Productivity
             homepage.loadBalancer.servers = [{url = "http://localhost:8082";}];
             microbin.loadBalancer.servers = [{url = "http://localhost:8069";}];
-            vaultwarden.loadBalancer.servers = [{url = "http://localhost:8222";}];
             atuin.loadBalancer.servers = [{url = "http://localhost:8881";}];
             livesync.loadBalancer.servers = [{url = "http://localhost:5984";}];
             dispatcharr.loadBalancer.servers = [{url = "http://localhost:9191";}];

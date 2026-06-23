@@ -112,6 +112,22 @@ Rules:
 - New flake input wired into a host → update Architecture.md Host Wiring section
 - Security tool replaced (e.g. Authelia → Kanidm) → update both the service table and any prose that references the old tool by name
 
+## CRITICAL: homeserver ZFS / Rebuild Safety Rules
+
+**NEVER run `nixos-rebuild switch` while `zfs send` is in progress.** Rebuild restarts affected mount units, killing the transfer and potentially crashing the server.
+
+**When config changes affect active mount units (`data.mount`, etc.):** use `nixos-rebuild boot` + reboot instead of `switch`. The `switch` path tries to restart mounts live, which kills services with open file handles and crashes SSH.
+
+**When adding a new ZFS pool:**
+1. Add `boot.zfs.extraPools = ["poolname"]` to hardware-configuration.nix FIRST
+2. Only then run `nixos-rebuild switch`
+3. Without `extraPools`, NixOS won't generate `zfs-import-<pool>.service`, causing `data.mount` to fail on rebuild/reboot
+
+**Before any destructive or hard-to-reverse action on homeserver** (nixos-rebuild switch, zfs destroy, zpool remove, reboot during migration):
+- Will this interrupt any running operation? (zfs send, mkvmerge, active downloads)
+- Will this restart a mount unit that something is actively using?
+- If unsure — warn the user BEFORE they run it.
+
 ## Reference Docs
 
 Read these before working on the relevant area — they are the authoritative detail source:
