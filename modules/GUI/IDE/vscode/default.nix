@@ -10,6 +10,6 @@
     enable = true;
     package = pkgs.vscodium-fhs;
 
-    profiles.default = { };
+    profiles.default = {};
   };
 }

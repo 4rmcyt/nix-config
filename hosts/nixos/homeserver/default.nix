@@ -271,7 +271,6 @@
         PermitRootLogin = "no";
       };
     };
-
   };
 
   my.unbound = {
