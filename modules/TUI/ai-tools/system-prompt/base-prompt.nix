@@ -22,7 +22,7 @@ in ''
     TUI/                  # Terminal tools (zsh, zellij, atuin, ai-tools)
     services/             # k3s, nixarr, homepage, etc.
     networking/           # SSH, tailscale, wireguard, traefik, cloudflared
-    security/             # authelia, lldap, fail2ban
+    security/             # fail2ban
     monitoring/           # prometheus, grafana, loki
     database/             # postgresql, redis, couchdb
     disko/                # Declarative disk partitioning per host
