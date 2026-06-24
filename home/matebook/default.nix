@@ -21,7 +21,7 @@
     ../../modules/WM/niri
     ../../modules/WM/niri/monitors/matebook.nix
     ../../modules/WM/niri/noctalia.nix
-    ../../modules/GUI/mime
+    ../../modules/WM/mime
   ];
   home = {
     username = "zeev";

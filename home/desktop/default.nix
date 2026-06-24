@@ -24,7 +24,7 @@
     ../../modules/WM/niri/noctalia.nix
     ../../modules/WM/niri/nvidia.nix
     ../../modules/WM/niri/monitors/desktop.nix
-    ../../modules/GUI/mime
+    ../../modules/WM/mime
     ../../modules/GUI/discord
     ../../modules/dev
   ];
