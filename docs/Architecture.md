@@ -34,32 +34,31 @@ Modules are **not** auto-imported. They are referenced explicitly from host conf
 
 ```
 modules/
-  base/                     # Shared base: common-packages, logging, msmtp, distributed-builds
+  base/                     # Shared base: logging, msmtp, distributed-builds
   options/                  # Custom options: my.defaults.*, my.network.*, my.security.*
-  roles/                    # Role compositions: desktop, server, media-server, monitoring
   database/                 # postgresql, redis, couchdb
   monitoring/               # Prometheus + Grafana + Loki + Alloy stack; node-exporter-client
   networking/               # ssh, tailscale, traefik, headscale, headplane, cloudflared,
-                            #   unbound, wireguard, caddy, dnssec, nfs, nut-client/server, avahi
-  security/                 # crowdsec, fail2ban, hardening (authelia/lldap disabled — Tailscale handles access control)
+                            #   caddy, dnssec, nfs, nut-client/server, avahi
+  security/                 # crowdsec, fail2ban, kanidm
   services/                 # Application services: nixarr, homepage, miniflux, home-assistant,
-                            #   atuin_server, komga, komf, kavita, dispatcharr, microbin, ntfy,
-                            #   radicale, ollama, vaultwarden, mautrix-telegram, dify, calibre-web
+                            #   atuin_server, komga, komf, dispatcharr, microbin, ntfy,
+                            #   radicale, ollama, vaultwarden, dify, calibre-web
   containers/               # Podman container support
   disko/                    # Declarative disk layouts per host
-  lib/                      # Helpers: sops, tmpfiles, users
   users/                    # Per-user NixOS config (zeev, vk)
   DE/                       # Desktop environments: COSMIC
   WM/                       # Window managers: niri (binds, startup, windowrules, monitors, nvidia)
-                            #   + GTK theming, matugen dynamic colors, xdg portals
-  GUI/                      # GUI apps: firefox, zen-browser, chrome, obsidian, mpv, IDE,
-                            #   terminal, discord, nautilus, thunderbird, virt-manager, OBS,
-                            #   quickshell, stylix, waydroid, mime
-  TUI/                      # Terminal tools: zsh, zellij, atuin, starship, tmux, nushell,
+                            #   + GTK theming, matugen dynamic colors, xdg portals, mime types
+  GUI/                      # GUI apps: firefox, chrome, obsidian, mpv, IDE,
+                            #   terminal, discord, nautilus, thunderbird, virt-manager,
+                            #   waydroid, chromium, flatpak
+  TUI/                      # Terminal tools: zsh, zellij, atuin, starship, tmux,
                             #   ai-tools (claude-code, gemini-cli, opencode, beads, mcp)
   fonts/                    # System font packages + fontconfig defaults
   gaming/                   # Steam + gaming packages
   dev/                      # Developer tools
+  nix/                      # Nix daemon config (determinate, lix)
 ```
 
 ## Options System
@@ -71,13 +70,12 @@ Global options live in `modules/options/`. Never hardcode values — reference v
 | `my.defaults.*`      | `options/defaults.nix`        | user, email, domain, IPs, timezone, locale   |
 | `my.network.*`       | `options/network.nix`         | ports, host addresses                        |
 | `my.security.*`      | `options/security.nix`        | security-related options                     |
-| `my.desktop.*`       | `options/desktop.nix`         | WM and DM selection                          |
 | `my.traefik.*`       | `networking/traefik/`         | Traefik reverse proxy                        |
 | `my.headscale.*`     | `networking/headscale/`       | Headscale coordination server                |
 | `my.nodeExporter.*`  | `monitoring/node-exporter-client.nix` | Per-host Prometheus node exporter   |
 | `my.unbound.*`       | `networking/unbound/`         | Unbound DNS resolver                         |
 | `my.crowdsec.*`      | `security/crowdsec/`          | CrowdSec IDS + bouncer                       |
-| `my.hardening.*`     | `security/hardening.nix`      | System hardening + auto-upgrade              |
+| `my.hardening.*`     | `hosts/nixos/gcp/hardening.nix` | System hardening + auto-upgrade (gcp only) |
 
 ## Host Wiring
 

@@ -104,7 +104,7 @@ ZFS root pool with systemd-tmpfiles suppression (`--exclude-prefix`) to avoid `c
 - **Headplane** web UI: proxied by Caddy
 - **DERP** relay: region ID 901, `gcp-us-central1`, STUN on `0.0.0.0:3478`
 - **Caddy** TLS termination (replaces Traefik for this host)
-- **CrowdSec nftables bouncer**: remote LAPI via Tailscale pointing to homeserver
+- **CrowdSec** nftables bouncer: remote LAPI via Tailscale pointing to homeserver
 - **fail2ban**: SSH jail, incremental bans up to 168h
 - **Auto-upgrade**: daily at 04:00, `nixos-rebuild boot`, flake `github:4rmcyt/nix-config#gcp-relay`
 - Root disk: 10 GB, zram swap, journal capped at 500 MB / 14 days
@@ -142,7 +142,7 @@ On homeserver, listening on Tailscale + LAN interfaces. Forwards to NextDNS prof
 
 ### Cloudflared
 
-Cloudflare Tunnel for select services (configured in `modules/networking/cloudflared/`).
+Cloudflare Tunnel for select services (configured in `modules/networking/cloudflared/`). Tunnel config rendered by sops template at runtime.
 
 ### NFS
 
