@@ -1,6 +1,5 @@
 {config, ...}: {
   imports = [
-    ../roles
     ./common-packages
     ./distributed-builds
     ./logging

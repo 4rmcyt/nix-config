@@ -25,7 +25,6 @@ hosts/nixos/<name>/         # NixOS system config + hardware-configuration.nix
 home/<name>/                # Home Manager config per host
 modules/                    # NixOS/HM modules (NOT auto-imported; referenced by host configs)
 secrets/                    # sops-encrypted YAML/binary files
-overlays/                   # Package overrides
 ```
 
 ## Module Layer
@@ -47,7 +46,9 @@ modules/
   containers/               # Podman container support
   disko/                    # Declarative disk layouts per host
   users/                    # Per-user NixOS config (zeev, vk)
-  DE/                       # Desktop environments: COSMIC
+  backup/                   # Backup tooling
+  dots/                     # Dotfile management
+  xdg/                      # XDG portal config
   WM/                       # Window managers: niri (binds, startup, windowrules, monitors, nvidia)
                             #   + GTK theming, matugen dynamic colors, xdg portals, mime types
   GUI/                      # GUI apps: firefox, chrome, obsidian, mpv, IDE,

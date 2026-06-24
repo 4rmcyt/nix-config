@@ -7,7 +7,7 @@ in ''
 
   ## nix-config Project Layout
 
-  Flake with 4 NixOS hosts: `desktop`, `homeserver`, `matebook`, `wsl`
+  Flake with 5 NixOS hosts: `desktop`, `gcp`, `homeserver`, `matebook`, `wsl`
 
   ```
   hosts/nixos/{host}/     # System config + hardware
@@ -15,20 +15,26 @@ in ''
   modules/
     base/                 # Core system (logging, msmtp, distributed-builds)
     options/              # my.defaults.*, my.network.*, my.security.*
-    roles/                # Compositions (desktop, server, media-server, monitoring)
-    DE/                   # Desktop environments (KDE, COSMIC)
-    WM/                   # Window managers (niri + noctalia-shell)
-    GUI/                  # GUI apps (firefox, kitty, zed, obsidian, etc.)
+    WM/                   # Window managers (niri + noctalia-shell, gtk, mime, xdg)
+    GUI/                  # GUI apps (firefox, chrome, obsidian, IDE, terminal, etc.)
     TUI/                  # Terminal tools (zsh, zellij, atuin, ai-tools)
-    services/             # k3s, nixarr, homepage, etc.
-    networking/           # SSH, tailscale, wireguard, traefik, cloudflared
-    security/             # fail2ban
-    monitoring/           # prometheus, grafana, loki
+    services/             # nixarr, homepage, miniflux, home-assistant, radicale, etc.
+    networking/           # SSH, tailscale, traefik, headscale, cloudflared, nfs, etc.
+    security/             # kanidm, crowdsec, fail2ban
+    monitoring/           # prometheus, grafana, loki, alloy
     database/             # postgresql, redis, couchdb
     disko/                # Declarative disk partitioning per host
-    lib/                  # Helpers (sops, tmpfiles, users)
+    fonts/                # System fonts
+    gaming/               # Steam + gaming
+    dev/                  # Developer tools
+    nix/                  # Nix daemon variants (determinate, lix)
+    users/                # Per-user NixOS config
+    backup/               # Backup tooling
+    containers/           # Container runtime config
+    dots/                 # Dotfile management
+    xdg/                  # XDG portal config
   secrets/                # sops-encrypted (NEVER commit plaintext)
-  overlays/               # Package customizations
+  parts/                  # flake-parts modules (auto-imported via import-tree)
   ```
 
   ## Key Conventions
