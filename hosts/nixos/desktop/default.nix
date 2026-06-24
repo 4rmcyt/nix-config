@@ -223,11 +223,6 @@ in {
   services = {
     gnome.gnome-keyring.enable = true;
 
-    # davfs2 = {
-    #   enable = true;
-    #   settings.sections."/data/zeev/Taildrive".gui_optimize = true;
-    # };
-
     openssh.enable = true;
 
     tailscale = {

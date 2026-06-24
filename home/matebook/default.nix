@@ -28,23 +28,19 @@
     homeDirectory = "/home/zeev";
 
     packages = with pkgs; [
-      # Development tools
       bat
+      brightnessctl
       davfs2
-
-      # GUI applications
+      materialgram
+      nautilus
+      pam_u2f
+      pcsc-tools
+      pinentry-qt
+      ryzen-monitor-ng
       signal-desktop
       slack
       ytmdesktop
-
-      brightnessctl # User utility for brightness control
-      pam_u2f # User-level U2F authentication
-      pcsc-tools # User tool for smart card debugging
-      pinentry-qt # User's pinentry for GPG
-      ryzen-monitor-ng # User monitoring tool
-      yubioath-flutter # User GUI for Yubikey OTP
-      nautilus
-      materialgram
+      yubioath-flutter
     ];
 
     sessionVariables = {

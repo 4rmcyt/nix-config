@@ -5,19 +5,14 @@
   fonts.fontconfig.enable = true;
 
   home.packages = with pkgs; [
-    # Nerd Fonts
-    nerd-fonts.jetbrains-mono
-    nerd-fonts.fira-code
-    nerd-fonts.caskaydia-cove
-    nerd-fonts.symbols-only
-
-    # Emoji Fonts
-    twemoji-color-font
-    noto-fonts-color-emoji
-
-    # Additional Fonts
     fantasque-sans-mono
     maple-mono.NF
+    nerd-fonts.caskaydia-cove
+    nerd-fonts.fira-code
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.symbols-only
+    noto-fonts-color-emoji
+    twemoji-color-font
   ];
 
   # ============================================

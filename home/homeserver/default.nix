@@ -11,28 +11,19 @@
     homeDirectory = "/home/zeev";
 
     packages = with pkgs; [
-      # Development tools
-      go
-      nix-inspect
-      nixfmt-tree
-      pyenv
-
-      # Audio tools
       cuetools
       flac
-
-      # Fonts
+      go
       meslo-lgs-nf
-
-      # System & Network tools
       nextdns
-      sudo
-      tuptime
-
-      # User utilities
+      nix-inspect
+      nixfmt-tree
       pass
+      pyenv
+      sudo
       trash-cli
       tree
+      tuptime
       yamllint
       zip
     ];

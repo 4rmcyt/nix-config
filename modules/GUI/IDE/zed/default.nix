@@ -1,8 +1,11 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   imports = [
     ./extensions.nix
     ./ai.nix
-    ./mcp.nix
     ./settings.nix
     ./languages.nix
   ];
@@ -11,5 +14,6 @@
     enable = true;
     package = pkgs.zed-editor-fhs;
     installRemoteServer = true;
+    userSettings.context_servers = config.programs.mcp.servers;
   };
 }

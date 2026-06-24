@@ -8,16 +8,16 @@
       hackgen-nf-font
       ibm-plex
       inter
-      nerd-fonts.jetbrains-mono
-      material-icons
       maple-mono.NF
+      material-icons
       minecraftia
-      nerd-fonts.im-writing
       nerd-fonts.blex-mono
+      nerd-fonts.im-writing
+      nerd-fonts.jetbrains-mono
       noto-fonts
-      noto-fonts-color-emoji
       noto-fonts-cjk-sans
       noto-fonts-cjk-serif
+      noto-fonts-color-emoji
       noto-fonts-monochrome-emoji
       powerline-fonts
       roboto

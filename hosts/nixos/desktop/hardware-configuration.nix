@@ -375,15 +375,6 @@ in {
       };
     };
 
-    # # CPU frequency scaling
-    # auto-cpufreq = {
-    #   enable = true;
-    #   settings.charger = {
-    #     governor = "performance";
-    #     turbo = "auto";
-    #   };
-    # };
-
     # Firmware updates
     fwupd = {
       enable = true;

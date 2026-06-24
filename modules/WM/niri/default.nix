@@ -23,15 +23,11 @@
   };
 
   home.packages = with pkgs; [
-    glib
-    wayland
-    gnome-software
-
-    # Clipboard Management
     cliphist
+    glib
+    gnome-software
+    wayland
     wl-clip-persist
-
-    # XWayland bridge for X11 apps (e.g. Steam update UI)
     xwayland-satellite
   ];
 

@@ -11,36 +11,23 @@
     homeDirectory = "/home/zeev";
 
     packages = with pkgs; [
-      # Development tools
+      cowsay
+      firefox
+      fortune
       go
-      nix-inspect
-      nixfmt-tree
-      pyenv
-
-      # Fonts & Themes
       meslo-lgs-nf
       nerd-fonts.hack
-
-      # Fun terminal utilities
-      cowsay
-      fortune
-
-      # GUI applications (with Start Menu shortcuts)
-      firefox
-
-      # Security & Crypto
-      pass
-
-      # System & Monitoring tools
       nextdns
+      nix-inspect
+      nixfmt-tree
+      pass
       pwgen
+      pyenv
       sudo
       tmux
-      tuptime
-
-      # User utilities
       trash-cli
       tree
+      tuptime
       yamllint
       zip
     ];

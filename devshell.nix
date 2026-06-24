@@ -3,41 +3,41 @@ pkgs.mkShell {
   name = "nix-config";
 
   packages = with pkgs; [
-    zsh
-    nix-direnv
-    nixfmt
-    statix
+    age
+    alejandra
+    bat
+    btop
     deadnix
-    nix-tree
+    eza
+    fd
+    gh
+    git
+    gitleaks
+    jq
+    just
+    nh
     nix-diff
+    nix-direnv
     nix-output-monitor
     nix-prefetch-git
+    nix-tree
     nix-update
-    nh
+    nixfmt
+    nurl
     nvd
-    sops
-    age
-    ssh-to-age
-    git
-    gh
+    pre-commit
+    pre-commit-hook-ensure-sops
+    ripgrep
+    ripsecrets
     shellcheck
     shfmt
-    jq
-    yq
-    btop
-    fd
-    ripgrep
-    bat
-    eza
-    just
-    alejandra
-    nurl
-    pre-commit
+    sops
+    ssh-to-age
+    statix
     taplo
     yamlfmt
-    ripsecrets
-    gitleaks
-    pre-commit-hook-ensure-sops
+    yq
+    zsh
   ];
 
   shellHook = ''

@@ -2,8 +2,7 @@
   pkgs,
   lib,
   ...
-}:
-{
+}: {
   imports = [
     ../../modules/GUI/terminal
     ../../modules/GUI/IDE
@@ -53,34 +52,54 @@
     username = "zeev";
 
     packages = with pkgs; [
-      easyeffects
-      jellycli
-      supersonic-wayland
-      materialgram
+      android-tools
+      antigravity-fhs
+      arp-scan
       bat
+      bettercap
+      claude-agent-acp
       distrobox
+      easyeffects
       ffmpegthumbnailer
+      firefox
       foliate
+      foot
+      github-mcp-server
       gst_all_1.gst-libav
+      ifrextractor-rs
+      jellycli
+      libreoffice
+      materialgram
+      mcat
+      mcp-grafana
+      mcp-k8s-go
+      nmap
+      nixos-anywhere
       nvtopPackages.nvidia
+      opencode-desktop
       pcsc-tools
+      pmbootstrap
       pods
       popsicle
-      signal-desktop
-      slack
-      vdpauinfo
-      vulkan-tools
-      ytmdesktop
-      github-mcp-server
-      terraform-mcp-server
-      mcp-k8s-go
-      mcp-grafana
-      antigravity-fhs
       proton-pass
       proton-pass-cli
+      python313Packages.netifaces-plus
+      rt-tests
       seahorse
+      signal-desktop
+      slack
+      supersonic-wayland
+      tcpdump
+      terraform-mcp-server
+      uefitool
+      uefitoolPackages.old-engine
+      vdpauinfo
+      vulkan-tools
+      waydroid-helper
+      ytmdesktop
       (pkgs.texlive.combine {
-        inherit (pkgs.texlive)
+        inherit
+          (pkgs.texlive)
           scheme-medium
           moderncv
           lastpage
@@ -91,27 +110,8 @@
           xcolor
           ;
       })
-      uefitool
-      uefitoolPackages.old-engine
-      ifrextractor-rs
-      waydroid-helper
       pkgs.nur.repos.codgician.samsung-dc-toolkit-3
       pkgs.nur.repos.codgician.waydroid-script
-      mcat
-      nmap
-      arp-scan
-      python313Packages.netifaces-plus
-      tcpdump
-      foot
-      rt-tests
-      claude-agent-acp
-      opencode-desktop
-      bettercap
-      firefox
-      libreoffice
-      nixos-anywhere
-      pmbootstrap
-      android-tools
     ];
 
     sessionVariables = {
@@ -136,14 +136,14 @@
   # which is in sockets.target → basic.target → set-SSH_AUTH_SOCK (implicit After=basic.target).
   # Removing the socket-level Before/WantedBy; default.target is sufficient.
   systemd.user.services.set-SSH_AUTH_SOCK = {
-    Unit.Before = lib.mkForce [ ];
-    Install.WantedBy = lib.mkForce [ "default.target" ];
+    Unit.Before = lib.mkForce [];
+    Install.WantedBy = lib.mkForce ["default.target"];
   };
 
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
-      autoconnect = [ "qemu:///system" ];
-      uris = [ "qemu:///system" ];
+      autoconnect = ["qemu:///system"];
+      uris = ["qemu:///system"];
     };
   };
 }
