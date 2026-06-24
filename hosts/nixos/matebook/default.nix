@@ -28,7 +28,7 @@
 
     # GUI Applications
     ../../../modules/GUI/chrome
-    ../../../modules/GUI/flatpak/hyprland
+    ../../../modules/GUI/flatpak/default
   ];
 
   # =================================================================

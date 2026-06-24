@@ -17,7 +17,7 @@ in ''
     options/              # my.defaults.*, my.network.*, my.security.*
     roles/                # Compositions (desktop, server, media-server, monitoring)
     DE/                   # Desktop environments (KDE, COSMIC)
-    WM/                   # Window managers (Hyprland + plugins)
+    WM/                   # Window managers (niri + noctalia-shell)
     GUI/                  # GUI apps (firefox, kitty, zed, obsidian, etc.)
     TUI/                  # Terminal tools (zsh, zellij, atuin, ai-tools)
     services/             # k3s, nixarr, homepage, etc.

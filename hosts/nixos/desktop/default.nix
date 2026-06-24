@@ -15,11 +15,6 @@
     "/var/lib/systemd/coredump"
   ];
 in {
-  my.desktop = {
-    windowManager = "niri"; # Options: "hyprland", "niri", "none"
-    displayManager = "greetd"; # Options: "greetd", "sddm", "gdm", "none"
-  };
-
   my.nodeExporter = {
     enable = true;
     extraCollectors = ["zfs"];
@@ -53,7 +48,7 @@ in {
 
     # Users & GUI
     ../../../modules/GUI/chrome
-    ../../../modules/GUI/flatpak/hyprland
+    ../../../modules/GUI/flatpak/default
     ../../../modules/GUI/nautilus
     ../../../modules/GUI/virt-manager
     ../../../modules/GUI/waydroid
