@@ -21,7 +21,7 @@ parts/                      # Auto-imported flake-parts modules
   schemas.nix               # flake.schemas — flake-schemas + custom topology schema
   topology.nix              # nix-topology SVG diagram generation
   formatting.nix            # treefmt (alejandra, deadnix, statix, shfmt, yamlfmt)
-  devshells.nix             # Dev shell with justfile tasks
+  devshells.nix             # Dev shells: default (justfile tasks), ide
 hosts/nixos/<name>/         # NixOS system config + hardware-configuration.nix
 home/<name>/                # Home Manager config per host
 modules/                    # NixOS/HM modules (NOT auto-imported; referenced by host configs)

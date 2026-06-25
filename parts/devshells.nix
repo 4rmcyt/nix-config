@@ -14,16 +14,6 @@
       ide = import ../shells/ide.nix {
         inherit pkgs;
       };
-
-      cuda = import ../shells/cuda-shell.nix {
-        pkgs = import inputs.nixpkgs {
-          inherit system;
-          config = {
-            allowUnfree = true;
-            cudaSupport = true;
-          };
-        };
-      };
     };
   };
 }
