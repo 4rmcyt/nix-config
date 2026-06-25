@@ -5,7 +5,7 @@
     ./homepage
     ./miniflux
     ./nixarr
-    ./atuin_server
+    ./atuin-server
     ./dispatcharr
     ./microbin
     ./komf

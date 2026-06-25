@@ -13,11 +13,12 @@ parts/                      # Auto-imported flake-parts modules
   configurations/nixos.nix  # Defines configurations.nixos option → nixosConfigurations + checks
   hosts/<name>/             # Per-host configuration (flake-parts module)
   shared-nixos-settings.nix # modules.nixos.base — shared nix/sops/substituter settings
-  home-manager-integration.nix # flake.modules.nixos.base — HM integration + external modules
-  home-manager-base.nix     # flake.modules.homeManager.base — sops, overlays, stateVersion
+  home-manager-integration.nix # modules.nixos.base — HM integration + external NixOS input modules
+  home-manager-base.nix     # modules.homeManager.base — sops, overlays, stateVersion
+  shared-programs.nix       # modules.nixos.base — common programs (zsh, nh, gnupg) on all hosts
   meta.nix                  # flake.meta (stateVersion)
   owner.nix                 # Non-secret owner metadata (username, IPs, domain, timezone)
-  deploy.nix                # deploy-rs node definitions
+  schemas.nix               # flake.schemas — flake-schemas + custom topology schema
   topology.nix              # nix-topology SVG diagram generation
   formatting.nix            # treefmt (alejandra, deadnix, statix, shfmt, yamlfmt)
   devshells.nix             # Dev shell with justfile tasks
@@ -41,8 +42,8 @@ modules/
                             #   caddy, dnssec, nfs, nut-client/server, avahi
   security/                 # crowdsec, fail2ban, kanidm
   services/                 # Application services: nixarr, homepage, miniflux, home-assistant,
-                            #   atuin_server, komga, komf, dispatcharr, microbin, ntfy,
-                            #   radicale, ollama, vaultwarden, dify, calibre-web
+                            #   atuin-server, komga, komf, dispatcharr, microbin, ntfy,
+                            #   radicale, ollama (disabled), kavita (disabled)
   containers/               # Podman container support
   disko/                    # Declarative disk layouts per host
   users/                    # Per-user NixOS config (zeev, vk)
@@ -60,6 +61,9 @@ modules/
   gaming/                   # Steam + gaming packages
   dev/                      # Developer tools
   nix/                      # Nix daemon config (determinate, lix)
+  roles/                    # Role compositions (desktop, server, media-server, monitoring)
+                            #   Defines options.roles.{desktop,server,...}.enable flags
+                            #   Not imported by any host currently — available for opt-in
 ```
 
 ## Options System
@@ -164,16 +168,16 @@ Every warning and error in `journalctl -b 0 -p warning` is worth investigating. 
 
 ## Deployment
 
-**deploy-rs** manages remote hosts. `nix run .#deploy -- .#<host>`.
+Remote hosts are deployed manually via `nixos-rebuild` over SSH or auto-upgrade. No deploy-rs configuration is active.
 
-| Host       | Magic rollback | Auto rollback |
-|------------|---------------|---------------|
-| homeserver | yes           | yes           |
-| matebook   | yes           | yes           |
-| gcp-relay  | yes           | yes           |
-| desktop    | no (local)    | no            |
+| Host       | Method                                                              |
+|------------|---------------------------------------------------------------------|
+| homeserver | `nixos-rebuild switch --target-host root@homeserver.ts.example.com --flake .#homeserver` |
+| matebook   | `nixos-rebuild switch --target-host root@matebook.ts.example.com --flake .#matebook` |
+| gcp-relay  | Auto-upgrade daily at 04:00 via `my.hardening.autoUpgrade` (`nixos-rebuild boot`, flake `github:4rmcyt/nix-config#gcp-relay`) |
+| desktop    | Local: `nixos-rebuild switch --flake .#desktop`                    |
 
-GCP relay additionally auto-upgrades itself daily at 04:00 via `my.hardening.autoUpgrade`.
+**ZFS/mount safety:** prefer `nixos-rebuild boot` + reboot over `switch` when config changes affect active mount units. See [Infrastructure.md](Infrastructure.md) ZFS Safety Rules.
 
 ## Topology Diagram
 

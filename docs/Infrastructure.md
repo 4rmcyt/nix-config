@@ -89,8 +89,8 @@ ZFS root pool with systemd-tmpfiles suppression (`--exclude-prefix`) to avoid `c
 ### wsl
 
 **Role:** WSL2 environment on Windows  
-- Minimal config — no HM, no extra modules
-- `services.timesyncd.enable = lib.mkForce false` (WSL manages time sync)
+- Minimal NixOS config — `services.timesyncd.enable = lib.mkForce false` (WSL manages time sync)
+- HM config in `home/wsl/`: TUI/common, TUI/zsh, TUI/atuin, GUI/terminal/wezterm, basic packages
 
 ---
 
@@ -258,21 +258,74 @@ Systemd journal ────────────┘          Traefik access.
 
 ## Secrets Layout
 
+All encrypted with age. Key file: `/root/.config/sops/age/keys.txt` (all hosts), `~/.config/sops/age/keys.txt` (HM).
+
 ```
 secrets/
-  common.yaml                     # git_access_token, nix_access_token, gemini_api_key, defaults
-  system.yaml                     # homeserver SSH host keys
-  tailscale-homeserver.yaml       # Tailscale auth key (homeserver)
-  tailscale-desktop.yaml          # Tailscale auth key (desktop)
-  tailscale-matebook.yaml         # Tailscale auth key (matebook)
-  cloudflare_acme_credentials.env # CF_DNS_API_TOKEN for Traefik ACME
-  grafana.yaml                    # admin password, OIDC secret, secret key
-  postgresql.yaml                 # DB passwords (grafana, etc.)
-  crowdsec.yaml                   # Traefik bouncer API key
-  crowdsec-gcp.yaml               # nftables bouncer API key (gcp-relay)
-  gcp-relay-host-ed25519          # (binary) GCP SSH host key
-  nix-builder-homeserver.yaml     # nix-builder SSH private key
-  nut.yaml                        # NUT exporter password
-```
+  # Global / shared
+  common.yaml                          # git_access_token, nix_access_token, gemini_api_key, defaults
+  defaults.yaml                        # default option values
+  system.yaml                          # homeserver SSH host keys
+  ssh.yaml                             # SSH keys
 
-All encrypted with age. Key file path: `/root/.config/sops/age/keys.txt` (all hosts).
+  # Per-host Tailscale auth
+  tailscale-homeserver.yaml
+  tailscale-desktop.yaml
+  tailscale-matebook.yaml
+  tailscale-gcp.yaml
+
+  # Nix remote builds
+  nix-builder-homeserver.yaml          # nix-builder SSH private key
+  nix-builder-keys.yaml                # nix-builder authorized keys
+
+  # Networking / TLS
+  cloudflare_acme_credentials.env      # CF_DNS_API_TOKEN for Traefik ACME
+  cloudflare.yaml                      # Cloudflare API token
+  cloudflare.pem / cloudflare.key      # TLS cert/key
+  cert.pem / key.pem                   # Additional TLS material
+  cloudflare_tunnel_credentials.bin    # Cloudflare Tunnel credentials
+  cloudflare-prometheus-exporter.yaml  # Cloudflare exporter token
+  tailscale-prometheus-exporter.env    # Tailscale exporter token
+  nextdns.yaml                         # NextDNS API key
+  wg.conf                              # WireGuard config
+  gcp-relay-host-ed25519              # GCP SSH host key
+  gcp-relay-age-key                    # GCP age encryption key
+  gcp.yaml                             # GCP credentials
+
+  # Security
+  crowdsec.yaml                        # Traefik bouncer API key (homeserver)
+  crowdsec-gcp.yaml                    # nftables bouncer API key (gcp-relay)
+  hetzner_pass.yaml                    # Hetzner password
+
+  # Databases
+  postgresql.yaml                      # DB passwords (grafana, atuin, etc.)
+  redis.yaml                           # Redis password
+  couchdb.yaml                         # CouchDB admin credentials
+
+  # Monitoring
+  grafana.yaml                         # admin password, OIDC secret, secret key
+  loki.yaml                            # Loki credentials
+  nut.yaml                             # NUT exporter password
+
+  # Identity
+  kanidm.yaml                          # Kanidm admin credentials, OIDC secrets
+  headscale.yaml                       # Headscale config secrets
+  headplane.yaml                       # Headplane credentials
+
+  # Services
+  atuin.yaml                           # Atuin server credentials
+  miniflux.yaml / miniflux.env         # Miniflux admin + env secrets
+  homepage.env                         # Homepage API keys
+  ntfy.yaml                            # ntfy auth config
+  radicale.yaml                        # Radicale user credentials
+  radicale_users.txt                   # Radicale htpasswd file
+  microbin.yaml                        # Microbin admin secret
+  hass-alexa.yaml                      # Home Assistant Alexa skill credentials
+  lazylibrarian.yaml                   # LazyLibrarian credentials
+  kavita.yaml                          # Kavita credentials (service disabled)
+  k3s.yaml                             # k3s token (service disabled)
+  recyclarr.yaml                       # Recyclarr API keys
+  restic.yaml                          # Restic backup repository + password
+  medialib.yaml                        # Media library credentials
+  gmail_conf.yaml                      # Gmail / msmtp config
+```
