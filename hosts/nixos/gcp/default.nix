@@ -20,7 +20,7 @@
     ./crowdsec-bouncer.nix
     ../../../modules/backup
     ../../../modules/security/fail2ban
-    ./hardening.nix
+    ../../../modules/security/hardening
     ../../../modules/security/kanidm/unix-client.nix
   ];
 

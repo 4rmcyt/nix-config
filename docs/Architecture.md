@@ -76,7 +76,7 @@ Global options live in `modules/options/`. Never hardcode values — reference v
 | `my.nodeExporter.*`  | `monitoring/node-exporter-client.nix` | Per-host Prometheus node exporter   |
 | `my.unbound.*`       | `networking/unbound/`         | Unbound DNS resolver                         |
 | `my.crowdsec.*`      | `security/crowdsec/`          | CrowdSec IDS + bouncer                       |
-| `my.hardening.*`     | `hosts/nixos/gcp/hardening.nix` | System hardening + auto-upgrade (gcp only) |
+| `my.hardening.*`     | `security/hardening.nix`        | System hardening + auto-upgrade            |
 
 ## Host Wiring
 
@@ -113,6 +113,12 @@ Binary caches (priority order):
 1. `4rmcyt.cachix.org` (personal, priority 0)
 2. `nix-community.cachix.org`, `cache.nixos.org`, `cache.lix.systems`
 3. CUDA, llama-cpp, noctalia, devenv caches
+
+## Package Overlays
+
+There is no local `overlays/` directory. All overlays come from flake inputs and are applied in `parts/home-manager-base.nix` (HM scope) or inline in host `configuration.nix` files (NixOS scope).
+
+To add a custom package override, add it as an overlay closure in the relevant `nixpkgs.overlays` list — either in `parts/home-manager-base.nix` for HM-wide packages or in `parts/hosts/<name>/configuration.nix` for a host-specific NixOS package.
 
 ## Desktop WM Stack
 
