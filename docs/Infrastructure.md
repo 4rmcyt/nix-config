@@ -90,6 +90,10 @@ ZFS root pool with systemd-tmpfiles suppression (`--exclude-prefix`) to avoid `c
 **Role:** Laptop — portable workstation  
 **WiFi IP:** `192.168.1.132`
 
+#### Storage
+
+Disk: WD PC SN730 512GB NVMe (`nvme-WDC_PC_SN730_SDBPNTY-512G-1027_20230H445703`). GPT: 2GB EFI + **ext4** root (no ZFS). 16GB swapfile (`/swapfile`, TRIM-enabled) for hibernation support.
+
 - Niri WM + noctalia-shell
 - Nix daemon: **determinate** (vs lix on desktop/homeserver)
 - Tailscale client with magic rollback enabled for remote deploys
