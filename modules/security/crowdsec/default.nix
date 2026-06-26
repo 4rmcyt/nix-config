@@ -53,6 +53,10 @@ in {
       mode = "0400";
     };
 
+    # tmpfiles-resetup skips crowdsec subdirs due to unsafe path transition on /var/lib/private/crowdsec
+    # (owned by nobody — normal for DynamicUser). StateDirectory lets systemd manage it correctly.
+    systemd.services.crowdsec.serviceConfig.StateDirectory = lib.mkIf (!isRemoteLapi) (lib.mkDefault "crowdsec");
+
     services.crowdsec = lib.mkIf (!isRemoteLapi) {
       enable = true;
 
