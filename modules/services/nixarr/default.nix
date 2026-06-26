@@ -115,10 +115,10 @@ in {
     (name: {
       isSystemUser = true;
       group = lib.mkForce name;
-      extraGroups = [
-        "users"
-        "media"
-      ];
+      extraGroups =
+        ["users" "media"]
+        # sonarr-sync-config runs as sonarr:sonarr and reads sonarr.api-key (group sonarr-api)
+        ++ lib.optional (name == "sonarr") "sonarr-api";
     });
 
   users.groups = lib.genAttrs [
