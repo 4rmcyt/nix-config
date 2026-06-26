@@ -232,6 +232,10 @@
     secretsFile = ../../../secrets/crowdsec.yaml;
   };
 
+  # bouncer key already provisioned manually via cscli — disable auto-register
+  # which fails because NixOS stores crowdsec state in /var/lib/private/crowdsec, not /etc/crowdsec
+  systemd.services.crowdsec-firewall-bouncer-register.enable = false;
+
   my.nodeExporter = {
     enable = true;
     openFirewall = false; # port already open in networking.firewall
