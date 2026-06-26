@@ -59,6 +59,14 @@ Tailnet login server: `https://hs.example.com` (self-hosted Headscale)
 
 #### Storage (ZFS)
 
+Disk: Samsung SSD 970 EVO Plus 1TB NVMe (`nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NS0W101791N`). GPT: 2GB EFI + ZFS remainder.
+
+| Pool    | Mount               | Notes                                      |
+|---------|---------------------|--------------------------------------------|
+| `zroot` | `/`                 | `reserved` (10G), `nix`, `root`, `home`, `log` |
+| `zroot/games` | `/home/games` | `recordsize=1M` — Steam, large game files  |
+| `zroot/vms`   | `/var/lib/libvirt` | `recordsize=64K` — VM/container storage   |
+
 ZFS root pool with systemd-tmpfiles suppression (`--exclude-prefix`) to avoid `chattr` warnings.
 
 #### Desktop Stack
