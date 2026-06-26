@@ -156,30 +156,9 @@ in {
 
     services.crowdsec-firewall-bouncer = lib.mkIf cfg.nftables.enable {
       enable = true;
-      settings = {
-        mode = "nftables";
-        api_key_path = "/run/crowdsec-bouncer/api_key";
-        api_url = cfg.nftables.lapiUrl;
-      };
-    };
-
-    systemd.services.crowdsec-firewall-bouncer-key = lib.mkIf cfg.nftables.enable {
-      description = "Write CrowdSec nftables bouncer API key to /run";
-      before = ["crowdsec-firewall-bouncer.service"];
-      wantedBy = ["crowdsec-firewall-bouncer.service"];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStart = pkgs.writeShellScript "crowdsec-bouncer-key" ''
-          install -d -m 0700 /run/crowdsec-bouncer
-          install -m 0600 ${config.sops.secrets.crowdsec_bouncer_key_nftables.path} /run/crowdsec-bouncer/api_key
-        '';
-      };
-    };
-
-    systemd.services.crowdsec-firewall-bouncer = lib.mkIf cfg.nftables.enable {
-      after = ["nftables.service"] ++ lib.optionals (!isRemoteLapi) ["crowdsec.service"];
-      requires = lib.optionals (!isRemoteLapi) ["crowdsec.service"];
+      registerBouncer.enable = false;
+      secrets.apiKeyPath = config.sops.secrets.crowdsec_bouncer_key_nftables.path;
+      settings.api_url = cfg.nftables.lapiUrl;
     };
 
     networking.nftables.enable = lib.mkIf cfg.nftables.enable true;
