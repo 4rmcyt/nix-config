@@ -32,6 +32,11 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    systemd.services.unbound = {
+      after = ["tailscale.service" "tailscale-autoconnect.service"];
+      wants = ["tailscale.service"];
+    };
+
     services.unbound = {
       enable = true;
       resolveLocalQueries = false;

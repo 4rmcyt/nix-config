@@ -86,6 +86,8 @@
   # Systemd Service Configuration
   # =================================================================
   systemd.services.redis-homeserver = {
+    after = ["podman.service"];
+    wants = ["podman.service"];
     serviceConfig = {
       # Resource limits
       MemoryMax = "1.2G";
