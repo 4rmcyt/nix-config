@@ -144,16 +144,10 @@
             };
             mountpoint = "/var/lib/containers";
           };
-          "authentik" = {
+          "kanidm" = {
             type = "zfs_fs";
             options."com.sun:auto-snapshot" = "false";
-            mountpoint = "/var/lib/private/authentik";
-          };
-          "vaultwarden" = {
-            type = "zfs_fs";
-            options."com.sun:auto-snapshot" = "false";
-            mountpoint = "/var/lib/vaultwarden";
-            postCreateHook = "zfs snapshot zroot/vaultwarden@empty";
+            mountpoint = "/var/lib/kanidm";
           };
         };
       };

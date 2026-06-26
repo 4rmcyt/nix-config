@@ -22,7 +22,7 @@ Tailnet login server: `https://hs.example.com` (self-hosted Headscale)
 | `zdata`  | Corsair MP600 Pro LPX 2TB NVMe     | `/data`    | Media, downloads. `autotrim=on`, `sync=disabled` |
 | `zbackup`| Patriot P210 1TB SATA SSD          | `/backup`  | Local backups. Imported non-blocking via `boot.postBootCommands` (not `extraPools`) so failure doesn't block boot |
 
-`zroot` datasets: `reserved` (20G), `nix`, `root`, `home`, `log`, `postgresql`, `containers`, `authentik`, `vaultwarden`  
+`zroot` datasets: `reserved` (20G), `nix`, `root`, `home`, `log`, `postgresql`, `containers`, `kanidm`  
 `zroot/nix` and `zroot/home` have `@empty` snapshots for rollback.
 
 #### ZFS Safety Rules

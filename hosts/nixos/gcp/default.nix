@@ -1,5 +1,5 @@
 # GCP e2-micro relay: headscale control plane + DERP server + Caddy TLS termination.
-# See gcp.md for deploy and first-boot instructions.
+# See docs/gcp.md for deploy and first-boot instructions.
 {
   config,
   lib,

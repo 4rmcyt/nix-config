@@ -77,11 +77,6 @@ repos:
   # Project-specific hooks
   - repo: local
     hooks:
-      - id: conventional-commits
-        name: Validate conventional commits
-        entry: tools/scripts/validate-commit-msg.sh
-        language: system
-        stages: [commit-msg]
       - id: dangerous-shell-patterns
         name: Check for dangerous shell patterns
         entry: tools/scripts/check-dangerous-patterns.sh

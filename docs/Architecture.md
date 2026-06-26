@@ -8,7 +8,7 @@ NixOS flake for 5 hosts managed as a single repository. Built on **flake-parts**
 
 ```
 flake.nix                   # Entry point — delegates to flake-parts + import-tree ./parts
-infra/tf/                   # Terraform/OpenTofu — Authentik OAuth2 provider provisioning
+infra/tf/gcp-relay/         # Terraform/OpenTofu — GCP infrastructure for gcp-relay (static IP, GCS bucket, VM instance)
 parts/                      # Auto-imported flake-parts modules
   configurations/nixos.nix  # Defines configurations.nixos option → nixosConfigurations
   hosts/<name>/             # Per-host configuration (flake-parts module)
@@ -62,6 +62,7 @@ modules/
                             #   virt-manager, waydroid, flatpak, zen-browser, stylix
   TUI/                      # Terminal tools: zsh, zellij, atuin, starship, tmux, tty,
                             #   ai-tools (claude-code, gemini-cli, opencode, beads, mcp, llama-cpp)
+                            #   ai-tools sub-dirs: agents/, skills/, commands/, system-prompt/
   fonts/                    # System font packages + fontconfig defaults
   gaming/                   # Steam + gaming packages
   dev/                      # Developer tools
@@ -143,7 +144,7 @@ GitHub access token loaded via sops secret `nix_access_token`, written to `/run/
 
 No local `overlays/` directory. All overlays come from flake inputs:
 
-- **HM scope** (`parts/home-manager-base.nix`): `mcp-servers-nix`, `nur`, `nix-vscode-extensions`, `noctalia`
+- **HM scope** (`parts/home-manager-base.nix`): `mcp-servers-nix`, `nur`, `nix-vscode-extensions`, `noctalia`; also patches `mcp-server-fetch` (proxy API fix)
 - **homeserver NixOS scope** (inline in host config): `ephraim-nur` packages (lazylibrarian, ez_setup, iso639-lang, slskd-api), `homepage-dashboard` pinned to v1.13.1
 - **gcp-relay NixOS scope** (inline in host config): `headplane`, `headplane-ssh-wasm` buildPhase patch
 
@@ -175,6 +176,7 @@ Desktop and matebook use **niri** as WM with **noctalia-shell** (quickshell-base
 **noctalia inputs:**
 - `inputs.noctalia` = `github:noctalia-dev/noctalia/legacy-v4`
 - `inputs.noctalia-qs` = `github:noctalia-dev/noctalia-qs`
+- `inputs.quickshell` = `git+https://git.outfoxxed.me/quickshell/quickshell` (direct dep via noctalia-qs)
 - Exports: `homeModules.default`, `nixosModules.default`, `overlays.default`
 - NixOS import: `inputs.noctalia.nixosModules.default` on desktop + matebook
 - HM import: `inputs.noctalia.homeModules.default` on desktop + matebook
@@ -208,9 +210,90 @@ Example: `DisablePlugins` is **not** a valid `main.conf` key for bluetoothd — 
 
 Every warning and error in `journalctl -b 0 -p warning` is worth investigating. Do not dismiss as "harmless" — present findings and let the user decide.
 
+## Root-Level Files
+
+Undocumented files that live in the repo root:
+
+### Tooling / Formatting
+
+| File | Purpose |
+|------|---------|
+| `treefmt.nix` | treefmt config as Nix (used by `parts/formatting.nix` via treefmt-nix flake). Formatters: alejandra, deadnix, dockfmt, just, prettier, rustfmt, shfmt, statix, toml-sort, yamlfmt, trailing-whitespace-fixer. Excludes `secrets/*`, `*.age`, `*.toml` (global). |
+| `treefmt.toml` | TOML mirror of the same treefmt config (used when running `treefmt` directly outside Nix). Must be kept in sync with `treefmt.nix`. |
+| `statix.toml` | statix linter config — disables `empty_pattern`, `manual_inherit`, `manual_inherit_from`; pins `nix_version = 2.31.2`; ignores `.direnv/`, `result*/`, `secrets/`, `.git/`. |
+| `namaka.toml` | [namaka](https://github.com/nix-community/namaka) snapshot test config. Tests discovered from `tests/` subdirs (each with `expr.nix` + optional `format.nix`). Currently disabled in pre-commit. |
+| `.yamllint` | yamllint config — extends `default`, disables `document-start` rule. |
+| `devshell.nix` | Legacy `pkgs.mkShell` dev shell (predates `parts/devshells.nix`). Contains all dev tools (age, alejandra, gitleaks, just, nh, pre-commit, sops, statix, etc.). Used when entering the repo with `nix-shell` instead of `nix develop`. |
+
+### Secrets Scanning / Pre-commit
+
+| File | Purpose |
+|------|---------|
+| `.pre-commit-config.yaml` | Pre-commit hooks: yamlfmt, ripsecrets, gitleaks, taplo, alejandra, deadnix, statix, dangerous-shell-patterns, pre-commit-hook-ensure-sops. namaka hook disabled. |
+| `.gitleaks.toml` | gitleaks config — extends default ruleset; allowlists: SOPS `ENC[AES256_GCM...]` values, age public keys, age encrypted file blocks, all of `secrets/`, false-positive patterns (`--user=admin`, NextDNS URLs), `config.sops.secrets.*.path` references in Nix. |
+| `.gitleaks-baseline.json` | gitleaks baseline of known/accepted findings — prevents re-alerting on pre-existing suppressions. |
+| `.ripsecrets.toml` | ripsecrets config — suppresses known false-positive secret patterns (SSH key prefixes, GPG key ID, stale API keys from old configs). Also allowlists specific files via `[allowlist].paths`. |
+
+### Secrets / SOPS Config
+
+| File | Purpose |
+|------|---------|
+| `.sops.yaml` | SOPS creation rules. All files matching `secrets/.*` are encrypted with 4 age keys: homeserver, desktop, matebook, gcp-relay. |
+| `.sopsrc` | sops client config — points to `.sops.yaml`, sets `decryptionOrder = ["age"]`, `encryptionOrder = ["age"]`. |
+
+### MCP / AI
+
+| File | Purpose |
+|------|---------|
+| `.mcp.json` | Claude Code MCP server definitions for this project. Servers: fetch, filesystem (`/etc/nixos`, `/home/zeev/src`), kubernetes (mcp-k8s-go), mcp-nixos, memory, python (uvx), sequential-thinking, tavily, github-mcp-server. Pinned to `/nix/store/...` paths — regenerated by the `modules/TUI/ai-tools/mcp` module. |
+| `CLAUDE.md` | Project-level instructions for Claude Code. Contains MCP routing table, project layout, key conventions, and critical rules (no sudo, no nix build, no sops encrypt). |
+
+### Git Config
+
+| File | Purpose |
+|------|---------|
+| `.gitignore` | Ignores: `result`, `core*`, `.vscode`, `.idea`, `.claude/*` (except `memory/`, `CLAUDE.md`, `settings.json`), `.mcp.json`, `.direnv`, decrypted secret patterns (`*.decrypted.*`, `*.sopsbak`). |
+| `.gitattributes` | (Empty — no custom attributes configured.) |
+
+### Justfile
+
+`justfile` contains task shortcuts (run with `just <recipe>`). **Note:** most recipes reference stale targets (e.g., `darwinConfigurations.macbook`, `nixfmt`, `nixos-rebuild-ng`, `rsync` to `/etc/nixos/`) and are largely outdated. Active/useful recipes:
+
+| Recipe | What it does |
+|--------|-------------|
+| `deploy-gcp` | `nixos-rebuild switch` to gcp-relay via SSH |
+| `deploy-homeserver` | Runs `./deploy.sh homeserver` |
+| `deploy-wsl` | Runs `./deploy.sh wsl` |
+| `check` / `test` | `nix flake check` |
+| `deploy-desktop` | Runs `./deploy.sh desktop` |
+| `dry-run $host` | `nixos-rebuild-ng dry-activate` on remote host |
+| `fmt` | `nixfmt **/*.nix` (uses nixfmt, not alejandra — prefer `nix fmt` instead) |
+
+### tools/scripts
+
+Pre-commit and CI helper scripts in `tools/scripts/`:
+
+| Script | Trigger | Purpose |
+|--------|---------|---------|
+| `check-dangerous-patterns.sh` | pre-commit (`dangerous-shell-patterns` hook), `.nix` + `.sh` files | Blocks `exec zellij/tmux/screen/wezterm` in shell configs — causes lockouts if zsh init runs `exec` unconditionally |
+| `check-installer-keys.sh` | (manual) | Validates `hosts/installer/authorized_keys`: ensures file exists, fixes permissions to 600, validates each line is a valid SSH public key via `ssh-keygen -lf` |
+
+### Desktop Hardware Notes
+
+| File | Purpose |
+|------|---------|
+| [`docs/efi.md`](efi.md) | Reference guide for MSI MAG B650 TOMAHAWK WIFI hidden UEFI settings. Documents `AmdSetupRPL` VarStore offsets (CPU, memory, power, prefetchers, NBIO/security, GFX) with `setup_var.efi` recipes. For BIOS tuning / unlocking suppressed settings. Desktop-specific. |
+| `cpu_flags.sh` | One-shot script: fetches `cpufeatures.h` from kernel.org, cross-references `/proc/cpuinfo` flags with their human-readable descriptions. |
+
+### Other
+
+| File | Purpose |
+|------|---------|
+| `jellycli.yaml` | Empty file — jellycli config placeholder. |
+
 ## Formatting
 
-`nix fmt` runs **treefmt** with: alejandra (Nix), deadnix (unused bindings), statix (antipatterns), prettier (JSON/YAML/MD), shfmt (shell), yamlfmt (YAML).
+`nix fmt` runs **treefmt** (via `parts/formatting.nix` + `treefmt.nix`) with: alejandra (Nix), deadnix, statix, prettier (JSON/YAML/MD/HTML/JS), shfmt (shell), yamlfmt, toml-sort, dockfmt, rustfmt, trailing-whitespace-fixer.
 
 ## Deployment
 
@@ -231,10 +314,11 @@ Remote hosts are deployed manually via `nixos-rebuild` over SSH or auto-upgrade.
 
 ## Terraform / OpenTofu
 
-`infra/tf/` manages out-of-band infrastructure state that can't live in Nix:
+`infra/tf/gcp-relay/` manages GCP infrastructure state for the `gcp-relay` host:
 
-- **Authentik OAuth2** provider + application objects (currently: Karakeep)
-- Remote state backend: GitLab HTTP backend (configured via `remote_state_address` variable)
-- Secrets injected at plan time via env vars; never committed
+- **GCP resources**: static external IP (`google_compute_address`), GCS bucket for NixOS images, compute instance import
+- Remote state backend: GCS bucket (`gcp-relay-nixos-images`, prefix `tofu/state`)
+- Variables: `project` (homelab-497717), `region` (us-central1), `zone` (us-central1-a), `image_date` (YYYYMMDD)
+- Secrets injected via env vars; never committed
 
-Run: `cd infra/tf && tofu init -backend-config=... && tofu apply`
+Run: `cd infra/tf/gcp-relay && tofu init && tofu apply -var="image_date=YYYYMMDD"`
