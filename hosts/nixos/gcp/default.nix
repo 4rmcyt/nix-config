@@ -81,6 +81,14 @@
         KbdInteractiveAuthentication = false;
         UseDns = false;
         AllowUsers = [config.my.defaults.user];
+        MaxAuthTries = 3;
+        LoginGraceTime = 30;
+        ClientAliveInterval = 300;
+        ClientAliveCountMax = 2;
+        X11Forwarding = false;
+        AllowAgentForwarding = false;
+        AllowTcpForwarding = false;
+        PermitUserEnvironment = false;
       };
     };
 

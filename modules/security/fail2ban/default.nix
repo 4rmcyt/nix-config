@@ -144,6 +144,19 @@ in {
     };
 
     # ----------------------------------------------------------------
+    # Grafana filter — matches failed login entries from journal.
+    # Pattern: level=warn ... msg="Invalid username or password" ... remote_addr=<ip>
+    # ----------------------------------------------------------------
+    "fail2ban/filter.d/grafana.conf" = {
+      mode = "0644";
+      text = ''
+        [Definition]
+        failregex = ^.*level=warn.*msg="Invalid username or password".*remote_addr=<HOST>.*$
+        ignoreregex =
+      '';
+    };
+
+    # ----------------------------------------------------------------
     # Home Assistant filter — matches failed login log entries.
     # HASS logs: Login attempt or request with invalid authentication
     # from <ip> (<user agent>)
