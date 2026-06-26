@@ -86,9 +86,10 @@
   # Systemd Service Configuration
   # =================================================================
   systemd.services.redis-homeserver = {
-    after = ["podman.service"];
-    wants = ["podman.service"];
+    after = ["network.target"];
     serviceConfig = {
+      Restart = "on-failure";
+      RestartSec = "5s";
       # Resource limits
       MemoryMax = "1.2G";
       CPUQuota = "75%";
