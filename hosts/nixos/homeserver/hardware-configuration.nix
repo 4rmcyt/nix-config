@@ -101,7 +101,6 @@ in {
 
     kernel.sysctl = {
       "kernel.nmi_watchdog" = 0;
-      "vm.swappiness" = 10;
       "vm.vfs_cache_pressure" = 50;
       "vm.dirty_ratio" = 15;
       "vm.dirty_background_ratio" = 5;
@@ -110,8 +109,6 @@ in {
       "net.core.wmem_max" = 16777216;
       "net.ipv4.tcp_rmem" = "4096 87380 16777216";
       "net.ipv4.tcp_wmem" = "4096 65536 16777216";
-      "net.ipv4.tcp_fastopen" = 3;
-      "net.ipv4.tcp_congestion_control" = "bbr";
     };
   };
 
