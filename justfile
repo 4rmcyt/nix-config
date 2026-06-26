@@ -1,6 +1,6 @@
 # Deploy to gcp-relay
 deploy-gcp:
-    nh os switch --hostname gcp-relay --target-host zeev@gcp-relay ~/src/nix-config
+    nixos-rebuild switch --flake .#gcp-relay --target-host zeev@gcp-relay --build-host localhost --elevate=sudo --ask-elevate-password
 
 # Deploy to homeserver
 deploy-homeserver:

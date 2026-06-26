@@ -66,20 +66,22 @@ modules/
   base/                 # Core system (logging, msmtp, distributed-builds)
   options/              # my.defaults.* options (user, email, domain, IPs, timezone, locale)
   roles/                # Role compositions (desktop, server, media-server, monitoring)
-  DE/                   # Desktop environments (KDE, COSMIC)
-  WM/                   # Window managers (niri + noctalia-shell)
-  GUI/                  # GUI apps (firefox, kitty, zed, obsidian, etc.)
-  TUI/                  # Terminal tools (zsh, zellij, atuin, ai-tools)
-  services/             # k3s, nixarr, homepage, ollama, paperless, etc.
-  networking/           # SSH, tailscale, wireguard, traefik, cloudflared
+  WM/                   # Window managers (niri + noctalia-shell, gtk, mime)
+  GUI/                  # GUI apps (firefox, chrome, zed, obsidian, terminal, IDE, etc.)
+  TUI/                  # Terminal tools (zsh, zellij, atuin, ai-tools, llama-cpp)
+  services/             # nixarr, homepage, miniflux, home-assistant, atuin-server, etc.
+                        # k3s, argocd — disabled (modules exist)
+  networking/           # SSH, tailscale, traefik, headscale, cloudflared, caddy, nfs, etc.
   security/             # kanidm, crowdsec, fail2ban
-  monitoring/           # prometheus, grafana, loki
+  monitoring/           # prometheus, grafana, loki, alloy, alertmanager
   database/             # postgresql, redis, couchdb
   disko/                # Declarative disk partitioning per host
-  lib/                  # Helpers (sops, tmpfiles, users)
+  users/                # Per-user NixOS config (zeev, vk)
+  backup/               # Backup tooling (restic)
+  containers/           # Podman container support
+  xdg/                  # XDG portal config
 parts/                  # flake-parts modules (auto-imported via import-tree)
 secrets/                # sops-encrypted YAML (NEVER commit plaintext)
-overlays/               # Package customizations
 ```
 
 ## Key Conventions
@@ -96,21 +98,25 @@ overlays/               # Package customizations
 
 **Verify config keys:** Before writing any daemon config key (bluetoothd `main.conf`, pipewire, wireplumber, etc.), check the actual schema in the nix store or binary `--help`. Do not guess option names.
 
-## Documentation Maintenance
+## Reference Docs — Read First, Update Always
 
-**Before every commit** — check if the changes affect either reference doc and update accordingly:
+**Before working on any area, read the relevant doc.** They are the authoritative detail source — do not guess at ports, URLs, module paths, or service state.
+
+| When working on… | Read first |
+|------------------|------------|
+| Any homeserver task (services, ZFS, networking, monitoring) | [docs/Infrastructure.md](docs/Infrastructure.md) |
+| Flake structure, `parts/`, module layout, WM stack, options system, deploy | [docs/Architecture.md](docs/Architecture.md) |
+
+**After every change, update the relevant doc immediately** — not at commit time, but as part of the same edit session.
 
 | If you changed… | Update |
 |-----------------|--------|
-| Host config, services, networking, ZFS, monitoring, secrets | [docs/Infrastructure.md](docs/Infrastructure.md) |
-| Flake structure, `parts/`, module layout, WM stack, deploy, options system | [docs/Architecture.md](docs/Architecture.md) |
-
-Rules:
-- New service added/removed → update the services table (mark disabled rather than delete)
-- Port, URL, or hostname changed → update the relevant table row
-- ZFS layout changed → update the Storage section
-- New flake input wired into a host → update Architecture.md Host Wiring section
-- Security tool replaced (e.g. Authelia → Kanidm) → update both the service table and any prose that references the old tool by name
+| Service added or removed | [docs/Infrastructure.md](docs/Infrastructure.md) — add or delete the row entirely (do not leave "disabled" rows for non-existent services) |
+| Port, URL, or hostname changed | Update the relevant table row |
+| ZFS layout changed | Update the Storage section |
+| New flake input wired into a host | [docs/Architecture.md](docs/Architecture.md) — Host Wiring section |
+| Flake structure, `parts/` files, module layout changed | [docs/Architecture.md](docs/Architecture.md) |
+| Security tool replaced | Update both the service table and any prose referencing the old tool |
 
 ## CRITICAL: homeserver ZFS / Rebuild Safety Rules
 
@@ -127,15 +133,6 @@ Rules:
 - Will this interrupt any running operation? (zfs send, mkvmerge, active downloads)
 - Will this restart a mount unit that something is actively using?
 - If unsure — warn the user BEFORE they run it.
-
-## Reference Docs
-
-Read these before working on the relevant area — they are the authoritative detail source:
-
-| When you're working on… | Read |
-|-------------------------|------|
-| Any homeserver task (services, ZFS, networking, monitoring) | [docs/Infrastructure.md](docs/Infrastructure.md) |
-| Flake structure, module wiring, desktop WM, options system, deploy | [docs/Architecture.md](docs/Architecture.md) |
 
 ## MCP Tool Routing
 

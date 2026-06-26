@@ -203,12 +203,6 @@
         description = "Audiobookshelf audiobook server";
       };
 
-      kavita = lib.mkOption {
-        type = lib.types.port;
-        default = 5000;
-        description = "Kavita reading/manga server";
-      };
-
       tdarr = lib.mkOption {
         type = lib.types.port;
         default = 8265;

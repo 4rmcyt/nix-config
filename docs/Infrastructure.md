@@ -10,7 +10,7 @@ Tailnet login server: `https://hs.example.com` (self-hosted Headscale)
 
 ### homeserver
 
-**Role:** Primary home server — all services, monitoring, DNS, VPN hub  
+**Role:** Primary home server — все сервисы, мониторинг, DNS, VPN hub  
 **LAN IP:** `192.168.1.165`  
 **Tailscale:** exit node + subnet router (`192.168.1.0/24`)
 
@@ -68,6 +68,7 @@ ZFS root pool with systemd-tmpfiles suppression (`--exclude-prefix`) to avoid `c
 - **Shell:** noctalia-shell (quickshell-based bar/shell)
 - **Theming:** Stylix + matugen dynamic colors
 - **Portal:** `xdg-desktop-portal-gnome` + `xdg-desktop-portal-gtk`
+- **nirinit:** enabled (smooth session init)
 
 #### Nix Build
 
@@ -82,6 +83,7 @@ ZFS root pool with systemd-tmpfiles suppression (`--exclude-prefix`) to avoid `c
 **WiFi IP:** `192.168.1.132`
 
 - Niri WM + noctalia-shell
+- Nix daemon: **determinate** (vs lix on desktop/homeserver)
 - Tailscale client with magic rollback enabled for remote deploys
 
 ---
@@ -101,7 +103,7 @@ ZFS root pool with systemd-tmpfiles suppression (`--exclude-prefix`) to avoid `c
 **Region:** GCP US Central (Iowa)
 
 - **Headscale** coordination server: `https://hs.example.com` (port 8080 behind Caddy)
-- **Headplane** web UI: proxied by Caddy
+- **Headplane** web UI: proxied by Caddy (`inputs.headplane` flake, with custom `headplane-ssh-wasm` buildPhase patch)
 - **DERP** relay: region ID 901, `gcp-us-central1`, STUN on `0.0.0.0:3478`
 - **Caddy** TLS termination (replaces Traefik for this host)
 - **CrowdSec** nftables bouncer: remote LAPI via Tailscale pointing to homeserver
@@ -186,17 +188,17 @@ Tunnel credentials in `secrets/cloudflare_tunnel_credentials.bin` + `secrets/clo
 | Kapowarr        | 5656  | `kapowarr.example.com`       | Comics                             |
 | Seerr           | 5055  | `seerr.example.com`          | Request management                 |
 | Audiobookshelf  | 9292  | `audiobookshelf.example.com` | Audiobooks                         |
-| slskd           | 5030  | `slskd.example.com`          | Soulseek client                    |
-| Dispatcharr     | 9191  | `dispatcharr.example.com`    | Stream dispatch                    |
+| Recyclarr       | —     | (no UI)                       | Auto-sync quality profiles to *arr |
+| Flaresolverr    | 8191  | (internal only)               | Cloudflare bypass for Prowlarr     |
+| Dispatcharr     | 9191  | `dispatcharr.example.com`    | Stream dispatch — OCI container    |
 
 ### Reading / Library
 
-| Service   | Port  | URL                      | Notes        |
-|-----------|-------|--------------------------|--------------|
-| Komga     | 8087  | `komga.example.com`     |              |
-| Komf      | 8085  | `komf.example.com`      |              |
-| Miniflux  | 8086  | `miniflux.example.com`  |              |
-| Kavita    | 5000  | `kavita.example.com`    | disabled     |
+| Service   | Port  | URL                      | Notes             |
+|-----------|-------|--------------------------|-------------------|
+| Komga     | 8087  | `komga.example.com`     |                   |
+| Komf      | 8085  | `komf.example.com`      |                   |
+| Miniflux  | 8086  | `miniflux.example.com`  |                   |
 
 ### Identity / SSO
 
@@ -209,19 +211,18 @@ Tunnel credentials in `secrets/cloudflare_tunnel_credentials.bin` + `secrets/clo
 | Service        | Port  | URL                        | Notes                         |
 |----------------|-------|----------------------------|-------------------------------|
 | Home Assistant | 8123  | `hass.example.com`        | Podman OCI container; Alexa Smart Home; WoL for desktop; geoblock + rate-limit |
-| Homepage       | 8082  | `home.example.com`        | Dashboard                     |
+| Homepage       | 8082  | `home.example.com`        | Dashboard (pinned v1.13.1 overlay) |
 | Radicale       | 5232  | `cal.example.com`         | CalDAV/CardDAV                |
 | ntfy           | 9991  | `ntfy.example.com`        | Push notifications            |
 | Microbin       | 8069  | `microbin.example.com`    | Paste bin                     |
-| Vaultwarden    | 8222  | `vault.example.com`       | Password manager — disabled   |
 | Atuin server   | 8881  | `atuin.example.com`       | Shell history sync            |
 | CouchDB        | 5984  | `livesync.example.com`    | Obsidian LiveSync backend     |
 
-### AI / Local LLM (disabled)
+### AI / Local LLM
 
-Ollama + Open-WebUI are present in `modules/services/ollama/` but commented out in `modules/services/default.nix`.  
-Config when enabled: `acceleration = "cuda"`, models: `codellama:7b`, `codellama:13b`, `phi3:mini-4k`.  
-Ports: Ollama `:11434`, Open-WebUI `:11435`.
+| Service   | Notes                                                                    |
+|-----------|--------------------------------------------------------------------------|
+| llama-cpp | Desktop only (`modules/TUI/ai-tools/llama-cpp`). Current model: Gemma 4 E4B |
 
 ---
 
@@ -231,18 +232,19 @@ Ports: Ollama `:11434`, Open-WebUI `:11435`.
 node_exporter (all hosts) ──┐
 NUT exporter                ├──► Prometheus :9090 ──► Grafana :3003  ──► grafana.example.com
 Traefik metrics :8080       │         │
-CrowdSec metrics :6060      │         └──► Alloy ──► Loki :3100
-                            │                  ▲
-Systemd journal ────────────┘          Traefik access.log
+CrowdSec metrics :6060      │         └──► Alertmanager ──► alertmanager-ntfy ──► ntfy
+                            │
+Systemd journal ────────────┤──► Alloy ──► Loki :3100
+Traefik access.log ─────────┘
 ```
 
 - **Prometheus** scrape targets: homeserver, desktop, matebook, gcp-relay node exporters; NUT; Traefik; CrowdSec; Prometheus self
-- **Grafana** OIDC via Kanidm; backend PostgreSQL; datasources: Prometheus + Loki
-- **Loki** retention 30 days; TSDB schema v13; filesystem storage
-- **Alloy** ships: Traefik access log, systemd journal (last 12h)
+- **Grafana** OIDC via Kanidm; backend PostgreSQL; datasources: Prometheus + Loki; dashboards from `modules/monitoring/dashboards/`
+- **Loki** retention 30 days; TSDB schema v13; filesystem storage; Loki alert rules in `modules/monitoring/alerts/loki-rules.yaml`
+- **Alloy** ships: Traefik access log, systemd journal (last 12h); Python container log-level fix pipeline
+- **Alertmanager** → **alertmanager-ntfy** bridge → ntfy topic `alerts`
 - **GeoIP** monthly auto-update from db-ip.com (city MMDB, no account required)
-- Alert rules: `modules/monitoring/alerts/homeserver.yaml`
-- Dashboards provisioned from `modules/monitoring/dashboards/`
+- Alert rules: `modules/monitoring/alerts/homeserver.yaml` (Prometheus), `modules/monitoring/alerts/loki-rules.yaml` (Loki)
 
 ---
 
@@ -322,7 +324,6 @@ secrets/
   microbin.yaml                        # Microbin admin secret
   hass-alexa.yaml                      # Home Assistant Alexa skill credentials
   lazylibrarian.yaml                   # LazyLibrarian credentials
-  kavita.yaml                          # Kavita credentials (service disabled)
   k3s.yaml                             # k3s token (service disabled)
   recyclarr.yaml                       # Recyclarr API keys
   restic.yaml                          # Restic backup repository + password

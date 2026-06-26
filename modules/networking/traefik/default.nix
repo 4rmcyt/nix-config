@@ -235,17 +235,6 @@ in {
               middlewares = [];
             };
 
-            slskd = {
-              rule = "Host(`slskd.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "slskd";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-
             # Nixarr
             sonarr = {
               rule = "Host(`sonarr.${domain}`)";
@@ -374,16 +363,6 @@ in {
               ];
               tls.certResolver = "default";
             };
-            kavita = {
-              rule = "Host(`kavita.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "kavita";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
             komga = {
               rule = "Host(`komga.${domain}`)";
               entryPoints = ["websecure"];
@@ -503,8 +482,6 @@ in {
           };
 
           services = {
-            slskd.loadBalancer.servers = [{url = "http://localhost:5030";}];
-
             # Nixarr
             sonarr.loadBalancer.servers = [{url = "http://localhost:8990";}];
             radarr.loadBalancer.servers = [{url = "http://localhost:7878";}];
@@ -526,7 +503,6 @@ in {
 
             # Reading
             miniflux.loadBalancer.servers = [{url = "http://localhost:8086";}];
-            kavita.loadBalancer.servers = [{url = "http://localhost:5000";}];
             audiobookshelf.loadBalancer.servers = [{url = "http://localhost:9292";}];
 
             # Smart home

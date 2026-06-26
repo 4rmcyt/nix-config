@@ -295,7 +295,6 @@
       extraGroups = lib.mkForce [
         "docker"
         "media"
-        "ollama"
         "networkmanager"
         "podman"
         "wheel"
