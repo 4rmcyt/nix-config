@@ -146,6 +146,14 @@
       };
     };
 
+    # nixos-upgrade runs in an isolated env and doesn't inherit NIX_USER_CONF_FILES
+    # so it can't reach the private github repo without this
+    systemd.services.nixos-upgrade = {
+      after = ["nix-access-tokens.service"];
+      requires = ["nix-access-tokens.service"];
+      environment.NIX_USER_CONF_FILES = "/run/nix-access-tokens.conf";
+    };
+
     my.crowdsecBouncer = {
       enable = true;
       lapiUrl = "http://100.64.0.3:8088";
