@@ -45,6 +45,10 @@ in {
       requires = ["tailscale-autoconnect.service"];
     };
 
+    # nixpkgs crowdsec module generates an empty crowdsec.service unit even when
+    # services.crowdsec.enable = false — mask it to silence the systemd warning.
+    systemd.masks = ["crowdsec.service"];
+
     networking.nftables.enable = true;
   };
 }
