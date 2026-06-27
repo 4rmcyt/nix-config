@@ -39,7 +39,7 @@
       ryzen-monitor-ng
       signal-desktop
       slack
-      ytmdesktop
+      # ytmdesktop
       yubioath-flutter
     ];
 

@@ -96,7 +96,7 @@
       vdpauinfo
       vulkan-tools
       waydroid-helper
-      ytmdesktop
+      # ytmdesktop
       (pkgs.texlive.combine {
         inherit
           (pkgs.texlive)
