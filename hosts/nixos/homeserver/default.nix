@@ -149,6 +149,7 @@
         443
         3000 # Grafana
         3100 # Loki (gcp-relay alloy-client)
+        8088 # CrowdSec LAPI (gcp-relay bouncer)
         9090 # Prometheus
         9091 # Database & infrastructure
         9100 # Node Exporter
