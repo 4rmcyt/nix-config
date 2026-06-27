@@ -140,7 +140,7 @@
       autoUpgrade = {
         enable = true;
         flake = "github:4rmcyt/nix-config#gcp-relay";
-        operation = "boot";
+        operation = "switch";
         dates = "04:00";
         randomizedDelaySec = "30min";
       };
