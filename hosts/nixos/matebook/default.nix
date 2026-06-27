@@ -47,9 +47,6 @@
   # =================================================================
   # 4. Boot Configuration
   # =================================================================
-  # linux_zen uses vmlinuz, not bzImage (the nixpkgs default for x86)
-  system.boot.loader.kernelFile = "vmlinuz";
-
   boot = {
     loader = {
       efi.canTouchEfiVariables = true;
