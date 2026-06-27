@@ -47,7 +47,7 @@ in {
 
     # nixpkgs crowdsec module generates an empty crowdsec.service unit even when
     # services.crowdsec.enable = false — mask it to silence the systemd warning.
-    systemd.masks = ["crowdsec.service"];
+    systemd.units."crowdsec.service".enable = false;
 
     networking.nftables.enable = true;
   };
