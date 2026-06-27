@@ -51,6 +51,8 @@
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = false;
+      # linux_zen uses vmlinuz, not bzImage (the nixpkgs default)
+      kernelFile = "vmlinuz";
       limine = {
         enable = true;
         enableEditor = false;
