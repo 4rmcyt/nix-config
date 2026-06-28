@@ -135,24 +135,8 @@
       mode = "0400";
     };
 
-    my.hardening = {
-      enable = true;
-      autoUpgrade = {
-        enable = true;
-        flake = "github:4rmcyt/nix-config#gcp-relay";
-        operation = "switch";
-        dates = "04:00";
-        randomizedDelaySec = "30min";
-      };
-    };
+    my.hardening.enable = true;
 
-    # nixos-upgrade runs in an isolated env and doesn't inherit NIX_USER_CONF_FILES
-    # so it can't reach the private github repo without this
-    systemd.services.nixos-upgrade = {
-      after = ["nix-access-tokens.service"];
-      requires = ["nix-access-tokens.service"];
-      environment.NIX_USER_CONF_FILES = "/run/nix-access-tokens.conf";
-    };
 
     my.crowdsecBouncer = {
       enable = true;
