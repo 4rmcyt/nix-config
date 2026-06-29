@@ -1,6 +1,7 @@
-{...}: {
+{ ... }: {
   imports = [
     ./kitty
     ./ghostty
+    ./alacritty
   ];
 }
