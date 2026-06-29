@@ -4,6 +4,6 @@
     # ./ghostty
     # ./alacritty
     ./wezterm
-    ./rio
+    # ./rio
   ];
 }

@@ -1,4 +1,6 @@
 {pkgs, ...}: {
+  stylix.targets.wezterm.enable = false;
+
   programs.wezterm = {
     enable = true;
     package = pkgs.wezterm;
@@ -23,7 +25,7 @@
       config.bold_brightens_ansi_colors = true
 
       -- Colors (catppuccin mocha)
-      config.color_scheme = 'Catppuccin Mocha'
+      config.color_scheme = 'Kanagawa (Gogh)'
 
       -- Window
       config.window_background_opacity = 0.4

@@ -96,7 +96,7 @@ secrets/                # sops-encrypted YAML (NEVER commit plaintext)
 
 **NixOS vs HM boundary:** System-level config belongs in NixOS modules. User-level config belongs in Home Manager. Use single-responsibility modules.
 
-**Verify config keys:** Before writing any daemon config key (bluetoothd `main.conf`, pipewire, wireplumber, etc.), check the actual schema in the nix store or binary `--help`. Do not guess option names.
+**Verify config keys:** Before writing ANY config key for ANY app, terminal, or daemon — fetch the official docs first (`mcp__fetch__fetch` or `tavily`). Never guess option names. Applies to: terminal emulators (rio, ghostty, alacritty, wezterm, kitty), daemons (bluetoothd, pipewire, wireplumber), HM/NixOS modules, everything. Read the schema, then write. No exceptions.
 
 ## Reference Docs — Read First, Update Always
 
