@@ -17,7 +17,6 @@
     ../../modules/TUI/zsh
     ../../modules/TUI/atuin
     ../../modules/TUI/zellij
-    # ../../modules/TUI/calendar  # khal broken in nixpkgs (sphinx-feed)
 
     ../../modules/WM
     ../../modules/WM/niri

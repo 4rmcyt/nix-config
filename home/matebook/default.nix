@@ -2,14 +2,14 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   imports = [
     ../../modules/GUI/chrome/home.nix
     ../../modules/GUI/firefox
     ../../modules/GUI/thunderbird
     ../../modules/GUI/IDE/vscode
-    ../../modules/GUI/terminal/ghostty
-    ../../modules/GUI/terminal/kitty
+    ../../modules/GUI/terminal
     ../../modules/TUI/common
     ../../modules/TUI/zsh
     ../../modules/TUI/tmux
