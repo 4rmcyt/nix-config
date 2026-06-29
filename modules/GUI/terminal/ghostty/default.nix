@@ -4,7 +4,8 @@ _: {
     enableZshIntegration = true;
 
     settings = {
-      background = "#19120ceb";
+      background = "#19120c";
+      background-opacity = 0.92;
       background-blur-radius = 25;
       clipboard-read = "allow";
       clipboard-trim-trailing-spaces = true;
@@ -50,7 +51,7 @@ _: {
       window-padding-x = 8;
       window-padding-y = 8;
       window-save-state = "always";
-      window-show-tab-bar = "never";
+      window-show-tab-bar = "auto";
       window-theme = "dark";
     };
   };

@@ -1,10 +1,10 @@
 _: {
+  stylix.targets.alacritty.enable = false;
+
   programs.alacritty = {
     enable = true;
 
     settings = {
-      general.import = ["~/.config/alacritty/colors.toml"];
-
       font = {
         normal = {
           family = "MesloLGS Nerd Font";
@@ -67,16 +67,6 @@ _: {
           action = "Paste";
         }
         {
-          key = "T";
-          mods = "Control|Shift";
-          action = "CreateNewTab";
-        }
-        {
-          key = "W";
-          mods = "Control|Shift";
-          action = "CloseTab";
-        }
-        {
           key = "Plus";
           mods = "Control";
           action = "IncreaseFontSize";
@@ -96,10 +86,6 @@ _: {
           action = "ToggleFullscreen";
         }
       ];
-
-      terminal.shell = {
-        program = "zsh";
-      };
 
       bell.duration = 0;
     };
