@@ -50,7 +50,7 @@ in {
     # Host-specific HM imports
     home-manager.users.${owner.username}.imports = [
       ../../../home/desktop
-      inputs.stylix.homeModules.stylix
+      # inputs.stylix.homeModules.stylix
       # inputs.pam-shim.homeModules.default
       inputs.noctalia.homeModules.default
     ];
