@@ -1,7 +1,8 @@
 { ... }: {
   imports = [
     ./kitty
-    ./ghostty
-    ./alacritty
+    # ./ghostty
+    # ./alacritty
+    ./wezterm
   ];
 }
