@@ -26,7 +26,7 @@
       config.color_scheme = 'Kanagawa (Gogh)'
 
       -- Window
-      config.window_background_opacity = 0.4
+      config.window_background_opacity = 0.8
       config.window_decorations = "NONE"
       config.window_padding = { left = 10, right = 10, top = 10, bottom = 10 }
 
