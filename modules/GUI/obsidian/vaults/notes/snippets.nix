@@ -1,4 +1,4 @@
-{config, ...}: [
+{...}: [
   {
     name = "system-font";
     text =
@@ -6,11 +6,11 @@
       ''
         body
           {
-            --font-default: "${config.stylix.fonts.sansSerif.name}";
+            --font-default: "Noto Sans";
             --zoom-factor: 1.2;
           }
         body.minimal-theme
-          { --font-editor-override: "${config.stylix.fonts.monospace.name}"; }
+          { --font-editor-override: "MonoLisa"; }
       '';
   }
 

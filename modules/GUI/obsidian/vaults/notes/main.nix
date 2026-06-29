@@ -26,7 +26,7 @@ in {
 
     appearance = {
       cssTheme = "Minimal";
-      accentColor = config.lib.stylix.colors.withHashtag.base04;
+      accentColor = "#727169";
       showRibbon = false;
       nativeMenus = false;
     };
