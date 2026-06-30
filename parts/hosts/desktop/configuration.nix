@@ -17,8 +17,6 @@ in {
       ../../../modules/nix/lix
     ];
 
-    nixpkgs.config.permittedInsecurePackages = ["pnpm-10.29.2"];
-
     nix.settings = {
       extra-substituters = [
         "https://cache.nixos-cuda.org?priority=1"
