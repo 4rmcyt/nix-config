@@ -3,7 +3,6 @@
   lib,
   ...
 }: {
-  nixpkgs.config.permittedInsecurePackages = ["pnpm-10.29.2"];
   imports = [
     ../../modules/GUI/terminal
     ../../modules/GUI/IDE
