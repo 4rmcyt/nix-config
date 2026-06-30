@@ -48,12 +48,14 @@ in {
     facter.reportPath = ../../../hosts/nixos/desktop/facter.json;
 
     # Host-specific HM imports
-    home-manager.users.${owner.username}.nixpkgs.config.permittedInsecurePackages = ["pnpm-10.29.2"];
-    home-manager.users.${owner.username}.imports = [
-      ../../../home/desktop
-      # inputs.stylix.homeModules.stylix
-      # inputs.pam-shim.homeModules.default
-      inputs.noctalia.homeModules.default
-    ];
+    home-manager.users.${owner.username} = {
+      nixpkgs.config.permittedInsecurePackages = ["pnpm-10.29.2"];
+      imports = [
+        ../../../home/desktop
+        # inputs.stylix.homeModules.stylix
+        # inputs.pam-shim.homeModules.default
+        inputs.noctalia.homeModules.default
+      ];
+    };
   };
 }
