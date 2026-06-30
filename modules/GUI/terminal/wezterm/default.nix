@@ -23,7 +23,7 @@
       config.bold_brightens_ansi_colors = true
 
       -- Colors (catppuccin mocha)
-      config.color_scheme = 'Kanagawa (Gogh)'
+      config.color_scheme = 'tokyonight'
 
       -- Window
       config.window_background_opacity = 0.8
