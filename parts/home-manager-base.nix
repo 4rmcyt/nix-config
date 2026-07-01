@@ -10,6 +10,7 @@ in {
   modules.homeManager.base = {
     imports = [
       inputs.sops-nix.homeManagerModules.sops
+      inputs.nixvim.homeModules.nixvim
     ];
 
     home = {

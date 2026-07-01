@@ -38,7 +38,6 @@
       unixtools.watch
       unzip
       usbutils
-      neovim
       wget
       bat
       jq

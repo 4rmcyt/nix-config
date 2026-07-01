@@ -2,6 +2,7 @@
   imports = [
     ../../modules/TUI/ai-tools
     ../../modules/TUI/common
+    ../../modules/TUI/neovim
     ../../modules/TUI/zsh
     ../../modules/TUI/atuin
   ];

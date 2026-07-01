@@ -11,6 +11,7 @@
     ../../modules/GUI/IDE/vscode
     ../../modules/GUI/terminal
     ../../modules/TUI/common
+    ../../modules/TUI/neovim
     ../../modules/TUI/zsh
     ../../modules/TUI/tmux
     ../../modules/TUI/atuin
