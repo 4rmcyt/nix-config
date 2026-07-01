@@ -194,6 +194,18 @@
     # Auto-save/restore session per directory
     persistence.enable = true;
 
+    # Claude Code terminal integration
+    claude-code = {
+      enable = true;
+      settings = {
+        window = {
+          position = "rightbelow vsplit";
+          split_ratio = 0.35;
+        };
+        keymaps.toggle.modes.normal = "<leader>ac";
+      };
+    };
+
     # Surround — add/delete/replace surrounding chars (",',(,[,{,<,...)
     mini = {
       enable = true;
