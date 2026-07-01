@@ -5,7 +5,7 @@
     # Core
     determinate.url = "github:DeterminateSystems/determinate";
     nix-auth.url = "github:numtide/nix-auth";
-    flake-schemas.url = "https://flakehub.com/f/DeterminateSystems/flake-schemas/0";
+    flake-schemas.url = "github:DeterminateSystems/flake-schemas";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
