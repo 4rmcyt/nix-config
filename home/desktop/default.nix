@@ -117,6 +117,7 @@
       BROWSER = lib.mkForce "google-chrome-stable";
       EDITOR = lib.mkForce "hx";
       VISUAL = lib.mkForce "code";
+      PYENV_ROOT = "$HOME/.pyenv";
     };
   };
 

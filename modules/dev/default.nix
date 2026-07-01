@@ -3,6 +3,7 @@
     # Runtime/env managers
     mise
     devenv
+    pyenv
 
     # Node
     pnpm
