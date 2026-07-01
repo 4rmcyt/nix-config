@@ -3,8 +3,10 @@
     # File tree (like VSCode Explorer)
     neo-tree = {
       enable = true;
-      window.width = 30;
-      filesystem.followCurrentFile.enabled = true;
+      settings = {
+        window.width = 30;
+        filesystem.follow_current_file.enabled = true;
+      };
     };
 
     # Fuzzy finder (like VSCode Cmd+P / Ctrl+Shift+F)
