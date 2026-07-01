@@ -1,4 +1,4 @@
-{config, ...}: {
+{config, pkgs, ...}: {
   programs.nixvim.plugins = {
     # File tree (like VSCode Explorer)
     neo-tree = {
@@ -197,6 +197,7 @@
     # Claude Code terminal integration
     claude-code = {
       enable = true;
+      package = pkgs.vimPlugins.claude-code-nvim;
       settings = {
         window = {
           position = "rightbelow vsplit";
