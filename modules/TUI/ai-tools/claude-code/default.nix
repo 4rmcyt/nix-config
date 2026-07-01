@@ -33,36 +33,12 @@ in {
     settings = {
       alwaysThinkingEnabled = false;
       effortLevel = "medium";
-      hooks = {
-        SessionStart = [
-          {
-            matcher = "";
-            hooks = [
-              {
-                type = "command";
-                command = "${lib.getExe pkgs.beads} prime";
-              }
-            ];
-          }
-        ];
-        PreCompact = [
-          {
-            matcher = "";
-            hooks = [
-              {
-                type = "command";
-                command = "${lib.getExe pkgs.beads} prime";
-              }
-            ];
-          }
-        ];
-      };
     };
 
     agents = {
       "nixos-config" = mkClaudeAgent {
         description = "NixOS configuration specialist for modules, options, and services";
-        tools = ["Read" "Write" "Edit" "Glob" "Grep" "Bash" "mcp__mcp-nixos" "mcp__filesystem" "mcp__grep-mcp" "mcp__sequential-thinking"];
+        tools = ["Read" "Write" "Edit" "Glob" "Grep" "Bash" "mcp__mcp-nixos" "mcp__filesystem" "mcp__github" "mcp__sequential-thinking"];
         body = builtins.readFile ../agents/nixos-config.md;
       };
       "homeserver-admin" = mkClaudeAgent {

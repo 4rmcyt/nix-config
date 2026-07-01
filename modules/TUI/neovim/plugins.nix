@@ -162,10 +162,7 @@
     flash.enable = true;
 
     # Side-by-side diff viewer + file history
-    diffview = {
-      enable = true;
-      settings.hg_cmd = [""];
-    };
+    diffview.enable = true;
 
     # Notification backend for noice
     notify = {

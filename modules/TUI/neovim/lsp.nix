@@ -75,6 +75,7 @@
       shfmt
       stylua
       bash-language-server
+      tree-sitter
     ];
   };
 }

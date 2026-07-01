@@ -15,58 +15,53 @@ in ''
   modules/
     base/                 # Core system (logging, msmtp, distributed-builds)
     options/              # my.defaults.*, my.network.*, my.security.*
-    WM/                   # Window managers (niri + noctalia-shell, gtk, mime, xdg)
-    GUI/                  # GUI apps (firefox, chrome, obsidian, IDE, terminal, etc.)
-    TUI/                  # Terminal tools (zsh, zellij, atuin, ai-tools)
-    services/             # nixarr, homepage, miniflux, home-assistant, radicale, etc.
-    networking/           # SSH, tailscale, traefik, headscale, cloudflared, nfs, etc.
-    security/             # kanidm, crowdsec, fail2ban
-    monitoring/           # prometheus, grafana, loki, alloy
+    roles/                # Role compositions (desktop, server, media-server, monitoring)
+    WM/                   # niri + noctalia-shell, gtk, mime
+    GUI/                  # firefox, chrome, zen-browser, obsidian, zed, terminal, mpv, etc.
+    TUI/                  # zsh, zellij, atuin, starship, neovim, ai-tools (claude-code, gemini, llama-cpp, mcp)
+    services/             # homepage, miniflux, home-assistant, atuin-server, nixarr,
+                          # dispatcharr, komga, komf, microbin, ntfy, radicale, argocd (disabled), k3s (disabled)
+    networking/           # ssh, tailscale, traefik, caddy, headscale, headplane,
+                          # cloudflared, wireguard, nfs, nfs-client, unbound, avahi, dnssec, nut-server, nut-client
+    security/             # kanidm, crowdsec, fail2ban, hardening
+    monitoring/           # prometheus, grafana, loki, alloy, alerts, node-exporter
     database/             # postgresql, redis, couchdb
     disko/                # Declarative disk partitioning per host
-    fonts/                # System fonts
-    gaming/               # Steam + gaming
+    users/                # Per-user NixOS config (zeev, vk)
+    backup/               # Backup tooling (restic)
+    containers/           # Podman container support
     dev/                  # Developer tools
-    nix/                  # Nix daemon variants (determinate, lix)
-    users/                # Per-user NixOS config
-    backup/               # Backup tooling
-    containers/           # Container runtime config
     dots/                 # Dotfile management
+    nix/                  # Nix daemon variants (determinate, lix)
     xdg/                  # XDG portal config
-  secrets/                # sops-encrypted (NEVER commit plaintext)
   parts/                  # flake-parts modules (auto-imported via import-tree)
+  secrets/                # sops-encrypted YAML (NEVER commit plaintext)
   ```
 
   ## Key Conventions
 
-  **Options:** Use `my.defaults.*` (user, email, domain, IPs, timezone, locale) from `modules/options/defaults.nix`. Never hardcode these values.
+  **Metadata:** Use `config.meta.owner.*` in flake-parts scope, and `config.my.defaults.*` in NixOS module scope. Never hardcode them.
 
-  **Secrets:** sops-nix with age encryption. Reference via `config.sops.secrets.<name>.path`. Never expose values in code.
+  **Secrets:** sops-nix + age. Reference as `config.sops.secrets.<name>.path`. Never expose values in code.
 
-  **Formatting:** `nix fmt` runs treefmt (alejandra, deadnix, statix, prettier, shfmt, yamlfmt). Always format before committing.
+  **Formatting:** `nix fmt` via treefmt (alejandra for Nix). Always format before committing.
 
-  **Commits:** Conventional style: `type(scope): description` (feat, fix, refactor, style, chore). Scope = module or host name.
+  **Commits:** Conventional style: `type(scope): description`. Scope = module name or host.
 
-  **Nix Standards:**
-  - Flakes-first. Pure, reproducible.
-  - Home Manager for user-level, NixOS modules for system-level.
-  - Single responsibility per module.
-  - Verify changes: `nix build` or `nixos-rebuild build` before claiming success.
+  **NixOS vs HM boundary:** System-level config in NixOS modules. User-level config in Home Manager.
 
   **Anti-Patterns:**
   - Guessing file contents instead of reading via tools
   - Hardcoding values that exist in `my.defaults.*`
   - Plaintext secrets anywhere
   - Over-engineering or "future-proofing"
+  - Running `nix build` or `nixos-rebuild` — the user builds himself
 
-  ## CRITICAL: No Guessing on Unfamiliar Tools
+  ## CRITICAL: Never guess config keys
 
-  **NEVER make speculative config changes for tools you are not 100% certain about.**
+  Before writing ANY config key for ANY app or daemon — fetch the official docs first (`fetch` or `tavily`). Never guess option names. Read the schema, then write. No exceptions.
 
-  Before touching any plugin, library, or tool configuration:
-  1. Search with `tavily` for documented behavior and known issues
-  2. Check GitHub issues for known bugs
-  3. Only propose a change backed by an actual source
+  ## CRITICAL: homeserver ZFS safety
 
-  This applies to: zsh plugins, fzf integrations, desktop compositors, audio stacks, and any tool with complex interactions. Making wrong guesses that break the user's config is unacceptable. One web search takes seconds and prevents this.
+  NEVER suggest `nixos-rebuild switch` for homeserver without checking for active ZFS transfers or mounted datasets. For mount-affecting changes: `nixos-rebuild boot` + reboot. Default to `boot` when in doubt.
 ''

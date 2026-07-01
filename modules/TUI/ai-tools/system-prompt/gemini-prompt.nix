@@ -15,7 +15,7 @@ in ''
   - Web search for current information -> use `tavily` server
   - Fetch content from a URL -> use `fetch` server
   - File operations in `/etc/nixos` or `~/src` -> use `filesystem` server
-  - Search upstream codebases (nixpkgs, etc.) -> use `grep-mcp` server
+  - Search upstream codebases (nixpkgs, GitHub) -> use `github` MCP `search_code` tool
   - Kubernetes cluster management -> use `kubernetes` server
   - Run Python code -> use `python` server
   - Complex multi-step reasoning -> use `sequential-thinking` server

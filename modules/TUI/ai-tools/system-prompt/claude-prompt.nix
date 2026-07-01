@@ -14,7 +14,7 @@ in ''
   | Web search | `tavily` | Current docs, news, specs |
   | Fetch specific URL | `fetch` | Read web page content |
   | Files in `/etc/nixos` or `~/src` | `filesystem` MCP | Read/write/search |
-  | Search external codebases (nixpkgs, etc.) | `grep-mcp` | grep.app for upstream code |
+  | Search external codebases (nixpkgs, GitHub) | `github` MCP | `search_code` tool |
   | Kubernetes cluster ops | `kubernetes` | k3s management |
   | Run Python code | `python` | Computation, scripting |
   | Multi-step analysis | `sequential-thinking` | Architecture decisions |
