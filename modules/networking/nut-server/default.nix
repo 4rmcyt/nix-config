@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   ...
 }: {
   users.users.nut = {
@@ -15,9 +14,6 @@
   ];
 
   systemd.services.upsdrv.wantedBy = ["multi-user.target"];
-  systemd.services.upsd.after = lib.mkForce ["network.target" "upsdrv.service"];
-  systemd.services.upsmon.after = ["upsd.service"];
-  systemd.services.upsmon.wants = ["upsd.service"];
 
   systemd.services.prometheus-nut-exporter = lib.mkIf config.services.prometheus.exporters.nut.enable {
     after = ["upsd.service"];
