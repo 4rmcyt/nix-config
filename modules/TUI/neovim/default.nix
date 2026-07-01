@@ -31,6 +31,7 @@
       updatetime = 50;
       cursorline = true;
       clipboard = "unnamedplus";
+      mouse = "a";
       undofile = true;
       ignorecase = true;
       smartcase = true;

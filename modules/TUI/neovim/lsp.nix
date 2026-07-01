@@ -68,6 +68,19 @@
     };
     plugins.fidget.enable = true;
 
+    # claude-code LSP — same pattern as helix in modules/TUI/common/default.nix
+    extraConfigLua = ''
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function()
+          vim.lsp.start({
+            name = "claude-code",
+            cmd = { "claude-code", "lsp" },
+            root_dir = vim.fs.root(0, { ".git" }),
+          })
+        end,
+      })
+    '';
+
     # Formatters/linters as extra packages
     extraPackages = with pkgs; [
       alejandra

@@ -278,6 +278,52 @@
       options.desc = "Close Diff View";
     }
 
+    # ── Undotree ──────────────────────────────────────────────────────────
+    {
+      mode = "n";
+      key = "<leader>u";
+      action = "<cmd>UndotreeToggle<CR>";
+      options.desc = "Undo Tree";
+    }
+
+    # ── Treesitter textobjects ────────────────────────────────────────────
+    {
+      mode = ["x" "o"];
+      key = "af";
+      action = "<cmd>lua require('nvim-treesitter-textobjects.select').select_textobject('@function.outer', 'textobjects')<CR>";
+      options.desc = "Outer function";
+    }
+    {
+      mode = ["x" "o"];
+      key = "if";
+      action = "<cmd>lua require('nvim-treesitter-textobjects.select').select_textobject('@function.inner', 'textobjects')<CR>";
+      options.desc = "Inner function";
+    }
+    {
+      mode = ["x" "o"];
+      key = "ac";
+      action = "<cmd>lua require('nvim-treesitter-textobjects.select').select_textobject('@class.outer', 'textobjects')<CR>";
+      options.desc = "Outer class";
+    }
+    {
+      mode = ["x" "o"];
+      key = "ic";
+      action = "<cmd>lua require('nvim-treesitter-textobjects.select').select_textobject('@class.inner', 'textobjects')<CR>";
+      options.desc = "Inner class";
+    }
+    {
+      mode = "n";
+      key = "]f";
+      action = "<cmd>lua require('nvim-treesitter-textobjects.move').goto_next_start('@function.outer', 'textobjects')<CR>";
+      options.desc = "Next function";
+    }
+    {
+      mode = "n";
+      key = "[f";
+      action = "<cmd>lua require('nvim-treesitter-textobjects.move').goto_previous_start('@function.outer', 'textobjects')<CR>";
+      options.desc = "Prev function";
+    }
+
     # ── Persistence ───────────────────────────────────────────────────────
     {
       mode = "n";

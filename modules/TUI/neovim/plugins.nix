@@ -180,5 +180,34 @@
 
     # Auto-save/restore session per directory
     persistence.enable = true;
+
+    # Surround — add/delete/replace surrounding chars (",',(,[,{,<,...)
+    mini = {
+      enable = true;
+      modules.surround = {
+        mappings = {
+          add = "gsa";
+          delete = "gsd";
+          replace = "gsr";
+          find = "gsf";
+          find_left = "gsF";
+          highlight = "gsh";
+          update_n_lines = "gsn";
+        };
+      };
+    };
+
+    # Treesitter textobjects — af/if (function), ac/ic (class), etc.
+    treesitter-textobjects.enable = true;
+
+    # Undo history visualizer
+    undotree = {
+      enable = true;
+      settings = {
+        FocusOnToggle = true;
+        HelpLine = false;
+        ShortIndicators = true;
+      };
+    };
   };
 }
