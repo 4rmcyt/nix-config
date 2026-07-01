@@ -11,6 +11,8 @@
     username = "zeev";
     homeDirectory = "/home/zeev";
 
+    sessionVariables.PYENV_ROOT = "$HOME/.pyenv";
+
     packages = with pkgs; [
       cuetools
       flac

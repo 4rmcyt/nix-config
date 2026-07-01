@@ -23,6 +23,7 @@
     ../../modules/WM/niri/monitors/matebook.nix
     ../../modules/WM/niri/noctalia.nix
     ../../modules/WM/mime
+    ../../modules/dev
   ];
   home = {
     username = "zeev";
@@ -50,6 +51,7 @@
 
       EDITOR = lib.mkForce "hx";
       BROWSER = lib.mkForce "google-chrome-stable";
+      PYENV_ROOT = "$HOME/.pyenv";
     };
   };
 
