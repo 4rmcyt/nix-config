@@ -36,6 +36,8 @@
         regex
         comment
         diff
+        vim
+        vimdoc
       ];
     };
 
@@ -151,5 +153,32 @@
       enable = true;
       settings.modes.diagnostics.auto_open = false;
     };
+
+    # Jump anywhere on screen with search labels
+    flash.enable = true;
+
+    # Side-by-side diff viewer + file history
+    diffview.enable = true;
+
+    # Floating cmdline, messages, popups
+    noice = {
+      enable = true;
+      settings = {
+        lsp.override = {
+          "vim.lsp.util.convert_input_to_markdown_lines" = true;
+          "vim.lsp.util.stylize_markdown" = true;
+          "cmp.entry.get_documentation" = true;
+        };
+        presets = {
+          bottom_search = true;
+          command_palette = true;
+          long_message_to_split = true;
+          inc_rename = false;
+        };
+      };
+    };
+
+    # Auto-save/restore session per directory
+    persistence.enable = true;
   };
 }

@@ -243,5 +243,59 @@
       action = "<cmd>TodoTelescope<CR>";
       options.desc = "Search TODOs";
     }
+
+    # ── Flash ─────────────────────────────────────────────────────────────
+    {
+      mode = ["n" "x" "o"];
+      key = "s";
+      action = "<cmd>lua require('flash').jump()<CR>";
+      options.desc = "Flash Jump";
+    }
+    {
+      mode = ["n" "x" "o"];
+      key = "S";
+      action = "<cmd>lua require('flash').treesitter()<CR>";
+      options.desc = "Flash Treesitter";
+    }
+
+    # ── Diffview ──────────────────────────────────────────────────────────
+    {
+      mode = "n";
+      key = "<leader>gd";
+      action = "<cmd>DiffviewOpen<CR>";
+      options.desc = "Diff View";
+    }
+    {
+      mode = "n";
+      key = "<leader>gh";
+      action = "<cmd>DiffviewFileHistory %<CR>";
+      options.desc = "File History";
+    }
+    {
+      mode = "n";
+      key = "<leader>gq";
+      action = "<cmd>DiffviewClose<CR>";
+      options.desc = "Close Diff View";
+    }
+
+    # ── Persistence ───────────────────────────────────────────────────────
+    {
+      mode = "n";
+      key = "<leader>qs";
+      action = "<cmd>lua require('persistence').load()<CR>";
+      options.desc = "Restore Session";
+    }
+    {
+      mode = "n";
+      key = "<leader>ql";
+      action = "<cmd>lua require('persistence').load({ last = true })<CR>";
+      options.desc = "Restore Last Session";
+    }
+    {
+      mode = "n";
+      key = "<leader>qd";
+      action = "<cmd>lua require('persistence').stop()<CR>";
+      options.desc = "Don't Save Session";
+    }
   ];
 }
