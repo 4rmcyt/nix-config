@@ -13,7 +13,7 @@ in {
       ../../../hosts/nixos/matebook
       inputs.niri-flake.nixosModules.niri
       inputs.noctalia.nixosModules.default
-      ../../../modules/nix/determinate
+      ../../../modules/nix/lix
     ];
 
     # Facter
