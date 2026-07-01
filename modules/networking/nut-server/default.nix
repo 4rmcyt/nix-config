@@ -10,6 +10,8 @@
 
   users.groups.nut = {};
 
+  environment.etc."nut/upsd.conf".mode = "0640";
+
   systemd.tmpfiles.rules = [
     "z /etc/nut/upsd.conf 0640 root nut -"
   ];
