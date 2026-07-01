@@ -74,7 +74,7 @@
       ruff
       shfmt
       stylua
-      nodePackages.bash-language-server
+      bash-language-server
     ];
   };
 }
