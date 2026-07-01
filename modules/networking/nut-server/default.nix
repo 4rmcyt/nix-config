@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   ...
 }: {
   users.users.nut = {
