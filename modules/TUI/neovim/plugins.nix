@@ -133,7 +133,11 @@
     # Markdown rendering
     render-markdown = {
       enable = true;
-      settings.file_types = ["markdown"];
+      settings = {
+        file_types = ["markdown"];
+        html.enabled = false;
+        latex.enabled = false;
+      };
     };
 
     # Bracket pair colorization (like VSCode bracketPairColorization)
@@ -158,7 +162,16 @@
     flash.enable = true;
 
     # Side-by-side diff viewer + file history
-    diffview.enable = true;
+    diffview = {
+      enable = true;
+      settings.hg_cmd = [""];
+    };
+
+    # Notification backend for noice
+    notify = {
+      enable = true;
+      settings.timeout = 3000;
+    };
 
     # Floating cmdline, messages, popups
     noice = {
@@ -184,6 +197,7 @@
     # Surround — add/delete/replace surrounding chars (",',(,[,{,<,...)
     mini = {
       enable = true;
+      mockDevIcons = true;
       modules.surround = {
         mappings = {
           add = "gsa";
