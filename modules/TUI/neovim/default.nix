@@ -7,6 +7,7 @@
 
   programs.nixvim = {
     nixpkgs.source = pkgs.path;
+    nixpkgs.config.allowUnfree = true;
     enable = true;
     defaultEditor = true;
     viAlias = true;

@@ -197,7 +197,6 @@
     # Claude Code terminal integration
     claude-code = {
       enable = true;
-      package = pkgs.vimPlugins.claude-code-nvim;
       settings = {
         window = {
           position = "rightbelow vsplit";
