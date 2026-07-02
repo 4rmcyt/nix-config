@@ -18,7 +18,7 @@
   ];
 
   # ── Time / Locale ────────────────────────────────────────────────────────
-  time.timeZone    = config.my.defaults.timezone;
+  time.timeZone = config.my.defaults.timezone;
   i18n.defaultLocale = config.my.defaults.locale;
 
   # ── Secrets ─────────────────────────────────────────────────────────────
@@ -28,13 +28,13 @@
     secrets = {
       ssh_host_ed25519_key = {
         sopsFile = ../../../secrets/system.yaml;
-        key      = "ssh_host_ed25519_key";
-        owner    = config.users.users.root.name;
-        group    = config.users.groups.root.name;
-        mode     = "0600";
+        key = "ssh_host_ed25519_key";
+        owner = config.users.users.root.name;
+        group = config.users.groups.root.name;
+        mode = "0600";
       };
       zeev_password = {
-        sopsFile      = ../../../secrets/common.yaml;
+        sopsFile = ../../../secrets/common.yaml;
         neededForUsers = true;
       };
     };
@@ -45,7 +45,7 @@
   # nftables input chain enforces this at packet level too (defence in depth).
   services.openssh = {
     enable = true;
-    ports  = [ 22 ];
+    ports = [22];
     # No listenAddresses — sshd listens on all interfaces.
     # Access is restricted at packet level by nftables input chain:
     # only trusted VLAN (vlan10) and tailscale0 are allowed tcp/22.
@@ -56,15 +56,15 @@
       }
     ];
     settings = {
-      PasswordAuthentication      = false;
-      PermitRootLogin             = "no";
+      PasswordAuthentication = false;
+      PermitRootLogin = "no";
       KbdInteractiveAuthentication = false;
-      AllowUsers                  = [ config.my.defaults.user ];
-      MaxAuthTries                = 3;
-      LoginGraceTime              = 30;
-      X11Forwarding               = false;
-      AllowAgentForwarding        = false;
-      AllowTcpForwarding          = "no";
+      AllowUsers = [config.my.defaults.user];
+      MaxAuthTries = 3;
+      LoginGraceTime = 30;
+      X11Forwarding = false;
+      AllowAgentForwarding = false;
+      AllowTcpForwarding = "no";
     };
   };
 
@@ -80,39 +80,39 @@
       config.my.network.vlans.iot
       config.my.network.vlans.media
     ];
-    tailscaleIp      = "100.64.0.3";
-    gcpRelayIp       = "203.0.113.1";
+    tailscaleIp = "100.64.0.3";
+    gcpRelayIp = "203.0.113.1";
     nextdnsProfileId = "nextdns0";
   };
 
   # ── Monitoring ──────────────────────────────────────────────────────────
   my.nodeExporter = {
-    enable       = true;
+    enable = true;
     openFirewall = false;
     extraCollectors = [
-      "conntrack"  # NAT table usage — critical for router health
-      "ethtool"    # NIC errors/drops per physical interface
-      "nftables"   # firewall rule counters (drops per zone)
+      "conntrack" # NAT table usage — critical for router health
+      "ethtool" # NIC errors/drops per physical interface
+      "nftables" # firewall rule counters (drops per zone)
     ];
   };
 
   my.alloyClient = {
-    enable  = true;
+    enable = true;
     lokiUrl = "http://${config.my.network.hosts.homeserver_lan}:3100/loki/api/v1/push";
   };
 
   # Unbound DNS exporter — cache hit rate, query latency, SERVFAIL rate
   services.prometheus.exporters.unbound = {
-    enable          = true;
-    port            = 9167;
-    unbound.host    = "unix:///run/unbound/unbound.ctl";
+    enable = true;
+    port = 9167;
+    unbound.host = "unix:///run/unbound/unbound.ctl";
   };
 
   # Kea DHCP exporter — lease utilization per subnet/VLAN
   services.prometheus.exporters.kea = {
-    enable  = true;
-    port    = 9547;
-    targets = [ "/run/kea/kea-dhcp4.socket" ];
+    enable = true;
+    port = 9547;
+    targets = ["/run/kea/kea-dhcp4.socket"];
   };
 
   # Kea control socket — required by kea_exporter
@@ -129,18 +129,18 @@
   # ACL enforcement lives in Headscale config (out of scope here).
   # --accept-routes is off: the router doesn't need to reach other tailnet subnets.
   networking.tailscaleAuth = {
-    enable      = true;
-    sopsFile    = ../../../secrets/tailscale-router.yaml;
+    enable = true;
+    sopsFile = ../../../secrets/tailscale-router.yaml;
     loginServer = "https://hs.example.com";
-    advertiseRoutes = [ "192.168.30.0/24" ];
-    networkInterface = "enp1s0";   # PLACEHOLDER — match wanInterface in networking.nix
+    advertiseRoutes = ["192.168.30.0/24"];
+    networkInterface = "enp1s0"; # PLACEHOLDER — match wanInterface in networking.nix
   };
 
   # ── Nix ─────────────────────────────────────────────────────────────────
   nix.settings = {
-    cores    = 2;
+    cores = 2;
     max-jobs = 2;
-    trusted-users = [ "root" "@wheel" ];
+    trusted-users = ["root" "@wheel"];
   };
 
   # ── Packages ─────────────────────────────────────────────────────────────
@@ -156,10 +156,10 @@
 
   # ── Users ────────────────────────────────────────────────────────────────
   users.users.${config.my.defaults.user} = {
-    isNormalUser        = true;
-    shell               = pkgs.zsh;
-    extraGroups         = [ "wheel" ];
-    hashedPasswordFile  = config.sops.secrets.zeev_password.path;
+    isNormalUser = true;
+    shell = pkgs.zsh;
+    extraGroups = ["wheel"];
+    hashedPasswordFile = config.sops.secrets.zeev_password.path;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyieBFROVPWmH3iC2ZAE+5zofMd6mnunBzfObEwMgFx"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks redacted@example.com"
@@ -178,7 +178,7 @@
   # ── NTP ─────────────────────────────────────────────────────────────────
   services.timesyncd = {
     enable = true;
-    servers = [ "0.pool.ntp.org" "1.pool.ntp.org" "2.pool.ntp.org" ];
+    servers = ["0.pool.ntp.org" "1.pool.ntp.org" "2.pool.ntp.org"];
   };
 
   # ── mDNS proxy (Avahi reflector) ────────────────────────────────────────
@@ -188,8 +188,8 @@
   services.avahi = {
     enable = true;
     reflector = true;
-    allowInterfaces = [ "vlan10" "vlan20" "vlan30" ];
-    nssmdns4 = false;  # не нужен на роутере, только proxy
+    allowInterfaces = ["vlan10" "vlan20" "vlan30"];
+    nssmdns4 = false; # не нужен на роутере, только proxy
     publish.enable = false;
   };
 

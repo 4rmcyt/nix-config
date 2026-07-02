@@ -61,18 +61,54 @@ _: {
       };
 
       bindings.keys = [
-        {key = "ctrl+shift+t"; action = "CreateTab";}
-        {key = "ctrl+shift+w"; action = "CloseTab";}
-        {key = "ctrl+tab"; action = "SelectNextTab";}
-        {key = "ctrl+shift+tab"; action = "SelectPrevTab";}
-        {key = "alt+1"; action = "SelectTab1";}
-        {key = "alt+2"; action = "SelectTab2";}
-        {key = "alt+3"; action = "SelectTab3";}
-        {key = "alt+4"; action = "SelectTab4";}
-        {key = "alt+5"; action = "SelectTab5";}
-        {key = "ctrl+equal"; action = "IncreaseFontSize";}
-        {key = "ctrl+minus"; action = "DecreaseFontSize";}
-        {key = "ctrl+0"; action = "ResetFontSize";}
+        {
+          key = "ctrl+shift+t";
+          action = "CreateTab";
+        }
+        {
+          key = "ctrl+shift+w";
+          action = "CloseTab";
+        }
+        {
+          key = "ctrl+tab";
+          action = "SelectNextTab";
+        }
+        {
+          key = "ctrl+shift+tab";
+          action = "SelectPrevTab";
+        }
+        {
+          key = "alt+1";
+          action = "SelectTab1";
+        }
+        {
+          key = "alt+2";
+          action = "SelectTab2";
+        }
+        {
+          key = "alt+3";
+          action = "SelectTab3";
+        }
+        {
+          key = "alt+4";
+          action = "SelectTab4";
+        }
+        {
+          key = "alt+5";
+          action = "SelectTab5";
+        }
+        {
+          key = "ctrl+equal";
+          action = "IncreaseFontSize";
+        }
+        {
+          key = "ctrl+minus";
+          action = "DecreaseFontSize";
+        }
+        {
+          key = "ctrl+0";
+          action = "ResetFontSize";
+        }
       ];
     };
   };

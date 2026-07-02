@@ -233,7 +233,6 @@
     secretsFile = ../../../secrets/crowdsec.yaml;
   };
 
-
   my.nodeExporter = {
     enable = true;
     openFirewall = false; # port already open in networking.firewall

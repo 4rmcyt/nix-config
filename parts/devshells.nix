@@ -2,7 +2,6 @@
 {inputs, ...}: {
   perSystem = {
     pkgs,
-    system,
     ...
   }: {
     devShells = {

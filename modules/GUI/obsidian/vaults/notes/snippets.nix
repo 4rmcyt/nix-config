@@ -1,4 +1,4 @@
-{...}: [
+_: [
   {
     name = "system-font";
     text =

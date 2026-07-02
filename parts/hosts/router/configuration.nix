@@ -2,7 +2,6 @@
 # x86_64, Intel Atom D525, legacy BIOS, headless appliance.
 {
   config,
-  inputs,
   ...
 }: let
   inherit (config.meta) owner;

@@ -137,7 +137,6 @@
 
     my.hardening.enable = true;
 
-
     my.crowdsecBouncer = {
       enable = true;
       lapiUrl = "http://100.64.0.3:8088";

@@ -19,7 +19,7 @@
 #   wan → *          : deny except ct established/related
 #
 # Tailscale interface (ts) is treated as trusted for SSH access to the router itself.
-{ ... }: {
+_: {
   networking.nftables = {
     enable = true;
     ruleset = ''

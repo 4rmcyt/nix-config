@@ -11,11 +11,26 @@
   ],
   "__elements": {},
   "__requires": [
-    {"type": "grafana", "id": "grafana", "name": "Grafana", "version": "10.4.0"},
-    {"type": "datasource", "id": "prometheus", "name": "Prometheus", "version": "1.0.0"},
-    {"type": "panel", "id": "stat", "name": "Stat", "version": ""},
-    {"type": "panel", "id": "timeseries", "name": "Time series", "version": ""},
-    {"type": "panel", "id": "gauge", "name": "Gauge", "version": ""}
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.4.0"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    { "type": "panel", "id": "stat", "name": "Stat", "version": "" },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    },
+    { "type": "panel", "id": "gauge", "name": "Gauge", "version": "" }
   ],
   "description": "NixOS Router (Sophos SG110/120) — CPU, RAM, network, conntrack, nftables",
   "editable": true,
@@ -26,172 +41,239 @@
   "panels": [
     {
       "collapsed": false,
-      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0},
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
       "id": 100,
       "title": "System",
       "type": "row"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "thresholds"},
-          "thresholds": {"mode": "absolute", "steps": [
-            {"color": "green", "value": null},
-            {"color": "yellow", "value": 70},
-            {"color": "red", "value": 90}
-          ]},
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 70 },
+              { "color": "red", "value": 90 }
+            ]
+          },
           "unit": "percent",
-          "min": 0, "max": 100
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
-      "gridPos": {"h": 4, "w": 4, "x": 0, "y": 1},
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 1 },
       "id": 1,
-      "options": {"reduceOptions": {"calcs": ["lastNotNull"]}, "orientation": "auto", "showThresholdLabels": false, "showThresholdMarkers": true},
-      "targets": [{
-        "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
-        "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{job=\"router-node\", mode=\"idle\"}[5m])) * 100)",
-        "legendFormat": "CPU",
-        "refId": "A"
-      }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "auto",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{job=\"router-node\", mode=\"idle\"}[5m])) * 100)",
+          "legendFormat": "CPU",
+          "refId": "A"
+        }
+      ],
       "title": "CPU Usage",
       "type": "gauge"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "thresholds"},
-          "thresholds": {"mode": "absolute", "steps": [
-            {"color": "green", "value": null},
-            {"color": "yellow", "value": 70},
-            {"color": "red", "value": 90}
-          ]},
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 70 },
+              { "color": "red", "value": 90 }
+            ]
+          },
           "unit": "percent",
-          "min": 0, "max": 100
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
-      "gridPos": {"h": 4, "w": 4, "x": 4, "y": 1},
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 1 },
       "id": 2,
-      "options": {"reduceOptions": {"calcs": ["lastNotNull"]}, "orientation": "auto", "showThresholdLabels": false, "showThresholdMarkers": true},
-      "targets": [{
-        "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
-        "expr": "100 - (node_memory_MemAvailable_bytes{job=\"router-node\"} / node_memory_MemTotal_bytes{job=\"router-node\"} * 100)",
-        "legendFormat": "RAM",
-        "refId": "A"
-      }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "auto",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "100 - (node_memory_MemAvailable_bytes{job=\"router-node\"} / node_memory_MemTotal_bytes{job=\"router-node\"} * 100)",
+          "legendFormat": "RAM",
+          "refId": "A"
+        }
+      ],
       "title": "Memory Usage",
       "type": "gauge"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "thresholds"},
-          "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}]},
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          },
           "unit": "s"
         },
         "overrides": []
       },
-      "gridPos": {"h": 4, "w": 4, "x": 8, "y": 1},
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 1 },
       "id": 3,
-      "options": {"colorMode": "value", "graphMode": "none", "reduceOptions": {"calcs": ["lastNotNull"]}, "textMode": "auto"},
-      "targets": [{
-        "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
-        "expr": "node_time_seconds{job=\"router-node\"} - node_boot_time_seconds{job=\"router-node\"}",
-        "legendFormat": "Uptime",
-        "refId": "A"
-      }],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "node_time_seconds{job=\"router-node\"} - node_boot_time_seconds{job=\"router-node\"}",
+          "legendFormat": "Uptime",
+          "refId": "A"
+        }
+      ],
       "title": "Uptime",
       "type": "stat"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "thresholds"},
-          "thresholds": {"mode": "absolute", "steps": [
-            {"color": "green", "value": null},
-            {"color": "yellow", "value": 80},
-            {"color": "red", "value": 95}
-          ]},
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 80 },
+              { "color": "red", "value": 95 }
+            ]
+          },
           "unit": "percent",
-          "min": 0, "max": 100
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
-      "gridPos": {"h": 4, "w": 4, "x": 12, "y": 1},
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 1 },
       "id": 4,
-      "options": {"reduceOptions": {"calcs": ["lastNotNull"]}, "orientation": "auto", "showThresholdLabels": false, "showThresholdMarkers": true},
-      "targets": [{
-        "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
-        "expr": "100 - (node_filesystem_avail_bytes{job=\"router-node\", mountpoint=\"/\"} / node_filesystem_size_bytes{job=\"router-node\", mountpoint=\"/\"} * 100)",
-        "legendFormat": "Disk /",
-        "refId": "A"
-      }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "auto",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "100 - (node_filesystem_avail_bytes{job=\"router-node\", mountpoint=\"/\"} / node_filesystem_size_bytes{job=\"router-node\", mountpoint=\"/\"} * 100)",
+          "legendFormat": "Disk /",
+          "refId": "A"
+        }
+      ],
       "title": "Disk Usage /",
       "type": "gauge"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "thresholds"},
-          "thresholds": {"mode": "absolute", "steps": [
-            {"color": "green", "value": null},
-            {"color": "yellow", "value": 70},
-            {"color": "red", "value": 90}
-          ]},
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 70 },
+              { "color": "red", "value": 90 }
+            ]
+          },
           "unit": "percent",
-          "min": 0, "max": 100
+          "min": 0,
+          "max": 100
         },
         "overrides": []
       },
-      "gridPos": {"h": 4, "w": 4, "x": 16, "y": 1},
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 1 },
       "id": 5,
-      "options": {"reduceOptions": {"calcs": ["lastNotNull"]}, "orientation": "auto", "showThresholdLabels": false, "showThresholdMarkers": true},
-      "targets": [{
-        "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
-        "expr": "node_memory_SwapTotal_bytes{job=\"router-node\"} > 0 and (100 - (node_memory_SwapFree_bytes{job=\"router-node\"} / node_memory_SwapTotal_bytes{job=\"router-node\"} * 100))",
-        "legendFormat": "zram",
-        "refId": "A"
-      }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "auto",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "node_memory_SwapTotal_bytes{job=\"router-node\"} > 0 and (100 - (node_memory_SwapFree_bytes{job=\"router-node\"} / node_memory_SwapTotal_bytes{job=\"router-node\"} * 100))",
+          "legendFormat": "zram",
+          "refId": "A"
+        }
+      ],
       "title": "zram Usage",
       "type": "gauge"
     },
     {
       "collapsed": false,
-      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 5},
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
       "id": 101,
       "title": "Network — WAN",
       "type": "row"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "palette-classic"},
-          "custom": {"drawStyle": "line", "lineWidth": 1, "fillOpacity": 10, "gradientMode": "none", "showPoints": "never", "spanNulls": false},
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "showPoints": "never",
+            "spanNulls": false
+          },
           "unit": "bps"
         },
         "overrides": [
-          {"matcher": {"id": "byName", "options": "TX"}, "properties": [{"id": "custom.transform", "value": "negative-Y"}]}
+          {
+            "matcher": { "id": "byName", "options": "TX" },
+            "properties": [{ "id": "custom.transform", "value": "negative-Y" }]
+          }
         ]
       },
-      "gridPos": {"h": 6, "w": 12, "x": 0, "y": 6},
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 6 },
       "id": 10,
-      "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "multi"}},
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
       "targets": [
         {
-          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "expr": "rate(node_network_receive_bytes_total{job=\"router-node\", device=~\"enp.*\"}[5m]) * 8",
           "legendFormat": "RX {{device}}",
           "refId": "A"
         },
         {
-          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "expr": "rate(node_network_transmit_bytes_total{job=\"router-node\", device=~\"enp.*\"}[5m]) * 8",
           "legendFormat": "TX {{device}}",
           "refId": "B"
@@ -201,29 +283,40 @@
       "type": "timeseries"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "palette-classic"},
-          "custom": {"drawStyle": "line", "lineWidth": 1, "fillOpacity": 10, "showPoints": "never"},
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          },
           "unit": "bps"
         },
         "overrides": [
-          {"matcher": {"id": "byName", "options": "TX"}, "properties": [{"id": "custom.transform", "value": "negative-Y"}]}
+          {
+            "matcher": { "id": "byName", "options": "TX" },
+            "properties": [{ "id": "custom.transform", "value": "negative-Y" }]
+          }
         ]
       },
-      "gridPos": {"h": 6, "w": 12, "x": 12, "y": 6},
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 6 },
       "id": 11,
-      "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "multi"}},
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
       "targets": [
         {
-          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "expr": "rate(node_network_receive_bytes_total{job=\"router-node\", device=~\"vlan.*\"}[5m]) * 8",
           "legendFormat": "RX {{device}}",
           "refId": "A"
         },
         {
-          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "expr": "rate(node_network_transmit_bytes_total{job=\"router-node\", device=~\"vlan.*\"}[5m]) * 8",
           "legendFormat": "TX {{device}}",
           "refId": "B"
@@ -234,137 +327,182 @@
     },
     {
       "collapsed": false,
-      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 12},
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 12 },
       "id": 102,
       "title": "NAT — Conntrack",
       "type": "row"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "thresholds"},
-          "thresholds": {"mode": "absolute", "steps": [
-            {"color": "green", "value": null},
-            {"color": "yellow", "value": 50000},
-            {"color": "red", "value": 80000}
-          ]},
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 50000 },
+              { "color": "red", "value": 80000 }
+            ]
+          },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 13},
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 13 },
       "id": 20,
-      "options": {"colorMode": "background", "graphMode": "area", "reduceOptions": {"calcs": ["lastNotNull"]}},
-      "targets": [{
-        "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
-        "expr": "node_nf_conntrack_entries{job=\"router-node\"}",
-        "legendFormat": "Active",
-        "refId": "A"
-      }],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "reduceOptions": { "calcs": ["lastNotNull"] }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "node_nf_conntrack_entries{job=\"router-node\"}",
+          "legendFormat": "Active",
+          "refId": "A"
+        }
+      ],
       "title": "Conntrack Active Entries",
       "type": "stat"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "thresholds"},
-          "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}]},
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 13},
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 13 },
       "id": 21,
-      "options": {"colorMode": "value", "graphMode": "none", "reduceOptions": {"calcs": ["lastNotNull"]}},
-      "targets": [{
-        "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
-        "expr": "node_nf_conntrack_entries_limit{job=\"router-node\"}",
-        "legendFormat": "Limit",
-        "refId": "A"
-      }],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": { "calcs": ["lastNotNull"] }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "node_nf_conntrack_entries_limit{job=\"router-node\"}",
+          "legendFormat": "Limit",
+          "refId": "A"
+        }
+      ],
       "title": "Conntrack Limit",
       "type": "stat"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "thresholds"},
-          "thresholds": {"mode": "percentage", "steps": [
-            {"color": "green", "value": null},
-            {"color": "yellow", "value": 60},
-            {"color": "red", "value": 80}
-          ]},
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 60 },
+              { "color": "red", "value": 80 }
+            ]
+          },
           "unit": "percentunit",
-          "min": 0, "max": 1
+          "min": 0,
+          "max": 1
         },
         "overrides": []
       },
-      "gridPos": {"h": 4, "w": 6, "x": 12, "y": 13},
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 13 },
       "id": 22,
-      "options": {"reduceOptions": {"calcs": ["lastNotNull"]}, "showThresholdMarkers": true},
-      "targets": [{
-        "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
-        "expr": "node_nf_conntrack_entries{job=\"router-node\"} / node_nf_conntrack_entries_limit{job=\"router-node\"}",
-        "legendFormat": "Usage %",
-        "refId": "A"
-      }],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "node_nf_conntrack_entries{job=\"router-node\"} / node_nf_conntrack_entries_limit{job=\"router-node\"}",
+          "legendFormat": "Usage %",
+          "refId": "A"
+        }
+      ],
       "title": "Conntrack Table Usage",
       "type": "gauge"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "palette-classic"},
-          "custom": {"drawStyle": "line", "lineWidth": 1, "fillOpacity": 10, "showPoints": "never"},
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          },
           "unit": "short"
         },
         "overrides": []
       },
-      "gridPos": {"h": 6, "w": 24, "x": 0, "y": 17},
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 17 },
       "id": 23,
-      "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "multi"}},
-      "targets": [{
-        "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
-        "expr": "node_nf_conntrack_entries{job=\"router-node\"}",
-        "legendFormat": "conntrack entries",
-        "refId": "A"
-      }],
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "node_nf_conntrack_entries{job=\"router-node\"}",
+          "legendFormat": "conntrack entries",
+          "refId": "A"
+        }
+      ],
       "title": "Conntrack Entries Over Time",
       "type": "timeseries"
     },
     {
       "collapsed": false,
-      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 23},
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 23 },
       "id": 103,
       "title": "Firewall — nftables Drops",
       "type": "row"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "palette-classic"},
-          "custom": {"drawStyle": "bars", "lineWidth": 1, "fillOpacity": 80, "showPoints": "never"},
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "bars",
+            "lineWidth": 1,
+            "fillOpacity": 80,
+            "showPoints": "never"
+          },
           "unit": "pps"
         },
         "overrides": []
       },
-      "gridPos": {"h": 7, "w": 12, "x": 0, "y": 24},
+      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 24 },
       "id": 30,
-      "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "multi"}},
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
       "targets": [
         {
-          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "expr": "rate(node_nft_packets_total{job=\"router-node\", chain=\"input\", comment=~\".*drop.*\"}[5m])",
           "legendFormat": "input drop",
           "refId": "A"
         },
         {
-          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "expr": "rate(node_nft_packets_total{job=\"router-node\", chain=\"forward\", comment=~\".*drop.*\"}[5m])",
           "legendFormat": "forward drop",
           "refId": "B"
@@ -374,21 +512,29 @@
       "type": "timeseries"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "palette-classic"},
-          "custom": {"drawStyle": "line", "lineWidth": 1, "fillOpacity": 10, "showPoints": "never"},
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          },
           "unit": "pps"
         },
         "overrides": []
       },
-      "gridPos": {"h": 7, "w": 12, "x": 12, "y": 24},
+      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 24 },
       "id": 31,
-      "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "multi"}},
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
       "targets": [
         {
-          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "expr": "rate(node_nft_packets_total{job=\"router-node\", chain=\"forward\"}[5m])",
           "legendFormat": "forward {{comment}}",
           "refId": "A"
@@ -399,33 +545,41 @@
     },
     {
       "collapsed": false,
-      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 31},
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 31 },
       "id": 104,
       "title": "NIC Errors (ethtool)",
       "type": "row"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "palette-classic"},
-          "custom": {"drawStyle": "line", "lineWidth": 1, "fillOpacity": 10, "showPoints": "never"},
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          },
           "unit": "pps"
         },
         "overrides": []
       },
-      "gridPos": {"h": 6, "w": 12, "x": 0, "y": 32},
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 32 },
       "id": 40,
-      "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "multi"}},
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
       "targets": [
         {
-          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "expr": "rate(node_ethtool_received_errors_total{job=\"router-node\"}[5m])",
           "legendFormat": "RX errors {{device}}",
           "refId": "A"
         },
         {
-          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "expr": "rate(node_ethtool_transmitted_errors_total{job=\"router-node\"}[5m])",
           "legendFormat": "TX errors {{device}}",
           "refId": "B"
@@ -435,27 +589,35 @@
       "type": "timeseries"
     },
     {
-      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
       "fieldConfig": {
         "defaults": {
-          "color": {"mode": "palette-classic"},
-          "custom": {"drawStyle": "line", "lineWidth": 1, "fillOpacity": 10, "showPoints": "never"},
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          },
           "unit": "pps"
         },
         "overrides": []
       },
-      "gridPos": {"h": 6, "w": 12, "x": 12, "y": 32},
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 32 },
       "id": 41,
-      "options": {"legend": {"displayMode": "list", "placement": "bottom"}, "tooltip": {"mode": "multi"}},
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
       "targets": [
         {
-          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "expr": "rate(node_network_receive_drop_total{job=\"router-node\", device=~\"enp.*|vlan.*\"}[5m])",
           "legendFormat": "RX drops {{device}}",
           "refId": "A"
         },
         {
-          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "expr": "rate(node_network_transmit_drop_total{job=\"router-node\", device=~\"enp.*|vlan.*\"}[5m])",
           "legendFormat": "TX drops {{device}}",
           "refId": "B"
@@ -468,8 +630,8 @@
   "refresh": "1m",
   "schemaVersion": 39,
   "tags": ["router", "nftables", "conntrack"],
-  "templating": {"list": []},
-  "time": {"from": "now-3h", "to": "now"},
+  "templating": { "list": [] },
+  "time": { "from": "now-3h", "to": "now" },
   "timepicker": {},
   "timezone": "browser",
   "title": "Router Overview",

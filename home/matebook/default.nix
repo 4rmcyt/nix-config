@@ -2,8 +2,7 @@
   pkgs,
   lib,
   ...
-}:
-{
+}: {
   imports = [
     ../../modules/GUI/chrome/home.nix
     ../../modules/GUI/firefox

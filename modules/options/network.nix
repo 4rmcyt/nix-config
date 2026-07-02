@@ -70,26 +70,106 @@
 
     # MAC addresses — one attrset per device, co-located with IPs for DRY dhcp.nix
     mac = {
-      homeserver      = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "homeserver NIC"; };
-      desktop-lan     = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "desktop wired NIC"; };
-      desktop-wifi    = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "desktop wireless NIC"; };
-      matebook        = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "Matebook wireless NIC"; };
-      homeassistant-vm = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "Home Assistant VM virtual NIC"; };
-      switch-office   = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "TL-SG108E office switch mgmt"; };
-      switch-livingroom = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "TL-SG108E living room switch mgmt"; };
-      alexa           = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "Amazon Echo Show"; };
-      plug-entrance   = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "HS103 entrance plug"; };
-      plug-salt       = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "HS103 salt lamp plug"; };
-      plug-office     = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "HS103 office plug"; };
-      plug-table      = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "HS103 table plug"; };
-      plug-window     = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "HS103 window plug"; };
-      humidifier      = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "Smart humidifier"; };
-      sophia-s23      = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "Sophia Samsung S23 Ultra (note: may randomise)"; };
-      volodymyr-s23   = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "Volodymyr Samsung S23 (note: may randomise)"; };
-      ps5             = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "PlayStation 5"; };
-      nintendo-switch = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "Nintendo Switch OLED"; };
-      mi-box-s        = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "Xiaomi Mi Box S"; };
-      roku-tv         = lib.mkOption { type = lib.types.str; default = "02:00:00:00:00:00"; description = "Roku TV WiFi"; };
+      homeserver = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "homeserver NIC";
+      };
+      desktop-lan = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "desktop wired NIC";
+      };
+      desktop-wifi = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "desktop wireless NIC";
+      };
+      matebook = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "Matebook wireless NIC";
+      };
+      homeassistant-vm = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "Home Assistant VM virtual NIC";
+      };
+      switch-office = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "TL-SG108E office switch mgmt";
+      };
+      switch-livingroom = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "TL-SG108E living room switch mgmt";
+      };
+      alexa = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "Amazon Echo Show";
+      };
+      plug-entrance = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "HS103 entrance plug";
+      };
+      plug-salt = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "HS103 salt lamp plug";
+      };
+      plug-office = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "HS103 office plug";
+      };
+      plug-table = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "HS103 table plug";
+      };
+      plug-window = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "HS103 window plug";
+      };
+      humidifier = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "Smart humidifier";
+      };
+      sophia-s23 = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "Sophia Samsung S23 Ultra (note: may randomise)";
+      };
+      volodymyr-s23 = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "Volodymyr Samsung S23 (note: may randomise)";
+      };
+      ps5 = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "PlayStation 5";
+      };
+      nintendo-switch = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "Nintendo Switch OLED";
+      };
+      mi-box-s = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "Xiaomi Mi Box S";
+      };
+      roku-tv = lib.mkOption {
+        type = lib.types.str;
+        default = "02:00:00:00:00:00";
+        description = "Roku TV WiFi";
+      };
     };
 
     # Network infrastructure
