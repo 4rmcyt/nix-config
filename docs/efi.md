@@ -27,12 +27,13 @@ Tools source: MSI Forum — [Svet's UEFI Shell Flash & Patch Tool](https://forum
 │   └── ME_FW/
 ├── limine/
 │   └── BOOTX64.EFI
-├── msi-flash/            ← old BIOS files (not used by STARTUP.NSH)
 └── tools/                ← extra tools (setup_var.efi, shell.efi, etc.)
     ├── setup_var.efi     (datasone build)
     ├── shell.efi
-    ├── STARTUP.NSH       (copy — not used directly)
-    └── ...
+    ├── memtest.efi
+    ├── gdisk.efi
+    ├── uvt.efi
+    └── Mosby_x64.efi
 ```
 
 ### Update procedure
