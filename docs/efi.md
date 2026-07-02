@@ -2,7 +2,6 @@
 
 ## Board Info
 - **Board**: MSI MAG B650 TOMAHAWK WIFI
-- **BIOS**: E7D75AMS.1P8
 - **Platform**: AMD AM5 — Ryzen 7000 / 9000 series (DDR5)
 - Main VarStore: `AmdSetupRPL`
   - GUID: `3A997502-647A-4C82-998E-52EF9486A247`
@@ -11,7 +10,62 @@
 
 ---
 
-## Tools Needed
+## BIOS Update via UEFI Shell (no USB needed)
+
+Tools source: MSI Forum — [Svet's UEFI Shell Flash & Patch Tool](https://forum-en.msi.com/index.php?threads/forum-uefi-shell-flash-patch-tool-v2-51-update-4-for-msi-boards.343010/) (`MSI_UEFI_FlashTool.rar`)
+
+### EFI partition layout (on NVMe, mounted at `/boot/EFI`)
+
+```
+/boot/EFI/
+├── E7D75AMS.1XX          ← BIOS file goes here (root of EFI partition)
+├── EFI/BOOT/             ← svet.efi MUST be here (hardcoded in STARTUP.NSH)
+│   ├── svet.efi          (v2.58+)
+│   ├── AFUE51605s.efi
+│   ├── AFUE592.efi
+│   ├── STARTUP.NSH
+│   └── ME_FW/
+├── limine/
+│   └── BOOTX64.EFI
+├── msi-flash/            ← old BIOS files (not used by STARTUP.NSH)
+└── tools/                ← extra tools (setup_var.efi, shell.efi, etc.)
+    ├── setup_var.efi     (datasone build)
+    ├── shell.efi
+    ├── STARTUP.NSH       (copy — not used directly)
+    └── ...
+```
+
+### Update procedure
+
+1. Download new BIOS from https://www.msi.com/Motherboard/MAG-B650-TOMAHAWK-WIFI/support
+2. Extract and copy BIOS file to EFI root:
+   ```bash
+   sudo cp ~/Downloads/7D75vXXX/E7D75AMS.XXX /boot/EFI/
+   # remove old BIOS file from root if present
+   ```
+3. Ensure `EFI/BOOT/` has the latest tools (copy from `MSI_UEFI_FlashTool.rar`):
+   ```bash
+   sudo mkdir -p /boot/EFI/EFI/BOOT/ME_FW
+   sudo cp ~/Downloads/MSI_UEFI_FlashTool/EFI/BOOT/{svet.efi,AFUE51605s.efi,AFUE592.efi,STARTUP.NSH} /boot/EFI/EFI/BOOT/
+   sudo cp ~/Downloads/MSI_UEFI_FlashTool/EFI/BOOT/ME_FW/* /boot/EFI/EFI/BOOT/ME_FW/
+   ```
+4. Reboot → MSI BIOS → Boot override → UEFI Shell (`shell.efi` or built-in)
+5. In shell — find the NVMe fs number (look for the one with `NVMe` in the mapping table), then:
+   ```
+   fs0:\EFI\BOOT\STARTUP.NSH
+   ```
+   (`fs0` may differ — check mapping table at shell startup)
+6. Script auto-detects BIOS file, flashes with `/B /K` (preserves settings), reboots automatically.
+
+### Notes
+- `STARTUP.NSH` searches for `svet.efi` at `fsN:\EFI\BOOT\svet.efi` — it will fail if svet.efi is elsewhere
+- BIOS file must be in the **root** of the same filesystem (`cd \` then glob `E????AM?*.???*`)
+- `/B /K` flags: `/B` = BIOS block only (not ME), `/K` = keep NVRAM settings
+- Settings survive update — NVRAM is preserved by `/K` flag and AMD crypto-32 path
+
+---
+
+## Tools Needed (for setup_var / hidden settings)
 
 ### Option A: setup_var.efi (datasone) — RECOMMENDED
 Download from: https://github.com/datasone/setup_var.efi/releases
@@ -20,8 +74,10 @@ Syntax:
 ```
 setup_var.efi <offset> [<value>] [-s <size>] [-n <VarName>] [-guid <GUID>]
 ```
-- Read:  `setup_var.efi 0x28`
+- Read:  `setup_var.efi 0x28 -n AmdSetupRPL -guid 3A997502-647A-4C82-998E-52EF9486A247`
 - Write: `setup_var.efi 0x28 0x00 -s 0x01 -n AmdSetupRPL -guid 3A997502-647A-4C82-998E-52EF9486A247`
+
+**Note:** The `setup_var.efi` in `/boot/EFI/tools/` is the datasone build. The old MSI-bundled version does NOT support `-n`/`-guid` flags.
 
 ### Option B: RU.efi (Universal UEFI variable editor)
 Navigate to the GUID `3A997502-647A-4C82-998E-52EF9486A247` → `AmdSetupRPL`
@@ -35,12 +91,11 @@ setup_var 0x28 0x00
 
 ---
 
-## UEFI Shell Quick-Start
+## UEFI Shell Quick-Start (setup_var)
 
-1. Copy `setup_var.efi` to a FAT32 USB drive
-2. Boot into UEFI Shell (MSI: Del → Boot → UEFI Shell, or use `fs0:` from shell)
-3. Navigate to your USB: `fs0:` then `cd EFI` or just `fs0:\setup_var.efi ...`
-4. Use commands below
+1. Boot into UEFI Shell — MSI BIOS: Del → Boot override → `shell.efi` (fs0:\EFI\tools\shell.efi)
+2. Switch to NVMe: `fs0:` (check mapping table — NVMe path contains `NVMe(0x1,...)`)
+3. Run: `\EFI\tools\setup_var.efi <offset> -n AmdSetupRPL -guid 3A997502-647A-4C82-998E-52EF9486A247`
 
 ---
 
