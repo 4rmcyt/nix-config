@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   imports = [
     ../../modules/TUI/common
+    ../../modules/TUI/helix
     ../../modules/TUI/zsh
     ../../modules/TUI/atuin
     ../../modules/GUI/terminal/wezterm

@@ -14,6 +14,7 @@
     ../../modules/GUI/mpv
     ../../modules/GUI/obsidian
     ../../modules/TUI/common
+    ../../modules/TUI/helix
     ../../modules/TUI/neovim
     ../../modules/TUI/zsh
     ../../modules/TUI/atuin
