@@ -417,6 +417,18 @@
           static_configs = [{targets = ["localhost:6060"];}];
         }
         {
+          job_name = "router-node";
+          static_configs = [{targets = ["router.ts.example.com:9100"];}];
+        }
+        {
+          job_name = "router-unbound";
+          static_configs = [{targets = ["router.ts.example.com:9167"];}];
+        }
+        {
+          job_name = "router-kea";
+          static_configs = [{targets = ["router.ts.example.com:9547"];}];
+        }
+        {
           job_name = "gcp-relay-node";
           static_configs = [{targets = ["100.64.0.5:9100"];}];
         }

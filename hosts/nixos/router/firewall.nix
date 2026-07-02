@@ -65,11 +65,19 @@
           # ICMPv6 handled if ever re-enabled
           ip6 nexthdr icmpv6 accept
 
+          # DNS: trusted, iot, media clients → unbound on this router
+          iifname { $TRUSTED_IF, $IOT_IF, $MEDIA_IF } udp dport 53 accept
+          iifname { $TRUSTED_IF, $IOT_IF, $MEDIA_IF } tcp dport 53 accept
+
           # SSH: only from trusted VLAN and Tailscale
           iifname { $TRUSTED_IF, $TS_IF } tcp dport 22 accept
 
           # Tailscale itself needs UDP 41641
           udp dport 41641 accept
+
+          # Prometheus exporters: only from Tailscale (homeserver scrapes via tailnet)
+          # 9100 node_exporter, 9167 unbound_exporter, 9547 kea_exporter
+          iifname $TS_IF tcp dport { 9100, 9167, 9547 } accept
 
           # Everything else → drop (logged for diagnostics)
           log prefix "nft-input-drop: " drop

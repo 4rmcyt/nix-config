@@ -11,6 +11,9 @@
     ./dhcp.nix
     ../../../modules/options
     ../../../modules/networking/tailscale
+    ../../../modules/networking/unbound
+    ../../../modules/monitoring/node-exporter-client.nix
+    ../../../modules/monitoring/alloy-client.nix
     ../../../modules/users/zeev
   ];
 
@@ -66,6 +69,62 @@
       AllowTcpForwarding          = "no";
     };
   };
+
+  # ── DNS (Unbound) ────────────────────────────────────────────────────────
+  # Full resolver on the router: NextDNS DoT upstream + split DNS for *.example.com.
+  # Listens on gateway IPs of trusted/iot/media VLANs.
+  # Work VLAN clients get 1.1.1.1 directly from DHCP — no LAN DNS access.
+  my.unbound = {
+    enable = true;
+    interfaces = [
+      "127.0.0.1"
+      config.my.network.vlans.trusted
+      config.my.network.vlans.iot
+      config.my.network.vlans.media
+    ];
+    tailscaleIp      = "100.64.0.3";
+    gcpRelayIp       = "203.0.113.1";
+    nextdnsProfileId = "nextdns0";
+  };
+
+  # ── Monitoring ──────────────────────────────────────────────────────────
+  my.nodeExporter = {
+    enable       = true;
+    openFirewall = false;
+    extraCollectors = [
+      "conntrack"  # NAT table usage — critical for router health
+      "ethtool"    # NIC errors/drops per physical interface
+      "nftables"   # firewall rule counters (drops per zone)
+    ];
+  };
+
+  my.alloyClient = {
+    enable  = true;
+    lokiUrl = "http://${config.my.network.hosts.homeserver_lan}:3100/loki/api/v1/push";
+  };
+
+  # Unbound DNS exporter — cache hit rate, query latency, SERVFAIL rate
+  services.prometheus.exporters.unbound = {
+    enable          = true;
+    port            = 9167;
+    unbound.host    = "unix:///run/unbound/unbound.ctl";
+  };
+
+  # Kea DHCP exporter — lease utilization per subnet/VLAN
+  services.prometheus.exporters.kea = {
+    enable  = true;
+    port    = 9547;
+    targets = [ "/run/kea/kea-dhcp4.socket" ];
+  };
+
+  # Kea control socket — required by kea_exporter
+  services.kea.dhcp4.settings.control-socket = {
+    socket-type = "unix";
+    socket-name = "/run/kea/kea-dhcp4.socket";
+  };
+
+  # All exporter ports: open on tailscale only (Prometheus on homeserver scrapes via tailnet)
+  # port 9100 node_exporter, 9167 unbound_exporter, 9547 kea_exporter — opened in firewall.nix
 
   # ── Tailscale ───────────────────────────────────────────────────────────
   # Advertises the media VLAN (192.168.30.0/24) to the Headscale tailnet.
