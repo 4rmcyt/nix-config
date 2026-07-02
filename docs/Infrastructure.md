@@ -86,6 +86,93 @@ Grafana dashboards: `router-overview`, `router-unbound`, `router-kea`.
 - SSH on port 22; restricted by nftables to trusted zone + Tailscale only
 - systemd-networkd; 802.1Q VLANs on office trunk `enp2s0`; media + AP as plain physical ports
 
+#### Installation Guide
+
+**Hardware:** Sophos SG110/120 — Intel Atom D525, legacy BIOS, VGA output.
+
+**1. Boot NixOS minimal ISO (x86_64)**
+
+Write to USB and boot. At the console:
+
+```bash
+# Set password for SSH access from desktop (optional)
+passwd nixos
+```
+
+**2. Identify interfaces and disk**
+
+```bash
+ip link                          # note all interface names (enp*s*)
+lsblk -d -o NAME,SIZE,MODEL     # note disk name for disko
+```
+
+Map physical ports by plugging a cable into each one and watching which interface gets carrier:
+```bash
+watch -n1 'ip link | grep -E "enp|state"'
+```
+
+**3. Fill in placeholders in the flake**
+
+In `hosts/nixos/router/networking.nix` — set `wanInterface`, `trunkInterface`, `mediaInterface`, `apInterface`.
+
+In `hosts/nixos/router/firewall.nix` — update `TRUSTED_IFS`, `IOT_IF`, `MEDIA_IF`, `WAN_IF` to match.
+
+In `hosts/nixos/router/default.nix` — update `networking.tailscaleAuth.networkInterface`.
+
+In `modules/disko/router/default.nix` — set `device` to `/dev/disk/by-id/...` from `lsblk -d -o NAME,SIZE,MODEL,SERIAL`.
+
+Generate hostId:
+```bash
+head -c4 /dev/urandom | od -A none -t x4 | tr -d ' \n'
+```
+Set it in `hosts/nixos/router/networking.nix` → `networking.hostId`.
+
+**4. Generate hardware-configuration.nix**
+
+```bash
+nixos-generate-config --no-filesystems --root /mnt
+# copy /mnt/etc/nixos/hardware-configuration.nix to hosts/nixos/router/
+```
+
+**5. Install via nixos-anywhere (from desktop)**
+
+```bash
+# On the Sophos (get its IP from ISP router DHCP table)
+# Make sure SSH is accessible
+
+# From desktop:
+nix run github:nix-community/nixos-anywhere -- \
+  --flake .#router \
+  nixos@<sophos-ip>
+```
+
+nixos-anywhere will run disko (partition + format), install NixOS, and reboot.
+
+**6. After first boot**
+
+```bash
+# From desktop via trusted VLAN or Tailscale:
+ssh zeev@192.168.1.1
+
+# Verify interfaces came up
+ip addr
+networkctl status
+
+# Verify nftables loaded
+nft list ruleset
+
+# Verify Kea DHCP running
+systemctl status kea-dhcp4-server
+```
+
+**7. Configure switches**
+
+```bash
+# After factory reset — switches get IPs from ISP router DHCP by MAC reservation
+SW1_PASS=<password> ./scripts/switch-office-setup.sh
+SW2_PASS=<password> ./scripts/switch-media-setup.sh
+```
+
 ---
 
 ### homeserver
