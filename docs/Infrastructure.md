@@ -21,7 +21,7 @@ Tailnet login server: `https://hs.example.com` (self-hosted Headscale)
 |-----------|------|-------------|
 | `enp1s0` | WAN | ISP router (DHCP) |
 | `enp2s0` | Office trunk (802.1Q) | TL-SG108E #1 `192.168.1.111` — vlan10 + vlan20 + vlan40 |
-| `enp3s0` | Media (physical, no VLAN) | TL-SG108E #2 `192.168.1.112` — all ports untagged |
+| `enp3s0` | Media (physical, no VLAN) | TL-SG108E #2 `192.168.30.112` — all ports untagged |
 | `enp4s0` | Trusted AP (physical) | ISP AP (trusted WiFi) |
 
 Interface names are placeholders — verify with `ip link` on hardware after first boot.
@@ -44,10 +44,11 @@ Interface names are placeholders — verify with `ip link` on hardware after fir
 | 3–6, 8 | Wired trusted devices | 10 | — |
 | 7 | Work port | 40 | — |
 
-#### Media Switch — TL-SG108E #2 (`192.168.1.112`)
+#### Living Room Switch — TL-SG108E #2 (`192.168.30.112`)
 
 No VLAN configuration needed — all ports untagged, plain L2 switch.  
-Router `enp3s0` plugged into any port; PS5, TV, Roku, Mi Box in remaining ports.
+Router `enp3s0` plugged into any port; PS5, TV, Roku, Mi Box in remaining ports.  
+Management IP is `192.168.30.112` — reachable from media segment only (via `enp3s0`).
 
 #### Firewall Policy (nftables)
 
@@ -58,7 +59,7 @@ Router `enp3s0` plugged into any port; PS5, TV, Roku, Mi Box in remaining ports.
 | trusted | work | deny |
 | iot | trusted | tcp 8123 (Home Assistant) |
 | iot | media | tcp 8060 (Roku ECP) |
-| media | trusted | tcp 8096,8920 (Jellyfin), tcp 9292 (Audiobookshelf), tcp 80,443 (Traefik), udp 1900,7359 (SSDP/DLNA) |
+| media | trusted | tcp 8096,8920 (Jellyfin), tcp 9292 (Audiobookshelf), tcp 80,443 (Traefik), udp 1900,7359 (SSDP/DLNA), tcp 2049 (NFS) |
 | work | * | deny |
 | * | wan | allow (masquerade NAT) |
 
@@ -239,6 +240,12 @@ Cloudflare Tunnel for select services (configured in `modules/networking/cloudfl
 ### NFS
 
 NFS server on homeserver (`modules/networking/nfs/`); NFS client on desktop (`modules/networking/nfs-client/`).
+
+| Client subnet | Access | Notes |
+|---------------|--------|-------|
+| `192.168.1.0/24` (trusted) | rw, no_root_squash | Desktop, matebook, servers |
+| `100.64.0.0/10` (tailscale) | rw, no_root_squash | Remote access via tailnet |
+| `192.168.30.0/24` (media) | ro, root_squash | Read-only; router forwards tcp/2049 media→trusted |
 
 ### UPS (NUT)
 

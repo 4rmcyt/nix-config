@@ -60,6 +60,9 @@ _: {
           ct state established,related accept
           ct state invalid drop
 
+          # DHCP: accept on all LAN interfaces (clients → router:67, broadcast)
+          iifname { $TRUSTED_IFS, $IOT_IF, $MEDIA_IF, $WORK_IF } udp dport 67 accept
+
           # ICMP: trusted + tailscale only
           iifname $TRUSTED_IFS ip protocol icmp accept
           iifname $TS_IF ip protocol icmp accept
@@ -102,11 +105,12 @@ _: {
 
           # trusted → work: deny (falls through)
 
-          # media → trusted: Jellyfin + Audiobookshelf + Traefik + discovery
+          # media → trusted: Jellyfin + Audiobookshelf + Traefik + discovery + NFS
           iifname $MEDIA_IF oifname $TRUSTED_IFS tcp dport $JELLYFIN_TCP accept
           iifname $MEDIA_IF oifname $TRUSTED_IFS tcp dport 9292 accept
           iifname $MEDIA_IF oifname $TRUSTED_IFS tcp dport { 80, 443 } accept
           iifname $MEDIA_IF oifname $TRUSTED_IFS udp dport { 1900, 7359 } accept
+          iifname $MEDIA_IF oifname $TRUSTED_IFS tcp dport 2049 accept
 
           # iot → trusted: Home Assistant only
           iifname $IOT_IF oifname $TRUSTED_IFS tcp dport 8123 accept

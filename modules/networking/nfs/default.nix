@@ -5,6 +5,7 @@ _: {
     exports = ''
       /data  192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash,insecure)
       /data  100.64.0.0/10(rw,sync,no_subtree_check,no_root_squash,insecure)
+      /data  192.168.30.0/24(ro,sync,no_subtree_check,root_squash,insecure)
     '';
   };
 

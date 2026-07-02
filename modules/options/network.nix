@@ -26,7 +26,7 @@
       media = lib.mkOption {
         type = lib.types.str;
         default = "192.168.30.1";
-        description = "Router gateway IP — media VLAN (vlan30)";
+        description = "Router gateway IP — media segment (enp3s0, physical, no VLAN)";
       };
       work = lib.mkOption {
         type = lib.types.str;

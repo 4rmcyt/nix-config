@@ -6,7 +6,7 @@ in {
   services.kea.dhcp4 = {
     enable = true;
     settings = {
-      interfaces-config.interfaces = ["vlan10" "vlan20" "vlan30" "vlan40"];
+      interfaces-config.interfaces = ["vlan10" "vlan20" "enp3s0" "enp4s0" "vlan40"];
 
       lease-database = {
         type = "memfile";
@@ -19,11 +19,11 @@ in {
       valid-lifetime = 3600;
 
       subnet4 = [
-        # ── VLAN 10 — trusted ───────────────────────────────────────────
+        # ── trusted — vlan10 (wired) + enp4s0 (ISP AP) — 192.168.1.0/24 ─
         {
           id = 10;
           subnet = "192.168.1.0/24";
-          interface = "vlan10";
+          # no interface restriction — serves both vlan10 and enp4s0
           pools = [{pool = "192.168.1.100 - 192.168.1.200";}];
           option-data = [
             {
@@ -148,11 +148,11 @@ in {
           ];
         }
 
-        # ── VLAN 30 — media ─────────────────────────────────────────────
+        # ── media — physical port enp3s0 (no VLAN tagging) ─────────────
         {
           id = 30;
           subnet = "192.168.30.0/24";
-          interface = "vlan30";
+          interface = "enp3s0";
           pools = [{pool = "192.168.30.100 - 192.168.30.200";}];
           option-data = [
             {
