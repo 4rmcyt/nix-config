@@ -100,10 +100,17 @@
           # ── trusted → work: deny (work is isolated, even from trusted)
           # (falls through to default drop)
 
-          # ── media → trusted: Jellyfin TCP + SSDP UDP only ───────────
+          # ── media → trusted: Jellyfin + Audiobookshelf + discovery ───
           iifname $MEDIA_IF oifname $TRUSTED_IF tcp dport $JELLYFIN_TCP accept
-          iifname $MEDIA_IF oifname $TRUSTED_IF udp dport 1900 accept
+          iifname $MEDIA_IF oifname $TRUSTED_IF tcp dport 9292 accept
+          iifname $MEDIA_IF oifname $TRUSTED_IF udp dport { 1900, 7359 } accept
           # All other media→trusted: deny (falls through)
+
+          # ── iot → trusted: Home Assistant only ─────────────────────
+          iifname $IOT_IF oifname $TRUSTED_IF tcp dport 8123 accept
+
+          # ── iot → media: Roku app control (ECP) ────────────────────
+          iifname $IOT_IF oifname $MEDIA_IF tcp dport 8060 accept
 
           # ── media → iot, work: deny (falls through) ─────────────────
 

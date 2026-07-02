@@ -193,18 +193,18 @@
       };
     };
 
-    # Mobile devices (IoT VLAN — 192.168.20.0/24)
+    # Mobile devices (trusted VLAN — 192.168.1.0/24)
     mobile = {
       sophia-s23-ultra = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.20.20";
-        description = "Sophia's Samsung Galaxy S23 Ultra — IoT VLAN";
+        default = "192.168.1.141";
+        description = "Sophia's Samsung Galaxy S23 Ultra — trusted VLAN";
       };
 
       volodymyr-s23 = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.20.21";
-        description = "Volodymyr's Samsung Galaxy S23 — IoT VLAN";
+        default = "192.168.1.140";
+        description = "Volodymyr's Samsung Galaxy S23 — trusted VLAN";
       };
     };
 

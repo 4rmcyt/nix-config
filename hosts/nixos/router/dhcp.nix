@@ -38,6 +38,8 @@ in {
             { hw-address = m.homeassistant-vm; ip-address = n.hosts.homeassistant-vm;   hostname = "homeassistant"; }
             { hw-address = m.switch-office;    ip-address = n.infrastructure.switch-office;      hostname = "switch-office"; }
             { hw-address = m.switch-livingroom; ip-address = n.infrastructure.switch-living-room; hostname = "switch-livingroom"; }
+            { hw-address = m.sophia-s23;    ip-address = n.mobile.sophia-s23-ultra;    hostname = "sophia-s23"; }
+            { hw-address = m.volodymyr-s23; ip-address = n.mobile.volodymyr-s23;       hostname = "volodymyr-s23"; }
           ];
         }
 
@@ -60,8 +62,6 @@ in {
             { hw-address = m.plug-table;    ip-address = n.smart-home.plugs.table;     hostname = "plug-table"; }
             { hw-address = m.plug-window;   ip-address = n.smart-home.plugs.window;    hostname = "plug-window"; }
             { hw-address = m.humidifier;    ip-address = n.smart-home.humidifier;      hostname = "humidifier"; }
-            { hw-address = m.sophia-s23;    ip-address = n.mobile.sophia-s23-ultra;    hostname = "sophia-s23"; }
-            { hw-address = m.volodymyr-s23; ip-address = n.mobile.volodymyr-s23;       hostname = "volodymyr-s23"; }
             # OpenWrt AP — add mac when available
           ];
         }
