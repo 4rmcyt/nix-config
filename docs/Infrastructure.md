@@ -8,9 +8,64 @@ Tailnet login server: `https://hs.example.com` (self-hosted Headscale)
 
 ## Hosts
 
+### router
+
+**Role:** Network router — VLAN segmentation, NAT, DHCP, DNS, Tailscale subnet relay  
+**Hardware:** Sophos SG110/120 — Intel Atom D525, 2 GB RAM, legacy BIOS  
+**WAN IP:** DHCP from ISP router (`192.168.1.254`)  
+**Tailscale:** subnet router (advertises `192.168.30.0/24` media VLAN)
+
+#### VLANs
+
+| VLAN | ID | Subnet | Gateway | DNS | Purpose |
+|------|----|--------|---------|-----|---------|
+| trusted | 10 | `192.168.1.0/24` | `192.168.1.1` | `192.168.1.1` | Servers, workstations, phones |
+| iot | 20 | `192.168.20.0/24` | `192.168.20.1` | `192.168.20.1` | Smart plugs, Alexa, humidifier |
+| media | 30 | `192.168.30.0/24` | `192.168.30.1` | `192.168.30.1` | PS5, Nintendo, Mi Box, Roku TV |
+| work | 40 | `192.168.40.0/24` | `192.168.40.1` | `1.1.1.1` | Fully isolated work devices |
+
+#### Firewall Policy (nftables)
+
+| Source | Destination | Allowed |
+|--------|-------------|---------|
+| trusted | iot | all |
+| trusted | media | all |
+| trusted | work | deny |
+| iot | trusted | tcp 8123 (Home Assistant) |
+| iot | media | tcp 8060 (Roku ECP) |
+| media | trusted | tcp 8096,8920 (Jellyfin), tcp 9292 (Audiobookshelf), tcp 80,443 (Traefik), udp 1900,7359 (SSDP/DLNA) |
+| work | * | deny |
+| * | wan | allow (masquerade NAT) |
+
+#### Services
+
+- **Unbound** — recursive DNS resolver; NextDNS DoT upstream (profile `nextdns0`); split DNS `*.example.com` → homeserver; listens on trusted/iot/media gateway IPs
+- **Kea DHCPv4** — static MAC reservations on all 4 VLANs; control socket at `/run/kea/kea-dhcp4.socket`
+- **Avahi reflector** — mDNS proxy between trusted/iot/media (Chromecast, AirPlay, Roku discovery)
+- **Tailscale** — headless auth via sops; advertises media VLAN; login server `https://hs.example.com`
+
+#### Monitoring (exporters, scraped by homeserver Prometheus via tailnet)
+
+| Exporter | Port | Metrics |
+|----------|------|---------|
+| node_exporter | 9100 | CPU, RAM, network, conntrack, ethtool, nftables counters |
+| unbound_exporter | 9167 | DNS cache hit rate, query latency, SERVFAIL rate |
+| kea_exporter | 9547 | DHCP lease utilization per subnet |
+
+Logs shipped to homeserver Loki via Alloy.  
+Grafana dashboards: `router-overview`, `router-unbound`, `router-kea`.
+
+#### Networking
+
+- SSH on port 22; restricted by nftables to trusted VLAN + Tailscale only
+- systemd-networkd; 802.1Q VLANs via netdevs on LAN trunk interface
+- Interface names are placeholders (`enp1s0` WAN, `enp2s0` LAN trunk) — fill in after `ip link` on hardware
+
+---
+
 ### homeserver
 
-**Role:** Primary home server — все сервисы, мониторинг, DNS, VPN hub  
+**Role:** Primary home server — all services, monitoring, DNS, VPN hub  
 **LAN IP:** `192.168.1.165`  
 **Tailscale:** exit node + subnet router (`192.168.1.0/24`)
 
@@ -244,12 +299,13 @@ node_exporter (all hosts) ──┐
 NUT exporter                ├──► Prometheus :9090 ──► Grafana :3003  ──► grafana.example.com
 Traefik metrics :8080       │         │
 CrowdSec metrics :6060      │         └──► Alertmanager ──► alertmanager-ntfy ──► ntfy
+router exporters (tailnet)  │
                             │
 Systemd journal ────────────┤──► Alloy ──► Loki :3100
 Traefik access.log ─────────┘
 ```
 
-- **Prometheus** scrape targets: homeserver, desktop, matebook, gcp-relay node exporters; NUT; Traefik; CrowdSec; Prometheus self
+- **Prometheus** scrape targets: homeserver, desktop, matebook, gcp-relay, router node exporters; NUT; Traefik; CrowdSec; Prometheus self; router unbound + kea
 - **Grafana** OIDC via Kanidm; backend PostgreSQL; datasources: Prometheus + Loki; dashboards from `modules/monitoring/dashboards/`
 - **Loki** retention 30 days; TSDB schema v13; filesystem storage; Loki alert rules in `modules/monitoring/alerts/loki-rules.yaml`
 - **Alloy** ships: Traefik access log, systemd journal (last 12h); Python container log-level fix pipeline
@@ -286,6 +342,7 @@ secrets/
   tailscale-desktop.yaml
   tailscale-matebook.yaml
   tailscale-gcp.yaml
+  tailscale-router.yaml
 
   # Nix remote builds
   nix-builder-homeserver.yaml          # nix-builder SSH private key

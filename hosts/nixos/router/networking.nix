@@ -6,7 +6,7 @@
 #
 # To discover real names: boot a NixOS installer, run `ip link`, look for the
 # two physical ports. Atom D525 boards typically expose Intel NICs as enp*s*.
-{ lib, ... }: let
+{ ... }: let
   wanInterface      = "enp1s0";   # PLACEHOLDER
   lanTrunkInterface = "enp2s0";   # PLACEHOLDER
 in {
