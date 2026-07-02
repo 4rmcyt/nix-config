@@ -188,7 +188,7 @@
   services.avahi = {
     enable = true;
     reflector = true;
-    allowInterfaces = ["vlan10" "vlan20" "vlan30"];
+    allowInterfaces = ["vlan10" "enp4s0" "vlan20" "enp3s0"];
     nssmdns4 = false; # не нужен на роутере, только proxy
     publish.enable = false;
   };

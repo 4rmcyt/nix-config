@@ -1,24 +1,33 @@
-# Router networking: systemd-networkd, WAN DHCP, 802.1Q VLAN trunk, static VLAN gateways.
+# Router networking: systemd-networkd, WAN DHCP, 802.1Q VLAN trunk + physical ports.
 #
-# PLACEHOLDER interface names — fill in after running `ip link` on real hardware:
-#   wanInterface      = uplink to ISP router (DHCP client)
-#   lanTrunkInterface = 802.1Q trunk to Switch #1 (office/lab TL-SG108E)
+# Physical layout (Sophos SG110/120, Intel Atom D525, 4x LAN + 1x WAN):
+#   enp1s0 — WAN       DHCP from ISP router
+#   enp2s0 — trunk  →  TL-SG108E #1 (office): tagged vlan10 + vlan20 + vlan40
+#     vlan10  trusted  192.168.1.1/24    wired devices (ports 3-6)
+#     vlan20  iot      192.168.20.1/24   AC1750 OpenWrt IoT AP (port 2)
+#     vlan40  work     192.168.40.1/24   work port (port 7)
+#   enp3s0 — media   192.168.30.1/24  → TL-SG108E #2 (media), untagged
+#   enp4s0 — trusted 192.168.1.1/24   → ISP AP (trusted WiFi), untagged
 #
-# To discover real names: boot a NixOS installer, run `ip link`, look for the
-# two physical ports. Atom D525 boards typically expose Intel NICs as enp*s*.
+# PLACEHOLDER interface names — verify after booting on real hardware:
+#   wanInterface    = WAN uplink
+#   trunkInterface  = 802.1Q trunk to office switch
+#   mediaInterface  = physical port to media switch
+#   apInterface     = physical port to ISP AP
 _: let
   wanInterface = "enp1s0"; # PLACEHOLDER
-  lanTrunkInterface = "enp2s0"; # PLACEHOLDER
+  trunkInterface = "enp2s0"; # PLACEHOLDER
+  mediaInterface = "enp3s0"; # PLACEHOLDER
+  apInterface = "enp4s0"; # PLACEHOLDER
 in {
   networking = {
     hostName = "router";
-    hostId = "a1b2c3d4"; # generate with: head -c 8 /dev/urandom | od -A n -t x4 | tr -d ' \n'
+    hostId = "a1b2c3d4"; # generate: head -c4 /dev/urandom | od -A none -t x4 | tr -d ' \n'
     useDHCP = false;
     useNetworkd = true;
     enableIPv6 = false;
 
-    # nftables ruleset is defined in firewall.nix.
-    # Disable the NixOS simple firewall to prevent conflicting rulesets.
+    # nftables ruleset is in firewall.nix.
     firewall.enable = false;
   };
 
@@ -40,18 +49,41 @@ in {
       };
     };
 
-    # ── LAN trunk (no IP — carries tagged VLANs only) ────────────────────
-    networks."20-lan-trunk" = {
-      matchConfig.Name = lanTrunkInterface;
+    # ── Office trunk → TL-SG108E #1 (no IP — carries tagged VLANs) ─────────
+    networks."20-trunk" = {
+      matchConfig.Name = trunkInterface;
       networkConfig = {
         DHCP = "no";
         LinkLocalAddressing = "no";
-        # Attach the four VLAN sub-interfaces so networkd brings them up.
-        VLAN = ["vlan10" "vlan20" "vlan30" "vlan40"];
+        VLAN = ["vlan10" "vlan20" "vlan40"];
       };
     };
 
-    # ── VLAN netdevs (802.1Q sub-interfaces) ─────────────────────────────
+    # ── Media switch port (physical, no VLAN tagging) ────────────────────────
+    networks."20-media" = {
+      matchConfig.Name = mediaInterface;
+      address = ["192.168.30.1/24"];
+      networkConfig = {
+        DHCP = "no";
+        IPv6AcceptRA = false;
+        LinkLocalAddressing = "no";
+        IPForward = "ipv4";
+      };
+    };
+
+    # ── ISP AP port (physical, trusted zone, no VLAN tagging) ───────────────
+    networks."20-ap" = {
+      matchConfig.Name = apInterface;
+      address = ["192.168.1.1/24"];
+      networkConfig = {
+        DHCP = "no";
+        IPv6AcceptRA = false;
+        LinkLocalAddressing = "no";
+        IPForward = "ipv4";
+      };
+    };
+
+    # ── VLAN netdevs (802.1Q sub-interfaces on office trunk) ────────────────
     netdevs."30-vlan10" = {
       netdevConfig = {
         Name = "vlan10";
@@ -66,13 +98,6 @@ in {
       };
       vlanConfig.Id = 20;
     };
-    netdevs."30-vlan30" = {
-      netdevConfig = {
-        Name = "vlan30";
-        Kind = "vlan";
-      };
-      vlanConfig.Id = 30;
-    };
     netdevs."30-vlan40" = {
       netdevConfig = {
         Name = "vlan40";
@@ -81,7 +106,7 @@ in {
       vlanConfig.Id = 40;
     };
 
-    # ── VLAN 10 — trusted (192.168.1.0/24, gw 192.168.1.1) ─────────────
+    # ── VLAN 10 — trusted (192.168.1.0/24) ──────────────────────────────────
     networks."40-vlan10" = {
       matchConfig.Name = "vlan10";
       address = ["192.168.1.1/24"];
@@ -93,7 +118,7 @@ in {
       };
     };
 
-    # ── VLAN 20 — iot (192.168.20.0/24, gw 192.168.20.1) ───────────────
+    # ── VLAN 20 — iot (192.168.20.0/24) ─────────────────────────────────────
     networks."40-vlan20" = {
       matchConfig.Name = "vlan20";
       address = ["192.168.20.1/24"];
@@ -105,19 +130,7 @@ in {
       };
     };
 
-    # ── VLAN 30 — media (192.168.30.0/24, gw 192.168.30.1) ─────────────
-    networks."40-vlan30" = {
-      matchConfig.Name = "vlan30";
-      address = ["192.168.30.1/24"];
-      networkConfig = {
-        DHCP = "no";
-        IPv6AcceptRA = false;
-        LinkLocalAddressing = "no";
-        IPForward = "ipv4";
-      };
-    };
-
-    # ── VLAN 40 — work (192.168.40.0/24, gw 192.168.40.1) ──────────────
+    # ── VLAN 40 — work (192.168.40.0/24) ────────────────────────────────────
     networks."40-vlan40" = {
       matchConfig.Name = "vlan40";
       address = ["192.168.40.1/24"];

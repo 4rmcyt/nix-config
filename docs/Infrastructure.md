@@ -15,14 +15,39 @@ Tailnet login server: `https://hs.example.com` (self-hosted Headscale)
 **WAN IP:** DHCP from ISP router (`192.168.1.254`)  
 **Tailscale:** subnet router (advertises `192.168.30.0/24` media VLAN)
 
-#### VLANs
+#### Physical Interfaces
 
-| VLAN | ID | Subnet | Gateway | DNS | Purpose |
-|------|----|--------|---------|-----|---------|
-| trusted | 10 | `192.168.1.0/24` | `192.168.1.1` | `192.168.1.1` | Servers, workstations, phones |
-| iot | 20 | `192.168.20.0/24` | `192.168.20.1` | `192.168.20.1` | Smart plugs, Alexa, humidifier |
-| media | 30 | `192.168.30.0/24` | `192.168.30.1` | `192.168.30.1` | PS5, Nintendo, Mi Box, Roku TV |
-| work | 40 | `192.168.40.0/24` | `192.168.40.1` | `1.1.1.1` | Fully isolated work devices |
+| Interface | Role | Connected to |
+|-----------|------|-------------|
+| `enp1s0` | WAN | ISP router (DHCP) |
+| `enp2s0` | Office trunk (802.1Q) | TL-SG108E #1 `192.168.1.111` — vlan10 + vlan20 + vlan40 |
+| `enp3s0` | Media (physical, no VLAN) | TL-SG108E #2 `192.168.1.112` — all ports untagged |
+| `enp4s0` | Trusted AP (physical) | ISP AP (trusted WiFi) |
+
+Interface names are placeholders — verify with `ip link` on hardware after first boot.
+
+#### Network Zones
+
+| Zone | Interface | Subnet | Gateway | DNS | Purpose |
+|------|-----------|--------|---------|-----|---------|
+| trusted | `vlan10` + `enp4s0` | `192.168.1.0/24` | `192.168.1.1` | `192.168.1.1` | Servers, workstations, phones, ISP AP WiFi |
+| iot | `vlan20` | `192.168.20.0/24` | `192.168.20.1` | `192.168.20.1` | AC1750 OpenWrt AP, smart plugs, Alexa, humidifier |
+| media | `enp3s0` | `192.168.30.0/24` | `192.168.30.1` | `192.168.30.1` | PS5, Nintendo Switch, Mi Box, Roku TV |
+| work | `vlan40` | `192.168.40.0/24` | `192.168.40.1` | `1.1.1.1` | Fully isolated work devices (office switch port 7) |
+
+#### Office Switch — TL-SG108E #1 (`192.168.1.111`)
+
+| Port | Device | PVID | Tagged VLANs |
+|------|--------|------|-------------|
+| 1 | Router `enp2s0` (uplink) | 1 | 10, 20, 40 |
+| 2 | AC1750 OpenWrt (IoT AP) | 20 | — |
+| 3–6, 8 | Wired trusted devices | 10 | — |
+| 7 | Work port | 40 | — |
+
+#### Media Switch — TL-SG108E #2 (`192.168.1.112`)
+
+No VLAN configuration needed — all ports untagged, plain L2 switch.  
+Router `enp3s0` plugged into any port; PS5, TV, Roku, Mi Box in remaining ports.
 
 #### Firewall Policy (nftables)
 
@@ -40,9 +65,9 @@ Tailnet login server: `https://hs.example.com` (self-hosted Headscale)
 #### Services
 
 - **Unbound** — recursive DNS resolver; NextDNS DoT upstream (profile `nextdns0`); split DNS `*.example.com` → homeserver; listens on trusted/iot/media gateway IPs
-- **Kea DHCPv4** — static MAC reservations on all 4 VLANs; control socket at `/run/kea/kea-dhcp4.socket`
+- **Kea DHCPv4** — static MAC reservations on all 4 zones; control socket at `/run/kea/kea-dhcp4.socket`
 - **Avahi reflector** — mDNS proxy between trusted/iot/media (Chromecast, AirPlay, Roku discovery)
-- **Tailscale** — headless auth via sops; advertises media VLAN; login server `https://hs.example.com`
+- **Tailscale** — headless auth via sops; advertises media VLAN `192.168.30.0/24`; login server `https://hs.example.com`
 
 #### Monitoring (exporters, scraped by homeserver Prometheus via tailnet)
 
@@ -57,9 +82,8 @@ Grafana dashboards: `router-overview`, `router-unbound`, `router-kea`.
 
 #### Networking
 
-- SSH on port 22; restricted by nftables to trusted VLAN + Tailscale only
-- systemd-networkd; 802.1Q VLANs via netdevs on LAN trunk interface
-- Interface names are placeholders (`enp1s0` WAN, `enp2s0` LAN trunk) — fill in after `ip link` on hardware
+- SSH on port 22; restricted by nftables to trusted zone + Tailscale only
+- systemd-networkd; 802.1Q VLANs on office trunk `enp2s0`; media + AP as plain physical ports
 
 ---
 
