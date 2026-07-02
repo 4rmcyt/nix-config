@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }: {
@@ -9,6 +8,7 @@
     ./networking.nix
     ./firewall.nix
     ./dhcp.nix
+    ../../../modules/disko/router
     ../../../modules/options
     ../../../modules/networking/tailscale
     ../../../modules/networking/unbound

@@ -184,7 +184,6 @@
           true-color = true;
           rulers = [80 120];
           auto-pairs = true;
-          completion-trigger-on-typeahead = true;
           indent-guides = {
             render = true;
             character = "│";
