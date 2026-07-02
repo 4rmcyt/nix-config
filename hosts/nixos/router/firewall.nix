@@ -12,7 +12,7 @@
 #   trusted → iot    : allow
 #   trusted → media  : allow
 #   iot     → *      : deny (all zones)
-#   media   → trusted: allow tcp 8096,8920 (Jellyfin) + udp 1900 (SSDP) only
+#   media   → trusted: tcp 8096,8920 (Jellyfin), 9292 (Audiobookshelf), 80,443 (Traefik) + udp 1900,7359 (SSDP/DLNA)
 #   media   → *      : deny otherwise
 #   work    → *      : deny (fully isolated)
 #   * → wan          : allow (masquerade NAT)
@@ -47,6 +47,13 @@
 
       table inet global {
 
+        # ── Rate limit sets ──────────────────────────────────────────────
+        set ssh_ratelimit {
+          type ipv4_addr
+          flags dynamic
+          timeout 60s
+        }
+
         # ── INPUT (traffic destined for the router itself) ───────────────
         chain input {
           type filter hook input priority filter; policy drop;
@@ -60,17 +67,22 @@
           # Invalid: drop silently
           ct state invalid drop
 
-          # ICMP: allow ping from all zones (useful for diagnostics)
-          ip protocol icmp  accept
-          # ICMPv6 handled if ever re-enabled
-          ip6 nexthdr icmpv6 accept
+          # ICMP: allow ping from trusted/tailscale only (not from iot/media/wan)
+          iifname { $TRUSTED_IF, $TS_IF } ip protocol icmp accept
 
           # DNS: trusted, iot, media clients → unbound on this router
           iifname { $TRUSTED_IF, $IOT_IF, $MEDIA_IF } udp dport 53 accept
           iifname { $TRUSTED_IF, $IOT_IF, $MEDIA_IF } tcp dport 53 accept
 
-          # SSH: only from trusted VLAN and Tailscale
+          # SSH: rate limit to 5 new connections per minute per IP
+          iifname { $TRUSTED_IF, $TS_IF } tcp dport 22 \
+            ct state new \
+            add @ssh_ratelimit { ip saddr limit rate over 5/minute } \
+            drop
           iifname { $TRUSTED_IF, $TS_IF } tcp dport 22 accept
+
+          # mDNS: allow from trusted/iot/media for Avahi reflector
+          iifname { $TRUSTED_IF, $IOT_IF, $MEDIA_IF } udp dport 5353 accept
 
           # Tailscale itself needs UDP 41641
           udp dport 41641 accept
@@ -100,9 +112,10 @@
           # ── trusted → work: deny (work is isolated, even from trusted)
           # (falls through to default drop)
 
-          # ── media → trusted: Jellyfin + Audiobookshelf + discovery ───
+          # ── media → trusted: Jellyfin + Audiobookshelf + Traefik + discovery
           iifname $MEDIA_IF oifname $TRUSTED_IF tcp dport $JELLYFIN_TCP accept
           iifname $MEDIA_IF oifname $TRUSTED_IF tcp dport 9292 accept
+          iifname $MEDIA_IF oifname $TRUSTED_IF tcp dport { 80, 443 } accept
           iifname $MEDIA_IF oifname $TRUSTED_IF udp dport { 1900, 7359 } accept
           # All other media→trusted: deny (falls through)
 

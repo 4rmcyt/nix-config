@@ -46,11 +46,9 @@
   services.openssh = {
     enable = true;
     ports  = [ 22 ];
-    listenAddresses = [
-      { addr = "192.168.1.1"; port = 22; }   # trusted VLAN
-      # tailscale0 address is dynamic — SSH on all addresses is fine because
-      # nftables already blocks WAN/iot/media/work at the input chain.
-    ];
+    # No listenAddresses — sshd listens on all interfaces.
+    # Access is restricted at packet level by nftables input chain:
+    # only trusted VLAN (vlan10) and tailscale0 are allowed tcp/22.
     hostKeys = [
       {
         type = "ed25519";
@@ -176,6 +174,24 @@
     SystemKeepFree=500M
     MaxRetentionSec=14day
   '';
+
+  # ── NTP ─────────────────────────────────────────────────────────────────
+  services.timesyncd = {
+    enable = true;
+    servers = [ "0.pool.ntp.org" "1.pool.ntp.org" "2.pool.ntp.org" ];
+  };
+
+  # ── mDNS proxy (Avahi reflector) ────────────────────────────────────────
+  # Reflects mDNS between trusted/iot/media VLANs so Chromecast, AirPlay
+  # and other zero-conf services are discoverable across VLANs.
+  # work VLAN excluded (denied in allowInterfaces).
+  services.avahi = {
+    enable = true;
+    reflector = true;
+    allowInterfaces = [ "vlan10" "vlan20" "vlan30" ];
+    nssmdns4 = false;  # не нужен на роутере, только proxy
+    publish.enable = false;
+  };
 
   # ── Misc ────────────────────────────────────────────────────────────────
   zramSwap.enable = true;

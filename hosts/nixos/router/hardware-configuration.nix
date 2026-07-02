@@ -1,5 +1,5 @@
 # Sophos SG110/120 hardware configuration.
-# Intel Atom D525 (Bonnell), 4 GB RAM, legacy BIOS.
+# Intel Atom D525 (Bonnell), 2 GB RAM, legacy BIOS.
 #
 # PLACEHOLDER: real interface names must be filled in after running
 #   nixos-generate-config on the physical hardware and inspecting `ip link`.

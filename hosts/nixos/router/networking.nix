@@ -17,10 +17,9 @@ in {
     useNetworkd = true;
     enableIPv6  = false;
 
-    # nftables is the sole firewall — disable the NixOS simple firewall to
-    # prevent two conflicting rulesets (nftables vs iptables).
+    # nftables ruleset is defined in firewall.nix.
+    # Disable the NixOS simple firewall to prevent conflicting rulesets.
     firewall.enable = false;
-    nftables.enable = true;
   };
 
   systemd.network = {
