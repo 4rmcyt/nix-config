@@ -6,7 +6,7 @@ _: {
       {command = ["bash" "-c" "wl-paste --type image --watch cliphist store"];}
 
       # Clipboard persistence
-      {command = ["wl-clip-persist" "--clipboard" "both"];}
+      {command = ["wl-clip-persist" "--clipboard" "regular"];}
 
       # XWayland support
       {command = ["xwayland-satellite" ":0"];}
