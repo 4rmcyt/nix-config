@@ -25,6 +25,11 @@ in {
     firewall.enable = false;
   };
 
+  boot.kernel.sysctl = {
+    "net.ipv4.conf.all.forwarding" = 1;
+    "net.ipv6.conf.all.forwarding" = 0;
+  };
+
   systemd.network = {
     enable = true;
 
@@ -61,7 +66,6 @@ in {
         DHCP = "no";
         IPv6AcceptRA = false;
         LinkLocalAddressing = "no";
-        IPForward = "ipv4";
       };
     };
 
@@ -73,7 +77,6 @@ in {
         DHCP = "no";
         IPv6AcceptRA = false;
         LinkLocalAddressing = "no";
-        IPForward = "ipv4";
       };
     };
 
@@ -108,7 +111,6 @@ in {
         DHCP = "no";
         IPv6AcceptRA = false;
         LinkLocalAddressing = "no";
-        IPForward = "ipv4";
       };
     };
 
@@ -120,7 +122,6 @@ in {
         DHCP = "no";
         IPv6AcceptRA = false;
         LinkLocalAddressing = "no";
-        IPForward = "ipv4";
       };
     };
 
@@ -132,7 +133,6 @@ in {
         DHCP = "no";
         IPv6AcceptRA = false;
         LinkLocalAddressing = "no";
-        IPForward = "ipv4";
       };
     };
   };
