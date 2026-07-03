@@ -151,7 +151,7 @@
 
   # ── Users ────────────────────────────────────────────────────────────────
   # modules/users/zeev handles password, authorized keys, and group membership.
-  programs.zsh.enable = true;
+  # programs.zsh.enable comes from nixosBase (shared-programs.nix)
   users.users.${config.my.defaults.user}.shell = pkgs.zsh;
 
   # ── Journald ─────────────────────────────────────────────────────────────

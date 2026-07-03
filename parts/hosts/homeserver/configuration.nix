@@ -6,10 +6,14 @@
 }: let
   inherit (config.meta) owner;
   nixosBase = config.modules.nixos.base;
+  nixosHm = config.modules.nixos.hm;
+  nixosWorkstation = config.modules.nixos.workstation;
 in {
   configurations.nixos.homeserver.module = {...}: {
     imports = [
       nixosBase
+      nixosHm
+      nixosWorkstation
       ../../../hosts/nixos/homeserver
       inputs.nixarr.nixosModules.default
       "${inputs.ephraim-nur}/nixos-modules/lazylibrarian.nix"

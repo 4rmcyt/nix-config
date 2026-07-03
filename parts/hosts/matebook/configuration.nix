@@ -6,10 +6,14 @@
 }: let
   inherit (config.meta) owner;
   nixosBase = config.modules.nixos.base;
+  nixosHm = config.modules.nixos.hm;
+  nixosWorkstation = config.modules.nixos.workstation;
 in {
   configurations.nixos.matebook.module = {...}: {
     imports = [
       nixosBase
+      nixosHm
+      nixosWorkstation
       ../../../hosts/nixos/matebook
       inputs.niri-flake.nixosModules.niri
       inputs.noctalia.nixosModules.default

@@ -1,36 +1,12 @@
-# Wires home-manager into NixOS as a module.
-# Imports HM NixOS module, configures shared settings,
-# and imports homeManager.base for the owner user.
-{
-  config,
-  inputs,
-  ...
-}: let
-  inherit (config.meta) owner;
-in {
+# Base NixOS module imports applied to all hosts.
+# HM wiring lives in parts/hm.nix (modules.nixos.hm) — imported only on hosts that use HM.
+# Workstation-specific modules (ucodenix, facter, gnupg, nh) live in parts/workstation.nix.
+{inputs, ...}: {
   modules.nixos.base = {
     imports = [
-      inputs.home-manager.nixosModules.home-manager
       inputs.sops-nix.nixosModules.sops
-      inputs.nixos-facter-modules.nixosModules.facter
-      inputs.vscode-server.nixosModules.default
-      inputs.ucodenix.nixosModules.default
       inputs.disko.nixosModules.disko
       inputs.nix-topology.nixosModules.default
     ];
-
-    home-manager = {
-      useGlobalPkgs = false;
-      useUserPackages = true;
-      backupFileExtension = "hm-backup";
-      sharedModules = [{home.enableNixpkgsReleaseCheck = false;}];
-      extraSpecialArgs = {inherit inputs;};
-
-      users.${owner.username} = {
-        imports = [
-          config.modules.homeManager.base
-        ];
-      };
-    };
   };
 }

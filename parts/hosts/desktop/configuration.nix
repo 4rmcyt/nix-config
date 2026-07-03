@@ -6,10 +6,14 @@
 }: let
   inherit (config.meta) owner;
   nixosBase = config.modules.nixos.base;
+  nixosHm = config.modules.nixos.hm;
+  nixosWorkstation = config.modules.nixos.workstation;
 in {
   configurations.nixos.desktop.module = {pkgs, ...}: {
     imports = [
       nixosBase
+      nixosHm
+      nixosWorkstation
       ../../../hosts/nixos/desktop
       inputs.niri-flake.nixosModules.niri
       inputs.nirinit.nixosModules.nirinit

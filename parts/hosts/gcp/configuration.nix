@@ -29,9 +29,5 @@ in {
         });
       })
     ];
-
-    home-manager.users.zeev.imports = [
-      ../../../modules/TUI/starship
-    ];
   };
 }
