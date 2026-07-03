@@ -25,19 +25,14 @@
   sops = {
     defaultSopsFormat = "yaml";
     age.keyFile = "/root/.config/sops/age/keys.txt";
-    secrets = {
-      ssh_host_ed25519_key = {
-        sopsFile = ../../../secrets/system.yaml;
-        key = "ssh_host_ed25519_key";
-        owner = config.users.users.root.name;
-        group = config.users.groups.root.name;
-        mode = "0600";
-      };
-      zeev_password = {
-        sopsFile = ../../../secrets/common.yaml;
-        neededForUsers = true;
-      };
+    secrets.ssh_host_ed25519_key = {
+      sopsFile = ../../../secrets/system.yaml;
+      key = "ssh_host_ed25519_key";
+      owner = config.users.users.root.name;
+      group = config.users.groups.root.name;
+      mode = "0600";
     };
+    # zeev_password is declared by modules/users/zeev
   };
 
   # ── SSH ─────────────────────────────────────────────────────────────────
@@ -155,17 +150,9 @@
   ];
 
   # ── Users ────────────────────────────────────────────────────────────────
-  users.users.${config.my.defaults.user} = {
-    isNormalUser = true;
-    shell = pkgs.zsh;
-    extraGroups = ["wheel"];
-    hashedPasswordFile = config.sops.secrets.zeev_password.path;
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyieBFROVPWmH3iC2ZAE+5zofMd6mnunBzfObEwMgFx"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJLqJ3YhcAyUW6cnSPyuLp5+zCF3ULTGjkxcKNqeBzks redacted@example.com"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO+zhOyZtuInZJpTXcqN5+HBatvOn8Ud2hGRZGuFkkQc u0_a765@localhost"
-    ];
-  };
+  # modules/users/zeev handles password, authorized keys, and group membership.
+  programs.zsh.enable = true;
+  users.users.${config.my.defaults.user}.shell = pkgs.zsh;
 
   # ── Journald ─────────────────────────────────────────────────────────────
   services.journald.extraConfig = ''

@@ -11,8 +11,8 @@
 
   programs.git = {
     enable = true;
-    userName = config.my.defaults.gitUsername or "zeev";
-    userEmail = config.my.defaults.email       or "redacted@example.com";
+    userName = config.my.defaults.gitUsername;
+    userEmail = config.my.defaults.email;
   };
 
   home.packages = with pkgs; [
