@@ -1,9 +1,6 @@
 # Router (Sophos SG110/120) host definition via Dendritic configurations.nixos option.
 # x86_64, Intel Atom D525, legacy BIOS, headless appliance.
-{
-  config,
-  ...
-}: let
+{config, ...}: let
   inherit (config.meta) owner;
   nixosBase = config.modules.nixos.base;
 in {
