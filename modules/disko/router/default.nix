@@ -9,12 +9,11 @@ _: {
     type = "disk";
     device = "/dev/disk/by-id/ata-Hitachi_HTS543225A7A384_E00653333H24S5P";
     content = {
-      type = "mbrTable";
+      type = "gpt";
       partitions = {
-        grub = {
+        boot = {
           size = "1M";
           type = "EF02"; # BIOS boot partition for GRUB
-          priority = 1;
         };
         root = {
           size = "100%";

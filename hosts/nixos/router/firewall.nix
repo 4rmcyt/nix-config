@@ -32,7 +32,7 @@ _: {
       define MEDIA_NET   = 192.168.30.0/24
       define WORK_NET    = 192.168.40.0/24
 
-      # trusted zone = vlan10 (office switch wired) + enp4s0 (ISP AP)
+      # trusted zone = vlan10 (office switch wired) + enp2s0 (ISP AP)
       define TRUSTED_IFS = { "vlan10", "enp2s0" }
       define IOT_IF      = "vlan20"
       define MEDIA_IF    = "enp3s0"

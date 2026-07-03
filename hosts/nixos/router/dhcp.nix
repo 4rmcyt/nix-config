@@ -6,7 +6,7 @@ in {
   services.kea.dhcp4 = {
     enable = true;
     settings = {
-      interfaces-config.interfaces = ["vlan10" "vlan20" "enp3s0" "enp4s0" "vlan40"];
+      interfaces-config.interfaces = ["vlan10" "vlan20" "enp3s0" "enp2s0" "vlan40"];
 
       lease-database = {
         type = "memfile";
@@ -19,7 +19,7 @@ in {
       valid-lifetime = 3600;
 
       subnet4 = [
-        # ── trusted — vlan10 (wired) + enp4s0 (ISP AP) — 192.168.1.0/24 ─
+        # ── trusted — vlan10 (wired) + enp2s0 (ISP AP) — 192.168.1.0/24 ─
         {
           id = 10;
           subnet = "192.168.1.0/24";
