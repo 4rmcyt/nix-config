@@ -136,6 +136,12 @@
     networkInterface = "enp5s0";
   };
 
+  # ── Boot (legacy BIOS, GRUB) ─────────────────────────────────────────────
+  boot.loader.grub = {
+    enable = true;
+    device = "/dev/disk/by-id/ata-Hitachi_HTS543225A7A384_E00653333H24S5P";
+  };
+
   # ── Nix ─────────────────────────────────────────────────────────────────
   nix.settings = {
     cores = 2;
