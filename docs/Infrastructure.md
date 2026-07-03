@@ -186,7 +186,7 @@ Disk: WD PC SN730 512GB NVMe (`nvme-WDC_PC_SN730_SDBPNTY-512G-1027_20230H445703`
 
 **Role:** WSL2 environment on Windows  
 - Minimal NixOS config — `services.timesyncd.enable = lib.mkForce false` (WSL manages time sync)
-- HM config in `home/wsl/`: TUI/common, TUI/zsh, TUI/atuin, GUI/terminal/wezterm, basic packages
+- HM config in `home/wsl/`: TUI/common, TUI/helix, TUI/zsh, TUI/atuin, GUI/terminal/wezterm, basic packages + pyenv setup
 
 ---
 

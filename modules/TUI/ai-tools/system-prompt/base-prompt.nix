@@ -17,7 +17,7 @@ in ''
     options/              # my.defaults.*, my.network.*, my.security.*
     roles/                # Role compositions (desktop, server, media-server, monitoring)
     WM/                   # niri + noctalia-shell, gtk, mime
-    GUI/                  # firefox, chrome, zen-browser, obsidian, zed, terminal, mpv, etc.
+    GUI/                  # firefox, chrome, obsidian, zed, terminal, mpv, etc.
     TUI/                  # zsh, zellij, atuin, starship, neovim, ai-tools (claude-code, gemini, llama-cpp, mcp)
     services/             # homepage, miniflux, home-assistant, atuin-server, nixarr,
                           # dispatcharr, komga, komf, microbin, ntfy, radicale, argocd (disabled), k3s (disabled)

@@ -1,6 +1,14 @@
 # Common programs enabled on all hosts via modules.nixos.base.
-_: {
+{config, ...}: let
+  inherit (config.meta) owner;
+in {
   modules.nixos.base = {
     programs.zsh.enable = true;
+    programs.nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 10d --keep 3";
+      flake = "/home/${owner.username}/src/nix-config";
+    };
   };
 }
