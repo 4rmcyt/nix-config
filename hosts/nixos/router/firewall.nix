@@ -1,11 +1,11 @@
 # nftables firewall for the router.
 #
 # Zone model:
-#   trusted = vlan10 + enp4s0   192.168.1.0/24    office switch (wired) + ISP AP (WiFi)
-#   iot     = vlan20             192.168.20.0/24   office switch port 2 → AC1750 OpenWrt
-#   media   = enp3s0             192.168.30.0/24   media switch (physical port, no VLAN)
+#   trusted = vlan10 + enp2s0   192.168.1.0/24    office switch (wired) + ISP AP (WiFi)
+#   iot     = vlan20             192.168.20.0/24   office switch port 8 → AC1750 OpenWrt
+#   media   = enp3s0             192.168.30.0/24   living room switch (physical port, no VLAN)
 #   work    = vlan40             192.168.40.0/24   office switch port 7
-#   wan     = enp1s0             DHCP from ISP router
+#   wan     = enp5s0             DHCP from ISP router
 #   ts      = tailscale0
 #
 # Forward policy matrix (default: deny between zones):
@@ -33,11 +33,11 @@ _: {
       define WORK_NET    = 192.168.40.0/24
 
       # trusted zone = vlan10 (office switch wired) + enp4s0 (ISP AP)
-      define TRUSTED_IFS = { "vlan10", "enp4s0" }   # PLACEHOLDER — match apInterface in networking.nix
+      define TRUSTED_IFS = { "vlan10", "enp2s0" }
       define IOT_IF      = "vlan20"
-      define MEDIA_IF    = "enp3s0"                  # PLACEHOLDER — match mediaInterface in networking.nix
+      define MEDIA_IF    = "enp3s0"
       define WORK_IF     = "vlan40"
-      define WAN_IF      = "enp1s0"                  # PLACEHOLDER — match wanInterface in networking.nix
+      define WAN_IF      = "enp5s0"
       define TS_IF       = "tailscale0"
 
       define JELLYFIN_TCP = { 8096, 8920 }

@@ -133,7 +133,7 @@
     sopsFile = ../../../secrets/tailscale-router.yaml;
     loginServer = "https://hs.example.com";
     advertiseRoutes = ["192.168.30.0/24"];
-    networkInterface = "enp1s0"; # PLACEHOLDER — match wanInterface in networking.nix
+    networkInterface = "enp5s0";
   };
 
   # ── Nix ─────────────────────────────────────────────────────────────────

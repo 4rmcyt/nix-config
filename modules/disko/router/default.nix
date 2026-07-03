@@ -1,15 +1,13 @@
 # Disko layout for Sophos SG110/120 — legacy BIOS, single HDD/SSD.
 #
-# PLACEHOLDER: replace device with output of:
-#   lsblk -d -o NAME,SIZE,MODEL
-# then use /dev/disk/by-id/... for stability.
+# Disk: Hitachi HTS543225A7A384 232.9G (sda)
 #
 # Layout: MBR → GRUB partition (1M) → ext4 root (100%)
 # No swap partition — zramSwap handles it in software (see default.nix).
 _: {
   disko.devices.disk.main = {
     type = "disk";
-    device = "/dev/disk/by-id/PLACEHOLDER"; # replace after lsblk on hardware
+    device = "/dev/disk/by-id/ata-Hitachi_HTS543225A7A384_E00653333H24S5P";
     content = {
       type = "mbrTable";
       partitions = {

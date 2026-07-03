@@ -1,28 +1,22 @@
 # Router networking: systemd-networkd, WAN DHCP, 802.1Q VLAN trunk + physical ports.
 #
 # Physical layout (Sophos SG110/120, Intel Atom D525, 4x LAN + 1x WAN):
-#   enp1s0 — WAN       DHCP from ISP router
-#   enp2s0 — trunk  →  TL-SG108E #1 (office): tagged vlan10 + vlan20 + vlan40
+#   enp5s0 — WAN       DHCP from ISP router
+#   enp4s0 — trunk  →  TL-SG108E #1 (office): tagged vlan10 + vlan20 + vlan40
 #     vlan10  trusted  192.168.1.1/24    wired devices (ports 3-6)
-#     vlan20  iot      192.168.20.1/24   AC1750 OpenWrt IoT AP (port 2)
+#     vlan20  iot      192.168.20.1/24   AC1750 OpenWrt IoT AP (port 8)
 #     vlan40  work     192.168.40.1/24   work port (port 7)
-#   enp3s0 — media   192.168.30.1/24  → TL-SG108E #2 (media), untagged
-#   enp4s0 — trusted 192.168.1.1/24   → ISP AP (trusted WiFi), untagged
-#
-# PLACEHOLDER interface names — verify after booting on real hardware:
-#   wanInterface    = WAN uplink
-#   trunkInterface  = 802.1Q trunk to office switch
-#   mediaInterface  = physical port to media switch
-#   apInterface     = physical port to ISP AP
+#   enp3s0 — media   192.168.30.1/24  → TL-SG108E #2 (living room), untagged
+#   enp2s0 — trusted 192.168.1.1/24   → ISP AP (trusted WiFi), untagged
 _: let
-  wanInterface = "enp1s0"; # PLACEHOLDER
-  trunkInterface = "enp2s0"; # PLACEHOLDER
-  mediaInterface = "enp3s0"; # PLACEHOLDER
-  apInterface = "enp4s0"; # PLACEHOLDER
+  wanInterface = "enp5s0";
+  trunkInterface = "enp4s0";
+  mediaInterface = "enp3s0";
+  apInterface = "enp2s0";
 in {
   networking = {
     hostName = "router";
-    hostId = "a1b2c3d4"; # generate: head -c4 /dev/urandom | od -A none -t x4 | tr -d ' \n'
+    hostId = "a5ffa043";
     useDHCP = false;
     useNetworkd = true;
     enableIPv6 = false;
