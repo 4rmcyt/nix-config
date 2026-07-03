@@ -158,47 +158,4 @@
     };
   };
 
-  # Host-specific HM imports and config
-  home-manager.users.${config.my.defaults.user} = {
-    imports = [
-      ../../../modules/TUI/common
-      ../../../modules/TUI/zsh
-      ../../../modules/TUI/atuin
-      ../../../modules/GUI/terminal/wezterm
-    ];
-
-    home.packages = with pkgs; [
-      go
-      nix-inspect
-      nixfmt-tree
-      pyenv
-      meslo-lgs-nf
-      nerd-fonts.hack
-      cowsay
-      fortune
-      firefox
-      pass
-      nextdns
-      pwgen
-      sudo
-      tmux
-      tuptime
-      trash-cli
-      tree
-      yamllint
-      zip
-    ];
-
-    programs.zsh.enable = true;
-    programs.zsh.profileExtra = ''
-      export PYENV_ROOT="$HOME/.pyenv"
-      export PATH="$PYENV_ROOT/bin:$PATH"
-      eval "$(pyenv init --path)"
-    '';
-
-    xdg = {
-      enable = true;
-      mimeApps.enable = true;
-    };
-  };
 }

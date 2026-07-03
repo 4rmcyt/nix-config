@@ -34,7 +34,6 @@
     ];
   };
 
-  programs.zsh.enable = true;
   # Override zsh profile for pyenv
   programs.zsh.profileExtra = ''
     export PYENV_ROOT="$HOME/.pyenv"
