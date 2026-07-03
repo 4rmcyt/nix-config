@@ -7,7 +7,7 @@
 _: {
   disko.devices.disk.main = {
     type = "disk";
-    device = "/dev/disk/by-id/ata-Hitachi_HTS543225A7A384_E00653333H24S5P";
+    device = "/dev/sda";
     content = {
       type = "gpt";
       partitions = {
