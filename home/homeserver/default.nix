@@ -2,6 +2,8 @@
   imports = [
     ../../modules/TUI/ai-tools
     ../../modules/TUI/common
+    ../../modules/dev/git.nix
+    ../../modules/security/gpg.nix
     ../../modules/TUI/helix
     ../../modules/TUI/neovim
     ../../modules/TUI/zsh

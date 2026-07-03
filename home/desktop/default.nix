@@ -28,6 +28,8 @@
     ../../modules/WM/mime
     ../../modules/GUI/discord
     ../../modules/dev
+    ../../modules/dev/git.nix
+    ../../modules/security/gpg.nix
   ];
 
   # WirePlumber: always use SBC-XQ for OpenRun Pro 2 (best codec it supports)

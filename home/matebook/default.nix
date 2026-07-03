@@ -24,6 +24,8 @@
     ../../modules/WM/niri/noctalia.nix
     ../../modules/WM/mime
     ../../modules/dev
+    ../../modules/dev/git.nix
+    ../../modules/security/gpg.nix
   ];
   home = {
     username = "zeev";
