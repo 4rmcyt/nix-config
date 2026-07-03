@@ -9,6 +9,7 @@
 in {
   modules.nixos.workstation = {
     imports = [
+      inputs.nixos-facter-modules.nixosModules.facter
       inputs.ucodenix.nixosModules.default
     ];
 

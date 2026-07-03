@@ -11,10 +11,6 @@ in {
   modules.nixos.hm = {
     imports = [
       inputs.home-manager.nixosModules.home-manager
-      inputs.sops-nix.nixosModules.sops
-      inputs.nixos-facter-modules.nixosModules.facter
-      inputs.disko.nixosModules.disko
-      inputs.nix-topology.nixosModules.default
     ];
 
     home-manager = {

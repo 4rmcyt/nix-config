@@ -37,6 +37,7 @@
       ];
       enable = true;
       enableZshIntegration = true;
+      historyWidget.command = ""; # Ctrl-R owned by atuin
     };
 
     git = {
