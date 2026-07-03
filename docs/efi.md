@@ -14,26 +14,46 @@
 
 Tools source: MSI Forum — [Svet's UEFI Shell Flash & Patch Tool](https://forum-en.msi.com/index.php?threads/forum-uefi-shell-flash-patch-tool-v2-51-update-4-for-msi-boards.343010/) (`MSI_UEFI_FlashTool.rar`)
 
-### EFI partition layout (on NVMe, mounted at `/boot/EFI`)
+### EFI partition layout
+
+EFI partition (`/dev/nvme0n1p1`) is mounted at **`/boot`** (not `/boot/EFI`).  
+In UEFI shell this is **`fs0:`** (NVMe, alias `HDB0`).
 
 ```
-/boot/EFI/
-├── E7D75AMS.1XX          ← BIOS file goes here (root of EFI partition)
-├── EFI/BOOT/             ← svet.efi MUST be here (hardcoded in STARTUP.NSH)
-│   ├── svet.efi          (v2.58+)
-│   ├── AFUE51605s.efi
-│   ├── AFUE592.efi
-│   ├── STARTUP.NSH
-│   └── ME_FW/
-├── limine/
-│   └── BOOTX64.EFI
-└── tools/                ← extra tools (setup_var.efi, shell.efi, etc.)
-    ├── setup_var.efi     (datasone build)
-    ├── shell.efi
-    ├── memtest.efi
-    ├── gdisk.efi
-    ├── uvt.efi
-    └── Mosby_x64.efi
+/boot/                        = fs0:\
+├── E7D75AMS.1XX              ← BIOS file (root of EFI partition = fs0:\)
+├── efi/                      = fs0:\efi\
+│   ├── BOOT/                 ← svet.efi MUST be here (fs0:\efi\BOOT\)
+│   │   ├── svet.efi          (v2.58+, signed with sbctl)
+│   │   ├── AFUE51605s.efi    (signed)
+│   │   ├── AFUE592.efi       (signed)
+│   │   ├── STARTUP.NSH
+│   │   └── ME_FW/
+│   │       ├── FWUpdLcl.efi       (signed)
+│   │       └── FWUpdLcl_RL.efi    (signed)
+│   ├── limine/
+│   │   └── BOOTX64.EFI       (signed)
+│   └── tools/                ← extra tools
+│       ├── setup_var.efi     (datasone build, signed)
+│       ├── shell.efi         (signed)
+│       ├── memtest.efi       (signed)
+│       ├── gdisk.efi
+│       ├── uvt.efi           (signed)
+│       └── Mosby_x64.efi     (signed)
+├── db, dbx, KEK, PK          ← Secure Boot enrolled keys
+└── limine/                   ← kernel + initrd
+```
+
+### Secure Boot
+
+All EFI binaries are signed with `sbctl`. After adding new tools:
+```bash
+sudo sbctl sign /boot/efi/BOOT/svet.efi
+sudo sbctl sign /boot/efi/BOOT/AFUE51605s.efi
+sudo sbctl sign /boot/efi/BOOT/AFUE592.efi
+sudo sbctl sign /boot/efi/BOOT/ME_FW/FWUpdLcl.efi
+sudo sbctl sign /boot/efi/BOOT/ME_FW/FWUpdLcl_RL.efi
+sudo sbctl verify  # check all signed
 ```
 
 ### Update procedure
@@ -41,28 +61,39 @@ Tools source: MSI Forum — [Svet's UEFI Shell Flash & Patch Tool](https://forum
 1. Download new BIOS from https://www.msi.com/Motherboard/MAG-B650-TOMAHAWK-WIFI/support
 2. Extract and copy BIOS file to EFI root:
    ```bash
-   sudo cp ~/Downloads/7D75vXXX/E7D75AMS.XXX /boot/EFI/
-   # remove old BIOS file from root if present
+   sudo cp ~/Downloads/7D75vXXX/E7D75AMS.XXX /boot/
+   sudo rm /boot/E7D75AMS.OLD  # remove previous version
    ```
-3. Ensure `EFI/BOOT/` has the latest tools (copy from `MSI_UEFI_FlashTool.rar`):
+3. Update tools if new `MSI_UEFI_FlashTool.rar` available:
    ```bash
-   sudo mkdir -p /boot/EFI/EFI/BOOT/ME_FW
-   sudo cp ~/Downloads/MSI_UEFI_FlashTool/EFI/BOOT/{svet.efi,AFUE51605s.efi,AFUE592.efi,STARTUP.NSH} /boot/EFI/EFI/BOOT/
-   sudo cp ~/Downloads/MSI_UEFI_FlashTool/EFI/BOOT/ME_FW/* /boot/EFI/EFI/BOOT/ME_FW/
+   sudo cp ~/Downloads/MSI_UEFI_FlashTool/EFI/BOOT/svet.efi /boot/efi/BOOT/
+   sudo cp ~/Downloads/MSI_UEFI_FlashTool/EFI/BOOT/AFUE51605s.efi /boot/efi/BOOT/
+   sudo cp ~/Downloads/MSI_UEFI_FlashTool/EFI/BOOT/AFUE592.efi /boot/efi/BOOT/
+   sudo cp ~/Downloads/MSI_UEFI_FlashTool/EFI/BOOT/STARTUP.NSH /boot/efi/BOOT/
+   sudo cp ~/Downloads/MSI_UEFI_FlashTool/EFI/BOOT/ME_FW/* /boot/efi/BOOT/ME_FW/
+   # Re-sign after updating tools
+   sudo sbctl sign /boot/efi/BOOT/svet.efi
+   sudo sbctl sign /boot/efi/BOOT/AFUE51605s.efi
+   sudo sbctl sign /boot/efi/BOOT/AFUE592.efi
+   sudo sbctl sign /boot/efi/BOOT/ME_FW/FWUpdLcl.efi
+   sudo sbctl sign /boot/efi/BOOT/ME_FW/FWUpdLcl_RL.efi
    ```
-4. Reboot → MSI BIOS → Boot override → UEFI Shell (`shell.efi` or built-in)
-5. In shell — find the NVMe fs number (look for the one with `NVMe` in the mapping table), then:
+4. Reboot → MSI BIOS → Boot Override → **UEFI Shell (M2_1 : Samsung SSD 970 EVO)**
+5. In shell:
    ```
-   fs0:\EFI\BOOT\STARTUP.NSH
+   fs0:\efi\BOOT\STARTUP.NSH
    ```
-   (`fs0` may differ — check mapping table at shell startup)
 6. Script auto-detects BIOS file, flashes with `/B /K` (preserves settings), reboots automatically.
 
 ### Notes
-- `STARTUP.NSH` searches for `svet.efi` at `fsN:\EFI\BOOT\svet.efi` — it will fail if svet.efi is elsewhere
-- BIOS file must be in the **root** of the same filesystem (`cd \` then glob `E????AM?*.???*`)
+- `STARTUP.NSH` (v2.58) searches for `svet.efi` at `fsN:\efi\BOOT\svet.efi` (case-insensitive on FAT32)
+- BIOS file must be in **`fs0:\`** (= `/boot/`) — the root of the EFI partition
 - `/B /K` flags: `/B` = BIOS block only (not ME), `/K` = keep NVRAM settings
-- Settings survive update — NVRAM is preserved by `/K` flag and AMD crypto-32 path
+- Settings survive update — NVRAM preserved by `/K` flag, AMD crypto-32 path
+- After flash: verify with `cat /sys/class/dmi/id/bios_version` and update `facter.json`:
+  ```bash
+  nix run github:numtide/nixos-facter -- --output hosts/nixos/desktop/facter.json
+  ```
 
 ---
 
@@ -78,7 +109,7 @@ setup_var.efi <offset> [<value>] [-s <size>] [-n <VarName>] [-guid <GUID>]
 - Read:  `setup_var.efi 0x28 -n AmdSetupRPL -guid 3A997502-647A-4C82-998E-52EF9486A247`
 - Write: `setup_var.efi 0x28 0x00 -s 0x01 -n AmdSetupRPL -guid 3A997502-647A-4C82-998E-52EF9486A247`
 
-**Note:** The `setup_var.efi` in `/boot/EFI/tools/` is the datasone build. The old MSI-bundled version does NOT support `-n`/`-guid` flags.
+**Note:** The `setup_var.efi` in `/boot/efi/tools/` is the datasone build. The old MSI-bundled version does NOT support `-n`/`-guid` flags.
 
 ### Option B: RU.efi (Universal UEFI variable editor)
 Navigate to the GUID `3A997502-647A-4C82-998E-52EF9486A247` → `AmdSetupRPL`
