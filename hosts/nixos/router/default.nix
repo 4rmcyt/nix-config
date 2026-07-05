@@ -176,7 +176,7 @@
     enable = true;
     reflector = true;
     allowInterfaces = ["vlan10" "enp2s0" "vlan20" "enp3s0"];
-    nssmdns4 = false; # не нужен на роутере, только proxy
+    nssmdns4 = false;
     publish.enable = false;
   };
 
