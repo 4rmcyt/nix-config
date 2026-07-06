@@ -85,9 +85,8 @@
     enable = true;
     openFirewall = false;
     extraCollectors = [
-      "conntrack" # NAT table usage — critical for router health
-      "ethtool" # NIC errors/drops per physical interface
-      "nftables" # firewall rule counters (drops per zone)
+      "conntrack"
+      "ethtool"
     ];
   };
 
