@@ -10,12 +10,10 @@ Write to USB and boot. At the console, set a password for SSH access from deskto
 passwd nixos
 ```
 
-Get the IP assigned by the ISP router (live ISO may not auto-configure DHCP):
+Get the IP assigned by the ISP router — boot process configures networking automatically:
 
 ```bash
-ip link                   # find the connected interface name
-dhcpcd <interface>        # request IP from ISP router
-ip addr                   # confirm IP assigned
+ip a
 ```
 
 ## 2. Identify interfaces and disk
@@ -63,8 +61,13 @@ cp ~/.config/sops/age/keys.txt /tmp/router-extra/root/.config/sops/age/keys.txt
 nix run github:nix-community/nixos-anywhere -- \
   --flake .#router \
   --extra-files /tmp/router-extra \
+  --ssh-option "IdentitiesOnly=yes" \
+  --ssh-option "IdentityFile=/dev/null" \
+  --ssh-option "PreferredAuthentications=password" \
   nixos@<sophos-ip>
 ```
+
+When prompted, enter the password set via `passwd nixos` on the live ISO.
 
 nixos-anywhere runs disko (partition + format), copies extra files, installs NixOS, reboots.
 
