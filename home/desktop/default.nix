@@ -99,6 +99,7 @@
       vdpauinfo
       vulkan-tools
       waydroid-helper
+      jujutsu
       (pkgs.texlive.combine {
         inherit
           (pkgs.texlive)
