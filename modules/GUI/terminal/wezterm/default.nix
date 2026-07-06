@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   programs.wezterm = {
     enable = true;
     package = pkgs.wezterm;
@@ -40,6 +40,7 @@
       config.show_tab_index_in_tab_bar = false
       config.show_new_tab_button_in_tab_bar = false
       config.tab_bar_at_bottom = true
+      show_close_tab_button_in_tabs = true
 
       -- Misc
       config.window_close_confirmation = 'NeverPrompt'
