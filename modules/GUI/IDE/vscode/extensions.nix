@@ -8,6 +8,7 @@
     vscodevim.vim
     yzhang.markdown-all-in-one
     mikestead.dotenv
+    visualjj.visualjj
 
     # Languages
     jnoortheen.nix-ide
