@@ -10,10 +10,12 @@ Write to USB and boot. At the console, set a password for SSH access from deskto
 passwd nixos
 ```
 
-Get the IP assigned by the ISP router:
+Get the IP assigned by the ISP router (live ISO may not auto-configure DHCP):
 
 ```bash
-ip addr
+ip link                   # find the connected interface name
+dhcpcd <interface>        # request IP from ISP router
+ip addr                   # confirm IP assigned
 ```
 
 ## 2. Identify interfaces and disk
