@@ -1,22 +1,22 @@
 # Router Installation Guide
 
-**Hardware:** Sophos SG110/120 — Intel Atom D525, legacy BIOS, VGA output.
+**Hardware:** Sophos SG110/120 — Intel Atom D525, legacy BIOS, VGA output, 4x Intel 82583V NICs (e1000e).
 
 ## 1. Boot NixOS minimal ISO (x86_64)
 
-Write to USB and boot. At the console:
+Write to USB and boot. At the console, set a password for SSH access from desktop:
 
 ```bash
-# Set password for SSH access from desktop (optional)
 passwd nixos
 ```
 
-## 2. Identify interfaces and disk
+Get the IP assigned by the ISP router:
 
 ```bash
-ip link                              # note all interface names (enp*s*)
-lsblk -d -o NAME,SIZE,MODEL,SERIAL  # note disk for disko
+ip addr
 ```
+
+## 2. Identify interfaces and disk
 
 Map physical ports by plugging a cable into each one and watching which interface gets carrier:
 
@@ -24,60 +24,49 @@ Map physical ports by plugging a cable into each one and watching which interfac
 watch -n1 'ip link | grep -E "enp|state"'
 ```
 
-Expected layout (verify on hardware):
+Note the disk device:
 
-| Interface | Role |
-|-----------|------|
-| `enp1s0` | WAN |
-| `enp2s0` | Office trunk → TL-SG108E #1 |
-| `enp3s0` | Media → TL-SG108E #2 |
-| `enp4s0` | ISP AP (trusted WiFi) |
+```bash
+lsblk -d -o NAME,SIZE,MODEL,SERIAL
+```
 
 ## 3. Fill in placeholders
 
 **`hosts/nixos/router/networking.nix`** — set interface variables:
 ```nix
-wanInterface   = "enp1s0";  # WAN
-trunkInterface = "enp2s0";  # office trunk
-mediaInterface = "enp3s0";  # media switch
-apInterface    = "enp4s0";  # ISP AP
+wanInterface   = "enp5s0";  # WAN
+trunkInterface = "enp4s0";  # office trunk → TL-SG108E #1
+mediaInterface = "enp3s0";  # media switch → TL-SG108E #2
+apInterface    = "enp2s0";  # ISP AP (trusted WiFi)
 ```
 
-**`hosts/nixos/router/networking.nix`** — generate and set hostId:
+**`networking.hostId`** — generate:
 ```bash
 head -c4 /dev/urandom | od -A none -t x4 | tr -d ' \n'
 ```
 
-**`hosts/nixos/router/firewall.nix`** — update interface defines to match above.
-
-**`hosts/nixos/router/default.nix`** — update `networking.tailscaleAuth.networkInterface`.
-
-**`modules/disko/router/default.nix`** — set disk device:
+**`modules/disko/router/default.nix`** — set disk device (use `/dev/sda` for bare install):
 ```nix
-device = "/dev/disk/by-id/<id-from-lsblk>";
+device = "/dev/sda";
 ```
 
-## 4. Generate hardware-configuration.nix
+## 4. Install via nixos-anywhere (from desktop)
+
+**Critical:** pass the age key via `--extra-files` so sops works on first boot.
 
 ```bash
-nixos-generate-config --no-filesystems --root /mnt
-```
+mkdir -p /tmp/router-extra/root/.config/sops/age
+cp ~/.config/sops/age/keys.txt /tmp/router-extra/root/.config/sops/age/keys.txt
 
-Copy `/mnt/etc/nixos/hardware-configuration.nix` to `hosts/nixos/router/hardware-configuration.nix` in the flake. Commit everything.
-
-## 5. Install via nixos-anywhere (from desktop)
-
-Get the Sophos IP from the ISP router DHCP table, then:
-
-```bash
 nix run github:nix-community/nixos-anywhere -- \
   --flake .#router \
+  --extra-files /tmp/router-extra \
   nixos@<sophos-ip>
 ```
 
-nixos-anywhere runs disko (partition + format), installs NixOS, reboots.
+nixos-anywhere runs disko (partition + format), copies extra files, installs NixOS, reboots.
 
-## 6. After first boot
+## 5. After first boot
 
 ```bash
 ssh zeev@192.168.1.1
@@ -97,23 +86,33 @@ systemctl status unbound
 dig @192.168.1.1 example.com
 ```
 
-## 7. Configure switches
-
-Factory reset both switches first — they'll get their IPs back via ISP router DHCP MAC reservations.
+## 6. Run nixos-facter (optional, improves hardware detection)
 
 ```bash
-SW1_PASS=<password> ./scripts/switch-office-setup.sh
-SW2_PASS=<password> ./scripts/switch-media-setup.sh
+ssh zeev@192.168.1.1
+nix run github:nix-community/nixos-facter -- -o /tmp/facter.json
 ```
 
-After `switch-media-setup.sh` completes, LivingRoom_SW2 moves to `192.168.30.112` and is only reachable from the media segment.
+Copy `facter.json` to `hosts/nixos/router/facter.json` in the flake.
+
+## 7. Configure switches
+
+Factory reset both switches. They'll get their IPs via ISP router DHCP until the NixOS router takes over.
+
+```bash
+SW1_PASS=sw1_SeptuagintA ./scripts/switch-office-setup.sh
+SW2_PASS=sw2_SeptuagintA ./scripts/switch-living-room-setup.sh
+```
+
+After `switch-living-room-setup.sh` completes, LivingRoom_SW2 moves to `192.168.30.112` and is only reachable from the media segment.
 
 ## 8. Rebuild homeserver
 
 Apply the new NFS export for media segment:
 
 ```bash
-# on homeserver
+# on homeserver — check for active ZFS transfers first
+systemctl list-units --type=mount
 nixos-rebuild boot
 # reboot at a convenient time
 ```
