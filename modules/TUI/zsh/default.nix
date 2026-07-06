@@ -22,6 +22,8 @@
         "zdharma-continuum/fast-syntax-highlighting"
         "zsh-users/zsh-autosuggestions"
         "zsh-users/zsh-history-substring-search"
+        "rkh/zsh-jj"
+        "elithrar/zsh-git-to-jj"
       ];
       useFriendlyNames = true;
     };
