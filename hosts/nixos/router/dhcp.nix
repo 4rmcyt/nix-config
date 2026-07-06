@@ -6,7 +6,10 @@ in {
   services.kea.dhcp4 = {
     enable = true;
     settings = {
-      interfaces-config.interfaces = ["vlan10" "vlan20" "enp3s0" "enp2s0" "vlan40"];
+      interfaces-config = {
+        interfaces = ["vlan10" "vlan20" "enp3s0" "enp2s0" "vlan40"];
+        dhcp-socket-type = "raw";
+      };
 
       lease-database = {
         type = "memfile";
