@@ -55,7 +55,8 @@ in {
       "zenergy"
     ];
 
-    kernelPackages = assert !xanmodKernel.${pkgs.zfs.kernelModuleAttribute}.meta.broken; xanmodKernel;
+    kernelPackages = xanmodKernel;
+    zfs.package = pkgs.zfs_2_4.override { enableUnsupportedExperimentalKernel = true; };
 
     blacklistedKernelModules = [
       "r8169"
