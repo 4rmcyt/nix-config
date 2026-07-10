@@ -16,23 +16,12 @@ in {
       nixosWorkstation
       ../../../hosts/nixos/homeserver
       inputs.nixarr.nixosModules.default
-      "${inputs.ephraim-nur}/nixos-modules/lazylibrarian.nix"
       ../../../modules/nix/lix
     ];
 
     disabledModules = [];
 
     nixpkgs.overlays = [
-      (final: _: {
-        ez_setup = final.callPackage "${inputs.ephraim-nur}/pkgs/ez_setup" {};
-        iso639-lang = (final.callPackage "${inputs.ephraim-nur}/pkgs/iso639-lang" {}).overrideAttrs (_: {
-          meta.description = "A fast, comprehensive, ISO 639 library";
-        });
-        slskd-api = final.callPackage "${inputs.ephraim-nur}/pkgs/slskd-api" {};
-        lazylibrarian = final.callPackage "${inputs.ephraim-nur}/pkgs/lazylibrarian" {
-          inherit (final) ez_setup iso639-lang slskd-api;
-        };
-      })
       (final: prev: {
         homepage-dashboard = prev.homepage-dashboard.overrideAttrs (_old: {
           version = "1.13.1";
