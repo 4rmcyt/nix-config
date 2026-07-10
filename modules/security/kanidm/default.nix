@@ -64,7 +64,7 @@ in {
       idmAdminPasswordFile = config.sops.secrets.kanidm_idm_admin_password.path;
 
       groups.users = {
-        members = [config.my.defaults.user "admin"];
+        members = [config.my.defaults.user];
       };
 
       persons.${config.my.defaults.user} = {
