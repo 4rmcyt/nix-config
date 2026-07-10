@@ -99,9 +99,9 @@ in {
           "email"
           "groups"
         ];
-        claimMaps.groups = {
+        claimMaps.grafana_role = {
           joinType = "array";
-          valuesByGroup.users = ["admin"];
+          valuesByGroup.users = ["Admin"];
         };
       };
 
