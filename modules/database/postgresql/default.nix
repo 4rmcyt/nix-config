@@ -250,6 +250,17 @@ in {
         '')
         dbUsers}
 
+      # PG15+ removed implicit CREATE on schema public — restore it for all app users
+      ${lib.concatMapStringsSep "\n      " (user: ''
+          ${pkgs.postgresql}/bin/psql -d "${user.name}" -c "GRANT ALL ON SCHEMA public TO ${user.name};" || true
+        '')
+        dbUsers}
+
+      # Fix ownership and schema access for *-log databases (created by ensureDatabases, owned by postgres)
+      for db_user in radarr sonarr prowlarr; do
+        ${pkgs.postgresql}/bin/psql -c "ALTER DATABASE \"''${db_user}-log\" OWNER TO ''${db_user};" || true
+        ${pkgs.postgresql}/bin/psql -d "''${db_user}-log" -c "GRANT ALL ON SCHEMA public TO ''${db_user};" || true
+      done
     '';
   };
 }
