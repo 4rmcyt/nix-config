@@ -250,6 +250,7 @@
           use_pkce = true;
           role_attribute_path = "contains(groups[*], 'admin') && 'Admin' || 'Viewer'";
           allow_sign_up = true;
+          log_user_info = true;
         };
       };
       provision.datasources.settings.datasources = [

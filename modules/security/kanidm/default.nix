@@ -64,7 +64,7 @@ in {
       idmAdminPasswordFile = config.sops.secrets.kanidm_idm_admin_password.path;
 
       groups.users = {
-        members = [config.my.defaults.user];
+        members = [config.my.defaults.user "admin"];
       };
 
       persons.${config.my.defaults.user} = {
@@ -72,6 +72,7 @@ in {
         mailAddresses = [config.my.defaults.email];
         groups = ["users"];
       };
+
 
       systems.oauth2.headscale = {
         displayName = "Headscale";
