@@ -157,5 +157,4 @@
       network.generateResolvConf = true;
     };
   };
-
 }

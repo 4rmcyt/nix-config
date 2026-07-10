@@ -100,16 +100,17 @@
       vulkan-tools
       waydroid-helper
       jujutsu
-      (pkgs.texliveSmall.withPackages (ps: with ps; [
-        scheme-medium
-        moderncv
-        lastpage
-        enumitem
-        fontawesome
-        pgf
-        mhchem
-        xcolor
-      ]))
+      (pkgs.texliveSmall.withPackages (ps:
+        with ps; [
+          scheme-medium
+          moderncv
+          lastpage
+          enumitem
+          fontawesome
+          pgf
+          mhchem
+          xcolor
+        ]))
       pkgs.nur.repos.codgician.samsung-dc-toolkit-3
       pkgs.nur.repos.codgician.waydroid-script
     ];

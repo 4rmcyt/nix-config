@@ -73,7 +73,6 @@ in {
         groups = ["users"];
       };
 
-
       systems.oauth2.headscale = {
         displayName = "Headscale";
         originUrl = "https://hs.${domain}/oidc/callback";

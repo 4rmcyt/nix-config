@@ -5,12 +5,15 @@
   modulesPath,
   ...
 }: let
-  xanmodKernels = lib.filterAttrs (
-    name: kp:
-    (builtins.match "linux_xanmod.*" name) != null
-    && (builtins.tryEval kp).success
-    && !(kp.${pkgs.zfs.kernelModuleAttribute}.meta.broken)
-  ) pkgs.linuxKernel.packages;
+  xanmodKernels =
+    lib.filterAttrs (
+      name: kp:
+        (builtins.match "linux_xanmod.*" name)
+        != null
+        && (builtins.tryEval kp).success
+        && !kp.${pkgs.zfs.kernelModuleAttribute}.meta.broken
+    )
+    pkgs.linuxKernel.packages;
   xanmodKernel = lib.last (
     lib.sort (a: b: lib.versionOlder a.kernel.version b.kernel.version)
     (builtins.attrValues xanmodKernels)

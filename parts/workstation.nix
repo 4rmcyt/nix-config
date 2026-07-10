@@ -1,9 +1,6 @@
 # Workstation-specific NixOS modules — desktop, laptop, homeserver.
 # Not imported on headless appliances (router, gcp-relay).
-{
-  inputs,
-  ...
-}: {
+{inputs, ...}: {
   modules.nixos.workstation = {
     imports = [
       inputs.nixos-facter-modules.nixosModules.facter

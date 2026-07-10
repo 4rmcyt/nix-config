@@ -1,9 +1,6 @@
 # Development shells via flake-parts perSystem.
 {inputs, ...}: {
-  perSystem = {
-    pkgs,
-    ...
-  }: {
+  perSystem = {pkgs, ...}: {
     devShells = {
       default = import ../devshell.nix {
         inherit pkgs inputs;

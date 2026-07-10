@@ -1,7 +1,4 @@
-{
-  config,
-  ...
-}: {
+{config, ...}: {
   programs.nixvim.plugins = {
     # File tree (like VSCode Explorer)
     neo-tree = {
