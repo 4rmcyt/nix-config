@@ -56,7 +56,6 @@ in {
     ];
 
     kernelPackages = xanmodKernel;
-    zfs.package = pkgs.zfs_2_4.override { enableUnsupportedExperimentalKernel = true; };
 
     blacklistedKernelModules = [
       "r8169"

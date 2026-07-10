@@ -48,6 +48,8 @@ in {
       };
     };
 
+    nixpkgs.config.problems.handlers.zfs.broken = "warn";
+
     # Facter
     facter.reportPath = ../../../hosts/nixos/desktop/facter.json;
 
