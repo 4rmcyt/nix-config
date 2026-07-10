@@ -223,6 +223,34 @@
     mode = "0400";
   };
 
+  # Local restic backup to zbackup pool — independent of Google Drive/rclone
+  services.restic.backups.local = {
+    initialize = true;
+    repository = "/backup/restic";
+    passwordFile = config.sops.secrets.restic_password.path;
+    paths = [
+      "/run/backup-pg-dumps"
+      "/data/media/.state/nixarr/jellyfin"
+      "/data/media/.state/nixarr/audiobookshelf"
+      "/var/lib/kanidm"
+    ];
+    pruneOpts = [
+      "--keep-daily 7"
+      "--keep-weekly 4"
+      "--keep-monthly 3"
+    ];
+    timerConfig = {
+      OnCalendar = "03:15";
+      RandomizedDelaySec = "10min";
+      Persistent = true;
+    };
+  };
+
+  systemd.services.restic-backups-local = {
+    after = ["backup-pg-dump.service" "zfs-import-zbackup.service"];
+    requires = ["backup-pg-dump.service"];
+  };
+
   my.hardening.enable = true;
   my.kanidmClient.enable = true;
   my.traefik.enable = true;
