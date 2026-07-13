@@ -23,28 +23,6 @@
     "sonarr"
   ];
 
-  movieCleaner = pkgs.writeShellApplication {
-    name = "movie-cleaner";
-    runtimeInputs = with pkgs; [
-      mkvtoolnix-cli
-      jq
-      curl
-      coreutils
-    ];
-    text = builtins.readFile ./scripts/movie-cleaner.sh;
-  };
-
-  showCleaner = pkgs.writeShellApplication {
-    name = "show-cleaner";
-    runtimeInputs = with pkgs; [
-      mkvtoolnix-cli
-      jq
-      curl
-      coreutils
-    ];
-    text = builtins.readFile ./scripts/show-cleaner.sh;
-  };
-
   musicConverter = pkgs.writeShellApplication {
     name = "music-converter";
     runtimeInputs = with pkgs; [
@@ -59,14 +37,6 @@
     text = builtins.readFile ./scripts/music-converter.sh;
   };
 
-  bazarrBridge = pkgs.writeShellApplication {
-    name = "bazarr-bridge";
-    runtimeInputs = [
-      movieCleaner
-      showCleaner
-    ];
-    text = builtins.readFile ./scripts/bazarr-bridge.sh;
-  };
 in {
   imports = [
     ./jellyfin
@@ -133,10 +103,7 @@ in {
   ] (_: {});
 
   environment.systemPackages = with pkgs; [
-    movieCleaner
-    showCleaner
     musicConverter
-    bazarrBridge
     mkvtoolnix-cli
     shntool
     cuetools
@@ -193,10 +160,7 @@ in {
     }))
     (lib.genAttrs servicesWithScripts (_name: {
       path = [
-        movieCleaner
-        showCleaner
         musicConverter
-        bazarrBridge
       ];
       serviceConfig.Environment = [
         "JF_URL=http://localhost:8096"

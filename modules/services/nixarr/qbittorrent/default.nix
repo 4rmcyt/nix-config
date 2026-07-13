@@ -40,7 +40,7 @@
         WebUI = {
           LocalHostAuth = false;
           AuthSubnetWhitelistEnabled = true;
-          AuthSubnetWhitelist = "10.0.0.0/8,127.0.0.1/32,192.168.0.0/16";
+          AuthSubnetWhitelist = "127.0.0.0/8";
         };
       };
       BitTorrent.Session = {
