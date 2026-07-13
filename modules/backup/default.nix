@@ -63,10 +63,11 @@ in {
       script = ''
         DATE=$(date +%Y%m%d)
         ${lib.concatMapStringsSep "\n" (db: ''
-          ${pkgs.postgresql}/bin/pg_dump -Fc ${db} > ${pgDumpDir}/${db}_$DATE.dump.tmp
-          mv ${pgDumpDir}/${db}_$DATE.dump.tmp ${pgDumpDir}/${db}_$DATE.dump
-          ls -t ${pgDumpDir}/${db}_*.dump 2>/dev/null | tail -n +8 | xargs rm -f
-        '') cfg.postgresqlDatabases}
+            ${pkgs.postgresql}/bin/pg_dump -Fc ${db} > ${pgDumpDir}/${db}_$DATE.dump.tmp
+            mv ${pgDumpDir}/${db}_$DATE.dump.tmp ${pgDumpDir}/${db}_$DATE.dump
+            ls -t ${pgDumpDir}/${db}_*.dump 2>/dev/null | tail -n +8 | xargs rm -f
+          '')
+          cfg.postgresqlDatabases}
       '';
     };
 

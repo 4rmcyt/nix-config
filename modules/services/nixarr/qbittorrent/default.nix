@@ -142,25 +142,25 @@
       Group = "media";
     };
     script = ''
-      cfg=/var/lib/qBittorrent/qBittorrent/config/categories.json
-      mkdir -p "$(dirname "$cfg")"
-      cat > "$cfg" <<'EOF'
-{
-    "audiobooks": {
-        "save_path": "/data/Downloads/audiobooks"
-    },
-    "lidarr": {
-        "save_path": "/data/Downloads/lidarr"
-    },
-    "radarr": {
-        "save_path": "/data/Downloads/radarr"
-    },
-    "tv-sonarr": {
-        "save_path": "/data/Downloads/tv-sonarr"
-    }
-}
-EOF
-      chmod 600 "$cfg"
+            cfg=/var/lib/qBittorrent/qBittorrent/config/categories.json
+            mkdir -p "$(dirname "$cfg")"
+            cat > "$cfg" <<'EOF'
+      {
+          "audiobooks": {
+              "save_path": "/data/Downloads/audiobooks"
+          },
+          "lidarr": {
+              "save_path": "/data/Downloads/lidarr"
+          },
+          "radarr": {
+              "save_path": "/data/Downloads/radarr"
+          },
+          "tv-sonarr": {
+              "save_path": "/data/Downloads/tv-sonarr"
+          }
+      }
+      EOF
+            chmod 600 "$cfg"
     '';
   };
 

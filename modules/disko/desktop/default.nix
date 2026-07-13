@@ -22,115 +22,89 @@
                 ];
               };
             };
-            ZFS = {
+            root = {
               size = "100%";
               content = {
-                type = "zfs";
-                pool = "zroot";
+                type = "btrfs";
+                extraArgs = [
+                  "-L"
+                  "nixos"
+                  "-f"
+                ];
+                subvolumes = {
+                  "/root" = {
+                    mountpoint = "/";
+                    mountOptions = [
+                      "compress=zstd:1"
+                      "noatime"
+                      "ssd"
+                      "discard=async"
+                      "space_cache=v2"
+                    ];
+                  };
+                  "/nix" = {
+                    mountpoint = "/nix";
+                    mountOptions = [
+                      "compress=zstd:1"
+                      "noatime"
+                      "ssd"
+                      "discard=async"
+                      "space_cache=v2"
+                      "nodatacow"
+                    ];
+                  };
+                  "/persist" = {
+                    mountpoint = "/persist";
+                    mountOptions = [
+                      "compress=zstd:1"
+                      "noatime"
+                      "ssd"
+                      "discard=async"
+                      "space_cache=v2"
+                    ];
+                  };
+                  "/log" = {
+                    mountpoint = "/var/log";
+                    mountOptions = [
+                      "compress=zstd:1"
+                      "noatime"
+                      "ssd"
+                      "discard=async"
+                      "space_cache=v2"
+                    ];
+                  };
+                  "/home" = {
+                    mountpoint = "/home";
+                    mountOptions = [
+                      "compress=zstd:1"
+                      "noatime"
+                      "ssd"
+                      "discard=async"
+                      "space_cache=v2"
+                    ];
+                  };
+                  "/games" = {
+                    mountpoint = "/home/games";
+                    mountOptions = [
+                      "compress=zstd:1"
+                      "noatime"
+                      "ssd"
+                      "discard=async"
+                      "space_cache=v2"
+                    ];
+                  };
+                  "/vms" = {
+                    mountpoint = "/var/lib/libvirt";
+                    mountOptions = [
+                      "compress=zstd:1"
+                      "noatime"
+                      "ssd"
+                      "discard=async"
+                      "space_cache=v2"
+                    ];
+                  };
+                };
               };
-            };
-          };
-        };
-      };
-    };
-
-    zpool = {
-      zroot = {
-        type = "zpool";
-        rootFsOptions = {
-          canmount = "off";
-          checksum = "edonr";
-          compression = "zstd";
-          dnodesize = "auto";
-          mountpoint = "none";
-          normalization = "formD";
-          relatime = "on";
-          "com.sun:auto-snapshot" = "false";
-          "sync" = "standard";
-          "logbias" = "throughput";
-          "primarycache" = "all";
-          "secondarycache" = "all";
-        };
-        options = {
-          ashift = "12";
-          autotrim = "off";
-        };
-        datasets = {
-          # Reserve space for ZFS operations
-          "reserved" = {
-            type = "zfs_fs";
-            options = {
-              canmount = "off";
-              mountpoint = "none";
-              reservation = "10G";
-            };
-          };
-
-          # Root filesystem - ephemeral
-          "root" = {
-            type = "zfs_fs";
-            options = {
-              mountpoint = "legacy";
-              atime = "off";
-              "com.sun:auto-snapshot" = "false";
-            };
-            mountpoint = "/";
-            postCreateHook = "zfs snapshot zroot/root@blank";
-          };
-
-          # Nix store
-          "nix" = {
-            type = "zfs_fs";
-            mountpoint = "/nix";
-            options = {
-              atime = "off";
-              canmount = "on";
-              "com.sun:auto-snapshot" = "false";
-            };
-          };
-
-          # Home directories - persistent
-          "home" = {
-            type = "zfs_fs";
-            mountpoint = "/home";
-            options = {
-              atime = "off";
-              acltype = "posixacl";
-              xattr = "sa";
-              "com.sun:auto-snapshot" = "false";
-            };
-          };
-
-          # System logs
-          "log" = {
-            type = "zfs_fs";
-            mountpoint = "/var/log";
-            options = {
-              acltype = "posixacl";
-              atime = "off";
-              canmount = "on";
-              xattr = "sa";
-              "com.sun:auto-snapshot" = "false";
-            };
-          };
-
-          # Gaming data (Steam, etc.)
-          "games" = {
-            type = "zfs_fs";
-            mountpoint = "/home/games";
-            options = {
-              recordsize = "1M"; # Better for large game files
-              "com.sun:auto-snapshot" = "false";
-            };
-          };
-
-          # VM/Container storage
-          "vms" = {
-            type = "zfs_fs";
-            mountpoint = "/var/lib/libvirt";
-            options = {
-              recordsize = "64K";
-              "com.sun:auto-snapshot" = "false";
             };
           };
         };

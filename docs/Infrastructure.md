@@ -139,17 +139,21 @@ See [router-installation.md](router-installation.md) for installation steps.
 **CPU:** Ryzen 7000 series (Zen 4)  
 **RAM:** 60 GB
 
-#### Storage (ZFS)
+#### Storage (Btrfs + Impermanence)
 
-Disk: Samsung SSD 970 EVO Plus 1TB NVMe (`nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NS0W101791N`). GPT: 2GB EFI + ZFS remainder.
+Disk: Samsung SSD 970 EVO Plus 1TB NVMe (`nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NS0W101791N`). GPT: 2GB EFI + Btrfs remainder (label `nixos`).
 
-| Pool    | Mount               | Notes                                      |
-|---------|---------------------|--------------------------------------------|
-| `zroot` | `/`                 | `reserved` (10G), `nix`, `root`, `home`, `log` |
-| `zroot/games` | `/home/games` | `recordsize=1M` — Steam, large game files  |
-| `zroot/vms`   | `/var/lib/libvirt` | `recordsize=64K` — VM/container storage   |
+| Subvolume | Mount              | Notes                                      |
+|-----------|--------------------|--------------------------------------------|
+| `/root`   | `/`                | Ephemeral — wiped on every boot via initrd |
+| `/nix`    | `/nix`             | Persistent, `nodatacow`                    |
+| `/persist`| `/persist`         | Persistent state (bind-mounted by impermanence) |
+| `/log`    | `/var/log`         | Persistent logs                            |
+| `/home`   | `/home`            | Persistent home                            |
+| `/games`  | `/home/games`      | Steam library, large game files            |
+| `/vms`    | `/var/lib/libvirt` | VM/container storage                       |
 
-ZFS root pool with systemd-tmpfiles suppression (`--exclude-prefix`) to avoid `chattr` warnings.
+Root subvolume is deleted and recreated on every boot (`boot.initrd.postResumeCommands`). Persistent state lives in `/persist` and is bind-mounted by the `impermanence` NixOS module. Age keys, SSH host keys, tailscale state, NetworkManager connections, and user dotfiles are persisted.
 
 #### Desktop Stack
 

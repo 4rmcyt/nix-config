@@ -36,7 +36,6 @@
     ];
     text = builtins.readFile ./scripts/music-converter.sh;
   };
-
 in {
   imports = [
     ./jellyfin

@@ -15,6 +15,7 @@ in {
       nixosHm
       nixosWorkstation
       ../../../hosts/nixos/desktop
+      inputs.impermanence.nixosModules.impermanence
       inputs.niri-flake.nixosModules.niri
       inputs.nirinit.nixosModules.nirinit
       inputs.noctalia.nixosModules.default

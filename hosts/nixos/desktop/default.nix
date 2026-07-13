@@ -3,22 +3,8 @@
   config,
   lib,
   ...
-}: let
-  zfsExcludes = lib.concatMapStringsSep " " (p: "--exclude-prefix=${p}") [
-    "/dev"
-    "/var/empty"
-    "/nix/var/nix/temproots"
-    "/nix/var/nix/b"
-    "/var/lib/containers/storage/tmp"
-    "/var/lib/cni/networks"
-    "/var/lib/systemd/ephemeral-trees"
-    "/var/lib/systemd/coredump"
-  ];
-in {
-  my.nodeExporter = {
-    enable = true;
-    extraCollectors = ["zfs"];
-  };
+}: {
+  my.nodeExporter.enable = true;
 
   my.alloyClient.enable = true;
 
@@ -276,28 +262,6 @@ in {
     };
   };
 
-  systemd.tmpfiles.rules = [
-    "d /home/zeev/.local/share/Trash 0700 zeev users -"
-    "d /home/zeev/.local/share/Trash/files 0700 zeev users -"
-    "d /home/zeev/.local/share/Trash/info 0700 zeev users -"
-  ];
-
-  # ZFS does not support FS_IOC_SETFLAGS (chattr), causing "Protocol driver not attached"
-  # warnings from systemd-tmpfiles for any path that uses the 'h' rule (chattr immutable).
-  # Suppress by excluding all such paths from all tmpfiles services.
-  systemd.services.systemd-tmpfiles-setup.serviceConfig.ExecStart = [
-    ""
-    "systemd-tmpfiles --create --remove --boot ${zfsExcludes}"
-  ];
-  systemd.services.systemd-tmpfiles-resetup.serviceConfig.ExecStart = [
-    ""
-    "systemd-tmpfiles --create ${zfsExcludes}"
-  ];
-  systemd.services.systemd-tmpfiles-clean.serviceConfig.ExecStart = [
-    ""
-    "systemd-tmpfiles --clean ${zfsExcludes}"
-  ];
-
   # Restrict avahi to ethernet only — both enp12s0 and wlp13s0 probing simultaneously
   # causes avahi to see its own mDNS probe on the other interface and conflict with itself
   services.avahi.allowInterfaces = ["enp12s0"];
@@ -312,4 +276,77 @@ in {
 
   # Cups resolves "localhost" to both 127.0.0.1 and ::1 — IPv6 disabled at kernel level so ::1 bind fails
   services.printing.listenAddresses = ["127.0.0.1:631"];
+
+  # sudo resets lecture state on each root wipe without this
+  security.sudo.extraConfig = "Defaults lecture = never";
+
+  # =================================================================
+  # Impermanence
+  # =================================================================
+  environment.persistence."/persist" = {
+    hideMounts = true;
+
+    directories = [
+      "/var/lib/nixos"
+      "/etc/NetworkManager/system-connections"
+      "/var/lib/NetworkManager"
+      "/var/lib/bluetooth"
+      "/var/lib/iwd"
+      "/var/lib/tailscale"
+      "/var/lib/colord"
+      "/var/lib/fwupd"
+      "/var/lib/upower"
+      "/var/lib/pcscd"
+      "/var/lib/systemd/coredump"
+      {
+        directory = "/etc/ssh";
+        mode = "0755";
+      }
+      {
+        directory = "/root/.config/sops";
+        mode = "0700";
+      }
+    ];
+
+    files = [
+      "/etc/machine-id"
+      "/etc/u2f_mappings"
+    ];
+
+    users.zeev = {
+      directories = [
+        {
+          directory = ".ssh";
+          mode = "0700";
+        }
+        {
+          directory = ".gnupg";
+          mode = "0700";
+        }
+        ".local/share/keyrings"
+        {
+          directory = ".config/sops";
+          mode = "0700";
+        }
+        ".local/share/zsh"
+        ".local/share/atuin"
+        ".config/git"
+        "src"
+        "Documents"
+        "Downloads"
+        "Pictures"
+        "Videos"
+        ".config/gh"
+        ".config/niri"
+        ".local/share/applications"
+        ".local/state/niri"
+        ".mozilla"
+        ".config/chromium"
+        ".config/mpv"
+        ".local/share/Trash"
+        ".config/obsidian"
+        ".config/zed"
+      ];
+    };
+  };
 }

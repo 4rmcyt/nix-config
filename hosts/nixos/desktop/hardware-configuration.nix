@@ -4,21 +4,7 @@
   pkgs,
   modulesPath,
   ...
-}: let
-  xanmodKernels =
-    lib.filterAttrs (
-      name: kp:
-        (builtins.match "linux_xanmod.*" name)
-        != null
-        && (builtins.tryEval kp).success
-        && !kp.${pkgs.zfs.kernelModuleAttribute}.meta.broken
-    )
-    pkgs.linuxKernel.packages;
-  xanmodKernel = lib.last (
-    lib.sort (a: b: lib.versionOlder a.kernel.version b.kernel.version)
-    (builtins.attrValues xanmodKernels)
-  );
-in {
+}: {
   # =================================================================
   # 1. Imports
   # =================================================================
@@ -27,6 +13,10 @@ in {
   # =================================================================
   # 2. Boot Configuration
   # =================================================================
+  # Mark /persist and /var/log as needed for boot (impermanence requirement)
+  fileSystems."/persist".neededForBoot = true;
+  fileSystems."/var/log".neededForBoot = true;
+
   boot = {
     # Kernel modules
     initrd.availableKernelModules = [
@@ -67,7 +57,7 @@ in {
       "zenergy"
     ];
 
-    kernelPackages = xanmodKernel;
+    kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
 
     blacklistedKernelModules = [
       "r8169"
@@ -91,11 +81,9 @@ in {
       # Disable snd-hda-intel index 2 (0000:10:00.6, Ryzen HD Audio Controller) — no codec connected
       # PCI probe order is fixed: 01:00.1=NVIDIA(0), 10:00.1=AMD-HDMI(1), 10:00.6=Ryzen-HDA(2)
       options snd-hda-intel enable=1,1,0
-      # ZFS ARC max: 24GB (40% of 62GB RAM) — canonical modprobe form, not cmdline
-      options zfs zfs_arc_max=25769803776
     '';
 
-    supportedFilesystems = ["zfs"];
+    supportedFilesystems = ["btrfs"];
 
     # Kernel parameters
     kernelParams = [
@@ -136,11 +124,22 @@ in {
       "irqaffinity=0" # Force hardware interrupts to Core 0 where possible
     ];
 
-    # ZFS configuration
-    zfs = {
-      forceImportRoot = true;
-      forceImportAll = true;
-    };
+    # Wipe root subvolume on every boot (impermanence)
+    initrd.postResumeCommands = lib.mkAfter ''
+      mkdir -p /mnt
+      mount -o subvol=/ /dev/disk/by-label/nixos /mnt
+
+      btrfs subvolume list -o /mnt/root |
+        cut -f9 -d' ' |
+        while read subvolume; do
+          btrfs subvolume delete "/mnt/$subvolume" 2>/dev/null || true
+        done
+
+      btrfs subvolume delete /mnt/root 2>/dev/null || true
+      btrfs subvolume create /mnt/root
+
+      umount /mnt
+    '';
 
     # System control parameters
     kernel.sysctl = {
@@ -151,11 +150,8 @@ in {
       # VM/Memory optimizations for 62GB RAM system
       "vm.swappiness" = 10; # Reduce swap usage with abundant RAM
       "vm.vfs_cache_pressure" = 50; # Keep more inodes/dentries cached
-      # dirty_ratio omitted: ZFS bypasses the kernel page cache (uses ARC directly);
-      # these only affect tmpfs/non-ZFS paths where defaults are fine
 
-      # ZFS-specific optimizations for Zen 4
-      "vm.min_free_kbytes" = 1048576; # 1GB min free for ZFS ARC stability
+      "vm.min_free_kbytes" = 1048576; # 1GB min free
 
       # Network — moved from kernelParams (these are sysctl values, not boot params)
       "net.core.default_qdisc" = "fq";
@@ -375,16 +371,15 @@ in {
       cpuModelId = ./facter.json;
     };
 
-    # ZFS services
-    zfs = {
-      autoScrub = {
-        enable = true;
-        interval = "weekly";
-      };
-      trim = {
-        enable = true;
-        interval = "weekly";
-      };
+    # Btrfs maintenance
+    btrfs.autoScrub = {
+      enable = true;
+      interval = "weekly";
+      fileSystems = ["/"];
+    };
+    fstrim = {
+      enable = true;
+      interval = "weekly";
     };
 
     # Firmware updates
@@ -590,7 +585,6 @@ in {
   # =================================================================
   networking = {
     useDHCP = lib.mkDefault true;
-    hostId = "e134040f";
     hostName = "desktop";
     networkmanager = {
       enable = true;
