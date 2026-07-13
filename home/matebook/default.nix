@@ -51,7 +51,6 @@
       LIBVA_DRIVER_NAME = "radeonsi";
       VDPAU_DRIVER = "radeonsi";
 
-      EDITOR = lib.mkForce "hx";
       BROWSER = lib.mkForce "google-chrome-stable";
       PYENV_ROOT = "$HOME/.pyenv";
     };
