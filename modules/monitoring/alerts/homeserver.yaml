@@ -58,7 +58,7 @@ groups:
           summary: "ZFS pool {{ $labels.zpool }} is {{ $labels.state }} on {{ $labels.instance }}"
           description: "ZFS pool '{{ $labels.zpool }}' is not online. Immediate investigation required."
       - alert: ServiceDown
-        expr: up{job!~"matebook-node|desktop-node"} == 0
+        expr: up{job!~"matebook-node|desktop-node|router-node|router-unbound|router-kea"} == 0
         for: 2m
         labels:
           severity: critical
