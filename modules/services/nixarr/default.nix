@@ -104,7 +104,6 @@ in {
 
   environment.systemPackages = with pkgs; [
     musicConverter
-    mkvtoolnix-cli
     shntool
     cuetools
   ];
