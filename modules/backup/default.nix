@@ -5,6 +5,7 @@
   ...
 }: let
   cfg = config.my.backup;
+  pgDumpDir = "/var/backup/pg-dumps";
 in {
   options.my.backup = {
     enable = lib.mkEnableOption "restic backups to Google Drive via rclone";
@@ -47,23 +48,35 @@ in {
 
     environment.systemPackages = [pkgs.restic];
 
+    systemd.tmpfiles.rules = lib.mkIf (cfg.postgresqlDatabases != []) [
+      "d ${pgDumpDir} 0750 postgres postgres -"
+    ];
+
     systemd.services.backup-pg-dump = lib.mkIf (cfg.postgresqlDatabases != []) {
-      description = "Dump PostgreSQL databases for restic backup";
-      before = ["restic-backups-main.service"];
-      requiredBy = ["restic-backups-main.service"];
+      description = "Dump PostgreSQL databases for backup";
       after = ["postgresql.service"];
       requires = ["postgresql.service"];
       serviceConfig = {
         Type = "oneshot";
         User = "postgres";
-        RuntimeDirectory = "backup-pg-dumps";
-        RuntimeDirectoryMode = "0700";
       };
-      script =
-        lib.concatMapStringsSep "\n" (db: ''
-          ${pkgs.postgresql}/bin/pg_dump -Fc ${db} > /run/backup-pg-dumps/${db}.dump
-        '')
-        cfg.postgresqlDatabases;
+      script = ''
+        DATE=$(date +%Y%m%d)
+        ${lib.concatMapStringsSep "\n" (db: ''
+          ${pkgs.postgresql}/bin/pg_dump -Fc ${db} > ${pgDumpDir}/${db}_$DATE.dump.tmp
+          mv ${pgDumpDir}/${db}_$DATE.dump.tmp ${pgDumpDir}/${db}_$DATE.dump
+          ls -t ${pgDumpDir}/${db}_*.dump 2>/dev/null | tail -n +8 | xargs rm -f
+        '') cfg.postgresqlDatabases}
+      '';
+    };
+
+    systemd.timers.backup-pg-dump = lib.mkIf (cfg.postgresqlDatabases != []) {
+      description = "Timer for PostgreSQL dumps";
+      wantedBy = ["timers.target"];
+      timerConfig = {
+        OnCalendar = "02:30";
+        Persistent = true;
+      };
     };
 
     services.restic.backups.main = {
@@ -74,7 +87,7 @@ in {
 
       paths =
         cfg.paths
-        ++ lib.optionals (cfg.postgresqlDatabases != []) ["/run/backup-pg-dumps"];
+        ++ lib.optionals (cfg.postgresqlDatabases != []) [pgDumpDir];
 
       pruneOpts = [
         "--keep-daily 7"
@@ -87,10 +100,6 @@ in {
         RandomizedDelaySec = "30min";
         Persistent = true;
       };
-
-      backupCleanupCommand = lib.mkIf (cfg.postgresqlDatabases != []) ''
-        rm -rf /run/backup-pg-dumps
-      '';
     };
   };
 }

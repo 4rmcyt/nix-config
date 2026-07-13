@@ -208,8 +208,6 @@
       "dispatcharr"
     ];
     paths = [
-      "/data/media/.state/nixarr/jellyfin"
-      "/data/media/.state/nixarr/audiobookshelf"
       "/var/lib/kanidm"
     ];
   };
@@ -229,9 +227,23 @@
     repository = "/backup/restic";
     passwordFile = config.sops.secrets.restic_password.path;
     paths = [
-      "/run/backup-pg-dumps"
-      "/data/media/.state/nixarr/jellyfin"
+      "/var/backup/pg-dumps"
       "/data/media/.state/nixarr/audiobookshelf"
+      "/data/media/.state/nixarr/autobrr"
+      "/data/media/.state/nixarr/bazarr"
+      "/data/media/.state/nixarr/kapowarr"
+      "/data/media/.state/nixarr/lazylibrarian"
+      "/data/media/.state/nixarr/lidarr"
+      "/data/media/.state/nixarr/prowlarr"
+      "/data/media/.state/nixarr/qbittorrent"
+      "/data/media/.state/nixarr/radarr"
+      "/data/media/.state/nixarr/readarr"
+      "/data/media/.state/nixarr/recyclarr"
+      "/data/media/.state/nixarr/sabnzbd"
+      "/data/media/.state/nixarr/seerr"
+      "/data/media/.state/nixarr/sonarr"
+      "/data/media/.state/nixarr/transmission"
+      "/var/lib/hass"
       "/var/lib/kanidm"
     ];
     pruneOpts = [
@@ -247,8 +259,7 @@
   };
 
   systemd.services.restic-backups-local = {
-    after = ["backup-pg-dump.service" "zfs-import-zbackup.service"];
-    requires = ["backup-pg-dump.service"];
+    after = ["zfs-import-zbackup.service"];
   };
 
   my.hardening.enable = true;
