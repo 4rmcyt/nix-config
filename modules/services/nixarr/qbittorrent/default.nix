@@ -37,7 +37,11 @@
           MaxConnections = 100;
           MaxUploads = 8;
         };
-        WebUI.LocalHostAuth = false;
+        WebUI = {
+          LocalHostAuth = false;
+          AuthSubnetWhitelistEnabled = true;
+          AuthSubnetWhitelist = "10.0.0.0/8,127.0.0.1/32,192.168.0.0/16";
+        };
       };
       BitTorrent.Session = {
         Port = 63998;
@@ -125,6 +129,39 @@
     after = ["qbittorrent.service"];
     requires = ["qbittorrent.service"];
     serviceConfig.ExecStart = "${pkgs.util-linux}/bin/nsenter --net=/run/netns/wg ${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:8080";
+  };
+
+  systemd.services.qbittorrent-categories = {
+    description = "Write qBittorrent categories.json";
+    before = ["qbittorrent.service"];
+    wantedBy = ["multi-user.target"];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      User = "qbittorrent";
+      Group = "media";
+    };
+    script = ''
+      cfg=/var/lib/qBittorrent/qBittorrent/config/categories.json
+      mkdir -p "$(dirname "$cfg")"
+      cat > "$cfg" <<'EOF'
+{
+    "audiobooks": {
+        "save_path": "/data/Downloads/audiobooks"
+    },
+    "lidarr": {
+        "save_path": "/data/Downloads/lidarr"
+    },
+    "radarr": {
+        "save_path": "/data/Downloads/radarr"
+    },
+    "tv-sonarr": {
+        "save_path": "/data/Downloads/tv-sonarr"
+    }
+}
+EOF
+      chmod 600 "$cfg"
+    '';
   };
 
   systemd.tmpfiles.rules = [
