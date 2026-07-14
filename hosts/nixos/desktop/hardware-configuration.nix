@@ -256,7 +256,7 @@
       efiSupport = true;
       efiInstallAsRemovable = false;
       biosSupport = false;
-      secureBoot.enable = true;
+      secureBoot.enable = false; # TODO: re-enable after first boot once sbctl keys are generated + enrolled
       style.wallpapers = [
         "${builtins.path {
           path = ./boot/background.jpg;
