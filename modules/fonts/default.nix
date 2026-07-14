@@ -14,6 +14,7 @@
       nerd-fonts.blex-mono
       nerd-fonts.im-writing
       nerd-fonts.jetbrains-mono
+      nerd-fonts.meslo-lg
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-cjk-serif

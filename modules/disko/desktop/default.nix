@@ -53,16 +53,6 @@
                       "nodatacow"
                     ];
                   };
-                  "/persist" = {
-                    mountpoint = "/persist";
-                    mountOptions = [
-                      "compress=zstd:1"
-                      "noatime"
-                      "ssd"
-                      "discard=async"
-                      "space_cache=v2"
-                    ];
-                  };
                   "/log" = {
                     mountpoint = "/var/log";
                     mountOptions = [

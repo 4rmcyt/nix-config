@@ -13,10 +13,6 @@
   # =================================================================
   # 2. Boot Configuration
   # =================================================================
-  # Mark /persist and /var/log as needed for boot (impermanence requirement)
-  fileSystems."/persist".neededForBoot = true;
-  fileSystems."/var/log".neededForBoot = true;
-
   boot = {
     # Kernel modules
     initrd.availableKernelModules = [
@@ -123,23 +119,6 @@
       "processor.max_cstate=1"
       "irqaffinity=0" # Force hardware interrupts to Core 0 where possible
     ];
-
-    # Wipe root subvolume on every boot (impermanence)
-    initrd.postResumeCommands = lib.mkAfter ''
-      mkdir -p /mnt
-      mount -o subvol=/ /dev/disk/by-label/nixos /mnt
-
-      btrfs subvolume list -o /mnt/root |
-        cut -f9 -d' ' |
-        while read subvolume; do
-          btrfs subvolume delete "/mnt/$subvolume" 2>/dev/null || true
-        done
-
-      btrfs subvolume delete /mnt/root 2>/dev/null || true
-      btrfs subvolume create /mnt/root
-
-      umount /mnt
-    '';
 
     # System control parameters
     kernel.sysctl = {

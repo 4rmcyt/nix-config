@@ -14,7 +14,7 @@
 
       -- Fonts
       config.font = wezterm.font_with_fallback({
-        "MesloLGS Nerd Font",
+        "MesloLGS NF",
         "Symbols Nerd Font",
       })
       config.font_size = 14.0
