@@ -84,7 +84,9 @@ in {
     EOF
         chmod +x "$HOME/.local/bin/tavily-mcp-wrapped"
 
-        # Symlink into project
-        ln -sf "$HOME/.config/mcp/mcp.json" "$HOME/src/nix-config/.mcp.json"
+        # Symlink into project (skip if repo isn't cloned yet, e.g. on a fresh machine)
+        if [ -d "$HOME/src/nix-config" ]; then
+          ln -sf "$HOME/.config/mcp/mcp.json" "$HOME/src/nix-config/.mcp.json"
+        fi
   '';
 }
