@@ -35,7 +35,7 @@
     # Users & GUI
     ../../../modules/GUI/chrome
     ../../../modules/GUI/flatpak/default
-    ../../../modules/GUI/nautilus
+    ../../../modules/GUI/nemo
     ../../../modules/GUI/virt-manager
     ../../../modules/GUI/waydroid
     ../../../modules/TUI/tty.nix

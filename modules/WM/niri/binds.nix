@@ -11,7 +11,7 @@ in {
 
     "Mod+Return".action = a.spawn "kitty";
     "Mod+B".action = a.spawn "google-chrome-stable";
-    "Mod+E".action = a.spawn "nautilus";
+    "Mod+E".action = a.spawn "nemo";
     "Mod+Space" = qs "launcher" "toggle";
     "Mod+D" = qs "launcher" "toggle";
     "Mod+M".action = a.spawn "kitty" "-e" "btop";

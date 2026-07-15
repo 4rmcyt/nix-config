@@ -12,7 +12,7 @@ _: {
       {command = ["xwayland-satellite" ":0"];}
 
       # Propagate PAM environment (GIO_EXTRA_MODULES, etc.) into D-Bus/systemd user session
-      # Required for gvfs backends (trash, NFS) to work in Nautilus outside GNOME
+      # Required for gvfs backends (trash, NFS) to work in Nemo outside GNOME/Cinnamon
       {command = ["bash" "-c" "dbus-update-activation-environment --systemd --all"];}
 
       # Session manager (started via systemd for lifecycle management)

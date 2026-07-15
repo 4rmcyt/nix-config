@@ -58,7 +58,7 @@ modules/
     mime/                   # MIME type associations
     niri/                   # Niri WM: settings, keybinds, startup, windowrules, nvidia, monitors
   GUI/                      # GUI apps: firefox, chrome, chromium, obsidian, mpv, IDE (vscode, zed),
-                            #   terminal (ghostty, kitty, wezterm), discord, nautilus, thunderbird,
+                            #   terminal (ghostty, kitty, wezterm), discord, nemo, thunderbird,
                             #   virt-manager, waydroid, flatpak, stylix
   TUI/                      # Terminal tools: zsh, zellij, atuin, starship, tmux, tty, neovim,
                             #   ai-tools (claude-code, gemini-cli, mcp, llama-cpp)

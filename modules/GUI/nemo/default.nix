@@ -1,28 +1,15 @@
-{pkgs, ...}: let
-  nautilusPkg = pkgs.nautilus.overrideAttrs (old: {
-    buildInputs =
-      old.buildInputs
-      ++ (with pkgs.gst_all_1; [
-        gst-plugins-good
-        gst-plugins-bad
-      ]);
-  });
-in {
-  programs.nautilus-open-any-terminal = {
-    enable = true;
-    terminal = "kitty";
-  };
-
+{pkgs, ...}: {
   # gvfs for trash, MTP, SFTP etc. NFS is handled via fstab automount (nfs-client module).
   services.gvfs.enable = true;
-
-  services.gnome.sushi.enable = true;
   services.udisks2.enable = true;
 
   programs.dconf.profiles.user.databases = [
     {
-      settings."org/gnome/nautilus/preferences" = {
-        show-delete-permanently = true;
+      settings."org/nemo/preferences" = {
+        enable-delete = true;
+      };
+      settings."org/cinnamon/desktop/default-applications/terminal" = {
+        exec = "kitty";
       };
       settings."org/gnome/desktop/search-providers" = {
         disable-external = true;
@@ -31,12 +18,11 @@ in {
   ];
 
   environment.systemPackages = with pkgs; [
-    nautilusPkg
+    nemo-with-extensions
     gnome-autoar
     libheif
     libheif.out
     localsearch
-    code-nautilus
   ];
 
   environment.pathsToLink = ["/share/thumbnailers"];

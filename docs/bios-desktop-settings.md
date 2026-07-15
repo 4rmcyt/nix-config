@@ -27,27 +27,37 @@ EXPO stability/latency improvements, so flashing to the latest version before
 re-tuning settings is worthwhile. Confirm the installed version after boot
 with `cat /sys/class/dmi/id/bios_version`.
 
-## 0. Prevent this from happening again — save an OC Profile
+## 0. Prevent this from happening again
 
-Once every setting below is dialed in and the system has been stable for a
-while, **save it as an OC Profile inside the BIOS itself** — this is a
-different mechanism from whatever "backup" failed to restore this time
-(that was likely a Windows/MSI Center-side snapshot or just NVRAM that got
-wiped along with everything else by the flash):
+**Confirmed by hands-on testing on this board: OC Profiles (F8/F9) are tied
+to a specific BIOS version/build and will not load across a firmware
+update.** A profile saved on `1.R1` was refused when attempting to load it
+after flashing `1.R2` ("created for a different BIOS version"). So the F9
+profile save recommended in earlier drafts of this doc is **not** the fix
+for "the next BIOS update wipes settings again" — it only protects against
+a CMOS clear or dying CMOS battery *on the same firmware version*, which is
+a real but narrower problem than the one that started all this.
 
-- In BIOS, press **F9** ("Save Overclocking Profile") to save the current
-  full settings state to one of the board's internal profile slots
-  (independent of NVRAM/CMOS — survives a CMOS clear).
-- Also export it to a **USB drive** from the same profile menu, and keep a
-  copy of that file outside the machine (e.g. in this repo's scratch area
-  or a personal backup location — it's a small binary blob, not secret).
-- **F8** ("Load Overclocking Profile") restores from either location later.
-- Redo this save whenever you meaningfully change tuning (new Curve
-  Optimizer value, EXPO adjustments, etc.) — an out-of-date profile is
-  only marginally better than none.
+**This document is the actual defense against the original problem.**
+Unlike a binary OC profile, the settings recorded here (EXPO enabled, SVM
+enabled, Global C-state Enabled, etc.) are concepts, not a version-locked
+blob — they survive any firmware version because they're re-entered by
+hand from a written checklist rather than replayed from a snapshot. Keep
+it current:
 
-This is the actual fix for "restoring from backup didn't work" — a
-BIOS-native profile slot/USB export, not relying on some other backup path.
+- After finishing a tuning pass, **update the Curve Optimizer value and
+  fan curves recorded in this file** (sections 4 and 8) so the next
+  BIOS-update recovery starts from a known-good number instead of from
+  scratch.
+- Still worth doing on **every individual BIOS version**, since it's free
+  and does help within that version's lifetime: press **F9** ("Save
+  Overclocking Profile") once settings are dialed in, and export a copy to
+  USB too. Just don't expect it to survive the *next* flash — re-save it
+  fresh after every future update instead of relying on an old one.
+- If a saved profile is ever refused after a flash with a "different BIOS
+  version" style error, that's expected per the above, not a sign
+  something else is broken — fall back to this checklist and redo the
+  settings by hand.
 
 ## 1. Boot / Boot Mode
 
@@ -117,6 +127,22 @@ BIOS-native profile slot/USB export, not relying on some other backup path.
   trying after Curve Optimizer tuning if thermals/fan noise bother you, not
   required.
 - **SMT:** Enabled.
+- **Global C-state Control: set explicitly to Enabled, not Auto** — this
+  contradicts the "leave on Auto" default listed in `efi.md` (hidden offset
+  `0x29`, default `0x03=Auto`), and it's worth the exception. Multiple
+  independent reports (r/AMDHelp, Tom's Hardware, Windows Forum) converge
+  on the same finding across various AM5 boards: **Auto frequently behaves
+  like Disabled in practice**, causing stutter, downclocking, and FPS drops
+  in games, while explicitly forcing **Enabled** restores expected boost
+  behavior and smooths out latency. Fully **Disabled** is worse than either
+  — it kills turbo boost on non-K-equivalent parts and raises temps for no
+  benefit. This is usually exposed directly in the visible AMD CBS /
+  Advanced CPU Configuration menu (not just the hidden offset), so no
+  `setup_var.efi` should be needed to set it.
+- **CPPC / CPPC Preferred Cores:** leave **Enabled** (should already be the
+  board default). For non-X3D Ryzen 7000 like the 7600X, this lets the OS
+  scheduler favor the highest-boosting cores for lightly-threaded work —
+  no reason to disable it on a general-use desktop.
 - No other manual voltage overrides — leave AMD defaults unless previously
   hand-tuned and you have a record of those values (this repo doesn't track
   BIOS-level CPU OC state).
@@ -203,6 +229,11 @@ Required for the `virtualisation.libvirtd` + VFIO setup already in the flake
   control` (`0x40`) — the gate for these advanced options — defaults to
   `0xFF=Customized` (already unlocked), and `TPM` (`0x37A`) defaults to
   `0x01=ASP fTPM`. See [`efi.md`](efi.md) for the full offset reference.
+  **Caveat:** `efi.md`'s offset table was extracted against BIOS `1P8`;
+  this board is now on `1.R1` and the offsets haven't been re-verified
+  against that firmware (see the staleness warning at the top of
+  `efi.md`). Read a value with `setup_var.efi` before writing it and
+  confirm it looks sane for that setting — don't write blind.
 
 ## 6. Secure Boot
 

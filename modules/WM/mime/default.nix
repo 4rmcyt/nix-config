@@ -9,7 +9,7 @@
     enable = true;
     defaultApplications = {
       # Directories
-      "inode/directory" = "org.gnome.Nautilus.desktop";
+      "inode/directory" = "nemo.desktop";
 
       # Text
       "text/plain" = "dev.zed.Zed.desktop";

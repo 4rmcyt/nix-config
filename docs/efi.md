@@ -3,10 +3,93 @@
 ## Board Info
 - **Board**: MSI MAG B650 TOMAHAWK WIFI
 - **Platform**: AMD AM5 — Ryzen 7000 / 9000 series (DDR5)
+- **Offsets below extracted from BIOS `E7D75AMS.1P8`** (via `ifrextractor-rs`)
 - Main VarStore: `AmdSetupRPL`
   - GUID: `3A997502-647A-4C82-998E-52EF9486A247`
   - VarStoreId: `0x5000`
   - Size: `0x888`
+
+> ⚠️ **Offset staleness warning:** the table below was captured against
+> BIOS `1P8`. The board has since been updated to `1.R1` (per
+> `hosts/nixos/desktop/facter.json`, `smbios.bios.version`), several AGESA
+> revisions later. MSI/AMI can reshuffle IFR form layouts between BIOS
+> revisions, which shifts `setup_var` offsets — a table built for one
+> version is not guaranteed accurate on another. **Before writing any
+> offset with `setup_var.efi`, read it first** and sanity-check the
+> returned value against this table's documented default/options; if it
+> doesn't look plausible for that setting, stop and re-extract against the
+> current firmware (`ifrextractor` against the currently loaded `1.R1`
+> image — see "Re-verifying offsets after a BIOS update" below for the exact
+> procedure) rather than trust this table blind. Re-dumping and refreshing
+> this file after any future BIOS update is the correct long-term fix — this
+> hasn't been done yet for `1.R1`.
+
+---
+
+## Re-verifying offsets after a BIOS update (`ifrextractor`)
+
+The NixOS package is `ifrextractor-rs`, but the installed binary is named
+**`ifrextractor`** (confirmed via `nix-config`'s `home/desktop/default.nix` +
+upstream source — the package name and binary name differ). It's already in
+`home/desktop/default.nix`, `hosts/nixos/desktop/hardware-configuration.nix`,
+and `hosts/nixos/matebook/default.nix`.
+
+**CLI usage** (from upstream `src/main.rs`, not guessed):
+
+```
+ifrextractor file.bin list
+    — list all string and form packages in the input file
+ifrextractor file.bin single <form_package_number> <string_package_number>
+    — extract one form package using one string package (numbers from `list`)
+ifrextractor file.bin lang <language>
+    — extract all form packages using all string packages in a given language
+ifrextractor file.bin all
+    — extract all form packages using all string packages
+ifrextractor file.bin verbose
+    — extract all form packages using English string packages, with raw
+      opcode bytes included — this is the mode to use for rebuilding an
+      offset table, since it gives byte-level detail to cross-check
+ifrextractor file.bin
+    — default: English string packages only, no raw bytes
+```
+
+It writes its extracted output as text file(s) next to the input file (exact
+naming wasn't traced from source — check the working directory / the tool's
+own console output after running to find them, rather than guessing a
+pattern here).
+
+**Procedure to refresh this document against the currently installed BIOS
+(`1.R1`, or whatever `cat /sys/class/dmi/id/bios_version` reports at the
+time):**
+
+1. Get the exact BIOS image currently running. Either:
+   - Reuse the `E7D75AMS.1R1` file downloaded from
+     https://www.msi.com/Motherboard/MAG-B650-TOMAHAWK-WIFI/support that was
+     used to perform the actual flash (see the update procedure below), or
+   - Dump the live SPI flash directly with `flashrom` for a byte-exact
+     match to what's actually running (more authoritative, but needs
+     `flashrom` support for this chipset/programmer — verify before relying
+     on it).
+2. Run `ifrextractor E7D75AMS.1R1 list` first. Confirm a form package
+   referencing AMD CBS/Overclocking is present, and note its form/string
+   package numbers.
+3. Run `ifrextractor E7D75AMS.1R1 verbose` for the full byte-level dump.
+4. Isolate the `AmdSetupRPL` section in the output: grep for the known GUID
+   or VarStoreId —
+   `grep -n -A2 -B2 "3A997502-647A-4C82-998E-52EF9486A247\|VarStoreId: 0x5000"`.
+5. For each setting in the tables below, find its `Prompt` string in the
+   new dump and compare the `VarOffset` value shown against the `Offset`
+   column here. If they match, the table is still accurate for that
+   setting. If a `Prompt` maps to a different `VarOffset`, or a setting
+   disappears/moves to a different `VarStoreId`, the table entry is stale —
+   correct it.
+6. Update the `**Offsets below extracted from BIOS ...**` line at the top
+   of this file to the new version, and remove or update the staleness
+   warning once the pass is done.
+
+This hasn't been run yet for `1.R1` — the table below still reflects `1P8`
+and should be treated per the staleness warning until this procedure has
+been carried out at least once on the current firmware.
 
 ---
 
