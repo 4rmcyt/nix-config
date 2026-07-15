@@ -257,6 +257,20 @@
       efiInstallAsRemovable = false;
       biosSupport = false;
       secureBoot.enable = false; # TODO: re-enable after first boot once sbctl keys are generated + enrolled
+      additionalFiles = {
+        # Full Tianocore EDK2 UEFI Shell — the firmware's built-in Boot
+        # Override "UEFI Shell" is a stripped-down build missing commands
+        # (e.g. `mode`) and mishandling FOR-loop variable reuse, which
+        # breaks MSI's svet.efi STARTUP.NSH flashing script. This gives a
+        # full-featured shell at fs0:\efi\BOOT\shell.efi instead. See
+        # docs/efi.md.
+        "efi/BOOT/shell.efi" = "${pkgs.edk2-uefi-shell}/shell.efi";
+      };
+      extraEntries = ''
+        /UEFI Shell
+            protocol: efi_chainload
+            path: boot():/efi/BOOT/shell.efi
+      '';
       style.wallpapers = [
         "${builtins.path {
           path = ./boot/background.jpg;

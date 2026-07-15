@@ -107,33 +107,61 @@ In UEFI shell this is **`fs0:`** (NVMe, alias `HDB0`).
 ├── E7D75AMS.1XX              ← BIOS file (root of EFI partition = fs0:\)
 ├── efi/                      = fs0:\efi\
 │   ├── BOOT/                 ← svet.efi MUST be here (fs0:\efi\BOOT\)
-│   │   ├── svet.efi          (v2.58+, signed with sbctl)
-│   │   ├── AFUE51605s.efi    (signed)
-│   │   ├── AFUE592.efi       (signed)
-│   │   ├── STARTUP.NSH
+│   │   ├── svet.efi          ← manually copied, NOT NixOS-managed — see caveat below
+│   │   ├── AFUE51605s.efi    ← manually copied
+│   │   ├── AFUE592.efi       ← manually copied
+│   │   ├── Bootx64.efi       ← manually copied (bundled with MSI_UEFI_FlashTool)
+│   │   ├── shell.efi         ← NixOS-managed! `boot.loader.limine.additionalFiles` in
+│   │   │                        hosts/nixos/desktop/hardware-configuration.nix, sourced
+│   │   │                        from `pkgs.edk2-uefi-shell` — survives nixos-rebuild
+│   │   ├── STARTUP.NSH       ← manually copied
 │   │   └── ME_FW/
-│   │       ├── FWUpdLcl.efi       (signed)
-│   │       └── FWUpdLcl_RL.efi    (signed)
+│   │       ├── FWUpdLcl.efi       ← manually copied
+│   │       ├── FWUpdLcl_RL.efi    ← manually copied
+│   │       └── ME*.bin             ← manually copied, not EFI executables
 │   ├── limine/
-│   │   └── BOOTX64.EFI       (signed)
-│   └── tools/                ← extra tools
-│       ├── setup_var.efi     (datasone build, signed)
-│       ├── shell.efi         (signed)
-│       ├── memtest.efi       (signed)
-│       ├── gdisk.efi
-│       ├── uvt.efi           (signed)
-│       └── Mosby_x64.efi     (signed)
-├── db, dbx, KEK, PK          ← Secure Boot enrolled keys
-└── limine/                   ← kernel + initrd
+│   │   └── BOOTX64.EFI       ← managed by NixOS's `boot.loader.limine`
+│   └── tools/                ← extra tools (setup_var.efi etc.) — separate download,
+│                                 not yet provisioned as of 2026-07-15, see below
+└── limine/                   ← kernel + initrd, managed by `boot.loader.limine`
 ```
+
+**Caveat on the manually-copied files above:** unlike `shell.efi`, they are
+plain files sitting on the ESP outside of Nix's control. It's unconfirmed
+whether they survive `nixos-rebuild switch` (the Limine installer might
+prune unmanaged files from `/boot` when it reinstalls — this is the leading
+theory for why this whole toolset went missing once already before this
+was written). If they disappear again after a rebuild, the fix is the same
+pattern used for `shell.efi`: vendor them into the repo (e.g. under
+`hosts/nixos/desktop/boot/msi-flash-tool/`, alongside the existing
+`./boot/background.jpg` wallpaper reference) and add them to
+`additionalFiles` too, rather than re-copying by hand again.
 
 ### Secure Boot
 
-All EFI binaries are signed with `sbctl`. After adding new tools:
+**Currently disabled on this host** (`boot.loader.limine.secureBoot.enable = false`
+in `hosts/nixos/desktop/hardware-configuration.nix`, `sbctl status` confirms no
+keys are enrolled: `Installed: ✗`, `Secure Boot: ✗ Disabled`). The `db`/`dbx`/
+`KEK`/`PK` files referenced in older revisions of this doc **do not exist**
+on this system — that line described an aspirational future state, not
+reality, and caused confusion when the tooling below turned out to be
+missing entirely (it had never actually been deployed, not wiped by
+anything). **Do not trust "signed"/"present" claims in this file as fact —
+verify against the live filesystem first.**
+
+While Secure Boot stays disabled, **`sbctl sign` is not required** — unsigned
+EFI binaries execute fine from the UEFI Shell. Only sign them once Secure
+Boot is actually being turned on (matches the pre-existing TODO in the host
+config), at which point run this once for every `.efi` (not the `ME*.bin`
+payloads — those aren't PE executables and `sbctl sign` doesn't apply to
+them):
 ```bash
+sudo sbctl create-keys      # only if sbctl status shows no keys yet
+sudo sbctl enroll-keys
 sudo sbctl sign /boot/efi/BOOT/svet.efi
 sudo sbctl sign /boot/efi/BOOT/AFUE51605s.efi
 sudo sbctl sign /boot/efi/BOOT/AFUE592.efi
+sudo sbctl sign /boot/efi/BOOT/Bootx64.efi
 sudo sbctl sign /boot/efi/BOOT/ME_FW/FWUpdLcl.efi
 sudo sbctl sign /boot/efi/BOOT/ME_FW/FWUpdLcl_RL.efi
 sudo sbctl verify  # check all signed
@@ -161,7 +189,18 @@ sudo sbctl verify  # check all signed
    sudo sbctl sign /boot/efi/BOOT/ME_FW/FWUpdLcl.efi
    sudo sbctl sign /boot/efi/BOOT/ME_FW/FWUpdLcl_RL.efi
    ```
-4. Reboot → MSI BIOS → Boot Override → **UEFI Shell (M2_1 : Samsung SSD 970 EVO)**
+4. Reboot → **Limine menu → "UEFI Shell"** entry (chainloads
+   `efi/BOOT/shell.efi`, the full Tianocore EDK2 shell, via
+   `boot.loader.limine.extraEntries` in
+   `hosts/nixos/desktop/hardware-configuration.nix`).
+
+   Do **not** use MSI BIOS → Boot Override → "UEFI Shell" — that's the
+   firmware's own stripped-down shell build, missing commands (`mode`) and
+   mishandling `FOR`-loop variable reuse, which breaks this exact
+   `STARTUP.NSH` script partway through (confirmed by hitting "Indexvar '0'
+   is incorrect" on 2026-07-15 before the flash logic was ever reached — no
+   harm done, but wastes a boot cycle). The Limine menu entry loads the
+   real EDK2 shell instead.
 5. In shell:
    ```
    fs0:\efi\BOOT\STARTUP.NSH
@@ -208,9 +247,16 @@ setup_var 0x28 0x00
 
 ## UEFI Shell Quick-Start (setup_var)
 
-1. Boot into UEFI Shell — MSI BIOS: Del → Boot override → `shell.efi` (fs0:\EFI\tools\shell.efi)
+1. Boot into UEFI Shell via the **Limine menu → "UEFI Shell"** entry (not
+   MSI BIOS Boot Override — see the note in the update procedure above for
+   why). This loads `fs0:\efi\BOOT\shell.efi`.
 2. Switch to NVMe: `fs0:` (check mapping table — NVMe path contains `NVMe(0x1,...)`)
-3. Run: `\EFI\tools\setup_var.efi <offset> -n AmdSetupRPL -guid 3A997502-647A-4C82-998E-52EF9486A247`
+3. Run `\EFI\tools\setup_var.efi <offset> -n AmdSetupRPL -guid 3A997502-647A-4C82-998E-52EF9486A247`
+   — **note:** `EFI\tools\setup_var.efi` is not currently provisioned on
+   this system (only `EFI\BOOT\*` from the flash tool package exists as of
+   2026-07-15 — see the file-layout table above). This step needs
+   `setup_var.efi` (datasone build) downloaded and placed there first; see
+   "Tools Needed" below for the source.
 
 ---
 
