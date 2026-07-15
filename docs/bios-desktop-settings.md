@@ -177,7 +177,15 @@ Required for the `virtualisation.libvirtd` + VFIO setup already in the flake
 
 - **SVM Mode (AMD-V):** Enabled
 - **IOMMU:** Enabled
-- **Above 4G Decoding:** Enabled
+- **Above 4G Decoding: Enabled — required for Resizable BAR to actually
+  work**, not just a nice-to-have alongside it. ReBAR exposes the RTX
+  3050's full VRAM as one CPU-addressable window, which needs 64-bit MMIO
+  addressing above the 4GB boundary; without Above 4G Decoding, ReBAR either
+  silently fails to enable or the GPU falls back to a small legacy BAR with
+  no error shown. It also matters for the IOMMU/VFIO setup already in the
+  flake (`pci-stub.ids=1022:15e3`) — with IOMMU on and multiple
+  large-BAR devices (GPU + NVMe), leaving MMIO mapping confined below 4GB
+  risks running out of address space for PCI BARs.
 - **Resizable BAR / Smart Access Memory:** Enabled (RTX 3050 supports it)
 
 ## 6. Secure Boot
