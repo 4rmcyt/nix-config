@@ -279,6 +279,7 @@ Pre-commit and CI helper scripts in `tools/scripts/`:
 | File | Purpose |
 |------|---------|
 | [`docs/efi.md`](efi.md) | Reference guide for MSI MAG B650 TOMAHAWK WIFI hidden UEFI settings. Documents `AmdSetupRPL` VarStore offsets (CPU, memory, power, prefetchers, NBIO/security, GFX) with `setup_var.efi` recipes. For BIOS tuning / unlocking suppressed settings. Desktop-specific. |
+| [`docs/bios-desktop-settings.md`](bios-desktop-settings.md) | Standard BIOS setup-screen checklist for the same board (EXPO, boot mode, virtualization/Secure Boot, TPM, fan curves) — for recovering settings after a firmware update wipes NVRAM. Desktop-specific. |
 | `cpu_flags.sh` | One-shot script: fetches `cpufeatures.h` from kernel.org, cross-references `/proc/cpuinfo` flags with their human-readable descriptions. |
 
 ### Other
