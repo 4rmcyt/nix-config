@@ -187,6 +187,22 @@ Required for the `virtualisation.libvirtd` + VFIO setup already in the flake
   large-BAR devices (GPU + NVMe), leaving MMIO mapping confined below 4GB
   risks running out of address space for PCI BARs.
 - **Resizable BAR / Smart Access Memory:** Enabled (RTX 3050 supports it)
+- **Hidden setting worth forcing explicitly (via `efi.md`): Local APIC
+  Mode → x2APIC.** Offset `0x2D` in `AmdSetupRPL` defaults to `0xFF=Auto`;
+  `efi.md`'s own unlock recipes call out forcing `0x02=x2APIC` as
+  "improves multi-CPU/VM performance," which applies directly to the
+  libvirtd/VFIO setup here. Modern kernels with IOMMU on usually resolve
+  Auto to x2APIC anyway, but forcing it explicitly removes one more
+  Auto-resolution unknown after a fresh reset:
+  ```
+  setup_var.efi 0x2D 0x02 -s 0x01 -n AmdSetupRPL -guid 3A997502-647A-4C82-998E-52EF9486A247
+  ```
+- Everything else in the hidden `AmdSetupRPL` NBIO/Security table already
+  defaults to what this setup needs and doesn't require touching:
+  `IOMMU` (`0x3D`) defaults to `0x01=Enabled` (not Auto), `SCPC attribute
+  control` (`0x40`) — the gate for these advanced options — defaults to
+  `0xFF=Customized` (already unlocked), and `TPM` (`0x37A`) defaults to
+  `0x01=ASP fTPM`. See [`efi.md`](efi.md) for the full offset reference.
 
 ## 6. Secure Boot
 
