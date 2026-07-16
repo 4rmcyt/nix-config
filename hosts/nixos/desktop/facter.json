@@ -2595,14 +2595,6 @@
           "interface_alternate_setting": 0
         },
         "hotplug": "usb",
-        "driver": "usbfs",
-        "driver_module": "usbcore",
-        "drivers": [
-          "usbfs"
-        ],
-        "driver_modules": [
-          "usbcore"
-        ],
         "module_alias": "usb:v1050p0407d0571dc00dsc00dp00ic0Bisc00ip00in02"
       }
     ],
@@ -2778,7 +2770,7 @@
           "[13]",
           "[14]"
         ],
-        "bogo": 9399,
+        "bogo": 9400,
         "cache": 1024,
         "units": 12,
         "page_size": 4096,
@@ -2901,7 +2893,7 @@
         "sysfs_id": "/class/block/zram0",
         "unix_device_names": [
           "/dev/disk/by-label/zram0",
-          "/dev/disk/by-uuid/274b7b9d-ff6b-4662-98b7-df9c4508c081",
+          "/dev/disk/by-uuid/d8537575-a0d8-4dc2-94bb-fdd65756853d",
           "/dev/zram0"
         ],
         "resources": [
@@ -3056,7 +3048,7 @@
         "resources": [
           {
             "type": "io",
-            "base": 53248,
+            "base": 57344,
             "range": 256,
             "enabled": true,
             "access": "read_write"
@@ -4129,7 +4121,7 @@
           "/dev/input/by-id/usb-SONiX_USB_DEVICE-event-kbd",
           "/dev/input/by-path/pci-0000:0e:00.0-usb-0:1.2:1.0-event-kbd",
           "/dev/input/by-path/pci-0000:0e:00.0-usbv2-0:1.2:1.0-event-kbd",
-          "/dev/input/event18"
+          "/dev/input/event8"
         ],
         "resources": [
           {
@@ -4231,7 +4223,7 @@
           "/dev/input/by-id/usb-Yubico_YubiKey_OTP+FIDO+CCID-event-kbd",
           "/dev/input/by-path/pci-0000:0e:00.0-usb-0:1.3:1.0-event-kbd",
           "/dev/input/by-path/pci-0000:0e:00.0-usbv2-0:1.3:1.0-event-kbd",
-          "/dev/input/event24"
+          "/dev/input/event14"
         ],
         "resources": [
           {
@@ -4899,13 +4891,41 @@
         "sysfs_id": "/devices/pci0000:00/0000:00:02.1/0000:03:00.0/0000:04:0a.0/0000:0c:00.0",
         "sysfs_bus_id": "0000:0c:00.0",
         "sysfs_iommu_group_id": 22,
+        "unix_device_names": [
+          "enp12s0"
+        ],
+        "resources": [
+          {
+            "type": "hwaddr",
+            "address": 56
+          },
+          {
+            "type": "io",
+            "base": 49152,
+            "range": 256,
+            "enabled": true,
+            "access": "read_write"
+          },
+          {
+            "type": "phwaddr",
+            "address": 51
+          }
+        ],
         "detail": {
           "function": 0,
-          "command": 0,
+          "command": 1031,
           "header_type": 0,
           "secondary_bus": 0,
           "prog_if": 0
         },
+        "driver": "r8125",
+        "driver_module": "r8125",
+        "drivers": [
+          "r8125"
+        ],
+        "driver_modules": [
+          "r8125"
+        ],
         "module_alias": "pci:v000010ECd00008125sv00001462sd00007D75bc02sc00i00"
       },
       {
@@ -5131,6 +5151,47 @@
         ],
         "driver_modules": [
           "mt7921e"
+        ]
+      },
+      {
+        "index": 109,
+        "attached_to": 17,
+        "class_list": [
+          "network_interface"
+        ],
+        "base_class": {
+          "hex": "0107",
+          "name": "Network Interface",
+          "value": 263
+        },
+        "sub_class": {
+          "hex": "0001",
+          "name": "Ethernet",
+          "value": 1
+        },
+        "model": "Ethernet network interface",
+        "sysfs_id": "/class/net/enp12s0",
+        "sysfs_device_link": "/devices/pci0000:00/0000:00:02.1/0000:03:00.0/0000:04:0a.0/0000:0c:00.0",
+        "unix_device_names": [
+          "enp12s0"
+        ],
+        "resources": [
+          {
+            "type": "hwaddr",
+            "address": 56
+          },
+          {
+            "type": "phwaddr",
+            "address": 51
+          }
+        ],
+        "driver": "r8125",
+        "driver_module": "r8125",
+        "drivers": [
+          "r8125"
+        ],
+        "driver_modules": [
+          "r8125"
         ]
       }
     ],
@@ -6849,35 +6910,35 @@
         "resources": [
           {
             "type": "io",
-            "base": 57344,
+            "base": 53248,
             "range": 32,
             "enabled": true,
             "access": "read_write"
           },
           {
             "type": "io",
-            "base": 57376,
+            "base": 53280,
             "range": 4,
             "enabled": true,
             "access": "read_write"
           },
           {
             "type": "io",
-            "base": 57392,
+            "base": 53296,
             "range": 8,
             "enabled": true,
             "access": "read_write"
           },
           {
             "type": "io",
-            "base": 57408,
+            "base": 53312,
             "range": 4,
             "enabled": true,
             "access": "read_write"
           },
           {
             "type": "io",
-            "base": 57424,
+            "base": 53328,
             "range": 8,
             "enabled": true,
             "access": "read_write"
@@ -7111,7 +7172,7 @@
           "/dev/input/by-id/usb-Rapoo_Rapoo_Gaming_Device_20220811-if01-event-kbd",
           "/dev/input/by-path/pci-0000:10:00.4-usb-0:1.2:1.1-event-kbd",
           "/dev/input/by-path/pci-0000:10:00.4-usbv2-0:1.2:1.1-event-kbd",
-          "/dev/input/event17"
+          "/dev/input/event7"
         ],
         "resources": [
           {
@@ -7296,7 +7357,7 @@
         "sysfs_id": "/devices/pci0000:00/0000:00:08.1/0000:10:00.4/usb5/5-1/5-1.1/5-1.1:1.0",
         "sysfs_bus_id": "5-1.1:1.0",
         "unix_device_names": [
-          "/dev/input/event15"
+          "/dev/input/event5"
         ],
         "resources": [
           {
@@ -7716,8 +7777,8 @@
     "bios": {
       "handle": 0,
       "vendor": "American Megatrends International, LLC.",
-      "version": "1.R1",
-      "date": "06/08/2026",
+      "version": "1.R2",
+      "date": "07/02/2026",
       "features": [
         "PCI supported",
         "BIOS flashable",
@@ -8010,7 +8071,7 @@
         "memory_type_details": [
           "Synchronous"
         ],
-        "speed": 4800
+        "speed": 5200
       },
       {
         "handle": 19,
@@ -8064,7 +8125,7 @@
         "memory_type_details": [
           "Synchronous"
         ],
-        "speed": 4800
+        "speed": 5200
       }
     ],
     "memory_device_mapped_address": [
@@ -8492,9 +8553,9 @@
       "product": "MS-7D75",
       "version": "1.0",
       "wake_up": {
-        "hex": "0006",
-        "name": "Power Switch",
-        "value": 6
+        "hex": "0002",
+        "name": "Unknown",
+        "value": 2
       }
     }
   }
