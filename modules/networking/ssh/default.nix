@@ -118,6 +118,11 @@ in {
   # SSH Known Hosts
   # =================================================================
   programs.ssh.knownHosts = {
+    "desktop" = {
+      hostNames = ["desktop.ts.example.com" "100.64.0.1"];
+      publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH1T6RcXrs1aeupXBSVZlvYbispJAR+KROiJM6P+MUq2";
+    };
+
     "homeserver" = {
       hostNames = ["homeserver.ts.example.com" "100.64.0.3"];
       publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJV+/pct8PNZhUqvnflYY5auIE1zTl3sPtCfVynTnajN";

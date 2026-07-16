@@ -227,11 +227,22 @@ Disk: WD PC SN730 512GB NVMe (`nvme-WDC_PC_SN730_SDBPNTY-512G-1027_20230H445703`
 Running on GCP relay. Split DNS: `example.com` → `100.64.0.3` (homeserver Tailscale IP).  
 Magic DNS base domain: `ts.example.com`. DERP: GCP US Central + Tailscale default map.
 
+Known static Tailscale IPs (headscale has no declarative per-node static IP — assigned sequentially in its sqlite DB; pinned here by manual `UPDATE nodes SET ipv4=...` after registration):
+
+| Host | Tailscale IP |
+|------|---------------|
+| desktop | `100.64.0.1` |
+| homeserver | `100.64.0.3` |
+| matebook | `100.64.0.4` |
+| gcp-relay | `100.64.0.5` |
+
 SSH config uses MagicDNS hostnames (`homeserver.ts.example.com`, `matebook.ts.example.com`, `gcp-relay.ts.example.com`) so SSH works from any network without hardcoded LAN IPs. Operator mode enabled on desktop + matebook (`extraSetFlags = ["--operator=zeev"]`) so `tailscale file cp` works without sudo.
 
 ### Unbound (recursive DNS)
 
 On homeserver, listening on Tailscale + LAN interfaces. Forwards to NextDNS profile `nextdns0` with DNSSEC validation. Desktop and matebook use homeserver as resolver.
+
+`example.com` is a `redirect` local-zone (answers homeserver's IPs for the whole zone). `ts.example.com` is carved out as `transparent` and forwarded to the Tailscale stub resolver (`100.100.100.100`), so individual per-node MagicDNS names (e.g. `matebook.ts.example.com`) resolve to their actual current Tailscale IP instead of being swallowed by the redirect.
 
 ### CrowdSec
 
