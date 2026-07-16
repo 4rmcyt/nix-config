@@ -338,7 +338,7 @@
       authKeyFile = config.sops.secrets.tailscale_auth_key.path;
       extraUpFlags = [
         "--accept-routes"
-        "--accept-dns=false"
+        "--accept-dns=true"
         "--reset"
         "--login-server=https://hs.example.com"
       ];
