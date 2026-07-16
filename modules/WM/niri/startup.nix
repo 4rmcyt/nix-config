@@ -25,8 +25,10 @@ _: {
       {command = ["materialgram"];}
       {command = ["vesktop" "--start-minimized"];}
 
-      # AMD GPU/CPU fan & power control (system tray)
-      {command = ["corectrl" "--minimize-systray"];}
+      # Fan/pump curve control (nct6687 SuperIO + AMD GPU/liquidctl).
+      # No CLI flag for minimize-to-tray exists (unlike corectrl) — enable
+      # "Start in Tray" / "Close to Tray" once in the app's own Settings.
+      {command = ["coolercontrol"];}
     ];
   };
 }

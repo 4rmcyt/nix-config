@@ -16,7 +16,7 @@ normal BIOS setup UI.
 | RAM | Corsair Vengeance `CMK64GX5M2B5200C40` — 2×32GB DDR5, rated **5200 MT/s CL40**, EXPO-certified |
 | GPU | NVIDIA RTX 3050 8GB (dGPU, primary) + AMD iGPU |
 | Boot drive | Samsung 970 EVO Plus 1TB NVMe (GPT, EFI partition mounted at `/boot`) |
-| Sensors | `nct6687` SuperIO hwmon; OS-level fan control via `corectrl` |
+| Sensors | `nct6687` SuperIO hwmon; OS-level fan control via `coolercontrol` |
 
 **Before starting:** check the current BIOS version against MSI's live
 support page — https://www.msi.com/Motherboard/MAG-B650-TOMAHAWK-WIFI/support
@@ -333,16 +333,26 @@ Required for the `virtualisation.libvirtd` + VFIO setup already in the flake
 ## 8. Fan / Smart Fan curves
 
 BIOS-level fan curves are **not tracked anywhere in this repo** — they live
-only in board NVRAM and were wiped along with everything else. OS-level
-`corectrl` config is separate and unaffected — though note `corectrl` is
-primarily a GPU/CPU power control GUI, not a fan-curve tool for the
-`nct6687` headers; it wasn't actually running by default (`programs.corectrl.enable`
-only installs the package + polkit rule, it doesn't autostart the GUI) until
-an entry was added to `spawn-at-startup` in
-`modules/WM/niri/startup.nix` (`corectrl --minimize-systray`) on 2026-07-16.
-Verify it's actually running with `pgrep -a corectrl` after a session
-restart if fan/power control from it seems to be doing nothing. **Menu path:**
-top-level
+only in board NVRAM and were wiped along with everything else.
+
+**`corectrl` was replaced with `coolercontrol` on 2026-07-16** —
+`corectrl` only controls AMD GPU power/fan curves and never touched the
+`nct6687` SuperIO headers at all (and this system's discrete GPU is
+NVIDIA, which `corectrl` can't manage either way, so it had near-zero
+practical use here). `coolercontrol` (`programs.coolercontrol.enable` in
+`hosts/nixos/desktop/hardware-configuration.nix`) is community-confirmed
+to work with `nct6687` and is the actual tool for moving these fan curves
+to OS-level control, if desired. Its daemon (`coolercontrold`) runs as a
+proper systemd service (starts automatically); the GUI is autostarted via
+`spawn-at-startup` in `modules/WM/niri/startup.nix`. Unlike `corectrl`,
+there's no CLI flag to start minimized — enable "Start in Tray"/"Close to
+Tray" once in the app's own Settings after first launch. Verify the daemon
+is running with `systemctl status coolercontrold` and the GUI with
+`pgrep -a coolercontrol`.
+
+For now, fan curves remain in **BIOS** (below) — `coolercontrol` is
+installed and available but no profile has been created in it yet.
+**Menu path (BIOS):** top-level
 **HARDWARE MONITOR** tab (not nested under `Settings`) — pick **Smart Fan
 Mode** per header, then drag points on the duty-vs-temperature curve editor.
 `All Full Speed` / `All Set Default` / `All Set Cancel` buttons on the same
@@ -392,10 +402,10 @@ ramp up than down) if the board exposes those, to avoid audible fan-speed
 "hunting" around a threshold.
 
 Optional: since `nct6687` hwmon already exposes full sensor/fan control to
-the OS, consider moving fan curves fully into OS-level control (e.g. via
-`corectrl` or `fancontrol`) so a future BIOS reset can't affect them again.
-Not required — just an option worth considering given this is the second
-time BIOS state was lost.
+the OS, consider moving fan curves fully into OS-level control via
+`coolercontrol` (already installed, see above) so a future BIOS reset can't
+affect them again. Not required — just an option worth considering given
+this is the second time BIOS state was lost.
 
 ## 9. iGPU
 

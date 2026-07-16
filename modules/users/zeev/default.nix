@@ -41,7 +41,6 @@ in {
         description = "zeev";
         extraGroups = [
           "audio"
-          "corectrl"
           "docker"
           "gamemode"
           "greeter"
