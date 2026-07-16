@@ -6,6 +6,7 @@
     ./headplane
     ./headscale
     ./nfs
+    ./ssh
     ./unbound
     ./tailscale
     ./traefik
