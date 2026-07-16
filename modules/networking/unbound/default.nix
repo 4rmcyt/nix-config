@@ -56,7 +56,12 @@ in {
           hide-version = true;
 
           # *.domain → homeserver (Tailscale IP + LAN IP)
+          # ts.domain is excluded (nodefault) and forwarded to the Tailscale
+          # stub resolver below — it must NOT be swallowed by the redirect,
+          # since it holds per-node MagicDNS records (e.g. matebook.ts.domain)
+          # that vary per host and aren't all homeserver.
           local-zone = [
+            ''"ts.${domain}." nodefault''
             ''"${domain}." redirect''
             ''"hs.${domain}." static''
             ''"hp.${domain}." static''
@@ -77,6 +82,10 @@ in {
               "45.90.28.163@853#${cfg.nextdnsProfileId}.dns.nextdns.io"
               "45.90.30.163@853#${cfg.nextdnsProfileId}.dns.nextdns.io"
             ];
+          }
+          {
+            name = "ts.${domain}.";
+            forward-addr = ["100.100.100.100"];
           }
         ];
       };
