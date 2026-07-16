@@ -55,6 +55,14 @@ in {
           hide-identity = true;
           hide-version = true;
 
+          # domain is a real registered name with public DNSSEC delegation.
+          # The validator tries to build a chain of trust for ts.domain as if
+          # it were a real public name, fails (private zone, no real
+          # delegation/signature), and marks it bogus -> SERVFAIL. Tell the
+          # validator to treat the whole domain as unsigned so local
+          # overrides and the ts.domain forward both resolve.
+          domain-insecure = ["${domain}"];
+
           # *.domain → homeserver (Tailscale IP + LAN IP)
           # ts.domain is a subzone of domain, so redirect covers it unless
           # carved out with "transparent" (nodefault only disables unbound's
