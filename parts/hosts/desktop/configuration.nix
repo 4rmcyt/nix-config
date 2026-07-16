@@ -53,7 +53,7 @@ in {
 
     # Host-specific HM imports
     home-manager.users.${owner.username} = {
-      nixpkgs.config.permittedInsecurePackages = ["pnpm-10.29.2"];
+      nixpkgs.config.permittedInsecurePackages = ["pnpm-10.29.2" "electron-40.10.5"];
       imports = [
         ../../../home/desktop
         # inputs.stylix.homeModules.stylix

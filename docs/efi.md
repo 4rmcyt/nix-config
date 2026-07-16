@@ -194,13 +194,11 @@ sudo sbctl verify  # check all signed
    `boot.loader.limine.extraEntries` in
    `hosts/nixos/desktop/hardware-configuration.nix`).
 
-   Do **not** use MSI BIOS → Boot Override → "UEFI Shell" — that's the
-   firmware's own stripped-down shell build, missing commands (`mode`) and
-   mishandling `FOR`-loop variable reuse, which breaks this exact
-   `STARTUP.NSH` script partway through (confirmed by hitting "Indexvar '0'
-   is incorrect" on 2026-07-15 before the flash logic was ever reached — no
-   harm done, but wastes a boot cycle). The Limine menu entry loads the
-   real EDK2 shell instead.
+   The Limine menu entry is still preferable to MSI BIOS → Boot Override →
+   "UEFI Shell" (the firmware's own stripped-down build is missing
+   commands like `mode`), but **the shell choice was not the real bug** —
+   see the STARTUP.NSH fix note below. The `mode`-missing error is
+   harmless/cosmetic either way.
 5. In shell:
    ```
    fs0:\efi\BOOT\STARTUP.NSH
@@ -212,6 +210,25 @@ sudo sbctl verify  # check all signed
 - BIOS file must be in **`fs0:\`** (= `/boot/`) — the root of the EFI partition
 - `/B /K` flags: `/B` = BIOS block only (not ME), `/K` = keep NVRAM settings
 - Settings survive update — NVRAM preserved by `/K` flag, AMD crypto-32 path
+
+**`STARTUP.NSH` bug fixed on 2026-07-15:** the stock script fails on any
+modern/strict EDK2 Shell (reproduced identically on both the firmware's
+built-in shell *and* a freshly-built official `pkgs.edk2-uefi-shell`
+202602 — ruling out "wrong shell" as the cause) with `The script's
+Indexvar '0' is incorrect / Script Error Status: Aborted (line number
+32)`. Root cause: the drive-detection loop (`FOR %A RUN (0 20 1)` ...
+`goto proceed`) exits via `goto` without reaching its own `endfor`,
+leaving `%A`'s loop state unresolved in the shell's loop stack. The BIOS
+file-detection loop later in the script (`FOR %A in E????%P%V?*.???*`)
+then reuses `%A` and collides with that unresolved state. **Fix:** rename
+that second loop's variable to an unused letter (`%D`), both in the `FOR`
+header and its one body reference (`set -v bios %A` → `set -v bios %D`).
+`%A` is never referenced again after that point in the script, so this is
+a complete, minimal fix — no other loop in the script needs the same
+treatment (the other early-`goto`-exited loops, `%B` and `%P`/`%V`, are
+also never reused afterward). If re-downloading a fresh
+`MSI_UEFI_FlashTool` package in the future, re-apply this same edit before
+trusting the bundled `STARTUP.NSH`.
 - After flash: verify with `cat /sys/class/dmi/id/bios_version` and update `facter.json`:
   ```bash
   nix run github:numtide/nixos-facter -- --output hosts/nixos/desktop/facter.json
