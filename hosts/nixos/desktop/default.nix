@@ -212,7 +212,7 @@
       useRoutingFeatures = "both";
       extraUpFlags = [
         "--accept-routes"
-        "--accept-dns=false"
+        "--accept-dns=true"
         "--reset"
         "--login-server=https://hs.example.com"
       ];
