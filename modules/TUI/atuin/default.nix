@@ -3,16 +3,20 @@
   osConfig ? null,
   lib,
   ...
-}: {
+}: let
+  hostName = osConfig.networking.hostName;
+  keyName = "atuin_key_${hostName}";
+  sessionName = "atuin_session_${hostName}";
+in {
   sops = {
     secrets = {
-      atuin_key = {
+      ${keyName} = {
         sopsFile = ../../../secrets/atuin.yaml;
-        key = "atuin_key";
+        key = keyName;
       };
-      atuin_session = {
+      ${sessionName} = {
         sopsFile = ../../../secrets/atuin.yaml;
-        key = "atuin_session";
+        key = sessionName;
       };
     };
   };
@@ -35,8 +39,8 @@
           inline_height = 10;
           search_mode = "fuzzy";
           filter_mode_shell_up_key_binding = "session";
-          session_path = config.sops.secrets.atuin_session.path;
-          key_path = config.sops.secrets.atuin_key.path;
+          session_path = config.sops.secrets.${sessionName}.path;
+          key_path = config.sops.secrets.${keyName}.path;
         }
         // lib.optionalAttrs (osConfig != null && osConfig ? my.defaults.domain) {
           sync_address = "https://atuin.${osConfig.my.defaults.domain}";
