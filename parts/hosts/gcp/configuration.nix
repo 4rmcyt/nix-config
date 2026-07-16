@@ -17,6 +17,7 @@ in {
     nixpkgs.hostPlatform = lib.mkForce "x86_64-linux";
     nixpkgs.overlays = [
       inputs.headplane.overlays.default
+      inputs.headscale.overlays.default
       # Fix: ssh-wasm buildPhase only chmod's derp/derphttp but the patch also
       # touches net/netcheck — widen to the whole tailscale.com vendor tree.
       (_final: prev: {
