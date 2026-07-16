@@ -334,7 +334,15 @@ Required for the `virtualisation.libvirtd` + VFIO setup already in the flake
 
 BIOS-level fan curves are **not tracked anywhere in this repo** — they live
 only in board NVRAM and were wiped along with everything else. OS-level
-`corectrl` config is separate and unaffected. **Menu path:** top-level
+`corectrl` config is separate and unaffected — though note `corectrl` is
+primarily a GPU/CPU power control GUI, not a fan-curve tool for the
+`nct6687` headers; it wasn't actually running by default (`programs.corectrl.enable`
+only installs the package + polkit rule, it doesn't autostart the GUI) until
+an entry was added to `spawn-at-startup` in
+`modules/WM/niri/startup.nix` (`corectrl --minimize-systray`) on 2026-07-16.
+Verify it's actually running with `pgrep -a corectrl` after a session
+restart if fan/power control from it seems to be doing nothing. **Menu path:**
+top-level
 **HARDWARE MONITOR** tab (not nested under `Settings`) — pick **Smart Fan
 Mode** per header, then drag points on the duty-vs-temperature curve editor.
 `All Full Speed` / `All Set Default` / `All Set Cancel` buttons on the same

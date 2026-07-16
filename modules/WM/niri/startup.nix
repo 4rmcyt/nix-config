@@ -24,6 +24,9 @@ _: {
       # Messaging apps
       {command = ["materialgram"];}
       {command = ["vesktop" "--start-minimized"];}
+
+      # AMD GPU/CPU fan & power control (system tray)
+      {command = ["corectrl" "--minimize-systray"];}
     ];
   };
 }
