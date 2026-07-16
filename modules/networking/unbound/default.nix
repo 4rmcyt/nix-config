@@ -56,12 +56,14 @@ in {
           hide-version = true;
 
           # *.domain → homeserver (Tailscale IP + LAN IP)
-          # ts.domain is excluded (nodefault) and forwarded to the Tailscale
-          # stub resolver below — it must NOT be swallowed by the redirect,
-          # since it holds per-node MagicDNS records (e.g. matebook.ts.domain)
-          # that vary per host and aren't all homeserver.
+          # ts.domain is a subzone of domain, so redirect covers it unless
+          # carved out with "transparent" (nodefault only disables unbound's
+          # own built-in default zones, it does not exempt a subzone from a
+          # local-zone you configured yourself) — it must fall through to the
+          # Tailscale stub resolver below, since it holds per-node MagicDNS
+          # records (e.g. matebook.ts.domain) that vary per host.
           local-zone = [
-            ''"ts.${domain}." nodefault''
+            ''"ts.${domain}." transparent''
             ''"${domain}." redirect''
             ''"hs.${domain}." static''
             ''"hp.${domain}." static''
