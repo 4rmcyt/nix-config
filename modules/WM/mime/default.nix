@@ -32,12 +32,12 @@
       "text/x-toml" = "dev.zed.Zed.desktop";
 
       # Browser
-      "text/html" = "google-chrome.desktop";
-      "x-scheme-handler/http" = "google-chrome.desktop";
-      "x-scheme-handler/https" = "google-chrome.desktop";
-      "x-scheme-handler/about" = "google-chrome.desktop";
-      "x-scheme-handler/unknown" = "google-chrome.desktop";
-      "x-scheme-handler/ftp" = "google-chrome.desktop";
+      "text/html" = "firefox.desktop";
+      "x-scheme-handler/http" = "firefox.desktop";
+      "x-scheme-handler/https" = "firefox.desktop";
+      "x-scheme-handler/about" = "firefox.desktop";
+      "x-scheme-handler/unknown" = "firefox.desktop";
+      "x-scheme-handler/ftp" = "firefox.desktop";
 
       # PDF & Documents
       "application/pdf" = "org.pwmt.zathura-pdf-mupdf.desktop";

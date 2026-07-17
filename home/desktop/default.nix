@@ -116,7 +116,7 @@
     ];
 
     sessionVariables = {
-      BROWSER = lib.mkForce "google-chrome-stable";
+      BROWSER = lib.mkForce "firefox";
       VISUAL = lib.mkForce "code";
       PYENV_ROOT = "$HOME/.pyenv";
     };
