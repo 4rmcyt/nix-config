@@ -337,7 +337,6 @@
   # 6. Hardware Programs
   # =================================================================
   programs = {
-    coolercontrol.enable = true; # Fan/pump curve control for nct6687 SuperIO + AMD GPU/liquidctl devices
     noisetorch.enable = true; # Noise suppression (audio hardware)
   };
 

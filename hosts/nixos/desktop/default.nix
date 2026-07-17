@@ -34,6 +34,7 @@
 
     # Users & GUI
     ../../../modules/GUI/chrome
+    ../../../modules/GUI/coolercontrol
     ../../../modules/GUI/flatpak/default
     ../../../modules/GUI/nemo
     ../../../modules/GUI/virt-manager

@@ -341,72 +341,188 @@ apply briefly during POST/before `coolercontrold` starts, and are **not
 tracked anywhere in this repo** (they live in board NVRAM and were wiped
 once already). The `coolercontrol` config below is the actual source of
 truth for fan behavior now, and — unlike BIOS NVRAM — survives a firmware
-reset, since it's OS-side state (`/var/lib/coolercontrol`).
+reset, since it's OS-side state (`/etc/coolercontrol/config.toml` — *not*
+`/var/lib/coolercontrol`, which only holds session tokens/alert logs).
 
 `corectrl` (previously used) was replaced with `coolercontrol` — `corectrl`
 only controls AMD GPU power/fan curves and never touched the `nct6687`
 headers at all, and this system's discrete GPU is NVIDIA, which `corectrl`
-can't manage either. `coolercontrol` (`programs.coolercontrol.enable` in
-`hosts/nixos/desktop/hardware-configuration.nix`) confirmed working with
-both `nct6687` and, surprisingly, the NVIDIA RTX 3050's fan channels via
-NVML (official docs said "works on most cards" — this card is one of
-them, confirmed by testing, not assumed). Daemon (`coolercontrold`) runs
-as a systemd service; GUI autostarts via `spawn-at-startup` in
+can't manage either. `coolercontrol` is now enabled via the dedicated
+module `modules/GUI/coolercontrol/` (imported in
+`hosts/nixos/desktop/default.nix`) rather than inline in
+`hardware-configuration.nix`. Confirmed working with both `nct6687` and,
+surprisingly, the NVIDIA RTX 3050's fan channels via NVML (official docs
+said "works on most cards" — this card is one of them, confirmed by
+testing, not assumed). Daemon (`coolercontrold`) runs as a systemd
+service; GUI autostarts via `spawn-at-startup` in
 `modules/WM/niri/startup.nix`. Enable "Start in Tray"/"Close to Tray" once
 in the app's own Settings (no CLI flag exists for this, unlike `corectrl`).
+
+**IPv6 bind warnings (ports 11987 REST + 11988 gRPC):** this host has
+`enableIPv6 = false` (`hosts/nixos/desktop/default.nix`), so the daemon's
+attempt to also bind IPv6 loopback always logged a WARN. Fixed by adding
+`ipv6_address = ""` under `[settings]` in `config.toml` (documented at
+`docs.coolercontrol.org/daemon/address.html` — empty string disables that
+address family entirely, one setting covers both ports). Log lines change
+from `Could not bind to standard IPv6 loopback address` (real failure) to
+`IPv6 address disabled` (expected, still logged at WARN level by the
+daemon regardless). **Deliberately left at WARN, not silenced further:**
+`docs.coolercontrol.org/wiki/logs-debugging.html` documents `CC_LOG`
+(systemd override, `ERROR`/`WARN`/`INFO`/`DEBUG`/`TRACE`) as the only
+verbosity control — it's a global floor, not a per-message filter, so
+suppressing this one cosmetic line would require `CC_LOG=ERROR` and lose
+visibility into *all* future real WARN-level issues (like the Nvidia
+fan-speed-range one caught and fixed earlier this same session). Traded
+one permanent harmless log line for keeping that signal — decided
+2026-07-17, don't revisit without a good reason. **Gotcha hit while
+applying this live:** editing the config with
+`tee -a` (append) while the daemon was still running got the line dropped
+entirely — `coolercontrold` rewrites the whole file from its in-memory
+state around restart/reload. Docs' own procedure is `stop` → edit → `start`
+(not `restart`), and the setting must land inside the `[settings]` block,
+not appended after the trailing per-device `[settings.<uid>]` sections at
+file's end.
+
+### Declarative backup
+
+`config.toml` and `alerts.json` are committed in
+`modules/GUI/coolercontrol/` and restored via `systemd.tmpfiles.rules`
+(type `C` — copy only if the target is missing, never clobbers live
+changes) if `/etc/coolercontrol/` is ever empty (fresh install, wiped
+state). Device UIDs in `config.toml` are sha256 hashes of stable hardware
+characteristics, so they re-match the same physical devices after a
+reinstall. Deliberately **not** backed up: `coolercontrol.crt`/`.key` (TLS
+keypair — the daemon regenerates these itself if missing) and `.passwd`
+(admin password hash — reset once via the UI on a fresh install rather
+than committing credential material to the repo). This sidesteps the
+"don't hand-write config.toml" warning from
+`docs.coolercontrol.org/daemon/headless.html` — we're not authoring it
+from scratch and guessing entity IDs, just restoring a known-good snapshot
+the GUI itself already generated.
 
 ### Final profile configuration
 
 **Pump** (Fixed) → assigned to **Pump Fan**:
 - 90% fixed (reads back as ~92%/3200 RPM — daemon rounding, not a bug)
 
-**CPU Fan** (Graph, temp source = `AMD Ryzen 5 7600X → CPU Temp Tctl`) →
-assigned to **CPU Fan**:
+**CPU Fan** (Graph, temp source = `AMD Ryzen 5 7600X → CPU Temp Tctl`,
+`temp_min = 30.0` / `temp_max = 90.0`) → assigned to **CPU Fan** (the
+CPU_FAN1 header — direct AIO radiator-fan control, i.e. primary CPU
+cooling):
 
 | Temp | Duty |
 |---|---|
-| 30°C | 25% |
-| 50°C | 50% |
-| 70°C | 70% |
+| 30°C | 35% |
+| 65°C | 35% |
+| 66°C | 70% |
 | 90°C | 100% |
 
-**Case Fans** (Graph, temp source = `nct6687 → System`, *not* `nct6687 →
-Cpu` — the latter duplicates what the CPU Fan profile above already
-covers via Tctl) → assigned to **System Fan #1–#4**:
-
-| Temp | Duty |
-|---|---|
-| 30°C | 30% |
-| 50°C | 35% |
-| 70°C | 45% |
-| 80°C | 55% |
-
-**System Fan #5/#6:** Case Fans profile assigned but reads 0 RPM —
-unpopulated headers (no physical fan connected), harmless.
+Step-shaped, not the original smooth 4-point ramp — sourced from a
+published 7600X-specific curve (r/pcmasterrace: *"35% for idle/low-end
+gaming and is dead quiet, then 70% above 65C which is tolerable + the
+best sound profile, no whining or turbulence"*). Flat plateau at 35% up
+to 65°C (Ryzen 7000 runs hot by design; no need to chase every idle
+fluctuation), sharp jump to 70% right after — the two adjacent points
+`65°C→35%` / `66°C→70%` approximate a step since Graph profiles only
+interpolate linearly between points. `90°C→100%` is a safety ceiling
+added locally; the source post didn't include one.
 
 **GPU Fans** (Graph, temp source = `NVIDIA GeForce RTX 3050 → GPU Temp
-Hotspot`) → assigned to **NVIDIA GeForce RTX 3050 fan1/fan2**. *Not* the
-`Case Fans` profile — that uses the motherboard's `System` sensor, which
-has no relation to actual GPU die temperature; driving GPU fans off a
-board-ambient sensor risks the card running hot under load while its own
-fans stay idle. Caught and fixed before it shipped, not after:
+Hotspot`, `temp_min = 40.0` / `temp_max = 95.0`) → assigned to **NVIDIA
+GeForce RTX 3050 fan1/fan2** (the card's own fans, direct GPU cooling):
 
 | Temp | Duty |
 |---|---|
 | 40°C | 30% |
-| 60°C | 40% |
-| 75°C | 65% |
-| 85°C | 100% |
+| 60°C | 30% |
+| 80°C | 40% |
+| 90°C | 65% |
+| 95°C | 100% |
 
-**Note:** the first point was originally `40°C→20%` — `coolercontrold`
-logged `WARN coolercontrold::repositories::gpu::nvidia] The fan speed 29%
-is not in the allowed Nvidia speed range: 30 - 100` and refused to apply
-it. NVML enforces a **hard 30% minimum duty** on this card; any curve
-point below that gets silently rejected. Bumped the floor to 30% to fix.
+Adapted from community RTX 3050/3080 curves (r/pcmasterrace: *"68-70 ish
+at full load and silent"* for a 3050; a 3080 example: `0→50°C, 30%
+50–69°C, 40%@78°C, 100%@87°C`). Shifted ~10–12°C higher than those
+sources because **this profile uses GPU Temp Hotspot, not plain GPU
+Temp/Edge** — on this card Hotspot reads noticeably higher than Edge at
+the same load (observed ~54°C Edge vs ~66°C Hotspot simultaneously), so
+using someone else's Edge-calibrated breakpoints verbatim here would ramp
+too late for the same real thermal state.
 
-**Function — "Smooth"** (Standard type), applied to **CPU Fan**, **Case
-Fans**, and **GPU Fans** (not `Pump`, which is Fixed and unaffected by
-step/hysteresis tuning):
+**Two NVIDIA-30%-floor issues found and fully fixed (not just tolerated),
+still relevant since GPU Fans keeps a 30% floor point:**
+
+1. A curve point below 30% (`40°C→20%` in an earlier draft) — `coolercontrold`
+   logged `WARN coolercontrold::repositories::gpu::nvidia] The fan speed 29%
+   is not in the allowed Nvidia speed range: 30 - 100` and refused to apply
+   it. NVML enforces a **hard 30% minimum duty** on this card.
+2. Every Graph profile *also* implicitly prepends a `[0°C → 0%]` anchor
+   point to `speed_profile`, which is below the 30% floor too — this kept
+   logging `Your Nvidia GPU does not allow setting a manual fan speed of
+   0% (30 - 100). Attempting to use auto-mode to enable zero rpm.` even
+   with all real points ≥30%, though the daemon handled it gracefully via
+   an auto-mode fallback. **Root-caused and eliminated:** setting each
+   Graph profile's `temp_min` to match its own first real point (instead
+   of the default `0.0`) removes the implicit 0° anchor point entirely —
+   confirmed in `config.toml`'s `speed_profile` arrays, no more leading
+   `[0.0, 0]` tuple, no more of either warning in
+   `journalctl -u coolercontrold`. Applied to *every* Graph profile below,
+   not just GPU Fans.
+
+**Case fans are driven by a Mix Profile, not a single Graph profile
+anymore.** Original approach used `nct6687 → System` (a board-ambient
+sensor) as the temp source — replaced because it has no direct relation
+to actual component heat; a docs-documented use case
+(`docs.coolercontrol.org/config-advanced/mix-profiles.html`) covers
+exactly this scenario: *"drive case fans from whichever of CPU or GPU is
+hotter, using separate curves for each."*
+
+- **CPU Curve** (Graph, temp source = `sensor1` custom sensor — see EMA
+  below — `temp_min = 30.0` / `temp_max = 85.0`):
+
+  | Temp | Duty |
+  |---|---|
+  | 30°C | 30% |
+  | 50°C | 35% |
+  | 70°C | 45% |
+  | 80°C | 55% |
+  | 85°C | 100% |
+
+- **GPU Curve** (Graph, temp source = `sensor2` custom sensor,
+  `temp_min = 30.0` / `temp_max = 85.0`): identical shape to CPU Curve
+  above — same duty-per-temp mapping, different (EMA-smoothed GPU
+  Hotspot) input. Deliberately *not* the step-shaped GPU Fans curve or
+  the Hotspot-offset breakpoints used there — this feeds case airflow,
+  not direct GPU cooling, so a gentler ramp is preferred (a visible
+  step-jump on case fans is more audibly annoying for less thermal
+  benefit than on the GPU's own fans).
+
+- **Case Fans Mix** (`p_type = "Mix"`, `mix_function_type = "Max"`,
+  `member_profile_uids` = [CPU Curve, GPU Curve]) → assigned to **System
+  Fan #1–#4**. Whichever of CPU or GPU is hotter at any moment drives the
+  case fans, each through its own tuned curve before the mix — not a
+  single blended/averaged temperature.
+
+**System Fan #5/#6:** Case Fans Mix assigned but reads 0 RPM —
+unpopulated headers (no physical fan connected), harmless.
+
+**EMA Custom Sensors** (`Custom Sensors → sensor1`/`sensor2`,
+`cs_type = "ExponentialMovingAvg"`, `time_window_seconds = 5`) feed
+`temp_source` for CPU Curve / GPU Curve only — *not* CPU Fan or GPU Fans,
+which stay on raw sensor readings deliberately: those two profiles
+directly cool the CPU/GPU themselves, and smoothing away real thermal
+transients on primary component cooling is a real risk that isn't worth
+taking; smoothing the secondary/case-fan-mix inputs is lower-stakes and
+reduces unnecessary case-fan churn from momentary spikes. Per
+`docs.coolercontrol.org/config-advanced/custom-sensors.html`: *"Best for
+fans that should track real temperature trends without reacting to
+short-lived jitter... takes roughly 3× the window length to fully follow
+a sustained change"* — a 5s window means ~15s to fully settle on a
+sustained change, judged an acceptable tradeoff for case-fan response.
+
+**Function — "Smooth"** (Standard type), applied to **CPU Fan**, **CPU
+Curve**, and **GPU Curve**, **GPU Fans** (not `Pump`, which is Fixed and
+unaffected by step/hysteresis tuning; not `Case Fans Mix` itself, which
+inherits behavior from its member profiles):
 
 - Step Size: **Asymmetric**
   - Minimum Increasing: 2%, **Maximum Increasing: 100%** (uncapped — fast
