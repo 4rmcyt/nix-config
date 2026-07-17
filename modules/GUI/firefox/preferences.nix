@@ -8,6 +8,21 @@ _: {
     "app.normandy.enabled" = false;
     "app.shield.optoutstudies.enabled" = false;
 
+    # === AI FEATURES (DISABLED) ===
+    "browser.ml.enable" = false; # Master switch for on-device ML/AI features
+    "browser.ml.chat.enabled" = false; # AI chatbot sidebar
+    "browser.ml.chat.sidebar" = false;
+    "browser.ml.chat.menu" = false; # Remove "Ask a chatbot" from tab context menu
+    "browser.ml.chat.page" = false; # Remove "Ask a chatbot" from page context menu
+    "browser.ml.linkPreview.enabled" = false; # AI-generated link preview key points
+    "browser.ml.pageAssist.enabled" = false;
+    "browser.ml.smartAssist.enabled" = false;
+    "extensions.ml.enabled" = false;
+    "browser.tabs.groups.smart.enabled" = false; # AI-suggested tab group names
+    "browser.tabs.groups.smart.userEnabled" = false;
+    "pdfjs.enableAltTextModelDownload" = false; # AI-generated PDF alt text model
+    "pdfjs.enableGuessAltText" = false;
+
     # === APZ (ASYNC PAN-ZOOM) ===
     "apz.overscroll.enabled" = true;
 
@@ -123,20 +138,20 @@ _: {
     "media.av1.enabled" = true;
     "media.av1.use-dav1d" = true; # Change to true - use software decoder for AV1
     "media.eme.enabled" = true;
-    "media.ffmpeg.vaapi.enabled" = true; # Disable VAAPI temporarily
-    "media.ffmpeg.vaapi-drm-display.enabled" = true; # Disable VAAPI DRM
+    "media.ffmpeg.vaapi.enabled" = true; # Enable VAAPI hardware video decoding
+    "media.ffmpeg.vaapi-drm-display.enabled" = true; # Enable VAAPI DRM display
     "media.ffvpx.enabled" = true; # Use built-in FFmpeg instead of system
-    "media.gpu-process-decoder" = true; # Disable GPU process decoder
+    "media.gpu-process-decoder" = true; # Decode video in the GPU process
     "media.hardwaremediakeys.enabled" = true;
-    "media.hardware-video-decoding.enabled" = true; # Disable hardware decoding
-    "media.hardware-video-decoding.force-enabled" = true; # Don't force hardware decoding
-    "media.hevc.enabled" = true; # Disable HEVC which might be problematic
+    "media.hardware-video-decoding.enabled" = true; # Enable hardware video decoding
+    "media.hardware-video-decoding.force-enabled" = true; # Force hardware video decoding
+    "media.hevc.enabled" = true; # Enable HEVC playback
     "media.hls.enabled" = true;
     "media.navigator.mediadatadecoder_vpx_enabled" = true;
     "media.rdd-ffmpeg.enabled" = false; # Disable RDD process for FFmpeg
     "media.rdd-vpx.enabled" = false; # Disable VP8/VP9 in RDD process
     "media.videocontrols.picture-in-picture.video-toggle.enabled" = true;
-    "media.wmf.amd.hevc.enabled" = true; # Disable Windows Media Foundation HEVC
+    "media.wmf.amd.hevc.enabled" = true; # Enable AMD Windows Media Foundation HEVC
     "media.wmf.hevc.enabled" = true;
 
     # Add these additional media settings for stability
@@ -160,6 +175,7 @@ _: {
     "mousewheel.min_line_scroll_amount" = 10;
 
     # === NETWORK ===
+    "network.trr.mode" = 5; # Disable DNS-over-HTTPS: use system resolver (unbound, split-horizon for Tailscale)
     "network.auth.subresource-http-auth-allow" = 1;
     "network.cookie.cookieBehavior" = 5;
     "network.http.http3.enabled" = true;
@@ -174,8 +190,8 @@ _: {
     "network.predictor.prefetch-min-confidence" = 30;
     "network.predictor.prefetch-rolling-load-count" = 120;
     "network.predictor.preresolve-min-confidence" = 10;
-    "ssl_tokens_cache_capacity" = 10; # Cache 10 SSL session tokens
-    "network.buffer.cache.size" = 65535; # 10GB buffer cache for 64GB RAM
+    "network.ssl_tokens_cache_capacity" = 10; # Cache 10 SSL session tokens
+    "network.buffer.cache.size" = 65535; # 64KB network buffer cache
 
     # === PERMISSIONS ===
     "permissions.default.desktop-notification" = 2;

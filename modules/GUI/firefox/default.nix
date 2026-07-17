@@ -42,12 +42,6 @@ in {
         installation_mode = "force_installed";
       };
     };
-
-    profiles.default = {
-      settings = {
-        "fastfox.enable" = true;
-      };
-    };
   };
 
   home.file.".mozilla/firefox/profiles.ini".force = lib.mkForce true;

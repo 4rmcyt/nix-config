@@ -15,6 +15,12 @@
     HardwareAcceleration = true;
     TranslateEnabled = true;
 
+    # === DNS ===
+    DNSOverHTTPS = {
+      Enabled = false;
+      Locked = true;
+    };
+
     # === AUTOFILL & CREDENTIALS ===
     OfferToSaveLogins = true;
     PasswordManagerEnabled = true;

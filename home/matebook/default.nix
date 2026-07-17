@@ -56,10 +56,6 @@
     };
   };
 
-  programs = {
-    browserpass.enable = true;
-  };
-
   services.gpg-agent.enable = true;
   services.udiskie = {
     enable = true;

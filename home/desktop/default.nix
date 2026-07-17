@@ -11,6 +11,7 @@
 
     ../../modules/GUI/chrome/home.nix
     ../../modules/GUI/chromium
+    ../../modules/GUI/firefox
     ../../modules/GUI/mpv
     ../../modules/GUI/obsidian
     ../../modules/TUI/common
@@ -64,7 +65,6 @@
       distrobox
       easyeffects
       ffmpegthumbnailer
-      firefox
       foliate
       foot
       github-mcp-server
@@ -124,7 +124,6 @@
 
   programs = {
     claude-code.enable = true;
-    firefox.package = pkgs.firefox;
   };
 
   services.gpg-agent = {
