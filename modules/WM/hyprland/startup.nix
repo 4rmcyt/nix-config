@@ -1,5 +1,7 @@
-_: {
-  wayland.windowManager.hyprland.settings."exec-once" = [
+{lib, ...}: let
+  inherit (lib.generators) mkLuaInline;
+
+  commands = [
     # Clipboard history daemon
     "bash -c 'wl-paste --type text --watch cliphist store'"
     "bash -c 'wl-paste --type image --watch cliphist store'"
@@ -23,4 +25,17 @@ _: {
     # "Start in Tray" / "Close to Tray" once in the app's own Settings.
     "coolercontrol"
   ];
+
+  execCalls = builtins.concatStringsSep "\n" (map (c: "  hl.exec_cmd(${builtins.toJSON c})") commands);
+in {
+  wayland.windowManager.hyprland.settings.on = {
+    _args = [
+      "hyprland.start"
+      (mkLuaInline ''
+        function()
+        ${execCalls}
+        end
+      '')
+    ];
+  };
 }

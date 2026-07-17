@@ -32,12 +32,17 @@ in {
 
     programs.hyprland.enable = true;
     programs.hyprland.package = pkgs.hyprland;
+    programs.hyprland.withUWSM = true;
 
+    # greetd has no session picker (direct exec), so invoke uwsm ourselves —
+    # this is the exact command nixpkgs' hyprland package embeds in its own
+    # generated hyprland-uwsm.desktop (share/wayland-sessions/), just run
+    # directly instead of through a display manager's session list.
     services.greetd = {
       enable = true;
       settings.default_session = {
         command = "${pkgs.writeShellScript "hyprland-session" ''
-          exec ${pkgs.hyprland}/bin/Hyprland >> "$HOME/.local/state/hyprland/hyprland.log" 2>&1
+          exec ${pkgs.uwsm}/bin/uwsm start -e -D Hyprland hyprland.desktop
         ''}";
         user = owner.username;
       };
