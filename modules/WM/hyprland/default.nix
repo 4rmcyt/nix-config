@@ -46,6 +46,9 @@
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
+    # Pin explicitly: all of binds.nix/startup.nix/windowrules.nix/monitors
+    # are written in classic hyprlang syntax, not the new Lua config format.
+    configType = "hyprlang";
 
     settings = {
       "$mod" = "SUPER";
