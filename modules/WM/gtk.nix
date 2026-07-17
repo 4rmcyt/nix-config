@@ -43,8 +43,8 @@
     };
 
     iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme.override {color = "green";};
+      name = "Tela-circle-dark";
+      package = pkgs.tela-icon-theme;
     };
 
     cursorTheme = {
