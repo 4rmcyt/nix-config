@@ -393,10 +393,16 @@ fans stay idle. Caught and fixed before it shipped, not after:
 
 | Temp | Duty |
 |---|---|
-| 40°C | 20% |
+| 40°C | 30% |
 | 60°C | 40% |
 | 75°C | 65% |
 | 85°C | 100% |
+
+**Note:** the first point was originally `40°C→20%` — `coolercontrold`
+logged `WARN coolercontrold::repositories::gpu::nvidia] The fan speed 29%
+is not in the allowed Nvidia speed range: 30 - 100` and refused to apply
+it. NVML enforces a **hard 30% minimum duty** on this card; any curve
+point below that gets silently rejected. Bumped the floor to 30% to fix.
 
 **Function — "Smooth"** (Standard type), applied to **CPU Fan**, **Case
 Fans**, and **GPU Fans** (not `Pump`, which is Fixed and unaffected by
