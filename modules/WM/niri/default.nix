@@ -19,6 +19,11 @@
     QT_AUTO_SCREEN_SCALE_FACTOR = 1;
     QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
     QT_QPA_PLATFORM = "wayland;xcb";
+
+    # Quickshell (noctalia-shell) icon theme override — bypasses Qt/GTK theme
+    # autodetection, which noctalia-shell's Quickshell.iconPath() does not
+    # reliably follow. See https://quickshell.org/docs/master/types/Quickshell/Quickshell
+    QS_ICON_THEME = "Papirus-Dark";
   };
 
   qt = {

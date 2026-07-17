@@ -12,6 +12,7 @@
     ../../modules/GUI/chrome/home.nix
     ../../modules/GUI/chromium
     ../../modules/GUI/firefox
+    ../../modules/GUI/jellyfin-mpv-shim
     ../../modules/GUI/mpv
     ../../modules/GUI/obsidian
     ../../modules/TUI/common

@@ -525,7 +525,6 @@
     bluez
     bluez-tools
     sof-firmware
-    jellyfin-desktop
     libfreeaptx # aptX / aptX HD BT codec
     fdk_aac # AAC BT codec
     ldacbt # LDAC BT codec
