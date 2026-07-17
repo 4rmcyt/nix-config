@@ -543,6 +543,7 @@
     microcode-amd
     powertop
     samba
+    stress-ng # additional stress-test backends for coolercontrol
     yubikey-personalization
     limine-full
 

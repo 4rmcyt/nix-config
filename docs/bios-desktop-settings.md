@@ -332,80 +332,103 @@ Required for the `virtualisation.libvirtd` + VFIO setup already in the flake
 
 ## 8. Fan / Smart Fan curves
 
-BIOS-level fan curves are **not tracked anywhere in this repo** — they live
-only in board NVRAM and were wiped along with everything else.
+**Status: fan control fully migrated to `coolercontrol` on 2026-07-16.**
+All `nct6687` PWM channels confirmed switched from `pwm*_enable=99`
+(firmware/BIOS control) to `pwm*_enable=1` (manual/OS control) via
+`cat /sys/class/hwmon/hwmon7/pwm*_enable`. BIOS-level Smart Fan curves are
+no longer the active control path while the OS is running — they only
+apply briefly during POST/before `coolercontrold` starts, and are **not
+tracked anywhere in this repo** (they live in board NVRAM and were wiped
+once already). The `coolercontrol` config below is the actual source of
+truth for fan behavior now, and — unlike BIOS NVRAM — survives a firmware
+reset, since it's OS-side state (`/var/lib/coolercontrol`).
 
-**`corectrl` was replaced with `coolercontrol` on 2026-07-16** —
-`corectrl` only controls AMD GPU power/fan curves and never touched the
-`nct6687` SuperIO headers at all (and this system's discrete GPU is
-NVIDIA, which `corectrl` can't manage either way, so it had near-zero
-practical use here). `coolercontrol` (`programs.coolercontrol.enable` in
-`hosts/nixos/desktop/hardware-configuration.nix`) is community-confirmed
-to work with `nct6687` and is the actual tool for moving these fan curves
-to OS-level control, if desired. Its daemon (`coolercontrold`) runs as a
-proper systemd service (starts automatically); the GUI is autostarted via
-`spawn-at-startup` in `modules/WM/niri/startup.nix`. Unlike `corectrl`,
-there's no CLI flag to start minimized — enable "Start in Tray"/"Close to
-Tray" once in the app's own Settings after first launch. Verify the daemon
-is running with `systemctl status coolercontrold` and the GUI with
-`pgrep -a coolercontrol`.
+`corectrl` (previously used) was replaced with `coolercontrol` — `corectrl`
+only controls AMD GPU power/fan curves and never touched the `nct6687`
+headers at all, and this system's discrete GPU is NVIDIA, which `corectrl`
+can't manage either. `coolercontrol` (`programs.coolercontrol.enable` in
+`hosts/nixos/desktop/hardware-configuration.nix`) confirmed working with
+both `nct6687` and, surprisingly, the NVIDIA RTX 3050's fan channels via
+NVML (official docs said "works on most cards" — this card is one of
+them, confirmed by testing, not assumed). Daemon (`coolercontrold`) runs
+as a systemd service; GUI autostarts via `spawn-at-startup` in
+`modules/WM/niri/startup.nix`. Enable "Start in Tray"/"Close to Tray" once
+in the app's own Settings (no CLI flag exists for this, unlike `corectrl`).
 
-For now, fan curves remain in **BIOS** (below) — `coolercontrol` is
-installed and available but no profile has been created in it yet.
-**Menu path (BIOS):** top-level
-**HARDWARE MONITOR** tab (not nested under `Settings`) — pick **Smart Fan
-Mode** per header, then drag points on the duty-vs-temperature curve editor.
-`All Full Speed` / `All Set Default` / `All Set Cancel` buttons on the same
-page apply/reset every header at once. Recreate them by hand per header.
-Community-sourced
-starting points below (AIO cooling, since that's what's installed) — treat
-as a reasonable default, not gospel; adjust for actual noise/thermal
-preference once retested.
+### Final profile configuration
 
-**PUMP_FAN1 (AIO pump):** run it at a **constant high speed, not a curve.**
-This is the near-universal recommendation across AIO vendors and
-enthusiast forums — pumps are designed for continuous operation, and
-modulating pump speed with load adds no meaningful cooling benefit while
-adding wear/noise variation. Set **Pump Control: PWM, fixed ~80–100%**
-(drop toward 80% only if the pump is audibly whining at full speed; most
-modern AIO pumps are quiet even at 100%).
+**Pump** (Fixed) → assigned to **Pump Fan**:
+- 90% fixed (reads back as ~92%/3200 RPM — daemon rounding, not a bug)
 
-**CPU_FAN1 (radiator fans):** a 4-point PWM curve, temperature source =
-CPU:
+**CPU Fan** (Graph, temp source = `AMD Ryzen 5 7600X → CPU Temp Tctl`) →
+assigned to **CPU Fan**:
 
-| Point | Temp | Duty |
-|---|---|---|
-| 1 | 30°C | 25% |
-| 2 | 50°C | 50% |
-| 3 | 70°C | 65–80% |
-| 4 | 90°C | 100% |
+| Temp | Duty |
+|---|---|
+| 30°C | 25% |
+| 50°C | 50% |
+| 70°C | 70% |
+| 90°C | 100% |
 
-This is a widely-circulated MSI baseline curve (used as-is by several AIO
-system builders for MSI boards) — gentle at idle/light load, ramping hard
-before the 95°C stock thermal target. If Platform Thermal Throttle Control
-was set to 85°C manual (section 3), consider pulling point 4 in to 85°C
-instead of 90°C so full fan speed arrives before the throttle point rather
-than after it.
+**Case Fans** (Graph, temp source = `nct6687 → System`, *not* `nct6687 →
+Cpu` — the latter duplicates what the CPU Fan profile above already
+covers via Tctl) → assigned to **System Fan #1–#4**:
 
-**SYS_FAN1–6 (case fans):** similar shape, lower ceiling since case fans
-matter less for thermals than for airflow/acoustics:
+| Temp | Duty |
+|---|---|
+| 30°C | 30% |
+| 50°C | 35% |
+| 70°C | 45% |
+| 80°C | 55% |
 
-| Point | Temp | Duty |
-|---|---|---|
-| 1 | 30°C | 25–35% |
-| 2 | 50°C | 30–40% |
-| 3 | 70°C | 40–50% |
-| 4 | 80°C | 50–60% |
+**System Fan #5/#6:** Case Fans profile assigned but reads 0 RPM —
+unpopulated headers (no physical fan connected), harmless.
 
-Set **Fan Step Up ≈ 0.7s / Fan Step Down ≈ 0.2s** (or similar — faster to
-ramp up than down) if the board exposes those, to avoid audible fan-speed
-"hunting" around a threshold.
+**GPU Fans** (Graph, temp source = `NVIDIA GeForce RTX 3050 → GPU Temp
+Hotspot`) → assigned to **NVIDIA GeForce RTX 3050 fan1/fan2**. *Not* the
+`Case Fans` profile — that uses the motherboard's `System` sensor, which
+has no relation to actual GPU die temperature; driving GPU fans off a
+board-ambient sensor risks the card running hot under load while its own
+fans stay idle. Caught and fixed before it shipped, not after:
 
-Optional: since `nct6687` hwmon already exposes full sensor/fan control to
-the OS, consider moving fan curves fully into OS-level control via
-`coolercontrol` (already installed, see above) so a future BIOS reset can't
-affect them again. Not required — just an option worth considering given
-this is the second time BIOS state was lost.
+| Temp | Duty |
+|---|---|
+| 40°C | 20% |
+| 60°C | 40% |
+| 75°C | 65% |
+| 85°C | 100% |
+
+**Function — "Smooth"** (Standard type), applied to **CPU Fan**, **Case
+Fans**, and **GPU Fans** (not `Pump`, which is Fixed and unaffected by
+step/hysteresis tuning):
+
+- Step Size: **Asymmetric**
+  - Minimum Increasing: 2%, **Maximum Increasing: 100%** (uncapped — fast
+    response to rising heat)
+  - Minimum Decreasing: 2%, **Maximum Decreasing: 5%** (capped — slow,
+    non-oscillating cooldown; this was the key value, originally
+    defaulted to 100% which would've made cooldown just as abrupt as
+    heat-up, defeating the purpose)
+- Step Overrides: **Threshold Hopping** on, **Always apply 0%/100%** on
+- Advanced Hysteresis: **Threshold 2.0°C**, **Delay 1s**, **Only
+  Downward** on — critical: without "Only Downward" the threshold/delay
+  would also blunt the *upward* heat response, which is backwards from
+  the intent (fast up, gradual down). This is the OS-level equivalent of
+  the BIOS "Fan Step Up/Down" timing knobs from earlier BIOS-only
+  attempts at this.
+
+### If `coolercontrol` ever needs to be rebuilt from scratch
+
+There is no supported config-file or REST API path for provisioning
+profiles/controls declaratively — confirmed from the project's own docs
+(`docs.coolercontrol.org/daemon/headless.html`): *"You can make many
+changes to the daemon's config.toml file, but due to the advanced nature
+of CoolerControl's control options and various entity relationships, it
+is highly recommended to use the web UI for cooling control."* Profile/
+channel IDs are assigned at runtime during hardware detection, so
+hand-writing them is fragile. Redo it through the GUI or Web UI
+(`http://localhost:11987`) using the table above as the reference values —
+takes a few minutes.
 
 ## 9. iGPU
 
