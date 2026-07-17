@@ -23,10 +23,10 @@
     ../../modules/TUI/zellij
 
     ../../modules/WM
-    ../../modules/WM/niri
-    ../../modules/WM/niri/noctalia.nix
-    ../../modules/WM/niri/nvidia.nix
-    ../../modules/WM/niri/monitors/desktop.nix
+    ../../modules/WM/hyprland
+    ../../modules/WM/hyprland/noctalia.nix
+    ../../modules/WM/hyprland/nvidia.nix
+    ../../modules/WM/hyprland/monitors/desktop.nix
     ../../modules/WM/mime
     ../../modules/GUI/discord
     ../../modules/dev

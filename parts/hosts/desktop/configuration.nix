@@ -15,8 +15,6 @@ in {
       nixosHm
       nixosWorkstation
       ../../../hosts/nixos/desktop
-      inputs.niri-flake.nixosModules.niri
-      inputs.nirinit.nixosModules.nirinit
       inputs.noctalia.nixosModules.default
       ../../../modules/nix/lix
     ];
@@ -32,17 +30,14 @@ in {
       ];
     };
 
-    services.nirinit.enable = true;
-
-    # Niri via niri-flake NixOS module (uses nixpkgs niri 25.11, not niri-flake's stable)
-    programs.niri.enable = true;
-    programs.niri.package = pkgs.niri;
+    programs.hyprland.enable = true;
+    programs.hyprland.package = pkgs.hyprland;
 
     services.greetd = {
       enable = true;
       settings.default_session = {
-        command = "${pkgs.writeShellScript "niri-session" ''
-          exec ${pkgs.niri}/bin/niri --session >> "$HOME/.local/state/niri/niri.log" 2>&1
+        command = "${pkgs.writeShellScript "hyprland-session" ''
+          exec ${pkgs.hyprland}/bin/Hyprland >> "$HOME/.local/state/hyprland/hyprland.log" 2>&1
         ''}";
         user = owner.username;
       };

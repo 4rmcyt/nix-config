@@ -8,8 +8,8 @@ in {
     MaxRetentionSec=1month
   '';
 
-  # Ensure niri log directory exists before login
+  # Ensure hyprland log directory exists before login
   systemd.tmpfiles.rules = [
-    "d /home/${user}/.local/state/niri 0755 ${user} users - -"
+    "d /home/${user}/.local/state/hyprland 0755 ${user} users - -"
   ];
 }
