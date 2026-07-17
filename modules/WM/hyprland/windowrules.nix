@@ -1,5 +1,5 @@
 _: {
-  wayland.windowManager.hyprland.settings.windowrulev2 = [
+  wayland.windowManager.hyprland.settings.windowrule = [
     # ============================================
     # DIALOG WINDOWS
     # ============================================

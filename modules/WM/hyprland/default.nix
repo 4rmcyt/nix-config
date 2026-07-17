@@ -93,7 +93,7 @@
       # noctalia bar/panel backgrounds — blur behind them, matching
       # https://docs.noctalia.dev/v4/getting-started/compositor-settings/hyprland/
       # (revamped layerrule syntax, Hyprland >=0.53: rules then match:namespace)
-      layerrule = "blur on, blurpopups on, ignore_alpha 0.5, match:namespace noctalia-background-.*$";
+      layerrule = "blur on, blur_popups on, ignore_alpha 0.5, match:namespace noctalia-background-.*$";
     };
   };
 }
