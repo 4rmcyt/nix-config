@@ -216,7 +216,7 @@ _: {
     "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
 
     # === WAYLAND SETTINGS ===
-    "widget.dmabuf.force-enabled" = true;
+    "widget.dmabuf.force-enabled" = false; # Forced dmabuf breaks WebGL/rendering on NVIDIA proprietary driver (Mozilla bug 1634213)
     "widget.gtk.wayland.force-enabled" = true;
     "widget.gtk.wayland.fractional-scaling.enabled" = true;
     "widget.use-xdg-desktop-portal.file-picker" = 1;
