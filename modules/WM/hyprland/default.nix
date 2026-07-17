@@ -46,54 +46,66 @@
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
-    # Pin explicitly: all of binds.nix/startup.nix/windowrules.nix/monitors
-    # are written in classic hyprlang syntax, not the new Lua config format.
-    configType = "hyprlang";
+    configType = "lua";
+
+    # UWSM manages graphical-session.target itself; HM's own systemd
+    # integration would conflict with it (per NixOS wiki + Hyprland wiki
+    # warning on withUWSM).
+    systemd.enable = false;
 
     settings = {
-      "$mod" = "SUPER";
-
       env = [
-        "NIXOS_OZONE_WL,1"
-        "ELECTRON_OZONE_PLATFORM_HINT,wayland"
+        {_args = ["NIXOS_OZONE_WL" "1"];}
+        {_args = ["ELECTRON_OZONE_PLATFORM_HINT" "wayland"];}
       ];
 
-      input = {
-        kb_layout = "us";
-        sensitivity = 0.0;
-        accel_profile = "flat";
-        follow_mouse = 0;
-      };
-
-      general = {
-        gaps_in = 5;
-        gaps_out = 10;
-        layout = "dwindle";
-      };
-
-      decoration = {
-        rounding = 20;
-        rounding_power = 2;
-
-        shadow = {
-          enabled = true;
-          range = 4;
-          render_power = 3;
-          color = "rgba(1a1a1aee)";
+      config = {
+        general = {
+          gaps_in = 5;
+          gaps_out = 10;
+          layout = "dwindle";
         };
 
-        blur = {
-          enabled = true;
-          size = 3;
-          passes = 2;
-          vibrancy = 0.1696;
+        decoration = {
+          rounding = 20;
+          rounding_power = 2;
+
+          shadow = {
+            enabled = true;
+            range = 4;
+            render_power = 3;
+            color = "rgba(1a1a1aee)";
+          };
+
+          blur = {
+            enabled = true;
+            size = 3;
+            passes = 2;
+            vibrancy = 0.1696;
+          };
+        };
+
+        input = {
+          kb_layout = "us";
+          sensitivity = 0.0;
+          accel_profile = "flat";
+          follow_mouse = 0;
         };
       };
 
       # noctalia bar/panel backgrounds — blur behind them, matching
       # https://docs.noctalia.dev/v4/getting-started/compositor-settings/hyprland/
-      # (revamped layerrule syntax, Hyprland >=0.53: rules then match:namespace)
-      layerrule = "blur on, blur_popups on, ignore_alpha 0.5, match:namespace noctalia-background-.*$";
+      layer_rule = {
+        _args = [
+          {
+            name = "noctalia-blur";
+            match = {namespace = "^noctalia-background-.*$";};
+            blur = true;
+            blur_popups = true;
+            ignore_alpha = 0.5;
+          }
+        ];
+      };
     };
   };
 }
