@@ -23,15 +23,18 @@ in {
       extra-substituters = [
         "https://cache.nixos-cuda.org?priority=1"
         "https://cuda-maintainers.cachix.org?priority=1"
+        "https://hyprland.cachix.org"
       ];
       extra-trusted-public-keys = [
         "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
         "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
       ];
     };
 
     programs.hyprland.enable = true;
-    programs.hyprland.package = pkgs.hyprland;
+    programs.hyprland.package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    programs.hyprland.portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     programs.hyprland.withUWSM = true;
 
     # greetd has no session picker (direct exec), so invoke uwsm ourselves —

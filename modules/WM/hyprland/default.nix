@@ -48,6 +48,11 @@
     xwayland.enable = true;
     configType = "lua";
 
+    # Installed by the NixOS module (from the hyprland flake, not nixpkgs) —
+    # null here avoids installing a second, mismatched nixpkgs build.
+    package = null;
+    portalPackage = null;
+
     # UWSM manages graphical-session.target itself; HM's own systemd
     # integration would conflict with it (per NixOS wiki + Hyprland wiki
     # warning on withUWSM).
