@@ -23,15 +23,15 @@
     # Quickshell (noctalia-shell) icon theme override — bypasses Qt/GTK theme
     # autodetection, which noctalia-shell's Quickshell.iconPath() does not
     # reliably follow. See https://quickshell.org/docs/master/types/Quickshell/Quickshell
-    QS_ICON_THEME = "Tela-circle-dark";
+    QS_ICON_THEME = "Tela-dark";
   };
 
   qt = {
     enable = true;
     platformTheme.name = "qtct";
     style.name = "kvantum";
-    qt5ctSettings.Appearance.icon_theme = "Tela-circle-dark";
-    qt6ctSettings.Appearance.icon_theme = "Tela-circle-dark";
+    qt5ctSettings.Appearance.icon_theme = "Tela-dark";
+    qt6ctSettings.Appearance.icon_theme = "Tela-dark";
   };
 
   home.packages = with pkgs; [
