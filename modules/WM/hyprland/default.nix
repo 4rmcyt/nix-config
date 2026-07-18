@@ -63,7 +63,14 @@
         general = {
           gaps_in = 5;
           gaps_out = 10;
-          layout = "dwindle";
+          layout = "scrolling";
+        };
+
+        # Native scrolling layout — infinite tape of columns, same model as
+        # niri. See https://wiki.hypr.land/Configuring/Layouts/Scrolling-Layout/
+        scrolling = {
+          fullscreen_on_one_column = true;
+          follow_focus = true;
         };
 
         decoration = {

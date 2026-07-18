@@ -30,9 +30,6 @@ in {
     # WINDOW MANAGEMENT
     # ============================================
     (bind "SUPER + Q" "hl.dsp.window.close()" null)
-    # niri's maximize-column fills the column but keeps other columns visible;
-    # Hyprland has no scrolling columns, so this maps to "maximized" (fill
-    # workspace, keep gaps) rather than true fullscreen.
     (bind "SUPER + F" ''hl.dsp.window.fullscreen({ mode = "maximized" })'' null)
     (bind "SUPER + SHIFT + F" ''hl.dsp.window.fullscreen({ mode = "fullscreen" })'' null)
     (bind "SUPER + SHIFT + Space" ''hl.dsp.window.float({ action = "toggle" })'' null)
@@ -132,6 +129,16 @@ in {
 
     (bind "SUPER + Page_Down" ''hl.dsp.focus({ workspace = "+1" })'' null)
     (bind "SUPER + Page_Up" ''hl.dsp.focus({ workspace = "-1" })'' null)
+
+    # ============================================
+    # COLUMN OPERATIONS (native scrolling layout — same model as niri)
+    # ============================================
+    (bind "SUPER + bracketleft" ''hl.dsp.layout("consume_or_expel prev")'' null)
+    (bind "SUPER + bracketright" ''hl.dsp.layout("consume_or_expel next")'' null)
+    (bind "SUPER + R" ''hl.dsp.layout("colresize +conf")'' null)
+    # No direct "center column" dispatcher; "fit active" brings the focused
+    # column fully into view, closest equivalent to niri's center-column.
+    (bind "SUPER + SHIFT + C" ''hl.dsp.layout("fit active")'' null)
 
     # ============================================
     # RESIZE (fixed 100px steps — Lua resize dispatcher takes pixel deltas,
