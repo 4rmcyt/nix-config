@@ -622,7 +622,6 @@
   # 11. Systemd Configuration
   # =================================================================
   systemd = {
-    coredump.enable = false;
     oomd.enable = false;
     services.bluetooth-unblock = {
       description = "Unblock Bluetooth rfkill soft block";

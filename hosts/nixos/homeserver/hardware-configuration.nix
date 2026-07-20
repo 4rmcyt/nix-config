@@ -212,7 +212,6 @@ in {
   '';
 
   systemd = {
-    coredump.enable = false;
     oomd.enable = true;
 
     services.rasdaemon.serviceConfig.StandardError = "null";
