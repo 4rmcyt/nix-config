@@ -34,7 +34,7 @@
     # === UI POLICIES ===
     DisplayBookmarksToolbar = "never";
     DisplayMenuBar = "never";
-    PictureInPicture.Enabled = false;
+    PictureInPicture.Enabled = true;
     PromptForDownloadLocation = false;
 
     # === STARTUP ===

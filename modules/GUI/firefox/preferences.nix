@@ -6,7 +6,11 @@ _: {
 
     # === APP SETTINGS ===
     "app.normandy.enabled" = false;
+    "app.normandy.api_url" = "";
     "app.shield.optoutstudies.enabled" = false;
+
+    # === CRASH REPORTS ===
+    "breakpad.reportURL" = "";
 
     # === AI FEATURES (DISABLED) ===
     "browser.ml.enable" = false; # Master switch for on-device ML/AI features
@@ -22,6 +26,8 @@ _: {
     "browser.tabs.groups.smart.userEnabled" = false;
     "pdfjs.enableAltTextModelDownload" = false; # AI-generated PDF alt text model
     "pdfjs.enableGuessAltText" = false;
+    "pdfjs.enableScripting" = false; # Disable JS execution inside embedded PDFs
+    "browser.ai.control.default" = "blocked"; # Unified AI-feature kill switch (FF152+)
 
     # === APZ (ASYNC PAN-ZOOM) ===
     "apz.overscroll.enabled" = true;
@@ -33,12 +39,15 @@ _: {
     "layout.css.devPixelsPerPx" = "2.0"; # Default scaling
     "widget.gtk.libadwaita-colors.enabled" = false;
     "browser.aboutConfig.showWarning" = false;
+    "browser.aboutwelcome.enabled" = false;
+    "browser.discovery.enabled" = false;
+    "browser.preferences.moreFromMozilla" = false;
     "browser.uidensity" = 1; # 0 = normal, 1 = compact, 2 = touch
+    "content.notify.interval" = 100000; # FastFox: reduce main-thread reflow frequency
     "browser.cache.disk.enable" = false;
     "browser.cache.memory.enable" = true;
     "browser.cache.frecency_half_life_hours" = 18; # More aggressive cache eviction
     "browser.contentblocking.category" = "strict";
-    "browser.contentblocking.report.lockwise.enabled" = true;
     "browser.ctrlTab.sortByRecentlyUsed" = false;
     "browser.download.start_downloads_in_tmp_dir" = true;
     "browser.download.useDownloadDir" = false;
@@ -53,7 +62,6 @@ _: {
     "browser.send_pings" = false;
     "browser.sessionstore.interval" = 600000; # More frequent saves with your RAM
     "browser.sessionhistory.max_entries" = 5; # Reduce memory usage
-    "browser.startup.page" = 3; # Resume previous session
     "browser.tabs.crashReporting.sendReport" = false;
     "browser.tabs.hoverPreview.enabled" = true;
     "browser.tabs.loadInBackground" = true;
@@ -75,6 +83,7 @@ _: {
     # === DATA REPORTING ===
     "datareporting.healthreport.uploadEnabled" = false;
     "datareporting.policy.dataSubmissionEnabled" = false;
+    "datareporting.usage.uploadEnabled" = false;
 
     # === DEVELOPER TOOLS ===
     "devtools.chrome.enabled" = false;
@@ -92,30 +101,29 @@ _: {
     "extensions.abuseReport.enabled" = false;
     "extensions.autoDisableScopes" = 0;
     "extensions.formautofill.creditCards.enabled" = true;
+    "extensions.getAddons.cache.enabled" = false; # Stop fetching AMO recommendation metadata
     "extensions.update.enabled" = true;
     "extensions.webcompat-reporter.enabled" = false;
     "extensions.webextensions.ExtensionStorageIDB.enabled" = false;
-    "extensions.pocket.enabled" = false;
 
     # === GEOLOCATION ===
     "geo.provider.network.url" = "https://beacondb.net/v1/geolocate";
 
     # === GRAPHICS & CANVAS ===
     "gfx.canvas.accelerated" = true;
+    "gfx.canvas.accelerated.cache-size" = 512; # FastFox
     "gfx.canvas.remote" = false;
+    "gfx.wayland.hdr" = true; # Experimental HDR on Wayland (compositor-dependent, may misrender colors)
+    "gfx.content.skia-font-cache-size" = 20; # FastFox
     "gfx.vsync.hw-vsync.enabled" = true;
-    "gfx.webrender.all" = true;
-    "gfx.webrender.compositor" = false;
-    "gfx.webrender.compositor.force-enabled" = false;
-    "gfx.webrender.enabled" = true;
-    "gfx.webrender.force-disabled" = false;
-    "gfx.webrender.software" = false;
-    "gfx.webrender.software.opengl" = false;
-    "gfx.webrender.precache-shaders" = true;
+
+    # === JAVASCRIPT ===
+    "javascript.options.baselinejit.threshold" = 50; # FastFox: JIT-compile hot code sooner
 
     # === IMAGES ===
     "image.avif.enabled" = true;
     "image.jxl.enabled" = true;
+    "image.mem.decode_bytes_at_a_time" = 32768; # FastFox
 
     # === IDENTITY & SYNC ===
     "identity.fxaccounts.commands.enabled" = true;
@@ -151,8 +159,6 @@ _: {
     "media.rdd-ffmpeg.enabled" = false; # Disable RDD process for FFmpeg
     "media.rdd-vpx.enabled" = false; # Disable VP8/VP9 in RDD process
     "media.videocontrols.picture-in-picture.video-toggle.enabled" = true;
-    "media.wmf.amd.hevc.enabled" = true; # Enable AMD Windows Media Foundation HEVC
-    "media.wmf.hevc.enabled" = true;
 
     # Add these additional media settings for stability
     "media.decoder.doctor.min_crash_count" = 10;
@@ -160,16 +166,16 @@ _: {
     "media.gmp-manager.updateEnabled" = false;
     "media.gmp.trial-create.enabled" = false;
 
+    # FastFox: media cache tuning
+    "media.cache_readahead_limit" = 3600;
+    "media.cache_resume_threshold" = 1800;
+
     # === MOUSE & SCROLLING ===
+    # msdPhysics.enabled=false -> spring-physics model is off; weighting model below governs feel
     "general.smoothScroll" = true;
     "general.smoothScroll.currentVelocityWeighting" = 0.15;
     "general.smoothScroll.mouseWheel.durationMinMS" = 80;
-    "general.smoothScroll.msdPhysics.continuousMotionMaxDeltaMS" = 12;
     "general.smoothScroll.msdPhysics.enabled" = false;
-    "general.smoothScroll.msdPhysics.motionBeginSpringConstant" = 600;
-    "general.smoothScroll.msdPhysics.regularSpringConstant" = 650;
-    "general.smoothScroll.msdPhysics.slowdownMinDeltaMS" = 25;
-    "general.smoothScroll.msdPhysics.slowdownSpringConstant" = 250;
     "general.smoothScroll.stopDecelerationWeighting" = 0.6;
     "mousewheel.default.delta_multiplier_y" = 300;
     "mousewheel.min_line_scroll_amount" = 10;
@@ -177,7 +183,6 @@ _: {
     # === NETWORK ===
     "network.trr.mode" = 5; # Disable DNS-over-HTTPS: use system resolver (unbound, split-horizon for Tailscale)
     "network.auth.subresource-http-auth-allow" = 1;
-    "network.cookie.cookieBehavior" = 5;
     "network.http.http3.enabled" = true;
     "network.http.referer.XOriginTrimmingPolicy" = 2;
     "network.prefetch-next" = false;
@@ -192,6 +197,11 @@ _: {
     "network.predictor.preresolve-min-confidence" = 10;
     "network.ssl_tokens_cache_capacity" = 10; # Cache 10 SSL session tokens
     "network.buffer.cache.size" = 65535; # 64KB network buffer cache
+    "network.buffer.cache.count" = 48; # FastFox
+    "network.http.max-connections" = 1800; # FastFox
+    "network.http.max-persistent-connections-per-server" = 10; # FastFox
+    "network.http.max-urgent-start-excessive-connections-per-host" = 5; # FastFox
+    "network.http.request.max-start-delay" = 5; # FastFox
 
     # === PERMISSIONS ===
     "permissions.default.desktop-notification" = 2;
@@ -199,14 +209,14 @@ _: {
     "permissions.manager.defaultsUrl" = "";
 
     # === PRIVACY & SECURITY ===
+    "privacy.antitracking.isolateContentScriptResources" = true; # Isolate extension content-script network access
     "privacy.clearOnShutdown.history" = false;
-    "privacy.donottrackheader.enabled" = true;
     "privacy.firstparty.isolate" = false;
+    "privacy.globalprivacycontrol.enabled" = true; # GPC: legally-binding "do not sell/share" signal, replaced DNT (removed in FF135)
     "privacy.history.custom" = true;
     "privacy.resistFingerprinting" = false;
     "privacy.trackingprotection.allow_list.baseline.enabled" = true;
     "privacy.trackingprotection.allow_list.convenience.enabled" = true;
-    "privacy.trackingprotection.enabled" = true;
     "privacy.trackingprotection.socialtracking.enabled" = true;
     "privacy.userContext.enabled" = true;
     "privacy.userContext.ui.enabled" = true;
@@ -214,6 +224,10 @@ _: {
     # === SECURITY ===
     "security.OCSP.enabled" = 0;
     "security.pki.crlite_mode" = 2;
+    "security.csp.reporting.enabled" = false; # Stop sending CSP-violation reports to report-uri targets
+    "security.ssl.treat_unsafe_negotiation_as_broken" = true; # Reject servers with insecure TLS renegotiation
+    "security.tls.enable_0rtt_data" = false; # Disable TLS 1.3 0-RTT (replay-attack surface)
+    "browser.xul.error_pages.expert_bad_cert" = true; # Show full cert-error detail
 
     # === SIGN-ON ===
     "signon.formlessCapture.enabled" = true;
@@ -227,6 +241,14 @@ _: {
     "toolkit.telemetry.enabled" = false;
     "toolkit.telemetry.server" = "";
     "toolkit.telemetry.unified" = false;
+    "toolkit.telemetry.newProfilePing.enabled" = false;
+    "toolkit.telemetry.shutdownPingSender.enabled" = false;
+    "toolkit.telemetry.updatePing.enabled" = false;
+    "toolkit.telemetry.bhrPing.enabled" = false;
+    "toolkit.telemetry.firstShutdownPing.enabled" = false;
+    "toolkit.telemetry.coverage.opt-out" = true;
+    "toolkit.coverage.opt-out" = true;
+    "toolkit.coverage.endpoint.base" = "";
 
     # === TOOLKIT ===
     "toolkit.legacyUserProfileCustomizations.stylesheets" = true;

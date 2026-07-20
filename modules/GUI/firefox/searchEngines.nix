@@ -79,7 +79,7 @@
 
     "Home Manager Options" = {
       urls = lib.singleton {
-        template = "https://home-manager-options.extranix.com/?release=release-24.11&query={searchTerms}";
+        template = "https://home-manager-options.extranix.com/?release=master&query={searchTerms}";
       };
       icon = "https://home-manager-options.extranix.com/images/favicon.png";
       definedAliases = lib.singleton "@oh";
@@ -87,7 +87,7 @@
 
     "NixOS Options" = {
       urls = lib.singleton {
-        template = "https://search.nixos.org/options?channel=24.11&from=0&size=100&sort=alpha_asc&query={searchTerms}";
+        template = "https://search.nixos.org/options?channel=unstable&from=0&size=100&sort=alpha_asc&query={searchTerms}";
       };
       definedAliases = lib.singleton "@on";
     };
