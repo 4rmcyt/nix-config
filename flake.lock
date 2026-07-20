@@ -971,11 +971,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1784544579,
-        "narHash": "sha256-nvGvfMb/x9MfEN5M9aJYkvfUDbCcOD9XCNNF/u04RlQ=",
+        "lastModified": 1784574265,
+        "narHash": "sha256-uG4+cGKQDKygX9G4kv6mUEJ1ZK3pcWWwj/6aAGBRQqg=",
         "ref": "refs/heads/main",
-        "rev": "5b260faeb9e4563b9e6bd74450a97f39a9d708e9",
-        "revCount": 7626,
+        "rev": "2174f26a142d32823ceb8d7039e39eef52dbd050",
+        "revCount": 7627,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/hyprwm/Hyprland"
@@ -1359,11 +1359,11 @@
         "xwayland-satellite-unstable": "xwayland-satellite-unstable"
       },
       "locked": {
-        "lastModified": 1784541752,
-        "narHash": "sha256-iONvlcXqaIUzEwZHabWLMtE90kqH3/iBmg5lQHZ1StY=",
+        "lastModified": 1784578694,
+        "narHash": "sha256-UQtzks2t8ycyki7NCaSsp3Dy7Hcw5iCzPX5txnU5744=",
         "owner": "sodiboo",
         "repo": "niri-flake",
-        "rev": "85a12e471a13eff3a3c476783a5d1cb0702c9da9",
+        "rev": "4d9088bdc07d20963be29821d5cf491edd9c8d25",
         "type": "github"
       },
       "original": {
@@ -1392,11 +1392,11 @@
     "niri-unstable": {
       "flake": false,
       "locked": {
-        "lastModified": 1784456420,
-        "narHash": "sha256-38yvDuO09V/GG19oJO+B5nn38NhvvZEWKRGFE4WPUi4=",
+        "lastModified": 1784570726,
+        "narHash": "sha256-9EMn69JBcFWFgUM7f0VBAX+jBby5b9H3M59U75+5yI4=",
         "owner": "YaLTeR",
         "repo": "niri",
-        "rev": "f036de655d309edc13fef545a3809330796cbe83",
+        "rev": "7f26c3ee804fb6ed458ef7fb0e3c794f14e0b3bc",
         "type": "github"
       },
       "original": {
@@ -2004,11 +2004,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1784570953,
-        "narHash": "sha256-9HU8wM6Rk5jYnpYcj8NRm3MdXUJNsDzHVHPYfmCcZu4=",
+        "lastModified": 1784578328,
+        "narHash": "sha256-8gW5um/dO2vi7IJVSdVdZ9+/od/tmvv48tDQx35O+LM=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "0ce16018ec378c0f38bca3400a7b82765e36a938",
+        "rev": "81639575b3f613755f812b9d5767ad49a14e4237",
         "type": "github"
       },
       "original": {

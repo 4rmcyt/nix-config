@@ -303,7 +303,7 @@ Tunnel credentials in `secrets/cloudflare_tunnel_credentials.bin` + `secrets/clo
 | Seerr           | 5055  | `seerr.example.com`          | Request management                 |
 | Audiobookshelf  | 9292  | `audiobookshelf.example.com` | Audiobooks                         |
 | Recyclarr       | —     | (no UI)                       | Auto-sync quality profiles to *arr |
-| Flaresolverr    | 8191  | (internal only)               | Cloudflare bypass for Prowlarr     |
+| Byparr          | 8191  | (internal only)               | Cloudflare bypass for Prowlarr — FlareSolverr-compatible, OCI container |
 | Dispatcharr     | 9191  | `dispatcharr.example.com`    | Stream dispatch — OCI container    |
 
 ### Reading / Library

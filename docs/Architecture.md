@@ -56,7 +56,8 @@ modules/
     default.nix             # XDG user dirs (HM level)
     gtk.nix                 # GTK theming
     mime/                   # MIME type associations
-    niri/                   # Niri WM: settings, keybinds, startup, windowrules, nvidia, monitors
+    hyprland/               # Hyprland WM (desktop): settings, keybinds, startup, windowrules, nvidia, monitors (HDR10)
+    niri/                   # niri WM (matebook): settings, keybinds, startup, windowrules, nvidia, monitors
   GUI/                      # GUI apps: firefox, chrome, chromium, obsidian, mpv, IDE (vscode, zed),
                             #   terminal (ghostty, kitty, wezterm), discord, nemo, thunderbird,
                             #   virt-manager, waydroid, flatpak, stylix
@@ -148,7 +149,27 @@ No local `overlays/` directory. All overlays come from flake inputs:
 
 ## Desktop WM Stack
 
-Desktop and matebook use **niri** as WM with **noctalia-shell** (quickshell-based) as bar/shell.
+**Desktop uses Hyprland; matebook uses niri.** Both pair with **noctalia-shell** (quickshell-based) as bar/shell.
+
+### Hyprland (desktop only)
+
+| File | Purpose |
+|------|---------|
+| `modules/WM/hyprland/default.nix` | Hyprland settings (Lua config), session vars, qt theming, scrolling layout |
+| `modules/WM/hyprland/noctalia.nix` | noctalia-shell HM config |
+| `modules/WM/hyprland/binds.nix` | keybindings |
+| `modules/WM/hyprland/startup.nix` | spawn-at-startup via `hyprland.start` exec: noctalia-shell, cliphist, wl-clip-persist, materialgram, vesktop, coolercontrol |
+| `modules/WM/hyprland/windowrules.nix` | floating rules |
+| `modules/WM/hyprland/monitors/desktop.nix` | ASUS VG289 ×2, 4K@60Hz, 2× scale, `cm="hdr"` + `bitdepth=10` (real HDR10 output — PQ transfer + wide gamut), `sdr_max_luminance=220` |
+| `modules/WM/hyprland/nvidia.nix` | NVIDIA env vars (`LIBVA_DRIVER_NAME`, GSync/VRR, `GLVidHeapReuseRatio` app profile) |
+
+**Hyprland version:** `inputs.hyprland` (`git+https://github.com/hyprwm/Hyprland`, submodules) via `programs.hyprland` NixOS module — NOT the nixpkgs package. `withUWSM = true`; `configType = "lua"`. HM's own `wayland.windowManager.hyprland.systemd.enable = false` (UWSM owns `graphical-session.target`, conflicts with HM's own systemd integration otherwise).
+
+**greetd** on desktop launches Hyprland via `uwsm start -e -D Hyprland hyprland.desktop`.
+
+**Real HDR:** unlike niri, Hyprland ≥0.55 implements `wp_color_management v2` — HDR10 (PQ/HLG) actually reaches the display, not just decode-side. Firefox's `gfx.wayland.hdr` pref (`modules/GUI/firefox/preferences.nix`) is meaningful on desktop for this reason.
+
+### niri (matebook only)
 
 | File | Purpose |
 |------|---------|
@@ -157,19 +178,23 @@ Desktop and matebook use **niri** as WM with **noctalia-shell** (quickshell-base
 | `modules/WM/niri/binds.nix` | keybindings — uses `qs -c noctalia-shell ipc call` for shell actions |
 | `modules/WM/niri/startup.nix` | spawn-at-startup: noctalia-shell, cliphist, wl-clip-persist, xwayland-satellite |
 | `modules/WM/niri/windowrules.nix` | floating rules |
-| `modules/WM/niri/monitors/desktop.nix` | DP-4 + DP-5: 4K@60Hz, 2× scale, VRR |
 | `modules/WM/niri/monitors/matebook.nix` | laptop display config |
 | `modules/WM/niri/nvidia.nix` | NVIDIA env vars |
+
+**niri version:** `pkgs.niri` (25.11) via `niri-flake` NixOS module — NOT `niri-flake`'s own stable package.
+
+**greetd** auto-logs into Niri session on matebook as `owner.username`. Session command logs to `~/.local/state/niri/niri.log`.
+
+**No real HDR on niri:** it lacks `wp_color_management v2` — no HDR output path to the display, unlike Hyprland.
+
+### Shared
+
+| File | Purpose |
+|------|---------|
 | `modules/WM/default.nix` | XDG user dirs (HM level) |
 | `modules/WM/gtk.nix` | GTK theming |
 | `modules/WM/mime/` | MIME type associations |
 | `modules/xdg/default.nix` | NixOS XDG portals: xdg-desktop-portal-gnome + gtk |
-
-**niri version:** `pkgs.niri` (25.11) via `niri-flake` NixOS module — NOT `niri-flake`'s own stable package.
-
-**niri on desktop:** additionally imports `nirinit.nixosModules.nirinit` + `services.nirinit.enable = true`.
-
-**greetd** auto-logs into Niri session as `owner.username`. Session command logs to `~/.local/state/niri/niri.log`.
 
 **noctalia inputs:**
 - `inputs.noctalia` = `github:noctalia-dev/noctalia/legacy-v4`

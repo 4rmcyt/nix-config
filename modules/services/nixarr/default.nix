@@ -38,6 +38,7 @@
   };
 in {
   imports = [
+    ./byparr
     ./jellyfin
     ./kapowarr
     ./lazylibrarian
@@ -106,12 +107,6 @@ in {
     shntool
     cuetools
   ];
-
-  services.flaresolverr = {
-    enable = true;
-    port = 8191;
-    openFirewall = true;
-  };
 
   nixarr = {
     enable = true;
