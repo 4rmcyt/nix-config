@@ -201,9 +201,9 @@ _: {
     # === PRIVACY & SECURITY ===
     "privacy.clearOnShutdown.history" = false;
     "privacy.donottrackheader.enabled" = true;
-    "privacy.firstparty.isolate" = true;
+    "privacy.firstparty.isolate" = false;
     "privacy.history.custom" = true;
-    "privacy.resistFingerprinting" = true;
+    "privacy.resistFingerprinting" = false;
     "privacy.trackingprotection.allow_list.baseline.enabled" = true;
     "privacy.trackingprotection.allow_list.convenience.enabled" = true;
     "privacy.trackingprotection.enabled" = true;
