@@ -157,6 +157,14 @@ in {
               crowdsecLapiHost = "127.0.0.1:8088";
               crowdsecLapiScheme = "http";
               updateIntervalSeconds = 60;
+              # Don't block Traefik startup on the first LAPI sync, and never
+              # flip the stream to unhealthy on sync failures — otherwise every
+              # request gets a blanket 403 for the ~2min CrowdSec takes to come
+              # up (hub sync) after a reboot, since Traefik has no ordering
+              # dependency on crowdsec.service (see systemd.services.traefik.after
+              # below).
+              streamStartupBlock = false;
+              updateMaxFailure = -1;
               forwardedHeadersTrustedIPs = [
                 "173.245.48.0/20"
                 "103.21.244.0/22"
