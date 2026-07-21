@@ -86,7 +86,7 @@ _: {
     "datareporting.usage.uploadEnabled" = false;
 
     # === DEVELOPER TOOLS ===
-    "devtools.chrome.enabled" = false;
+    "devtools.chrome.enabled" = true;
 
     # === DOM ===
     "dom.battery.enabled" = false;
@@ -163,8 +163,8 @@ _: {
     # Add these additional media settings for stability
     "media.decoder.doctor.min_crash_count" = 10;
     "media.decoder.doctor.use_crash_guard" = true;
-    "media.gmp-manager.updateEnabled" = false;
-    "media.gmp.trial-create.enabled" = false;
+    "media.gmp-manager.updateEnabled" = true;
+    "media.gmp.trial-create.enabled" = true;
 
     # FastFox: media cache tuning
     "media.cache_readahead_limit" = 3600;
