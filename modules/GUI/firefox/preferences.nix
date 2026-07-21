@@ -144,7 +144,7 @@ _: {
 
     # === MEDIA & HARDWARE VIDEO ACCELERATION ===
     "media.av1.enabled" = true;
-    "media.av1.use-dav1d" = true; # Change to true - use software decoder for AV1
+    "media.av1.use-dav1d" = false; # Use hardware AV1 decode (NVDEC, RTX 3050 supports it) instead of software dav1d
     "media.eme.enabled" = true;
     "media.ffmpeg.vaapi.enabled" = true; # Enable VAAPI hardware video decoding
     "media.ffmpeg.vaapi-drm-display.enabled" = true; # Enable VAAPI DRM display

@@ -6,6 +6,11 @@ _: {
     __GL_GSYNC_ALLOWED = "1";
     __GL_VRR_ALLOWED = "1";
     GSK_RENDERER = "ngl";
+    # nvidia-vaapi-driver's "direct" backend needs EGL device access that
+    # Firefox's RDD process sandbox blocks; vainfo works fine outside the
+    # sandbox but hardware decode silently fails inside Firefox without this.
+    # https://github.com/elFarto/nvidia-vaapi-driver/issues/179
+    MOZ_DISABLE_RDD_SANDBOX = "1";
   };
 
   # Per https://wiki.hypr.land/Nvidia/#environment-variables: these must be set
