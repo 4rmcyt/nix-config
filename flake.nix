@@ -130,11 +130,6 @@
 
     nixos-needsreboot.url = "git+https://codeberg.org/Mynacol/nixos-needsreboot.git";
 
-    # Headscale web UI
-    headplane = {
-      url = "github:tale/headplane";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     # Headscale control server — not following nixpkgs: upstream pins its own
     # nixpkgs branch for a Go 1.26.4 security fix (GO-2026-5037/5039) that
     # hasn't reached nixpkgs-unstable yet.

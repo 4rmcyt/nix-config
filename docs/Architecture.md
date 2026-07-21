@@ -40,7 +40,7 @@ modules/
   database/                 # postgresql, redis, couchdb
   monitoring/               # Prometheus + Grafana + Loki + Alloy stack; node-exporter-client;
                             #   Alertmanager + alertmanager-ntfy bridge
-  networking/               # ssh, tailscale, traefik, headscale, headplane, cloudflared,
+  networking/               # ssh, tailscale, traefik, headscale, cloudflared,
                             #   caddy, dnssec, nfs, nut-client/server, avahi, wireguard
   security/                 # crowdsec, fail2ban, kanidm
   services/                 # Application services: home-assistant, radicale, homepage, miniflux,
@@ -145,7 +145,6 @@ No local `overlays/` directory. All overlays come from flake inputs:
 
 - **HM scope** (`parts/home-manager-base.nix`): `mcp-servers-nix`, `nur`, `nix-vscode-extensions`, `noctalia`; also patches `mcp-server-fetch` (proxy API fix)
 - **homeserver NixOS scope** (inline in host config): `ephraim-nur` packages (lazylibrarian, ez_setup, iso639-lang, slskd-api), `homepage-dashboard` pinned to v1.13.1
-- **gcp-relay NixOS scope** (inline in host config): `headplane`, `headplane-ssh-wasm` buildPhase patch
 
 ## Desktop WM Stack
 

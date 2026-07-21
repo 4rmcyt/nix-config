@@ -15,7 +15,6 @@
     ../../../modules/monitoring/alloy-client.nix
     ../../../modules/networking/caddy
     ../../../modules/networking/headscale
-    ../../../modules/networking/headplane
     ../../../modules/networking/tailscale
     ./crowdsec-bouncer.nix
     ../../../modules/backup
@@ -122,7 +121,6 @@
       paths = [
         "/var/lib/headscale"
         "/var/lib/caddy"
-        "/var/lib/headplane"
       ];
     };
 
@@ -169,7 +167,6 @@
     my.caddy = {
       enable = true;
       headscale.enable = true;
-      headplane.enable = true;
     };
 
     services.fail2ban = {

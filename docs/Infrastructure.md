@@ -201,7 +201,6 @@ Disk: WD PC SN730 512GB NVMe (`nvme-WDC_PC_SN730_SDBPNTY-512G-1027_20230H445703`
 **Region:** GCP US Central (Iowa)
 
 - **Headscale** coordination server: `https://hs.example.com` (port 8080 behind Caddy)
-- **Headplane** web UI: proxied by Caddy (`inputs.headplane` flake, with custom `headplane-ssh-wasm` buildPhase patch)
 - **DERP** relay: region ID 901, `gcp-us-central1`, STUN on `0.0.0.0:3478`
 - **Caddy** TLS termination (replaces Traefik for this host)
 - **CrowdSec** nftables bouncer: remote LAPI via Tailscale pointing to homeserver
@@ -428,7 +427,6 @@ secrets/
   # Identity
   kanidm.yaml                          # Kanidm admin credentials, OIDC secrets
   headscale.yaml                       # Headscale config secrets
-  headplane.yaml                       # Headplane credentials
 
   # Services
   atuin.yaml                           # Atuin server credentials

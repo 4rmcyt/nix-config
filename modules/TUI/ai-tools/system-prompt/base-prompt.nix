@@ -21,7 +21,7 @@ in ''
     TUI/                  # zsh, zellij, atuin, starship, neovim, ai-tools (claude-code, gemini, llama-cpp, mcp)
     services/             # homepage, miniflux, home-assistant, atuin-server, nixarr,
                           # dispatcharr, komga, komf, microbin, ntfy, radicale, argocd (disabled), k3s (disabled)
-    networking/           # ssh, tailscale, traefik, caddy, headscale, headplane,
+    networking/           # ssh, tailscale, traefik, caddy, headscale,
                           # cloudflared, wireguard, nfs, nfs-client, unbound, avahi, dnssec, nut-server, nut-client
     security/             # kanidm, crowdsec, fail2ban, hardening
     monitoring/           # prometheus, grafana, loki, alloy, alerts, node-exporter

@@ -81,7 +81,7 @@ sudo mkdir -p /root/.config/sops/age
 sudo mv /tmp/keys.txt /root/.config/sops/age/keys.txt
 sudo chmod 600 /root/.config/sops/age/keys.txt
 sudo /run/current-system/activate
-sudo systemctl restart headscale headplane caddy
+sudo systemctl restart headscale caddy
 ```
 
 ---
