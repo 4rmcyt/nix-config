@@ -20,6 +20,7 @@ _: {
     {_args = ["LIBVA_DRIVER_NAME" "nvidia"];}
     {_args = ["__GLX_VENDOR_LIBRARY_NAME" "nvidia"];}
     {_args = ["NVD_BACKEND" "direct"];}
+    {_args = ["MOZ_DISABLE_RDD_SANDBOX" "1"];}
   ];
 
   home.file.".nv/nvidia-application-profiles-rc".text = builtins.toJSON {
