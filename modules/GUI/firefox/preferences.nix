@@ -144,7 +144,7 @@ _: {
 
     # === MEDIA & HARDWARE VIDEO ACCELERATION ===
     "media.av1.enabled" = true;
-    "media.av1.use-dav1d" = true; # Software AV1 decode (dav1d) - VAAPI/NVDEC unreliable on nvidia-vaapi-driver until Firefox 153's Vulkan Video path lands in nixpkgs
+    "media.av1.use-dav1d" = false; # Hardware AV1 decode (NVDEC, RTX 3050) via Firefox 153's Vulkan Video path
     "media.eme.enabled" = true;
     "media.ffmpeg.vaapi.enabled" = true; # Enable VAAPI hardware video decoding
     "media.ffmpeg.vaapi-drm-display.enabled" = true; # Enable VAAPI DRM display
@@ -152,12 +152,12 @@ _: {
     "media.gpu-process-decoder" = true; # Decode video in the GPU process
     "media.hardwaremediakeys.enabled" = true;
     "media.hardware-video-decoding.enabled" = true; # Enable hardware video decoding
-    "media.hardware-video-decoding.force-enabled" = false; # Don't force VAAPI - nvidia-vaapi-driver + Firefox 152 GPU process is unreliable (RemoteMediaManager unavailable); revisit after Firefox 153's native Vulkan Video path lands
+    "media.hardware-video-decoding.force-enabled" = true; # Force hardware video decoding
     "media.hevc.enabled" = true; # Enable HEVC playback
     "media.hls.enabled" = true;
     "media.navigator.mediadatadecoder_vpx_enabled" = true;
-    "media.rdd-ffmpeg.enabled" = true; # Software fallback for ffmpeg-decoded formats in the RDD process
-    "media.rdd-vpx.enabled" = true; # Software fallback for VP8/VP9 in the RDD process
+    "media.rdd-ffmpeg.enabled" = false; # Disable RDD process for FFmpeg
+    "media.rdd-vpx.enabled" = false; # Disable VP8/VP9 in RDD process
     "media.videocontrols.picture-in-picture.video-toggle.enabled" = true;
 
     # Add these additional media settings for stability
