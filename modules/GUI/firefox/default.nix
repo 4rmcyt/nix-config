@@ -14,7 +14,6 @@ in {
 
   programs.firefox = {
     enable = true;
-    package = pkgs.firefox-beta; # 153.0b13+ has the native Vulkan Video decode path (Bug 2021722), replacing the flaky nvidia-vaapi-driver/VAAPI workaround on Firefox <=152
     configPath = ".mozilla/firefox";
 
     policies.ExtensionSettings = {

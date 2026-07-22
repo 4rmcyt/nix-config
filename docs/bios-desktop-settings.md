@@ -262,6 +262,22 @@ Re-tuning procedure:
 
    > All-Core Curve Optimizer offset: `<fill in after retesting>`
 
+**2026-07-22 incident: `-25` all-core set directly (skipping the
+step-and-test procedure above), untested at this magnitude on this specific
+chip, on top of a freshly re-enabled EXPO 5200 profile (also untested since
+the `1.R1`→`1.R2` reflash).** Symptom: instant hard reset under high load —
+`journalctl -b -1` shows the boot ending mid-log with zero shutdown sequence
+(no `systemd-shutdown`/SIGTERM lines), and no WHEA/MCE decoded anywhere
+before the cutoff — consistent with a CPU/memory fault severe enough that
+the kernel never got to log it, not a thermal or fan-control issue
+(`coolercontrold` had applied all fan profiles cleanly earlier in that same
+boot). Diagnosis procedure: revert Curve Optimizer to `0`/Auto only (leave
+EXPO untouched), stress-test (`stress-ng --cpu $(nproc) --timeout 30m` plus
+an AVX/`matrixprod` pass) — if stable, step CO back up in `-5` increments
+per the procedure above; if still unstable at CO=0, suspect EXPO next and
+test with it reverted to JEDEC/Auto instead (don't revert both at once, or
+the culprit won't be isolated).
+
 ## 5. Virtualization / Security
 
 Required for the `virtualisation.libvirtd` + VFIO setup already in the flake
