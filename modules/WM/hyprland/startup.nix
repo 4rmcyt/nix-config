@@ -23,7 +23,10 @@
     # Fan/pump curve control (nct6687 SuperIO + AMD GPU/liquidctl).
     # No CLI flag for minimize-to-tray exists (unlike corectrl) — enable
     # "Start in Tray" / "Close to Tray" once in the app's own Settings.
-    "coolercontrol"
+    # --disable-gpu works around a QtWebEngine/NVIDIA-proprietary GBM bug
+    # that corrupts glyph rendering (falls back to a broken Vulkan path):
+    # https://gitlab.com/coolercontrol/coolercontrol/-/issues/526
+    "coolercontrol --disable-gpu"
   ];
 
   execCalls = builtins.concatStringsSep "\n" (map (c: "  hl.exec_cmd(${builtins.toJSON c})") commands);
