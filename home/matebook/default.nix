@@ -16,6 +16,7 @@
     ../../modules/TUI/tmux
     ../../modules/TUI/atuin
     ../../modules/GUI/mpv
+    ../../modules/GUI/nemo/home.nix
     ../../modules/GUI/obsidian
     ../../modules/TUI/starship
     ../../modules/TUI/zellij

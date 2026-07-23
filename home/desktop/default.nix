@@ -14,6 +14,7 @@
     ../../modules/GUI/firefox
     ../../modules/GUI/jellyfin-mpv-shim
     ../../modules/GUI/mpv
+    ../../modules/GUI/nemo/home.nix
     ../../modules/GUI/obsidian
     ../../modules/TUI/common
     ../../modules/TUI/helix
