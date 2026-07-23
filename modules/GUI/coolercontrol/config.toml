@@ -201,11 +201,7 @@ thinkpad_full_speed = false
 # ipv4_address = "127.0.0.1"
 # ipv6_address = "::1"
 
-# IPv6 is disabled system-wide on this host (enableIPv6 = false in
-# hosts/nixos/desktop/default.nix), so binding to the IPv6 loopback always
-# fails with a WARN in the daemon log. An empty string disables the address
-# entirely instead of attempting and failing to bind it.
-ipv6_address = ""
+ipv6_address = "::1"
 
 # Whether to compress the response payload from the API. This will reduce the size of the response
 # but will increase CPU usage a tiny bit. This is useful if you are running the API over a network.

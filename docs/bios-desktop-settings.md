@@ -260,7 +260,10 @@ Re-tuning procedure:
 6. **Record the final value here once found**, so it survives the next BIOS
    reset:
 
-   > All-Core Curve Optimizer offset: `<fill in after retesting>`
+   > All-Core Curve Optimizer offset: `-20` (2026-07-22, stepped down from
+   > `-25` after the instant-reset incident below — not yet stress-tested
+   > at this value, treat as provisional until confirmed stable under
+   > sustained load)
 
 **2026-07-22 incident: `-25` all-core set directly (skipping the
 step-and-test procedure above), untested at this magnitude on this specific
@@ -374,23 +377,21 @@ service; GUI autostarts via `spawn-at-startup` in
 `modules/WM/niri/startup.nix`. Enable "Start in Tray"/"Close to Tray" once
 in the app's own Settings (no CLI flag exists for this, unlike `corectrl`).
 
-**IPv6 bind warnings (ports 11987 REST + 11988 gRPC):** this host has
-`enableIPv6 = false` (`hosts/nixos/desktop/default.nix`), so the daemon's
-attempt to also bind IPv6 loopback always logged a WARN. Fixed by adding
-`ipv6_address = ""` under `[settings]` in `config.toml` (documented at
-`docs.coolercontrol.org/daemon/address.html` — empty string disables that
-address family entirely, one setting covers both ports). Log lines change
-from `Could not bind to standard IPv6 loopback address` (real failure) to
-`IPv6 address disabled` (expected, still logged at WARN level by the
-daemon regardless). **Deliberately left at WARN, not silenced further:**
-`docs.coolercontrol.org/wiki/logs-debugging.html` documents `CC_LOG`
-(systemd override, `ERROR`/`WARN`/`INFO`/`DEBUG`/`TRACE`) as the only
-verbosity control — it's a global floor, not a per-message filter, so
-suppressing this one cosmetic line would require `CC_LOG=ERROR` and lose
-visibility into *all* future real WARN-level issues (like the Nvidia
-fan-speed-range one caught and fixed earlier this same session). Traded
-one permanent harmless log line for keeping that signal — decided
-2026-07-17, don't revisit without a good reason. **Gotcha hit while
+**IPv6 bind warnings (ports 11987 REST + 11988 gRPC) — resolved 2026-07-22
+by enabling IPv6:** this host originally had `enableIPv6 = false`
+(`hosts/nixos/desktop/default.nix`), so the daemon's attempt to also bind
+IPv6 loopback always logged a WARN. Initial fix (2026-07-17) was
+`ipv6_address = ""` in `config.toml` to disable the address family and
+turn the WARN into an expected `IPv6 address disabled` line — see the
+now-superseded note this replaces. Root-caused instead on 2026-07-22:
+flipped `networking.enableIPv6 = true` on the host (low-risk per a repo
+audit — `dnssec` already carries IPv6 fallback anchors, no other
+networking module assumed IPv6 off), which lets `config.toml` use the
+project's actual documented default, `ipv6_address = "::1"`
+(`docs.coolercontrol.org/daemon/address.html`), and the warning is gone
+because the bind now succeeds instead of being suppressed. CUPS
+`listenAddresses` updated to include `[::1]:631` alongside `127.0.0.1:631`
+now that `::1` actually resolves. **Gotcha hit while
 applying this live:** editing the config with
 `tee -a` (append) while the daemon was still running got the line dropped
 entirely — `coolercontrold` rewrites the whole file from its in-memory

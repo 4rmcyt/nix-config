@@ -180,7 +180,7 @@
       enable = true;
       profileId = "nextdns0";
     };
-    enableIPv6 = false;
+    enableIPv6 = true;
     interfaces.enp12s0.wakeOnLan.enable = true;
   };
 
@@ -276,8 +276,8 @@
     noPollBatteries = true;
   };
 
-  # Cups resolves "localhost" to both 127.0.0.1 and ::1 — IPv6 disabled at kernel level so ::1 bind fails
-  services.printing.listenAddresses = ["127.0.0.1:631"];
+  # Cups resolves "localhost" to both 127.0.0.1 and ::1
+  services.printing.listenAddresses = ["127.0.0.1:631" "[::1]:631"];
 
   security.sudo.extraConfig = "Defaults lecture = never";
 }
