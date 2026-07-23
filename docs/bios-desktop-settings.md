@@ -400,6 +400,26 @@ state around restart/reload. Docs' own procedure is `stop` → edit → `start`
 not appended after the trailing per-device `[settings.<uid>]` sections at
 file's end.
 
+**Recurred 2026-07-23 — root cause of the recurrence:** the 2026-07-22 fix
+above only edited the live `/etc/coolercontrol/config.toml` at the time;
+it did not update the `ipv6_address` value tracked in this repo's
+`config.toml` at the same moment (that got fixed separately, commit
+`867b3e4a`). Because tmpfiles type `C` never overwrites an existing file,
+committing the repo's `config.toml` and rebuilding does **nothing** to the
+live file — the live file is the actual source of truth once
+`/etc/coolercontrol/` exists, and only a daemon-triggered rewrite (e.g. a
+settings change via the GUI, which re-serializes its in-memory state) or a
+manual edit changes it. The daemon's in-memory state still held
+`ipv6_address = ""` from before the 07-22 edit, so at some point it
+rewrote the file back to `""`, silently reverting the fix. Re-applied via
+the same `stop` → `sed` → `start` procedure; confirmed clean with
+`journalctl -u coolercontrold --since <restart-time> | grep -i ipv6`
+(no output). **Takeaway:** for this file, the repo copy and
+`nixos-rebuild` are only a disaster-recovery template — they do not keep
+the live daemon config in sync. Any future setting change here must be
+applied to the live file directly (daemon stopped), not by editing the
+repo's `config.toml` and rebuilding.
+
 ### Declarative backup
 
 `config.toml` and `alerts.json` are committed in
