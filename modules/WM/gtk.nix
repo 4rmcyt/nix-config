@@ -54,6 +54,21 @@
     };
   };
 
+  # xdg-desktop-portal-gtk (file chooser, etc.) reads theme/font via
+  # GSettings/dconf under org/gnome/desktop/interface, not the settings.ini
+  # files above — those only cover regular GTK apps. Without a GNOME
+  # session nothing ever populates this dconf path, so the portal falls
+  # back with no font set and renders dialogs with broken/collapsed text
+  # layout. Mirrors the values set in the `gtk` block above.
+  # https://wiki.hypr.land/Nix/Hyprland-on-NixOS/#fixing-problems-with-themes
+  dconf.settings."org/gnome/desktop/interface" = {
+    gtk-theme = "Kanagawa-B";
+    icon-theme = "Tela-dark";
+    font-name = "Maple Mono 12";
+    document-font-name = "Maple Mono 12";
+    monospace-font-name = "Maple Mono 12";
+  };
+
   # ============================================
   # CURSOR CONFIGURATION
   # ============================================

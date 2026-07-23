@@ -3,6 +3,11 @@
   services.gvfs.enable = true;
   services.udisks2.enable = true;
 
+  # Required for programs.dconf.profiles below (and any other dconf.settings
+  # elsewhere in the config, e.g. Home Manager's gtk.nix) to actually take
+  # effect — defaults to false, which silently no-ops all dconf writes.
+  programs.dconf.enable = true;
+
   programs.dconf.profiles.user.databases = [
     {
       settings."org/nemo/preferences" = {
