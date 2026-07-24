@@ -1,8 +1,4 @@
-{
-  lib,
-  pkgs,
-  ...
-}: let
+{lib, ...}: let
   moz = short: "https://addons.mozilla.org/firefox/downloads/latest/${short}/latest.xpi";
 in {
   imports = [

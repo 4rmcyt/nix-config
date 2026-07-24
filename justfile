@@ -6,22 +6,16 @@ deploy-gcp:
 deploy-homeserver:
     ./deploy.sh homeserver
 
-# Deploy to WSL
-deploy-wsl:
-    ./deploy.sh wsl
-
 # Update flake and test all systems
 update:
     nix flake update
     nix build .#nixosConfigurations.homeserver.config.system.build.toplevel
     nix build .#darwinConfigurations.macbook.config.system.build.toplevel
-    nix build .#nixosConfigurations.wsl.config.system.build.toplevel
 
 # Push to all caches
 push-caches:
     nix build .#nixosConfigurations.homeserver.config.system.build.toplevel | cachix push homeserver
     nix build .#darwinConfigurations.macbook.config.system.build.toplevel | cachix push macbookk
-    nix build .#nixosConfigurations.wsl.config.system.build.toplevel | cachix push homeserver
 
 # Format all nix files
 fmt:
@@ -35,15 +29,10 @@ check:
 test:
     nix flake check
     just test-homeserver
-    just test-wsl
 
 # Test homeserver configuration
 test-homeserver:
     nix build .#checks.x86_64-linux.homeserver-tests
-
-# Test WSL configuration
-test-wsl:
-    nix build .#nixosConfigurations.wsl.config.system.build.toplevel
 
 build-iso $host:
     just copy {{ host }}; ssh {{ host }} "nix-shell -p nixos-generators.out --run 'nixos-generate -c /etc/nixos/machines/installer/default.nix -f install-iso -I nixpkgs=channel:unstable'"

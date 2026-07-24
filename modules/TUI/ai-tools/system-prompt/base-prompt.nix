@@ -7,7 +7,7 @@ in ''
 
   ## nix-config Project Layout
 
-  Flake with 5 NixOS hosts: `desktop`, `gcp`, `homeserver`, `matebook`, `wsl`
+  Flake with 4 NixOS hosts: `desktop`, `gcp`, `homeserver`, `matebook`
 
   ```
   hosts/nixos/{host}/     # System config + hardware

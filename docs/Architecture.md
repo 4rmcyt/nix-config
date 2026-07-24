@@ -110,7 +110,6 @@ configurations.nixos.homeserver.module = {...}: {
 |-------------|-----------------------------|
 | desktop     | `modules/nix/lix`           |
 | homeserver  | `modules/nix/lix`           |
-| wsl         | `modules/nix/lix`           |
 | matebook    | `modules/nix/determinate`   |
 | gcp-relay   | (base default)              |
 
@@ -283,7 +282,6 @@ Undocumented files that live in the repo root:
 |--------|-------------|
 | `deploy-gcp` | `nixos-rebuild switch` to gcp-relay via SSH |
 | `deploy-homeserver` | Runs `./deploy.sh homeserver` |
-| `deploy-wsl` | Runs `./deploy.sh wsl` |
 | `check` / `test` | `nix flake check` |
 | `deploy-desktop` | Runs `./deploy.sh desktop` |
 | `dry-run $host` | `nixos-rebuild-ng dry-activate` on remote host |

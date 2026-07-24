@@ -6,21 +6,13 @@
 }: let
   servicesWithMediaAccess = [
     "audiobookshelf"
-    "bazarr"
     "jellyfin"
-    "seerr"
     "lidarr"
-    "prowlarr"
     "qbittorrent"
-    "radarr"
-    "sonarr"
   ];
 
   servicesWithScripts = [
-    "bazarr"
     "lidarr"
-    "radarr"
-    "sonarr"
   ];
 
   musicConverter = pkgs.writeShellApplication {
@@ -38,11 +30,17 @@
   };
 in {
   imports = [
+    ./bazarr
     ./byparr
     ./jellyfin
     ./kapowarr
     ./lazylibrarian
+    ./prowlarr
     ./qbittorrent
+    ./radarr
+    ./recyclarr
+    ./seerr
+    ./sonarr
     ./upnp-fix.nix
   ];
 
@@ -66,6 +64,20 @@ in {
       owner = config.my.defaults.user;
       key = "lidarr_api_key";
       group = "media";
+      mode = "0440";
+    };
+    radarr_api_key = {
+      sopsFile = ../../../secrets/medialib.yaml;
+      owner = "recyclarr";
+      key = "radarr_api_key";
+      group = "recyclarr";
+      mode = "0440";
+    };
+    sonarr_api_key = {
+      sopsFile = ../../../secrets/medialib.yaml;
+      owner = "recyclarr";
+      key = "sonarr_api_key";
+      group = "recyclarr";
       mode = "0440";
     };
   };
@@ -115,27 +127,11 @@ in {
     stateDir = "/data/media/.state/nixarr";
 
     audiobookshelf.enable = true;
-    seerr.enable = true;
     jellyfin.enable = false; # Handled by ./jellyfin
-    bazarr.enable = true;
     lidarr.enable = true;
-    prowlarr.enable = true;
-    radarr.enable = true;
-    sonarr = {
-      enable = true;
-      port = 8990;
-    };
-    recyclarr = {
-      enable = true;
-      configFile = ./recyclarr.yaml;
-    };
   };
 
   systemd.services = lib.mkMerge [
-    # recyclarr 8.x dropped --app-data; override nixarr's hardcoded ExecStart
-    {
-      recyclarr.serviceConfig.ExecStart = lib.mkOverride 0 "${config.nixarr.recyclarr.package}/bin/recyclarr sync --config ${config.nixarr.recyclarr.configFile}";
-    }
     # nixarr passes an absolute path to StateDirectory= which systemd rejects with a warning.
     # StateDirectory= must be relative. Clear it — the dir already exists via tmpfiles.
     {
@@ -164,138 +160,6 @@ in {
         "BAZARR_API_KEY_FILE=${config.sops.secrets.bazarr_api_key.path}"
       ];
     }))
-    {
-      radarr-pg-config = {
-        description = "Write Radarr PostgreSQL config.xml";
-        after = [
-          "postgresql.service"
-          "postgresql-setup-users.service"
-        ];
-        requires = ["postgresql.service"];
-        wantedBy = ["multi-user.target"];
-        before = ["radarr.service"];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          User = "radarr";
-          Group = "radarr";
-        };
-        path = [pkgs.xmlstarlet];
-        script = ''
-          mkdir -p /data/media/.state/nixarr/radarr
-          cfg=/data/media/.state/nixarr/radarr/config.xml
-          if [ ! -f "$cfg" ]; then
-            printf '<Config>\n</Config>\n' > "$cfg"
-          fi
-          PG_PASS=$(cat ${config.sops.secrets.radarr_db_password.path} | tr -d '\n\r')
-          for pair in "PostgresUser:radarr" "PostgresPassword:$PG_PASS" "PostgresPort:5432" "PostgresHost:127.0.0.1" "PostgresMainDb:radarr" "PostgresLogDb:radarr-log"; do
-            key="''${pair%%:*}"
-            val="''${pair#*:}"
-            if xmlstarlet sel -t -v "count(/Config/$key)" "$cfg" 2>/dev/null | grep -q "^0$"; then
-              xmlstarlet ed -L -s /Config -t elem -n "$key" -v "$val" "$cfg"
-            else
-              xmlstarlet ed -L -u "/Config/$key" -v "$val" "$cfg"
-            fi
-          done
-          chmod 600 "$cfg"
-        '';
-      };
-      sonarr-pg-config = {
-        description = "Write Sonarr PostgreSQL config.xml";
-        after = [
-          "postgresql.service"
-          "postgresql-setup-users.service"
-        ];
-        requires = ["postgresql.service"];
-        wantedBy = ["multi-user.target"];
-        before = ["sonarr.service"];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          User = "sonarr";
-          Group = "sonarr";
-        };
-        path = [pkgs.xmlstarlet];
-        script = ''
-          mkdir -p /data/media/.state/nixarr/sonarr
-          cfg=/data/media/.state/nixarr/sonarr/config.xml
-          if [ ! -f "$cfg" ]; then
-            printf '<Config>\n</Config>\n' > "$cfg"
-          fi
-          PG_PASS=$(cat ${config.sops.secrets.sonarr_db_password.path} | tr -d '\n\r')
-          for pair in "PostgresUser:sonarr" "PostgresPassword:$PG_PASS" "PostgresPort:5432" "PostgresHost:127.0.0.1" "PostgresMainDb:sonarr" "PostgresLogDb:sonarr-log"; do
-            key="''${pair%%:*}"
-            val="''${pair#*:}"
-            if xmlstarlet sel -t -v "count(/Config/$key)" "$cfg" 2>/dev/null | grep -q "^0$"; then
-              xmlstarlet ed -L -s /Config -t elem -n "$key" -v "$val" "$cfg"
-            else
-              xmlstarlet ed -L -u "/Config/$key" -v "$val" "$cfg"
-            fi
-          done
-          chmod 600 "$cfg"
-        '';
-      };
-      prowlarr-pg-config = {
-        description = "Write Prowlarr PostgreSQL config.xml";
-        after = [
-          "postgresql.service"
-          "postgresql-setup-users.service"
-        ];
-        requires = ["postgresql.service"];
-        wantedBy = ["multi-user.target"];
-        before = ["prowlarr.service"];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          User = "prowlarr";
-          Group = "prowlarr";
-        };
-        path = [pkgs.xmlstarlet];
-        script = ''
-          mkdir -p /data/media/.state/nixarr/prowlarr
-          cfg=/data/media/.state/nixarr/prowlarr/config.xml
-          if [ ! -f "$cfg" ]; then
-            printf '<Config>\n</Config>\n' > "$cfg"
-          fi
-          PG_PASS=$(cat ${config.sops.secrets.prowlarr_db_password.path} | tr -d '\n\r')
-          for pair in "PostgresUser:prowlarr" "PostgresPassword:$PG_PASS" "PostgresPort:5432" "PostgresHost:127.0.0.1" "PostgresMainDb:prowlarr" "PostgresLogDb:prowlarr-log"; do
-            key="''${pair%%:*}"
-            val="''${pair#*:}"
-            if xmlstarlet sel -t -v "count(/Config/$key)" "$cfg" 2>/dev/null | grep -q "^0$"; then
-              xmlstarlet ed -L -s /Config -t elem -n "$key" -v "$val" "$cfg"
-            else
-              xmlstarlet ed -L -u "/Config/$key" -v "$val" "$cfg"
-            fi
-          done
-          chmod 600 "$cfg"
-        '';
-      };
-      bazarr-pg-env = {
-        description = "Write Bazarr PostgreSQL environment file";
-        after = [
-          "postgresql.service"
-          "postgresql-setup-users.service"
-        ];
-        requires = ["postgresql.service"];
-        wantedBy = ["bazarr.service"];
-        before = ["bazarr.service"];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          RuntimeDirectory = "bazarr-secrets";
-          RuntimeDirectoryMode = "0750";
-          User = "bazarr";
-          Group = "bazarr";
-        };
-        script = ''
-          printf 'POSTGRES_ENABLED=true\nPOSTGRES_HOST=127.0.0.1\nPOSTGRES_PORT=5432\nPOSTGRES_DATABASE=bazarr\nPOSTGRES_USERNAME=bazarr\nPOSTGRES_PASSWORD=%s\n' \
-            "$(cat ${config.sops.secrets.bazarr_db_password.path} | tr -d '\n\r')" \
-            > /run/bazarr-secrets/pg-env
-          chmod 600 /run/bazarr-secrets/pg-env
-        '';
-      };
-      bazarr.serviceConfig.EnvironmentFile = "/run/bazarr-secrets/pg-env";
-    }
   ];
 
   systemd.tmpfiles.rules = [

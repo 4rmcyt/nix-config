@@ -186,14 +186,6 @@ Disk: WD PC SN730 512GB NVMe (`nvme-WDC_PC_SN730_SDBPNTY-512G-1027_20230H445703`
 
 ---
 
-### wsl
-
-**Role:** WSL2 environment on Windows  
-- Minimal NixOS config — `services.timesyncd.enable = lib.mkForce false` (WSL manages time sync)
-- HM config in `home/wsl/`: TUI/common, TUI/helix, TUI/zsh, TUI/atuin, GUI/terminal/wezterm, basic packages + pyenv setup
-
----
-
 ### gcp-relay
 
 **Role:** GCP e2-micro — VPN control plane + DERP relay  
@@ -292,14 +284,14 @@ Tunnel credentials in `secrets/cloudflare_tunnel_credentials.bin` + `secrets/clo
 |-----------------|-------|-------------------------------|------------------------------------|
 | Jellyfin        | 8096  | `jellyfin.example.com`       | Media server                       |
 | qBittorrent     | 8081  | `qb.example.com`             | via nixarr                         |
-| Sonarr          | 8990  | `sonarr.example.com`         | TV                                 |
-| Radarr          | 7878  | `radarr.example.com`         | Movies                             |
-| Prowlarr        | 9696  | `prowlarr.example.com`       | Indexer                            |
-| Bazarr          | 6767  | `bazarr.example.com`         | Subtitles                          |
+| Sonarr          | 8990  | `sonarr.example.com`         | TV — OCI container                 |
+| Radarr          | 7878  | `radarr.example.com`         | Movies — OCI container             |
+| Prowlarr        | 9696  | `prowlarr.example.com`       | Indexer — OCI container            |
+| Bazarr          | 6767  | `bazarr.example.com`         | Subtitles — OCI container          |
 | Lidarr          | 8686  | `lidarr.example.com`         | Music                              |
 | LazyLibrarian   | 5299  | `lazylibrarian.example.com`  | Books — ephraim-nur overlay        |
 | Kapowarr        | 5656  | `kapowarr.example.com`       | Comics                             |
-| Seerr           | 5055  | `seerr.example.com`          | Request management                 |
+| Seerr           | 5055  | `seerr.example.com`          | Request management — OCI container |
 | Audiobookshelf  | 9292  | `audiobookshelf.example.com` | Audiobooks                         |
 | Recyclarr       | —     | (no UI)                       | Auto-sync quality profiles to *arr |
 | Byparr          | 8191  | (internal only)               | Cloudflare bypass for Prowlarr — FlareSolverr-compatible, OCI container |

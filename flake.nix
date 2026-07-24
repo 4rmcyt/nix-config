@@ -33,10 +33,6 @@
       inputs.disko.follows = "disko";
     };
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
-    nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL/main";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     # Secrets
     sops-nix = {

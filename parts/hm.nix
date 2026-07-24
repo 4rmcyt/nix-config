@@ -1,5 +1,5 @@
 # Home Manager NixOS integration — wired into modules.nixos.hm.
-# Import this module on hosts that use Home Manager (desktop, matebook, homeserver, wsl).
+# Import this module on hosts that use Home Manager (desktop, matebook, homeserver).
 # Headless appliances (router, gcp-relay) skip this entirely.
 {
   config,
