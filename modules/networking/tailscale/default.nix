@@ -53,23 +53,30 @@ in {
       tailscale
       jq
       ethtool
-      networkd-dispatcher
     ];
 
-    services = {
-      tailscale = {
-        enable = true;
-        useRoutingFeatures = "both";
-        disableUpstreamLogging = true;
-      };
-      networkd-dispatcher = {
-        enable = true;
-        rules."50-tailscale" = {
-          onState = ["routable"];
-          script = ''
-            ${pkgs.ethtool} -K ${cfg.networkInterface} rx-udp-gro-forwarding on rx-gro-list off
-          '';
-        };
+    services.tailscale = {
+      enable = true;
+      useRoutingFeatures = "both";
+      disableUpstreamLogging = true;
+    };
+
+    # Tunes GRO offload for Tailscale throughput. Runs as a plain oneshot
+    # bound to the interface's device unit instead of networkd-dispatcher,
+    # since this host doesn't use systemd-networkd (networkd-dispatcher's
+    # rules never fire without it).
+    systemd.services.tailscale-ethtool-tune = {
+      description = "Tune GRO offload on ${cfg.networkInterface} for Tailscale";
+      after = [
+        "network-online.target"
+        "sys-subsystem-net-devices-${cfg.networkInterface}.device"
+      ];
+      wants = ["network-online.target"];
+      wantedBy = ["multi-user.target"];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = "${pkgs.ethtool}/bin/ethtool -K ${cfg.networkInterface} rx-udp-gro-forwarding on rx-gro-list off";
       };
     };
 
