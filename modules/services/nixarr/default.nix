@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  inputs,
   ...
 }: let
   servicesWithMediaAccess = [
@@ -129,6 +130,18 @@ in {
     audiobookshelf.enable = true;
     jellyfin.enable = false; # Handled by ./jellyfin
     lidarr.enable = true;
+
+    # Upstream bug: pname = "nixarr" but pyproject.toml declares name =
+    # "nixarr_py", so nixpkgs' pythonMetadataCheckPhase can't find metadata
+    # for "nixarr" and fails the build. Skip the check — it only verifies
+    # the version string in pyproject.toml matches the derivation version.
+    nixarr-py.package =
+      (pkgs.callPackage "${inputs.nixarr}/nixarr/lib/nixarr-py" {
+        jellyfin = config.nixarr.jellyfin.package;
+      })
+      .overrideAttrs (_: {
+        dontCheckPythonMetadata = true;
+      });
   };
 
   systemd.services = lib.mkMerge [
