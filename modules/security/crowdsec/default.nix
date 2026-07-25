@@ -62,6 +62,12 @@ in {
       "crowdsec/state/hub"
     ]);
 
+    # ExecStartPre's config test (-t) does a non-follow journalctl read to validate the
+    # journalctl acquisitions, which linearly scans the on-disk journal. Right after boot
+    # that scan hits a cold page cache and can exceed the default 90s TimeoutStartSec.
+    systemd.services.crowdsec.serviceConfig.TimeoutStartSec = lib.mkIf (!isRemoteLapi) "5min";
+    systemd.services.crowdsec.serviceConfig.Restart = lib.mkIf (!isRemoteLapi) "on-failure";
+
     services.crowdsec = lib.mkIf (!isRemoteLapi) {
       enable = true;
 

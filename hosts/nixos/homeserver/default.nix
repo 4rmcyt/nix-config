@@ -80,6 +80,21 @@
   };
 
   # =================================================================
+  # Overlays
+  # =================================================================
+  # sbcl's test suite hangs indefinitely in the Nix build sandbox on this
+  # host (elf-sans-immobile-test / threading tests never complete under
+  # restricted ptrace). Skip checks — sbcl is only pulled in transitively
+  # via pgloader.
+  nixpkgs.overlays = [
+    (_final: prev: {
+      sbcl = prev.sbcl.overrideAttrs (_old: {
+        doCheck = false;
+      });
+    })
+  ];
+
+  # =================================================================
   # Environment
   # =================================================================
   environment.systemPackages = with pkgs; [
