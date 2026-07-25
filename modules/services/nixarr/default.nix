@@ -16,6 +16,45 @@
     "lidarr"
   ];
 
+  # Pinned explicitly (not left to dynamic useradd allocation) because
+  # oci-containers PUID/PGID env vars are interpolated at Nix eval time —
+  # config.users.users.<name>.uid is null until activation otherwise,
+  # so ${toString ...} silently renders as an empty string.
+  serviceIds = {
+    audiobookshelf = {
+      uid = 156;
+      gid = 998;
+    };
+    bazarr = {
+      uid = 232;
+      gid = 995;
+    };
+    seerr = {
+      uid = 262;
+      gid = 250;
+    };
+    lidarr = {
+      uid = 306;
+      gid = 985;
+    };
+    prowlarr = {
+      uid = 293;
+      gid = 287;
+    };
+    radarr = {
+      uid = 275;
+      gid = 975;
+    };
+    sonarr = {
+      uid = 274;
+      gid = 970;
+    };
+    recyclarr = {
+      uid = 269;
+      gid = 269;
+    };
+  };
+
   musicConverter = pkgs.writeShellApplication {
     name = "music-converter";
     runtimeInputs = with pkgs; [
@@ -84,36 +123,19 @@ in {
   };
 
   users.users =
-    lib.genAttrs
-    [
-      "audiobookshelf"
-      "bazarr"
-      "seerr"
-      "lidarr"
-      "prowlarr"
-      "radarr"
-      "sonarr"
-      "recyclarr"
-    ]
-    (name: {
+    lib.mapAttrs
+    (name: ids: {
       isSystemUser = true;
+      uid = ids.uid;
       group = lib.mkForce name;
       extraGroups =
         ["users" "media"]
         # sonarr-sync-config runs as sonarr:sonarr and reads sonarr.api-key (group sonarr-api)
         ++ lib.optional (name == "sonarr") "sonarr-api";
-    });
+    })
+    serviceIds;
 
-  users.groups = lib.genAttrs [
-    "audiobookshelf"
-    "bazarr"
-    "seerr"
-    "lidarr"
-    "prowlarr"
-    "radarr"
-    "sonarr"
-    "recyclarr"
-  ] (_: {});
+  users.groups = lib.mapAttrs (_name: ids: {gid = ids.gid;}) serviceIds;
 
   environment.systemPackages = with pkgs; [
     musicConverter

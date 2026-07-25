@@ -129,6 +129,7 @@
       enable = true;
       sopsFile = ../../../secrets/tailscale-homeserver.yaml;
       loginServer = "https://hs.example.com";
+      networkInterface = "enp0s31f6";
       advertiseExitNode = true;
       advertiseRoutes = [
         (
