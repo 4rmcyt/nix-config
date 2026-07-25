@@ -6,6 +6,10 @@ deploy-gcp:
 deploy-homeserver:
     nixos-rebuild switch --flake .#homeserver --target-host zeev@homeserver --build-host localhost --elevate=sudo --ask-elevate-password
 
+# Deploy to matebook
+deploy-matebook:
+    nixos-rebuild switch --flake .#matebook --target-host zeev@matebook --build-host localhost --elevate=sudo --ask-elevate-password
+    
 # Update flake and test all systems
 update:
     nix flake update
