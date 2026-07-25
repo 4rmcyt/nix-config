@@ -4,7 +4,7 @@ deploy-gcp:
 
 # Deploy to homeserver
 deploy-homeserver:
-    ./deploy.sh homeserver
+    nixos-rebuild switch --flake .#homeserver --target-host zeev@homeserver --build-host localhost --elevate=sudo --ask-elevate-password
 
 # Update flake and test all systems
 update:

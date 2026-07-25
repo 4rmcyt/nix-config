@@ -92,9 +92,6 @@
     iw
     wireguard-tools
 
-    # DB tooling
-    pgloader
-
     # Build & deployment tools
     betula
 

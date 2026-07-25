@@ -60,8 +60,4 @@ in ''
   ## CRITICAL: Never guess config keys
 
   Before writing ANY config key for ANY app or daemon — fetch the official docs first (`fetch` or `tavily`). Never guess option names. Read the schema, then write. No exceptions.
-
-  ## CRITICAL: homeserver ZFS safety
-
-  NEVER suggest `nixos-rebuild switch` for homeserver without checking for active ZFS transfers or mounted datasets. For mount-affecting changes: `nixos-rebuild boot` + reboot. Default to `boot` when in doubt.
 ''
