@@ -9,7 +9,7 @@ deploy-homeserver:
 # Deploy to matebook
 deploy-matebook:
     nixos-rebuild switch --flake .#matebook --target-host zeev@matebook --build-host localhost --elevate=sudo --ask-elevate-password
-    
+
 # Update flake and test all systems
 update:
     nix flake update
@@ -18,12 +18,11 @@ update:
 
 # Push to all caches
 push-caches:
-    nix build .#nixosConfigurations.homeserver.config.system.build.toplevel | cachix push homeserver
-    nix build .#darwinConfigurations.macbook.config.system.build.toplevel | cachix push macbookk
+    cachix push 4rmcyt /run/current-system
 
 # Format all nix files
 fmt:
-    nixfmt **/*.nix
+    nix fmt
 
 # Check for dead code
 check:
@@ -32,11 +31,9 @@ check:
 # Run all tests
 test:
     nix flake check
-    just test-homeserver
 
 # Test homeserver configuration
-test-homeserver:
-    nix build .#checks.x86_64-linux.homeserver-tests
+
 
 build-iso $host:
     just copy {{ host }}; ssh {{ host }} "nix-shell -p nixos-generators.out --run 'nixos-generate -c /etc/nixos/machines/installer/default.nix -f install-iso -I nixpkgs=channel:unstable'"
