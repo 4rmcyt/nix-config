@@ -126,7 +126,7 @@ in {
     lib.mapAttrs
     (name: ids: {
       isSystemUser = true;
-      uid = ids.uid;
+      inherit (ids) uid;
       group = lib.mkForce name;
       extraGroups =
         ["users" "media"]
@@ -135,7 +135,7 @@ in {
     })
     serviceIds;
 
-  users.groups = lib.mapAttrs (_name: ids: {gid = ids.gid;}) serviceIds;
+  users.groups = lib.mapAttrs (_name: ids: {inherit (ids) gid;}) serviceIds;
 
   environment.systemPackages = with pkgs; [
     musicConverter
