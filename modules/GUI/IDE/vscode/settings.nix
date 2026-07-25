@@ -172,7 +172,9 @@
     "nix.enableLanguageServer" = true;
     "nix.serverPath" = "nil";
     "nix.serverSettings" = {
-      formatting.command = ["alejandra"];
+      nil = {
+        formatting.command = ["alejandra"];
+      };
     };
     "nix.formatterPath" = "alejandra";
     "nixEnvSelector.useFlakes" = true;
