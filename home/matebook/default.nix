@@ -4,6 +4,8 @@
   ...
 }: {
   imports = [
+    ../../modules/TUI/ai-tools/llama-cpp/cpu.nix
+
     ../../modules/GUI/chrome/home.nix
     ../../modules/GUI/firefox
     ../../modules/GUI/thunderbird
