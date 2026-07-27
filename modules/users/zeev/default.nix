@@ -27,7 +27,7 @@ in {
   users = {
     groups = {
       git = {};
-      media = {};
+      media = {gid = 169;}; # pinned: NFS (AUTH_SYS) checks raw GIDs, must match across all hosts
       zeev = {};
     };
 
