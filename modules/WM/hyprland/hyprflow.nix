@@ -13,7 +13,7 @@
       owner = "isorensen";
       repo = "hyprflow";
       rev = "v${version}";
-      hash = lib.fakeHash;
+      hash = "sha256-5QWzimuNSl91TLWhBBiq4HCQyYtoSP8c9VknxSA0O8s=";
     };
 
     cargoLock.lockFile = "${src}/Cargo.lock";
