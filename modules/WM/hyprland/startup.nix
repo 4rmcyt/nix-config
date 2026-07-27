@@ -16,6 +16,9 @@
     # Desktop shell (systemd startup is deprecated upstream — spawn directly)
     "noctalia-shell"
 
+    # Restore last window session (skip if stale, e.g. after a long shutdown)
+    "hyprflow restore --max-age 24h"
+
     # Messaging apps
     "materialgram"
     "vesktop --start-minimized"

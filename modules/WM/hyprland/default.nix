@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   imports = [
     ./binds.nix
+    ./hyprflow.nix
     ./startup.nix
     ./windowrules.nix
     ../gtk.nix

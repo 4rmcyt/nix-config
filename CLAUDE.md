@@ -66,7 +66,7 @@ modules/
   base/                 # Core system (logging, msmtp, distributed-builds)
   options/              # my.defaults.* options (user, email, domain, IPs, timezone, locale)
   roles/                # Role compositions (desktop, server, media-server, monitoring)
-  WM/                   # Window managers (niri + noctalia-shell, gtk, mime)
+  WM/                   # Window managers (hyprland + niri, both w/ noctalia-shell, gtk, mime) — desktop:hyprland, matebook:niri
   GUI/                  # GUI apps (firefox, chrome, zed, obsidian, terminal, IDE, etc.)
   TUI/                  # Terminal tools (zsh, zellij, atuin, ai-tools, llama-cpp)
   services/             # nixarr, homepage, miniflux, home-assistant, atuin-server, etc.
