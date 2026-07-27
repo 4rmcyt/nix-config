@@ -32,9 +32,15 @@ in {
     (bind "SUPER + mouse:272" "hl.dsp.window.drag()" {mouse = true;})
     (bind "SUPER + mouse:273" "hl.dsp.window.resize()" {mouse = true;})
 
-    # Scroll the tape by a column, same gesture as niri's wheel-over-gap scroll.
-    (bind "SUPER + mouse_down" ''hl.dsp.layout("move +col")'' null)
-    (bind "SUPER + mouse_up" ''hl.dsp.layout("move -col")'' null)
+    # Horizontal wheel scrolls the tape by a column — same gesture as niri's
+    # wheel-over-gap scroll, mapped to the dedicated horizontal wheel instead
+    # of the vertical one (which is used for workspace switching below).
+    (bind "SUPER + mouse_right" ''hl.dsp.layout("move +col")'' null)
+    (bind "SUPER + mouse_left" ''hl.dsp.layout("move -col")'' null)
+
+    # Vertical wheel switches workspaces.
+    (bind "SUPER + mouse_down" ''hl.dsp.focus({ workspace = "e+1" })'' null)
+    (bind "SUPER + mouse_up" ''hl.dsp.focus({ workspace = "e-1" })'' null)
 
     # ============================================
     # WINDOW MANAGEMENT
