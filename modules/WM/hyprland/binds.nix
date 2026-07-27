@@ -27,6 +27,16 @@ in {
     (bind "SUPER + SHIFT + D" (exec "discord") null)
 
     # ============================================
+    # MOUSE BINDS
+    # ============================================
+    (bind "SUPER + mouse:272" "hl.dsp.window.drag()" {mouse = true;})
+    (bind "SUPER + mouse:273" "hl.dsp.window.resize()" {mouse = true;})
+
+    # Scroll the tape by a column, same gesture as niri's wheel-over-gap scroll.
+    (bind "SUPER + mouse_down" ''hl.dsp.layout("move +col")'' null)
+    (bind "SUPER + mouse_up" ''hl.dsp.layout("move -col")'' null)
+
+    # ============================================
     # WINDOW MANAGEMENT
     # ============================================
     (bind "SUPER + Q" "hl.dsp.window.close()" null)
@@ -140,12 +150,41 @@ in {
     # column fully into view, closest equivalent to niri's center-column.
     (bind "SUPER + SHIFT + C" ''hl.dsp.layout("fit active")'' null)
 
+    # Scroll the tape by a whole column, without moving focus.
+    (bind "SUPER + CTRL + bracketleft" ''hl.dsp.layout("move -col")'' null)
+    (bind "SUPER + CTRL + bracketright" ''hl.dsp.layout("move +col")'' null)
+
+    # Swap the focused column with its left/right neighbor.
+    (bind "SUPER + SHIFT + bracketleft" ''hl.dsp.layout("swapcol l")'' null)
+    (bind "SUPER + SHIFT + bracketright" ''hl.dsp.layout("swapcol r")'' null)
+
+    # Move focused window to its own new column.
+    (bind "SUPER + P" ''hl.dsp.layout("promote")'' null)
+
+    # Explicit expel (into its own column) / consume (into previous column) —
+    # consume_or_expel above picks one of these automatically based on state.
+    (bind "SUPER + O" ''hl.dsp.layout("expel")'' null)
+    (bind "SUPER + SHIFT + O" ''hl.dsp.layout("consume")'' null)
+
+    # Expand focused window into remaining free space on the monitor.
+    (bind "SUPER + SHIFT + Return" ''hl.dsp.layout("fit expand")'' null)
+
+    # Fully scroll the focused column into view.
+    (bind "SUPER + CTRL + C" ''hl.dsp.layout("fit_into_view")'' null)
+
+    # Toggle scroll-follow-focus off/on for the current workspace.
+    (bind "SUPER + SHIFT + I" ''hl.dsp.layout("inhibit_scroll")'' null)
+
     # ============================================
-    # RESIZE (fixed 100px steps — Lua resize dispatcher takes pixel deltas,
-    # not the percentage-of-window-size form classic hyprlang had)
+    # RESIZE
     # ============================================
-    (bind "SUPER + Minus" ''hl.dsp.window.resize({ x = -100, y = 0, relative = true })'' null)
-    (bind "SUPER + Equal" ''hl.dsp.window.resize({ x = 100, y = 0, relative = true })'' null)
+    # Column width (scrolling layout) — relative fraction step, same model as
+    # niri's set-column-width "-10%"/"+10%".
+    (bind "SUPER + Minus" ''hl.dsp.layout("colresize -0.1")'' null)
+    (bind "SUPER + Equal" ''hl.dsp.layout("colresize +0.1")'' null)
+
+    # Window height — Lua resize dispatcher takes pixel deltas, not the
+    # percentage-of-window-size form classic hyprlang had.
     (bind "SUPER + SHIFT + Minus" ''hl.dsp.window.resize({ x = 0, y = -100, relative = true })'' null)
     (bind "SUPER + SHIFT + Equal" ''hl.dsp.window.resize({ x = 0, y = 100, relative = true })'' null)
 
