@@ -36,10 +36,15 @@
     # See modules/WM/hyprland/default.nix for the full explanation — no
     # [Fonts] section meant qt5ct/qt6ct handed Qt apps a null QFont,
     # breaking QPainter for custom-drawn widgets (file dialogs, etc.).
-    qt5ctSettings.Fonts.general = "Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular";
-    qt5ctSettings.Fonts.fixed = "Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular";
-    qt6ctSettings.Fonts.general = "Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular";
-    qt6ctSettings.Fonts.fixed = "Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular";
+    # Values must carry literal quote chars — QSettings parses an
+    # unquoted comma-bearing value as a QStringList, and
+    # QVariant::toString() on a multi-element list returns "", which is
+    # what was still breaking QFont::fromString() despite this section
+    # existing.
+    qt5ctSettings.Fonts.general = ''"Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular"'';
+    qt5ctSettings.Fonts.fixed = ''"Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular"'';
+    qt6ctSettings.Fonts.general = ''"Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular"'';
+    qt6ctSettings.Fonts.fixed = ''"Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular"'';
   };
 
   home.packages = with pkgs; [

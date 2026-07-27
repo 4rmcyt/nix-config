@@ -34,18 +34,20 @@
     qt5ctSettings.Appearance.icon_theme = "Tela-dark";
     qt6ctSettings.Appearance.icon_theme = "Tela-dark";
 
-    # qt5ct/qt6ct shipped with no [Fonts] section at all (only icon_theme
-    # was set above), leaving general_font unset. The platform plugin then
-    # hands Qt widgets a null/invalid QFont, which breaks QPainter for
-    # custom-drawn item delegates (e.g. the Materialgram/Telegram Desktop
-    # file dialog's column view) — symptom was collapsed/unreadable text
-    # and "QPainter::begin: Paint device returned engine == 0" in every
-    # Qt app on this system (confirmed via QT_QPA_PLATFORMTHEME= bypass
-    # fixing it). Value is QFont::toString() serialization format.
-    qt5ctSettings.Fonts.general = "Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular";
-    qt5ctSettings.Fonts.fixed = "Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular";
-    qt6ctSettings.Fonts.general = "Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular";
-    qt6ctSettings.Fonts.fixed = "Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular";
+  
+    # QSettings (qt5ct/qt6ct's ini backend) parses an unquoted comma-bearing
+    # value as a QStringList, not a scalar string — QVariant::toString() on
+    # a multi-element QStringList returns "", so qt6ct/qt5ct's
+    # readSettings() ends up doing QFont::fromString("") and applying that
+    # broken font as the app's actual QGuiApplication::font() (not just a
+    # log warning — confirmed via gdb breakpoint on QFont::fromString,
+    # called from Qt6CTPlatformTheme::readSettings() at QApplication init,
+    # hitting materialgram/coolercontrol). HM's qt module docs say "Fonts
+    # must be quoted" — the literal " chars must be part of the ini value.
+    qt5ctSettings.Fonts.general = ''"Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular"'';
+    qt5ctSettings.Fonts.fixed = ''"Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular"'';
+    qt6ctSettings.Fonts.general = ''"Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular"'';
+    qt6ctSettings.Fonts.fixed = ''"Maple Mono,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,Regular"'';
   };
 
   home.packages = with pkgs; [

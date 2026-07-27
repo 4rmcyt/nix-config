@@ -575,6 +575,17 @@
   # =================================================================
   # 9. Networking (host identity & hardware networking)
   # =================================================================
+  # nixos-facter-modules' networking module force-enables per-interface
+  # useDHCP (networking.interfaces.<name>.useDHCP = mkDefault true) for every
+  # detected physical interface (enp12s0, wlp13s0), independent of the
+  # top-level networking.useDHCP flag below. That per-interface flag alone
+  # is enough to flip on the global dhcpcd.service (see dhcpcd.nix's
+  # enableDHCP = useDHCP || any interface.useDHCP), which then raced
+  # NetworkManager's own DHCP client for the same interfaces (dhcp6
+  # EADDRINUSE). Disable facter's auto-DHCP entirely — NetworkManager owns
+  # DHCP here.
+  facter.detected.dhcp.enable = lib.mkForce false;
+
   networking = {
     useDHCP = lib.mkDefault false; # NetworkManager owns DHCP for enp12s0; global dhcpcd was racing it (ARP defence failures, dhcp6 EADDRINUSE)
     hostName = "desktop";
