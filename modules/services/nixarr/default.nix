@@ -199,7 +199,7 @@ in {
 
   systemd.tmpfiles.rules = [
     "d /data 770 root media -"
-    "d /data/media 775 ${config.my.defaults.user} media -"
+    "d /data/media 775 root media -"
     "d /data/Downloads 775 ${config.my.defaults.user} media -"
 
     "d /data/media/movies 2775 ${config.my.defaults.user} media -"
