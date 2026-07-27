@@ -576,7 +576,7 @@
   # 9. Networking (host identity & hardware networking)
   # =================================================================
   networking = {
-    useDHCP = lib.mkDefault true;
+    useDHCP = lib.mkDefault false; # NetworkManager owns DHCP for enp12s0; global dhcpcd was racing it (ARP defence failures, dhcp6 EADDRINUSE)
     hostName = "desktop";
     networkmanager = {
       enable = true;
