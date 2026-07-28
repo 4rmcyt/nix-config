@@ -49,6 +49,7 @@
       "--env=PUID=${toString config.users.users.radarr.uid}"
       "--env=PGID=${toString config.users.groups.media.gid}"
       "--env=TZ=${config.my.defaults.timezone}"
+      "--env=UMASK=002"
     ];
     volumes = [
       "/data/media/.state/nixarr/radarr:/config"
