@@ -47,7 +47,7 @@
       "--network=host"
       "--label=io.containers.autoupdate=registry"
       "--env=PUID=${toString config.users.users.radarr.uid}"
-      "--env=PGID=${toString config.users.groups.radarr.gid}"
+      "--env=PGID=${toString config.users.groups.media.gid}"
       "--env=TZ=${config.my.defaults.timezone}"
     ];
     volumes = [

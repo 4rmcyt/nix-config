@@ -33,7 +33,7 @@
       "--network=host"
       "--label=io.containers.autoupdate=registry"
       "--env=PUID=${toString config.users.users.bazarr.uid}"
-      "--env=PGID=${toString config.users.groups.bazarr.gid}"
+      "--env=PGID=${toString config.users.groups.media.gid}"
       "--env=TZ=${config.my.defaults.timezone}"
     ];
     volumes = [
