@@ -1,5 +1,16 @@
-{pkgs, ...}: {
-  services.flatpak.enable = true;
+{
+  inputs,
+  pkgs,
+  ...
+}: {
+  imports = [inputs.nix-flatpak.nixosModules.nix-flatpak];
+
+  services.flatpak = {
+    enable = true;
+    packages = [
+      "com.github.IsmaelMartinez.teams_for_linux"
+    ];
+  };
 
   systemd.services.flatpak-repo = {
     wantedBy = ["multi-user.target"];

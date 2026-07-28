@@ -104,6 +104,8 @@
       url = "github:noctalia-dev/noctalia-qs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # No nixpkgs input to follow — the flake only ships bare nixos/home-manager modules.
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
