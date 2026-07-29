@@ -229,14 +229,18 @@ in {
     "d /data/media/.state/nixarr/sonarr 775 sonarr sonarr -"
     "d /data/media/.state/nixarr/bazarr 775 bazarr bazarr -"
 
-    "Z /data/media/movies 2775 ${config.my.defaults.user} media -"
-    "Z /data/media/shows 2775 ${config.my.defaults.user} media -"
-    "Z /data/media/music 775 ${config.my.defaults.user} media -"
-    "Z /data/media/audiobooks 775 ${config.my.defaults.user} media -"
-    "Z /data/media/books 775 ${config.my.defaults.user} media -"
-    "Z /data/media/comics 775 ${config.my.defaults.user} media -"
-    "Z /data/media/manga 775 ${config.my.defaults.user} media -"
-    "Z /data/Downloads 775 ${config.my.defaults.user} media -"
+    # mode "-" (unchanged): only owner/group are re-synced recursively, not mode —
+    # forcing a numeric mode here would apply directory bits (setgid, exec) to
+    # regular files too, since Z can't distinguish files from directories.
+    # Correct file/dir mode for new content comes from each container's UMASK.
+    "Z /data/media/movies - ${config.my.defaults.user} media -"
+    "Z /data/media/shows - ${config.my.defaults.user} media -"
+    "Z /data/media/music - ${config.my.defaults.user} media -"
+    "Z /data/media/audiobooks - ${config.my.defaults.user} media -"
+    "Z /data/media/books - ${config.my.defaults.user} media -"
+    "Z /data/media/comics - ${config.my.defaults.user} media -"
+    "Z /data/media/manga - ${config.my.defaults.user} media -"
+    "Z /data/Downloads - ${config.my.defaults.user} media -"
   ];
 
   networking.firewall.allowedTCPPorts = [
