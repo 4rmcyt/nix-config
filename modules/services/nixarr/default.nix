@@ -204,6 +204,7 @@ in {
 
     "d /data/media/movies 2775 ${config.my.defaults.user} media -"
     "d /data/media/shows 2775 ${config.my.defaults.user} media -"
+    "d /data/media/anime 2775 ${config.my.defaults.user} media -"
     "d /data/media/music 775 ${config.my.defaults.user} media -"
     "d /data/media/audiobooks 775 ${config.my.defaults.user} media -"
     "d /data/media/books 775 ${config.my.defaults.user} media -"
@@ -235,6 +236,7 @@ in {
     # Correct file/dir mode for new content comes from each container's UMASK.
     "Z /data/media/movies - ${config.my.defaults.user} media -"
     "Z /data/media/shows - ${config.my.defaults.user} media -"
+    "Z /data/media/anime - ${config.my.defaults.user} media -"
     "Z /data/media/music - ${config.my.defaults.user} media -"
     "Z /data/media/audiobooks - ${config.my.defaults.user} media -"
     "Z /data/media/books - ${config.my.defaults.user} media -"
