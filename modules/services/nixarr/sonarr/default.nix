@@ -1,65 +1,52 @@
 # modules/services/nixarr/sonarr/default.nix
 {
   config,
-  pkgs,
+  lib,
   ...
 }: {
-  systemd.services.sonarr-pg-config = {
-    description = "Write Sonarr PostgreSQL config.xml";
+  # Sonarr reads SONARR__POSTGRES__* env vars natively -- no need to
+  # hand-edit config.xml via xmlstarlet.
+  systemd.services.sonarr-pg-env = {
+    description = "Write Sonarr PostgreSQL environment file";
     after = [
       "postgresql.service"
       "postgresql-setup-users.service"
     ];
     requires = ["postgresql.service"];
-    wantedBy = ["multi-user.target"];
-    before = ["podman-sonarr.service"];
+    wantedBy = ["sonarr.service"];
+    before = ["sonarr.service"];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
+      RuntimeDirectory = "sonarr-secrets";
+      RuntimeDirectoryMode = "0750";
       User = "sonarr";
       Group = "sonarr";
     };
-    path = [pkgs.xmlstarlet];
     script = ''
-      mkdir -p /data/media/.state/nixarr/sonarr
-      cfg=/data/media/.state/nixarr/sonarr/config.xml
-      if [ ! -f "$cfg" ]; then
-        printf '<Config>\n</Config>\n' > "$cfg"
-      fi
-      PG_PASS=$(cat ${config.sops.secrets.sonarr_db_password.path} | tr -d '\n\r')
-      for pair in "Port:8990" "PostgresUser:sonarr" "PostgresPassword:$PG_PASS" "PostgresPort:5432" "PostgresHost:127.0.0.1" "PostgresMainDb:sonarr" "PostgresLogDb:sonarr-log"; do
-        key="''${pair%%:*}"
-        val="''${pair#*:}"
-        if xmlstarlet sel -t -v "count(/Config/$key)" "$cfg" 2>/dev/null | grep -q "^0$"; then
-          xmlstarlet ed -L -s /Config -t elem -n "$key" -v "$val" "$cfg"
-        else
-          xmlstarlet ed -L -u "/Config/$key" -v "$val" "$cfg"
-        fi
-      done
-      chmod 600 "$cfg"
+      printf 'SONARR__POSTGRES__HOST=127.0.0.1\nSONARR__POSTGRES__PORT=5432\nSONARR__POSTGRES__USER=sonarr\nSONARR__POSTGRES__MAINDB=sonarr\nSONARR__POSTGRES__LOGDB=sonarr-log\nSONARR__POSTGRES__PASSWORD=%s\n' \
+        "$(cat ${config.sops.secrets.sonarr_db_password.path} | tr -d '\n\r')" \
+        > /run/sonarr-secrets/pg-env
+      chmod 600 /run/sonarr-secrets/pg-env
     '';
   };
 
-  virtualisation.oci-containers.containers.sonarr = {
-    autoStart = true;
-    image = "lscr.io/linuxserver/sonarr:latest";
-    extraOptions = [
-      "--network=host"
-      "--label=io.containers.autoupdate=registry"
-      "--env=PUID=${toString config.users.users.sonarr.uid}"
-      "--env=PGID=${toString config.users.groups.media.gid}"
-      "--env=TZ=${config.my.defaults.timezone}"
-      "--env=UMASK=002"
-    ];
-    volumes = [
-      "/data/media/.state/nixarr/sonarr:/config"
-      "/data/media:/data/media"
-      "/data/Downloads:/data/Downloads"
-    ];
+  services.sonarr = {
+    enable = true;
+    user = "sonarr";
+    group = "sonarr";
+    dataDir = "/data/media/.state/nixarr/sonarr";
+    settings.server.port = 8990;
   };
 
-  systemd.services.podman-sonarr = {
-    after = ["data.mount" "sonarr-pg-config.service"];
-    requires = ["data.mount" "sonarr-pg-config.service"];
+  systemd.services.sonarr = {
+    after = ["data.mount" "sonarr-pg-env.service"];
+    requires = ["data.mount" "sonarr-pg-env.service"];
+    serviceConfig = {
+      EnvironmentFile = "/run/sonarr-secrets/pg-env";
+      # nixpkgs' module hardcodes 0022; we need group-writable output to
+      # match the rest of the media stack's shared "media" group access.
+      UMask = lib.mkForce "0002";
+    };
   };
 }
