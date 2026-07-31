@@ -38,11 +38,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1785467569,
-        "narHash": "sha256-f6Sr1MDQDJilDF0W3keaCCkFlYtQhqcA31pOt7ICdgk=",
+        "lastModified": 1785476239,
+        "narHash": "sha256-DOZ4At5clvGzyCZCZxFZEhqvt7ucIr/g7FQRIf7cKHo=",
         "owner": "4rmcyt",
         "repo": "arr-packages",
-        "rev": "10d986a9337358fee5b9a5b22b91187a40a7fb90",
+        "rev": "1bf0a88b5d892998501f8821e5f7d1143d153968",
         "type": "github"
       },
       "original": {
