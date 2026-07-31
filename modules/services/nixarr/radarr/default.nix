@@ -1,65 +1,52 @@
 # modules/services/nixarr/radarr/default.nix
 {
   config,
-  pkgs,
+  lib,
   ...
 }: {
-  systemd.services.radarr-pg-config = {
-    description = "Write Radarr PostgreSQL config.xml";
+  # Radarr reads RADARR__POSTGRES__* env vars natively -- no need to
+  # hand-edit config.xml via xmlstarlet.
+  systemd.services.radarr-pg-env = {
+    description = "Write Radarr PostgreSQL environment file";
     after = [
       "postgresql.service"
       "postgresql-setup-users.service"
     ];
     requires = ["postgresql.service"];
-    wantedBy = ["multi-user.target"];
-    before = ["podman-radarr.service"];
+    wantedBy = ["radarr.service"];
+    before = ["radarr.service"];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
+      RuntimeDirectory = "radarr-secrets";
+      RuntimeDirectoryMode = "0750";
       User = "radarr";
       Group = "radarr";
     };
-    path = [pkgs.xmlstarlet];
     script = ''
-      mkdir -p /data/media/.state/nixarr/radarr
-      cfg=/data/media/.state/nixarr/radarr/config.xml
-      if [ ! -f "$cfg" ]; then
-        printf '<Config>\n</Config>\n' > "$cfg"
-      fi
-      PG_PASS=$(cat ${config.sops.secrets.radarr_db_password.path} | tr -d '\n\r')
-      for pair in "PostgresUser:radarr" "PostgresPassword:$PG_PASS" "PostgresPort:5432" "PostgresHost:127.0.0.1" "PostgresMainDb:radarr" "PostgresLogDb:radarr-log"; do
-        key="''${pair%%:*}"
-        val="''${pair#*:}"
-        if xmlstarlet sel -t -v "count(/Config/$key)" "$cfg" 2>/dev/null | grep -q "^0$"; then
-          xmlstarlet ed -L -s /Config -t elem -n "$key" -v "$val" "$cfg"
-        else
-          xmlstarlet ed -L -u "/Config/$key" -v "$val" "$cfg"
-        fi
-      done
-      chmod 600 "$cfg"
+      printf 'RADARR__POSTGRES__HOST=127.0.0.1\nRADARR__POSTGRES__PORT=5432\nRADARR__POSTGRES__USER=radarr\nRADARR__POSTGRES__MAINDB=radarr\nRADARR__POSTGRES__LOGDB=radarr-log\nRADARR__POSTGRES__PASSWORD=%s\n' \
+        "$(cat ${config.sops.secrets.radarr_db_password.path} | tr -d '\n\r')" \
+        > /run/radarr-secrets/pg-env
+      chmod 600 /run/radarr-secrets/pg-env
     '';
   };
 
-  virtualisation.oci-containers.containers.radarr = {
-    autoStart = true;
-    image = "lscr.io/linuxserver/radarr:latest";
-    extraOptions = [
-      "--network=host"
-      "--label=io.containers.autoupdate=registry"
-      "--env=PUID=${toString config.users.users.radarr.uid}"
-      "--env=PGID=${toString config.users.groups.media.gid}"
-      "--env=TZ=${config.my.defaults.timezone}"
-      "--env=UMASK=002"
-    ];
-    volumes = [
-      "/data/media/.state/nixarr/radarr:/config"
-      "/data/media:/data/media"
-      "/data/Downloads:/data/Downloads"
-    ];
+  services.radarr = {
+    enable = true;
+    user = "radarr";
+    group = "radarr";
+    dataDir = "/data/media/.state/nixarr/radarr";
+    settings.server.port = 7878;
   };
 
-  systemd.services.podman-radarr = {
-    after = ["data.mount" "radarr-pg-config.service"];
-    requires = ["data.mount" "radarr-pg-config.service"];
+  systemd.services.radarr = {
+    after = ["data.mount" "radarr-pg-env.service"];
+    requires = ["data.mount" "radarr-pg-env.service"];
+    serviceConfig = {
+      EnvironmentFile = "/run/radarr-secrets/pg-env";
+      # nixpkgs' module hardcodes 0022; we need group-writable output to
+      # match the rest of the media stack's shared "media" group access.
+      UMask = lib.mkForce "0002";
+    };
   };
 }
