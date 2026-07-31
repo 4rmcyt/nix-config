@@ -19,6 +19,11 @@
   # oci-containers PUID/PGID env vars are interpolated at Nix eval time —
   # config.users.users.<name>.uid is null until activation otherwise,
   # so ${toString ...} silently renders as an empty string.
+  #
+  # radarr/sonarr are NOT here: their nixpkgs service modules already create
+  # users.users/groups.{radarr,sonarr} pinned to config.ids.uids/gids.* --
+  # duplicating that here with different numbers throws a conflicting-
+  # definition error. They only need extraGroups added, done separately below.
   serviceIds = {
     audiobookshelf = {
       uid = 156;
@@ -39,14 +44,6 @@
     prowlarr = {
       uid = 293;
       gid = 287;
-    };
-    radarr = {
-      uid = 275;
-      gid = 975;
-    };
-    sonarr = {
-      uid = 274;
-      gid = 970;
     };
     recyclarr = {
       uid = 269;
@@ -121,18 +118,24 @@ in {
     };
   };
 
-  users.users =
-    lib.mapAttrs
-    (name: ids: {
-      isSystemUser = true;
-      inherit (ids) uid;
-      group = lib.mkForce name;
-      extraGroups =
-        ["users" "media"]
-        # sonarr-sync-config runs as sonarr:sonarr and reads sonarr.api-key (group sonarr-api)
-        ++ lib.optional (name == "sonarr") "sonarr-api";
-    })
-    serviceIds;
+  users.users = lib.mkMerge [
+    (lib.mapAttrs
+      (name: ids: {
+        isSystemUser = true;
+        inherit (ids) uid;
+        group = lib.mkForce name;
+        extraGroups = ["users" "media"];
+      })
+      serviceIds)
+    # radarr/sonarr users/groups are created by their own nixpkgs service
+    # modules (services.radarr/services.sonarr) -- just add the extra group
+    # memberships the media stack needs on top of that.
+    {
+      radarr.extraGroups = ["users" "media"];
+      # sonarr-sync-config runs as sonarr:sonarr and reads sonarr.api-key (group sonarr-api)
+      sonarr.extraGroups = ["users" "media" "sonarr-api"];
+    }
+  ];
 
   users.groups = lib.mapAttrs (_name: ids: {inherit (ids) gid;}) serviceIds;
 
