@@ -1,62 +1,42 @@
 # modules/services/nixarr/prowlarr/default.nix
-{
-  config,
-  pkgs,
-  ...
-}: {
-  systemd.services.prowlarr-pg-config = {
-    description = "Write Prowlarr PostgreSQL config.xml";
+{config, ...}: {
+  # Prowlarr reads PROWLARR__POSTGRES__* env vars natively (same mechanism as
+  # every other Servarr app) -- no need to hand-edit config.xml via xmlstarlet.
+  systemd.services.prowlarr-pg-env = {
+    description = "Write Prowlarr PostgreSQL environment file";
     after = [
       "postgresql.service"
       "postgresql-setup-users.service"
     ];
     requires = ["postgresql.service"];
-    wantedBy = ["multi-user.target"];
-    before = ["podman-prowlarr.service"];
+    wantedBy = ["prowlarr.service"];
+    before = ["prowlarr.service"];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
+      RuntimeDirectory = "prowlarr-secrets";
+      RuntimeDirectoryMode = "0750";
+      # prowlarr_db_password is mode 0440 owner=postgres group=prowlarr.
       User = "prowlarr";
       Group = "prowlarr";
     };
-    path = [pkgs.xmlstarlet];
     script = ''
-      mkdir -p /data/media/.state/nixarr/prowlarr
-      cfg=/data/media/.state/nixarr/prowlarr/config.xml
-      if [ ! -f "$cfg" ]; then
-        printf '<Config>\n</Config>\n' > "$cfg"
-      fi
-      PG_PASS=$(cat ${config.sops.secrets.prowlarr_db_password.path} | tr -d '\n\r')
-      for pair in "PostgresUser:prowlarr" "PostgresPassword:$PG_PASS" "PostgresPort:5432" "PostgresHost:127.0.0.1" "PostgresMainDb:prowlarr" "PostgresLogDb:prowlarr-log"; do
-        key="''${pair%%:*}"
-        val="''${pair#*:}"
-        if xmlstarlet sel -t -v "count(/Config/$key)" "$cfg" 2>/dev/null | grep -q "^0$"; then
-          xmlstarlet ed -L -s /Config -t elem -n "$key" -v "$val" "$cfg"
-        else
-          xmlstarlet ed -L -u "/Config/$key" -v "$val" "$cfg"
-        fi
-      done
-      chmod 600 "$cfg"
+      printf 'PROWLARR__POSTGRES__HOST=127.0.0.1\nPROWLARR__POSTGRES__PORT=5432\nPROWLARR__POSTGRES__USER=prowlarr\nPROWLARR__POSTGRES__MAINDB=prowlarr\nPROWLARR__POSTGRES__LOGDB=prowlarr-log\nPROWLARR__POSTGRES__PASSWORD=%s\n' \
+        "$(cat ${config.sops.secrets.prowlarr_db_password.path} | tr -d '\n\r')" \
+        > /run/prowlarr-secrets/pg-env
+      chmod 600 /run/prowlarr-secrets/pg-env
     '';
   };
 
-  virtualisation.oci-containers.containers.prowlarr = {
-    autoStart = true;
-    image = "lscr.io/linuxserver/prowlarr:latest";
-    extraOptions = [
-      "--network=host"
-      "--label=io.containers.autoupdate=registry"
-      "--env=PUID=${toString config.users.users.prowlarr.uid}"
-      "--env=PGID=${toString config.users.groups.prowlarr.gid}"
-      "--env=TZ=${config.my.defaults.timezone}"
-    ];
-    volumes = [
-      "/data/media/.state/nixarr/prowlarr:/config"
-    ];
+  services.prowlarr = {
+    enable = true;
+    dataDir = "/data/media/.state/nixarr/prowlarr";
+    settings.server.port = 9696;
   };
 
-  systemd.services.podman-prowlarr = {
-    after = ["data.mount" "prowlarr-pg-config.service"];
-    requires = ["data.mount" "prowlarr-pg-config.service"];
+  systemd.services.prowlarr = {
+    after = ["data.mount" "prowlarr-pg-env.service"];
+    requires = ["data.mount" "prowlarr-pg-env.service"];
+    serviceConfig.EnvironmentFile = "/run/prowlarr-secrets/pg-env";
   };
 }
