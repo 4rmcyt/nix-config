@@ -33,16 +33,18 @@
     };
 
     theme = {
-      name = "Colloid-Dark";
-      package = pkgs.colloid-gtk-theme.override {
-        colorVariants = ["dark"];
+      name = "catppuccin-mocha-blue-standard+default";
+      package = pkgs.catppuccin-gtk.override {
+        variant = "mocha";
+        accents = ["blue"];
       };
     };
 
     gtk4.theme = {
-      name = "Colloid-Dark";
-      package = pkgs.colloid-gtk-theme.override {
-        colorVariants = ["dark"];
+      name = "catppuccin-mocha-blue-standard+default";
+      package = pkgs.catppuccin-gtk.override {
+        variant = "mocha";
+        accents = ["blue"];
       };
     };
 
@@ -66,7 +68,7 @@
   # layout. Mirrors the values set in the `gtk` block above.
   # https://wiki.hypr.land/Nix/Hyprland-on-NixOS/#fixing-problems-with-themes
   dconf.settings."org/gnome/desktop/interface" = {
-    gtk-theme = "Colloid-Dark";
+    gtk-theme = "catppuccin-mocha-blue-standard+default";
     icon-theme = "Tela-dark";
     font-name = "Maple Mono 12";
     document-font-name = "Maple Mono 12";
