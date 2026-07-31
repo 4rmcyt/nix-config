@@ -34,7 +34,6 @@
     qt5ctSettings.Appearance.icon_theme = "Tela-dark";
     qt6ctSettings.Appearance.icon_theme = "Tela-dark";
 
-  
     # QSettings (qt5ct/qt6ct's ini backend) parses an unquoted comma-bearing
     # value as a QStringList, not a scalar string — QVariant::toString() on
     # a multi-element QStringList returns "", so qt6ct/qt5ct's
