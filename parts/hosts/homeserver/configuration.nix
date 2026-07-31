@@ -46,6 +46,17 @@ in {
           };
         });
       })
+      (_final: prev: {
+        inherit
+          (inputs.arr-packages.packages.${prev.system})
+          sonarr
+          radarr
+          prowlarr
+          bazarr
+          jellyfin
+          jellyfin-web
+          ;
+      })
     ];
 
     # Facter

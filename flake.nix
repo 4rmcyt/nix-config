@@ -155,6 +155,11 @@
       url = "github:rasmus-kirk/nixarr";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Sonarr/Radarr/Prowlarr/Bazarr/Jellyfin built from upstream release tags,
+    # not nixpkgs' pin. Deliberately NOT following nixpkgs: these packages are
+    # pre-built and pushed to Cachix against arr-packages' own nixpkgs rev —
+    # following ours would change the derivation hash and force a local rebuild.
+    arr-packages.url = "github:4rmcyt/arr-packages";
   };
 
   outputs = inputs:
