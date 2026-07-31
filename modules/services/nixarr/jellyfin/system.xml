@@ -2,14 +2,13 @@
 <ServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <LogFileRetentionDays>3</LogFileRetentionDays>
   <IsStartupWizardCompleted>true</IsStartupWizardCompleted>
-  <CachePath>/data/media/.state/nixarr/jellyfin/cache</CachePath>
   <EnableMetrics>false</EnableMetrics>
   <EnableNormalizedItemByNameIds>true</EnableNormalizedItemByNameIds>
   <IsPortAuthorized>true</IsPortAuthorized>
   <QuickConnectAvailable>true</QuickConnectAvailable>
   <EnableCaseSensitiveItemIds>true</EnableCaseSensitiveItemIds>
   <DisableLiveTvChannelUserDataName>true</DisableLiveTvChannelUserDataName>
-  <MetadataPath>/data/media/.state/nixarr/jellyfin/data/metadata</MetadataPath>
+  <MetadataPath />
   <PreferredMetadataLanguage>en</PreferredMetadataLanguage>
   <MetadataCountryCode>CA</MetadataCountryCode>
   <SortReplaceCharacters>
@@ -132,11 +131,11 @@
     </MetadataOptions>
   </MetadataOptions>
   <SkipDeserializationForBasicTypes>true</SkipDeserializationForBasicTypes>
-  <ServerName>Jellyfin Homeserver</ServerName>
+  <ServerName>homeserver</ServerName>
   <UICulture>en-US</UICulture>
   <SaveMetadataHidden>false</SaveMetadataHidden>
   <ContentTypes />
-  <RemoteClientBitrateLimit>120000000</RemoteClientBitrateLimit>
+  <RemoteClientBitrateLimit>0</RemoteClientBitrateLimit>
   <EnableFolderView>false</EnableFolderView>
   <EnableGroupingMoviesIntoCollections>false</EnableGroupingMoviesIntoCollections>
   <EnableGroupingShowsIntoCollections>false</EnableGroupingShowsIntoCollections>
@@ -144,38 +143,8 @@
   <CodecsUsed />
   <PluginRepositories>
     <RepositoryInfo>
-      <Name>Jellyfin Stable</Name>
-      <Url>https://repo.jellyfin.org/files/plugin/manifest.json</Url>
-      <Enabled>true</Enabled>
-    </RepositoryInfo>
-    <RepositoryInfo>
-      <Name>danieladov</Name>
-      <Url>https://raw.githubusercontent.com/danieladov/JellyfinPluginManifest/master/manifest.json</Url>
-      <Enabled>true</Enabled>
-    </RepositoryInfo>
-    <RepositoryInfo>
-      <Name>jellyfin-unstable</Name>
-      <Url>https://repo.jellyfin.org/files/plugin-unstable/manifest.json</Url>
-      <Enabled>true</Enabled>
-    </RepositoryInfo>
-    <RepositoryInfo>
-      <Name>jellyfin-plugin-cinemamode</Name>
-      <Url>https://raw.githubusercontent.com/CherryFloors/jellyfin-plugin-cinemamode/main/manifest.json</Url>
-      <Enabled>true</Enabled>
-    </RepositoryInfo>
-    <RepositoryInfo>
-      <Name>jellyfin-plugin-sso</Name>
-      <Url>https://raw.githubusercontent.com/9p4/jellyfin-plugin-sso/manifest-release/manifest.json</Url>
-      <Enabled>true</Enabled>
-    </RepositoryInfo>
-    <RepositoryInfo>
-      <Name>Intro skipper</Name>
-      <Url>https://intro-skipper.org/manifest.json</Url>
-      <Enabled>true</Enabled>
-    </RepositoryInfo>
-    <RepositoryInfo>
-      <Name>Jellyfin-Enhanced</Name>
-      <Url>https://raw.githubusercontent.com/n00bcodr/jellyfin-plugins/main/10.11/manifest.json</Url>
+      <Name>AssignThemeSong</Name>
+      <Url>https://raw.githubusercontent.com/kirtan3d/Jellyfin.Plugin.AssignThemeSong/main/manifest.json</Url>
       <Enabled>true</Enabled>
     </RepositoryInfo>
     <RepositoryInfo>
@@ -184,8 +153,48 @@
       <Enabled>true</Enabled>
     </RepositoryInfo>
     <RepositoryInfo>
-      <Name>AssignThemeSong</Name>
-      <Url>https://raw.githubusercontent.com/kirtan3d/Jellyfin.Plugin.AssignThemeSong/main/manifest.json</Url>
+      <Name>Jellyfin-Enhanced</Name>
+      <Url>https://raw.githubusercontent.com/n00bcodr/jellyfin-plugins/main/10.11/manifest.json</Url>
+      <Enabled>true</Enabled>
+    </RepositoryInfo>
+    <RepositoryInfo>
+      <Name>Intro skipper</Name>
+      <Url>https://intro-skipper.org/manifest.json</Url>
+      <Enabled>true</Enabled>
+    </RepositoryInfo>
+    <RepositoryInfo>
+      <Name>jellyfin-plugin-sso</Name>
+      <Url>https://raw.githubusercontent.com/9p4/jellyfin-plugin-sso/manifest-release/manifest.json</Url>
+      <Enabled>true</Enabled>
+    </RepositoryInfo>
+    <RepositoryInfo>
+      <Name>jellyfin-plugin-cinemamode</Name>
+      <Url>https://raw.githubusercontent.com/CherryFloors/jellyfin-plugin-cinemamode/main/manifest.json</Url>
+      <Enabled>true</Enabled>
+    </RepositoryInfo>
+    <RepositoryInfo>
+      <Name>jellyfin-unstable</Name>
+      <Url>https://repo.jellyfin.org/files/plugin-unstable/manifest.json</Url>
+      <Enabled>true</Enabled>
+    </RepositoryInfo>
+    <RepositoryInfo>
+      <Name>Bazarr-jellyfin</Name>
+      <Url>https://raw.githubusercontent.com/enoch85/bazarr-jellyfin/main/manifest.json</Url>
+      <Enabled>true</Enabled>
+    </RepositoryInfo>
+    <RepositoryInfo>
+      <Name>subbuzz</Name>
+      <Url>https://raw.githubusercontent.com/josdion/subbuzz/master/repo/jellyfin_10.11.json</Url>
+      <Enabled>true</Enabled>
+    </RepositoryInfo>
+    <RepositoryInfo>
+      <Name>Moonfin</Name>
+      <Url>https://raw.githubusercontent.com/Moonfin-Client/Plugin/refs/heads/master/manifest.json</Url>
+      <Enabled>true</Enabled>
+    </RepositoryInfo>
+    <RepositoryInfo>
+      <Name>jellyfin-plugin-lyrics</Name>
+      <Url>https://raw.githubusercontent.com/Felitendo/jellyfin-plugin-lyrics/master/manifest.json</Url>
       <Enabled>true</Enabled>
     </RepositoryInfo>
   </PluginRepositories>
@@ -198,29 +207,20 @@
     <string>*</string>
   </CorsHosts>
   <ActivityLogRetentionDays>30</ActivityLogRetentionDays>
-  <LibraryScanFanoutConcurrency>2</LibraryScanFanoutConcurrency>
+  <LibraryScanFanoutConcurrency>0</LibraryScanFanoutConcurrency>
   <LibraryMetadataRefreshConcurrency>0</LibraryMetadataRefreshConcurrency>
   <AllowClientLogUpload>true</AllowClientLogUpload>
   <DummyChapterDuration>0</DummyChapterDuration>
   <ChapterImageResolution>MatchSource</ChapterImageResolution>
-  <ParallelImageEncodingLimit>2</ParallelImageEncodingLimit>
-  <CastReceiverApplications>
-    <CastReceiverApplication>
-      <Id>F007D354</Id>
-      <Name>Stable</Name>
-    </CastReceiverApplication>
-    <CastReceiverApplication>
-      <Id>6F511C87</Id>
-      <Name>Unstable</Name>
-    </CastReceiverApplication>
-  </CastReceiverApplications>
+  <ParallelImageEncodingLimit>0</ParallelImageEncodingLimit>
+  <CastReceiverApplications />
   <TrickplayOptions>
     <EnableHwAcceleration>true</EnableHwAcceleration>
-    <EnableHwEncoding>true</EnableHwEncoding>
+    <EnableHwEncoding>false</EnableHwEncoding>
     <EnableKeyFrameOnlyExtraction>true</EnableKeyFrameOnlyExtraction>
     <ScanBehavior>NonBlocking</ScanBehavior>
-    <ProcessPriority>Lowest</ProcessPriority>
-    <Interval>30000</Interval>
+    <ProcessPriority>BelowNormal</ProcessPriority>
+    <Interval>10000</Interval>
     <WidthResolutions>
       <int>320</int>
     </WidthResolutions>

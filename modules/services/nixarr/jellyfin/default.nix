@@ -4,11 +4,14 @@
   config,
   ...
 }: let
-  cfg = config.services.jellyfin;
   systemXml = ./system.xml;
   encodingXml = ./encoding.xml;
 in {
+  # Now that jellyfin comes from our own arr-packages fork (tracks upstream
+  # release tags directly), we're back to nixpkgs' native services.jellyfin
+  # instead of the official container image.
   systemd.services.jellyfin.path = [pkgs.chromaprint pkgs.jellyfin-ffmpeg];
+
   users.users.jellyfin = {
     isSystemUser = true;
     group = lib.mkForce "jellyfin";
@@ -32,10 +35,15 @@ in {
       type = "vaapi";
       device = "/dev/dri/renderD128";
     };
-    forceEncodingConfig = true;
   };
+
+  # The module can now generate encoding.xml from services.jellyfin.transcoding.*,
+  # but our own file carries tuning (tonemapping detail, QSV device, deinterlace
+  # method, segment retention...) that isn't exposed as options. mkAfter runs
+  # this once the module's own preStart (which only writes if missing) is done,
+  # so our unconditional install always wins.
   systemd.services.jellyfin.preStart = lib.mkAfter ''
-    test -f "${cfg.configDir}/system.xml" || install -m 640 ${systemXml} "${cfg.configDir}/system.xml"
-    install -m 640 ${encodingXml} "${cfg.configDir}/encoding.xml"
+    test -f "${config.services.jellyfin.configDir}/system.xml" || install -m 640 ${systemXml} "${config.services.jellyfin.configDir}/system.xml"
+    install -m 640 ${encodingXml} "${config.services.jellyfin.configDir}/encoding.xml"
   '';
 }
