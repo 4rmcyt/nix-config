@@ -7,8 +7,8 @@
       "postgresql-setup-users.service"
     ];
     requires = ["postgresql.service"];
-    wantedBy = ["podman-bazarr.service"];
-    before = ["podman-bazarr.service"];
+    wantedBy = ["bazarr.service"];
+    before = ["bazarr.service"];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
@@ -25,26 +25,19 @@
     '';
   };
 
-  virtualisation.oci-containers.containers.bazarr = {
-    autoStart = true;
-    image = "lscr.io/linuxserver/bazarr:latest";
-    environmentFiles = ["/run/bazarr-secrets/pg-env"];
-    extraOptions = [
-      "--network=host"
-      "--label=io.containers.autoupdate=registry"
-      "--env=PUID=${toString config.users.users.bazarr.uid}"
-      "--env=PGID=${toString config.users.groups.media.gid}"
-      "--env=TZ=${config.my.defaults.timezone}"
-      "--env=UMASK=002"
-    ];
-    volumes = [
-      "/data/media/.state/nixarr/bazarr:/config"
-      "/data/media:/data/media"
-    ];
+  # Bazarr reads these same POSTGRES_* env vars natively and gives them
+  # precedence over config.yaml -- no container entrypoint magic needed.
+  services.bazarr = {
+    enable = true;
+    user = "bazarr";
+    group = "bazarr";
+    dataDir = "/data/media/.state/nixarr/bazarr";
+    listenPort = 6767;
   };
 
-  systemd.services.podman-bazarr = {
+  systemd.services.bazarr = {
     after = ["data.mount" "bazarr-pg-env.service"];
     requires = ["data.mount" "bazarr-pg-env.service"];
+    serviceConfig.EnvironmentFile = "/run/bazarr-secrets/pg-env";
   };
 }

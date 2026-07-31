@@ -7,7 +7,6 @@
 }: let
   servicesWithMediaAccess = [
     "audiobookshelf"
-    "jellyfin"
     "lidarr"
     "qbittorrent"
   ];
@@ -225,10 +224,17 @@ in {
     "d /data/media/.state/nixarr/audiobookshelf/metadata 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/audiobookshelf/config 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/lidarr 775 lidarr lidarr -"
-    "d /data/media/.state/nixarr/prowlarr 775 prowlarr prowlarr -"
-    "d /data/media/.state/nixarr/radarr 775 radarr radarr -"
+    # prowlarr's dataDir tmpfiles rule (bind-mount source dir) is now managed
+    # by services.prowlarr itself -- a second rule here for the same path
+    # would conflict with it.
+    # radarr's dataDir tmpfiles rule is now managed by services.radarr itself
+    # (unconditionally, mode 0700) -- a second rule here would conflict.
+    # sonarr's is NOT auto-managed by services.sonarr for a custom dataDir
+    # (only for its own default path), so its rule below is still needed.
     "d /data/media/.state/nixarr/sonarr 775 sonarr sonarr -"
-    "d /data/media/.state/nixarr/bazarr 775 bazarr bazarr -"
+    # bazarr's dataDir tmpfiles rule is now managed by services.bazarr itself
+    # (nixpkgs' bazarr.nix module, mode 0700) -- a second rule here for the
+    # same path would conflict with it.
 
     # mode "-" (unchanged): only owner/group are re-synced recursively, not mode —
     # forcing a numeric mode here would apply directory bits (setgid, exec) to
