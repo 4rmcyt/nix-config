@@ -15,7 +15,7 @@ in {
 
   config = lib.mkIf config.my.kanidmClient.enable {
     services.kanidm = {
-      package = lib.mkDefault pkgs.kanidm_1_10;
+      package = lib.mkDefault pkgs.kanidm_1_11;
 
       client = {
         enable = true;
