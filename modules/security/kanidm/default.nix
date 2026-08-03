@@ -60,7 +60,8 @@ in {
 
     provision = {
       enable = true;
-      acceptInvalidCerts = true;
+      # instanceUrl defaults to https://localhost:${port}, so
+      # acceptInvalidCerts is already true by default — no need to set it.
       adminPasswordFile = config.sops.secrets.kanidm_admin_password.path;
       idmAdminPasswordFile = config.sops.secrets.kanidm_idm_admin_password.path;
 
@@ -124,9 +125,13 @@ in {
 
       systems.oauth2.audiobookshelf = {
         displayName = "Audiobookshelf";
+        # Only ABS's own server callbacks go here. Custom mobile-app URI
+        # schemes (e.g. audiobookshelf://oauth) are registered inside ABS
+        # itself (Settings > Allowed Mobile Redirect URIs), not with the
+        # OIDC provider — see audiobookshelf.org/docs/.../oidc-authentication
         originUrl = [
           "https://audiobookshelf.${domain}/auth/openid/callback"
-          "audiobookshelf://oauth"
+          "https://audiobookshelf.${domain}/auth/openid/mobile-redirect"
         ];
         originLanding = "https://audiobookshelf.${domain}";
         basicSecretFile = config.sops.secrets.kanidm_audiobookshelf_secret.path;
