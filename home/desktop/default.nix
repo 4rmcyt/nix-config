@@ -93,7 +93,7 @@
       seahorse
       signal-desktop
       slack
-      supersonic-wayland
+      supersonic
       tcpdump
       terraform-mcp-server
       uefitool
