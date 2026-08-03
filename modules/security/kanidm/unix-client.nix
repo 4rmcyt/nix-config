@@ -8,6 +8,7 @@
   ...
 }: let
   inherit (config.my.defaults) domain;
+  kanidmVersion = import ./version.nix;
 in {
   options.my.kanidmClient = {
     enable = lib.mkEnableOption "Kanidm unix client (SSH key distribution + PAM cache)";
@@ -15,7 +16,14 @@ in {
 
   config = lib.mkIf config.my.kanidmClient.enable {
     services.kanidm = {
-      package = lib.mkDefault pkgs.kanidm_1_11;
+      # services.kanidm.package is shared by kanidmd/unixd/nss — there is no
+      # separate option per role. On hosts that also import ./default.nix with
+      # provisioning enabled (currently homeserver), this mkDefault is overridden
+      # by the hard-set kanidmWithSecretProvisioning_${kanidmVersion} package,
+      # since kanidm's own module asserts that provisioning secrets require the
+      # secret-provisioning build. That's required, not a bug — see
+      # nixos/modules/services/security/kanidm.nix upstream.
+      package = lib.mkDefault pkgs."kanidm_${kanidmVersion}";
 
       client = {
         enable = true;

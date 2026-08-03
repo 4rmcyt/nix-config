@@ -6,6 +6,7 @@
   inherit (config.my.defaults) domain;
   port = 3013;
   certDir = "/var/lib/kanidm/tls";
+  kanidmVersion = import ./version.nix;
 in {
   # Generate self-signed TLS cert for kanidm (it requires HTTPS natively)
   systemd.services.kanidm-tls-cert = {
@@ -32,7 +33,7 @@ in {
   };
 
   services.kanidm = {
-    package = pkgs.kanidmWithSecretProvisioning_1_11;
+    package = pkgs."kanidmWithSecretProvisioning_${kanidmVersion}";
 
     client = {
       enable = true;

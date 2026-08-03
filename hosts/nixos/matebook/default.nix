@@ -22,6 +22,7 @@
     ../../../modules/networking/nfs-client
     ../../../modules/networking/ssh
     # ../../../modules/networking/avahi
+    ../../../modules/security/kanidm/unix-client.nix
 
     # User configuration
     ../../../modules/users/zeev
@@ -179,6 +180,7 @@
 
   my.nodeExporter.enable = true;
   my.alloyClient.enable = true;
+  my.kanidmClient.enable = true;
 
   # =================================================================
   # 9. Networking
