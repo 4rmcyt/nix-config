@@ -36,8 +36,22 @@ in {
       };
     };
 
+    # sshd refuses an AuthorizedKeysCommand that lives under /nix/store: the
+    # store directory itself is group-writable (root:nixbld, drwxrwxr-t),
+    # which fails sshd's "bad ownership or modes" check on the whole path,
+    # not just the binary. Route through security.wrappers instead, which
+    # places the binary in wrapperDir (root-owned, not writable by others) —
+    # the same workaround the upstream kanidm NixOS module uses for its own
+    # sshIntegration path. See NixOS/nixpkgs#94653.
+    security.wrappers.kanidm_ssh_authorizedkeys_direct = {
+      owner = "root";
+      group = "root";
+      permissions = "a+rx";
+      source = "${config.services.kanidm.package}/bin/kanidm_ssh_authorizedkeys_direct";
+    };
+
     services.openssh.settings = {
-      AuthorizedKeysCommand = "${config.services.kanidm.package}/bin/kanidm_ssh_authorizedkeys_direct -D anonymous %u";
+      AuthorizedKeysCommand = "${config.security.wrapperDir}/kanidm_ssh_authorizedkeys_direct -D anonymous %u";
       AuthorizedKeysCommandUser = "nobody";
     };
   };
