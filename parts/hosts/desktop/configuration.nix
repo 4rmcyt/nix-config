@@ -33,7 +33,16 @@ in {
     };
 
     programs.hyprland.enable = true;
-    programs.hyprland.package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    # Upstream regression (as of 2026-08-04): Hyprland's CMakeLists.txt does
+    # `find_package(glaze 7...<8 QUIET)` before falling back to a network
+    # FetchContent clone (which always fails in the Nix sandbox). glaze is a
+    # proper buildInput with a valid glazeConfig.cmake, but CMake's
+    # Config-mode version-range lookup isn't resolving it — pass -Dglaze_DIR
+    # explicitly so find_package(CONFIG) locates it directly. Drop once fixed
+    # upstream in the hyprland flake's nix/default.nix.
+    programs.hyprland.package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.overrideAttrs (old: {
+      cmakeFlags = (old.cmakeFlags or []) ++ ["-Dglaze_DIR=${pkgs.glaze}/share/glaze"];
+    });
     programs.hyprland.portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     programs.hyprland.withUWSM = true;
 
