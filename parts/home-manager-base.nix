@@ -26,17 +26,25 @@ in {
       inputs.nix-vscode-extensions.overlays.default
       inputs.noctalia.overlays.default
 
-      # Upstream regression (as of 2026-08-04): Hyprland's CMakeLists.txt
-      # does `find_package(glaze 7...<8 QUIET)` before falling back to a
-      # network FetchContent clone (which always fails in the Nix sandbox).
-      # glaze is a proper buildInput with a valid glazeConfig.cmake, but
-      # CMake's Config-mode version-range lookup isn't resolving it — pass
-      # -Dglaze_DIR explicitly so find_package(CONFIG) locates it directly.
-      # Drop once fixed upstream in nixpkgs' hyprland.nix.
-      (final: prev: {
-        hyprland = prev.hyprland.overrideAttrs (old: {
-          cmakeFlags = (old.cmakeFlags or []) ++ ["-Dglaze_DIR=${final.glaze}/share/glaze"];
+      # Upstream version skew (as of 2026-08-04): Hyprland's CMakeLists.txt
+      # requires `find_package(glaze 7...<8 QUIET)`, but nixpkgs' `glaze` has
+      # moved to 8.0.0 — outside that range — so the Config-mode lookup
+      # legitimately fails and CMake falls back to a network FetchContent
+      # clone, which always fails in the sandbox. Pin glaze to the last 7.x
+      # release for hyprland's buildInput until Hyprland bumps its own
+      # requirement to accept glaze 8.
+      (final: prev: let
+        glaze7 = prev.glaze.overrideAttrs (_old: rec {
+          version = "7.9.1";
+          src = prev.fetchFromGitHub {
+            owner = "stephenberry";
+            repo = "glaze";
+            tag = "v${version}";
+            hash = "sha256-1t7jkSdvU3VnLDXQYFjk/Y8fMPYrrhY6AEs70TpOKuM=";
+          };
         });
+      in {
+        hyprland = prev.hyprland.override {glaze = glaze7;};
       })
     ];
 
