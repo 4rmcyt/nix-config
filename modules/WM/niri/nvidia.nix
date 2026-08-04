@@ -6,6 +6,9 @@ _: {
     __GL_GSYNC_ALLOWED = "1";
     __GL_VRR_ALLOWED = "1";
     GSK_RENDERER = "ngl";
+    # See modules/WM/hyprland/nvidia.nix for why this is required for Firefox
+    # VAAPI hardware video decode to actually work on NVIDIA.
+    MOZ_DISABLE_RDD_SANDBOX = "1";
   };
 
   home.file.".nv/nvidia-application-profiles-rc".text = builtins.toJSON {

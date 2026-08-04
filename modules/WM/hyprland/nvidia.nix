@@ -6,6 +6,11 @@ _: {
     __GL_GSYNC_ALLOWED = "1";
     __GL_VRR_ALLOWED = "1";
     GSK_RENDERER = "ngl";
+    # Without this, Firefox's RDD process sandbox blocks nvidia-vaapi-driver
+    # from reaching the NVIDIA driver, silently falling back to software
+    # video decode (dav1d/ffvpx) even though VAAPI is otherwise set up
+    # correctly. Documented fix: https://github.com/elFarto/nvidia-vaapi-driver#firefox
+    MOZ_DISABLE_RDD_SANDBOX = "1";
   };
 
   # Per https://wiki.hypr.land/Nvidia/#environment-variables: these must be set
@@ -15,6 +20,7 @@ _: {
     {_args = ["LIBVA_DRIVER_NAME" "nvidia"];}
     {_args = ["__GLX_VENDOR_LIBRARY_NAME" "nvidia"];}
     {_args = ["NVD_BACKEND" "direct"];}
+    {_args = ["MOZ_DISABLE_RDD_SANDBOX" "1"];}
   ];
 
   home.file.".nv/nvidia-application-profiles-rc".text = builtins.toJSON {
