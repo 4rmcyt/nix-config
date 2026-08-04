@@ -33,16 +33,29 @@ in {
     };
 
     programs.hyprland.enable = true;
-    # Upstream regression (as of 2026-08-04): Hyprland's CMakeLists.txt does
-    # `find_package(glaze 7...<8 QUIET)` before falling back to a network
-    # FetchContent clone (which always fails in the Nix sandbox). glaze is a
-    # proper buildInput with a valid glazeConfig.cmake, but CMake's
-    # Config-mode version-range lookup isn't resolving it — pass -Dglaze_DIR
-    # explicitly so find_package(CONFIG) locates it directly. Drop once fixed
-    # upstream in the hyprland flake's nix/default.nix.
-    programs.hyprland.package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.overrideAttrs (old: {
-      cmakeFlags = (old.cmakeFlags or []) ++ ["-Dglaze_DIR=${pkgs.glaze}/share/glaze"];
-    });
+    # Upstream version skew (as of 2026-08-04): Hyprland's CMakeLists.txt
+    # requires `find_package(glaze 7...<8 QUIET)`, but nixpkgs' `glaze` has
+    # moved to 8.0.0 — outside that range — so the Config-mode lookup
+    # legitimately fails and CMake falls back to a network FetchContent
+    # clone, which always fails in the sandbox. Pin glaze to the last 7.x
+    # release (keeping the flake's own SSL/interop-disabled overlay tweaks)
+    # until Hyprland bumps its own requirement to accept glaze 8.
+    programs.hyprland.package = let
+      glaze7 =
+        (pkgs.glaze.override {
+          enableSSL = false;
+          enableInterop = false;
+        }).overrideAttrs (_old: rec {
+          version = "7.9.1";
+          src = pkgs.fetchFromGitHub {
+            owner = "stephenberry";
+            repo = "glaze";
+            tag = "v${version}";
+            hash = "sha256-NRRq5MGF2f5PW0teYnq58ELzson+U6KHVPaY6r30KLA=";
+          };
+        });
+    in
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.override {glaze-hyprland = glaze7;};
     programs.hyprland.portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     programs.hyprland.withUWSM = true;
 

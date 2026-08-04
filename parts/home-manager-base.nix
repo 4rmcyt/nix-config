@@ -33,14 +33,14 @@ in {
       # clone, which always fails in the sandbox. Pin glaze to the last 7.x
       # release for hyprland's buildInput until Hyprland bumps its own
       # requirement to accept glaze 8.
-      (final: prev: let
+      (_final: prev: let
         glaze7 = prev.glaze.overrideAttrs (_old: rec {
           version = "7.9.1";
           src = prev.fetchFromGitHub {
             owner = "stephenberry";
             repo = "glaze";
             tag = "v${version}";
-            hash = "sha256-1t7jkSdvU3VnLDXQYFjk/Y8fMPYrrhY6AEs70TpOKuM=";
+            hash = "sha256-NRRq5MGF2f5PW0teYnq58ELzson+U6KHVPaY6r30KLA=";
           };
         });
       in {
