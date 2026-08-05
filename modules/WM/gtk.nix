@@ -95,20 +95,26 @@
     theme=catppuccin-mocha-blue
   '';
 
-  # Kvantum only themes QWidgets painting — it never touches
-  # QGuiApplication::palette(), which is what QQC2/Kirigami controls
-  # (kdeconnect-app) actually read for their colors when no KDE Plasma
-  # session is present to feed KColorScheme. qt5ct/qt6ct's platformtheme
-  # plugin can inject a full QPalette from a KDE .colors file via
-  # custom_palette + color_scheme_path (confirmed present as config keys
-  # in libqt5ct.so/libqt6ct.so) — this is what fixes Kirigami apps.
+  # Gives QWidgets apps (Ark, kcmshell/systemsettings modules, etc.) a full
+  # dark QPalette instead of Kvantum's default light Fusion fallback, and
+  # routes their native dialogs (file open/save, print, color picker)
+  # through KDE's own implementation instead of Qt's — otherwise those
+  # dialogs stay light even when the app around them is dark. Both keys
+  # confirmed present in libqt5ct.so/libqt6ct.so via strings.
+  #
+  # Does NOT fix Kirigami/QQC2 apps (kdeconnect-app) — those never consult
+  # QWidgets palette/dialog machinery at all; confirmed dead end after
+  # extensive live testing (org.kde.desktop QQC2 style + plasma-integration
+  # + correct kdeglobals still rendered light).
   qt.qt5ctSettings.Appearance = {
     custom_palette = true;
     color_scheme_path = "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors";
+    standard_dialogs = "kde";
   };
   qt.qt6ctSettings.Appearance = {
     custom_palette = true;
     color_scheme_path = "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors";
+    standard_dialogs = "kde";
   };
 
   # ============================================
