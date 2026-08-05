@@ -111,14 +111,6 @@
     color_scheme_path = "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors";
   };
 
-  # Kirigami/QQC2 apps (kdeconnect-app) still don't pick up the palette
-  # above without this — QQC2's default "Basic"/"Fusion" style doesn't
-  # consult QPlatformTheme::palette() at all, only the "org.kde.desktop"
-  # QQC2 style does (bridges QQC2 controls to native QWidget/Kvantum
-  # painting and the qt5ct/qt6ct palette). qqc2-desktop-style is already
-  # pulled in as a kdeconnect-kde/Kirigami dependency.
-  home.sessionVariables.QT_QUICK_CONTROLS_STYLE = "org.kde.desktop";
-
   # ============================================
   # CURSOR CONFIGURATION
   # ============================================
