@@ -36,6 +36,7 @@
     ../../../modules/GUI/chrome
     ../../../modules/GUI/coolercontrol
     ../../../modules/GUI/flatpak
+    ../../../modules/GUI/kdeconnect
     ../../../modules/GUI/nemo
     ../../../modules/GUI/virt-manager
     ../../../modules/GUI/waydroid
