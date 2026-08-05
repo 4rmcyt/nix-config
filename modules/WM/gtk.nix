@@ -95,6 +95,22 @@
     theme=catppuccin-mocha-blue
   '';
 
+  # Kvantum only themes QWidgets painting — it never touches
+  # QGuiApplication::palette(), which is what QQC2/Kirigami controls
+  # (kdeconnect-app) actually read for their colors when no KDE Plasma
+  # session is present to feed KColorScheme. qt5ct/qt6ct's platformtheme
+  # plugin can inject a full QPalette from a KDE .colors file via
+  # custom_palette + color_scheme_path (confirmed present as config keys
+  # in libqt5ct.so/libqt6ct.so) — this is what fixes Kirigami apps.
+  qt.qt5ctSettings.Appearance = {
+    custom_palette = true;
+    color_scheme_path = "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors";
+  };
+  qt.qt6ctSettings.Appearance = {
+    custom_palette = true;
+    color_scheme_path = "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors";
+  };
+
   # ============================================
   # CURSOR CONFIGURATION
   # ============================================
