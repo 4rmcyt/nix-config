@@ -33,7 +33,7 @@
     };
 
     theme = {
-      name = "catppuccin-mocha-blue-standard+default";
+      name = "catppuccin-mocha-blue-standard";
       package = pkgs.catppuccin-gtk.override {
         variant = "mocha";
         accents = ["blue"];
@@ -41,7 +41,7 @@
     };
 
     gtk4.theme = {
-      name = "catppuccin-mocha-blue-standard+default";
+      name = "catppuccin-mocha-blue-standard";
       package = pkgs.catppuccin-gtk.override {
         variant = "mocha";
         accents = ["blue"];
@@ -68,12 +68,32 @@
   # layout. Mirrors the values set in the `gtk` block above.
   # https://wiki.hypr.land/Nix/Hyprland-on-NixOS/#fixing-problems-with-themes
   dconf.settings."org/gnome/desktop/interface" = {
-    gtk-theme = "catppuccin-mocha-blue-standard+default";
+    gtk-theme = "catppuccin-mocha-blue-standard";
     icon-theme = "Tela-dark";
     font-name = "Maple Mono 12";
     document-font-name = "Maple Mono 12";
     monospace-font-name = "Maple Mono 12";
+    # libadwaita/GTK4 apps (Nemo's GTK4 build, file choosers, etc.) pick
+    # dark/light from this key rather than the theme name.
+    color-scheme = "prefer-dark";
   };
+
+  # ============================================
+  # QT/KVANTUM THEMING
+  # ============================================
+  # QT_STYLE_OVERRIDE=kvantum (set in hyprland/niri sessionVariables) is a
+  # no-op without an actual Kvantum theme selected — Kvantum falls back to
+  # its unstyled default, which reads as a plain light Qt/Fusion palette.
+  # This affects Kirigami/QQC2 apps (kdeconnect-app) same as QWidgets apps.
+  xdg.dataFile."Kvantum/catppuccin-mocha-blue".source = "${pkgs.catppuccin-kvantum.override {
+    variant = "mocha";
+    accent = "blue";
+  }}/share/Kvantum/catppuccin-mocha-blue";
+
+  xdg.configFile."Kvantum/kvantum.kvconfig".text = ''
+    [General]
+    theme=catppuccin-mocha-blue
+  '';
 
   # ============================================
   # CURSOR CONFIGURATION
