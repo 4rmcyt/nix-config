@@ -68,7 +68,7 @@ def main():
         print(f"{prefix}: merging {len(files)} files...")
         result = subprocess.run(
             [sys.executable, str(SCRIPT_DIR / "merge-audiobook.py"), str(book_dir), str(tmp_m4b)],
-            capture_output=True, text=True,
+            capture_output=True, text=True, errors="replace",
         )
         print(result.stdout)
         if result.stderr:
