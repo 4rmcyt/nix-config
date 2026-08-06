@@ -21,7 +21,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-AUDIO_EXTS = {".mp3", ".m4a", ".m4b", ".flac", ".wav", ".ogg"}
+AUDIO_EXTS = {".mp3", ".m4a", ".flac", ".wav", ".ogg"}
 SCRIPT_DIR = Path(__file__).parent
 
 def audio_files(d: Path) -> list[Path]:

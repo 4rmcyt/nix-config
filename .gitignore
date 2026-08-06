@@ -21,3 +21,4 @@ secrets/*.unencrypted
 .decrypted.*
 *.decrypted.*
 *.sopsbak
+tools/scripts/batch-log.txt
