@@ -57,7 +57,11 @@ def main():
     book_dir = Path(sys.argv[1])
     out_path = Path(sys.argv[2])
 
-    files = sorted(p for p in book_dir.iterdir() if p.suffix.lower() in (".mp3", ".m4a", ".flac", ".wav", ".ogg"))
+    files = sorted(
+        p for p in book_dir.iterdir()
+        if not p.name.startswith(".") and p.name != "raw_audio.m4a"
+        and p.suffix.lower() in (".mp3", ".m4a", ".flac", ".wav", ".ogg")
+    )
     if not files:
         sys.exit(f"No audio files found in {book_dir}")
 
@@ -142,7 +146,7 @@ def main():
     # standalone CLI -- ffmpeg-full isn't built with libfdk_aac since its license
     # is GPL-incompatible, but the encoder itself is faster and higher quality
     # than ffmpeg's native "aac" encoder, so it's worth shelling out to).
-    raw_aac = scratch / "raw_audio.m4a"
+    raw_aac = scratch / ".raw_audio.m4a"
     decode = subprocess.Popen(
         ["ffmpeg", "-v", "error", "-f", "concat", "-safe", "0", "-i", str(concat_list), "-f", "wav", "-"],
         stdout=subprocess.PIPE,

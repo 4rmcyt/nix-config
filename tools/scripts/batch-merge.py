@@ -24,7 +24,10 @@ AUDIO_EXTS = {".mp3", ".m4a", ".m4b", ".flac", ".wav", ".ogg"}
 SCRIPT_DIR = Path(__file__).parent
 
 def audio_files(d: Path) -> list[Path]:
-    return sorted(p for p in d.iterdir() if p.is_file() and p.suffix.lower() in AUDIO_EXTS)
+    return sorted(
+        p for p in d.iterdir()
+        if p.is_file() and not p.name.startswith(".") and p.suffix.lower() in AUDIO_EXTS
+    )
 
 def main():
     if len(sys.argv) != 3:
