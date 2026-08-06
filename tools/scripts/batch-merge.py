@@ -15,6 +15,7 @@ For each top-level directory directly under <library_root>:
 Safe to re-run: a book already holding a single audio file (post-merge)
 is skipped on the next pass, so an interrupted run can just be restarted.
 """
+import re
 import shutil
 import subprocess
 import sys
@@ -67,7 +68,11 @@ def main():
         print(f"{prefix}: merging {len(files)} files...")
         result = subprocess.run(
             [sys.executable, str(SCRIPT_DIR / "merge-audiobook.py"), str(book_dir), str(tmp_m4b)],
+            capture_output=True, text=True,
         )
+        print(result.stdout)
+        if result.stderr:
+            print(result.stderr)
         if result.returncode != 0 or not tmp_m4b.exists():
             print(f"{prefix}: FAILED (merge error)")
             failed.append(f"{name}  -- merge failed")
@@ -80,8 +85,11 @@ def main():
             shutil.move(str(f), str(book_backup / f.name))
 
         tmp_m4b.rename(out_m4b)
-        print(f"{prefix}: DONE -> {out_m4b.name}, {len(files)} originals -> {book_backup}")
-        done.append(name)
+        combined = result.stdout + result.stderr
+        warned = bool(re.search(r"invalid|error|corrupt|missing|overread", combined, re.IGNORECASE))
+        suffix = " [decoder warnings, check terminal scrollback]" if warned else ""
+        print(f"{prefix}: DONE -> {out_m4b.name}, {len(files)} originals -> {book_backup}{suffix}")
+        done.append(f"{name}{suffix}")
 
     log_path.write_text(
         f"=== DONE ({len(done)}) ===\n" + "\n".join(done) +

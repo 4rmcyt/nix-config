@@ -16,7 +16,11 @@ for d in "$DT"/Тёмная*; do
   mkdir -p "$BACKUP/$name"
   find "$d" -maxdepth 1 \( -iname '*.mp3' -o -iname '*.m4a' -o -iname '*.flac' \) -not -name '.*' -exec mv {} "$BACKUP/$name/" \;
   mv "$tmp" "$d/$name.m4b"
-  rm -f "$d/merge.log"
-  echo "DONE: $name"
+  if grep -qiE 'invalid|error|corrupt|missing|overread' "$d/merge.log"; then
+    echo "DONE (with decoder warnings, log kept): $name"
+  else
+    rm -f "$d/merge.log"
+    echo "DONE: $name"
+  fi
 done
 echo "ALL_DONE"
