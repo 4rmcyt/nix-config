@@ -16,6 +16,8 @@
       "/data/media/.state/nixarr/lazylibrarian:/config"
       "/data/media/books:/books"
       "/data/Downloads/books:/downloads"
+      "/data/media/audiobooks:/audiobooks"
+      "/data/Downloads/audiobooks:/downloads-audiobooks"
     ];
   };
 
