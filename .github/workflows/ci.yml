@@ -35,6 +35,17 @@ jobs:
     # `permissions:` block.
     permissions:
       contents: write
+    # Top-level workflow `concurrency:` alone doesn't reliably cancel
+    # already-running steps *inside* a called reusable workflow — observed
+    # live: a superseded run kept executing Validate's steps for 9+ minutes
+    # after a newer push started. `jobs.<job_id>.concurrency` is one of the
+    # few keys GitHub explicitly allows on a job that calls a reusable
+    # workflow (docs: "reuse-workflows#supported-keywords") — set it on every
+    # `uses:` job too so each one gets its own cancellation checkpoint
+    # instead of relying solely on the orchestrator-level group.
+    concurrency:
+      group: ${{ github.workflow }}-flake-lock-update-${{ github.ref_name }}
+      cancel-in-progress: true
     uses: ./.github/workflows/flake-lock-update.yml
     secrets: inherit
   # Non-blocking fmt/flake-check — see validate.yml for why.
@@ -42,6 +53,9 @@ jobs:
     name: Validate
     needs: [flake-lock-update]
     if: always() && (needs.flake-lock-update.result == 'success' || needs.flake-lock-update.result == 'skipped')
+    concurrency:
+      group: ${{ github.workflow }}-validate-${{ github.ref_name }}
+      cancel-in-progress: true
     uses: ./.github/workflows/validate.yml
     with:
       flake_lock_changed: ${{ needs.flake-lock-update.outputs.changes_detected == 'true' }}
@@ -54,6 +68,9 @@ jobs:
     # inside security-checks.yml needs at least contents:read for checkout.
     permissions:
       contents: read
+    concurrency:
+      group: ${{ github.workflow }}-security-checks-${{ github.ref_name }}
+      cancel-in-progress: true
     uses: ./.github/workflows/security-checks.yml
     secrets: inherit
   # Real build of every host — the actual gate. See reusable-build.yml.
@@ -69,6 +86,11 @@ jobs:
           - homeserver # Intel Skylake
           - matebook # AMD Zen 1 (znver1)
           - gcp-relay
+    # Keyed per-system too — otherwise the 4 matrix jobs would share one
+    # group and cancel each other instead of only superseded runs.
+    concurrency:
+      group: ${{ github.workflow }}-build-${{ matrix.system }}-${{ github.ref_name }}
+      cancel-in-progress: true
     uses: ./.github/workflows/reusable-build.yml
     with:
       system: ${{ matrix.system }}
@@ -87,6 +109,9 @@ jobs:
     name: Vulnix CVE Scan
     needs: [build-and-check-systems]
     if: success() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    concurrency:
+      group: ${{ github.workflow }}-vulnix-scan-${{ github.ref_name }}
+      cancel-in-progress: true
     uses: ./.github/workflows/vulnix-scan.yml
     secrets: inherit
   # ==========================================================================
