@@ -41,6 +41,12 @@ repos:
         entry: gitleaks protect --staged --redact --verbose
         language: system
         pass_filenames: false
+      - id: trufflehog
+        name: TruffleHog verified secrets scan
+        description: Same --only-verified check as the CI secret-scan job, run locally before push.
+        entry: trufflehog git file://. --since-commit HEAD --results=verified --fail --trust-local-git-config
+        language: system
+        pass_filenames: false
   # Nix tools (local hooks using system binaries from nix shell)
   - repo: local
     hooks:

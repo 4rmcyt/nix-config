@@ -35,6 +35,7 @@ pkgs.mkShell {
     ssh-to-age
     statix
     taplo
+    trufflehog
     yamlfmt
     yq
     zsh
