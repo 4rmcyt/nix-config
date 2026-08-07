@@ -59,8 +59,8 @@ resource "google_storage_bucket" "images" {
 
 # NixOS image (updated via nixos-rebuild / nh os build-image)
 resource "google_compute_image" "nixos" {
-  name    = "gcp-relay-${var.image_date}"
-  family  = "nixos-gcp-relay"
+  name   = "gcp-relay-${var.image_date}"
+  family = "nixos-gcp-relay"
 
   raw_disk {
     source = "https://storage.googleapis.com/${google_storage_bucket.images.name}/nixos-gcp-relay-v${var.image_date}.raw.tar.gz"
@@ -130,8 +130,8 @@ resource "google_compute_instance" "relay" {
   }
 
   metadata = {
-    enable-oslogin        = "FALSE"
-    serial-port-enable    = "TRUE"
+    enable-oslogin     = "FALSE"
+    serial-port-enable = "TRUE"
   }
 
   lifecycle {

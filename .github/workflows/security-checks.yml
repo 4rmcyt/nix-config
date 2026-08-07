@@ -246,14 +246,14 @@ jobs:
           ERRORS=0
           for dir in $TF_DIRS; do
             echo "Checking formatting: $dir"
-            if ! nix run nixpkgs#terraform -- fmt -check -diff "$dir"; then
+            if ! nix run nixpkgs#opentofu -- fmt -check -diff "$dir"; then
               echo "❌ Terraform formatting issues in $dir"
               ERRORS=$((ERRORS + 1))
             fi
           done
 
           if [ $ERRORS -gt 0 ]; then
-            echo "❌ Terraform formatting issues in $ERRORS directory(ies) — run: terraform fmt"
+            echo "❌ Terraform formatting issues in $ERRORS directory(ies) — run: tofu fmt"
             exit 1
           fi
 
