@@ -37,7 +37,6 @@ jobs:
       contents: write
     uses: ./.github/workflows/flake-lock-update.yml
     secrets: inherit
-
   # Non-blocking fmt/flake-check — see validate.yml for why.
   validate:
     name: Validate
@@ -47,7 +46,6 @@ jobs:
     with:
       flake_lock_changed: ${{ needs.flake-lock-update.outputs.changes_detected == 'true' }}
     secrets: inherit
-
   # Trivy + TruffleHog + SOPS + syntax — hard gate, runs in parallel with
   # validate. See security-checks.yml for the 4 checks it bundles.
   security-checks:
@@ -60,7 +58,6 @@ jobs:
       security-events: write
     uses: ./.github/workflows/security-checks.yml
     secrets: inherit
-
   # Real build of every host — the actual gate. See reusable-build.yml.
   build-and-check-systems:
     name: Build & Check ${{ matrix.system }}
@@ -82,7 +79,6 @@ jobs:
       event_name: ${{ github.event_name }}
       commit_message: ${{ github.event.head_commit.message }}
     secrets: inherit
-
   # Scans one host's built closure for known CVEs. Schedule/dispatch only —
   # not part of the push/PR gate. Needs build-and-check-systems so it builds
   # against the same freshly-committed flake.lock that just got built and
@@ -95,7 +91,6 @@ jobs:
     if: success() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     uses: ./.github/workflows/vulnix-scan.yml
     secrets: inherit
-
   # ==========================================================================
   # Workflow Summary - Send overall workflow status
   # ==========================================================================

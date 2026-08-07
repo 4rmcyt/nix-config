@@ -37,7 +37,7 @@ while IFS= read -r drv; do
     reason="Rust crate vendored via cargo (crate-*.drv input) — crate version scheme unrelated to any C library of the same name"
   elif grep -qiE '/(ghc-|cabal-|hackage2nix)' <<<"$inputs"; then
     reason="Haskell build input present"
-  elif [[ "$name" =~ -[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z].*)?$ ]]; then
+  elif [[ $name =~ -[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z].*)?$ ]]; then
     reason="4-component version suffix (Haskell PVP-style, e.g. 3.2.8.0) — check it's not a real 4-part upstream version first"
   fi
 

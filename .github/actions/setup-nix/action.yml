@@ -1,9 +1,7 @@
 name: Setup Nix
 description: >
-  Install Nix (cachix/install-nix-action) with the shared baseline config
-  (flakes, accept-flake-config, SSL cert path) and wire up Magic Nix Cache.
-  Callers append job-specific config (extra substituters, perf tuning) via
-  extra-nix-config.
+  Install Nix (cachix/install-nix-action) with the shared baseline config (flakes, accept-flake-config, SSL cert path) and wire up Magic Nix Cache. Callers append job-specific config (extra substituters, perf tuning) via extra-nix-config.
+
 inputs:
   extra-nix-config:
     description: Extra nix.conf lines appended after the shared baseline.

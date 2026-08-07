@@ -57,11 +57,31 @@ jobs:
         # rate limit. See https://cveb.in/ (maintained by a cve-bin-tool/
         # OpenSSF maintainer). Not an official NIST source — fine for an
         # informational homelab scan, don't treat it as authoritative.
+        # -j: JSON output, so the next step can build a Telegram summary.
         run: |
           nix run nixpkgs#vulnix -- \
+            -j \
             -m https://mirror.cveb.in/nvd/json/cve/2.0/ \
             -w .github/vulnix-whitelist.toml \
-            result
+            result >vulnix-results.json
+      - name: Build CVE summary
+        id: summary
+        if: steps.vulnix.outcome == 'failure'
+        continue-on-error: true
+        run: |
+          total=$(jq 'length' vulnix-results.json)
+          top5=$(jq -r '
+            [.[] | . as $pkg | ($pkg.cvssv3_basescore // {}) | to_entries[]
+              | {name: $pkg.name, cve: .key, score: (.value // 0)}]
+            | sort_by(-.score) | .[0:5][]
+            | "• `\(.name)` — [\(.cve)](https://nvd.nist.gov/vuln/detail/\(.cve)) (CVSS \(.score))"
+          ' vulnix-results.json)
+          {
+            echo "total=${total}"
+            echo "top5<<VULNIX_SUMMARY_EOF"
+            echo "$top5"
+            echo "VULNIX_SUMMARY_EOF"
+          } >>"$GITHUB_OUTPUT"
       - name: Notify - CVEs Found
         if: steps.vulnix.outcome == 'failure'
         uses: ./.github/actions/notify-telegram
@@ -69,8 +89,12 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            🔍 *vulnix: known CVEs in desktop closure*
+            🔍 *vulnix: ${{ steps.summary.outputs.total || '?' }} known CVE(s) in desktop closure*
             Repository: `${{ github.repository }}`
-            Informational only — check the workflow log for affected packages.
-            Scans `desktop` as a representative host, not the full fleet.
+            Informational only — scans `desktop` as a representative host, not the full fleet.
+
+            Top 5 by CVSS:
+            ${{ steps.summary.outputs.top5 || '(summary unavailable — see workflow log)' }}
+
+            Full list in the workflow log.
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
