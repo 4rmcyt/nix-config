@@ -80,10 +80,14 @@ jobs:
     needs: [validate, security-checks]
     strategy:
       fail-fast: false # Continue building other systems even if one fails
-      max-parallel: 4 # Build systems in parallel
+      max-parallel: 3 # Build systems in parallel
       matrix:
         system:
-          - desktop # AMD Zen 4 (znver4)
+          # desktop (AMD Zen 4, Hyprland) intentionally excluded — its full
+          # GUI closure regularly exceeds GitHub-hosted runner disk/RAM and
+          # kills the runner outright (job fails with no log output at all,
+          # not a real build error). Built locally on that machine instead;
+          # see CLAUDE.md "user builds himself".
           - homeserver # Intel Skylake
           - matebook # AMD Zen 1 (znver1)
           - gcp-relay
@@ -141,7 +145,7 @@ jobs:
             All checks passed:
             ✅ Validation (Format &amp; Flake)
             ✅ Security (Trivy, TruffleHog, SOPS, syntax)
-            ✅ All systems built (desktop, homeserver, matebook, gcp-relay)
+            ✅ All systems built (homeserver, matebook, gcp-relay)
             <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>
       - name: Notify - Issues Detected
         if: needs.validate.result != 'success' || needs.security-checks.result != 'success' || needs.build-and-check-systems.result != 'success'
