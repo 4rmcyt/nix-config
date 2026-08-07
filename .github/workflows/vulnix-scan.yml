@@ -1,0 +1,65 @@
+name: "Vulnix CVE Scan"
+# Called by ci.yml, schedule/workflow_dispatch only. Scans ONE representative
+# host's built closure (desktop — broadest package set) against NVD CVEs.
+# Not blocking, not run per-host/per-push: a cold-cache vulnix run downloads
+# and parses ~5 years of NVD archives with no progress output and can take
+# many minutes. Running it 4x in parallel on every push/PR (the original
+# design) was needlessly slow and NVD-rate-limit-prone. `~/.cache/vulnix` is
+# cached across runs (keyed by ISO week, falling back to last week's cache),
+# so only the very first-ever run pays the full download — trigger this
+# manually once via workflow_dispatch to warm it ahead of the nightly cron.
+on:
+  workflow_call:
+    secrets:
+      TELEGRAM_CHAT_ID:
+        required: true
+      TELEGRAM_BOT_TOKEN:
+        required: true
+jobs:
+  vulnix:
+    name: Scan desktop closure for known CVEs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Setup Nix
+        uses: ./.github/actions/setup-nix
+        with:
+          extra-nix-config: |
+            max-jobs = auto
+            cores = 0
+            builders-use-substitutes = true
+            substituters = https://cache.nixos.org https://4rmcyt.cachix.org https://nix-community.cachix.org https://cache.garnix.io
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= 4rmcyt.cachix.org-1:yHVDqXs6TDmfSOuPbl4gcfomDK9gzTmK8FabfHLi+d8= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
+      # Should hit Cachix (already pushed by the same night's
+      # build-and-check-systems run), not rebuild from scratch.
+      - name: Build desktop configuration
+        run: |
+          nix build \
+            .#nixosConfigurations.desktop.config.system.build.toplevel \
+            --print-build-logs
+      - name: Get ISO week for vulnix cache key
+        id: date
+        run: echo "week=$(date +%G-W%V)" >> "$GITHUB_OUTPUT"
+      - name: Cache vulnix NVD feed
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/vulnix
+          key: vulnix-nvd-${{ steps.date.outputs.week }}
+          restore-keys: vulnix-nvd-
+      - name: Scan built closure for known CVEs (vulnix)
+        id: vulnix
+        continue-on-error: true
+        run: nix run nixpkgs#vulnix -- result
+      - name: Notify - CVEs Found
+        if: steps.vulnix.outcome == 'failure'
+        uses: ./.github/actions/notify-telegram
+        with:
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            🔍 *vulnix: known CVEs in desktop closure*
+            Repository: `${{ github.repository }}`
+            Informational only — check the workflow log for affected packages.
+            Scans `desktop` as a representative host, not the full fleet.
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})

@@ -1,4 +1,13 @@
 name: "CI"
+# Orchestrator only — no build/check logic lives here. Each stage below is
+# its own reusable workflow file; see docs/CI-CD.md for the full pipeline
+# diagram and what each one actually does.
+#
+#   flake-lock-update (schedule/dispatch only)
+#     └─ validate ─────────────┐
+#     └─ security-checks ──────┤─→ build-and-check-systems ─→ workflow-summary
+#   vulnix-scan (schedule/dispatch only, independent of the above)
+#
 on:
   workflow_dispatch: # Manual trigger
   pull_request: # PRs to any branch
@@ -7,499 +16,42 @@ on:
       - main # Auto-run on main branch
   schedule:
     - cron: "0 3 * * *" # Daily at 3 AM UTC
-# ============================================================================
-# Permissions (Principle of Least Privilege)
-# ============================================================================
 permissions:
   actions: read
   contents: read
-# ============================================================================
-# Environment Variables
-# ============================================================================
-env:
-  # SSL/TLS Configuration for CI environment
-  SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
-  CURL_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
-  NIX_SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
-# ============================================================================
-# Concurrency Control
-# ============================================================================
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 jobs:
-  # ==========================================================================
-  # Update Flake Lock - only on the nightly schedule or a manual dispatch.
-  # Runs first so validate/build see the freshly committed flake.lock.
-  # ==========================================================================
-  update-flake-lock:
-    name: Update Flake Lock File
-    runs-on: ubuntu-latest
+  # Only on schedule/dispatch — see flake-lock-update.yml. Skipped on
+  # push/pull_request so those runs never get an unrelated auto-commit.
+  flake-lock-update:
+    name: Flake Lock Update
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    permissions:
-      contents: write
-    outputs:
-      changes_detected: ${{ steps.commit.outputs.changes_detected }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-      - name: Install Nix
-        uses: cachix/install-nix-action@v31
-        with:
-          extra_nix_config: |
-            experimental-features = nix-command flakes
-            accept-flake-config = true
-            ssl-cert-file = /etc/ssl/certs/ca-certificates.crt
-            max-jobs = auto
-            cores = 0
-      - name: Setup Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@v14
-      - name: Update flake.lock
-        run: nix flake update
-      - name: Commit updated flake.lock
-        id: commit
-        uses: stefanzweifel/git-auto-commit-action@v7
-        with:
-          commit_message: "ci: update flake.lock"
-          file_pattern: "flake.lock"
-          commit_user_name: "github-actions[bot]"
-          commit_user_email: "github-actions[bot]@users.noreply.github.com"
-          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
-      - name: Send Telegram notification - Flake Lock Updated
-        if: success() && steps.commit.outputs.changes_detected == 'true'
-        uses: appleboy/telegram-action@v1.0.1
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
-          message: |
-            🔄 *Flake Lock File Updated*
+    uses: ./.github/workflows/flake-lock-update.yml
+    secrets: inherit
 
-            Repository: `${{ github.repository }}`
-            Branch: `main`
-            Trigger: ${{ github.event_name }}
-
-            The `flake.lock` file has been automatically updated and pushed to `main`.
-            Validation and builds are running next in this same workflow.
-
-            [View Commit](${{ github.server_url }}/${{ github.repository }}/commit/${{ steps.commit.outputs.commit_hash }})
-      - name: Send Telegram notification - Flake Update Failed
-        if: failure()
-        uses: appleboy/telegram-action@v1.0.1
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
-          message: |
-            ❌ *Flake Lock Update Failed*
-
-            Repository: `${{ github.repository }}`
-            Branch: `main`
-            Trigger: ${{ github.event_name }}
-
-            The scheduled `nix flake update` job failed. Please check the logs.
-
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+  # Non-blocking fmt/flake-check — see validate.yml for why.
   validate:
-    name: Validate Flake & Formatting
-    needs: [update-flake-lock]
-    if: always() && (needs.update-flake-lock.result == 'success' || needs.update-flake-lock.result == 'skipped')
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout (picks up the just-committed flake.lock on schedule/dispatch runs)
-      - name: Checkout repository
-        uses: actions/checkout@v7
-      # Setup Nix
-      - name: Install Nix
-        uses: cachix/install-nix-action@v31
-        with:
-          extra_nix_config: |
-            experimental-features = nix-command flakes
-            accept-flake-config = true
-            # SSL/TLS Configuration
-            ssl-cert-file = /etc/ssl/certs/ca-certificates.crt
-            # Performance optimizations
-            max-jobs = auto
-            cores = 0
-            builders-use-substitutes = true
-            # Additional community caches
-            extra-substituters = https://nix-community.cachix.org https://cache.garnix.io
-            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
-      # Setup Magic Nix Cache
-      - name: Setup Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@v14
-      # Check for uncommitted changes before flake update
-      - name: Check for uncommitted changes before flake update
-        run: |
-          if ! git diff --quiet || ! git diff --cached --quiet; then
-            echo "❌ Uncommitted changes detected before flake update!"
-            git status
-            git diff
-            exit 1
-          fi
-      # Update and validate
-      - name: Update flake inputs (in-memory)
-        run: nix flake update
-      # Check if flake.lock changed after update
-      - name: Check if flake.lock changed
-        id: flake-changed
-        run: |
-          if git diff --quiet flake.lock; then
-            echo "changed=false" >> $GITHUB_OUTPUT
-            echo "✅ flake.lock unchanged - skipping flake check"
-          else
-            echo "changed=true" >> $GITHUB_OUTPUT
-            echo "⚠️ flake.lock changed - will run flake check"
-            git diff flake.lock
-          fi
-      # Validate flake metadata and structure
-      - name: Validate flake metadata
-        run: |
-          echo "📦 Validating flake metadata and structure..."
-          nix flake metadata --json | jq .
-          nix flake show
-          echo "✅ Flake structure is valid"
-      # Formatting check (informational only - doesn't fail the job)
-      - name: Check formatting
-        id: formatting
-        continue-on-error: true
-        run: nix fmt -- --ci .
-      # Send Telegram notification - Formatting Failed
-      - name: Send Telegram notification - Formatting Failed
-        if: steps.formatting.outcome == 'failure' && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@v1.0.1
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
-          message: |
-            ⚠️ *Formatting Check Failed (Non-blocking)*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
-            Trigger: ${{ github.event_name }}
-            The formatting check failed but the workflow will continue.
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-      # Flake check (informational only - doesn't fail the job)
-      - name: Check flake
-        id: flake-check
-        if: steps.flake-changed.outputs.changed == 'true' || needs.update-flake-lock.outputs.changes_detected == 'true'
-        continue-on-error: true
-        run: nix flake check --show-trace
-      # Send Telegram notification - Formatting Failed
-      - name: Send Telegram notification - Flake Check Failed
-        if: steps.flake-check.outcome == 'failure' && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@v1.0.1
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
-          message: |
-            ⚠️ *Flake Check Failed (Non-blocking)*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
-            Trigger: ${{ github.event_name }}
-            The flake check failed but the workflow will continue.
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-      # Send Telegram notification - Validation Failed
-      - name: Send Telegram notification - Validation Failed
-        if: failure() && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@v1.0.1
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
-          message: |
-            ❌ *Validation Failed (Format or Flake Check)*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
-            Trigger: ${{ github.event_name }}
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-  # ==========================================================================
-  # Trivy Vulnerability / IaC Scan - gates the build, runs in parallel with
-  # validate (doesn't need the flake.lock update)
-  # ==========================================================================
-  trivy-scan:
-    name: Trivy Vulnerability Scan
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          scan-type: "fs"
-          scan-ref: "."
-          format: "sarif"
-          output: "trivy-results.sarif"
-          severity: "CRITICAL,HIGH"
-          exit-code: "1" # fail the step (and job) when findings are present
-      - name: Upload Trivy results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4
-        continue-on-error: true # Don't fail if code scanning is not enabled
-        if: always() && github.event_name != 'pull_request'
-        with:
-          sarif_file: "trivy-results.sarif"
-      - name: Send Telegram notification - Vulnerabilities Found
-        if: failure() && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@v1.0.1
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
-          message: |
-            🔒 *Security Scan - Vulnerabilities Detected*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
-            Scanner: Trivy
-            Critical/High findings block the build — see the Security tab.
-            [View Details](${{ github.server_url }}/${{ github.repository }}/security/code-scanning)
-  # ==========================================================================
-  # Secret Scanning - gates the build
-  # ==========================================================================
-  secret-scan:
-    name: Secret Detection
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - name: TruffleHog Secret Scan
-        uses: trufflesecurity/trufflehog@v3.96.0
-        with:
-          path: ./
-          extra_args: --only-verified
-          # No base/head: let the action pick per-event scan mode (PR diff,
-          # push before/after, or a full-repo scan for schedule/workflow_dispatch).
-          # Passing explicit base/head that resolve to the same commit — which
-          # happens on every non-PR run — makes the action hard-fail instead of
-          # scanning.
-      - name: Send Telegram notification - Secrets Found
-        if: failure() && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@v1.0.1
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
-          message: |
-            🚨 *Security Alert - Secrets Detected*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
-            Scanner: TruffleHog
-            Potential secrets found — build blocked!
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-  # ==========================================================================
-  # SOPS Validation - every file under secrets/ must be SOPS-encrypted,
-  # regardless of extension or sops output format (yaml/json/binary/dotenv)
-  # ==========================================================================
-  sops-validation:
-    name: SOPS Secrets Validation
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-      - name: Validate SOPS encrypted files
-        run: |
-          echo "🔐 Validating SOPS encrypted files..."
+    name: Validate
+    needs: [flake-lock-update]
+    if: always() && (needs.flake-lock-update.result == 'success' || needs.flake-lock-update.result == 'skipped')
+    uses: ./.github/workflows/validate.yml
+    with:
+      flake_lock_changed: ${{ needs.flake-lock-update.outputs.changes_detected == 'true' }}
+    secrets: inherit
 
-          # Known non-secret placeholder files under secrets/ — verify these
-          # are still expected before trusting this list blindly.
-          EXCLUDE=("radicale_users.txt")
+  # Trivy + TruffleHog + SOPS + syntax — hard gate, runs in parallel with
+  # validate. See security-checks.yml for the 4 checks it bundles.
+  security-checks:
+    name: Security Checks
+    uses: ./.github/workflows/security-checks.yml
+    secrets: inherit
 
-          ERRORS=0
-          while IFS= read -r -d '' file; do
-            base=$(basename "$file")
-            skip=false
-            for ex in "${EXCLUDE[@]}"; do
-              [ "$base" == "$ex" ] && skip=true
-            done
-            $skip && { echo "Skipping (allow-listed): $file"; continue; }
-
-            echo "Checking: $file"
-            # sops marks its output differently per format:
-            #   yaml    -> "sops:" block
-            #   json    -> "\"sops\":" block
-            #   binary  -> same as json (sops wraps binary data in a json envelope)
-            #   dotenv  -> flat "sops_mac=" / "sops_version=" keys, no "sops:" substring
-            if ! grep -qE '"sops":|^sops:|sops_mac=' "$file"; then
-              echo "❌ $file does not appear to be SOPS encrypted!"
-              ERRORS=$((ERRORS + 1))
-            fi
-          done < <(find secrets -type f -print0)
-
-          if [ $ERRORS -gt 0 ]; then
-            echo "❌ Found $ERRORS unencrypted/suspect file(s) under secrets/"
-            exit 1
-          fi
-
-          echo "✅ All files under secrets/ are SOPS encrypted"
-      - name: Send Telegram notification - SOPS Validation Failed
-        if: failure() && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@v1.0.1
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
-          message: |
-            ⚠️ *SOPS Validation Failed*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
-            A file under secrets/ may not be properly encrypted — build blocked!
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-  # ==========================================================================
-  # Configuration Syntax Validation - YAML, shell scripts, Terraform
-  # ==========================================================================
-  syntax-validation:
-    name: Syntax Validation
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-      - name: Install Nix
-        uses: cachix/install-nix-action@v31
-        with:
-          extra_nix_config: |
-            experimental-features = nix-command flakes
-            accept-flake-config = true
-      - name: Setup Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@v14
-      - name: Validate YAML files
-        run: |
-          echo "📄 Checking YAML file syntax..."
-
-          YAML_FILES=$(find . -type f \( -name "*.yaml" -o -name "*.yml" \) \
-            -not -path "./.git/*" \
-            -not -path "./secrets/*" || echo "")
-
-          if [ -z "$YAML_FILES" ]; then
-            echo "No YAML files found to validate"
-            exit 0
-          fi
-
-          ERRORS=0
-          for file in $YAML_FILES; do
-            echo "Checking: $file"
-            if ! nix run nixpkgs#yq -- eval "$file" > /dev/null 2>&1; then
-              echo "❌ Syntax error in $file"
-              ERRORS=$((ERRORS + 1))
-            fi
-          done
-
-          if [ $ERRORS -gt 0 ]; then
-            echo "❌ Found $ERRORS YAML syntax errors"
-            exit 1
-          fi
-
-          echo "✅ All YAML files have valid syntax"
-      - name: Shellcheck shell scripts
-        run: |
-          echo "🐚 Running shellcheck on shell scripts..."
-
-          SH_FILES=$(find . -name "*.sh" -not -path "./.git/*" || echo "")
-
-          if [ -z "$SH_FILES" ]; then
-            echo "No shell scripts found to validate"
-            exit 0
-          fi
-
-          ERRORS=0
-          for file in $SH_FILES; do
-            echo "Checking: $file"
-            if ! nix run nixpkgs#shellcheck -- "$file"; then
-              echo "❌ shellcheck issues in $file"
-              ERRORS=$((ERRORS + 1))
-            fi
-          done
-
-          if [ $ERRORS -gt 0 ]; then
-            echo "❌ Found shellcheck issues in $ERRORS script(s)"
-            exit 1
-          fi
-
-          echo "✅ All shell scripts passed shellcheck"
-      - name: Terraform format check
-        run: |
-          echo "🏗️  Checking Terraform formatting..."
-
-          TF_DIRS=$(find . -name "*.tf" -not -path "./.git/*" -exec dirname {} \; | sort -u || echo "")
-
-          if [ -z "$TF_DIRS" ]; then
-            echo "No Terraform files found"
-            exit 0
-          fi
-
-          ERRORS=0
-          for dir in $TF_DIRS; do
-            echo "Checking formatting: $dir"
-            if ! nix run nixpkgs#terraform -- fmt -check -diff "$dir"; then
-              echo "❌ Terraform formatting issues in $dir"
-              ERRORS=$((ERRORS + 1))
-            fi
-          done
-
-          if [ $ERRORS -gt 0 ]; then
-            echo "❌ Terraform formatting issues in $ERRORS directory(ies) — run: terraform fmt"
-            exit 1
-          fi
-
-          echo "✅ All Terraform files are properly formatted"
-      - name: Check for unpinned Nix fetches
-        run: |
-          echo "🔗 Checking for unpinned fetchTarball/fetchurl/fetchGit calls..."
-
-          # A fetch call is unpinned if it has no hash/rev/ref argument at all
-          # (bare `fetchTarball "https://..."` or `builtins.fetchGit { url = ...; }`
-          # with no rev/sha256/hash). This is a coarse, single-call heuristic —
-          # it flags calls whose closing paren/quote comes before any of
-          # sha256/hash/narHash/rev is seen, within a bounded lookahead window.
-          ERRORS=0
-          while IFS=: read -r file line _; do
-            echo "⚠️  Possibly unpinned fetch in $file:$line"
-            sed -n "${line},$((line + 8))p" "$file"
-            echo "---"
-            ERRORS=$((ERRORS + 1))
-          done < <(
-            grep -rnoE '(builtins\.)?(fetchTarball|fetchurl|fetchGit)\b' \
-              --include="*.nix" . 2>/dev/null | \
-            while IFS=: read -r file line _; do
-              # Look at the call site plus the next 8 lines; if none of these
-              # pinning args show up in that window, flag it.
-              window=$(sed -n "${line},$((line + 8))p" "$file")
-              if ! echo "$window" | grep -qE 'sha256|narHash|"hash"|hash =|rev ='; then
-                echo "$file:$line:unpinned"
-              fi
-            done
-          )
-
-          if [ $ERRORS -gt 0 ]; then
-            echo "❌ Found $ERRORS possibly unpinned fetch(es) — pin with sha256/hash/rev for reproducibility"
-            exit 1
-          fi
-
-          echo "✅ No unpinned fetchTarball/fetchurl/fetchGit calls found"
-      - name: Send Telegram notification - Syntax Validation Failed
-        if: failure() && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@v1.0.1
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
-          message: |
-            ⚠️ *Syntax Validation Failed*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
-            YAML, shell, or Terraform files failed validation — build blocked!
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-  # ==========================================================================
-  # Build & Check Systems - Call the reusable workflow for each system
-  # ==========================================================================
+  # Real build of every host — the actual gate. See reusable-build.yml.
   build-and-check-systems:
     name: Build & Check ${{ matrix.system }}
-    needs: [validate, trivy-scan, secret-scan, sops-validation, syntax-validation]
+    needs: [validate, security-checks]
     strategy:
       fail-fast: false # Continue building other systems even if one fails
       max-parallel: 4 # Build systems in parallel
@@ -516,26 +68,35 @@ jobs:
       ref_type: ${{ github.ref_type }}
       event_name: ${{ github.event_name }}
       commit_message: ${{ github.event.head_commit.message }}
-    secrets:
-      CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+    secrets: inherit
+
+  # Scans one host's built closure for known CVEs. Schedule/dispatch only —
+  # not part of the push/PR gate. See vulnix-scan.yml for why.
+  vulnix-scan:
+    name: Vulnix CVE Scan
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/vulnix-scan.yml
+    secrets: inherit
+
   # ==========================================================================
   # Workflow Summary - Send overall workflow status
   # ==========================================================================
   workflow-summary:
     name: Workflow Summary
     runs-on: ubuntu-latest
-    needs: [validate, trivy-scan, secret-scan, sops-validation, syntax-validation, build-and-check-systems]
+    needs: [validate, security-checks, build-and-check-systems]
     if: always() && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     steps:
-      - name: Send Telegram notification - All Checks Passed
-        if: needs.validate.result == 'success' && needs.trivy-scan.result == 'success' && needs.secret-scan.result == 'success' && needs.sops-validation.result == 'success' && needs.syntax-validation.result == 'success' && needs.build-and-check-systems.result == 'success'
-        uses: appleboy/telegram-action@v1.0.1
+      # Needed because notify-telegram below is a local composite action —
+      # `uses: ./...` resolves from the checked-out workspace.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Notify - All Checks Passed
+        if: needs.validate.result == 'success' && needs.security-checks.result == 'success' && needs.build-and-check-systems.result == 'success'
+        uses: ./.github/actions/notify-telegram
         with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
             ✅ *CI Workflow Completed Successfully*
             Repository: `${{ github.repository }}`
@@ -545,13 +106,12 @@ jobs:
             ✅ Security (Trivy, TruffleHog, SOPS, syntax)
             ✅ All systems built (desktop, homeserver, matebook, gcp-relay)
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-      - name: Send Telegram notification - Issues Detected
-        if: needs.validate.result != 'success' || needs.trivy-scan.result != 'success' || needs.secret-scan.result != 'success' || needs.sops-validation.result != 'success' || needs.syntax-validation.result != 'success' || needs.build-and-check-systems.result != 'success'
-        uses: appleboy/telegram-action@v1.0.1
+      - name: Notify - Issues Detected
+        if: needs.validate.result != 'success' || needs.security-checks.result != 'success' || needs.build-and-check-systems.result != 'success'
+        uses: ./.github/actions/notify-telegram
         with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
             ❌ *CI Workflow - Issues Detected*
             Repository: `${{ github.repository }}`
@@ -559,10 +119,10 @@ jobs:
 
             Check results:
             ${{ needs.validate.result == 'success' && '✅' || '❌' }} Validation (Format & Flake)
-            ${{ needs.trivy-scan.result == 'success' && '✅' || '❌' }} Trivy vulnerability scan
-            ${{ needs.secret-scan.result == 'success' && '✅' || '❌' }} Secret detection
-            ${{ needs.sops-validation.result == 'success' && '✅' || '❌' }} SOPS validation
-            ${{ needs.syntax-validation.result == 'success' && '✅' || '❌' }} Syntax validation
+            ${{ needs.security-checks.outputs.trivy_result == 'success' && '✅' || '❌' }} Trivy vulnerability scan
+            ${{ needs.security-checks.outputs.secret_scan_result == 'success' && '✅' || '❌' }} Secret detection
+            ${{ needs.security-checks.outputs.sops_result == 'success' && '✅' || '❌' }} SOPS validation
+            ${{ needs.security-checks.outputs.syntax_result == 'success' && '✅' || '❌' }} Syntax validation
             ${{ needs.build-and-check-systems.result == 'success' && '✅' || '❌' }} System builds
 
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})

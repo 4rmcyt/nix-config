@@ -1,0 +1,24 @@
+name: Setup Nix
+description: >
+  Install Nix (cachix/install-nix-action) with the shared baseline config
+  (flakes, accept-flake-config, SSL cert path) and wire up Magic Nix Cache.
+  Callers append job-specific config (extra substituters, perf tuning) via
+  extra-nix-config.
+inputs:
+  extra-nix-config:
+    description: Extra nix.conf lines appended after the shared baseline.
+    required: false
+    default: ""
+runs:
+  using: composite
+  steps:
+    - name: Install Nix
+      uses: cachix/install-nix-action@v31
+      with:
+        extra_nix_config: |
+          experimental-features = nix-command flakes
+          accept-flake-config = true
+          ssl-cert-file = /etc/ssl/certs/ca-certificates.crt
+          ${{ inputs.extra-nix-config }}
+    - name: Setup Magic Nix Cache
+      uses: DeterminateSystems/magic-nix-cache-action@v14

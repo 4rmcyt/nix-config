@@ -30,13 +30,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
-      - name: Send Telegram notification - Build Started
+      - name: Notify - Build Started
         if: inputs.event_name != 'pull_request'
-        uses: appleboy/telegram-action@v1.0.1
+        uses: ./.github/actions/notify-telegram
         with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
             🔨 *Build Started*
             Repository: `${{ github.repository }}`
@@ -52,23 +51,15 @@ jobs:
           sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIRECTORY" /usr/local/lib/android /usr/share/swift
           echo "=== After cleanup ==="
           df -h
-      - name: Install Nix
-        uses: cachix/install-nix-action@v31
+      - name: Setup Nix
+        uses: ./.github/actions/setup-nix
         with:
-          extra_nix_config: |
-            experimental-features = nix-command flakes
-            accept-flake-config = true
-            # SSL/TLS Configuration
-            ssl-cert-file = /etc/ssl/certs/ca-certificates.crt
-            # Performance optimizations
+          extra-nix-config: |
             max-jobs = auto
             cores = 0
             builders-use-substitutes = true
-            # Caching configuration
             substituters = https://cache.nixos.org https://4rmcyt.cachix.org https://nix-community.cachix.org https://cache.garnix.io
             trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= 4rmcyt.cachix.org-1:yHVDqXs6TDmfSOuPbl4gcfomDK9gzTmK8FabfHLi+d8= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
-      - name: Setup Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@v14
       - name: Update flake inputs (in-memory)
         run: nix flake update
       - name: Setup Cachix for ${{ inputs.system }} (Push)
@@ -88,45 +79,18 @@ jobs:
             .#nixosConfigurations.${{ inputs.system }}.config.system.build.toplevel \
             --print-build-logs \
             --show-trace
-      # ------------------------------------------------------------------
-      # vulnix: scans the *built* Nix closure against NVD CVEs. Runs only
-      # after a successful build (it needs the ./result closure) and is
-      # informational only — CVE feeds change daily, shouldn't block a build.
-      # ------------------------------------------------------------------
-      - name: Get ISO week for vulnix cache key
-        id: date
-        run: echo "week=$(date +%G-W%V)" >> "$GITHUB_OUTPUT"
-      - name: Cache vulnix NVD feed
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/vulnix
-          key: vulnix-nvd-${{ steps.date.outputs.week }}
-          restore-keys: vulnix-nvd-
-      - name: Scan built closure for known CVEs (vulnix)
-        id: vulnix
-        if: success()
-        continue-on-error: true
-        run: nix run nixpkgs#vulnix -- result
-      - name: Send Telegram notification - CVEs Found
-        if: steps.vulnix.outcome == 'failure' && inputs.event_name != 'pull_request'
-        uses: appleboy/telegram-action@v1.0.1
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
-          message: |
-            🔍 *vulnix: known CVEs in built closure*
-            Repository: `${{ github.repository }}`
-            System: `${{ inputs.system }}`
-            Informational only — check the build log for affected packages.
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-      - name: Send Telegram notification - Build Failed
+      # vulnix (CVE scan of the built closure) intentionally does NOT run
+      # here — see vulnix-scan.yml. A cold-cache vulnix run downloads and
+      # parses ~5 years of NVD archives with no progress output and can take
+      # many minutes; running it per-host, per-push (4x in parallel on every
+      # commit) was needlessly slow and NVD-rate-limit-prone. It now runs
+      # once, nightly, against a single representative host.
+      - name: Notify - Build Failed
         if: failure() && inputs.event_name != 'pull_request'
-        uses: appleboy/telegram-action@v1.0.1
+        uses: ./.github/actions/notify-telegram
         with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
             ❌ *Build Failed*
             Repository: `${{ github.repository }}`
@@ -135,13 +99,12 @@ jobs:
             Trigger: ${{ inputs.event_name }}
             Build or Home Manager validation failed.
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-      - name: Send Telegram notification - Build Success
+      - name: Notify - Build Success
         if: success() && inputs.ref_type == 'branch' && inputs.ref_name == 'main'
-        uses: appleboy/telegram-action@v1.0.1
+        uses: ./.github/actions/notify-telegram
         with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: markdown
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
             ✅ *Build Successful*
             Repository: `${{ github.repository }}`

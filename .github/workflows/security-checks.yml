@@ -1,0 +1,315 @@
+name: "Security Checks"
+# Called by ci.yml, in parallel with validate. Four independent gates —
+# Trivy (IaC/vuln), TruffleHog (secrets), SOPS encryption coverage, and
+# YAML/shell/Terraform/Nix-fetch syntax — all of which build-and-check-systems
+# must pass before it starts. Each check sends its own Telegram notification
+# on failure; the `results` job re-exposes each one's outcome as a workflow
+# output so the ci.yml orchestrator can still report an itemized summary.
+on:
+  workflow_call:
+    outputs:
+      trivy_result:
+        value: ${{ jobs.results.outputs.trivy }}
+      secret_scan_result:
+        value: ${{ jobs.results.outputs.secret_scan }}
+      sops_result:
+        value: ${{ jobs.results.outputs.sops }}
+      syntax_result:
+        value: ${{ jobs.results.outputs.syntax }}
+    secrets:
+      TELEGRAM_CHAT_ID:
+        required: true
+      TELEGRAM_BOT_TOKEN:
+        required: true
+permissions:
+  contents: read
+jobs:
+  # ==========================================================================
+  # Trivy Vulnerability / IaC Scan
+  # Mostly exercises Trivy's IaC/misconfig scanner against infra/tf/gcp-relay
+  # and the k3s/argocd manifests — this repo has no package.json/go.mod/etc.
+  # for Trivy's dependency-CVE scanning to bite on.
+  # ==========================================================================
+  trivy-scan:
+    name: Trivy Vulnerability Scan
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          format: "sarif"
+          output: "trivy-results.sarif"
+          severity: "CRITICAL,HIGH"
+          exit-code: "1" # fail the step (and job) when findings are present
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        continue-on-error: true # Don't fail if code scanning is not enabled
+        if: always() && github.event_name != 'pull_request'
+        with:
+          sarif_file: "trivy-results.sarif"
+      - name: Notify - Vulnerabilities Found
+        if: failure() && github.event_name != 'pull_request'
+        uses: ./.github/actions/notify-telegram
+        with:
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            🔒 *Security Scan - Vulnerabilities Detected*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            Scanner: Trivy
+            Critical/High findings block the build — see the Security tab.
+            [View Details](${{ github.server_url }}/${{ github.repository }}/security/code-scanning)
+  # ==========================================================================
+  # Secret Scanning
+  # No explicit base/head: let the action pick per-event scan mode (PR diff,
+  # push before/after, or a full-repo scan for schedule/workflow_dispatch).
+  # Passing explicit base/head that resolve to the same commit — which
+  # happens on every non-PR run — makes the action hard-fail instead of
+  # scanning; don't reintroduce that.
+  # ==========================================================================
+  secret-scan:
+    name: Secret Detection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@v3.96.0
+        with:
+          path: ./
+          extra_args: --only-verified
+      - name: Notify - Secrets Found
+        if: failure() && github.event_name != 'pull_request'
+        uses: ./.github/actions/notify-telegram
+        with:
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            🚨 *Security Alert - Secrets Detected*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            Scanner: TruffleHog
+            Potential secrets found — build blocked!
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+  # ==========================================================================
+  # SOPS Validation
+  # Every file under secrets/ must be SOPS-encrypted, regardless of extension
+  # or sops output format (yaml/json/binary/dotenv).
+  # ==========================================================================
+  sops-validation:
+    name: SOPS Secrets Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Validate SOPS encrypted files
+        run: |
+          echo "🔐 Validating SOPS encrypted files..."
+
+          # Known non-secret placeholder files under secrets/ — verify these
+          # are still expected before trusting this list blindly.
+          EXCLUDE=("radicale_users.txt")
+
+          ERRORS=0
+          while IFS= read -r -d '' file; do
+            base=$(basename "$file")
+            skip=false
+            for ex in "${EXCLUDE[@]}"; do
+              [ "$base" == "$ex" ] && skip=true
+            done
+            $skip && { echo "Skipping (allow-listed): $file"; continue; }
+
+            echo "Checking: $file"
+            # sops marks its output differently per format:
+            #   yaml    -> "sops:" block
+            #   json    -> "\"sops\":" block
+            #   binary  -> same as json (sops wraps binary data in a json envelope)
+            #   dotenv  -> flat "sops_mac=" / "sops_version=" keys, no "sops:" substring
+            if ! grep -qE '"sops":|^sops:|sops_mac=' "$file"; then
+              echo "❌ $file does not appear to be SOPS encrypted!"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done < <(find secrets -type f -print0)
+
+          if [ $ERRORS -gt 0 ]; then
+            echo "❌ Found $ERRORS unencrypted/suspect file(s) under secrets/"
+            exit 1
+          fi
+
+          echo "✅ All files under secrets/ are SOPS encrypted"
+      - name: Notify - SOPS Validation Failed
+        if: failure() && github.event_name != 'pull_request'
+        uses: ./.github/actions/notify-telegram
+        with:
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            ⚠️ *SOPS Validation Failed*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            A file under secrets/ may not be properly encrypted — build blocked!
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+  # ==========================================================================
+  # Configuration Syntax Validation - YAML, shell scripts, Terraform, Nix fetches
+  # ==========================================================================
+  syntax-validation:
+    name: Syntax Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Setup Nix
+        uses: ./.github/actions/setup-nix
+      - name: Validate YAML files
+        run: |
+          echo "📄 Checking YAML file syntax..."
+
+          YAML_FILES=$(find . -type f \( -name "*.yaml" -o -name "*.yml" \) \
+            -not -path "./.git/*" \
+            -not -path "./secrets/*" || echo "")
+
+          if [ -z "$YAML_FILES" ]; then
+            echo "No YAML files found to validate"
+            exit 0
+          fi
+
+          ERRORS=0
+          for file in $YAML_FILES; do
+            echo "Checking: $file"
+            if ! nix run nixpkgs#yq -- eval "$file" > /dev/null 2>&1; then
+              echo "❌ Syntax error in $file"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+
+          if [ $ERRORS -gt 0 ]; then
+            echo "❌ Found $ERRORS YAML syntax errors"
+            exit 1
+          fi
+
+          echo "✅ All YAML files have valid syntax"
+      - name: Shellcheck shell scripts
+        run: |
+          echo "🐚 Running shellcheck on shell scripts..."
+
+          SH_FILES=$(find . -name "*.sh" -not -path "./.git/*" || echo "")
+
+          if [ -z "$SH_FILES" ]; then
+            echo "No shell scripts found to validate"
+            exit 0
+          fi
+
+          ERRORS=0
+          for file in $SH_FILES; do
+            echo "Checking: $file"
+            if ! nix run nixpkgs#shellcheck -- "$file"; then
+              echo "❌ shellcheck issues in $file"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+
+          if [ $ERRORS -gt 0 ]; then
+            echo "❌ Found shellcheck issues in $ERRORS script(s)"
+            exit 1
+          fi
+
+          echo "✅ All shell scripts passed shellcheck"
+      - name: Terraform format check
+        run: |
+          echo "🏗️  Checking Terraform formatting..."
+
+          TF_DIRS=$(find . -name "*.tf" -not -path "./.git/*" -exec dirname {} \; | sort -u || echo "")
+
+          if [ -z "$TF_DIRS" ]; then
+            echo "No Terraform files found"
+            exit 0
+          fi
+
+          ERRORS=0
+          for dir in $TF_DIRS; do
+            echo "Checking formatting: $dir"
+            if ! nix run nixpkgs#terraform -- fmt -check -diff "$dir"; then
+              echo "❌ Terraform formatting issues in $dir"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+
+          if [ $ERRORS -gt 0 ]; then
+            echo "❌ Terraform formatting issues in $ERRORS directory(ies) — run: terraform fmt"
+            exit 1
+          fi
+
+          echo "✅ All Terraform files are properly formatted"
+      - name: Check for unpinned Nix fetches
+        run: |
+          echo "🔗 Checking for unpinned fetchTarball/fetchurl/fetchGit calls..."
+
+          # A fetch call is unpinned if it has no hash/rev/ref argument at all
+          # (bare `fetchTarball "https://..."` or `builtins.fetchGit { url = ...; }`
+          # with no rev/sha256/hash). This is a coarse, single-call heuristic —
+          # it flags calls whose closing paren/quote comes before any of
+          # sha256/hash/narHash/rev is seen, within a bounded lookahead window.
+          ERRORS=0
+          while IFS=: read -r file line _; do
+            echo "⚠️  Possibly unpinned fetch in $file:$line"
+            sed -n "${line},$((line + 8))p" "$file"
+            echo "---"
+            ERRORS=$((ERRORS + 1))
+          done < <(
+            grep -rnoE '(builtins\.)?(fetchTarball|fetchurl|fetchGit)\b' \
+              --include="*.nix" . 2>/dev/null | \
+            while IFS=: read -r file line _; do
+              # Look at the call site plus the next 8 lines; if none of these
+              # pinning args show up in that window, flag it.
+              window=$(sed -n "${line},$((line + 8))p" "$file")
+              if ! echo "$window" | grep -qE 'sha256|narHash|"hash"|hash =|rev ='; then
+                echo "$file:$line:unpinned"
+              fi
+            done
+          )
+
+          if [ $ERRORS -gt 0 ]; then
+            echo "❌ Found $ERRORS possibly unpinned fetch(es) — pin with sha256/hash/rev for reproducibility"
+            exit 1
+          fi
+
+          echo "✅ No unpinned fetchTarball/fetchurl/fetchGit calls found"
+      - name: Notify - Syntax Validation Failed
+        if: failure() && github.event_name != 'pull_request'
+        uses: ./.github/actions/notify-telegram
+        with:
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            ⚠️ *Syntax Validation Failed*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            YAML, shell, Terraform, or Nix-fetch checks failed — build blocked!
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+  # ==========================================================================
+  # Collect per-check results so the ci.yml orchestrator can still report an
+  # itemized summary even though it only sees this workflow as one job.
+  # ==========================================================================
+  results:
+    name: Collect Results
+    needs: [trivy-scan, secret-scan, sops-validation, syntax-validation]
+    if: always()
+    runs-on: ubuntu-latest
+    outputs:
+      trivy: ${{ needs.trivy-scan.result }}
+      secret_scan: ${{ needs.secret-scan.result }}
+      sops: ${{ needs.sops-validation.result }}
+      syntax: ${{ needs.syntax-validation.result }}
+    steps:
+      - run: echo "trivy=${{ needs.trivy-scan.result }} secret-scan=${{ needs.secret-scan.result }} sops=${{ needs.sops-validation.result }} syntax=${{ needs.syntax-validation.result }}"

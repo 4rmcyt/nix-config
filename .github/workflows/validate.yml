@@ -1,0 +1,111 @@
+name: "Validate"
+# Called by ci.yml. Formatting (nix fmt, which also runs statix/deadnix via
+# treefmt.nix) and `nix flake check` — both non-blocking by design: a
+# formatting or flake-check failure warns via Telegram but doesn't fail this
+# job or block the build. The real build step is the actual gate for those.
+on:
+  workflow_call:
+    inputs:
+      flake_lock_changed:
+        description: "Whether the upstream flake-lock-update job actually changed flake.lock"
+        type: boolean
+        required: false
+        default: false
+    secrets:
+      TELEGRAM_CHAT_ID:
+        required: true
+      TELEGRAM_BOT_TOKEN:
+        required: true
+jobs:
+  validate:
+    name: Validate Flake & Formatting
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout (picks up the just-committed flake.lock on schedule/dispatch runs)
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Setup Nix
+        uses: ./.github/actions/setup-nix
+        with:
+          extra-nix-config: |
+            max-jobs = auto
+            cores = 0
+            builders-use-substitutes = true
+            extra-substituters = https://nix-community.cachix.org https://cache.garnix.io
+            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
+      - name: Check for uncommitted changes before flake update
+        run: |
+          if ! git diff --quiet || ! git diff --cached --quiet; then
+            echo "❌ Uncommitted changes detected before flake update!"
+            git status
+            git diff
+            exit 1
+          fi
+      - name: Update flake inputs (in-memory)
+        run: nix flake update
+      - name: Check if flake.lock changed
+        id: flake-changed
+        run: |
+          if git diff --quiet flake.lock; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "✅ flake.lock unchanged - skipping flake check"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "⚠️ flake.lock changed - will run flake check"
+            git diff flake.lock
+          fi
+      - name: Validate flake metadata
+        run: |
+          echo "📦 Validating flake metadata and structure..."
+          nix flake metadata --json | jq .
+          nix flake show
+          echo "✅ Flake structure is valid"
+      # Formatting check (informational only - doesn't fail the job)
+      - name: Check formatting
+        id: formatting
+        continue-on-error: true
+        run: nix fmt -- --ci .
+      - name: Notify - Formatting Failed
+        if: steps.formatting.outcome == 'failure' && github.event_name != 'pull_request'
+        uses: ./.github/actions/notify-telegram
+        with:
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            ⚠️ *Formatting Check Failed (Non-blocking)*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            Trigger: ${{ github.event_name }}
+            The formatting check failed but the workflow will continue.
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+      # Flake check (informational only - doesn't fail the job)
+      - name: Check flake
+        id: flake-check
+        if: steps.flake-changed.outputs.changed == 'true' || inputs.flake_lock_changed
+        continue-on-error: true
+        run: nix flake check --show-trace
+      - name: Notify - Flake Check Failed
+        if: steps.flake-check.outcome == 'failure' && github.event_name != 'pull_request'
+        uses: ./.github/actions/notify-telegram
+        with:
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            ⚠️ *Flake Check Failed (Non-blocking)*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            Trigger: ${{ github.event_name }}
+            The flake check failed but the workflow will continue.
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+      - name: Notify - Validation Failed
+        if: failure() && github.event_name != 'pull_request'
+        uses: ./.github/actions/notify-telegram
+        with:
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            ❌ *Validation Failed (Format or Flake Check)*
+            Repository: `${{ github.repository }}`
+            Branch: `${{ github.ref_name }}`
+            Trigger: ${{ github.event_name }}
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
