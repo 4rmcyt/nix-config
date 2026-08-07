@@ -15,7 +15,8 @@ on:
     branches:
       - main # Auto-run on main branch
   schedule:
-    - cron: "0 3 * * *" # Daily at 3 AM UTC
+    - cron: "0 3 * * *" # Daily at 3 AM America/Edmonton
+      timezone: "America/Edmonton"
 permissions:
   actions: read
   contents: read
