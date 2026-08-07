@@ -50,7 +50,18 @@ jobs:
       - name: Scan built closure for known CVEs (vulnix)
         id: vulnix
         continue-on-error: true
-        run: nix run nixpkgs#vulnix -- result
+        # nvd.nist.gov itself is slow (~60 KB/s observed, confirmed in a
+        # browser too — NIST's own infra, not a vulnix issue). Point at the
+        # FCIX-hosted community mirror instead: same NVD JSON 2.0 file
+        # layout (nvdcve-2.0-<year>.json.gz etc.), GPG-signed, no API key or
+        # rate limit. See https://cveb.in/ (maintained by a cve-bin-tool/
+        # OpenSSF maintainer). Not an official NIST source — fine for an
+        # informational homelab scan, don't treat it as authoritative.
+        run: |
+          nix run nixpkgs#vulnix -- \
+            -m https://mirror.cveb.in/nvd/json/cve/2.0/ \
+            -w .github/vulnix-whitelist.toml \
+            result
       - name: Notify - CVEs Found
         if: steps.vulnix.outcome == 'failure'
         uses: ./.github/actions/notify-telegram

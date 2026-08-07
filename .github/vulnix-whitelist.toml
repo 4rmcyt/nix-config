@@ -1,0 +1,34 @@
+# vulnix whitelist — see vulnix-whitelist(5) / README.rst "Whitelisting".
+#
+# Every entry MUST be verified before being added — vulnix's name matching
+# is a coarse heuristic (direct match, then lower-case/underscore variants),
+# so it's easy to misidentify a genuine hit as a false positive. Verify with:
+#
+#   nix why-depends /run/current-system /nix/store/<hash>-<name>.drv
+#
+# Section header selects the package:
+#   ["pname-version"]  — exact version only (safest — prefer this)
+#   ["pname"]           — all versions (only with `cve = [...]` to scope it)
+#   ["*"]                — everything (avoid)
+#
+# Prefer a short `until` date over a permanent entry, so stale exclusions
+# get forced back into review instead of silently hiding future real CVEs
+# on the same package name.
+#
+["curl-0.4.49"]
+# This is the Rust crate "curl" (libcurl bindings), pulled in via cargo
+# vendoring — confirmed via:
+#   nix derivation show <drv> | jq '.[].inputDrvs | keys'
+# -> .../crate-curl-0.4.49.tar.gz.drv (cargo vendor fetch, not a libcurl build)
+# Crate versioning (0.4.x) is unrelated to the actual libcurl version the
+# matched CVEs (e.g. CVE-2022-32221) apply to. Verified 2026-08-07.
+until = "2027-02-06"
+comment = "Rust curl crate (libcurl bindings), not the C library — name-collision false positive."
+
+["network-3.2.8.0"]
+# Haskell "network" package (Cabal PVP versioning 3.2.8.0) — confirmed via:
+#   nix derivation show <drv> | jq '.[].env.pname, .[].env.version'
+# -> pname="network", version="3.2.8.0". Unrelated to whatever the matched
+# CVEs' actual product is. Verified 2026-08-07.
+until = "2027-02-06"
+comment = "Haskell network package — name-collision false positive."
