@@ -1602,11 +1602,11 @@
         "nixpkgs": "nixpkgs_9"
       },
       "locked": {
-        "lastModified": 1785520378,
-        "narHash": "sha256-snPxq3eb0HYovhYxZj1ZBOoEOE0gzH9/tZITG3u+WVQ=",
+        "lastModified": 1786125055,
+        "narHash": "sha256-c48qZ2MLlPnePQSA/2qvRIrVKUXzzn3dXvowGm1VWq8=",
         "ref": "refs/heads/main",
-        "rev": "405714e5bf51eb9e466444bc48c53d4c9af05103",
-        "revCount": 92,
+        "rev": "057015776ff033422cfa64c52348f992dd075f27",
+        "revCount": 93,
         "type": "git",
         "url": "https://codeberg.org/Mynacol/nixos-needsreboot.git"
       },
@@ -1867,11 +1867,11 @@
     },
     "nixpkgs_9": {
       "locked": {
-        "lastModified": 1785454630,
-        "narHash": "sha256-Lr/ImHlbXabw7KPWfXWY4kkiiHb24PkmBZVVIm28V/c=",
-        "rev": "1559d3daa3ecc813a650b79375ea61b6741b8746",
+        "lastModified": 1785967620,
+        "narHash": "sha256-929m7iW8q2uv3mZHNwY8Um6XKj99rbIcZsWS9cT1vaI=",
+        "rev": "b7c2ada94fe99c15b0dbcf4d11fd7850b957a436",
         "type": "tarball",
-        "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1044798.1559d3daa3ec/nixexprs.tar.zst?lastModified=1785454630&rev=1559d3daa3ecc813a650b79375ea61b6741b8746"
+        "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1048607.b7c2ada94fe9/nixexprs.tar.zst?lastModified=1785967620&rev=b7c2ada94fe99c15b0dbcf4d11fd7850b957a436"
       },
       "original": {
         "type": "tarball",
@@ -1954,11 +1954,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786124360,
-        "narHash": "sha256-fQg3yuIANR9CytU/bGsYp9YAk07MpTBuNRzesRe1kvM=",
+        "lastModified": 1786126006,
+        "narHash": "sha256-bSEM6CWP0D+W+kIfIu04vt4lN3esxW+Sf3jhqU1XuMg=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "16c0706c08fec9d9f26384cf89e3437b5eb48deb",
+        "rev": "f89655beb7b8e081346e6d607ebe247d77abc557",
         "type": "github"
       },
       "original": {
