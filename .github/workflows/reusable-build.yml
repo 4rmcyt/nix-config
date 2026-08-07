@@ -71,7 +71,15 @@ jobs:
       - name: Validate Home Manager config for ${{ inputs.system }}
         run: |
           echo "Validating Home Manager config for ${{ inputs.system }}..."
-          nix eval .#nixosConfigurations.${{ inputs.system }}.config.home-manager.users --apply 'x: "ok"'
+          nix eval --impure --expr '
+            let
+              flake = builtins.getFlake (toString ./.);
+              cfg = flake.nixosConfigurations."${{ inputs.system }}".config;
+            in
+              if cfg ? home-manager
+              then builtins.seq cfg.home-manager.users "ok: home-manager configured"
+              else "skip: ${{ inputs.system }} has no home-manager users (headless host)"
+          '
       - name: Build ${{ inputs.system }} configuration
         run: |
           echo "Building system config for ${{ inputs.system }}..."
