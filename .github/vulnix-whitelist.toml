@@ -4,7 +4,22 @@
 # is a coarse heuristic (direct match, then lower-case/underscore variants),
 # so it's easy to misidentify a genuine hit as a false positive. Verify with:
 #
-#   nix why-depends /run/current-system /nix/store/<hash>-<name>.drv
+#   nix derivation show /nix/store/<hash>-<name>.drv | jq '.[].env.pname, .[].env.version'
+#   nix derivation show /nix/store/<hash>-<name>.drv | jq -r '.[].inputDrvs | keys[]'
+#
+# (`nix why-depends /run/current-system <drv>` does NOT work for this — .drv
+# files are build-time recipes, not part of the runtime closure, so it always
+# reports "does not depend on" regardless of whether the package is actually
+# in use. Use the `nix derivation show` commands above instead.)
+#
+# tools/scripts/vulnix-triage.sh flags likely candidates automatically (Rust
+# crate / Haskell GHC build inputs, suspicious version shapes) — it does NOT
+# add anything here itself, every candidate still needs manual confirmation.
+# Its version-shape heuristic false-flags real 4-component upstream versions
+# too — confirmed NOT to whitelist, investigated and rejected:
+#   dash-0.5.13.4 / dash-0.5.13.5    — real dash shell, CVE-2024-21485 is genuine
+#   libreoffice-25.8.5.2(-wrapped)   — real LibreOffice, genuinely uses W.X.Y.Z versions
+#   python-2.7.18.12                — real Python 2.7 (EOL), genuine CVE exposure
 #
 # Section header selects the package:
 #   ["pname-version"]  — exact version only (safest — prefer this)
@@ -32,3 +47,52 @@ comment = "Rust curl crate (libcurl bindings), not the C library — name-collis
 # CVEs' actual product is. Verified 2026-08-07.
 until = "2027-02-06"
 comment = "Haskell network package — name-collision false positive."
+
+# The following are all Haskell (Hackage) packages, confirmed by inputDrvs
+# containing ghc-9.10.3.drv — none of these are the C/other-ecosystem
+# software of the same name that the matched CVEs actually apply to.
+# Verified 2026-08-07 via tools/scripts/vulnix-triage.sh + manual check.
+
+["filelock-0.1.1.9"]
+until = "2027-02-06"
+comment = "Haskell filelock package — name-collision false positive."
+
+["tar-0.6.4.0"]
+until = "2027-02-06"
+comment = "Haskell tar package — name-collision false positive (not GNU tar)."
+
+["tar-0.6.4.0-r4.cabal"]
+until = "2027-02-06"
+comment = "Cabal file derivation for the Haskell tar package above."
+
+["vault-0.3.1.6"]
+until = "2027-02-06"
+comment = "Haskell vault package (purely-functional key/value store) — not HashiCorp Vault."
+
+["yaml-0.11.11.2"]
+until = "2027-02-06"
+comment = "Haskell yaml package — name-collision false positive."
+
+["yaml-0.11.11.2-r2.cabal"]
+until = "2027-02-06"
+comment = "Cabal file derivation for the Haskell yaml package above."
+
+["zlib-0.7.1.1"]
+until = "2027-02-06"
+comment = "Haskell zlib package (bindings) — not the C zlib library."
+
+["websockets-0.13.0.0"]
+until = "2027-02-06"
+comment = "Haskell websockets package — name-collision false positive."
+
+["websockets-0.13.0.0-r6.cabal"]
+until = "2027-02-06"
+comment = "Cabal file derivation for the Haskell websockets package above."
+
+["uuid-1.3.16.1"]
+until = "2027-02-06"
+comment = "Haskell uuid package — name-collision false positive."
+
+["commonmark-0.2.6.1"]
+until = "2027-02-06"
+comment = "Haskell commonmark-hs package — name-collision false positive."
