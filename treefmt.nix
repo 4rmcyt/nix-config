@@ -51,6 +51,16 @@
       includes = ["*.rs"];
       package = pkgs.rustfmt;
     };
+    shellcheck = {
+      enable = true;
+      includes = [
+        "*.bash"
+        "*.envrc"
+        "*.envrc.*"
+        "*.sh"
+      ];
+      package = pkgs.shellcheck;
+    };
     shfmt = {
       enable = true;
       includes = [

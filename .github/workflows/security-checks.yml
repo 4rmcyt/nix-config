@@ -43,6 +43,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@v0.36.0
         with:
+          version: "v0.73.0"
           scan-type: "fs"
           scan-ref: "."
           # secrets/ is sops-encrypted ciphertext (age/PEM-style ENC[...]
@@ -52,6 +53,7 @@ jobs:
           # duplicate it here, just do vuln/misconfig scanning.
           skip-dirs: "secrets"
           scanners: "vuln,misconfig"
+          trivyignores: ".trivyignore.yaml"
           # table (not sarif): this is a private repo without GitHub Code
           # Security (paid Team/Enterprise feature) — there's no Security
           # tab to upload SARIF to, it 404s. Print human-readable results

@@ -90,20 +90,6 @@ resource "google_compute_firewall" "http_https" {
   target_tags   = ["http-server", "https-server"]
 }
 
-# Firewall: SSH (port 22 — GCP OS Login / emergency access)
-resource "google_compute_firewall" "ssh" {
-  name    = "gcp-relay-allow-ssh"
-  network = "default"
-
-  allow {
-    protocol = "tcp"
-    ports    = ["22"]
-  }
-
-  source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["http-server", "https-server"]
-}
-
 # Firewall: DERP/STUN (headscale)
 resource "google_compute_firewall" "derp" {
   name    = "gcp-relay-allow-derp"

@@ -11,10 +11,6 @@
     "qbittorrent"
   ];
 
-  servicesWithScripts = [
-    "lidarr"
-  ];
-
   # Pinned explicitly (not left to dynamic useradd allocation) because
   # oci-containers PUID/PGID env vars are interpolated at Nix eval time —
   # config.users.users.<name>.uid is null until activation otherwise,
@@ -49,20 +45,6 @@
       uid = 269;
       gid = 269;
     };
-  };
-
-  musicConverter = pkgs.writeShellApplication {
-    name = "music-converter";
-    runtimeInputs = with pkgs; [
-      ffmpeg-headless
-      flac
-      shntool
-      cuetools
-      curl
-      coreutils
-      util-linux
-    ];
-    text = builtins.readFile ./scripts/music-converter.sh;
   };
 in {
   imports = [
@@ -140,7 +122,6 @@ in {
   users.groups = lib.mapAttrs (_name: ids: {inherit (ids) gid;}) serviceIds;
 
   environment.systemPackages = with pkgs; [
-    musicConverter
     shntool
     cuetools
   ];
@@ -183,19 +164,6 @@ in {
           "/data/media/.state"
         ];
       };
-    }))
-    (lib.genAttrs servicesWithScripts (_name: {
-      path = [
-        musicConverter
-      ];
-      serviceConfig.Environment = [
-        "JF_URL=http://localhost:8096"
-        "JF_API_KEY_FILE=${config.sops.secrets.jellyfin_api_key.path}"
-        "LIDARR_URL=http://localhost:8686"
-        "LIDARR_API_KEY_FILE=${config.sops.secrets.lidarr_api_key.path}"
-        "BAZARR_URL=http://localhost:6767"
-        "BAZARR_API_KEY_FILE=${config.sops.secrets.bazarr_api_key.path}"
-      ];
     }))
   ];
 

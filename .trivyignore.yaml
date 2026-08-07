@@ -1,0 +1,14 @@
+# Trivy misconfiguration suppressions — see security-checks.yml (trivy-scan job).
+# Every entry needs a `statement` explaining why it's a real, accepted
+# design decision — not a workaround for something that should be fixed.
+misconfigurations:
+  - id: AVD-GCP-0031
+    paths:
+      - "infra/tf/gcp-relay/main.tf"
+    statement: >
+      gcp-relay's HTTP/HTTPS (Caddy TLS termination, headscale control plane)
+      and DERP/STUN (3478/udp) firewall rules are intentionally open to
+      0.0.0.0/0 by design — that's the tailnet's public entry point. SSH is
+      NOT open to the internet: the public SSH firewall rule was removed:
+      access is tailnet-only via the host's existing tailscale connection.
+      See hosts/nixos/gcp/default.nix.
