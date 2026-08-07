@@ -33,11 +33,8 @@ jobs:
   trivy-scan:
     name: Trivy Vulnerability Scan
     runs-on: ubuntu-latest
-    # Job-level `permissions:` REPLACES the whole set, it doesn't add to it —
-    # contents:read must be listed explicitly here too, or checkout breaks.
     permissions:
       contents: read
-      security-events: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -48,16 +45,21 @@ jobs:
         with:
           scan-type: "fs"
           scan-ref: "."
-          format: "sarif"
-          output: "trivy-results.sarif"
+          # secrets/ is sops-encrypted ciphertext (age/PEM-style ENC[...]
+          # blocks) — Trivy's naive pattern-based secret scanner flags it as
+          # false positives. TruffleHog (secret-scan job) already covers
+          # secret detection properly, with actual verification — don't
+          # duplicate it here, just do vuln/misconfig scanning.
+          skip-dirs: "secrets"
+          scanners: "vuln,misconfig"
+          # table (not sarif): this is a private repo without GitHub Code
+          # Security (paid Team/Enterprise feature) — there's no Security
+          # tab to upload SARIF to, it 404s. Print human-readable results
+          # straight to the job log instead, which is the only place anyone
+          # will actually see them.
+          format: "table"
           severity: "CRITICAL,HIGH"
           exit-code: "1" # fail the step (and job) when findings are present
-      - name: Upload Trivy results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4
-        continue-on-error: true # Don't fail if code scanning is not enabled
-        if: always() && github.event_name != 'pull_request'
-        with:
-          sarif_file: "trivy-results.sarif"
       - name: Notify - Vulnerabilities Found
         if: failure() && github.event_name != 'pull_request'
         uses: ./.github/actions/notify-telegram
@@ -69,8 +71,8 @@ jobs:
             Repository: `${{ github.repository }}`
             Branch: `${{ github.ref_name }}`
             Scanner: Trivy
-            Critical/High findings block the build — see the Security tab.
-            [View Details](${{ github.server_url }}/${{ github.repository }}/security/code-scanning)
+            Critical/High findings block the build — see the "Run Trivy vulnerability scanner" step log for details.
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
   # ==========================================================================
   # Secret Scanning
   # No explicit base/head: let the action pick per-event scan mode (PR diff,
@@ -190,7 +192,7 @@ jobs:
           ERRORS=0
           for file in $YAML_FILES; do
             echo "Checking: $file"
-            if ! nix run nixpkgs#yq -- eval "$file" > /dev/null 2>&1; then
+            if ! nix run nixpkgs#yq-go -- eval "$file" > /dev/null 2>&1; then
               echo "❌ Syntax error in $file"
               ERRORS=$((ERRORS + 1))
             fi

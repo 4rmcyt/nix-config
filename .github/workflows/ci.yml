@@ -50,12 +50,10 @@ jobs:
   # validate. See security-checks.yml for the 4 checks it bundles.
   security-checks:
     name: Security Checks
-    # Same caller-caps-callee rule as flake-lock-update above: trivy-scan
-    # inside security-checks.yml needs security-events:write to upload SARIF,
-    # and contents:read for checkout — both must be granted at the call site.
+    # Same caller-caps-callee rule as flake-lock-update above: every job
+    # inside security-checks.yml needs at least contents:read for checkout.
     permissions:
       contents: read
-      security-events: write
     uses: ./.github/workflows/security-checks.yml
     secrets: inherit
   # Real build of every host — the actual gate. See reusable-build.yml.
