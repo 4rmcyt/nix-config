@@ -33,7 +33,10 @@ jobs:
   trivy-scan:
     name: Trivy Vulnerability Scan
     runs-on: ubuntu-latest
+    # Job-level `permissions:` REPLACES the whole set, it doesn't add to it —
+    # contents:read must be listed explicitly here too, or checkout breaks.
     permissions:
+      contents: read
       security-events: write
     steps:
       - name: Checkout repository

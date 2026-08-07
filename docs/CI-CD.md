@@ -12,7 +12,7 @@ ci.yml
   ├─ validate.yml            (needs: flake-lock-update; fmt + flake check — both non-blocking)
   ├─ security-checks.yml     (parallel with validate; 4 internal jobs, all must pass — gates the build)
   ├─ reusable-build.yml      (needs: validate + security-checks; matrix over every host)
-  ├─ vulnix-scan.yml         (schedule/workflow_dispatch only, independent of the build gate)
+  ├─ vulnix-scan.yml         (needs: reusable-build.yml; schedule/workflow_dispatch only)
   └─ workflow-summary        (inline job in ci.yml; needs everything; Telegram summary)
         │
         ▼ workflow_run: completed
@@ -30,6 +30,8 @@ Two composite actions remove the boilerplate that used to be copy-pasted into ev
 
 Both are local composite actions (`uses: ./.github/actions/<name>`), which means any job step using them must have already run `actions/checkout` — local action refs resolve from the checked-out workspace, not the repo on GitHub.
 
+**Permissions gotcha when calling a reusable workflow:** the `GITHUB_TOKEN` permissions available *inside* a called workflow are capped by whatever the **calling job** grants — not by what the called workflow's own `permissions:` block asks for. If `ci.yml`'s calling job doesn't explicitly list a scope, the callee can never have it, regardless of its own file declaring it. That's why `flake-lock-update:` and `security-checks:` in `ci.yml` carry their own `permissions:` blocks (`contents: write` and `contents: read` + `security-events: write` respectively) even though `flake-lock-update.yml` and `security-checks.yml` already declare the same scopes themselves — both layers need it. Relatedly, a job-level `permissions:` block **replaces** the whole set rather than adding to it — `trivy-scan` in `security-checks.yml` needs `contents: read` listed explicitly alongside `security-events: write`, or checkout breaks.
+
 `flake-lock-update.yml` pushes with the default `GITHUB_TOKEN`. That push does **not** itself re-trigger `ci.yml`'s `push` trigger (GitHub doesn't fire `push`-triggered workflows off `GITHUB_TOKEN`-authored pushes) — a non-issue here because `flake-lock-update` runs as part of the *same* `ci.yml` run via `needs:`, not by re-triggering. `logging.yml` uses `workflow_run` (not `push`) specifically so it reliably fires regardless of how the upstream `CI` run started.
 
 ## ci.yml jobs
@@ -40,7 +42,7 @@ Both are local composite actions (`uses: ./.github/actions/<name>`), which means
 | `validate` | always (needs `flake-lock-update`, proceeds if it was skipped) | `validate.yml` — checks out (picking up the just-committed lock on schedule runs), re-runs `nix flake update` in-memory for PR/push runs, validates flake metadata, runs `nix fmt -- --ci` and `nix flake check` — both `continue-on-error: true` by design: a formatting or flake-check failure doesn't fail the job or block the build. `nix fmt` also runs `statix`/`deadnix` (wired into `treefmt.nix`) — same non-blocking treatment, intentional. Takes `flake_lock_changed` as input (from `flake-lock-update`'s output) to decide whether to run `nix flake check` even when its own in-memory update found nothing new. |
 | `security-checks` | always, parallel with `validate` | `security-checks.yml` — see below. Hard gate: `build-and-check-systems` needs this to succeed. |
 | `build-and-check-systems` | needs `validate` + `security-checks` | `reusable-build.yml` — matrix build of every real `nixosConfigurations` host: `desktop`, `homeserver`, `matebook`, `gcp-relay`. |
-| `vulnix-scan` | `schedule` or `workflow_dispatch` only, independent of the build gate | `vulnix-scan.yml` — see below. |
+| `vulnix-scan` | needs `build-and-check-systems`; `schedule` or `workflow_dispatch` only | `vulnix-scan.yml` — see below. |
 | `workflow-summary` | push to `main`, not on PR | Inline job (not split out — it's just two Telegram notifications reading `needs.*.result`/`needs.security-checks.outputs.*`). |
 
 **Host matrix caveat:** kept in sync with `parts/hosts/*/configuration.nix` by hand — no automatic derivation. Current hosts: `desktop`, `homeserver`, `matebook`, `router`, `gcp-relay` (flake attribute is `gcp-relay`, not `gcp`). `router` is intentionally excluded — not currently in use.
@@ -64,7 +66,7 @@ Called only by `ci.yml`'s `build-and-check-systems` matrix (`workflow_call`). Pe
 
 Scans a **built Nix closure** against NVD CVEs — different target from Trivy (which scans repo *files*, before anything is built). `vulnix` was originally wired into `reusable-build.yml`, running once per host, in parallel, on every push/PR (4x per commit). That turned out to be a bad idea in practice: a cold-cache `vulnix` run downloads and parses **~5 years of NVD archives with no progress output**, confirmed by running `vulnix --system` locally and watching it hang silently for several minutes — this is documented, expected `vulnix` behavior (`doc/vulnix.1.md`: *"Invoking vulnix with an empty cache directory can take quite a while..."*), not a misconfiguration. Running that 4x in parallel on every commit was slow and risked NVD rate-limiting (5 req/30s unauthenticated).
 
-Now it's `schedule`/`workflow_dispatch` only, scans a single representative host (`desktop` — broadest package set of the fleet), and is completely decoupled from the push/PR build gate. `~/.cache/vulnix` is cached across CI runs the same way as before (ISO-week key, falling back to the previous week's cache on a miss), so only the very first-ever run pays the full 5-year download — trigger `workflow_dispatch` once manually to warm that cache ahead of the nightly cron rather than let the first scheduled run eat it. Locally, the cache persists in `~/.cache/vulnix` on whatever machine runs it (already warmed on `desktop` after a manual `vulnix --system` run) — same mechanism, not shared between the two environments.
+Now it's `schedule`/`workflow_dispatch` only, decoupled from the push/PR build gate, and scans a single representative host (`desktop` — broadest package set of the fleet). It does `needs: [build-and-check-systems]` — not to gate the build, but so it builds against the same freshly-committed `flake.lock` that `build-and-check-systems` just built and pushed to Cachix that same run; without that dependency it can race `flake-lock-update`'s commit and end up building (slowly, from scratch) a stale closure instead of what's actually about to be deployed. `~/.cache/vulnix` is cached across CI runs the same way as before (ISO-week key, falling back to the previous week's cache on a miss), so only the very first-ever run pays the full 5-year download — trigger `workflow_dispatch` once manually to warm that cache ahead of the nightly cron rather than let the first scheduled run eat it. Locally, the cache persists in `~/.cache/vulnix` on whatever machine runs it (already warmed on `desktop` after a manual `vulnix --system` run) — same mechanism, not shared between the two environments.
 
 `vulnix` itself is also installed system-wide via `modules/base/common-packages/default.nix` for ad-hoc local scans (`vulnix --system`, `vulnix result/`, etc.).
 

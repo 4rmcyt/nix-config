@@ -28,6 +28,13 @@ jobs:
   flake-lock-update:
     name: Flake Lock Update
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    # GITHUB_TOKEN permissions for a called reusable workflow are capped by
+    # the CALLING job, not just what the callee's own file declares — the
+    # callee needs contents:write to push the commit, so it must be granted
+    # here too, or the push 403s regardless of flake-lock-update.yml's own
+    # `permissions:` block.
+    permissions:
+      contents: write
     uses: ./.github/workflows/flake-lock-update.yml
     secrets: inherit
 
@@ -45,6 +52,12 @@ jobs:
   # validate. See security-checks.yml for the 4 checks it bundles.
   security-checks:
     name: Security Checks
+    # Same caller-caps-callee rule as flake-lock-update above: trivy-scan
+    # inside security-checks.yml needs security-events:write to upload SARIF,
+    # and contents:read for checkout — both must be granted at the call site.
+    permissions:
+      contents: read
+      security-events: write
     uses: ./.github/workflows/security-checks.yml
     secrets: inherit
 
@@ -71,10 +84,15 @@ jobs:
     secrets: inherit
 
   # Scans one host's built closure for known CVEs. Schedule/dispatch only —
-  # not part of the push/PR gate. See vulnix-scan.yml for why.
+  # not part of the push/PR gate. Needs build-and-check-systems so it builds
+  # against the same freshly-committed flake.lock that just got built and
+  # pushed to Cachix — without this it can race flake-lock-update's commit
+  # and end up scanning (and slowly rebuilding) a stale closure instead of
+  # what's actually being deployed. See vulnix-scan.yml for the rest.
   vulnix-scan:
     name: Vulnix CVE Scan
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    needs: [build-and-check-systems]
+    if: success() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     uses: ./.github/workflows/vulnix-scan.yml
     secrets: inherit
 
