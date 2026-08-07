@@ -53,6 +53,10 @@ Fires on `workflow_run: [CI]` completion. For each job in the run, via `gh api /
 
 Previous version (`ship-logs-to-loki.yml`) slurped each job's entire raw log as a single opaque Loki entry with a "now" timestamp — no per-line structure, no queryable duration/conclusion fields, nothing dashboard-shaped. This version fixes both problems and only pays the "ship full log text" cost for jobs that actually failed.
 
+### Grafana dashboard
+
+`modules/monitoring/dashboards/github-actions.json` ("GitHub Actions Insights", uid `github-actions-insights`) is auto-provisioned by Grafana's dashboard provider (`modules/monitoring/default.nix`, picks up every `*.json` under `dashboards/`) — no separate registration needed when editing it. It queries the `job="github-actions"` stream from `logging.yml`: total/failed job counts, success rate, p95 duration, conclusion breakdown, status-over-time, per-job-name duration, and a recent-runs table. Filterable by `workflow`, `branch`, `job_name` template variables. The dashboard was previously built against the old `ship-logs-to-loki.yml` output (`status` as both a stream label and an unparseable JSON body) and never actually rendered real data — it's been rewritten to match the current `conclusion`/`duration_seconds` schema.
+
 ## Required secrets
 
 | Secret | Used by |
