@@ -76,6 +76,10 @@
       includes = ["*.nix"];
       package = pkgs.statix;
     };
+    terraform = {
+      enable = true;
+      package = pkgs.opentofu;
+    };
     toml-sort = {
       enable = true;
       includes = ["*.toml"];
