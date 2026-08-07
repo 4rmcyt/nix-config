@@ -1,7 +1,8 @@
 name: "Security Scanning"
 on:
-  push:
-    branches: [main]
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -21,11 +22,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.36.0
         if: github.token != ''
         with:
           scan-type: "fs"
@@ -40,7 +42,7 @@ jobs:
         with:
           sarif_file: "trivy-results.sarif"
       - name: Generate Trivy report for notification
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.36.0
         if: github.token != ''
         with:
           scan-type: "fs"
@@ -50,7 +52,7 @@ jobs:
           severity: "CRITICAL,HIGH"
       - name: Send Telegram notification - Vulnerabilities Found
         if: failure() && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@master
+        uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -70,11 +72,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       - name: TruffleHog Secret Scan
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@v3.96.0
         if: github.token != ''
         with:
           path: ./
@@ -83,7 +86,7 @@ jobs:
           extra_args: --only-verified
       - name: Send Telegram notification - Secrets Found
         if: failure() && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@master
+        uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -103,7 +106,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       - name: Install Nix
         uses: cachix/install-nix-action@v31
         with:
@@ -111,7 +116,7 @@ jobs:
             experimental-features = nix-command flakes
             accept-flake-config = true
       - name: Setup Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@v4
+        uses: DeterminateSystems/magic-nix-cache-action@v14
       - name: Validate SOPS encrypted files
         run: |
           echo "🔐 Validating SOPS encrypted files..."
@@ -136,7 +141,7 @@ jobs:
           echo "✅ All SOPS files are properly encrypted"
       - name: Send Telegram notification - SOPS Validation Failed
         if: failure() && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@master
+        uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -155,7 +160,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       - name: Install Nix
         uses: cachix/install-nix-action@v31
         with:
@@ -163,7 +170,7 @@ jobs:
             experimental-features = nix-command flakes
             accept-flake-config = true
       - name: Setup Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@v4
+        uses: DeterminateSystems/magic-nix-cache-action@v14
       - name: Validate Nushell configuration syntax
         run: |
           echo "🐚 Checking Nushell configuration syntax..."
@@ -222,7 +229,7 @@ jobs:
           echo "✅ All YAML files have valid syntax"
       - name: Send Telegram notification - Syntax Validation Failed
         if: failure() && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@master
+        uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -244,7 +251,7 @@ jobs:
     steps:
       - name: Send Telegram notification - All Security Checks Passed
         if: needs.trivy-scan.result == 'success' && needs.secret-scan.result == 'success' && needs.sops-validation.result == 'success' && needs.syntax-validation.result == 'success'
-        uses: appleboy/telegram-action@master
+        uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -263,7 +270,7 @@ jobs:
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
       - name: Send Telegram notification - Security Issues Detected
         if: needs.trivy-scan.result == 'failure' || needs.secret-scan.result == 'failure' || needs.sops-validation.result == 'failure' || needs.syntax-validation.result == 'failure'
-        uses: appleboy/telegram-action@master
+        uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}

@@ -106,6 +106,7 @@ secrets/                # sops-encrypted YAML (NEVER commit plaintext)
 |------------------|------------|
 | Any homeserver task (services, ZFS, networking, monitoring) | [docs/Infrastructure.md](docs/Infrastructure.md) |
 | Flake structure, `parts/`, module layout, WM stack, options system, deploy | [docs/Architecture.md](docs/Architecture.md) |
+| GitHub Actions workflows, CI/CD pipeline, `.github/` | [docs/CI-CD.md](docs/CI-CD.md) |
 
 **After every change, update the relevant doc immediately** — not at commit time, but as part of the same edit session.
 
@@ -117,6 +118,7 @@ secrets/                # sops-encrypted YAML (NEVER commit plaintext)
 | New flake input wired into a host | [docs/Architecture.md](docs/Architecture.md) — Host Wiring section |
 | Flake structure, `parts/` files, module layout changed | [docs/Architecture.md](docs/Architecture.md) |
 | Security tool replaced | Update both the service table and any prose referencing the old tool |
+| `.github/workflows/*` changed (triggers, jobs, matrix, secrets) | [docs/CI-CD.md](docs/CI-CD.md) |
 
 **When adding a new ZFS pool:**
 1. Add `boot.zfs.extraPools = ["poolname"]` to hardware-configuration.nix FIRST

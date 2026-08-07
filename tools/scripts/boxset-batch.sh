@@ -20,7 +20,7 @@ for d in "$BOXSET"/*/; do
   fi
   echo "=== $name ($n files) ==="
   tmp="$d/.tmp_merge.m4b"
-  python3 "$SCRIPT_DIR/merge-audiobook.py" "$d" "$tmp" > "$d/merge.log" 2>&1
+  python3 "$SCRIPT_DIR/merge-audiobook.py" "$d" "$tmp" >"$d/merge.log" 2>&1
   if [ $? -ne 0 ] || [ ! -f "$tmp" ]; then
     echo "FAILED: $name (see $d/merge.log)"
     continue

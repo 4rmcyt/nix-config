@@ -8,7 +8,7 @@ on:
   schedule:
     - cron: "0 3 * * *" # Daily at 3 AM UTC
 # ============================================================================
-# Permissions (Principle of Least Privilege) test
+# Permissions (Principle of Least Privilege)
 # ============================================================================
 permissions:
   actions: read
@@ -28,13 +28,87 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 jobs:
+  # ==========================================================================
+  # Update Flake Lock - only on the nightly schedule or a manual dispatch.
+  # Runs first so validate/build see the freshly committed flake.lock.
+  # ==========================================================================
+  update-flake-lock:
+    name: Update Flake Lock File
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+    outputs:
+      changes_detected: ${{ steps.commit.outputs.changes_detected }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+            ssl-cert-file = /etc/ssl/certs/ca-certificates.crt
+            max-jobs = auto
+            cores = 0
+      - name: Setup Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@v14
+      - name: Update flake.lock
+        run: nix flake update
+      - name: Commit updated flake.lock
+        id: commit
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "ci: update flake.lock"
+          file_pattern: "flake.lock"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+      - name: Send Telegram notification - Flake Lock Updated
+        if: success() && steps.commit.outputs.changes_detected == 'true'
+        uses: appleboy/telegram-action@v1.0.1
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            🔄 *Flake Lock File Updated*
+
+            Repository: `${{ github.repository }}`
+            Branch: `main`
+            Trigger: ${{ github.event_name }}
+
+            The `flake.lock` file has been automatically updated and pushed to `main`.
+            Validation and builds are running next in this same workflow.
+
+            [View Commit](${{ github.server_url }}/${{ github.repository }}/commit/${{ steps.commit.outputs.commit_hash }})
+      - name: Send Telegram notification - Flake Update Failed
+        if: failure()
+        uses: appleboy/telegram-action@v1.0.1
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: markdown
+          message: |
+            ❌ *Flake Lock Update Failed*
+
+            Repository: `${{ github.repository }}`
+            Branch: `main`
+            Trigger: ${{ github.event_name }}
+
+            The scheduled `nix flake update` job failed. Please check the logs.
+
+            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
   validate:
     name: Validate Flake & Formatting
+    needs: [update-flake-lock]
+    if: always() && (needs.update-flake-lock.result == 'success' || needs.update-flake-lock.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
-      # Checkout
+      # Checkout (picks up the just-committed flake.lock on schedule/dispatch runs)
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       # Setup Nix
       - name: Install Nix
         uses: cachix/install-nix-action@v31
@@ -53,7 +127,7 @@ jobs:
             extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
       # Setup Magic Nix Cache
       - name: Setup Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@v4
+        uses: DeterminateSystems/magic-nix-cache-action@v14
       # Check for uncommitted changes before flake update
       - name: Check for uncommitted changes before flake update
         run: |
@@ -78,13 +152,6 @@ jobs:
             echo "⚠️ flake.lock changed - will run flake check"
             git diff flake.lock
           fi
-      # Upload updated flake.lock for reuse in build jobs
-      - name: Upload updated flake.lock
-        uses: actions/upload-artifact@v4
-        with:
-          name: flake-lock
-          path: flake.lock
-          retention-days: 1
       # Validate flake metadata and structure
       - name: Validate flake metadata
         run: |
@@ -100,7 +167,7 @@ jobs:
       # Send Telegram notification - Formatting Failed
       - name: Send Telegram notification - Formatting Failed
         if: steps.formatting.outcome == 'failure' && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@master
+        uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -115,13 +182,13 @@ jobs:
       # Flake check (informational only - doesn't fail the job)
       - name: Check flake
         id: flake-check
-        if: steps.flake-changed.outputs.changed == 'true'
+        if: steps.flake-changed.outputs.changed == 'true' || needs.update-flake-lock.outputs.changes_detected == 'true'
         continue-on-error: true
         run: nix flake check --show-trace
       # Send Telegram notification - Formatting Failed
       - name: Send Telegram notification - Flake Check Failed
         if: steps.flake-check.outcome == 'failure' && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@master
+        uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -136,7 +203,7 @@ jobs:
       # Send Telegram notification - Validation Failed
       - name: Send Telegram notification - Validation Failed
         if: failure() && github.event_name != 'pull_request'
-        uses: appleboy/telegram-action@master
+        uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -158,10 +225,10 @@ jobs:
       max-parallel: 4 # Build systems in parallel
       matrix:
         system:
-          - wsl # AMD Zen 3 (znver3)
           - desktop # AMD Zen 4 (znver4)
           - homeserver # Intel Skylake
           - matebook # AMD Zen 1 (znver1)
+          - gcp-relay
     uses: ./.github/workflows/reusable-build.yml
     with:
       system: ${{ matrix.system }}
@@ -184,7 +251,7 @@ jobs:
     steps:
       - name: Send Telegram notification - All Checks Passed
         if: needs.validate.result == 'success' && needs.build-and-check-systems.result == 'success'
-        uses: appleboy/telegram-action@master
+        uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -195,6 +262,6 @@ jobs:
             Branch: `${{ github.ref_name }}`
             All checks passed:
             ✅ Validation (Format & Flake)
-            ✅ All systems built (wsl, desktop, homeserver, matebook)
+            ✅ All systems built (desktop, homeserver, matebook, gcp-relay)
             ✅ Home manager validation
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})

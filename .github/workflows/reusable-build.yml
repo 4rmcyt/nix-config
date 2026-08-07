@@ -29,10 +29,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Send Telegram notification - Build Started
         if: inputs.event_name != 'pull_request'
-        uses: appleboy/telegram-action@master
+        uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -68,11 +68,11 @@ jobs:
             substituters = https://cache.nixos.org https://4rmcyt.cachix.org https://nix-community.cachix.org https://cache.garnix.io
             trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= 4rmcyt.cachix.org-1:yHVDqXs6TDmfSOuPbl4gcfomDK9gzTmK8FabfHLi+d8= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
       - name: Setup Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@v4
+        uses: DeterminateSystems/magic-nix-cache-action@v14
       - name: Update flake inputs (in-memory)
         run: nix flake update
       - name: Setup Cachix for ${{ inputs.system }} (Push)
-        uses: cachix/cachix-action@v15
+        uses: cachix/cachix-action@v17
         with:
           name: 4rmcyt
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
@@ -90,7 +90,7 @@ jobs:
             --show-trace
       - name: Send Telegram notification - Build Failed
         if: failure() && inputs.event_name != 'pull_request'
-        uses: appleboy/telegram-action@master
+        uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -105,7 +105,7 @@ jobs:
             [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
       - name: Send Telegram notification - Build Success
         if: success() && inputs.ref_type == 'branch' && inputs.ref_name == 'main'
-        uses: appleboy/telegram-action@master
+        uses: appleboy/telegram-action@v1.0.1
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}

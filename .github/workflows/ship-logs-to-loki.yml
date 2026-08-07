@@ -1,9 +1,9 @@
 name: Ship Logs to Loki
 # This workflow ships GitHub Actions logs to your Loki instance
-# It runs after the CI workflow completes
+# It runs after CI or Security Scanning completes
 on:
   workflow_run:
-    workflows: ["CI"]
+    workflows: ["CI", "Security Scanning"]
     types:
       - completed
 permissions:
