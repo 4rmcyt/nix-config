@@ -135,14 +135,14 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            ✅ *CI Workflow Completed Successfully*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
+            ✅ <b>CI Workflow Completed Successfully</b>
+            Repository: <code>${{ github.repository }}</code>
+            Branch: <code>${{ github.ref_name }}</code>
             All checks passed:
-            ✅ Validation (Format & Flake)
+            ✅ Validation (Format &amp; Flake)
             ✅ Security (Trivy, TruffleHog, SOPS, syntax)
             ✅ All systems built (desktop, homeserver, matebook, gcp-relay)
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>
       - name: Notify - Issues Detected
         if: needs.validate.result != 'success' || needs.security-checks.result != 'success' || needs.build-and-check-systems.result != 'success'
         uses: ./.github/actions/notify-telegram
@@ -150,16 +150,16 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            ❌ *CI Workflow - Issues Detected*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
+            ❌ <b>CI Workflow - Issues Detected</b>
+            Repository: <code>${{ github.repository }}</code>
+            Branch: <code>${{ github.ref_name }}</code>
 
             Check results:
-            ${{ needs.validate.result == 'success' && '✅' || '❌' }} Validation (Format & Flake)
+            ${{ needs.validate.result == 'success' && '✅' || '❌' }} Validation (Format &amp; Flake)
             ${{ needs.security-checks.outputs.trivy_result == 'success' && '✅' || '❌' }} Trivy vulnerability scan
             ${{ needs.security-checks.outputs.secret_scan_result == 'success' && '✅' || '❌' }} Secret detection
             ${{ needs.security-checks.outputs.sops_result == 'success' && '✅' || '❌' }} SOPS validation
             ${{ needs.security-checks.outputs.syntax_result == 'success' && '✅' || '❌' }} Syntax validation
             ${{ needs.build-and-check-systems.result == 'success' && '✅' || '❌' }} System builds
 
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>

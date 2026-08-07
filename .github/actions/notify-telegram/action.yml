@@ -1,5 +1,5 @@
 name: Notify Telegram
-description: Send a markdown-formatted status message to the repo's Telegram chat.
+description: Send an HTML-formatted status message to the repo's Telegram chat.
 inputs:
   chat-id:
     description: Telegram chat ID (usually secrets.TELEGRAM_CHAT_ID).
@@ -8,7 +8,7 @@ inputs:
     description: Telegram bot token (usually secrets.TELEGRAM_BOT_TOKEN).
     required: true
   message:
-    description: Markdown message body.
+    description: HTML message body (Telegram HTML subset — <b>, <code>, <a href>).
     required: true
 runs:
   using: composite
@@ -17,5 +17,5 @@ runs:
       with:
         to: ${{ inputs.chat-id }}
         token: ${{ inputs.bot-token }}
-        format: markdown
+        format: html
         message: ${{ inputs.message }}

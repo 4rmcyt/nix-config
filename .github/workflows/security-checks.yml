@@ -69,12 +69,12 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            🔒 *Security Scan - Vulnerabilities Detected*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
+            🔒 <b>Security Scan - Vulnerabilities Detected</b>
+            Repository: <code>${{ github.repository }}</code>
+            Branch: <code>${{ github.ref_name }}</code>
             Scanner: Trivy
             Critical/High findings block the build — see the "Run Trivy vulnerability scanner" step log for details.
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>
   # ==========================================================================
   # Secret Scanning
   # No explicit base/head: let the action pick per-event scan mode (PR diff,
@@ -103,12 +103,12 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            🚨 *Security Alert - Secrets Detected*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
+            🚨 <b>Security Alert - Secrets Detected</b>
+            Repository: <code>${{ github.repository }}</code>
+            Branch: <code>${{ github.ref_name }}</code>
             Scanner: TruffleHog
             Potential secrets found — build blocked!
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>
   # ==========================================================================
   # SOPS Validation
   # Every file under secrets/ must be SOPS-encrypted, regardless of extension
@@ -162,11 +162,11 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            ⚠️ *SOPS Validation Failed*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
+            ⚠️ <b>SOPS Validation Failed</b>
+            Repository: <code>${{ github.repository }}</code>
+            Branch: <code>${{ github.ref_name }}</code>
             A file under secrets/ may not be properly encrypted — build blocked!
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>
   # ==========================================================================
   # Configuration Syntax Validation - YAML, shell scripts, Terraform, Nix fetches
   # ==========================================================================
@@ -299,11 +299,11 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            ⚠️ *Syntax Validation Failed*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
+            ⚠️ <b>Syntax Validation Failed</b>
+            Repository: <code>${{ github.repository }}</code>
+            Branch: <code>${{ github.ref_name }}</code>
             YAML, shell, Terraform, or Nix-fetch checks failed — build blocked!
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>
   # ==========================================================================
   # Collect per-check results so the ci.yml orchestrator can still report an
   # itemized summary even though it only sees this workflow as one job.

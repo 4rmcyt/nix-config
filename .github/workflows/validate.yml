@@ -72,12 +72,12 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            ⚠️ *Formatting Check Failed (Non-blocking)*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
-            Trigger: ${{ github.event_name }}
+            ⚠️ <b>Formatting Check Failed (Non-blocking)</b>
+            Repository: <code>${{ github.repository }}</code>
+            Branch: <code>${{ github.ref_name }}</code>
+            Trigger: <code>${{ github.event_name }}</code>
             The formatting check failed but the workflow will continue.
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>
       # Flake check (informational only - doesn't fail the job)
       - name: Check flake
         id: flake-check
@@ -91,12 +91,12 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            ⚠️ *Flake Check Failed (Non-blocking)*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
-            Trigger: ${{ github.event_name }}
+            ⚠️ <b>Flake Check Failed (Non-blocking)</b>
+            Repository: <code>${{ github.repository }}</code>
+            Branch: <code>${{ github.ref_name }}</code>
+            Trigger: <code>${{ github.event_name }}</code>
             The flake check failed but the workflow will continue.
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>
       - name: Notify - Validation Failed
         if: failure() && github.event_name != 'pull_request'
         uses: ./.github/actions/notify-telegram
@@ -104,8 +104,8 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            ❌ *Validation Failed (Format or Flake Check)*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ github.ref_name }}`
-            Trigger: ${{ github.event_name }}
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            ❌ <b>Validation Failed (Format or Flake Check)</b>
+            Repository: <code>${{ github.repository }}</code>
+            Branch: <code>${{ github.ref_name }}</code>
+            Trigger: <code>${{ github.event_name }}</code>
+            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>

@@ -47,16 +47,16 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            🔄 *Flake Lock File Updated*
+            🔄 <b>Flake Lock File Updated</b>
 
-            Repository: `${{ github.repository }}`
-            Branch: `main`
-            Trigger: ${{ github.event_name }}
+            Repository: <code>${{ github.repository }}</code>
+            Branch: <code>main</code>
+            Trigger: <code>${{ github.event_name }}</code>
 
-            The `flake.lock` file has been automatically updated and pushed to `main`.
+            The <code>flake.lock</code> file has been automatically updated and pushed to <code>main</code>.
             Validation and builds are running next in this same workflow.
 
-            [View Commit](${{ github.server_url }}/${{ github.repository }}/commit/${{ steps.commit.outputs.commit_hash }})
+            <a href="${{ github.server_url }}/${{ github.repository }}/commit/${{ steps.commit.outputs.commit_hash }}">View Commit</a>
       - name: Notify - Flake Update Failed
         if: failure()
         uses: ./.github/actions/notify-telegram
@@ -64,12 +64,12 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            ❌ *Flake Lock Update Failed*
+            ❌ <b>Flake Lock Update Failed</b>
 
-            Repository: `${{ github.repository }}`
-            Branch: `main`
-            Trigger: ${{ github.event_name }}
+            Repository: <code>${{ github.repository }}</code>
+            Branch: <code>main</code>
+            Trigger: <code>${{ github.event_name }}</code>
 
-            The scheduled `nix flake update` job failed. Please check the logs.
+            The scheduled <code>nix flake update</code> job failed. Please check the logs.
 
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>

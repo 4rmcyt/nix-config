@@ -37,13 +37,13 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            🔨 *Build Started*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ inputs.ref_name }}`
-            System: `${{ inputs.system }}`
-            Trigger: ${{ inputs.event_name }}
-            Commit: `${{ inputs.commit_message || 'N/A' }}`
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            🔨 <b>Build Started</b>
+            Repository: <code>${{ github.repository }}</code>
+            Branch: <code>${{ inputs.ref_name }}</code>
+            System: <code>${{ inputs.system }}</code>
+            Trigger: <code>${{ inputs.event_name }}</code>
+            Commit: ${{ inputs.commit_message || 'N/A' }}
+            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>
       - name: Free up disk space
         run: |
           echo "=== Before cleanup ==="
@@ -92,13 +92,13 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            ❌ *Build Failed*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ inputs.ref_name }}`
-            System: `${{ inputs.system }}`
-            Trigger: ${{ inputs.event_name }}
+            ❌ <b>Build Failed</b>
+            Repository: <code>${{ github.repository }}</code>
+            Branch: <code>${{ inputs.ref_name }}</code>
+            System: <code>${{ inputs.system }}</code>
+            Trigger: <code>${{ inputs.event_name }}</code>
             Build or Home Manager validation failed.
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>
       - name: Notify - Build Success
         if: success() && inputs.ref_type == 'branch' && inputs.ref_name == 'main'
         uses: ./.github/actions/notify-telegram
@@ -106,9 +106,9 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            ✅ *Build Successful*
-            Repository: `${{ github.repository }}`
-            Branch: `${{ inputs.ref_name }}`
-            System: `${{ inputs.system }}`
+            ✅ <b>Build Successful</b>
+            Repository: <code>${{ github.repository }}</code>
+            Branch: <code>${{ inputs.ref_name }}</code>
+            System: <code>${{ inputs.system }}</code>
             Build completed and pushed to Cachix.
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>

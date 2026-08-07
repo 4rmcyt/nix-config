@@ -89,12 +89,12 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            🔍 *vulnix: ${{ steps.summary.outputs.total || '?' }} known CVE(s) in desktop closure*
-            Repository: `${{ github.repository }}`
-            Informational only — scans `desktop` as a representative host, not the full fleet.
+            🔍 <b>vulnix: ${{ steps.summary.outputs.total || '?' }} known CVE(s) in desktop closure</b>
+            Repository: <code>${{ github.repository }}</code>
+            Informational only — scans <code>desktop</code> as a representative host, not the full fleet.
 
             Top 5 by CVSS:
             ${{ steps.summary.outputs.top5 || '(summary unavailable — see workflow log)' }}
 
             Full list in the workflow log.
-            [View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>
