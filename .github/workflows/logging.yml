@@ -1,0 +1,131 @@
+name: Ship Metrics & Logs to Loki
+# Two different things shipped to two different streams, for two different
+# purposes:
+#   1. One structured JSON event per job, always — this is what the Grafana
+#      dashboard queries (success/fail counts, durations, trends via LogQL
+#      `| json`). Cheap, small, always sent.
+#   2. The full per-line log of a job, only when it failed — for debugging
+#      in Grafana Explore. Not meant for dashboard panels.
+# Runs after CI completes, regardless of how CI itself was triggered.
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+permissions:
+  actions: read
+jobs:
+  ship-to-loki:
+    name: Ship Job Metrics + Failed-Job Logs to Loki
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ship per-job summaries and failed-job logs to Loki
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LOKI_URL: ${{ secrets.LOKI_ENDPOINT }}
+          LOKI_AUTH_TOKEN: ${{ secrets.LOKI_AUTH_TOKEN }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          WORKFLOW: ${{ github.event.workflow_run.name }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          ACTOR: ${{ github.event.workflow_run.actor.login }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+        run: |
+          set -euo pipefail
+
+          gh api "/repos/${REPO}/actions/runs/${RUN_ID}/jobs" --paginate --jq '.jobs' > jobs.json
+          echo "Found $(jq length jobs.json) job(s) in run ${RUN_ID}"
+
+          jq -c '.[]' jobs.json | while IFS= read -r job; do
+            job_id=$(jq -r '.id' <<<"$job")
+            job_name=$(jq -r '.name' <<<"$job")
+            conclusion=$(jq -r '.conclusion // "unknown"' <<<"$job")
+            status=$(jq -r '.status' <<<"$job")
+            started_at=$(jq -r '.started_at' <<<"$job")
+            completed_at=$(jq -r '.completed_at' <<<"$job")
+            job_url=$(jq -r '.html_url' <<<"$job")
+
+            if [ "$completed_at" != "null" ]; then
+              ts_ns=$(date -d "$completed_at" +%s%N)
+            else
+              ts_ns=$(date +%s%N)
+            fi
+
+            duration_seconds=0
+            if [ "$started_at" != "null" ] && [ "$completed_at" != "null" ]; then
+              duration_seconds=$(($(date -d "$completed_at" +%s) - $(date -d "$started_at" +%s)))
+            fi
+
+            echo "== ${job_name}: ${conclusion} (${duration_seconds}s) =="
+
+            # ---- 1. Structured summary event (dashboard) ----
+            # Low-cardinality fields become Loki stream labels (cheap to
+            # filter/aggregate on); everything else lives in the JSON body,
+            # pulled out at query time with `| json`.
+            line=$(jq -nc \
+              --arg workflow "$WORKFLOW" \
+              --arg job_name "$job_name" \
+              --arg conclusion "$conclusion" \
+              --arg status "$status" \
+              --arg branch "$BRANCH" \
+              --argjson run_number "${RUN_NUMBER:-0}" \
+              --argjson run_attempt "${RUN_ATTEMPT:-1}" \
+              --arg actor "$ACTOR" \
+              --arg job_url "$job_url" \
+              --arg run_url "$RUN_URL" \
+              --argjson duration_seconds "$duration_seconds" \
+              '{workflow: $workflow, job_name: $job_name, conclusion: $conclusion,
+                status: $status, branch: $branch, run_number: $run_number,
+                run_attempt: $run_attempt, actor: $actor, duration_seconds: $duration_seconds,
+                job_url: $job_url, run_url: $run_url}')
+
+            summary_payload=$(jq -nc \
+              --arg repo "$REPO" --arg wf "$WORKFLOW" --arg jn "$job_name" \
+              --arg concl "$conclusion" --arg branch "$BRANCH" \
+              --arg ts "$ts_ns" --arg line "$line" \
+              '{streams: [{stream: {job: "github-actions", repository: $repo, workflow: $wf,
+                job_name: $jn, conclusion: $concl, branch: $branch}, values: [[$ts, $line]]}]}')
+
+            curl -sf -X POST \
+              -H "Content-Type: application/json" \
+              -H "Authorization: Bearer ${LOKI_AUTH_TOKEN}" \
+              -d "$summary_payload" \
+              "${LOKI_URL}/loki/api/v1/push" \
+              || echo "::warning::Failed to ship summary for ${job_name}"
+
+            # ---- 2. Raw per-line log, failed jobs only (debug) ----
+            if [ "$conclusion" == "failure" ]; then
+              echo "Fetching full log for failed job: ${job_name} (id ${job_id})"
+              if gh api "/repos/${REPO}/actions/jobs/${job_id}/logs" >"job_${job_id}.log" 2>/dev/null \
+                && [ -s "job_${job_id}.log" ]; then
+                # Real GH Actions log lines already carry their own ISO8601
+                # timestamp prefix, but parsing that per-line reliably in
+                # bash/jq is fragile. Instead: anchor every line at the job's
+                # completion time and add a 1ns offset per line so entries
+                # stay strictly ordered and unique within the stream — good
+                # enough for text search in Explore, not meant for timing
+                # analysis.
+                values=$(jq -Rn --arg ts "$ts_ns" \
+                  '[inputs] | to_entries | map([(($ts | tonumber) + .key | tostring), .value])' \
+                  "job_${job_id}.log")
+
+                log_payload=$(jq -nc \
+                  --arg repo "$REPO" --arg wf "$WORKFLOW" --arg jn "$job_name" \
+                  --argjson vals "$values" \
+                  '{streams: [{stream: {job: "github-actions-logs", repository: $repo,
+                    workflow: $wf, job_name: $jn}, values: $vals}]}')
+
+                curl -sf -X POST \
+                  -H "Content-Type: application/json" \
+                  -H "Authorization: Bearer ${LOKI_AUTH_TOKEN}" \
+                  -d "$log_payload" \
+                  "${LOKI_URL}/loki/api/v1/push" \
+                  || echo "::warning::Failed to ship raw log for ${job_name}"
+              fi
+              rm -f "job_${job_id}.log"
+            fi
+          done
+
+          echo "✅ Done shipping to Loki"
