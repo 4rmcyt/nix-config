@@ -7,11 +7,16 @@ name: Ship Metrics & Logs to Loki
 #   2. The full per-line log of a job, only when it failed — for debugging
 #      in Grafana Explore. Not meant for dashboard panels.
 # Runs after CI completes, regardless of how CI itself was triggered.
+# Loki is LAN/tailnet-only with no auth of its own (auth_enabled = false) —
+# not exposed to the public internet. The runner joins the tailnet itself
+# (via the headscale-hosted control plane on gcp-relay) as an ephemeral node
+# before pushing, instead of exposing Loki. See docs/CI-CD.md.
 on:
   workflow_run:
     workflows: ["CI"]
     types:
       - completed
+  workflow_dispatch: # manual test run
 permissions:
   actions: read
 jobs:
@@ -19,6 +24,18 @@ jobs:
     name: Ship Job Metrics + Failed-Job Logs to Loki
     runs-on: ubuntu-latest
     steps:
+      # headscale (self-hosted control plane on gcp-relay) has no OAuth/
+      # federated-identity API — only Tailscale SaaS supports those. Use a
+      # reusable, ephemeral, per-user preauth key instead, pointed at our
+      # own control plane via `args: --login-server=...` (the action has no
+      # dedicated input for a custom control server; `args` passes straight
+      # through to `tailscale up`, which does support --login-server).
+      - name: Connect to tailnet
+        uses: tailscale/github-action@v4.1.3
+        with:
+          authkey: ${{ secrets.TS_AUTHKEY }}
+          args: --login-server=https://hs.example.com --accept-dns
+          ping: homeserver.ts.example.com
       - name: Ship per-job summaries and failed-job logs to Loki
         env:
           GH_TOKEN: ${{ github.token }}
@@ -34,6 +51,13 @@ jobs:
           RUN_URL: ${{ github.event.workflow_run.html_url }}
         run: |
           set -euo pipefail
+
+          # Safety net: skip cleanly instead of failing every run if the
+          # secret is ever unset (e.g. mid-rotation) rather than erroring out.
+          if [ -z "${LOKI_URL}" ]; then
+            echo "LOKI_ENDPOINT not set — skipping."
+            exit 0
+          fi
 
           gh api "/repos/${REPO}/actions/runs/${RUN_ID}/jobs" --paginate --jq '.jobs' > jobs.json
           echo "Found $(jq length jobs.json) job(s) in run ${RUN_ID}"
