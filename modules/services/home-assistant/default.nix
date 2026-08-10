@@ -30,13 +30,6 @@ in {
       script: !include scripts.yaml
       scene: !include scenes.yaml
 
-      # Required for reverse proxy
-      http:
-        use_x_forwarded_for: true
-        trusted_proxies:
-          - 127.0.0.1
-          - ::1
-
       wake_on_lan:
 
       switch:
