@@ -78,6 +78,16 @@ jobs:
   build-and-check-systems:
     name: Build & Check ${{ matrix.system }}
     needs: [validate, security-checks]
+    # Explicit, not the implicit success() a bare `needs:` gets by default:
+    # `validate` itself uses `if: always()` (so it still runs when
+    # flake-lock-update is skipped on push/PR) — and once any job upstream
+    # in the chain uses always(), GitHub's implicit success() for jobs
+    # further downstream evaluates wrong and skips them even though
+    # validate concluded 'success'. Confirmed live (three runs skipped this
+    # job outright with validate/security-checks both green) and matches
+    # https://github.com/orgs/community/discussions/26945. Check the
+    # `needs` results explicitly instead of trusting the default.
+    if: needs.validate.result == 'success' && needs.security-checks.result == 'success'
     strategy:
       fail-fast: false # Continue building other systems even if one fails
       max-parallel: 3 # Build systems in parallel
@@ -113,7 +123,10 @@ jobs:
   vulnix-scan:
     name: Vulnix CVE Scan
     needs: [build-and-check-systems]
-    if: success() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    # needs.X.result, not bare success() — see build-and-check-systems'
+    # comment above on why success() is unreliable once an upstream job in
+    # the chain (validate) uses if: always().
+    if: needs.build-and-check-systems.result == 'success' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     concurrency:
       group: ${{ github.workflow }}-vulnix-scan-${{ github.ref_name }}
       cancel-in-progress: true
