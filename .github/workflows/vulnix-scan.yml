@@ -1,6 +1,6 @@
 name: "Vulnix CVE Scan"
 # Called by ci.yml, schedule/workflow_dispatch only. Scans ONE representative
-# host's built closure (desktop — broadest package set) against NVD CVEs.
+# host's built closure (homeserver — broadest package set) against NVD CVEs.
 # Not blocking, not run per-host/per-push: a cold-cache vulnix run downloads
 # and parses ~5 years of NVD archives with no progress output and can take
 # many minutes. Running it 4x in parallel on every push/PR (the original
@@ -17,7 +17,7 @@ on:
         required: true
 jobs:
   vulnix:
-    name: Scan desktop closure for known CVEs
+    name: Scan homeserver closure for known CVEs
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -33,10 +33,10 @@ jobs:
             trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= 4rmcyt.cachix.org-1:yHVDqXs6TDmfSOuPbl4gcfomDK9gzTmK8FabfHLi+d8= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
       # Should hit Cachix (already pushed by the same night's
       # build-and-check-systems run), not rebuild from scratch.
-      - name: Build desktop configuration
+      - name: Build homeserver configuration
         run: |
           nix build \
-            .#nixosConfigurations.desktop.config.system.build.toplevel \
+            .#nixosConfigurations.homeserver.config.system.build.toplevel \
             --print-build-logs
       - name: Get ISO week for vulnix cache key
         id: date
@@ -74,7 +74,7 @@ jobs:
             [.[] | . as $pkg | ($pkg.cvssv3_basescore // {}) | to_entries[]
               | {name: $pkg.name, cve: .key, score: (.value // 0)}]
             | sort_by(-.score) | .[0:5][]
-            | "• `\(.name)` — [\(.cve)](https://nvd.nist.gov/vuln/detail/\(.cve)) (CVSS \(.score))"
+            | "• <code>\(.name)</code> — <a href=\"https://nvd.nist.gov/vuln/detail/\(.cve)\">\(.cve)</a> (CVSS \(.score))"
           ' vulnix-results.json)
           {
             echo "total=${total}"
@@ -89,9 +89,9 @@ jobs:
           chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
           bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            🔍 <b>vulnix: ${{ steps.summary.outputs.total || '?' }} known CVE(s) in desktop closure</b>
+            🔍 <b>vulnix: ${{ steps.summary.outputs.total || '?' }} known CVE(s) in homeserver closure</b>
             Repository: <code>${{ github.repository }}</code>
-            Informational only — scans <code>desktop</code> as a representative host, not the full fleet.
+            Informational only — scans <code>homeserver</code> as a representative host, not the full fleet.
 
             Top 5 by CVSS:
             ${{ steps.summary.outputs.top5 || '(summary unavailable — see workflow log)' }}
