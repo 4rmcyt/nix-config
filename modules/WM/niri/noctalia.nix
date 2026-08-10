@@ -1,8 +1,10 @@
 {pkgs, ...}: let
   # Zed theme template from matugen-themes
+  # Pinned to a commit, not refs/heads/main — that branch moved and broke
+  # the fixed-output hash once already (upstream edits the file in place).
   zedTemplate = pkgs.fetchurl {
-    url = "https://raw.githubusercontent.com/InioX/matugen-themes/refs/heads/main/templates/zed-colors.json";
-    sha256 = "154zpd7f4q3gf5jm6650bghbgyinz85vc8snn73127r2i6w672x8";
+    url = "https://raw.githubusercontent.com/InioX/matugen-themes/e4c1d6b7a76e980ffbb93fc57559689cef1f37d6/templates/zed-colors.json";
+    sha256 = "0kgwi45qyign1zg8b5jxsavhh3wamshvapvkx9q28xzbi95si142";
   };
 
   # Materialgram/Telegram theme template (Material You style)
