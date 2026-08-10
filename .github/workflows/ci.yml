@@ -86,8 +86,14 @@ jobs:
     # validate concluded 'success'. Confirmed live (three runs skipped this
     # job outright with validate/security-checks both green) and matches
     # https://github.com/orgs/community/discussions/26945. Check the
-    # `needs` results explicitly instead of trusting the default.
-    if: needs.validate.result == 'success' && needs.security-checks.result == 'success'
+    # `needs` results explicitly instead of trusting the default — and the
+    # leading always() is load-bearing: without it GitHub still applies its
+    # default "skip if anything transitive upstream was skipped" cascade
+    # *before* this condition is even evaluated, skipping the job outright
+    # regardless of what the condition itself says. Confirmed live: the
+    # explicit needs.result check alone (no always()) still skipped this
+    # job with validate/security-checks both green.
+    if: always() && needs.validate.result == 'success' && needs.security-checks.result == 'success'
     strategy:
       fail-fast: false # Continue building other systems even if one fails
       max-parallel: 3 # Build systems in parallel
@@ -123,10 +129,9 @@ jobs:
   vulnix-scan:
     name: Vulnix CVE Scan
     needs: [build-and-check-systems]
-    # needs.X.result, not bare success() — see build-and-check-systems'
-    # comment above on why success() is unreliable once an upstream job in
-    # the chain (validate) uses if: always().
-    if: needs.build-and-check-systems.result == 'success' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    # always() + explicit needs.X.result, not bare success() — see
+    # build-and-check-systems' comment above; the always() is load-bearing.
+    if: always() && needs.build-and-check-systems.result == 'success' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     concurrency:
       group: ${{ github.workflow }}-vulnix-scan-${{ github.ref_name }}
       cancel-in-progress: true

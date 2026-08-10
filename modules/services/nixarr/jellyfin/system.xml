@@ -193,11 +193,6 @@
       <Enabled>true</Enabled>
     </RepositoryInfo>
     <RepositoryInfo>
-      <Name>Moonfin</Name>
-      <Url>https://raw.githubusercontent.com/Moonfin-Client/Plugin/refs/heads/master/manifest.json</Url>
-      <Enabled>true</Enabled>
-    </RepositoryInfo>
-    <RepositoryInfo>
       <Name>jellyfin-plugin-lyrics</Name>
       <Url>https://raw.githubusercontent.com/Felitendo/jellyfin-plugin-lyrics/master/manifest.json</Url>
       <Enabled>true</Enabled>
