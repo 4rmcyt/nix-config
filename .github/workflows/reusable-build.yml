@@ -30,6 +30,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
+      - name: Sanitize commit message for Telegram HTML
+        id: commit-msg
+        # Raw commit subjects are free text and can contain literal
+        # &, <, > — Telegram's HTML parse mode chokes on those (e.g. a
+        # message mentioning `needs.<job>.result` breaks with "Unsupported
+        # start tag" and fails the whole notify step). First line only,
+        # then escape in the order that matters: & before < and >, or the
+        # entities we just inserted get re-escaped.
+        run: |
+          msg=$(printf '%s' "${{ inputs.commit_message || 'N/A' }}" | head -n1)
+          msg="${msg//&/&amp;}"
+          msg="${msg//</&lt;}"
+          msg="${msg//>/&gt;}"
+          {
+            echo "escaped<<COMMITMSG_EOF"
+            echo "$msg"
+            echo "COMMITMSG_EOF"
+          } >> "$GITHUB_OUTPUT"
       - name: Notify - Build Started
         if: inputs.event_name != 'pull_request'
         uses: ./.github/actions/notify-telegram
@@ -42,7 +60,7 @@ jobs:
             Branch: <code>${{ inputs.ref_name }}</code>
             System: <code>${{ inputs.system }}</code>
             Trigger: <code>${{ inputs.event_name }}</code>
-            Commit: ${{ inputs.commit_message || 'N/A' }}
+            Commit: ${{ steps.commit-msg.outputs.escaped }}
             <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>
       - name: Free up disk space
         run: |
