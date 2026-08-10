@@ -14,7 +14,7 @@ in {
   # HA never writes to this file; automations/scripts/scenes go to separate includes.
   sops.templates."homeassistant-configuration.yaml" = {
     owner = "root";
-    mode = "0444";
+    mode = "0400";
     content = ''
       # Loads default set of integrations. Do not remove.
       default_config:
