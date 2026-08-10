@@ -27,6 +27,10 @@
     };
     prettier = {
       enable = true;
+      # *.yaml/*.yml intentionally NOT here — yamlfmt already claims those
+      # below. Both formatters racing on the same file caused treefmt's
+      # mtime-staleness check to flag it as "changed underneath us" on
+      # every CI run (confirmed live, always .trivyignore.yaml).
       includes = [
         "*.cjs"
         "*.css"
@@ -41,8 +45,6 @@
         "*.ts"
         "*.tsx"
         "*.vue"
-        "*.yaml"
-        "*.yml"
       ];
       package = pkgs.prettier;
     };
