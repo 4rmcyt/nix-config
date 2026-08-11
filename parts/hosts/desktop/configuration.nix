@@ -55,7 +55,19 @@ in {
           };
         });
     in
-      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.override {glaze-hyprland = glaze7;};
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.override {
+        glaze-hyprland = glaze7;
+        # Upstream version skew (as of 2026-08-11): Hyprland's flake.lock pins
+        # hyprland-guiutils (a16ad89, 2026-07-20) and hyprtoolkit (bdba25c,
+        # 2026-06-27) out of lockstep, so hyprland-guiutils fails to link
+        # against the older hyprtoolkit's undefined symbols. Since
+        # hyprland-guiutils is only referenced inside `postInstall`'s
+        # `wrapRuntimeDeps` PATH wrapping (lib.optionalString, lazily
+        # unevaluated when false), disabling it drops the build dependency
+        # entirely. Costs the hyprland-welcome/hyprland-run/hyprland-donate-screen
+        # helper binaries on PATH until upstream re-syncs the pins.
+        wrapRuntimeDeps = false;
+      };
     programs.hyprland.portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     programs.hyprland.withUWSM = true;
 
