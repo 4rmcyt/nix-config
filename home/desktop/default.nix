@@ -59,7 +59,6 @@
 
     packages = with pkgs; [
       android-tools
-      antigravity-ide-fhs
       arp-scan
       bat
       bettercap
