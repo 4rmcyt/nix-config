@@ -7,6 +7,7 @@
   commonExtraOptions = [
     "--add-host=host.containers.internal:host-gateway"
     "--label=io.containers.autoupdate=registry"
+    "--device=/dev/dri:/dev/dri"
   ];
   envFile = [config.sops.templates."dispatcharr.env".path];
 in {
