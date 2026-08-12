@@ -799,11 +799,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786501082,
-        "narHash": "sha256-ROC70hdloiAY74yodpAgT0sP1dmYk+vchjYsrfmhfiM=",
+        "lastModified": 1786538400,
+        "narHash": "sha256-PH8B1YKxedcWKNw2xsk6cKPVk/rJoLgdlWd5d+Icies=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "99e84ee7387ff24cd112ff51f71c3465eb9cb770",
+        "rev": "e13ba5e5abbd9b912fa8c6979bd119e87ca7fdd9",
         "type": "github"
       },
       "original": {
@@ -911,11 +911,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1786471079,
-        "narHash": "sha256-cPLX8ypnqVv9kUbKxiW6YADtffJBtciUT1g+wyNL/lw=",
+        "lastModified": 1786555543,
+        "narHash": "sha256-hjVcd1p+V32VlA/cdWb6AFJDvPx+h6tsVb+OXlEElL4=",
         "ref": "refs/heads/main",
-        "rev": "24e23ca4bb6041014c3b784fdf5012b2fdae89ac",
-        "revCount": 7733,
+        "rev": "1256bd180e7677aadd715e59351c09fb16e48efc",
+        "revCount": 7734,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/hyprwm/Hyprland"
@@ -1217,11 +1217,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786503409,
-        "narHash": "sha256-OlwkAVXKos0+3WoFYe3EWb/G2lMP0vVHCs9A1yd/PXs=",
+        "lastModified": 1786554751,
+        "narHash": "sha256-S6elg+nneCdUwpG6Y9ABMr/bbRfzCvls0ba2Vva22Lk=",
         "owner": "utensils",
         "repo": "mcp-nixos",
-        "rev": "a786fa8c575fc130fa0e0ec39d9ee5592538df4f",
+        "rev": "fea707cb1aec3e68baf2a815fa292ab9291451e4",
         "type": "github"
       },
       "original": {
@@ -1954,11 +1954,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786526504,
-        "narHash": "sha256-VQ8VCAWyTScgX4mjeNiJ+TcK4UHg+OxFCMl2NshUr/8=",
+        "lastModified": 1786558646,
+        "narHash": "sha256-iLu97dKQCpJnAla4a+LbYmpHFzEa/7f2IZVNoe2HuQ4=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "12a983cddd8b689e33a6d9bda585add7f6e4d399",
+        "rev": "b18b8d80be45605175e7e3c8da76a6c657c6cecd",
         "type": "github"
       },
       "original": {
@@ -2192,11 +2192,11 @@
         "tinted-zed": "tinted-zed"
       },
       "locked": {
-        "lastModified": 1786502578,
-        "narHash": "sha256-zdWv5uKQFAzM+9XhsYyydLdGQH/DGEkQl0mIC0N9xOU=",
+        "lastModified": 1786531493,
+        "narHash": "sha256-F93yabBSW2TpxKYMcArQOnFuCqBgAdbfZsdl0w5Pojg=",
         "owner": "danth",
         "repo": "stylix",
-        "rev": "35d3c1cd9f6b4af66a225b144ab5d30aefbcb68a",
+        "rev": "1e6ccadeda179d96728b4a9f20fc9d4dcf6b6059",
         "type": "github"
       },
       "original": {
