@@ -129,6 +129,10 @@ See [router-installation.md](router-installation.md) for installation steps.
 - `cores = 4`, `max-jobs = 4`, `big-parallel` feature enabled
 - `nix-builder` system user accepts remote builds from desktop
 
+#### CPU / Scheduling
+
+**Do not add `isolcpus`/`nohz_full`/`rcu_nocbs` kernel params without pinning a specific workload to the isolated cores.** They shipped in the original hardware-configuration (undocumented, no service ever used the isolated range) and silently parked all real work onto CPU0 — `mpstat` showed 0.00% usr on cores 1-7 despite services having full `0-7` affinity masks, because isolated CPUs are excluded from the default SMP load-balancing domain even though the affinity mask still permits them. Removed 2026-08-11; requires reboot (`nixos-rebuild boot`, not `switch`) to take effect since it's a boot param, not a live-switchable setting.
+
 ---
 
 ### desktop
