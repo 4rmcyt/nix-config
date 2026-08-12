@@ -56,7 +56,7 @@
     # any time the swapfile is recreated (e.g. after a fresh disko install):
     #   filefrag -v /swapfile | awk '$1=="0:" {print $4}' | tr -d '.'
     resumeDevice = config.fileSystems."/".device;
-    kernelParams = ["resume_offset=REPLACE_ME"];
+    kernelParams = ["resume_offset=63500288"];
 
     loader = {
       efi.canTouchEfiVariables = true;
