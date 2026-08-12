@@ -186,6 +186,13 @@
   };
 
   # =================================================================
+  # Virtualization
+  # =================================================================
+  # kvm-amd nested virtualization: needed so guest VMs (e.g. the OpenStack
+  # lab VM) can run their own KVM-accelerated Nova compute nodes.
+  boot.extraModprobeConfig = "options kvm-amd nested=1";
+
+  # =================================================================
   # Programs
   # =================================================================
   programs.nix-ld.enable = true;

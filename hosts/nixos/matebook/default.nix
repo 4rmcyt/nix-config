@@ -51,6 +51,13 @@
   system.boot.loader.kernelFile = "bzImage";
 
   boot = {
+    # Hibernation: swapfile lives on the ext4 root fs (see modules/disko/matebook).
+    # resume_offset is the physical block offset of /swapfile and MUST be regenerated
+    # any time the swapfile is recreated (e.g. after a fresh disko install):
+    #   filefrag -v /swapfile | awk '$1=="0:" {print $4}' | tr -d '.'
+    resumeDevice = config.fileSystems."/".device;
+    kernelParams = ["resume_offset=REPLACE_ME"];
+
     loader = {
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = false;
@@ -231,6 +238,10 @@
     polkit.enable = true;
   };
 
+  # suspend-then-hibernate: go to sleep first, hibernate after this long
+  # (or sooner on low battery). See systemd-sleep.conf(5).
+  systemd.sleep.settings.Sleep.HibernateDelaySec = "30m";
+
   # =================================================================
   # 12. Services
   # =================================================================
@@ -317,9 +328,11 @@
       };
     };
 
+    # NB: logind.conf(5) keys are PascalCase (HandleLidSwitch, not lidSwitch) —
+    # the previous lowercase keys were silently ignored by systemd-logind.
     logind.settings.Login = {
-      lidSwitch = "suspend";
-      lidSwitchDocked = "ignore";
+      HandleLidSwitch = "suspend-then-hibernate";
+      HandleLidSwitchDocked = "ignore";
     };
 
     # =============================================================
