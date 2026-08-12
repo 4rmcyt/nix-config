@@ -159,7 +159,12 @@ in {
 
   services = {
     thermald.enable = lib.mkDefault true;
-    scx.enable = false;
+    scx = {
+      enable = true;
+      package = pkgs.scx.full;
+      scheduler = "scx_lavd";
+      extraArgs = ["--autopilot"];
+    };
 
     smartd = {
       enable = true;
