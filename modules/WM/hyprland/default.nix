@@ -54,6 +54,7 @@
     glib
     gnome-software
     grimblast
+    hyprland-qtutils
     wayland
     wl-clip-persist
   ];
