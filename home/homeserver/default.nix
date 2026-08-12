@@ -8,6 +8,7 @@
     ../../modules/TUI/neovim
     ../../modules/TUI/zsh
     ../../modules/TUI/atuin
+    ../../modules/TUI/zellij
   ];
 
   home = {
