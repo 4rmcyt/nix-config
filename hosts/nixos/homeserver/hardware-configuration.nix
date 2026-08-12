@@ -59,9 +59,6 @@ in {
       "i915.enable_guc=3"
       "video=eDP-1:d"
       "zfs.zfs_arc_max=13421772800" # 12.5GB
-      "nohz_full=1-7"
-      "rcu_nocbs=1-7"
-      "isolcpus=1-7"
       "hung_task_timeout_secs=300"
     ];
 
