@@ -136,5 +136,6 @@ secrets/                # sops-encrypted YAML (NEVER commit plaintext)
 | Files in this repo | `filesystem` MCP |
 | Kubernetes (k3s) | `kubernetes` |
 | Persist context across sessions | `memory` |
+| OpenTofu registry, providers, modules, resources | `opentofu` MCP |
 
 **ALWAYS search the internet (tavily) before touching any unfamiliar tool's config.** Never make speculative changes — find the documented solution or GitHub issue first.

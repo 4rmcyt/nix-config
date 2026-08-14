@@ -48,6 +48,10 @@
       command = lib.getExe pkgs.mcp-nixos;
       args = [];
     };
+    opentofu = {
+      type = "http";
+      url = "https://mcp.opentofu.org/mcp";
+    };
     tavily = {
       type = "stdio";
       command = "${config.home.homeDirectory}/.local/bin/tavily-mcp-wrapped";
