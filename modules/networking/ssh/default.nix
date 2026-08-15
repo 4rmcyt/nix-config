@@ -36,6 +36,12 @@ in {
       ControlMaster auto
       ControlPersist 10m
 
+    # Ephemeral libvirt lab VMs (openstack-lab-*, 192.168.20x.0/24) — no PQ
+    # KEX on stock RHEL-family OpenSSH, and not worth caring about for
+    # throwaway internal VMs. See openssh.com/pq.html.
+    Host 192.168.20?.*
+      WarnWeakCrypto no
+
     # Internal hosts
     Host homeserver
       HostName homeserver.ts.example.com
