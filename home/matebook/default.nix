@@ -39,7 +39,6 @@
       brightnessctl
       davfs2
       materialgram
-      nemo-with-extensions
       pam_u2f
       pcsc-tools
       pinentry-qt

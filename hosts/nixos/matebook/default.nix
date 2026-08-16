@@ -30,6 +30,7 @@
     ../../../modules/GUI/chrome
     ../../../modules/GUI/flatpak
     ../../../modules/GUI/kdeconnect
+    ../../../modules/GUI/nemo
   ];
 
   # =================================================================
@@ -241,6 +242,13 @@
   # suspend-then-hibernate: go to sleep first, hibernate after this long
   # (or sooner on low battery). See systemd-sleep.conf(5).
   systemd.sleep.settings.Sleep.HibernateDelaySec = "30m";
+
+  # 5.8GB RAM leaves little headroom: default /sys/power/image_size (~2.2GB)
+  # caused "PM: hibernation: Error -12 creating image" (not enough free pages
+  # to preallocate the snapshot). image_size=0 makes the kernel swap out as
+  # much as possible before snapshotting instead of preserving pages in RAM,
+  # trading a slower resume for hibernation actually succeeding.
+  systemd.tmpfiles.rules = ["w /sys/power/image_size - - - - 0"];
 
   # =================================================================
   # 12. Services
