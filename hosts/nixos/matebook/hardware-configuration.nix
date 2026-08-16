@@ -156,6 +156,15 @@
   # =================================================================
   # 6. Networking
   # =================================================================
-  networking.useDHCP = lib.mkDefault true;
+  # nixos-facter-modules' networking module force-enables per-interface
+  # useDHCP (networking.interfaces.wlp2s0.useDHCP = mkDefault true), which
+  # alone flips on the global dhcpcd.service (dhcpcd.nix's enableDHCP =
+  # useDHCP || any interface.useDHCP). That raced NetworkManager's own DHCP
+  # client on wlp2s0, crashing dhcpcd with SEGV in dhcp_deconfigure on every
+  # sleep/hibernate resume (netlink events handled by both clients at once).
+  # NetworkManager owns DHCP here — see hosts/nixos/desktop/hardware-configuration.nix
+  # for the same fix.
+  facter.detected.dhcp.enable = lib.mkForce false;
+  networking.useDHCP = lib.mkForce false;
   # networking.interfaces.wlp13s0.useDHCP = lib.mkDefault true;
 }

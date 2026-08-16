@@ -275,7 +275,13 @@
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.niri}/bin/niri --session";
+          # niri-session (not `niri --session`) imports the environment into
+          # the systemd user session and starts niri.service, which is what
+          # activates graphical-session.target. Without it, logind never
+          # promotes the session past class=greeter, so anything gated on
+          # graphical-session.target (xdg-desktop-portal, etc.) spins forever
+          # with "Dependency failed for Portal service".
+          command = "${pkgs.niri}/bin/niri-session";
           user = "zeev";
         };
       };
