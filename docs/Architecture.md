@@ -62,7 +62,7 @@ modules/
                             #   terminal (ghostty, kitty, wezterm), discord, nemo, thunderbird,
                             #   virt-manager, waydroid, flatpak, stylix
   TUI/                      # Terminal tools: zsh, zellij, atuin, starship, tmux, tty, neovim,
-                            #   ai-tools (claude-code, gemini-cli, mcp, llama-cpp)
+                            #   ai-tools (claude-code, antigravity-cli, mcp, llama-cpp)
                             #   ai-tools sub-dirs: agents/, skills/, commands/, system-prompt/
   dev/                      # Developer tools
   nix/                      # Nix daemon config (determinate, lix)
@@ -208,12 +208,12 @@ No local `overlays/` directory. All overlays come from flake inputs:
 
 All desktop HM imports include this module. Sub-modules:
 
-| Sub-module    | Tool                                                  |
-|---------------|-------------------------------------------------------|
-| `claude-code` | Claude Code CLI                                       |
-| `gemini-cli`  | Gemini CLI                                            |
-| `mcp`         | MCP server configs (stdio + HTTP with sops secrets)   |
-| `llama-cpp`   | Local LLM inference (desktop only, imported directly) |
+| Sub-module         | Tool                                                                                      |
+| ------------------ | ----------------------------------------------------------------------------------------- |
+| `claude-code`       | Claude Code CLI                                                                           |
+| `antigravity-cli`   | Antigravity CLI (`agy`) — replaced Gemini CLI (nixpkgs `gemini-cli` flagged for removal)   |
+| `mcp`               | MCP server configs (stdio + HTTP with sops secrets)                                       |
+| `llama-cpp`         | Local LLM inference (desktop only, imported directly)                                     |
 
 ## Critical Patterns
 

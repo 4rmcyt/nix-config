@@ -27,7 +27,6 @@ in
     name = "terminal-ide";
 
     packages = with pkgs; [
-      antigravity-cli
       helix
       zellij
       zsh
