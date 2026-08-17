@@ -18,7 +18,7 @@ in ''
     roles/                # Role compositions (desktop, server, media-server, monitoring)
     WM/                   # hyprland + niri (both w/ noctalia-shell), gtk, mime — desktop:hyprland, matebook:niri
     GUI/                  # firefox, chrome, obsidian, zed, terminal, mpv, etc.
-    TUI/                  # zsh, zellij, atuin, starship, neovim, ai-tools (claude-code, gemini, llama-cpp, mcp)
+    TUI/                  # zsh, zellij, atuin, starship, neovim, ai-tools (claude-code, llama-cpp, mcp)
     services/             # homepage, miniflux, home-assistant, atuin-server, nixarr,
                           # dispatcharr, komga, komf, microbin, ntfy, radicale, argocd (disabled), k3s (disabled)
     networking/           # ssh, tailscale, traefik, caddy, headscale,

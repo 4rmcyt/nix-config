@@ -9,7 +9,7 @@
             }
             pane size="35%" {
                 pane command="zsh" {
-                    args "-i" "-c" "gemini chat; exec zsh"
+                    args "-i" "-c" "agy; exec zsh"
                 }
             }
         }
@@ -27,9 +27,9 @@ in
     name = "terminal-ide";
 
     packages = with pkgs; [
+      antigravity-cli
       helix
       zellij
-      gemini-cli
       zsh
     ];
 

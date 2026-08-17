@@ -1,7 +1,7 @@
 {...}: {
   imports = [
+    ./antigravity-cli
     ./claude-code
-    ./gemini-cli
     ./mcp
   ];
 }
