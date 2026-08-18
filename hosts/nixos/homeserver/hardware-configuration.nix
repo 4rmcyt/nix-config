@@ -57,7 +57,6 @@ in {
 
     kernelParams = [
       "i915.enable_guc=3"
-      "video=eDP-1:d"
       "zfs.zfs_arc_max=13421772800" # 12.5GB
       "hung_task_timeout_secs=300"
     ];
@@ -153,7 +152,6 @@ in {
   powerManagement = {
     enable = true;
     cpuFreqGovernor = lib.mkDefault "performance";
-    powertop.enable = true;
   };
 
   services = {
