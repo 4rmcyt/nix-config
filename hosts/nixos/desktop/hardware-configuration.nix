@@ -390,9 +390,6 @@
       plugins = [pkgs.ccid];
     };
 
-    # iOS device support
-    usbmuxd.enable = true;
-
     # Audio
     pipewire = {
       enable = true;
@@ -534,6 +531,10 @@
     libva-utils
     nvidia-vaapi-driver
     vulkan-tools
+
+    # Remote support
+    anydesk
+    teamviewer
 
     # Hardware Support & Monitoring
     apcupsd
