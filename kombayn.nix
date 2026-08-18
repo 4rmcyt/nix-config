@@ -38,6 +38,22 @@ in {
       description = "systemd OnCalendar spec (default: every hour).";
     };
 
+    notify = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Send new vacancies to Telegram each run. Dedup means only NEW postings are
+        sent, so steady-state is a trickle. Set false if you want the very first run
+        to fill the dedup index quietly (no initial burst), then flip back to true.
+      '';
+    };
+
+    pdf = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Render resume.pdf + cover_letter.pdf next to the HTML each run.";
+    };
+
     pythonPackage = lib.mkOption {
       type = lib.types.package;
       default = pkgs.python3.withPackages (ps: [ ps.requests ps.weasyprint ]);
@@ -65,7 +81,10 @@ in {
       path = [ cfg.pythonPackage pkgs.bash pkgs.coreutils ]
              ++ lib.optional cfg.useChromium pkgs.chromium;
       environment = lib.mkMerge [
-        { PYTHON = "${cfg.pythonPackage}/bin/python3"; }
+        { PYTHON = "${cfg.pythonPackage}/bin/python3";
+          KOMBAYN_NOTIFY = if cfg.notify then "1" else "0";
+          KOMBAYN_PDF = if cfg.pdf then "1" else "0";
+        }
         # let topdf find the browser without guessing (only when chromium is enabled)
         (lib.mkIf cfg.useChromium { CHROMIUM_BIN = "${pkgs.chromium}/bin/chromium"; })
       ];
