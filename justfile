@@ -17,9 +17,9 @@ update:
     nix build .#nixosConfigurations.homeserver.config.system.build.toplevel
     nix build .#darwinConfigurations.macbook.config.system.build.toplevel
 
-# Push to all caches
+# Push the currently running system to its own host cache
 push-caches:
-    cachix push 4rmcyt /run/current-system
+    cachix push 4rmcyt-$(hostname) /run/current-system
 
 # Format all nix files
 fmt:
