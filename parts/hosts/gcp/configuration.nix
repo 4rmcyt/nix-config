@@ -15,5 +15,10 @@ in {
     nixpkgs.overlays = [
       inputs.headscale.overlays.default
     ];
+
+    nix.settings = {
+      extra-substituters = ["https://4rmcyt-gcp.cachix.org?priority=0"];
+      extra-trusted-public-keys = ["4rmcyt-gcp.cachix.org-1:YeeaTxEm6F3YRsHdEYcggHL3TjrdJrLOfxM6J2YLHwY="];
+    };
   };
 }

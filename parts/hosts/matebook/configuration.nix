@@ -20,6 +20,11 @@ in {
       ../../../modules/nix/lix
     ];
 
+    nix.settings = {
+      extra-substituters = ["https://4rmcyt-matebook.cachix.org?priority=0"];
+      extra-trusted-public-keys = ["4rmcyt-matebook.cachix.org-1:rRhmrqqdIkcFQdMJRo27YMaeU/G+H/cABE53EV5grDY="];
+    };
+
     # Facter
     facter.reportPath = ../../../hosts/nixos/matebook/facter.json;
 

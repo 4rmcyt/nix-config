@@ -80,7 +80,6 @@ in {
     # Binary caches
     nix.settings = {
       extra-substituters = [
-        "https://4rmcyt.cachix.org?priority=0"
         "https://arr-packages.cachix.org?priority=0"
         "https://nix-community.cachix.org?priority=1"
         "https://cache.nixos.org?priority=1"
@@ -91,7 +90,6 @@ in {
         "https://nixpkgs-unfree.cachix.org?priority=5"
       ];
       extra-trusted-public-keys = [
-        "4rmcyt.cachix.org-1:yHVDqXs6TDmfSOuPbl4gcfomDK9gzTmK8FabfHLi+d8="
         "arr-packages.cachix.org-1:oEUMZth/blE0vXVc2zWhczUyaKGvII8UlwHFxSO78WY="
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
