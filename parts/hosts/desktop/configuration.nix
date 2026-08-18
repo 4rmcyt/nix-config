@@ -25,12 +25,14 @@ in {
         "https://cuda-maintainers.cachix.org?priority=1"
         "https://hyprland.cachix.org"
         "https://4rmcyt-desktop.cachix.org?priority=0"
+        "https://4rmcyt-gcp.cachix.org?priority=0"
       ];
       extra-trusted-public-keys = [
         "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
         "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
         "4rmcyt-desktop.cachix.org-1:1lj75JVwUuiYqVzG/o2kuUneXV5ydrkFBLuY9b7Nvus="
+        "4rmcyt-gcp.cachix.org-1:YeeaTxEm6F3YRsHdEYcggHL3TjrdJrLOfxM6J2YLHwY="
       ];
     };
 

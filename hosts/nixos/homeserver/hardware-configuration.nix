@@ -158,7 +158,7 @@ in {
   };
 
   services = {
-    thermald.enable = lib.mkDefault true;
+    thermald.enable = lib.mkDefault false;
     scx = {
       enable = true;
       package = pkgs.scx.full;
