@@ -115,7 +115,7 @@
     #   inputs.nixpkgs.follows = "nixpkgs";
     # };
     quickshell = {
-      url = "git+https://git.outfoxxed.me/quickshell/quickshell";
+      url = "github:quickshell-mirror/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     stylix.url = "github:danth/stylix";
