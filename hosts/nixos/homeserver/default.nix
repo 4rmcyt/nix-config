@@ -29,7 +29,7 @@
     # ../../../modules/base/distributed-builds
     ../../../modules/backup
     ../../../modules/users/zeev
-    /home/zeev/src/job-kombayn/kombayn.nix
+    ./kombayn.nix
   ];
 
   # =================================================================
@@ -313,7 +313,6 @@
       enable = true;
       projectDir = "/home/zeev/src/job-kombayn";
       user = "zeev";
-      # weasyprint по умолчанию (без браузера); Chromium не нужен
     };
   };
 
