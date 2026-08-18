@@ -132,7 +132,6 @@ in {
 
     systemPackages = with pkgs; [
       apcupsd
-      auto-cpufreq
       clinfo
       cpuid
       fwupd
