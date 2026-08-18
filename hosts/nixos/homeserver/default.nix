@@ -29,7 +29,7 @@
     # ../../../modules/base/distributed-builds
     ../../../modules/backup
     ../../../modules/users/zeev
-    ./kombayn.nix
+    ../../../kombayn.nix
   ];
 
   # =================================================================
