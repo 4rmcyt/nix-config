@@ -313,6 +313,7 @@
       enable = true;
       projectDir = "/home/zeev/src/job-kombayn";
       user = "zeev";
+      notify = true;
     };
   };
 
