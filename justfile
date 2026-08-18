@@ -1,6 +1,7 @@
 # Deploy to gcp-relay
 deploy-gcp:
     nixos-rebuild switch --flake .#gcp-relay --target-host zeev@gcp-relay --build-host localhost --elevate=sudo --ask-elevate-password
+    nix build .#nixosConfigurations.gcp-relay.config.system.build.toplevel --no-link --print-out-paths | cachix push 4rmcyt-gcp
 
 # Deploy to homeserver
 deploy-homeserver:
