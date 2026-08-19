@@ -110,10 +110,12 @@ in {
 
     pythonPackage = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.python3.withPackages (ps: [ps.requests ps.weasyprint]);
+      default = pkgs.python3.withPackages (ps: [ps.requests ps.weasyprint ps.psycopg ps."psycopg-c"]);
       description = ''
-        Python interpreter with requests + weasyprint (the no-browser PDF engine).
-        Add anthropic if you use the paid tailoring path.
+        Python interpreter with requests + weasyprint (the no-browser PDF engine)
+        + psycopg (dedup/status store, kombayn/organize.py — connects to the
+        `kombayn` Postgres DB over the local unix socket, peer-auth'd as this
+        service's `user`). Add anthropic if you use the paid tailoring path.
       '';
     };
 
