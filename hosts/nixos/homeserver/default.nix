@@ -331,10 +331,7 @@
         pname = "job-kombayn-web";
         version = "0.1.0";
         src = "${inputs.jobshunting}/frontend";
-        # Replace with the hash Nix reports on first build
-        # (`nix build .#nixosConfigurations.homeserver...` will fail once
-        # with the correct value to paste here).
-        npmDepsHash = lib.fakeHash;
+        npmDepsHash = "sha256-vgBhClvJwdVqK3R6dt10uy5vsprYgtX/Zi37NgCsqQo=";
         installPhase = ''
           mkdir -p $out
           cp -r dist $out/dist

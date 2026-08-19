@@ -187,8 +187,8 @@ in {
 
     apiPythonPackage = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.python3.withPackages (ps: [ps.psycopg ps."psycopg-c" ps.fastapi ps.uvicorn]);
-      description = "Python interpreter with psycopg + fastapi + uvicorn, for job-kombayn-api.";
+      default = pkgs.python3.withPackages (ps: [ps.psycopg ps."psycopg-c" ps.psycopg-pool ps.fastapi ps.uvicorn]);
+      description = "Python interpreter with psycopg + psycopg-pool + fastapi + uvicorn, for job-kombayn-api.";
     };
   };
 
