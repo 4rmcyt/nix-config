@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }: {
   # =================================================================
@@ -62,6 +63,13 @@
         owner = "root";
         mode = "0600";
         path = "/root/.ssh/nix-builder";
+      };
+      job_kombayn_env = {
+        sopsFile = ../../../secrets/job-kombayn.env;
+        format = "dotenv";
+        key = "job_kombayn_env";
+        owner = "zeev";
+        mode = "0400";
       };
     };
   };
@@ -311,9 +319,10 @@
     };
     jobKombayn = {
       enable = true;
-      projectDir = "/home/zeev/src/job-kombayn";
+      src = inputs.jobshunting;
       user = "zeev";
       notify = true;
+      environmentFile = config.sops.secrets.job_kombayn_env.path;
     };
   };
 

@@ -1206,6 +1206,22 @@
         "type": "github"
       }
     },
+    "jobshunting": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1787097349,
+        "narHash": "sha256-51vYUtoSCsu1kjIN58kErkORrQmXLUzBBcCSIdvf8GY=",
+        "owner": "4rmcyt",
+        "repo": "jobshunting",
+        "rev": "e01414f4cd91115c4684aafeca59e9e965a8bb65",
+        "type": "github"
+      },
+      "original": {
+        "owner": "4rmcyt",
+        "repo": "jobshunting",
+        "type": "github"
+      }
+    },
     "mcp-nixos": {
       "inputs": {
         "devshell": "devshell_2",
@@ -2052,6 +2068,7 @@
         "hyprland": "hyprland",
         "impermanence": "impermanence",
         "import-tree": "import-tree_2",
+        "jobshunting": "jobshunting",
         "mcp-nixos": "mcp-nixos",
         "mcp-servers-nix": "mcp-servers-nix",
         "niri-flake": "niri-flake",

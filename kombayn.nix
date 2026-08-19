@@ -1,35 +1,83 @@
 # NixOS module: run job-kombayn hourly via a systemd timer.
 #
-# Usage: import this from your configuration.nix (or flake), then set:
+# Usage:
 #   services.jobKombayn.enable = true;
-#   services.jobKombayn.projectDir = "/home/zeev/src/job-kombayn";
+#   services.jobKombayn.src = inputs.jobshunting;   # or a local path checkout
 #   services.jobKombayn.user = "zeev";
+#   services.jobKombayn.environmentFile = config.sops.secrets.job_kombayn_env.path;
 #
-# Assumes:
-#   - a Python env with `requests` (and `anthropic` only if you use the paid path)
-#     is available; point pythonPackage at it, or rely on a .venv in projectDir.
-#   - <projectDir>/.env holds the keys (ADZUNA_*, RAPIDAPI_KEY, JOOBLE_KEY,
-#     CAREERJET_AFFID, TELEGRAM_*, HOME_LAT/HOME_LON). The script loads it.
-#   - chromium is installed (for --pdf); this module adds it to PATH.
-
-{ config, lib, pkgs, ... }:
-
-let
+# `src` is read-only (typically a flake input in /nix/store), so all runtime
+# state — dedup index.json, generated resume/cover HTML+PDF, geocode cache —
+# lives under systemd's StateDirectory (/var/lib/job-kombayn), not under src.
+# Secrets (ANTHROPIC_API_KEY, TELEGRAM_*, ADZUNA_*, RAPIDAPI_KEY, HOME_LAT/LON,
+# ...) come from `environmentFile` (an EnvironmentFile) instead of a .env
+# sitting next to the script — src has no writable/secret-holding directory.
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
   cfg = config.services.jobKombayn;
+
+  scriptArgs = lib.concatStringsSep " " (
+    lib.optional cfg.pdf "--pdf" ++ lib.optional cfg.notify "--notify"
+  );
+
+  runScript = pkgs.writeShellScript "job-kombayn-run" ''
+    set -euo pipefail
+    echo "=== kombayn run: $(date -Is) ==="
+    ${lib.concatMapStringsSep "\n" (prof: ''
+        prof="${cfg.src}/${prof}"
+        if [ -f "$prof" ]; then
+          echo "--- $prof ---"
+          "${cfg.pythonPackage}/bin/python3" ${cfg.src}/run.py scan --profile "$prof" ${scriptArgs} \
+            || echo "! scan failed for $prof (continuing)"
+        else
+          echo "! missing profile: $prof (skip)"
+        fi
+      '')
+      cfg.profiles}
+    echo "=== done: $(date -Is) ==="
+  '';
 in {
   options.services.jobKombayn = {
     enable = lib.mkEnableOption "job-kombayn hourly scan";
 
-    projectDir = lib.mkOption {
-      type = lib.types.str;
-      description = "Absolute path to the job-kombayn checkout.";
-      example = "/home/zeev/src/job-kombayn";
+    src = lib.mkOption {
+      type = lib.types.path;
+      description = "job-kombayn source tree (run.py, kombayn/, profiles/). Read-only.";
+      example = "inputs.jobshunting";
+    };
+
+    profiles = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        "profiles/volodymyr-kondratenko-it.md"
+        "profiles/volodymyr-kondratenko-kitchen.md"
+        "profiles/volodymyr-kondratenko-survival.md"
+        "profiles/sofiia-rogatska-education.md"
+        "profiles/sofiia-rogatska-survival.md"
+      ];
+      description = "Profile files (relative to `src`) to scan each run.";
     };
 
     user = lib.mkOption {
       type = lib.types.str;
-      description = "User to run the scan as (needs read/write on projectDir).";
+      description = "User to run the scan as (owns the state directory).";
       example = "zeev";
+    };
+
+    environmentFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = ''
+        EnvironmentFile with the API keys the scripts read (ANTHROPIC_API_KEY,
+        KOMBAYN_MODEL, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, ADZUNA_APP_ID,
+        ADZUNA_APP_KEY, RAPIDAPI_KEY, HOME_LAT, HOME_LON, JOOBLE_KEY,
+        CAREERJET_KEY, CAREERJET_REFERER, ...). Typically a sops-nix secret
+        with `format = "dotenv"`.
+      '';
     };
 
     onCalendar = lib.mkOption {
@@ -56,7 +104,7 @@ in {
 
     pythonPackage = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.python3.withPackages (ps: [ ps.requests ps.weasyprint ]);
+      default = pkgs.python3.withPackages (ps: [ps.requests ps.weasyprint]);
       description = ''
         Python interpreter with requests + weasyprint (the no-browser PDF engine).
         Add anthropic if you use the paid tailoring path.
@@ -77,22 +125,15 @@ in {
   config = lib.mkIf cfg.enable {
     systemd.services.job-kombayn = {
       description = "job-kombayn: scan all profiles, notify new vacancies";
-      # tools the wrapper/script call; chromium only if useChromium is set
-      path = [ cfg.pythonPackage pkgs.bash pkgs.coreutils ]
-             ++ lib.optional cfg.useChromium pkgs.chromium;
-      environment = lib.mkMerge [
-        { PYTHON = "${cfg.pythonPackage}/bin/python3";
-          KOMBAYN_NOTIFY = if cfg.notify then "1" else "0";
-          KOMBAYN_PDF = if cfg.pdf then "1" else "0";
-        }
-        # let topdf find the browser without guessing (only when chromium is enabled)
-        (lib.mkIf cfg.useChromium { CHROMIUM_BIN = "${pkgs.chromium}/bin/chromium"; })
-      ];
+      path = [cfg.pythonPackage pkgs.bash pkgs.coreutils] ++ lib.optional cfg.useChromium pkgs.chromium;
+      environment = lib.mkIf cfg.useChromium {CHROMIUM_BIN = "${pkgs.chromium}/bin/chromium";};
       serviceConfig = {
         Type = "oneshot";
         User = cfg.user;
-        WorkingDirectory = cfg.projectDir;
-        ExecStart = "${pkgs.bash}/bin/bash ${cfg.projectDir}/run_all_profiles.sh";
+        StateDirectory = "job-kombayn";
+        WorkingDirectory = "/var/lib/job-kombayn";
+        EnvironmentFile = lib.mkIf (cfg.environmentFile != null) cfg.environmentFile;
+        ExecStart = "${pkgs.bash}/bin/bash ${runScript}";
         # be a good citizen on a homeserver
         Nice = 10;
         IOSchedulingClass = "idle";
@@ -103,11 +144,11 @@ in {
 
     systemd.timers.job-kombayn = {
       description = "Run job-kombayn every hour";
-      wantedBy = [ "timers.target" ];
+      wantedBy = ["timers.target"];
       timerConfig = {
         OnCalendar = cfg.onCalendar;
-        Persistent = true;      # catch up if the box was asleep at the scheduled time
-        RandomizedDelaySec = "3min";  # avoid hitting APIs exactly on the hour
+        Persistent = true; # catch up if the box was asleep at the scheduled time
+        RandomizedDelaySec = "3min"; # avoid hitting APIs exactly on the hour
       };
     };
   };

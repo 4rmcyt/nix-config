@@ -160,6 +160,11 @@
     # pre-built and pushed to Cachix against arr-packages' own nixpkgs rev —
     # following ours would change the derivation hash and force a local rebuild.
     arr-packages.url = "github:4rmcyt/arr-packages";
+    # job-kombayn: not a flake, just the script tree (run.py, kombayn/, profiles/).
+    jobshunting = {
+      url = "github:4rmcyt/jobshunting";
+      flake = false;
+    };
   };
 
   outputs = inputs:
