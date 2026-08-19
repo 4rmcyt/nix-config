@@ -187,8 +187,13 @@ in {
 
     apiPythonPackage = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.python3.withPackages (ps: [ps.psycopg ps."psycopg-c" ps.psycopg-pool ps.fastapi ps.uvicorn]);
-      description = "Python interpreter with psycopg + psycopg-pool + fastapi + uvicorn, for job-kombayn-api.";
+      default = pkgs.python3.withPackages (ps: [ps.psycopg ps."psycopg-c" ps.psycopg-pool ps.fastapi ps.uvicorn ps.requests]);
+      description = ''
+        Python interpreter with psycopg + psycopg-pool + fastapi + uvicorn, for
+        job-kombayn-api. Also needs requests: kombayn/__init__.py unconditionally
+        imports pipeline -> notify, which imports requests at module load time,
+        even though api.py itself never calls into notify.
+      '';
     };
   };
 
