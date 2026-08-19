@@ -325,6 +325,21 @@
       onCalendar = "*-*-* 0/3:00:00"; # every 3 hours instead of hourly
       environmentFile = config.sops.secrets.job_kombayn_env.path;
       enableBot = true; # Applied/Skip inline buttons on vacancy cards
+      enableApi = true; # HTTP API for the web frontend (jobko.<domain>/api)
+      enableWeb = true; # static SPA (jobko.<domain>)
+      webBuild = pkgs.buildNpmPackage {
+        pname = "job-kombayn-web";
+        version = "0.1.0";
+        src = "${inputs.jobshunting}/frontend";
+        # Replace with the hash Nix reports on first build
+        # (`nix build .#nixosConfigurations.homeserver...` will fail once
+        # with the correct value to paste here).
+        npmDepsHash = lib.fakeHash;
+        installPhase = ''
+          mkdir -p $out
+          cp -r dist $out/dist
+        '';
+      };
     };
   };
 

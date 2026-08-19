@@ -140,6 +140,56 @@ in {
         TELEGRAM_BOT_TOKEN as the scan timer (from `environmentFile`).
       '';
     };
+
+    enableApi = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Run kombayn/api.py (FastAPI) as an always-on service on
+        127.0.0.1:''${toString cfg.apiPort} — read/PATCH-status HTTP API for
+        the web frontend. No auth of its own; only reachable via Traefik at
+        jobko.''${config.my.defaults.domain}/api or over the tailnet.
+      '';
+    };
+
+    apiPort = lib.mkOption {
+      type = lib.types.port;
+      default = 8420;
+      description = "Loopback port for the kombayn API service (enableApi).";
+    };
+
+    enableWeb = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Serve the built `frontend/` SPA (static-web-server) on
+        127.0.0.1:''${toString cfg.webPort}, fronted by Traefik at
+        jobko.''${config.my.defaults.domain}.
+      '';
+    };
+
+    webPort = lib.mkOption {
+      type = lib.types.port;
+      default = 8421;
+      description = "Loopback port for the static frontend (enableWeb).";
+    };
+
+    webBuild = lib.mkOption {
+      type = lib.types.nullOr lib.types.package;
+      default = null;
+      description = ''
+        The built frontend as a Nix package (its output root must contain
+        the compiled `dist/`, e.g. via
+        `pkgs.buildNpmPackage { src = "''${cfg.src}/frontend"; ... }`).
+        Required when enableWeb is true.
+      '';
+    };
+
+    apiPythonPackage = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.python3.withPackages (ps: [ps.psycopg ps."psycopg-c" ps.fastapi ps.uvicorn]);
+      description = "Python interpreter with psycopg + fastapi + uvicorn, for job-kombayn-api.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -175,6 +225,38 @@ in {
         OnCalendar = cfg.onCalendar;
         Persistent = true; # catch up if the box was asleep at the scheduled time
         RandomizedDelaySec = "3min"; # avoid hitting APIs exactly on the hour
+      };
+    };
+
+    systemd.services.job-kombayn-api = lib.mkIf cfg.enableApi {
+      description = "job-kombayn: read/status HTTP API for the web frontend";
+      after = ["network-online.target" "postgresql.service"];
+      wants = ["network-online.target"];
+      wantedBy = ["multi-user.target"];
+      path = [cfg.apiPythonPackage];
+      environment.KOMBAYN_CORS_ORIGINS = "https://jobko.${config.my.defaults.domain}";
+      serviceConfig = {
+        Type = "simple";
+        User = cfg.user;
+        StateDirectory = "job-kombayn";
+        WorkingDirectory = cfg.src;
+        EnvironmentFile = lib.mkIf (cfg.environmentFile != null) cfg.environmentFile;
+        ExecStart = "${cfg.apiPythonPackage}/bin/uvicorn kombayn.api:app --host 127.0.0.1 --port ${toString cfg.apiPort}";
+        Restart = "always";
+        RestartSec = "5s";
+        Nice = 10;
+      };
+    };
+
+    systemd.services.job-kombayn-web = lib.mkIf cfg.enableWeb {
+      description = "job-kombayn: static frontend (SPA)";
+      wantedBy = ["multi-user.target"];
+      serviceConfig = {
+        Type = "simple";
+        DynamicUser = true;
+        ExecStart = "${pkgs.static-web-server}/bin/static-web-server --host 127.0.0.1 --port ${toString cfg.webPort} --root ${cfg.webBuild}/dist";
+        Restart = "always";
+        RestartSec = "5s";
       };
     };
 

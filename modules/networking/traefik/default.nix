@@ -487,6 +487,31 @@ in {
               ];
               tls.certResolver = "default";
             };
+
+            # job-kombayn: API on /api (higher priority = more specific path
+            # wins over the SPA catch-all below), everything else -> static SPA.
+            kombayn-api = {
+              rule = "Host(`jobko.${domain}`) && PathPrefix(`/api`)";
+              entryPoints = ["websecure"];
+              service = "kombayn-api";
+              priority = 10;
+              middlewares = [
+                "security-headers"
+                "crowdsec"
+              ];
+              tls.certResolver = "default";
+            };
+            kombayn-web = {
+              rule = "Host(`jobko.${domain}`)";
+              entryPoints = ["websecure"];
+              service = "kombayn-web";
+              priority = 1;
+              middlewares = [
+                "security-headers"
+                "crowdsec"
+              ];
+              tls.certResolver = "default";
+            };
           };
 
           services = {
@@ -524,6 +549,10 @@ in {
             dispatcharr.loadBalancer.servers = [{url = "http://localhost:9191";}];
             radicale.loadBalancer.servers = [{url = "http://localhost:5232";}];
             ntfy.loadBalancer.servers = [{url = "http://localhost:9991";}];
+
+            # job-kombayn
+            kombayn-api.loadBalancer.servers = [{url = "http://localhost:8420";}];
+            kombayn-web.loadBalancer.servers = [{url = "http://localhost:8421";}];
           };
         };
       };
