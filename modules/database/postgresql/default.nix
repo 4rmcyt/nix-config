@@ -117,9 +117,13 @@ in {
   };
   users.groups.postgres = {};
 
-  networking.firewall.allowedTCPPorts = [
-    5432 # PostgreSQL
-  ];
+  # No global TCP 5432 opening here on purpose: pg_hba below only trusts
+  # loopback + the podman bridge (10.88.0.0/16) anyway, and that range is
+  # already interface-scoped at the host level
+  # (hosts/nixos/homeserver/default.nix: firewall.interfaces.podman0). A
+  # blanket allowedTCPPorts opened the port on every interface (LAN/tailscale
+  # included) for no functional gain, since pg_hba would refuse those source
+  # IPs regardless — pure unnecessary attack surface (port scan/banner recon).
 
   services.postgresql = {
     enable = true;
@@ -139,6 +143,7 @@ in {
       "prowlarr"
       "prowlarr-log"
       "dispatcharr"
+      "kombayn"
     ];
 
     # Automatically create users with DB ownership
@@ -177,6 +182,12 @@ in {
       }
       {
         name = "dispatcharr";
+        ensureDBOwnership = true;
+      }
+      {
+        # peer-auth only (local unix socket, no TCP/password) — see
+        # modules/services/job-kombayn, not part of `dbUsers` above on purpose
+        name = "kombayn";
         ensureDBOwnership = true;
       }
     ];
@@ -255,6 +266,10 @@ in {
           ${pkgs.postgresql}/bin/psql -d "${user.name}" -c "GRANT ALL ON SCHEMA public TO ${user.name};" || true
         '')
         dbUsers}
+
+      # kombayn: peer-auth only, not in dbUsers (no password to wait for), but
+      # still needs the same PG15+ public-schema grant as everyone else
+      ${pkgs.postgresql}/bin/psql -d "kombayn" -c "GRANT ALL ON SCHEMA public TO kombayn;" || true
 
       # Fix ownership and schema access for *-log databases (created by ensureDatabases, owned by postgres)
       for db_user in radarr sonarr prowlarr; do

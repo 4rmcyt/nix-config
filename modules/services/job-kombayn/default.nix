@@ -3,7 +3,7 @@
 # Usage:
 #   services.jobKombayn.enable = true;
 #   services.jobKombayn.src = inputs.jobshunting;   # or a local path checkout
-#   services.jobKombayn.user = "zeev";
+#   services.jobKombayn.user = "kombayn";           # default; dedicated system user, peer-auth'd to Postgres
 #   services.jobKombayn.environmentFile = config.sops.secrets.job_kombayn_env.path;
 #
 # `src` is read-only (typically a flake input in /nix/store), so all runtime
@@ -64,8 +64,14 @@ in {
 
     user = lib.mkOption {
       type = lib.types.str;
-      description = "User to run the scan as (owns the state directory).";
-      example = "zeev";
+      default = "kombayn";
+      description = ''
+        User to run the scan as (owns the state directory). Defaults to a
+        dedicated `kombayn` system user (created by this module) so Postgres
+        peer auth (`local all all peer map=superuser_map` in
+        modules/database/postgresql) maps it straight to the `kombayn` DB
+        role with no password/secret needed.
+      '';
     };
 
     environmentFile = lib.mkOption {
@@ -123,6 +129,12 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    users.users.kombayn = lib.mkIf (cfg.user == "kombayn") {
+      isSystemUser = true;
+      group = "kombayn";
+    };
+    users.groups.kombayn = lib.mkIf (cfg.user == "kombayn") {};
+
     systemd.services.job-kombayn = {
       description = "job-kombayn: scan all profiles, notify new vacancies";
       path = [cfg.pythonPackage pkgs.bash pkgs.coreutils] ++ lib.optional cfg.useChromium pkgs.chromium;
@@ -143,7 +155,7 @@ in {
     };
 
     systemd.timers.job-kombayn = {
-      description = "Run job-kombayn every hour";
+      description = "Run job-kombayn (OnCalendar: ${cfg.onCalendar})";
       wantedBy = ["timers.target"];
       timerConfig = {
         OnCalendar = cfg.onCalendar;

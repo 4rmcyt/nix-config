@@ -30,7 +30,6 @@
     # ../../../modules/base/distributed-builds
     ../../../modules/backup
     ../../../modules/users/zeev
-    ../../../kombayn.nix
   ];
 
   # =================================================================
@@ -68,7 +67,7 @@
         sopsFile = ../../../secrets/job-kombayn.env;
         format = "dotenv";
         key = "job_kombayn_env";
-        owner = "zeev";
+        owner = "kombayn";
         mode = "0400";
       };
     };
@@ -213,6 +212,7 @@
       "prowlarr"
       "prowlarr-log"
       "dispatcharr"
+      "kombayn"
     ];
     paths = [
       "/var/lib/kanidm"
@@ -282,6 +282,7 @@
     enable = true;
     openFirewall = false; # port already open in networking.firewall
     extraCollectors = ["pressure" "thermal_zone" "zfs"];
+    textfileWriters = [config.my.defaults.user "kombayn"];
   };
 
   # =================================================================
@@ -320,7 +321,6 @@
     jobKombayn = {
       enable = true;
       src = inputs.jobshunting;
-      user = "zeev";
       notify = true;
       onCalendar = "*-*-* 0/3:00:00"; # every 3 hours instead of hourly
       environmentFile = config.sops.secrets.job_kombayn_env.path;

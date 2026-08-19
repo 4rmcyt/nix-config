@@ -99,3 +99,29 @@ groups:
         annotations:
           summary: "UPS forced shutdown in progress"
           description: "UPS FSD (Forced Shutdown) flag is set — imminent power loss."
+  - name: job-kombayn Alerts
+    rules:
+      - alert: JobKombaynRunFailed
+        expr: job_kombayn_last_run_success == 0
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "job-kombayn scan failed for {{ $labels.profile }}"
+          description: "The last scan run for profile '{{ $labels.profile }}' exited with an error. Check the systemd journal for job-kombayn.service."
+      - alert: JobKombaynStale
+        expr: time() - job_kombayn_last_run_timestamp_seconds > 7800
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "job-kombayn hasn't run for {{ $labels.profile }} in over 2h"
+          description: "No successful/attempted scan recorded for profile '{{ $labels.profile }}' in the last 2h+10m — job-kombayn.timer may be stopped or the textfile-collector ACL may be broken."
+      - alert: JobKombaynRunErrors
+        expr: job_kombayn_errors > 0
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "job-kombayn had {{ $value }} error(s) on last run for {{ $labels.profile }}"
+          description: "The last scan for profile '{{ $labels.profile }}' logged {{ $value }} error(s) (e.g. Telegram delivery failures) even though the run itself succeeded."

@@ -11,6 +11,7 @@
     ./komf
     ./komga
     ./ntfy
+    ./job-kombayn
     # ./k3s
     # ./argocd
   ];
