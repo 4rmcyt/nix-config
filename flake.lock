@@ -1209,11 +1209,11 @@
     "jobshunting": {
       "flake": false,
       "locked": {
-        "lastModified": 1787171871,
-        "narHash": "sha256-yi8Jyvq/z/MIhUl7W3SSUbKqyJAq0/rKOd+vOlTaoN0=",
+        "lastModified": 1787173130,
+        "narHash": "sha256-aQA2GDU4gkPfjr/3q+6hm9h+ad4IjlG0Rer+mRfzJ1I=",
         "owner": "4rmcyt",
         "repo": "jobshunting",
-        "rev": "8b5eeb22e2402b437f0e45649c0d0b5cceb7af5f",
+        "rev": "f2ac8e1a9ed89d7c37d8052cc94bb03531e8ad31",
         "type": "github"
       },
       "original": {
@@ -1970,11 +1970,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787171574,
-        "narHash": "sha256-5bdLcF8HF5UTVS5G+7goNrAnTn+P219lGAO9h4NdKGM=",
+        "lastModified": 1787173066,
+        "narHash": "sha256-epa70SqiZHW5G3ixl5O6S0PC5QrOuxTNP2xFB28Ciuo=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "f279cf90d8aa9404f857181d1d78219b5171542b",
+        "rev": "ad8ca866a86dddb3805ea0f6693c9c256a688363",
         "type": "github"
       },
       "original": {
