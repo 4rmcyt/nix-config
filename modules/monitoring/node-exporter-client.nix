@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: {
   options.my.nodeExporter = {
@@ -20,14 +19,22 @@
       type = lib.types.listOf lib.types.str;
       default = [];
       description = ''
-        Local usernames granted write access (via POSIX ACL) to the
+        Local usernames granted write access (via a shared group) to the
         textfile-collector directory, so non-root services/timers can drop
         their own *.prom files without needing the exporter's DynamicUser.
+        Group-based rather than POSIX ACL because the root filesystem here
+        is ZFS mounted `noacl` — setfacl fails outright (ACLs unsupported at
+        the mount level, not just acltype=off on the dataset).
       '';
     };
   };
 
   config = lib.mkIf config.my.nodeExporter.enable {
+    users.groups.node-exporter-textfile = {};
+    users.users = lib.genAttrs config.my.nodeExporter.textfileWriters (_: {
+      extraGroups = ["node-exporter-textfile"];
+    });
+
     services.prometheus.exporters.node = {
       enable = true;
       port = 9100;
@@ -64,16 +71,15 @@
 
     # The exporter's DynamicUser owns the textfile dir (root:root won't stick,
     # it ends up nobody:nogroup 0775) — grant configured local users write
-    # access via ACL so their own timers can drop *.prom files without root.
+    # access via a shared group (setgid so new files inherit it) so their own
+    # timers can drop *.prom files without root.
     system.activationScripts.node-exporter-textfile-acl = lib.mkIf (config.my.nodeExporter.textfileWriters != []) {
       supportsDryActivation = true;
       deps = ["node-exporter-system-version"];
-      text =
-        lib.concatMapStringsSep "\n" (u: ''
-          ${pkgs.acl}/bin/setfacl -m u:${u}:rwx,d:u:${u}:rwx \
-            /var/lib/prometheus-node-exporter-text-files
-        '')
-        config.my.nodeExporter.textfileWriters;
+      text = ''
+        chgrp node-exporter-textfile /var/lib/prometheus-node-exporter-text-files
+        chmod 2775 /var/lib/prometheus-node-exporter-text-files
+      '';
     };
 
     networking.firewall.allowedTCPPorts = lib.mkIf config.my.nodeExporter.openFirewall [9100];
