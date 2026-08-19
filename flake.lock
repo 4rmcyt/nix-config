@@ -1209,11 +1209,11 @@
     "jobshunting": {
       "flake": false,
       "locked": {
-        "lastModified": 1787173130,
-        "narHash": "sha256-aQA2GDU4gkPfjr/3q+6hm9h+ad4IjlG0Rer+mRfzJ1I=",
+        "lastModified": 1787173438,
+        "narHash": "sha256-rX12IpZAQrSDQcHcgNF6+aJaOvPJ+hh+fu3j3UV2oV8=",
         "owner": "4rmcyt",
         "repo": "jobshunting",
-        "rev": "f2ac8e1a9ed89d7c37d8052cc94bb03531e8ad31",
+        "rev": "a8f608cf6492834c920071ef2cbaa98ba5b67385",
         "type": "github"
       },
       "original": {
