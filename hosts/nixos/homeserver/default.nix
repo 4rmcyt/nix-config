@@ -324,6 +324,7 @@
       notify = true;
       onCalendar = "*-*-* 0/3:00:00"; # every 3 hours instead of hourly
       environmentFile = config.sops.secrets.job_kombayn_env.path;
+      enableBot = true; # Applied/Skip inline buttons on vacancy cards
     };
   };
 

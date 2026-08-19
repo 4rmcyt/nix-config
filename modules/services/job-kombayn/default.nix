@@ -128,6 +128,18 @@ in {
         no browser needed) — simpler on a headless server.
       '';
     };
+
+    enableBot = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Run telegram_bot.py as an always-on service (long-polling getUpdates,
+        no open port/webhook) that handles the Applied/Skip inline buttons
+        notify.send_job attaches to vacancy cards, writing status updates
+        straight into the `applications` Postgres table. Needs the same
+        TELEGRAM_BOT_TOKEN as the scan timer (from `environmentFile`).
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -163,6 +175,25 @@ in {
         OnCalendar = cfg.onCalendar;
         Persistent = true; # catch up if the box was asleep at the scheduled time
         RandomizedDelaySec = "3min"; # avoid hitting APIs exactly on the hour
+      };
+    };
+
+    systemd.services.job-kombayn-bot = lib.mkIf cfg.enableBot {
+      description = "job-kombayn: Telegram Applied/Skip button listener (long-polling)";
+      after = ["network-online.target"];
+      wants = ["network-online.target"];
+      wantedBy = ["multi-user.target"];
+      path = [cfg.pythonPackage];
+      serviceConfig = {
+        Type = "simple";
+        User = cfg.user;
+        StateDirectory = "job-kombayn"; # shares the .telegram_offset state file
+        WorkingDirectory = "/var/lib/job-kombayn";
+        EnvironmentFile = lib.mkIf (cfg.environmentFile != null) cfg.environmentFile;
+        ExecStart = "${cfg.pythonPackage}/bin/python3 ${cfg.src}/telegram_bot.py";
+        Restart = "always";
+        RestartSec = "10s";
+        Nice = 10;
       };
     };
   };
