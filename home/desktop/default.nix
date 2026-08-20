@@ -31,6 +31,7 @@
     ../../modules/WM/mime
     ../../modules/GUI/discord
     ../../modules/dev
+    ../../modules/dev/android.nix
     ../../modules/dev/git.nix
     ../../modules/security/gpg.nix
   ];
