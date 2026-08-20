@@ -1,5 +1,5 @@
 # Base home-manager configuration applied to all hosts.
-# Provides: sops, allowUnfree, overlays, stateVersion.
+# Provides: sops, allowUnfree, android SDK license acceptance, overlays, stateVersion.
 {
   config,
   inputs,
@@ -20,6 +20,7 @@ in {
     };
 
     nixpkgs.config.allowUnfree = true;
+    nixpkgs.config.android_sdk.accept_license = true;
     nixpkgs.overlays = [
       inputs.mcp-servers-nix.overlays.default
       inputs.nur.overlays.default
