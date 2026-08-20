@@ -11,12 +11,12 @@
 in {
   home.packages = [
     androidComposition.androidsdk
-    pkgs.jdk17
+    pkgs.jdk21
   ];
 
   home.sessionVariables = {
     ANDROID_HOME = "${androidComposition.androidsdk}/libexec/android-sdk";
     ANDROID_SDK_ROOT = "${androidComposition.androidsdk}/libexec/android-sdk";
-    JAVA_HOME = "${pkgs.jdk17}";
+    JAVA_HOME = "${pkgs.jdk21}";
   };
 }
