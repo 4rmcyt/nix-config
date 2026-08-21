@@ -189,13 +189,16 @@ in {
 
     apiPythonPackage = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.python3.withPackages (ps: [ps.psycopg ps."psycopg-c" ps.psycopg-pool ps.fastapi ps.uvicorn ps.requests ps.pyjwt ps.argon2-cffi]);
+      default = pkgs.python3.withPackages (ps: [ps.psycopg ps."psycopg-c" ps.psycopg-pool ps.fastapi ps.uvicorn ps.requests ps.pyjwt ps.argon2-cffi ps.pypdf ps.python-multipart]);
       description = ''
         Python interpreter with psycopg + psycopg-pool + fastapi + uvicorn, for
         job-kombayn-api. Also needs requests: kombayn/__init__.py unconditionally
         imports pipeline -> notify, which imports requests at module load time,
         even though api.py itself never calls into notify. pyjwt + argon2-cffi
-        back kombayn/auth.py's JWT-cookie login.
+        back kombayn/auth.py's JWT-cookie login. pypdf + python-multipart back
+        the self-service onboarding routes (kombayn/onboarding.py's PDF
+        extraction, api.py's multipart file upload) - see requirements-api.txt
+        in job-kombayn, which is the source of truth this package list mirrors.
       '';
     };
   };
