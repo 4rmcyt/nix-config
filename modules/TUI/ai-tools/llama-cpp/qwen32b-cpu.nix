@@ -43,7 +43,12 @@ in {
         # keep resetting this. First request after sleep just reloads it.
         "--sleep-idle-seconds 300"
       ];
-      MemoryMax = "28G";
+      # 28G left ~444K of headroom in practice once the KV cache actually fills
+      # in (n_slots=1 lowered the theoretical ceiling but the real single-slot
+      # working set -- ~20G model + ctx-size 16384 q8_0 KV cache -- still sits
+      # right at 28G once pages are touched, not the ~13G seen right after a
+      # fresh start before the cache has filled).
+      MemoryMax = "32G";
       Restart = "on-failure";
       RestartSec = 5;
     };
