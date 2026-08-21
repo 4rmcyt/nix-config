@@ -1209,11 +1209,11 @@
     "jobshunting": {
       "flake": false,
       "locked": {
-        "lastModified": 1787191599,
-        "narHash": "sha256-aO4pS5YTIOGIsuiu5huc61eQfODv9MU+DArJqiP8XDw=",
+        "lastModified": 1787271384,
+        "narHash": "sha256-CdQXw/s1fIuq/0YdVNYBAKf5xbOas4GBdQyyegDftcg=",
         "owner": "4rmcyt",
         "repo": "jobshunting",
-        "rev": "254e102197a0dbcf1dcfe88320b3883490ca123f",
+        "rev": "95ff90557e300d28e0ac85f6135403e294c152e6",
         "type": "github"
       },
       "original": {
@@ -1903,11 +1903,11 @@
         "systems": "systems_5"
       },
       "locked": {
-        "lastModified": 1787151631,
-        "narHash": "sha256-EblMdrDFBFNNlUPm5zUQdh0j6gDx+OFQPv7LFE4B5AA=",
+        "lastModified": 1787270640,
+        "narHash": "sha256-L3ZXW7MSCPsOZz5powJZZqzZLxuPLh9QXHp5shwzqb8=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "d0d62a2b5027da689b4e8d5ee43f1cf83f2e975d",
+        "rev": "bd46166bd8308861cd36984a52ed5d25522d0ba8",
         "type": "github"
       },
       "original": {
@@ -1970,11 +1970,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787266647,
-        "narHash": "sha256-xnAzMU2QsqKkViBg4Pk++ctGm5vvyMifsyLQ+KLqoNY=",
+        "lastModified": 1787270094,
+        "narHash": "sha256-pGpkjLrD0JB9sxpz9SFTOUj7AUA2JkWSoDrPYRhz89o=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "bc4abc8c71d76fe936bfc851870060742ce13650",
+        "rev": "382d4e1422fe9b6354cad251ebd5d37a9ef34594",
         "type": "github"
       },
       "original": {
