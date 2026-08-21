@@ -59,11 +59,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787240817,
-        "narHash": "sha256-5Ppycz99SNV8Z3Pp88w72SiBBnKHyUXhdSmFSx2ANaI=",
+        "lastModified": 1787289435,
+        "narHash": "sha256-wkZTE3TDgGqMlXhls4+tuwQu8/rJPgjhLIHXbxTyFms=",
         "owner": "AdnanHodzic",
         "repo": "auto-cpufreq",
-        "rev": "5326bc9ca2a86f2ebb31254ed88065024571d8d8",
+        "rev": "a1c9450aa821ac493a8ef05eb9b7e986685ea9eb",
         "type": "github"
       },
       "original": {
@@ -389,11 +389,11 @@
       },
       "locked": {
         "dir": "pkgs/firefox-addons",
-        "lastModified": 1787112172,
-        "narHash": "sha256-UMk1vXwGwx7dSxHAst6EcOvsryXIRuRF1QIFCz3oG+k=",
+        "lastModified": 1787284994,
+        "narHash": "sha256-ekBKvaEJY74xfbvB/QWLaB42XspwLlO5ySfmgvgKeeM=",
         "owner": "rycee",
         "repo": "nur-expressions",
-        "rev": "b6890db16471fa96d9223b538bcd30af7ea0a9bb",
+        "rev": "6e90cf8523a05e55621ede7cf1e101e1a70c5446",
         "type": "gitlab"
       },
       "original": {
@@ -911,11 +911,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1787239441,
-        "narHash": "sha256-/l+nW//CknuWWK0e8n0GpB/1D3oncGfNDX72P+Pt2BE=",
+        "lastModified": 1787325022,
+        "narHash": "sha256-u+DnD7j5Ae9SjakOgDCmYubgvJBTiNdduSSJE0ZUs9Y=",
         "ref": "refs/heads/main",
-        "rev": "8d50be06aa7d84283ac364a03df74bd834cab0ee",
-        "revCount": 7746,
+        "rev": "a28784206716a1c3e94535c99116a27a1f895980",
+        "revCount": 7748,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/hyprwm/Hyprland"
@@ -1209,11 +1209,11 @@
     "jobshunting": {
       "flake": false,
       "locked": {
-        "lastModified": 1787274053,
-        "narHash": "sha256-RrY3JOHkDUSnF/Yhvsin3kX5nbpQNGwplLDB3jcKSlQ=",
+        "lastModified": 1787329336,
+        "narHash": "sha256-jpinNjyYA8o0m2pNIYwP2UTinZXm+bxFpZRgcyf/iaQ=",
         "owner": "4rmcyt",
         "repo": "jobshunting",
-        "rev": "e5700663e55a7417d978488c89c94ab4523ba708",
+        "rev": "f4514d05561a447eda4b21d6dbded67f6c8e4049",
         "type": "github"
       },
       "original": {
@@ -1251,11 +1251,11 @@
         "nixpkgs": "nixpkgs_6"
       },
       "locked": {
-        "lastModified": 1787229212,
-        "narHash": "sha256-KqwJlUadAo6rlfNaBgIir/dQRPlbB1zq83Ib/uaiMk0=",
+        "lastModified": 1787315577,
+        "narHash": "sha256-hgrLFA05Ndh5cBfFJtmVZuWXCTxGGzC7FlV6pPjmOIM=",
         "owner": "natsukium",
         "repo": "mcp-servers-nix",
-        "rev": "9f7a4807f00c45a848b4b8edb2492c6cc9f85924",
+        "rev": "9ced2e7048a0cb43d801940d4b345b8027a4c02f",
         "type": "github"
       },
       "original": {
@@ -1970,11 +1970,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787284208,
-        "narHash": "sha256-rDeZil0DQJswMQ1hwwrJLZAwf/x0LFjSlib1rUTvFPI=",
+        "lastModified": 1787326210,
+        "narHash": "sha256-nvcnu816NW34h3a2zUz1AZZLoABhAb8zJNr07tWR0tA=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "7597d35ed04ad4f9a235d5d2d634f681d3333233",
+        "rev": "45f1d19439aaad82adda0e1380cf21df69807f7a",
         "type": "github"
       },
       "original": {
