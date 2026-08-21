@@ -8,12 +8,14 @@
     hash = "sha256-Ll9trqGA28WfZaQGQelNOXO126oys8Cs9UZH+odOUZ4=";
   };
 in {
-  # Separate CPU-only llama-server instance for the fairy-tale-pipeline project's
-  # story.json generation. Runs alongside the GPU gemma service on a different port.
+  # On-demand CPU-only llama-server for the fairy-tale-pipeline project's
+  # story.json generation. Deliberately has no Install/WantedBy: a 32B model
+  # pins ~28G of RAM, so it must not auto-start at login. Start it only when
+  # needed: `systemctl --user start llama-cpp-story` (the pipeline's
+  # generate_story.py does this itself and stops it again afterwards).
   systemd.user.services.llama-cpp-story = {
     Unit = {
-      Description = "llama.cpp inference server (CPU, Qwen2.5-32B story generation)";
-      After = ["default.target"];
+      Description = "llama.cpp inference server (CPU, Qwen2.5-32B story generation, on-demand)";
     };
 
     Service = {
@@ -32,10 +34,6 @@ in {
       MemoryMax = "28G";
       Restart = "on-failure";
       RestartSec = 5;
-    };
-
-    Install = {
-      WantedBy = ["default.target"];
     };
   };
 }
