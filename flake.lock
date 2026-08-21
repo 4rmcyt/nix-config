@@ -1237,11 +1237,11 @@
         "treefmt-nix": "treefmt-nix_3"
       },
       "locked": {
-        "lastModified": 1787350959,
-        "narHash": "sha256-eIT9OEUUY/qz4GLiISPWB5+o7ZTigQa9Ia++oBiEyAU=",
+        "lastModified": 1787351518,
+        "narHash": "sha256-dCx6XXw9aZHIhn0OV2UffPTdWTD6mPT+NSmNLbaafao=",
         "owner": "4rmcyt",
         "repo": "jobshunting",
-        "rev": "f5ee4f77ea88f521fc07768873b407fd6223e7de",
+        "rev": "ba862bbc840e7cf8cbd726ea6472bec1068a3b33",
         "type": "github"
       },
       "original": {
