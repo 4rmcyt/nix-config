@@ -86,20 +86,6 @@ in {
       '';
     };
 
-    seedUsersEnvironmentFile = lib.mkOption {
-      type = lib.types.nullOr lib.types.path;
-      default = null;
-      description = ''
-        EnvironmentFile with KOMBAYN_SEED_VOLODYMYR_EMAIL/_PASSWORD and
-        KOMBAYN_SEED_SOFIIA_EMAIL/_PASSWORD -- provisions the two fixed
-        kombayn-api login users (job-kombayn-seed-users, runs before
-        job-kombayn-api, idempotent). Only takes effect when enableApi is
-        also true. Typically a sops-nix secret with `format = "dotenv"`;
-        passwords are plaintext at rest in the encrypted file and hashed at
-        seed time by kombayn.auth.create_user, not pre-hashed.
-      '';
-    };
-
     onCalendar = lib.mkOption {
       type = lib.types.str;
       default = "hourly";
@@ -161,8 +147,9 @@ in {
       description = ''
         Run kombayn/api.py (FastAPI) as an always-on service on
         127.0.0.1:''${toString cfg.apiPort} — read/PATCH-status HTTP API for
-        the web frontend, gated by email+password login (see
-        seedUsersEnvironmentFile). Reachable via Traefik at
+        the web frontend, gated by email+password login (kombayn/auth.py;
+        users provisioned by hand via `python -m kombayn.auth create-user`,
+        not by this module). Reachable via Traefik at
         jobko.''${config.my.defaults.domain}/api or over the tailnet.
       '';
     };
@@ -249,40 +236,9 @@ in {
       };
     };
 
-    systemd.services.job-kombayn-seed-users = lib.mkIf (cfg.enableApi && cfg.seedUsersEnvironmentFile != null) {
-      description = "job-kombayn: provision the two fixed API login users";
-      after = ["postgresql.service"];
-      requires = ["postgresql.service"];
-      before = ["job-kombayn-api.service"];
-      wantedBy = ["multi-user.target"];
-      path = [cfg.apiPythonPackage];
-      environment = {
-        # Peer-auth'd as cfg.user over the local unix socket, same as the
-        # scan timer -- KOMBAYN_DATABASE_URL's default (organize.DEFAULT_DSN)
-        # is enough, no secret needed for the DB connection itself.
-        PYTHONPATH = cfg.src;
-      };
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        User = cfg.user;
-        StateDirectory = "job-kombayn";
-        WorkingDirectory = "/var/lib/job-kombayn";
-        EnvironmentFile = cfg.seedUsersEnvironmentFile;
-      };
-      # Idempotent (auth.create_user upserts on email), so safe to run on
-      # every boot/config change rather than gating it behind a one-off trigger.
-      script = ''
-        python -m kombayn.auth create-user "$KOMBAYN_SEED_VOLODYMYR_EMAIL" --password-env KOMBAYN_SEED_VOLODYMYR_PASSWORD
-        python -m kombayn.auth create-user "$KOMBAYN_SEED_SOFIIA_EMAIL" --password-env KOMBAYN_SEED_SOFIIA_PASSWORD
-      '';
-    };
-
     systemd.services.job-kombayn-api = lib.mkIf cfg.enableApi {
       description = "job-kombayn: read/status HTTP API for the web frontend";
-      after =
-        ["network-online.target" "postgresql.service"]
-        ++ lib.optional (cfg.seedUsersEnvironmentFile != null) "job-kombayn-seed-users.service";
+      after = ["network-online.target" "postgresql.service"];
       wants = ["network-online.target"];
       wantedBy = ["multi-user.target"];
       path = [cfg.apiPythonPackage];

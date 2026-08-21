@@ -70,13 +70,6 @@
         owner = "kombayn";
         mode = "0400";
       };
-      job_kombayn_users_env = {
-        sopsFile = ../../../secrets/job-kombayn-users.env;
-        format = "dotenv";
-        key = "job_kombayn_users_env";
-        owner = "kombayn";
-        mode = "0400";
-      };
     };
   };
 
@@ -331,7 +324,6 @@
       notify = true;
       onCalendar = "*-*-* 0/3:00:00"; # every 3 hours instead of hourly
       environmentFile = config.sops.secrets.job_kombayn_env.path;
-      seedUsersEnvironmentFile = config.sops.secrets.job_kombayn_users_env.path;
       enableBot = true; # Applied/Skip inline buttons on vacancy cards
       enableApi = true; # HTTP API for the web frontend (jobko.<domain>/api)
       enableWeb = true; # static SPA (jobko.<domain>)
