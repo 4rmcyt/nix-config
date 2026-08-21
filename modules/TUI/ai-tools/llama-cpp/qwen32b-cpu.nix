@@ -28,6 +28,10 @@ in {
         "--port 8090"
         "--threads 6"
         "--ctx-size 16384"
+        # generate_story.py only ever sends one request at a time; llama-server's
+        # default n_parallel=4 slots each get a full --ctx-size KV cache (16384
+        # tokens per slot), so it was reserving 4x the KV memory actually needed.
+        "--parallel 1"
         "--cache-type-k q8_0"
         "--cache-type-v q8_0"
       ];
