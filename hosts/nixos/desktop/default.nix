@@ -25,6 +25,7 @@
     ../../../modules/monitoring/alloy-client.nix
 
     # Features and roles
+    ../../../modules/containers
     ../../../modules/gaming
     # ../../../modules/networking/avahi
     ../../../modules/networking/dnssec
