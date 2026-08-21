@@ -244,7 +244,14 @@ in {
         Type = "simple";
         User = cfg.user;
         StateDirectory = "job-kombayn";
-        WorkingDirectory = cfg.src;
+        # Must match job-kombayn.service's WorkingDirectory: the scan timer
+        # writes Postgres `applications.folder` as a path relative to its own
+        # CWD (run.py's --root defaults to "applications", never passed
+        # explicitly). If this service's CWD differs, api.py's
+        # Path(folder).exists() checks resolve against the wrong directory
+        # and every resume.pdf/cover.pdf lookup 404s even when the file is
+        # really there under /var/lib/job-kombayn/applications/.
+        WorkingDirectory = "/var/lib/job-kombayn";
         EnvironmentFile = lib.mkIf (cfg.environmentFile != null) cfg.environmentFile;
         ExecStart = "${cfg.apiPythonPackage}/bin/uvicorn kombayn.api:app --host 127.0.0.1 --port ${toString cfg.apiPort}";
         Restart = "always";
