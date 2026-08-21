@@ -60,4 +60,8 @@ in ''
   ## CRITICAL: Never guess config keys
 
   Before writing ANY config key for ANY app or daemon — fetch the official docs first (`fetch` or `tavily`). Never guess option names. Read the schema, then write. No exceptions.
+
+  ## CRITICAL: Never use sudo over SSH to remote hosts
+
+  Never run `sudo` (directly or via `sudo -n`/`sudo -u`) when SSH'd into a remote host (homeserver, gcp, etc.). No exceptions, no "just to read something" — includes read-only queries (e.g. `sudo -u <service-user> psql ...`). Use the app's own read path (its API, its own service account if it's the SSH user, etc.) instead. If that's not enough, ask the user to run the command himself.
 ''

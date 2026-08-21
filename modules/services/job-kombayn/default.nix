@@ -239,7 +239,13 @@ in {
       wants = ["network-online.target"];
       wantedBy = ["multi-user.target"];
       path = [cfg.apiPythonPackage];
-      environment.KOMBAYN_CORS_ORIGINS = "https://jobko.${config.my.defaults.domain}";
+      environment = {
+        KOMBAYN_CORS_ORIGINS = "https://jobko.${config.my.defaults.domain}";
+        # WorkingDirectory is /var/lib/job-kombayn (not cfg.src, see below),
+        # so `kombayn` is no longer importable via the CWD-relative sys.path
+        # entry Python adds automatically -- point it at src explicitly.
+        PYTHONPATH = cfg.src;
+      };
       serviceConfig = {
         Type = "simple";
         User = cfg.user;

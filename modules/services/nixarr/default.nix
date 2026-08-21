@@ -16,10 +16,15 @@
   # config.users.users.<name>.uid is null until activation otherwise,
   # so ${toString ...} silently renders as an empty string.
   #
-  # radarr/sonarr are NOT here: their nixpkgs service modules already create
-  # users.users/groups.{radarr,sonarr} pinned to config.ids.uids/gids.* --
-  # duplicating that here with different numbers throws a conflicting-
-  # definition error. They only need extraGroups added, done separately below.
+  # radarr/sonarr users are NOT here: their nixpkgs service modules already
+  # create users.users.{radarr,sonarr} pinned to config.ids.uids.* -- they
+  # only need extraGroups added, done separately below. Their group GIDs
+  # ARE overridden below (lib.mkForce) because nixpkgs pins them to
+  # config.ids.gids.{radarr,sonarr} (274/275), which no longer matches the
+  # GIDs actually present in /etc/group on homeserver (970/975, from before
+  # these services were declared here); without the override, activation
+  # just warns ("not applying GID change") and leaves /etc/group untouched
+  # anyway, so this documents reality instead of fighting it every rebuild.
   serviceIds = {
     audiobookshelf = {
       uid = 156;
@@ -119,7 +124,12 @@ in {
     }
   ];
 
-  users.groups = lib.mapAttrs (_name: ids: {inherit (ids) gid;}) serviceIds;
+  users.groups =
+    lib.mapAttrs (_name: ids: {inherit (ids) gid;}) serviceIds
+    // {
+      radarr.gid = lib.mkForce 975;
+      sonarr.gid = lib.mkForce 970;
+    };
 
   environment.systemPackages = with pkgs; [
     shntool

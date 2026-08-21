@@ -331,7 +331,12 @@
         pname = "job-kombayn-web";
         version = "0.1.0";
         src = "${inputs.jobshunting}/frontend";
-        npmDepsHash = "sha256-MQZA8iXlnOsi7HYVtmg/ZbFP4js4KUZR2mi2wWSfYg0=";
+        # importNpmLock reads the per-package integrity hashes already in
+        # package-lock.json instead of a single pinned npmDepsHash, so a
+        # frontend dependency bump (package-lock.json change) never needs a
+        # matching hash update here.
+        npmDeps = pkgs.importNpmLock {npmRoot = "${inputs.jobshunting}/frontend";};
+        npmConfigHook = pkgs.importNpmLock.npmConfigHook;
         installPhase = ''
           mkdir -p $out
           cp -r dist $out/dist
