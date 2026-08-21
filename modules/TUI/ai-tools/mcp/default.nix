@@ -14,6 +14,9 @@
       type = "stdio";
       command = lib.getExe pkgs.mcp-server-memory;
       args = [];
+      env = {
+        MEMORY_FILE_PATH = "${config.home.homeDirectory}/.local/share/mcp-memory/memory.jsonl";
+      };
     };
     sequential-thinking = {
       type = "stdio";
@@ -64,6 +67,7 @@ in {
   home.activation.mcpConfig = lib.hm.dag.entryAfter ["writeBoundary" "sops-nix"] ''
         mkdir -p "$HOME/.config/mcp"
         mkdir -p "$HOME/.local/bin"
+        mkdir -p "$HOME/.local/share/mcp-memory"
 
         export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
 

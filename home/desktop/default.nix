@@ -8,6 +8,7 @@
     ../../modules/GUI/IDE
     ../../modules/TUI/ai-tools
     ../../modules/TUI/ai-tools/llama-cpp
+    ../../modules/TUI/ai-tools/llama-cpp/qwen32b-cpu.nix
 
     ../../modules/GUI/chrome/home.nix
     ../../modules/GUI/chromium
