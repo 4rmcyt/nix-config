@@ -34,6 +34,14 @@ in {
         "--parallel 1"
         "--cache-type-k q8_0"
         "--cache-type-v q8_0"
+        # Safety net for orphaned runs: if a caller starts this service and finds
+        # it already active (see generate_story.py's llama_service_is_active
+        # check), it never stops it -- that let this pin ~12G of RAM for over an
+        # hour after its last request and drove the system into heavy swapping.
+        # Unload the model+KV cache automatically after 5 minutes idle; /health
+        # polls don't count as activity, so a script waiting on readiness won't
+        # keep resetting this. First request after sleep just reloads it.
+        "--sleep-idle-seconds 300"
       ];
       MemoryMax = "28G";
       Restart = "on-failure";
