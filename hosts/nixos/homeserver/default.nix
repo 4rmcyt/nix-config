@@ -331,7 +331,7 @@
         pname = "job-kombayn-web";
         version = "0.1.0";
         src = "${inputs.jobshunting}/frontend";
-        npmDepsHash = "sha256-vgBhClvJwdVqK3R6dt10uy5vsprYgtX/Zi37NgCsqQo=";
+        npmDepsHash = "sha256-MQZA8iXlnOsi7HYVtmg/ZbFP4js4KUZR2mi2wWSfYg0=";
         installPhase = ''
           mkdir -p $out
           cp -r dist $out/dist
