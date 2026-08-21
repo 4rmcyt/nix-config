@@ -160,10 +160,12 @@
     # pre-built and pushed to Cachix against arr-packages' own nixpkgs rev —
     # following ours would change the derivation hash and force a local rebuild.
     arr-packages.url = "github:4rmcyt/arr-packages";
-    # job-kombayn: not a flake, just the script tree (run.py, kombayn/, profiles/).
+    # job-kombayn: script tree (run.py, kombayn/, profiles/). Now a real flake
+    # (formatter only, via treefmt-nix) - follow our nixpkgs so it doesn't
+    # pull its own copy just to build the treefmt wrapper.
     jobshunting = {
       url = "github:4rmcyt/jobshunting";
-      flake = false;
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
