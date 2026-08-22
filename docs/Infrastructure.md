@@ -289,6 +289,8 @@ Active tunnels (proxied through `localhost:443` → Traefik):
 | `livesync.example.com`  | CouchDB / Obsidian LiveSync  |
 | `cal.example.com`       | Radicale CalDAV/CardDAV      |
 | `ntfy.example.com`      | Push notifications           |
+| `jobko.example.com`     | job-kombayn (web + API)      |
+| `idm.example.com`       | Kanidm SSO                   |
 
 Tunnel credentials in `secrets/cloudflare_tunnel_credentials.bin` + `secrets/cloudflare.yaml`. Config rendered by sops template at runtime.
 

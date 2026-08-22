@@ -67,6 +67,18 @@
             originServerName: ntfy.${config.my.defaults.domain}
             noTLSVerify: true
 
+        - hostname: jobko.${config.my.defaults.domain}
+          service: https://localhost:443
+          originRequest:
+            originServerName: jobko.${config.my.defaults.domain}
+            noTLSVerify: true
+
+        - hostname: idm.${config.my.defaults.domain}
+          service: https://localhost:443
+          originRequest:
+            originServerName: idm.${config.my.defaults.domain}
+            noTLSVerify: true
+
         # Catch-all
         - service: http_status:404
     '';
