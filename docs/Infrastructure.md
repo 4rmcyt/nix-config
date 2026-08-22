@@ -283,14 +283,16 @@ Most services are behind Traefik at `*.example.com`. A subset is additionally ex
 
 Active tunnels (proxied through `localhost:443` → Traefik):
 
-| Hostname                 | Purpose                      |
-|--------------------------|------------------------------|
-| `hass.example.com`      | Home Assistant (public)      |
-| `livesync.example.com`  | CouchDB / Obsidian LiveSync  |
-| `cal.example.com`       | Radicale CalDAV/CardDAV      |
-| `ntfy.example.com`      | Push notifications           |
-| `jobko.example.com`     | job-kombayn (web + API)      |
-| `idm.example.com`       | Kanidm SSO                   |
+| Hostname                 | Purpose                      | Cloudflare Access |
+|--------------------------|-------------------------------|-------------------|
+| `hass.example.com`      | Home Assistant (public)      | Yes (`owner-only` policy) |
+| `livesync.example.com`  | CouchDB / Obsidian LiveSync  | No |
+| `cal.example.com`       | Radicale CalDAV/CardDAV      | No |
+| `ntfy.example.com`      | Push notifications           | No |
+| `jobko.example.com`     | job-kombayn (web + API)      | No |
+| `idm.example.com`       | Kanidm SSO                   | Yes (`owner-only` policy) |
+
+`hass` and `idm` additionally sit behind a Cloudflare Zero Trust Access application (email OTP gate, policy `owner-only` restricted to the owner's email) — configured in the Cloudflare dashboard (Access controls → Applications), not declarative in this repo, since nixpkgs' `services.cloudflared` has no Access support. This only affects requests that actually cross Cloudflare's edge; LAN/Tailscale clients resolve `*.example.com` straight to the homeserver via the split-horizon Unbound config (`modules/networking/unbound/`) and never touch Access or the tunnel at all. Kanidm's own auth (username + WebAuthn/Yubikey) is unchanged and still required after Access.
 
 Tunnel credentials in `secrets/cloudflare_tunnel_credentials.bin` (per-tunnel, scoped) + `secrets/cloudflare_tunnel_cert.pem` (account-level `cert.pem` from `cloudflared login`, needed so cloudflared can create the DNS routes itself). Tunnel UUID (`57a75d0b-ba3c-4b13-9e45-8854e13fc0fb`, name `homeserver-nix`) is hardcoded in the module — it's not sensitive on its own (publicly derivable from any `<uuid>.cfargotunnel.com` CNAME target) and has to be a literal Nix attribute name. This tunnel was created via CLI (`cloudflared tunnel create`), not the dashboard — dashboard-created tunnels are permanently remotely-managed and silently ignore any local `--config`/ingress, no matter what options are passed (confirmed via cloudflared GitHub issue #843 and live testing against the old `homeserver` dashboard tunnel, f7876e26-..., now retired).
 
