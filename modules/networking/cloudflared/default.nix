@@ -10,7 +10,7 @@
 # <uuid>.cfargotunnel.com CNAME target once DNS is set up).
 {config, ...}: let
   inherit (config.my.defaults) domain;
-  tunnelId = "f7876e26-87a8-4bdd-9798-3986b0f7cebc";
+  tunnelId = "57a75d0b-ba3c-4b13-9e45-8854e13fc0fb";
 
   hostnames = ["hass" "livesync" "cal" "ntfy" "jobko" "idm"];
 
@@ -27,7 +27,7 @@ in {
   sops.secrets = {
     cloudflare_tunnel_credentials = {
       sopsFile = ../../../secrets/cloudflare_tunnel_credentials.bin;
-      key = "credentials";
+      key = "data";
       format = "binary";
     };
 
