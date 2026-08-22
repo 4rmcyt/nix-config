@@ -55,6 +55,10 @@
       type = "http";
       url = "https://mcp.opentofu.org/mcp";
     };
+    cloudflare = {
+      type = "http";
+      url = "https://mcp.cloudflare.com/mcp";
+    };
     tavily = {
       type = "stdio";
       command = "${config.home.homeDirectory}/.local/bin/tavily-mcp-wrapped";
