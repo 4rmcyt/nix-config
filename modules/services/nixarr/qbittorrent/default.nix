@@ -82,6 +82,7 @@
       STATE_DIR="/data/media/.state/nixarr/qbittorrent"
       curl -sSLf "https://raw.githubusercontent.com/Naunter/BT_BlockLists/refs/heads/master/bt_blocklists" \
         | grep -E '^.+:[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}-[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$' \
+        | grep -vE ':(10\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}-|172\.(1[6-9]|2[0-9]|3[0-1])\.[0-9]{1,3}\.[0-9]{1,3}-|192\.168\.[0-9]{1,3}\.[0-9]{1,3}-|100\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\.[0-9]{1,3}\.[0-9]{1,3}-)' \
         > "$STATE_DIR/ipfilter.p2p"
       chown qbittorrent:media "$STATE_DIR/ipfilter.p2p"
       chmod 644 "$STATE_DIR/ipfilter.p2p"
