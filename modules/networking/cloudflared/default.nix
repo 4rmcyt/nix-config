@@ -1,115 +1,60 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+# Fully declarative Cloudflare Tunnel via nixpkgs' services.cloudflared module
+# (DynamicUser-based, not our own systemd unit). certificateFile is the
+# account-level cert.pem (from `cloudflared login`) — required for cloudflared
+# to create the public-hostname DNS records itself; without it, routes can
+# only be created by hand via the Cloudflare dashboard/API.
+#
+# The tunnel UUID has to be a literal Nix attribute name (services.cloudflared
+# .tunnels.<uuid>), so it can't come from a sops secret — it's not sensitive
+# on its own (it's the same UUID publicly visible in every
+# <uuid>.cfargotunnel.com CNAME target once DNS is set up).
+{config, ...}: let
+  inherit (config.my.defaults) domain;
+  tunnelId = "f7876e26-87a8-4bdd-9798-3986b0f7cebc";
+
+  hostnames = ["hass" "livesync" "cal" "ntfy" "jobko" "idm"];
+
+  mkIngress = name: {
+    "${name}.${domain}" = {
+      service = "https://localhost:443";
+      originRequest = {
+        originServerName = "${name}.${domain}";
+        noTLSVerify = true;
+      };
+    };
+  };
+in {
   sops.secrets = {
     cloudflare_tunnel_credentials = {
       sopsFile = ../../../secrets/cloudflare_tunnel_credentials.bin;
       key = "credentials";
-      owner = "cloudflared";
-      group = "cloudflared";
-      mode = "0400";
       format = "binary";
     };
 
-    cloudflare_tunnel_id = {
-      sopsFile = ../../../secrets/cloudflare.yaml;
-      key = "cloudflare_tunnel_id";
-      owner = "cloudflared";
-      group = "cloudflared";
-      mode = "0400";
+    cloudflare_tunnel_cert = {
+      sopsFile = ../../../secrets/cloudflare_tunnel_cert.pem;
+      key = "data";
+      format = "binary";
     };
   };
 
-  sops.templates."cloudflared-config.yml" = {
-    owner = "cloudflared";
-    group = "cloudflared";
-    mode = "0400";
-    content = ''
-      tunnel: ${config.sops.placeholder.cloudflare_tunnel_id}
-      credentials-file: ${config.sops.secrets.cloudflare_tunnel_credentials.path}
+  services.cloudflared = {
+    enable = true;
+    certificateFile = config.sops.secrets.cloudflare_tunnel_cert.path;
 
-      # Enable WebSocket support for all services
-      warp-routing:
-        enabled: false
+    tunnels.${tunnelId} = {
+      credentialsFile = config.sops.secrets.cloudflare_tunnel_credentials.path;
+      default = "http_status:404";
 
-      # Global origin request settings
-      originRequest:
-        connectTimeout: 30s
-        tcpKeepAlive: 30s
-        keepAliveTimeout: 90s
-        keepAliveConnections: 100
-        noHappyEyeballs: false
+      originRequest = {
+        connectTimeout = "30s";
+        tcpKeepAlive = "30s";
+        keepAliveTimeout = "90s";
+        keepAliveConnections = 100;
+        noHappyEyeballs = false;
+      };
 
-      ingress:
-        - hostname: hass.${config.my.defaults.domain}
-          service: https://localhost:443
-          originRequest:
-            originServerName: hass.${config.my.defaults.domain}
-            noTLSVerify: true
-
-        - hostname: livesync.${config.my.defaults.domain}
-          service: https://localhost:443
-          originRequest:
-            originServerName: livesync.${config.my.defaults.domain}
-            noTLSVerify: true
-
-        - hostname: cal.${config.my.defaults.domain}
-          service: https://localhost:443
-          originRequest:
-            originServerName: cal.${config.my.defaults.domain}
-            noTLSVerify: true
-
-        - hostname: ntfy.${config.my.defaults.domain}
-          service: https://localhost:443
-          originRequest:
-            originServerName: ntfy.${config.my.defaults.domain}
-            noTLSVerify: true
-
-        - hostname: jobko.${config.my.defaults.domain}
-          service: https://localhost:443
-          originRequest:
-            originServerName: jobko.${config.my.defaults.domain}
-            noTLSVerify: true
-
-        - hostname: idm.${config.my.defaults.domain}
-          service: https://localhost:443
-          originRequest:
-            originServerName: idm.${config.my.defaults.domain}
-            noTLSVerify: true
-
-        # Catch-all
-        - service: http_status:404
-    '';
-  };
-
-  users.users.cloudflared = {
-    isSystemUser = true;
-    group = "cloudflared";
-  };
-  users.groups.cloudflared = {};
-
-  systemd.services.cloudflared = {
-    after = [
-      "network.target"
-      "network-online.target"
-      "sops-nix.service"
-    ];
-    wants = [
-      "network.target"
-      "network-online.target"
-    ];
-    wantedBy = ["multi-user.target"];
-
-    serviceConfig = {
-      User = "cloudflared";
-      Group = "cloudflared";
-      ExecStart = "${pkgs.cloudflared}/bin/cloudflared tunnel --config ${
-        config.sops.templates."cloudflared-config.yml".path
-      } --no-autoupdate run";
-      Restart = "on-failure";
-      RestartSec = "5s";
+      ingress = builtins.foldl' (acc: name: acc // mkIngress name) {} hostnames;
     };
   };
 }

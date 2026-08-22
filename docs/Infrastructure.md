@@ -257,7 +257,7 @@ On homeserver, listening on Tailscale + LAN interfaces. Forwards to NextDNS prof
 
 ### Cloudflared
 
-Cloudflare Tunnel for select services (configured in `modules/networking/cloudflared/`). Tunnel config rendered by sops template at runtime.
+Cloudflare Tunnel for select services (configured in `modules/networking/cloudflared/`), via nixpkgs' native `services.cloudflared.tunnels` module (fully declarative — DNS routes are created by cloudflared itself using an account-level `certificateFile`, no manual dashboard steps).
 
 ### NFS
 
@@ -292,7 +292,7 @@ Active tunnels (proxied through `localhost:443` → Traefik):
 | `jobko.example.com`     | job-kombayn (web + API)      |
 | `idm.example.com`       | Kanidm SSO                   |
 
-Tunnel credentials in `secrets/cloudflare_tunnel_credentials.bin` + `secrets/cloudflare.yaml`. Config rendered by sops template at runtime.
+Tunnel credentials in `secrets/cloudflare_tunnel_credentials.bin` (per-tunnel, scoped) + `secrets/cloudflare_tunnel_cert.pem` (account-level `cert.pem` from `cloudflared login`, needed so cloudflared can create the DNS routes itself). Tunnel UUID (`f7876e26-87a8-4bdd-9798-3986b0f7cebc`) is hardcoded in the module — it's not sensitive on its own (publicly derivable from any `<uuid>.cfargotunnel.com` CNAME target) and has to be a literal Nix attribute name.
 
 ### Media
 
