@@ -296,6 +296,15 @@ Active tunnels (proxied through `localhost:443` → Traefik):
 
 Tunnel credentials in `secrets/cloudflare_tunnel_credentials.bin` (per-tunnel, scoped) + `secrets/cloudflare_tunnel_cert.pem` (account-level `cert.pem` from `cloudflared login`, needed so cloudflared can create the DNS routes itself). Tunnel UUID (`57a75d0b-ba3c-4b13-9e45-8854e13fc0fb`, name `homeserver-nix`) is hardcoded in the module — it's not sensitive on its own (publicly derivable from any `<uuid>.cfargotunnel.com` CNAME target) and has to be a literal Nix attribute name. This tunnel was created via CLI (`cloudflared tunnel create`), not the dashboard — dashboard-created tunnels are permanently remotely-managed and silently ignore any local `--config`/ingress, no matter what options are passed (confirmed via cloudflared GitHub issue #843 and live testing against the old `homeserver` dashboard tunnel, f7876e26-..., now retired).
 
+### jobko.example.com hardening
+
+All configured via the Cloudflare dashboard/API (zone `example.com`, Free plan) — not declarative, no nixpkgs module covers these:
+
+- **Rate limiting rule** `jobko-auth-ratelimit` (Security rules → Rate limiting rules): blocks IPs exceeding 3 requests/10s (Free plan's max window) to `/api/auth/login` or `/api/auth/register`.
+- **Schema validation**: job-kombayn's OpenAPI schema (exported via `python -m kombayn.export_openapi`, converted 3.1→3.0.3 since Cloudflare only accepts v3.0.x, `servers` added manually since FastAPI doesn't set it, `additionalProperties: false` added by hand to `LoginRequest`/`RegisterRequest`/`StatusUpdate`/`ProfileIn` since OpenAPI/FastAPI leaves it unset — i.e. extra fields allowed — by default) uploaded as `jobko-openapi.json`, zone-level `validation_default_mitigation_action: block`. Per-operation overrides must be `null` (inherit), not `none` — the dashboard's "Add schema and endpoints" wizard sets every operation to an explicit `none` override by default, silently defeating the zone-level action; cleared via `PATCH /zones/{id}/schema_validation/settings/operations` with each operation set to `{"mitigation_action": null}` (must be redone after any schema re-upload). `log` action requires a paid plan; Free only gets `none`/`block`. Confirmed live: a request missing the required `email` field, or one with a wrong-typed `email`/an extra body field, gets a 403 from Cloudflare's edge (not the origin) on `/api/auth/login`.
+- **Bot Fight Mode** and **Leaked Credentials Detection** (Security → Settings): both enabled zone-wide.
+- Cloudflare Access was deliberately **not** put in front of jobko (unlike hass/idm) — job-kombayn has multiple real users (profiles for `volodymyr-kondratenko` and `sofiia-rogatska`) and open self-service `/api/auth/register`; gating the whole app behind Access would need a bypass rule on the signup path plus app-level automation to add new signups' emails to the Access policy, which isn't built.
+
 ### Media
 
 | Service         | Port  | URL                           | Notes                              |

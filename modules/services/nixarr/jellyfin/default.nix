@@ -12,6 +12,11 @@ in {
   # instead of the official container image.
   systemd.services.jellyfin.path = [pkgs.chromaprint pkgs.jellyfin-ffmpeg];
 
+  # jellyfin-ffmpeg (libass) needs a fontconfig-visible font with Hebrew
+  # glyphs to burn in / render Hebrew subtitles; without one they show as
+  # tofu boxes or drop out entirely.
+  fonts.packages = [pkgs.noto-fonts];
+
   users.users.jellyfin = {
     isSystemUser = true;
     group = lib.mkForce "jellyfin";
