@@ -1,8 +1,5 @@
 {config, ...}: let
   a = config.lib.niri.actions;
-  qs = target: act: {
-    action = a.spawn "noctalia-shell" "ipc" "call" target act;
-  };
 in {
   programs.niri.settings.binds = {
     # ============================================
@@ -12,11 +9,11 @@ in {
     "Mod+Return".action = a.spawn "kitty";
     "Mod+B".action = a.spawn "google-chrome-stable";
     "Mod+E".action = a.spawn "nemo";
-    "Mod+Space" = qs "launcher" "toggle";
-    "Mod+D" = qs "launcher" "toggle";
+    "Mod+Space".action = a.spawn "noctalia" "msg" "panel-toggle" "launcher";
+    "Mod+D".action = a.spawn "noctalia" "msg" "panel-toggle" "launcher";
     "Mod+M".action = a.spawn "kitty" "-e" "btop";
     "Ctrl+Shift+Escape".action = a.spawn "kitty" "-e" "btop";
-    "Mod+Comma" = qs "settings" "toggle";
+    "Mod+Comma".action = a.spawn "noctalia" "msg" "settings-toggle";
     "Mod+Shift+D".action = a.spawn "discord";
 
     # ============================================
@@ -32,18 +29,20 @@ in {
     # SYSTEM CONTROLS
     # ============================================
 
-    "Mod+Escape" = qs "lockScreen" "lock";
-    "Mod+Shift+Escape" = qs "sessionMenu" "toggle";
-    "Mod+N" = qs "notifications" "toggleHistory";
-    "Mod+T" = qs "darkMode" "toggle";
-    "Mod+Shift+N" = qs "nightLight" "toggle";
+    "Mod+Escape".action = a.spawn "noctalia" "msg" "session" "lock";
+    "Mod+Shift+Escape".action = a.spawn "noctalia" "msg" "panel-toggle" "session";
+    "Mod+N".action = a.spawn "noctalia" "msg" "panel-toggle" "control-center" "notifications";
+    "Mod+T".action = a.spawn "noctalia" "msg" "theme-mode-toggle";
+    "Mod+Shift+N".action = a.spawn "noctalia" "msg" "nightlight-toggle";
 
     # ============================================
     # THEMING & CUSTOMIZATION
     # ============================================
 
-    "Mod+C" = qs "colorPicker" "toggle";
-    "Mod+W" = qs "desktopWidgets" "toggle";
+    # Mod+C (colorPicker toggle) dropped: v5 has no standalone color-picker
+    # panel/IPC command — the picker is now an internal dialog reached only
+    # from Settings/wallpaper UI, not exposed for direct binding.
+    "Mod+W".action = a.spawn "noctalia" "msg" "desktop-widgets-toggle";
 
     # ============================================
     # SCREENSHOTS - niri native
@@ -172,7 +171,7 @@ in {
     # CLIPBOARD
     # ============================================
 
-    "Mod+V" = qs "launcher" "clipboard";
+    "Mod+V".action = a.spawn "noctalia" "msg" "panel-toggle" "clipboard";
 
     # ============================================
     # SYSTEM

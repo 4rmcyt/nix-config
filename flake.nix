@@ -95,15 +95,16 @@
       url = "github:amaanq/nirinit";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    noctalia = {
-      url = "github:noctalia-dev/noctalia/legacy-v4";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.noctalia-qs.follows = "noctalia-qs";
-    };
-    noctalia-qs = {
-      url = "github:noctalia-dev/noctalia-qs";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # cachix branch, not main — always points at the latest commit noctalia's
+    # own CI has finished caching to noctalia.cachix.org, so this never pulls
+    # an uncached main commit that would force a local compile.
+    #
+    # No `inputs.nixpkgs.follows` here (unlike most other inputs): overriding
+    # noctalia's nixpkgs changes its derivation hash and causes a cache miss
+    # against noctalia.cachix.org, forcing a full local meson/ninja C++
+    # build instead of a substituted binary. Costs one extra nixpkgs
+    # evaluation in the closure; buys a guaranteed cache hit.
+    noctalia.url = "github:noctalia-dev/noctalia/cachix";
     # No nixpkgs input to follow — the flake only ships bare nixos/home-manager modules.
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
     nur = {
@@ -114,10 +115,6 @@
     #   url = "github:Cu3PO42/pam_shim/next";
     #   inputs.nixpkgs.follows = "nixpkgs";
     # };
-    quickshell = {
-      url = "github:quickshell-mirror/quickshell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     stylix.url = "github:danth/stylix";
 
     # Shell & TUI

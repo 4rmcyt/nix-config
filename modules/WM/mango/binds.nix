@@ -12,10 +12,7 @@ _: let
       else ",${args}"
     );
 
-  # -c noctalia-shell targets the stable named config (see
-  # modules/WM/mango/noctalia.nix) instead of the noctalia-shell wrapper's
-  # ephemeral /nix/store-keyed instance identity.
-  noctalia = cmd: "spawn,quickshell -c noctalia-shell ipc call ${cmd}";
+  noctalia = cmd: "spawn,noctalia msg ${cmd}";
 in {
   wayland.windowManager.mango.settings = {
     bind = [
@@ -25,11 +22,11 @@ in {
       (bind "SUPER,Return" "spawn" "kitty")
       (bind "SUPER,B" "spawn" "google-chrome-stable")
       (bind "SUPER,E" "spawn" "nemo")
-      (bind "SUPER,Space" (noctalia "launcher toggle") "")
-      (bind "SUPER,D" (noctalia "launcher toggle") "")
+      (bind "SUPER,Space" (noctalia "panel-toggle launcher") "")
+      (bind "SUPER,D" (noctalia "panel-toggle launcher") "")
       (bind "SUPER,M" "spawn" "kitty -e btop")
       (bind "CTRL+SHIFT,Escape" "spawn" "kitty -e btop")
-      (bind "SUPER,Comma" (noctalia "settings toggle") "")
+      (bind "SUPER,Comma" (noctalia "settings-toggle") "")
       (bind "SUPER+SHIFT,D" "spawn" "discord")
 
       # ============================================
@@ -43,17 +40,19 @@ in {
       # ============================================
       # SYSTEM CONTROLS
       # ============================================
-      (bind "SUPER,Escape" (noctalia "lockScreen lock") "")
-      (bind "SUPER+SHIFT,Escape" (noctalia "sessionMenu toggle") "")
-      (bind "SUPER,N" (noctalia "notifications toggleHistory") "")
-      (bind "SUPER,T" (noctalia "darkMode toggle") "")
-      (bind "SUPER+SHIFT,N" (noctalia "nightLight toggle") "")
+      (bind "SUPER,Escape" (noctalia "session lock") "")
+      (bind "SUPER+SHIFT,Escape" (noctalia "panel-toggle session") "")
+      (bind "SUPER,N" (noctalia "panel-toggle control-center notifications") "")
+      (bind "SUPER,T" (noctalia "theme-mode-toggle") "")
+      (bind "SUPER+SHIFT,N" (noctalia "nightlight-toggle") "")
 
       # ============================================
       # THEMING & CUSTOMIZATION
       # ============================================
-      (bind "SUPER,C" (noctalia "colorPicker toggle") "")
-      (bind "SUPER,W" (noctalia "desktopWidgets toggle") "")
+      # Mod+C (colorPicker toggle) dropped: v5 has no standalone color-picker
+      # panel/IPC command — the picker is now an internal dialog reached only
+      # from Settings/wallpaper UI, not exposed for direct binding.
+      (bind "SUPER,W" (noctalia "desktop-widgets-toggle") "")
 
       # ============================================
       # SCREENSHOTS
@@ -156,7 +155,7 @@ in {
       # ============================================
       # CLIPBOARD
       # ============================================
-      (bind "SUPER,V" (noctalia "launcher clipboard") "")
+      (bind "SUPER,V" (noctalia "panel-toggle clipboard") "")
 
       # ============================================
       # SYSTEM

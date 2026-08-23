@@ -498,30 +498,29 @@
     importOptionInfo: {{colors.on_surface_variant.dark.hex}};
   '';
 in {
-  # Template files for noctalia's user-templates theming
+  # Template source files, rendered by noctalia's TemplateEngine into the
+  # paths below. See https://docs.noctalia.dev/noctalia/theming/app-theming/#user-templates
   xdg.configFile = {
     "noctalia/templates/zed-colors.json".source = zedTemplate;
     "noctalia/templates/materialgram.tdesktop-theme".source = materialgramTemplate;
   };
 
-  programs.noctalia-shell = {
+  programs.noctalia = {
     enable = true;
     # spawn-at-startup configured in startup.nix; systemd service not used
 
-    user-templates = {
-      templates = {
+    settings = {
+      theme.templates.user = {
         zed-dark = {
-          input_path = "$HOME/.config/noctalia/templates/zed-colors.json";
-          output_path = "$HOME/.config/zed/themes/matugen.json";
+          input_path = "$XDG_CONFIG_HOME/noctalia/templates/zed-colors.json";
+          output_path = "$XDG_CONFIG_HOME/zed/themes/matugen.json";
         };
         materialgram = {
-          input_path = "$HOME/.config/noctalia/templates/materialgram.tdesktop-theme";
+          input_path = "$XDG_CONFIG_HOME/noctalia/templates/materialgram.tdesktop-theme";
           output_path = "$HOME/.local/share/TelegramDesktop/tdata/matugen.tdesktop-theme";
         };
       };
     };
-
-    settings = {};
   };
 
   # playerctl for media key bindings (replaces dms ipc mpris)

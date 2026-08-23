@@ -165,7 +165,7 @@ Root subvolume is deleted and recreated on every boot (`boot.initrd.postResumeCo
 
 - **WM:** Niri (niri-flake NixOS module, `pkgs.niri` 25.11, not niri-flake stable)
 - **DM:** greetd (auto-login into Niri session)
-- **Shell:** noctalia-shell (quickshell-based bar/shell)
+- **Shell:** noctalia v5 (native bar/shell, no Quickshell)
 - **Theming:** Stylix + matugen dynamic colors
 - **Portal:** `xdg-desktop-portal-gnome` + `xdg-desktop-portal-gtk`
 - **nirinit:** enabled (smooth session init)
@@ -190,7 +190,7 @@ Root subvolume is deleted and recreated on every boot (`boot.initrd.postResumeCo
 
 Disk: WD PC SN730 512GB NVMe (`nvme-WDC_PC_SN730_SDBPNTY-512G-1027_20230H445703`). GPT: 2GB EFI + **ext4** root (no ZFS). 16GB swapfile (`/swapfile`, TRIM-enabled) for hibernation support.
 
-- Niri WM + noctalia-shell
+- Niri WM + noctalia v5
 - Nix daemon: **determinate** (vs lix on desktop/homeserver)
 - Tailscale client with magic rollback enabled for remote deploys
 

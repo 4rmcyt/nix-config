@@ -148,16 +148,16 @@ No local `overlays/` directory. All overlays come from flake inputs:
 
 ## Desktop WM Stack
 
-**Desktop uses mango; matebook uses niri.** Both pair with **noctalia-shell** (quickshell-based) as bar/shell. Desktop ran Hyprland until 2026-08-22, when it was fully replaced by mango (`modules/WM/hyprland/` is kept on disk but no longer imported by any host).
+**Desktop uses mango; matebook uses niri.** Both pair with **noctalia** v5 (native C++ binary, no Quickshell) as bar/shell. Desktop ran Hyprland until 2026-08-22, when it was fully replaced by mango (`modules/WM/hyprland/` is kept on disk but no longer imported by any host, and was not migrated off noctalia legacy-v4 — see below).
 
 ### mango (desktop only)
 
 | File | Purpose |
 |------|---------|
 | `modules/WM/mango/default.nix` | mango settings (structured Nix → `config.conf`), session vars, qt theming, scroller layout, blur/shadow effects |
-| `modules/WM/mango/noctalia.nix` | noctalia-shell HM config |
+| `modules/WM/mango/noctalia.nix` | noctalia HM config |
 | `modules/WM/mango/binds.nix` | keybindings (`bind`/`mousebind` in mango's own comma-separated grammar) |
-| `modules/WM/mango/startup.nix` | `autostart_sh`: cliphist, wl-clip-persist, noctalia-shell, materialgram, vesktop, coolercontrol |
+| `modules/WM/mango/startup.nix` | `autostart_sh`: cliphist, wl-clip-persist, noctalia, materialgram, vesktop, coolercontrol |
 | `modules/WM/mango/windowrules.nix` | floating rules (`windowrule=` strings) |
 | `modules/WM/mango/monitors/desktop.nix` | ASUS VG289 ×2, 4K@60Hz, 2× scale, matched by make+model+serial (`monitorrule=`) |
 | `modules/WM/mango/nvidia.nix` | NVIDIA env vars (`LIBVA_DRIVER_NAME`, GSync/VRR, `GLVidHeapReuseRatio` app profile), set both via HM sessionVariables and mango's own `env=` config lines |
@@ -173,9 +173,9 @@ No local `overlays/` directory. All overlays come from flake inputs:
 | File | Purpose |
 |------|---------|
 | `modules/WM/niri/default.nix` | niri settings, session vars, input/layout |
-| `modules/WM/niri/noctalia.nix` | noctalia-shell HM config, matugen templates (zed, materialgram) |
-| `modules/WM/niri/binds.nix` | keybindings — uses `qs -c noctalia-shell ipc call` for shell actions |
-| `modules/WM/niri/startup.nix` | spawn-at-startup: noctalia-shell, cliphist, wl-clip-persist, xwayland-satellite |
+| `modules/WM/niri/noctalia.nix` | noctalia HM config, `[theme.templates.user.*]` (zed, materialgram) |
+| `modules/WM/niri/binds.nix` | keybindings — `a.spawn "noctalia" "msg" ...` for shell actions |
+| `modules/WM/niri/startup.nix` | spawn-at-startup: noctalia, cliphist, wl-clip-persist, xwayland-satellite |
 | `modules/WM/niri/windowrules.nix` | floating rules |
 | `modules/WM/niri/monitors/matebook.nix` | laptop display config |
 | `modules/WM/niri/nvidia.nix` | NVIDIA env vars |
@@ -196,12 +196,14 @@ No local `overlays/` directory. All overlays come from flake inputs:
 | `modules/xdg/default.nix` | NixOS XDG portals: xdg-desktop-portal-gnome + gtk |
 
 **noctalia inputs:**
-- `inputs.noctalia` = `github:noctalia-dev/noctalia/legacy-v4`
-- `inputs.noctalia-qs` = `github:noctalia-dev/noctalia-qs`
-- `inputs.quickshell` = `git+https://git.outfoxxed.me/quickshell/quickshell` (direct dep via noctalia-qs)
+- `inputs.noctalia` = `github:noctalia-dev/noctalia/cachix` (v5, C++ rewrite — pinned to the `cachix` branch, which always points at the latest commit noctalia's own CI has finished pushing to `noctalia.cachix.org`, so it never forces a local compile the way tracking `main` directly can)
+- Migrated from `legacy-v4` (QML/Quickshell, archived upstream) on 2026-08-23. No settings migration from v4 — separate config format (TOML, `[theme.templates.user.*]` instead of `programs.noctalia-shell.user-templates`). IPC CLI changed from `noctalia-shell ipc call <target> <action>` to `noctalia msg <command> [args...]`; command names changed too (e.g. `launcher toggle` → `panel-toggle launcher`, `darkMode toggle` → `theme-mode-toggle`). No v5 equivalent exists for the old standalone color-picker toggle bind (dropped from mango/niri binds).
+- Package renamed `noctalia-shell` → `noctalia`; overlay attr is `pkgs.noctalia`.
+- No more `noctalia-qs` or `inputs.quickshell` inputs — v5 has no Quickshell dependency at all (removed from flake.nix).
 - Exports: `homeModules.default`, `nixosModules.default`, `overlays.default`
 - NixOS import: `inputs.noctalia.nixosModules.default` on desktop + matebook
 - HM import: `inputs.noctalia.homeModules.default` on desktop + matebook
+- `modules/WM/hyprland/*` was NOT migrated (dead code, not imported by any host) — still references `programs.noctalia-shell` and the old IPC syntax. Update it first if hyprland is ever revived.
 
 **Theming:** Stylix (`inputs.stylix`) imported as HM module on desktop only.
 
