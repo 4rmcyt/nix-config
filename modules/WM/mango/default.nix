@@ -73,19 +73,24 @@
       gappov = 10;
       borderpx = 2;
 
-      # HDR requires the Vulkan renderer, which drops scenefx support — so
-      # blur/shadow (see git history for the previous settings) are traded
-      # away here in favor of HDR on the two HDR10 ASUS VG289Q panels.
-      # See https://mangowm.github.io/docs/configuration/monitors#hdr and
-      # modules/WM/mango/monitors/desktop.nix for the per-output hdr:1.
+      # HDR requires the vulkan renderer, and mango's own docs say HDR only
+      # works on the `wl-only` branch, since scenefx (which `main` links
+      # unconditionally) doesn't support that renderer — see the mango
+      # input comment in flake.nix and docs/Architecture.md for the full
+      # trail. Trade-off: `wl-only`'s meson.build drops libscenefx entirely,
+      # so every scenefx-dependent visual (blur, shadows, AND border_radius
+      # — corner radii are drawn via scenefx's fx_corner_radii/
+      # wlr_scene_shadow_create, not plain wlroots) is gone with it, not
+      # just blur/shadow. `border_radius` is not a recognized config
+      # keyword on this branch at all — setting it fails mango-config.conf's
+      # build (`[ERROR]: Unknown keyword: border_radius`), it doesn't just
+      # no-op.
       #
       # WLR_RENDERER is NOT set here via `env=` — wlroots picks the renderer
       # backend before mango ever reads config.conf, so a config-file `env=`
       # directive is too late (confirmed: had no effect on `mmsg get
       # monitor`'s is_hdr). It's set on greetd's exec instead — see
       # parts/hosts/desktop/configuration.nix.
-
-      border_radius = 20;
 
       # Layouts — scroller matches niri/hyprland's scrolling-tape model
       circle_layout = "scroller,tile";

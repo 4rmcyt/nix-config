@@ -13,11 +13,12 @@
 # name — and these panels' EDID apparently doesn't clear that bar. hdr_force
 # skips those two EDID checks; it does NOT skip the third (renderer must
 # support output_color_transform), which is why WLR_RENDERER=vulkan (see
-# default.nix, which drops scenefx blur/shadow as a deliberate trade-off)
-# is still required.
+# default.nix) is still required.
 #
-# HDR support itself lives in mangowm/mango's main branch (src/ext-protocol/
-# hdr.h, togglehdr, IPC's `is_hdr`) — no special branch needed.
+# HDR only actually works on mangowm/mango's `wl-only` branch (see the
+# mango input comment in flake.nix) — `main` links scenefx unconditionally,
+# and scenefx doesn't support the vulkan renderer output_color_transform
+# needs, so is_hdr stays false on `main` no matter what's set here.
 _: {
   wayland.windowManager.mango.settings.monitorrule = [
     "make:ASUSTek COMPUTER INC,model:ASUS VG289,serial:0x00011FC7,width:3840,height:2160,refresh:60,x:0,y:0,scale:2,hdr:1,hdr_force:1"
