@@ -905,11 +905,11 @@
         "treefmt-nix": "treefmt-nix_3"
       },
       "locked": {
-        "lastModified": 1787522773,
-        "narHash": "sha256-FRIr4OuY0V4tlBQ+o2IutXPsPXZsme4jsA1CGGNRAms=",
+        "lastModified": 1787523495,
+        "narHash": "sha256-0JM8kqNZZI1tfzfYw0CxX+9ybIneRP8qrl8/kbrT1N0=",
         "owner": "4rmcyt",
         "repo": "jobshunting",
-        "rev": "2ae4915083826522a2587cccc706eed2adf18c61",
+        "rev": "80132b2d2e0484c9998a91b34283805e40686904",
         "type": "github"
       },
       "original": {
@@ -1690,11 +1690,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787521891,
-        "narHash": "sha256-A6XdbU7fBG/MjorO5OhgEEnz/lMJNSwTREb4y/cfhY0=",
+        "lastModified": 1787522848,
+        "narHash": "sha256-Etr6UNS9iyF9jkkHwcnSXBwU18a0VYC+eNO6N0anJZ8=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "4afa441599070750912cf635e1834e996217c406",
+        "rev": "377f0d2c80714f333ea0c643827d40ca451ebee9",
         "type": "github"
       },
       "original": {
