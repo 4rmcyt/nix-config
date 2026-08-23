@@ -13,8 +13,10 @@ _: {
     # Propagate PAM environment (GIO_EXTRA_MODULES, etc.) into D-Bus/systemd user session
     dbus-update-activation-environment --systemd --all
 
-    # Desktop shell
-    noctalia-shell &
+    # Desktop shell — launched by named config (`-c noctalia-shell`), not the
+    # `noctalia-shell` wrapper, so IPC instance identity stays stable across
+    # generations. See modules/WM/mango/noctalia.nix for why.
+    quickshell -c noctalia-shell &
 
     # Messaging apps
     materialgram &

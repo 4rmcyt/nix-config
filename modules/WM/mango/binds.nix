@@ -12,7 +12,10 @@ _: let
       else ",${args}"
     );
 
-  noctalia = cmd: "spawn,noctalia-shell ipc call ${cmd}";
+  # -c noctalia-shell targets the stable named config (see
+  # modules/WM/mango/noctalia.nix) instead of the noctalia-shell wrapper's
+  # ephemeral /nix/store-keyed instance identity.
+  noctalia = cmd: "spawn,quickshell -c noctalia-shell ipc call ${cmd}";
 in {
   wayland.windowManager.mango.settings = {
     bind = [
