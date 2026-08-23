@@ -4,6 +4,7 @@ in {
   configurations.nixos.gcp-relay.module = {
     lib,
     inputs,
+    pkgs,
     ...
   }: {
     imports = [
@@ -15,6 +16,8 @@ in {
     nixpkgs.overlays = [
       inputs.headscale.overlays.default
     ];
+
+    environment.systemPackages = [pkgs.fastfetch];
 
     nix.settings = {
       extra-substituters = ["https://4rmcyt-gcp.cachix.org?priority=0"];

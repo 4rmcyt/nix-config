@@ -140,6 +140,7 @@
   # ── Packages ─────────────────────────────────────────────────────────────
   environment.systemPackages = with pkgs; [
     curl
+    fastfetch
     htop
     iproute2
     jq

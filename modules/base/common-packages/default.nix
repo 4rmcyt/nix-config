@@ -105,6 +105,7 @@
       # Productivity & Terminal Tools
       # =================================================================
       cht-sh
+      fastfetch
       fblog
       graph-easy
       grc
