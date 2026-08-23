@@ -55,7 +55,7 @@ in {
       # ============================================
       # SCREENSHOTS
       # ============================================
-      (bind "Print" "spawn_shell" ''grim -g "$(slurp)" - | satty -f -'')
+      (bind "none,Print" "spawn_shell" ''grim -g "$(slurp)" - | satty -f -'')
       (bind "SUPER,Print" "spawn_shell" ''grim - | satty -f -'')
 
       # ============================================
