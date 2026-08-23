@@ -135,7 +135,12 @@ in {
       # ============================================
       (bind "SUPER,bracketleft" "switch_proportion_preset" "prev")
       (bind "SUPER,bracketright" "switch_proportion_preset" "")
-      (bind "SUPER,R" "set_proportion" "1.0")
+      (bind "SUPER+SHIFT,R" "set_proportion" "1.0")
+
+      # ============================================
+      # CONFIG RELOAD (hot-reload, no compositor restart needed)
+      # ============================================
+      (bind "SUPER,R" "reload" "")
 
       # ============================================
       # RESIZE
