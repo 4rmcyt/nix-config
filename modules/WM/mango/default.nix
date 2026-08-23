@@ -78,20 +78,12 @@
       gappov = 10;
       borderpx = 2;
 
-      # Window effects (scenefx) — mutually exclusive with HDR on mango's
-      # wl-only/vulkan branch (not what nixpkgs builds), so effects win here.
-      # See https://mangowm.github.io/docs/visuals/effects
-      blur = 1;
-      blur_optimized = 1;
-      blur_params_radius = 5;
-      blur_params_num_passes = 2;
-      blur_params_saturation = 1.1696; # matches hyprland's vibrancy=0.1696
-
-      shadows = 1;
-      shadow_only_floating = 1;
-      shadows_size = 4;
-      shadows_blur = 15;
-      shadowscolor = "0x1a1a1aee";
+      # HDR requires the Vulkan renderer, which drops scenefx support — so
+      # blur/shadow (see git history for the previous settings) are traded
+      # away here in favor of HDR on the two HDR10 ASUS VG289Q panels.
+      # See https://mangowm.github.io/docs/configuration/monitors#hdr and
+      # modules/WM/mango/monitors/desktop.nix for the per-output hdr:1.
+      env = ["WLR_RENDERER,vulkan"];
 
       border_radius = 20;
 
