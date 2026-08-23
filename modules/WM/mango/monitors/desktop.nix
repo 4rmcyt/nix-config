@@ -5,13 +5,22 @@
 # matched by make+model+serial (mango has no single "desc" field like
 # Hyprland's wlr-output desc string, which packs make+model+serial into one).
 #
-# hdr:1 — both panels are ASUS TUF VG289Q, which are HDR10-certified, so
-# their EDID should advertise BT.2020/PQ correctly without needing
-# hdr_force:1. Requires env=WLR_RENDERER,vulkan (see default.nix), which
-# drops scenefx (blur/shadow) — a deliberate trade-off, not a bug.
+# hdr:1,hdr_force:1 — both panels are ASUS TUF VG289Q ("HDR10-certified"),
+# but live testing (`mmsg get all-monitors` → is_hdr) showed hdr:1 alone
+# never took effect: mango's output_supports_hdr() (src/ext-protocol/hdr.h)
+# gates on wlr_output->supported_primaries/supported_transfer_functions,
+# i.e. what the EDID actually advertises to wlroots — not the marketing
+# name — and these panels' EDID apparently doesn't clear that bar. hdr_force
+# skips those two EDID checks; it does NOT skip the third (renderer must
+# support output_color_transform), which is why WLR_RENDERER=vulkan (see
+# default.nix, which drops scenefx blur/shadow as a deliberate trade-off)
+# is still required.
+#
+# HDR support itself lives in mangowm/mango's main branch (src/ext-protocol/
+# hdr.h, togglehdr, IPC's `is_hdr`) — no special branch needed.
 _: {
   wayland.windowManager.mango.settings.monitorrule = [
-    "make:ASUSTek COMPUTER INC,model:ASUS VG289,serial:0x00011FC7,width:3840,height:2160,refresh:60,x:0,y:0,scale:2,hdr:1"
-    "make:ASUSTek COMPUTER INC,model:ASUS VG289,serial:0x00011E65,width:3840,height:2160,refresh:60,x:1920,y:0,scale:2,hdr:1"
+    "make:ASUSTek COMPUTER INC,model:ASUS VG289,serial:0x00011FC7,width:3840,height:2160,refresh:60,x:0,y:0,scale:2,hdr:1,hdr_force:1"
+    "make:ASUSTek COMPUTER INC,model:ASUS VG289,serial:0x00011E65,width:3840,height:2160,refresh:60,x:1920,y:0,scale:2,hdr:1,hdr_force:1"
   ];
 }

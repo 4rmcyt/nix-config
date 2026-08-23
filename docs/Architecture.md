@@ -166,7 +166,7 @@ No local `overlays/` directory. All overlays come from flake inputs:
 
 **greetd** on desktop execs `mango` directly (no UWSM — mango's own HM module binds a `mango-session.target` to `graphical-session.target` itself).
 
-**No real HDR on desktop's mango build:** mango does support HDR (`hdr:1`/`hdr_force`/`hdr_*_lum` in `monitorrule`), but only on its separate wl-only branch behind `WLR_RENDERER=vulkan` — and that branch drops scenefx (blur/shadow effects), which `modules/WM/mango/default.nix` relies on. nixpkgs/`inputs.mango` builds the mainline (non-vulkan) branch, so HDR isn't reachable there regardless. Niri has no HDR path at all (see below); Hyprland ≥0.55 was the only WM in this config with a working HDR10 output path (`wp_color_management v2`) before the switch.
+**HDR on desktop's mango build:** HDR support lives in mangowm/mango's `main` branch itself (`src/ext-protocol/hdr.h`, `togglehdr`, IPC's `is_hdr`) — no special branch needed (an earlier version of this doc claimed otherwise; that was wrong, corrected 2026-08-23). `hdr:1` alone was not enough for the two ASUS VG289Q panels — their EDID apparently doesn't clear wlroots' `supported_primaries`/`supported_transfer_functions` bar mango's `output_supports_hdr()` checks against, so `hdr_force:1` (see `modules/WM/mango/monitors/desktop.nix`) is required to skip those two EDID checks. `WLR_RENDERER=vulkan` is still required regardless of `hdr_force` — it's a separate, non-skippable renderer-capability check (`output_color_transform`). Niri has no HDR path at all (see below); Hyprland ≥0.55 was the only WM in this config with a working HDR10 output path (`wp_color_management v2`) before the switch.
 
 ### niri (matebook only)
 

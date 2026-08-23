@@ -16,7 +16,6 @@ in {
       nixosWorkstation
       ../../../hosts/nixos/desktop
       inputs.noctalia.nixosModules.default
-      inputs.mango.nixosModules.mango
       ../../../modules/nix/lix
     ];
 
@@ -35,7 +34,18 @@ in {
       ];
     };
 
-    programs.mango.enable = true;
+    # `programs.mango` is nixpkgs' own module now (portal + systemPackages
+    # wiring only — packages the stable v0.16.1 release, which has no HDR).
+    # We no longer import inputs.mango.nixosModules.mango — it duplicate-
+    # declared the same `programs.mango.enable` option nixpkgs now ships,
+    # which errors at eval time (two non-identical mkEnableOption
+    # declarations of the same option path don't merge). Point `package` at
+    # our own flake's build so systemPackages/portals match the binary
+    # greetd actually execs below.
+    programs.mango = {
+      enable = true;
+      package = inputs.mango.packages.${pkgs.stdenv.hostPlatform.system}.mango;
+    };
 
     # No UWSM — mango's own HM module (wayland.windowManager.mango.systemd)
     # already binds a mango-session.target to graphical-session.target and

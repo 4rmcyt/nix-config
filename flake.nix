@@ -83,13 +83,16 @@
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # hdr branch, not main — mainline mango bundles scenefx (blur/shadow)
-    # but has no working HDR output path at all; HDR support only exists on
-    # this unmerged branch, which drops scenefx in exchange (matches the
-    # blur/shadow trade-off already made in modules/WM/mango/default.nix).
-    # See https://mangowm.github.io/docs/configuration/monitors#hdr
+    # NOT the `hdr` branch: tried it (2026-08-23) — it's broken, not just
+    # stale. Its own nix/default.nix requests wlroots_0_19 while its C
+    # source (meson.build) has already moved to wlroots-0.20, so it fails
+    # at meson's configure step ("Dependency wlroots-0.20 not found") —
+    # the branch's Nix packaging was never updated to match its own C code.
+    # mainline mango has no working HDR output path either way (bundles
+    # scenefx, no vulkan renderer) — HDR isn't reachable via mango right
+    # now without fixing that branch upstream first.
     mango = {
-      url = "github:mangowm/mango/hdr";
+      url = "github:mangowm/mango";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     niri-flake = {
