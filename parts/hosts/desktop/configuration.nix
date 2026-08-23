@@ -40,10 +40,18 @@ in {
     # No UWSM — mango's own HM module (wayland.windowManager.mango.systemd)
     # already binds a mango-session.target to graphical-session.target and
     # imports the environment, so greetd just execs the compositor directly.
+    #
+    # WLR_RENDERER=vulkan must be in mango's own process environment before
+    # wlroots picks a renderer backend, which happens before mango ever
+    # reads config.conf — so `env=WLR_RENDERER,vulkan` inside config.conf
+    # (modules/WM/mango/default.nix) is too late and silently has no effect
+    # (confirmed: `mmsg get monitor` still reports is_hdr:false with that
+    # config-file directive alone). It has to be set here, on the actual
+    # exec that starts mango.
     services.greetd = {
       enable = true;
       settings.default_session = {
-        command = "${inputs.mango.packages.${pkgs.stdenv.hostPlatform.system}.mango}/bin/mango";
+        command = "env WLR_RENDERER=vulkan ${inputs.mango.packages.${pkgs.stdenv.hostPlatform.system}.mango}/bin/mango";
         user = owner.username;
       };
     };

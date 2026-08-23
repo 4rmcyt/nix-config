@@ -83,7 +83,12 @@
       # away here in favor of HDR on the two HDR10 ASUS VG289Q panels.
       # See https://mangowm.github.io/docs/configuration/monitors#hdr and
       # modules/WM/mango/monitors/desktop.nix for the per-output hdr:1.
-      env = ["WLR_RENDERER,vulkan"];
+      #
+      # WLR_RENDERER is NOT set here via `env=` — wlroots picks the renderer
+      # backend before mango ever reads config.conf, so a config-file `env=`
+      # directive is too late (confirmed: had no effect on `mmsg get
+      # monitor`'s is_hdr). It's set on greetd's exec instead — see
+      # parts/hosts/desktop/configuration.nix.
 
       border_radius = 20;
 
