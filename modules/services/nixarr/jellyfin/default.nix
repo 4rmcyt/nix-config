@@ -5,7 +5,9 @@
   ...
 }: let
   systemXml = ./system.xml;
-  encodingXml = ./encoding.xml;
+  encodingXml = pkgs.replaceVars ./encoding.xml {
+    fallbackFontPath = "${pkgs.noto-fonts}/share/fonts/noto";
+  };
 in {
   # Now that jellyfin comes from our own arr-packages fork (tracks upstream
   # release tags directly), we're back to nixpkgs' native services.jellyfin

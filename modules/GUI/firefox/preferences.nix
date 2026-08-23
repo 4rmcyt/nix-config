@@ -142,7 +142,7 @@ _: {
 
     # === MEDIA & HARDWARE VIDEO ACCELERATION ===
     "media.av1.enabled" = true;
-    "media.av1.use-dav1d" = true; # Software AV1 decode - previously believed unavoidable under native Wayland, but the real cause was a missing MOZ_DISABLE_RDD_SANDBOX=1 (now set in modules/WM/hyprland/nvidia.nix). Re-test AV1 hw decode via about:support after rebuild; NVIDIA AV1 decode requires Turing (RTX 20-series) or newer
+    "media.av1.use-dav1d" = true; # Software AV1 decode - previously believed unavoidable under native Wayland, but the real cause was a missing MOZ_DISABLE_RDD_SANDBOX=1 (now set in modules/WM/mango/nvidia.nix). Re-test AV1 hw decode via about:support after rebuild; NVIDIA AV1 decode requires Turing (RTX 20-series) or newer
     "media.eme.enabled" = true;
     "media.ffmpeg.vaapi.enabled" = true; # Enable VAAPI hardware video decoding
     "media.ffmpeg.vaapi-drm-display.enabled" = true; # Enable VAAPI DRM display
@@ -150,7 +150,7 @@ _: {
     "media.gpu-process-decoder" = true; # Decode video in the GPU process
     "media.hardwaremediakeys.enabled" = true;
     "media.hardware-video-decoding.enabled" = true; # Enable hardware video decoding
-    "media.hardware-video-decoding.force-enabled" = false; # Previously believed ineffective due to GPU process blocklisting under Wayland; real cause was a missing MOZ_DISABLE_RDD_SANDBOX=1 (now set in modules/WM/hyprland/nvidia.nix). If about:support still shows NVIDIA blocklisted after rebuild, try flipping this to true
+    "media.hardware-video-decoding.force-enabled" = false; # Previously believed ineffective due to GPU process blocklisting under Wayland; real cause was a missing MOZ_DISABLE_RDD_SANDBOX=1 (now set in modules/WM/mango/nvidia.nix). If about:support still shows NVIDIA blocklisted after rebuild, try flipping this to true
     "media.hevc.enabled" = true; # Enable HEVC playback
     "media.hls.enabled" = true;
     "media.navigator.mediadatadecoder_vpx_enabled" = true;

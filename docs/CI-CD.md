@@ -47,7 +47,7 @@ Both are local composite actions (`uses: ./.github/actions/<name>`), which means
 | `vulnix-scan` | needs `build-and-check-systems`; `schedule` or `workflow_dispatch` only | `vulnix-scan.yml` — see below. |
 | `workflow-summary` | push to `main`, not on PR | Inline job (not split out — it's just two Telegram notifications reading `needs.*.result`/`needs.security-checks.outputs.*`). |
 
-**Host matrix caveat:** kept in sync with `parts/hosts/*/configuration.nix` by hand — no automatic derivation. Current hosts: `desktop`, `homeserver`, `matebook`, `router`, `gcp-relay` (flake attribute is `gcp-relay`, not `gcp`). `router` is intentionally excluded — not currently in use. `desktop` is also excluded from the CI matrix: its full GUI closure (Hyprland + the whole desktop stack) regularly exceeds GitHub-hosted runner disk/RAM and kills the runner outright — no build error, no log output, job just dies. Built locally on that machine instead (`nixos-rebuild`/`nh os switch` — see "user builds himself" in CLAUDE.md).
+**Host matrix caveat:** kept in sync with `parts/hosts/*/configuration.nix` by hand — no automatic derivation. Current hosts: `desktop`, `homeserver`, `matebook`, `router`, `gcp-relay` (flake attribute is `gcp-relay`, not `gcp`). `router` is intentionally excluded — not currently in use. `desktop` is also excluded from the CI matrix: its full GUI closure (mango + the whole desktop stack) regularly exceeds GitHub-hosted runner disk/RAM and kills the runner outright — no build error, no log output, job just dies. Built locally on that machine instead (`nixos-rebuild`/`nh os switch` — see "user builds himself" in CLAUDE.md).
 
 ## security-checks.yml
 

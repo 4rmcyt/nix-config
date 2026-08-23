@@ -16,7 +16,7 @@ in ''
     base/                 # Core system (logging, msmtp, distributed-builds)
     options/              # my.defaults.*, my.network.*, my.security.*
     roles/                # Role compositions (desktop, server, media-server, monitoring)
-    WM/                   # hyprland + niri (both w/ noctalia-shell), gtk, mime — desktop:hyprland, matebook:niri
+    WM/                   # niri + mango (both w/ noctalia-shell), gtk, mime — desktop:mango, matebook:niri; hyprland kept on disk unused
     GUI/                  # firefox, chrome, obsidian, zed, terminal, mpv, etc.
     TUI/                  # zsh, zellij, atuin, starship, neovim, ai-tools (claude-code, llama-cpp, mcp)
     services/             # homepage, miniflux, home-assistant, atuin-server, nixarr,

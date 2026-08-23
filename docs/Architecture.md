@@ -56,8 +56,9 @@ modules/
     default.nix             # XDG user dirs (HM level)
     gtk.nix                 # GTK theming
     mime/                   # MIME type associations
-    hyprland/               # Hyprland WM (desktop): settings, keybinds, startup, windowrules, nvidia, monitors (HDR10)
+    mango/                  # mango WM (desktop): settings, keybinds, startup, windowrules, nvidia, monitors
     niri/                   # niri WM (matebook): settings, keybinds, startup, windowrules, nvidia, monitors
+    hyprland/               # unused — kept on disk, no longer imported by any host
   GUI/                      # GUI apps: firefox, chrome, chromium, obsidian, mpv, IDE (vscode, zed),
                             #   terminal (ghostty, kitty, wezterm), discord, nemo, thunderbird,
                             #   virt-manager, waydroid, flatpak, stylix
@@ -147,25 +148,25 @@ No local `overlays/` directory. All overlays come from flake inputs:
 
 ## Desktop WM Stack
 
-**Desktop uses Hyprland; matebook uses niri.** Both pair with **noctalia-shell** (quickshell-based) as bar/shell.
+**Desktop uses mango; matebook uses niri.** Both pair with **noctalia-shell** (quickshell-based) as bar/shell. Desktop ran Hyprland until 2026-08-22, when it was fully replaced by mango (`modules/WM/hyprland/` is kept on disk but no longer imported by any host).
 
-### Hyprland (desktop only)
+### mango (desktop only)
 
 | File | Purpose |
 |------|---------|
-| `modules/WM/hyprland/default.nix` | Hyprland settings (Lua config), session vars, qt theming, scrolling layout |
-| `modules/WM/hyprland/noctalia.nix` | noctalia-shell HM config |
-| `modules/WM/hyprland/binds.nix` | keybindings |
-| `modules/WM/hyprland/startup.nix` | spawn-at-startup via `hyprland.start` exec: noctalia-shell, cliphist, wl-clip-persist, materialgram, vesktop, coolercontrol |
-| `modules/WM/hyprland/windowrules.nix` | floating rules |
-| `modules/WM/hyprland/monitors/desktop.nix` | ASUS VG289 ×2, 4K@60Hz, 2× scale, `cm="hdr"` + `bitdepth=10` (real HDR10 output — PQ transfer + wide gamut), `sdr_max_luminance=220` |
-| `modules/WM/hyprland/nvidia.nix` | NVIDIA env vars (`LIBVA_DRIVER_NAME`, GSync/VRR, `GLVidHeapReuseRatio` app profile) |
+| `modules/WM/mango/default.nix` | mango settings (structured Nix → `config.conf`), session vars, qt theming, scroller layout, blur/shadow effects |
+| `modules/WM/mango/noctalia.nix` | noctalia-shell HM config |
+| `modules/WM/mango/binds.nix` | keybindings (`bind`/`mousebind` in mango's own comma-separated grammar) |
+| `modules/WM/mango/startup.nix` | `autostart_sh`: cliphist, wl-clip-persist, noctalia-shell, materialgram, vesktop, coolercontrol |
+| `modules/WM/mango/windowrules.nix` | floating rules (`windowrule=` strings) |
+| `modules/WM/mango/monitors/desktop.nix` | ASUS VG289 ×2, 4K@60Hz, 2× scale, matched by make+model+serial (`monitorrule=`) |
+| `modules/WM/mango/nvidia.nix` | NVIDIA env vars (`LIBVA_DRIVER_NAME`, GSync/VRR, `GLVidHeapReuseRatio` app profile), set both via HM sessionVariables and mango's own `env=` config lines |
 
-**Hyprland version:** `inputs.hyprland` (`git+https://github.com/hyprwm/Hyprland`, submodules) via `programs.hyprland` NixOS module — NOT the nixpkgs package. `withUWSM = true`; `configType = "lua"`. HM's own `wayland.windowManager.hyprland.systemd.enable = false` (UWSM owns `graphical-session.target`, conflicts with HM's own systemd integration otherwise).
+**mango version:** `inputs.mango` (`github:mangowm/mango`) — provides `nixosModules.mango` (`programs.mango.enable`) and `hmModules.mango` (`wayland.windowManager.mango`), not the nixpkgs package.
 
-**greetd** on desktop launches Hyprland via `uwsm start -e -D Hyprland hyprland.desktop`.
+**greetd** on desktop execs `mango` directly (no UWSM — mango's own HM module binds a `mango-session.target` to `graphical-session.target` itself).
 
-**Real HDR:** unlike niri, Hyprland ≥0.55 implements `wp_color_management v2` — HDR10 (PQ/HLG) actually reaches the display, not just decode-side. Firefox's `gfx.wayland.hdr` pref (`modules/GUI/firefox/preferences.nix`) is meaningful on desktop for this reason.
+**No real HDR on desktop's mango build:** mango does support HDR (`hdr:1`/`hdr_force`/`hdr_*_lum` in `monitorrule`), but only on its separate wl-only branch behind `WLR_RENDERER=vulkan` — and that branch drops scenefx (blur/shadow effects), which `modules/WM/mango/default.nix` relies on. nixpkgs/`inputs.mango` builds the mainline (non-vulkan) branch, so HDR isn't reachable there regardless. Niri has no HDR path at all (see below); Hyprland ≥0.55 was the only WM in this config with a working HDR10 output path (`wp_color_management v2`) before the switch.
 
 ### niri (matebook only)
 

@@ -25,10 +25,10 @@
     ../../modules/TUI/zellij
 
     ../../modules/WM
-    ../../modules/WM/hyprland
-    ../../modules/WM/hyprland/noctalia.nix
-    ../../modules/WM/hyprland/nvidia.nix
-    ../../modules/WM/hyprland/monitors/desktop.nix
+    ../../modules/WM/mango
+    ../../modules/WM/mango/noctalia.nix
+    ../../modules/WM/mango/nvidia.nix
+    ../../modules/WM/mango/monitors/desktop.nix
     ../../modules/WM/mime
     ../../modules/GUI/discord
     ../../modules/dev
