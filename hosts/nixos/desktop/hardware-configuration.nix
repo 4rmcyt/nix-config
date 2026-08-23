@@ -114,6 +114,15 @@
       "amd_iommu=on"
       "iommu=pt"
 
+      # RTL8125 (enp12s0) never got an interface: dmesg showed BAR 0/2/4
+      # all failing with "can't assign; no space", so r8125 loaded but
+      # couldn't bind ("region #1 not an MMIO resource, aborting"). Firmware's
+      # PCI resource layout ran out of address space with the NVIDIA GPU
+      # (large VRAM BARs) and the AMD GPU stubbed for VFIO passthrough below
+      # both competing for it. pci=realloc makes the kernel recompute BAR
+      # assignments from scratch instead of trusting that layout.
+      "pci=realloc"
+
       "pci-stub.ids=1022:15e3"
       "transparent_hugepage=madvise"
       "processor.max_cstate=1"
