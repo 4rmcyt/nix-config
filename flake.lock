@@ -927,15 +927,16 @@
         "scenefx": "scenefx"
       },
       "locked": {
-        "lastModified": 1787475228,
-        "narHash": "sha256-kLF2PMUS6XnUZm/Fv39l5pNG+cwmiV4ET9mLlnqDDEY=",
+        "lastModified": 1787475239,
+        "narHash": "sha256-9Ldp92jkBegayNfN8UwgPoR7ALoR+AfRJj9Ai85yrKU=",
         "owner": "mangowm",
         "repo": "mango",
-        "rev": "ab3102f6428ac723ddc54ba311563e5a7d33629b",
+        "rev": "ea1814c6759cd9d536f409cee42110c4ddfdaa19",
         "type": "github"
       },
       "original": {
         "owner": "mangowm",
+        "ref": "wl-only",
         "repo": "mango",
         "type": "github"
       }

@@ -88,11 +88,18 @@
     # source (meson.build) has already moved to wlroots-0.20, so it fails
     # at meson's configure step ("Dependency wlroots-0.20 not found") —
     # the branch's Nix packaging was never updated to match its own C code.
-    # mainline mango has no working HDR output path either way (bundles
-    # scenefx, no vulkan renderer) — HDR isn't reachable via mango right
-    # now without fixing that branch upstream first.
+    #
+    # `main` has no working HDR output path: its meson.build unconditionally
+    # requires libscenefx, and scenefx doesn't support the vulkan renderer
+    # HDR's output_color_transform check needs — confirmed both by mango's
+    # own docs/configuration/monitors.md ("HDR is only supported in wl-only
+    # branch, since it requires the vulkan renderer but scenefx is not
+    # supported yet") and by diffing meson.build: `wl-only` drops the
+    # scenefx dependency() call and its executable() link entirely, while
+    # `main` keeps both. wlroots pin matches main (wlroots-0.20), so unlike
+    # `hdr` this branch isn't known-broken packaging-wise.
     mango = {
-      url = "github:mangowm/mango";
+      url = "github:mangowm/mango/wl-only";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     niri-flake = {
