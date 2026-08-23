@@ -216,6 +216,12 @@
     ];
     paths = [
       "/var/lib/kanidm"
+      # Bazarr provider credentials, hashed passwords and settings live in
+      # config.yaml, not in its Postgres DB -- back it up separately.
+      "/data/media/.state/nixarr/bazarr/config"
+      # job-kombayn's dedup index, generated resume/cover PDFs and geocode
+      # cache live in its StateDirectory, not in the kombayn Postgres DB.
+      "/var/lib/job-kombayn"
     ];
   };
 

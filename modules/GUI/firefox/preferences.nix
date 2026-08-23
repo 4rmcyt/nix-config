@@ -136,9 +136,7 @@ _: {
 
     # === LAYERS (GPU ACCELERATION) ===
     "layers.acceleration.disabled" = false;
-    "layers.acceleration.force-enabled" = true;
     "layers.gpu-process.enabled" = true;
-    "layers.gpu-process.force-enabled" = true;
     "layers.mlgpu.enabled" = true;
     "layers.omtp.enabled" = false;
 
@@ -265,7 +263,6 @@ _: {
 
     # === WEBGL ===
     "webgl.disabled" = false;
-    "webgl.force-enabled" = true;
     "webgl.msaa-force" = false; # Enable MSAA with your GPU power
   };
 }
