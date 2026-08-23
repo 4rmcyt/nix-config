@@ -143,7 +143,7 @@ in {
       # ============================================
       # CONFIG RELOAD (hot-reload, no compositor restart needed)
       # ============================================
-      (bind "SUPER,R" "reload" "")
+      (bind "SUPER,R" "reload_config" "")
 
       # ============================================
       # RESIZE

@@ -49,8 +49,8 @@
     };
 
     iconTheme = {
-      name = "Tela-dark";
-      package = pkgs.tela-icon-theme;
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
     };
 
     cursorTheme = {
@@ -69,7 +69,7 @@
   # https://wiki.hypr.land/Nix/Hyprland-on-NixOS/#fixing-problems-with-themes
   dconf.settings."org/gnome/desktop/interface" = {
     gtk-theme = "catppuccin-mocha-blue-standard";
-    icon-theme = "Tela-dark";
+    icon-theme = "Papirus-Dark";
     font-name = "Maple Mono 12";
     document-font-name = "Maple Mono 12";
     monospace-font-name = "Maple Mono 12";

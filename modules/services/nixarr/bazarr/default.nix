@@ -1,5 +1,16 @@
 # modules/services/nixarr/bazarr/default.nix
-{config, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
+  # Custom post-processing (Bazarr Settings > Subtitles) converts .srt to
+  # .ass for languages whose glyphs some clients can't render as text
+  # (e.g. Hebrew on Roku -- tofu boxes), so the server burns them in via
+  # libass instead of the client rendering plain text. ffmpeg isn't
+  # otherwise on bazarr's PATH.
+  systemd.services.bazarr.path = [pkgs.ffmpeg];
+
   systemd.services.bazarr-pg-env = {
     description = "Write Bazarr PostgreSQL environment file";
     after = [

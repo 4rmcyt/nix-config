@@ -23,15 +23,15 @@
     # Quickshell (noctalia-shell) icon theme override — bypasses Qt/GTK theme
     # autodetection, which noctalia-shell's Quickshell.iconPath() does not
     # reliably follow. See https://quickshell.org/docs/master/types/Quickshell/Quickshell
-    QS_ICON_THEME = "Tela-dark";
+    QS_ICON_THEME = "Papirus-Dark";
   };
 
   qt = {
     enable = true;
     platformTheme.name = "qtct";
     style.name = "kvantum";
-    qt5ctSettings.Appearance.icon_theme = "Tela-dark";
-    qt6ctSettings.Appearance.icon_theme = "Tela-dark";
+    qt5ctSettings.Appearance.icon_theme = "Papirus-Dark";
+    qt6ctSettings.Appearance.icon_theme = "Papirus-Dark";
 
     # See modules/WM/hyprland/default.nix for the full explanation — no
     # [Fonts] section meant qt5ct/qt6ct handed Qt apps a null QFont,
