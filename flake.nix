@@ -83,8 +83,13 @@
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # hdr branch, not main — mainline mango bundles scenefx (blur/shadow)
+    # but has no working HDR output path at all; HDR support only exists on
+    # this unmerged branch, which drops scenefx in exchange (matches the
+    # blur/shadow trade-off already made in modules/WM/mango/default.nix).
+    # See https://mangowm.github.io/docs/configuration/monitors#hdr
     mango = {
-      url = "github:mangowm/mango";
+      url = "github:mangowm/mango/hdr";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     niri-flake = {
