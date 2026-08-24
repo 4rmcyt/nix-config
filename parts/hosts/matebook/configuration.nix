@@ -29,6 +29,12 @@ in {
     facter.reportPath = ../../../hosts/nixos/matebook/facter.json;
 
     # Host-specific HM imports
+    # home-manager now ships its own modules/programs/noctalia.nix, which
+    # re-declares programs.noctalia.enable and conflicts with
+    # inputs.noctalia.homeModules.default's nix/home-module.nix. Disable the
+    # nixpkgs/home-manager copy, mirroring what noctalia's own
+    # nix/nixos-module.nix already does for the NixOS-side module.
+    home-manager.users.${owner.username}.disabledModules = ["programs/noctalia.nix"];
     home-manager.users.${owner.username}.imports = [
       ../../../home/matebook
       inputs.noctalia.homeModules.default

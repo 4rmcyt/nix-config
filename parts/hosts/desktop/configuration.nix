@@ -72,6 +72,12 @@ in {
     # Host-specific HM imports
     home-manager.users.${owner.username} = {
       nixpkgs.config.permittedInsecurePackages = ["pnpm-10.29.2" "electron-40.10.5"];
+      # home-manager now ships its own modules/programs/noctalia.nix,
+      # which re-declares programs.noctalia.enable and conflicts with
+      # inputs.noctalia.homeModules.default's nix/home-module.nix. Disable
+      # the nixpkgs/home-manager copy, mirroring what noctalia's own
+      # nix/nixos-module.nix already does for the NixOS-side module.
+      disabledModules = ["programs/noctalia.nix"];
       imports = [
         ../../../home/desktop
         # inputs.stylix.homeModules.stylix
