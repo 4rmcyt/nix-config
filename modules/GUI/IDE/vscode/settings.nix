@@ -19,7 +19,6 @@
       "strings" = true;
     };
     "editor.bracketPairColorization.enabled" = true;
-    # "editor.defaultFormatter" = "ibecker.treefmt-vscode"; # Extension temporarily removed
     "editor.formatOnSave" = true;
     "editor.guides.bracketPairs" = "active";
     "editor.rulers" = [

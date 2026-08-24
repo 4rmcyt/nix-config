@@ -1,7 +1,7 @@
 {...}: {
   imports = [
+    ./couchdb
     ./postgresql
     ./redis
-    ./couchdb
   ];
 }

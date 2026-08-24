@@ -1,17 +1,17 @@
 {...}: {
   imports = [
-    ./home-assistant
-    ./radicale
-    ./homepage
-    ./miniflux
-    ./nixarr
     ./atuin-server
     ./dispatcharr
-    ./microbin
+    ./home-assistant
+    ./homepage
+    ./job-kombayn
     ./komf
     ./komga
+    ./microbin
+    ./miniflux
+    ./nixarr
     ./ntfy
-    ./job-kombayn
+    ./radicale
     # ./k3s
     # ./argocd
   ];

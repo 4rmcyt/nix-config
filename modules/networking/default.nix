@@ -6,9 +6,9 @@
     ./headscale
     ./nfs
     ./ssh
-    ./unbound
     ./tailscale
     ./traefik
+    ./unbound
     ./wireguard
   ];
 }

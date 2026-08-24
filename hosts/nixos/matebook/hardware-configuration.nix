@@ -166,5 +166,4 @@
   # for the same fix.
   facter.detected.dhcp.enable = lib.mkForce false;
   networking.useDHCP = lib.mkForce false;
-  # networking.interfaces.wlp13s0.useDHCP = lib.mkDefault true;
 }

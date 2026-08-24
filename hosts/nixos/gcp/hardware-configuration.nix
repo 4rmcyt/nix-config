@@ -27,9 +27,6 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
-  # Facter report — populated after first nixos-anywhere deploy
-  # facter.reportPath = ./facter.json;
-
   hardware.enableRedistributableFirmware = lib.mkDefault true;
   services.qemuGuest.enable = true;
 

@@ -74,13 +74,14 @@
       gst_all_1.gst-libav
       ifrextractor-rs
       jellycli
+      jujutsu
       libreoffice
       materialgram
       mcat
       mcp-grafana
       mcp-k8s-go
-      nmap
       nixos-anywhere
+      nmap
       nvtopPackages.nvidia
       opencode-desktop
       pcsc-tools
@@ -102,7 +103,6 @@
       vdpauinfo
       vulkan-tools
       waydroid-helper
-      jujutsu
       (pkgs.texliveSmall.withPackages (ps:
         with ps; [
           scheme-medium
