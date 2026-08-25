@@ -9,6 +9,8 @@
     enable = true;
     packages = [
       "com.github.IsmaelMartinez.teams_for_linux"
+      "net.lutris.Lutris"
+      "com.heroicgameslauncher.hgl"
     ];
   };
 
