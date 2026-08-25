@@ -13,6 +13,11 @@ _: {
     # Propagate PAM environment (GIO_EXTRA_MODULES, etc.) into D-Bus/systemd user session
     dbus-update-activation-environment --systemd --all
 
+    # Bluetooth pairing agent — without it bluetoothd has nothing to answer
+    # device_confirm_passkey requests, so devices (e.g. Bluetooth
+    # controllers) connect and are immediately dropped.
+    blueman-applet &
+
     # Desktop shell — v5 is a single native binary with no Quickshell
     # instance-identity problem to work around (unlike legacy-v4).
     noctalia &

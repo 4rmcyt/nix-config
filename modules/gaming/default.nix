@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   # Steam needs system fonts to render UI text (especially non-Latin scripts)
   fonts.packages = with pkgs; [
     noto-fonts
@@ -56,6 +60,12 @@
   # Nintendo Switch Pro Controller support
   boot.kernelModules = ["hid_nintendo"];
   hardware.steam-hardware.enable = true;
+
+  # Xbox controller support over Bluetooth (Elite/Pro included): xpadneo
+  # replaces the in-kernel xpad driver for proper rumble, trigger/paddle
+  # button, and battery-level support.
+  boot.extraModulePackages = [config.boot.kernelPackages.xpadneo];
+  boot.blacklistedKernelModules = ["xpad"];
 
   # Add udev rules for gamemode GPU access
   services.udev.extraRules = ''
