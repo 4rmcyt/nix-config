@@ -905,11 +905,11 @@
         "treefmt-nix": "treefmt-nix_3"
       },
       "locked": {
-        "lastModified": 1787688590,
-        "narHash": "sha256-OSudNpB+wWVPIybZVqKD45xcOvvawEpoMYL90ZOMTag=",
+        "lastModified": 1787688628,
+        "narHash": "sha256-X394psbkU2AxPRTbPxeyBEP11FXM1EYAEg/ocztmNoo=",
         "owner": "4rmcyt",
         "repo": "jobshunting",
-        "rev": "37674576201a91d07860affee89491c39b5d56db",
+        "rev": "048885439eb19ddec38e7d4193bc8d64b3f5bb8f",
         "type": "github"
       },
       "original": {

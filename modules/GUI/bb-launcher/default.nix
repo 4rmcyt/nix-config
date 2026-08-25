@@ -17,7 +17,7 @@
     hash = "sha256-iWCiDbqSk+0LeJRH7OnvfYtmTCwT6PjX3B2yDyHG/mI=";
   };
 
-  appimageContents = pkgs.appimageTools.extractType2 {inherit pname version src;};
+  appimageContents = pkgs.appimageTools.extract {inherit pname version src;};
 
   bb-launcher = pkgs.appimageTools.wrapType2 {
     inherit pname version src;
