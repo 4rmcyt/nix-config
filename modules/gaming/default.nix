@@ -39,6 +39,12 @@
     extraCompatPackages = with pkgs; [proton-ge-bin];
   };
 
+  # Steam's client UI is an XWayland app and doesn't read the compositor's
+  # output scale, so on the scale:2 monitors (modules/WM/mango/monitors/
+  # desktop.nix) it renders at 1x and gets stretched — blurry. This is
+  # Valve's own documented workaround.
+  environment.sessionVariables.STEAM_FORCE_DESKTOPUI_SCALING = "2.0";
+
   # Gaming packages
   environment.systemPackages = with pkgs; [
     # heroic
