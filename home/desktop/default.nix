@@ -10,6 +10,7 @@
     ../../modules/TUI/ai-tools/llama-cpp
     ../../modules/TUI/ai-tools/llama-cpp/qwen32b-cpu.nix
 
+    ../../modules/GUI/bb-launcher
     ../../modules/GUI/chrome/home.nix
     ../../modules/GUI/chromium
     ../../modules/GUI/firefox
