@@ -46,7 +46,7 @@
     gamescope
     # mangohud
     # vesktop
-    # lutris
+    lutris
     # protonup-qt
   ];
 
