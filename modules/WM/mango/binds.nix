@@ -25,14 +25,13 @@ in {
       (bind "SUPER,Space" (noctalia "panel-toggle launcher") "")
       (bind "SUPER,D" (noctalia "panel-toggle launcher") "")
       (bind "SUPER,M" "spawn" "kitty -e btop")
-      (bind "CTRL+SHIFT,Escape" "spawn" "kitty -e btop")
       (bind "SUPER,Comma" (noctalia "settings-toggle") "")
       (bind "SUPER+SHIFT,D" "spawn" "discord")
 
       # ============================================
       # WINDOW MANAGEMENT
       # ============================================
-      (bind "ALT,Q" "killclient" "")
+      (bind "SUPER,Q" "killclient" "")
       (bind "SUPER,F" "togglemaximizescreen" "")
       (bind "SUPER+SHIFT,F" "togglefullscreen" "")
       (bind "SUPER+SHIFT,Space" "togglefloating" "")
@@ -63,7 +62,7 @@ in {
       # ============================================
       # FOCUS CONTROL
       # ============================================
-      (bind "ALT,Tab" "focuslast" "")
+      (bind "SUPER,Tab" "focuslast" "")
 
       # Arrow keys
       (bind "SUPER,Left" "focusdir" "left")
