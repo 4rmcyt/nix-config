@@ -53,6 +53,10 @@
   # Enable 32-bit support for games
   hardware.graphics.enable32Bit = true;
 
+  # Nintendo Switch Pro Controller support
+  boot.kernelModules = ["hid_nintendo"];
+  hardware.steam-hardware.enable = true;
+
   # Add udev rules for gamemode GPU access
   services.udev.extraRules = ''
     # Allow gamemode to access GPU vendor information
