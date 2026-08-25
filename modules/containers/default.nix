@@ -5,6 +5,10 @@ _: {
   };
   virtualisation.oci-containers.backend = "podman";
 
+  virtualisation.containers.policy = {
+    default = [{type = "insecureAcceptAnything";}];
+  };
+
   systemd.timers.podman-auto-update = {
     wantedBy = ["timers.target"];
     timerConfig = {
