@@ -26,7 +26,10 @@
 
       gpu = {
         apply_gpu_optimisations = "accept-responsibility";
-        gpu_device = 2;
+        # Only one NVIDIA GPU present (RTX 3050, nvidia-smi index 0) plus an
+        # AMD iGPU gamemode doesn't touch — index 2 didn't exist, hence
+        # "Failed to find Nvidia GPU with expected index!" every launch.
+        gpu_device = 0;
       };
     };
   };
@@ -61,6 +64,9 @@
 
     # Controller testing
     jstest-gtk
+
+    # gamemode's nvidia GPU-optimisation path shells out to nvidia-settings
+    config.boot.kernelPackages.nvidiaPackages.stable.settings
   ];
 
   # Enable 32-bit support for games

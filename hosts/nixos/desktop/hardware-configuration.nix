@@ -353,8 +353,13 @@
   # 7. Services
   # =================================================================
   services = {
+    # Disabled: scx_lavd repeatedly self-unloads with "runnable task stall"
+    # on unrelated processes system-wide (codium, noctalia shell, tabtip.exe)
+    # every ~2 minutes, causing desktop-wide 30-40s freezes unrelated to any
+    # specific workload (first noticed via DarkSoulsII.exe stalls, but it
+    # hits everything). Re-enable once root cause / a fixed scx build is found.
     scx = {
-      enable = true;
+      enable = false;
       package = pkgs.scx.full;
       scheduler = "scx_lavd";
       extraArgs = ["--performance"];
