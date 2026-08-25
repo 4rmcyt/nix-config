@@ -34,6 +34,14 @@
     };
   };
 
+  # BBLauncher's "Manage Builds" downloads shadPS4 as a raw AppImage and
+  # execs it directly (unlike bb-launcher itself, which is nix-wrapped at
+  # build time) — without this it fails to mount via FUSE.
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+  };
+
   programs.steam = {
     dedicatedServer.openFirewall = true;
     enable = true;
