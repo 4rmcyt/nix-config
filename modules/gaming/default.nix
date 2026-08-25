@@ -57,7 +57,7 @@
     # mangohud
     # vesktop
     lutris
-    # protonup-qt
+    protonup-qt
 
     # Controller testing
     jstest-gtk
