@@ -11,6 +11,7 @@
     supportedLocales = [
       "en_US.UTF-8/UTF-8"
       "en_CA.UTF-8/UTF-8"
+      "ru_RU.UTF-8/UTF-8"
     ];
     extraLocaleSettings = {
       LC_ADDRESS = "en_CA.UTF-8";
