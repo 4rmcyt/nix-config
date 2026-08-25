@@ -58,6 +58,9 @@
     # vesktop
     lutris
     # protonup-qt
+
+    # Controller testing
+    jstest-gtk
   ];
 
   # Enable 32-bit support for games
