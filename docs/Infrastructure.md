@@ -177,7 +177,11 @@ Root subvolume is deleted and recreated on every boot (`boot.initrd.postResumeCo
 
 #### CPU / Scheduling
 
-`services.scx` — `scx_lavd --performance`. Chosen 2026-08-11 after A/B testing `bpfland`/`lavd`/`flow`/`rusty` via `stress-ng` + `schbench` wakeup-latency under CPU saturation (simulating a background `nix build` while gaming): `bpfland` and `lavd` tied for best, `rusty` had a 32ms worst-case outlier despite good median (dropped), `flow`'s median (1ms) was too high for interactive use. `lavd` edged out on total wakeup throughput and 99th percentile. `--performance` (not `--autopilot`) since this is an always-plugged-in desktop where max responsiveness is preferred over idle power saving.
+`services.scx-loader` (DBus-managed, hot-swappable) — daily driver `scx_lavd` in `Auto` mode (`--autopilot`, Core Compaction on).
+
+Superseded `scx_lavd --performance` (chosen 2026-08-11 after A/B testing `bpfland`/`lavd`/`flow`/`rusty` via `stress-ng` + `schbench` wakeup-latency under CPU saturation: `bpfland` and `lavd` tied for best, `rusty` had a 32ms worst-case outlier, `flow`'s 1ms median was too high; `lavd` edged out on total wakeup throughput and 99th percentile). `--performance` disables Core Compaction and pins all cores to max frequency; under game + GPU frequency/thermal churn it self-unloaded with "runnable task stall" and froze the desktop 30-40s. Reverted to `--autopilot` (as homeserver runs), moved to `scx-loader` for runtime switching.
+
+Game launch/exit swap the scheduler via gamemode custom hooks (`modules/gaming/default.nix`): on launch → `scx_bpfland -m all` (`gaming` mode; cache-topology-aware, A/B-tied with lavd, no cpufreq forcing); on exit → back to `scx_lavd` auto. A polkit rule lets the user session call `org.scx.loader.manage-schedulers` without a password prompt.
 
 ---
 

@@ -9,13 +9,33 @@
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
   ];
+  # Let gamemoded's custom hooks drive scx_loader over DBus without a polkit
+  # password prompt. gamemoded runs in the user session (active + wheel).
+  security.polkit.extraConfig = ''
+    polkit.addRule(function (action, subject) {
+      if (action.id == "org.scx.loader.manage-schedulers" && subject.active && subject.isInGroup("wheel")) {
+        return polkit.Result.YES;
+      }
+    });
+  '';
+
   # Programs
   programs.gamemode = {
     enable = true;
     settings = {
+      # On game launch, hot-swap the CPU scheduler to scx_bpfland in "gaming"
+      # mode (-m all); revert to scx_lavd auto on exit. The daily-driver
+      # scheduler and the rationale live in
+      # hosts/nixos/desktop/hardware-configuration.nix (services.scx-loader).
       custom = {
-        end = "${pkgs.libnotify}/bin/notify-send 'GameMode ended'";
-        start = "${pkgs.libnotify}/bin/notify-send 'GameMode started'";
+        start = toString (pkgs.writeShellScript "gamemode-start" ''
+          ${pkgs.scx-loader}/bin/scxctl switch -s scx_bpfland -m gaming || true
+          ${pkgs.libnotify}/bin/notify-send 'GameMode started' 'scheduler → scx_bpfland (gaming)'
+        '');
+        end = toString (pkgs.writeShellScript "gamemode-end" ''
+          ${pkgs.scx-loader}/bin/scxctl switch -s scx_lavd -m auto || true
+          ${pkgs.libnotify}/bin/notify-send 'GameMode ended' 'scheduler → scx_lavd (auto)'
+        '');
       };
 
       general = {

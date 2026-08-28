@@ -353,16 +353,30 @@
   # 7. Services
   # =================================================================
   services = {
-    # Disabled: scx_lavd repeatedly self-unloads with "runnable task stall"
-    # on unrelated processes system-wide (codium, noctalia shell, tabtip.exe)
-    # every ~2 minutes, causing desktop-wide 30-40s freezes unrelated to any
-    # specific workload (first noticed via DarkSoulsII.exe stalls, but it
-    # hits everything). Re-enable once root cause / a fixed scx build is found.
-    scx = {
-      enable = false;
-      package = pkgs.scx.full;
-      scheduler = "scx_lavd";
-      extraArgs = ["--performance"];
+    # CPU scheduling via scx_loader (DBus-managed, hot-swappable at runtime).
+    #
+    # History: a plain `services.scx` running `scx_lavd --performance` 24/7
+    # self-unloaded with "runnable task stall" and froze the desktop for
+    # 30-40s, worst under game load (DarkSoulsII first, then everything).
+    # Root cause was `--performance`: it disables LAVD Core Compaction and
+    # pins every core to max freq, which fell over under the game+GPU
+    # frequency/thermal churn. homeserver runs `scx_lavd --autopilot` with
+    # no such issue.
+    #
+    # New arrangement:
+    #   - daily driver: scx_lavd in "auto" mode (--autopilot, Core Compaction
+    #     on) — good interactivity, powers down when idle.
+    #   - on game launch: gamemode switches to `scx_bpfland -m all` (see
+    #     modules/gaming/default.nix). bpfland is cache-topology-aware, was
+    #     A/B-tied with lavd here, and doesn't force cpufreq the way
+    #     `--performance` did.
+    #   - on game exit: gamemode switches back to scx_lavd auto.
+    scx-loader = {
+      enable = true;
+      config = {
+        default_sched = "scx_lavd";
+        default_mode = "Auto";
+      };
     };
 
     # Hardware monitoring
