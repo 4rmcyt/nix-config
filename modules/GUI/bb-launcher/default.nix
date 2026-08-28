@@ -38,6 +38,22 @@
       mainProgram = pname;
     };
   };
+
+  # Bloodborne is played through this launcher (it spawns shadPS4), so neither
+  # process ever registers with gamemode on its own. Wrap the entry point in
+  # gamemoderun: gamemode's LD_PRELOAD propagates to the shadPS4 child, and
+  # the scx_loader scheduler swap (modules/gaming/default.nix) fires for it
+  # like any Steam/Lutris/Heroic title.
+  bb-launcher-gamemode = pkgs.symlinkJoin {
+    name = "${pname}-${version}";
+    paths = [bb-launcher];
+    nativeBuildInputs = [pkgs.makeWrapper];
+    postBuild = ''
+      rm $out/bin/${pname}
+      makeWrapper ${pkgs.gamemode}/bin/gamemoderun $out/bin/${pname} \
+        --add-flags ${bb-launcher}/bin/${pname}
+    '';
+  };
 in {
-  home.packages = [bb-launcher];
+  home.packages = [bb-launcher-gamemode];
 }
