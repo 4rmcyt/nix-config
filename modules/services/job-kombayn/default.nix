@@ -27,17 +27,13 @@
   runScript = pkgs.writeShellScript "job-kombayn-run" ''
     set -euo pipefail
     echo "=== kombayn run: $(date -Is) ==="
-    ${lib.concatMapStringsSep "\n" (prof: ''
-        prof="${cfg.src}/${prof}"
-        if [ -f "$prof" ]; then
-          echo "--- $prof ---"
-          "${cfg.pythonPackage}/bin/python3" ${cfg.src}/run.py scan --profile "$prof" ${scriptArgs} \
-            || echo "! scan failed for $prof (continuing)"
-        else
-          echo "! missing profile: $prof (skip)"
-        fi
-      '')
-      cfg.profiles}
+    # Profiles are DB-backed (kombayn/profiles_db.py) since the 2026-08-21
+    # multi-tenant migration: scan-all iterates every `profiles` row, so
+    # self-service signups are picked up with no deploy change. The metrics
+    # `profile` label set is therefore dynamic (one series per row); drop
+    # stale .prom files first so a removed/renamed profile stops alerting.
+    rm -f /var/lib/prometheus-node-exporter-text-files/job_kombayn_*.prom
+    "${cfg.pythonPackage}/bin/python3" ${cfg.src}/run.py scan-all ${scriptArgs}
     echo "=== done: $(date -Is) ==="
   '';
 in {
@@ -48,18 +44,6 @@ in {
       type = lib.types.path;
       description = "job-kombayn source tree (run.py, kombayn/, profiles/). Read-only.";
       example = "inputs.jobshunting";
-    };
-
-    profiles = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [
-        "profiles/volodymyr-kondratenko-it.md"
-        "profiles/volodymyr-kondratenko-kitchen.md"
-        "profiles/volodymyr-kondratenko-survival.md"
-        "profiles/sofiia-rogatska-education.md"
-        "profiles/sofiia-rogatska-survival.md"
-      ];
-      description = "Profile files (relative to `src`) to scan each run.";
     };
 
     user = lib.mkOption {
@@ -211,7 +195,9 @@ in {
     users.groups.kombayn = lib.mkIf (cfg.user == "kombayn") {};
 
     systemd.services.job-kombayn = {
-      description = "job-kombayn: scan all profiles, notify new vacancies";
+      description = "job-kombayn: scan all DB-backed profiles, notify new vacancies";
+      after = ["network-online.target" "postgresql.service"];
+      wants = ["network-online.target"];
       path = [cfg.pythonPackage pkgs.bash pkgs.coreutils] ++ lib.optional cfg.useChromium pkgs.chromium;
       environment = lib.mkIf cfg.useChromium {CHROMIUM_BIN = "${pkgs.chromium}/bin/chromium";};
       serviceConfig = {

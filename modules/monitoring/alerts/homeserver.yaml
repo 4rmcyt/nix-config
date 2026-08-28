@@ -110,13 +110,16 @@ groups:
           summary: "job-kombayn scan failed for {{ $labels.profile }}"
           description: "The last scan run for profile '{{ $labels.profile }}' exited with an error. Check the systemd journal for job-kombayn.service."
       - alert: JobKombaynStale
-        expr: time() - job_kombayn_last_run_timestamp_seconds > 7800
+        # job-kombayn.timer runs every 3h (homeserver onCalendar "*-*-* 0/3:00:00")
+        # + up to 3min RandomizedDelaySec + up to 20min TimeoutStartSec, so the
+        # gap between two healthy successful runs can legitimately reach ~3h25m.
+        expr: time() - job_kombayn_last_run_timestamp_seconds > 13800
         for: 0m
         labels:
           severity: warning
         annotations:
-          summary: "job-kombayn hasn't run for {{ $labels.profile }} in over 2h"
-          description: "No successful/attempted scan recorded for profile '{{ $labels.profile }}' in the last 2h+10m — job-kombayn.timer may be stopped or the textfile-collector ACL may be broken."
+          summary: "job-kombayn hasn't run for {{ $labels.profile }} in over 3h50m"
+          description: "No successful/attempted scan recorded for profile '{{ $labels.profile }}' in the last 3h50m (timer fires every 3h) — job-kombayn.timer may be stopped or the textfile-collector ACL may be broken."
       - alert: JobKombaynRunErrors
         expr: job_kombayn_errors > 0
         for: 0m
