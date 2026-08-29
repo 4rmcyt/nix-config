@@ -19,6 +19,11 @@
     });
   '';
 
+  # Memory scanners (GameConqueror/scanmem below) attach to wine/proton games
+  # via ptrace; the default yama scope (1) blocks tracing non-descendant
+  # processes. Games box only — plain single-player value editing.
+  boot.kernel.sysctl."kernel.yama.ptrace_scope" = 0;
+
   # Programs
   programs.gamemode = {
     enable = true;
@@ -92,6 +97,10 @@
 
     # Controller testing
     jstest-gtk
+
+    # Memory scanner/editor (GameConqueror GUI) — single-player value editing.
+    # Needs kernel.yama.ptrace_scope = 0 (set above).
+    scanmem
 
     # gamemode's nvidia GPU-optimisation path shells out to nvidia-settings
     config.boot.kernelPackages.nvidiaPackages.stable.settings
