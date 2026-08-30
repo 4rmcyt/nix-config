@@ -446,9 +446,16 @@
         ];
         context.properties = {
           default.clock.rate = 48000;
+          # Card does up to 192 kHz natively; list the standard families so
+          # hi-res FLAC plays without resampling (44.1 base -> 88.2/176.4,
+          # 48 base -> 96/192).
           default.clock.allowed-rates = [
             44100
             48000
+            88200
+            96000
+            176400
+            192000
           ];
           default.clock.quantum = 1024;
           default.clock.min-quantum = 32;
