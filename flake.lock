@@ -905,11 +905,11 @@
         "treefmt-nix": "treefmt-nix_3"
       },
       "locked": {
-        "lastModified": 1788056555,
-        "narHash": "sha256-CPVnZudefjSSUsGr7hflYXKgDgntZkgrCmaaNFox/Xg=",
+        "lastModified": 1788057977,
+        "narHash": "sha256-b7ZCUivyGRtTee6qU6vpK4oB+wL2aq0lVGJxbvW2J8c=",
         "owner": "4rmcyt",
         "repo": "jobshunting",
-        "rev": "967b4cb78d8b7cb1132f5a44dfdb051020d0a10e",
+        "rev": "5546fd63907a108a8c8b3959562b5b37b3e658cd",
         "type": "github"
       },
       "original": {
@@ -1668,11 +1668,11 @@
         "nixpkgs": "nixpkgs_11"
       },
       "locked": {
-        "lastModified": 1788050744,
-        "narHash": "sha256-O+GIRtyRZhn2Cv5NosvsoQzaPBpI2T3AGNqxwcS65Oc=",
+        "lastModified": 1788056502,
+        "narHash": "sha256-ZAS3aQIuKEuUh1GujQDq/D2XNuVc+YDHqDOWOf3uQok=",
         "owner": "noctalia-dev",
         "repo": "noctalia",
-        "rev": "99296b25b0aa6e293fad10ae77a56e567cd6120c",
+        "rev": "037804f86a3d2b75a7d741e6b6a965e8cba8e5b0",
         "type": "github"
       },
       "original": {
