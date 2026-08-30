@@ -56,6 +56,11 @@ in {
         ];
         hashedPasswordFile = config.sops.secrets.zeev_password.path;
         isNormalUser = true;
+        # Populate /etc/subuid + /etc/subgid so rootless podman can map a UID
+        # range — without it `podman run` as zeev fails with "cannot find
+        # UID/GID for user zeev: open /etc/subuid" (hit by `make test-python-db`
+        # in job-kombayn, and any other rootless container run).
+        autoSubUidGidRange = true;
         openssh.authorizedKeys.keys = server-keys;
       };
     };
