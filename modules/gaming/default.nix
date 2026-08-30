@@ -76,13 +76,17 @@
   };
 
   # gamescope as a nested micro-compositor (run per-game via Lutris/Steam
-  # launch options, not as a session). capSysNice lets it set RT priority so
-  # the nested game gets scheduling headroom instead of logging "Failed to
-  # get nice level" and stuttering. Fixes the XWayland scale:2 blur: the game
-  # renders at e.g. 1920x1080 and gamescope integer-scales x2 to the 4K panel.
+  # launch options, not as a session). Fixes the XWayland scale:2 blur: the
+  # game renders at e.g. 1920x1080 and gamescope scales it to the 4K panel.
+  #
+  # capSysNice MUST stay false: with CAP_SYS_NICE the gamescope wrapper leaks
+  # ambient caps into its children, and pressure-vessel's bwrap aborts with
+  # "Unexpected capabilities but not setuid" — every Proton/umu game under
+  # gamescope fails to launch. Losing RT priority is a minor perf hit; gamemode
+  # already handles the scheduler side.
   programs.gamescope = {
     enable = true;
-    capSysNice = true;
+    capSysNice = false;
   };
 
   # Steam's client UI is an XWayland app and doesn't read the compositor's
@@ -99,7 +103,7 @@
 
     # Performance tools
     gamemode
-    gamescope
+    # gamescope — installed via programs.gamescope above
     # mangohud
     # vesktop
     lutris
