@@ -39,17 +39,18 @@ in {
       plugins_order = ["equalizer#0" "crossfeed#0"];
 
       # bs2b crossfeed — kills the "sound stuck inside your head" effect that
-      # hard-panned stereo mixes give on headphones. 700 Hz / 4.5 dB is the
-      # bs2b "default" preset — the gentlest of the three built-ins.
-      # bs2b attenuates internally (~2-3 dB) to keep headroom; output-gain
-      # +2.5 dB makes up for that so enabled vs bypassed sit at the same
-      # loudness. Fine-tune against the EasyEffects output meter if needed.
+      # hard-panned stereo mixes give on headphones. 600 Hz / 6.0 dB: a bit
+      # warmer and more present than the "Chu Moy" preset (700/6.0), chosen by
+      # ear on hard-panned metal/punk mixes.
+      # bs2b attenuates internally to keep headroom; output-gain +1.0 dB makes
+      # up for that so enabled vs bypassed sit at the same loudness (matched by
+      # ear + EasyEffects output meter at fcut 600 / feed 6.0).
       "crossfeed#0" = {
         bypass = false;
         input-gain = 0.0;
-        output-gain = 2.5;
-        fcut = 700;
-        feed = 4.5;
+        output-gain = 1.0;
+        fcut = 600;
+        feed = 6.0;
       };
 
       "equalizer#0" = {
