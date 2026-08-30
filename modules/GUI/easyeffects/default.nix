@@ -48,14 +48,14 @@ in {
       plugins_order = ["equalizer#0" "crossfeed#0"];
 
       # bs2b crossfeed — kills the "sound stuck inside your head" effect that
-      # hard-panned stereo mixes give on headphones. fcut 700 Hz / feed 5.5 dB
-      # is between the bs2b "default" (700/4.5) and "Chu Moy" (700/6.0) presets.
+      # hard-panned stereo mixes give on headphones. 650 Hz / 9.5 dB is the
+      # bs2b "Jan Meier" preset — the strongest of the three built-ins.
       "crossfeed#0" = {
         bypass = false;
         input-gain = 0.0;
         output-gain = 0.0;
-        fcut = 700;
-        feed = 5.5;
+        fcut = 650;
+        feed = 9.5;
       };
 
       "equalizer#0" = {
