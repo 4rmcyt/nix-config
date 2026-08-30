@@ -32,6 +32,7 @@
     ../../modules/WM/mango/monitors/desktop.nix
     ../../modules/WM/mime
     ../../modules/GUI/discord
+    ../../modules/GUI/easyeffects
     ../../modules/dev
     ../../modules/dev/android.nix
     ../../modules/dev/git.nix
@@ -67,7 +68,6 @@
       bettercap
       claude-agent-acp
       distrobox
-      easyeffects
       ffmpegthumbnailer
       foliate
       foot
