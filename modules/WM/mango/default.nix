@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   imports = [
     ./binds.nix
+    ./gaming-res.nix
     ./startup.nix
     ./windowrules.nix
     ../gtk.nix
