@@ -45,7 +45,19 @@ in {
 
     extraPresets.grado-sr325x.output = {
       blocklist = [];
-      plugins_order = ["equalizer#0"];
+      plugins_order = ["equalizer#0" "crossfeed#0"];
+
+      # bs2b crossfeed — kills the "sound stuck inside your head" effect that
+      # hard-panned stereo mixes give on headphones. fcut 700 Hz / feed 5.5 dB
+      # is between the bs2b "default" (700/4.5) and "Chu Moy" (700/6.0) presets.
+      "crossfeed#0" = {
+        bypass = false;
+        input-gain = 0.0;
+        output-gain = 0.0;
+        fcut = 700;
+        feed = 5.5;
+      };
+
       "equalizer#0" = {
         bypass = false;
         input-gain = preamp;
