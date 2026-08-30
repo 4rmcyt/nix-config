@@ -12,9 +12,11 @@ _: {
   # Both IRs are 48 kHz / 24-bit; autogain keeps enabled vs bypassed level-matched.
   # Regenerate: run ASH-Toolset, export "WAV Stereo FIR Filters" + "True Stereo WAV
   # BRIRs" at 48/24, drop the two wavs back in this directory under the same names.
+  # EasyEffects only looks up impulses by the ".irs" extension (an .irs file is
+  # just a renamed WAV); a plain .wav in the irs dir is never found.
   xdg.dataFile = {
-    "easyeffects/irs/brir-ash-listening-room.wav".source = ./brir-ash-listening-room.wav;
-    "easyeffects/irs/hpcf-grado-sr325x.wav".source = ./hpcf-grado-sr325x.wav;
+    "easyeffects/irs/brir-ash-listening-room.irs".source = ./brir-ash-listening-room.wav;
+    "easyeffects/irs/hpcf-grado-sr325x.irs".source = ./hpcf-grado-sr325x.wav;
   };
 
   services.easyeffects = {
