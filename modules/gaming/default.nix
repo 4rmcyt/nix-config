@@ -75,6 +75,16 @@
     extraCompatPackages = with pkgs; [proton-ge-bin];
   };
 
+  # gamescope as a nested micro-compositor (run per-game via Lutris/Steam
+  # launch options, not as a session). capSysNice lets it set RT priority so
+  # the nested game gets scheduling headroom instead of logging "Failed to
+  # get nice level" and stuttering. Fixes the XWayland scale:2 blur: the game
+  # renders at e.g. 1920x1080 and gamescope integer-scales x2 to the 4K panel.
+  programs.gamescope = {
+    enable = true;
+    capSysNice = true;
+  };
+
   # Steam's client UI is an XWayland app and doesn't read the compositor's
   # output scale, so on the scale:2 monitors (modules/WM/mango/monitors/
   # desktop.nix) it renders at 1x and gets stretched — blurry. This is
