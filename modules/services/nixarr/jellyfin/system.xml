@@ -178,11 +178,6 @@
       <Enabled>true</Enabled>
     </RepositoryInfo>
     <RepositoryInfo>
-      <Name>Bazarr-jellyfin</Name>
-      <Url>https://raw.githubusercontent.com/enoch85/bazarr-jellyfin/main/manifest.json</Url>
-      <Enabled>true</Enabled>
-    </RepositoryInfo>
-    <RepositoryInfo>
       <Name>subbuzz</Name>
       <Url>https://raw.githubusercontent.com/josdion/subbuzz/master/repo/jellyfin_10.11.json</Url>
       <Enabled>true</Enabled>
