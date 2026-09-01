@@ -10,6 +10,7 @@
 
   settings = {
     # ===== Editor Settings =====
+    "password-store" = "gnome-libsecret";
     "editor.fontFamily" = "'Maple Mono NF', 'MesloLGS NF', 'FiraCode Nerd Font', monospace";
     "editor.fontLigatures" = true;
     "editor.fontSize" = 16;
