@@ -144,6 +144,31 @@ in {
               stsSeconds = 31536000;
               customFrameOptionsValue = "SAMEORIGIN";
             };
+            # Komga: like security-headers but allow the komf webui to embed
+            # Komga (iframe) and call its API cross-origin (CORS with creds).
+            komga-headers.headers = {
+              browserXssFilter = true;
+              contentTypeNosniff = true;
+              forceSTSHeader = true;
+              stsIncludeSubdomains = true;
+              stsPreload = true;
+              stsSeconds = 31536000;
+              customFrameOptionsValue = "ALLOW-FROM https://komf.${domain}";
+              customResponseHeaders."Content-Security-Policy" = "frame-ancestors 'self' https://komf.${domain}";
+              accessControlAllowMethods = [
+                "GET"
+                "POST"
+                "PUT"
+                "DELETE"
+                "OPTIONS"
+                "PATCH"
+              ];
+              accessControlAllowHeaders = ["*"];
+              accessControlAllowOriginList = ["https://komf.${domain}"];
+              accessControlAllowCredentials = true;
+              accessControlMaxAge = 100;
+              addVaryHeader = true;
+            };
             # Rate limiter for public-facing services (hass)
             rate-limit.rateLimit = {
               average = 100;
@@ -379,7 +404,7 @@ in {
               entryPoints = ["websecure"];
               service = "komga";
               middlewares = [
-                "security-headers"
+                "komga-headers"
                 "crowdsec"
               ];
               tls.certResolver = "default";

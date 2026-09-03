@@ -227,6 +227,8 @@ Disk: WD PC SN730 512GB NVMe (`nvme-WDC_PC_SN730_SDBPNTY-512G-1027_20230H445703`
 - HTTP → HTTPS redirect; wildcard TLS via Cloudflare DNS-01 ACME
 - Plugins (local, from Nix store): **crowdsec-bouncer**, **traefik-geoblock**
 - Middlewares applied to all routers: `security-headers`, `crowdsec`
+- `komga`: uses `komga-headers` instead of `security-headers` — allows the komf webui to iframe Komga (`frame-ancestors https://komf.example.com`) and call its API cross-origin (CORS with credentials)
+- `komf`: uses `komf-headers` — CORS `Access-Control-Allow-Origin: *` (komf is Tailscale/LAN-only and unauthenticated, so the komf browser extension can reach it)
 - Public-facing `hass`: additionally `rate-limit` + `geoblock` (CA/US only)
 - Metrics endpoint on `127.0.0.1:8080`; internal API on `127.0.0.1:8083` (homepage widget)
 - Access logs: JSON, errors + slow requests only, 14-day rotation
