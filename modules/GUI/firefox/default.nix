@@ -41,6 +41,13 @@ in {
         install_url = moz "indie-wiki-buddy";
         installation_mode = "force_installed";
       };
+
+      # === SELF-HOSTED SERVICES ===
+      # komf — metadata fetcher integration for the Komga webui
+      "{2c5b0916-8452-46fe-aa0b-7dc7d1e514f0}" = {
+        install_url = moz "komf";
+        installation_mode = "force_installed";
+      };
     };
   };
 
