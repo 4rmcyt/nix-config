@@ -28,7 +28,10 @@
         };
         IPFilter = {
           Enabled = true;
-          FilterTracker = true;
+          # Apply the blocklist to peers/seeds only, never to trackers —
+          # the Naunter list catches private-tracker IPs (e.g. fuzer.xyz)
+          # and silently kills their announces otherwise.
+          FilterTracker = false;
           File = "/data/media/.state/nixarr/qbittorrent/ipfilter.p2p";
         };
         Connection = {
