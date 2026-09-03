@@ -323,7 +323,7 @@ All configured via the Cloudflare dashboard/API (zone `example.com`, Free plan) 
 | Bazarr          | 6767  | `bazarr.example.com`         | Subtitles — OCI container          |
 | Lidarr          | 8686  | `lidarr.example.com`         | Music                              |
 | LazyLibrarian   | 5299  | `lazylibrarian.example.com`  | Books — ephraim-nur overlay        |
-| Kapowarr        | 5656  | `kapowarr.example.com`       | Comics                             |
+| Kapowarr        | 5656  | `kapowarr.example.com`       | Comics & manga — OCI container. DDL temp folder `/app/temp_downloads` → `/data/Downloads/kapowarr`; library roots `/comics`, `/manga`. qBittorrent category `kapowarr` saves to the same path (Remote Path Mapping `/data/Downloads/kapowarr`→`/app/temp_downloads` in the web UI). ComicVine key set in web UI. |
 | Seerr           | 5055  | `seerr.example.com`          | Request management — OCI container |
 | Audiobookshelf  | 9292  | `audiobookshelf.example.com` | Audiobooks                         |
 | Recyclarr       | —     | (no UI)                       | Auto-sync quality profiles to *arr |

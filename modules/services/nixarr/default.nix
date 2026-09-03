@@ -188,8 +188,8 @@ in {
     "d /data/media/music 775 ${config.my.defaults.user} media -"
     "d /data/media/audiobooks 775 ${config.my.defaults.user} media -"
     "d /data/media/books 775 ${config.my.defaults.user} media -"
-    "d /data/media/comics 775 ${config.my.defaults.user} media -"
-    "d /data/media/manga 775 ${config.my.defaults.user} media -"
+    "d /data/media/comics 2775 ${config.my.defaults.user} media -"
+    "d /data/media/manga 2775 ${config.my.defaults.user} media -"
 
     "d /data/Downloads/tv-sonarr 775 ${config.my.defaults.user} media -"
     "d /data/Downloads/radarr 775 ${config.my.defaults.user} media -"

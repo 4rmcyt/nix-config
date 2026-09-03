@@ -150,6 +150,9 @@
           "audiobooks": {
               "save_path": "/data/Downloads/audiobooks"
           },
+          "kapowarr": {
+              "save_path": "/data/Downloads/kapowarr"
+          },
           "lidarr": {
               "save_path": "/data/Downloads/lidarr"
           },
