@@ -216,8 +216,11 @@ in {
                 "PATCH"
               ];
               accessControlAllowHeaders = ["*"];
-              accessControlAllowOriginList = ["https://komf.${domain}"];
-              accessControlAllowCredentials = true;
+              # komf has no authentication, so CORS provides no protection here.
+              # Allow any origin so the komf browser extension (moz-extension://…)
+              # can reach the API. Credentials must be off when origin is "*".
+              accessControlAllowOriginList = ["*"];
+              accessControlAllowCredentials = false;
               accessControlMaxAge = 100;
               addVaryHeader = true;
             };
