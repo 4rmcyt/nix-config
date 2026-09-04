@@ -155,12 +155,12 @@
   users.users.${config.my.defaults.user}.shell = pkgs.zsh;
 
   # ── Journald ─────────────────────────────────────────────────────────────
-  services.journald.extraConfig = ''
-    Storage=persistent
-    SystemMaxUse=200M
-    SystemKeepFree=500M
-    MaxRetentionSec=14day
-  '';
+  services.journald.settings.Journal = {
+    Storage = "persistent";
+    SystemMaxUse = "200M";
+    SystemKeepFree = "500M";
+    MaxRetentionSec = "14day";
+  };
 
   # ── NTP ─────────────────────────────────────────────────────────────────
   services.timesyncd = {

@@ -186,11 +186,11 @@
     };
 
     # 30 GB root disk — cap journal
-    services.journald.extraConfig = ''
-      SystemMaxUse=500M
-      SystemKeepFree=2G
-      MaxRetentionSec=14day
-    '';
+    services.journald.settings.Journal = {
+      SystemMaxUse = "500M";
+      SystemKeepFree = "2G";
+      MaxRetentionSec = "14day";
+    };
 
     sops.secrets.zeev_password = {
       sopsFile = ../../../secrets/common.yaml;

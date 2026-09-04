@@ -189,15 +189,15 @@ in {
       };
     };
 
-    journald.extraConfig = ''
-      Storage=persistent
-      RateLimitIntervalSec=30s
-      RateLimitBurst=10000
-      SystemMaxUse=2G
-      SystemKeepFree=500M
-      MaxRetentionSec=3month
-      RuntimeMaxUse=200M
-    '';
+    journald.settings.Journal = {
+      Storage = "persistent";
+      RateLimitIntervalSec = "30s";
+      RateLimitBurst = 10000;
+      SystemMaxUse = "2G";
+      SystemKeepFree = "500M";
+      MaxRetentionSec = "3month";
+      RuntimeMaxUse = "200M";
+    };
   };
 
   security.polkit.enable = true;

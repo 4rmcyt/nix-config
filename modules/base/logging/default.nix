@@ -1,20 +1,19 @@
 _: {
-  # 1. Journald Configuration
-  # Using structured options for better readability and error-checking.
+  # Structured journald options for better readability and error-checking.
   services.journald = {
-    storage = "persistent";
-    extraConfig = ''
-      SystemMaxUse=500M
-      SystemMaxFileSize=50M
-      SystemMaxFiles=10
-      MaxRetentionSec=30day
-      ForwardToSyslog=no
-      ForwardToWall=yes
-      MaxLevelWall=crit
-      RateLimitInterval=30s
-      RateLimitBurst=10000
-      Compress=yes
-      LineMax=65536
-    '';
+    settings.Journal = {
+      Storage = "persistent";
+      SystemMaxUse = "500M";
+      SystemMaxFileSize = "50M";
+      SystemMaxFiles = 10;
+      MaxRetentionSec = "30day";
+      ForwardToSyslog = false;
+      ForwardToWall = true;
+      MaxLevelWall = "crit";
+      RateLimitIntervalSec = "30s";
+      RateLimitBurst = 10000;
+      Compress = true;
+      LineMax = 65536;
+    };
   };
 }
