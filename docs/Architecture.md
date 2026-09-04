@@ -167,7 +167,7 @@ No local `overlays/` directory. All overlays come from flake inputs:
 
 ## Desktop WM Stack
 
-**Desktop uses mango; matebook uses niri.** Both pair with **noctalia** v5 (native C++ binary, no Quickshell) as bar/shell. Desktop ran Hyprland until 2026-08-22, when it was fully replaced by mango (`modules/WM/hyprland/` is kept on disk but no longer imported by any host, and was not migrated off noctalia legacy-v4 — see below).
+**Desktop uses mango; matebook uses niri.** Both pair with **noctalia** v5 (native C++ binary, no Quickshell) as bar/shell. Desktop ran Hyprland until 2026-08-22, when it was fully replaced by mango (`modules/WM/hyprland/` is kept on disk but no longer imported by any host, and its startup/binds still use the noctalia legacy-v4 IPC — see below).
 
 ### mango (desktop only)
 
@@ -192,7 +192,7 @@ No local `overlays/` directory. All overlays come from flake inputs:
 | File | Purpose |
 |------|---------|
 | `modules/WM/niri/default.nix` | niri settings, session vars, input/layout |
-| `modules/WM/niri/noctalia.nix` | noctalia HM config, `[theme.templates.user.*]` (zed, materialgram) |
+| `modules/WM/niri/noctalia.nix` | noctalia HM config |
 | `modules/WM/niri/binds.nix` | keybindings — `a.spawn "noctalia" "msg" ...` for shell actions |
 | `modules/WM/niri/startup.nix` | spawn-at-startup: noctalia, cliphist, wl-clip-persist, xwayland-satellite |
 | `modules/WM/niri/windowrules.nix` | floating rules |
@@ -222,7 +222,7 @@ No local `overlays/` directory. All overlays come from flake inputs:
 - Exports: `homeModules.default`, `nixosModules.default`, `overlays.default`
 - NixOS import: `inputs.noctalia.nixosModules.default` on desktop + matebook
 - HM import: `inputs.noctalia.homeModules.default` on desktop + matebook
-- `modules/WM/hyprland/*` was NOT migrated (dead code, not imported by any host) — still references `programs.noctalia-shell` and the old IPC syntax. Update it first if hyprland is ever revived.
+- `modules/WM/hyprland/*` was NOT fully migrated (dead code, not imported by any host). Its `startup.nix` / `binds.nix` still use the old `noctalia-shell` IPC syntax (`noctalia.nix` itself was reduced to the minimal v5 stub). Finish the migration first if hyprland is ever revived.
 
 **Theming:** noctalia drives colors. `inputs.stylix` is wired as a flake input and `modules/GUI/stylix/` exists, but the HM import is currently commented out in `parts/hosts/desktop/configuration.nix` — Stylix is **not** active on any host right now.
 

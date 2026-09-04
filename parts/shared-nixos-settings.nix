@@ -24,7 +24,10 @@ in {
       restartUnits = ["nix-access-tokens.service"];
     };
     # nix_access_token value format: "access-tokens = github.com=<token>"
-    # Oneshot service writes token to /run/ early in boot, before any nix client runs
+    # Oneshot service writes the token to /run/ early in boot, before any nix
+    # client runs. Kept root:wheel 0640 — the daemon (root) and interactive
+    # nix run by the operator (wheel) are the only readers; it's a GitHub PAT,
+    # not something every login user needs.
     systemd.services.nix-access-tokens = {
       description = "Write nix access tokens to /run";
       wantedBy = ["multi-user.target"];
@@ -32,8 +35,10 @@ in {
         Type = "oneshot";
         RemainAfterExit = true;
         ExecStart = pkgs.writeShellScript "nix-access-tokens-write" ''
+          umask 027
           printf '%s\n' "$(cat /run/secrets/nix_access_token)" > /run/nix-access-tokens.conf
-          chmod 644 /run/nix-access-tokens.conf
+          chown root:wheel /run/nix-access-tokens.conf
+          chmod 640 /run/nix-access-tokens.conf
         '';
       };
     };
