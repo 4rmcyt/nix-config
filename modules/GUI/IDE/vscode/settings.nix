@@ -106,9 +106,9 @@
         "wsl.localhost" = "linux";
       }
       // lib.optionalAttrs (osConfig != null && osConfig ? my.defaults) {
-        "${osConfig.my.defaults.homeserver_lan}" = "linux";
-        "${osConfig.my.defaults.matebook_wifi}" = "linux";
-        "${osConfig.my.defaults.desktop_lan}" = "linux";
+        "${osConfig.my.network.hosts.homeserver_lan}" = "linux";
+        "${osConfig.my.network.hosts.matebook_wifi}" = "linux";
+        "${osConfig.my.network.hosts.desktop_lan}" = "linux";
       };
 
     # ===== Misc Settings =====

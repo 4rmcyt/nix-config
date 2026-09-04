@@ -142,7 +142,7 @@
       advertiseRoutes = [
         (
           let
-            parts = lib.splitString "." config.my.defaults.homeserver_lan;
+            parts = lib.splitString "." config.my.network.hosts.homeserver_lan;
           in "${lib.concatStringsSep "." (lib.take 3 parts)}.0/24"
         )
       ];

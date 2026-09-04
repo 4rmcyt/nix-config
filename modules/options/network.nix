@@ -367,8 +367,6 @@ in {
         description = "Mosquitto MQTT broker";
       };
 
-      # Security & Authentication
-
       # Alerting
       alertmanager = lib.mkOption {
         type = lib.types.port;

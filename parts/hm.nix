@@ -17,7 +17,17 @@ in {
       useGlobalPkgs = false;
       useUserPackages = true;
       backupFileExtension = "hm-backup";
-      sharedModules = [{home.enableNixpkgsReleaseCheck = false;}];
+      sharedModules = [
+        {home.enableNixpkgsReleaseCheck = false;}
+        {
+          # home-manager ships its own modules/programs/noctalia.nix, which
+          # re-declares programs.noctalia.enable and conflicts with
+          # inputs.noctalia.homeModules.default's nix/home-module.nix. Disable
+          # the home-manager copy, mirroring what noctalia's own
+          # nix/nixos-module.nix does for the NixOS-side module.
+          disabledModules = ["programs/noctalia.nix"];
+        }
+      ];
       extraSpecialArgs = {inherit inputs;};
 
       users.${owner.username} = {

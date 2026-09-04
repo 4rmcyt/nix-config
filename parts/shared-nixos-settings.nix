@@ -53,7 +53,8 @@ in {
     nix.channel.enable = false;
     nix.registry.nixpkgs.flake = inputs.nixpkgs;
 
-    # Common nix daemon settings (host-specific: cores, max-jobs, trusted-users, extra-system-features)
+    # Common nix daemon settings (host-specific bits — cores, max-jobs,
+    # trusted-users, extra-system-features — are set per host).
     nix.settings = {
       experimental-features = [
         "flakes"
@@ -75,10 +76,8 @@ in {
       min-free = 5368709120; # 5GB
       max-free = 10737418240; # 10GB
       builders-use-substitutes = true;
-    };
 
-    # Binary caches
-    nix.settings = {
+      # Binary caches
       extra-substituters = [
         "https://arr-packages.cachix.org?priority=0"
         "https://nix-community.cachix.org?priority=1"

@@ -80,15 +80,16 @@ Identity (email, GPG key, full name, domain) and the full LAN topology (host IPs
 MAC addresses, infrastructure/smart-home/mobile device addresses, GCP relay IP,
 NextDNS profile id) are **not in this repo**. They live in a separate private
 flake, wired as `inputs.private` (`git+ssh://…/nix-config-private`), and surface
-through `my.defaults.*` / `my.network.*` option defaults and `meta.owner.*`.
-sops can't hold them — they're needed at eval time, before sops-nix decrypts.
+through `my.defaults.*` / `my.network.*` option defaults (plus `meta.owner.username`
+in the flake-parts scope). sops can't hold them — they're needed at eval time,
+before sops-nix decrypts.
 `modules/options/private-example.nix` documents the expected schema. The personal
 Thunderbird account config also lives there (`inputs.private.homeManagerModules.thunderbird`).
 
 | Option namespace     | File                          | Purpose                                      |
 |----------------------|-------------------------------|----------------------------------------------|
-| `my.defaults.*`      | `options/defaults.nix`        | user, email, domain, IPs, timezone, locale (from `inputs.private`) |
-| `my.network.*`       | `options/network.nix`         | ports, host addresses, MACs (from `inputs.private`) |
+| `my.defaults.*`      | `options/defaults.nix`        | user, email, git identity, domain, timezone, locale, GCP relay IP, NextDNS profile id (from `inputs.private`) |
+| `my.network.*`       | `options/network.nix`         | gateway, host addresses, MACs, VLANs, subnets, service ports (from `inputs.private`) |
 | `my.security.*`      | `options/security.nix`        | security-related options                     |
 | `my.traefik.*`       | `networking/traefik/`         | Traefik reverse proxy                        |
 | `my.headscale.*`     | `networking/headscale/`       | Headscale coordination server                |

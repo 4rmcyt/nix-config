@@ -435,7 +435,7 @@
         }
         {
           job_name = "matebook-node";
-          static_configs = [{targets = ["${config.my.defaults.matebook_wifi}:9100"];}];
+          static_configs = [{targets = ["${config.my.network.hosts.matebook_wifi}:9100"];}];
         }
       ];
     };
