@@ -166,12 +166,12 @@ just topology        # regenerate the topology SVGs
 
 ## 📦 Key inputs
 
-`nixpkgs` (unstable) · `flake-parts` · `import-tree` · `home-manager` · `sops-nix` ·
-`disko` · `nixos-facter-modules` · `nixos-anywhere` · `determinate` / lix · `mango` ·
-`niri-flake` · `noctalia` · `stylix` · `nixvim` · `nix-vscode-extensions` · `nixarr` ·
-`arr-packages` (own) · `headscale` · `nix-topology` · `nix-flatpak` · `mcp-nixos` /
-`mcp-servers-nix` · `nix-index-database` · `auto-cpufreq` · `ucodenix` ·
-`private` (own, identity/topology).
+- **Core** — `nixpkgs` (unstable) · `flake-parts` · `import-tree` · `home-manager`
+- **System** — `sops-nix` · `disko` · `nixos-facter-modules` · `nixos-anywhere` · `determinate` / lix · `ucodenix` · `auto-cpufreq`
+- **Desktop** — `mango` · `niri-flake` · `noctalia` · `stylix` · `nixvim` · `nix-vscode-extensions` · `nix-flatpak`
+- **Services** — `nixarr` · `arr-packages` (own) · `headscale` · `nix-topology`
+- **Tooling** — `mcp-nixos` · `mcp-servers-nix` · `nix-index-database`
+- **Private** — `private` (own — identity + LAN topology)
 
 ## 📚 Docs
 
