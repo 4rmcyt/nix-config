@@ -1,6 +1,6 @@
 # CI/CD Pipeline
 
-GitHub Actions workflows in [.github/workflows/](../.github/workflows/), composite actions in [.github/actions/](../.github/actions/). Currently **disabled at the repo level** — the files below describe the intended behavior for whenever Actions are turned back on.
+GitHub Actions workflows in [.github/workflows/](../.github/workflows/), composite actions in [.github/actions/](../.github/actions/). `ci.yml` runs on push to `main`, on every PR, and nightly at 03:00 America/Edmonton (plus `workflow_dispatch`).
 
 ## Layout
 

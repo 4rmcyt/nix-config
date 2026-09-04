@@ -12,10 +12,12 @@ infra/tf/gcp-relay/         # Terraform/OpenTofu — GCP infrastructure for gcp-
 parts/                      # Auto-imported flake-parts modules
   configurations/nixos.nix  # Defines configurations.nixos option → nixosConfigurations
   hosts/<name>/             # Per-host configuration (flake-parts module)
-  shared-nixos-settings.nix # modules.nixos.base — shared nix/sops/substituter settings
-  home-manager-integration.nix # modules.nixos.base — HM integration + external NixOS input modules
-  home-manager-base.nix     # modules.homeManager.base — sops, overlays, stateVersion
-  shared-programs.nix       # modules.nixos.base — common programs (zsh, nh, gnupg) on all hosts
+  shared-nixos-settings.nix # modules.nixos.base — shared nix daemon / caches / sops / access-token wiring
+  home-manager-integration.nix # modules.nixos.base — imports sops-nix, disko, nix-topology NixOS modules
+  hm.nix                    # modules.nixos.hm — Home Manager NixOS module + HM base wiring (opt-in per host)
+  home-manager-base.nix     # modules.homeManager.base — sops, nixvim, overlays, stateVersion
+  workstation.nix          # modules.nixos.workstation — facter + ucodenix + gnupg (desktop/laptop/server only)
+  shared-programs.nix       # modules.nixos.base — common programs on all hosts (zsh, nh)
   meta.nix                  # options.meta (stateVersion, owner)
   owner.nix                 # meta.owner — sourced from the private `private` flake input (identity + LAN topology)
   schemas.nix               # flake.schemas — flake-schemas + custom topology schema
@@ -60,8 +62,9 @@ modules/
     niri/                   # niri WM (matebook): settings, keybinds, startup, windowrules, nvidia, monitors
     hyprland/               # unused — kept on disk, no longer imported by any host
   GUI/                      # GUI apps: firefox, chrome, chromium, obsidian, mpv, IDE (vscode, zed),
-                            #   terminal (ghostty, kitty, wezterm), discord, nemo, thunderbird,
-                            #   virt-manager, waydroid, flatpak, stylix
+                            #   terminal, discord, easyeffects, nemo, coolercontrol, kdeconnect,
+                            #   virt-manager, waydroid, flatpak, jellyfin-mpv-shim, bb-launcher, stylix
+                            #   (thunderbird module removed — personal account config lives in inputs.private)
   TUI/                      # Terminal tools: zsh, zellij, atuin, starship, tmux, tty, neovim,
                             #   ai-tools (claude-code, antigravity-cli, mcp, llama-cpp)
                             #   ai-tools sub-dirs: agents/, skills/, commands/, system-prompt/
@@ -104,24 +107,32 @@ Each `parts/hosts/<name>/configuration.nix` declares a `configurations.nixos.<na
 ```nix
 configurations.nixos.homeserver.module = {...}: {
   imports = [
-    nixosBase           # ← modules.nixos.base (shared-nixos-settings + HM integration + shared-programs)
+    nixosBase           # modules.nixos.base — shared-nixos-settings + HM integration + shared-programs
+    nixosHm             # modules.nixos.hm  — Home Manager (skipped on router + gcp-relay)
+    nixosWorkstation    # modules.nixos.workstation — facter/ucodenix/gnupg (skipped on router + gcp-relay)
     ../../../hosts/nixos/homeserver
     inputs.nixarr.nixosModules.default
+    ../../../modules/nix/lix
   ];
   home-manager.users.zeev.imports = [ ../../../home/homeserver ];
 };
 ```
 
-`configurations/nixos.nix` maps each entry to `lib.nixosSystem`.
+`configurations/nixos.nix` maps each entry to `lib.nixosSystem`. **router** and
+**gcp-relay** are headless — they import only `nixosBase` (plus router adds lix),
+no HM, no workstation modules.
 
 ### Host → Nix daemon variant
 
-| Host        | Nix daemon                  |
-|-------------|-----------------------------|
-| desktop     | `modules/nix/lix`           |
-| homeserver  | `modules/nix/lix`           |
-| matebook    | `modules/nix/determinate`   |
-| gcp-relay   | (base default)              |
+| Host        | Nix daemon        |
+|-------------|-------------------|
+| desktop     | `modules/nix/lix` |
+| homeserver  | `modules/nix/lix` |
+| matebook    | `modules/nix/lix` |
+| router      | `modules/nix/lix` |
+| gcp-relay   | base default (stock nixpkgs `nix`) |
+
+`modules/nix/determinate` exists on disk but is not imported by any host.
 
 ## Secrets
 
@@ -134,17 +145,18 @@ All secrets managed by **sops-nix** with age encryption.
 
 ## Nix Implementation
 
-**Lix** replaces the standard nix daemon on most hosts (`modules/nix/lix`). Matebook uses **determinate** (`modules/nix/determinate`). Channels disabled. Registry pinned to `inputs.nixpkgs`. IFD enabled.
+**Lix** replaces the stock nix daemon on desktop, homeserver, matebook and router (`modules/nix/lix`). gcp-relay runs stock nixpkgs `nix`. Channels disabled. Registry pinned to `inputs.nixpkgs`. IFD enabled (`allow-import-from-derivation = true`).
 
 All hosts get:
 - `nix-auth` — `nix auth` subcommand for token management
 - `nixos-needsreboot` — checks if a rebuild requires a reboot; runs as activation script
 
-Binary caches (priority order):
-1. `4rmcyt.cachix.org` (personal, priority 0)
-2. `nix-community.cachix.org`, `cache.nixos.org`, `cache.flox.dev` (priority 1)
-3. `llama-cpp.cachix.org`, `noctalia.cachix.org`, `devenv.cachix.org`, `nixpkgs-unfree.cachix.org`
-4. Desktop additionally: `cache.nixos-cuda.org`, `cuda-maintainers.cachix.org`
+Binary caches (from `parts/shared-nixos-settings.nix`, priority order):
+1. `arr-packages.cachix.org` (priority 0)
+2. `nix-community.cachix.org`, `cache.nixos.org`, `cache.flox.dev`, `llama-cpp.cachix.org` (priority 1)
+3. `noctalia.cachix.org` (2), `devenv.cachix.org` (3), `nixpkgs-unfree.cachix.org` (5)
+4. Per-host push cache added in `parts/hosts/<host>/configuration.nix`: `4rmcyt-<host>.cachix.org`
+5. desktop additionally: `cache.nixos-cuda.org`, `cuda-maintainers.cachix.org`, `4rmcyt-gcp.cachix.org`
 
 GitHub access token loaded via sops secret `nix_access_token`, written to `/run/nix-access-tokens.conf` by a oneshot systemd service at boot. `NIX_USER_CONF_FILES` points to this file for both the nix daemon and user sessions.
 
@@ -152,8 +164,8 @@ GitHub access token loaded via sops secret `nix_access_token`, written to `/run/
 
 No local `overlays/` directory. All overlays come from flake inputs:
 
-- **HM scope** (`parts/home-manager-base.nix`): `mcp-servers-nix`, `nur`, `nix-vscode-extensions`, `noctalia`; also patches `mcp-server-fetch` (proxy API fix)
-- **homeserver NixOS scope** (inline in host config): `ephraim-nur` packages (lazylibrarian, ez_setup, iso639-lang, slskd-api), `homepage-dashboard` pinned to v1.13.1
+- **HM scope** (`parts/home-manager-base.nix`): `mcp-servers-nix`, `nur`, `nix-vscode-extensions`, `noctalia`
+- **homeserver NixOS scope** (inline in `parts/hosts/homeserver/configuration.nix`): `homepage-dashboard` pinned to v1.13.1, and `sonarr`/`radarr`/`prowlarr`/`bazarr`/`jellyfin`/`jellyfin-web` taken from `inputs.arr-packages`
 
 ## Desktop WM Stack
 
@@ -171,9 +183,9 @@ No local `overlays/` directory. All overlays come from flake inputs:
 | `modules/WM/mango/monitors/desktop.nix` | ASUS VG289 ×2, 4K@60Hz, 2× scale, matched by make+model+serial (`monitorrule=`) |
 | `modules/WM/mango/nvidia.nix` | NVIDIA env vars (`LIBVA_DRIVER_NAME`, GSync/VRR, `GLVidHeapReuseRatio` app profile), set both via HM sessionVariables and mango's own `env=` config lines |
 
-**mango version:** `inputs.mango` (`github:mangowm/mango/wl-only`) — provides `nixosModules.mango` (`programs.mango.enable`) and `hmModules.mango` (`wayland.windowManager.mango`), not the nixpkgs package.
+**mango wiring:** desktop uses **nixpkgs' own `programs.mango`** module (portal + systemPackages wiring), with `programs.mango.package` and greetd's exec both pointed at `inputs.mango.packages.<system>.mango` (`github:mangowm/mango/wl-only`). `inputs.mango.nixosModules.mango` is deliberately **not** imported — it re-declares `programs.mango.enable` and conflicts with the nixpkgs module. `inputs.mango.hmModules.mango` (`wayland.windowManager.mango`) is imported on the HM side.
 
-**greetd** on desktop execs `mango` directly (no UWSM — mango's own HM module binds a `mango-session.target` to `graphical-session.target` itself).
+**greetd** on desktop execs `env WLR_RENDERER=vulkan …/bin/mango` directly (no UWSM — mango's own HM module binds a `mango-session.target` to `graphical-session.target` itself). `WLR_RENDERER=vulkan` must be on the exec, not in `config.conf` — wlroots picks its renderer before mango reads the config file.
 
 **HDR on desktop's mango build:** requires tracking the **`wl-only` branch**, not `main` (corrected again 2026-08-23 — a same-day earlier edit wrongly claimed no special branch was needed; that was wrong, see `flake.nix`'s comment on the `mango` input for the full trail, including why the `hdr` branch was rejected too). `main`'s `meson.build` unconditionally requires `libscenefx` and links it into the `mango` executable; scenefx doesn't support the vulkan renderer HDR needs, so `drw->features.output_color_transform` (checked in `src/ext-protocol/hdr.h`'s `output_supports_hdr()`) never comes back true on `main` no matter what config is set — confirmed both by mango's own docs (`docs/configuration/monitors.md`: "HDR is only supported in wl-only branch, since it requires the vulkan renderer but scenefx is not supported yet") and by diffing `meson.build` between branches. `wl-only` drops the `scenefx` `dependency()` call and its executable-link entirely, and its wlroots pin (`wlroots-0.20`) matches `main`'s and `nix/default.nix`'s, so — unlike the `hdr` branch — it isn't known-broken on the packaging side. `hdr:1` alone was not enough for the two ASUS VG289Q panels — their EDID apparently doesn't clear wlroots' `supported_primaries`/`supported_transfer_functions` bar `output_supports_hdr()` checks against, so `hdr_force:1` (see `modules/WM/mango/monitors/desktop.nix`) is required to skip those two EDID checks. `WLR_RENDERER=vulkan` is still required regardless of `hdr_force` — it's the separate, non-skippable `output_color_transform` check. Niri has no HDR path at all (see below); Hyprland ≥0.55 was the only WM in this config with a working HDR10 output path (`wp_color_management v2`) before the switch.
 
@@ -214,7 +226,7 @@ No local `overlays/` directory. All overlays come from flake inputs:
 - HM import: `inputs.noctalia.homeModules.default` on desktop + matebook
 - `modules/WM/hyprland/*` was NOT migrated (dead code, not imported by any host) — still references `programs.noctalia-shell` and the old IPC syntax. Update it first if hyprland is ever revived.
 
-**Theming:** Stylix (`inputs.stylix`) imported as HM module on desktop only.
+**Theming:** noctalia drives colors. `inputs.stylix` is wired as a flake input and `modules/GUI/stylix/` exists, but the HM import is currently commented out in `parts/hosts/desktop/configuration.nix` — Stylix is **not** active on any host right now.
 
 ## AI Tools (`modules/TUI/ai-tools/`)
 
@@ -276,7 +288,7 @@ Undocumented files that live in the repo root:
 
 | File | Purpose |
 |------|---------|
-| `.mcp.json` | Claude Code MCP server definitions for this project. Servers: fetch, filesystem (`/etc/nixos`, `/home/zeev/src`), kubernetes (mcp-k8s-go), mcp-nixos, memory, python (uvx), sequential-thinking, tavily (stdio); github, fizzy, supabase (HTTP). Pinned to `/nix/store/...` paths for stdio — regenerated by the `modules/TUI/ai-tools/mcp` HM activation script. |
+| `.mcp.json` | Symlink → `~/.config/mcp/mcp.json` (generated by the `modules/TUI/ai-tools/mcp` HM module). Servers: fetch, filesystem, kubernetes, mcp-nixos, memory, python, sequential-thinking, tavily, opentofu (stdio); github, fizzy, supabase (HTTP). |
 | `CLAUDE.md` | Project-level instructions for Claude Code. Contains MCP routing table, project layout, key conventions, and critical rules (no sudo, no nix build, no sops encrypt). |
 
 ### Git Config
@@ -292,12 +304,15 @@ Undocumented files that live in the repo root:
 
 | Recipe | What it does |
 |--------|-------------|
-| `deploy-gcp` | `nixos-rebuild switch` to gcp-relay via SSH |
-| `deploy-homeserver` | Runs `./deploy.sh homeserver` |
-| `check` / `test` | `nix flake check` |
+| `deploy-gcp` | `nixos-rebuild switch --flake .#gcp-relay --target-host zeev@gcp-relay --build-host localhost --elevate=sudo`, then `cachix push 4rmcyt-gcp`, then `nh clean all` |
+| `deploy-homeserver` / `deploy-matebook` | `nixos-rebuild switch --flake .#<host> --target-host zeev@<host> --build-host localhost --elevate=sudo` |
 | `deploy-desktop` | Runs `./deploy.sh desktop` |
-| `dry-run $host` | `nixos-rebuild-ng dry-activate` on remote host |
-| `fmt` | `nixfmt **/*.nix` (uses nixfmt, not alejandra — prefer `nix fmt` instead) |
+| `check` / `test` | `nix flake check` |
+| `fmt` | `nix fmt` |
+| `push-caches` | `cachix push 4rmcyt-$(hostname) /run/current-system` |
+| `dry-run $host` / `deploy $host` / `copy $host` | `nixos-rebuild-ng` + `rsync` to `/etc/nixos` — older workflow, mostly unused |
+
+Stale recipes still in the file: `update` (references non-existent `darwinConfigurations.macbook`), `build-iso`.
 
 ### tools/scripts
 
@@ -328,14 +343,17 @@ Pre-commit and CI helper scripts in `tools/scripts/`:
 
 ## Deployment
 
-Remote hosts are deployed manually via `nixos-rebuild` over SSH or auto-upgrade. No deploy-rs configuration is active.
+Remote hosts are deployed manually via `nixos-rebuild` over SSH — recipes live in the [`justfile`](../justfile). Build happens on the local machine (`--build-host localhost`), activation on the target with `--elevate=sudo`. No deploy-rs.
 
-| Host       | Method                                                              |
-|------------|---------------------------------------------------------------------|
-| homeserver | `nixos-rebuild switch --target-host root@homeserver.ts.example.com --flake .#homeserver` |
-| matebook   | `nixos-rebuild switch --target-host root@matebook.ts.example.com --flake .#matebook` |
-| gcp-relay  | Auto-upgrade daily at 04:00 via `my.hardening.autoUpgrade` (`nixos-rebuild boot`, flake `github:4rmcyt/nix-config#gcp-relay`) |
-| desktop    | Local: `nixos-rebuild switch --flake .#desktop`                    |
+| Host       | Recipe / method |
+|------------|-----------------|
+| homeserver | `just deploy-homeserver` → `nixos-rebuild switch --flake .#homeserver --target-host zeev@homeserver --build-host localhost --elevate=sudo` |
+| matebook   | `just deploy-matebook` (same shape, `zeev@matebook`) |
+| gcp-relay  | `just deploy-gcp` → deploy `.#gcp-relay`, then push closure to `4rmcyt-gcp` Cachix, then `nh clean all` |
+| desktop    | Local: `nixos-rebuild switch --flake .#desktop` / `nh os switch` |
+| router     | `nixos-anywhere` for install (see [router-installation.md](router-installation.md)); `nixos-rebuild --flake .#router --target-host zeev@router` after |
+
+`my.hardening.autoUpgrade` exists as an option (`operation` defaults to `"boot"`) but no host enables it — updates are manual everywhere.
 
 **ZFS/mount safety:** prefer `nixos-rebuild boot` + reboot over `switch` when config changes affect active mount units. See [Infrastructure.md](Infrastructure.md) ZFS Safety Rules.
 

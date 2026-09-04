@@ -19,12 +19,12 @@ Tailnet login server: `https://hs.example.com` (self-hosted Headscale)
 
 | Interface | Role | Connected to |
 |-----------|------|-------------|
-| `enp1s0` | WAN | ISP router (DHCP) |
-| `enp2s0` | Office trunk (802.1Q) | TL-SG108E #1 `192.168.1.111` — vlan10 + vlan20 + vlan40 |
-| `enp3s0` | Media (physical, no VLAN) | TL-SG108E #2 `192.168.30.112` — all ports untagged |
-| `enp4s0` | Trusted AP (physical) | ISP AP (trusted WiFi) |
+| `enp5s0` | WAN | ISP router (DHCP) |
+| `enp4s0` | Office trunk (802.1Q) | TL-SG108E #1 `192.168.1.111` — tagged vlan10 + vlan20 + vlan40 |
+| `enp3s0` | Media (physical, no VLAN), `192.168.30.1/24` | TL-SG108E #2 `192.168.30.112` — all ports untagged |
+| `enp2s0` | Trusted AP (physical), `192.168.1.1/24` | ISP AP (trusted WiFi) |
 
-Interface names are placeholders — verify with `ip link` on hardware after first boot.
+Interface names are set in `hosts/nixos/router/networking.nix` (`wanInterface`/`trunkInterface`/`mediaInterface`/`apInterface`) and matched again by name in `firewall.nix`'s nftables ruleset — verify with `ip link` on hardware and keep both files in sync.
 
 #### Network Zones
 
@@ -39,10 +39,10 @@ Interface names are placeholders — verify with `ip link` on hardware after fir
 
 | Port | Device | PVID | Tagged VLANs |
 |------|--------|------|-------------|
-| 1 | Router `enp2s0` (uplink) | 1 | 10, 20, 40 |
-| 2 | AC1750 OpenWrt (IoT AP) | 20 | — |
-| 3–6, 8 | Wired trusted devices | 10 | — |
+| 1 | Router `enp4s0` (uplink) | 1 | 10, 20, 40 |
+| 3–6 | Wired trusted devices | 10 | — |
 | 7 | Work port | 40 | — |
+| 8 | AC1750 OpenWrt (IoT AP) | 20 | — |
 
 #### Living Room Switch — TL-SG108E #2 (`192.168.30.112`)
 
@@ -83,8 +83,8 @@ Grafana dashboards: `router-overview`, `router-unbound`, `router-kea`.
 
 #### Networking
 
-- SSH on port 22; restricted by nftables to trusted zone + Tailscale only
-- systemd-networkd; 802.1Q VLANs on office trunk `enp2s0`; media + AP as plain physical ports
+- SSH on port 22; sshd listens on all interfaces but the nftables input chain only permits tcp/22 from `vlan10` and `tailscale0`
+- systemd-networkd; 802.1Q VLANs on office trunk `enp4s0`; media (`enp3s0`) + AP (`enp2s0`) as plain physical ports; `networking.firewall.enable = false` — nftables ruleset in `firewall.nix` is authoritative
 
 See [router-installation.md](router-installation.md) for installation steps.
 
@@ -139,36 +139,34 @@ See [router-installation.md](router-installation.md) for installation steps.
 
 ### desktop
 
-**Role:** Primary workstation — Niri WM, gaming, dev tools  
-**LAN IP:** `192.168.1.118` (ethernet) / `192.168.1.239` (WiFi)  
-**GPU:** NVIDIA RTX 3050 8GB  
-**CPU:** Ryzen 7000 series (Zen 4)  
-**RAM:** 60 GB
+**Role:** Primary workstation — mango WM, gaming, dev tools, local LLM, libvirt  
+**GPU:** NVIDIA  
+**CPU:** AMD Zen 4  
+(LAN IPs / RAM: see `inputs.private` topology — not tracked in this repo)
 
-#### Storage (Btrfs + Impermanence)
+#### Storage (Btrfs)
 
-Disk: Samsung SSD 970 EVO Plus 1TB NVMe (`nvme-Samsung_SSD_970_EVO_Plus_1TB_S6S1NS0W101791N`). GPT: 2GB EFI + Btrfs remainder (label `nixos`).
+Disko config in `modules/disko/desktop/`. GPT: `/boot` ESP + Btrfs remainder (label `nixos`), all subvolumes `compress=zstd:1,noatime,ssd,discard=async,space_cache=v2`.
 
-| Subvolume | Mount              | Notes                                      |
-|-----------|--------------------|--------------------------------------------|
-| `/root`   | `/`                | Ephemeral — wiped on every boot via initrd |
-| `/nix`    | `/nix`             | Persistent, `nodatacow`                    |
-| `/persist`| `/persist`         | Persistent state (bind-mounted by impermanence) |
-| `/log`    | `/var/log`         | Persistent logs                            |
-| `/home`   | `/home`            | Persistent home                            |
-| `/games`  | `/home/games`      | Steam library, large game files            |
-| `/vms`    | `/var/lib/libvirt` | VM/container storage                       |
+| Subvolume | Mount              | Notes                                 |
+|-----------|--------------------|---------------------------------------|
+| `/root`   | `/`                | Persistent (not ephemeral)            |
+| `/nix`    | `/nix`             | `nodatacow`                           |
+| `/log`    | `/var/log`         | Logs                                  |
+| `/home`   | `/home`            | Home                                  |
+| `/games`  | `/home/games`      | Steam library, large game files       |
+| `/vms`    | `/var/lib/libvirt` | libvirt VM storage                    |
 
-Root subvolume is deleted and recreated on every boot (`boot.initrd.postResumeCommands`). Persistent state lives in `/persist` and is bind-mounted by the `impermanence` NixOS module. Age keys, SSH host keys, tailscale state, NetworkManager connections, and user dotfiles are persisted.
+`inputs.impermanence` is declared in `flake.nix` but **not imported by any host** — there is no ephemeral-root / `/persist` setup on desktop. `btrfs.autoScrub` runs on `/`.
 
 #### Desktop Stack
 
-- **WM:** Niri (niri-flake NixOS module, `pkgs.niri` 25.11, not niri-flake stable)
-- **DM:** greetd (auto-login into Niri session)
-- **Shell:** noctalia v5 (native bar/shell, no Quickshell)
-- **Theming:** Stylix + matugen dynamic colors
-- **Portal:** `xdg-desktop-portal-gnome` + `xdg-desktop-portal-gtk`
-- **nirinit:** enabled (smooth session init)
+- **WM:** mango (`inputs.mango` `wl-only` branch, Vulkan renderer for HDR; nixpkgs `programs.mango` module + flake package)
+- **DM:** greetd, execs `env WLR_RENDERER=vulkan mango` directly for `zeev`
+- **Shell:** noctalia v5 (native C++ bar/shell, no Quickshell)
+- **Theming:** noctalia dynamic colors (Stylix wired but currently disabled)
+- **Portal:** `modules/xdg` (portal-gnome + portal-gtk); gnome-keyring for secrets
+- Ran Hyprland until 2026-08-22, then fully migrated to mango
 
 #### Nix Build
 
@@ -192,11 +190,13 @@ Game launch/exit swap the scheduler via gamemode custom hooks (`modules/gaming/d
 
 #### Storage
 
-Disk: WD PC SN730 512GB NVMe (`nvme-WDC_PC_SN730_SDBPNTY-512G-1027_20230H445703`). GPT: 2GB EFI + **ext4** root (no ZFS). 16GB swapfile (`/swapfile`, TRIM-enabled) for hibernation support.
+Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabled) on the ext4 root for hibernation; `resume_offset` kernel param must be regenerated whenever the swapfile is recreated.
 
-- Niri WM + noctalia v5
-- Nix daemon: **determinate** (vs lix on desktop/homeserver)
-- Tailscale client with magic rollback enabled for remote deploys
+- **niri** WM + noctalia v5; greetd runs `niri-session` for `zeev`
+- Boot: **Limine** bootloader (`boot.loader.limine`, `secureBoot.enable = true`, custom wallpaper), systemd-boot disabled
+- Nix daemon: **lix** (same as desktop/homeserver/router)
+- `services.tailscale` with `authKeyFile` from sops, Headscale login server
+- Power: `auto-cpufreq` (powersave on battery / performance on charger), `power-profiles-daemon` disabled, lid → suspend-then-hibernate
 
 #### CPU / Scheduling
 
@@ -315,14 +315,14 @@ All configured via the Cloudflare dashboard/API (zone `example.com`, Free plan) 
 
 | Service         | Port  | URL                           | Notes                              |
 |-----------------|-------|-------------------------------|------------------------------------|
-| Jellyfin        | 8096  | `jellyfin.example.com`       | Media server                       |
-| qBittorrent     | 8081  | `qb.example.com`             | via nixarr                         |
-| Sonarr          | 8990  | `sonarr.example.com`         | TV — OCI container                 |
-| Radarr          | 7878  | `radarr.example.com`         | Movies — OCI container             |
-| Prowlarr        | 9696  | `prowlarr.example.com`       | Indexer — OCI container            |
-| Bazarr          | 6767  | `bazarr.example.com`         | Subtitles — OCI container          |
-| Lidarr          | 8686  | `lidarr.example.com`         | Music                              |
-| LazyLibrarian   | 5299  | `lazylibrarian.example.com`  | Books — ephraim-nur overlay        |
+| Jellyfin        | 8096  | `jellyfin.example.com`       | `inputs.arr-packages` build         |
+| qBittorrent     | 8081  | `qb.example.com`             | via nixarr                          |
+| Sonarr          | 8990  | `sonarr.example.com`         | TV — native `services.sonarr`, Postgres backend |
+| Radarr          | 7878  | `radarr.example.com`         | Movies — native `services.radarr`, Postgres backend |
+| Prowlarr        | 9696  | `prowlarr.example.com`       | Indexer — native `services.prowlarr`, Postgres backend |
+| Bazarr          | 6767  | `bazarr.example.com`         | Subtitles — native `services.bazarr`, Postgres backend |
+| Lidarr          | 8686  | `lidarr.example.com`         | Music                               |
+| LazyLibrarian   | 5299  | `lazylibrarian.example.com`  | Books — OCI container               |
 | Kapowarr        | 5656  | `kapowarr.example.com`       | Comics & manga — OCI container. DDL temp folder `/app/temp_downloads` → `/data/Downloads/kapowarr`; library roots `/comics`, `/manga`. qBittorrent category `kapowarr` saves to the same path (Remote Path Mapping `/data/Downloads/kapowarr`→`/app/temp_downloads` in the web UI). ComicVine key set in web UI. |
 | Seerr           | 5055  | `seerr.example.com`          | Request management — OCI container |
 | Audiobookshelf  | 9292  | `audiobookshelf.example.com` | Audiobooks                         |
@@ -360,7 +360,7 @@ All configured via the Cloudflare dashboard/API (zone `example.com`, Free plan) 
 
 | Service   | Notes                                                                    |
 |-----------|--------------------------------------------------------------------------|
-| llama-cpp | Desktop only (`modules/TUI/ai-tools/llama-cpp`). Current model: Gemma 4 E4B |
+| llama-cpp | Desktop only (`modules/TUI/ai-tools/llama-cpp`). CPU inference server, on-demand (no `WantedBy`), auto-unloads after 5 min idle. Model: `Qwen2.5-32B-Instruct-Q4_K_M` (bartowski GGUF), used for story.json generation. A lighter `cpu.nix` variant also exists. |
 
 ---
 
