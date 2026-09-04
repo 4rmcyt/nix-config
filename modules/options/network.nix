@@ -94,8 +94,10 @@ in {
       plug-table = macOpt "plug-table" "HS103 table plug";
       plug-window = macOpt "plug-window" "HS103 window plug";
       humidifier = macOpt "humidifier" "Smart humidifier";
-      sophia-s23 = macOpt "sophia-s23" "phone A (note: may randomise)";
-      volodymyr-s23 = macOpt "volodymyr-s23" "phone B (note: may randomise)";
+      # Both phones have per-SSID MAC randomisation turned off for the home
+      # network so these DHCP reservations stay stable.
+      sophia-s23 = macOpt "sophia-s23" "phone A";
+      volodymyr-s23 = macOpt "volodymyr-s23" "phone B";
       ps5 = macOpt "ps5" "PlayStation 5";
       nintendo-switch = macOpt "nintendo-switch" "Nintendo Switch OLED";
       mi-box-s = macOpt "mi-box-s" "Xiaomi Mi Box S";
