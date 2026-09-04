@@ -53,8 +53,8 @@ Interface labels are deliberately IP-free — the diagrams expose nothing beyond
 
 ## 🧩 Repository layout
 
-- **`flake.nix`** — ~15 lines; delegates to `import-tree ./parts`
-- **`parts/`** — flake-parts modules, auto-imported
+- <img src="https://img.shields.io/badge/flake.nix-8250DF" alt="flake.nix"> — ~15 lines; delegates to `import-tree ./parts`
+- <img src="https://img.shields.io/badge/parts%2F-8250DF" alt="parts/"> — flake-parts modules, auto-imported
   - `owner.nix` — private identity/topology → `meta.owner.*`
   - `meta.nix` / `flake-parts-modules.nix` — internal options (`meta`, `modules`)
   - `shared-nixos-settings.nix` — nix daemon, caches, sops, access tokens
@@ -62,9 +62,9 @@ Interface labels are deliberately IP-free — the diagrams expose nothing beyond
   - `topology.nix` — nix-topology wiring + global topology
   - `configurations/` — `configurations.nixos.<name>` → `nixosConfigurations`
   - `hosts/<host>/` — per-host module composition
-- **`hosts/nixos/<host>/`** — `hardware-configuration.nix`, `facter.json`, host config
-- **`home/<host>/`** — Home Manager config per host
-- **`modules/`** — ~190 single-purpose modules, imported explicitly
+- <img src="https://img.shields.io/badge/hosts%2Fnixos%2F-1F883D" alt="hosts/nixos/"> — per-host `hardware-configuration.nix`, `facter.json`, NixOS config
+- <img src="https://img.shields.io/badge/home%2F-1F883D" alt="home/"> — Home Manager config per host
+- <img src="https://img.shields.io/badge/modules%2F-BF3989" alt="modules/"> — ~190 single-purpose modules, imported explicitly
   - `options/` — `my.defaults.*` · `my.network.*` · `my.security.*`
   - `base/` · `roles/` — core system · role compositions
   - `WM/` · `GUI/` · `TUI/` — mango · niri · noctalia · firefox · zsh · ai-tools
@@ -72,9 +72,9 @@ Interface labels are deliberately IP-free — the diagrams expose nothing beyond
   - `networking/` — traefik · caddy · headscale · tailscale · unbound
   - `security/` · `monitoring/` · `database/` — kanidm/crowdsec · grafana/loki · postgres/redis
   - `disko/` · `backup/` · `containers/` · `nix/` — disks · restic · podman · lix
-- **`secrets/`** — sops-encrypted YAML/env (age)
-- **`infra/tf/gcp-relay/`** — OpenTofu: GCP static IP + instance
-- **`docs/`** — Architecture · Infrastructure · CI-CD · hardware notes
+- <img src="https://img.shields.io/badge/secrets%2F-CF222E" alt="secrets/"> — sops-encrypted YAML/env (age)
+- <img src="https://img.shields.io/badge/infra%2Ftf%2F-844FBA" alt="infra/tf/"> — OpenTofu: GCP static IP + instance
+- <img src="https://img.shields.io/badge/docs%2F-0969DA" alt="docs/"> — Architecture · Infrastructure · CI-CD · hardware notes
 
 ## 🔧 How a host is assembled
 
@@ -166,12 +166,43 @@ just topology        # regenerate the topology SVGs
 
 ## 📦 Key inputs
 
-- **Core** — `nixpkgs` (unstable) · `flake-parts` · `import-tree` · `home-manager`
-- **System** — `sops-nix` · `disko` · `nixos-facter-modules` · `nixos-anywhere` · `determinate` / lix · `ucodenix` · `auto-cpufreq`
-- **Desktop** — `mango` · `niri-flake` · `noctalia` · `stylix` · `nixvim` · `nix-vscode-extensions` · `nix-flatpak`
-- **Services** — `nixarr` · `arr-packages` (own) · `headscale` · `nix-topology`
-- **Tooling** — `mcp-nixos` · `mcp-servers-nix` · `nix-index-database`
-- **Private** — `private` (own — identity + LAN topology)
+**Core** &nbsp;
+![nixpkgs](https://img.shields.io/badge/nixpkgs-5277C3)
+![flake-parts](https://img.shields.io/badge/flake--parts-5277C3)
+![import-tree](https://img.shields.io/badge/import--tree-5277C3)
+![home-manager](https://img.shields.io/badge/home--manager-5277C3)
+
+**System** &nbsp;
+![sops-nix](https://img.shields.io/badge/sops--nix-0B7285)
+![disko](https://img.shields.io/badge/disko-0B7285)
+![nixos-facter-modules](https://img.shields.io/badge/nixos--facter--modules-0B7285)
+![nixos-anywhere](https://img.shields.io/badge/nixos--anywhere-0B7285)
+![determinate / lix](https://img.shields.io/badge/determinate%20%2F%20lix-0B7285)
+![ucodenix](https://img.shields.io/badge/ucodenix-0B7285)
+![auto-cpufreq](https://img.shields.io/badge/auto--cpufreq-0B7285)
+
+**Desktop** &nbsp;
+![mango](https://img.shields.io/badge/mango-7048E8)
+![niri-flake](https://img.shields.io/badge/niri--flake-7048E8)
+![noctalia](https://img.shields.io/badge/noctalia-7048E8)
+![stylix](https://img.shields.io/badge/stylix-7048E8)
+![nixvim](https://img.shields.io/badge/nixvim-7048E8)
+![nix-vscode-extensions](https://img.shields.io/badge/nix--vscode--extensions-7048E8)
+![nix-flatpak](https://img.shields.io/badge/nix--flatpak-7048E8)
+
+**Services** &nbsp;
+![nixarr](https://img.shields.io/badge/nixarr-E8590C)
+![arr-packages (own)](https://img.shields.io/badge/arr--packages-own-E8590C)
+![headscale](https://img.shields.io/badge/headscale-E8590C)
+![nix-topology](https://img.shields.io/badge/nix--topology-E8590C)
+
+**Tooling** &nbsp;
+![mcp-nixos](https://img.shields.io/badge/mcp--nixos-C2255C)
+![mcp-servers-nix](https://img.shields.io/badge/mcp--servers--nix-C2255C)
+![nix-index-database](https://img.shields.io/badge/nix--index--database-C2255C)
+
+**Private** &nbsp;
+![private (own)](https://img.shields.io/badge/private-identity%20%2B%20LAN%20topology-495057)
 
 ## 📚 Docs
 
