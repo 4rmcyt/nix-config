@@ -14,13 +14,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    sops.secrets.cloudflare_acme_credentials = {
-      sopsFile = ../../../secrets/cloudflare_acme_credentials.env;
-      owner = "caddy";
-      group = "caddy";
-      mode = "0400";
-      format = "dotenv";
-    };
+    sops.secrets.cloudflare_acme_credentials = import ../../../lib/cloudflare-acme-secret.nix "caddy";
 
     services.caddy = {
       enable = true;

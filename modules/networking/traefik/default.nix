@@ -12,13 +12,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     # Cloudflare DNS-01 credentials — Traefik reads as EnvironmentFile
-    sops.secrets.cloudflare_acme_credentials = {
-      sopsFile = ../../../secrets/cloudflare_acme_credentials.env;
-      owner = "traefik";
-      group = "traefik";
-      mode = "0400";
-      format = "dotenv";
-    };
+    sops.secrets.cloudflare_acme_credentials = import ../../../lib/cloudflare-acme-secret.nix "traefik";
 
     users.users.traefik = {
       isSystemUser = true;

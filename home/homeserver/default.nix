@@ -22,7 +22,6 @@
       nixfmt-tree
       pass
       pyenv
-      sudo
       trash-cli
       tree
       tuptime

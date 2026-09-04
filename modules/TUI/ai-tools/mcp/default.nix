@@ -28,7 +28,7 @@
       command = lib.getExe pkgs.mcp-server-filesystem;
       args = [
         "/etc/nixos"
-        "/home/zeev/src"
+        "${config.home.homeDirectory}/src"
       ];
     };
     kubernetes = {

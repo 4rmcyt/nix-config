@@ -79,7 +79,7 @@
     "terminal.integrated.fontFamily" = "MesloLGS NF";
     "terminal.integrated.tabs.defaultColor" = "terminal.ansiBlack";
     "terminal.integrated.fontWeight" = "500";
-    "terminal.integrated.profiles.linux".nu.path = "/etc/profiles/per-user/zeev/bin/nu";
+    "terminal.integrated.profiles.linux".nu.path = "/etc/profiles/per-user/${config.home.username}/bin/nu";
     "terminal.integrated.scrollback" = 100000;
 
     # Window Settings
