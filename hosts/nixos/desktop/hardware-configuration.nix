@@ -5,14 +5,10 @@
   modulesPath,
   ...
 }: {
-  # =================================================================
   # 1. Imports
-  # =================================================================
   imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
-  # =================================================================
   # 2. Boot Configuration
-  # =================================================================
   boot = {
     # Kernel modules
     initrd.availableKernelModules = [
@@ -187,9 +183,7 @@
     ];
   };
 
-  # =================================================================
   # 3. Hardware Configuration
-  # =================================================================
   hardware = {
     # AMD GPU
     amdgpu.overdrive.enable = true;
@@ -252,9 +246,7 @@
 
   powerManagement.cpuFreqGovernor = "performance";
 
-  # =================================================================
   # 4. Boot Loader
-  # =================================================================
   boot.loader = {
     efi.canTouchEfiVariables = true;
     systemd-boot.enable = false;
@@ -289,9 +281,7 @@
     };
   };
 
-  # =================================================================
   # 5. Security (hardware-tied: PAM U2F / YubiKey)
-  # =================================================================
   security = {
     polkit.enable = true;
     rtkit.enable = true;
@@ -342,16 +332,12 @@
     })
   ];
 
-  # =================================================================
   # 6. Hardware Programs
-  # =================================================================
   programs = {
     noisetorch.enable = true; # Noise suppression (audio hardware)
   };
 
-  # =================================================================
   # 7. Services
-  # =================================================================
   services = {
     # CPU scheduling via scx_loader (DBus-managed, hot-swappable at runtime).
     #
@@ -547,9 +533,7 @@
     };
   };
 
-  # =================================================================
   # 8. System Packages (hardware tools)
-  # =================================================================
   environment.systemPackages = with pkgs; [
     # Audio & Multimedia
     pavucontrol
@@ -609,9 +593,7 @@
     # shim-unsigned
   ];
 
-  # =================================================================
   # 9. Networking (host identity & hardware networking)
-  # =================================================================
   # nixos-facter-modules' networking module force-enables per-interface
   # useDHCP (networking.interfaces.<name>.useDHCP = mkDefault true) for every
   # detected physical interface (enp12s0, wlp13s0), independent of the
@@ -654,9 +636,7 @@
     };
   };
 
-  # =================================================================
   # 10. Swap Configuration
-  # =================================================================
   swapDevices = [];
 
   zramSwap = {
@@ -666,9 +646,7 @@
     priority = 100; # High priority to prefer zram over disk swap
   };
 
-  # =================================================================
   # 11. Systemd Configuration
-  # =================================================================
   systemd = {
     oomd.enable = false;
     services.bluetooth-unblock = {
@@ -700,9 +678,7 @@
     ModelBouncingKeys=1
   '';
 
-  # =================================================================
   # 9. Platform Configuration
-  # =================================================================
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
   systemd.services.numlock = {

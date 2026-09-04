@@ -1,9 +1,7 @@
 {config, ...}: let
   inherit (config.my.defaults) user domain;
 in {
-  # =================================================================
   # SSH Secrets Management with SOPS
-  # =================================================================
   sops.secrets = {
     ssh_private_key = {
       sopsFile = ../../../secrets/ssh.yaml;
@@ -24,9 +22,7 @@ in {
     };
   };
 
-  # =================================================================
   # SSH Client Configuration
-  # =================================================================
   system.activationScripts.sshConfig = ''
     mkdir -p /home/${user}/.ssh
     cat > /home/${user}/.ssh/config << 'EOF'
@@ -83,9 +79,7 @@ in {
     chmod 600 /home/${user}/.ssh/config
   '';
 
-  # =================================================================
   # /etc/hosts Configuration
-  # =================================================================
   networking.hosts = {
     # Gateway / Router
     "${config.my.network.gateway}" = ["router" "gateway" "router-mgmt"];
@@ -120,9 +114,7 @@ in {
     "${config.my.network.mobile.volodymyr-s23}" = ["volodymyr-phone" "s23plus"];
   };
 
-  # =================================================================
   # SSH Known Hosts
-  # =================================================================
   programs.ssh.knownHosts = {
     "desktop" = {
       hostNames = ["desktop.ts.${domain}" "100.64.0.1"];

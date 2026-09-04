@@ -9,7 +9,7 @@
   mcpList = lib.concatMapStringsSep "\n" (name: "- `${name}`") mcpServerNames;
 
   settings = {
-    # ===== Editor Settings =====
+    # Editor Settings
     "password-store" = "gnome-libsecret";
     "editor.fontFamily" = "'Maple Mono NF', 'MesloLGS NF', 'FiraCode Nerd Font', monospace";
     "editor.fontLigatures" = true;
@@ -27,7 +27,7 @@
       120
     ];
 
-    # ===== File Settings =====
+    # File Settings
     "files.autoSave" = "afterDelay";
     "files.autoSaveDelay" = 1000;
     "files.enableTrash" = false;
@@ -48,7 +48,7 @@
       "**/.direnv" = true;
     };
 
-    # ===== Workbench Settings =====
+    # Workbench Settings
     "workbench.colorTheme" = "Kanagawa";
     "workbench.editor.enablePreview" = false;
     "workbench.editorAssociations" = {
@@ -60,20 +60,20 @@
     "workbench.startupEditor" = "none";
     "workbench.settings.applyToAllProfiles" = [];
 
-    # ===== Explorer Settings =====
+    # Explorer Settings
     "explorer.confirmDelete" = false;
     "explorer.confirmDragAndDrop" = false;
 
-    # ===== Diff Editor Settings =====
+    # Diff Editor Settings
     "diffEditor.ignoreTrimWhitespace" = true;
 
-    # ===== Search Settings =====
+    # Search Settings
     "search.exclude" = {
       "**/.devenv" = true;
       "**/.direnv" = true;
     };
 
-    # ===== Terminal Settings =====
+    # Terminal Settings
     "terminal.integrated.defaultProfile.linux" = "zsh";
     "terminal.integrated.defaultProfile.osx" = "zsh";
     "terminal.integrated.fontFamily" = "MesloLGS NF";
@@ -82,12 +82,12 @@
     "terminal.integrated.profiles.linux".nu.path = "/etc/profiles/per-user/zeev/bin/nu";
     "terminal.integrated.scrollback" = 100000;
 
-    # ===== Window Settings =====
+    # Window Settings
     "window.menuBarVisibility" = "visible";
     "window.titleBarStyle" = "custom";
     "window.autoDetectColorScheme" = false;
 
-    # ===== Git Settings =====
+    # Git Settings
     "git.autofetch" = true;
     "git.confirmSync" = false;
     "git.enableCommitSigning" = true;
@@ -95,12 +95,12 @@
     "git.ignoreRebaseWarning" = true;
     "github.gitProtocol" = "ssh";
 
-    # ===== Security Settings =====
+    # Security Settings
     "security.allowedUNCHosts" = ["wsl.localhost"];
     "security.workspace.trust.untrustedFiles" = "open";
     "telemetry.telemetryLevel" = "off";
 
-    # ===== Remote SSH Settings =====
+    # Remote SSH Settings
     "remote.SSH.remotePlatform" =
       {
         "wsl.localhost" = "linux";
@@ -111,12 +111,12 @@
         "${osConfig.my.network.hosts.desktop_lan}" = "linux";
       };
 
-    # ===== Misc Settings =====
+    # Misc Settings
     "todo-tree.regex.regex" = "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!";
     "extensions.autoCheckUpdates" = false;
     "update.mode" = "none";
 
-    # ===== Extension-Specific Settings =====
+    # Extension-Specific Settings
 
     # Disable Copilot, use Continue instead
     "github.copilot.enable" = {
@@ -161,7 +161,7 @@
     "commitCraft.detail" = "concise";
     "commitCraft.language" = "English";
 
-    # ===== Language-Specific Settings =====
+    # Language-Specific Settings
 
     # Nix
     "[nix]" = {

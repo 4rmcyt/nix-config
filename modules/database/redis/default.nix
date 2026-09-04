@@ -1,7 +1,5 @@
 {config, ...}: {
-  # =================================================================
   # SOPS Secrets for Redis
-  # =================================================================
   sops.secrets = {
     redis-oauth2-proxy-password = {
       sopsFile = ../../../secrets/redis.yaml;
@@ -12,9 +10,7 @@
     };
   };
 
-  # =================================================================
   # Users and Groups
-  # =================================================================
   # Create redis user/group for secret ownership
   users.users.redis = {
     isSystemUser = true;
@@ -28,9 +24,7 @@
     members = []; # Services that need Redis socket access
   };
 
-  # =================================================================
   # Centralized Redis Server
-  # =================================================================
   services.redis.servers.homeserver = {
     enable = true;
 
@@ -75,16 +69,12 @@
     };
   };
 
-  # =================================================================
   # Firewall Configuration
-  # =================================================================
   networking.firewall.allowedTCPPorts = [
     # 6379 # Commented out - only allow local connections
   ];
 
-  # =================================================================
   # Systemd Service Configuration
-  # =================================================================
   systemd.services.redis-homeserver = {
     after = ["network.target"];
     serviceConfig = {
@@ -132,9 +122,7 @@
     };
   };
 }
-# =================================================================
 # Configuration Notes
-# =================================================================
 # Simple Redis setup: one password, separate databases per service
 #
 # Database allocation:

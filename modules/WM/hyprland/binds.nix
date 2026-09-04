@@ -13,9 +13,7 @@
   };
 in {
   wayland.windowManager.hyprland.settings.bind = [
-    # ============================================
     # APPLICATIONS
-    # ============================================
     (bind "SUPER + Return" (exec "kitty") null)
     (bind "SUPER + B" (exec "google-chrome-stable") null)
     (bind "SUPER + E" (exec "nemo") null)
@@ -26,9 +24,7 @@ in {
     (bind "SUPER + Comma" (noctalia "settings toggle") null)
     (bind "SUPER + SHIFT + D" (exec "discord") null)
 
-    # ============================================
     # MOUSE BINDS
-    # ============================================
     (bind "SUPER + mouse:272" "hl.dsp.window.drag()" {mouse = true;})
     (bind "SUPER + mouse:273" "hl.dsp.window.resize()" {mouse = true;})
 
@@ -42,38 +38,28 @@ in {
     (bind "SUPER + mouse_down" ''hl.dsp.focus({ workspace = "e+1" })'' null)
     (bind "SUPER + mouse_up" ''hl.dsp.focus({ workspace = "e-1" })'' null)
 
-    # ============================================
     # WINDOW MANAGEMENT
-    # ============================================
     (bind "SUPER + Q" "hl.dsp.window.close()" null)
     (bind "SUPER + F" ''hl.dsp.window.fullscreen({ mode = "maximized" })'' null)
     (bind "SUPER + SHIFT + F" ''hl.dsp.window.fullscreen({ mode = "fullscreen" })'' null)
     (bind "SUPER + SHIFT + Space" ''hl.dsp.window.float({ action = "toggle" })'' null)
 
-    # ============================================
     # SYSTEM CONTROLS
-    # ============================================
     (bind "SUPER + Escape" (noctalia "lockScreen lock") null)
     (bind "SUPER + SHIFT + Escape" (noctalia "sessionMenu toggle") null)
     (bind "SUPER + N" (noctalia "notifications toggleHistory") null)
     (bind "SUPER + T" (noctalia "darkMode toggle") null)
     (bind "SUPER + SHIFT + N" (noctalia "nightLight toggle") null)
 
-    # ============================================
     # THEMING & CUSTOMIZATION
-    # ============================================
     (bind "SUPER + C" (noctalia "colorPicker toggle") null)
     (bind "SUPER + W" (noctalia "desktopWidgets toggle") null)
 
-    # ============================================
     # SCREENSHOTS — no native dispatcher in Hyprland, using grimblast
-    # ============================================
     (bind "Print" (exec ''grimblast --notify copysave area ~/Pictures/Screenshots/Screenshot-$(date +%Y-%m-%d-%H%M%S).png'') null)
     (bind "SUPER + Print" (exec ''grimblast --notify copysave screen ~/Pictures/Screenshots/Screenshot-$(date +%Y-%m-%d-%H%M%S).png'') null)
 
-    # ============================================
     # FOCUS CONTROL
-    # ============================================
     (bind "ALT + Tab" ''hl.dsp.focus({ last = true })'' null)
 
     # Arrow Keys
@@ -88,9 +74,7 @@ in {
     (bind "SUPER + K" ''hl.dsp.focus({ direction = "u" })'' null)
     (bind "SUPER + J" ''hl.dsp.focus({ direction = "d" })'' null)
 
-    # ============================================
     # MOVE WINDOW
-    # ============================================
     (bind "SUPER + CTRL + left" ''hl.dsp.window.move({ direction = "l" })'' null)
     (bind "SUPER + CTRL + right" ''hl.dsp.window.move({ direction = "r" })'' null)
     (bind "SUPER + CTRL + up" ''hl.dsp.window.move({ direction = "u" })'' null)
@@ -101,9 +85,7 @@ in {
     (bind "SUPER + CTRL + K" ''hl.dsp.window.move({ direction = "u" })'' null)
     (bind "SUPER + CTRL + J" ''hl.dsp.window.move({ direction = "d" })'' null)
 
-    # ============================================
     # MONITOR FOCUS
-    # ============================================
     (bind "SUPER + SHIFT + left" ''hl.dsp.focus({ monitor = "l" })'' null)
     (bind "SUPER + SHIFT + right" ''hl.dsp.focus({ monitor = "r" })'' null)
     (bind "SUPER + SHIFT + up" ''hl.dsp.focus({ monitor = "u" })'' null)
@@ -114,9 +96,7 @@ in {
     (bind "SUPER + SHIFT + K" ''hl.dsp.focus({ monitor = "u" })'' null)
     (bind "SUPER + SHIFT + J" ''hl.dsp.focus({ monitor = "d" })'' null)
 
-    # ============================================
     # MOVE WINDOW TO MONITOR
-    # ============================================
     (bind "SUPER + SHIFT + CTRL + left" ''hl.dsp.window.move({ monitor = "l" })'' null)
     (bind "SUPER + SHIFT + CTRL + right" ''hl.dsp.window.move({ monitor = "r" })'' null)
     (bind "SUPER + SHIFT + CTRL + up" ''hl.dsp.window.move({ monitor = "u" })'' null)
@@ -127,9 +107,7 @@ in {
     (bind "SUPER + SHIFT + CTRL + K" ''hl.dsp.window.move({ monitor = "u" })'' null)
     (bind "SUPER + SHIFT + CTRL + J" ''hl.dsp.window.move({ monitor = "d" })'' null)
 
-    # ============================================
     # WORKSPACES
-    # ============================================
     (bind "SUPER + 1" ''hl.dsp.focus({ workspace = 1 })'' null)
     (bind "SUPER + 2" ''hl.dsp.focus({ workspace = 2 })'' null)
     (bind "SUPER + 3" ''hl.dsp.focus({ workspace = 3 })'' null)
@@ -146,9 +124,7 @@ in {
     (bind "SUPER + Page_Down" ''hl.dsp.focus({ workspace = "+1" })'' null)
     (bind "SUPER + Page_Up" ''hl.dsp.focus({ workspace = "-1" })'' null)
 
-    # ============================================
     # COLUMN OPERATIONS (native scrolling layout — same model as niri)
-    # ============================================
     (bind "SUPER + bracketleft" ''hl.dsp.layout("consume_or_expel prev")'' null)
     (bind "SUPER + bracketright" ''hl.dsp.layout("consume_or_expel next")'' null)
     (bind "SUPER + R" ''hl.dsp.layout("colresize +conf")'' null)
@@ -181,9 +157,7 @@ in {
     # Toggle scroll-follow-focus off/on for the current workspace.
     (bind "SUPER + SHIFT + I" ''hl.dsp.layout("inhibit_scroll")'' null)
 
-    # ============================================
     # RESIZE
-    # ============================================
     # Column width (scrolling layout) — relative fraction step, same model as
     # niri's set-column-width "-10%"/"+10%".
     (bind "SUPER + Minus" ''hl.dsp.layout("colresize -0.1")'' null)
@@ -194,23 +168,17 @@ in {
     (bind "SUPER + SHIFT + Minus" ''hl.dsp.window.resize({ x = 0, y = -100, relative = true })'' null)
     (bind "SUPER + SHIFT + Equal" ''hl.dsp.window.resize({ x = 0, y = 100, relative = true })'' null)
 
-    # ============================================
     # CLIPBOARD
-    # ============================================
     (bind "SUPER + V" (noctalia "launcher clipboard") null)
 
-    # ============================================
     # SYSTEM
-    # ============================================
     # NOT hl.dsp.exit() — under UWSM this bypasses graceful shutdown of the
     # login session bound to it. See
     # https://wiki.hypr.land/Useful-Utilities/Systemd-start/#uwsm
     (bind "SUPER + SHIFT + E" (exec "uwsm stop") null)
     (bind "SUPER + SHIFT + P" ''hl.dsp.dpms({ action = "off" })'' null)
 
-    # ============================================
     # MEDIA CONTROLS
-    # ============================================
     (bind "XF86AudioPlay" (exec "playerctl play-pause") null)
     (bind "XF86AudioNext" (exec "playerctl next") null)
     (bind "XF86AudioPrev" (exec "playerctl previous") null)

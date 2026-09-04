@@ -1,8 +1,6 @@
 _: {
-  # =================================================================
   # 1. Journald Configuration
   # Using structured options for better readability and error-checking.
-  # =================================================================
   services.journald = {
     storage = "persistent";
     extraConfig = ''

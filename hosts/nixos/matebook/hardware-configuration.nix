@@ -5,14 +5,10 @@
   modulesPath,
   ...
 }: {
-  # =================================================================
   # 1. Imports
-  # =================================================================
   imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
-  # =================================================================
   # 2. Boot Configuration
-  # =================================================================
   boot = {
     # Kernel modules for MateBook D14
     initrd.availableKernelModules = [
@@ -81,9 +77,7 @@
     };
   };
 
-  # =================================================================
   # 3. Hardware Configuration
-  # =================================================================
   hardware = {
     # AMD GPU configuration
     graphics = {
@@ -122,14 +116,10 @@
     acpilight.enable = true;
   };
 
-  # =================================================================
   # 4. Power Management
-  # =================================================================
   powerManagement.enable = true;
 
-  # =================================================================
   # 5. Services
-  # =================================================================
   services = {
     scx = {
       enable = true;
@@ -153,9 +143,7 @@
     };
   };
 
-  # =================================================================
   # 6. Networking
-  # =================================================================
   # nixos-facter-modules' networking module force-enables per-interface
   # useDHCP (networking.interfaces.wlp2s0.useDHCP = mkDefault true), which
   # alone flips on the global dhcpcd.service (dhcpcd.nix's enableDHCP =

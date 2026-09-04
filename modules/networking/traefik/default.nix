@@ -116,9 +116,7 @@ in {
         # Localhost-only entrypoint for the API (used by homepage widget)
         entryPoints.traefik-api.address = "127.0.0.1:8083";
 
-        # ----------------------------------------------------------------
         # Plugins — local sources, no internet required at startup
-        # ----------------------------------------------------------------
         experimental.localPlugins = {
           bouncer = {
             moduleName = "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin";

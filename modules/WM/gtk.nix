@@ -1,7 +1,5 @@
 {pkgs, ...}: {
-  # ============================================
   # FONTS
-  # ============================================
   fonts.fontconfig.enable = true;
 
   home.packages = with pkgs; [
@@ -15,9 +13,7 @@
     twemoji-color-font
   ];
 
-  # ============================================
   # GTK THEMING
-  # ============================================
 
   # Force overwrite GTK config files to avoid conflicts
   xdg.configFile."gtk-3.0/settings.ini".force = true;
@@ -78,9 +74,7 @@
     color-scheme = "prefer-dark";
   };
 
-  # ============================================
   # QT/KVANTUM THEMING
-  # ============================================
   # QT_STYLE_OVERRIDE=kvantum (set in hyprland/niri sessionVariables) is a
   # no-op without an actual Kvantum theme selected — Kvantum falls back to
   # its unstyled default, which reads as a plain light Qt/Fusion palette.
@@ -117,9 +111,7 @@
     standard_dialogs = "kde";
   };
 
-  # ============================================
   # CURSOR CONFIGURATION
-  # ============================================
   home.pointerCursor = {
     enable = true;
     name = "Bibata-Modern-Ice";

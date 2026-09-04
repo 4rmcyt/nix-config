@@ -10,58 +10,58 @@
         origins = ["<all_urls>"];
       };
     };
-    # === BASIC POLICIES ===
+    # BASIC POLICIES
     DontCheckDefaultBrowser = true;
     HardwareAcceleration = true;
     TranslateEnabled = true;
 
-    # === DNS ===
+    # DNS
     DNSOverHTTPS = {
       Enabled = false;
       Locked = true;
     };
 
-    # === AUTOFILL & CREDENTIALS ===
+    # AUTOFILL & CREDENTIALS
     OfferToSaveLogins = true;
     PasswordManagerEnabled = true;
 
-    # === PRIVACY & TELEMETRY ===
+    # PRIVACY & TELEMETRY
     DisableTelemetry = true;
     DisableFirefoxStudies = true;
     DisablePocket = true;
     DisableFirefoxScreenshots = true;
 
-    # === UI POLICIES ===
+    # UI POLICIES
     DisplayBookmarksToolbar = "never";
     DisplayMenuBar = "never";
     PictureInPicture.Enabled = true;
     PromptForDownloadLocation = false;
 
-    # === STARTUP ===
+    # STARTUP
     OverrideFirstRunPage = "";
     Homepage.StartPage = "previous-session";
 
-    # === USER MESSAGING ===
+    # USER MESSAGING
     UserMessaging = {
       UrlbarInterventions = false;
       SkipOnboarding = true;
     };
 
-    # === FIREFOX SUGGEST ===
+    # FIREFOX SUGGEST
     FirefoxSuggest = {
       WebSuggestions = false;
       SponsoredSuggestions = false;
       ImproveSuggest = false;
     };
 
-    # === TRACKING PROTECTION ===
+    # TRACKING PROTECTION
     EnableTrackingProtection = {
       Value = true;
       Cryptomining = true;
       Fingerprinting = true;
     };
 
-    # === NEW TAB PAGE ===
+    # NEW TAB PAGE
     FirefoxHome = {
       Search = true;
       TopSites = false;
@@ -72,7 +72,7 @@
       Snippets = false;
     };
 
-    # === PROTOCOL HANDLERS ===
+    # PROTOCOL HANDLERS
     Handlers.schemes = {
       vscode = {
         action = "useSystemDefault";

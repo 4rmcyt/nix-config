@@ -58,10 +58,8 @@ in {
       })
     ];
 
-    # Facter
     facter.reportPath = ../../../hosts/nixos/homeserver/facter.json;
 
-    # Host-specific HM imports
     home-manager.users.${owner.username}.imports = [
       ../../../home/homeserver
     ];

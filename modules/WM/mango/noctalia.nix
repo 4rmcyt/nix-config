@@ -1,11 +1,10 @@
 {pkgs, ...}: {
   programs.noctalia = {
     enable = true;
-    # autostart_sh spawns `noctalia` directly (see startup.nix); systemd
-    # service not used.
-
+    # spawn-at-startup configured in startup.nix; systemd service not used
     settings = {};
   };
 
+  # playerctl for media key bindings
   home.packages = [pkgs.playerctl];
 }

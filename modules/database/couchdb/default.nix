@@ -5,9 +5,7 @@
   pkgs,
   ...
 }: {
-  # =================================================================
   # SOPS Secrets for CouchDB
-  # =================================================================
   sops.secrets = {
     couchdb_admin_password = {
       sopsFile = ../../../secrets/couchdb.yaml;
@@ -18,18 +16,14 @@
     };
   };
 
-  # =================================================================
   # Users and Groups
-  # =================================================================
   users.users.couchdb = {
     isSystemUser = true;
     group = "couchdb";
   };
   users.groups.couchdb = {};
 
-  # =================================================================
   # CouchDB Service
-  # =================================================================
   services.couchdb = {
     enable = true;
     port = 5984;
@@ -70,9 +64,7 @@
 
   networking.firewall.allowedTCPPorts = [5984]; # Exposed to Traefik locally
 
-  # =================================================================
   # Systemd Service Configuration
-  # =================================================================
   systemd.services.couchdb = {
     postStart = ''
       # Wait for CouchDB to be ready
@@ -118,9 +110,7 @@
     };
   };
 }
-# =================================================================
 # Initial Setup Instructions
-# =================================================================
 # 1. After first deployment, visit: https://livesync.${config.my.defaults.domain}/_utils
 # 2. Login with admin credentials from secrets/couchdb.yaml
 # 3. Create a new database named "" (or your preferred name)

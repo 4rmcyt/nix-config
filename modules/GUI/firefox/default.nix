@@ -13,7 +13,7 @@ in {
     configPath = ".mozilla/firefox";
 
     policies.ExtensionSettings = {
-      # === AD BLOCKING & PRIVACY ===
+      # AD BLOCKING & PRIVACY
       "addon@darkreader.org" = {
         install_url = moz "darkreader";
         installation_mode = "force_installed";
@@ -24,25 +24,25 @@ in {
         installation_mode = "force_installed";
       };
 
-      # === DEVELOPER TOOLS ===
+      # DEVELOPER TOOLS
       "{a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad}" = {
         install_url = moz "refined-github-";
         installation_mode = "force_installed";
       };
 
-      # === MEDIA & ENTERTAINMENT ===
+      # MEDIA & ENTERTAINMENT
       "{762f9885-5a13-4abd-9c77-433dcd38b8fd}" = {
         install_url = moz "return-youtube-dislikes";
         installation_mode = "force_installed";
       };
 
-      # === PRODUCTIVITY & NAVIGATION ===
+      # PRODUCTIVITY & NAVIGATION
       "indie-wiki-buddy@einaregilsson.com" = {
         install_url = moz "indie-wiki-buddy";
         installation_mode = "force_installed";
       };
 
-      # === SELF-HOSTED SERVICES ===
+      # SELF-HOSTED SERVICES
       # komf — metadata fetcher integration for the Komga webui
       "{2c5b0916-8452-46fe-aa0b-7dc7d1e514f0}" = {
         install_url = moz "komf";

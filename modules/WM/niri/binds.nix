@@ -2,9 +2,7 @@
   a = config.lib.niri.actions;
 in {
   programs.niri.settings.binds = {
-    # ============================================
     # APPLICATIONS
-    # ============================================
 
     "Mod+Return".action = a.spawn "kitty";
     "Mod+B".action = a.spawn "google-chrome-stable";
@@ -16,18 +14,14 @@ in {
     "Mod+Comma".action = a.spawn "noctalia" "msg" "settings-toggle";
     "Mod+Shift+D".action = a.spawn "discord";
 
-    # ============================================
     # WINDOW MANAGEMENT
-    # ============================================
 
     "Mod+Q".action = a.close-window;
     "Mod+F".action = a.maximize-column;
     "Mod+Shift+F".action = a.fullscreen-window;
     "Mod+Shift+Space".action = a.toggle-window-floating;
 
-    # ============================================
     # SYSTEM CONTROLS
-    # ============================================
 
     "Mod+Escape".action = a.spawn "noctalia" "msg" "session" "lock";
     "Mod+Shift+Escape".action = a.spawn "noctalia" "msg" "panel-toggle" "session";
@@ -35,25 +29,19 @@ in {
     "Mod+T".action = a.spawn "noctalia" "msg" "theme-mode-toggle";
     "Mod+Shift+N".action = a.spawn "noctalia" "msg" "nightlight-toggle";
 
-    # ============================================
     # THEMING & CUSTOMIZATION
-    # ============================================
 
     # Mod+C (colorPicker toggle) dropped: v5 has no standalone color-picker
     # panel/IPC command — the picker is now an internal dialog reached only
     # from Settings/wallpaper UI, not exposed for direct binding.
     "Mod+W".action = a.spawn "noctalia" "msg" "desktop-widgets-toggle";
 
-    # ============================================
     # SCREENSHOTS - niri native
-    # ============================================
 
     "Print".action.screenshot = {};
     "Mod+Print".action.screenshot-screen = {};
 
-    # ============================================
     # FOCUS CONTROL
-    # ============================================
 
     "Alt+Tab".action = a.focus-window-previous;
 
@@ -69,9 +57,7 @@ in {
     "Mod+K".action = a.focus-window-up;
     "Mod+J".action = a.focus-window-down;
 
-    # ============================================
     # MOVE WINDOW
-    # ============================================
 
     "Mod+Ctrl+Left".action = a.move-column-left;
     "Mod+Ctrl+Right".action = a.move-column-right;
@@ -83,9 +69,7 @@ in {
     "Mod+Ctrl+K".action = a.move-window-up;
     "Mod+Ctrl+J".action = a.move-window-down;
 
-    # ============================================
     # MONITOR FOCUS
-    # ============================================
 
     "Mod+Shift+Left".action = a.focus-monitor-left;
     "Mod+Shift+Right".action = a.focus-monitor-right;
@@ -97,9 +81,7 @@ in {
     "Mod+Shift+K".action = a.focus-monitor-up;
     "Mod+Shift+J".action = a.focus-monitor-down;
 
-    # ============================================
     # MOVE TO MONITOR
-    # ============================================
 
     "Mod+Shift+Ctrl+Left".action = a.move-column-to-monitor-left;
     "Mod+Shift+Ctrl+Right".action = a.move-column-to-monitor-right;
@@ -111,9 +93,7 @@ in {
     "Mod+Shift+Ctrl+K".action = a.move-column-to-monitor-up;
     "Mod+Shift+Ctrl+J".action = a.move-column-to-monitor-down;
 
-    # ============================================
     # WORKSPACES
-    # ============================================
 
     "Mod+1".action = a.focus-workspace 1;
     "Mod+2".action = a.focus-workspace 2;
@@ -134,27 +114,21 @@ in {
     "Mod+Shift+Page_Down".action = a.move-workspace-down;
     "Mod+Shift+Page_Up".action = a.move-workspace-up;
 
-    # ============================================
     # COLUMN OPERATIONS
-    # ============================================
 
     "Mod+BracketLeft".action = a.consume-or-expel-window-left;
     "Mod+BracketRight".action = a.consume-or-expel-window-right;
     "Mod+R".action = a.switch-preset-column-width;
     "Mod+Shift+C".action = a.center-column;
 
-    # ============================================
     # RESIZE
-    # ============================================
 
     "Mod+Minus".action = a.set-column-width "-10%";
     "Mod+Equal".action = a.set-column-width "+10%";
     "Mod+Shift+Minus".action = a.set-window-height "-10%";
     "Mod+Shift+Equal".action = a.set-window-height "+10%";
 
-    # ============================================
     # MEDIA CONTROLS
-    # ============================================
 
     "XF86AudioPlay".action = a.spawn "playerctl" "play-pause";
     "XF86AudioNext".action = a.spawn "playerctl" "next";
@@ -167,15 +141,11 @@ in {
     "XF86MonBrightnessUp".action = a.spawn "brightnessctl" "set" "5%+";
     "XF86MonBrightnessDown".action = a.spawn "brightnessctl" "set" "5%-";
 
-    # ============================================
     # CLIPBOARD
-    # ============================================
 
     "Mod+V".action = a.spawn "noctalia" "msg" "panel-toggle" "clipboard";
 
-    # ============================================
     # SYSTEM
-    # ============================================
 
     "Mod+Shift+E".action = a.quit;
     "Mod+Shift+P".action = a.power-off-monitors;

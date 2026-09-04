@@ -523,6 +523,6 @@ in {
     };
   };
 
-  # playerctl for media key bindings (replaces dms ipc mpris)
+  # playerctl for media key bindings
   home.packages = [pkgs.playerctl];
 }

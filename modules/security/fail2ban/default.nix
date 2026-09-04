@@ -51,10 +51,8 @@ in {
       "131.0.72.0/22"
     ];
 
-    # ----------------------------------------------------------------
     # SSH — NixOS defines this jail automatically when openssh is enabled.
     # We override settings to tighten it up and use cloudflare-waf action.
-    # ----------------------------------------------------------------
     jails.sshd.settings = {
       enabled = true;
       maxretry = 3;
@@ -66,9 +64,7 @@ in {
     # traefik-auth jail removed — CrowdSec handles Traefik log parsing
     # (access log is now JSON format, parsed by crowdsecurity/traefik collection)
 
-    # ----------------------------------------------------------------
     # Jellyfin — logs real IP in its own journal entries
-    # ----------------------------------------------------------------
     jails.jellyfin = ''
       enabled      = true
       backend      = systemd
@@ -80,10 +76,8 @@ in {
       action       = cloudflare-waf
     '';
 
-    # ----------------------------------------------------------------
     # Grafana — logs failed logins with IP to journal
     # Pattern: level=warn ... msg="Invalid username or password" ... remote_addr=<ip>
-    # ----------------------------------------------------------------
     jails.grafana = ''
       enabled      = true
       backend      = systemd
@@ -95,9 +89,7 @@ in {
       action       = cloudflare-waf
     '';
 
-    # ----------------------------------------------------------------
     # Home Assistant — logs failed logins with IP to journal
-    # ----------------------------------------------------------------
     jails.home-assistant = ''
       enabled      = true
       backend      = systemd
@@ -111,12 +103,10 @@ in {
   };
 
   environment.etc = {
-    # ----------------------------------------------------------------
     # Cloudflare WAF Custom Rules action (replaces deprecated
     # firewall/access_rules API which stopped working May 2024).
     # Creates a per-IP block rule in the zone's WAF custom ruleset;
     # deletes it on unban using the rule ID stored in a temp file.
-    # ----------------------------------------------------------------
     "fail2ban/action.d/cloudflare-waf.conf" = {
       mode = "0644";
       text = ''
@@ -143,10 +133,8 @@ in {
       '';
     };
 
-    # ----------------------------------------------------------------
     # Grafana filter — matches failed login entries from journal.
     # Pattern: level=warn ... msg="Invalid username or password" ... remote_addr=<ip>
-    # ----------------------------------------------------------------
     "fail2ban/filter.d/grafana.conf" = {
       mode = "0644";
       text = ''
@@ -156,11 +144,9 @@ in {
       '';
     };
 
-    # ----------------------------------------------------------------
     # Home Assistant filter — matches failed login log entries.
     # HASS logs: Login attempt or request with invalid authentication
     # from <ip> (<user agent>)
-    # ----------------------------------------------------------------
     "fail2ban/filter.d/home-assistant.conf" = {
       mode = "0644";
       text = ''
@@ -170,10 +156,8 @@ in {
       '';
     };
 
-    # ----------------------------------------------------------------
     # Jellyfin filter — matches journald entries for denied auth.
     # Pattern from upstream jellyfin/jellyfin issue #5057.
-    # ----------------------------------------------------------------
     "fail2ban/filter.d/jellyfin.conf" = {
       mode = "0644";
       text = ''

@@ -1,6 +1,6 @@
 _: {
   programs.zed-editor.userSettings = {
-    # ===== Appearance =====
+    # Appearance
     theme = {
       mode = "dark";
       light = "Bearded Theme Arc";
@@ -17,7 +17,7 @@ _: {
     ui_font_size = 15.0;
     colorize_brackets = true;
 
-    # ===== Editor =====
+    # Editor
     autosave.after_delay.milliseconds = 1000;
     base_keymap = "VSCode";
     ensure_final_newline_on_save = true;
@@ -39,7 +39,7 @@ _: {
       metrics = false;
     };
 
-    # ===== Terminal =====
+    # Terminal
     terminal = {
       font_family = "MesloLGS NF";
       font_size = 16.0;

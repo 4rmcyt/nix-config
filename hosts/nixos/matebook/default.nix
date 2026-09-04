@@ -4,9 +4,6 @@
   config,
   ...
 }: {
-  # =================================================================
-  # 1. Imports
-  # =================================================================
   imports = [
     # Hardware and system base
     ./hardware-configuration.nix
@@ -33,9 +30,7 @@
     ../../../modules/GUI/nemo
   ];
 
-  # =================================================================
-  # 3. Secrets Management
-  # =================================================================
+  # Secrets Management
   sops.secrets = {
     tailscale_auth_key = {
       sopsFile = ../../../secrets/tailscale-matebook.yaml;
@@ -46,9 +41,7 @@
     };
   };
 
-  # =================================================================
-  # 4. Boot Configuration
-  # =================================================================
+  # Boot Configuration
   system.boot.loader.kernelFile = "bzImage";
 
   boot = {
@@ -80,9 +73,7 @@
     };
   };
 
-  # =================================================================
-  # 5. Nix Configuration
-  # =================================================================
+  # Nix Configuration
   nix.settings = {
     cores = 0;
     max-jobs = "auto";
@@ -92,9 +83,7 @@
     ];
   };
 
-  # =================================================================
-  # 6. Environment
-  # =================================================================
+  # Environment
   environment = {
     etc."polkit-1/actions/org.auto-cpufreq.pkexec.policy".text = ''
       <?xml version="1.0" encoding="UTF-8"?>
@@ -137,17 +126,13 @@
     ];
 
     systemPackages = with pkgs; [
-      # =============================================================
       # Laptop-specific tools
-      # =============================================================
       ansible
       acpi
       brightnessctl
       powertop
 
-      # =============================================================
       # Hardware Support & Monitoring
-      # =============================================================
       fira-code
       fira-mono
       meslo-lgs-nf
@@ -176,22 +161,16 @@
     ];
   };
 
-  # =================================================================
-  # 7. Fonts
-  # =================================================================
+  # Fonts
   fonts.fontconfig.useEmbeddedBitmaps = true;
 
-  # =================================================================
-  # 8. Home Manager
-  # =================================================================
+  # Home Manager
   # backupFileExtension is set in commonHomeManagerNixosConfig with unique timestamp
 
   my.nodeExporter.enable = true;
   my.alloyClient.enable = true;
 
-  # =================================================================
-  # 9. Networking
-  # =================================================================
+  # Networking
   networking = {
     enableIPv6 = true;
     firewall = {
@@ -204,9 +183,7 @@
     };
   };
 
-  # =================================================================
-  # 10. Programs
-  # =================================================================
+  # Programs
   programs = {
     gnupg.agent = {
       enableSSHSupport = true;
@@ -231,9 +208,7 @@
     };
   };
 
-  # =================================================================
-  # 11. Security
-  # =================================================================
+  # Security
   security = {
     rtkit.enable = true;
     polkit.enable = true;
@@ -250,13 +225,9 @@
   # trading a slower resume for hibernation actually succeeding.
   systemd.tmpfiles.rules = ["w /sys/power/image_size - - - - 0"];
 
-  # =================================================================
-  # 12. Services
-  # =================================================================
+  # Services
   services = {
-    # =============================================================
     # Audio Services
-    # =============================================================
     pipewire = {
       enable = true;
       audio.enable = true;
@@ -268,9 +239,7 @@
       wireplumber.enable = true;
     };
 
-    # =============================================================
     # Display Manager - greetd + niri
-    # =============================================================
     greetd = {
       enable = true;
       settings = {
@@ -294,9 +263,7 @@
       scrollMethod = "twofinger";
     };
 
-    # =============================================================
     # File Systems & Storage
-    # =============================================================
     davfs2 = {
       enable = true;
       settings = {
@@ -308,9 +275,7 @@
       };
     };
 
-    # =============================================================
     # Hardware Services
-    # =============================================================
     blueman.enable = true;
 
     pcscd = {
@@ -323,9 +288,7 @@
     udisks2.enable = true;
     usbmuxd.enable = true;
 
-    # =============================================================
     # Power Management
-    # =============================================================
     power-profiles-daemon.enable = false;
 
     auto-cpufreq = {
@@ -349,9 +312,7 @@
       HandleLidSwitchDocked = "ignore";
     };
 
-    # =============================================================
     # System Services
-    # =============================================================
     openssh = {
       enable = true;
       settings = {
@@ -374,9 +335,7 @@
     };
   };
 
-  # =================================================================
-  # 13. Users & Groups
-  # =================================================================
+  # Users & Groups
   users = {
     groups = {
       git = {};
@@ -396,8 +355,6 @@
     };
   };
 
-  # =================================================================
-  # 14. Virtualization
-  # =================================================================
+  # Virtualization
   virtualisation.podman.enable = true;
 }
