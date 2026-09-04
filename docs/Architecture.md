@@ -17,7 +17,7 @@ parts/                      # Auto-imported flake-parts modules
   home-manager-base.nix     # modules.homeManager.base — sops, overlays, stateVersion
   shared-programs.nix       # modules.nixos.base — common programs (zsh, nh, gnupg) on all hosts
   meta.nix                  # options.meta (stateVersion, owner)
-  owner.nix                 # Non-secret owner metadata (username, IPs, domain, timezone)
+  owner.nix                 # meta.owner — sourced from the private `private` flake input (identity + LAN topology)
   schemas.nix               # flake.schemas — flake-schemas + custom topology schema
   topology.nix              # nix-topology SVG diagram generation
   formatting.nix            # treefmt (alejandra, deadnix, statix, shfmt, yamlfmt)
@@ -76,10 +76,19 @@ modules/
 
 Global options live in `modules/options/`. Never hardcode values — reference via `config.my.*`.
 
+Identity (email, GPG key, full name, domain) and the full LAN topology (host IPs,
+MAC addresses, infrastructure/smart-home/mobile device addresses, GCP relay IP,
+NextDNS profile id) are **not in this repo**. They live in a separate private
+flake, wired as `inputs.private` (`git+ssh://…/nix-config-private`), and surface
+through `my.defaults.*` / `my.network.*` option defaults and `meta.owner.*`.
+sops can't hold them — they're needed at eval time, before sops-nix decrypts.
+`modules/options/private-example.nix` documents the expected schema. The personal
+Thunderbird account config also lives there (`inputs.private.homeManagerModules.thunderbird`).
+
 | Option namespace     | File                          | Purpose                                      |
 |----------------------|-------------------------------|----------------------------------------------|
-| `my.defaults.*`      | `options/defaults.nix`        | user, email, domain, IPs, timezone, locale   |
-| `my.network.*`       | `options/network.nix`         | ports, host addresses                        |
+| `my.defaults.*`      | `options/defaults.nix`        | user, email, domain, IPs, timezone, locale (from `inputs.private`) |
+| `my.network.*`       | `options/network.nix`         | ports, host addresses, MACs (from `inputs.private`) |
 | `my.security.*`      | `options/security.nix`        | security-related options                     |
 | `my.traefik.*`       | `networking/traefik/`         | Traefik reverse proxy                        |
 | `my.headscale.*`     | `networking/headscale/`       | Headscale coordination server                |

@@ -1,4 +1,8 @@
-{lib, ...}: {
+{
+  lib,
+  config,
+  ...
+}: {
   # Chrome managed policies — written to /etc/opt/chrome/policies/managed/
   # These cannot be overridden by the user in Chrome UI.
   environment.etc."opt/chrome/policies/managed/hardening.json".text = lib.generators.toJSON {} {
@@ -20,7 +24,7 @@
 
     # Security: DNS-over-HTTPS via NextDNS
     DnsOverHttpsMode = "automatic";
-    DnsOverHttpsTemplates = "https://dns.nextdns.io/nextdns0";
+    DnsOverHttpsTemplates = "https://dns.nextdns.io/${config.my.defaults.nextdnsProfileId}";
 
     # Security: prevent internal IP leak via WebRTC
     WebRtcIPHandling = "default_public_interface_only";

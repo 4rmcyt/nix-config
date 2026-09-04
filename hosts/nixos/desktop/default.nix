@@ -180,7 +180,7 @@
   networking = {
     dnssec = {
       enable = true;
-      profileId = "nextdns0";
+      profileId = config.my.defaults.nextdnsProfileId;
     };
     enableIPv6 = true;
     interfaces.enp12s0.wakeOnLan.enable = true;
@@ -229,7 +229,7 @@
         "--accept-routes"
         "--accept-dns=true"
         "--reset"
-        "--login-server=https://hs.example.com"
+        "--login-server=https://hs.${config.my.defaults.domain}"
       ];
       extraSetFlags = ["--operator=${config.my.defaults.user}"];
     };

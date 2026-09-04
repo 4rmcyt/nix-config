@@ -1,5 +1,5 @@
 {config, ...}: let
-  inherit (config.my.defaults) user;
+  inherit (config.my.defaults) user domain;
 in {
   # =================================================================
   # SSH Secrets Management with SOPS
@@ -44,14 +44,14 @@ in {
 
     # Internal hosts
     Host homeserver
-      HostName homeserver.ts.example.com
+      HostName homeserver.ts.${domain}
       User ${user}
       Port 2222
       IdentityFile ~/.ssh/${user}
       IdentitiesOnly yes
 
     Host desktop
-      HostName desktop.ts.example.com
+      HostName desktop.ts.${domain}
       User ${user}
       IdentityFile ~/.ssh/${user}
       IdentitiesOnly yes
@@ -63,14 +63,14 @@ in {
       IdentitiesOnly yes
 
     Host matebook
-      HostName matebook.ts.example.com
+      HostName matebook.ts.${domain}
       User ${user}
       IdentityFile ~/.ssh/${user}
       IdentitiesOnly yes
 
     # External services
     Host gcp-relay
-      HostName gcp-relay.ts.example.com
+      HostName gcp-relay.ts.${domain}
       User ${user}
       IdentityFile ~/.ssh/${user}
       IdentitiesOnly yes
@@ -125,22 +125,22 @@ in {
   # =================================================================
   programs.ssh.knownHosts = {
     "desktop" = {
-      hostNames = ["desktop.ts.example.com" "100.64.0.1"];
+      hostNames = ["desktop.ts.${domain}" "100.64.0.1"];
       publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH1T6RcXrs1aeupXBSVZlvYbispJAR+KROiJM6P+MUq2";
     };
 
     "homeserver" = {
-      hostNames = ["homeserver.ts.example.com" "100.64.0.3"];
+      hostNames = ["homeserver.ts.${domain}" "100.64.0.3"];
       publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJV+/pct8PNZhUqvnflYY5auIE1zTl3sPtCfVynTnajN";
     };
 
     "matebook" = {
-      hostNames = ["matebook.ts.example.com" "100.64.0.4"];
+      hostNames = ["matebook.ts.${domain}" "100.64.0.4"];
       publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILMexDvsxSWoErrJDM++L2N0dJxKc3ro7sIezfYIWFH2";
     };
 
     "gcp-relay" = {
-      hostNames = ["203.0.113.1" "gcp-relay" "gcp-relay.ts.example.com" "100.64.0.5"];
+      hostNames = [config.my.defaults.gcpRelayIp "gcp-relay" "gcp-relay.ts.${domain}" "100.64.0.5"];
       publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJM6PdGMBKVCzUboMTKIw6Dbdmy8HM8QVFibWy7PBVZZ";
     };
 

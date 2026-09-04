@@ -534,7 +534,7 @@
             name = "70-mt7922-rename.rules";
             destination = "/etc/udev/rules.d/70-mt7922-rename.rules";
             text = ''
-              SUBSYSTEM=="net", ACTION=="add", DRIVERS=="mt7921e", ATTR{address}=="02:00:00:00:00:00", NAME="wlp13s0"
+              SUBSYSTEM=="net", ACTION=="add", DRIVERS=="mt7921e", ATTR{address}=="${config.my.network.mac.desktop-wifi}", NAME="wlp13s0"
             '';
           })
         ]

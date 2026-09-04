@@ -64,7 +64,7 @@
   };
 
   # ── DNS (Unbound) ────────────────────────────────────────────────────────
-  # Full resolver on the router: NextDNS DoT upstream + split DNS for *.example.com.
+  # Full resolver on the router: NextDNS DoT upstream + split DNS for the private domain.
   # Listens on gateway IPs of trusted/iot/media VLANs.
   # Work VLAN clients get 1.1.1.1 directly from DHCP — no LAN DNS access.
   my.unbound = {
@@ -76,8 +76,8 @@
       config.my.network.vlans.media
     ];
     tailscaleIp = "100.64.0.3";
-    gcpRelayIp = "203.0.113.1";
-    nextdnsProfileId = "nextdns0";
+    gcpRelayIp = config.my.defaults.gcpRelayIp;
+    nextdnsProfileId = config.my.defaults.nextdnsProfileId;
   };
 
   # ── Monitoring ──────────────────────────────────────────────────────────
@@ -125,7 +125,7 @@
   networking.tailscaleAuth = {
     enable = true;
     sopsFile = ../../../secrets/tailscale-router.yaml;
-    loginServer = "https://hs.example.com";
+    loginServer = "https://hs.${config.my.defaults.domain}";
     advertiseRoutes = ["192.168.30.0/24"];
     networkInterface = "enp5s0";
   };

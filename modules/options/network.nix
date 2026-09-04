@@ -1,8 +1,10 @@
 {
   lib,
-  config,
+  inputs,
   ...
-}: {
+}: let
+  net = inputs.private.lib.network;
+in {
   options.my.network = {
     # Gateway (NixOS router, vlan10)
     gateway = lib.mkOption {
@@ -39,252 +41,180 @@
     hosts = {
       homeserver_lan = lib.mkOption {
         type = lib.types.str;
-        default = "${config.my.defaults.homeserver_lan}";
+        default = net.hosts.homeserver_lan;
         description = "IP address of homeserver — trusted VLAN";
       };
 
       desktop_lan = lib.mkOption {
         type = lib.types.str;
-        default = "${config.my.defaults.desktop_lan}";
+        default = net.hosts.desktop_lan;
         description = "IP address of desktop wired — trusted VLAN";
       };
 
       desktop_wifi = lib.mkOption {
         type = lib.types.str;
-        default = "${config.my.defaults.desktop_wifi}";
+        default = net.hosts.desktop_wifi;
         description = "IP address of desktop wireless — trusted VLAN";
       };
 
       matebook_wifi = lib.mkOption {
         type = lib.types.str;
-        default = "${config.my.defaults.matebook_wifi}";
+        default = net.hosts.matebook_wifi;
         description = "IP address of Matebook wireless — trusted VLAN";
       };
 
       homeassistant-vm = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.1.235";
+        default = net.hosts."homeassistant-vm";
         description = "Home Assistant VM (QEMU on homeserver) — trusted VLAN";
       };
     };
 
-    # MAC addresses — one attrset per device, co-located with IPs for DRY dhcp.nix
-    mac = {
-      homeserver = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "homeserver NIC";
-      };
-      desktop-lan = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "desktop wired NIC";
-      };
-      desktop-wifi = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "desktop wireless NIC";
-      };
-      matebook = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "Matebook wireless NIC";
-      };
-      homeassistant-vm = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "Home Assistant VM virtual NIC";
-      };
-      switch-office = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "TL-SG108E office switch mgmt";
-      };
-      switch-livingroom = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "TL-SG108E living room switch mgmt";
-      };
-      alexa = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "Amazon Echo Show";
-      };
-      plug-entrance = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "HS103 entrance plug";
-      };
-      plug-salt = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "HS103 salt lamp plug";
-      };
-      plug-office = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "HS103 office plug";
-      };
-      plug-table = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "HS103 table plug";
-      };
-      plug-window = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "HS103 window plug";
-      };
-      humidifier = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "Smart humidifier";
-      };
-      sophia-s23 = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "Sophia Samsung S23 Ultra (note: may randomise)";
-      };
-      volodymyr-s23 = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "Volodymyr Samsung S23 (note: may randomise)";
-      };
-      ps5 = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "PlayStation 5";
-      };
-      nintendo-switch = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "Nintendo Switch OLED";
-      };
-      mi-box-s = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "Xiaomi Mi Box S";
-      };
-      roku-tv = lib.mkOption {
-        type = lib.types.str;
-        default = "02:00:00:00:00:00";
-        description = "Roku TV WiFi";
-      };
+    # MAC addresses — one attrset per device, co-located with IPs for DRY dhcp.nix.
+    # Values come from the private flake input (net.mac.*).
+    mac = let
+      macOpt = key: desc:
+        lib.mkOption {
+          type = lib.types.str;
+          default = net.mac.${key};
+          description = desc;
+        };
+    in {
+      homeserver = macOpt "homeserver" "homeserver NIC";
+      desktop-lan = macOpt "desktop-lan" "desktop wired NIC";
+      desktop-wifi = macOpt "desktop-wifi" "desktop wireless NIC";
+      matebook = macOpt "matebook" "Matebook wireless NIC";
+      homeassistant-vm = macOpt "homeassistant-vm" "Home Assistant VM virtual NIC";
+      switch-office = macOpt "switch-office" "TL-SG108E office switch mgmt";
+      switch-livingroom = macOpt "switch-livingroom" "TL-SG108E living room switch mgmt";
+      alexa = macOpt "alexa" "Amazon Echo Show";
+      plug-entrance = macOpt "plug-entrance" "HS103 entrance plug";
+      plug-salt = macOpt "plug-salt" "HS103 salt lamp plug";
+      plug-office = macOpt "plug-office" "HS103 office plug";
+      plug-table = macOpt "plug-table" "HS103 table plug";
+      plug-window = macOpt "plug-window" "HS103 window plug";
+      humidifier = macOpt "humidifier" "Smart humidifier";
+      sophia-s23 = macOpt "sophia-s23" "phone A (note: may randomise)";
+      volodymyr-s23 = macOpt "volodymyr-s23" "phone B (note: may randomise)";
+      ps5 = macOpt "ps5" "PlayStation 5";
+      nintendo-switch = macOpt "nintendo-switch" "Nintendo Switch OLED";
+      mi-box-s = macOpt "mi-box-s" "Xiaomi Mi Box S";
+      roku-tv = macOpt "roku-tv" "Roku TV WiFi";
     };
 
-    # Network infrastructure
+    # Network infrastructure — values from the private flake input.
     infrastructure = {
       router = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.1.1";
+        default = net.infrastructure.router;
         description = "NixOS router (Sophos SG110/120)";
       };
 
       isp-router = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.1.254";
+        default = net.infrastructure."isp-router";
         description = "ISP router (Technicolor NH20T) — WAN uplink";
       };
 
       switch-office = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.1.111";
+        default = net.infrastructure."switch-office";
         description = "Office network switch (TL-SG108E)";
       };
 
       switch-living-room = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.1.112";
+        default = net.infrastructure."switch-living-room";
         description = "Living room network switch (TL-SG108E)";
       };
     };
 
-    # Smart home devices (IoT VLAN — 192.168.20.0/24)
+    # Smart home devices (IoT VLAN — 192.168.20.0/24) — values from private input.
     smart-home = {
       plugs = {
         office = lib.mkOption {
           type = lib.types.str;
-          default = "192.168.20.14";
+          default = net."smart-home".plugs.office;
           description = "Office HS103 smart plug — IoT VLAN";
         };
 
         entrance = lib.mkOption {
           type = lib.types.str;
-          default = "192.168.20.11";
+          default = net."smart-home".plugs.entrance;
           description = "Entrance HS103 smart plug — IoT VLAN";
         };
 
         table = lib.mkOption {
           type = lib.types.str;
-          default = "192.168.20.15";
+          default = net."smart-home".plugs.table;
           description = "Table HS103 smart plug — IoT VLAN";
         };
 
         window = lib.mkOption {
           type = lib.types.str;
-          default = "192.168.20.16";
+          default = net."smart-home".plugs.window;
           description = "Window HS103 smart plug — IoT VLAN";
         };
 
         salt = lib.mkOption {
           type = lib.types.str;
-          default = "192.168.20.12";
+          default = net."smart-home".plugs.salt;
           description = "Salt HS103 smart plug — IoT VLAN";
         };
       };
 
       humidifier = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.20.13";
+        default = net."smart-home".humidifier;
         description = "Smart humidifier — IoT VLAN";
       };
 
       alexa-echo-show = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.20.10";
+        default = net."smart-home"."alexa-echo-show";
         description = "Amazon Echo Show — IoT VLAN";
       };
     };
 
-    # Entertainment devices (media VLAN — 192.168.30.0/24)
+    # Entertainment devices (media VLAN — 192.168.30.0/24) — values from private input.
     entertainment = {
       roku-tv = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.30.13";
+        default = net.entertainment."roku-tv";
         description = "Roku TV WiFi — media VLAN";
       };
 
       mi-box-s = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.30.12";
+        default = net.entertainment."mi-box-s";
         description = "Xiaomi Mi Box S Android TV — media VLAN";
       };
 
       playstation-5 = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.30.10";
+        default = net.entertainment."playstation-5";
         description = "PlayStation 5 — media VLAN";
       };
 
       nintendo-switch = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.30.11";
+        default = net.entertainment."nintendo-switch";
         description = "Nintendo Switch OLED — media VLAN";
       };
     };
 
-    # Mobile devices (trusted VLAN — 192.168.1.0/24)
+    # Mobile devices (trusted VLAN — 192.168.1.0/24) — values from private input.
     mobile = {
       sophia-s23-ultra = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.1.141";
-        description = "Sophia's Samsung Galaxy S23 Ultra — trusted VLAN";
+        default = net.mobile."sophia-s23-ultra";
+        description = "phone A — trusted VLAN";
       };
 
       volodymyr-s23 = lib.mkOption {
         type = lib.types.str;
-        default = "192.168.1.140";
-        description = "Volodymyr's Samsung Galaxy S23 — trusted VLAN";
+        default = net.mobile."volodymyr-s23";
+        description = "phone B — trusted VLAN";
       };
     };
 

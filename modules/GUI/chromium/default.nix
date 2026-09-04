@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  osConfig,
   ...
 }: {
   xdg.configFile."chromium/policies/managed/hardening.json".text = lib.generators.toJSON {} {
@@ -13,7 +14,7 @@
     SafeBrowsingProtectionLevel = 1;
     SpellCheckServiceEnabled = false;
     DnsOverHttpsMode = "automatic";
-    DnsOverHttpsTemplates = "https://dns.nextdns.io/nextdns0";
+    DnsOverHttpsTemplates = "https://dns.nextdns.io/${osConfig.my.defaults.nextdnsProfileId}";
     WebRtcIPHandling = "default_public_interface_only";
     HttpsOnlyMode = "force_enabled";
     SSLVersionMin = "tls1.2";

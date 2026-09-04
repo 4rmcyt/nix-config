@@ -63,7 +63,7 @@
       cors = {
         credentials = true;
         # Allow Obsidian mobile and desktop apps
-        origins = "app://obsidian.md,capacitor://localhost,http://localhost,https://localhost,capacitor://livesync.example.com,http://livesync.example.com,https://livesync.example.com";
+        origins = "app://obsidian.md,capacitor://localhost,http://localhost,https://localhost,capacitor://livesync.${config.my.defaults.domain},http://livesync.${config.my.defaults.domain},https://livesync.${config.my.defaults.domain}";
       };
     };
   };
@@ -121,12 +121,12 @@
 # =================================================================
 # Initial Setup Instructions
 # =================================================================
-# 1. After first deployment, visit: https://livesync.example.com/_utils
+# 1. After first deployment, visit: https://livesync.${config.my.defaults.domain}/_utils
 # 2. Login with admin credentials from secrets/couchdb.yaml
 # 3. Create a new database named "" (or your preferred name)
 # 4. Create a user for your Obsidian client (recommended for securobsidianity)
 # 5. In Obsidian LiveSync plugin settings:
-#    - Remote Database URL: https://livesync.example.com/obsidian
+#    - Remote Database URL: https://livesync.${config.my.defaults.domain}/obsidian
 #    - Username: (your created user)
 #    - Password: (your user's password)
 #    - Enable End-to-End Encryption (recommended)

@@ -65,7 +65,7 @@ Management IP is `192.168.30.112` — reachable from media segment only (via `en
 
 #### Services
 
-- **Unbound** — recursive DNS resolver; NextDNS DoT upstream (profile `nextdns0`); split DNS `*.example.com` → homeserver; listens on trusted/iot/media gateway IPs
+- **Unbound** — recursive DNS resolver; NextDNS DoT upstream (profile `<nextdns-profile>`); split DNS `*.<domain>` → homeserver; listens on trusted/iot/media gateway IPs
 - **Kea DHCPv4** — static MAC reservations on all 4 zones; control socket at `/run/kea/kea-dhcp4.socket`
 - **Avahi reflector** — mDNS proxy between trusted/iot/media (Chromecast, AirPlay, Roku discovery)
 - **Tailscale** — headless auth via sops; advertises media VLAN `192.168.30.0/24`; login server `https://hs.example.com`
@@ -121,7 +121,7 @@ See [router-installation.md](router-installation.md) for installation steps.
 #### Networking
 
 - SSH on port **2222** (port 22 has no listener)
-- Unbound DNS resolver: interfaces `tailscale0`, `enp0s31f6`; NextDNS profile `nextdns0`
+- Unbound DNS resolver: interfaces `tailscale0`, `enp0s31f6`; NextDNS profile `<nextdns-profile>`
 - Tailscale with DNSSEC: NextDNS upstream, split DNS for `example.com` → homeserver
 
 #### Nix Build
@@ -207,7 +207,7 @@ Disk: WD PC SN730 512GB NVMe (`nvme-WDC_PC_SN730_SDBPNTY-512G-1027_20230H445703`
 ### gcp-relay
 
 **Role:** GCP e2-micro — VPN control plane + DERP relay  
-**Public IP:** `203.0.113.1`  
+**Public IP:** `<gcp-relay-ip>`  
 **Region:** GCP US Central (Iowa)
 
 - **Headscale** coordination server: `https://hs.example.com` (port 8080 behind Caddy)
@@ -251,7 +251,7 @@ SSH config uses MagicDNS hostnames (`homeserver.ts.example.com`, `matebook.ts.ex
 
 ### Unbound (recursive DNS)
 
-On homeserver, listening on Tailscale + LAN interfaces. Forwards to NextDNS profile `nextdns0` with DNSSEC validation. Desktop and matebook use homeserver as resolver.
+On homeserver, listening on Tailscale + LAN interfaces. Forwards to NextDNS profile `<nextdns-profile>` with DNSSEC validation. Desktop and matebook use homeserver as resolver.
 
 `example.com` is a `redirect` local-zone (answers homeserver's IPs for the whole zone). `ts.example.com` is carved out as `transparent` and forwarded to the Tailscale stub resolver (`100.100.100.100`), so individual per-node MagicDNS names (e.g. `matebook.ts.example.com`) resolve to their actual current Tailscale IP instead of being swallowed by the redirect.
 
@@ -283,7 +283,7 @@ NUT server on homeserver; NUT client on desktop. Prometheus NUT exporter scrapes
 
 ## Services (homeserver)
 
-Most services are behind Traefik at `*.example.com`. A subset is additionally exposed via **Cloudflare Tunnel** (no open inbound ports required).
+Most services are behind Traefik at `*.<domain>`. A subset is additionally exposed via **Cloudflare Tunnel** (no open inbound ports required).
 
 ### Cloudflare Tunnel
 
@@ -298,7 +298,7 @@ Active tunnels (proxied through `localhost:443` → Traefik):
 | `jobko.example.com`     | job-kombayn (web + API)      | No |
 | `idm.example.com`       | Kanidm SSO                   | Yes (`owner-only` policy) |
 
-`hass` and `idm` additionally sit behind a Cloudflare Zero Trust Access application (email OTP gate, policy `owner-only` restricted to the owner's email) — configured in the Cloudflare dashboard (Access controls → Applications), not declarative in this repo, since nixpkgs' `services.cloudflared` has no Access support. This only affects requests that actually cross Cloudflare's edge; LAN/Tailscale clients resolve `*.example.com` straight to the homeserver via the split-horizon Unbound config (`modules/networking/unbound/`) and never touch Access or the tunnel at all. Kanidm's own auth (username + WebAuthn/Yubikey) is unchanged and still required after Access.
+`hass` and `idm` additionally sit behind a Cloudflare Zero Trust Access application (email OTP gate, policy `owner-only` restricted to the owner's email) — configured in the Cloudflare dashboard (Access controls → Applications), not declarative in this repo, since nixpkgs' `services.cloudflared` has no Access support. This only affects requests that actually cross Cloudflare's edge; LAN/Tailscale clients resolve `*.<domain>` straight to the homeserver via the split-horizon Unbound config (`modules/networking/unbound/`) and never touch Access or the tunnel at all. Kanidm's own auth (username + WebAuthn/Yubikey) is unchanged and still required after Access.
 
 Tunnel credentials in `secrets/cloudflare_tunnel_credentials.bin` (per-tunnel, scoped) + `secrets/cloudflare_tunnel_cert.pem` (account-level `cert.pem` from `cloudflared login`, needed so cloudflared can create the DNS routes itself). Tunnel UUID (`57a75d0b-ba3c-4b13-9e45-8854e13fc0fb`, name `homeserver-nix`) is hardcoded in the module — it's not sensitive on its own (publicly derivable from any `<uuid>.cfargotunnel.com` CNAME target) and has to be a literal Nix attribute name. This tunnel was created via CLI (`cloudflared tunnel create`), not the dashboard — dashboard-created tunnels are permanently remotely-managed and silently ignore any local `--config`/ingress, no matter what options are passed (confirmed via cloudflared GitHub issue #843 and live testing against the old `homeserver` dashboard tunnel, f7876e26-..., now retired).
 

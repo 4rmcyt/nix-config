@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  inputs,
   ...
 }: {
   imports = [
@@ -8,7 +9,7 @@
 
     ../../modules/GUI/chrome/home.nix
     ../../modules/GUI/firefox
-    ../../modules/GUI/thunderbird
+    inputs.private.homeManagerModules.thunderbird
     ../../modules/GUI/IDE/vscode
     ../../modules/GUI/terminal
     ../../modules/TUI/common

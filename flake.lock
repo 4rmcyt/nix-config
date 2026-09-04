@@ -1728,6 +1728,21 @@
         "type": "github"
       }
     },
+    "private": {
+      "locked": {
+        "lastModified": 1788495699,
+        "narHash": "sha256-KyJytzHUnLFLOzLt8ojDjXR2hH9vsIebBaxcAqyTA+E=",
+        "ref": "refs/heads/main",
+        "rev": "c7e8e11666eb4d533c45b5ae9f94aa31cbf471cc",
+        "revCount": 4,
+        "type": "git",
+        "url": "ssh://git@github.com/4rmcyt/nix-config-private.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/4rmcyt/nix-config-private.git"
+      }
+    },
     "root": {
       "inputs": {
         "arr-packages": "arr-packages",
@@ -1764,6 +1779,7 @@
         "nixvim": "nixvim",
         "noctalia": "noctalia",
         "nur": "nur",
+        "private": "private",
         "rust-overlay": "rust-overlay",
         "sops-nix": "sops-nix",
         "stylix": "stylix",

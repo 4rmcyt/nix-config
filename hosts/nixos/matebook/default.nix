@@ -368,7 +368,7 @@
         "--accept-routes"
         "--accept-dns=true"
         "--reset"
-        "--login-server=https://hs.example.com"
+        "--login-server=https://hs.${config.my.defaults.domain}"
       ];
       extraSetFlags = ["--operator=${config.my.defaults.user}"];
     };

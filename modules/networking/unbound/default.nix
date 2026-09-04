@@ -27,7 +27,7 @@ in {
 
     nextdnsProfileId = lib.mkOption {
       type = lib.types.str;
-      description = "NextDNS profile ID (e.g. nextdns0).";
+      description = "NextDNS profile ID (e.g. abcdef).";
     };
   };
 

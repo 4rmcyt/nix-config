@@ -6,6 +6,7 @@
 with lib; let
   cfg = config.networking.dnssec;
   inherit (config.networking) hostName;
+  inherit (config.my.defaults) domain;
   inherit (cfg) profileId;
   nextdnsHost = "${hostName}-${profileId}.dns.nextdns.io";
 in {
@@ -13,7 +14,7 @@ in {
     enable = mkEnableOption "DNSSEC/NextDNS configuration";
     profileId = mkOption {
       type = types.str;
-      description = "NextDNS profile ID (e.g., nextdns0)";
+      description = "NextDNS profile ID (e.g. abcdef)";
     };
   };
 
@@ -48,7 +49,7 @@ in {
     # NegativeTrustAnchors was removed from resolved.conf in systemd 250+
     # The replacement is /etc/dnssec-trust-anchors.d/*.negative
     environment.etc."dnssec-trust-anchors.d/local.negative".text = ''
-      example.com
+      ${domain}
     '';
   };
 }

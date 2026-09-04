@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  osConfig,
+  ...
+}: {
   home.packages = with pkgs; [
     obsidian
   ];
@@ -19,7 +23,7 @@
     ## Configure Self-hosted LiveSync
     1. Open plugin settings for "Self-hosted LiveSync"
     2. Configure the remote database:
-       - **URI**: https://livesync.example.com/obsidian
+       - **URI**: https://livesync.${osConfig.my.defaults.domain}/obsidian
        - **Username**: Your CouchDB username
        - **Password**: Your CouchDB password
        - **Database name**: obsidian (or your created database name)
@@ -45,14 +49,14 @@
     - Use the same encryption passphrase (if enabled)
 
     ## Server URL
-    - CouchDB Admin UI: https://livesync.example.com/_utils
-    - Database endpoint: https://livesync.example.com/obsidian
+    - CouchDB Admin UI: https://livesync.${osConfig.my.defaults.domain}/_utils
+    - Database endpoint: https://livesync.${osConfig.my.defaults.domain}/obsidian
 
     ## Troubleshooting
     - Check CouchDB is running: systemctl status couchdb
     - View logs: journalctl -u couchdb -f
     - Verify nginx proxy: systemctl status nginx
-    - Test connection: curl https://livesync.example.com
+    - Test connection: curl https://livesync.${osConfig.my.defaults.domain}
 
     ## References
     - Plugin: https://github.com/vrtmrz/obsidian-livesync

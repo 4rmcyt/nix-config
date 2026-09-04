@@ -1,19 +1,13 @@
-{lib, ...}: let
-  secretsFile = ../../secrets/common.yaml;
-  secretsData = {
-    user = "zeev";
-    email = "redacted@example.com";
-    git_username = "4rmcyt";
-    git_signing_key = "D85B52C9288A138E";
-    domain = "example.com";
-    timezone = "America/Edmonton";
-    locale = "en_US.UTF-8";
-    gateway = "192.168.1.254";
-    homeserver_lan = "192.168.1.165";
-    desktop_lan = "192.168.1.118";
-    desktop_wifi = "192.168.1.239";
-    matebook_wifi = "192.168.1.132";
-  };
+# my.defaults.* — identity/locale/network scalars used across NixOS modules at
+# eval time. Real values come from the private `private` flake input (see
+# parts/private-example.nix for the schema); this file only declares the options
+# and maps the private data onto them.
+{
+  lib,
+  inputs,
+  ...
+}: let
+  inherit (inputs.private.lib) identity network;
 in {
   options.my.defaults = {
     user = lib.mkOption {
@@ -24,6 +18,11 @@ in {
     email = lib.mkOption {
       type = lib.types.str;
       description = "Primary email address";
+    };
+
+    fullName = lib.mkOption {
+      type = lib.types.str;
+      description = "Owner's full name (git author, mail realName)";
     };
 
     gitUsername = lib.mkOption {
@@ -75,44 +74,33 @@ in {
       type = lib.types.str;
       description = "Local IP address of the Matebook WiFi connection";
     };
-  };
 
-  config = {
-    my.defaults = {
-      user = lib.mkDefault secretsData.user;
-      email = lib.mkDefault secretsData.email;
-      gitUsername = lib.mkDefault secretsData.git_username;
-      gitSigningKey = lib.mkDefault secretsData.git_signing_key;
-      domain = lib.mkDefault secretsData.domain;
-      timezone = lib.mkDefault secretsData.timezone;
-      locale = lib.mkDefault secretsData.locale;
-      gateway = lib.mkDefault secretsData.gateway;
-      homeserver_lan = lib.mkDefault secretsData.homeserver_lan;
-      desktop_lan = lib.mkDefault secretsData.desktop_lan;
-      desktop_wifi = lib.mkDefault secretsData.desktop_wifi;
-      matebook_wifi = lib.mkDefault secretsData.matebook_wifi;
+    gcpRelayIp = lib.mkOption {
+      type = lib.types.str;
+      description = "Public static IP of the GCP relay host";
     };
 
-    sops.secrets = builtins.listToAttrs (map (key: {
-        name = "defaults-${key}";
-        value = {
-          sopsFile = secretsFile;
-          inherit key;
-          mode = "0400";
-        };
-      }) [
-        "user"
-        "email"
-        "git_username"
-        "git_signing_key"
-        "domain"
-        "timezone"
-        "locale"
-        "gateway"
-        "homeserver_lan"
-        "desktop_lan"
-        "desktop_wifi"
-        "matebook_wifi"
-      ]);
+    nextdnsProfileId = lib.mkOption {
+      type = lib.types.str;
+      description = "NextDNS account profile ID";
+    };
+  };
+
+  config.my.defaults = {
+    user = lib.mkDefault identity.username;
+    email = lib.mkDefault identity.email;
+    fullName = lib.mkDefault identity.fullName;
+    gitUsername = lib.mkDefault identity.gitUsername;
+    gitSigningKey = lib.mkDefault identity.gitSigningKey;
+    domain = lib.mkDefault identity.domain;
+    timezone = lib.mkDefault identity.timezone;
+    locale = lib.mkDefault identity.locale;
+    gateway = lib.mkDefault network.gateway;
+    homeserver_lan = lib.mkDefault network.hosts.homeserver_lan;
+    desktop_lan = lib.mkDefault network.hosts.desktop_lan;
+    desktop_wifi = lib.mkDefault network.hosts.desktop_wifi;
+    matebook_wifi = lib.mkDefault network.hosts.matebook_wifi;
+    gcpRelayIp = lib.mkDefault network.gcpRelayIp;
+    nextdnsProfileId = lib.mkDefault network.nextdns.profileId;
   };
 }

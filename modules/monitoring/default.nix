@@ -419,15 +419,15 @@
         }
         {
           job_name = "router-node";
-          static_configs = [{targets = ["router.ts.example.com:9100"];}];
+          static_configs = [{targets = ["router.ts.${config.my.defaults.domain}:9100"];}];
         }
         {
           job_name = "router-unbound";
-          static_configs = [{targets = ["router.ts.example.com:9167"];}];
+          static_configs = [{targets = ["router.ts.${config.my.defaults.domain}:9167"];}];
         }
         {
           job_name = "router-kea";
-          static_configs = [{targets = ["router.ts.example.com:9547"];}];
+          static_configs = [{targets = ["router.ts.${config.my.defaults.domain}:9547"];}];
         }
         {
           job_name = "gcp-relay-node";

@@ -39,6 +39,9 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Identity + LAN topology — plaintext values needed at eval time, kept in a
+    # private repo instead of this public one. See modules/options/private-example.nix.
+    private.url = "git+ssh://git@github.com/4rmcyt/nix-config-private.git";
 
     # Hardware & system
     auto-cpufreq = {

@@ -130,13 +130,13 @@
 
     dnssec = {
       enable = true;
-      profileId = "nextdns0";
+      profileId = config.my.defaults.nextdnsProfileId;
     };
 
     tailscaleAuth = {
       enable = true;
       sopsFile = ../../../secrets/tailscale-homeserver.yaml;
-      loginServer = "https://hs.example.com";
+      loginServer = "https://hs.${config.my.defaults.domain}";
       networkInterface = "enp0s31f6";
       advertiseExitNode = true;
       advertiseRoutes = [
@@ -355,8 +355,8 @@
     enable = true;
     interfaces = ["tailscale0" "enp0s31f6"];
     tailscaleIp = "100.64.0.3";
-    gcpRelayIp = "203.0.113.1";
-    nextdnsProfileId = "nextdns0";
+    gcpRelayIp = config.my.defaults.gcpRelayIp;
+    nextdnsProfileId = config.my.defaults.nextdnsProfileId;
   };
 
   # =================================================================
