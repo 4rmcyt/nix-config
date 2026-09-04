@@ -48,7 +48,6 @@
     secrets = {
       tailscale_auth_key = {
         sopsFile = ../../../secrets/tailscale-desktop.yaml;
-        key = "tailscale_auth_key";
       };
       git_access_token = {
         sopsFile = ../../../secrets/common.yaml;
