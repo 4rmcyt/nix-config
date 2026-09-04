@@ -130,13 +130,13 @@ curl -I http://localhost:9000
 # Should return HTTP 200 or redirect
 
 # Test via Cloudflare tunnel
-curl -I https://auth.example.com
+curl -I https://auth.<domain>
 # Should return HTTP 200 or redirect
 ```
 
 ### Step 7: Access Keycloak Admin Console
 
-1. Navigate to: **https://auth.example.com**
+1. Navigate to: **https://auth.<domain>**
 2. Login with:
    - **Username**: `admin`
    - **Password**: (from `k3s_keycloak_admin_password` in secrets/k3s.yaml)
@@ -182,7 +182,7 @@ Follow [k3s-oidc-setup.md](../../security/keycloak/k3s-oidc-setup.md) to:
               Cloudflare Tunnel
                         │
                         ▼
-            https://auth.example.com
+            https://auth.<domain>
 ```
 
 ## GitOps Workflow

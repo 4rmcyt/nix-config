@@ -274,7 +274,6 @@ Undocumented files that live in the repo root:
 |------|---------|
 | `.pre-commit-config.yaml` | Pre-commit hooks: yamlfmt, ripsecrets, gitleaks, taplo, alejandra, deadnix, statix, dangerous-shell-patterns, pre-commit-hook-ensure-sops. namaka hook disabled. |
 | `.gitleaks.toml` | gitleaks config — extends default ruleset; allowlists: SOPS `ENC[AES256_GCM...]` values, age public keys, age encrypted file blocks, all of `secrets/`, false-positive patterns (`--user=admin`, NextDNS URLs), `config.sops.secrets.*.path` references in Nix. |
-| `.gitleaks-baseline.json` | gitleaks baseline of known/accepted findings — prevents re-alerting on pre-existing suppressions. |
 | `.ripsecrets.toml` | ripsecrets config — suppresses known false-positive secret patterns (SSH key prefixes, GPG key ID, stale API keys from old configs). Also allowlists specific files via `[allowlist].paths`. |
 
 ### Secrets / SOPS Config

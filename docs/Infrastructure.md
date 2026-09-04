@@ -1,8 +1,8 @@
 # Infrastructure
 
-Domain: `example.com`  
+Domain: `<domain>`  
 Timezone: `America/Edmonton`  
-Tailnet login server: `https://hs.example.com` (self-hosted Headscale)
+Tailnet login server: `https://hs.<domain>` (self-hosted Headscale)
 
 ---
 
@@ -68,7 +68,7 @@ Management IP is `192.168.30.112` — reachable from media segment only (via `en
 - **Unbound** — recursive DNS resolver; NextDNS DoT upstream (profile `<nextdns-profile>`); split DNS `*.<domain>` → homeserver; listens on trusted/iot/media gateway IPs
 - **Kea DHCPv4** — static MAC reservations on all 4 zones; control socket at `/run/kea/kea-dhcp4.socket`
 - **Avahi reflector** — mDNS proxy between trusted/iot/media (Chromecast, AirPlay, Roku discovery)
-- **Tailscale** — headless auth via sops; advertises media VLAN `192.168.30.0/24`; login server `https://hs.example.com`
+- **Tailscale** — headless auth via sops; advertises media VLAN `192.168.30.0/24`; login server `https://hs.<domain>`
 
 #### Monitoring (exporters, scraped by homeserver Prometheus via tailnet)
 
@@ -122,7 +122,7 @@ See [router-installation.md](router-installation.md) for installation steps.
 
 - SSH on port **2222** (port 22 has no listener)
 - Unbound DNS resolver: interfaces `tailscale0`, `enp0s31f6`; NextDNS profile `<nextdns-profile>`
-- Tailscale with DNSSEC: NextDNS upstream, split DNS for `example.com` → homeserver
+- Tailscale with DNSSEC: NextDNS upstream, split DNS for `<domain>` → homeserver
 
 #### Nix Build
 
@@ -210,7 +210,7 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 **Public IP:** `<gcp-relay-ip>`  
 **Region:** GCP US Central (Iowa)
 
-- **Headscale** coordination server: `https://hs.example.com` (port 8080 behind Caddy)
+- **Headscale** coordination server: `https://hs.<domain>` (port 8080 behind Caddy)
 - **DERP** relay: region ID 901, `gcp-us-central1`, STUN on `0.0.0.0:3478`
 - **Caddy** TLS termination (replaces Traefik for this host)
 - **CrowdSec** nftables bouncer: remote LAPI via Tailscale pointing to homeserver
@@ -227,7 +227,7 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 - HTTP → HTTPS redirect; wildcard TLS via Cloudflare DNS-01 ACME
 - Plugins (local, from Nix store): **crowdsec-bouncer**, **traefik-geoblock**
 - Middlewares applied to all routers: `security-headers`, `crowdsec`
-- `komga`: uses `komga-headers` instead of `security-headers` — allows the komf webui to iframe Komga (`frame-ancestors https://komf.example.com`) and call its API cross-origin (CORS with credentials)
+- `komga`: uses `komga-headers` instead of `security-headers` — allows the komf webui to iframe Komga (`frame-ancestors https://komf.<domain>`) and call its API cross-origin (CORS with credentials)
 - `komf`: uses `komf-headers` — CORS `Access-Control-Allow-Origin: *` (komf is Tailscale/LAN-only and unauthenticated, so the komf browser extension can reach it)
 - Public-facing `hass`: additionally `rate-limit` + `geoblock` (CA/US only)
 - Metrics endpoint on `127.0.0.1:8080`; internal API on `127.0.0.1:8083` (homepage widget)
@@ -235,8 +235,8 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 
 ### Headscale (Tailnet control plane)
 
-Running on GCP relay. Split DNS: `example.com` → `100.64.0.3` (homeserver Tailscale IP).  
-Magic DNS base domain: `ts.example.com`. DERP: GCP US Central + Tailscale default map.
+Running on GCP relay. Split DNS: `<domain>` → `100.64.0.3` (homeserver Tailscale IP).  
+Magic DNS base domain: `ts.<domain>`. DERP: GCP US Central + Tailscale default map.
 
 Known static Tailscale IPs (headscale has no declarative per-node static IP — assigned sequentially in its sqlite DB; pinned here by manual `UPDATE nodes SET ipv4=...` after registration):
 
@@ -247,13 +247,13 @@ Known static Tailscale IPs (headscale has no declarative per-node static IP — 
 | matebook | `100.64.0.4` |
 | gcp-relay | `100.64.0.5` |
 
-SSH config uses MagicDNS hostnames (`homeserver.ts.example.com`, `matebook.ts.example.com`, `gcp-relay.ts.example.com`) so SSH works from any network without hardcoded LAN IPs. Operator mode enabled on desktop + matebook (`extraSetFlags = ["--operator=zeev"]`) so `tailscale file cp` works without sudo.
+SSH config uses MagicDNS hostnames (`homeserver.ts.<domain>`, `matebook.ts.<domain>`, `gcp-relay.ts.<domain>`) so SSH works from any network without hardcoded LAN IPs. Operator mode enabled on desktop + matebook (`extraSetFlags = ["--operator=zeev"]`) so `tailscale file cp` works without sudo.
 
 ### Unbound (recursive DNS)
 
 On homeserver, listening on Tailscale + LAN interfaces. Forwards to NextDNS profile `<nextdns-profile>` with DNSSEC validation. Desktop and matebook use homeserver as resolver.
 
-`example.com` is a `redirect` local-zone (answers homeserver's IPs for the whole zone). `ts.example.com` is carved out as `transparent` and forwarded to the Tailscale stub resolver (`100.100.100.100`), so individual per-node MagicDNS names (e.g. `matebook.ts.example.com`) resolve to their actual current Tailscale IP instead of being swallowed by the redirect.
+`<domain>` is a `redirect` local-zone (answers homeserver's IPs for the whole zone). `ts.<domain>` is carved out as `transparent` and forwarded to the Tailscale stub resolver (`100.100.100.100`), so individual per-node MagicDNS names (e.g. `matebook.ts.<domain>`) resolve to their actual current Tailscale IP instead of being swallowed by the redirect.
 
 ### CrowdSec
 
@@ -291,20 +291,20 @@ Active tunnels (proxied through `localhost:443` → Traefik):
 
 | Hostname                 | Purpose                      | Cloudflare Access |
 |--------------------------|-------------------------------|-------------------|
-| `hass.example.com`      | Home Assistant (public)      | Yes (`owner-only` policy) |
-| `livesync.example.com`  | CouchDB / Obsidian LiveSync  | No |
-| `cal.example.com`       | Radicale CalDAV/CardDAV      | No |
-| `ntfy.example.com`      | Push notifications           | No |
-| `jobko.example.com`     | job-kombayn (web + API)      | No |
-| `idm.example.com`       | Kanidm SSO                   | Yes (`owner-only` policy) |
+| `hass.<domain>`      | Home Assistant (public)      | Yes (`owner-only` policy) |
+| `livesync.<domain>`  | CouchDB / Obsidian LiveSync  | No |
+| `cal.<domain>`       | Radicale CalDAV/CardDAV      | No |
+| `ntfy.<domain>`      | Push notifications           | No |
+| `jobko.<domain>`     | job-kombayn (web + API)      | No |
+| `idm.<domain>`       | Kanidm SSO                   | Yes (`owner-only` policy) |
 
 `hass` and `idm` additionally sit behind a Cloudflare Zero Trust Access application (email OTP gate, policy `owner-only` restricted to the owner's email) — configured in the Cloudflare dashboard (Access controls → Applications), not declarative in this repo, since nixpkgs' `services.cloudflared` has no Access support. This only affects requests that actually cross Cloudflare's edge; LAN/Tailscale clients resolve `*.<domain>` straight to the homeserver via the split-horizon Unbound config (`modules/networking/unbound/`) and never touch Access or the tunnel at all. Kanidm's own auth (username + WebAuthn/Yubikey) is unchanged and still required after Access.
 
 Tunnel credentials in `secrets/cloudflare_tunnel_credentials.bin` (per-tunnel, scoped) + `secrets/cloudflare_tunnel_cert.pem` (account-level `cert.pem` from `cloudflared login`, needed so cloudflared can create the DNS routes itself). Tunnel UUID (`57a75d0b-ba3c-4b13-9e45-8854e13fc0fb`, name `homeserver-nix`) is hardcoded in the module — it's not sensitive on its own (publicly derivable from any `<uuid>.cfargotunnel.com` CNAME target) and has to be a literal Nix attribute name. This tunnel was created via CLI (`cloudflared tunnel create`), not the dashboard — dashboard-created tunnels are permanently remotely-managed and silently ignore any local `--config`/ingress, no matter what options are passed (confirmed via cloudflared GitHub issue #843 and live testing against the old `homeserver` dashboard tunnel, f7876e26-..., now retired).
 
-### jobko.example.com hardening
+### jobko.<domain> hardening
 
-All configured via the Cloudflare dashboard/API (zone `example.com`, Free plan) — not declarative, no nixpkgs module covers these:
+All configured via the Cloudflare dashboard/API (zone `<domain>`, Free plan) — not declarative, no nixpkgs module covers these:
 
 - **Rate limiting rule** `jobko-auth-ratelimit` (Security rules → Rate limiting rules): blocks IPs exceeding 3 requests/10s (Free plan's max window) to `/api/auth/login` or `/api/auth/register`.
 - **Schema validation**: job-kombayn's OpenAPI schema (exported via `python -m kombayn.export_openapi`, converted 3.1→3.0.3 since Cloudflare only accepts v3.0.x, `servers` added manually since FastAPI doesn't set it, `additionalProperties: false` added by hand to `LoginRequest`/`RegisterRequest`/`StatusUpdate`/`ProfileIn` since OpenAPI/FastAPI leaves it unset — i.e. extra fields allowed — by default) uploaded as `jobko-openapi.json`, zone-level `validation_default_mitigation_action: block`. Per-operation overrides must be `null` (inherit), not `none` — the dashboard's "Add schema and endpoints" wizard sets every operation to an explicit `none` override by default, silently defeating the zone-level action; cleared via `PATCH /zones/{id}/schema_validation/settings/operations` with each operation set to `{"mitigation_action": null}` (must be redone after any schema re-upload). `log` action requires a paid plan; Free only gets `none`/`block`. Confirmed live: a request missing the required `email` field, or one with a wrong-typed `email`/an extra body field, gets a 403 from Cloudflare's edge (not the origin) on `/api/auth/login`.
@@ -315,46 +315,46 @@ All configured via the Cloudflare dashboard/API (zone `example.com`, Free plan) 
 
 | Service         | Port  | URL                           | Notes                              |
 |-----------------|-------|-------------------------------|------------------------------------|
-| Jellyfin        | 8096  | `jellyfin.example.com`       | `inputs.arr-packages` build         |
-| qBittorrent     | 8081  | `qb.example.com`             | via nixarr                          |
-| Sonarr          | 8990  | `sonarr.example.com`         | TV — native `services.sonarr`, Postgres backend |
-| Radarr          | 7878  | `radarr.example.com`         | Movies — native `services.radarr`, Postgres backend |
-| Prowlarr        | 9696  | `prowlarr.example.com`       | Indexer — native `services.prowlarr`, Postgres backend |
-| Bazarr          | 6767  | `bazarr.example.com`         | Subtitles — native `services.bazarr`, Postgres backend |
-| Lidarr          | 8686  | `lidarr.example.com`         | Music                               |
-| LazyLibrarian   | 5299  | `lazylibrarian.example.com`  | Books — OCI container               |
-| Kapowarr        | 5656  | `kapowarr.example.com`       | Comics & manga — OCI container. DDL temp folder `/app/temp_downloads` → `/data/Downloads/kapowarr`; library roots `/comics`, `/manga`. qBittorrent category `kapowarr` saves to the same path (Remote Path Mapping `/data/Downloads/kapowarr`→`/app/temp_downloads` in the web UI). ComicVine key set in web UI. |
-| Seerr           | 5055  | `seerr.example.com`          | Request management — OCI container |
-| Audiobookshelf  | 9292  | `audiobookshelf.example.com` | Audiobooks                         |
+| Jellyfin        | 8096  | `jellyfin.<domain>`       | `inputs.arr-packages` build         |
+| qBittorrent     | 8081  | `qb.<domain>`             | via nixarr                          |
+| Sonarr          | 8990  | `sonarr.<domain>`         | TV — native `services.sonarr`, Postgres backend |
+| Radarr          | 7878  | `radarr.<domain>`         | Movies — native `services.radarr`, Postgres backend |
+| Prowlarr        | 9696  | `prowlarr.<domain>`       | Indexer — native `services.prowlarr`, Postgres backend |
+| Bazarr          | 6767  | `bazarr.<domain>`         | Subtitles — native `services.bazarr`, Postgres backend |
+| Lidarr          | 8686  | `lidarr.<domain>`         | Music                               |
+| LazyLibrarian   | 5299  | `lazylibrarian.<domain>`  | Books — OCI container               |
+| Kapowarr        | 5656  | `kapowarr.<domain>`       | Comics & manga — OCI container. DDL temp folder `/app/temp_downloads` → `/data/Downloads/kapowarr`; library roots `/comics`, `/manga`. qBittorrent category `kapowarr` saves to the same path (Remote Path Mapping `/data/Downloads/kapowarr`→`/app/temp_downloads` in the web UI). ComicVine key set in web UI. |
+| Seerr           | 5055  | `seerr.<domain>`          | Request management — OCI container |
+| Audiobookshelf  | 9292  | `audiobookshelf.<domain>` | Audiobooks                         |
 | Recyclarr       | —     | (no UI)                       | Auto-sync quality profiles to *arr |
 | Byparr          | 8191  | (internal only)               | Cloudflare bypass for Prowlarr — FlareSolverr-compatible, OCI container |
-| Dispatcharr     | 9191  | `dispatcharr.example.com`    | Stream dispatch — OCI container    |
+| Dispatcharr     | 9191  | `dispatcharr.<domain>`    | Stream dispatch — OCI container    |
 
 ### Reading / Library
 
 | Service   | Port  | URL                      | Notes             |
 |-----------|-------|--------------------------|-------------------|
-| Komga     | 8087  | `komga.example.com`     |                   |
-| Komf      | 8085  | `komf.example.com`      |                   |
-| Miniflux  | 8086  | `miniflux.example.com`  |                   |
+| Komga     | 8087  | `komga.<domain>`     |                   |
+| Komf      | 8085  | `komf.<domain>`      |                   |
+| Miniflux  | 8086  | `miniflux.<domain>`  |                   |
 
 ### Identity / SSO
 
 | Service  | Port  | URL                    | Notes                                                     |
 |----------|-------|------------------------|-----------------------------------------------------------|
-| Kanidm   | 3013  | `idm.example.com`     | OIDC provider for Grafana, Miniflux, Jellyfin, Audiobookshelf, Headscale. Self-signed TLS internally, Traefik terminates externally via `insecureSkipVerify`. Provisioned declaratively via sops secrets. |
+| Kanidm   | 3013  | `idm.<domain>`     | OIDC provider for Grafana, Miniflux, Jellyfin, Audiobookshelf, Headscale. Self-signed TLS internally, Traefik terminates externally via `insecureSkipVerify`. Provisioned declaratively via sops secrets. |
 
 ### Productivity / Home
 
 | Service        | Port  | URL                        | Notes                         |
 |----------------|-------|----------------------------|-------------------------------|
-| Home Assistant | 8123  | `hass.example.com`        | Podman OCI container; Alexa Smart Home; WoL for desktop; geoblock + rate-limit |
-| Homepage       | 8082  | `home.example.com`        | Dashboard (pinned v1.13.1 overlay) |
-| Radicale       | 5232  | `cal.example.com`         | CalDAV/CardDAV                |
-| ntfy           | 9991  | `ntfy.example.com`        | Push notifications            |
-| Microbin       | 8069  | `microbin.example.com`    | Paste bin                     |
-| Atuin server   | 8881  | `atuin.example.com`       | Shell history sync            |
-| CouchDB        | 5984  | `livesync.example.com`    | Obsidian LiveSync backend     |
+| Home Assistant | 8123  | `hass.<domain>`        | Podman OCI container; Alexa Smart Home; WoL for desktop; geoblock + rate-limit |
+| Homepage       | 8082  | `home.<domain>`        | Dashboard (pinned v1.13.1 overlay) |
+| Radicale       | 5232  | `cal.<domain>`         | CalDAV/CardDAV                |
+| ntfy           | 9991  | `ntfy.<domain>`        | Push notifications            |
+| Microbin       | 8069  | `microbin.<domain>`    | Paste bin                     |
+| Atuin server   | 8881  | `atuin.<domain>`       | Shell history sync            |
+| CouchDB        | 5984  | `livesync.<domain>`    | Obsidian LiveSync backend     |
 
 ### AI / Local LLM
 
@@ -368,7 +368,7 @@ All configured via the Cloudflare dashboard/API (zone `example.com`, Free plan) 
 
 ```
 node_exporter (all hosts) ──┐
-NUT exporter                ├──► Prometheus :9090 ──► Grafana :3003  ──► grafana.example.com
+NUT exporter                ├──► Prometheus :9090 ──► Grafana :3003  ──► grafana.<domain>
 Traefik metrics :8080       │         │
 CrowdSec metrics :6060      │         └──► Alertmanager ──► alertmanager-ntfy ──► ntfy
 router exporters (tailnet)  │
@@ -393,7 +393,7 @@ Traefik access.log ─────────┘
 |------------|------------------------------------------------|
 | PostgreSQL | Used by: Grafana, Miniflux, Atuin, others       |
 | Redis      | Cache layer for various services               |
-| CouchDB    | Obsidian LiveSync backend (`livesync.example.com`) |
+| CouchDB    | Obsidian LiveSync backend (`livesync.<domain>`) |
 
 ---
 

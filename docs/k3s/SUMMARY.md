@@ -15,7 +15,7 @@
 - Directory: `k3s/keycloak/`
 - Connects to system PostgreSQL
 - Exposed via LoadBalancer on port 9000
-- Accessible at `https://auth.example.com` via Cloudflare tunnel
+- Accessible at `https://auth.<domain>` via Cloudflare tunnel
 - Auto-configured with sops secrets
 
 ### 3. ✅ Secrets Management
@@ -83,7 +83,7 @@
                            │
                            │ HTTPS
                            ▼
-                https://auth.example.com
+                https://auth.<domain>
 ```
 
 ## How It Works
@@ -204,7 +204,7 @@ keycloak_db_password: <db-password>
 4. **Enable k3s module** in NixOS config
 5. **Deploy**: `sudo nixos-rebuild switch`
 6. **Verify**: `kubectl get all`
-7. **Access**: https://auth.example.com
+7. **Access**: https://auth.<domain>
 
 Full guide: [DEPLOYMENT.md](DEPLOYMENT.md)
 
@@ -440,7 +440,7 @@ You now have a **production-ready k3s setup** with:
 ✅ **k3s as systemd service** (not a VM!)
 ✅ **System PostgreSQL integration**
 ✅ **GitOps auto-deployment** from https://github.com/4rmcyt/gitops.git
-✅ **Keycloak for SSO** at https://auth.example.com
+✅ **Keycloak for SSO** at https://auth.<domain>
 ✅ **Sops secrets management**
 ✅ **No port conflicts**
 ✅ **Comprehensive documentation**

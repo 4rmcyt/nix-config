@@ -34,8 +34,8 @@ jobs:
         uses: tailscale/github-action@v4.1.3
         with:
           authkey: ${{ secrets.TS_AUTHKEY }}
-          args: --login-server=https://hs.example.com --accept-dns
-          ping: homeserver.ts.example.com
+          args: --login-server=https://hs.<domain> --accept-dns
+          ping: homeserver.ts.<domain>
       - name: Ship per-job summaries and failed-job logs to Loki
         env:
           GH_TOKEN: ${{ github.token }}

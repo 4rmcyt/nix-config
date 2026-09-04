@@ -88,7 +88,7 @@ systemctl status kea-dhcp4-server
 
 # Verify DNS
 systemctl status unbound
-dig @192.168.1.1 example.com
+dig @192.168.1.1 <domain>
 ```
 
 ## 6. Run nixos-facter (optional, improves hardware detection)
