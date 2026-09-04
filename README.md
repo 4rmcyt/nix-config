@@ -1,56 +1,60 @@
-# nix-config
+<h1 align="center">nix-config</h1>
 
-> 4rmcyt's NixOS fleet — five machines, one flake, zero hand-editing.
+<p align="center"><em>4rmcyt's NixOS fleet — five machines, one flake, zero hand-editing.</em></p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/NixOS-unstable-5277C3?logo=nixos&logoColor=white" alt="NixOS unstable">
+  <img src="https://img.shields.io/badge/Nix-flakes-7EBAE4?logo=nixos&logoColor=white" alt="Nix flakes">
+  <img src="https://img.shields.io/badge/flake--parts-modular-4A5FBF" alt="flake-parts">
+  <img src="https://img.shields.io/badge/Home_Manager-managed-41439A" alt="Home Manager">
+  <img src="https://img.shields.io/badge/secrets-sops--nix-1E7C3A" alt="sops-nix">
+  <a href="https://github.com/4rmcyt/nix-config/actions/workflows/ci.yml"><img src="https://github.com/4rmcyt/nix-config/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+</p>
 
 A [flake-parts](https://flake.parts) + [`import-tree`](https://github.com/vic/import-tree)
-configuration that builds and deploys every machine I run: a workstation, a
-laptop, a home server, a VLAN router, and a public cloud relay. Each host is a
+configuration that builds and deploys every machine I run. Each host is a
 composition of small single-responsibility modules; identity and LAN topology
 live in a separate private flake so this repo can stay public.
 
----
+## 🖥️ Hosts
 
-## Hosts
-
-| Host | Hardware | Role | Desktop / notable stack |
-|------|----------|------|--------------------------|
-| **desktop** | AMD Zen 4, NVIDIA | Workstation | Wayland via **mango** (`wl-only`, Vulkan renderer for HDR) + **noctalia** shell; gaming, libvirt/virt-manager, waydroid, CUDA caches |
-| **matebook** | AMD Zen 1 laptop | Mobile workstation | **niri** + noctalia; Limine + Secure Boot, suspend-then-hibernate, auto-cpufreq |
-| **homeserver** | Intel Coffee Lake | Services host | Traefik, media stack (nixarr), Postgres/Redis/CouchDB, monitoring, Kanidm, CrowdSec, restic backups |
-| **gcp-relay** | GCP `e2-micro` | Tailnet relay | **Headscale** control plane + DERP server, Caddy TLS, fail2ban, hardened |
-| **router** | Sophos SG appliance (Intel Atom) | Edge router | nftables firewall, Kea DHCP, Unbound resolver, VLAN segmentation, mDNS reflector — headless, no HM |
-
-Build any host:
+<table>
+  <tr><td><strong>desktop</strong></td><td>AMD Zen 4 + NVIDIA workstation. Wayland via <strong>mango</strong> + <strong>noctalia</strong>, gaming, libvirt, waydroid, local LLM, CUDA caches.</td></tr>
+  <tr><td><strong>matebook</strong></td><td>AMD Zen 1 laptop. <strong>niri</strong> + noctalia, Limine + Secure Boot, suspend-then-hibernate, auto-cpufreq.</td></tr>
+  <tr><td><strong>homeserver</strong></td><td>Intel Coffee Lake. Every service: Traefik, media stack (nixarr), Postgres / Redis / CouchDB, Prometheus/Grafana/Loki, Kanidm, CrowdSec, restic.</td></tr>
+  <tr><td><strong>gcp-relay</strong></td><td>GCP <code>e2-micro</code>. <strong>Headscale</strong> control plane + DERP server, Caddy TLS, fail2ban, hardened.</td></tr>
+  <tr><td><strong>router</strong></td><td>Sophos SG appliance (Intel Atom). nftables firewall, Kea DHCP, Unbound, VLAN segmentation, mDNS reflector. Headless, no HM.</td></tr>
+</table>
 
 ```bash
+# build one host locally
 nix build .#nixosConfigurations.<host>.config.system.build.toplevel
+# deploy a host (targets defined in the justfile)
+just deploy-homeserver
 ```
 
-Deploy targets are wired in the [`justfile`](justfile) (`just deploy-homeserver`,
-`just deploy-matebook`, `just deploy-gcp`, …).
+## 🌐 Topology
 
----
-
-## Topology
-
-Generated from the NixOS configs with [nix-topology](https://github.com/oddlama/nix-topology) —
-per-host annotations in [`modules/topology/`](modules/topology/default.nix), the
-internet / ISP router / switches / APs / network CIDRs in
+Generated from the NixOS configs with
+[nix-topology](https://github.com/oddlama/nix-topology) — per-host annotations in
+[`modules/topology/`](modules/topology/default.nix), the global picture (internet,
+ISP router, switches, APs, network CIDRs) in
 [`parts/topology.nix`](parts/topology.nix). Regenerate with `just topology`.
-Interface labels are deliberately IP-free, so these diagrams expose nothing beyond
+Interface labels are deliberately IP-free — the diagrams expose nothing beyond
 [`docs/Infrastructure.md`](docs/Infrastructure.md).
 
-### Physical
+**Physical**
 
 <a href="docs/topology.svg"><img src="docs/topology.svg" alt="Physical topology" width="100%"></a>
 
-### Network-centric
+**Network-centric**
 
 <a href="docs/topology-network.svg"><img src="docs/topology-network.svg" alt="Network-centric topology" width="100%"></a>
 
----
+## 🧩 Repository layout
 
-## Repository layout
+<details>
+<summary>Tree</summary>
 
 ```
 flake.nix               # ~15 lines — hands off to import-tree ./parts
@@ -64,7 +68,7 @@ parts/                  # flake-parts modules, auto-imported
   topology.nix          # nix-topology wiring + global topology
   configurations/       # configurations.nixos.<name> → nixosConfigurations
   hosts/<host>/         # per-host module composition
-hosts/nixos/<host>/     # hardware-configuration.nix, facter.json, config
+hosts/nixos/<host>/     # hardware-configuration.nix, facter.json, host config
 home/<host>/            # Home Manager config per host
 modules/                # ~190 single-purpose modules (imported explicitly)
   options/              # my.defaults.* · my.network.* · my.security.*
@@ -82,119 +86,111 @@ infra/tf/gcp-relay/     # OpenTofu — GCP static IP + instance
 docs/                   # Architecture · Infrastructure · CI-CD · hardware
 ```
 
-### How a host is assembled
+</details>
 
-`parts/hosts/<host>/configuration.nix` defines `configurations.nixos.<name>.module`,
-which `parts/configurations/nixos.nix` turns into `flake.nixosConfigurations.<name>`
-via `lib.nixosSystem`. Each host imports three shared deferred modules —
-`modules.nixos.base` (nix settings, caches, sops), `modules.nixos.hm` (Home
-Manager), `modules.nixos.workstation` (microcode, facter, gnupg) — plus its
-`hosts/nixos/<host>` tree and whatever input modules it needs. `deferredModule`
-merge semantics let several `parts/` files contribute to the same base.
+## 🔧 How a host is assembled
 
----
+`parts/hosts/<host>/configuration.nix` declares a `configurations.nixos.<name>.module`;
+`parts/configurations/nixos.nix` turns it into `flake.nixosConfigurations.<name>`.
+Each host imports:
 
-## Conventions
+- **`modules.nixos.base`** — nix settings, binary caches, sops, HM wiring
+- **`modules.nixos.hm`** — Home Manager (skipped on router + gcp-relay)
+- **`modules.nixos.workstation`** — microcode, facter, gnupg (skipped on router + gcp-relay)
+- its own `hosts/nixos/<host>/` tree + whatever flake-input modules it needs
 
-- **Metadata:** `config.meta.owner.*` in flake-parts scope, `config.my.defaults.*`
-  in NixOS modules — both resolve from the private `private` flake input
-  (`git+ssh://…/nix-config-private`). Never hardcoded. See
-  [`modules/options/private-example.nix`](modules/options/private-example.nix)
-  for the schema.
-- **Secrets:** [sops-nix](https://github.com/Mic92/sops-nix) + age. Referenced as
-  `config.sops.secrets.<name>.path`; plaintext never enters the repo. Age keys at
-  `/root/.config/sops/age/keys.txt` (system) and `~/.config/sops/age/keys.txt` (HM).
-- **Formatting:** `nix fmt` runs [treefmt](treefmt.nix) — alejandra, deadnix,
-  statix, prettier, shfmt/shellcheck, yamlfmt, toml-sort, rustfmt, opentofu.
-- **Commits:** Conventional — `type(scope): description`, scope = module or host.
-- **NixOS vs Home Manager:** system-level config in `modules/`, user-level in `home/`.
-- **Never guess config keys** — read the upstream schema before writing any
-  daemon/service option.
+`deferredModule` merge semantics let several `parts/` files contribute to the
+same base.
 
----
+## 🔐 Conventions
 
-## Networking & remote access
+- **Metadata** — `config.meta.owner.*` (flake-parts scope) / `config.my.defaults.*`
+  (NixOS scope) resolve from the private `private` flake input. Never hardcoded;
+  schema in [`modules/options/private-example.nix`](modules/options/private-example.nix).
+- **Secrets** — [sops-nix](https://github.com/Mic92/sops-nix) + age, referenced as
+  `config.sops.secrets.<name>.path`. Plaintext never enters the repo.
+- **Formatting** — `nix fmt` runs [treefmt](treefmt.nix) (alejandra, deadnix,
+  statix, prettier, shfmt, yamlfmt, toml-sort, rustfmt).
+- **Commits** — Conventional: `type(scope): description`, scope = module or host.
+- **Boundary** — system config in `modules/`, user config in `home/`.
+- **Never guess config keys** — read the upstream schema first.
 
-All machines join a self-hosted [Headscale](https://headscale.net) tailnet whose
-control plane and a DERP region run on **gcp-relay** (`hs.<domain>`, reached over
-Caddy TLS). The homeserver advertises its LAN subnet and an exit node; the router
-advertises the media VLAN. Split DNS for the private domain is served by Unbound
-(on the router and homeserver) with a NextDNS DoT upstream. Public service
-ingress on the homeserver terminates at **Traefik** with a Cloudflare DNS-01
-wildcard cert and a CrowdSec bouncer.
+## 📡 Networking & remote access
 
-Roughly what's published behind Traefik (`*.<domain>`):
+- **Tailnet** — all machines join a self-hosted [Headscale](https://headscale.net);
+  control plane + a DERP region run on **gcp-relay**. homeserver advertises its
+  LAN subnet + an exit node; router advertises the media VLAN.
+- **DNS** — Unbound on router and homeserver, split DNS for the private domain,
+  NextDNS DoT upstream.
+- **Ingress** — public traffic to homeserver terminates at **Traefik** (Cloudflare
+  DNS-01 wildcard cert, CrowdSec bouncer); a few services also go through a
+  Cloudflare Tunnel.
 
-`home` (homepage) · `grafana` · `miniflux` · `hass` · `jellyfin` · `sonarr` /
-`radarr` / `prowlarr` / `bazarr` / `lidarr` / `seerr` / `qb` · `audiobookshelf` ·
+<details>
+<summary>Published behind Traefik (<code>*.&lt;domain&gt;</code>)</summary>
+
+`home` · `grafana` · `miniflux` · `hass` · `jellyfin` · `sonarr` / `radarr` /
+`prowlarr` / `bazarr` / `lidarr` / `seerr` / `qb` · `audiobookshelf` ·
 `lazylibrarian` · `kapowarr` · `komga` / `komf` · `dispatcharr` · `atuin` ·
-`ntfy` · `cal` (radicale) · `microbin` · `livesync` (CouchDB) · `idm` (Kanidm) ·
-`jobko` · `traefik`
+`ntfy` · `cal` · `microbin` · `livesync` · `idm` · `jobko` · `traefik`
 
----
+</details>
 
-## Local inference
+## 🤖 Local inference
 
 [`modules/TUI/ai-tools/llama-cpp/`](modules/TUI/ai-tools/llama-cpp/default.nix) —
-per-host `llama-server` as a user service, bound to `127.0.0.1`, models pinned as
-`fetchurl` GGUFs (no runtime downloads):
+`llama-server` as a user service on `127.0.0.1`, models pinned as `fetchurl` GGUFs
+(no runtime downloads):
 
-| Host | Variant | Model | Backend | Notes |
-|------|---------|-------|---------|-------|
-| **desktop** | `default.nix` | Gemma 4 E4B (Q4_K_XL) | CUDA, all layers offloaded | `:8080`, 16K ctx, flash-attn, unloads after 15 min idle; companion `mcp-proxy` (`:8081`) bridges `~/.config/mcp/mcp.json` into the llama web UI |
-| **desktop** | `qwen32b-cpu.nix` | Qwen2.5-32B (Q4_K_M) | CPU, on-demand | `:8090`, no `WantedBy` (pins ~28 GB) — started/stopped by the fairy-tale pipeline's `generate_story.py`, unloads after 5 min idle |
-| **matebook** | `cpu.nix` | Qwen2.5-3B (Q4_K_M) | CPU | `:8080`, 8K ctx, 4 GB cap |
+- **desktop** `default.nix` — Gemma 4 E4B on CUDA (`:8080`, all layers offloaded,
+  16K ctx, flash-attn), unloads after 15 min idle. Companion `mcp-proxy` (`:8081`)
+  bridges `~/.config/mcp/mcp.json` into the llama web UI.
+- **desktop** `qwen32b-cpu.nix` — Qwen2.5-32B on CPU (`:8090`), on-demand only
+  (~28 GB, no `WantedBy`); started/stopped by the fairy-tale pipeline's
+  `generate_story.py`, unloads after 5 min idle.
+- **matebook** `cpu.nix` — Qwen2.5-3B on CPU (`:8080`, 8K ctx, 4 GB cap).
 
----
+## 🔁 CI
 
-## CI
-
-[`.github/workflows/ci.yml`](.github/workflows/ci.yml) is an orchestrator over
-reusable workflows:
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) orchestrates reusable workflows:
 
 ```
 flake-lock-update (schedule/dispatch only)
-  ├─ validate            nix fmt + flake check          (non-blocking, warns via Telegram)
-  └─ security-checks     Trivy · TruffleHog · SOPS · syntax   (hard gate)
-        └─ build-and-check-systems   real toplevel build of homeserver, matebook, gcp-relay
-              └─ workflow-summary    Telegram notification
-vulnix-scan   (schedule/dispatch only) — CVE scan of a built closure
+  ├─ validate          nix fmt + flake check     (non-blocking, Telegram warn)
+  └─ security-checks   Trivy · TruffleHog · SOPS (hard gate)
+       └─ build-and-check-systems   build: homeserver, matebook, gcp-relay
+            └─ workflow-summary     Telegram notification
+vulnix-scan (schedule/dispatch only)   CVE scan of a built closure
 ```
 
-`desktop` is intentionally excluded from CI builds — its full GUI/CUDA closure
-exceeds GitHub-hosted runner limits; it's built on the machine itself. Per-host
-builds are pushed to per-host Cachix caches (`4rmcyt-<host>.cachix.org`).
+`desktop` is excluded from CI builds — its GUI/CUDA closure exceeds GitHub runner
+limits; it's built on the machine. Per-host builds push to per-host Cachix caches
+(`4rmcyt-<host>.cachix.org`).
 
----
-
-## Local development
+## 🛠️ Local development
 
 ```bash
 nix develop          # tooling shell: sops, age, gitleaks, ripsecrets, nh, nix-tree, …
 nix fmt              # format everything
 nix flake check      # validate outputs
-just topology        # regenerate the topology SVGs (see Topology above)
+just topology        # regenerate the topology SVGs
 ```
 
----
+## 📦 Key inputs
 
-## Key inputs
+`nixpkgs` (unstable) · `flake-parts` · `import-tree` · `home-manager` · `sops-nix` ·
+`disko` · `nixos-facter-modules` · `nixos-anywhere` · `determinate` / lix · `mango` ·
+`niri-flake` · `noctalia` · `stylix` · `nixvim` · `nix-vscode-extensions` · `nixarr` ·
+`arr-packages` (own) · `headscale` · `nix-topology` · `nix-flatpak` · `mcp-nixos` /
+`mcp-servers-nix` · `nix-index-database` · `auto-cpufreq` · `ucodenix` ·
+`private` (own, identity/topology).
 
-`nixpkgs` (unstable) · `flake-parts` · `import-tree` · `home-manager` ·
-`sops-nix` · `disko` · `impermanence` · `nixos-facter-modules` · `nixos-anywhere` ·
-`determinate` / lix · `mango` · `niri-flake` · `noctalia` · `stylix` · `nixvim` ·
-`nix-vscode-extensions` · `nixarr` · `arr-packages` (own) · `headscale` ·
-`nix-topology` · `nix-flatpak` · `mcp-nixos` / `mcp-servers-nix` · `nix-index-database` ·
-`auto-cpufreq` · `ucodenix` · `private` (own, identity/topology).
-
----
-
-## Docs
+## 📚 Docs
 
 | File | Covers |
 |------|--------|
-| [docs/Architecture.md](docs/Architecture.md) | Flake structure, `parts/`, module layout, options system |
-| [docs/Infrastructure.md](docs/Infrastructure.md) | Homeserver services, ZFS layout, ports, networking |
-| [docs/CI-CD.md](docs/CI-CD.md) | Full pipeline diagram and per-workflow detail |
-| [docs/gcp.md](docs/gcp.md) | gcp-relay deploy + first-boot |
-| [docs/router-installation.md](docs/router-installation.md), [docs/efi.md](docs/efi.md), [docs/bios-desktop-settings.md](docs/bios-desktop-settings.md) | Hardware / firmware notes |
+| [Architecture.md](docs/Architecture.md) | Flake structure, `parts/`, module layout, options system |
+| [Infrastructure.md](docs/Infrastructure.md) | Homeserver services, ZFS layout, ports, networking |
+| [CI-CD.md](docs/CI-CD.md) | Full pipeline diagram and per-workflow detail |
+| [gcp.md](docs/gcp.md) | gcp-relay deploy + first-boot |
+| [router-installation.md](docs/router-installation.md) · [efi.md](docs/efi.md) · [bios-desktop-settings.md](docs/bios-desktop-settings.md) | Hardware / firmware notes |
