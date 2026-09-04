@@ -114,8 +114,7 @@ same base.
   DNS-01 wildcard cert, CrowdSec bouncer); a few services also go through a
   Cloudflare Tunnel.
 
-<details>
-<summary>Services published behind Traefik (<code>*.&lt;domain&gt;</code>)</summary>
+Services published behind Traefik (`*.<domain>`):
 
 | Group | Subdomains |
 |-------|------------|
@@ -123,8 +122,6 @@ same base.
 | **Reading** | `komga` · `komf` · `miniflux` |
 | **Home & personal** | `home` · `hass` · `cal` · `ntfy` · `atuin` · `livesync` · `microbin` |
 | **Identity & ops** | `idm` · `grafana` · `jobko` · `traefik` |
-
-</details>
 
 ## 🤖 Local inference
 
