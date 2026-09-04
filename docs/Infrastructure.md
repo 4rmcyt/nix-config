@@ -165,7 +165,7 @@ Disko config in `modules/disko/desktop/`. GPT: `/boot` ESP + Btrfs remainder (la
 - **DM:** greetd, execs `env WLR_RENDERER=vulkan mango` directly for `zeev`
 - **Shell:** noctalia v5 (native C++ bar/shell, no Quickshell)
 - **Theming:** noctalia dynamic colors (Stylix wired but currently disabled)
-- **Portal:** `modules/xdg` (portal-gnome + portal-gtk); gnome-keyring for secrets
+- **Portal:** handled by nixpkgs' own `programs.mango` module (portal-wlr + portal-gtk, gnome-keyring for secrets) — no repo-local xdg module
 - Ran Hyprland until 2026-08-22, then fully migrated to mango
 
 #### Nix Build

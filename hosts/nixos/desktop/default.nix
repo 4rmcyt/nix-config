@@ -40,7 +40,6 @@
     ../../../modules/GUI/waydroid
     ../../../modules/TUI/tty.nix
     ../../../modules/users/zeev
-    ../../../modules/xdg
   ];
 
   # Secrets Management

@@ -50,10 +50,9 @@ modules/
                             #   k3s (disabled), argocd (disabled)
   containers/               # Podman container support
   disko/                    # Declarative disk layouts per host
-  users/                    # Per-user NixOS config (zeev, vk)
+  users/                    # Per-user NixOS config (zeev)
   backup/                   # Backup tooling
   dots/                     # Dotfile management
-  xdg/                      # XDG portal config (NixOS level: xdg-desktop-portal-gnome + gtk)
   WM/                       # Window manager HM modules
     default.nix             # XDG user dirs (HM level)
     gtk.nix                 # GTK theming
@@ -209,7 +208,6 @@ No local `overlays/` directory. All overlays come from flake inputs:
 | `modules/WM/default.nix` | XDG user dirs (HM level) |
 | `modules/WM/gtk.nix` | GTK theming |
 | `modules/WM/mime/` | MIME type associations |
-| `modules/xdg/default.nix` | NixOS XDG portals: xdg-desktop-portal-gnome + gtk |
 
 **noctalia inputs:**
 - `inputs.noctalia` = `github:noctalia-dev/noctalia/cachix` (v5, C++ rewrite — pinned to the `cachix` branch, which always points at the latest commit noctalia's own CI has finished pushing to `noctalia.cachix.org`, so it never forces a local compile the way tracking `main` directly can)

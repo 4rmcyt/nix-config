@@ -75,10 +75,9 @@ modules/
   monitoring/           # prometheus, grafana, loki, alloy, alertmanager
   database/             # postgresql, redis, couchdb
   disko/                # Declarative disk partitioning per host
-  users/                # Per-user NixOS config (zeev, vk)
+  users/                # Per-user NixOS config (zeev)
   backup/               # Backup tooling (restic)
   containers/           # Podman container support
-  xdg/                  # XDG portal config
 parts/                  # flake-parts modules (auto-imported via import-tree)
 secrets/                # sops-encrypted YAML (NEVER commit plaintext)
 ```

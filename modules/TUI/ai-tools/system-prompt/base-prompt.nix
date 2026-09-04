@@ -26,13 +26,12 @@ in ''
     monitoring/           # prometheus, grafana, loki, alloy, alerts, node-exporter
     database/             # postgresql, redis, couchdb
     disko/                # Declarative disk partitioning per host
-    users/                # Per-user NixOS config (zeev, vk)
+    users/                # Per-user NixOS config (zeev)
     backup/               # Backup tooling (restic)
     containers/           # Podman container support
     dev/                  # Developer tools
     dots/                 # Dotfile management
     nix/                  # Nix daemon variants (lix)
-    xdg/                  # XDG portal config
   parts/                  # flake-parts modules (auto-imported via import-tree)
   secrets/                # sops-encrypted YAML (NEVER commit plaintext)
   ```
