@@ -36,7 +36,8 @@
     unixSocket = "/run/redis-homeserver/redis.sock";
     unixSocketPerm = 660;
 
-    # Simple password authentication - oauth2-proxy password
+    # Secret is still named redis-oauth2-proxy-password from an earlier
+    # setup; the only current consumer is dispatcharr (database 3).
     requirePassFile = config.sops.secrets.redis-oauth2-proxy-password.path;
 
     # Database configuration
@@ -122,16 +123,3 @@
     };
   };
 }
-# Configuration Notes
-# Simple Redis setup: one password, separate databases per service
-#
-# Database allocation:
-# - oauth2-proxy: database 0
-# - paperless: database 1 (when enabled)
-#
-# All services use the same password (oauth2_proxy_password from secrets)
-# Isolation is achieved through different database numbers
-#
-# Connection format:
-# - TCP: redis://127.0.0.1:6379/0 + redis-password-file option
-

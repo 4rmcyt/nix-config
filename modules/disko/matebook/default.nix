@@ -1,18 +1,15 @@
 # Disko configuration for Huawei MateBook D14 WAQ9BR
-# Standard layout: EFI boot + root partition + swap file
-# Adjust device path if your NVMe device is different
 _: {
   disko.devices = {
     disk = {
       main = {
         type = "disk";
-        device = "/dev/disk/by-id/nvme-WDC_PC_SN730_SDBPNTY-512G-1027_20230H445703"; # Verify with 'lsblk' before installing!
+        device = "/dev/disk/by-id/nvme-WDC_PC_SN730_SDBPNTY-512G-1027_20230H445703";
         content = {
           type = "gpt";
           partitions = {
             ESP = {
               size = "2G";
-              # Your actual EFI partition size
               type = "EF00";
               content = {
                 type = "filesystem";
@@ -27,7 +24,6 @@ _: {
             };
             root = {
               size = "100%";
-              # Rest of disk
               content = {
                 type = "filesystem";
                 format = "ext4";

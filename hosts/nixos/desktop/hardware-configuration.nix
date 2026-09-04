@@ -490,11 +490,9 @@
         SUBSYSTEM=="input", ATTRS{name}=="Rapoo Rapoo Gaming Device", TAG+="uaccess"
 
         # MSI MYSTIC LIGHT - disable entirely
-        # Changed DEVTYPE to ENV{DEVTYPE} for schema compliance
         ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="1462", ATTRS{idProduct}=="7d75", ATTR{authorized}="0"
 
         # Lock PC on yubikey removal
-        # Added spaces after commas and corrected line continuation spacing
         ACTION=="remove", \
           ENV{ID_BUS}=="usb", \
           ENV{ID_MODEL_ID}=="0407", \
