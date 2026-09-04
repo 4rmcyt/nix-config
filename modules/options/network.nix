@@ -70,154 +70,31 @@ in {
       };
     };
 
-    # MAC addresses — one attrset per device, co-located with IPs for DRY dhcp.nix.
-    # Values come from the private flake input (net.mac.*).
-    mac = let
-      macOpt = key: desc:
-        lib.mkOption {
-          type = lib.types.str;
-          default = net.mac.${key};
-          description = desc;
-        };
-    in {
-      homeserver = macOpt "homeserver" "homeserver NIC";
-      desktop-lan = macOpt "desktop-lan" "desktop wired NIC";
-      desktop-wifi = macOpt "desktop-wifi" "desktop wireless NIC";
-      matebook = macOpt "matebook" "Matebook wireless NIC";
-      homeassistant-vm = macOpt "homeassistant-vm" "Home Assistant VM virtual NIC";
-      switch-office = macOpt "switch-office" "TL-SG108E office switch mgmt";
-      switch-livingroom = macOpt "switch-livingroom" "TL-SG108E living room switch mgmt";
-      alexa = macOpt "alexa" "Amazon Echo Show";
-      plug-entrance = macOpt "plug-entrance" "HS103 entrance plug";
-      plug-salt = macOpt "plug-salt" "HS103 salt lamp plug";
-      plug-office = macOpt "plug-office" "HS103 office plug";
-      plug-table = macOpt "plug-table" "HS103 table plug";
-      plug-window = macOpt "plug-window" "HS103 window plug";
-      humidifier = macOpt "humidifier" "Smart humidifier";
-      # Both phones have per-SSID MAC randomisation turned off for the home
-      # network so these DHCP reservations stay stable.
-      sophia-s23 = macOpt "sophia-s23" "phone A";
-      volodymyr-s23 = macOpt "volodymyr-s23" "phone B";
-      ps5 = macOpt "ps5" "PlayStation 5";
-      nintendo-switch = macOpt "nintendo-switch" "Nintendo Switch OLED";
-      mi-box-s = macOpt "mi-box-s" "Xiaomi Mi Box S";
-      roku-tv = macOpt "roku-tv" "Roku TV WiFi";
+    # MAC addresses referenced outside the DHCP reservation list (currently just
+    # the desktop Wi-Fi NIC, for a udev naming rule). Keyed attrset from the
+    # private flake.
+    mac = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = net.mac or {};
+      description = "MAC addresses by device key (defined in the private flake).";
     };
 
-    # Network infrastructure — values from the private flake input.
-    infrastructure = {
-      router = lib.mkOption {
-        type = lib.types.str;
-        default = net.infrastructure.router;
-        description = "NixOS router (Sophos SG110/120)";
-      };
-
-      isp-router = lib.mkOption {
-        type = lib.types.str;
-        default = net.infrastructure."isp-router";
-        description = "ISP router (Technicolor NH20T) — WAN uplink";
-      };
-
-      switch-office = lib.mkOption {
-        type = lib.types.str;
-        default = net.infrastructure."switch-office";
-        description = "Office network switch (TL-SG108E)";
-      };
-
-      switch-living-room = lib.mkOption {
-        type = lib.types.str;
-        default = net.infrastructure."switch-living-room";
-        description = "Living room network switch (TL-SG108E)";
-      };
+    # Network infrastructure IPs (router, ISP router, managed switches). Keyed
+    # attrset from the private flake.
+    infrastructure = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = net.infrastructure or {};
+      description = "Infrastructure IPs by device key (defined in the private flake).";
     };
 
-    # Smart home devices (IoT VLAN — 192.168.20.0/24) — values from private input.
-    smart-home = {
-      plugs = {
-        office = lib.mkOption {
-          type = lib.types.str;
-          default = net."smart-home".plugs.office;
-          description = "Office HS103 smart plug — IoT VLAN";
-        };
-
-        entrance = lib.mkOption {
-          type = lib.types.str;
-          default = net."smart-home".plugs.entrance;
-          description = "Entrance HS103 smart plug — IoT VLAN";
-        };
-
-        table = lib.mkOption {
-          type = lib.types.str;
-          default = net."smart-home".plugs.table;
-          description = "Table HS103 smart plug — IoT VLAN";
-        };
-
-        window = lib.mkOption {
-          type = lib.types.str;
-          default = net."smart-home".plugs.window;
-          description = "Window HS103 smart plug — IoT VLAN";
-        };
-
-        salt = lib.mkOption {
-          type = lib.types.str;
-          default = net."smart-home".plugs.salt;
-          description = "Salt HS103 smart plug — IoT VLAN";
-        };
-      };
-
-      humidifier = lib.mkOption {
-        type = lib.types.str;
-        default = net."smart-home".humidifier;
-        description = "Smart humidifier — IoT VLAN";
-      };
-
-      alexa-echo-show = lib.mkOption {
-        type = lib.types.str;
-        default = net."smart-home"."alexa-echo-show";
-        description = "Amazon Echo Show — IoT VLAN";
-      };
-    };
-
-    # Entertainment devices (media VLAN — 192.168.30.0/24) — values from private input.
-    entertainment = {
-      roku-tv = lib.mkOption {
-        type = lib.types.str;
-        default = net.entertainment."roku-tv";
-        description = "Roku TV WiFi — media VLAN";
-      };
-
-      mi-box-s = lib.mkOption {
-        type = lib.types.str;
-        default = net.entertainment."mi-box-s";
-        description = "Xiaomi Mi Box S Android TV — media VLAN";
-      };
-
-      playstation-5 = lib.mkOption {
-        type = lib.types.str;
-        default = net.entertainment."playstation-5";
-        description = "PlayStation 5 — media VLAN";
-      };
-
-      nintendo-switch = lib.mkOption {
-        type = lib.types.str;
-        default = net.entertainment."nintendo-switch";
-        description = "Nintendo Switch OLED — media VLAN";
-      };
-    };
-
-    # Mobile devices (trusted VLAN — 192.168.1.0/24) — values from private input.
-    mobile = {
-      sophia-s23-ultra = lib.mkOption {
-        type = lib.types.str;
-        default = net.mobile."sophia-s23-ultra";
-        description = "phone A — trusted VLAN";
-      };
-
-      volodymyr-s23 = lib.mkOption {
-        type = lib.types.str;
-        default = net.mobile."volodymyr-s23";
-        description = "phone B — trusted VLAN";
-      };
+    # Full home device inventory — DHCP reservations on the router plus the
+    # /etc/hosts and SSH aliases derived from them. Defined in the private
+    # flake so device names never land in the public repo. Each entry:
+    #   { hostname; mac; ip; subnetId; aliases ? []; }
+    reservations = lib.mkOption {
+      type = lib.types.listOf (lib.types.attrsOf lib.types.anything);
+      default = net.reservations or [];
+      description = "DHCP reservations / host aliases (defined in the private flake).";
     };
 
     # Network subnets

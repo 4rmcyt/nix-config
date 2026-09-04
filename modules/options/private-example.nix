@@ -22,6 +22,7 @@
   network = {
     gateway = "192.0.2.1";
     gcpRelayIp = "203.0.113.1";
+
     hosts = {
       homeserver_lan = "192.0.2.10";
       desktop_lan = "192.0.2.11";
@@ -29,36 +30,53 @@
       matebook_wifi = "192.0.2.13";
       homeassistant-vm = "192.0.2.14";
     };
+
+    # MACs still needed outside the reservation list (→ my.network.mac.*).
     mac = {
-      # one "aa:bb:cc:dd:ee:ff" per key in modules/options/network.nix `mac`
+      desktop-wifi = "aa:bb:cc:dd:ee:ff";
     };
+
+    # → my.network.infrastructure.*
     infrastructure = {
       router = "192.0.2.1";
       isp-router = "192.0.2.254";
       switch-office = "192.0.2.2";
       switch-living-room = "192.0.2.3";
     };
-    smart-home = {
-      plugs = {
-        office = "198.51.100.10";
-        entrance = "198.51.100.11";
-        table = "198.51.100.12";
-        window = "198.51.100.13";
-        salt = "198.51.100.14";
-      };
-      humidifier = "198.51.100.15";
-      alexa-echo-show = "198.51.100.16";
-    };
-    entertainment = {
-      roku-tv = "198.51.100.20";
-      mi-box-s = "198.51.100.21";
-      playstation-5 = "198.51.100.22";
-      nintendo-switch = "198.51.100.23";
-    };
-    mobile = {
-      sophia-s23-ultra = "192.0.2.20";
-      volodymyr-s23 = "192.0.2.21";
-    };
+
     nextdns.profileId = "abcdef";
+
+    # Full device inventory → my.network.reservations. Drives the router's Kea
+    # DHCP reservations (hosts/nixos/router/dhcp.nix) and the /etc/hosts + SSH
+    # aliases (modules/networking/ssh). `subnetId` matches the Kea subnet4 id
+    # (10 trusted, 20 iot, 30 media); `aliases` is optional.
+    reservations = [
+      {
+        hostname = "host-a";
+        mac = "aa:bb:cc:00:00:01";
+        ip = "192.0.2.20";
+        subnetId = 10;
+      }
+      {
+        hostname = "phone-a";
+        mac = "aa:bb:cc:00:00:02";
+        ip = "192.0.2.21";
+        subnetId = 10;
+        aliases = ["my-phone"];
+      }
+      {
+        hostname = "plug-1";
+        mac = "aa:bb:cc:00:00:03";
+        ip = "198.51.100.10";
+        subnetId = 20;
+      }
+      {
+        hostname = "console-1";
+        mac = "aa:bb:cc:00:00:04";
+        ip = "198.51.100.20";
+        subnetId = 30;
+        aliases = ["game-console"];
+      }
+    ];
   };
 }

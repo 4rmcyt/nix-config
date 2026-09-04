@@ -1,4 +1,8 @@
-{config, ...}: let
+{
+  config,
+  lib,
+  ...
+}: let
   inherit (config.my.defaults) user domain;
 in {
   # SSH Secrets Management with SOPS
@@ -80,39 +84,27 @@ in {
   '';
 
   # /etc/hosts Configuration
-  networking.hosts = {
-    # Gateway / Router
-    "${config.my.network.gateway}" = ["router" "gateway" "router-mgmt"];
+  networking.hosts =
+    {
+      # Gateway / Router
+      "${config.my.network.gateway}" = ["router" "gateway" "router-mgmt"];
 
-    # Primary systems
-    "${config.my.network.hosts.homeserver_lan}" = ["homeserver" "serv"];
-    "${config.my.network.hosts.desktop_lan}" = ["desktop" "desktop-lan"];
-    "${config.my.network.hosts.desktop_wifi}" = ["desktop-wifi"];
-    "${config.my.network.hosts.matebook_wifi}" = ["matebook"];
+      # Primary systems
+      "${config.my.network.hosts.homeserver_lan}" = ["homeserver" "serv"];
+      "${config.my.network.hosts.desktop_lan}" = ["desktop" "desktop-lan"];
+      "${config.my.network.hosts.desktop_wifi}" = ["desktop-wifi"];
+      "${config.my.network.hosts.matebook_wifi}" = ["matebook"];
 
-    # Network infrastructure
-    "${config.my.network.infrastructure.switch-office}" = ["switch-office"];
-    "${config.my.network.infrastructure.switch-living-room}" = ["switch-living-room"];
-
-    # Smart home devices
-    "${config.my.network.smart-home.plugs.office}" = ["plug-office"];
-    "${config.my.network.smart-home.plugs.entrance}" = ["plug-entrance"];
-    "${config.my.network.smart-home.plugs.table}" = ["plug-table"];
-    "${config.my.network.smart-home.plugs.window}" = ["plug-window"];
-    "${config.my.network.smart-home.plugs.salt}" = ["plug-salt"];
-    "${config.my.network.smart-home.humidifier}" = ["humidifier"];
-    "${config.my.network.smart-home.alexa-echo-show}" = ["alexa" "echo-show"];
-
-    # Entertainment devices
-    "${config.my.network.entertainment.roku-tv}" = ["roku-tv" "tv"];
-    "${config.my.network.entertainment.mi-box-s}" = ["mi-box" "android-tv"];
-    "${config.my.network.entertainment.playstation-5}" = ["ps5" "playstation"];
-    "${config.my.network.entertainment.nintendo-switch}" = ["switch" "nintendo"];
-
-    # Mobile devices
-    "${config.my.network.mobile.sophia-s23-ultra}" = ["sophia-phone"];
-    "${config.my.network.mobile.volodymyr-s23}" = ["volodymyr-phone" "s23plus"];
-  };
+      # Network infrastructure
+      "${config.my.network.infrastructure.switch-office}" = ["switch-office"];
+      "${config.my.network.infrastructure.switch-living-room}" = ["switch-living-room"];
+    }
+    # Smart-home / entertainment / phone entries — generated from the private
+    # DHCP reservation list (iot + media VLANs, plus any trusted-VLAN entry that
+    # carries extra aliases).
+    // lib.listToAttrs (map
+      (r: lib.nameValuePair r.ip ([r.hostname] ++ (r.aliases or [])))
+      (lib.filter (r: r.subnetId != 10 || (r.aliases or []) != []) config.my.network.reservations));
 
   # SSH Known Hosts
   programs.ssh.knownHosts = {

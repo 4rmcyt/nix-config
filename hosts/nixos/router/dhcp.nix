@@ -1,7 +1,17 @@
-# Kea DHCPv4 — one subnet per VLAN, reservations from my.network.* options.
-{config, ...}: let
+# Kea DHCPv4 — one subnet per VLAN. Reservations come from
+# my.network.reservations (defined in the private flake).
+{
+  config,
+  lib,
+  ...
+}: let
   n = config.my.network;
-  m = n.mac;
+  reservationsFor = id:
+    map (r: {
+      hw-address = r.mac;
+      ip-address = r.ip;
+      inherit (r) hostname;
+    }) (lib.filter (r: r.subnetId == id) n.reservations);
 in {
   services.kea.dhcp4 = {
     enable = true;
@@ -42,53 +52,7 @@ in {
               data = "192.168.1.255";
             }
           ];
-          reservations = [
-            {
-              hw-address = m.homeserver;
-              ip-address = n.hosts.homeserver_lan;
-              hostname = "homeserver";
-            }
-            {
-              hw-address = m.desktop-lan;
-              ip-address = n.hosts.desktop_lan;
-              hostname = "desktop";
-            }
-            {
-              hw-address = m.desktop-wifi;
-              ip-address = n.hosts.desktop_wifi;
-              hostname = "desktop-wifi";
-            }
-            {
-              hw-address = m.matebook;
-              ip-address = n.hosts.matebook_wifi;
-              hostname = "matebook";
-            }
-            {
-              hw-address = m.homeassistant-vm;
-              ip-address = n.hosts.homeassistant-vm;
-              hostname = "homeassistant";
-            }
-            {
-              hw-address = m.switch-office;
-              ip-address = n.infrastructure.switch-office;
-              hostname = "switch-office";
-            }
-            {
-              hw-address = m.switch-livingroom;
-              ip-address = n.infrastructure.switch-living-room;
-              hostname = "switch-livingroom";
-            }
-            {
-              hw-address = m.sophia-s23;
-              ip-address = n.mobile.sophia-s23-ultra;
-              hostname = "sophia-s23";
-            }
-            {
-              hw-address = m.volodymyr-s23;
-              ip-address = n.mobile.volodymyr-s23;
-              hostname = "volodymyr-s23";
-            }
-          ];
+          reservations = reservationsFor 10;
         }
 
         # ── VLAN 20 — iot ───────────────────────────────────────────────
@@ -111,44 +75,8 @@ in {
               data = "192.168.20.255";
             }
           ];
-          reservations = [
-            {
-              hw-address = m.alexa;
-              ip-address = n.smart-home.alexa-echo-show;
-              hostname = "alexa";
-            }
-            {
-              hw-address = m.plug-entrance;
-              ip-address = n.smart-home.plugs.entrance;
-              hostname = "plug-entrance";
-            }
-            {
-              hw-address = m.plug-salt;
-              ip-address = n.smart-home.plugs.salt;
-              hostname = "plug-salt";
-            }
-            {
-              hw-address = m.plug-office;
-              ip-address = n.smart-home.plugs.office;
-              hostname = "plug-office";
-            }
-            {
-              hw-address = m.plug-table;
-              ip-address = n.smart-home.plugs.table;
-              hostname = "plug-table";
-            }
-            {
-              hw-address = m.plug-window;
-              ip-address = n.smart-home.plugs.window;
-              hostname = "plug-window";
-            }
-            {
-              hw-address = m.humidifier;
-              ip-address = n.smart-home.humidifier;
-              hostname = "humidifier";
-            }
-            # OpenWrt AP — add mac when available
-          ];
+          # OpenWrt AP — add to my.network.reservations when its mac is known
+          reservations = reservationsFor 20;
         }
 
         # ── media — physical port enp3s0 (no VLAN tagging) ─────────────
@@ -171,28 +99,7 @@ in {
               data = "192.168.30.255";
             }
           ];
-          reservations = [
-            {
-              hw-address = m.ps5;
-              ip-address = n.entertainment.playstation-5;
-              hostname = "ps5";
-            }
-            {
-              hw-address = m.nintendo-switch;
-              ip-address = n.entertainment.nintendo-switch;
-              hostname = "nintendo-switch";
-            }
-            {
-              hw-address = m.mi-box-s;
-              ip-address = n.entertainment.mi-box-s;
-              hostname = "mi-box-s";
-            }
-            {
-              hw-address = m.roku-tv;
-              ip-address = n.entertainment.roku-tv;
-              hostname = "roku-tv";
-            }
-          ];
+          reservations = reservationsFor 30;
         }
 
         # ── VLAN 40 — work ──────────────────────────────────────────────
