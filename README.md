@@ -115,12 +115,14 @@ same base.
   Cloudflare Tunnel.
 
 <details>
-<summary>Published behind Traefik (<code>*.&lt;domain&gt;</code>)</summary>
+<summary>Services published behind Traefik (<code>*.&lt;domain&gt;</code>)</summary>
 
-`home` · `grafana` · `miniflux` · `hass` · `jellyfin` · `sonarr` / `radarr` /
-`prowlarr` / `bazarr` / `lidarr` / `seerr` / `qb` · `audiobookshelf` ·
-`lazylibrarian` · `kapowarr` · `komga` / `komf` · `dispatcharr` · `atuin` ·
-`ntfy` · `cal` · `microbin` · `livesync` · `idm` · `jobko` · `traefik`
+| Group | Subdomains |
+|-------|------------|
+| **Media** | `jellyfin` · `qb` · `sonarr` · `radarr` · `prowlarr` · `bazarr` · `lidarr` · `seerr` · `audiobookshelf` · `lazylibrarian` · `kapowarr` · `dispatcharr` |
+| **Reading** | `komga` · `komf` · `miniflux` |
+| **Home & personal** | `home` · `hass` · `cal` · `ntfy` · `atuin` · `livesync` · `microbin` |
+| **Identity & ops** | `idm` · `grafana` · `jobko` · `traefik` |
 
 </details>
 
@@ -163,46 +165,6 @@ nix fmt              # format everything
 nix flake check      # validate outputs
 just topology        # regenerate the topology SVGs
 ```
-
-## 📦 Key inputs
-
-**Core** &nbsp;
-![nixpkgs](https://img.shields.io/badge/nixpkgs-5277C3)
-![flake-parts](https://img.shields.io/badge/flake--parts-5277C3)
-![import-tree](https://img.shields.io/badge/import--tree-5277C3)
-![home-manager](https://img.shields.io/badge/home--manager-5277C3)
-
-**System** &nbsp;
-![sops-nix](https://img.shields.io/badge/sops--nix-0B7285)
-![disko](https://img.shields.io/badge/disko-0B7285)
-![nixos-facter-modules](https://img.shields.io/badge/nixos--facter--modules-0B7285)
-![nixos-anywhere](https://img.shields.io/badge/nixos--anywhere-0B7285)
-![determinate / lix](https://img.shields.io/badge/determinate%20%2F%20lix-0B7285)
-![ucodenix](https://img.shields.io/badge/ucodenix-0B7285)
-![auto-cpufreq](https://img.shields.io/badge/auto--cpufreq-0B7285)
-
-**Desktop** &nbsp;
-![mango](https://img.shields.io/badge/mango-7048E8)
-![niri-flake](https://img.shields.io/badge/niri--flake-7048E8)
-![noctalia](https://img.shields.io/badge/noctalia-7048E8)
-![stylix](https://img.shields.io/badge/stylix-7048E8)
-![nixvim](https://img.shields.io/badge/nixvim-7048E8)
-![nix-vscode-extensions](https://img.shields.io/badge/nix--vscode--extensions-7048E8)
-![nix-flatpak](https://img.shields.io/badge/nix--flatpak-7048E8)
-
-**Services** &nbsp;
-![nixarr](https://img.shields.io/badge/nixarr-E8590C)
-![arr-packages (own)](https://img.shields.io/badge/arr--packages-own-E8590C)
-![headscale](https://img.shields.io/badge/headscale-E8590C)
-![nix-topology](https://img.shields.io/badge/nix--topology-E8590C)
-
-**Tooling** &nbsp;
-![mcp-nixos](https://img.shields.io/badge/mcp--nixos-C2255C)
-![mcp-servers-nix](https://img.shields.io/badge/mcp--servers--nix-C2255C)
-![nix-index-database](https://img.shields.io/badge/nix--index--database-C2255C)
-
-**Private** &nbsp;
-![private (own)](https://img.shields.io/badge/private-identity%20%2B%20LAN%20topology-495057)
 
 ## 📚 Docs
 
