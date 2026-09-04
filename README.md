@@ -53,8 +53,8 @@ Interface labels are deliberately IP-free — the diagrams expose nothing beyond
 
 ## 🧩 Repository layout
 
-- <img src="https://img.shields.io/badge/flake.nix-8250DF" alt="flake.nix"> — ~15 lines; delegates to `import-tree ./parts`
-- <img src="https://img.shields.io/badge/parts%2F-8250DF" alt="parts/"> — flake-parts modules, auto-imported
+- **`flake.nix`** — ~15 lines; delegates to `import-tree ./parts`
+- **`parts/`** — flake-parts modules, auto-imported
   - `owner.nix` — private identity/topology → `meta.owner.*`
   - `meta.nix` / `flake-parts-modules.nix` — internal options (`meta`, `modules`)
   - `shared-nixos-settings.nix` — nix daemon, caches, sops, access tokens
@@ -62,9 +62,9 @@ Interface labels are deliberately IP-free — the diagrams expose nothing beyond
   - `topology.nix` — nix-topology wiring + global topology
   - `configurations/` — `configurations.nixos.<name>` → `nixosConfigurations`
   - `hosts/<host>/` — per-host module composition
-- <img src="https://img.shields.io/badge/hosts%2Fnixos%2F-1F883D" alt="hosts/nixos/"> — per-host `hardware-configuration.nix`, `facter.json`, NixOS config
-- <img src="https://img.shields.io/badge/home%2F-1F883D" alt="home/"> — Home Manager config per host
-- <img src="https://img.shields.io/badge/modules%2F-BF3989" alt="modules/"> — ~190 single-purpose modules, imported explicitly
+- **`hosts/nixos/<host>/`** — per-host `hardware-configuration.nix`, `facter.json`, NixOS config
+- **`home/<host>/`** — Home Manager config per host
+- **`modules/`** — ~190 single-purpose modules, imported explicitly
   - `options/` — `my.defaults.*` · `my.network.*` · `my.security.*`
   - `base/` · `roles/` — core system · role compositions
   - `WM/` · `GUI/` · `TUI/` — mango · niri · noctalia · firefox · zsh · ai-tools
@@ -72,9 +72,9 @@ Interface labels are deliberately IP-free — the diagrams expose nothing beyond
   - `networking/` — traefik · caddy · headscale · tailscale · unbound
   - `security/` · `monitoring/` · `database/` — kanidm/crowdsec · grafana/loki · postgres/redis
   - `disko/` · `backup/` · `containers/` · `nix/` — disks · restic · podman · lix
-- <img src="https://img.shields.io/badge/secrets%2F-CF222E" alt="secrets/"> — sops-encrypted YAML/env (age)
-- <img src="https://img.shields.io/badge/infra%2Ftf%2F-844FBA" alt="infra/tf/"> — OpenTofu: GCP static IP + instance
-- <img src="https://img.shields.io/badge/docs%2F-0969DA" alt="docs/"> — Architecture · Infrastructure · CI-CD · hardware notes
+- **`secrets/`** — sops-encrypted YAML/env (age)
+- **`infra/tf/gcp-relay/`** — OpenTofu: GCP static IP + instance
+- **`docs/`** — Architecture · Infrastructure · CI-CD · hardware notes
 
 ## 🔧 How a host is assembled
 
