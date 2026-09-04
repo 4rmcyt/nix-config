@@ -25,7 +25,7 @@ in {
     ];
 
     nix.settings = let
-      cachix = import ../../lib/cachix.nix;
+      cachix = import ../../../lib/cachix.nix;
       own = cachix "desktop" "1lj75JVwUuiYqVzG/o2kuUneXV5ydrkFBLuY9b7Nvus=";
       gcp = cachix "gcp" "YeeaTxEm6F3YRsHdEYcggHL3TjrdJrLOfxM6J2YLHwY=";
     in {

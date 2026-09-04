@@ -19,7 +19,7 @@ in {
       ../../../modules/nix/lix
     ];
 
-    nix.settings = import ../../lib/cachix.nix "homeserver" "QUtDyIxhMJRwispauvcutxugqz0I1PieNprFlIkhBZo=";
+    nix.settings = import ../../../lib/cachix.nix "homeserver" "QUtDyIxhMJRwispauvcutxugqz0I1PieNprFlIkhBZo=";
 
     nixpkgs.overlays = [
       (final: prev: let

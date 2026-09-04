@@ -21,7 +21,7 @@ in {
       ../../../modules/nix/lix
     ];
 
-    nix.settings = import ../../lib/cachix.nix "matebook" "rRhmrqqdIkcFQdMJRo27YMaeU/G+H/cABE53EV5grDY=";
+    nix.settings = import ../../../lib/cachix.nix "matebook" "rRhmrqqdIkcFQdMJRo27YMaeU/G+H/cABE53EV5grDY=";
 
     facter.reportPath = ../../../hosts/nixos + "/${config.networking.hostName}/facter.json";
 

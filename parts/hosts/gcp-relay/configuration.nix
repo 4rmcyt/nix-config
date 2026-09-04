@@ -21,6 +21,6 @@ in {
 
     environment.systemPackages = [pkgs.fastfetch];
 
-    nix.settings = import ../../lib/cachix.nix "gcp" "YeeaTxEm6F3YRsHdEYcggHL3TjrdJrLOfxM6J2YLHwY=";
+    nix.settings = import ../../../lib/cachix.nix "gcp" "YeeaTxEm6F3YRsHdEYcggHL3TjrdJrLOfxM6J2YLHwY=";
   };
 }
