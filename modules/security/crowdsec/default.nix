@@ -151,7 +151,7 @@ in {
             - "192.168.1.0/24"
             - "10.0.0.0/8"
             - "100.64.0.0/10"
-        ${lib.concatMapStringsSep "\n" (cidr: ''- "${cidr}"'') config.my.network.subnets.cloudflare}
+        ${lib.concatMapStringsSep "\n" (cidr: "    - \"${cidr}\"") config.my.network.subnets.cloudflare}
       '';
     };
 
