@@ -358,7 +358,7 @@ Remote hosts are deployed manually via `nixos-rebuild` over SSH — recipes live
 
 ## Topology Diagram
 
-`just topology` (or `nix build .#topology.x86_64-linux.config.output`) generates two SVGs via **nix-topology** — physical `main.svg` and `network.svg` — written to `docs/topology.svg` / `docs/topology-network.svg`. **Both are git-ignored** — they bake in resolved host IPs and the public relay IP from the private flake input, so they stay local only.
+`just topology` (or `nix build .#topology.x86_64-linux.config.output`) generates two SVGs via **nix-topology** — physical `main.svg` and `network.svg` — written to `docs/topology.svg` / `docs/topology-network.svg` and embedded in the README. Interface `addresses` in the annotations are descriptive labels, not real IPs, so the committed SVGs expose nothing beyond `docs/Infrastructure.md`.
 
 - **`parts/topology.nix`** — flakeModule wiring + the global topology: `internet`, `isp-router`, `switch-office`, `switch-livingroom`, `ap-trusted`, `ap-iot`, and the `trusted` / `iot` / `media` / `work` / `tailnet` network CIDRs. All five hosts are included (desktop, homeserver, matebook, gcp-relay, router).
 - **`modules/topology/default.nix`** — NixOS module imported into `modules.nixos.base` (every host). Per-host `topology.self`: interfaces, network membership, hardware blurbs, a shared `tailscale0` overlay interface. Also:

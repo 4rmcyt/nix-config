@@ -1,10 +1,6 @@
 .DS_Store
 result
 result-topology
-# nix-topology renders resolve real host/relay IPs from the private flake input —
-# generate locally with `just topology`, never commit.
-docs/topology.svg
-docs/topology-network.svg
 core
 core.*
 .vscode

@@ -30,7 +30,7 @@ fmt:
 check:
     nix flake check
 
-# Render nix-topology diagrams into docs/ (git-ignored — resolve real IPs)
+# Render nix-topology diagrams into docs/ (committed; IP-free labels)
 topology:
     nix build .#topology.x86_64-linux.config.output -o result-topology
     install -m 644 result-topology/main.svg docs/topology.svg

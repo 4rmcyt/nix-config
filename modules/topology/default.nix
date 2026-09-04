@@ -5,15 +5,17 @@
 # the parts it cannot infer: physical/virtual interfaces (only `router` uses systemd-networkd,
 # the rest are NetworkManager/DHCP), network membership and hardware descriptions.
 #
+# Interface `addresses` here are deliberately descriptive labels, not real IPs, so the
+# rendered SVGs are safe to commit to this public repo — they expose nothing beyond
+# docs/Infrastructure.md (hostnames, interface names, /24 CIDRs, device models).
+#
 # The global topology — internet, ISP router, switches, APs, network CIDRs — lives in
-# parts/topology.nix. Build the diagrams with:
-#   nix build .#topology.x86_64-linux.config.output
+# parts/topology.nix. Build the diagrams with `just topology`.
 {
   config,
   lib,
   ...
 }: let
-  net = config.my.network;
   host = config.networking.hostName;
 
   # tailscale0 overlay interface — every host is on the Headscale tailnet.
@@ -48,27 +50,27 @@ in {
           };
           enp3s0 = {
             network = "media";
-            addresses = [net.vlans.media];
+            addresses = ["media gateway"];
             type = "ethernet";
           };
           enp2s0 = {
             network = "trusted";
-            addresses = [net.vlans.trusted];
+            addresses = ["trusted gateway"];
             type = "ethernet";
           };
           vlan10 = {
             network = "trusted";
-            addresses = [net.vlans.trusted];
+            addresses = ["trusted gateway"];
             virtual = true;
           };
           vlan20 = {
             network = "iot";
-            addresses = [net.vlans.iot];
+            addresses = ["iot gateway"];
             virtual = true;
           };
           vlan40 = {
             network = "work";
-            addresses = [net.vlans.work];
+            addresses = ["work gateway"];
             virtual = true;
           };
         }
@@ -77,20 +79,29 @@ in {
 
     (lib.mkIf (host == "homeserver") {
       name = "🗄️ homeserver";
-      hardware.info = "Intel i7-9700T · 8-core · ZFS (zroot/zdata/zbackup) — Traefik, media, monitoring, SSO";
+      hardware.info = "Intel Coffee Lake · 8-core · ZFS (zroot/zdata/zbackup) — Traefik, media, monitoring, SSO";
       interfaces =
         {
           enp0s31f6 = {
             network = "trusted";
-            addresses = [net.hosts.homeserver_lan];
+            addresses = ["static · trusted VLAN"];
             type = "ethernet";
           };
         }
         // tailnet;
-      # The Traefik extractor dumps every http.router and its backend URL into the
-      # diagram — including job-kombayn (a multi-user app) and every other route.
-      # Drop the enumerated router list; the Traefik service card itself stays.
-      services.traefik.details = lib.mkForce {};
+      services = {
+        # The Traefik extractor dumps every http.router + backend URL (job-kombayn
+        # included); the restic extractor dumps the full backup path inventory;
+        # mosquitto's listener binds the real LAN IP; grafana/kanidm expose the
+        # real domain in `info`. Keep the cards, drop the leaky detail so the
+        # committed SVG stays IP-/domain-/layout-free.
+        traefik.details = lib.mkForce {};
+        mosquitto.details = lib.mkForce {};
+        grafana.info = lib.mkForce "";
+        kanidm.info = lib.mkForce "";
+        local.hidden = lib.mkForce true;
+        main.hidden = lib.mkForce true;
+      };
     })
 
     (lib.mkIf (host == "desktop") {
@@ -100,7 +111,7 @@ in {
         {
           enp12s0 = {
             network = "trusted";
-            addresses = [net.hosts.desktop_lan];
+            addresses = ["static · trusted VLAN"];
             type = "ethernet";
           };
         }
@@ -114,7 +125,7 @@ in {
         {
           wifi = {
             network = "trusted";
-            addresses = [net.hosts.matebook_wifi];
+            addresses = ["static · trusted VLAN"];
             type = "wifi";
           };
         }
@@ -123,7 +134,7 @@ in {
 
     (lib.mkIf (host == "gcp-relay") {
       name = "☁️ gcp-relay";
-      hardware.info = "GCP e2-micro · US Central (Iowa) — Headscale control plane + DERP relay, Caddy TLS";
+      hardware.info = "GCP e2-micro — Headscale control plane + DERP relay, Caddy TLS";
       interfaces =
         {
           ens4 = {
@@ -132,6 +143,13 @@ in {
           };
         }
         // tailnet;
+      services = {
+        # caddy's virtualHost key + headscale's `info` are the real domain; restic
+        # dumps its backup paths. Drop all three from the committed SVG.
+        caddy.details = lib.mkForce {};
+        headscale.info = lib.mkForce "";
+        main.hidden = lib.mkForce true;
+      };
     })
   ];
 }

@@ -6,9 +6,9 @@
 # This file defines the global topology: the internet, the ISP router, the two
 # switches, the Wi-Fi APs and the logical network CIDRs.
 #
-# The rendered SVGs are git-ignored — they resolve real host addresses from the
-# private flake input. Build locally with `just topology` (or
-# `nix build .#topology.x86_64-linux.config.output`).
+# Interface addresses in modules/topology/ are descriptive labels (not real IPs),
+# so the rendered SVGs are safe to commit and are embedded in the README.
+# Regenerate with `just topology` (or `nix build .#topology.x86_64-linux.config.output`).
 {
   inputs,
   config,

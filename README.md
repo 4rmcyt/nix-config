@@ -16,7 +16,7 @@ live in a separate private flake so this repo can stay public.
 |------|----------|------|--------------------------|
 | **desktop** | AMD Zen 4, NVIDIA | Workstation | Wayland via **mango** (`wl-only`, Vulkan renderer for HDR) + **noctalia** shell; gaming, libvirt/virt-manager, waydroid, CUDA caches |
 | **matebook** | AMD Zen 1 laptop | Mobile workstation | **niri** + noctalia; Limine + Secure Boot, suspend-then-hibernate, auto-cpufreq |
-| **homeserver** | Intel Skylake | Services host | Traefik, media stack (nixarr), Postgres/Redis/CouchDB, monitoring, Kanidm, CrowdSec, restic backups |
+| **homeserver** | Intel Coffee Lake | Services host | Traefik, media stack (nixarr), Postgres/Redis/CouchDB, monitoring, Kanidm, CrowdSec, restic backups |
 | **gcp-relay** | GCP `e2-micro` | Tailnet relay | **Headscale** control plane + DERP server, Caddy TLS, fail2ban, hardened |
 | **router** | Sophos SG appliance (Intel Atom) | Edge router | nftables firewall, Kea DHCP, Unbound resolver, VLAN segmentation, mDNS reflector — headless, no HM |
 
@@ -31,32 +31,55 @@ Deploy targets are wired in the [`justfile`](justfile) (`just deploy-homeserver`
 
 ---
 
+## Topology
+
+Generated from the NixOS configs with [nix-topology](https://github.com/oddlama/nix-topology) —
+per-host annotations in [`modules/topology/`](modules/topology/default.nix), the
+internet / ISP router / switches / APs / network CIDRs in
+[`parts/topology.nix`](parts/topology.nix). Regenerate with `just topology`.
+Interface labels are deliberately IP-free, so these diagrams expose nothing beyond
+[`docs/Infrastructure.md`](docs/Infrastructure.md).
+
+### Physical
+
+<a href="docs/topology.svg"><img src="docs/topology.svg" alt="Physical topology" width="100%"></a>
+
+### Network-centric
+
+<a href="docs/topology-network.svg"><img src="docs/topology-network.svg" alt="Network-centric topology" width="100%"></a>
+
+---
+
 ## Repository layout
 
 ```
-flake.nix                 # ~15 lines — delegates everything to import-tree ./parts
-parts/                    # flake-parts modules, auto-imported
-  owner.nix               # maps private identity/topology onto meta.owner.*
-  meta.nix / flake-parts-modules.nix   # internal options (not flake outputs)
-  configurations/nixos.nix             # configurations.nixos.<name> → flake.nixosConfigurations
-  shared-nixos-settings.nix            # nix daemon, binary caches, sops, access tokens
-  hm.nix / home-manager-*.nix          # Home Manager wiring (skipped on router + gcp-relay)
-  workstation.nix          # facter + ucodenix + gnupg — desktop/laptop/server only
-  hosts/<host>/configuration.nix       # per-host composition
-  formatting.nix / devshells.nix / topology.nix / schemas.nix
-hosts/nixos/<host>/       # hardware-configuration.nix, facter.json, host NixOS config
-home/<host>/              # Home Manager config per host
-modules/                  # ~190 single-responsibility modules
-  base/ options/ roles/   # core system, my.defaults.*, role compositions
-  WM/ GUI/ TUI/           # mango, niri, noctalia, firefox/chrome, zsh, zellij, ai-tools, …
-  services/               # nixarr, homepage, miniflux, home-assistant, atuin-server,
-                          #   komga/komf, dispatcharr, microbin, ntfy, radicale
-  networking/             # traefik, caddy, headscale, tailscale, unbound, dnssec, nfs, wireguard, nut
-  security/ monitoring/ database/      # kanidm, crowdsec, fail2ban / prometheus+grafana+loki+alloy / postgres+redis+couchdb
-  disko/ backup/ containers/ nix/      # declarative disks, restic, podman, lix/determinate
-secrets/                  # sops-encrypted YAML/env (age)
-infra/tf/gcp-relay/       # OpenTofu — GCP instance + static IP for the relay
-docs/                     # Architecture / Infrastructure / CI-CD / hardware notes
+flake.nix               # ~15 lines — hands off to import-tree ./parts
+parts/                  # flake-parts modules, auto-imported
+  owner.nix             # private identity/topology → meta.owner.*
+  meta.nix              # options.meta — internal, not a flake output
+  flake-parts-modules.nix    # options.modules — deferred modules by class
+  shared-nixos-settings.nix  # nix daemon, caches, sops, access tokens
+  hm.nix                # Home Manager wiring (opt-in; not router/gcp-relay)
+  workstation.nix       # facter + ucodenix + gnupg (non-server hosts)
+  topology.nix          # nix-topology wiring + global topology
+  configurations/       # configurations.nixos.<name> → nixosConfigurations
+  hosts/<host>/         # per-host module composition
+hosts/nixos/<host>/     # hardware-configuration.nix, facter.json, config
+home/<host>/            # Home Manager config per host
+modules/                # ~190 single-purpose modules (imported explicitly)
+  options/              # my.defaults.* · my.network.* · my.security.*
+  base/ roles/          # core system · role compositions
+  WM/ GUI/ TUI/         # mango · niri · noctalia · firefox · zsh · ai-tools
+  services/             # nixarr · homepage · miniflux · hass · komga · ntfy
+  networking/           # traefik · caddy · headscale · tailscale · unbound
+  security/             # kanidm · crowdsec · fail2ban · hardening
+  monitoring/           # prometheus · grafana · loki · alloy · alertmanager
+  database/             # postgresql · redis · couchdb
+  disko/ backup/        # declarative disks · restic
+  containers/ nix/      # rootless podman · lix / determinate
+secrets/                # sops-encrypted YAML/env (age)
+infra/tf/gcp-relay/     # OpenTofu — GCP static IP + instance
+docs/                   # Architecture · Infrastructure · CI-CD · hardware
 ```
 
 ### How a host is assembled
@@ -110,6 +133,20 @@ Roughly what's published behind Traefik (`*.<domain>`):
 
 ---
 
+## Local inference
+
+[`modules/TUI/ai-tools/llama-cpp/`](modules/TUI/ai-tools/llama-cpp/default.nix) —
+per-host `llama-server` as a user service, bound to `127.0.0.1`, models pinned as
+`fetchurl` GGUFs (no runtime downloads):
+
+| Host | Variant | Model | Backend | Notes |
+|------|---------|-------|---------|-------|
+| **desktop** | `default.nix` | Gemma 4 E4B (Q4_K_XL) | CUDA, all layers offloaded | `:8080`, 16K ctx, flash-attn, unloads after 15 min idle; companion `mcp-proxy` (`:8081`) bridges `~/.config/mcp/mcp.json` into the llama web UI |
+| **desktop** | `qwen32b-cpu.nix` | Qwen2.5-32B (Q4_K_M) | CPU, on-demand | `:8090`, no `WantedBy` (pins ~28 GB) — started/stopped by the fairy-tale pipeline's `generate_story.py`, unloads after 5 min idle |
+| **matebook** | `cpu.nix` | Qwen2.5-3B (Q4_K_M) | CPU | `:8080`, 8K ctx, 4 GB cap |
+
+---
+
 ## CI
 
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml) is an orchestrator over
@@ -136,15 +173,8 @@ builds are pushed to per-host Cachix caches (`4rmcyt-<host>.cachix.org`).
 nix develop          # tooling shell: sops, age, gitleaks, ripsecrets, nh, nix-tree, …
 nix fmt              # format everything
 nix flake check      # validate outputs
-just topology        # render nix-topology diagrams into docs/ (git-ignored)
+just topology        # regenerate the topology SVGs (see Topology above)
 ```
-
-`just topology` builds `docs/topology.svg` (physical) and `docs/topology-network.svg`
-(network-centric) from the NixOS configs via
-[nix-topology](https://github.com/oddlama/nix-topology) — annotations in
-[`modules/topology/`](modules/topology/default.nix) and
-[`parts/topology.nix`](parts/topology.nix). The SVGs are git-ignored: they resolve
-real host addresses from the private flake input, so they stay local.
 
 ---
 
