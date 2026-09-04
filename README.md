@@ -53,40 +53,28 @@ Interface labels are deliberately IP-free — the diagrams expose nothing beyond
 
 ## 🧩 Repository layout
 
-<details>
-<summary>Tree</summary>
-
-```
-flake.nix               # ~15 lines — hands off to import-tree ./parts
-parts/                  # flake-parts modules, auto-imported
-  owner.nix             # private identity/topology → meta.owner.*
-  meta.nix              # options.meta — internal, not a flake output
-  flake-parts-modules.nix    # options.modules — deferred modules by class
-  shared-nixos-settings.nix  # nix daemon, caches, sops, access tokens
-  hm.nix                # Home Manager wiring (opt-in; not router/gcp-relay)
-  workstation.nix       # facter + ucodenix + gnupg (non-server hosts)
-  topology.nix          # nix-topology wiring + global topology
-  configurations/       # configurations.nixos.<name> → nixosConfigurations
-  hosts/<host>/         # per-host module composition
-hosts/nixos/<host>/     # hardware-configuration.nix, facter.json, host config
-home/<host>/            # Home Manager config per host
-modules/                # ~190 single-purpose modules (imported explicitly)
-  options/              # my.defaults.* · my.network.* · my.security.*
-  base/ roles/          # core system · role compositions
-  WM/ GUI/ TUI/         # mango · niri · noctalia · firefox · zsh · ai-tools
-  services/             # nixarr · homepage · miniflux · hass · komga · ntfy
-  networking/           # traefik · caddy · headscale · tailscale · unbound
-  security/             # kanidm · crowdsec · fail2ban · hardening
-  monitoring/           # prometheus · grafana · loki · alloy · alertmanager
-  database/             # postgresql · redis · couchdb
-  disko/ backup/        # declarative disks · restic
-  containers/ nix/      # rootless podman · lix / determinate
-secrets/                # sops-encrypted YAML/env (age)
-infra/tf/gcp-relay/     # OpenTofu — GCP static IP + instance
-docs/                   # Architecture · Infrastructure · CI-CD · hardware
-```
-
-</details>
+- **`flake.nix`** — ~15 lines; delegates to `import-tree ./parts`
+- **`parts/`** — flake-parts modules, auto-imported
+  - `owner.nix` — private identity/topology → `meta.owner.*`
+  - `meta.nix` / `flake-parts-modules.nix` — internal options (`meta`, `modules`)
+  - `shared-nixos-settings.nix` — nix daemon, caches, sops, access tokens
+  - `hm.nix` / `workstation.nix` — HM wiring / facter + ucodenix + gnupg (both opt-in)
+  - `topology.nix` — nix-topology wiring + global topology
+  - `configurations/` — `configurations.nixos.<name>` → `nixosConfigurations`
+  - `hosts/<host>/` — per-host module composition
+- **`hosts/nixos/<host>/`** — `hardware-configuration.nix`, `facter.json`, host config
+- **`home/<host>/`** — Home Manager config per host
+- **`modules/`** — ~190 single-purpose modules, imported explicitly
+  - `options/` — `my.defaults.*` · `my.network.*` · `my.security.*`
+  - `base/` · `roles/` — core system · role compositions
+  - `WM/` · `GUI/` · `TUI/` — mango · niri · noctalia · firefox · zsh · ai-tools
+  - `services/` — nixarr · homepage · miniflux · hass · komga · ntfy
+  - `networking/` — traefik · caddy · headscale · tailscale · unbound
+  - `security/` · `monitoring/` · `database/` — kanidm/crowdsec · grafana/loki · postgres/redis
+  - `disko/` · `backup/` · `containers/` · `nix/` — disks · restic · podman · lix
+- **`secrets/`** — sops-encrypted YAML/env (age)
+- **`infra/tf/gcp-relay/`** — OpenTofu: GCP static IP + instance
+- **`docs/`** — Architecture · Infrastructure · CI-CD · hardware notes
 
 ## 🔧 How a host is assembled
 
