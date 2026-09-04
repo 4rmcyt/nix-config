@@ -8,8 +8,13 @@
   nixosBase = config.modules.nixos.base;
   nixosHm = config.modules.nixos.hm;
   nixosWorkstation = config.modules.nixos.workstation;
+  hmWorkstation = config.modules.homeManager.workstation;
 in {
-  configurations.nixos.desktop.module = {pkgs, ...}: {
+  configurations.nixos.desktop.module = {
+    config,
+    pkgs,
+    ...
+  }: {
     imports = [
       nixosBase
       nixosHm
@@ -19,19 +24,25 @@ in {
       ../../../modules/nix/lix
     ];
 
-    nix.settings = {
-      extra-substituters = [
-        "https://cache.nixos-cuda.org?priority=1"
-        "https://cuda-maintainers.cachix.org?priority=1"
-        "https://4rmcyt-desktop.cachix.org?priority=0"
-        "https://4rmcyt-gcp.cachix.org?priority=0"
-      ];
-      extra-trusted-public-keys = [
-        "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
-        "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
-        "4rmcyt-desktop.cachix.org-1:1lj75JVwUuiYqVzG/o2kuUneXV5ydrkFBLuY9b7Nvus="
-        "4rmcyt-gcp.cachix.org-1:YeeaTxEm6F3YRsHdEYcggHL3TjrdJrLOfxM6J2YLHwY="
-      ];
+    nix.settings = let
+      cachix = import ../../lib/cachix.nix;
+      own = cachix "desktop" "1lj75JVwUuiYqVzG/o2kuUneXV5ydrkFBLuY9b7Nvus=";
+      gcp = cachix "gcp" "YeeaTxEm6F3YRsHdEYcggHL3TjrdJrLOfxM6J2YLHwY=";
+    in {
+      extra-substituters =
+        [
+          "https://cache.nixos-cuda.org?priority=1"
+          "https://cuda-maintainers.cachix.org?priority=1"
+        ]
+        ++ own.extra-substituters
+        ++ gcp.extra-substituters;
+      extra-trusted-public-keys =
+        [
+          "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
+          "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+        ]
+        ++ own.extra-trusted-public-keys
+        ++ gcp.extra-trusted-public-keys;
     };
 
     # `programs.mango` is nixpkgs' own module now (portal + systemPackages
@@ -66,11 +77,12 @@ in {
       };
     };
 
-    facter.reportPath = ../../../hosts/nixos/desktop/facter.json;
+    facter.reportPath = ../../../hosts/nixos + "/${config.networking.hostName}/facter.json";
 
     home-manager.users.${owner.username} = {
       nixpkgs.config.permittedInsecurePackages = ["pnpm-10.29.2" "electron-40.10.5"];
       imports = [
+        hmWorkstation
         ../../../home/desktop
         inputs.noctalia.homeModules.default
         inputs.mango.hmModules.mango

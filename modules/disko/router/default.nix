@@ -2,7 +2,7 @@
 #
 # Disk: Hitachi HTS543225A7A384 232.9G (sda)
 #
-# Layout: MBR → GRUB partition (1M) → ext4 root (100%)
+# Layout: GPT with BIOS-boot partition (1M, for legacy GRUB) → ext4 root (100%)
 # No swap partition — zramSwap handles it in software (see default.nix).
 _: {
   disko.devices.disk.main = {

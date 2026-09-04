@@ -25,7 +25,6 @@
     ../../../modules/backup
 
     # not in use: ../../../modules/networking/avahi
-    # not in use: ../../../modules/base/distributed-builds
     ../../../modules/users/zeev
   ];
 
@@ -93,19 +92,6 @@
 
     # Build & deployment tools
     betula
-
-    # Lix tooling
-    lixPackageSets.latest.nixpkgs-review
-    lixPackageSets.latest.nix-eval-jobs
-    lixPackageSets.latest.nix-fast-build
-    lixPackageSets.latest.colmena
-    lixPackageSets.latest.nix-direnv
-    lixPackageSets.latest.nix-serve-ng
-    lixPackageSets.latest.boehmgc
-    lixPackageSets.latest.nil
-    lixPackageSets.latest.nurl
-    lixPackageSets.latest.nix-init
-    lixPackageSets.latest.nix-update
   ];
 
   environment.shells = with pkgs; [zsh];
@@ -199,6 +185,8 @@
       "prowlarr-log"
       "dispatcharr"
       "kombayn"
+      "hass"
+      "grafana"
     ];
     paths = [
       "/var/lib/kanidm"
@@ -208,6 +196,16 @@
       # job-kombayn's dedup index, generated resume/cover PDFs and geocode
       # cache live in its StateDirectory, not in the kombayn Postgres DB.
       "/var/lib/job-kombayn"
+      # Obsidian LiveSync vault — CouchDB is the only copy of live sync history.
+      "/var/lib/couchdb"
+      # CalDAV/CardDAV collections (calendars, contacts).
+      "/var/lib/radicale/collections"
+      # Comic/manga library metadata (H2 database) and thumbnails.
+      "/var/lib/komga"
+      # komf's cache/config.
+      "/var/lib/komf"
+      # Paste/file-share uploads.
+      "/var/lib/microbin"
     ];
   };
 
@@ -244,6 +242,11 @@
       "/data/media/.state/nixarr/transmission"
       "/var/lib/hass"
       "/var/lib/kanidm"
+      "/var/lib/couchdb"
+      "/var/lib/radicale/collections"
+      "/var/lib/komga"
+      "/var/lib/komf"
+      "/var/lib/microbin"
     ];
     pruneOpts = [
       "--keep-daily 7"

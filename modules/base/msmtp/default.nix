@@ -20,8 +20,6 @@
   };
   users.groups.msmtp = {};
 
-  networking.firewall.allowedTCPPorts = [587]; # SMTP over SSL
-
   environment.etc."aliases" = {
     text = ''
       default: admin@${config.my.defaults.domain}

@@ -114,6 +114,12 @@ in {
         description = "Tailscale VPN network subnet";
       };
 
+      media = lib.mkOption {
+        type = lib.types.str;
+        default = "192.168.30.0/24";
+        description = "Media segment subnet (enp3s0, physical, no VLAN)";
+      };
+
       podman = lib.mkOption {
         type = lib.types.str;
         default = "10.88.0.0/16";
@@ -128,6 +134,28 @@ in {
           "192.168.0.0/16"
         ];
         description = "Private network ranges (RFC1918)";
+      };
+
+      cloudflare = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [
+          "173.245.48.0/20"
+          "103.21.244.0/22"
+          "103.22.200.0/22"
+          "103.31.4.0/22"
+          "141.101.64.0/18"
+          "108.162.192.0/18"
+          "190.93.240.0/20"
+          "188.114.96.0/20"
+          "197.234.240.0/22"
+          "198.41.128.0/17"
+          "162.158.0.0/15"
+          "104.16.0.0/13"
+          "104.24.0.0/14"
+          "172.64.0.0/13"
+          "131.0.72.0/22"
+        ];
+        description = "Cloudflare IPv4 proxy ranges (https://www.cloudflare.com/ips-v4)";
       };
     };
 

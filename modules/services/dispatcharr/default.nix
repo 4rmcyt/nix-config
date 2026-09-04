@@ -36,6 +36,14 @@ in {
     "d /var/lib/dispatcharr 0755 root root -"
   ];
 
+  # Both containers connect to Postgres/Redis over host.containers.internal
+  # at startup — without this ordering they can race postgresql/redis on a
+  # cold boot and fail to connect.
+  systemd.services.podman-dispatcharr.after = ["postgresql.service" "redis-homeserver.service"];
+  systemd.services.podman-dispatcharr.requires = ["postgresql.service" "redis-homeserver.service"];
+  systemd.services.podman-dispatcharr-celery.after = ["postgresql.service" "redis-homeserver.service"];
+  systemd.services.podman-dispatcharr-celery.requires = ["postgresql.service" "redis-homeserver.service"];
+
   virtualisation.oci-containers.containers = {
     dispatcharr = {
       autoStart = true;

@@ -13,7 +13,7 @@ in ''
   hosts/nixos/{host}/     # System config + hardware
   home/{host}/            # Home Manager per host
   modules/
-    base/                 # Core system (logging, msmtp, distributed-builds)
+    base/                 # Core system (logging, msmtp)
     options/              # my.defaults.*, my.network.*, my.security.*
     WM/                   # niri + mango (both w/ noctalia v5), gtk, mime — desktop:mango, matebook:niri; hyprland kept on disk unused, not migrated off noctalia legacy-v4
     GUI/                  # firefox, chrome, obsidian, zed, terminal, mpv, etc.
@@ -31,7 +31,7 @@ in ''
     containers/           # Podman container support
     dev/                  # Developer tools
     dots/                 # Dotfile management
-    nix/                  # Nix daemon variants (determinate, lix)
+    nix/                  # Nix daemon variants (lix)
     xdg/                  # XDG portal config
   parts/                  # flake-parts modules (auto-imported via import-tree)
   secrets/                # sops-encrypted YAML (NEVER commit plaintext)

@@ -77,13 +77,8 @@ in {
     zfs = {
       devNodes = "/dev/disk/by-id/";
       forceImportRoot = false;
-      extraPools = ["zdata"];
+      extraPools = ["zdata" "zbackup"];
     };
-
-    postBootCommands = ''
-      ${pkgs.zfs}/bin/zpool import -N -d /dev/disk/by-id zbackup 2>/dev/null || true
-      ${pkgs.zfs}/bin/zfs mount zbackup/backup 2>/dev/null || true
-    '';
 
     extraModprobeConfig = ''
       options i915 enable_guc=3

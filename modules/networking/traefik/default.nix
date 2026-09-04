@@ -51,23 +51,7 @@ in {
             };
             # Trust Cloudflare's IPs so CF-Connecting-IP / X-Forwarded-For
             # carries the real client IP (needed for fail2ban on hass).
-            forwardedHeaders.trustedIPs = [
-              "173.245.48.0/20"
-              "103.21.244.0/22"
-              "103.22.200.0/22"
-              "103.31.4.0/22"
-              "141.101.64.0/18"
-              "108.162.192.0/18"
-              "190.93.240.0/20"
-              "188.114.96.0/20"
-              "197.234.240.0/22"
-              "198.41.128.0/17"
-              "162.158.0.0/15"
-              "104.16.0.0/13"
-              "104.24.0.0/14"
-              "172.64.0.0/13"
-              "131.0.72.0/22"
-            ];
+            forwardedHeaders.trustedIPs = config.my.network.subnets.cloudflare;
           };
         };
 
@@ -188,23 +172,7 @@ in {
               # below).
               streamStartupBlock = false;
               updateMaxFailure = -1;
-              forwardedHeadersTrustedIPs = [
-                "173.245.48.0/20"
-                "103.21.244.0/22"
-                "103.22.200.0/22"
-                "103.31.4.0/22"
-                "141.101.64.0/18"
-                "108.162.192.0/18"
-                "190.93.240.0/20"
-                "188.114.96.0/20"
-                "197.234.240.0/22"
-                "198.41.128.0/17"
-                "162.158.0.0/15"
-                "104.16.0.0/13"
-                "104.24.0.0/14"
-                "172.64.0.0/13"
-                "131.0.72.0/22"
-              ];
+              forwardedHeadersTrustedIPs = config.my.network.subnets.cloudflare;
             };
             # Geoblock — Canada only, for public-facing hass
             geoblock.plugin.geoblock = {

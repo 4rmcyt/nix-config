@@ -4,33 +4,23 @@
   lib,
   ...
 }: {
+  imports = [
+    ((import ../lib/pg-env.nix {inherit lib;}) {
+      name = "sonarr";
+      envLines = [
+        "SONARR__POSTGRES__HOST=127.0.0.1"
+        "SONARR__POSTGRES__PORT=5432"
+        "SONARR__POSTGRES__USER=sonarr"
+        "SONARR__POSTGRES__MAINDB=sonarr"
+        "SONARR__POSTGRES__LOGDB=sonarr-log"
+        "SONARR__POSTGRES__PASSWORD=%s"
+      ];
+      passwordSecretPath = config.sops.secrets.sonarr_db_password.path;
+    })
+  ];
+
   # Sonarr reads SONARR__POSTGRES__* env vars natively -- no need to
   # hand-edit config.xml via xmlstarlet.
-  systemd.services.sonarr-pg-env = {
-    description = "Write Sonarr PostgreSQL environment file";
-    after = [
-      "postgresql.service"
-      "postgresql-setup-users.service"
-    ];
-    requires = ["postgresql.service"];
-    wantedBy = ["sonarr.service"];
-    before = ["sonarr.service"];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      RuntimeDirectory = "sonarr-secrets";
-      RuntimeDirectoryMode = "0750";
-      User = "sonarr";
-      Group = "sonarr";
-    };
-    script = ''
-      printf 'SONARR__POSTGRES__HOST=127.0.0.1\nSONARR__POSTGRES__PORT=5432\nSONARR__POSTGRES__USER=sonarr\nSONARR__POSTGRES__MAINDB=sonarr\nSONARR__POSTGRES__LOGDB=sonarr-log\nSONARR__POSTGRES__PASSWORD=%s\n' \
-        "$(cat ${config.sops.secrets.sonarr_db_password.path} | tr -d '\n\r')" \
-        > /run/sonarr-secrets/pg-env
-      chmod 600 /run/sonarr-secrets/pg-env
-    '';
-  };
-
   services.sonarr = {
     enable = true;
     user = "sonarr";

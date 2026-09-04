@@ -15,6 +15,12 @@ _: {
       # Required for gvfs backends (trash, NFS) to work in Nemo outside GNOME/Cinnamon
       {command = ["bash" "-c" "dbus-update-activation-environment --systemd --all"];}
 
+      # Bluetooth pairing agent — without it bluetoothd has nothing to answer
+      # device_confirm_passkey requests, so devices connect and are
+      # immediately dropped. niri (unlike GNOME) doesn't autostart
+      # /etc/xdg/autostart .desktop entries, so this has to be spawned here.
+      {command = ["blueman-applet"];}
+
       # Session manager (started via systemd for lifecycle management)
       {command = ["systemctl" "--user" "start" "nirinit.service"];}
 

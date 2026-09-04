@@ -12,8 +12,6 @@
   ];
 
   home = {
-    sessionVariables.PYENV_ROOT = "$HOME/.pyenv";
-
     packages = with pkgs; [
       cuetools
       flac
@@ -33,12 +31,8 @@
     ];
   };
 
-  # Override zsh profile for pyenv and kubectl
   programs.zsh.profileExtra = ''
     export PYENV_ROOT="$HOME/.pyenv"
     export PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"
-
-    # k3s kubectl configuration
-    export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
   '';
 }

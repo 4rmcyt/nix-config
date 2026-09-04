@@ -9,7 +9,7 @@
   nixosHm = config.modules.nixos.hm;
   nixosWorkstation = config.modules.nixos.workstation;
 in {
-  configurations.nixos.homeserver.module = {...}: {
+  configurations.nixos.homeserver.module = {config, ...}: {
     imports = [
       nixosBase
       nixosHm
@@ -19,10 +19,7 @@ in {
       ../../../modules/nix/lix
     ];
 
-    nix.settings = {
-      extra-substituters = ["https://4rmcyt-homeserver.cachix.org?priority=0"];
-      extra-trusted-public-keys = ["4rmcyt-homeserver.cachix.org-1:QUtDyIxhMJRwispauvcutxugqz0I1PieNprFlIkhBZo="];
-    };
+    nix.settings = import ../../lib/cachix.nix "homeserver" "QUtDyIxhMJRwispauvcutxugqz0I1PieNprFlIkhBZo=";
 
     nixpkgs.overlays = [
       (final: prev: let
@@ -58,7 +55,7 @@ in {
       })
     ];
 
-    facter.reportPath = ../../../hosts/nixos/homeserver/facter.json;
+    facter.reportPath = ../../../hosts/nixos + "/${config.networking.hostName}/facter.json";
 
     home-manager.users.${owner.username}.imports = [
       ../../../home/homeserver

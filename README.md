@@ -66,7 +66,7 @@ Interface labels are deliberately IP-free — the diagrams expose nothing beyond
 - **`home/<host>/`** — Home Manager config per host
 - **`modules/`** — ~190 single-purpose modules, imported explicitly
   - `options/` — `my.defaults.*` · `my.network.*` · `my.security.*`
-  - `base/` — core system (logging, msmtp, distributed-builds)
+  - `base/` — core system (logging, msmtp)
   - `WM/` · `GUI/` · `TUI/` — mango · niri · noctalia · firefox · zsh · ai-tools
   - `services/` — nixarr · homepage · miniflux · hass · komga · ntfy
   - `networking/` — traefik · caddy · headscale · tailscale · unbound

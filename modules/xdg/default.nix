@@ -6,7 +6,7 @@
       xdg-desktop-portal-gnome
     ];
     config = {
-      niri = {
+      mango = {
         default = [
           "gnome"
           "gtk"

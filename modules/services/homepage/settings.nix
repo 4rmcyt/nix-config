@@ -11,23 +11,19 @@
       style = "row";
       columns = 2;
     };
-    Arrs = {
-      style = "row";
-      columns = 3;
-    };
-    "Storage & Documents" = {
+    Downloads = {
       style = "row";
       columns = 2;
     };
-    "Productivity Tools" = {
+    "Smart Home" = {
+      style = "row";
+      columns = 2;
+    };
+    Productivity = {
       style = "row";
       columns = 2;
     };
     "Monitoring & Analytics" = {
-      style = "row";
-      columns = 2;
-    };
-    "Infrastructure & Security" = {
       style = "row";
       columns = 2;
     };

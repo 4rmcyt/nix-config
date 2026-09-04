@@ -1,40 +1,31 @@
 # modules/services/nixarr/bazarr/default.nix
 {
   config,
+  lib,
   pkgs,
   ...
 }: {
+  imports = [
+    ((import ../lib/pg-env.nix {inherit lib;}) {
+      name = "bazarr";
+      envLines = [
+        "POSTGRES_ENABLED=true"
+        "POSTGRES_HOST=127.0.0.1"
+        "POSTGRES_PORT=5432"
+        "POSTGRES_DATABASE=bazarr"
+        "POSTGRES_USERNAME=bazarr"
+        "POSTGRES_PASSWORD=%s"
+      ];
+      passwordSecretPath = config.sops.secrets.bazarr_db_password.path;
+    })
+  ];
+
   # Custom post-processing (Bazarr Settings > Subtitles) converts .srt to
   # .ass for languages whose glyphs some clients can't render as text
   # (e.g. Hebrew on Roku -- tofu boxes), so the server burns them in via
   # libass instead of the client rendering plain text. ffmpeg isn't
   # otherwise on bazarr's PATH.
   systemd.services.bazarr.path = [pkgs.ffmpeg];
-
-  systemd.services.bazarr-pg-env = {
-    description = "Write Bazarr PostgreSQL environment file";
-    after = [
-      "postgresql.service"
-      "postgresql-setup-users.service"
-    ];
-    requires = ["postgresql.service"];
-    wantedBy = ["bazarr.service"];
-    before = ["bazarr.service"];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      RuntimeDirectory = "bazarr-secrets";
-      RuntimeDirectoryMode = "0750";
-      User = "bazarr";
-      Group = "bazarr";
-    };
-    script = ''
-      printf 'POSTGRES_ENABLED=true\nPOSTGRES_HOST=127.0.0.1\nPOSTGRES_PORT=5432\nPOSTGRES_DATABASE=bazarr\nPOSTGRES_USERNAME=bazarr\nPOSTGRES_PASSWORD=%s\n' \
-        "$(cat ${config.sops.secrets.bazarr_db_password.path} | tr -d '\n\r')" \
-        > /run/bazarr-secrets/pg-env
-      chmod 600 /run/bazarr-secrets/pg-env
-    '';
-  };
 
   # Bazarr reads these same POSTGRES_* env vars natively and gives them
   # precedence over config.yaml -- no container entrypoint magic needed.

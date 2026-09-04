@@ -62,7 +62,9 @@
     };
   };
 
-  networking.firewall.allowedTCPPorts = [5984]; # Exposed to Traefik locally
+  # No firewall exception needed: bindAddress = "127.0.0.1" above means
+  # nothing ever listens on a non-loopback interface; Traefik reaches it
+  # over loopback, not through the firewall.
 
   # Systemd Service Configuration
   systemd.services.couchdb = {

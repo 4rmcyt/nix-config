@@ -4,39 +4,22 @@
   ...
 }: {
   imports = [
-    ../../modules/GUI/terminal
     ../../modules/GUI/IDE
     ../../modules/TUI/ai-tools
     ../../modules/TUI/ai-tools/llama-cpp
     ../../modules/TUI/ai-tools/llama-cpp/qwen32b-cpu.nix
 
     ../../modules/GUI/bb-launcher
-    ../../modules/GUI/chrome/home.nix
     ../../modules/GUI/chromium
-    ../../modules/GUI/firefox
     ../../modules/GUI/jellyfin-mpv-shim
-    ../../modules/GUI/mpv
-    ../../modules/GUI/nemo/home.nix
-    ../../modules/GUI/obsidian
-    ../../modules/TUI/common
-    ../../modules/TUI/helix
-    ../../modules/TUI/neovim
-    ../../modules/TUI/zsh
-    ../../modules/TUI/atuin
-    ../../modules/TUI/zellij
 
     ../../modules/WM
     ../../modules/WM/mango
-    ../../modules/WM/mango/noctalia.nix
     ../../modules/WM/mango/nvidia.nix
     ../../modules/WM/mango/monitors/desktop.nix
-    ../../modules/WM/mime
     ../../modules/GUI/discord
     ../../modules/GUI/easyeffects
-    ../../modules/dev
     ../../modules/dev/android.nix
-    ../../modules/dev/git.nix
-    ../../modules/security/gpg.nix
   ];
 
   # WirePlumber: always use SBC-XQ for OpenRun Pro 2 (best codec it supports)
@@ -114,12 +97,6 @@
       pkgs.nur.repos.codgician.samsung-dc-toolkit-3
       pkgs.nur.repos.codgician.waydroid-script
     ];
-
-    sessionVariables = {
-      BROWSER = lib.mkForce "firefox";
-      VISUAL = lib.mkForce "code";
-      PYENV_ROOT = "$HOME/.pyenv";
-    };
   };
 
   programs = {

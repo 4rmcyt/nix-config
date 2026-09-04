@@ -24,7 +24,7 @@ in {
   home.packages = [kdeconnectShare];
 
   # noctalia-shell's Quickshell.iconPath() (legacy v4, archived upstream —
-  # see modules/WM/mango/noctalia.nix) fails to resolve the generic
+  # see modules/WM/noctalia.nix) fails to resolve the generic
   # freedesktop icon name "system-file-manager" in the launcher, even
   # though the file exists in every icon theme tried (Tela-dark,
   # Papirus-Dark) and other apps' icons resolve fine. App-specific icon

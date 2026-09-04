@@ -17,6 +17,16 @@
     ../../../modules/users/zeev
   ];
 
+  # ── Boot ────────────────────────────────────────────────────────────────
+  # Legacy BIOS boot — modules/disko/router creates a GPT disk with a
+  # dedicated EF02 BIOS-boot partition (no EFI on this hardware) for GRUB
+  # to embed its core.img into.
+  boot.loader.grub = {
+    enable = true;
+    device = "/dev/sda";
+    efiSupport = false;
+  };
+
   # ── Time / Locale ────────────────────────────────────────────────────────
   time.timeZone = config.my.defaults.timezone;
   i18n.defaultLocale = config.my.defaults.locale;

@@ -1,4 +1,12 @@
-{
+let
+  commonMountOptions = [
+    "compress=zstd:1"
+    "noatime"
+    "ssd"
+    "discard=async"
+    "space_cache=v2"
+  ];
+in {
   disko.devices = {
     disk = {
       nvme = {
@@ -34,64 +42,27 @@
                 subvolumes = {
                   "/root" = {
                     mountpoint = "/";
-                    mountOptions = [
-                      "compress=zstd:1"
-                      "noatime"
-                      "ssd"
-                      "discard=async"
-                      "space_cache=v2"
-                    ];
+                    mountOptions = commonMountOptions;
                   };
                   "/nix" = {
                     mountpoint = "/nix";
-                    mountOptions = [
-                      "compress=zstd:1"
-                      "noatime"
-                      "ssd"
-                      "discard=async"
-                      "space_cache=v2"
-                      "nodatacow"
-                    ];
+                    mountOptions = commonMountOptions ++ ["nodatacow"];
                   };
                   "/log" = {
                     mountpoint = "/var/log";
-                    mountOptions = [
-                      "compress=zstd:1"
-                      "noatime"
-                      "ssd"
-                      "discard=async"
-                      "space_cache=v2"
-                    ];
+                    mountOptions = commonMountOptions;
                   };
                   "/home" = {
                     mountpoint = "/home";
-                    mountOptions = [
-                      "compress=zstd:1"
-                      "noatime"
-                      "ssd"
-                      "discard=async"
-                      "space_cache=v2"
-                    ];
+                    mountOptions = commonMountOptions;
                   };
                   "/games" = {
                     mountpoint = "/home/games";
-                    mountOptions = [
-                      "compress=zstd:1"
-                      "noatime"
-                      "ssd"
-                      "discard=async"
-                      "space_cache=v2"
-                    ];
+                    mountOptions = commonMountOptions;
                   };
                   "/vms" = {
                     mountpoint = "/var/lib/libvirt";
-                    mountOptions = [
-                      "compress=zstd:1"
-                      "noatime"
-                      "ssd"
-                      "discard=async"
-                      "space_cache=v2"
-                    ];
+                    mountOptions = commonMountOptions;
                   };
                 };
               };

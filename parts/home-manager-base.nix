@@ -17,6 +17,7 @@ in {
       inherit (owner) username;
       homeDirectory = "/home/${owner.username}";
       inherit stateVersion;
+      sessionVariables.PYENV_ROOT = "$HOME/.pyenv";
     };
 
     nixpkgs.config.allowUnfree = true;

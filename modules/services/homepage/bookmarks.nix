@@ -17,7 +17,7 @@
         GitHub = [
           {
             name = "GitHub Server Config";
-            href = "https://github.com/your-username/server-config";
+            href = "https://github.com/4rmcyt/nix-config";
             icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/github-light.svg";
           }
         ];

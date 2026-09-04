@@ -1,7 +1,6 @@
 {config, ...}: {
   imports = [
     ./common-packages
-    ./distributed-builds
     ./logging
     ./msmtp
   ];

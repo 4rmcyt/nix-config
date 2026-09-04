@@ -3,7 +3,6 @@
 
   inputs = {
     # Core
-    determinate.url = "github:DeterminateSystems/determinate";
     nix-auth.url = "github:numtide/nix-auth";
     flake-schemas.url = "github:DeterminateSystems/flake-schemas";
     flake-parts = {

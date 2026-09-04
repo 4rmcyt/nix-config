@@ -247,7 +247,13 @@ in {
       BASE_URL = "https://miniflux.${config.my.defaults.domain}";
       LISTEN_ADDR = "localhost:${toString config.my.network.ports.miniflux}";
       DATABASE_MIGRATIONS = 1;
-      DATABASE_URL = lib.mkForce "user=miniflux password=${config.sops.secrets.miniflux_db_password.path} dbname=miniflux sslmode=disable host=/run/postgresql";
+      # No password field: services.miniflux writes this straight into the
+      # unit's Environment= (world-readable in the store), so the secret's
+      # actual content must never land here. It isn't needed anyway —
+      # modules/database/postgresql's pg_hba uses peer auth for local socket
+      # connections (`local all all peer map=superuser_map`), which maps the
+      # miniflux OS user to the miniflux DB role regardless of password.
+      DATABASE_URL = lib.mkForce "user=miniflux dbname=miniflux sslmode=disable host=/run/postgresql";
 
       OAUTH2_PROVIDER = "oidc";
       OAUTH2_CLIENT_ID = "miniflux";

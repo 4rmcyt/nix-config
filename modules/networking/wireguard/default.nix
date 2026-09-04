@@ -11,11 +11,12 @@
     wireguardConfigFile = config.sops.secrets.wg_conf.path;
 
     # Make VPN namespace accessible from local network
-    accessibleFrom = [
-      "192.168.0.0/24"
-      "10.0.0.0/8"
-      "127.0.0.1/32"
-    ];
+    accessibleFrom =
+      config.my.network.subnets.lan
+      ++ [
+        "10.0.0.0/8"
+        "127.0.0.1/32"
+      ];
 
     # Port forwarding from host to VPN namespace
     portMappings = [

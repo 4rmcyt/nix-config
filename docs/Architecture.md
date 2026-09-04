@@ -37,7 +37,7 @@ Modules are **not** auto-imported. They are referenced explicitly from host conf
 
 ```
 modules/
-  base/                     # Shared base: logging, msmtp, distributed-builds
+  base/                     # Shared base: logging, msmtp
   options/                  # Custom options: my.defaults.*, my.network.*
   database/                 # postgresql, redis, couchdb
   monitoring/               # Prometheus + Grafana + Loki + Alloy stack; node-exporter-client;
@@ -69,7 +69,7 @@ modules/
                             #   ai-tools (claude-code, antigravity-cli, mcp, llama-cpp)
                             #   ai-tools sub-dirs: agents/, skills/, commands/, system-prompt/
   dev/                      # Developer tools
-  nix/                      # Nix daemon config (determinate, lix)
+  nix/                      # Nix daemon config (lix)
 ```
 
 ## Options System
@@ -128,8 +128,6 @@ no HM, no workstation modules.
 | matebook    | `modules/nix/lix` |
 | router      | `modules/nix/lix` |
 | gcp-relay   | base default (stock nixpkgs `nix`) |
-
-`modules/nix/determinate` exists on disk but is not imported by any host.
 
 ## Secrets
 

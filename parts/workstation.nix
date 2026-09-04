@@ -1,6 +1,11 @@
 # Workstation-specific NixOS modules — desktop, laptop, homeserver.
 # Not imported on headless appliances (router, gcp-relay).
-{inputs, ...}: {
+{
+  inputs,
+  pkgs,
+  lib,
+  ...
+}: {
   modules.nixos.workstation = {
     imports = [
       inputs.nixos-facter-modules.nixosModules.facter
@@ -8,5 +13,46 @@
     ];
 
     programs.gnupg.agent.enable = true;
+
+    environment.systemPackages = with pkgs; [
+      # Lix Tooling
+      lixPackageSets.latest.nixpkgs-review
+      lixPackageSets.latest.nix-eval-jobs
+      lixPackageSets.latest.nix-fast-build
+      lixPackageSets.latest.colmena
+      lixPackageSets.latest.nix-direnv
+      lixPackageSets.latest.nix-serve-ng
+      lixPackageSets.latest.boehmgc
+      lixPackageSets.latest.nil
+      lixPackageSets.latest.nurl
+      lixPackageSets.latest.nix-init
+      lixPackageSets.latest.nix-update
+    ];
+  };
+
+  # GUI workstation Home Manager modules — desktop, matebook. Not imported
+  # on homeserver (no GUI) or headless appliances.
+  modules.homeManager.workstation = {
+    imports = [
+      ../modules/GUI/chrome/home.nix
+      ../modules/GUI/firefox
+      ../modules/GUI/terminal
+      ../modules/GUI/mpv
+      ../modules/GUI/nemo/home.nix
+      ../modules/GUI/obsidian
+      ../modules/TUI/common
+      ../modules/TUI/helix
+      ../modules/TUI/neovim
+      ../modules/TUI/zsh
+      ../modules/TUI/atuin
+      ../modules/TUI/zellij
+      ../modules/WM/noctalia.nix
+      ../modules/WM/mime
+      ../modules/dev
+      ../modules/dev/git.nix
+      ../modules/security/gpg.nix
+    ];
+
+    home.sessionVariables.BROWSER = lib.mkForce "firefox";
   };
 }

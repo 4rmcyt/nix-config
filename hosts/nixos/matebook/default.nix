@@ -139,19 +139,6 @@
       nerd-fonts.droid-sans-mono
       nerd-fonts.fira-code
 
-      #Lix tools
-      lixPackageSets.latest.nixpkgs-review
-      lixPackageSets.latest.nix-eval-jobs
-      lixPackageSets.latest.nix-fast-build
-      lixPackageSets.latest.colmena
-      lixPackageSets.latest.nix-direnv
-      lixPackageSets.latest.nix-serve-ng
-      lixPackageSets.latest.boehmgc
-      lixPackageSets.latest.nil
-      lixPackageSets.latest.nurl
-      lixPackageSets.latest.nix-init
-      lixPackageSets.latest.nix-update
-
       # Secure Boot & EFI Tools
       efibootmgr
       ifrextractor-rs
