@@ -9,7 +9,9 @@ in {
   }: {
     imports = [
       nixosBase
-      ../../../hosts/nixos/gcp
+      ../../../hosts/nixos/gcp-relay
+      # No modules/nix/lix here (unlike every other host) — gcp-relay runs the
+      # stock nixpkgs nix daemon on purpose.
     ];
 
     nixpkgs.hostPlatform = lib.mkForce "x86_64-linux";

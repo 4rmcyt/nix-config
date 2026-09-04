@@ -19,8 +19,6 @@ in {
       ../../../modules/nix/lix
     ];
 
-    disabledModules = [];
-
     nix.settings = {
       extra-substituters = ["https://4rmcyt-homeserver.cachix.org?priority=0"];
       extra-trusted-public-keys = ["4rmcyt-homeserver.cachix.org-1:QUtDyIxhMJRwispauvcutxugqz0I1PieNprFlIkhBZo="];

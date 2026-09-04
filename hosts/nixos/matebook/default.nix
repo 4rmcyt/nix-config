@@ -21,7 +21,7 @@
     # Networking
     ../../../modules/networking/nfs-client
     ../../../modules/networking/ssh
-    # ../../../modules/networking/avahi
+    # not in use: ../../../modules/networking/avahi
 
     # User configuration
     ../../../modules/users/zeev

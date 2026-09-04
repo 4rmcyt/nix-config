@@ -70,9 +70,6 @@ modules/
                             #   ai-tools sub-dirs: agents/, skills/, commands/, system-prompt/
   dev/                      # Developer tools
   nix/                      # Nix daemon config (determinate, lix)
-  roles/                    # Role compositions (desktop, server, media-server, monitoring)
-                            #   Defines options.roles.{desktop,server,...}.enable flags
-                            #   Not imported by any host currently — available for opt-in
 ```
 
 ## Options System

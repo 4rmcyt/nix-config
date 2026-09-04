@@ -12,6 +12,7 @@
     ./nixarr
     ./ntfy
     ./radicale
+    # Not in use, kept for reference:
     # ./k3s
     # ./argocd
   ];

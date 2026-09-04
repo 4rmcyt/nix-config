@@ -30,7 +30,7 @@ nix build .#nixosConfigurations.<host>.config.system.build.toplevel  # Build a h
 | `home-manager-base.nix` | Defines `modules.homeManager.base`: sops HM, overlays, stateVersion |
 | `configurations/nixos.nix` | Defines `options.configurations.nixos` (lazyAttrsOf deferredModule → `flake.nixosConfigurations`) |
 | `systems.nix` | `systems = ["x86_64-linux"]` |
-| `hosts/{desktop,gcp,homeserver,matebook,wsl}/configuration.nix` | Per-host definitions using `configurations.nixos.<name>.module` |
+| `hosts/{desktop,gcp-relay,homeserver,matebook,router}/configuration.nix` | Per-host definitions using `configurations.nixos.<name>.module` |
 
 ### Host definition pattern
 
@@ -64,8 +64,7 @@ hosts/nixos/{host}/     # Hardware config + host-specific NixOS settings
 home/{host}/            # Home Manager config per host
 modules/
   base/                 # Core system (logging, msmtp, distributed-builds)
-  options/              # my.defaults.* options (user, email, domain, IPs, timezone, locale)
-  roles/                # Role compositions (desktop, server, media-server, monitoring)
+  options/              # my.defaults.* (identity/locale) + my.network.* (addresses, ports) + my.security.*
   WM/                   # Window managers (niri + mango, both w/ noctalia-shell, gtk, mime) — desktop:mango, matebook:niri; hyprland kept on disk unused
   GUI/                  # GUI apps (firefox, chrome, zed, obsidian, terminal, IDE, etc.)
   TUI/                  # Terminal tools (zsh, zellij, atuin, ai-tools, llama-cpp)

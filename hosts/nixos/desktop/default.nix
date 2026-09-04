@@ -27,7 +27,7 @@
     # Features and roles
     ../../../modules/containers
     ../../../modules/gaming
-    # ../../../modules/networking/avahi
+    # not in use: ../../../modules/networking/avahi
     ../../../modules/networking/dnssec
     ../../../modules/networking/nfs-client
     ../../../modules/networking/nut-client

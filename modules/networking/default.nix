@@ -1,6 +1,5 @@
 {...}: {
   imports = [
-    # ./avahi
     ./cloudflared
     ./dnssec
     ./headscale
@@ -10,5 +9,7 @@
     ./traefik
     ./unbound
     ./wireguard
+    # Not in use, kept for reference:
+    # ./avahi
   ];
 }

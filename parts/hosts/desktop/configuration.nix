@@ -80,8 +80,6 @@ in {
       disabledModules = ["programs/noctalia.nix"];
       imports = [
         ../../../home/desktop
-        # inputs.stylix.homeModules.stylix
-        # inputs.pam-shim.homeModules.default
         inputs.noctalia.homeModules.default
         inputs.mango.hmModules.mango
       ];

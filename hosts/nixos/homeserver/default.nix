@@ -23,12 +23,12 @@
     ../../../modules/networking
     ../../../modules/networking/ssh
     ../../../modules/networking/nut-server
-    # ../../../modules/networking/avahi
     ../../../modules/security
     ../../../modules/services
-
-    # ../../../modules/base/distributed-builds
     ../../../modules/backup
+
+    # not in use: ../../../modules/networking/avahi
+    # not in use: ../../../modules/base/distributed-builds
     ../../../modules/users/zeev
   ];
 

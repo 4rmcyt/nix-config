@@ -7,7 +7,7 @@ in ''
 
   ## nix-config Project Layout
 
-  Flake with 4 NixOS hosts: `desktop`, `gcp`, `homeserver`, `matebook`
+  Flake with 5 NixOS hosts: `desktop`, `gcp-relay`, `homeserver`, `matebook`, `router` (router not currently deployed)
 
   ```
   hosts/nixos/{host}/     # System config + hardware
@@ -15,7 +15,6 @@ in ''
   modules/
     base/                 # Core system (logging, msmtp, distributed-builds)
     options/              # my.defaults.*, my.network.*, my.security.*
-    roles/                # Role compositions (desktop, server, media-server, monitoring)
     WM/                   # niri + mango (both w/ noctalia v5), gtk, mime — desktop:mango, matebook:niri; hyprland kept on disk unused, not migrated off noctalia legacy-v4
     GUI/                  # firefox, chrome, obsidian, zed, terminal, mpv, etc.
     TUI/                  # zsh, zellij, atuin, starship, neovim, ai-tools (claude-code, llama-cpp, mcp)
