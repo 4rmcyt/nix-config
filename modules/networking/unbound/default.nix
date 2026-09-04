@@ -4,7 +4,8 @@
   ...
 }: let
   cfg = config.my.unbound;
-  inherit (config.my.defaults) domain homeserver_lan;
+  inherit (config.my.defaults) domain;
+  inherit (config.my.network.hosts) homeserver_lan;
 in {
   options.my.unbound = {
     enable = lib.mkEnableOption "Unbound split DNS for Tailscale";

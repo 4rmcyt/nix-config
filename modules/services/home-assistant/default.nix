@@ -1,5 +1,6 @@
 {config, ...}: let
-  inherit (config.my.defaults) domain homeserver_lan timezone desktop_lan desktop_wifi;
+  inherit (config.my.defaults) domain timezone;
+  inherit (config.my.network.hosts) homeserver_lan desktop_lan desktop_wifi;
 in {
   sops.secrets.hass_alexa_client_secret = {
     sopsFile = ../../../secrets/hass-alexa.yaml;
