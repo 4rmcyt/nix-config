@@ -12,7 +12,7 @@ Tailnet login server: `https://hs.<domain>` (self-hosted Headscale)
 
 **Role:** Network router — VLAN segmentation, NAT, DHCP, DNS, Tailscale subnet relay  
 **Hardware:** Sophos SG110/120 — Intel Atom D525, 2 GB RAM, legacy BIOS  
-**WAN IP:** DHCP from ISP router (`192.168.1.254`)  
+**WAN IP:** DHCP from ISP router  
 **Tailscale:** subnet router (advertises `192.168.30.0/24` media VLAN)
 
 #### Physical Interfaces
@@ -20,8 +20,8 @@ Tailnet login server: `https://hs.<domain>` (self-hosted Headscale)
 | Interface | Role | Connected to |
 |-----------|------|-------------|
 | `enp5s0` | WAN | ISP router (DHCP) |
-| `enp4s0` | Office trunk (802.1Q) | TL-SG108E #1 `192.168.1.111` — tagged vlan10 + vlan20 + vlan40 |
-| `enp3s0` | Media (physical, no VLAN), `192.168.30.1/24` | TL-SG108E #2 `192.168.30.112` — all ports untagged |
+| `enp4s0` | Office trunk (802.1Q) | TL-SG108E #1 (managed) — tagged vlan10 + vlan20 + vlan40 |
+| `enp3s0` | Media (physical, no VLAN), `192.168.30.1/24` | TL-SG108E #2 (unmanaged use) — all ports untagged |
 | `enp2s0` | Trusted AP (physical), `192.168.1.1/24` | ISP AP (trusted WiFi) |
 
 Interface names are set in `hosts/nixos/router/networking.nix` (`wanInterface`/`trunkInterface`/`mediaInterface`/`apInterface`) and matched again by name in `firewall.nix`'s nftables ruleset — verify with `ip link` on hardware and keep both files in sync.
@@ -35,7 +35,7 @@ Interface names are set in `hosts/nixos/router/networking.nix` (`wanInterface`/`
 | media | `enp3s0` | `192.168.30.0/24` | `192.168.30.1` | `192.168.30.1` | PS5, Nintendo Switch, Mi Box, Roku TV |
 | work | `vlan40` | `192.168.40.0/24` | `192.168.40.1` | `1.1.1.1` | Fully isolated work devices (office switch port 7) |
 
-#### Office Switch — TL-SG108E #1 (`192.168.1.111`)
+#### Office Switch — TL-SG108E #1
 
 | Port | Device | PVID | Tagged VLANs |
 |------|--------|------|-------------|
@@ -44,11 +44,11 @@ Interface names are set in `hosts/nixos/router/networking.nix` (`wanInterface`/`
 | 7 | Work port | 40 | — |
 | 8 | AC1750 OpenWrt (IoT AP) | 20 | — |
 
-#### Living Room Switch — TL-SG108E #2 (`192.168.30.112`)
+#### Living Room Switch — TL-SG108E #2
 
 No VLAN configuration needed — all ports untagged, plain L2 switch.  
 Router `enp3s0` plugged into any port; PS5, TV, Roku, Mi Box in remaining ports.  
-Management IP is `192.168.30.112` — reachable from media segment only (via `enp3s0`).
+Management IP is on the media segment only (reachable via `enp3s0`).
 
 #### Firewall Policy (nftables)
 
@@ -93,7 +93,7 @@ See [router-installation.md](router-installation.md) for installation steps.
 ### homeserver
 
 **Role:** Primary home server — all services, monitoring, DNS, VPN hub  
-**LAN IP:** `192.168.1.165`  
+**LAN IP:** static in the trusted VLAN (`my.network.hosts.homeserver_lan`)  
 **Tailscale:** exit node + subnet router (`192.168.1.0/24`)
 
 #### Storage (ZFS)
@@ -186,7 +186,7 @@ Game launch/exit swap the scheduler via gamemode custom hooks (`modules/gaming/d
 ### matebook
 
 **Role:** Laptop — portable workstation  
-**WiFi IP:** `192.168.1.132`
+**WiFi IP:** static in the trusted VLAN (`my.network.hosts.matebook_wifi`)
 
 #### Storage
 
@@ -235,17 +235,13 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 
 ### Headscale (Tailnet control plane)
 
-Running on GCP relay. Split DNS: `<domain>` → `100.64.0.3` (homeserver Tailscale IP).  
+Running on GCP relay. Split DNS: `<domain>` → homeserver's Tailscale IP.  
 Magic DNS base domain: `ts.<domain>`. DERP: GCP US Central + Tailscale default map.
 
-Known static Tailscale IPs (headscale has no declarative per-node static IP — assigned sequentially in its sqlite DB; pinned here by manual `UPDATE nodes SET ipv4=...` after registration):
-
-| Host | Tailscale IP |
-|------|---------------|
-| desktop | `100.64.0.1` |
-| homeserver | `100.64.0.3` |
-| matebook | `100.64.0.4` |
-| gcp-relay | `100.64.0.5` |
+Each node is pinned to a fixed address in the `100.64.0.0/10` CGNAT range via a
+manual `UPDATE nodes SET ipv4=...` in headscale's sqlite DB after registration
+(headscale has no declarative per-node static IP — it otherwise assigns them
+sequentially).
 
 SSH config uses MagicDNS hostnames (`homeserver.ts.<domain>`, `matebook.ts.<domain>`, `gcp-relay.ts.<domain>`) so SSH works from any network without hardcoded LAN IPs. Operator mode enabled on desktop + matebook (`extraSetFlags = ["--operator=zeev"]`) so `tailscale file cp` works without sudo.
 
@@ -309,7 +305,7 @@ All configured via the Cloudflare dashboard/API (zone `<domain>`, Free plan) —
 - **Rate limiting rule** `jobko-auth-ratelimit` (Security rules → Rate limiting rules): blocks IPs exceeding 3 requests/10s (Free plan's max window) to `/api/auth/login` or `/api/auth/register`.
 - **Schema validation**: job-kombayn's OpenAPI schema (exported via `python -m kombayn.export_openapi`, converted 3.1→3.0.3 since Cloudflare only accepts v3.0.x, `servers` added manually since FastAPI doesn't set it, `additionalProperties: false` added by hand to `LoginRequest`/`RegisterRequest`/`StatusUpdate`/`ProfileIn` since OpenAPI/FastAPI leaves it unset — i.e. extra fields allowed — by default) uploaded as `jobko-openapi.json`, zone-level `validation_default_mitigation_action: block`. Per-operation overrides must be `null` (inherit), not `none` — the dashboard's "Add schema and endpoints" wizard sets every operation to an explicit `none` override by default, silently defeating the zone-level action; cleared via `PATCH /zones/{id}/schema_validation/settings/operations` with each operation set to `{"mitigation_action": null}` (must be redone after any schema re-upload). `log` action requires a paid plan; Free only gets `none`/`block`. Confirmed live: a request missing the required `email` field, or one with a wrong-typed `email`/an extra body field, gets a 403 from Cloudflare's edge (not the origin) on `/api/auth/login`.
 - **Bot Fight Mode** and **Leaked Credentials Detection** (Security → Settings): both enabled zone-wide.
-- Cloudflare Access was deliberately **not** put in front of jobko (unlike hass/idm) — job-kombayn has multiple real users (profiles for `volodymyr-kondratenko` and `sofiia-rogatska`) and open self-service `/api/auth/register`; gating the whole app behind Access would need a bypass rule on the signup path plus app-level automation to add new signups' emails to the Access policy, which isn't built.
+- Cloudflare Access was deliberately **not** put in front of jobko (unlike hass/idm) — job-kombayn has multiple real users and open self-service `/api/auth/register`; gating the whole app behind Access would need a bypass rule on the signup path plus app-level automation to add new signups' emails to the Access policy, which isn't built.
 
 ### Media
 

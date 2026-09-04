@@ -358,7 +358,14 @@ Remote hosts are deployed manually via `nixos-rebuild` over SSH — recipes live
 
 ## Topology Diagram
 
-`nix build .#topology.x86_64-linux.config.output` generates SVG infrastructure diagrams via **nix-topology**. Includes: desktop, homeserver, matebook, gcp-relay.
+`just topology` (or `nix build .#topology.x86_64-linux.config.output`) generates two SVGs via **nix-topology** — physical `main.svg` and `network.svg` — written to `docs/topology.svg` / `docs/topology-network.svg`. **Both are git-ignored** — they bake in resolved host IPs and the public relay IP from the private flake input, so they stay local only.
+
+- **`parts/topology.nix`** — flakeModule wiring + the global topology: `internet`, `isp-router`, `switch-office`, `switch-livingroom`, `ap-trusted`, `ap-iot`, and the `trusted` / `iot` / `media` / `work` / `tailnet` network CIDRs. All five hosts are included (desktop, homeserver, matebook, gcp-relay, router).
+- **`modules/topology/default.nix`** — NixOS module imported into `modules.nixos.base` (every host). Per-host `topology.self`: interfaces, network membership, hardware blurbs, a shared `tailscale0` overlay interface. Also:
+  - disables the kea extractor on `router` (its trusted subnet has no `.interface`, which the extractor assumes);
+  - forces `services.traefik.details = {}` on homeserver so the diagram does **not** enumerate every Traefik router and backend URL (job-kombayn included).
+- 802.1Q is not representable in nix-topology — the office switch is drawn as the trusted segment it mostly carries; the IoT AP hangs off the router's `vlan20` interface.
+- `matebook` and `router` currently exist only in config, not yet deployed — noted in their `hardware.info`.
 
 ## Terraform / OpenTofu
 

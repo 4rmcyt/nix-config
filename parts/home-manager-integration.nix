@@ -7,6 +7,7 @@
       inputs.sops-nix.nixosModules.sops
       inputs.disko.nixosModules.disko
       inputs.nix-topology.nixosModules.default
+      ../modules/topology
     ];
   };
 }

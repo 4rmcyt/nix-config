@@ -136,8 +136,15 @@ builds are pushed to per-host Cachix caches (`4rmcyt-<host>.cachix.org`).
 nix develop          # tooling shell: sops, age, gitleaks, ripsecrets, nh, nix-tree, …
 nix fmt              # format everything
 nix flake check      # validate outputs
-nix build .#topology.x86_64-linux.config.output   # nix-topology infrastructure diagram
+just topology        # render nix-topology diagrams into docs/ (git-ignored)
 ```
+
+`just topology` builds `docs/topology.svg` (physical) and `docs/topology-network.svg`
+(network-centric) from the NixOS configs via
+[nix-topology](https://github.com/oddlama/nix-topology) — annotations in
+[`modules/topology/`](modules/topology/default.nix) and
+[`parts/topology.nix`](parts/topology.nix). The SVGs are git-ignored: they resolve
+real host addresses from the private flake input, so they stay local.
 
 ---
 

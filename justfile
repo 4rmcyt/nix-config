@@ -30,6 +30,13 @@ fmt:
 check:
     nix flake check
 
+# Render nix-topology diagrams into docs/ (git-ignored — resolve real IPs)
+topology:
+    nix build .#topology.x86_64-linux.config.output -o result-topology
+    cp -L result-topology/main.svg docs/topology.svg
+    cp -L result-topology/network.svg docs/topology-network.svg
+    rm -f result-topology
+
 # Run all tests
 test:
     nix flake check
