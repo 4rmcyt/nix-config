@@ -542,38 +542,38 @@ in {
 
           services = {
             # Nixarr
-            sonarr.loadBalancer.servers = [{url = "http://localhost:8990";}];
-            radarr.loadBalancer.servers = [{url = "http://localhost:7878";}];
-            prowlarr.loadBalancer.servers = [{url = "http://localhost:9696";}];
-            bazarr.loadBalancer.servers = [{url = "http://localhost:6767";}];
-            lidarr.loadBalancer.servers = [{url = "http://localhost:8686";}];
-            lazylibrarian.loadBalancer.servers = [{url = "http://localhost:5299";}];
+            sonarr.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.sonarr}";}];
+            radarr.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.radarr}";}];
+            prowlarr.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.prowlarr}";}];
+            bazarr.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.bazarr}";}];
+            lidarr.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.lidarr}";}];
+            lazylibrarian.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.lazylibrarian}";}];
             kapowarr.loadBalancer.servers = [{url = "http://localhost:5656";}];
             seerr.loadBalancer.servers = [{url = "http://localhost:5055";}];
 
             # Media
-            jellyfin.loadBalancer.servers = [{url = "http://localhost:8096";}];
+            jellyfin.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.jellyfin}";}];
             qb.loadBalancer.servers = [{url = "http://localhost:8081";}];
             komf.loadBalancer.servers = [{url = "http://localhost:8085";}];
             komga.loadBalancer.servers = [{url = "http://localhost:8087";}];
 
             # Monitoring
-            grafana.loadBalancer.servers = [{url = "http://localhost:3003";}];
+            grafana.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.grafana}";}];
 
             # Reading
-            miniflux.loadBalancer.servers = [{url = "http://localhost:8086";}];
-            audiobookshelf.loadBalancer.servers = [{url = "http://localhost:9292";}];
+            miniflux.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.miniflux}";}];
+            audiobookshelf.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.audiobookshelf}";}];
 
             # Smart home
-            hass.loadBalancer.servers = [{url = "http://localhost:8123";}];
+            hass.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.home-assistant}";}];
 
             # Productivity
-            homepage.loadBalancer.servers = [{url = "http://localhost:8082";}];
+            homepage.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.homepage}";}];
             microbin.loadBalancer.servers = [{url = "http://localhost:8069";}];
             atuin.loadBalancer.servers = [{url = "http://localhost:8881";}];
             livesync.loadBalancer.servers = [{url = "http://localhost:5984";}];
             dispatcharr.loadBalancer.servers = [{url = "http://localhost:9191";}];
-            radicale.loadBalancer.servers = [{url = "http://localhost:5232";}];
+            radicale.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.radicale}";}];
             ntfy.loadBalancer.servers = [{url = "http://localhost:9991";}];
 
             # job-kombayn

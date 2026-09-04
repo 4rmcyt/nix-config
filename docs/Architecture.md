@@ -38,7 +38,7 @@ Modules are **not** auto-imported. They are referenced explicitly from host conf
 ```
 modules/
   base/                     # Shared base: logging, msmtp, distributed-builds
-  options/                  # Custom options: my.defaults.*, my.network.*, my.security.*
+  options/                  # Custom options: my.defaults.*, my.network.*
   database/                 # postgresql, redis, couchdb
   monitoring/               # Prometheus + Grafana + Loki + Alloy stack; node-exporter-client;
                             #   Alertmanager + alertmanager-ntfy bridge
@@ -90,7 +90,6 @@ Thunderbird account config also lives there (`inputs.private.homeManagerModules.
 |----------------------|-------------------------------|----------------------------------------------|
 | `my.defaults.*`      | `options/defaults.nix`        | user, email, git identity, domain, timezone, locale, GCP relay IP, NextDNS profile id (from `inputs.private`) |
 | `my.network.*`       | `options/network.nix`         | gateway, host addresses, MACs, VLANs, subnets, service ports (from `inputs.private`) |
-| `my.security.*`      | `options/security.nix`        | security-related options                     |
 | `my.traefik.*`       | `networking/traefik/`         | Traefik reverse proxy                        |
 | `my.headscale.*`     | `networking/headscale/`       | Headscale coordination server                |
 | `my.nodeExporter.*`  | `monitoring/node-exporter-client.nix` | Per-host Prometheus node exporter   |

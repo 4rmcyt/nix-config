@@ -32,9 +32,6 @@
     ../../modules/security/gpg.nix
   ];
   home = {
-    username = "zeev";
-    homeDirectory = "/home/zeev";
-
     packages = with pkgs; [
       bat
       brightnessctl

@@ -231,7 +231,7 @@ in {
   users.groups.miniflux = {};
 
   networking.firewall.allowedTCPPorts = [
-    8086 # Miniflux
+    config.my.network.ports.miniflux
   ];
 
   environment.systemPackages = [pkgs.miniflux];
@@ -245,7 +245,7 @@ in {
       CREATE_ADMIN = 1;
       CLEANUP_ARCHIVE_READ_DAYS = "60";
       BASE_URL = "https://miniflux.${config.my.defaults.domain}";
-      LISTEN_ADDR = "localhost:8086";
+      LISTEN_ADDR = "localhost:${toString config.my.network.ports.miniflux}";
       DATABASE_MIGRATIONS = 1;
       DATABASE_URL = lib.mkForce "user=miniflux password=${config.sops.secrets.miniflux_db_password.path} dbname=miniflux sslmode=disable host=/run/postgresql";
 
@@ -271,7 +271,7 @@ in {
       EnvironmentFile = config.sops.secrets.miniflux_admin_creds.path;
     };
     script = ''
-      url="http://localhost:8086"
+      url="http://localhost:${toString config.my.network.ports.miniflux}"
 
       until curl -sf "$url/healthcheck" > /dev/null; do
         sleep 2

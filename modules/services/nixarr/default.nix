@@ -234,14 +234,14 @@ in {
 
   networking.firewall.allowedTCPPorts = [
     5055 # seerr
-    6767 # Bazarr
-    7878 # Radarr
-    8096 # Jellyfin HTTP
-    8686 # Lidarr
+    config.my.network.ports.bazarr
+    config.my.network.ports.radarr
+    config.my.network.ports.jellyfin
+    config.my.network.ports.lidarr
     8920 # Jellyfin HTTPS
-    8990 # Sonarr
-    9292 # Audiobookshelf
-    9696 # Prowlarr
+    config.my.network.ports.sonarr
+    config.my.network.ports.audiobookshelf
+    config.my.network.ports.prowlarr
   ];
   networking.firewall.allowedUDPPorts = [
     1900 # DLNA/UPnP

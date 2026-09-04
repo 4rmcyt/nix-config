@@ -255,10 +255,6 @@
     };
   };
 
-  # Restrict avahi to ethernet only — both enp12s0 and wlp13s0 probing simultaneously
-  # causes avahi to see its own mDNS probe on the other interface and conflict with itself
-  services.avahi.allowInterfaces = ["enp12s0"];
-
   # No battery on desktop — keep UPower running (wireplumber needs it for BT headset battery)
   # but disable all power management polling since there's no battery
   services.upower = {

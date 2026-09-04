@@ -57,10 +57,6 @@
   '';
 
   home = {
-    homeDirectory = "/home/zeev";
-
-    username = "zeev";
-
     packages = with pkgs; [
       android-tools
       arp-scan

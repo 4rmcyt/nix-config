@@ -3,7 +3,6 @@
   pkgs,
   ...
 }: {
-  # 1. SOPS Secrets
   sops.secrets = {
     ntfy_alertmanager_config = {
       sopsFile = ../../secrets/ntfy.yaml;
@@ -29,7 +28,6 @@
     };
   };
 
-  # 2. Users and Groups
   users.users = {
     grafana = {
       isSystemUser = true;
@@ -48,16 +46,15 @@
     prometheus = {};
   };
 
-  # 3. Firewall
   networking.firewall.allowedTCPPorts = [
-    3003 # Grafana
+    config.my.network.ports.grafana
     3100 # Loki
-    9090 # Prometheus
-    9100 # Node Exporter
+    config.my.network.ports.prometheus
+    config.my.network.ports.node-exporter
     9199 # NUT Exporter
   ];
 
-  # 4. GeoIP Database (db-ip.com, no account required)
+  # GeoIP Database (db-ip.com, no account required)
   systemd.tmpfiles.rules = [
     "d /var/lib/geoip 0755 root root -"
     "d /var/lib/loki/rules 0755 loki loki -"
@@ -98,9 +95,6 @@
     };
   };
 
-  # =================================================================
-  # 5. Alloy config
-  # =================================================================
   environment.etc."alloy/config.alloy".text = ''
     // ── Loki sink ────────────────────────────────────────────────
     loki.write "default" {
@@ -207,9 +201,6 @@
     serviceConfig.SupplementaryGroups = ["systemd-journal"];
   };
 
-  # =================================================================
-  # 6. Services
-  # =================================================================
   services = {
     # --- Grafana Visualization ---
     grafana = {
@@ -227,7 +218,7 @@
         };
         server = {
           http_addr = "127.0.0.1";
-          http_port = 3003;
+          http_port = config.my.network.ports.grafana;
           root_url = "https://grafana.${config.my.defaults.domain}";
         };
         "auth.generic_oauth" = {
@@ -348,7 +339,7 @@
     # --- Prometheus Monitoring Stack ---
     prometheus = {
       enable = true;
-      port = 9090;
+      port = config.my.network.ports.prometheus;
       retentionTime = "30d";
       globalConfig.scrape_interval = "1m";
       ruleFiles = [./alerts/homeserver.yaml];
@@ -390,7 +381,7 @@
         }
         {
           job_name = "homeserver-node";
-          static_configs = [{targets = ["localhost:9100"];}];
+          static_configs = [{targets = ["localhost:${toString config.my.network.ports.node-exporter}"];}];
         }
         {
           job_name = "nut-exporter";
@@ -411,7 +402,7 @@
         }
         {
           job_name = "router-node";
-          static_configs = [{targets = ["router.ts.${config.my.defaults.domain}:9100"];}];
+          static_configs = [{targets = ["router.ts.${config.my.defaults.domain}:${toString config.my.network.ports.node-exporter}"];}];
         }
         {
           job_name = "router-unbound";
@@ -423,19 +414,16 @@
         }
         {
           job_name = "gcp-relay-node";
-          static_configs = [{targets = ["100.64.0.5:9100"];}];
+          static_configs = [{targets = ["100.64.0.5:${toString config.my.network.ports.node-exporter}"];}];
         }
         {
           job_name = "matebook-node";
-          static_configs = [{targets = ["${config.my.network.hosts.matebook_wifi}:9100"];}];
+          static_configs = [{targets = ["${config.my.network.hosts.matebook_wifi}:${toString config.my.network.ports.node-exporter}"];}];
         }
       ];
     };
   };
 
-  # =================================================================
-  # 7. Alertmanager + ntfy bridge
-  # =================================================================
   services.prometheus.alertmanager = {
     enable = true;
     port = config.my.network.ports.alertmanager;

@@ -182,7 +182,6 @@
     };
   };
 
-  # Traefik & Services Toggle
   my.backup = {
     enable = true;
     repository = "rclone:homeserver:restic/homeserver";

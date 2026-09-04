@@ -161,7 +161,7 @@ in {
       # *arr Media Automation Stack
       sonarr = lib.mkOption {
         type = lib.types.port;
-        default = 8089;
+        default = 8990;
         description = "Sonarr TV shows automation";
       };
 

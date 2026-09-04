@@ -36,7 +36,7 @@
     user = "sonarr";
     group = "sonarr";
     dataDir = "/data/media/.state/nixarr/sonarr";
-    settings.server.port = 8990;
+    settings.server.port = config.my.network.ports.sonarr;
   };
 
   systemd.services.sonarr = {

@@ -64,7 +64,7 @@ hosts/nixos/{host}/     # Hardware config + host-specific NixOS settings
 home/{host}/            # Home Manager config per host
 modules/
   base/                 # Core system (logging, msmtp, distributed-builds)
-  options/              # my.defaults.* (identity/locale) + my.network.* (addresses, ports) + my.security.*
+  options/              # my.defaults.* (identity/locale) + my.network.* (addresses, ports)
   WM/                   # Window managers (niri + mango, both w/ noctalia-shell, gtk, mime) — desktop:mango, matebook:niri; hyprland kept on disk unused
   GUI/                  # GUI apps (firefox, chrome, zed, obsidian, terminal, IDE, etc.)
   TUI/                  # Terminal tools (zsh, zellij, atuin, ai-tools, llama-cpp)

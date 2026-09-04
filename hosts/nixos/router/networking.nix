@@ -8,7 +8,7 @@
 #     vlan40  work     192.168.40.1/24   work port (port 7)
 #   enp3s0 — media   192.168.30.1/24  → TL-SG108E #2 (living room), untagged
 #   enp2s0 — trusted 192.168.1.1/24   → ISP AP (trusted WiFi), untagged
-_: let
+{config, ...}: let
   wanInterface = "enp5s0";
   trunkInterface = "enp4s0";
   mediaInterface = "enp3s0";
@@ -61,7 +61,7 @@ in {
     # ── Media switch port (physical, no VLAN tagging) ────────────────────────
     networks."20-media" = {
       matchConfig.Name = mediaInterface;
-      address = ["192.168.30.1/24"];
+      address = ["${config.my.network.vlans.media}/24"];
       networkConfig = {
         DHCP = "no";
         IPv6AcceptRA = false;
@@ -72,7 +72,7 @@ in {
     # ── ISP AP port (physical, trusted zone, no VLAN tagging) ───────────────
     networks."20-ap" = {
       matchConfig.Name = apInterface;
-      address = ["192.168.1.1/24"];
+      address = ["${config.my.network.vlans.trusted}/24"];
       networkConfig = {
         DHCP = "no";
         IPv6AcceptRA = false;
@@ -106,7 +106,7 @@ in {
     # ── VLAN 10 — trusted (192.168.1.0/24) ──────────────────────────────────
     networks."40-vlan10" = {
       matchConfig.Name = "vlan10";
-      address = ["192.168.1.1/24"];
+      address = ["${config.my.network.vlans.trusted}/24"];
       networkConfig = {
         DHCP = "no";
         IPv6AcceptRA = false;
@@ -117,7 +117,7 @@ in {
     # ── VLAN 20 — iot (192.168.20.0/24) ─────────────────────────────────────
     networks."40-vlan20" = {
       matchConfig.Name = "vlan20";
-      address = ["192.168.20.1/24"];
+      address = ["${config.my.network.vlans.iot}/24"];
       networkConfig = {
         DHCP = "no";
         IPv6AcceptRA = false;
@@ -128,7 +128,7 @@ in {
     # ── VLAN 40 — work (192.168.40.0/24) ────────────────────────────────────
     networks."40-vlan40" = {
       matchConfig.Name = "vlan40";
-      address = ["192.168.40.1/24"];
+      address = ["${config.my.network.vlans.work}/24"];
       networkConfig = {
         DHCP = "no";
         IPv6AcceptRA = false;

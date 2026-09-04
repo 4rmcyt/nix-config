@@ -3,7 +3,6 @@
   pkgs,
   ...
 }: {
-  # SOPS secret for homepage environment file
   sops.secrets.homepage_env = {
     sopsFile = ../../../secrets/homepage.env;
     format = "dotenv";
@@ -17,14 +16,14 @@
   users.groups.homepage-dashboard = {};
 
   networking.firewall.allowedTCPPorts = [
-    8082 # Homepage Dashboard
+    config.my.network.ports.homepage
   ];
 
   environment.systemPackages = [pkgs.homepage-dashboard];
 
   services.homepage-dashboard = {
     enable = true;
-    listenPort = 8082;
+    listenPort = config.my.network.ports.homepage;
     environmentFiles = [config.sops.secrets.homepage_env.path];
 
     # Import modular configuration

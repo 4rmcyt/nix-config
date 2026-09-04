@@ -18,14 +18,14 @@
   };
   users.groups.radicale = {};
 
-  networking.firewall.allowedTCPPorts = [5232];
+  networking.firewall.allowedTCPPorts = [config.my.network.ports.radicale];
 
   environment.systemPackages = [pkgs.radicale];
   services.radicale = {
     enable = true;
     settings = {
       server = {
-        hosts = ["127.0.0.1:5232"];
+        hosts = ["127.0.0.1:${toString config.my.network.ports.radicale}"];
       };
 
       auth = {

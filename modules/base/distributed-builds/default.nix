@@ -3,7 +3,7 @@
   lib,
   ...
 }: {
-  options.distributed-builds = {
+  options.my.distributedBuilds = {
     enable = lib.mkEnableOption "distributed builds configuration";
 
     role = lib.mkOption {
@@ -55,9 +55,9 @@
     };
   };
 
-  config = lib.mkIf config.distributed-builds.enable {
+  config = lib.mkIf config.my.distributedBuilds.enable {
     # Builder role: Accept build requests from other machines
-    services.openssh = lib.mkIf (config.distributed-builds.role == "builder" || config.distributed-builds.role == "both") {
+    services.openssh = lib.mkIf (config.my.distributedBuilds.role == "builder" || config.my.distributedBuilds.role == "both") {
       enable = true;
       settings = {
         PasswordAuthentication = false;
@@ -66,7 +66,7 @@
     };
 
     # Create nix-builder user on builder machines
-    users.users.nix-builder = lib.mkIf (config.distributed-builds.role == "builder" || config.distributed-builds.role == "both") {
+    users.users.nix-builder = lib.mkIf (config.my.distributedBuilds.role == "builder" || config.my.distributedBuilds.role == "both") {
       isSystemUser = true;
       group = "nix-builder";
       openssh.authorizedKeys.keyFiles = [
@@ -74,10 +74,10 @@
       ];
     };
 
-    users.groups.nix-builder = lib.mkIf (config.distributed-builds.role == "builder" || config.distributed-builds.role == "both") {};
+    users.groups.nix-builder = lib.mkIf (config.my.distributedBuilds.role == "builder" || config.my.distributedBuilds.role == "both") {};
 
     # Client role: Use remote builders
-    nix = lib.mkIf (config.distributed-builds.role == "client" || config.distributed-builds.role == "both") {
+    nix = lib.mkIf (config.my.distributedBuilds.role == "client" || config.my.distributedBuilds.role == "both") {
       buildMachines =
         map (builder: {
           inherit (builder) hostName;
@@ -90,7 +90,7 @@
           sshKey = "/root/.ssh/nix-builder";
           inherit (builder) publicHostKey;
         })
-        config.distributed-builds.builders;
+        config.my.distributedBuilds.builders;
 
       distributedBuilds = lib.mkDefault true;
 
@@ -107,13 +107,13 @@
 
     # Add remote builders to known hosts
     programs.ssh.knownHosts =
-      lib.mkIf (config.distributed-builds.role == "client" || config.distributed-builds.role == "both")
+      lib.mkIf (config.my.distributedBuilds.role == "client" || config.my.distributedBuilds.role == "both")
       (lib.listToAttrs (map (builder: {
           name = builder.hostName;
           value = {
             publicKey = builder.publicHostKey;
           };
         })
-        config.distributed-builds.builders));
+        config.my.distributedBuilds.builders));
   };
 }

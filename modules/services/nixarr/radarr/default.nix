@@ -36,7 +36,7 @@
     user = "radarr";
     group = "radarr";
     dataDir = "/data/media/.state/nixarr/radarr";
-    settings.server.port = 7878;
+    settings.server.port = config.my.network.ports.radarr;
   };
 
   systemd.services.radarr = {

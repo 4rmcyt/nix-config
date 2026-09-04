@@ -22,7 +22,7 @@ in {
 
       homeassistant:
         external_url: "https://hass.${domain}"
-        internal_url: "http://localhost:8123"
+        internal_url: "http://localhost:${toString config.my.network.ports.home-assistant}"
 
       frontend:
         themes: !include_dir_merge_named themes
@@ -74,7 +74,8 @@ in {
   ];
 
   # ── Mosquitto MQTT Broker ─────────────────────────────────────────────────
-  # HA container (--network=host) connects to mosquitto via homeserver_lan:1883.
+  # HA container (--network=host) connects to mosquitto via homeserver_lan on
+  # config.my.network.ports.mosquitto.
   # IoT devices on the LAN also reach the broker at this address.
   users.users.mosquitto = {
     isSystemUser = true;
@@ -87,7 +88,7 @@ in {
     listeners = [
       {
         address = homeserver_lan;
-        port = 1883;
+        port = config.my.network.ports.mosquitto;
         acl = ["pattern readwrite #"];
         omitPasswordAuth = true;
         settings.allow_anonymous = true;
@@ -95,5 +96,5 @@ in {
     ];
   };
 
-  networking.firewall.allowedTCPPorts = [1883];
+  networking.firewall.allowedTCPPorts = [config.my.network.ports.mosquitto];
 }

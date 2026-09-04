@@ -31,7 +31,7 @@
   services.prowlarr = {
     enable = true;
     dataDir = "/data/media/.state/nixarr/prowlarr";
-    settings.server.port = 9696;
+    settings.server.port = config.my.network.ports.prowlarr;
   };
 
   systemd.services.prowlarr = {

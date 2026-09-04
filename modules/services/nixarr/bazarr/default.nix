@@ -43,7 +43,7 @@
     user = "bazarr";
     group = "bazarr";
     dataDir = "/data/media/.state/nixarr/bazarr";
-    listenPort = 6767;
+    listenPort = config.my.network.ports.bazarr;
   };
 
   systemd.services.bazarr = {
