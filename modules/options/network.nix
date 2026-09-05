@@ -15,7 +15,19 @@ in {
     gateway = lib.mkOption {
       type = lib.types.str;
       default = "192.168.1.1";
-      description = "Default gateway — NixOS router, trusted VLAN";
+      description = "Default gateway — router appliance, trusted VLAN";
+    };
+
+    podmanBridge = lib.mkOption {
+      type = lib.types.str;
+      default = "podman0";
+      description = "Podman default network bridge interface name.";
+    };
+
+    podmanGateway = lib.mkOption {
+      type = lib.types.str;
+      default = "10.88.0.1";
+      description = "Podman default network gateway IP — host side of the bridge; host services (redis, postgres) bind it.";
     };
 
     vlans = {
@@ -114,8 +126,8 @@ in {
       description = "Infrastructure IPs by device key (defined in the private flake).";
     };
 
-    # Full home device inventory — DHCP reservations on the router plus the
-    # /etc/hosts and SSH aliases derived from them. Defined in the private
+    # Full home device inventory — drives the /etc/hosts and SSH aliases
+    # derived from it. Defined in the private
     # flake so device names never land in the public repo. Each entry:
     #   { hostname; mac; ip; subnetId; aliases ? []; }
     reservations = lib.mkOption {

@@ -1,4 +1,12 @@
-{config, ...}: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  inherit (config.my.network) podmanBridge podmanGateway;
+  podmanPrefix = lib.elemAt (lib.splitString "/" config.my.network.subnets.podman) 1;
+in {
   sops.secrets = {
     redis-oauth2-proxy-password = {
       sopsFile = ../../../secrets/redis.yaml;
@@ -25,7 +33,7 @@
   services.redis.servers.homeserver = {
     enable = true;
 
-    bind = "127.0.0.1 10.88.0.1";
+    bind = "127.0.0.1 ${podmanGateway}";
     port = 6379;
 
     # Unix socket for better performance
@@ -63,8 +71,30 @@
     # 6379 # Commented out - only allow local connections
   ];
 
+  # Pre-create the podman bridge with its gateway IP so redis (and postgres)
+  # can bind it at boot — netavark otherwise only creates podman0 when the
+  # first container starts, long after redis-homeserver.
+  systemd.services.podman-bridge = {
+    description = "Pre-create ${podmanBridge} bridge for host services binding the podman gateway";
+    wantedBy = ["multi-user.target"];
+    before = ["redis-homeserver.service" "postgresql.service" "podman.service"];
+    after = ["network-pre.target"];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = pkgs.writeShellScript "podman-bridge-up" ''
+        set -eu
+        ${pkgs.iproute2}/bin/ip link show ${podmanBridge} >/dev/null 2>&1 \
+          || ${pkgs.iproute2}/bin/ip link add name ${podmanBridge} type bridge
+        ${pkgs.iproute2}/bin/ip addr replace ${podmanGateway}/${podmanPrefix} dev ${podmanBridge}
+        ${pkgs.iproute2}/bin/ip link set ${podmanBridge} up
+      '';
+    };
+  };
+
   systemd.services.redis-homeserver = {
-    after = ["network.target"];
+    after = ["network.target" "podman-bridge.service"];
+    requires = ["podman-bridge.service"];
     serviceConfig =
       config.my.hardening.serviceBase
       // {

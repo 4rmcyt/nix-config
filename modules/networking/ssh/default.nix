@@ -83,7 +83,7 @@ in {
 
   networking.hosts =
     {
-      "${config.my.network.gateway}" = ["router" "gateway" "router-mgmt"];
+      "${config.my.network.gateway}" = ["gateway"];
 
       "${config.my.network.hosts.homeserver_lan}" = ["homeserver" "serv"];
       "${config.my.network.hosts.desktop_lan}" = ["desktop" "desktop-lan"];

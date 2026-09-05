@@ -76,18 +76,6 @@
         static_configs = [{targets = ["localhost:6060"];}];
       }
       {
-        job_name = "router-node";
-        static_configs = [{targets = ["router.ts.${config.my.defaults.domain}:${toString config.my.network.ports.node-exporter}"];}];
-      }
-      {
-        job_name = "router-unbound";
-        static_configs = [{targets = ["router.ts.${config.my.defaults.domain}:9167"];}];
-      }
-      {
-        job_name = "router-kea";
-        static_configs = [{targets = ["router.ts.${config.my.defaults.domain}:9547"];}];
-      }
-      {
         job_name = "gcp-relay-node";
         static_configs = [{targets = ["${config.my.network.hosts."gcp-relay_ts"}:${toString config.my.network.ports.node-exporter}"];}];
       }

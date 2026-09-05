@@ -38,7 +38,6 @@
 
     # → my.network.infrastructure.*
     infrastructure = {
-      router = "192.0.2.1";
       isp-router = "192.0.2.254";
       switch-office = "192.0.2.2";
       switch-living-room = "192.0.2.3";
@@ -46,9 +45,8 @@
 
     nextdns.profileId = "abcdef";
 
-    # Full device inventory → my.network.reservations. Drives the router's Kea
-    # DHCP reservations (hosts/nixos/router/dhcp.nix) and the /etc/hosts + SSH
-    # aliases (modules/networking/ssh). `subnetId` matches the Kea subnet4 id
+    # Full device inventory → my.network.reservations. Drives the /etc/hosts and
+    # SSH aliases (modules/networking/ssh). `subnetId` is the DHCP subnet id
     # (10 trusted, 20 iot, 30 media); `aliases` is optional.
     reservations = [
       {

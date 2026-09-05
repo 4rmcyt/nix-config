@@ -3,22 +3,21 @@
 # (a physical "main" view and a network-centric view).
 #
 # Per-host interface/hardware annotations live in modules/topology/ (a NixOS module).
-# This file defines the global topology: the internet, the ISP router, the two
-# switches, the Wi-Fi APs and the logical network CIDRs.
+# This file defines the global topology: the internet, the ISP router, the NixOS
+# router, the two switches, the Wi-Fi APs and the logical network CIDRs.
 #
-# Interface addresses in modules/topology/ are descriptive labels (not real IPs),
-# so the rendered SVGs are safe to commit and are embedded in the README.
+# The NixOS `router` host was removed from the flake, so its node is described by
+# hand here now. Interface addresses are descriptive labels (not real IPs), so the
+# rendered SVGs are safe to commit and are embedded in the README.
 # Regenerate with `just topology` (or `nix build .#topology.x86_64-linux.config.output`).
 {
   inputs,
   config,
   ...
 }: let
-  # Reuse the router's own network options instead of hand-copying the VLAN
-  # CIDRs a third time — nix-topology already fully evaluates every host's
-  # NixOS config below (`nixosConfigurations = {inherit ... router;}`), so
-  # this adds no extra evaluation cost.
-  routerNet = config.flake.nixosConfigurations.router.config.my.network;
+  # The VLAN CIDRs are plain `my.network.*` option defaults (not router-specific),
+  # so any fully-evaluated host carries the same values.
+  net = config.flake.nixosConfigurations.homeserver.config.my.network;
 in {
   imports = [inputs.nix-topology.flakeModule];
 
@@ -32,7 +31,6 @@ in {
             homeserver
             matebook
             gcp-relay
-            router
             ;
         };
       }
@@ -43,23 +41,23 @@ in {
         networks = {
           trusted = {
             name = "Trusted · VLAN 10";
-            cidrv4 = routerNet.subnets.trusted;
+            cidrv4 = net.subnets.trusted;
           };
           iot = {
             name = "IoT · VLAN 20";
-            cidrv4 = routerNet.subnets.iot;
+            cidrv4 = net.subnets.iot;
           };
           media = {
             name = "Media · enp3s0 (untagged)";
-            cidrv4 = routerNet.subnets.media;
+            cidrv4 = net.subnets.media;
           };
           work = {
             name = "Work · VLAN 40 (isolated)";
-            cidrv4 = routerNet.subnets.work;
+            cidrv4 = net.subnets.work;
           };
           tailnet = {
             name = "Headscale tailnet";
-            cidrv4 = routerNet.subnets.tailscale;
+            cidrv4 = net.subnets.tailscale;
           };
         };
 
@@ -76,6 +74,47 @@ in {
           info = "Technicolor NH20T";
           interfaceGroups = [["lan"] ["wan"]];
           connections.lan = mkConnection "router" "enp5s0";
+        };
+
+        # NixOS router (Sophos SG110/120) — described by hand: the host was
+        # removed from the flake but the appliance still anchors the topology.
+        nodes.router = mkRouter "🧱 router" {
+          info = "Sophos SG110/120 · Intel Atom D525 · 2 GB — config-only, not deployed";
+          interfaces = {
+            enp5s0 = {
+              addresses = ["DHCP (ISP router)"];
+              type = "ethernet";
+            };
+            enp4s0 = {
+              addresses = ["802.1Q trunk — vlan10 + vlan20 + vlan40"];
+              type = "ethernet";
+            };
+            enp3s0 = {
+              network = "media";
+              addresses = ["media gateway"];
+              type = "ethernet";
+            };
+            enp2s0 = {
+              network = "trusted";
+              addresses = ["trusted gateway"];
+              type = "ethernet";
+            };
+            vlan10 = {
+              network = "trusted";
+              addresses = ["trusted gateway"];
+              virtual = true;
+            };
+            vlan20 = {
+              network = "iot";
+              addresses = ["iot gateway"];
+              virtual = true;
+            };
+            vlan40 = {
+              network = "work";
+              addresses = ["work gateway"];
+              virtual = true;
+            };
+          };
         };
 
         # TP-Link TL-SG108E #1 — 802.1Q managed; port 1 is the tagged trunk to the

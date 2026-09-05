@@ -1,6 +1,6 @@
 <h1 align="center">nix-config</h1>
 
-<p align="center"><em>4rmcyt's NixOS fleet — five machines, one flake, zero hand-editing.</em></p>
+<p align="center"><em>4rmcyt's NixOS fleet — four machines, one flake, zero hand-editing.</em></p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/NixOS-unstable-5277C3?logo=nixos&logoColor=white" alt="NixOS unstable">
@@ -23,7 +23,6 @@ live in a separate private flake so this repo can stay public.
   <tr><td><strong>matebook</strong></td><td>AMD Zen 1 laptop. <strong>niri</strong> + noctalia, Limine + Secure Boot, suspend-then-hibernate, auto-cpufreq.</td></tr>
   <tr><td><strong>homeserver</strong></td><td>Intel Coffee Lake. Every service: Traefik, media stack (nixarr), Postgres / Redis / CouchDB, Prometheus/Grafana/Loki, Kanidm, CrowdSec, restic.</td></tr>
   <tr><td><strong>gcp-relay</strong></td><td>GCP <code>e2-micro</code>. <strong>Headscale</strong> control plane + DERP server, Caddy TLS, fail2ban, hardened.</td></tr>
-  <tr><td><strong>router</strong></td><td>Sophos SG appliance (Intel Atom). nftables firewall, Kea DHCP, Unbound, VLAN segmentation, mDNS reflector. Headless, no HM.</td></tr>
 </table>
 
 ```bash
@@ -38,7 +37,7 @@ just deploy-homeserver
 Generated from the NixOS configs with
 [nix-topology](https://github.com/oddlama/nix-topology) — per-host annotations in
 [`modules/topology/`](modules/topology/default.nix), the global picture (internet,
-ISP router, switches, APs, network CIDRs) in
+ISP router, the router appliance, switches, APs, network CIDRs) in
 [`parts/topology.nix`](parts/topology.nix). Regenerate with `just topology`.
 Interface labels are deliberately IP-free — the diagrams expose nothing beyond
 [`docs/Infrastructure.md`](docs/Infrastructure.md).
@@ -83,8 +82,8 @@ Interface labels are deliberately IP-free — the diagrams expose nothing beyond
 Each host imports:
 
 - **`modules.nixos.base`** — nix settings, binary caches, sops, HM wiring
-- **`modules.nixos.hm`** — Home Manager (skipped on router + gcp-relay)
-- **`modules.nixos.workstation`** — microcode, facter, gnupg (skipped on router + gcp-relay)
+- **`modules.nixos.hm`** — Home Manager (skipped on gcp-relay)
+- **`modules.nixos.workstation`** — microcode, facter, gnupg (skipped on gcp-relay)
 - its own `hosts/nixos/<host>/` tree + whatever flake-input modules it needs
 
 `deferredModule` merge semantics let several `parts/` files contribute to the
@@ -107,8 +106,8 @@ same base.
 
 - **Tailnet** — all machines join a self-hosted [Headscale](https://headscale.net);
   control plane + a DERP region run on **gcp-relay**. homeserver advertises its
-  LAN subnet + an exit node; router advertises the media VLAN.
-- **DNS** — Unbound on router and homeserver, split DNS for the private domain,
+  LAN subnet + an exit node.
+- **DNS** — Unbound on homeserver, split DNS for the private domain,
   NextDNS DoT upstream.
 - **Ingress** — public traffic to homeserver terminates at **Traefik** (Cloudflare
   DNS-01 wildcard cert, CrowdSec bouncer); a few services also go through a
@@ -171,4 +170,4 @@ just topology        # regenerate the topology SVGs
 | [Infrastructure.md](docs/Infrastructure.md) | Homeserver services, ZFS layout, ports, networking |
 | [CI-CD.md](docs/CI-CD.md) | Full pipeline diagram and per-workflow detail |
 | [gcp.md](docs/gcp.md) | gcp-relay deploy + first-boot |
-| [router-installation.md](docs/router-installation.md) · [efi.md](docs/efi.md) · [bios-desktop-settings.md](docs/bios-desktop-settings.md) | Hardware / firmware notes |
+| [efi.md](docs/efi.md) · [bios-desktop-settings.md](docs/bios-desktop-settings.md) | Hardware / firmware notes |

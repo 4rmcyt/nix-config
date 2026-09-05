@@ -1,5 +1,5 @@
 {lib, ...}: {
-  # mkDefault so host-specific overrides (homeserver, gcp-relay, router) win.
+  # mkDefault so host-specific overrides (homeserver, gcp-relay) win.
   services.journald.settings.Journal = {
     Storage = lib.mkDefault "persistent";
     SystemMaxUse = lib.mkDefault "500M";

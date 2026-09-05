@@ -8,88 +8,6 @@ Tailnet login server: `https://hs.<domain>` (self-hosted Headscale)
 
 ## Hosts
 
-### router
-
-**Role:** Network router — VLAN segmentation, NAT, DHCP, DNS, Tailscale subnet relay  
-**Hardware:** Sophos SG110/120 — Intel Atom D525, 2 GB RAM, legacy BIOS  
-**WAN IP:** DHCP from ISP router  
-**Tailscale:** subnet router (advertises `192.168.30.0/24` media VLAN)
-
-#### Physical Interfaces
-
-| Interface | Role | Connected to |
-|-----------|------|-------------|
-| `enp5s0` | WAN | ISP router (DHCP) |
-| `enp4s0` | Office trunk (802.1Q) | TL-SG108E #1 (managed) — tagged vlan10 + vlan20 + vlan40 |
-| `enp3s0` | Media (physical, no VLAN), `192.168.30.1/24` | TL-SG108E #2 (unmanaged use) — all ports untagged |
-| `enp2s0` | Trusted AP (physical), `192.168.1.1/24` | ISP AP (trusted WiFi) |
-
-Interface names are set in `hosts/nixos/router/networking.nix` (`wanInterface`/`trunkInterface`/`mediaInterface`/`apInterface`) and matched again by name in `firewall.nix`'s nftables ruleset — verify with `ip link` on hardware and keep both files in sync.
-
-#### Network Zones
-
-| Zone | Interface | Subnet | Gateway | DNS | Purpose |
-|------|-----------|--------|---------|-----|---------|
-| trusted | `vlan10` + `enp4s0` | `192.168.1.0/24` | `192.168.1.1` | `192.168.1.1` | Servers, workstations, phones, ISP AP WiFi |
-| iot | `vlan20` | `192.168.20.0/24` | `192.168.20.1` | `192.168.20.1` | AC1750 OpenWrt AP, smart plugs, Alexa, humidifier |
-| media | `enp3s0` | `192.168.30.0/24` | `192.168.30.1` | `192.168.30.1` | PS5, Nintendo Switch, Mi Box, Roku TV |
-| work | `vlan40` | `192.168.40.0/24` | `192.168.40.1` | `1.1.1.1` | Fully isolated work devices (office switch port 7) |
-
-#### Office Switch — TL-SG108E #1
-
-| Port | Device | PVID | Tagged VLANs |
-|------|--------|------|-------------|
-| 1 | Router `enp4s0` (uplink) | 1 | 10, 20, 40 |
-| 3–6 | Wired trusted devices | 10 | — |
-| 7 | Work port | 40 | — |
-| 8 | AC1750 OpenWrt (IoT AP) | 20 | — |
-
-#### Living Room Switch — TL-SG108E #2
-
-No VLAN configuration needed — all ports untagged, plain L2 switch.  
-Router `enp3s0` plugged into any port; PS5, TV, Roku, Mi Box in remaining ports.  
-Management IP is on the media segment only (reachable via `enp3s0`).
-
-#### Firewall Policy (nftables)
-
-| Source | Destination | Allowed |
-|--------|-------------|---------|
-| trusted | iot | all |
-| trusted | media | all |
-| trusted | work | deny |
-| iot | trusted | tcp 8123 (Home Assistant) |
-| iot | media | tcp 8060 (Roku ECP) |
-| media | trusted | tcp 8096,8920 (Jellyfin), tcp 9292 (Audiobookshelf), tcp 80,443 (Traefik), udp 1900,7359 (SSDP/DLNA), tcp 2049 (NFS) |
-| work | * | deny |
-| * | wan | allow (masquerade NAT) |
-
-#### Services
-
-- **Unbound** — recursive DNS resolver; NextDNS DoT upstream (profile `<nextdns-profile>`); split DNS `*.<domain>` → homeserver; listens on trusted/iot/media gateway IPs
-- **Kea DHCPv4** — static MAC reservations on all 4 zones; control socket at `/run/kea/kea-dhcp4.socket`
-- **Avahi reflector** — mDNS proxy between trusted/iot/media (Chromecast, AirPlay, Roku discovery)
-- **Tailscale** — headless auth via sops; advertises media VLAN `192.168.30.0/24`; login server `https://hs.<domain>`
-
-#### Monitoring (exporters, scraped by homeserver Prometheus via tailnet)
-
-| Exporter | Port | Metrics |
-|----------|------|---------|
-| node_exporter | 9100 | CPU, RAM, network, conntrack, ethtool, nftables counters |
-| unbound_exporter | 9167 | DNS cache hit rate, query latency, SERVFAIL rate |
-| kea_exporter | 9547 | DHCP lease utilization per subnet |
-
-Logs shipped to homeserver Loki via Alloy.  
-Grafana dashboards: `router-overview`, `router-unbound`, `router-kea`.
-
-#### Networking
-
-- SSH on port 22; sshd listens on all interfaces but the nftables input chain only permits tcp/22 from `vlan10` and `tailscale0`
-- systemd-networkd; 802.1Q VLANs on office trunk `enp4s0`; media (`enp3s0`) + AP (`enp2s0`) as plain physical ports; `networking.firewall.enable = false` — nftables ruleset in `firewall.nix` is authoritative
-
-See [router-installation.md](router-installation.md) for installation steps.
-
----
-
 ### homeserver
 
 **Role:** Primary home server — all services, monitoring, DNS, VPN hub  
@@ -194,7 +112,7 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 
 - **niri** WM + noctalia v5; greetd runs `niri-session` for `zeev`
 - Boot: **Limine** bootloader (`boot.loader.limine`, `secureBoot.enable = true`, custom wallpaper), systemd-boot disabled
-- Nix daemon: **lix** (same as desktop/homeserver/router)
+- Nix daemon: **lix** (same as desktop/homeserver)
 - `services.tailscale` with `authKeyFile` from sops, Headscale login server
 - Power: `auto-cpufreq` (powersave on battery / performance on charger), `power-profiles-daemon` disabled, lid → suspend-then-hibernate
 
@@ -269,7 +187,7 @@ NFS server on homeserver (`modules/networking/nfs/`); NFS client on desktop (`mo
 |---------------|--------|-------|
 | `192.168.1.0/24` (trusted) | rw, no_root_squash | Desktop, matebook, servers |
 | `100.64.0.0/10` (tailscale) | rw, no_root_squash | Remote access via tailnet |
-| `192.168.30.0/24` (media) | ro, root_squash | Read-only; router forwards tcp/2049 media→trusted |
+| `192.168.30.0/24` (media) | ro, root_squash | Read-only; gateway forwards tcp/2049 media→trusted |
 
 ### UPS (NUT)
 
@@ -367,13 +285,12 @@ node_exporter (all hosts) ──┐
 NUT exporter                ├──► Prometheus :9090 ──► Grafana :3003  ──► grafana.<domain>
 Traefik metrics :8080       │         │
 CrowdSec metrics :6060      │         └──► Alertmanager ──► alertmanager-ntfy ──► ntfy
-router exporters (tailnet)  │
                             │
 Systemd journal ────────────┤──► Alloy ──► Loki :3100
 Traefik access.log ─────────┘
 ```
 
-- **Prometheus** scrape targets: homeserver, desktop, matebook, gcp-relay, router node exporters; NUT; Traefik; CrowdSec; Prometheus self; router unbound + kea
+- **Prometheus** scrape targets: homeserver, desktop, matebook, gcp-relay node exporters; NUT; Traefik; CrowdSec; Prometheus self
 - **Grafana** OIDC via Kanidm; backend PostgreSQL; datasources: Prometheus + Loki; dashboards from `modules/monitoring/dashboards/`
 - **Loki** retention 30 days; TSDB schema v13; filesystem storage; Loki alert rules in `modules/monitoring/alerts/loki-rules.yaml`
 - **Alloy** ships: Traefik access log, systemd journal (last 12h); Python container log-level fix pipeline
@@ -410,7 +327,6 @@ secrets/
   tailscale-desktop.yaml
   tailscale-matebook.yaml
   tailscale-gcp.yaml
-  tailscale-router.yaml
 
   # Nix remote builds
   nix-builder-homeserver.yaml          # nix-builder SSH private key

@@ -2,7 +2,7 @@
 
 ## Overview
 
-NixOS flake for 5 hosts managed as a single repository. Built on **flake-parts** with **import-tree** for automatic module discovery. All hosts share a common base layer; host-specific config lives in `parts/hosts/<name>/`.
+NixOS flake for 4 hosts managed as a single repository. Built on **flake-parts** with **import-tree** for automatic module discovery. All hosts share a common base layer; host-specific config lives in `parts/hosts/<name>/`.
 
 ## Flake Structure
 
@@ -106,8 +106,8 @@ Each `parts/hosts/<name>/configuration.nix` declares a `configurations.nixos.<na
 configurations.nixos.homeserver.module = {...}: {
   imports = [
     nixosBase           # modules.nixos.base — shared-nixos-settings + HM integration + shared-programs
-    nixosHm             # modules.nixos.hm  — Home Manager (skipped on router + gcp-relay)
-    nixosWorkstation    # modules.nixos.workstation — facter/ucodenix/gnupg (skipped on router + gcp-relay)
+    nixosHm             # modules.nixos.hm  — Home Manager (skipped on gcp-relay)
+    nixosWorkstation    # modules.nixos.workstation — facter/ucodenix/gnupg (skipped on gcp-relay)
     ../../../hosts/nixos/homeserver
     inputs.nixarr.nixosModules.default
     ../../../modules/nix/lix
@@ -116,9 +116,8 @@ configurations.nixos.homeserver.module = {...}: {
 };
 ```
 
-`configurations/nixos.nix` maps each entry to `lib.nixosSystem`. **router** and
-**gcp-relay** are headless — they import only `nixosBase` (plus router adds lix),
-no HM, no workstation modules.
+`configurations/nixos.nix` maps each entry to `lib.nixosSystem`. **gcp-relay** is
+headless — it imports only `nixosBase`, no HM, no workstation modules.
 
 ### Host → Nix daemon variant
 
@@ -127,7 +126,6 @@ no HM, no workstation modules.
 | desktop     | `modules/nix/lix` |
 | homeserver  | `modules/nix/lix` |
 | matebook    | `modules/nix/lix` |
-| router      | `modules/nix/lix` |
 | gcp-relay   | base default (stock nixpkgs `nix`) |
 
 ## Secrets
@@ -141,7 +139,7 @@ All secrets managed by **sops-nix** with age encryption.
 
 ## Nix Implementation
 
-**Lix** replaces the stock nix daemon on desktop, homeserver, matebook and router (`modules/nix/lix`). gcp-relay runs stock nixpkgs `nix`. Channels disabled. Registry pinned to `inputs.nixpkgs`. IFD enabled (`allow-import-from-derivation = true`).
+**Lix** replaces the stock nix daemon on desktop, homeserver and matebook (`modules/nix/lix`). gcp-relay runs stock nixpkgs `nix`. Channels disabled. Registry pinned to `inputs.nixpkgs`. IFD enabled (`allow-import-from-derivation = true`).
 
 All hosts get:
 - `nix-auth` — `nix auth` subcommand for token management
@@ -345,7 +343,6 @@ Remote hosts are deployed manually via `nixos-rebuild` over SSH — recipes live
 | matebook   | `just deploy-matebook` (same shape, `zeev@matebook`) |
 | gcp-relay  | `just deploy-gcp` → deploy `.#gcp-relay`, then push closure to `4rmcyt-gcp` Cachix, then `nh clean all` |
 | desktop    | Local: `nixos-rebuild switch --flake .#desktop` / `nh os switch` |
-| router     | `nixos-anywhere` for install (see [router-installation.md](router-installation.md)); `nixos-rebuild --flake .#router --target-host zeev@router` after |
 
 `my.hardening.autoUpgrade` exists as an option (`operation` defaults to `"boot"`) but no host enables it — updates are manual everywhere.
 
@@ -355,12 +352,10 @@ Remote hosts are deployed manually via `nixos-rebuild` over SSH — recipes live
 
 `just topology` (or `nix build .#topology.x86_64-linux.config.output`) generates two SVGs via **nix-topology** — physical `main.svg` and `network.svg` — written to `docs/topology.svg` / `docs/topology-network.svg` and embedded in the README. Interface `addresses` in the annotations are descriptive labels, not real IPs, so the committed SVGs expose nothing beyond `docs/Infrastructure.md`.
 
-- **`parts/topology.nix`** — flakeModule wiring + the global topology: `internet`, `isp-router`, `switch-office`, `switch-livingroom`, `ap-trusted`, `ap-iot`, and the `trusted` / `iot` / `media` / `work` / `tailnet` network CIDRs. All five hosts are included (desktop, homeserver, matebook, gcp-relay, router).
-- **`modules/topology/default.nix`** — NixOS module imported into `modules.nixos.base` (every host). Per-host `topology.self`: interfaces, network membership, hardware blurbs, a shared `tailscale0` overlay interface. Also:
-  - disables the kea extractor on `router` (its trusted subnet has no `.interface`, which the extractor assumes);
-  - forces `services.traefik.details = {}` on homeserver so the diagram does **not** enumerate every Traefik router and backend URL (job-kombayn included).
+- **`parts/topology.nix`** — flakeModule wiring + the global topology: `internet`, `isp-router`, the hand-described `router` appliance node (the NixOS host was removed), `switch-office`, `switch-livingroom`, `ap-trusted`, `ap-iot`, and the `trusted` / `iot` / `media` / `work` / `tailnet` network CIDRs. Four hosts are included (desktop, homeserver, matebook, gcp-relay).
+- **`modules/topology/default.nix`** — NixOS module imported into `modules.nixos.base` (every host). Per-host `topology.self`: interfaces, network membership, hardware blurbs, a shared `tailscale0` overlay interface. Also forces `services.traefik.details = {}` on homeserver so the diagram does **not** enumerate every Traefik router and backend URL (job-kombayn included).
 - 802.1Q is not representable in nix-topology — the office switch is drawn as the trusted segment it mostly carries; the IoT AP hangs off the router's `vlan20` interface.
-- `matebook` and `router` currently exist only in config, not yet deployed — noted in their `hardware.info`.
+- `matebook` currently exists only in config, not yet deployed — noted in its `hardware.info`.
 
 ## Terraform / OpenTofu
 

@@ -1,5 +1,5 @@
 # Workstation-specific NixOS modules — desktop, laptop, homeserver.
-# Not imported on headless appliances (router, gcp-relay).
+# Not imported on headless appliances (gcp-relay).
 {
   inputs,
   lib,
