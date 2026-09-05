@@ -13,7 +13,13 @@
   inputs,
   config,
   ...
-}: {
+}: let
+  # Reuse the router's own network options instead of hand-copying the VLAN
+  # CIDRs a third time — nix-topology already fully evaluates every host's
+  # NixOS config below (`nixosConfigurations = {inherit ... router;}`), so
+  # this adds no extra evaluation cost.
+  routerNet = config.flake.nixosConfigurations.router.config.my.network;
+in {
   imports = [inputs.nix-topology.flakeModule];
 
   perSystem = {
@@ -37,23 +43,23 @@
         networks = {
           trusted = {
             name = "Trusted · VLAN 10";
-            cidrv4 = "192.168.1.0/24";
+            cidrv4 = routerNet.subnets.trusted;
           };
           iot = {
             name = "IoT · VLAN 20";
-            cidrv4 = "192.168.20.0/24";
+            cidrv4 = routerNet.subnets.iot;
           };
           media = {
             name = "Media · enp3s0 (untagged)";
-            cidrv4 = "192.168.30.0/24";
+            cidrv4 = routerNet.subnets.media;
           };
           work = {
             name = "Work · VLAN 40 (isolated)";
-            cidrv4 = "192.168.40.0/24";
+            cidrv4 = routerNet.subnets.work;
           };
           tailnet = {
             name = "Headscale tailnet";
-            cidrv4 = "100.64.0.0/10";
+            cidrv4 = routerNet.subnets.tailscale;
           };
         };
 

@@ -1,6 +1,6 @@
 {config, ...}: {
   networking.firewall.allowedTCPPorts = [
-    3100 # Loki
+    config.my.network.ports.loki
   ];
 
   systemd.tmpfiles.rules = [
@@ -14,7 +14,7 @@
     enable = true;
     configuration = {
       auth_enabled = false;
-      server.http_listen_port = 3100;
+      server.http_listen_port = config.my.network.ports.loki;
       ingester = {
         lifecycler = {
           address = "127.0.0.1";

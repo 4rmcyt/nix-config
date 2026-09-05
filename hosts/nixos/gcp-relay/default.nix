@@ -134,13 +134,13 @@
 
     my.crowdsecBouncer = {
       enable = true;
-      lapiUrl = "http://100.64.0.3:8088";
+      lapiUrl = "http://${config.my.network.hosts.homeserver_ts}:8088";
     };
 
     my.nodeExporter.enable = true;
     my.alloyClient = {
       enable = true;
-      lokiUrl = "http://100.64.0.3:3100/loki/api/v1/push";
+      lokiUrl = "http://${config.my.network.hosts.homeserver_ts}:${toString config.my.network.ports.loki}/loki/api/v1/push";
     };
 
     my.headscale = {
@@ -149,7 +149,7 @@
       port = 8080;
       metricsPort = 9091;
       dns = {
-        splitNameservers = ["100.64.0.3"];
+        splitNameservers = [config.my.network.hosts.homeserver_ts];
         splitDomains = [config.my.defaults.domain];
       };
       derp = {
@@ -176,7 +176,7 @@
         maxtime = "168h";
         overalljails = true;
       };
-      ignoreIP = ["127.0.0.0/8" "100.64.0.0/10"];
+      ignoreIP = ["127.0.0.0/8" config.my.network.subnets.tailscale];
       jails.sshd.settings = {
         enabled = true;
         maxretry = 3;

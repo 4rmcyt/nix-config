@@ -75,7 +75,7 @@
         name = "Loki";
         type = "loki";
         access = "proxy";
-        url = "http://localhost:3100";
+        url = "http://localhost:${toString config.my.network.ports.loki}";
       }
     ];
     provision.dashboards.settings.providers = [

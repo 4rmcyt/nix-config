@@ -22,15 +22,15 @@
 #   wan → *          : deny except ct established/related
 #
 # Tailscale interface (ts) is treated as trusted for SSH + exporter access.
-_: {
+{config, ...}: {
   networking.nftables = {
     enable = true;
     ruleset = ''
       # ── Named sets ──────────────────────────────────────────────────────
-      define TRUSTED_NET = 192.168.1.0/24
-      define IOT_NET     = 192.168.20.0/24
-      define MEDIA_NET   = 192.168.30.0/24
-      define WORK_NET    = 192.168.40.0/24
+      define TRUSTED_NET = ${config.my.network.subnets.trusted}
+      define IOT_NET     = ${config.my.network.subnets.iot}
+      define MEDIA_NET   = ${config.my.network.subnets.media}
+      define WORK_NET    = ${config.my.network.subnets.work}
 
       # trusted zone = vlan10 (office switch wired) + enp2s0 (ISP AP)
       define TRUSTED_IFS = { "vlan10", "enp2s0" }

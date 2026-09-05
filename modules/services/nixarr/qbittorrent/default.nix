@@ -3,12 +3,16 @@
   pkgs,
   lib,
   ...
-}: {
+}: let
+  # qBittorrent's own WebUI, reachable only inside the VPN netns — distinct
+  # from config.my.network.ports.qb (the host-side proxy socket below).
+  webuiPort = 8080;
+in {
   services.qbittorrent = {
     enable = true;
     user = "qbittorrent";
     group = "media";
-    webuiPort = 8080;
+    inherit webuiPort;
     torrentingPort = 63998;
     openFirewall = true;
 
@@ -90,9 +94,9 @@
         > "$STATE_DIR/ipfilter.p2p"
       chown qbittorrent:media "$STATE_DIR/ipfilter.p2p"
       chmod 644 "$STATE_DIR/ipfilter.p2p"
-      nsenter --net=/run/netns/wg curl -s -X POST "http://localhost:8080/api/v2/app/setPreferences" \
+      nsenter --net=/run/netns/wg curl -s -X POST "http://localhost:${toString webuiPort}/api/v2/app/setPreferences" \
         --data "json={\"ip_filter_enabled\":false}"
-      nsenter --net=/run/netns/wg curl -s -X POST "http://localhost:8080/api/v2/app/setPreferences" \
+      nsenter --net=/run/netns/wg curl -s -X POST "http://localhost:${toString webuiPort}/api/v2/app/setPreferences" \
         --data "json={\"ip_filter_enabled\":true}"
     '';
     serviceConfig = {
@@ -133,7 +137,7 @@
     description = "Proxy to qBittorrent in VPN namespace";
     after = ["qbittorrent.service"];
     requires = ["qbittorrent.service"];
-    serviceConfig.ExecStart = "${pkgs.util-linux}/bin/nsenter --net=/run/netns/wg ${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:8080";
+    serviceConfig.ExecStart = "${pkgs.util-linux}/bin/nsenter --net=/run/netns/wg ${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:${toString webuiPort}";
   };
 
   systemd.services.qbittorrent-categories = {

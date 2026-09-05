@@ -1,4 +1,4 @@
-_: {
+{config, ...}: {
   # --- Grafana Alloy Log Shipper (server-side: reads Traefik access log +
   # the systemd journal, ships to the local Loki instance) ---
   services.alloy.enable = true;
@@ -7,7 +7,7 @@ _: {
     // ── Loki sink ────────────────────────────────────────────────
     loki.write "default" {
       endpoint {
-        url = "http://localhost:3100/loki/api/v1/push"
+        url = "http://localhost:${toString config.my.network.ports.loki}/loki/api/v1/push"
       }
     }
 

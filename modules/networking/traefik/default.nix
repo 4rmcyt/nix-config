@@ -163,7 +163,7 @@ in {
           entryPoint = "metrics";
         };
 
-        entryPoints.metrics.address = "127.0.0.1:8080";
+        entryPoints.metrics.address = "127.0.0.1:${toString config.my.network.ports.traefik-metrics}";
 
         # Localhost-only entrypoint for the API (used by homepage widget)
         entryPoints.traefik-api.address = "127.0.0.1:8083";

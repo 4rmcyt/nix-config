@@ -7,7 +7,7 @@
     enable = lib.mkEnableOption "Grafana Alloy log shipper (journal → remote Loki)";
     lokiUrl = lib.mkOption {
       type = lib.types.str;
-      default = "http://${config.my.network.hosts.homeserver_lan}:3100/loki/api/v1/push";
+      default = "http://${config.my.network.hosts.homeserver_lan}:${toString config.my.network.ports.loki}/loki/api/v1/push";
       description = "Loki push endpoint.";
     };
     hostname = lib.mkOption {

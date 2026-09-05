@@ -280,10 +280,22 @@ in {
         description = "Grafana metrics visualization";
       };
 
+      loki = lib.mkOption {
+        type = lib.types.port;
+        default = 3100;
+        description = "Loki log aggregation server";
+      };
+
       node-exporter = lib.mkOption {
         type = lib.types.port;
         default = 9100;
         description = "Prometheus node exporter";
+      };
+
+      traefik-metrics = lib.mkOption {
+        type = lib.types.port;
+        default = 8080;
+        description = "Traefik Prometheus metrics entrypoint (localhost only)";
       };
 
       # Productivity & Document Management

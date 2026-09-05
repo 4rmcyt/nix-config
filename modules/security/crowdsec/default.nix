@@ -131,7 +131,7 @@ in {
         whitelist:
           reason: "Tailscale CGNAT"
           cidr:
-            - "100.64.0.0/10"
+            - "${config.my.network.subnets.tailscale}"
       '';
     };
 
