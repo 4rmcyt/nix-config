@@ -102,7 +102,7 @@
 
   my.alloyClient = {
     enable = true;
-    lokiUrl = "http://${config.my.network.hosts.homeserver_lan}:3100/loki/api/v1/push";
+    lokiUrl = "http://${config.my.network.hosts.homeserver_lan}:${toString config.my.network.ports.loki}/loki/api/v1/push";
   };
 
   # Unbound DNS exporter — cache hit rate, query latency, SERVFAIL rate
@@ -136,7 +136,7 @@
     enable = true;
     sopsFile = ../../../secrets/tailscale-router.yaml;
     loginServer = "https://hs.${config.my.defaults.domain}";
-    advertiseRoutes = ["192.168.30.0/24"];
+    advertiseRoutes = [config.my.network.subnets.media];
     networkInterface = "enp5s0";
   };
 

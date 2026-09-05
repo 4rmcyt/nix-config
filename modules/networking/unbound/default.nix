@@ -46,8 +46,8 @@ in {
           interface = cfg.interfaces;
           access-control = [
             "127.0.0.1/8 allow"
-            "192.168.0.0/16 allow"
-            "100.64.0.0/10 allow"
+            "192.168.0.0/16 allow" # covers every VLAN (my.network.subnets.*)
+            "${config.my.network.subnets.tailscale} allow"
           ];
           tls-cert-bundle = "/etc/ssl/certs/ca-certificates.crt";
           cache-max-ttl = 86400;

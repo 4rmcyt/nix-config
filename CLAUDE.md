@@ -72,7 +72,9 @@ modules/
                         # k3s, argocd — disabled (modules exist)
   networking/           # SSH, tailscale, traefik, headscale, cloudflared, caddy, nfs, etc.
   security/             # kanidm, crowdsec, fail2ban
-  monitoring/           # prometheus, grafana, loki, alloy, alertmanager
+  monitoring/           # split by concern: grafana.nix, loki.nix, prometheus.nix,
+                        # alertmanager.nix, alloy-server.nix, geoip.nix (default.nix
+                        # just imports them); client-side: alloy-client.nix, node-exporter-client.nix
   database/             # postgresql, redis, couchdb
   disko/                # Declarative disk partitioning per host
   users/                # Per-user NixOS config (zeev)

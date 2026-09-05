@@ -40,8 +40,10 @@ modules/
   base/                     # Shared base: logging, msmtp
   options/                  # Custom options: my.defaults.*, my.network.*
   database/                 # postgresql, redis, couchdb
-  monitoring/               # Prometheus + Grafana + Loki + Alloy stack; node-exporter-client;
-                            #   Alertmanager + alertmanager-ntfy bridge
+  monitoring/               # Split by concern: grafana.nix, loki.nix, prometheus.nix,
+                            #   alertmanager.nix, alloy-server.nix, geoip.nix (default.nix
+                            #   just imports them); plus client-side alloy-client.nix and
+                            #   node-exporter-client.nix (imported directly by non-homeserver hosts)
   networking/               # ssh, tailscale, traefik, headscale, cloudflared,
                             #   caddy, dnssec, nfs, nut-client/server, avahi, wireguard
   security/                 # crowdsec, fail2ban, kanidm
@@ -88,7 +90,7 @@ Thunderbird account config also lives there (`inputs.private.homeManagerModules.
 | Option namespace     | File                          | Purpose                                      |
 |----------------------|-------------------------------|----------------------------------------------|
 | `my.defaults.*`      | `options/defaults.nix`        | user, email, git identity, domain, timezone, locale, GCP relay IP, NextDNS profile id (from `inputs.private`) |
-| `my.network.*`       | `options/network.nix`         | gateway, host addresses, MACs, VLANs, subnets, service ports (from `inputs.private`) |
+| `my.network.*`       | `options/network.nix`         | gateway, VLAN CIDRs, subnets, service ports — local defaults; host addresses/MACs/infrastructure/DHCP reservations sourced from `inputs.private` |
 | `my.traefik.*`       | `networking/traefik/`         | Traefik reverse proxy                        |
 | `my.headscale.*`     | `networking/headscale/`       | Headscale coordination server                |
 | `my.nodeExporter.*`  | `monitoring/node-exporter-client.nix` | Per-host Prometheus node exporter   |

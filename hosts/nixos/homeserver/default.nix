@@ -128,12 +128,12 @@
         53
         80
         443
-        3000 # Grafana
-        3100 # Loki (gcp-relay alloy-client)
+        config.my.network.ports.grafana
+        config.my.network.ports.loki # gcp-relay alloy-client
         8088 # CrowdSec LAPI (gcp-relay bouncer)
-        9090 # Prometheus
+        config.my.network.ports.prometheus
         9091 # Database & infrastructure
-        9100 # Node Exporter
+        config.my.network.ports.node-exporter
         27196 # Cloudflare Exporter
       ];
       allowedUDPPorts = [53];
