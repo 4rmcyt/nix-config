@@ -128,8 +128,6 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    stylix.url = "github:danth/stylix";
-
     # Shell & TUI
     zellij-nix = {
       url = "github:a-kenji/zellij-nix";

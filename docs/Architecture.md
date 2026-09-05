@@ -47,7 +47,7 @@ modules/
                             #   just imports them); plus client-side alloy-client.nix and
                             #   node-exporter-client.nix (imported directly by non-homeserver hosts)
   networking/               # ssh, tailscale, traefik, headscale, cloudflared,
-                            #   caddy, dnssec, nfs, nut-client/server, avahi, wireguard
+                            #   caddy, dnssec, nfs, nut-client/server, wireguard
   security/                 # crowdsec, fail2ban, kanidm
   services/                 # Application services: home-assistant, radicale, homepage, miniflux,
                             #   nixarr, atuin-server, dispatcharr, microbin, komf, komga, ntfy,
@@ -63,10 +63,9 @@ modules/
     mime/                   # MIME type associations
     mango/                  # mango WM (desktop): settings, keybinds, startup, windowrules, nvidia, monitors
     niri/                   # niri WM (matebook): settings, keybinds, startup, windowrules, nvidia, monitors
-    hyprland/               # unused — kept on disk, no longer imported by any host
   GUI/                      # GUI apps: firefox, chrome, chromium, obsidian, mpv, IDE (vscode, zed),
                             #   terminal, discord, easyeffects, nemo, coolercontrol, kdeconnect,
-                            #   virt-manager, waydroid, flatpak, jellyfin-mpv-shim, bb-launcher, stylix
+                            #   virt-manager, waydroid, flatpak, jellyfin-mpv-shim, bb-launcher
                             #   (thunderbird module removed — personal account config lives in inputs.private)
   TUI/                      # Terminal tools: zsh, zellij, atuin, starship, tmux, tty, neovim,
                             #   ai-tools (claude-code, antigravity-cli, mcp, llama-cpp)
@@ -167,7 +166,7 @@ No local `overlays/` directory. All overlays come from flake inputs:
 
 ## Desktop WM Stack
 
-**Desktop uses mango; matebook uses niri.** Both pair with **noctalia** v5 (native C++ binary, no Quickshell) as bar/shell. Desktop ran Hyprland until 2026-08-22, when it was fully replaced by mango (`modules/WM/hyprland/` is kept on disk but no longer imported by any host, and its startup/binds still use the noctalia legacy-v4 IPC — see below).
+**Desktop uses mango; matebook uses niri.** Both pair with **noctalia** v5 (native C++ binary, no Quickshell) as bar/shell. Desktop ran Hyprland until 2026-08-22, when it was fully replaced by mango; the Hyprland modules have since been removed.
 
 ### mango (desktop only)
 
@@ -221,9 +220,7 @@ No local `overlays/` directory. All overlays come from flake inputs:
 - Exports: `homeModules.default`, `nixosModules.default`, `overlays.default`
 - NixOS import: `inputs.noctalia.nixosModules.default` on desktop + matebook
 - HM import: `inputs.noctalia.homeModules.default` on desktop + matebook
-- `modules/WM/hyprland/*` was NOT fully migrated (dead code, not imported by any host). Its `startup.nix` / `binds.nix` still use the old `noctalia-shell` IPC syntax (`noctalia.nix` itself was reduced to the minimal v5 stub). Finish the migration first if hyprland is ever revived.
-
-**Theming:** noctalia drives colors. `inputs.stylix` is wired as a flake input and `modules/GUI/stylix/` exists, but the HM import is currently commented out in `parts/hosts/desktop/configuration.nix` — Stylix is **not** active on any host right now.
+**Theming:** noctalia drives colors. Stylix was removed 2026-09-05 (flake input + `modules/GUI/stylix/` deleted — it had been wired but never enabled on any host).
 
 ## AI Tools (`modules/TUI/ai-tools/`)
 

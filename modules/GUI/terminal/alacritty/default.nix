@@ -1,6 +1,4 @@
 _: {
-  stylix.targets.alacritty.enable = false;
-
   programs.alacritty = {
     enable = true;
 

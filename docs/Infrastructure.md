@@ -82,7 +82,7 @@ Disko config in `modules/disko/desktop/`. GPT: `/boot` ESP + Btrfs remainder (la
 - **WM:** mango (`inputs.mango` `wl-only` branch, Vulkan renderer for HDR; nixpkgs `programs.mango` module + flake package)
 - **DM:** greetd, execs `env WLR_RENDERER=vulkan mango` directly for `zeev`
 - **Shell:** noctalia v5 (native C++ bar/shell, no Quickshell)
-- **Theming:** noctalia dynamic colors (Stylix wired but currently disabled)
+- **Theming:** noctalia dynamic colors
 - **Portal:** handled by nixpkgs' own `programs.mango` module (portal-wlr + portal-gtk, gnome-keyring for secrets) — no repo-local xdg module
 - Ran Hyprland until 2026-08-22, then fully migrated to mango
 
@@ -317,8 +317,7 @@ All encrypted with age. Key file: `/root/.config/sops/age/keys.txt` (all hosts),
 ```
 secrets/
   # Global / shared
-  common.yaml                          # git_access_token, nix_access_token, gemini_api_key, defaults
-  defaults.yaml                        # default option values
+  common.yaml                          # git_access_token, nix_access_token, gemini_api_key
   system.yaml                          # homeserver SSH host keys
   ssh.yaml                             # SSH keys
 
@@ -330,26 +329,19 @@ secrets/
 
   # Nix remote builds
   nix-builder-homeserver.yaml          # nix-builder SSH private key
-  nix-builder-keys.yaml                # nix-builder authorized keys
 
   # Networking / TLS
   cloudflare_acme_credentials.env      # CF_DNS_API_TOKEN for Traefik ACME
   cloudflare.yaml                      # Cloudflare API token
-  cloudflare.pem / cloudflare.key      # TLS cert/key
-  cert.pem / key.pem                   # Additional TLS material
+  cloudflare_tunnel_cert.pem           # Cloudflare Tunnel account cert
   cloudflare_tunnel_credentials.bin    # Cloudflare Tunnel credentials
-  cloudflare-prometheus-exporter.yaml  # Cloudflare exporter token
-  tailscale-prometheus-exporter.env    # Tailscale exporter token
-  nextdns.yaml                         # NextDNS API key
   wg.conf                              # WireGuard config
-  gcp-relay-host-ed25519              # GCP SSH host key
-  gcp-relay-age-key                    # GCP age encryption key
-  gcp.yaml                             # GCP credentials
+  gcp-relay-host-ed25519               # GCP SSH host key
+  gcp-relay-age-key                    # GCP age encryption key (bootstrap only, not in the flake)
 
   # Security
   crowdsec.yaml                        # Traefik bouncer API key (homeserver)
   crowdsec-gcp.yaml                    # nftables bouncer API key (gcp-relay)
-  hetzner_pass.yaml                    # Hetzner password
 
   # Databases
   postgresql.yaml                      # DB passwords (grafana, atuin, etc.)
@@ -358,25 +350,21 @@ secrets/
 
   # Monitoring
   grafana.yaml                         # admin password, OIDC secret, secret key
-  loki.yaml                            # Loki credentials
   nut.yaml                             # NUT exporter password
 
   # Identity
   kanidm.yaml                          # Kanidm admin credentials, OIDC secrets
-  headscale.yaml                       # Headscale config secrets
 
   # Services
   atuin.yaml                           # Atuin server credentials
-  miniflux.yaml / miniflux.env         # Miniflux admin + env secrets
+  miniflux.env                         # Miniflux env secrets
   homepage.env                         # Homepage API keys
+  job-kombayn.env                      # job-kombayn API keys (Anthropic, Telegram, Adzuna, RapidAPI)
   ntfy.yaml                            # ntfy auth config
   radicale.yaml                        # Radicale user credentials
-  radicale_users.txt                   # Radicale htpasswd file
   microbin.yaml                        # Microbin admin secret
   hass-alexa.yaml                      # Home Assistant Alexa skill credentials
-  lazylibrarian.yaml                   # LazyLibrarian credentials
-  k3s.yaml                             # k3s token (service disabled)
-  recyclarr.yaml                       # Recyclarr API keys
+  k3s.yaml                             # k3s token (service disabled, module parked)
   restic.yaml                          # Restic backup repository + password
   medialib.yaml                        # Media library credentials
   gmail_conf.yaml                      # Gmail / msmtp config
