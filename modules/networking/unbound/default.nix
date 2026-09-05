@@ -44,11 +44,15 @@ in {
       settings = {
         server = {
           interface = cfg.interfaces;
-          access-control = [
-            "127.0.0.1/8 allow"
-            "192.168.0.0/16 allow" # covers every VLAN (my.network.subnets.*)
-            "${config.my.network.subnets.tailscale} allow"
-          ];
+          access-control =
+            ["127.0.0.1/8 allow"]
+            ++ map (subnet: "${subnet} allow") [
+              config.my.network.subnets.trusted
+              config.my.network.subnets.iot
+              config.my.network.subnets.media
+              config.my.network.subnets.work
+              config.my.network.subnets.tailscale
+            ];
           tls-cert-bundle = "/etc/ssl/certs/ca-certificates.crt";
           cache-max-ttl = 86400;
           cache-min-ttl = 300;

@@ -21,7 +21,7 @@
 
   services.atuin = {
     enable = true;
-    port = 8881;
+    port = config.my.network.ports.atuin;
     database.uri = null; # Use EnvironmentFile instead
     openRegistration = true;
   };

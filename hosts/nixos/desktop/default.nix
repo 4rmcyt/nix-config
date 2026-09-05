@@ -24,7 +24,6 @@
     # Features and roles
     ../../../modules/containers
     ../../../modules/gaming
-    # not in use: ../../../modules/networking/avahi
     ../../../modules/networking/dnssec
     ../../../modules/networking/nfs-client
     ../../../modules/networking/nut-client
@@ -76,11 +75,8 @@
       "big-parallel"
       "kvm"
     ];
-    trusted-users = [
-      "root"
-      "@wheel"
-      "nix-builder"
-    ];
+    # "root" + "@wheel" already come from parts/shared-nixos-settings.nix
+    trusted-users = ["nix-builder"];
   };
 
   # Environment

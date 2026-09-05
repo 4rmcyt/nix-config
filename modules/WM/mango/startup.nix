@@ -26,8 +26,8 @@ _: {
     materialgram &
     vesktop --start-minimized &
 
-    # Fan/pump curve control — see modules/WM/hyprland/startup.nix for the
-    # --disable-gpu rationale (NVIDIA QtWebEngine glyph corruption workaround)
+    # Fan/pump curve control — --disable-gpu works around NVIDIA QtWebEngine
+    # glyph corruption
     coolercontrol --disable-gpu &
   '';
 }

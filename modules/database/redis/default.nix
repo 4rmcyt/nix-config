@@ -78,48 +78,44 @@
   # Systemd Service Configuration
   systemd.services.redis-homeserver = {
     after = ["network.target"];
-    serviceConfig = {
-      Restart = "on-failure";
-      RestartSec = "5s";
-      # Resource limits
-      MemoryMax = "1.2G";
-      CPUQuota = "75%";
+    serviceConfig =
+      config.my.hardening.serviceBase
+      // {
+        Restart = "on-failure";
+        RestartSec = "5s";
+        # Resource limits
+        MemoryMax = "1.2G";
+        CPUQuota = "75%";
 
-      # Security hardening
-      NoNewPrivileges = true;
-      PrivateTmp = true;
-      ProtectHome = true;
-      ProtectSystem = "strict";
+        # Allow Redis to write to its data directory
+        ReadWritePaths = [
+          "/var/lib/redis-homeserver"
+          "/run/redis-homeserver"
+        ];
 
-      # Allow Redis to write to its data directory
-      ReadWritePaths = [
-        "/var/lib/redis-homeserver"
-        "/run/redis-homeserver"
-      ];
+        # Network restrictions
+        RestrictAddressFamilies = [
+          "AF_INET"
+          "AF_INET6"
+          "AF_UNIX"
+        ];
 
-      # Network restrictions
-      RestrictAddressFamilies = [
-        "AF_INET"
-        "AF_INET6"
-        "AF_UNIX"
-      ];
+        # Capabilities
+        CapabilityBoundingSet = "";
+        AmbientCapabilities = "";
 
-      # Capabilities
-      CapabilityBoundingSet = "";
-      AmbientCapabilities = "";
-
-      # Additional hardening
-      PrivateDevices = true;
-      ProtectKernelTunables = true;
-      ProtectKernelModules = true;
-      ProtectControlGroups = true;
-      RestrictRealtime = true;
-      RestrictNamespaces = true;
-      LockPersonality = true;
-      SystemCallFilter = [
-        "@system-service"
-        "~@privileged"
-      ];
-    };
+        # Additional hardening
+        PrivateDevices = true;
+        ProtectKernelTunables = true;
+        ProtectKernelModules = true;
+        ProtectControlGroups = true;
+        RestrictRealtime = true;
+        RestrictNamespaces = true;
+        LockPersonality = true;
+        SystemCallFilter = [
+          "@system-service"
+          "~@privileged"
+        ];
+      };
   };
 }

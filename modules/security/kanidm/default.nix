@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  mkProxiedRouter,
   ...
 }: let
   inherit (config.my.defaults) domain;
@@ -210,23 +211,10 @@ in {
     "d /var/lib/kanidm/tls 0750 kanidm kanidm -"
   ];
 
-  services.traefik.dynamicConfigOptions.http = {
-    routers.kanidm = {
-      rule = "Host(`idm.${domain}`)";
-      entryPoints = ["websecure"];
-      service = "kanidm";
-      middlewares = [
-        "security-headers"
-        "crowdsec"
-      ];
-      tls.certResolver = "default";
-    };
-    services.kanidm = {
-      loadBalancer = {
-        servers = [{url = "https://127.0.0.1:${toString port}";}];
-        serversTransport = "kanidm-transport";
-      };
-    };
-    serversTransports.kanidm-transport.insecureSkipVerify = true;
+  services.traefik.dynamicConfigOptions.http = mkProxiedRouter "kanidm" {
+    inherit port;
+    host = "idm.${domain}";
+    scheme = "https";
+    serversTransport.insecureSkipVerify = true;
   };
 }

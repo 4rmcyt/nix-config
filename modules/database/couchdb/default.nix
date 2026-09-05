@@ -93,23 +93,19 @@
       ${pkgs.curl}/bin/curl -X PUT http://admin:$ADMIN_PASS@127.0.0.1:5984/_replicator || true
     '';
 
-    serviceConfig = {
-      # Security hardening
-      NoNewPrivileges = true;
-      PrivateTmp = true;
-      ProtectHome = true;
-      ProtectSystem = "strict";
+    serviceConfig =
+      config.my.hardening.serviceBase
+      // {
+        # Allow CouchDB to write to its data directory and runtime directory
+        ReadWritePaths = [
+          "/var/lib/couchdb"
+          "/run/couchdb"
+        ];
 
-      # Allow CouchDB to write to its data directory and runtime directory
-      ReadWritePaths = [
-        "/var/lib/couchdb"
-        "/run/couchdb"
-      ];
-
-      # Resource limits
-      MemoryMax = "2G";
-      CPUQuota = "100%";
-    };
+        # Resource limits
+        MemoryMax = "2G";
+        CPUQuota = "100%";
+      };
   };
 }
 # Initial Setup Instructions

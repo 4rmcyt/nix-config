@@ -1,9 +1,9 @@
 # monitorrule=name:Regex,make:Values,model:Values,serial:Values,Param:Values
 # See https://mangowm.github.io/docs/configuration/monitors
 #
-# Same two ASUS VG289 panels as modules/WM/hyprland/monitors/desktop.nix,
-# matched by make+model+serial (mango has no single "desc" field like
-# Hyprland's wlr-output desc string, which packs make+model+serial into one).
+# Same two ASUS VG289 panels as the old Hyprland config (removed), matched
+# by make+model+serial (mango has no single "desc" field like Hyprland's
+# wlr-output desc string, which packs make+model+serial into one).
 #
 # hdr:1,hdr_force:1 — both panels are ASUS TUF VG289Q ("HDR10-certified"),
 # but live testing (`mmsg get all-monitors` → is_hdr) showed hdr:1 alone

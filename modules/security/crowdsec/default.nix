@@ -5,7 +5,8 @@
   ...
 }: let
   cfg = config.my.crowdsec;
-  isRemoteLapi = cfg.nftables.lapiUrl != "http://127.0.0.1:8088";
+  defaultLapiUrl = "http://127.0.0.1:${toString config.my.network.ports.crowdsec-lapi}";
+  isRemoteLapi = cfg.nftables.lapiUrl != defaultLapiUrl;
 
   crowdsecPlugin = pkgs.fetchFromGitHub {
     owner = "maxlerebourg";
@@ -28,7 +29,7 @@ in {
       enable = lib.mkEnableOption "CrowdSec nftables firewall bouncer";
       lapiUrl = lib.mkOption {
         type = lib.types.str;
-        default = "http://127.0.0.1:8088";
+        default = defaultLapiUrl;
         description = "CrowdSec LAPI URL (local or remote via Tailscale).";
       };
       secretsFile = lib.mkOption {
@@ -81,7 +82,7 @@ in {
 
       settings.general.api.server = {
         enable = true;
-        listen_uri = "0.0.0.0:8088";
+        listen_uri = "0.0.0.0:${toString config.my.network.ports.crowdsec-lapi}";
       };
 
       settings.lapi.credentialsFile = "/var/lib/crowdsec/state/lapi-credentials.yaml";

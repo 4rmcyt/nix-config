@@ -81,6 +81,11 @@ in {
       min-free = 5368709120; # 5GB
       max-free = 10737418240; # 10GB
       builders-use-substitutes = true;
+      # NixOS's own nix.nix module already contributes "root" at normal
+      # priority (concatenated in, not overridden) — only "@wheel" needs
+      # adding here. Hosts that need more (e.g. "nix-builder") append their
+      # own single-entry list; same-priority list definitions concatenate.
+      trusted-users = ["@wheel"];
 
       # Binary caches
       extra-substituters = [

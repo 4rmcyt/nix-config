@@ -41,7 +41,6 @@
     nix.settings = {
       cores = 2;
       max-jobs = "auto";
-      trusted-users = ["root" "@wheel"];
       require-sigs = false;
     };
 
@@ -134,7 +133,7 @@
 
     my.crowdsecBouncer = {
       enable = true;
-      lapiUrl = "http://${config.my.network.hosts.homeserver_ts}:8088";
+      lapiUrl = "http://${config.my.network.hosts.homeserver_ts}:${toString config.my.network.ports.crowdsec-lapi}";
     };
 
     my.nodeExporter.enable = true;

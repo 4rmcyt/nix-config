@@ -24,7 +24,6 @@
     ../../../modules/services
     ../../../modules/backup
 
-    # not in use: ../../../modules/networking/avahi
     ../../../modules/users/zeev
   ];
 
@@ -72,11 +71,8 @@
     cores = 4;
     max-jobs = 4;
     extra-system-features = ["big-parallel"];
-    trusted-users = [
-      "root"
-      "@wheel"
-      "nix-builder"
-    ];
+    # "root" + "@wheel" already come from parts/shared-nixos-settings.nix
+    trusted-users = ["nix-builder"];
   };
 
   # Environment
@@ -130,7 +126,7 @@
         443
         config.my.network.ports.grafana
         config.my.network.ports.loki # gcp-relay alloy-client
-        8088 # CrowdSec LAPI (gcp-relay bouncer)
+        config.my.network.ports.crowdsec-lapi # gcp-relay bouncer
         config.my.network.ports.prometheus
         9091 # Database & infrastructure
         config.my.network.ports.node-exporter

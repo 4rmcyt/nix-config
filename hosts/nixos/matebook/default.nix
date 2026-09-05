@@ -18,7 +18,6 @@
     # Networking
     ../../../modules/networking/nfs-client
     ../../../modules/networking/ssh
-    # not in use: ../../../modules/networking/avahi
 
     # User configuration
     ../../../modules/users/zeev
@@ -77,10 +76,6 @@
   nix.settings = {
     cores = 0;
     max-jobs = "auto";
-    trusted-users = [
-      "root"
-      "@wheel"
-    ];
   };
 
   # Environment

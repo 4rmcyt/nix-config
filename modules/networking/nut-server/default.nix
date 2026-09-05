@@ -27,7 +27,7 @@
   };
 
   networking.firewall.allowedTCPPorts = [
-    3493 # NUT (Network UPS Tools)
+    config.my.network.ports.nut
   ];
 
   power.ups = {
@@ -43,7 +43,7 @@
     upsd.listen = [
       {
         address = "0.0.0.0";
-        port = 3493;
+        port = config.my.network.ports.nut;
       }
     ];
 

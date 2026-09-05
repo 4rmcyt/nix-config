@@ -105,7 +105,10 @@
   '';
 
   systemd.services.alloy = {
-    after = ["geoip-update.service"];
+    # Not ordered after geoip-update.service: Alloy tolerates a missing or
+    # stale mmdb file at startup, so it shouldn't block on that unit's
+    # network fetch (which can be a multi-minute catch-up run after a
+    # missed monthly timer).
     serviceConfig.SupplementaryGroups = ["systemd-journal"];
   };
 }

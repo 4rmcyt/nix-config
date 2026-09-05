@@ -144,7 +144,6 @@
   nix.settings = {
     cores = 2;
     max-jobs = 2;
-    trusted-users = ["root" "@wheel"];
   };
 
   # ── Packages ─────────────────────────────────────────────────────────────

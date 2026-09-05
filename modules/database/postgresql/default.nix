@@ -208,7 +208,7 @@ in {
       # Require password authentication for network connections (both IPv4 and IPv6)
       host  all all 127.0.0.1/32 scram-sha-256
       host  all all ::1/128      scram-sha-256
-      host  all all 10.88.0.0/16 scram-sha-256
+      host  all all ${config.my.network.subnets.podman} scram-sha-256
     '';
   };
 
@@ -223,18 +223,25 @@ in {
       RemainAfterExit = true;
       User = "postgres";
       Group = "postgres";
+      Restart = "on-failure";
+      RestartSec = "10s";
     };
     script = ''
       # Refresh collation version to avoid mismatch errors after OS upgrades
       ${pkgs.postgresql}/bin/psql -c "ALTER DATABASE template1 REFRESH COLLATION VERSION;" || true
       ${pkgs.postgresql}/bin/psql -c "ALTER DATABASE postgres REFRESH COLLATION VERSION;" || true
 
-      # Wait for all secrets to be available
+      # Wait (bounded) for all secrets to be available
       ${lib.concatMapStringsSep "\n      " (user: ''
-          while [ ! -f ${config.sops.secrets.${user.secret}.path} ]; do
+          for i in $(seq 1 30); do
+            [ -f ${config.sops.secrets.${user.secret}.path} ] && break
             echo "Waiting for ${user.name} secret to be available..."
             sleep 1
           done
+          if [ ! -f ${config.sops.secrets.${user.secret}.path} ]; then
+            echo "${user.name} secret never appeared, giving up" >&2
+            exit 1
+          fi
         '')
         dbUsers}
 

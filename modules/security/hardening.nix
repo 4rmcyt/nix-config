@@ -8,6 +8,24 @@ in {
   options.my.hardening = {
     enable = lib.mkEnableOption "System hardening (SSH, kernel, systemd defaults, auto-upgrade)";
 
+    serviceBase = lib.mkOption {
+      type = lib.types.attrs;
+      readOnly = true;
+      internal = true;
+      default = {
+        NoNewPrivileges = true;
+        PrivateTmp = true;
+        ProtectHome = true;
+        ProtectSystem = "strict";
+      };
+      description = ''
+        Common systemd hardening baseline shared by hardened services
+        (crowdsec, redis, couchdb, ...). Merge into a unit's serviceConfig
+        with `config.my.hardening.serviceBase // { ... }` rather than
+        re-typing these four keys by hand.
+      '';
+    };
+
     autoUpgrade = {
       enable = lib.mkEnableOption "Automatic NixOS upgrades from flake";
       flake = lib.mkOption {
@@ -120,21 +138,19 @@ in {
 
     # systemd service hardening defaults
     # Applied to all services that don't override these
-    systemd.services."crowdsec".serviceConfig = {
-      NoNewPrivileges = true;
-      PrivateTmp = true;
-      ProtectSystem = "strict";
-      ProtectHome = true;
-      RestrictSUIDSGID = true;
-      ProtectKernelTunables = true;
-      ProtectControlGroups = true;
-      ProtectKernelModules = true;
-      ProtectKernelLogs = true;
-      LockPersonality = true;
-      RestrictRealtime = true;
-      RestrictNamespaces = true;
-      SystemCallArchitectures = "native";
-    };
+    systemd.services."crowdsec".serviceConfig =
+      cfg.serviceBase
+      // {
+        RestrictSUIDSGID = true;
+        ProtectKernelTunables = true;
+        ProtectControlGroups = true;
+        ProtectKernelModules = true;
+        ProtectKernelLogs = true;
+        LockPersonality = true;
+        RestrictRealtime = true;
+        RestrictNamespaces = true;
+        SystemCallArchitectures = "native";
+      };
 
     systemd.services."caddy".serviceConfig = {
       NoNewPrivileges = lib.mkDefault true;

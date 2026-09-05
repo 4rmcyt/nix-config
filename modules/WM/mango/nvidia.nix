@@ -15,9 +15,9 @@ _: {
 
   # mango reads its own config-file `env=KEY,VALUE` lines before the
   # compositor finishes initializing (see
-  # https://mangowm.github.io/docs/configuration/basics), same rationale as
-  # modules/WM/hyprland/nvidia.nix — session vars alone aren't guaranteed
-  # live in time, so set them here too via mango's own env directive.
+  # https://mangowm.github.io/docs/configuration/basics) — session vars
+  # alone aren't guaranteed live in time, so set them here too via mango's
+  # own env directive.
   wayland.windowManager.mango.settings.env = [
     "LIBVA_DRIVER_NAME,nvidia"
     "__GLX_VENDOR_LIBRARY_NAME,nvidia"

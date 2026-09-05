@@ -39,19 +39,26 @@ in {
       ++ config.my.network.subnets.cloudflare;
 
     # SSH — NixOS defines this jail automatically when openssh is enabled.
-    # We override settings to tighten it up and use cloudflare-waf action.
+    # We override settings to tighten it up and add the cloudflare-waf action
+    # alongside (not instead of) the local ban — SSH isn't proxied through
+    # Cloudflare, so %(action_)s is what actually blocks the attacker.
     jails.sshd.settings = {
       enabled = true;
       maxretry = 3;
       bantime = "24h";
       findtime = "10m";
-      action = "cloudflare-waf";
+      action = ''
+        %(action_)s
+        cloudflare-waf
+      '';
     };
 
     # traefik-auth jail removed — CrowdSec handles Traefik log parsing
     # (access log is now JSON format, parsed by crowdsecurity/traefik collection)
 
-    # Jellyfin — logs real IP in its own journal entries
+    # Jellyfin — reached directly via Traefik (not tunneled through
+    # Cloudflare), so the local ban (%(action_)s) is what actually blocks
+    # the attacker; cloudflare-waf is added defense-in-depth only.
     jails.jellyfin = ''
       enabled      = true
       backend      = systemd
@@ -60,10 +67,12 @@ in {
       maxretry     = 5
       bantime      = 2h
       findtime     = 10m
-      action       = cloudflare-waf
+      action       = %(action_)s
+                      cloudflare-waf
     '';
 
-    # Grafana — logs failed logins with IP to journal
+    # Grafana — reached directly via Traefik (not tunneled through
+    # Cloudflare); same reasoning as the jellyfin jail above.
     # Pattern: level=warn ... msg="Invalid username or password" ... remote_addr=<ip>
     jails.grafana = ''
       enabled      = true
@@ -73,10 +82,13 @@ in {
       maxretry     = 5
       bantime      = 2h
       findtime     = 10m
-      action       = cloudflare-waf
+      action       = %(action_)s
+                      cloudflare-waf
     '';
 
-    # Home Assistant — logs failed logins with IP to journal
+    # Home Assistant — tunneled through Cloudflare (hass in cloudflared's
+    # tunnel list), so cloudflare-waf alone is effective here; local ban
+    # added anyway for defense-in-depth / direct-LAN access.
     jails.home-assistant = ''
       enabled      = true
       backend      = systemd
@@ -85,7 +97,8 @@ in {
       maxretry     = 5
       bantime      = 2h
       findtime     = 10m
-      action       = cloudflare-waf
+      action       = %(action_)s
+                      cloudflare-waf
     '';
   };
 

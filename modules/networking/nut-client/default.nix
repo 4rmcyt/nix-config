@@ -20,14 +20,19 @@
   };
 
   systemd.services.nut-wait-homeserver = {
-    description = "Wait for NUT server on homeserver:3493";
+    description = "Wait for NUT server on homeserver:${toString config.my.network.ports.nut}";
     after = ["network-online.target"];
     wants = ["network-online.target"];
     before = ["upsmon.service"];
     wantedBy = ["upsmon.service"];
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.bash}/bin/bash -c 'until ${pkgs.nut}/bin/upsc apc@homeserver &>/dev/null; do sleep 2; done'";
+      # Bounded retry: fail fast instead of hanging boot forever if
+      # homeserver's NUT server is unreachable; systemd's Restart=on-failure
+      # then retries the whole unit.
+      ExecStart = "${pkgs.bash}/bin/bash -c 'for i in $(seq 1 30); do ${pkgs.nut}/bin/upsc apc@homeserver &>/dev/null && exit 0; sleep 2; done; exit 1'";
+      Restart = "on-failure";
+      RestartSec = "10s";
     };
   };
 
