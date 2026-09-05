@@ -6,7 +6,7 @@
   imports = [
     ../../modules/TUI/ai-tools/llama-cpp/cpu.nix
 
-    inputs.private.homeManagerModules.thunderbird
+    inputs.private.homeModules.thunderbird
     ../../modules/GUI/IDE/vscode
     ../../modules/TUI/tmux
     ../../modules/TUI/starship

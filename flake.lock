@@ -694,11 +694,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788644970,
-        "narHash": "sha256-6BI+HCRmDPcdoudp7VvLKGBiRhiDct+4MARCxDFI3jg=",
+        "lastModified": 1788650959,
+        "narHash": "sha256-0/e9+N5WcpSaNi534TyF7kVTAE6rEwKNwjh/OpfzgZ4=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "11f7a2df92b132274c49d2645cacd375d4345cf4",
+        "rev": "a49f50d59510d49b0e1c48090b6e504975beeda9",
         "type": "github"
       },
       "original": {
@@ -1492,11 +1492,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788649334,
-        "narHash": "sha256-pcCIvhkJfFuv4t/+o0MA7XAIKFH3dC4x87yGerwPquE=",
+        "lastModified": 1788651190,
+        "narHash": "sha256-CZpAMihhQ6yBBZx6HFitS3WYwNInN7I5FqTb+cq6fTU=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "7b7be7098adfbe882a6b54deff6aa0299247ffa5",
+        "rev": "ecbfe0847a750c655fefd63550e34b1bec461e6a",
         "type": "github"
       },
       "original": {
@@ -1532,11 +1532,11 @@
     },
     "private": {
       "locked": {
-        "lastModified": 1788650944,
-        "narHash": "sha256-sFIb5ldlUWhzWkBwixkGwy5wNnJwvJ/8ZP4WKt23hlM=",
+        "lastModified": 1788651406,
+        "narHash": "sha256-JXjLhxbf6cPlYhMyXqv8wq5G2/Stg7gkjBKApVXtDmk=",
         "ref": "refs/heads/main",
-        "rev": "d54722691d75eec3c91142e6c38a3bd52be6e9fc",
-        "revCount": 6,
+        "rev": "51be20dbc66e3ea9548f1726b6294b28d0644880",
+        "revCount": 8,
         "type": "git",
         "url": "ssh://git@github.com/4rmcyt/nix-config-private.git"
       },

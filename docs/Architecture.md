@@ -87,7 +87,7 @@ through `my.defaults.*` / `my.network.*` option defaults (plus `meta.owner.usern
 in the flake-parts scope). sops can't hold them — they're needed at eval time,
 before sops-nix decrypts.
 `modules/options/private-example.nix` documents the expected schema. The personal
-Thunderbird account config also lives there (`inputs.private.homeManagerModules.thunderbird`).
+Thunderbird account config also lives there (`inputs.private.homeModules.thunderbird`).
 
 | Option namespace     | File                          | Purpose                                      |
 |----------------------|-------------------------------|----------------------------------------------|
