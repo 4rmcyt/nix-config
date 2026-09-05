@@ -52,7 +52,7 @@ Interface labels are deliberately IP-free — the diagrams expose nothing beyond
 
 ## 🧩 Repository layout
 
-- **`flake.nix`** — ~15 lines; delegates to `import-tree ./parts`
+- **`flake.nix`** — inputs block + a 6-line `outputs` that delegates everything to `import-tree ./parts`
 - **`parts/`** — flake-parts modules, auto-imported
   - `owner.nix` — private identity/topology → `meta.owner.*`
   - `meta.nix` / `flake-parts-modules.nix` — internal options (`meta`, `modules`)
@@ -64,7 +64,7 @@ Interface labels are deliberately IP-free — the diagrams expose nothing beyond
 - **`hosts/nixos/<host>/`** — per-host `hardware-configuration.nix`, `facter.json`, NixOS config
 - **`home/<host>/`** — Home Manager config per host
 - **`modules/`** — ~190 single-purpose modules, imported explicitly
-  - `options/` — `my.defaults.*` · `my.network.*` · `my.security.*`
+  - `options/` — `my.defaults.*` · `my.network.*` (every other module is flat under `my.<name>`)
   - `base/` — core system (logging, msmtp)
   - `WM/` · `GUI/` · `TUI/` — mango · niri · noctalia · firefox · zsh · ai-tools
   - `services/` — nixarr · homepage · miniflux · hass · komga · ntfy

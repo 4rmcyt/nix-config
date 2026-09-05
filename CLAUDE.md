@@ -16,7 +16,7 @@ nix build .#nixosConfigurations.<host>.config.system.build.toplevel  # Build a h
 
 ## Flake Architecture (flake-parts + import-tree)
 
-`flake.nix` is ~15 lines — it delegates everything to `parts/` via `import-tree ./parts`. All flake-parts modules in `parts/` are auto-imported.
+`flake.nix` is an `inputs` block plus a 6-line `outputs` that delegates everything to `parts/` via `import-tree ./parts`. All flake-parts modules in `parts/` are auto-imported.
 
 ### Key `parts/` files
 
