@@ -250,12 +250,6 @@ in {
         description = "IP address of Matebook wireless — trusted VLAN";
       };
 
-      homeassistant-vm = lib.mkOption {
-        type = lib.types.str;
-        default = net.hosts."homeassistant-vm";
-        description = "Home Assistant VM (QEMU on homeserver) — trusted VLAN";
-      };
-
       # Tailscale (tailnet) addresses — CGNAT range, not modeled in the
       # private flake since they're only reachable over the tailnet itself.
       desktop_ts = lib.mkOption {

@@ -28,7 +28,6 @@
       desktop_lan = "192.0.2.11";
       desktop_wifi = "192.0.2.12";
       matebook_wifi = "192.0.2.13";
-      homeassistant-vm = "192.0.2.14";
     };
 
     # MACs still needed outside the reservation list (→ my.network.mac.*).
