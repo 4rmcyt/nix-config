@@ -233,7 +233,7 @@ in {
   ];
 
   networking.firewall.allowedTCPPorts = [
-    5055 # seerr
+    config.my.network.ports.seerr
     config.my.network.ports.bazarr
     config.my.network.ports.radarr
     config.my.network.ports.jellyfin

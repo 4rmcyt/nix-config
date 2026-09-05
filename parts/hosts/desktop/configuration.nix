@@ -11,7 +11,6 @@
   hmWorkstation = config.modules.homeManager.workstation;
 in {
   configurations.nixos.desktop.module = {
-    config,
     pkgs,
     ...
   }: {
@@ -76,8 +75,6 @@ in {
         user = owner.username;
       };
     };
-
-    facter.reportPath = ../../../hosts/nixos + "/${config.networking.hostName}/facter.json";
 
     home-manager.users.${owner.username} = {
       nixpkgs.config.permittedInsecurePackages = ["pnpm-10.29.2" "electron-40.10.5"];

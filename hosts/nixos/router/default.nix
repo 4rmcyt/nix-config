@@ -85,7 +85,7 @@
       config.my.network.vlans.iot
       config.my.network.vlans.media
     ];
-    tailscaleIp = "100.64.0.3";
+    tailscaleIp = config.my.network.hosts.homeserver_ts;
     gcpRelayIp = config.my.defaults.gcpRelayIp;
     nextdnsProfileId = config.my.defaults.nextdnsProfileId;
   };

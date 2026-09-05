@@ -10,7 +10,7 @@
   nixosWorkstation = config.modules.nixos.workstation;
   hmWorkstation = config.modules.homeManager.workstation;
 in {
-  configurations.nixos.matebook.module = {config, ...}: {
+  configurations.nixos.matebook.module = { ...}: {
     imports = [
       nixosBase
       nixosHm
@@ -22,8 +22,6 @@ in {
     ];
 
     nix.settings = import ../../../lib/cachix.nix "matebook" "rRhmrqqdIkcFQdMJRo27YMaeU/G+H/cABE53EV5grDY=";
-
-    facter.reportPath = ../../../hosts/nixos + "/${config.networking.hostName}/facter.json";
 
     home-manager.users.${owner.username}.imports = [
       hmWorkstation

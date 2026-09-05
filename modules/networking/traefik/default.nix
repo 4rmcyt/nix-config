@@ -5,6 +5,80 @@
 }: let
   cfg = config.my.traefik;
   inherit (config.my.defaults) domain;
+
+  # Declarative table for the common case: one router + one service per
+  # backend, proxied to a localhost port behind the standard security
+  # middlewares. Anything with non-standard routing (path-based rules,
+  # priority, internal-only entrypoints) is defined by hand instead —
+  # see traefik-dashboard/traefik-api-internal/kombayn-* below.
+  mkProxiedRouter = name: {
+    port,
+    middlewares ? ["security-headers" "crowdsec"],
+    host ? "${name}.${domain}",
+  }: {
+    routers.${name} = {
+      rule = "Host(`${host}`)";
+      entryPoints = ["websecure"];
+      service = name;
+      inherit middlewares;
+      tls.certResolver = "default";
+    };
+    services.${name}.loadBalancer.servers = [{url = "http://localhost:${toString port}";}];
+  };
+
+  proxiedServices = {
+    # Nixarr
+    sonarr.port = config.my.network.ports.sonarr;
+    radarr.port = config.my.network.ports.radarr;
+    prowlarr.port = config.my.network.ports.prowlarr;
+    bazarr.port = config.my.network.ports.bazarr;
+    lidarr.port = config.my.network.ports.lidarr;
+    lazylibrarian.port = config.my.network.ports.lazylibrarian;
+    kapowarr.port = config.my.network.ports.kapowarr;
+    seerr.port = config.my.network.ports.seerr;
+
+    # Media
+    jellyfin.port = config.my.network.ports.jellyfin;
+    qb.port = config.my.network.ports.qb;
+
+    # Monitoring
+    grafana.port = config.my.network.ports.grafana;
+
+    # Reading
+    miniflux.port = config.my.network.ports.miniflux;
+    komga = {
+      port = config.my.network.ports.komga;
+      middlewares = ["komga-headers" "crowdsec"];
+    };
+    komf = {
+      port = config.my.network.ports.komf;
+      middlewares = ["komf-headers" "crowdsec"];
+    };
+    audiobookshelf.port = config.my.network.ports.audiobookshelf;
+
+    # Smart home
+    hass = {
+      port = config.my.network.ports.home-assistant;
+      middlewares = ["security-headers" "rate-limit" "crowdsec" "geoblock"];
+    };
+
+    # Productivity
+    homepage = {
+      port = config.my.network.ports.homepage;
+      host = "home.${domain}";
+    };
+    microbin.port = config.my.network.ports.microbin;
+    atuin.port = config.services.atuin.port;
+    livesync.port = config.services.couchdb.port;
+    dispatcharr.port = config.my.network.ports.dispatcharr;
+    radicale = {
+      port = config.my.network.ports.radicale;
+      host = "cal.${domain}";
+    };
+    ntfy.port = config.my.network.ports.ntfy;
+  };
+
+  generatedRoutes = lib.foldl' lib.recursiveUpdate {} (lib.mapAttrsToList mkProxiedRouter proxiedServices);
 in {
   options.my.traefik = {
     enable = lib.mkEnableOption "Traefik reverse proxy";
@@ -182,8 +256,8 @@ in {
                 "US"
               ];
               allowedIPBlocks = [
-                "100.64.0.0/10"
-                "192.168.1.0/24"
+                config.my.network.subnets.tailscale
+                config.my.network.subnets.trusted
               ]; # Tailscale CGNAT + LAN
               ipHeaders = [
                 "x-forwarded-for"
@@ -211,337 +285,61 @@ in {
             };
           };
 
-          routers = {
-            traefik-dashboard = {
-              rule = "Host(`traefik.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "api@internal";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
+          routers =
+            generatedRoutes.routers
+            // {
+              traefik-dashboard = {
+                rule = "Host(`traefik.${domain}`)";
+                entryPoints = ["websecure"];
+                service = "api@internal";
+                middlewares = [
+                  "security-headers"
+                  "crowdsec"
+                ];
+                tls.certResolver = "default";
+              };
+
+              # Internal API router for homepage widget (localhost only, no middleware)
+              traefik-api-internal = {
+                rule = "PathPrefix(`/`)";
+                entryPoints = ["traefik-api"];
+                service = "api@internal";
+                middlewares = [];
+              };
+
+              # job-kombayn: API on /api (higher priority = more specific path
+              # wins over the SPA catch-all below), everything else -> static SPA.
+              kombayn-api = {
+                rule = "Host(`jobko.${domain}`) && PathPrefix(`/api`)";
+                entryPoints = ["websecure"];
+                service = "kombayn-api";
+                priority = 10;
+                middlewares = [
+                  "security-headers"
+                  "crowdsec"
+                ];
+                tls.certResolver = "default";
+              };
+              kombayn-web = {
+                rule = "Host(`jobko.${domain}`)";
+                entryPoints = ["websecure"];
+                service = "kombayn-web";
+                priority = 1;
+                middlewares = [
+                  "security-headers"
+                  "crowdsec"
+                ];
+                tls.certResolver = "default";
+              };
             };
 
-            # Internal API router for homepage widget (localhost only, no middleware)
-            traefik-api-internal = {
-              rule = "PathPrefix(`/`)";
-              entryPoints = ["traefik-api"];
-              service = "api@internal";
-              middlewares = [];
+          services =
+            generatedRoutes.services
+            // {
+              # job-kombayn
+              kombayn-api.loadBalancer.servers = [{url = "http://localhost:${toString config.services.jobKombayn.apiPort}";}];
+              kombayn-web.loadBalancer.servers = [{url = "http://localhost:${toString config.services.jobKombayn.webPort}";}];
             };
-
-            # Nixarr
-            sonarr = {
-              rule = "Host(`sonarr.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "sonarr";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            radarr = {
-              rule = "Host(`radarr.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "radarr";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            prowlarr = {
-              rule = "Host(`prowlarr.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "prowlarr";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            bazarr = {
-              rule = "Host(`bazarr.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "bazarr";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            lidarr = {
-              rule = "Host(`lidarr.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "lidarr";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            lazylibrarian = {
-              rule = "Host(`lazylibrarian.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "lazylibrarian";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-
-            kapowarr = {
-              rule = "Host(`kapowarr.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "kapowarr";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            seerr = {
-              rule = "Host(`seerr.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "seerr";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-
-            # Media
-            jellyfin = {
-              rule = "Host(`jellyfin.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "jellyfin";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            qb = {
-              rule = "Host(`qb.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "qb";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-
-            # Monitoring
-            grafana = {
-              rule = "Host(`grafana.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "grafana";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-
-            # Reading
-            miniflux = {
-              rule = "Host(`miniflux.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "miniflux";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            komga = {
-              rule = "Host(`komga.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "komga";
-              middlewares = [
-                "komga-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            komf = {
-              rule = "Host(`komf.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "komf";
-              middlewares = [
-                "komf-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            audiobookshelf = {
-              rule = "Host(`audiobookshelf.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "audiobookshelf";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-
-            # Smart home
-            hass = {
-              rule = "Host(`hass.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "hass";
-              middlewares = [
-                "security-headers"
-                "rate-limit"
-                "crowdsec"
-                "geoblock"
-              ];
-              tls.certResolver = "default";
-            };
-
-            # Productivity
-            homepage = {
-              rule = "Host(`home.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "homepage";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            microbin = {
-              rule = "Host(`microbin.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "microbin";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            atuin = {
-              rule = "Host(`atuin.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "atuin";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            livesync = {
-              rule = "Host(`livesync.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "livesync";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            dispatcharr = {
-              rule = "Host(`dispatcharr.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "dispatcharr";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            radicale = {
-              rule = "Host(`cal.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "radicale";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            ntfy = {
-              rule = "Host(`ntfy.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "ntfy";
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-
-            # job-kombayn: API on /api (higher priority = more specific path
-            # wins over the SPA catch-all below), everything else -> static SPA.
-            kombayn-api = {
-              rule = "Host(`jobko.${domain}`) && PathPrefix(`/api`)";
-              entryPoints = ["websecure"];
-              service = "kombayn-api";
-              priority = 10;
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-            kombayn-web = {
-              rule = "Host(`jobko.${domain}`)";
-              entryPoints = ["websecure"];
-              service = "kombayn-web";
-              priority = 1;
-              middlewares = [
-                "security-headers"
-                "crowdsec"
-              ];
-              tls.certResolver = "default";
-            };
-          };
-
-          services = {
-            # Nixarr
-            sonarr.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.sonarr}";}];
-            radarr.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.radarr}";}];
-            prowlarr.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.prowlarr}";}];
-            bazarr.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.bazarr}";}];
-            lidarr.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.lidarr}";}];
-            lazylibrarian.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.lazylibrarian}";}];
-            kapowarr.loadBalancer.servers = [{url = "http://localhost:5656";}];
-            seerr.loadBalancer.servers = [{url = "http://localhost:5055";}];
-
-            # Media
-            jellyfin.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.jellyfin}";}];
-            qb.loadBalancer.servers = [{url = "http://localhost:8081";}];
-            komf.loadBalancer.servers = [{url = "http://localhost:8085";}];
-            komga.loadBalancer.servers = [{url = "http://localhost:8087";}];
-
-            # Monitoring
-            grafana.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.grafana}";}];
-
-            # Reading
-            miniflux.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.miniflux}";}];
-            audiobookshelf.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.audiobookshelf}";}];
-
-            # Smart home
-            hass.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.home-assistant}";}];
-
-            # Productivity
-            homepage.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.homepage}";}];
-            microbin.loadBalancer.servers = [{url = "http://localhost:8069";}];
-            atuin.loadBalancer.servers = [{url = "http://localhost:8881";}];
-            livesync.loadBalancer.servers = [{url = "http://localhost:5984";}];
-            dispatcharr.loadBalancer.servers = [{url = "http://localhost:9191";}];
-            radicale.loadBalancer.servers = [{url = "http://localhost:${toString config.my.network.ports.radicale}";}];
-            ntfy.loadBalancer.servers = [{url = "http://localhost:9991";}];
-
-            # job-kombayn
-            kombayn-api.loadBalancer.servers = [{url = "http://localhost:8420";}];
-            kombayn-web.loadBalancer.servers = [{url = "http://localhost:8421";}];
-          };
         };
       };
     };

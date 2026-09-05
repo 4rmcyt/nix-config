@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   ...
@@ -125,7 +126,7 @@
     description = "Socket for qBittorrent proxy";
     wantedBy = ["sockets.target"];
     requires = ["qbittorrent.service"];
-    socketConfig.ListenStream = "8081";
+    socketConfig.ListenStream = toString config.my.network.ports.qb;
   };
 
   systemd.services.proxy-to-qbittorrent = {

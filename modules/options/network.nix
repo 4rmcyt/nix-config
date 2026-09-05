@@ -68,6 +68,32 @@ in {
         default = net.hosts."homeassistant-vm";
         description = "Home Assistant VM (QEMU on homeserver) — trusted VLAN";
       };
+
+      # Tailscale (tailnet) addresses — CGNAT range, not modeled in the
+      # private flake since they're only reachable over the tailnet itself.
+      desktop_ts = lib.mkOption {
+        type = lib.types.str;
+        default = "100.64.0.1";
+        description = "IP address of desktop — Tailscale/Headscale tailnet";
+      };
+
+      homeserver_ts = lib.mkOption {
+        type = lib.types.str;
+        default = "100.64.0.3";
+        description = "IP address of homeserver — Tailscale/Headscale tailnet";
+      };
+
+      matebook_ts = lib.mkOption {
+        type = lib.types.str;
+        default = "100.64.0.4";
+        description = "IP address of Matebook — Tailscale/Headscale tailnet";
+      };
+
+      gcp-relay_ts = lib.mkOption {
+        type = lib.types.str;
+        default = "100.64.0.5";
+        description = "IP address of gcp-relay — Tailscale/Headscale tailnet";
+      };
     };
 
     # MAC addresses referenced outside the DHCP reservation list (currently just
@@ -114,10 +140,28 @@ in {
         description = "Tailscale VPN network subnet";
       };
 
+      trusted = lib.mkOption {
+        type = lib.types.str;
+        default = "192.168.1.0/24";
+        description = "Trusted VLAN subnet (vlan10)";
+      };
+
+      iot = lib.mkOption {
+        type = lib.types.str;
+        default = "192.168.20.0/24";
+        description = "IoT VLAN subnet (vlan20)";
+      };
+
       media = lib.mkOption {
         type = lib.types.str;
         default = "192.168.30.0/24";
         description = "Media segment subnet (enp3s0, physical, no VLAN)";
+      };
+
+      work = lib.mkOption {
+        type = lib.types.str;
+        default = "192.168.40.0/24";
+        description = "Work VLAN subnet (vlan40)";
       };
 
       podman = lib.mkOption {
@@ -285,6 +329,57 @@ in {
         type = lib.types.port;
         default = 9094;
         description = "alertmanager-ntfy bridge";
+      };
+
+      # More *arr / media automation
+      kapowarr = lib.mkOption {
+        type = lib.types.port;
+        default = 5656;
+        description = "Kapowarr comics automation web UI";
+      };
+
+      seerr = lib.mkOption {
+        type = lib.types.port;
+        default = 5055;
+        description = "Jellyseerr request management web UI";
+      };
+
+      qb = lib.mkOption {
+        type = lib.types.port;
+        default = 8081;
+        description = "qBittorrent WebUI proxy (host side, forwards into the VPN netns)";
+      };
+
+      # Reading / document management
+      komf = lib.mkOption {
+        type = lib.types.port;
+        default = 8085;
+        description = "Komf metadata fetcher web UI";
+      };
+
+      komga = lib.mkOption {
+        type = lib.types.port;
+        default = 8087;
+        description = "Komga comics/manga server";
+      };
+
+      # Utilities
+      microbin = lib.mkOption {
+        type = lib.types.port;
+        default = 8069;
+        description = "Microbin pastebin/file-sharing service";
+      };
+
+      dispatcharr = lib.mkOption {
+        type = lib.types.port;
+        default = 9191;
+        description = "Dispatcharr IPTV/EPG manager";
+      };
+
+      ntfy = lib.mkOption {
+        type = lib.types.port;
+        default = 9991;
+        description = "ntfy push notification server";
       };
     };
   };

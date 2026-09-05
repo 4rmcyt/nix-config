@@ -2,12 +2,12 @@
   commonEnv = {
     TZ = config.my.defaults.timezone;
     DISPATCHARR_ENV = "modular";
-    DISPATCHARR_PORT = "9191";
+    DISPATCHARR_PORT = toString config.my.network.ports.dispatcharr;
     # Traefik proxies over the tailnet; dispatcharr's setup-wizard "local
     # network" check only recognizes RFC1918 + loopback, not Tailscale's
     # CGNAT range (100.64.0.0/10), so the initial admin setup page refuses
     # the connection unless the tailnet peer IP is allowlisted explicitly.
-    DISPATCHARR_SETUP_ALLOWED_IP = "100.64.0.1";
+    DISPATCHARR_SETUP_ALLOWED_IP = config.my.network.hosts.desktop_ts;
   };
   commonExtraOptions = [
     "--add-host=host.containers.internal:host-gateway"
@@ -51,7 +51,7 @@ in {
       environment = commonEnv;
       environmentFiles = envFile;
       volumes = ["/var/lib/dispatcharr:/data"];
-      ports = ["127.0.0.1:9191:9191"];
+      ports = ["127.0.0.1:${toString config.my.network.ports.dispatcharr}:${toString config.my.network.ports.dispatcharr}"];
       extraOptions = commonExtraOptions;
     };
 

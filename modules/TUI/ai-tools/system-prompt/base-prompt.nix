@@ -14,7 +14,9 @@ in ''
   home/{host}/            # Home Manager per host
   modules/
     base/                 # Core system (logging, msmtp)
-    options/              # my.defaults.*, my.network.*, my.security.*
+    options/              # my.defaults.*, my.network.* (real nested categories);
+                          # everything else is flat under my.<moduleName> (my.crowdsec,
+                          # my.traefik, my.hardening, ...) — there is no my.security.* namespace
     WM/                   # niri + mango (both w/ noctalia v5), gtk, mime — desktop:mango, matebook:niri; hyprland kept on disk unused, not migrated off noctalia legacy-v4
     GUI/                  # firefox, chrome, obsidian, zed, terminal, mpv, etc.
     TUI/                  # zsh, zellij, atuin, starship, neovim, ai-tools (claude-code, llama-cpp, mcp)

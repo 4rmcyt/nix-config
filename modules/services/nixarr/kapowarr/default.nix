@@ -23,7 +23,7 @@
   };
 
   networking.firewall.allowedTCPPorts = [
-    5656 # Kapowarr Web UI
+    config.my.network.ports.kapowarr
   ];
 
   systemd.tmpfiles.rules = [

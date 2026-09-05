@@ -335,7 +335,7 @@
   my.unbound = {
     enable = true;
     interfaces = ["tailscale0" "enp0s31f6"];
-    tailscaleIp = "100.64.0.3";
+    tailscaleIp = config.my.network.hosts.homeserver_ts;
     gcpRelayIp = config.my.defaults.gcpRelayIp;
     nextdnsProfileId = config.my.defaults.nextdnsProfileId;
   };

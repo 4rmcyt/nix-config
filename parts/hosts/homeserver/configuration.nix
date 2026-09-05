@@ -9,7 +9,7 @@
   nixosHm = config.modules.nixos.hm;
   nixosWorkstation = config.modules.nixos.workstation;
 in {
-  configurations.nixos.homeserver.module = {config, ...}: {
+  configurations.nixos.homeserver.module = { ...}: {
     imports = [
       nixosBase
       nixosHm
@@ -54,8 +54,6 @@ in {
           ;
       })
     ];
-
-    facter.reportPath = ../../../hosts/nixos + "/${config.networking.hostName}/facter.json";
 
     home-manager.users.${owner.username}.imports = [
       ../../../home/homeserver

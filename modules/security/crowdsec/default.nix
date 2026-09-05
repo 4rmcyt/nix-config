@@ -146,11 +146,11 @@ in {
           reason: "trusted network"
           ip:
             - "127.0.0.1"
-            - "192.168.1.1"
+            - "${config.my.network.gateway}"
           cidr:
-            - "192.168.1.0/24"
+            - "${config.my.network.subnets.trusted}"
             - "10.0.0.0/8"
-            - "100.64.0.0/10"
+            - "${config.my.network.subnets.tailscale}"
         ${lib.concatMapStringsSep "\n" (cidr: "    - \"${cidr}\"") config.my.network.subnets.cloudflare}
       '';
     };

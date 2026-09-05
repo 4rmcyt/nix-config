@@ -9,11 +9,17 @@
   # imported into a host), NOT a flake-parts top-level arg (that's only
   # injected inside `perSystem`) — so this has to be a function taking its
   # own {pkgs, ...}, not reach for the outer flake-parts scope's pkgs.
-  modules.nixos.workstation = {pkgs, ...}: {
+  modules.nixos.workstation = {
+    config,
+    pkgs,
+    ...
+  }: {
     imports = [
       inputs.nixos-facter-modules.nixosModules.facter
       inputs.ucodenix.nixosModules.default
     ];
+
+    facter.reportPath = ../hosts/nixos + "/${config.networking.hostName}/facter.json";
 
     programs.gnupg.agent.enable = true;
 

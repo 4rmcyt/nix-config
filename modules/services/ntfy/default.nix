@@ -9,7 +9,7 @@
     environmentFile = config.sops.secrets.ntfy_env.path;
     settings = {
       base-url = "https://ntfy.${config.my.defaults.domain}";
-      listen-http = "127.0.0.1:9991";
+      listen-http = "127.0.0.1:${toString config.my.network.ports.ntfy}";
       auth-default-access = "deny-all";
       behind-proxy = true;
     };

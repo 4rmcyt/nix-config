@@ -35,7 +35,7 @@ in {
         # ── trusted — vlan10 (wired) + enp2s0 (ISP AP) — 192.168.1.0/24 ─
         {
           id = 10;
-          subnet = "192.168.1.0/24";
+          subnet = n.subnets.trusted;
           # no interface restriction — serves both vlan10 and enp4s0
           pools = [{pool = "192.168.1.100 - 192.168.1.200";}];
           option-data = [
@@ -58,7 +58,7 @@ in {
         # ── VLAN 20 — iot ───────────────────────────────────────────────
         {
           id = 20;
-          subnet = "192.168.20.0/24";
+          subnet = n.subnets.iot;
           interface = "vlan20";
           pools = [{pool = "192.168.20.100 - 192.168.20.200";}];
           option-data = [
@@ -82,7 +82,7 @@ in {
         # ── media — physical port enp3s0 (no VLAN tagging) ─────────────
         {
           id = 30;
-          subnet = "192.168.30.0/24";
+          subnet = n.subnets.media;
           interface = "enp3s0";
           pools = [{pool = "192.168.30.100 - 192.168.30.200";}];
           option-data = [
@@ -105,7 +105,7 @@ in {
         # ── VLAN 40 — work ──────────────────────────────────────────────
         {
           id = 40;
-          subnet = "192.168.40.0/24";
+          subnet = n.subnets.work;
           interface = "vlan40";
           pools = [{pool = "192.168.40.100 - 192.168.40.200";}];
           option-data = [

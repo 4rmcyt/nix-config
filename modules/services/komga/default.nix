@@ -1,5 +1,5 @@
 # modules/services/komga/default.nix
-_: {
+{config, ...}: {
   users.users.komga = {
     isSystemUser = true;
     group = "komga";
@@ -14,7 +14,7 @@ _: {
     enable = true;
     settings = {
       "spring.datasource.url" = "jdbc:h2:file:/var/lib/komga/database;DB_CLOSE_ON_EXIT=FALSE";
-      server.port = 8087;
+      server.port = config.my.network.ports.komga;
     };
   };
 

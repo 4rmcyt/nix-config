@@ -109,22 +109,22 @@ in {
   # SSH Known Hosts
   programs.ssh.knownHosts = {
     "desktop" = {
-      hostNames = ["desktop.ts.${domain}" "100.64.0.1"];
+      hostNames = ["desktop.ts.${domain}" config.my.network.hosts.desktop_ts];
       publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH1T6RcXrs1aeupXBSVZlvYbispJAR+KROiJM6P+MUq2";
     };
 
     "homeserver" = {
-      hostNames = ["homeserver.ts.${domain}" "100.64.0.3"];
+      hostNames = ["homeserver.ts.${domain}" config.my.network.hosts.homeserver_ts];
       publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJV+/pct8PNZhUqvnflYY5auIE1zTl3sPtCfVynTnajN";
     };
 
     "matebook" = {
-      hostNames = ["matebook.ts.${domain}" "100.64.0.4"];
+      hostNames = ["matebook.ts.${domain}" config.my.network.hosts.matebook_ts];
       publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILMexDvsxSWoErrJDM++L2N0dJxKc3ro7sIezfYIWFH2";
     };
 
     "gcp-relay" = {
-      hostNames = [config.my.defaults.gcpRelayIp "gcp-relay" "gcp-relay.ts.${domain}" "100.64.0.5"];
+      hostNames = [config.my.defaults.gcpRelayIp "gcp-relay" "gcp-relay.ts.${domain}" config.my.network.hosts."gcp-relay_ts"];
       publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJM6PdGMBKVCzUboMTKIw6Dbdmy8HM8QVFibWy7PBVZZ";
     };
 

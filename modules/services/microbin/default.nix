@@ -40,7 +40,7 @@ in {
   users.groups.microbin = {};
 
   networking.firewall.allowedTCPPorts = [
-    8069 # Microbin
+    config.my.network.ports.microbin
   ];
 
   nixpkgs.overlays = [
@@ -88,7 +88,7 @@ in {
         MICROBIN_MAX_FILE_SIZE_UNENCRYPTED_MB = 2048;
         MICROBIN_PUBLIC_PATH = "https://microbin.${config.my.defaults.domain}";
         MICROBIN_BIND = "127.0.0.1";
-        MICROBIN_PORT = 8069;
+        MICROBIN_PORT = config.my.network.ports.microbin;
         MICROBIN_HIDE_LOGO = false;
         MICROBIN_HIGHLIGHTSYNTAX = true;
         MICROBIN_HIDE_HEADER = false;

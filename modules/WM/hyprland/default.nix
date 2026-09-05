@@ -1,3 +1,7 @@
+# Not imported by any host — niri/mango replaced it as the active WM stack.
+# Kept on disk intentionally as a reference for prior config decisions (see
+# comments in ../mango/*.nix referencing "hyprland's X"); not dead code to be
+# cleaned up, just inert until someone wants to resurrect Hyprland.
 {pkgs, ...}: {
   imports = [
     ./binds.nix
