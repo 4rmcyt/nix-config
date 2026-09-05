@@ -22,19 +22,16 @@
     ../../../modules/monitoring/alloy-client.nix
 
     # Features and roles
+    # GUI/{chrome,flatpak,kdeconnect,nemo} + networking/nfs-client come from
+    # modules.nixos.workstationGui (parts/workstation.nix).
     ../../../modules/containers
     ../../../modules/gaming
     ../../../modules/networking/dnssec
-    ../../../modules/networking/nfs-client
     ../../../modules/networking/nut-client
     ../../../modules/networking/ssh
 
     # Users & GUI
-    ../../../modules/GUI/chrome
     ../../../modules/GUI/coolercontrol
-    ../../../modules/GUI/flatpak
-    ../../../modules/GUI/kdeconnect
-    ../../../modules/GUI/nemo
     ../../../modules/GUI/virt-manager
     ../../../modules/GUI/waydroid
     ../../../modules/TUI/tty.nix

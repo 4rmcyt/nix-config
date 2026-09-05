@@ -16,7 +16,9 @@ parts/                      # Auto-imported flake-parts modules
   home-manager-integration.nix # modules.nixos.base — imports sops-nix, disko, nix-topology NixOS modules
   hm.nix                    # modules.nixos.hm — Home Manager NixOS module + HM base wiring (opt-in per host)
   home-manager-base.nix     # modules.homeManager.base — sops, nixvim, overlays, stateVersion
-  workstation.nix          # modules.nixos.workstation — facter + ucodenix + gnupg (desktop/laptop/server only)
+  workstation.nix          # modules.nixos.workstation — facter + ucodenix + gnupg (desktop/laptop/server);
+                           # modules.nixos.workstationGui — GUI/{chrome,flatpak,kdeconnect,nemo} + nfs-client (desktop/matebook);
+                           # modules.homeManager.workstation — GUI/TUI HM apps (desktop/matebook)
   shared-programs.nix       # modules.nixos.base — common programs on all hosts (zsh, nh)
   meta.nix                  # options.meta (stateVersion, owner)
   owner.nix                 # meta.owner — sourced from the private `private` flake input (identity + LAN topology)
@@ -90,7 +92,7 @@ Thunderbird account config also lives there (`inputs.private.homeManagerModules.
 | Option namespace     | File                          | Purpose                                      |
 |----------------------|-------------------------------|----------------------------------------------|
 | `my.defaults.*`      | `options/defaults.nix`        | user, email, git identity, domain, timezone, locale, GCP relay IP, NextDNS profile id (from `inputs.private`) |
-| `my.network.*`       | `options/network.nix`         | gateway, subnets, service ports — local defaults; host addresses/MACs/infrastructure/DHCP reservations sourced from `inputs.private` |
+| `my.network.*`       | `options/network.nix`         | gateway, subnets, service ports (`ports.<name>` int + derived read-only `portScope.<name>` = internet/lan/localhost) — local defaults; host addresses/MACs/infrastructure/DHCP reservations sourced from `inputs.private` |
 | `my.traefik.*`       | `networking/traefik/`         | Traefik reverse proxy                        |
 | `my.headscale.*`     | `networking/headscale/`       | Headscale coordination server                |
 | `my.nodeExporter.*`  | `monitoring/node-exporter-client.nix` | Per-host Prometheus node exporter   |
@@ -118,6 +120,8 @@ configurations.nixos.homeserver.module = {...}: {
 
 `configurations/nixos.nix` maps each entry to `lib.nixosSystem`. **gcp-relay** is
 headless — it imports only `nixosBase`, no HM, no workstation modules.
+**desktop** and **matebook** additionally import `nixosWorkstationGui`
+(`modules.nixos.workstationGui`) and `hmWorkstation`.
 
 ### Host → Nix daemon variant
 

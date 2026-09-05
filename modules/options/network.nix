@@ -5,10 +5,205 @@
 }: let
   net = inputs.private.lib.network;
 
-  mkPort = default: description:
+  # Service ports plus their exposure class — single source of truth for both
+  # my.network.ports.<name> (a bare int, consumed everywhere) and the derived
+  # read-only my.network.portScope.<name>:
+  #   internet  — reachable from the public internet via the Cloudflare tunnel
+  #               (ingress allowlist in modules/networking/cloudflared)
+  #   lan       — LAN / Tailscale only: a Traefik :443 router with no tunnel
+  #               ingress, or a firewall-opened port scraped over the tailnet
+  #   localhost — bound to 127.0.0.1, no external reachability
+  # Documentation contract — nothing here enforces it; actual routing lives in
+  # modules/networking/{traefik,cloudflared} and per-host firewall rules. Keep
+  # in sync when adding a service or giving one a public route.
+  portDefs = {
+    jellyfin = {
+      port = 8096;
+      scope = "lan";
+      desc = "Jellyfin media server";
+    };
+    transmission = {
+      port = 9091;
+      scope = "lan";
+      desc = "Transmission BitTorrent client web UI";
+    };
+    audiobookshelf = {
+      port = 9292;
+      scope = "lan";
+      desc = "Audiobookshelf audiobook server";
+    };
+    tdarr = {
+      port = 8265;
+      scope = "lan";
+      desc = "Tdarr media transcoding web UI";
+    };
+
+    sonarr = {
+      port = 8990;
+      scope = "lan";
+      desc = "Sonarr TV shows automation";
+    };
+    radarr = {
+      port = 7878;
+      scope = "lan";
+      desc = "Radarr movies automation";
+    };
+    lidarr = {
+      port = 8686;
+      scope = "lan";
+      desc = "Lidarr music automation";
+    };
+    lazylibrarian = {
+      port = 5299;
+      scope = "lan";
+      desc = "LazyLibrarian ebooks/audiobooks automation";
+    };
+    bazarr = {
+      port = 6767;
+      scope = "lan";
+      desc = "Bazarr subtitles automation";
+    };
+    prowlarr = {
+      port = 9696;
+      scope = "lan";
+      desc = "Prowlarr indexer manager";
+    };
+
+    prometheus = {
+      port = 9090;
+      scope = "lan";
+      desc = "Prometheus time-series database";
+    };
+    grafana = {
+      port = 3003;
+      scope = "lan";
+      desc = "Grafana metrics visualization";
+    };
+    loki = {
+      port = 3100;
+      scope = "lan";
+      desc = "Loki log aggregation server";
+    };
+    node-exporter = {
+      port = 9100;
+      scope = "lan";
+      desc = "Prometheus node exporter";
+    };
+    traefik-metrics = {
+      port = 8080;
+      scope = "localhost";
+      desc = "Traefik Prometheus metrics entrypoint (localhost only)";
+    };
+
+    miniflux = {
+      port = 8086;
+      scope = "lan";
+      desc = "Miniflux RSS feed reader";
+    };
+    radicale = {
+      port = 5232;
+      scope = "internet";
+      desc = "Radicale CalDAV/CardDAV server";
+    };
+    homepage = {
+      port = 8082;
+      scope = "lan";
+      desc = "Homepage application dashboard";
+    };
+
+    home-assistant = {
+      port = 8123;
+      scope = "internet";
+      desc = "Home Assistant smart home platform";
+    };
+    mosquitto = {
+      port = 1883;
+      scope = "lan";
+      desc = "Mosquitto MQTT broker";
+    };
+
+    alertmanager = {
+      port = 9093;
+      scope = "localhost";
+      desc = "Prometheus Alertmanager";
+    };
+    alertmanager-ntfy = {
+      port = 9094;
+      scope = "localhost";
+      desc = "alertmanager-ntfy bridge";
+    };
+
+    kapowarr = {
+      port = 5656;
+      scope = "lan";
+      desc = "Kapowarr comics automation web UI";
+    };
+    seerr = {
+      port = 5055;
+      scope = "lan";
+      desc = "Jellyseerr request management web UI";
+    };
+    qb = {
+      port = 8081;
+      scope = "lan";
+      desc = "qBittorrent WebUI proxy (host side, forwards into the VPN netns)";
+    };
+
+    komf = {
+      port = 8085;
+      scope = "lan";
+      desc = "Komf metadata fetcher web UI";
+    };
+    komga = {
+      port = 8087;
+      scope = "lan";
+      desc = "Komga comics/manga server";
+    };
+
+    microbin = {
+      port = 8069;
+      scope = "lan";
+      desc = "Microbin pastebin/file-sharing service";
+    };
+    dispatcharr = {
+      port = 9191;
+      scope = "lan";
+      desc = "Dispatcharr IPTV/EPG manager";
+    };
+    ntfy = {
+      port = 9991;
+      scope = "internet";
+      desc = "ntfy push notification server";
+    };
+
+    crowdsec-lapi = {
+      port = 8088;
+      scope = "lan";
+      desc = "CrowdSec local API (LAPI) — local bouncers plus the gcp-relay remote bouncer over Tailscale";
+    };
+    traefik-api = {
+      port = 8083;
+      scope = "localhost";
+      desc = "Traefik API entrypoint (localhost only, used by the homepage widget)";
+    };
+
+    atuin = {
+      port = 8881;
+      scope = "lan";
+      desc = "Atuin shell history sync server";
+    };
+    nut = {
+      port = 3493;
+      scope = "lan";
+      desc = "Network UPS Tools (NUT) upsd server";
+    };
+  };
+
+  mkPort = d:
     lib.mkOption {
       type = lib.types.port;
-      inherit default description;
+      default = d.port;
+      description = d.desc;
     };
 in {
   options.my.network = {
@@ -192,51 +387,25 @@ in {
       };
     };
 
-    ports = {
-      jellyfin = mkPort 8096 "Jellyfin media server";
-      transmission = mkPort 9091 "Transmission BitTorrent client web UI";
-      audiobookshelf = mkPort 9292 "Audiobookshelf audiobook server";
-      tdarr = mkPort 8265 "Tdarr media transcoding web UI";
+    # Bare int per service — generated from portDefs above. Unchanged shape
+    # for all consumers (config.my.network.ports.<name> is an int).
+    ports = lib.mapAttrs (_: mkPort) portDefs;
 
-      sonarr = mkPort 8990 "Sonarr TV shows automation";
-      radarr = mkPort 7878 "Radarr movies automation";
-      lidarr = mkPort 8686 "Lidarr music automation";
-      lazylibrarian = mkPort 5299 "LazyLibrarian ebooks/audiobooks automation";
-      bazarr = mkPort 6767 "Bazarr subtitles automation";
-      prowlarr = mkPort 9696 "Prowlarr indexer manager";
-
-      prometheus = mkPort 9090 "Prometheus time-series database";
-      grafana = mkPort 3003 "Grafana metrics visualization";
-      loki = mkPort 3100 "Loki log aggregation server";
-      node-exporter = mkPort 9100 "Prometheus node exporter";
-      traefik-metrics = mkPort 8080 "Traefik Prometheus metrics entrypoint (localhost only)";
-
-      miniflux = mkPort 8086 "Miniflux RSS feed reader";
-      radicale = mkPort 5232 "Radicale CalDAV/CardDAV server";
-      homepage = mkPort 8082 "Homepage application dashboard";
-
-      home-assistant = mkPort 8123 "Home Assistant smart home platform";
-      mosquitto = mkPort 1883 "Mosquitto MQTT broker";
-
-      alertmanager = mkPort 9093 "Prometheus Alertmanager";
-      alertmanager-ntfy = mkPort 9094 "alertmanager-ntfy bridge";
-
-      kapowarr = mkPort 5656 "Kapowarr comics automation web UI";
-      seerr = mkPort 5055 "Jellyseerr request management web UI";
-      qb = mkPort 8081 "qBittorrent WebUI proxy (host side, forwards into the VPN netns)";
-
-      komf = mkPort 8085 "Komf metadata fetcher web UI";
-      komga = mkPort 8087 "Komga comics/manga server";
-
-      microbin = mkPort 8069 "Microbin pastebin/file-sharing service";
-      dispatcharr = mkPort 9191 "Dispatcharr IPTV/EPG manager";
-      ntfy = mkPort 9991 "ntfy push notification server";
-
-      crowdsec-lapi = mkPort 8088 "CrowdSec local API (LAPI) — local bouncers plus the gcp-relay remote bouncer over Tailscale";
-      traefik-api = mkPort 8083 "Traefik API entrypoint (localhost only, used by the homepage widget)";
-
-      atuin = mkPort 8881 "Atuin shell history sync server";
-      nut = mkPort 3493 "Network UPS Tools (NUT) upsd server";
+    # Derived exposure class per service port — see portDefs above.
+    portScope = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.enum [
+        "internet"
+        "lan"
+        "localhost"
+      ]);
+      default = lib.mapAttrs (_: d: d.scope) portDefs;
+      readOnly = true;
+      description = ''
+        Exposure class per service port: "internet" (public via the Cloudflare
+        tunnel), "lan" (LAN/Tailscale only), "localhost" (127.0.0.1 only).
+        Documentation contract, not enforced here — see portDefs in
+        modules/options/network.nix.
+      '';
     };
   };
 }

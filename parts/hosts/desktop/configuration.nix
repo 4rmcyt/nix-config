@@ -8,16 +8,15 @@
   nixosBase = config.modules.nixos.base;
   nixosHm = config.modules.nixos.hm;
   nixosWorkstation = config.modules.nixos.workstation;
+  nixosWorkstationGui = config.modules.nixos.workstationGui;
   hmWorkstation = config.modules.homeManager.workstation;
 in {
-  configurations.nixos.desktop.module = {
-    pkgs,
-    ...
-  }: {
+  configurations.nixos.desktop.module = {pkgs, ...}: {
     imports = [
       nixosBase
       nixosHm
       nixosWorkstation
+      nixosWorkstationGui
       ../../../hosts/nixos/desktop
       inputs.noctalia.nixosModules.default
       ../../../modules/nix/lix

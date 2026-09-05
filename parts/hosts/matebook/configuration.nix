@@ -8,13 +8,15 @@
   nixosBase = config.modules.nixos.base;
   nixosHm = config.modules.nixos.hm;
   nixosWorkstation = config.modules.nixos.workstation;
+  nixosWorkstationGui = config.modules.nixos.workstationGui;
   hmWorkstation = config.modules.homeManager.workstation;
 in {
-  configurations.nixos.matebook.module = { ...}: {
+  configurations.nixos.matebook.module = {...}: {
     imports = [
       nixosBase
       nixosHm
       nixosWorkstation
+      nixosWorkstationGui
       ../../../hosts/nixos/matebook
       inputs.niri-flake.nixosModules.niri
       inputs.noctalia.nixosModules.default

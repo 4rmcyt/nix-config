@@ -13,15 +13,12 @@
     ../../../modules/monitoring/node-exporter-client.nix
     ../../../modules/monitoring/alloy-client.nix
 
-    ../../../modules/networking/nfs-client
     ../../../modules/networking/ssh
 
     ../../../modules/users/zeev
 
-    ../../../modules/GUI/chrome
-    ../../../modules/GUI/flatpak
-    ../../../modules/GUI/kdeconnect
-    ../../../modules/GUI/nemo
+    # GUI/{chrome,flatpak,kdeconnect,nemo} + networking/nfs-client come from
+    # modules.nixos.workstationGui (parts/workstation.nix).
   ];
 
   sops.secrets = {

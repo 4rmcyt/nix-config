@@ -38,6 +38,18 @@
     ];
   };
 
+  # GUI workstation NixOS modules — desktop, matebook only. Not on homeserver
+  # (no GUI) or gcp-relay (headless). nfs-client rides along here since only
+  # the GUI workstations mount the homeserver NFS shares (homeserver is the
+  # server, gcp-relay has no need).
+  modules.nixos.workstationGui.imports = [
+    ../modules/GUI/chrome
+    ../modules/GUI/flatpak
+    ../modules/GUI/kdeconnect
+    ../modules/GUI/nemo
+    ../modules/networking/nfs-client
+  ];
+
   # GUI workstation Home Manager modules — desktop, matebook. Not imported
   # on homeserver (no GUI) or headless appliances.
   modules.homeManager.workstation = {
