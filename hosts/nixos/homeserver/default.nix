@@ -251,7 +251,6 @@
 
   my.hardening.enable = true;
   my.traefik.enable = true;
-  my.headscale.enable = false;
   my.crowdsec.traefik.enable = true;
   my.crowdsec.nftables = {
     enable = true;
@@ -321,9 +320,6 @@
   my.unbound = {
     enable = true;
     interfaces = ["tailscale0" "enp0s31f6"];
-    tailscaleIp = config.my.network.hosts.homeserver_ts;
-    gcpRelayIp = config.my.defaults.gcpRelayIp;
-    nextdnsProfileId = config.my.defaults.nextdnsProfileId;
   };
 
   users = {

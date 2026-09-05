@@ -4,8 +4,8 @@
   ...
 }: let
   cfg = config.my.unbound;
-  inherit (config.my.defaults) domain;
-  inherit (config.my.network.hosts) homeserver_lan;
+  inherit (config.my.defaults) domain gcpRelayIp nextdnsProfileId;
+  inherit (config.my.network.hosts) homeserver_lan homeserver_ts;
 in {
   options.my.unbound = {
     enable = lib.mkEnableOption "Unbound split DNS for Tailscale";
@@ -14,21 +14,6 @@ in {
       type = lib.types.listOf lib.types.str;
       default = [];
       description = "Interfaces to listen on.";
-    };
-
-    tailscaleIp = lib.mkOption {
-      type = lib.types.str;
-      description = "Homeserver Tailscale IP for *.domain wildcard.";
-    };
-
-    gcpRelayIp = lib.mkOption {
-      type = lib.types.str;
-      description = "GCP relay static IP (for hs.* and hp.* overrides).";
-    };
-
-    nextdnsProfileId = lib.mkOption {
-      type = lib.types.str;
-      description = "NextDNS profile ID (e.g. abcdef).";
     };
   };
 
@@ -82,10 +67,10 @@ in {
             ''"hp.${domain}." static''
           ];
           local-data = [
-            ''"${domain}. A ${cfg.tailscaleIp}"''
+            ''"${domain}. A ${homeserver_ts}"''
             ''"${domain}. A ${homeserver_lan}"''
-            ''"hs.${domain}. A ${cfg.gcpRelayIp}"''
-            ''"hp.${domain}. A ${cfg.gcpRelayIp}"''
+            ''"hs.${domain}. A ${gcpRelayIp}"''
+            ''"hp.${domain}. A ${gcpRelayIp}"''
           ];
         };
 
@@ -94,8 +79,8 @@ in {
             name = ".";
             forward-tls-upstream = true;
             forward-addr = [
-              "45.90.28.163@853#${cfg.nextdnsProfileId}.dns.nextdns.io"
-              "45.90.30.163@853#${cfg.nextdnsProfileId}.dns.nextdns.io"
+              "45.90.28.163@853#${nextdnsProfileId}.dns.nextdns.io"
+              "45.90.30.163@853#${nextdnsProfileId}.dns.nextdns.io"
             ];
           }
           {

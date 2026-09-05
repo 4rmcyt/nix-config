@@ -6,7 +6,7 @@
   cfg = config.my.hardening;
 in {
   options.my.hardening = {
-    enable = lib.mkEnableOption "System hardening (SSH, kernel, systemd defaults, auto-upgrade)";
+    enable = lib.mkEnableOption "System hardening (SSH, kernel, systemd defaults)";
 
     serviceBase = lib.mkOption {
       type = lib.types.attrs;
@@ -24,31 +24,6 @@ in {
         with `config.my.hardening.serviceBase // { ... }` rather than
         re-typing these four keys by hand.
       '';
-    };
-
-    autoUpgrade = {
-      enable = lib.mkEnableOption "Automatic NixOS upgrades from flake";
-      flake = lib.mkOption {
-        type = lib.types.str;
-        description = "Flake URI to upgrade from.";
-        example = "github:4rmcyt/nix-config#gcp-relay";
-      };
-      # boot instead of switch — safer on remote machines (no live service restarts)
-      operation = lib.mkOption {
-        type = lib.types.enum ["switch" "boot"];
-        default = "boot";
-        description = "nixos-rebuild operation. 'boot' is safer for remote headless servers.";
-      };
-      dates = lib.mkOption {
-        type = lib.types.str;
-        default = "04:00";
-        description = "systemd.time(7) schedule for upgrades.";
-      };
-      randomizedDelaySec = lib.mkOption {
-        type = lib.types.str;
-        default = "30min";
-        description = "Random delay to avoid thundering herd on flake host.";
-      };
     };
   };
 
@@ -166,18 +141,6 @@ in {
       LockPersonality = lib.mkDefault true;
       RestrictRealtime = lib.mkDefault true;
       SystemCallArchitectures = lib.mkDefault "native";
-    };
-
-    system.autoUpgrade = lib.mkIf cfg.autoUpgrade.enable {
-      enable = true;
-      flake = cfg.autoUpgrade.flake;
-      operation = cfg.autoUpgrade.operation;
-      dates = cfg.autoUpgrade.dates;
-      randomizedDelaySec = cfg.autoUpgrade.randomizedDelaySec;
-      persistent = true;
-      allowReboot = true;
-      # GC after upgrade — 30GB disk, keep it clean
-      runGarbageCollection = true;
     };
   };
 }

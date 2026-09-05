@@ -30,29 +30,6 @@ in {
       description = "Podman default network gateway IP — host side of the bridge; host services (redis, postgres) bind it.";
     };
 
-    vlans = {
-      trusted = lib.mkOption {
-        type = lib.types.str;
-        default = "192.168.1.1";
-        description = "Router gateway IP — trusted VLAN (vlan10)";
-      };
-      iot = lib.mkOption {
-        type = lib.types.str;
-        default = "192.168.20.1";
-        description = "Router gateway IP — IoT VLAN (vlan20)";
-      };
-      media = lib.mkOption {
-        type = lib.types.str;
-        default = "192.168.30.1";
-        description = "Router gateway IP — media segment (enp3s0, physical, no VLAN)";
-      };
-      work = lib.mkOption {
-        type = lib.types.str;
-        default = "192.168.40.1";
-        description = "Router gateway IP — work VLAN (vlan40)";
-      };
-    };
-
     hosts = {
       homeserver_lan = lib.mkOption {
         type = lib.types.str;

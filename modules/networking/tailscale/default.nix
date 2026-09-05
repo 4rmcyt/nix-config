@@ -11,12 +11,7 @@ in {
     enable = mkEnableOption "Tailscale with SOPS authentication";
     sopsFile = mkOption {
       type = types.path;
-      description = "Path to the SOPS file containing the auth key";
-    };
-    key = mkOption {
-      type = types.str;
-      default = "tailscale_auth_key";
-      description = "YAML key for the auth key in the SOPS file";
+      description = "Path to the SOPS file containing the auth key (YAML key: tailscale_auth_key)";
     };
     loginServer = mkOption {
       type = types.str;
@@ -46,7 +41,7 @@ in {
   config = mkIf cfg.enable {
     sops.secrets.tailscale_auth_key = {
       inherit (cfg) sopsFile;
-      inherit (cfg) key;
+      key = "tailscale_auth_key";
     };
 
     environment.systemPackages = with pkgs; [

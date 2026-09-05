@@ -90,13 +90,13 @@ Thunderbird account config also lives there (`inputs.private.homeManagerModules.
 | Option namespace     | File                          | Purpose                                      |
 |----------------------|-------------------------------|----------------------------------------------|
 | `my.defaults.*`      | `options/defaults.nix`        | user, email, git identity, domain, timezone, locale, GCP relay IP, NextDNS profile id (from `inputs.private`) |
-| `my.network.*`       | `options/network.nix`         | gateway, VLAN CIDRs, subnets, service ports — local defaults; host addresses/MACs/infrastructure/DHCP reservations sourced from `inputs.private` |
+| `my.network.*`       | `options/network.nix`         | gateway, subnets, service ports — local defaults; host addresses/MACs/infrastructure/DHCP reservations sourced from `inputs.private` |
 | `my.traefik.*`       | `networking/traefik/`         | Traefik reverse proxy                        |
 | `my.headscale.*`     | `networking/headscale/`       | Headscale coordination server                |
 | `my.nodeExporter.*`  | `monitoring/node-exporter-client.nix` | Per-host Prometheus node exporter   |
 | `my.unbound.*`       | `networking/unbound/`         | Unbound DNS resolver                         |
 | `my.crowdsec.*`      | `security/crowdsec/`          | CrowdSec IDS + bouncer                       |
-| `my.hardening.*`     | `security/hardening.nix`      | System hardening + auto-upgrade              |
+| `my.hardening.*`     | `security/hardening.nix`      | System hardening (SSH, kernel, systemd defaults) |
 
 ## Host Wiring
 
@@ -344,7 +344,7 @@ Remote hosts are deployed manually via `nixos-rebuild` over SSH — recipes live
 | gcp-relay  | `just deploy-gcp` → deploy `.#gcp-relay`, then push closure to `4rmcyt-gcp` Cachix, then `nh clean all` |
 | desktop    | Local: `nixos-rebuild switch --flake .#desktop` / `nh os switch` |
 
-`my.hardening.autoUpgrade` exists as an option (`operation` defaults to `"boot"`) but no host enables it — updates are manual everywhere.
+Updates are manual everywhere — no auto-upgrade timer.
 
 **ZFS/mount safety:** prefer `nixos-rebuild boot` + reboot over `switch` when config changes affect active mount units. See [Infrastructure.md](Infrastructure.md) ZFS Safety Rules.
 

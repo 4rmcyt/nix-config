@@ -50,7 +50,7 @@
       enable = true;
       sopsFile = ../../../secrets/tailscale-gcp.yaml;
       # Connect directly to local headscale — no dependency on Caddy/DNS
-      loginServer = "http://127.0.0.1:${toString config.my.headscale.port}";
+      loginServer = "http://127.0.0.1:8080";
       networkInterface = "ens4";
     };
 
@@ -144,15 +144,11 @@
 
     my.headscale = {
       enable = true;
-      subdomain = "hs";
-      port = 8080;
-      metricsPort = 9091;
       dns = {
         splitNameservers = [config.my.network.hosts.homeserver_ts];
         splitDomains = [config.my.defaults.domain];
       };
       derp = {
-        regionId = 901;
         regionCode = "gcp-us-central1";
         regionName = "GCP US Central (Iowa)";
         latitude = 41.878;

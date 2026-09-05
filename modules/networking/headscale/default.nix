@@ -6,27 +6,14 @@
 with lib; let
   cfg = config.my.headscale;
   inherit (config.my.defaults) domain;
+
+  # Fixed: headscale listens on 127.0.0.1:8080, metrics on 127.0.0.1:9091,
+  # server_url is https://hs.<domain>. Never varied per host.
+  port = 8080;
+  metricsPort = 9091;
 in {
   options.my.headscale = {
     enable = mkEnableOption "Headscale coordination server";
-
-    port = mkOption {
-      type = types.port;
-      default = 8080;
-      description = "Port headscale listens on (127.0.0.1 only).";
-    };
-
-    subdomain = mkOption {
-      type = types.str;
-      default = "hs";
-      description = "Subdomain prefix for server_url (e.g. 'hs' → https://hs.domain).";
-    };
-
-    metricsPort = mkOption {
-      type = types.port;
-      default = 9091;
-      description = "Port for Prometheus metrics endpoint (127.0.0.1 only).";
-    };
 
     dns = {
       nameservers = mkOption {
@@ -47,11 +34,6 @@ in {
     };
 
     derp = {
-      regionId = mkOption {
-        type = types.int;
-        default = 901;
-        description = "DERP region ID (must be unique across all regions).";
-      };
       regionCode = mkOption {
         type = types.str;
         default = "relay";
@@ -79,10 +61,10 @@ in {
     services.headscale = {
       enable = true;
       address = "127.0.0.1";
-      inherit (cfg) port;
+      inherit port;
 
       settings = {
-        server_url = "https://${cfg.subdomain}.${domain}";
+        server_url = "https://hs.${domain}";
         noise.private_key_path = "/var/lib/headscale/noise_private.key";
 
         log = {
@@ -114,7 +96,7 @@ in {
         derp = {
           server = {
             enabled = true;
-            region_id = cfg.derp.regionId;
+            region_id = 901;
             region_code = cfg.derp.regionCode;
             region_name = cfg.derp.regionName;
             stun_listen_addr = "0.0.0.0:3478";
@@ -125,7 +107,7 @@ in {
           urls = ["https://controlplane.tailscale.com/derpmap/default"];
         };
 
-        metrics_listen_addr = "127.0.0.1:${toString cfg.metricsPort}";
+        metrics_listen_addr = "127.0.0.1:${toString metricsPort}";
       };
     };
 
