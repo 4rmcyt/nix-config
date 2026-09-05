@@ -1532,11 +1532,11 @@
     },
     "private": {
       "locked": {
-        "lastModified": 1788504316,
-        "narHash": "sha256-Ca0ZxKRSPRLwpNX4y5sX76Jp7v9YYkz4zy1pzgOfE7o=",
+        "lastModified": 1788650944,
+        "narHash": "sha256-sFIb5ldlUWhzWkBwixkGwy5wNnJwvJ/8ZP4WKt23hlM=",
         "ref": "refs/heads/main",
-        "rev": "b9f3a81abffa3e20b25fc5f2041b11aaf46af162",
-        "revCount": 5,
+        "rev": "d54722691d75eec3c91142e6c38a3bd52be6e9fc",
+        "revCount": 6,
         "type": "git",
         "url": "ssh://git@github.com/4rmcyt/nix-config-private.git"
       },
