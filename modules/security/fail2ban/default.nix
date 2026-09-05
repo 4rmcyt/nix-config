@@ -49,7 +49,7 @@ in {
       findtime = "10m";
       action = ''
         %(action_)s
-        cloudflare-waf
+          cloudflare-waf
       '';
     };
 
