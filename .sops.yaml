@@ -3,7 +3,6 @@ keys:
   - &desktop_key age156neere9qg5ry92ru8tckjcf9h2zn3xdrs6ywzq7cuhg7v8m3s0qka8p8k
   - &matebook_key age1mnavzptapglqmf4pmvecdhdrysykwhxk0u5mef5rvhjtqdrxcckszqsav6
   - &gcp_relay_key age1fsjqjx77t6yhfvdgq8a69aggh36jv0fjm53u26tlqvs73lkpgutsssdttd
-  - &router_key age1y27m7cd4prs827vevceq8fun9wm9r3el2srsmukgcyag23f8dfrsjchvgr
 creation_rules:
   - path_regex: "secrets/.*"
     key_groups:
@@ -12,4 +11,3 @@ creation_rules:
           - *desktop_key
           - *matebook_key
           - *gcp_relay_key
-          - *router_key

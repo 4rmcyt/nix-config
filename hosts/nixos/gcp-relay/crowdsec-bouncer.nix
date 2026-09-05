@@ -13,7 +13,7 @@ in {
     lapiUrl = lib.mkOption {
       type = lib.types.str;
       description = "CrowdSec LAPI URL (remote host over headscale).";
-      example = "http://100.64.0.3:8088";
+      example = "http://<homeserver-tailnet-ip>:8088";
     };
 
     secretsFile = lib.mkOption {

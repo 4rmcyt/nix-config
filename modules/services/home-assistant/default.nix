@@ -2,6 +2,10 @@
   inherit (config.my.defaults) domain timezone;
   inherit (config.my.network.hosts) homeserver_lan desktop_lan desktop_wifi;
   inherit (config.my.network.mac) desktop-wifi;
+
+  # desktop wired NIC MAC for wake-on-lan. Prefer the private-flake value;
+  # fall back to the literal until `desktop-lan` is added to `net.mac`.
+  desktop-lan-mac = config.my.network.mac.desktop-lan or "04:7C:16:6F:6F:36";
 in {
   sops.secrets.hass_alexa_client_secret = {
     sopsFile = ../../../secrets/hass-alexa.yaml;
@@ -36,11 +40,8 @@ in {
 
       switch:
         - platform: wake_on_lan
-          # No config.my.network.mac.desktop-lan key exists in the private
-          # flake yet (only desktop-wifi is defined there) — add one and
-          # switch this to ''${desktop-lan} once it does.
           name: "Desktop (LAN)"
-          mac: "04:7C:16:6F:6F:36"
+          mac: "${desktop-lan-mac}"
           host: ${desktop_lan}
         - platform: wake_on_lan
           name: "Desktop (WiFi)"
