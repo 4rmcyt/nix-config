@@ -1,7 +1,6 @@
 _: {
   programs.niri.settings = {
     window-rules = [
-      # DIALOG WINDOWS
       {
         matches = [
           {title = "^Open File$";}
@@ -13,7 +12,6 @@ _: {
         open-floating = true;
       }
 
-      # GNOME UTILITIES
       {
         matches = [
           {app-id = "^org\\.gnome\\.Calculator$";}
@@ -22,7 +20,6 @@ _: {
         open-floating = true;
       }
 
-      # SYSTEM UTILITIES
       {
         matches = [
           {app-id = "^org\\.pulseaudio\\.pavucontrol$";}
@@ -31,7 +28,6 @@ _: {
         open-floating = true;
       }
 
-      # IMAGE VIEWERS
       {
         matches = [
           {app-id = "^Viewnior$";}
@@ -42,7 +38,6 @@ _: {
         opacity = 1.0;
       }
 
-      # MEDIA - Full Opacity
       {
         matches = [
           {app-id = "^mpv$";}
@@ -71,7 +66,6 @@ _: {
         opacity = 1.0;
       }
 
-      # GAMING
       {
         matches = [
           {app-id = "^\\.sameboy-wrapped$";}
@@ -79,7 +73,6 @@ _: {
         open-floating = true;
       }
 
-      # LAUNCHERS
       {
         matches = [
           {app-id = "^walker$";}
@@ -87,7 +80,6 @@ _: {
         open-floating = true;
       }
 
-      # VOLUME CONTROL
       {
         matches = [
           {title = "^Volume Control$";}
@@ -95,7 +87,6 @@ _: {
         open-floating = true;
       }
 
-      # TRANSMISSION
       {
         matches = [
           {title = "^Transmission$";}

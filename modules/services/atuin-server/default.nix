@@ -26,6 +26,5 @@
     openRegistration = true;
   };
 
-  # Configure systemd service to use the environment file
   systemd.services.atuin.serviceConfig.EnvironmentFile = config.sops.templates."atuin-env".path;
 }

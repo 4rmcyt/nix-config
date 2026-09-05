@@ -1,6 +1,5 @@
 {pkgs, ...}: {
   programs.vscodium.profiles.default.extensions = with pkgs.vscode-marketplace; [
-    # Formatters & Editing
     irongeek.vscode-env
     foxundermoon.shell-format
     redhat.vscode-yaml
@@ -10,7 +9,6 @@
     mikestead.dotenv
     visualjj.visualjj
 
-    # Languages
     jnoortheen.nix-ide
     ms-python.isort
     ms-python.python
@@ -24,16 +22,13 @@
     # ms-vscode-remote.remote-containers
     # ms-vscode-remote.remote-ssh
 
-    # Theme & Icons
     pkief.material-icon-theme
     qufiwefefwoyn.kanagawa
     metaphore.kanagawa-vscode-color-theme
 
-    # Utilities
     tomoki1207.pdf
     github.vscode-github-actions
 
-    # AI
     anthropic.claude-code
     feiren200.ai-commit-craft
   ];

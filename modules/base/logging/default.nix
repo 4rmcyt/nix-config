@@ -1,5 +1,4 @@
 {lib, ...}: {
-  # Structured journald options for better readability and error-checking.
   # mkDefault so host-specific overrides (homeserver, gcp-relay, router) win.
   services.journald.settings.Journal = {
     Storage = lib.mkDefault "persistent";

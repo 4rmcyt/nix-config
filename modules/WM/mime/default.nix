@@ -8,10 +8,8 @@
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
-      # Directories
       "inode/directory" = "nemo.desktop";
 
-      # Text
       "text/plain" = "dev.zed.Zed.desktop";
       "text/x-script" = "dev.zed.Zed.desktop";
       "text/x-shellscript" = "dev.zed.Zed.desktop";
@@ -31,7 +29,6 @@
       "text/toml" = "dev.zed.Zed.desktop";
       "text/x-toml" = "dev.zed.Zed.desktop";
 
-      # Browser
       "text/html" = "firefox.desktop";
       "x-scheme-handler/http" = "firefox.desktop";
       "x-scheme-handler/https" = "firefox.desktop";
@@ -39,7 +36,6 @@
       "x-scheme-handler/unknown" = "firefox.desktop";
       "x-scheme-handler/ftp" = "firefox.desktop";
 
-      # PDF & Documents
       "application/pdf" = "org.pwmt.zathura-pdf-mupdf.desktop";
       "application/epub+zip" = "org.pwmt.zathura-pdf-mupdf.desktop";
       "application/x-fictionbook" = "org.pwmt.zathura-pdf-mupdf.desktop";
@@ -51,7 +47,6 @@
       "application/eps" = "org.pwmt.zathura-ps.desktop";
       "application/x-eps" = "org.pwmt.zathura-ps.desktop";
 
-      # Images
       "image/png" = "imv.desktop";
       "image/jpeg" = "imv.desktop";
       "image/jpg" = "imv.desktop";
@@ -66,7 +61,6 @@
       "image/x-bmp" = "imv.desktop";
       "image/qoi" = "imv.desktop";
 
-      # Video
       "video/mp4" = "mpv.desktop";
       "video/x-matroska" = "mpv.desktop";
       "video/webm" = "mpv.desktop";
@@ -78,7 +72,6 @@
       "video/ogg" = "mpv.desktop";
       "video/3gpp" = "mpv.desktop";
 
-      # Audio
       "audio/mpeg" = "mpv.desktop";
       "audio/flac" = "mpv.desktop";
       "audio/x-wav" = "mpv.desktop";
@@ -90,7 +83,6 @@
       "audio/mp4" = "mpv.desktop";
       "audio/x-m4a" = "mpv.desktop";
 
-      # Archives
       "application/zip" = "org.gnome.FileRoller.desktop";
       "application/gzip" = "org.gnome.FileRoller.desktop";
       "application/bzip2" = "org.gnome.FileRoller.desktop";

@@ -1,4 +1,3 @@
-# modules/services/komf/default.nix
 {config, ...}: {
   virtualisation.oci-containers.containers.komf = {
     autoStart = true;

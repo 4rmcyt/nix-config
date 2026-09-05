@@ -1,4 +1,3 @@
-# modules/services/nixarr/radarr/default.nix
 {
   config,
   lib,

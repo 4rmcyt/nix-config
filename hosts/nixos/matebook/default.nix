@@ -5,31 +5,25 @@
   ...
 }: {
   imports = [
-    # Hardware and system base
     ./hardware-configuration.nix
     ../../../modules/base
     ../../../modules/disko/matebook
     ../../../modules/options
 
-    # Monitoring
     ../../../modules/monitoring/node-exporter-client.nix
     ../../../modules/monitoring/alloy-client.nix
 
-    # Networking
     ../../../modules/networking/nfs-client
     ../../../modules/networking/ssh
 
-    # User configuration
     ../../../modules/users/zeev
 
-    # GUI Applications
     ../../../modules/GUI/chrome
     ../../../modules/GUI/flatpak
     ../../../modules/GUI/kdeconnect
     ../../../modules/GUI/nemo
   ];
 
-  # Secrets Management
   sops.secrets = {
     tailscale_auth_key = {
       sopsFile = ../../../secrets/tailscale-matebook.yaml;
@@ -40,7 +34,6 @@
     };
   };
 
-  # Boot Configuration
   system.boot.loader.kernelFile = "bzImage";
 
   boot = {
@@ -72,13 +65,11 @@
     };
   };
 
-  # Nix Configuration
   nix.settings = {
     cores = 0;
     max-jobs = "auto";
   };
 
-  # Environment
   environment = {
     etc."polkit-1/actions/org.auto-cpufreq.pkexec.policy".text = ''
       <?xml version="1.0" encoding="UTF-8"?>
@@ -100,11 +91,9 @@
       </policyconfig>
     '';
     sessionVariables = {
-      # AMD GPU variables
       LIBVA_DRIVER_NAME = "radeonsi";
       VDPAU_DRIVER = "radeonsi";
 
-      # Wayland Support
       GDK_BACKEND = "wayland,x11";
       SDL_VIDEODRIVER = "wayland";
       CLUTTER_BACKEND = "wayland";
@@ -121,20 +110,17 @@
     ];
 
     systemPackages = with pkgs; [
-      # Laptop-specific tools
       ansible
       acpi
       brightnessctl
       powertop
 
-      # Hardware Support & Monitoring
       fira-code
       fira-mono
       meslo-lgs-nf
       nerd-fonts.droid-sans-mono
       nerd-fonts.fira-code
 
-      # Secure Boot & EFI Tools
       efibootmgr
       ifrextractor-rs
       sbctl
@@ -143,16 +129,13 @@
     ];
   };
 
-  # Fonts
   fonts.fontconfig.useEmbeddedBitmaps = true;
 
-  # Home Manager
   # backupFileExtension is set in commonHomeManagerNixosConfig with unique timestamp
 
   my.nodeExporter.enable = true;
   my.alloyClient.enable = true;
 
-  # Networking
   networking = {
     enableIPv6 = true;
     firewall = {
@@ -165,7 +148,6 @@
     };
   };
 
-  # Programs
   programs = {
     gnupg.agent = {
       enableSSHSupport = true;
@@ -190,7 +172,6 @@
     };
   };
 
-  # Security
   security = {
     rtkit.enable = true;
     polkit.enable = true;
@@ -207,9 +188,7 @@
   # trading a slower resume for hibernation actually succeeding.
   systemd.tmpfiles.rules = ["w /sys/power/image_size - - - - 0"];
 
-  # Services
   services = {
-    # Audio Services
     pipewire = {
       enable = true;
       audio.enable = true;
@@ -221,7 +200,6 @@
       wireplumber.enable = true;
     };
 
-    # Display Manager - greetd + niri
     greetd = {
       enable = true;
       settings = {
@@ -245,7 +223,6 @@
       scrollMethod = "twofinger";
     };
 
-    # File Systems & Storage
     davfs2 = {
       enable = true;
       settings = {
@@ -257,7 +234,6 @@
       };
     };
 
-    # Hardware Services
     blueman.enable = true;
 
     pcscd = {
@@ -270,7 +246,6 @@
     udisks2.enable = true;
     usbmuxd.enable = true;
 
-    # Power Management
     power-profiles-daemon.enable = false;
 
     auto-cpufreq = {
@@ -294,7 +269,6 @@
       HandleLidSwitchDocked = "ignore";
     };
 
-    # System Services
     openssh = {
       enable = true;
       settings = {
@@ -317,7 +291,6 @@
     };
   };
 
-  # Users & Groups
   users = {
     groups = {
       git = {};
@@ -337,6 +310,5 @@
     };
   };
 
-  # Virtualization
   virtualisation.podman.enable = true;
 }

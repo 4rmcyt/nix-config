@@ -1,15 +1,12 @@
 _: {
   programs.firefox.profiles.default.settings = {
-    # ACCESSIBILITY
     "accessibility.typeaheadfind.enablesound" = false;
     "general.autoScroll" = true;
 
-    # APP SETTINGS
     "app.normandy.enabled" = false;
     "app.normandy.api_url" = "";
     "app.shield.optoutstudies.enabled" = false;
 
-    # CRASH REPORTS
     "breakpad.reportURL" = "";
 
     # AI FEATURES (DISABLED)
@@ -32,7 +29,6 @@ _: {
     # APZ (ASYNC PAN-ZOOM)
     "apz.overscroll.enabled" = true;
 
-    # BROWSER BEHAVIOR
     # Disable client-side decorations for COSMIC compatibility
     "browser.tabs.inTitlebar" = 0; # Use system titlebar with window controls
     "widget.gtk.non-native-titlebar-buttons.enabled" = true; # Enable native GTK window controls
@@ -80,24 +76,19 @@ _: {
     "browser.urlbar.unitConversion.enabled" = true;
     "browser.warnOnQuitShortcut" = false;
 
-    # DATA REPORTING
     "datareporting.healthreport.uploadEnabled" = false;
     "datareporting.policy.dataSubmissionEnabled" = false;
     "datareporting.usage.uploadEnabled" = false;
 
-    # DEVELOPER TOOLS
     "devtools.chrome.enabled" = true;
 
-    # DOM
     "dom.battery.enabled" = false;
     "dom.ipc.processPriorityManager.backgroundUsesEcoQoS" = true;
     "dom.private-attribution.submission.enabled" = false;
     "dom.webgpu.enabled" = true;
 
-    # EDITOR
     "editor.truncate_user_pastes" = false;
 
-    # EXTENSIONS
     "extensions.abuseReport.enabled" = false;
     "extensions.autoDisableScopes" = 0;
     "extensions.formautofill.creditCards.enabled" = true;
@@ -106,10 +97,8 @@ _: {
     "extensions.webcompat-reporter.enabled" = false;
     "extensions.webextensions.ExtensionStorageIDB.enabled" = false;
 
-    # GEOLOCATION
     "geo.provider.network.url" = "https://beacondb.net/v1/geolocate";
 
-    # GRAPHICS & CANVAS
     "gfx.canvas.accelerated" = true;
     "gfx.canvas.accelerated.cache-size" = 512; # FastFox
     "gfx.canvas.remote" = false;
@@ -117,30 +106,24 @@ _: {
     "gfx.content.skia-font-cache-size" = 20; # FastFox
     "gfx.vsync.hw-vsync.enabled" = true;
 
-    # JAVASCRIPT
     "javascript.options.baselinejit.threshold" = 50; # FastFox: JIT-compile hot code sooner
 
-    # IMAGES
     "image.avif.enabled" = true;
     "image.jxl.enabled" = true;
     "image.mem.decode_bytes_at_a_time" = 32768; # FastFox
 
-    # IDENTITY & SYNC
     "identity.fxaccounts.commands.enabled" = true;
     "identity.fxaccounts.enabled" = true;
     "identity.fxaccounts.pairing.enabled" = true;
     "identity.fxaccounts.toolbar.enabled" = true;
 
-    # INTERNATIONALIZATION
     "intl.accept_languages" = "en-US,en";
 
-    # LAYERS (GPU ACCELERATION)
     "layers.acceleration.disabled" = false;
     "layers.gpu-process.enabled" = true;
     "layers.mlgpu.enabled" = true;
     "layers.omtp.enabled" = false;
 
-    # MEDIA & HARDWARE VIDEO ACCELERATION
     "media.av1.enabled" = true;
     "media.av1.use-dav1d" = true; # Software AV1 decode - previously believed unavoidable under native Wayland, but the real cause was a missing MOZ_DISABLE_RDD_SANDBOX=1 (now set in modules/WM/mango/nvidia.nix). Re-test AV1 hw decode via about:support after rebuild; NVIDIA AV1 decode requires Turing (RTX 20-series) or newer
     "media.eme.enabled" = true;
@@ -168,7 +151,6 @@ _: {
     "media.cache_readahead_limit" = 3600;
     "media.cache_resume_threshold" = 1800;
 
-    # MOUSE & SCROLLING
     # msdPhysics.enabled=false -> spring-physics model is off; weighting model below governs feel
     "general.smoothScroll" = true;
     "general.smoothScroll.currentVelocityWeighting" = 0.15;
@@ -178,7 +160,6 @@ _: {
     "mousewheel.default.delta_multiplier_y" = 300;
     "mousewheel.min_line_scroll_amount" = 10;
 
-    # NETWORK
     "network.trr.mode" = 5; # Disable DNS-over-HTTPS: use system resolver (unbound, split-horizon for Tailscale)
     "network.auth.subresource-http-auth-allow" = 1;
     "network.http.http3.enabled" = true;
@@ -201,12 +182,10 @@ _: {
     "network.http.max-urgent-start-excessive-connections-per-host" = 5; # FastFox
     "network.http.request.max-start-delay" = 5; # FastFox
 
-    # PERMISSIONS
     "permissions.default.desktop-notification" = 2;
     "permissions.default.geo" = 2;
     "permissions.manager.defaultsUrl" = "";
 
-    # PRIVACY & SECURITY
     "privacy.antitracking.isolateContentScriptResources" = true; # Isolate extension content-script network access
     "privacy.clearOnShutdown.history" = false;
     "privacy.firstparty.isolate" = false;
@@ -219,7 +198,6 @@ _: {
     "privacy.userContext.enabled" = true;
     "privacy.userContext.ui.enabled" = true;
 
-    # SECURITY
     "security.OCSP.enabled" = 0;
     "security.pki.crlite_mode" = 2;
     "security.csp.reporting.enabled" = false; # Stop sending CSP-violation reports to report-uri targets
@@ -227,14 +205,11 @@ _: {
     "security.tls.enable_0rtt_data" = false; # Disable TLS 1.3 0-RTT (replay-attack surface)
     "browser.xul.error_pages.expert_bad_cert" = true; # Show full cert-error detail
 
-    # SIGN-ON
     "signon.formlessCapture.enabled" = true;
     "signon.privateBrowsingCapture.enabled" = true;
 
-    # SVG
     "svg.context-properties.content.enabled" = true;
 
-    # TELEMETRY
     "toolkit.telemetry.archive.enabled" = false;
     "toolkit.telemetry.enabled" = false;
     "toolkit.telemetry.server" = "";
@@ -248,10 +223,8 @@ _: {
     "toolkit.coverage.opt-out" = true;
     "toolkit.coverage.endpoint.base" = "";
 
-    # TOOLKIT
     "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
 
-    # WAYLAND SETTINGS
     "widget.dmabuf.force-enabled" = false; # Forced dmabuf breaks WebGL/rendering on NVIDIA proprietary driver (Mozilla bug 1634213)
     "widget.gtk.wayland.force-enabled" = true;
     "widget.gtk.wayland.fractional-scaling.enabled" = true;
@@ -261,7 +234,6 @@ _: {
     "widget.use-xdg-desktop-portal.open-uri" = 1;
     "widget.use-xdg-desktop-portal.settings" = 1;
 
-    # WEBGL
     "webgl.disabled" = false;
     "webgl.msaa-force" = false; # Enable MSAA with your GPU power
   };

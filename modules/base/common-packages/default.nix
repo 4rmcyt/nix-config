@@ -5,7 +5,6 @@
 }: {
   environment.systemPackages = lib.mkBefore (
     with pkgs; [
-      # Core System Utilities
       btop
       cpuid
       uutils-coreutils
@@ -45,7 +44,6 @@
       xmlstarlet
       busybox
 
-      # Development & Nix Tools
       age
       alejandra
       cachix
@@ -80,12 +78,10 @@
       vulnix
       yamlfmt
 
-      # Security & Secrets Management
       gnupg
       ssh-to-age
       libargon2
 
-      # Git & Version Control
       git
       git-crypt
       delta
@@ -93,7 +89,6 @@
       gh-dash
       glab
 
-      # Productivity & Terminal Tools
       cht-sh
       fastfetch
       fblog
@@ -109,7 +104,6 @@
       ytt
       zk
 
-      # Network & System Analysis
       bind
       gping
       httpie
@@ -120,11 +114,9 @@
       ethtool
       wakeonlan
 
-      # Media & File Processing
       ffmpeg
       rclone
 
-      # Infrastructure & DevOps
       docker-compose
       kubectl
       krew
@@ -134,22 +126,16 @@
       kubebuilder
       kubernetes-helm
 
-      # Programming Languages & Runtimes
-      ## Golang
       cue
       golangci-lint
 
-      ## Node/JavaScript
       nodejs_22
 
-      ## Python
       python3
       uv
 
-      ## Rust
       rustup
 
-      # Terminal compatibility (SSH sessions)
       kitty.terminfo
       wezterm.terminfo
     ]

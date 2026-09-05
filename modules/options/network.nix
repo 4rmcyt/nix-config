@@ -12,14 +12,12 @@
     };
 in {
   options.my.network = {
-    # Gateway (NixOS router, vlan10)
     gateway = lib.mkOption {
       type = lib.types.str;
       default = "192.168.1.1";
       description = "Default gateway — NixOS router, trusted VLAN";
     };
 
-    # VLAN gateway IPs (router's address on each segment)
     vlans = {
       trusted = lib.mkOption {
         type = lib.types.str;
@@ -43,7 +41,6 @@ in {
       };
     };
 
-    # Primary systems (trusted VLAN)
     hosts = {
       homeserver_lan = lib.mkOption {
         type = lib.types.str;
@@ -111,8 +108,6 @@ in {
       description = "MAC addresses by device key (defined in the private flake).";
     };
 
-    # Network infrastructure IPs (router, ISP router, managed switches). Keyed
-    # attrset from the private flake.
     infrastructure = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = net.infrastructure or {};
@@ -129,7 +124,6 @@ in {
       description = "DHCP reservations / host aliases (defined in the private flake).";
     };
 
-    # Network subnets
     subnets = {
       lan = lib.mkOption {
         type = lib.types.listOf lib.types.str;
@@ -209,15 +203,12 @@ in {
       };
     };
 
-    # Service ports - organized by category
     ports = {
-      # Media Services
       jellyfin = mkPort 8096 "Jellyfin media server";
       transmission = mkPort 9091 "Transmission BitTorrent client web UI";
       audiobookshelf = mkPort 9292 "Audiobookshelf audiobook server";
       tdarr = mkPort 8265 "Tdarr media transcoding web UI";
 
-      # *arr Media Automation Stack
       sonarr = mkPort 8990 "Sonarr TV shows automation";
       radarr = mkPort 7878 "Radarr movies automation";
       lidarr = mkPort 8686 "Lidarr music automation";
@@ -225,41 +216,33 @@ in {
       bazarr = mkPort 6767 "Bazarr subtitles automation";
       prowlarr = mkPort 9696 "Prowlarr indexer manager";
 
-      # Monitoring & Observability
       prometheus = mkPort 9090 "Prometheus time-series database";
       grafana = mkPort 3003 "Grafana metrics visualization";
       loki = mkPort 3100 "Loki log aggregation server";
       node-exporter = mkPort 9100 "Prometheus node exporter";
       traefik-metrics = mkPort 8080 "Traefik Prometheus metrics entrypoint (localhost only)";
 
-      # Productivity & Document Management
       miniflux = mkPort 8086 "Miniflux RSS feed reader";
       radicale = mkPort 5232 "Radicale CalDAV/CardDAV server";
       homepage = mkPort 8082 "Homepage application dashboard";
 
-      # Home Automation
       home-assistant = mkPort 8123 "Home Assistant smart home platform";
       mosquitto = mkPort 1883 "Mosquitto MQTT broker";
 
-      # Alerting
       alertmanager = mkPort 9093 "Prometheus Alertmanager";
       alertmanager-ntfy = mkPort 9094 "alertmanager-ntfy bridge";
 
-      # More *arr / media automation
       kapowarr = mkPort 5656 "Kapowarr comics automation web UI";
       seerr = mkPort 5055 "Jellyseerr request management web UI";
       qb = mkPort 8081 "qBittorrent WebUI proxy (host side, forwards into the VPN netns)";
 
-      # Reading / document management
       komf = mkPort 8085 "Komf metadata fetcher web UI";
       komga = mkPort 8087 "Komga comics/manga server";
 
-      # Utilities
       microbin = mkPort 8069 "Microbin pastebin/file-sharing service";
       dispatcharr = mkPort 9191 "Dispatcharr IPTV/EPG manager";
       ntfy = mkPort 9991 "ntfy push notification server";
 
-      # Security infrastructure
       crowdsec-lapi = mkPort 8088 "CrowdSec local API (LAPI) — local bouncers plus the gcp-relay remote bouncer over Tailscale";
       traefik-api = mkPort 8083 "Traefik API entrypoint (localhost only, used by the homepage widget)";
 

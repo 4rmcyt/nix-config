@@ -24,7 +24,6 @@
     programs.gnupg.agent.enable = true;
 
     environment.systemPackages = with pkgs; [
-      # Lix Tooling
       lixPackageSets.latest.nixpkgs-review
       lixPackageSets.latest.nix-eval-jobs
       lixPackageSets.latest.nix-fast-build

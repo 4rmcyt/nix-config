@@ -3,7 +3,6 @@
   pkgs,
   ...
 }: {
-  # SOPS Secrets
   sops.secrets = {
     k3s_token_file = {
       sopsFile = ../../../secrets/k3s.yaml;
@@ -19,7 +18,6 @@
 
   environment.systemPackages = [pkgs.k3s];
 
-  # k3s Service
   systemd.services.k3s = {
     description = "k3s service";
     after = ["network-online.target"];

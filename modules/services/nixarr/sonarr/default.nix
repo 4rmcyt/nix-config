@@ -1,4 +1,3 @@
-# modules/services/nixarr/sonarr/default.nix
 {
   config,
   lib,

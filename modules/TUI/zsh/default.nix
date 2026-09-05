@@ -120,7 +120,6 @@
       "..." = "cd ../..";
       ll = "ls -la";
       mc = "mc --nosubshell";
-      # git
       g = "git";
       ga = "git add";
       gaa = "git add --all";

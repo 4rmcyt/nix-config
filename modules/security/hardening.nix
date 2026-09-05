@@ -53,7 +53,6 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    # SSH hardening
     services.openssh.settings = {
       # Modern KEX, ciphers, MACs only
       KexAlgorithms = [
@@ -78,7 +77,6 @@ in {
       LoginGraceTime = 30;
       ClientAliveInterval = 300;
       ClientAliveCountMax = 2;
-      # Disable unused auth methods
       X11Forwarding = false;
       AllowAgentForwarding = false;
       AllowTcpForwarding = false;
@@ -86,7 +84,6 @@ in {
       PrintLastLog = false;
     };
 
-    # Kernel hardening (sysctl)
     boot.kernel.sysctl = {
       # Network — anti-spoofing, SYN flood protection
       "net.ipv4.conf.all.rp_filter" = 1;
@@ -136,8 +133,6 @@ in {
       "vm.swappiness" = 10;
     };
 
-    # systemd service hardening defaults
-    # Applied to all services that don't override these
     systemd.services."crowdsec".serviceConfig =
       cfg.serviceBase
       // {
@@ -173,7 +168,6 @@ in {
       SystemCallArchitectures = lib.mkDefault "native";
     };
 
-    # Auto-upgrade
     system.autoUpgrade = lib.mkIf cfg.autoUpgrade.enable {
       enable = true;
       flake = cfg.autoUpgrade.flake;

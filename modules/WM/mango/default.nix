@@ -9,7 +9,6 @@
   ];
 
   home.sessionVariables = {
-    # Wayland/Ozone
     ANKI_WAYLAND = "1";
     MOZ_ENABLE_WAYLAND = "1";
     CLUTTER_BACKEND = "wayland";
@@ -17,7 +16,6 @@
     XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "mango";
 
-    # Qt
     QT_AUTO_SCREEN_SCALE_FACTOR = 1;
     QT_WAYLAND_DISABLE_WINDOWDECORATION = 1;
     QT_QPA_PLATFORM = "wayland;xcb";
@@ -47,7 +45,6 @@
       cursor_theme = "Bibata-Modern-Ice";
       cursor_size = 24;
 
-      # Appearance
       gappih = 5;
       gappiv = 5;
       gappoh = 10;

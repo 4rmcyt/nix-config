@@ -1,4 +1,3 @@
-# modules/services/nixarr/prowlarr/default.nix
 {
   config,
   lib,

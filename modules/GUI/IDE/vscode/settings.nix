@@ -9,7 +9,6 @@
   mcpList = lib.concatMapStringsSep "\n" (name: "- `${name}`") mcpServerNames;
 
   settings = {
-    # Editor Settings
     "password-store" = "gnome-libsecret";
     "editor.fontFamily" = "'Maple Mono NF', 'MesloLGS NF', 'FiraCode Nerd Font', monospace";
     "editor.fontLigatures" = true;
@@ -27,7 +26,6 @@
       120
     ];
 
-    # File Settings
     "files.autoSave" = "afterDelay";
     "files.autoSaveDelay" = 1000;
     "files.enableTrash" = false;
@@ -48,7 +46,6 @@
       "**/.direnv" = true;
     };
 
-    # Workbench Settings
     "workbench.colorTheme" = "Kanagawa";
     "workbench.editor.enablePreview" = false;
     "workbench.editorAssociations" = {
@@ -60,20 +57,16 @@
     "workbench.startupEditor" = "none";
     "workbench.settings.applyToAllProfiles" = [];
 
-    # Explorer Settings
     "explorer.confirmDelete" = false;
     "explorer.confirmDragAndDrop" = false;
 
-    # Diff Editor Settings
     "diffEditor.ignoreTrimWhitespace" = true;
 
-    # Search Settings
     "search.exclude" = {
       "**/.devenv" = true;
       "**/.direnv" = true;
     };
 
-    # Terminal Settings
     "terminal.integrated.defaultProfile.linux" = "zsh";
     "terminal.integrated.defaultProfile.osx" = "zsh";
     "terminal.integrated.fontFamily" = "MesloLGS NF";
@@ -82,12 +75,10 @@
     "terminal.integrated.profiles.linux".nu.path = "/etc/profiles/per-user/${config.home.username}/bin/nu";
     "terminal.integrated.scrollback" = 100000;
 
-    # Window Settings
     "window.menuBarVisibility" = "visible";
     "window.titleBarStyle" = "custom";
     "window.autoDetectColorScheme" = false;
 
-    # Git Settings
     "git.autofetch" = true;
     "git.confirmSync" = false;
     "git.enableCommitSigning" = true;
@@ -95,12 +86,10 @@
     "git.ignoreRebaseWarning" = true;
     "github.gitProtocol" = "ssh";
 
-    # Security Settings
     "security.allowedUNCHosts" = ["wsl.localhost"];
     "security.workspace.trust.untrustedFiles" = "open";
     "telemetry.telemetryLevel" = "off";
 
-    # Remote SSH Settings
     "remote.SSH.remotePlatform" =
       {
         "wsl.localhost" = "linux";
@@ -111,12 +100,9 @@
         "${osConfig.my.network.hosts.desktop_lan}" = "linux";
       };
 
-    # Misc Settings
     "todo-tree.regex.regex" = "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!";
     "extensions.autoCheckUpdates" = false;
     "update.mode" = "none";
-
-    # Extension-Specific Settings
 
     # Disable Copilot, use Continue instead
     "github.copilot.enable" = {
@@ -161,9 +147,6 @@
     "commitCraft.detail" = "concise";
     "commitCraft.language" = "English";
 
-    # Language-Specific Settings
-
-    # Nix
     "[nix]" = {
       "editor.tabSize" = 2;
       "editor.detectIndentation" = true;
@@ -179,13 +162,11 @@
     "nix.formatterPath" = "alejandra";
     "nixEnvSelector.useFlakes" = true;
 
-    # Shell
     "[shellscript]" = {
       "editor.defaultFormatter" = "foxundermoon.shell-format";
       "files.autoSave" = "afterDelay";
     };
 
-    # YAML
     "[yaml]" = {
       "diffEditor.ignoreTrimWhitespace" = false;
       "editor.autoIndent" = "keep";
@@ -198,7 +179,6 @@
       "editor.tabSize" = 2;
     };
 
-    # Docker Compose
     "[dockercompose]" = {
       "editor.autoIndent" = "advanced";
       "editor.defaultFormatter" = "redhat.vscode-yaml";
@@ -211,30 +191,24 @@
       "editor.tabSize" = 2;
     };
 
-    # GitHub Actions
     "[github-actions-workflow]"."editor.defaultFormatter" = "redhat.vscode-yaml";
 
-    # JSON
     "[json]"."editor.defaultFormatter" = "vscode.json-language-features";
     "[jsonc]"."editor.defaultFormatter" = "vscode.json-language-features";
 
-    # JavaScript/TypeScript
     "[javascript]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
     "[javascriptreact]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
     "[typescript]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
     "[typescriptreact]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
 
-    # Markdown
     "[markdown]" = {
       "editor.defaultFormatter" = "esbenp.prettier-vscode";
       "files.trimTrailingWhitespace" = false;
     };
 
-    # Python
     "[python]"."editor.defaultFormatter" = "ms-python.python";
     "python.analysis.enableTroubleshootMissingImports" = true;
 
-    # TOML
     "[toml]"."editor.defaultFormatter" = "tamasfe.even-better-toml";
 
     "yaml.disableSchemaDetection" = [

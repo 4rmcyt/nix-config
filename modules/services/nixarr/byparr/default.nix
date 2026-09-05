@@ -1,4 +1,3 @@
-# modules/services/nixarr/byparr/default.nix
 _: {
   virtualisation.oci-containers.containers.byparr = {
     autoStart = true;

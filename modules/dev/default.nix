@@ -1,11 +1,9 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    # Runtime/env managers
     mise
     devenv
     pyenv
 
-    # Node
     pnpm
     deno
 
@@ -22,15 +20,12 @@
         ]
     ))
 
-    # Infrastructure
     tenv
     supabase-cli
     wrangler
     google-cloud-sdk
-    # C/system
     gcc
 
-    # CI/CD
     actionlint
     pre-commit
   ];

@@ -1,5 +1,4 @@
 {config, ...}: {
-  # SOPS Secrets for Redis
   sops.secrets = {
     redis-oauth2-proxy-password = {
       sopsFile = ../../../secrets/redis.yaml;
@@ -10,7 +9,6 @@
     };
   };
 
-  # Users and Groups
   # Create redis user/group for secret ownership
   users.users.redis = {
     isSystemUser = true;
@@ -24,11 +22,9 @@
     members = []; # Services that need Redis socket access
   };
 
-  # Centralized Redis Server
   services.redis.servers.homeserver = {
     enable = true;
 
-    # Network configuration
     bind = "127.0.0.1 10.88.0.1";
     port = 6379;
 
@@ -40,42 +36,33 @@
     # setup; the only current consumer is dispatcharr (database 3).
     requirePassFile = config.sops.secrets.redis-oauth2-proxy-password.path;
 
-    # Database configuration
-    databases = 16; # Support databases 0-15
+    databases = 16;
 
-    # Security and configuration settings
     settings = {
-      # Resource limits
       maxmemory = "1GB";
       maxmemory-policy = "allkeys-lru";
 
-      # Logging
       loglevel = "notice";
       syslog-enabled = true;
 
-      # Persistence settings
       save = [
         "900 1"
         "300 10"
         "60 10000"
       ];
 
-      # Append-only file for durability
       appendonly = "yes";
       appendfsync = "everysec";
 
-      # Performance tuning
       tcp-keepalive = "300";
       timeout = "0";
     };
   };
 
-  # Firewall Configuration
   networking.firewall.allowedTCPPorts = [
     # 6379 # Commented out - only allow local connections
   ];
 
-  # Systemd Service Configuration
   systemd.services.redis-homeserver = {
     after = ["network.target"];
     serviceConfig =
@@ -83,7 +70,6 @@
       // {
         Restart = "on-failure";
         RestartSec = "5s";
-        # Resource limits
         MemoryMax = "1.2G";
         CPUQuota = "75%";
 
@@ -93,18 +79,15 @@
           "/run/redis-homeserver"
         ];
 
-        # Network restrictions
         RestrictAddressFamilies = [
           "AF_INET"
           "AF_INET6"
           "AF_UNIX"
         ];
 
-        # Capabilities
         CapabilityBoundingSet = "";
         AmbientCapabilities = "";
 
-        # Additional hardening
         PrivateDevices = true;
         ProtectKernelTunables = true;
         ProtectKernelModules = true;

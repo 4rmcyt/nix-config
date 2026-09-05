@@ -1,4 +1,3 @@
-# modules/services/komga/default.nix
 {config, ...}: {
   users.users.komga = {
     isSystemUser = true;

@@ -1,4 +1,3 @@
-# modules/services/nixarr/recyclarr/default.nix
 {
   config,
   pkgs,

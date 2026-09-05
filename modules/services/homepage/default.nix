@@ -26,7 +26,6 @@
     listenPort = config.my.network.ports.homepage;
     environmentFiles = [config.sops.secrets.homepage_env.path];
 
-    # Import modular configuration
     services = import ./services.nix;
     widgets = import ./widgets.nix;
     bookmarks = import ./bookmarks.nix;

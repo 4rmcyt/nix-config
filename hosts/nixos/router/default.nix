@@ -17,7 +17,6 @@
     ../../../modules/users/zeev
   ];
 
-  # ── Boot ────────────────────────────────────────────────────────────────
   # Legacy BIOS boot — modules/disko/router creates a GPT disk with a
   # dedicated EF02 BIOS-boot partition (no EFI on this hardware) for GRUB
   # to embed its core.img into.
@@ -27,11 +26,9 @@
     efiSupport = false;
   };
 
-  # ── Time / Locale ────────────────────────────────────────────────────────
   time.timeZone = config.my.defaults.timezone;
   i18n.defaultLocale = config.my.defaults.locale;
 
-  # ── Secrets ─────────────────────────────────────────────────────────────
   sops = {
     defaultSopsFormat = "yaml";
     age.keyFile = "/root/.config/sops/age/keys.txt";
@@ -45,7 +42,6 @@
     # zeev_password is declared by modules/users/zeev
   };
 
-  # ── SSH ─────────────────────────────────────────────────────────────────
   # Listen only on trusted VLAN and Tailscale — never on WAN or other VLANs.
   # nftables input chain enforces this at packet level too (defence in depth).
   services.openssh = {
@@ -73,7 +69,6 @@
     };
   };
 
-  # ── DNS (Unbound) ────────────────────────────────────────────────────────
   # Full resolver on the router: NextDNS DoT upstream + split DNS for the private domain.
   # Listens on gateway IPs of trusted/iot/media VLANs.
   # Work VLAN clients get 1.1.1.1 directly from DHCP — no LAN DNS access.
@@ -90,7 +85,6 @@
     nextdnsProfileId = config.my.defaults.nextdnsProfileId;
   };
 
-  # ── Monitoring ──────────────────────────────────────────────────────────
   my.nodeExporter = {
     enable = true;
     openFirewall = false;
@@ -128,7 +122,6 @@
   # All exporter ports: open on tailscale only (Prometheus on homeserver scrapes via tailnet)
   # port 9100 node_exporter, 9167 unbound_exporter, 9547 kea_exporter — opened in firewall.nix
 
-  # ── Tailscale ───────────────────────────────────────────────────────────
   # Advertises the media VLAN (192.168.30.0/24) to the Headscale tailnet.
   # ACL enforcement lives in Headscale config (out of scope here).
   # --accept-routes is off: the router doesn't need to reach other tailnet subnets.
@@ -140,13 +133,11 @@
     networkInterface = "enp5s0";
   };
 
-  # ── Nix ─────────────────────────────────────────────────────────────────
   nix.settings = {
     cores = 2;
     max-jobs = 2;
   };
 
-  # ── Packages ─────────────────────────────────────────────────────────────
   environment.systemPackages = with pkgs; [
     curl
     fastfetch
@@ -158,12 +149,10 @@
     vim
   ];
 
-  # ── Users ────────────────────────────────────────────────────────────────
   # modules/users/zeev handles password, authorized keys, and group membership.
   # programs.zsh.enable comes from nixosBase (shared-programs.nix)
   users.users.${config.my.defaults.user}.shell = pkgs.zsh;
 
-  # ── Journald ─────────────────────────────────────────────────────────────
   services.journald.settings.Journal = {
     Storage = "persistent";
     SystemMaxUse = "200M";
@@ -171,13 +160,11 @@
     MaxRetentionSec = "14day";
   };
 
-  # ── NTP ─────────────────────────────────────────────────────────────────
   services.timesyncd = {
     enable = true;
     servers = ["0.pool.ntp.org" "1.pool.ntp.org" "2.pool.ntp.org"];
   };
 
-  # ── mDNS proxy (Avahi reflector) ────────────────────────────────────────
   # Reflects mDNS between trusted/iot/media VLANs so Chromecast, AirPlay
   # and other zero-conf services are discoverable across VLANs.
   # work VLAN excluded (denied in allowInterfaces).
@@ -189,7 +176,6 @@
     publish.enable = false;
   };
 
-  # ── Misc ────────────────────────────────────────────────────────────────
   zramSwap.enable = true;
 
   system.stateVersion = "25.11";

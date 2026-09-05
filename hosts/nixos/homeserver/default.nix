@@ -27,7 +27,6 @@
     ../../../modules/users/zeev
   ];
 
-  # Secrets Management
   sops = {
     defaultSopsFormat = "yaml";
     secrets = {
@@ -66,7 +65,6 @@
     };
   };
 
-  # Nix Configuration
   nix.settings = {
     cores = 4;
     max-jobs = 4;
@@ -75,24 +73,20 @@
     trusted-users = ["nix-builder"];
   };
 
-  # Environment
   environment.systemPackages = with pkgs; [
     lsof
     openssh
     sysstat
 
-    # Network tools
     iproute2
     iw
     wireguard-tools
 
-    # Build & deployment tools
     betula
   ];
 
   environment.shells = with pkgs; [zsh];
 
-  # Networking
   networking = {
     hostName = "homeserver";
     hostId = "0b8d0f5a";
@@ -148,7 +142,6 @@
     firewall = {
       enable = true;
 
-      # Logging
       logReversePathDrops = true;
       logRefusedConnections = false; # Avoid log spam
 
@@ -272,15 +265,12 @@
     textfileWriters = [config.my.defaults.user "kombayn"];
   };
 
-  # Programs
   programs.gnupg.agent = {
     enableSSHSupport = true;
     pinentryPackage = pkgs.pinentry-tty;
   };
 
-  # Services
   services = {
-    # SSH configuration
     openssh = {
       enable = true;
       ports = [2222];
@@ -336,7 +326,6 @@
     nextdnsProfileId = config.my.defaults.nextdnsProfileId;
   };
 
-  # Users & Groups
   users = {
     users.git = {
       isSystemUser = true;

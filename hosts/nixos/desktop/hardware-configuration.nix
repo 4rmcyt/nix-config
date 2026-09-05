@@ -5,12 +5,10 @@
   modulesPath,
   ...
 }: {
-  # 1. Imports
   imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
   # 2. Boot Configuration
   boot = {
-    # Kernel modules
     initrd.availableKernelModules = [
       "ahci"
       "amdgpu"
@@ -64,7 +62,6 @@
       nct6687d
     ];
 
-    # Module configuration
     extraModprobeConfig = ''
       # Enable v4l2loopback for virtual camera
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
@@ -77,7 +74,6 @@
 
     supportedFilesystems = ["btrfs"];
 
-    # Kernel parameters
     kernelParams = [
       "acpi_enforce_resources=lax" # Required for nct6687 hwmon chip access
       "amd_pstate=active" # Use CPPC EPP driver for best Zen 4 performance
@@ -94,7 +90,6 @@
 
       "preempt=full" # Full preemption for desktop responsiveness
 
-      # System configuration
       "cfg80211.ieee80211_regdom=CA"
       "loglevel=4"
       "nohibernate"
@@ -125,9 +120,7 @@
       "irqaffinity=0" # Force hardware interrupts to Core 0 where possible
     ];
 
-    # System control parameters
     kernel.sysctl = {
-      # Kernel optimizations
       "kernel.split_lock_mitigate" = 0;
       "kernel.nmi_watchdog" = 0; # Disable NMI watchdog to reduce interrupts and save power
 
@@ -141,22 +134,18 @@
       "net.core.default_qdisc" = "fq";
       "net.ipv4.tcp_congestion_control" = "bbr";
 
-      # Network queue and backlog
       "net.core.busy_poll" = 50;
       "net.core.busy_read" = 50;
       "net.core.netdev_budget" = 600;
       "net.core.netdev_max_backlog" = 5000;
 
-      # TCP Buffer sizes
       "net.core.rmem_default" = 262144;
       "net.core.rmem_max" = 16777216;
       "net.core.wmem_default" = 262144;
       "net.core.wmem_max" = 16777216;
 
-      # Increase local port range
       "net.ipv4.ip_local_port_range" = "1024 65535";
 
-      # TCP optimizations
       "net.ipv4.tcp_fastopen" = 3;
       "net.ipv4.tcp_rmem" = "4096 65536 16777216";
       "net.ipv4.tcp_sack" = 1;
@@ -166,7 +155,6 @@
       "net.ipv4.tcp_wmem" = "4096 65536 16777216";
     };
 
-    # Tmp configuration
     tmp.useTmpfs = true;
     tmp.tmpfsSize = "100%";
     tmp.tmpfsHugeMemoryPages = "within_size";
@@ -185,10 +173,8 @@
 
   # 3. Hardware Configuration
   hardware = {
-    # AMD GPU
     amdgpu.overdrive.enable = true;
 
-    # Bluetooth
     bluetooth = {
       enable = true;
       powerOnBoot = true;
@@ -204,16 +190,12 @@
       };
     };
 
-    # CPU
     cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
-    # Firmware
     enableRedistributableFirmware = lib.mkDefault true;
 
-    # GPG Smartcards
     gpgSmartcards.enable = true;
 
-    # Graphics
     graphics = {
       enable = true;
       enable32Bit = true;
@@ -223,7 +205,6 @@
       ];
     };
 
-    # NVIDIA configuration
     nvidia = {
       modesetting.enable = true;
       nvidiaSettings = true;
@@ -332,7 +313,6 @@
     })
   ];
 
-  # 6. Hardware Programs
   programs = {
     noisetorch.enable = true; # Noise suppression (audio hardware)
   };
@@ -365,20 +345,17 @@
       };
     };
 
-    # Hardware monitoring
     smartd = {
       autodetect = true;
       defaults.autodetected = "-a -o on -s (S/../.././02|L/../../7/04)";
       enable = true;
     };
 
-    # Microcode updates
     ucodenix = {
       enable = true;
       cpuModelId = ./facter.json;
     };
 
-    # Btrfs maintenance
     btrfs.autoScrub = {
       enable = true;
       interval = "weekly";
@@ -389,7 +366,6 @@
       interval = "weekly";
     };
 
-    # Firmware updates
     fwupd = {
       enable = true;
       extraRemotes = [
@@ -398,13 +374,11 @@
       ];
     };
 
-    # Smartcard / YubiKey
     pcscd = {
       enable = true;
       plugins = [pkgs.ccid];
     };
 
-    # Audio
     pipewire = {
       enable = true;
       alsa = {
@@ -478,21 +452,16 @@
       drivers = [];
     };
 
-    # udev rules for hardware peripherals
     udev = {
       extraRules = ''
-        # QMK keyboard rules
         SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ff4", MODE="0666", GROUP="plugdev"
         SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ffb", MODE="0666", GROUP="plugdev"
         SUBSYSTEM=="usb", ATTRS{idVendor}=="174c", ATTRS{idProduct}=="2074", MODE="0666", GROUP="plugdev"
 
-        # Gaming device rules
         SUBSYSTEM=="input", ATTRS{name}=="Rapoo Rapoo Gaming Device", TAG+="uaccess"
 
-        # MSI MYSTIC LIGHT - disable entirely
         ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="1462", ATTRS{idProduct}=="7d75", ATTR{authorized}="0"
 
-        # Lock PC on yubikey removal
         ACTION=="remove", \
           ENV{ID_BUS}=="usb", \
           ENV{ID_MODEL_ID}=="0407", \
@@ -533,7 +502,6 @@
 
   # 8. System Packages (hardware tools)
   environment.systemPackages = with pkgs; [
-    # Audio & Multimedia
     pavucontrol
     pamixer
     pulseaudio # provides pactl for pipewire-pulse control
@@ -544,16 +512,13 @@
     fdk_aac # AAC BT codec
     ldacbt # LDAC BT codec
 
-    # Graphics & GPU
     libva-utils
     nvidia-vaapi-driver
     vulkan-tools
 
-    # Remote support
     anydesk
     teamviewer
 
-    # Hardware Support & Monitoring
     apcupsd
     cifs-utils
     fwupd
@@ -564,7 +529,6 @@
     yubikey-personalization
     limine-full
 
-    # Security & Encryption (hardware-backed)
     ccid
     libfido2
     pinentry-all
@@ -581,7 +545,6 @@
     ]))
     pass-wayland
 
-    # Secure Boot & EFI Tools
     efibootmgr
     ifrextractor-rs
     sbctl
@@ -634,17 +597,15 @@
     };
   };
 
-  # 10. Swap Configuration
   swapDevices = [];
 
   zramSwap = {
     enable = true;
     algorithm = "zstd";
-    memoryPercent = 25; # Use 25% of RAM for zram swap
+    memoryPercent = 25;
     priority = 100; # High priority to prefer zram over disk swap
   };
 
-  # 11. Systemd Configuration
   systemd = {
     oomd.enable = false;
     services.bluetooth-unblock = {
@@ -676,7 +637,6 @@
     ModelBouncingKeys=1
   '';
 
-  # 9. Platform Configuration
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
   systemd.services.numlock = {

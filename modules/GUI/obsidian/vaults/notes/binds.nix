@@ -237,7 +237,6 @@
   ];
   "workspace:undo-close-pane" = [];
 
-  # plugins
   "obsidian-minimal-settings:toggle-colorful-headings" = [
     {
       key = "U";

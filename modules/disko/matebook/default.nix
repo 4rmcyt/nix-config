@@ -46,7 +46,7 @@ _: {
   swapDevices = [
     {
       device = "/swapfile";
-      size = 16384; # 16GB in MB
+      size = 16384;
       options = ["discard"]; # TRIM swap pages on NVMe
     }
   ];

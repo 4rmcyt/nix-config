@@ -16,7 +16,6 @@ _: let
 in {
   wayland.windowManager.mango.settings = {
     bind = [
-      # APPLICATIONS
       (bind "SUPER,Return" "spawn" "kitty")
       (bind "SUPER,B" "spawn" "google-chrome-stable")
       (bind "SUPER,E" "spawn" "nemo")
@@ -26,39 +25,32 @@ in {
       (bind "SUPER,Comma" (noctalia "settings-toggle") "")
       (bind "SUPER+SHIFT,D" "spawn" "discord")
 
-      # WINDOW MANAGEMENT
       (bind "SUPER,Q" "killclient" "")
       (bind "SUPER,F" "togglemaximizescreen" "")
       (bind "SUPER+SHIFT,F" "togglefullscreen" "")
       (bind "SUPER+SHIFT,Space" "togglefloating" "")
 
-      # SYSTEM CONTROLS
       (bind "SUPER,Escape" (noctalia "session lock") "")
       (bind "SUPER+SHIFT,Escape" (noctalia "panel-toggle session") "")
       (bind "SUPER,N" (noctalia "panel-toggle control-center notifications") "")
       (bind "SUPER,T" (noctalia "theme-mode-toggle") "")
       (bind "SUPER+SHIFT,N" (noctalia "nightlight-toggle") "")
 
-      # THEMING & CUSTOMIZATION
       # Mod+C (colorPicker toggle) dropped: v5 has no standalone color-picker
       # panel/IPC command — the picker is now an internal dialog reached only
       # from Settings/wallpaper UI, not exposed for direct binding.
       (bind "SUPER,W" (noctalia "desktop-widgets-toggle") "")
 
-      # SCREENSHOTS
       (bind "none,Print" "spawn_shell" ''grim -g "$(slurp)" - | satty -f -'')
       (bind "SUPER,Print" "spawn_shell" ''grim - | satty -f -'')
 
-      # FOCUS CONTROL
       (bind "SUPER,Tab" "focuslast" "")
 
-      # Arrow keys
       (bind "SUPER,Left" "focusdir" "left")
       (bind "SUPER,Right" "focusdir" "right")
       (bind "SUPER,Up" "focusdir" "up")
       (bind "SUPER,Down" "focusdir" "down")
 
-      # Vim keys
       (bind "SUPER,H" "focusdir" "left")
       (bind "SUPER,L" "focusdir" "right")
       (bind "SUPER,K" "focusdir" "up")
@@ -76,7 +68,6 @@ in {
       (bind "SUPER+CTRL,K" "exchange_client" "up")
       (bind "SUPER+CTRL,J" "exchange_client" "down")
 
-      # MONITOR FOCUS / MOVE WINDOW TO MONITOR
       (bind "SUPER+SHIFT,Left" "focusmon" "left")
       (bind "SUPER+SHIFT,Right" "focusmon" "right")
       (bind "SUPER+SHIFT,Up" "focusmon" "up")
@@ -113,7 +104,6 @@ in {
       (bind "SUPER+CTRL,Page_Down" "tagtoright" "0")
       (bind "SUPER+CTRL,Page_Up" "tagtoleft" "0")
 
-      # SCROLLER LAYOUT
       (bind "SUPER,bracketleft" "switch_proportion_preset" "prev")
       (bind "SUPER,bracketright" "switch_proportion_preset" "")
       (bind "SUPER+SHIFT,R" "set_proportion" "1.0")
@@ -121,19 +111,15 @@ in {
       # CONFIG RELOAD (hot-reload, no compositor restart needed)
       (bind "SUPER,R" "reload_config" "")
 
-      # RESIZE
       (bind "SUPER,Minus" "scroller_stack" "left")
       (bind "SUPER,Equal" "scroller_stack" "right")
       (bind "SUPER+SHIFT,Minus" "resizewin" "+0,-100")
       (bind "SUPER+SHIFT,Equal" "resizewin" "+0,+100")
 
-      # CLIPBOARD
       (bind "SUPER,V" (noctalia "panel-toggle clipboard") "")
 
-      # SYSTEM
       (bind "SUPER+SHIFT,E" "quit" "")
 
-      # MEDIA CONTROLS
       (bind "none,XF86AudioPlay" "spawn" "playerctl play-pause")
       (bind "none,XF86AudioNext" "spawn" "playerctl next")
       (bind "none,XF86AudioPrev" "spawn" "playerctl previous")

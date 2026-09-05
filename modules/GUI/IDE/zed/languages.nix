@@ -1,6 +1,5 @@
 _: {
   programs.zed-editor.userSettings = {
-    # Languages
     languages = {
       Markdown.format_on_save = "on";
 

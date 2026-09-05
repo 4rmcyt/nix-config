@@ -5,7 +5,6 @@
 }: let
   inherit (config.my.defaults) user domain;
 in {
-  # SSH Secrets Management with SOPS
   sops.secrets = {
     ssh_private_key = {
       sopsFile = ../../../secrets/ssh.yaml;
@@ -26,7 +25,6 @@ in {
     };
   };
 
-  # SSH Client Configuration
   system.activationScripts.sshConfig = ''
     mkdir -p /home/${user}/.ssh
     cat > /home/${user}/.ssh/config << 'EOF'
@@ -83,19 +81,15 @@ in {
     chmod 600 /home/${user}/.ssh/config
   '';
 
-  # /etc/hosts Configuration
   networking.hosts =
     {
-      # Gateway / Router
       "${config.my.network.gateway}" = ["router" "gateway" "router-mgmt"];
 
-      # Primary systems
       "${config.my.network.hosts.homeserver_lan}" = ["homeserver" "serv"];
       "${config.my.network.hosts.desktop_lan}" = ["desktop" "desktop-lan"];
       "${config.my.network.hosts.desktop_wifi}" = ["desktop-wifi"];
       "${config.my.network.hosts.matebook_wifi}" = ["matebook"];
 
-      # Network infrastructure
       "${config.my.network.infrastructure.switch-office}" = ["switch-office"];
       "${config.my.network.infrastructure.switch-living-room}" = ["switch-living-room"];
     }
@@ -106,7 +100,6 @@ in {
       (r: lib.nameValuePair r.ip ([r.hostname] ++ (r.aliases or [])))
       (lib.filter (r: r.subnetId != 10 || (r.aliases or []) != []) config.my.network.reservations));
 
-  # SSH Known Hosts
   programs.ssh.knownHosts = {
     "desktop" = {
       hostNames = ["desktop.ts.${domain}" config.my.network.hosts.desktop_ts];

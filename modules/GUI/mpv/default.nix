@@ -22,7 +22,6 @@
       gpu-context = "wayland";
       hwdec = "nvdec-copy";
 
-      # HDR support
       target-colorspace-hint = true;
       target-prim = "auto";
       target-trc = "auto";

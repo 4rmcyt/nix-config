@@ -2,7 +2,6 @@
   # Transmission peer port, forwarded through the VPN namespace.
   vpnPort = 63998;
 in {
-  # SOPS secrets for WireGuard
   sops.secrets.wg_conf = {
     sopsFile = ../../../secrets/wg.conf;
     format = "binary";
@@ -13,7 +12,6 @@ in {
     enable = true;
     wireguardConfigFile = config.sops.secrets.wg_conf.path;
 
-    # Make VPN namespace accessible from local network
     accessibleFrom =
       config.my.network.subnets.lan
       ++ [
@@ -21,7 +19,6 @@ in {
         "127.0.0.1/32"
       ];
 
-    # Port forwarding from host to VPN namespace
     portMappings = [
       {
         from = vpnPort;
@@ -30,7 +27,6 @@ in {
       }
     ];
 
-    # Open ports through the VPN interface
     openVPNPorts = [
       {
         port = vpnPort;
@@ -39,7 +35,6 @@ in {
     ];
   };
 
-  # Firewall rules to allow access to forwarded port
   networking.firewall = {
     allowedTCPPorts = [vpnPort];
     allowedUDPPorts = [vpnPort];

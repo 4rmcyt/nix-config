@@ -1,6 +1,5 @@
 {lib, ...}: {
   programs.firefox.profiles.default.search.engines = {
-    # DISABLE DEFAULT SEARCH ENGINE SUGGESTIONS
     "ddg".metaData.hidden = true;
     "bing".metaData.hidden = true;
     "ebay".metaData.hidden = true;

@@ -42,7 +42,6 @@ _: let
     format = ''
       [](${c.p0})$os$username[](bg:${c.p1} fg:${c.p0})$directory[](fg:${c.p1} bg:${c.p2})$git_branch$git_status[](fg:${c.p2} bg:${c.p3})$nix_shell$docker_context$conda[](fg:${c.p3} bg:${c.p4})$c$rust$golang$nodejs$php$java$kotlin$haskell$python[](fg:${c.p4} bg:${c.p5})$time[ ](fg:${c.p5})
     '';
-    # General
     line_break.disabled = true;
     character = {
       disabled = false;
@@ -54,7 +53,6 @@ _: let
       vimcmd_visual_symbol = "[](bold fg:${c.p3})";
     };
 
-    # Symbols
     os = {
       disabled = false;
       style = "bg:${c.p0} fg:${c.fg0}";

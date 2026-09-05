@@ -5,12 +5,10 @@
   modulesPath,
   ...
 }: {
-  # 1. Imports
   imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
   # 2. Boot Configuration
   boot = {
-    # Kernel modules for MateBook D14
     initrd.availableKernelModules = [
       "nvme"
       "xhci_pci"
@@ -26,7 +24,6 @@
 
     extraModulePackages = [];
 
-    # Kernel parameters
     kernelParams = [
       # AMD GPU optimizations (Vega 8 iGPU)
       "amdgpu.gpu_recovery=1"
@@ -47,7 +44,6 @@
       "pcie_aspm=force"
       "pcie_aspm.policy=powersupersave"
 
-      # System configuration
       "quiet"
       "splash"
       "loglevel=3"
@@ -58,9 +54,7 @@
 
     kernelPackages = pkgs.linuxKernel.packages.linux_zen;
 
-    # System control parameters
     kernel.sysctl = {
-      # Laptop power optimizations
       "kernel.nmi_watchdog" = 0;
 
       # VM/Memory optimizations for laptop (assume 8-16GB RAM)
@@ -70,7 +64,6 @@
       "vm.dirty_background_ratio" = 10;
       "vm.dirty_writeback_centisecs" = 1500; # Longer for battery life
 
-      # Network optimizations
       "net.ipv4.tcp_fastopen" = 3;
       "net.core.default_qdisc" = "fq";
       "net.ipv4.tcp_congestion_control" = "bbr";
@@ -79,23 +72,18 @@
 
   # 3. Hardware Configuration
   hardware = {
-    # AMD GPU configuration
     graphics = {
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
-        # ROCm for compute/OpenCL
         rocmPackages.clr.icd
-        # Video acceleration (VAAPI/VDPAU)
         mesa
       ];
     };
 
-    # AMD CPU configuration
     cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     enableRedistributableFirmware = lib.mkDefault true;
 
-    # Bluetooth
     bluetooth = {
       enable = true;
       powerOnBoot = true;
@@ -107,19 +95,15 @@
       };
     };
 
-    # Firmware packages for WiFi/BT
     firmware = with pkgs; [
       linux-firmware
     ];
 
-    # Backlight control
     acpilight.enable = true;
   };
 
-  # 4. Power Management
   powerManagement.enable = true;
 
-  # 5. Services
   services = {
     scx = {
       enable = true;
@@ -143,7 +127,6 @@
     };
   };
 
-  # 6. Networking
   # nixos-facter-modules' networking module force-enables per-interface
   # useDHCP (networking.interfaces.wlp2s0.useDHCP = mkDefault true), which
   # alone flips on the global dhcpcd.service (dhcpcd.nix's enableDHCP =

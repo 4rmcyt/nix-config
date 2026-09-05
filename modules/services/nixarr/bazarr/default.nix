@@ -1,4 +1,3 @@
-# modules/services/nixarr/bazarr/default.nix
 {
   config,
   lib,

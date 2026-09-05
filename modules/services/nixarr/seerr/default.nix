@@ -1,4 +1,3 @@
-# modules/services/nixarr/seerr/default.nix
 {config, ...}: {
   virtualisation.oci-containers.containers.seerr = {
     autoStart = true;

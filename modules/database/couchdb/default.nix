@@ -5,7 +5,6 @@
   pkgs,
   ...
 }: {
-  # SOPS Secrets for CouchDB
   sops.secrets = {
     couchdb_admin_password = {
       sopsFile = ../../../secrets/couchdb.yaml;
@@ -16,14 +15,12 @@
     };
   };
 
-  # Users and Groups
   users.users.couchdb = {
     isSystemUser = true;
     group = "couchdb";
   };
   users.groups.couchdb = {};
 
-  # CouchDB Service
   services.couchdb = {
     enable = true;
     port = 5984;
@@ -33,7 +30,6 @@
     adminUser = "admin";
     adminPass = "-"; # Placeholder, will be set via postStart
 
-    # Configuration for Obsidian LiveSync
     # https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/setup_own_server.md
     extraConfig = {
       chttpd = {
@@ -50,10 +46,8 @@
         enable_cors = true;
       };
 
-      # 50MB max document size
       couchdb.max_document_size = 50000000;
 
-      # CORS for Obsidian apps
       cors = {
         credentials = true;
         # Allow Obsidian mobile and desktop apps
@@ -66,10 +60,8 @@
   # nothing ever listens on a non-loopback interface; Traefik reaches it
   # over loopback, not through the firewall.
 
-  # Systemd Service Configuration
   systemd.services.couchdb = {
     postStart = ''
-      # Wait for CouchDB to be ready
       for i in {1..30}; do
         if ${pkgs.curl}/bin/curl -s http://admin:-@127.0.0.1:5984/ > /dev/null 2>&1; then
           break
@@ -77,7 +69,6 @@
         sleep 1
       done
 
-      # Update admin password from sops secret
       ADMIN_PASS=$(cat ${config.sops.secrets.couchdb_admin_password.path})
       ${pkgs.curl}/bin/curl -X PUT http://admin:-@127.0.0.1:5984/_node/_local/_config/admins/admin \
         -H "Content-Type: application/json" \
@@ -86,10 +77,8 @@
       # Wait a moment for password to be updated
       sleep 2
 
-      # Create _users database
       ${pkgs.curl}/bin/curl -X PUT http://admin:$ADMIN_PASS@127.0.0.1:5984/_users || true
 
-      # Create _replicator database
       ${pkgs.curl}/bin/curl -X PUT http://admin:$ADMIN_PASS@127.0.0.1:5984/_replicator || true
     '';
 
@@ -102,7 +91,6 @@
           "/run/couchdb"
         ];
 
-        # Resource limits
         MemoryMax = "2G";
         CPUQuota = "100%";
       };

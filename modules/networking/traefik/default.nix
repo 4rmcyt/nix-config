@@ -37,7 +37,6 @@
     };
 
   proxiedServices = {
-    # Nixarr
     sonarr.port = config.my.network.ports.sonarr;
     radarr.port = config.my.network.ports.radarr;
     prowlarr.port = config.my.network.ports.prowlarr;
@@ -47,14 +46,11 @@
     kapowarr.port = config.my.network.ports.kapowarr;
     seerr.port = config.my.network.ports.seerr;
 
-    # Media
     jellyfin.port = config.my.network.ports.jellyfin;
     qb.port = config.my.network.ports.qb;
 
-    # Monitoring
     grafana.port = config.my.network.ports.grafana;
 
-    # Reading
     miniflux.port = config.my.network.ports.miniflux;
     komga = {
       port = config.my.network.ports.komga;
@@ -66,13 +62,11 @@
     };
     audiobookshelf.port = config.my.network.ports.audiobookshelf;
 
-    # Smart home
     hass = {
       port = config.my.network.ports.home-assistant;
       middlewares = ["security-headers" "rate-limit" "crowdsec" "geoblock"];
     };
 
-    # Productivity
     homepage = {
       port = config.my.network.ports.homepage;
       host = "home.${domain}";
@@ -353,7 +347,6 @@ in {
             services =
               generatedRoutes.services
               // {
-                # job-kombayn
                 kombayn-api.loadBalancer.servers = [{url = "http://localhost:${toString config.services.jobKombayn.apiPort}";}];
                 kombayn-web.loadBalancer.servers = [{url = "http://localhost:${toString config.services.jobKombayn.webPort}";}];
               };
@@ -377,7 +370,6 @@ in {
         postrotate = "systemctl kill --kill-who=main --signal=USR1 traefik.service";
       };
 
-      # Cloudflare credentials injected as environment variables
       systemd.services.traefik.serviceConfig.EnvironmentFile =
         config.sops.secrets.cloudflare_acme_credentials.path;
 

@@ -24,7 +24,6 @@
   # processes. Games box only — plain single-player value editing.
   boot.kernel.sysctl."kernel.yama.ptrace_scope" = 0;
 
-  # Programs
   programs.gamemode = {
     enable = true;
     settings = {
@@ -95,13 +94,10 @@
   # Valve's own documented workaround.
   environment.sessionVariables.STEAM_FORCE_DESKTOPUI_SCALING = "2.0";
 
-  # Gaming packages
   environment.systemPackages = with pkgs; [
-    # heroic
     wine
     winetricks
 
-    # Performance tools
     gamemode
     # gamescope — installed via programs.gamescope above
     # mangohud
@@ -109,7 +105,6 @@
     lutris
     protonup-qt
 
-    # Controller testing
     jstest-gtk
 
     # Memory scanner/editor (GameConqueror GUI) — single-player value editing.
@@ -120,10 +115,8 @@
     config.boot.kernelPackages.nvidiaPackages.stable.settings
   ];
 
-  # Enable 32-bit support for games
   hardware.graphics.enable32Bit = true;
 
-  # Nintendo Switch Pro Controller support
   boot.kernelModules = ["hid_nintendo"];
   hardware.steam-hardware.enable = true;
 
@@ -133,7 +126,6 @@
   boot.extraModulePackages = [config.boot.kernelPackages.xpadneo];
   boot.blacklistedKernelModules = ["xpad"];
 
-  # Add udev rules for gamemode GPU access
   services.udev.extraRules = ''
     # Allow gamemode to access GPU vendor information
     KERNEL=="card[0-9]*", SUBSYSTEM=="drm", GROUP="video", MODE="0664"

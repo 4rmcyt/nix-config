@@ -41,7 +41,6 @@
     ../../../modules/users/zeev
   ];
 
-  # Secrets Management
   sops = {
     secrets = {
       tailscale_auth_key = {
@@ -67,7 +66,6 @@
     age.keyFile = "/root/.config/sops/age/keys.txt";
   };
 
-  # Nix Configuration
   nix.settings = {
     cores = 0;
     max-jobs = "auto";
@@ -79,14 +77,11 @@
     trusted-users = ["nix-builder"];
   };
 
-  # Environment
   environment = {
     sessionVariables = lib.mkBefore {
-      # Cursor theme
       XCURSOR_THEME = "breeze_cursors";
       XCURSOR_SIZE = "24";
 
-      # XDG
       XDG_CACHE_HOME = "$HOME/.cache";
       XDG_CONFIG_HOME = "$HOME/.config";
       XDG_DATA_HOME = "$HOME/.local/share";
@@ -117,7 +112,6 @@
     ];
   };
 
-  # Fonts
   fonts = {
     fontDir.enable = true;
     fontconfig = {
@@ -143,7 +137,6 @@
       ++ (builtins.filter lib.isDerivation (lib.attrValues pkgs.nerd-fonts));
   };
 
-  # Networking
   networking = {
     dnssec = {
       enable = true;
@@ -153,12 +146,10 @@
     interfaces.enp12s0.wakeOnLan.enable = true;
   };
 
-  # Virtualization
   # kvm-amd nested virtualization: needed so guest VMs (e.g. the OpenStack
   # lab VM) can run their own KVM-accelerated Nova compute nodes.
   boot.extraModprobeConfig = "options kvm-amd nested=1";
 
-  # Programs
   programs.nix-ld.enable = true;
 
   programs.solaar = {
@@ -166,7 +157,6 @@
     userService.enable = true;
   };
 
-  # Services
   security.pam.services.greetd.enableGnomeKeyring = true;
 
   environment.etc."xdg/autostart/gnome-keyring-secrets.desktop".text = ''
@@ -194,7 +184,7 @@
       extraSetFlags = ["--operator=${config.my.defaults.user}"];
     };
   };
-  # Users & Groups
+
   users = {
     groups = {
       git = {};
@@ -219,7 +209,6 @@
         isSystemUser = true;
       };
 
-      # User for accepting remote nix builds
       nix-builder = {
         isSystemUser = true;
         group = "nix-builder";

@@ -44,7 +44,6 @@
     }
   ];
 in {
-  # Database secrets configuration
   sops.secrets = {
     miniflux_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
@@ -129,7 +128,6 @@ in {
     enable = true;
     package = pkgs.postgresql;
 
-    # Automatically create databases for all app users
     ensureDatabases = [
       "miniflux"
       "hass"
@@ -146,7 +144,6 @@ in {
       "kombayn"
     ];
 
-    # Automatically create users with DB ownership
     ensureUsers = [
       {
         name = "miniflux";
@@ -212,7 +209,6 @@ in {
     '';
   };
 
-  # Set up user passwords after PostgreSQL is running
   systemd.services.postgresql-setup-users = {
     description = "Set up PostgreSQL user passwords";
     after = ["postgresql.service"];
