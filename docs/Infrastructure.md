@@ -270,6 +270,24 @@ All configured via the Cloudflare dashboard/API (zone `<domain>`, Free plan) —
 | Atuin server   | 8881  | `atuin.<domain>`       | Shell history sync            |
 | CouchDB        | 5984  | `livesync.<domain>`    | Obsidian LiveSync backend     |
 
+### Kubernetes (k3s + ArgoCD)
+
+**Status: staged, not enabled** — modules are complete; uncomment `./k3s` +
+`./argocd` in `modules/services/default.nix` to bring it up.
+
+Single-node k3s on homeserver (`modules/services/k3s`). Embedded Traefik and
+servicelb are **disabled** — homeserver's NixOS Traefik owns `:80/:443`; cluster
+services are reached via the NodePort range `30000-32767`.
+
+| Component | Notes |
+|-----------|-------|
+| k3s server | hand-rolled systemd unit, token from `secrets/k3s.yaml`. Kubeconfig `/etc/rancher/k3s/k3s.yaml` (mode 0640, group `wheel`) |
+| ArgoCD | `v3.5.2`, pinned `install.yaml` via `pkgs.fetchurl`. Installed by `argocd-install` oneshot after `k3s.service`. UI on NodePort `30080` (`argocd-server-nodeport` svc) |
+| Repo access | HTTPS to private `github.com/4rmcyt/gitops`, PAT = `git_access_token` from `secrets/common.yaml`, rendered into the `gitops-repo` Secret via `sops.templates` |
+| Root app | Application `gitops` → `4rmcyt/gitops` path `k3s` (recurse), auto-sync prune + selfHeal |
+| Workloads | `k3s/playground` (sandbox ns + quota/limitrange); `k3s/apps` app-of-apps → actions-runner-controller (`gha-runner-scale-set-controller` + account-level `gha-runner-scale-set` for `github.com/4rmcyt`, dind, 0–4 runners) |
+| ARC auth | GitHub App; `modules/services/argocd/arc-github-app.nix` (not imported by default) provisions the `arc-github-app` Secret in `arc-runners` from `secrets/k3s.yaml` (`arc_github_app_*`) |
+
 ### AI / Local LLM
 
 | Service   | Notes                                                                    |
@@ -364,7 +382,7 @@ secrets/
   radicale.yaml                        # Radicale user credentials
   microbin.yaml                        # Microbin admin secret
   hass-alexa.yaml                      # Home Assistant Alexa skill credentials
-  k3s.yaml                             # k3s token (service disabled, module parked)
+  k3s.yaml                             # k3s server token; ARC GitHub App creds (arc_github_app_*)
   restic.yaml                          # Restic backup repository + password
   medialib.yaml                        # Media library credentials
   gmail_conf.yaml                      # Gmail / msmtp config

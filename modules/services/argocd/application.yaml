@@ -9,6 +9,8 @@ spec:
     repoURL: https://github.com/4rmcyt/gitops.git
     targetRevision: main
     path: k3s
+    directory:
+      recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: default
@@ -18,7 +20,3 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-  # Ignore TLS verification
-  ignoreDifferences:
-    - group: ""
-      kind: Secret

@@ -12,7 +12,8 @@
     ./nixarr
     ./ntfy
     ./radicale
-    # Not in use, kept for reference:
+    # Ready but off — flip on to bring up k3s + ArgoCD on homeserver.
+    # See docs/Infrastructure.md "Kubernetes (k3s + ArgoCD)".
     # ./k3s
     # ./argocd
   ];

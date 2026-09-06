@@ -51,7 +51,7 @@ modules/
   security/                 # crowdsec, fail2ban, kanidm
   services/                 # Application services: home-assistant, radicale, homepage, miniflux,
                             #   nixarr, atuin-server, dispatcharr, microbin, komf, komga, ntfy,
-                            #   k3s (disabled), argocd (disabled)
+                            #   k3s + argocd (homeserver; see Infrastructure.md)
   containers/               # Podman container support
   disko/                    # Declarative disk layouts per host
   users/                    # Per-user NixOS config (zeev)

@@ -9,11 +9,6 @@
       key = "tokenFile";
       mode = "0400";
     };
-    k3s_keycloak_admin_password = {
-      sopsFile = ../../../secrets/k3s.yaml;
-      key = "keycloak_admin_password";
-      mode = "0400";
-    };
   };
 
   environment.systemPackages = [pkgs.k3s];
@@ -34,7 +29,16 @@
       LimitNPROC = "infinity";
       LimitCORE = "infinity";
       TasksMax = "infinity";
-      ExecStart = "${pkgs.k3s}/bin/k3s server --token-file=${config.sops.secrets.k3s_token_file.path}";
+      # traefik + servicelb disabled: homeserver already runs a NixOS Traefik on
+      # :80/:443 and its own load-balancing. External access to cluster services
+      # is via the NodePort range below.
+      ExecStart = ''
+        ${pkgs.k3s}/bin/k3s server \
+          --token-file=${config.sops.secrets.k3s_token_file.path} \
+          --disable=traefik \
+          --disable=servicelb \
+          --write-kubeconfig-mode=0640
+      '';
     };
   };
 
