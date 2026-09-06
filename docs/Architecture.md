@@ -4,6 +4,19 @@
 
 NixOS flake for 4 hosts managed as a single repository. Built on **flake-parts** with **import-tree** for automatic module discovery. All hosts share a common base layer; host-specific config lives in `parts/hosts/<name>/`.
 
+## Architectural Invariants
+
+Deliberate decisions that recurring "improvements" tend to undo. Changing any of these is a real architectural change — do it consciously, not by drift.
+
+- **This document is canonical.** `CLAUDE.md`, `README.md`, and workflow comments point here for architecture detail; they must not re-describe it. Update this file in the same change that alters the structure.
+- **`parts/` is auto-imported; `modules/` is not.** Every `.nix` under `parts/` is loaded via `import-tree ./parts`. Everything under `modules/` is imported *explicitly* from a host config (or a `parts/` deferred module) — so "the module exists" and "the module is active on this host" stay distinct facts, visible in one place per host.
+- **`parts/foo.nix` may depend on a declared option, never on a sibling file existing.** Deferred modules (`modules.nixos.*`, `configurations.nixos.*`) are the contract between `parts/` files. No `parts/` file may assume load order or the presence of another `parts/` file.
+- **Hosts are discovered from `parts/hosts/*/`.** One directory per host, 1:1 with `configurations.nixos.<name>`. CI's build matrix is derived from this (see [CI-CD.md](CI-CD.md)); adding a host must not require editing a workflow.
+- **`treefmt.nix` is the sole formatter config.** No standalone `treefmt.toml`. Formatting runs through `nix fmt`.
+- **Dev shells are defined inline in `parts/devshells.nix`.** No root-level `devshell.nix` / `shell.nix`.
+- **Identity and LAN topology come only from `inputs.private`.** Surfaced as `my.defaults.*` / `my.network.*` (NixOS scope) and `meta.owner.*` (flake-parts scope). Never hardcoded in the public tree; schema in [`modules/options/private-example.nix`](../modules/options/private-example.nix).
+- **`nix flake check` is a blocking CI gate; `nix fmt` is advisory.** A flake-check failure stops the build; a formatting failure only warns.
+
 ## Flake Structure
 
 ```
@@ -26,7 +39,7 @@ parts/                      # Auto-imported flake-parts modules
   schemas.nix               # flake.schemas — flake-schemas + custom topology schema
   topology.nix              # nix-topology SVG diagram generation
   formatting.nix            # treefmt (alejandra, deadnix, statix, shfmt, yamlfmt)
-  devshells.nix             # Dev shells: default (justfile tasks), ide
+  devshells.nix             # Dev shells (inline): default (dev tooling: age, sops, just, nh, pre-commit, …), ide
 hosts/nixos/<name>/         # NixOS system config + hardware-configuration.nix
 home/<name>/                # Home Manager config per host
 modules/                    # NixOS/HM modules (NOT auto-imported; referenced by host configs)

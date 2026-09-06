@@ -54,10 +54,10 @@ Interface labels are deliberately IP-free — the diagrams expose nothing beyond
 
 - **`flake.nix`** — inputs block + a 6-line `outputs` that delegates everything to `import-tree ./parts`
 - **`parts/`** — flake-parts modules, auto-imported
-  - `owner.nix` — private identity/topology → `meta.owner.*`
+  - `owner.nix` — pulls `meta.owner.username` from the private `private` flake input
   - `meta.nix` / `flake-parts-modules.nix` — internal options (`meta`, `modules`)
   - `shared-nixos-settings.nix` — nix daemon, caches, sops, access tokens
-  - `hm.nix` / `workstation.nix` — HM wiring / facter + ucodenix + gnupg (both opt-in)
+  - `hm.nix` / `workstation.nix` — `modules.nixos.hm` (HM wiring) / `modules.nixos.bareMetal` + `workstationGui` + `homeManager.workstation` (both opt-in)
   - `topology.nix` — nix-topology wiring + global topology
   - `configurations/` — `configurations.nixos.<name>` → `nixosConfigurations`
   - `hosts/<host>/` — per-host module composition
@@ -81,9 +81,9 @@ Interface labels are deliberately IP-free — the diagrams expose nothing beyond
 `parts/configurations/nixos.nix` turns it into `flake.nixosConfigurations.<name>`.
 Each host imports:
 
-- **`modules.nixos.base`** — nix settings, binary caches, sops, HM wiring
+- **`modules.nixos.base`** — nix settings, binary caches, sops, sops-nix/disko/nix-topology wiring
 - **`modules.nixos.hm`** — Home Manager (skipped on gcp-relay)
-- **`modules.nixos.workstation`** — microcode, facter, gnupg (skipped on gcp-relay)
+- **`modules.nixos.bareMetal`** — microcode, facter, gnupg, nix dev tools (physical hosts only — skipped on the gcp-relay VM)
 - its own `hosts/nixos/<host>/` tree + whatever flake-input modules it needs
 
 `deferredModule` merge semantics let several `parts/` files contribute to the
