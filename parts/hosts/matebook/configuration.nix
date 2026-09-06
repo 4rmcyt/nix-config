@@ -7,7 +7,7 @@
   inherit (config.meta) owner;
   nixosBase = config.modules.nixos.base;
   nixosHm = config.modules.nixos.hm;
-  nixosWorkstation = config.modules.nixos.workstation;
+  nixosBareMetal = config.modules.nixos.bareMetal;
   nixosWorkstationGui = config.modules.nixos.workstationGui;
   hmWorkstation = config.modules.homeManager.workstation;
 in {
@@ -15,7 +15,7 @@ in {
     imports = [
       nixosBase
       nixosHm
-      nixosWorkstation
+      nixosBareMetal
       nixosWorkstationGui
       ../../../hosts/nixos/matebook
       inputs.niri-flake.nixosModules.niri

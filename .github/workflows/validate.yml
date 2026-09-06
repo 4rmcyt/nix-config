@@ -1,8 +1,10 @@
 name: "Validate"
-# Called by ci.yml. Formatting (nix fmt, which also runs statix/deadnix via
-# treefmt.nix) and `nix flake check` — both non-blocking by design: a
-# formatting or flake-check failure warns via Telegram but doesn't fail this
-# job or block the build. The real build step is the actual gate for those.
+# Called by ci.yml.
+#  - `nix fmt` (also runs statix/deadnix via treefmt.nix): non-blocking —
+#    a formatting failure warns via Telegram but doesn't fail the job.
+#  - `nix flake check`: BLOCKING — a flake-check failure fails this job, which
+#    gates build-and-check-systems. It only runs when flake.lock actually
+#    changed (or flake_lock_changed was passed) to keep push/PR runs fast.
 on:
   workflow_call:
     inputs:
@@ -78,25 +80,13 @@ jobs:
             Trigger: <code>${{ github.event_name }}</code>
             The formatting check failed but the workflow will continue.
             <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>
-      # Flake check (informational only - doesn't fail the job)
+      # Flake check — BLOCKING. Fails the job (and the build gate) on error.
+      # Failure notification is handled by "Notify - Validation Failed" below
+      # (the job now actually fails, so `failure()` catches it).
       - name: Check flake
         id: flake-check
         if: steps.flake-changed.outputs.changed == 'true' || inputs.flake_lock_changed
-        continue-on-error: true
         run: nix flake check --show-trace
-      - name: Notify - Flake Check Failed
-        if: steps.flake-check.outcome == 'failure' && github.event_name != 'pull_request'
-        uses: ./.github/actions/notify-telegram
-        with:
-          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
-          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          message: |
-            ⚠️ <b>Flake Check Failed (Non-blocking)</b>
-            Repository: <code>${{ github.repository }}</code>
-            Branch: <code>${{ github.ref_name }}</code>
-            Trigger: <code>${{ github.event_name }}</code>
-            The flake check failed but the workflow will continue.
-            <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>
       - name: Notify - Validation Failed
         if: failure() && github.event_name != 'pull_request'
         uses: ./.github/actions/notify-telegram

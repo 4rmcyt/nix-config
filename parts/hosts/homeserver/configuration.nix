@@ -7,13 +7,13 @@
   inherit (config.meta) owner;
   nixosBase = config.modules.nixos.base;
   nixosHm = config.modules.nixos.hm;
-  nixosWorkstation = config.modules.nixos.workstation;
+  nixosBareMetal = config.modules.nixos.bareMetal;
 in {
-  configurations.nixos.homeserver.module = { ...}: {
+  configurations.nixos.homeserver.module = {...}: {
     imports = [
       nixosBase
       nixosHm
-      nixosWorkstation
+      nixosBareMetal
       ../../../hosts/nixos/homeserver
       inputs.nixarr.nixosModules.default
       ../../../modules/nix/lix

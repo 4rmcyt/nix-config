@@ -1,5 +1,9 @@
-# Workstation-specific NixOS modules — desktop, laptop, homeserver.
-# Not imported on headless appliances (gcp-relay).
+# Deferred modules for real (bare-metal) machines. Defines three:
+#   modules.nixos.bareMetal      — hardware/CPU/dev plumbing on every physical
+#                                  host (desktop, matebook, homeserver);
+#                                  skipped on the gcp-relay VM.
+#   modules.nixos.workstationGui  — GUI NixOS bits (desktop, matebook).
+#   modules.homeManager.workstation — GUI/TUI HM apps (desktop, matebook).
 {
   inputs,
   lib,
@@ -9,7 +13,7 @@
   # imported into a host), NOT a flake-parts top-level arg (that's only
   # injected inside `perSystem`) — so this has to be a function taking its
   # own {pkgs, ...}, not reach for the outer flake-parts scope's pkgs.
-  modules.nixos.workstation = {
+  modules.nixos.bareMetal = {
     config,
     pkgs,
     ...

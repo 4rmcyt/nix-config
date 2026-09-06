@@ -16,46 +16,19 @@ nix build .#nixosConfigurations.<host>.config.system.build.toplevel  # Build a h
 
 ## Flake Architecture (flake-parts + import-tree)
 
-`flake.nix` is an `inputs` block plus a 6-line `outputs` that delegates everything to `parts/` via `import-tree ./parts`. All flake-parts modules in `parts/` are auto-imported.
+`flake.nix` is an `inputs` block plus a 6-line `outputs` that delegates everything to `parts/` via `import-tree ./parts`. Every `.nix` under `parts/` is auto-imported.
 
-### Key `parts/` files
+**[docs/Architecture.md](docs/Architecture.md) is the canonical reference** for `parts/` file responsibilities, the named deferred modules, host wiring, and the options system. Don't duplicate that detail here — read it and keep it current.
 
-| File | Purpose |
-|------|---------|
-| `owner.nix` | `meta.owner.*` — non-secret metadata (username, domain, IPs, email, etc.) |
-| `meta.nix` | Defines internal `options.meta` (not a flake output) |
-| `flake-parts-modules.nix` | Defines `options.modules` — named deferred modules by class (e.g. `modules.nixos.base`, `modules.homeManager.base`) |
-| `shared-nixos-settings.nix` | Contributes to `modules.nixos.base`: nix daemon settings, binary caches, sops, `_module.args = { inherit inputs; }` |
-| `home-manager-integration.nix` | Contributes to `modules.nixos.base`: wires HM NixOS module, sops-nix, disko, facter, vscode-server, ucodenix |
-| `home-manager-base.nix` | Defines `modules.homeManager.base`: sops HM, overlays, stateVersion |
-| `configurations/nixos.nix` | Defines `options.configurations.nixos` (lazyAttrsOf deferredModule → `flake.nixosConfigurations`) |
-| `systems.nix` | `systems = ["x86_64-linux"]` |
-| `hosts/{desktop,gcp-relay,homeserver,matebook}/configuration.nix` | Per-host definitions using `configurations.nixos.<name>.module` |
+Quick orientation only:
 
-### Host definition pattern
-
-Each host in `parts/hosts/<host>/configuration.nix` follows this pattern:
-
-```nix
-{ config, inputs, ... }: let
-  inherit (config.meta) owner;
-  nixosBase = config.modules.nixos.base;   # capture before entering NixOS scope
-in {
-  configurations.nixos.<host>.module = { pkgs, ... }: {
-    imports = [
-      nixosBase                             # shared base (HM wiring, nix settings, sops)
-      ../../../hosts/nixos/<host>           # hardware + host-specific NixOS config
-      # input modules...
-    ];
-    home-manager.users.${owner.username}.imports = [
-      ../../../home/<host>
-      # host-specific HM modules
-    ];
-  };
-}
-```
-
-`modules.nixos.base` uses `deferredModule` merge semantics — multiple `parts/` files contribute to it and it is merged before being imported into NixOS.
+- Named deferred modules (`options.modules`, defined in `flake-parts-modules.nix`), merged via `deferredModule` semantics from several `parts/` files, then imported per host:
+  - `modules.nixos.base` — nix daemon/caches/sops + sops-nix/disko/nix-topology wiring. Every host.
+  - `modules.nixos.hm` — Home Manager NixOS module. Opt-in per host (not gcp-relay).
+  - `modules.nixos.bareMetal` — facter + ucodenix + gnupg + nix dev tools. Physical hosts only (not the gcp-relay VM).
+  - `modules.nixos.workstationGui` / `modules.homeManager.workstation` — GUI stack, desktop + matebook.
+- `parts/hosts/<host>/configuration.nix` defines `configurations.nixos.<host>.module`, capturing the deferred modules from `config.modules.*` before entering NixOS scope and listing them plus `../../../hosts/nixos/<host>` and input modules in `imports`.
+- Identity + LAN topology come from the private `private` flake input, surfaced as `my.defaults.*` / `my.network.*` (see `modules/options/`). `parts/owner.nix` only pulls `meta.owner.username` from it for flake-parts-scope wiring.
 
 ## Module Layout
 
@@ -86,7 +59,7 @@ secrets/                # sops-encrypted YAML (NEVER commit plaintext)
 
 ## Key Conventions
 
-**Metadata:** Use `config.meta.owner.*` in flake-parts scope, and `config.my.defaults.*` in NixOS module scope. Both resolve to the same values from `parts/owner.nix` / `modules/options/defaults.nix`. Never hardcode them.
+**Metadata:** In NixOS module scope use `config.my.defaults.*` / `config.my.network.*`; in flake-parts scope use `config.meta.owner.*` (currently just `username`). Both ultimately come from the private `private` flake input (`inputs.private.lib.{identity,network}` — schema in `modules/options/private-example.nix`). Never hardcode them.
 
 **Secrets:** sops-nix + age. Age key at `/root/.config/sops/age/keys.txt` (system) and `~/.config/sops/age/keys.txt` (HM). Reference secrets as `config.sops.secrets.<name>.path`. Never run `sops encrypt` via tool call — give the user the command.
 

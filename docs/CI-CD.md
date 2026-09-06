@@ -9,9 +9,10 @@ GitHub Actions workflows in [.github/workflows/](../.github/workflows/), composi
 ```
 ci.yml
   ├─ flake-lock-update.yml   (schedule/workflow_dispatch only: nix flake update, commit + push)
-  ├─ validate.yml            (needs: flake-lock-update; fmt + flake check — both non-blocking)
+  ├─ validate.yml            (needs: flake-lock-update; fmt non-blocking, flake check blocking)
   ├─ security-checks.yml     (parallel with validate; 4 internal jobs, all must pass — gates the build)
-  ├─ reusable-build.yml      (needs: validate + security-checks; matrix over every host)
+  ├─ discover-hosts          (inline job; needs validate + security-checks; build matrix from parts/hosts/* minus EXCLUDE)
+  ├─ reusable-build.yml      (needs: discover-hosts; matrix over the discovered hosts)
   ├─ vulnix-scan.yml         (needs: reusable-build.yml; schedule/workflow_dispatch only)
   └─ workflow-summary        (inline job in ci.yml; needs everything; Telegram summary)
         │
@@ -41,13 +42,14 @@ Both are local composite actions (`uses: ./.github/actions/<name>`), which means
 | Job | Runs when | Calls |
 |---|---|---|
 | `flake-lock-update` | `schedule` or `workflow_dispatch` only | `flake-lock-update.yml` — `nix flake update`, commits + pushes `flake.lock` to `main`. Skipped on `push`/`pull_request` so PR builds never get an unrelated auto-commit. Exposes `changes_detected` output. |
-| `validate` | always (needs `flake-lock-update`, proceeds if it was skipped) | `validate.yml` — checks out (picking up the just-committed lock on schedule runs), re-runs `nix flake update` in-memory for PR/push runs, validates flake metadata, runs `nix fmt -- --ci` and `nix flake check` — both `continue-on-error: true` by design: a formatting or flake-check failure doesn't fail the job or block the build. `nix fmt` also runs `statix`/`deadnix` (wired into `treefmt.nix`) — same non-blocking treatment, intentional. Takes `flake_lock_changed` as input (from `flake-lock-update`'s output) to decide whether to run `nix flake check` even when its own in-memory update found nothing new. |
+| `validate` | always (needs `flake-lock-update`, proceeds if it was skipped) | `validate.yml` — checks out (picking up the just-committed lock on schedule runs), re-runs `nix flake update` in-memory for PR/push runs, validates flake metadata, runs `nix fmt -- --ci` and `nix flake check`. `nix fmt` (incl. `statix`/`deadnix` via `treefmt.nix`) is `continue-on-error: true` — a formatting failure warns via Telegram but doesn't fail the job. **`nix flake check` is blocking** — its failure fails `validate`, which gates the build. It only runs when `flake.lock` actually changed (own in-memory `nix flake update`, or `flake_lock_changed` input from `flake-lock-update`) to keep push/PR runs fast. |
 | `security-checks` | always, parallel with `validate` | `security-checks.yml` — see below. Hard gate: `build-and-check-systems` needs this to succeed. |
-| `build-and-check-systems` | needs `validate` + `security-checks` | `reusable-build.yml` — matrix build of the CI-buildable `nixosConfigurations` hosts: `homeserver`, `matebook`, `gcp-relay`. |
+| `discover-hosts` | needs `validate` + `security-checks` | Inline job. Lists `parts/hosts/*/` (1:1 with `configurations.nixos.<name>`) minus the hand-maintained `EXCLUDE` list, emits it as JSON in the `systems` output that `build-and-check-systems` consumes as its matrix. Pure filesystem read — no Nix eval, no private-flake fetch. |
+| `build-and-check-systems` | needs `discover-hosts` (and transitively `validate` + `security-checks`) | `reusable-build.yml` — matrix build over `discover-hosts`'s output. Currently `homeserver`, `matebook`, `gcp-relay`. |
 | `vulnix-scan` | needs `build-and-check-systems`; `schedule` or `workflow_dispatch` only | `vulnix-scan.yml` — see below. |
 | `workflow-summary` | push to `main`, not on PR | Inline job (not split out — it's just two Telegram notifications reading `needs.*.result`/`needs.security-checks.outputs.*`). |
 
-**Host matrix caveat:** kept in sync with `parts/hosts/*/configuration.nix` by hand — no automatic derivation. Current hosts: `desktop`, `homeserver`, `matebook`, `gcp-relay`. `desktop` is excluded from the CI matrix: its full GUI closure (mango + the whole desktop stack) regularly exceeds GitHub-hosted runner disk/RAM and kills the runner outright — no build error, no log output, job just dies. Built locally on that machine instead (`nixos-rebuild`/`nh os switch` — see "user builds himself" in CLAUDE.md).
+**Host matrix:** derived automatically by the `discover-hosts` job from `parts/hosts/*/` — a newly added host is built with no workflow edit. Only the `EXCLUDE` list is hand-maintained, in that job's `List CI-buildable hosts` step. Currently the only exclusion is `desktop`: its full GUI closure (mango + the whole desktop stack) regularly exceeds GitHub-hosted runner disk/RAM and kills the runner outright — no build error, no log output, job just dies. Built locally on that machine instead (`just deploy-local` / `nh os switch` — see "user builds himself" in CLAUDE.md).
 
 ## security-checks.yml
 

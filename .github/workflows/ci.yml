@@ -4,8 +4,8 @@ name: "CI"
 # diagram and what each one actually does.
 #
 #   flake-lock-update (schedule/dispatch only)
-#     └─ validate ─────────────┐
-#     └─ security-checks ──────┤─→ build-and-check-systems ─→ workflow-summary
+#     └─ validate ────────────┐
+#     └─ security-checks ─────┴─→ discover-hosts ─→ build-and-check-systems ─→ workflow-summary
 #   vulnix-scan (schedule/dispatch only, independent of the above)
 #
 on:
@@ -49,7 +49,7 @@ jobs:
       cancel-in-progress: true
     uses: ./.github/workflows/flake-lock-update.yml
     secrets: inherit
-  # Non-blocking fmt/flake-check — see validate.yml for why.
+  # fmt non-blocking, flake check blocking — see validate.yml.
   validate:
     name: Validate
     needs: [flake-lock-update]
@@ -74,10 +74,45 @@ jobs:
       cancel-in-progress: true
     uses: ./.github/workflows/security-checks.yml
     secrets: inherit
-  # Real build of every host — the actual gate. See reusable-build.yml.
+  # CI host list — derived from parts/hosts/*/ (1:1 with the flake's
+  # configurations.nixos.<name>) so a newly added host is built automatically.
+  # Only CI-specific *exclusions* are hand-maintained (in the step below).
+  # Pure filesystem read — no Nix, no private-flake fetch, so it can't be the
+  # thing that breaks the pipeline.
+  discover-hosts:
+    name: Discover Hosts
+    needs: [validate, security-checks]
+    if: always() && needs.validate.result == 'success' && needs.security-checks.result == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      systems: ${{ steps.list.outputs.systems }}
+    concurrency:
+      group: ${{ github.workflow }}-discover-hosts-${{ github.ref_name }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: List CI-buildable hosts
+        id: list
+        # EXCLUDE list: `desktop` — its full GUI closure (mango + the whole
+        # desktop stack) regularly exceeds GitHub-hosted runner disk/RAM and
+        # kills the runner outright (no build error, no log, job just dies).
+        # Built locally on that machine instead (see "user builds himself").
+        env:
+          EXCLUDE: "desktop"
+        run: |
+          systems=$(
+            for d in parts/hosts/*/; do basename "$d"; done \
+              | grep -vxF "$EXCLUDE" \
+              | jq -R . | jq -sc .
+          )
+          echo "systems=$systems" >> "$GITHUB_OUTPUT"
+          echo "CI build matrix: $systems"
+
+  # Real build of every CI host — the actual gate. See reusable-build.yml.
   build-and-check-systems:
     name: Build & Check ${{ matrix.system }}
-    needs: [validate, security-checks]
+    needs: [validate, security-checks, discover-hosts]
     # Explicit, not the implicit success() a bare `needs:` gets by default:
     # `validate` itself uses `if: always()` (so it still runs when
     # flake-lock-update is skipped on push/PR) — and once any job upstream
@@ -93,20 +128,14 @@ jobs:
     # regardless of what the condition itself says. Confirmed live: the
     # explicit needs.result check alone (no always()) still skipped this
     # job with validate/security-checks both green.
-    if: always() && needs.validate.result == 'success' && needs.security-checks.result == 'success'
+    if: always() && needs.validate.result == 'success' && needs.security-checks.result == 'success' && needs.discover-hosts.result == 'success'
     strategy:
       fail-fast: false # Continue building other systems even if one fails
       max-parallel: 3 # Build systems in parallel
       matrix:
-        system:
-          # desktop (AMD Zen 4, Hyprland) intentionally excluded — its full
-          # GUI closure regularly exceeds GitHub-hosted runner disk/RAM and
-          # kills the runner outright (job fails with no log output at all,
-          # not a real build error). Built locally on that machine instead;
-          # see CLAUDE.md "user builds himself".
-          - homeserver # Intel Skylake
-          - matebook # AMD Zen 1 (znver1)
-          - gcp-relay
+        # Host list from the discover-hosts job (flake nixosConfigurations
+        # minus CI exclusions). Currently: homeserver, matebook, gcp-relay.
+        system: ${{ fromJSON(needs.discover-hosts.outputs.systems) }}
     # Keyed per-system too — otherwise the 4 matrix jobs would share one
     # group and cancel each other instead of only superseded runs.
     concurrency:

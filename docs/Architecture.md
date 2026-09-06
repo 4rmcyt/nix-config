@@ -16,7 +16,8 @@ parts/                      # Auto-imported flake-parts modules
   home-manager-integration.nix # modules.nixos.base — imports sops-nix, disko, nix-topology NixOS modules
   hm.nix                    # modules.nixos.hm — Home Manager NixOS module + HM base wiring (opt-in per host)
   home-manager-base.nix     # modules.homeManager.base — sops, nixvim, overlays, stateVersion
-  workstation.nix          # modules.nixos.workstation — facter + ucodenix + gnupg (desktop/laptop/server);
+  workstation.nix          # modules.nixos.bareMetal — facter + ucodenix + gnupg + nix dev tools
+                           #   (every physical host: desktop/matebook/homeserver; NOT the gcp-relay VM);
                            # modules.nixos.workstationGui — GUI/{chrome,flatpak,kdeconnect,nemo} + nfs-client (desktop/matebook);
                            # modules.homeManager.workstation — GUI/TUI HM apps (desktop/matebook)
   shared-programs.nix       # modules.nixos.base — common programs on all hosts (zsh, nh)
@@ -108,7 +109,7 @@ configurations.nixos.homeserver.module = {...}: {
   imports = [
     nixosBase           # modules.nixos.base — shared-nixos-settings + HM integration + shared-programs
     nixosHm             # modules.nixos.hm  — Home Manager (skipped on gcp-relay)
-    nixosWorkstation    # modules.nixos.workstation — facter/ucodenix/gnupg (skipped on gcp-relay)
+    nixosBareMetal      # modules.nixos.bareMetal — facter/ucodenix/gnupg/dev tools (skipped on gcp-relay)
     ../../../hosts/nixos/homeserver
     inputs.nixarr.nixosModules.default
     ../../../modules/nix/lix
@@ -118,7 +119,7 @@ configurations.nixos.homeserver.module = {...}: {
 ```
 
 `configurations/nixos.nix` maps each entry to `lib.nixosSystem`. **gcp-relay** is
-headless — it imports only `nixosBase`, no HM, no workstation modules.
+headless — it imports only `nixosBase`, no HM, no bare-metal modules.
 **desktop** and **matebook** additionally import `nixosWorkstationGui`
 (`modules.nixos.workstationGui`) and `hmWorkstation`.
 
@@ -255,12 +256,12 @@ Undocumented files that live in the repo root:
 
 | File | Purpose |
 |------|---------|
-| `treefmt.nix` | treefmt config as Nix (used by `parts/formatting.nix` via treefmt-nix flake). Formatters: alejandra, deadnix, dockfmt, just, prettier, rustfmt, shfmt, statix, toml-sort, yamlfmt, trailing-whitespace-fixer. Excludes `secrets/*`, `*.age`, `*.toml` (global). |
-| `treefmt.toml` | TOML mirror of the same treefmt config (used when running `treefmt` directly outside Nix). Must be kept in sync with `treefmt.nix`. |
+| `treefmt.nix` | Sole treefmt config (Nix), used by `parts/formatting.nix` via treefmt-nix and by `nix fmt`. Formatters: alejandra, deadnix, dockfmt, just, prettier, rustfmt, shfmt, statix, toml-sort, yamlfmt, trailing-whitespace-fixer. Excludes `secrets/*`, `*.age`, `*.toml` (global). No standalone `treefmt.toml` — run formatting through `nix fmt`. |
 | `statix.toml` | statix linter config — disables `empty_pattern`, `manual_inherit`, `manual_inherit_from`; pins `nix_version = 2.31.2`; ignores `.direnv/`, `result*/`, `secrets/`, `.git/`. |
 | `namaka.toml` | [namaka](https://github.com/nix-community/namaka) snapshot test config. Tests discovered from `tests/` subdirs (each with `expr.nix` + optional `format.nix`). Currently disabled in pre-commit. |
 | `.yamllint` | yamllint config — extends `default`, disables `document-start` rule. |
-| `devshell.nix` | Legacy `pkgs.mkShell` dev shell (predates `parts/devshells.nix`). Contains all dev tools (age, alejandra, gitleaks, just, nh, pre-commit, sops, statix, etc.). Used when entering the repo with `nix-shell` instead of `nix develop`. |
+
+The `default` dev shell (`nix develop`) is defined inline in [`parts/devshells.nix`](../parts/devshells.nix) — a `pkgs.mkShell` with the dev tools (age, alejandra, gitleaks, just, nh, pre-commit, sops, statix, …); `ide` comes from `shells/ide.nix`.
 
 ### Secrets Scanning / Pre-commit
 
@@ -293,19 +294,18 @@ Undocumented files that live in the repo root:
 
 ### Justfile
 
-`justfile` contains task shortcuts (run with `just <recipe>`). **Note:** most recipes reference stale targets (e.g., `darwinConfigurations.macbook`, `nixfmt`, `nixos-rebuild-ng`, `rsync` to `/etc/nixos/`) and are largely outdated. Active/useful recipes:
+`justfile` contains task shortcuts (run with `just <recipe>`). Full list:
 
 | Recipe | What it does |
 |--------|-------------|
-| `deploy-gcp` | `nixos-rebuild switch --flake .#gcp-relay --target-host zeev@gcp-relay --build-host localhost --elevate=sudo`, then `cachix push 4rmcyt-gcp`, then `nh clean all` |
-| `deploy-homeserver` / `deploy-matebook` | `nixos-rebuild switch --flake .#<host> --target-host zeev@<host> --build-host localhost --elevate=sudo` |
-| `deploy-desktop` | Runs `./deploy.sh desktop` |
-| `check` / `test` | `nix flake check` |
+| `deploy-gcp` | `nixos-rebuild switch --flake .#gcp-relay --target-host zeev@gcp-relay --build-host localhost --elevate=sudo --ask-elevate-password`, then `cachix push 4rmcyt-gcp`, then `nh clean all` |
+| `deploy-homeserver` / `deploy-matebook` | `nixos-rebuild switch --flake .#<host> --target-host zeev@<host> --build-host localhost --elevate=sudo --ask-elevate-password` |
+| `deploy-local` | `sudo nixos-rebuild switch --flake ".#$(hostname)"` — for desktop, which is built on-machine, never in CI |
+| `update` | `nix flake update`, then build homeserver/matebook/gcp-relay locally |
+| `check` | `nix flake check` |
 | `fmt` | `nix fmt` |
 | `push-caches` | `cachix push 4rmcyt-$(hostname) /run/current-system` |
-| `dry-run $host` / `deploy $host` / `copy $host` | `nixos-rebuild-ng` + `rsync` to `/etc/nixos` — older workflow, mostly unused |
-
-Stale recipes still in the file: `update` (references non-existent `darwinConfigurations.macbook`), `build-iso`.
+| `topology` | Render nix-topology SVGs into `docs/` |
 
 ### tools/scripts
 
@@ -343,7 +343,7 @@ Remote hosts are deployed manually via `nixos-rebuild` over SSH — recipes live
 | homeserver | `just deploy-homeserver` → `nixos-rebuild switch --flake .#homeserver --target-host zeev@homeserver --build-host localhost --elevate=sudo` |
 | matebook   | `just deploy-matebook` (same shape, `zeev@matebook`) |
 | gcp-relay  | `just deploy-gcp` → deploy `.#gcp-relay`, then push closure to `4rmcyt-gcp` Cachix, then `nh clean all` |
-| desktop    | Local: `nixos-rebuild switch --flake .#desktop` / `nh os switch` |
+| desktop    | Local: `just deploy-local` (`sudo nixos-rebuild switch --flake ".#$(hostname)"`) / `nh os switch` |
 
 Updates are manual everywhere — no auto-upgrade timer.
 
