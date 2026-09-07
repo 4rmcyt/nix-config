@@ -153,10 +153,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
     };
-    # Pinned pre-2026-09-06: newer revs bumped mcp-servers-nix's own nixpkgs
-    # (17de0b97), whose npm breaks the @modelcontextprotocol/servers workspace
-    # build (`tsc` can't resolve @types/node → TS2591). Unpin once upstream fixes.
-    mcp-servers-nix.url = "github:natsukium/mcp-servers-nix/ba9d1f61db2ecab6cebad320e219235f1fcd0f74";
+    mcp-servers-nix.url = "github:natsukium/mcp-servers-nix";
     nix-topology = {
       url = "github:oddlama/nix-topology";
       inputs.nixpkgs.follows = "nixpkgs";

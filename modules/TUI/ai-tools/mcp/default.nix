@@ -10,27 +10,33 @@
   jq = lib.getExe pkgs.jq;
 
   staticServers = {
-    memory = {
-      type = "stdio";
-      command = lib.getExe pkgs.mcp-server-memory;
-      args = [];
-      env = {
-        MEMORY_FILE_PATH = "${config.home.homeDirectory}/.local/share/mcp-memory/memory.jsonl";
-      };
-    };
-    sequential-thinking = {
-      type = "stdio";
-      command = lib.getExe pkgs.mcp-server-sequential-thinking;
-      args = [];
-    };
-    filesystem = {
-      type = "stdio";
-      command = lib.getExe pkgs.mcp-server-filesystem;
-      args = [
-        "/etc/nixos"
-        "${config.home.homeDirectory}/src"
-      ];
-    };
+    # memory / sequential-thinking / filesystem disabled 2026-09-07: all three
+    # build the @modelcontextprotocol/servers npm monorepo, whose `tsc` step
+    # fails from source against current nixpkgs buildNpmPackage (@types/node not
+    # resolved → TS2591). The system-pkgs build only worked via cachix cache;
+    # the HM instantiation forces a from-source build. Re-enable once
+    # mcp-servers-nix / upstream adapt the workspace build.
+    # memory = {
+    #   type = "stdio";
+    #   command = lib.getExe pkgs.mcp-server-memory;
+    #   args = [];
+    #   env = {
+    #     MEMORY_FILE_PATH = "${config.home.homeDirectory}/.local/share/mcp-memory/memory.jsonl";
+    #   };
+    # };
+    # sequential-thinking = {
+    #   type = "stdio";
+    #   command = lib.getExe pkgs.mcp-server-sequential-thinking;
+    #   args = [];
+    # };
+    # filesystem = {
+    #   type = "stdio";
+    #   command = lib.getExe pkgs.mcp-server-filesystem;
+    #   args = [
+    #     "/etc/nixos"
+    #     "${config.home.homeDirectory}/src"
+    #   ];
+    # };
     kubernetes = {
       type = "stdio";
       command = lib.getExe pkgs.mcp-k8s-go;
