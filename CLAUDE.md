@@ -6,11 +6,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 nix fmt                          # Format all files (alejandra, deadnix, statix, prettier, shfmt, yamlfmt)
-nix flake check                  # Validate flake outputs
-nix build .#nixosConfigurations.<host>.config.system.build.toplevel  # Build a host
 ```
 
-**NEVER run `nix build`, `nixos-rebuild`, or any build/deploy commands.** The user builds himself. Write code changes only — stop when done.
+Claude runs `nix fmt` only. The commands below are for the USER to run — never Claude:
+
+```bash
+nix flake check                                                      # user runs
+nix eval .#nixosConfigurations.<host>...                             # user runs
+nix build .#nixosConfigurations.<host>.config.system.build.toplevel  # user runs
+nixos-rebuild / nh os switch                                         # user runs
+```
+
+**NEVER run `nix build`, `nix eval`, `nix flake check`, `nixos-rebuild`, or any build/eval/deploy command.** The user owns the build loop and builds himself. Do not eval to "verify" an edit — make the change, state exactly what changed and where, stop. Eval only when it uniquely answers a concrete question that cannot be reasoned out (and then the narrowest expression, never a full host `toplevel`).
+
+**Diagnosis before action.** When the user pastes an error or asks for a fix: first output the diagnosis — what the error means, which `file:line`, why — then wait for go-ahead ("давай"/"сделай") before editing. Do not lead with an Edit tool call. One proposed change at a time; when done, list every file touched explicitly (no edits buried in prose).
 
 **NEVER run `sudo`.** It is blocked by a hook. Write the command and ask the user to run it.
 
@@ -37,7 +46,10 @@ hosts/nixos/{host}/     # Hardware config + host-specific NixOS settings
 home/{host}/            # Home Manager config per host
 modules/
   base/                 # Core system (logging, msmtp)
-  options/              # my.defaults.* (identity/locale) + my.network.* (addresses, ports)
+  options/              # my.defaults.* (identity/locale) + my.network.* (addresses, ports) are
+                        # the only real nested categories; every other module is flat under
+                        # my.<moduleName> (my.crowdsec, my.traefik, my.hardening, …) —
+                        # there is no my.security.* namespace
   WM/                   # Window managers (niri + mango, both w/ noctalia-shell, gtk, mime) — desktop:mango, matebook:niri
   GUI/                  # GUI apps (firefox, chrome, zed, obsidian, terminal, IDE, etc.)
   TUI/                  # Terminal tools (zsh, zellij, atuin, ai-tools, llama-cpp)

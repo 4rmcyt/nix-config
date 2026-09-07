@@ -1,43 +1,4 @@
-lib: mcpServers: let
-  mcpServerNames = builtins.attrNames mcpServers;
-  mcpList = lib.concatMapStringsSep "\n" (name: "  - ${name}") mcpServerNames;
-in ''
-  ## Available MCP Servers
-  ${mcpList}
-
-  ## nix-config Project Layout
-
-  Flake with 4 NixOS hosts: `desktop`, `gcp-relay`, `homeserver`, `matebook`
-
-  ```
-  hosts/nixos/{host}/     # System config + hardware
-  home/{host}/            # Home Manager per host
-  modules/
-    base/                 # Core system (logging, msmtp)
-    options/              # my.defaults.*, my.network.* (real nested categories);
-                          # everything else is flat under my.<moduleName> (my.crowdsec,
-                          # my.traefik, my.hardening, ...) — there is no my.security.* namespace
-    WM/                   # niri + mango (both w/ noctalia v5), gtk, mime — desktop:mango, matebook:niri
-    GUI/                  # firefox, chrome, obsidian, zed, terminal, mpv, etc.
-    TUI/                  # zsh, zellij, atuin, starship, neovim, ai-tools (claude-code, llama-cpp, mcp)
-    services/             # homepage, miniflux, home-assistant, atuin-server, nixarr,
-                          # dispatcharr, komga, komf, microbin, ntfy, radicale, argocd (disabled), k3s (disabled)
-    networking/           # ssh, tailscale, traefik, caddy, headscale,
-                          # cloudflared, wireguard, nfs, nfs-client, unbound, avahi, dnssec, nut-server, nut-client
-    security/             # kanidm, crowdsec, fail2ban, hardening
-    monitoring/           # prometheus, grafana, loki, alloy, alerts, node-exporter
-    database/             # postgresql, redis, couchdb
-    disko/                # Declarative disk partitioning per host
-    users/                # Per-user NixOS config (zeev)
-    backup/               # Backup tooling (restic)
-    containers/           # Podman container support
-    dev/                  # Developer tools
-    dots/                 # Dotfile management
-    nix/                  # Nix daemon variants (lix)
-  parts/                  # flake-parts modules (auto-imported via import-tree)
-  secrets/                # sops-encrypted YAML (NEVER commit plaintext)
-  ```
-
+_lib: _mcpServers: ''
   ## Key Conventions
 
   **Metadata:** Use `config.meta.owner.*` in flake-parts scope, and `config.my.defaults.*` in NixOS module scope. Never hardcode them.

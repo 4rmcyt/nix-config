@@ -5,20 +5,10 @@ in ''
 
   ## MCP Tool Routing
 
-  **ALWAYS use the correct MCP tool. Do NOT fall back to CLI when an MCP tool exists.**
-
-  | Task | Tool | Notes |
-  |------|------|-------|
-  | GitHub PRs, issues, repos, code search | `github` MCP | NEVER use `gh` CLI |
-  | NixOS packages, options, Home Manager docs | `mcp-nixos` | First choice for Nix queries |
-  | Web search | `tavily` | Current docs, news, specs |
-  | Fetch specific URL | `fetch` | Read web page content |
-  | Files in `/etc/nixos` or `~/src` | `filesystem` MCP | Read/write/search |
-  | Search external codebases (nixpkgs, GitHub) | `github` MCP | `search_code` tool |
-  | Kubernetes cluster ops | `kubernetes` | k3s management |
-  | Run Python code | `python` | Computation, scripting |
-  | Multi-step analysis | `sequential-thinking` | Architecture decisions |
-  | Persist context across sessions | `memory` | Decisions, patterns |
+  **ALWAYS use the correct MCP tool. Do NOT fall back to CLI when an MCP tool exists**
+  (`github` MCP over `gh`, `mcp-nixos` over `nix search`, `filesystem` MCP for reads/writes,
+  `tavily`/`fetch` for the web, `kubernetes` for k3s, `memory` to persist context).
+  A project's own CLAUDE.md carries the authoritative routing table for that project.
 
   ${basePrompt}
 ''
