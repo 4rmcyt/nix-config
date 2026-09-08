@@ -263,7 +263,7 @@ All configured via the Cloudflare dashboard/API (zone `<domain>`, Free plan) —
 | Service        | Port  | URL                        | Notes                         |
 |----------------|-------|----------------------------|-------------------------------|
 | Home Assistant | 8123  | `hass.<domain>`        | Podman OCI container; Alexa Smart Home; WoL for desktop; geoblock + rate-limit |
-| Homepage       | 8082  | `home.<domain>`        | Dashboard (pinned v1.13.1 overlay) |
+| Homepage       | 8082  | `home.<domain>`        | Dashboard (v2, from nixpkgs; `allowedHosts` set in the module) |
 | Radicale       | 5232  | `cal.<domain>`         | CalDAV/CardDAV                |
 | ntfy           | 9991  | `ntfy.<domain>`        | Push notifications            |
 | Microbin       | 8069  | `microbin.<domain>`    | Paste bin                     |

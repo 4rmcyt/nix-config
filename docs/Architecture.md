@@ -176,7 +176,7 @@ GitHub access token loaded via sops secret `nix_access_token`, written to `/run/
 
 - **HM scope** — the list lives in [`lib/overlays.nix`](lib/overlays.nix) (`import`ed by `parts/home-manager-base.nix`): `mcp-servers-nix`, `nur`, `nix-vscode-extensions`, `noctalia`, plus a small local overlay that restores `mcp-server-{memory,filesystem,sequential-thinking}` from vanilla nixpkgs (mcp-servers-nix's TS builds of those are broken from source; it's kept only for `tavily-mcp`).
 - **System scope** — no shared list; each is inline in the one host or module that needs it:
-  - `parts/hosts/homeserver/configuration.nix` — `homepage-dashboard` pinned to v1.13.1; `sonarr`/`radarr`/`prowlarr`/`bazarr`/`jellyfin`/`jellyfin-web` from `inputs.arr-packages`
+  - `parts/hosts/homeserver/configuration.nix` — `sonarr`/`radarr`/`prowlarr`/`bazarr`/`jellyfin`/`jellyfin-web` from `inputs.arr-packages`
   - `parts/hosts/gcp-relay/configuration.nix` — `inputs.headscale.overlays.default`
   - `hosts/nixos/desktop/hardware-configuration.nix` — `linux-firmware` MT7922 Wi-Fi blob rollback (hardware-specific)
   - `modules/services/microbin/default.nix` — `microbin` theming/asset override (coupled to the module)
