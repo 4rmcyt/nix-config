@@ -95,7 +95,11 @@
           xcolor
           titlesec
           geometry
-          hvfloat
+          preprint
+          fontawesome5
+          csquotes
+          latexmk
+          polyglossia
         ]))
       pkgs.nur.repos.codgician.samsung-dc-toolkit-3
       pkgs.nur.repos.codgician.waydroid-script
