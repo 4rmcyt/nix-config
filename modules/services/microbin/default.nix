@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }: let
@@ -62,6 +63,12 @@ in {
   ];
   systemd.services.microbin = {
     serviceConfig = {
+      # nixpkgs' microbin module already sets PrivateUsers=yes,
+      # MemoryDenyWriteExecute=yes, DynamicUser=yes, ProtectSystem=strict
+      # (verified via `systemctl show microbin.service`) — already tight,
+      # and already proven to work under those. Only gap: CapabilityBoundingSet
+      # left at the full default set despite AmbientCapabilities being empty.
+      CapabilityBoundingSet = lib.mkDefault [];
       LoadCredential = [
         "admin_password:${config.sops.secrets.microbin_admin_password.path}"
         "uploader_password:${config.sops.secrets.microbin_uploader_password.path}"

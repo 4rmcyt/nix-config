@@ -24,6 +24,42 @@
     lib.optional cfg.pdf "--pdf" ++ lib.optional cfg.notify "--notify"
   );
 
+  # No hardening at all here previously (verified via `systemctl show
+  # job-kombayn-api.service`: full CapabilityBoundingSet, ProtectSystem=no,
+  # NoNewPrivileges=no) — this is our own, least-audited code on the box.
+  # Deliberately NOT setting SystemCallFilter/MemoryDenyWriteExecute/
+  # PrivateUsers: weasyprint pulls in cairo/pango (C libs doing their own
+  # font/rendering syscalls), psycopg and argon2-cffi are C extensions —
+  # same class of directive that killed alloy.service (Go) on gcp-relay via
+  # an unexpected syscall, not worth testing blind against untested paths
+  # (PDF rendering, JWT auth) with no equivalent live evidence either way.
+  # None of these bind <1024 or touch netlink, so PrivateUsers' specific
+  # failure mode (caddy/crowdsec-firewall-bouncer) shouldn't apply — skipped
+  # anyway, consistent with the rest of this pass.
+  commonHardening = {
+    CapabilityBoundingSet = lib.mkDefault [];
+    NoNewPrivileges = lib.mkDefault true;
+    ProtectSystem = lib.mkDefault "strict";
+    ProtectHome = lib.mkDefault true;
+    PrivateTmp = lib.mkDefault true;
+    PrivateDevices = lib.mkDefault true;
+    RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
+    ProtectClock = lib.mkDefault true;
+    ProtectKernelLogs = lib.mkDefault true;
+    ProtectKernelModules = lib.mkDefault true;
+    ProtectKernelTunables = lib.mkDefault true;
+    ProtectControlGroups = lib.mkDefault true;
+    ProtectHostname = lib.mkDefault true;
+    RestrictNamespaces = lib.mkDefault true;
+    RestrictSUIDSGID = lib.mkDefault true;
+    LockPersonality = lib.mkDefault true;
+    RestrictRealtime = lib.mkDefault true;
+    ProtectProc = lib.mkDefault "invisible";
+    ProcSubset = lib.mkDefault "pid";
+    UMask = lib.mkDefault "0077";
+    RemoveIPC = lib.mkDefault true;
+  };
+
   runScript = pkgs.writeShellScript "job-kombayn-run" ''
     set -euo pipefail
     echo "=== kombayn run: $(date -Is) ==="
@@ -200,19 +236,21 @@ in {
       wants = ["network-online.target"];
       path = [cfg.pythonPackage pkgs.bash pkgs.coreutils] ++ lib.optional cfg.useChromium pkgs.chromium;
       environment = lib.mkIf cfg.useChromium {CHROMIUM_BIN = "${pkgs.chromium}/bin/chromium";};
-      serviceConfig = {
-        Type = "oneshot";
-        User = cfg.user;
-        StateDirectory = "job-kombayn";
-        WorkingDirectory = "/var/lib/job-kombayn";
-        EnvironmentFile = lib.mkIf (cfg.environmentFile != null) cfg.environmentFile;
-        ExecStart = "${pkgs.bash}/bin/bash ${runScript}";
-        # be a good citizen on a homeserver
-        Nice = 10;
-        IOSchedulingClass = "idle";
-        # don't let one run pile onto another
-        TimeoutStartSec = "20min";
-      };
+      serviceConfig =
+        commonHardening
+        // {
+          Type = "oneshot";
+          User = cfg.user;
+          StateDirectory = "job-kombayn";
+          WorkingDirectory = "/var/lib/job-kombayn";
+          EnvironmentFile = lib.mkIf (cfg.environmentFile != null) cfg.environmentFile;
+          ExecStart = "${pkgs.bash}/bin/bash ${runScript}";
+          # be a good citizen on a homeserver
+          Nice = 10;
+          IOSchedulingClass = "idle";
+          # don't let one run pile onto another
+          TimeoutStartSec = "20min";
+        };
     };
 
     systemd.timers.job-kombayn = {
@@ -238,36 +276,40 @@ in {
         # entry Python adds automatically -- point it at src explicitly.
         PYTHONPATH = cfg.src;
       };
-      serviceConfig = {
-        Type = "simple";
-        User = cfg.user;
-        StateDirectory = "job-kombayn";
-        # Must match job-kombayn.service's WorkingDirectory: the scan timer
-        # writes Postgres `applications.folder` as a path relative to its own
-        # CWD (run.py's --root defaults to "applications", never passed
-        # explicitly). If this service's CWD differs, api.py's
-        # Path(folder).exists() checks resolve against the wrong directory
-        # and every resume.pdf/cover.pdf lookup 404s even when the file is
-        # really there under /var/lib/job-kombayn/applications/.
-        WorkingDirectory = "/var/lib/job-kombayn";
-        EnvironmentFile = lib.mkIf (cfg.environmentFile != null) cfg.environmentFile;
-        ExecStart = "${cfg.apiPythonPackage}/bin/uvicorn kombayn.api:app --host 127.0.0.1 --port ${toString cfg.apiPort}";
-        Restart = "always";
-        RestartSec = "5s";
-        Nice = 10;
-      };
+      serviceConfig =
+        commonHardening
+        // {
+          Type = "simple";
+          User = cfg.user;
+          StateDirectory = "job-kombayn";
+          # Must match job-kombayn.service's WorkingDirectory: the scan timer
+          # writes Postgres `applications.folder` as a path relative to its own
+          # CWD (run.py's --root defaults to "applications", never passed
+          # explicitly). If this service's CWD differs, api.py's
+          # Path(folder).exists() checks resolve against the wrong directory
+          # and every resume.pdf/cover.pdf lookup 404s even when the file is
+          # really there under /var/lib/job-kombayn/applications/.
+          WorkingDirectory = "/var/lib/job-kombayn";
+          EnvironmentFile = lib.mkIf (cfg.environmentFile != null) cfg.environmentFile;
+          ExecStart = "${cfg.apiPythonPackage}/bin/uvicorn kombayn.api:app --host 127.0.0.1 --port ${toString cfg.apiPort}";
+          Restart = "always";
+          RestartSec = "5s";
+          Nice = 10;
+        };
     };
 
     systemd.services.job-kombayn-web = lib.mkIf cfg.enableWeb {
       description = "job-kombayn: static frontend (SPA)";
       wantedBy = ["multi-user.target"];
-      serviceConfig = {
-        Type = "simple";
-        DynamicUser = true;
-        ExecStart = "${pkgs.static-web-server}/bin/static-web-server --host 127.0.0.1 --port ${toString cfg.webPort} --root ${cfg.webBuild}/dist";
-        Restart = "always";
-        RestartSec = "5s";
-      };
+      serviceConfig =
+        commonHardening
+        // {
+          Type = "simple";
+          DynamicUser = true;
+          ExecStart = "${pkgs.static-web-server}/bin/static-web-server --host 127.0.0.1 --port ${toString cfg.webPort} --root ${cfg.webBuild}/dist";
+          Restart = "always";
+          RestartSec = "5s";
+        };
     };
 
     systemd.services.job-kombayn-bot = lib.mkIf cfg.enableBot {
@@ -276,17 +318,19 @@ in {
       wants = ["network-online.target"];
       wantedBy = ["multi-user.target"];
       path = [cfg.pythonPackage];
-      serviceConfig = {
-        Type = "simple";
-        User = cfg.user;
-        StateDirectory = "job-kombayn"; # shares the .telegram_offset state file
-        WorkingDirectory = "/var/lib/job-kombayn";
-        EnvironmentFile = lib.mkIf (cfg.environmentFile != null) cfg.environmentFile;
-        ExecStart = "${cfg.pythonPackage}/bin/python3 ${cfg.src}/telegram_bot.py";
-        Restart = "always";
-        RestartSec = "10s";
-        Nice = 10;
-      };
+      serviceConfig =
+        commonHardening
+        // {
+          Type = "simple";
+          User = cfg.user;
+          StateDirectory = "job-kombayn"; # shares the .telegram_offset state file
+          WorkingDirectory = "/var/lib/job-kombayn";
+          EnvironmentFile = lib.mkIf (cfg.environmentFile != null) cfg.environmentFile;
+          ExecStart = "${cfg.pythonPackage}/bin/python3 ${cfg.src}/telegram_bot.py";
+          Restart = "always";
+          RestartSec = "10s";
+          Nice = 10;
+        };
     };
   };
 }

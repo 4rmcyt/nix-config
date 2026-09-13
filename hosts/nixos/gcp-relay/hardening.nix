@@ -37,6 +37,12 @@
     # non-overlapping SSH settings (AllowUsers, MaxAuthTries, ...) stay
     # inline in ./default.nix.
     extras.misc.ssh-hardening = true;
+
+    # PermitRootLogin=no already blocks SSH root login; this closes the
+    # remaining path (su/console password auth as root) by making the
+    # password hash unmatchable. zeev's sudo still needs its own password
+    # (security.sudo.wheelNeedsPassword), unaffected.
+    extras.system.lock-root = true;
   };
 
   # gcp-relay imports only modules/base/logging, not all of modules/base
@@ -65,6 +71,40 @@
     UMask = lib.mkDefault "0077";
     RemoveIPC = lib.mkDefault true;
     PrivateUsers = lib.mkDefault true;
+  };
+
+  # sshd and tailscaled are structurally near-unhardenable (nixpkgs tracks
+  # both as "critical to not have regressions" in
+  # https://github.com/NixOS/nixpkgs/issues/377827) — sshd spawns arbitrary
+  # user shells via PAM, tailscaled needs CAP_NET_ADMIN/CAP_NET_RAW and TUN
+  # access. Neither will leave UNSAFE. These are additive-only directives
+  # that don't touch capabilities, namespaces, or address families — same
+  # subset already proven safe on headscale/nscd/couchdb in this repo.
+  # Deliberately NOT set: SystemCallFilter, MemoryDenyWriteExecute,
+  # PrivateUsers — same kill-on-violation directives that already crashed
+  # alloy.service here (see modules/monitoring/alloy-client.nix) and were
+  # skipped on headscale for the same reason; PAM sessions in particular are
+  # known to break under PrivateUsers.
+  systemd.services.sshd.serviceConfig = {
+    ProtectClock = lib.mkDefault true;
+    ProtectKernelLogs = lib.mkDefault true;
+    ProtectKernelModules = lib.mkDefault true;
+    ProtectKernelTunables = lib.mkDefault true;
+    ProtectHostname = lib.mkDefault true;
+    LockPersonality = lib.mkDefault true;
+    RestrictRealtime = lib.mkDefault true;
+    RemoveIPC = lib.mkDefault true;
+    UMask = lib.mkDefault "0077";
+  };
+
+  systemd.services.tailscaled.serviceConfig = {
+    ProtectClock = lib.mkDefault true;
+    ProtectKernelLogs = lib.mkDefault true;
+    ProtectHostname = lib.mkDefault true;
+    LockPersonality = lib.mkDefault true;
+    RestrictRealtime = lib.mkDefault true;
+    RemoveIPC = lib.mkDefault true;
+    UMask = lib.mkDefault "0077";
   };
 
   # Not hardening, disabling: this GCE VM has no VGA console, keyboard, or

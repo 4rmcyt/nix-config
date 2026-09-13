@@ -194,6 +194,13 @@ in {
         CapabilityBoundingSet = lib.mkDefault [];
         NoNewPrivileges = lib.mkDefault true;
       };
+      # audiobookshelf's module already has ProtectSystem=strict,
+      # NoNewPrivileges=yes (verified via `systemctl show`) but the same
+      # full-default-capability-set gap. Not setting MemoryDenyWriteExecute:
+      # it's a Node.js app, and V8's JIT needs W+X memory — same risk class
+      # that killed alloy.service (Go) here, don't need a second confirmed
+      # incident to know better.
+      audiobookshelf.serviceConfig.CapabilityBoundingSet = lib.mkDefault [];
     }
   ];
 

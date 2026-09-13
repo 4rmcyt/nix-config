@@ -51,5 +51,22 @@
     # modules/security/hardening.nix. Non-overlapping SSH settings
     # (AllowUsers, ...) stay inline in ./default.nix.
     extras.misc.ssh-hardening = true;
+
+    # PermitRootLogin=no already blocks SSH root login; this closes the
+    # remaining path (su/console password auth as root) by making the
+    # password hash unmatchable. zeev's sudo still needs its own password
+    # (security.sudo.wheelNeedsPassword), unaffected.
+    extras.system.lock-root = true;
+
+    # intelme-related: real Intel ME hardware here, never touched over any
+    # network path we manage — pure attack-surface reduction, no downside.
+    # bluetooth-related: hardware.bluetooth.enable is already false
+    # (hosts/nixos/homeserver/hardware-configuration.nix) — bluetooth is
+    # already unused, this just blocks the kernel modules too instead of
+    # only disabling the service.
+    kernel-modules.disable = {
+      intelme-related = true;
+      bluetooth-related = true;
+    };
   };
 }
