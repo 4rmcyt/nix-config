@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }: let
@@ -172,4 +173,31 @@ in {
   systemd.tmpfiles.rules = [
     "d /run/fail2ban 0750 root root -"
   ];
+
+  # nixpkgs' fail2ban module already runs as root with a narrow
+  # CapabilityBoundingSet (cap_dac_read_search, cap_net_admin, cap_net_raw,
+  # cap_audit_read — verified via `systemctl show fail2ban.service`) and
+  # ProtectSystem=strict; root is required (manages nftables/iptables bans
+  # and reads root-owned logs), not fixable here. The toggles below are
+  # additive sandboxing the module doesn't set at all — none grant or
+  # require any capability, so they're safe regardless of jail config.
+  systemd.services.fail2ban.serviceConfig = {
+    ProtectClock = lib.mkDefault true;
+    ProtectKernelLogs = lib.mkDefault true;
+    MemoryDenyWriteExecute = lib.mkDefault true;
+    RestrictNamespaces = lib.mkDefault true;
+    LockPersonality = lib.mkDefault true;
+    RestrictRealtime = lib.mkDefault true;
+    RestrictSUIDSGID = lib.mkDefault true;
+    SystemCallArchitectures = lib.mkDefault "native";
+    # AF_NETLINK required (nftables/iptables manipulation), AF_UNIX for
+    # journald reads, AF_INET/INET6 for the cloudflare-waf action's curl calls.
+    RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX" "AF_NETLINK"];
+    ProtectProc = lib.mkDefault "invisible";
+    ProcSubset = lib.mkDefault "pid";
+    UMask = lib.mkDefault "0077";
+    SystemCallFilter = lib.mkDefault ["@system-service"];
+    # No IPAddressDeny/Allow — cloudflare-waf action needs unrestricted
+    # outbound to api.cloudflare.com.
+  };
 }

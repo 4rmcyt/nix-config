@@ -112,5 +112,28 @@ in {
     };
 
     networking.firewall.allowedUDPPorts = [3478];
+
+    # nixpkgs' headscale module already sets CapabilityBoundingSet=cap_chown,
+    # RestrictAddressFamilies=AF_INET/AF_INET6/AF_UNIX and a curated
+    # SystemCallFilter (verified via `systemctl show headscale.service`) — do
+    # not touch those, they're already tight. These are just the additive
+    # sandboxing toggles the module leaves unset. No IPAddressDeny/Allow:
+    # derp.auto_update_enabled fetches https://controlplane.tailscale.com
+    # periodically, so outbound can't be locked down to the tailnet only.
+    systemd.services.headscale.serviceConfig = {
+      ProtectClock = mkDefault true;
+      ProtectKernelLogs = mkDefault true;
+      ProtectKernelModules = mkDefault true;
+      ProtectKernelTunables = mkDefault true;
+      ProtectControlGroups = mkDefault true;
+      ProtectHostname = mkDefault true;
+      RestrictNamespaces = mkDefault true;
+      MemoryDenyWriteExecute = mkDefault true;
+      ProtectProc = mkDefault "invisible";
+      ProcSubset = mkDefault "pid";
+      UMask = mkDefault "0077";
+      RemoveIPC = mkDefault true;
+      PrivateUsers = mkDefault true;
+    };
   };
 }

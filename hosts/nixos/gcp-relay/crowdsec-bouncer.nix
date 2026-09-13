@@ -50,5 +50,31 @@ in {
     systemd.units."crowdsec.service".enable = lib.mkForce false;
 
     networking.nftables.enable = true;
+
+    # nixpkgs' crowdsec-firewall-bouncer module already sets
+    # CapabilityBoundingSet=cap_net_admin only (no cap_net_raw — verified via
+    # `systemctl show crowdsec-firewall-bouncer.service`, don't assume it
+    # needs more), RestrictAddressFamilies=AF_INET/AF_INET6/AF_NETLINK/AF_UNIX,
+    # a curated SystemCallFilter, and DynamicUser=yes — do not touch those.
+    # These are just the additive sandboxing toggles the module leaves
+    # unset. No IPAddressDeny/Allow: it talks to the LAPI over Tailscale
+    # (homeserver, not local), so it needs outbound beyond just localhost.
+    systemd.services.crowdsec-firewall-bouncer.serviceConfig = {
+      ProtectClock = lib.mkDefault true;
+      ProtectKernelLogs = lib.mkDefault true;
+      ProtectKernelModules = lib.mkDefault true;
+      ProtectKernelTunables = lib.mkDefault true;
+      ProtectHostname = lib.mkDefault true;
+      RestrictNamespaces = lib.mkDefault true;
+      MemoryDenyWriteExecute = lib.mkDefault true;
+      ProtectProc = lib.mkDefault "invisible";
+      ProcSubset = lib.mkDefault "pid";
+      UMask = lib.mkDefault "0077";
+      RemoveIPC = lib.mkDefault true;
+      PrivateUsers = lib.mkDefault true;
+      # ProtectControlGroups left alone — the bouncer's nftables backend
+      # sometimes needs cgroup-based matching depending on ruleset; not
+      # worth the risk to verify blind.
+    };
   };
 }

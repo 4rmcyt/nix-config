@@ -56,6 +56,34 @@ in {
       LockPersonality = lib.mkDefault true;
       RestrictRealtime = lib.mkDefault true;
       SystemCallArchitectures = lib.mkDefault "native";
+
+      # nixpkgs' caddy module leaves CapabilityBoundingSet at the systemd
+      # default (the full ~40-capability set: cap_sys_admin, cap_sys_module,
+      # cap_sys_boot, ...). It only actually needs the two it already
+      # requests via AmbientCapabilities (verified via `systemctl show
+      # caddy.service -p AmbientCapabilities`, do not change without
+      # rechecking that first).
+      CapabilityBoundingSet = ["CAP_NET_BIND_SERVICE" "CAP_NET_ADMIN"];
+
+      ProtectClock = lib.mkDefault true;
+      ProtectKernelLogs = lib.mkDefault true;
+      ProtectKernelModules = lib.mkDefault true;
+      ProtectKernelTunables = lib.mkDefault true;
+      ProtectControlGroups = lib.mkDefault true;
+      ProtectHostname = lib.mkDefault true;
+      RestrictNamespaces = lib.mkDefault true;
+      MemoryDenyWriteExecute = lib.mkDefault true;
+      # AF_NETLINK kept: ambient CAP_NET_ADMIN implies caddy (or a plugin)
+      # does netlink-level network work, not just listen()/connect().
+      RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX" "AF_NETLINK"];
+      ProtectProc = lib.mkDefault "invisible";
+      ProcSubset = lib.mkDefault "pid";
+      UMask = lib.mkDefault "0077";
+      SystemCallFilter = lib.mkDefault ["@system-service"];
+      RemoveIPC = lib.mkDefault true;
+      PrivateUsers = lib.mkDefault true;
+      # No IPAddressDeny/Allow — caddy needs unrestricted outbound (DNS-01
+      # ACME to Cloudflare's API, arbitrary reverse-proxy upstreams).
     };
   };
 }
