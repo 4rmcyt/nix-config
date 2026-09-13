@@ -74,7 +74,9 @@ in {
 
     # Grafana — reached directly via Traefik (not tunneled through
     # Cloudflare); same reasoning as the jellyfin jail above.
-    # Pattern: level=warn ... msg="Invalid username or password" ... remote_addr=<ip>
+    # Uses the filter shipped by the fail2ban package itself (see removed
+    # environment.etc override below) — matches Grafana's actual log15
+    # output (`lvl=eror`/`lvl=warn`, not `level=`).
     jails.grafana = ''
       enabled      = true
       backend      = systemd
@@ -134,16 +136,15 @@ in {
       '';
     };
 
-    # Grafana filter — matches failed login entries from journal.
-    # Pattern: level=warn ... msg="Invalid username or password" ... remote_addr=<ip>
-    "fail2ban/filter.d/grafana.conf" = {
-      mode = "0644";
-      text = ''
-        [Definition]
-        failregex = ^.*level=warn.*msg="Invalid username or password".*remote_addr=<HOST>.*$
-        ignoreregex =
-      '';
-    };
+    # No custom grafana.conf filter here anymore — the fail2ban package
+    # (1.1.1+) now ships its own etc/fail2ban/filter.d/grafana.conf, which
+    # collided with ours ("mismatched duplicate entry" build failure).
+    # Removed rather than kept: ours matched `level=warn`, but Grafana's
+    # actual logger (log15) emits `lvl=warn`/`lvl=eror` — the custom filter
+    # was almost certainly never matching real log lines. The bundled one
+    # (`failregex` on `lvl=err?or ... msg="Invalid username or password"
+    # ... remote_addr=<ADDR>`) matches the real format and is what
+    # `filter = grafana` in the jail below now resolves to.
 
     # Home Assistant filter — matches failed login log entries.
     # HASS logs: Login attempt or request with invalid authentication
