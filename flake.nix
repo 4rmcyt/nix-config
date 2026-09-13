@@ -32,10 +32,8 @@
       inputs.disko.follows = "disko";
     };
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
-    # Pinned to a tag, not main — nix-mineral is alpha software (see docs/Infrastructure.md
-    # gcp-relay section). Bump deliberately, review the diff, don't blind `nix flake update`.
     nix-mineral = {
-      url = "github:cynicsketch/nix-mineral/v0.4.0-alpha";
+      url = "github:cynicsketch/nix-mineral";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

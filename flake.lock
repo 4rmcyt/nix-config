@@ -586,11 +586,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789320570,
-        "narHash": "sha256-1Js4AJiWLV7U1SF3ok0J2tKbBEJYE5YpElGU+7fMbfo=",
+        "lastModified": 1789339793,
+        "narHash": "sha256-1TGxgma8jQGhw0yfjyndwPhgcoXAYtlSm4ezENVzrPA=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "87b3c74df02a2b2e691a24f3c82774f48a70c1bd",
+        "rev": "dd0b74e2b53eb6aa03fe120fcc00a4d37cc288f8",
         "type": "github"
       },
       "original": {
@@ -941,16 +941,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1785770546,
-        "narHash": "sha256-I1csyD4Z1uHxJ8NOvdEOXYjtEEI3J3bBvXylzlzLRPc=",
+        "lastModified": 1788673119,
+        "narHash": "sha256-xlyrxRGi1ZhpRG3owrJvcKwLjfkvMc65dK5cUKA8BnE=",
         "owner": "cynicsketch",
         "repo": "nix-mineral",
-        "rev": "a488ad7d35f658f0d7bd8363bbf3be32bcd992a3",
+        "rev": "00b178db003b6cd6040a2451b976266348bb7c11",
         "type": "github"
       },
       "original": {
         "owner": "cynicsketch",
-        "ref": "v0.4.0-alpha",
         "repo": "nix-mineral",
         "type": "github"
       }
@@ -1384,11 +1383,11 @@
         "nixpkgs": "nixpkgs_9"
       },
       "locked": {
-        "lastModified": 1789325869,
-        "narHash": "sha256-M3L6BwNwpVWvg0b12YkHUrNKtzX9I0Z09TS83tPafgc=",
+        "lastModified": 1789338294,
+        "narHash": "sha256-cjgCGUOjDgLVb6bcrWQIJthHL/QxEXlFWurx0T0Ka7o=",
         "owner": "noctalia-dev",
         "repo": "noctalia",
-        "rev": "4011887477bdaa1e452cc8770ec696977fffde15",
+        "rev": "9e9e83017a47cbba39fb7b200b9fba7d5213d7f0",
         "type": "github"
       },
       "original": {
@@ -1406,11 +1405,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789328560,
-        "narHash": "sha256-t/DCzl8bDibWnwWr5EQ8JIDcfSP59PgiEzcWTGEdjJ0=",
+        "lastModified": 1789342345,
+        "narHash": "sha256-iwwhomZS0lAgGOCjbcoD5wldOZO9lWuZT1/Ii830gWw=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "fd4a66cea3a1078618e91cb1685aa324641d2ddb",
+        "rev": "35f75939ebfc5f122f8d03cbd8e239765781a234",
         "type": "github"
       },
       "original": {

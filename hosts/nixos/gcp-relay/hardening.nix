@@ -1,4 +1,4 @@
-# nix-mineral hardening baseline (inputs.nix-mineral, pinned in flake.nix).
+# nix-mineral hardening baseline (inputs.nix-mineral, tracks main in flake.nix).
 #
 # gcp-relay is the simplest host to harden: no podman, no ZFS/Btrfs
 # subvolumes, no GUI/games/anti-cheat — just Headscale/DERP/Caddy/fail2ban on

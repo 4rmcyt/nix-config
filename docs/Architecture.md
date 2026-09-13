@@ -141,8 +141,8 @@ headless — it imports only `nixosBase`, no HM, no bare-metal modules.
 `parts/hosts/<host>/configuration.nix`) — settings in
 [`hosts/nixos/gcp-relay/hardening.nix`](../hosts/nixos/gcp-relay/hardening.nix) /
 [`hosts/nixos/homeserver/hardening.nix`](../hosts/nixos/homeserver/hardening.nix).
-Alpha software (`cynicsketch/nix-mineral`), pinned to a tag in `flake.nix`
-(not `main`) — bump deliberately. Not wired into `modules.nixos.base` since
+Alpha software (`cynicsketch/nix-mineral`), tracks the `main` branch (no tag
+pin in `flake.nix`). Not wired into `modules.nixos.base` since
 each host needs different filesystem/network overrides (ZFS vs Btrfs vs
 single-partition, exit-node routing); desktop is a candidate for its own
 `hardening.nix` later, matebook is not planned.

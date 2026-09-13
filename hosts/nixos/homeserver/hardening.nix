@@ -1,4 +1,4 @@
-# nix-mineral hardening baseline (inputs.nix-mineral, pinned in flake.nix).
+# nix-mineral hardening baseline (inputs.nix-mineral, tracks main in flake.nix).
 # Replaces modules/security/hardening.nix (deleted) — SSH ciphers now come
 # from extras.misc.ssh-hardening below; the crowdsec/prometheus systemd
 # hardening that used to live there moved into their own modules
@@ -61,17 +61,13 @@
     # Real Intel ME hardware here, never touched over any network path we
     # manage — pure attack-surface reduction, no downside.
     #
-    # NOTE: flake.nix pins nix-mineral to tag v0.4.0-alpha, which predates
-    # the "nix-mineral.kernel-modules.disable.*" module entirely (that's
-    # only on main/HEAD) — these options use the pinned version's actual
-    # names/semantics instead (false = disable, inverted from the newer
-    # schema), verified directly against the pinned commit's tree.
-    extras.kernel.intelme-kmodules = false;
-
     # hardware.bluetooth.enable is already false
     # (hosts/nixos/homeserver/hardware-configuration.nix) — bluetooth is
     # already unused, this just blocks the kernel modules too instead of
     # only disabling the service.
-    extras.network.bluetooth-kmodules = false;
+    kernel-modules.disable = {
+      intelme-related = true;
+      bluetooth-related = true;
+    };
   };
 }
