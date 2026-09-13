@@ -1,4 +1,8 @@
-{config, ...}: {
+{
+  config,
+  lib,
+  ...
+}: {
   # --- Grafana Alloy Log Shipper (server-side: reads Traefik access log +
   # the systemd journal, ships to the local Loki instance) ---
   services.alloy.enable = true;
@@ -109,6 +113,43 @@
     # stale mmdb file at startup, so it shouldn't block on that unit's
     # network fetch (which can be a multi-minute catch-up run after a
     # missed monthly timer).
-    serviceConfig.SupplementaryGroups = ["systemd-journal"];
+    serviceConfig = {
+      SupplementaryGroups = ["systemd-journal"];
+
+      # Same gap as alloy-client.nix on the other hosts: nixpkgs' alloy
+      # module leaves CapabilityBoundingSet at the full default set with
+      # AmbientCapabilities empty — it needs none of it, just journal read
+      # (via the group above) and reading /var/log/traefik/access.log.
+      # mkForce, not mkDefault: mkDefault silently loses here (list-typed
+      # option, nixpkgs' own definition sits at normal priority and wins
+      # the priority filter before any list-merge happens — confirmed via
+      # `systemctl show` after mkDefault made no difference on this exact
+      # module on homeserver).
+      CapabilityBoundingSet = lib.mkForce [];
+      RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
+      SystemCallArchitectures = lib.mkDefault "native";
+      # SystemCallFilter/MemoryDenyWriteExecute/PrivateUsers deliberately
+      # NOT set: this exact binary (Grafana Alloy, Go) already crashed with
+      # SIGSYS from SystemCallFilter=@system-service on gcp-relay
+      # (alloy-client.nix) — not testing that twice.
+      NoNewPrivileges = lib.mkDefault true;
+      ProtectClock = lib.mkDefault true;
+      ProtectKernelLogs = lib.mkDefault true;
+      ProtectKernelModules = lib.mkDefault true;
+      ProtectKernelTunables = lib.mkDefault true;
+      ProtectControlGroups = lib.mkDefault true;
+      ProtectHostname = lib.mkDefault true;
+      RestrictNamespaces = lib.mkDefault true;
+      RestrictSUIDSGID = lib.mkDefault true;
+      LockPersonality = lib.mkDefault true;
+      RestrictRealtime = lib.mkDefault true;
+      ProtectProc = lib.mkDefault "invisible";
+      ProcSubset = lib.mkDefault "pid";
+      UMask = lib.mkDefault "0077";
+      RemoveIPC = lib.mkDefault true;
+      # ProtectSystem/ProtectHome not set: alloy reads
+      # /var/log/traefik/access.log outside any StateDirectory it owns —
+      # would need explicit ReadOnlyPaths first, separate pass.
+    };
   };
 }

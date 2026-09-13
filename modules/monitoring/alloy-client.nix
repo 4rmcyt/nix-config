@@ -107,7 +107,7 @@
       # show alloy.service`) — it doesn't actually request any capability,
       # journal read access comes from the systemd-journal group above, not
       # a capability. All it does is tail the journal and push over HTTP.
-      CapabilityBoundingSet = lib.mkDefault [];
+      CapabilityBoundingSet = lib.mkForce [];
       RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
       SystemCallArchitectures = lib.mkDefault "native";
       # SystemCallFilter=["@system-service"] and MemoryDenyWriteExecute=true

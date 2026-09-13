@@ -37,7 +37,7 @@
   # failure mode (caddy/crowdsec-firewall-bouncer) shouldn't apply — skipped
   # anyway, consistent with the rest of this pass.
   commonHardening = {
-    CapabilityBoundingSet = lib.mkDefault [];
+    CapabilityBoundingSet = lib.mkForce [];
     NoNewPrivileges = lib.mkDefault true;
     ProtectSystem = lib.mkDefault "strict";
     ProtectHome = lib.mkDefault true;

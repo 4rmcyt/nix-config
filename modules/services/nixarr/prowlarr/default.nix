@@ -41,7 +41,7 @@
       # access outside its own dataDir (already granted, since it already
       # runs fine under ProtectSystem=strict), so the fuller set is safe
       # here.
-      CapabilityBoundingSet = lib.mkDefault [];
+      CapabilityBoundingSet = lib.mkForce [];
       NoNewPrivileges = lib.mkDefault true;
       PrivateDevices = lib.mkDefault true;
       RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
