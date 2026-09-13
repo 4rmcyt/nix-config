@@ -19,7 +19,6 @@
     ./crowdsec-bouncer.nix
     ../../../modules/backup
     ../../../modules/security/fail2ban
-    ../../../modules/security/hardening.nix
     ./nix-mineral.nix
   ];
 
@@ -74,18 +73,18 @@
         }
       ];
       settings = {
-        PasswordAuthentication = false;
-        PermitRootLogin = "no";
-        KbdInteractiveAuthentication = false;
+        # PasswordAuthentication, PermitRootLogin, KbdInteractiveAuthentication,
+        # X11Forwarding, AllowTcpForwarding — set by
+        # nix-mineral.extras.misc.ssh-hardening (see ./nix-mineral.nix). Do
+        # not redeclare here — duplicate definitions of the same key at the
+        # same priority fail eval.
         UseDns = false;
         AllowUsers = [config.my.defaults.user];
         MaxAuthTries = 3;
         LoginGraceTime = 30;
         ClientAliveInterval = 300;
         ClientAliveCountMax = 2;
-        X11Forwarding = false;
         AllowAgentForwarding = false;
-        AllowTcpForwarding = false;
         PermitUserEnvironment = false;
       };
     };
@@ -129,8 +128,6 @@
       sopsFile = ../../../secrets/restic.yaml;
       mode = "0400";
     };
-
-    my.hardening.enable = true;
 
     my.crowdsecBouncer = {
       enable = true;

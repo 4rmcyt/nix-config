@@ -25,5 +25,11 @@
     # advertises no routes/exit-node), but keep it explicit so it doesn't
     # bite if that ever changes.
     settings.network.ip-forwarding = true;
+
+    # Replaces the SSH cipher/auth hardening that used to come from
+    # modules/security/hardening.nix (removed from this host). The
+    # non-overlapping SSH settings (AllowUsers, MaxAuthTries, ...) stay
+    # inline in ./default.nix.
+    extras.misc.ssh-hardening = true;
   };
 }

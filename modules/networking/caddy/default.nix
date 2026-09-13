@@ -47,7 +47,15 @@ in {
       };
     };
 
-    systemd.services.caddy.serviceConfig.EnvironmentFile =
-      config.sops.secrets.cloudflare_acme_credentials.path;
+    systemd.services.caddy.serviceConfig = {
+      EnvironmentFile = config.sops.secrets.cloudflare_acme_credentials.path;
+      NoNewPrivileges = lib.mkDefault true;
+      PrivateTmp = lib.mkDefault true;
+      ProtectHome = lib.mkDefault true;
+      RestrictSUIDSGID = lib.mkDefault true;
+      LockPersonality = lib.mkDefault true;
+      RestrictRealtime = lib.mkDefault true;
+      SystemCallArchitectures = lib.mkDefault "native";
+    };
   };
 }
