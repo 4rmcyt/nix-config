@@ -16,5 +16,14 @@
     # hardening (self bind-mount with a null device) would otherwise try to
     # create that mount from nothing and fail eval.
     filesystems.normal."/boot".enable = false;
+
+    # modules/networking/tailscale sets services.tailscale.useRoutingFeatures =
+    # "both", which makes the nixpkgs tailscale module force IP forwarding on
+    # via mkDefault. nix-mineral's own default (false) disables forwarding at
+    # a higher override priority (900 vs mkDefault's 1000), silently winning
+    # over the tailscale module's intent. Not required today (this host
+    # advertises no routes/exit-node), but keep it explicit so it doesn't
+    # bite if that ever changes.
+    settings.network.ip-forwarding = true;
   };
 }
