@@ -25,6 +25,7 @@
     ../../../modules/backup
 
     ../../../modules/users/zeev
+    ./hardening.nix
   ];
 
   sops = {
@@ -249,7 +250,6 @@
     after = ["zfs-import-zbackup.service"];
   };
 
-  my.hardening.enable = true;
   my.traefik.enable = true;
   my.crowdsec.traefik.enable = true;
   my.crowdsec.nftables = {
@@ -285,8 +285,10 @@
         }
       ];
       settings = {
-        PasswordAuthentication = false;
-        PermitRootLogin = "no";
+        # PasswordAuthentication, PermitRootLogin — set by
+        # nix-mineral.extras.misc.ssh-hardening (see ./hardening.nix). Do not
+        # redeclare here — duplicate definitions of the same key at the same
+        # priority fail eval.
         AllowUsers = [config.my.defaults.user "nix-builder"];
       };
     };

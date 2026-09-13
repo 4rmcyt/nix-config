@@ -26,6 +26,12 @@
     # bite if that ever changes.
     settings.network.ip-forwarding = true;
 
+    # Default panics the kernel on any oops (boot.kernelParams "oops=panic").
+    # This is a single remote instance with no physical access (GCE Serial
+    # Console only) — a transient/non-malicious virtio driver oops shouldn't
+    # force a reboot on top of that.
+    settings.kernel.oops-panic = false;
+
     # Replaces the SSH cipher/auth hardening that used to come from
     # modules/security/hardening.nix (removed from this host). The
     # non-overlapping SSH settings (AllowUsers, MaxAuthTries, ...) stay

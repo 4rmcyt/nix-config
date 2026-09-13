@@ -19,7 +19,7 @@
     ./crowdsec-bouncer.nix
     ../../../modules/backup
     ../../../modules/security/fail2ban
-    ./nix-mineral.nix
+    ./hardening.nix
   ];
 
   config = {
@@ -75,7 +75,7 @@
       settings = {
         # PasswordAuthentication, PermitRootLogin, KbdInteractiveAuthentication,
         # X11Forwarding, AllowTcpForwarding — set by
-        # nix-mineral.extras.misc.ssh-hardening (see ./nix-mineral.nix). Do
+        # nix-mineral.extras.misc.ssh-hardening (see ./hardening.nix). Do
         # not redeclare here — duplicate definitions of the same key at the
         # same priority fail eval.
         UseDns = false;

@@ -112,7 +112,6 @@ Thunderbird account config also lives there (`inputs.private.homeModules.thunder
 | `my.nodeExporter.*`  | `monitoring/node-exporter-client.nix` | Per-host Prometheus node exporter   |
 | `my.unbound.*`       | `networking/unbound/`         | Unbound DNS resolver                         |
 | `my.crowdsec.*`      | `security/crowdsec/`          | CrowdSec IDS + bouncer                       |
-| `my.hardening.*`     | `security/hardening.nix`      | System hardening (SSH, kernel, systemd defaults) |
 
 ## Host Wiring
 
@@ -137,13 +136,32 @@ headless — it imports only `nixosBase`, no HM, no bare-metal modules.
 **desktop** and **matebook** additionally import `nixosWorkstationGui`
 (`modules.nixos.workstationGui`) and `hmWorkstation`.
 
-**gcp-relay** additionally imports `inputs.nix-mineral.nixosModules.nix-mineral`
-(`parts/hosts/gcp-relay/configuration.nix`) — settings in
-[`hosts/nixos/gcp-relay/nix-mineral.nix`](../hosts/nixos/gcp-relay/nix-mineral.nix).
+**gcp-relay** and **homeserver** additionally import
+`inputs.nix-mineral.nixosModules.nix-mineral` (their respective
+`parts/hosts/<host>/configuration.nix`) — settings in
+[`hosts/nixos/gcp-relay/hardening.nix`](../hosts/nixos/gcp-relay/hardening.nix) /
+[`hosts/nixos/homeserver/hardening.nix`](../hosts/nixos/homeserver/hardening.nix).
 Alpha software (`cynicsketch/nix-mineral`), pinned to a tag in `flake.nix`
 (not `main`) — bump deliberately. Not wired into `modules.nixos.base` since
-it's only used on this one host so far; homeserver/desktop are candidates
-for their own per-host settings files later, matebook is not planned.
+each host needs different filesystem/network overrides (ZFS vs Btrfs vs
+single-partition, exit-node routing); desktop is a candidate for its own
+`hardening.nix` later, matebook is not planned.
+
+`modules/security/hardening.nix` (the old hand-rolled `my.hardening.*`
+module: SSH ciphers, sysctl, per-service systemd hardening) is **deleted**.
+Replaced per-host by nix-mineral (sysctl, SSH via
+`nix-mineral.extras.misc.ssh-hardening`) plus systemd-hardening moved
+directly into the services it targeted, since nix-mineral doesn't do
+per-service systemd hardening at all (out of scope upstream):
+`systemd.services.crowdsec.serviceConfig` in
+[`modules/security/crowdsec/default.nix`](../modules/security/crowdsec/default.nix),
+`systemd.services.prometheus.serviceConfig` in
+[`modules/monitoring/prometheus.nix`](../modules/monitoring/prometheus.nix),
+`systemd.services.caddy.serviceConfig` in
+[`modules/networking/caddy/default.nix`](../modules/networking/caddy/default.nix).
+The old module's `my.hardening.serviceBase` constant (used by
+`modules/database/couchdb` and `modules/database/redis`) was inlined at
+both call sites instead of kept as a shared option.
 
 ### Host → Nix daemon variant
 

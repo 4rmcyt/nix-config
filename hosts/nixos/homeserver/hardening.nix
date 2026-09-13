@@ -1,0 +1,55 @@
+# nix-mineral hardening baseline (inputs.nix-mineral, pinned in flake.nix).
+# Replaces modules/security/hardening.nix (deleted) — SSH ciphers now come
+# from extras.misc.ssh-hardening below; the crowdsec/prometheus systemd
+# hardening that used to live there moved into their own modules
+# (modules/security/crowdsec, modules/monitoring/prometheus.nix).
+{
+  nix-mineral = {
+    enable = true;
+
+    # /home and /var/log are real, separate ZFS datasets (own mountpoint,
+    # see modules/disko/homeserver), not subdirectories of the root dataset.
+    # nix-mineral's default self bind-mount ("bind" = true) assumes the
+    # opposite (a single-partition layout where hardened paths are bound
+    # onto themselves) and breaks stage-2 activation on a real separate
+    # mount — same class of issue as Btrfs subvolumes, see nix-mineral's
+    # own FAQ / issue #11. /var, /root, /tmp, /var/tmp, /etc, /srv all live
+    # inside the "root" zfs dataset ("/"), so the default is correct there.
+    # /boot is a real ESP mount too, but nix-mineral already ships
+    # bind = false for it by default.
+    filesystems.normal."/home".options."bind" = false;
+    filesystems.normal."/var/log".options."bind" = false;
+
+    # Native *arr services (sonarr/radarr/prowlarr/bazarr) keep state and any
+    # custom scripts/Recyclarr connect-hooks under /var/lib/<service>, which
+    # is on the same "root" dataset as /var — nix-mineral's default noexec on
+    # /var would otherwise reach them. Same override nix-mineral's own
+    # compatibility preset uses for this exact reason.
+    filesystems.normal."/var/lib" = {
+      enable = true;
+      options."noexec" = false;
+      options."exec" = true;
+    };
+
+    # Homeserver is a Tailscale exit node + subnet router
+    # (advertiseExitNode / advertiseRoutes in ./default.nix) — the tailscale
+    # module forces IP forwarding on via mkDefault, but nix-mineral's own
+    # default (false) disables it at a higher override priority (900 vs
+    # mkDefault's 1000), which would actually break exit-node/subnet-router
+    # routing here, not just in theory. Podman's bridge networking (heavily
+    # used here — home-assistant, seerr, lazylibrarian, komf, byparr,
+    # dispatcharr, kapowarr) needs it too.
+    settings.network.ip-forwarding = true;
+
+    # Default panics the kernel on any oops (boot.kernelParams "oops=panic").
+    # Too aggressive for a multi-service box with 3 ZFS pools under active
+    # write load — a single flaky driver oops shouldn't force an unclean
+    # reboot. See docs/Infrastructure.md ZFS Safety Rules.
+    settings.kernel.oops-panic = false;
+
+    # Replaces the SSH cipher/auth hardening that used to come from
+    # modules/security/hardening.nix. Non-overlapping SSH settings
+    # (AllowUsers, ...) stay inline in ./default.nix.
+    extras.misc.ssh-hardening = true;
+  };
+}

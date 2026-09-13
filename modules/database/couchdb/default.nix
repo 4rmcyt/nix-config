@@ -83,7 +83,12 @@
     '';
 
     serviceConfig =
-      config.my.hardening.serviceBase
+      {
+        NoNewPrivileges = true;
+        PrivateTmp = true;
+        ProtectHome = true;
+        ProtectSystem = "strict";
+      }
       // {
         # Allow CouchDB to write to its data directory and runtime directory
         ReadWritePaths = [

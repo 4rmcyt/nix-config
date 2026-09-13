@@ -68,6 +68,15 @@ in {
     # that scan hits a cold page cache and can exceed the default 90s TimeoutStartSec.
     systemd.services.crowdsec.serviceConfig.TimeoutStartSec = lib.mkIf (!isRemoteLapi) "5min";
     systemd.services.crowdsec.serviceConfig.Restart = lib.mkIf (!isRemoteLapi) "on-failure";
+    systemd.services.crowdsec.serviceConfig.RestrictSUIDSGID = lib.mkIf (!isRemoteLapi) true;
+    systemd.services.crowdsec.serviceConfig.ProtectKernelTunables = lib.mkIf (!isRemoteLapi) true;
+    systemd.services.crowdsec.serviceConfig.ProtectControlGroups = lib.mkIf (!isRemoteLapi) true;
+    systemd.services.crowdsec.serviceConfig.ProtectKernelModules = lib.mkIf (!isRemoteLapi) true;
+    systemd.services.crowdsec.serviceConfig.ProtectKernelLogs = lib.mkIf (!isRemoteLapi) true;
+    systemd.services.crowdsec.serviceConfig.LockPersonality = lib.mkIf (!isRemoteLapi) true;
+    systemd.services.crowdsec.serviceConfig.RestrictRealtime = lib.mkIf (!isRemoteLapi) true;
+    systemd.services.crowdsec.serviceConfig.RestrictNamespaces = lib.mkIf (!isRemoteLapi) true;
+    systemd.services.crowdsec.serviceConfig.SystemCallArchitectures = lib.mkIf (!isRemoteLapi) "native";
 
     services.crowdsec = lib.mkIf (!isRemoteLapi) {
       enable = true;

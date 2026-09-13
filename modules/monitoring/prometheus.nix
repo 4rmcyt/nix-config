@@ -1,4 +1,8 @@
-{config, ...}: {
+{
+  config,
+  lib,
+  ...
+}: {
   users.users.prometheus = {
     isSystemUser = true;
     description = "Prometheus daemon user";
@@ -84,5 +88,16 @@
         static_configs = [{targets = ["${config.my.network.hosts.matebook_wifi}:${toString config.my.network.ports.node-exporter}"];}];
       }
     ];
+  };
+
+  systemd.services.prometheus.serviceConfig = {
+    NoNewPrivileges = lib.mkDefault true;
+    PrivateTmp = lib.mkDefault true;
+    ProtectHome = lib.mkDefault true;
+    ProtectSystem = lib.mkDefault "strict";
+    RestrictSUIDSGID = lib.mkDefault true;
+    LockPersonality = lib.mkDefault true;
+    RestrictRealtime = lib.mkDefault true;
+    SystemCallArchitectures = lib.mkDefault "native";
   };
 }

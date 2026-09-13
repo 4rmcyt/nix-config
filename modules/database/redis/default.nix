@@ -96,7 +96,12 @@ in {
     after = ["network.target" "podman-bridge.service"];
     requires = ["podman-bridge.service"];
     serviceConfig =
-      config.my.hardening.serviceBase
+      {
+        NoNewPrivileges = true;
+        PrivateTmp = true;
+        ProtectHome = true;
+        ProtectSystem = "strict";
+      }
       // {
         Restart = "on-failure";
         RestartSec = "5s";

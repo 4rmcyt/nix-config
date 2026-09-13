@@ -14,6 +14,7 @@ in {
       nixosBase
       nixosHm
       nixosBareMetal
+      inputs.nix-mineral.nixosModules.nix-mineral
       ../../../hosts/nixos/homeserver
       inputs.nixarr.nixosModules.default
       ../../../modules/nix/lix
