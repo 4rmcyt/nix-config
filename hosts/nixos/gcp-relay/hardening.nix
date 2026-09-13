@@ -6,7 +6,7 @@
 # (no preset) rather than "maximum" since this is the first host running it
 # and it's alpha software — layer on more (module blacklist, extras) once
 # this boots clean.
-{
+{lib, ...}: {
   nix-mineral = {
     enable = true;
 
@@ -37,5 +37,33 @@
     # non-overlapping SSH settings (AllowUsers, MaxAuthTries, ...) stay
     # inline in ./default.nix.
     extras.misc.ssh-hardening = true;
+  };
+
+  # gcp-relay imports only modules/base/logging, not all of modules/base
+  # (it sets its own timezone/locale inline) — so the nscd serviceConfig
+  # hardening in modules/base/default.nix never reaches this host. Same
+  # block, duplicated here rather than restructuring modules/base for one
+  # host's import quirk.
+  systemd.services.nscd.serviceConfig = {
+    CapabilityBoundingSet = lib.mkDefault [];
+    RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX" "AF_NETLINK"];
+    SystemCallFilter = lib.mkDefault ["@system-service"];
+    SystemCallArchitectures = lib.mkDefault "native";
+    ProtectClock = lib.mkDefault true;
+    ProtectKernelLogs = lib.mkDefault true;
+    ProtectKernelModules = lib.mkDefault true;
+    ProtectKernelTunables = lib.mkDefault true;
+    ProtectControlGroups = lib.mkDefault true;
+    ProtectHostname = lib.mkDefault true;
+    RestrictNamespaces = lib.mkDefault true;
+    RestrictSUIDSGID = lib.mkDefault true;
+    LockPersonality = lib.mkDefault true;
+    RestrictRealtime = lib.mkDefault true;
+    MemoryDenyWriteExecute = lib.mkDefault true;
+    ProtectProc = lib.mkDefault "invisible";
+    ProcSubset = lib.mkDefault "pid";
+    UMask = lib.mkDefault "0077";
+    RemoveIPC = lib.mkDefault true;
+    PrivateUsers = lib.mkDefault true;
   };
 }
