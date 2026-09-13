@@ -99,6 +99,39 @@
       }
     '';
 
-    systemd.services.alloy.serviceConfig.SupplementaryGroups = ["systemd-journal"];
+    systemd.services.alloy.serviceConfig = {
+      SupplementaryGroups = ["systemd-journal"];
+
+      # nixpkgs' alloy module leaves CapabilityBoundingSet at the full
+      # default set and AmbientCapabilities empty (verified via `systemctl
+      # show alloy.service`) — it doesn't actually request any capability,
+      # journal read access comes from the systemd-journal group above, not
+      # a capability. All it does is tail the journal and push over HTTP.
+      CapabilityBoundingSet = lib.mkDefault [];
+      RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
+      SystemCallFilter = lib.mkDefault ["@system-service"];
+      SystemCallArchitectures = lib.mkDefault "native";
+
+      NoNewPrivileges = lib.mkDefault true;
+      ProtectClock = lib.mkDefault true;
+      ProtectKernelLogs = lib.mkDefault true;
+      ProtectKernelModules = lib.mkDefault true;
+      ProtectKernelTunables = lib.mkDefault true;
+      ProtectControlGroups = lib.mkDefault true;
+      ProtectHostname = lib.mkDefault true;
+      RestrictNamespaces = lib.mkDefault true;
+      RestrictSUIDSGID = lib.mkDefault true;
+      LockPersonality = lib.mkDefault true;
+      RestrictRealtime = lib.mkDefault true;
+      MemoryDenyWriteExecute = lib.mkDefault true;
+      ProtectProc = lib.mkDefault "invisible";
+      ProcSubset = lib.mkDefault "pid";
+      UMask = lib.mkDefault "0077";
+      RemoveIPC = lib.mkDefault true;
+      PrivateUsers = lib.mkDefault true;
+      # No IPAddressDeny/Allow — Loki push endpoint varies per host
+      # (config.my.alloyClient.lokiUrl), not worth hardcoding an allowlist
+      # here for a log shipper.
+    };
   };
 }

@@ -1,4 +1,8 @@
-{config, ...}: {
+{
+  config,
+  lib,
+  ...
+}: {
   imports = [
     ./common-packages
     ./logging
@@ -37,4 +41,32 @@
 
   console.keyMap = "us";
   time.timeZone = config.my.defaults.timezone;
+
+  # nscd already runs as its own "nscd" user with ProtectSystem=strict and
+  # NoNewPrivileges=yes (NixOS default, not set by this repo) — but still
+  # carries the full ~40-capability default set it never uses (verified via
+  # `systemctl show nscd.service`). Just an NSS lookup cache, needs none of
+  # them.
+  systemd.services.nscd.serviceConfig = {
+    CapabilityBoundingSet = lib.mkDefault [];
+    RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX" "AF_NETLINK"];
+    SystemCallFilter = lib.mkDefault ["@system-service"];
+    SystemCallArchitectures = lib.mkDefault "native";
+    ProtectClock = lib.mkDefault true;
+    ProtectKernelLogs = lib.mkDefault true;
+    ProtectKernelModules = lib.mkDefault true;
+    ProtectKernelTunables = lib.mkDefault true;
+    ProtectControlGroups = lib.mkDefault true;
+    ProtectHostname = lib.mkDefault true;
+    RestrictNamespaces = lib.mkDefault true;
+    RestrictSUIDSGID = lib.mkDefault true;
+    LockPersonality = lib.mkDefault true;
+    RestrictRealtime = lib.mkDefault true;
+    MemoryDenyWriteExecute = lib.mkDefault true;
+    ProtectProc = lib.mkDefault "invisible";
+    ProcSubset = lib.mkDefault "pid";
+    UMask = lib.mkDefault "0077";
+    RemoveIPC = lib.mkDefault true;
+    PrivateUsers = lib.mkDefault true;
+  };
 }
