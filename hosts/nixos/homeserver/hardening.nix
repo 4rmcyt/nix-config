@@ -58,15 +58,20 @@
     # (security.sudo.wheelNeedsPassword), unaffected.
     extras.system.lock-root = true;
 
-    # intelme-related: real Intel ME hardware here, never touched over any
-    # network path we manage — pure attack-surface reduction, no downside.
-    # bluetooth-related: hardware.bluetooth.enable is already false
+    # Real Intel ME hardware here, never touched over any network path we
+    # manage — pure attack-surface reduction, no downside.
+    #
+    # NOTE: flake.nix pins nix-mineral to tag v0.4.0-alpha, which predates
+    # the "nix-mineral.kernel-modules.disable.*" module entirely (that's
+    # only on main/HEAD) — these options use the pinned version's actual
+    # names/semantics instead (false = disable, inverted from the newer
+    # schema), verified directly against the pinned commit's tree.
+    extras.kernel.intelme-kmodules = false;
+
+    # hardware.bluetooth.enable is already false
     # (hosts/nixos/homeserver/hardware-configuration.nix) — bluetooth is
     # already unused, this just blocks the kernel modules too instead of
     # only disabling the service.
-    kernel-modules.disable = {
-      intelme-related = true;
-      bluetooth-related = true;
-    };
+    extras.network.bluetooth-kmodules = false;
   };
 }
