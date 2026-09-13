@@ -66,4 +66,14 @@
     RemoveIPC = lib.mkDefault true;
     PrivateUsers = lib.mkDefault true;
   };
+
+  # Not hardening, disabling: this GCE VM has no VGA console, keyboard, or
+  # RF hardware at all — only the Serial Console (ttyS0, already enabled in
+  # ./default.nix) is a real access path. These three units exist purely
+  # because NixOS enables them by default; running-but-unused is still
+  # attack surface.
+  systemd.services."autovt@tty1".enable = false;
+  systemd.services."getty@tty1".enable = false;
+  systemd.services."systemd-vconsole-setup".enable = false;
+  systemd.services."systemd-rfkill".enable = false;
 }

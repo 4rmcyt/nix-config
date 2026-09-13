@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   mkProxiedRouter,
   ...
@@ -210,6 +211,45 @@ in {
     "d /var/lib/kanidm/backups 0750 kanidm kanidm -"
     "d /var/lib/kanidm/tls 0750 kanidm kanidm -"
   ];
+
+  # nixpkgs' kanidm module already sets CapabilityBoundingSet=
+  # cap_net_bind_service (matches AmbientCapabilities), a curated
+  # SystemCallFilter, RestrictAddressFamilies=AF_INET/AF_INET6/AF_UNIX,
+  # MemoryDenyWriteExecute=yes (already running fine — Kanidm is Rust, not
+  # Go/BEAM, no JIT), and StateDirectory=kanidm (verified via `systemctl
+  # show kanidm.service`) — don't touch those, they're already tight.
+  # The one real gap: ProtectSystem was "no" — filesystem access is
+  # completely unrestricted. StateDirectory already covers /var/lib/kanidm
+  # (including the TLS cert dir kanidm-tls-cert writes to) even under
+  # "strict", so this shouldn't need any extra ReadWritePaths.
+  systemd.services.kanidm.serviceConfig = {
+    ProtectSystem = lib.mkDefault "strict";
+    ProtectHome = lib.mkDefault true;
+    PrivateTmp = lib.mkDefault true;
+    ProtectClock = lib.mkDefault true;
+    ProtectKernelLogs = lib.mkDefault true;
+    ProtectKernelModules = lib.mkDefault true;
+    ProtectKernelTunables = lib.mkDefault true;
+    ProtectControlGroups = lib.mkDefault true;
+    ProtectHostname = lib.mkDefault true;
+    RestrictNamespaces = lib.mkDefault true;
+    RestrictSUIDSGID = lib.mkDefault true;
+    LockPersonality = lib.mkDefault true;
+    RestrictRealtime = lib.mkDefault true;
+    ProtectProc = lib.mkDefault "invisible";
+    ProcSubset = lib.mkDefault "pid";
+    UMask = lib.mkDefault "0077";
+    RemoveIPC = lib.mkDefault true;
+    # PrivateUsers deliberately not set: same class of risk demonstrated
+    # live on caddy/crowdsec-firewall-bouncer (breaks the kernel's
+    # privileged-port check for AmbientCapabilities=CAP_NET_BIND_SERVICE
+    # once the service is in its own user namespace) — kanidm has the exact
+    # same ambient capability, for the exact same reason (binding via
+    # Traefik's serversTransport doesn't apply here, kanidm itself binds
+    # 127.0.0.1:3013 — unprivileged port, so this is precautionary, not
+    # confirmed necessary, but not worth testing against the SSO for
+    # Grafana/Miniflux/Jellyfin/Headscale/Audiobookshelf).
+  };
 
   services.traefik.dynamicConfigOptions.http = mkProxiedRouter "kanidm" {
     inherit port;

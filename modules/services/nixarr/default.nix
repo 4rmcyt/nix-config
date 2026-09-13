@@ -175,6 +175,26 @@ in {
         ];
       };
     }))
+    # bazarr and lidarr's nixpkgs modules leave CapabilityBoundingSet at the
+    # full default set with NoNewPrivileges=no (verified via `systemctl
+    # show`) — unlike sonarr/radarr/prowlarr, whose modules already clear
+    # capabilities entirely. Same *arr-suite C#/.NET codebase, no reason
+    # bazarr/lidarr need more than sonarr/radarr do. Not touching
+    # ProtectSystem here: bazarr needs read/write access to the media
+    # library outside its own dataDir for its ffmpeg subtitle burn-in
+    # (Settings > Subtitles), and isn't in servicesWithMediaAccess's
+    # BindPaths above — auditing exactly what strict + BindPaths would need
+    # is a separate pass, not blind here.
+    {
+      bazarr.serviceConfig = {
+        CapabilityBoundingSet = lib.mkDefault [];
+        NoNewPrivileges = lib.mkDefault true;
+      };
+      lidarr.serviceConfig = {
+        CapabilityBoundingSet = lib.mkDefault [];
+        NoNewPrivileges = lib.mkDefault true;
+      };
+    }
   ];
 
   systemd.tmpfiles.rules = [
