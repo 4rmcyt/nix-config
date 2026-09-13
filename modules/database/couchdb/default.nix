@@ -2,6 +2,7 @@
 # https://github.com/vrtmrz/obsidian-livesync
 {
   config,
+  lib,
   pkgs,
   ...
 }: {
@@ -98,6 +99,33 @@
 
         MemoryMax = "2G";
         CPUQuota = "100%";
+
+        # nixpkgs' couchdb module leaves CapabilityBoundingSet at the full
+        # default set with AmbientCapabilities empty (verified via
+        # `systemctl show couchdb.service`) — it doesn't request any
+        # capability, runs as its own "couchdb" user.
+        CapabilityBoundingSet = lib.mkDefault [];
+        RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
+        ProtectClock = lib.mkDefault true;
+        ProtectKernelLogs = lib.mkDefault true;
+        ProtectKernelModules = lib.mkDefault true;
+        ProtectKernelTunables = lib.mkDefault true;
+        ProtectControlGroups = lib.mkDefault true;
+        ProtectHostname = lib.mkDefault true;
+        RestrictNamespaces = lib.mkDefault true;
+        RestrictSUIDSGID = lib.mkDefault true;
+        LockPersonality = lib.mkDefault true;
+        RestrictRealtime = lib.mkDefault true;
+        ProtectProc = lib.mkDefault "invisible";
+        ProcSubset = lib.mkDefault "pid";
+        UMask = lib.mkDefault "0077";
+        RemoveIPC = lib.mkDefault true;
+        # Deliberately NOT setting SystemCallFilter, MemoryDenyWriteExecute,
+        # or PrivateUsers: CouchDB runs on the BEAM VM, whose JIT (BeamAsm,
+        # default since OTP 24) needs W+X memory — MemoryDenyWriteExecute
+        # would almost certainly break it the same way a kill-on-violation
+        # directive just killed alloy.service (Go) on gcp-relay. Not worth
+        # testing blind against the Obsidian LiveSync backend.
       };
   };
 }

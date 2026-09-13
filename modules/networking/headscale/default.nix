@@ -128,7 +128,12 @@ in {
       ProtectControlGroups = mkDefault true;
       ProtectHostname = mkDefault true;
       RestrictNamespaces = mkDefault true;
-      MemoryDenyWriteExecute = mkDefault true;
+      # MemoryDenyWriteExecute deliberately NOT set: same class of directive
+      # (kills the process on violation, no catchable error) that just
+      # killed alloy.service on gcp-relay (SIGSYS) — same Go runtime family.
+      # headscale hasn't crashed with it yet, but this is the single
+      # control-plane instance with no physical access; not worth finding
+      # out the hard way under real traffic.
       ProtectProc = mkDefault "invisible";
       ProcSubset = mkDefault "pid";
       UMask = mkDefault "0077";

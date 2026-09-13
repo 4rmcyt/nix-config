@@ -370,8 +370,48 @@ in {
         postrotate = "systemctl kill --kill-who=main --signal=USR1 traefik.service";
       };
 
-      systemd.services.traefik.serviceConfig.EnvironmentFile =
-        config.sops.secrets.cloudflare_acme_credentials.path;
+      systemd.services.traefik.serviceConfig = {
+        EnvironmentFile = config.sops.secrets.cloudflare_acme_credentials.path;
+
+        # nixpkgs' traefik module already sets CapabilityBoundingSet=
+        # cap_net_bind_service (matches AmbientCapabilities exactly),
+        # ProtectSystem=full, PrivateUsers=no, NoNewPrivileges=yes (verified
+        # via `systemctl show traefik.service`) — don't touch those.
+        #
+        # Deliberately NOT setting SystemCallFilter, MemoryDenyWriteExecute,
+        # or PrivateUsers here:
+        # - SystemCallFilter/MemoryDenyWriteExecute kill the process on
+        #   violation (SIGSYS), not a catchable error — this exact class of
+        #   directive just killed alloy.service on gcp-relay. Traefik loads
+        #   the crowdsec-bouncer and geoblock plugins via Yaegi (a Go
+        #   *interpreter*, experimental.localPlugins above), which is far
+        #   more likely than plain compiled Go to hit something outside
+        #   @system-service or need W+X pages — not worth the risk on the
+        #   service every other host on the LAN/tailnet routes through.
+        # - PrivateUsers breaks AmbientCapabilities=CAP_NET_BIND_SERVICE for
+        #   binding <1024 (the kernel's privileged-port check doesn't
+        #   recognize the capability once the service is in its own user
+        #   namespace) — confirmed live on caddy on gcp-relay, same ambient
+        #   capability here for :80/:443.
+        RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
+        ProtectClock = lib.mkDefault true;
+        ProtectKernelLogs = lib.mkDefault true;
+        ProtectKernelModules = lib.mkDefault true;
+        ProtectKernelTunables = lib.mkDefault true;
+        ProtectControlGroups = lib.mkDefault true;
+        ProtectHostname = lib.mkDefault true;
+        RestrictNamespaces = lib.mkDefault true;
+        RestrictSUIDSGID = lib.mkDefault true;
+        LockPersonality = lib.mkDefault true;
+        RestrictRealtime = lib.mkDefault true;
+        ProtectProc = lib.mkDefault "invisible";
+        ProcSubset = lib.mkDefault "pid";
+        UMask = lib.mkDefault "0077";
+        RemoveIPC = lib.mkDefault true;
+        # No IPAddressDeny/Allow — Traefik proxies to arbitrary localhost
+        # backends and does DNS-01 ACME to Cloudflare's API, needs open
+        # outbound.
+      };
 
       # CrowdSec bouncer runs in stream mode and caches decisions locally —
       # Traefik does not need to wait for it. crowdsec-setup takes ~2min on
