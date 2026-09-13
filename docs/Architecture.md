@@ -137,6 +137,14 @@ headless — it imports only `nixosBase`, no HM, no bare-metal modules.
 **desktop** and **matebook** additionally import `nixosWorkstationGui`
 (`modules.nixos.workstationGui`) and `hmWorkstation`.
 
+**gcp-relay** additionally imports `inputs.nix-mineral.nixosModules.nix-mineral`
+(`parts/hosts/gcp-relay/configuration.nix`) — settings in
+[`hosts/nixos/gcp-relay/nix-mineral.nix`](../hosts/nixos/gcp-relay/nix-mineral.nix).
+Alpha software (`cynicsketch/nix-mineral`), pinned to a tag in `flake.nix`
+(not `main`) — bump deliberately. Not wired into `modules.nixos.base` since
+it's only used on this one host so far; homeserver/desktop are candidates
+for their own per-host settings files later, matebook is not planned.
+
 ### Host → Nix daemon variant
 
 | Host        | Nix daemon        |
@@ -168,7 +176,7 @@ Binary caches (from `parts/shared-nixos-settings.nix`, priority order):
 2. `nix-community.cachix.org`, `cache.nixos.org`, `cache.flox.dev`, `llama-cpp.cachix.org` (priority 1)
 3. `noctalia.cachix.org` (2), `devenv.cachix.org` (3), `nixpkgs-unfree.cachix.org` (5)
 4. Per-host push cache added in `parts/hosts/<host>/configuration.nix`: `4rmcyt-<host>.cachix.org`
-5. desktop additionally: `cache.nixos-cuda.org`, `cuda-maintainers.cachix.org`, `4rmcyt-gcp.cachix.org`
+5. desktop additionally: `cache.nixos-cuda.org` (CUDA cache; migrated from `cuda-maintainers.cachix.org`, which no longer serves `nix-cache-info`), `4rmcyt-gcp.cachix.org`
 
 GitHub access token loaded via sops secret `nix_access_token`, written to `/run/nix-access-tokens.conf` by a oneshot systemd service at boot. `NIX_USER_CONF_FILES` points to this file for both the nix daemon and user sessions.
 

@@ -20,6 +20,7 @@
     ../../../modules/backup
     ../../../modules/security/fail2ban
     ../../../modules/security/hardening.nix
+    ./nix-mineral.nix
   ];
 
   config = {

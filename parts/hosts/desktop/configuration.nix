@@ -29,15 +29,15 @@ in {
     in {
       extra-substituters =
         [
+          # cuda-maintainers.cachix.org migrated here; the old cachix URL no
+          # longer serves nix-cache-info (404s the substituter handshake).
           "https://cache.nixos-cuda.org?priority=1"
-          "https://cuda-maintainers.cachix.org?priority=1"
         ]
         ++ own.extra-substituters
         ++ gcp.extra-substituters;
       extra-trusted-public-keys =
         [
           "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
-          "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
         ]
         ++ own.extra-trusted-public-keys
         ++ gcp.extra-trusted-public-keys;

@@ -9,6 +9,7 @@ in {
   }: {
     imports = [
       nixosBase
+      inputs.nix-mineral.nixosModules.nix-mineral
       ../../../hosts/nixos/gcp-relay
       # No modules/nix/lix here (unlike every other host) — gcp-relay runs the
       # stock nixpkgs nix daemon on purpose.
