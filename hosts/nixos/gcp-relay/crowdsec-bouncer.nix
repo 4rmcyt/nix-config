@@ -71,7 +71,11 @@ in {
       ProcSubset = lib.mkDefault "pid";
       UMask = lib.mkDefault "0077";
       RemoveIPC = lib.mkDefault true;
-      PrivateUsers = lib.mkDefault true;
+      # PrivateUsers deliberately NOT set: it breaks CAP_NET_ADMIN's netlink
+      # access for nftables — the kernel's netlink permission check doesn't
+      # carry over once the service is in its own user namespace. Confirmed
+      # live: "netlink receive: operation not permitted" on deploy with
+      # PrivateUsers=true.
       # ProtectControlGroups left alone — the bouncer's nftables backend
       # sometimes needs cgroup-based matching depending on ruleset; not
       # worth the risk to verify blind.

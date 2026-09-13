@@ -81,7 +81,11 @@ in {
       UMask = lib.mkDefault "0077";
       SystemCallFilter = lib.mkDefault ["@system-service"];
       RemoveIPC = lib.mkDefault true;
-      PrivateUsers = lib.mkDefault true;
+      # PrivateUsers deliberately NOT set: it breaks binding :443 via
+      # AmbientCapabilities=CAP_NET_BIND_SERVICE — the kernel's privileged-
+      # port check doesn't recognize the capability once the service is in
+      # its own user namespace. Confirmed live: "bind: permission denied"
+      # on deploy with PrivateUsers=true.
       # No IPAddressDeny/Allow — caddy needs unrestricted outbound (DNS-01
       # ACME to Cloudflare's API, arbitrary reverse-proxy upstreams).
     };

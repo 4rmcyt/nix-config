@@ -199,5 +199,13 @@ in {
     SystemCallFilter = lib.mkDefault ["@system-service"];
     # No IPAddressDeny/Allow — cloudflare-waf action needs unrestricted
     # outbound to api.cloudflare.com.
+    #
+    # PrivateUsers deliberately NOT set: fail2ban needs CAP_NET_ADMIN/
+    # CAP_NET_RAW netlink access to manipulate nftables/iptables bans, which
+    # breaks the same way caddy's CAP_NET_BIND_SERVICE and crowdsec's
+    # CAP_NET_ADMIN did on gcp-relay when PrivateUsers put them in their own
+    # user namespace (kernel's privileged network checks don't carry over).
+    # Never actually failed here — just hadn't banned anyone yet since
+    # reboot — pulled preemptively.
   };
 }
