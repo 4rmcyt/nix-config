@@ -17,7 +17,18 @@
     # inside the "root" zfs dataset ("/"), so the default is correct there.
     # /boot is a real ESP mount too, but nix-mineral already ships
     # bind = false for it by default.
-    filesystems.normal."/home".options."bind" = false;
+    #
+    # noexec off too: zeev has a full interactive shell here (zsh/p10k),
+    # and gitstatusd (powerlevel10k's git-status daemon) caches its binary
+    # at ~/.cache/gitstatus/gitstatusd-linux-x86_64 — under noexec that's
+    # just a silent "gitstatus failed to initialize" at every login, no
+    # exec-denied message pointing at the actual cause. Confirmed live:
+    # `mount` showed /home as noexec, the binary sat right there refusing
+    # to run.
+    filesystems.normal."/home" = {
+      options."bind" = false;
+      options."noexec" = false;
+    };
     filesystems.normal."/var/log".options."bind" = false;
 
     # Native *arr services (sonarr/radarr/prowlarr/bazarr) keep state and any
