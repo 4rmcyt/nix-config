@@ -77,7 +77,7 @@
     RestrictRealtime = true;
     ProtectClock = true;
     RestrictAddressFamilies = ["AF_INET" "AF_INET6"];
-    SocketBindDeny = ["ipv4:tcp" "ipv4:udp" "ipv6:tcp" "ipv6:udp"];
+    SocketBindDeny = ["ipv4:udp" "ipv6:tcp" "ipv6:udp"];
     CapabilityBoundingSet = lib.mkForce "~CAP_BLOCK_SUSPEND CAP_BPF CAP_CHOWN CAP_IPC_LOCK CAP_MKNOD CAP_NET_RAW CAP_PERFMON CAP_SYS_BOOT CAP_SYS_CHROOT CAP_SYS_MODULE CAP_SYS_NICE CAP_SYS_PACCT CAP_SYS_PTRACE CAP_SYS_TIME CAP_SYSLOG CAP_WAKE_ALARM";
     # Each group needs its own "~" as a separate list entry: systemd only
     # applies a leading "~" to the first token of a value, so a single
