@@ -69,6 +69,18 @@
     # (security.sudo.wheelNeedsPassword), unaffected.
     extras.system.lock-root = true;
 
+    # TEMPORARY: nix-mineral's default (settings.system.yama = "restricted",
+    # kernel.yama.ptrace_scope=3 via mkForce) blocks ptrace for every
+    # process including root — this took down sshd.service outright when
+    # `shh` (strace-based profiling, see modules/base/common-packages) tried
+    # to attach to it ("PTRACE_TRACEME: Operation not permitted"), since shh
+    # wraps the service's ExecStart in strace to record its syscalls.
+    # "admin-only" (ptrace_scope=2) allows root/CAP_SYS_PTRACE to ptrace,
+    # which is what `sudo shh service start-profile ...` needs. Revert to
+    # "restricted" (or just delete this line) once done profiling services
+    # on this host — it's meaningfully weaker than the default otherwise.
+    settings.system.yama = "admin-only";
+
     # Real Intel ME hardware here, never touched over any network path we
     # manage — pure attack-surface reduction, no downside.
     #
