@@ -44,7 +44,13 @@
       CapabilityBoundingSet = lib.mkForce "";
       NoNewPrivileges = lib.mkDefault true;
       PrivateDevices = lib.mkDefault true;
-      RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
+      # No AF_INET6 — homeserver-only module, networking.enableIPv6 = false
+      # there. nixpkgs' upstream default here is AF_INET/AF_INET6/AF_UNIX;
+      # with AF_INET6 present, `shh` (strace-profiling hardening helper)
+      # crashes reading /proc/sys/net/ipv6/bindv6only, which doesn't exist
+      # when IPv6 is fully disabled (confirmed live 2026-09-14, same crash
+      # radarr/sonarr's comments already flagged this file as hitting).
+      RestrictAddressFamilies = lib.mkForce ["AF_INET" "AF_UNIX"];
       ProtectClock = lib.mkDefault true;
       ProtectKernelLogs = lib.mkDefault true;
       ProtectKernelModules = lib.mkDefault true;
