@@ -75,13 +75,23 @@
     # `shh` (strace-based profiling, see modules/base/common-packages) tried
     # to attach to it ("PTRACE_TRACEME: Operation not permitted"), since shh
     # wraps the service's ExecStart in strace to record its syscalls.
-    # "admin-only" (ptrace_scope=2) allows root/CAP_SYS_PTRACE to ptrace,
-    # which is what `sudo shh service start-profile ...` needs. Revert to
-    # "restricted" (or just delete this line) once done profiling every
+    #
+    # "admin-only" (ptrace_scope=2) worked for sshd (runs as root, full
+    # capabilities) but NOT for radarr/prowlarr/etc: those run as their own
+    # unprivileged user with CapabilityBoundingSet="" (nixpkgs default for
+    # the *arr modules), and the strace wrapper inherits that same
+    # restriction as part of the unit — admin-only requires the *tracer* to
+    # be root or hold CAP_SYS_PTRACE, which it then doesn't. "relaxed"
+    # (ptrace_scope=1) instead permits ptrace purely by parent/child
+    # relationship with no privilege check, which is exactly shh's model
+    # (strace forks and execs the target as its own child) — works
+    # regardless of the target unit's capability set.
+    #
+    # Revert to "restricted" (or delete this line) once done profiling every
     # service on this host we plan to — it's meaningfully weaker than the
     # default otherwise, and lowering it back live requires a reboot
     # (Yama's ptrace_scope only ratchets up without one).
-    settings.system.yama = "admin-only";
+    settings.system.yama = "relaxed";
 
     # Real Intel ME hardware here, never touched over any network path we
     # manage — pure attack-surface reduction, no downside.
