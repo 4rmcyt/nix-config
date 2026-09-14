@@ -160,4 +160,103 @@
   # Locked out `nixos-rebuild` from writing /etc over SSH entirely; had to
   # fix via physical console. Do not reapply those four directives to
   # sshd on this host without testing from a non-SSH session first.
+
+  # Generated via `shh` (strace-profiling based hardening), one service at a
+  # time, profiled under real usage. Unlike sshd, none of these fork a
+  # per-connection session for an interactive user — single-purpose daemons
+  # only — so the mount-namespace directives here (ProtectSystem,
+  # PrivateDevices, PrivateMounts, ProtectKernelTunables) don't carry the
+  # same "leaks into every session" risk that broke sshd above.
+  #
+  # Not applied to prowlarr/qbittorrent: `shh` crashes reading
+  # /proc/sys/net/ipv6/bindv6only for both, even though that sysctl exists
+  # and reads fine on this host and inside qbittorrent's own wg netns.
+  # prowlarr has DynamicUser=yes (the only profiled unit that does) — likely
+  # cause there; qbittorrent's cause wasn't identified. Left unhardened by
+  # `shh` rather than keep restarting production services chasing it.
+  systemd.services.sonarr.serviceConfig = {
+    ProtectSystem = "full";
+    PrivateMounts = true;
+    ProtectKernelModules = true;
+    ProtectControlGroups = true;
+    LockPersonality = true;
+    RestrictRealtime = true;
+    ProtectClock = true;
+    RestrictAddressFamilies = ["AF_INET" "AF_UNIX"];
+    SocketBindDeny = ["ipv4:udp" "ipv6:tcp" "ipv6:udp"];
+    CapabilityBoundingSet = ["~CAP_BLOCK_SUSPEND" "CAP_BPF" "CAP_CHOWN" "CAP_IPC_LOCK" "CAP_KILL" "CAP_MKNOD" "CAP_NET_RAW" "CAP_PERFMON" "CAP_SYS_BOOT" "CAP_SYS_CHROOT" "CAP_SYS_MODULE" "CAP_SYS_PACCT" "CAP_SYS_PTRACE" "CAP_SYS_TIME" "CAP_SYS_TTY_CONFIG" "CAP_SYSLOG" "CAP_WAKE_ALARM"];
+    SystemCallFilter = ["~@aio:EPERM" "@chown:EPERM" "@clock:EPERM" "@cpu-emulation:EPERM" "@debug:EPERM" "@keyring:EPERM" "@memlock:EPERM" "@module:EPERM" "@mount:EPERM" "@obsolete:EPERM" "@pkey:EPERM" "@privileged:EPERM" "@raw-io:EPERM" "@reboot:EPERM" "@sandbox:EPERM" "@setuid:EPERM" "@swap:EPERM"];
+  };
+
+  systemd.services.radarr.serviceConfig = {
+    ProtectSystem = "full";
+    PrivateMounts = true;
+    ProtectKernelModules = true;
+    ProtectControlGroups = true;
+    LockPersonality = true;
+    RestrictRealtime = true;
+    ProtectClock = true;
+    RestrictAddressFamilies = ["AF_INET" "AF_UNIX"];
+    SocketBindDeny = ["ipv4:udp" "ipv6:tcp" "ipv6:udp"];
+    CapabilityBoundingSet = ["~CAP_BLOCK_SUSPEND" "CAP_BPF" "CAP_CHOWN" "CAP_IPC_LOCK" "CAP_KILL" "CAP_MKNOD" "CAP_NET_RAW" "CAP_PERFMON" "CAP_SYS_BOOT" "CAP_SYS_CHROOT" "CAP_SYS_MODULE" "CAP_SYS_PACCT" "CAP_SYS_PTRACE" "CAP_SYS_TIME" "CAP_SYS_TTY_CONFIG" "CAP_SYSLOG" "CAP_WAKE_ALARM"];
+    SystemCallFilter = ["~@aio:EPERM" "@chown:EPERM" "@clock:EPERM" "@cpu-emulation:EPERM" "@debug:EPERM" "@keyring:EPERM" "@memlock:EPERM" "@module:EPERM" "@mount:EPERM" "@obsolete:EPERM" "@pkey:EPERM" "@privileged:EPERM" "@raw-io:EPERM" "@reboot:EPERM" "@sandbox:EPERM" "@setuid:EPERM" "@swap:EPERM"];
+  };
+
+  systemd.services.bazarr.serviceConfig = {
+    ProtectSystem = "full";
+    ProtectHome = true;
+    PrivateTmp = "disconnected";
+    PrivateDevices = true;
+    PrivateMounts = true;
+    ProtectKernelTunables = true;
+    ProtectKernelModules = true;
+    ProtectKernelLogs = true;
+    ProtectControlGroups = true;
+    LockPersonality = true;
+    RestrictRealtime = true;
+    ProtectClock = true;
+    MemoryDenyWriteExecute = true;
+    RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_NETLINK" "AF_UNIX"];
+    SocketBindDeny = ["ipv4:udp" "ipv6:udp"];
+    CapabilityBoundingSet = ["~CAP_BLOCK_SUSPEND" "CAP_BPF" "CAP_CHOWN" "CAP_IPC_LOCK" "CAP_MKNOD" "CAP_NET_RAW" "CAP_PERFMON" "CAP_SYS_BOOT" "CAP_SYS_CHROOT" "CAP_SYS_MODULE" "CAP_SYS_PACCT" "CAP_SYS_PTRACE" "CAP_SYS_TIME" "CAP_SYSLOG" "CAP_WAKE_ALARM"];
+    SystemCallFilter = ["~@aio:EPERM" "@chown:EPERM" "@clock:EPERM" "@cpu-emulation:EPERM" "@debug:EPERM" "@keyring:EPERM" "@memlock:EPERM" "@module:EPERM" "@mount:EPERM" "@obsolete:EPERM" "@pkey:EPERM" "@privileged:EPERM" "@raw-io:EPERM" "@reboot:EPERM" "@sandbox:EPERM" "@setuid:EPERM" "@swap:EPERM"];
+  };
+
+  systemd.services.lidarr.serviceConfig = {
+    ProtectSystem = "full";
+    PrivateMounts = true;
+    ProtectKernelTunables = true;
+    ProtectKernelModules = true;
+    ProtectKernelLogs = true;
+    ProtectControlGroups = true;
+    LockPersonality = true;
+    RestrictRealtime = true;
+    ProtectClock = true;
+    RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_NETLINK" "AF_UNIX"];
+    SocketBindDeny = ["ipv4:udp" "ipv6:udp"];
+    CapabilityBoundingSet = ["~CAP_BLOCK_SUSPEND" "CAP_BPF" "CAP_CHOWN" "CAP_IPC_LOCK" "CAP_MKNOD" "CAP_NET_RAW" "CAP_PERFMON" "CAP_SYS_BOOT" "CAP_SYS_CHROOT" "CAP_SYS_MODULE" "CAP_SYS_PACCT" "CAP_SYS_PTRACE" "CAP_SYS_TIME" "CAP_SYSLOG" "CAP_WAKE_ALARM"];
+    SystemCallFilter = ["~@aio:EPERM" "@chown:EPERM" "@clock:EPERM" "@cpu-emulation:EPERM" "@debug:EPERM" "@keyring:EPERM" "@memlock:EPERM" "@module:EPERM" "@mount:EPERM" "@obsolete:EPERM" "@pkey:EPERM" "@privileged:EPERM" "@raw-io:EPERM" "@reboot:EPERM" "@sandbox:EPERM" "@setuid:EPERM" "@swap:EPERM"];
+  };
+
+  # komga's own module (modules/services/komga) already sets UMask,
+  # BindPaths, and the java.io.tmpdir Environment fix — these merge
+  # alongside those, no overlap.
+  systemd.services.komga.serviceConfig = {
+    ProtectSystem = "full";
+    ProtectHome = true;
+    PrivateTmp = "disconnected";
+    PrivateDevices = true;
+    PrivateMounts = true;
+    ProtectKernelTunables = true;
+    ProtectKernelModules = true;
+    ProtectKernelLogs = true;
+    ProtectControlGroups = true;
+    LockPersonality = true;
+    RestrictRealtime = true;
+    ProtectClock = true;
+    RestrictAddressFamilies = ["AF_INET" "AF_INET6"];
+    SocketBindDeny = ["ipv4:udp" "ipv6:tcp" "ipv6:udp"];
+    CapabilityBoundingSet = ["~CAP_BLOCK_SUSPEND" "CAP_BPF" "CAP_CHOWN" "CAP_IPC_LOCK" "CAP_MKNOD" "CAP_NET_RAW" "CAP_PERFMON" "CAP_SYS_BOOT" "CAP_SYS_CHROOT" "CAP_SYS_MODULE" "CAP_SYS_NICE" "CAP_SYS_PACCT" "CAP_SYS_PTRACE" "CAP_SYS_TIME" "CAP_SYSLOG" "CAP_WAKE_ALARM"];
+    SystemCallFilter = ["~@aio:EPERM" "@chown:EPERM" "@clock:EPERM" "@cpu-emulation:EPERM" "@debug:EPERM" "@keyring:EPERM" "@memlock:EPERM" "@module:EPERM" "@mount:EPERM" "@obsolete:EPERM" "@pkey:EPERM" "@privileged:EPERM" "@raw-io:EPERM" "@reboot:EPERM" "@resources:EPERM" "@sandbox:EPERM" "@setuid:EPERM" "@swap:EPERM"];
+  };
 }
