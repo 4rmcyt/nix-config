@@ -1,4 +1,9 @@
-{config, ...}: {
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   users.users.komga = {
     isSystemUser = true;
     group = "komga";
@@ -35,7 +40,17 @@
     # (filesystems.normal."/var/lib" in hardening.nix, for the *arr stack's
     # own scripts) — point java.io.tmpdir at /var/lib/komga/tmp instead of
     # PrivateTmp's /tmp.
-    Environment = ["JAVA_TOOL_OPTIONS=-Djava.io.tmpdir=/var/lib/komga/tmp"];
+    # nixpkgs' komga wrapper only puts libwebp on LD_LIBRARY_PATH (verified
+    # via `cat` on the wrapper script) — libheif and libjxl are both
+    # available in nixpkgs but the package doesn't wire them in, so their
+    # image-format plugins log "Could not load libheif"/"Could not load
+    # libjxl" and silently disable at startup (confirmed live 2026-09-14).
+    # The wrapper prepends its own LD_LIBRARY_PATH entry onto whatever it
+    # inherits, so this is additive, not a fight over who wins.
+    Environment = [
+      "JAVA_TOOL_OPTIONS=-Djava.io.tmpdir=/var/lib/komga/tmp"
+      "LD_LIBRARY_PATH=${lib.makeLibraryPath [pkgs.libheif pkgs.libjxl]}"
+    ];
   };
 
   systemd.tmpfiles.rules = [
