@@ -17,6 +17,7 @@ in {
       nixosHm
       nixosBareMetal
       nixosWorkstationGui
+      inputs.nix-mineral.nixosModules.nix-mineral
       ../../../hosts/nixos/desktop
       inputs.noctalia.nixosModules.default
       ../../../modules/nix/lix
