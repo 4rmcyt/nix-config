@@ -46,6 +46,8 @@
 
       age
       alejandra
+      shh
+      strace
       cachix
       cmake-format
       comma

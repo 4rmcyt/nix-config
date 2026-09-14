@@ -76,9 +76,46 @@
     # (hosts/nixos/homeserver/hardware-configuration.nix) — bluetooth is
     # already unused, this just blocks the kernel modules too instead of
     # only disabling the service.
+    #
+    # Every option below this point except intelme-related/bluetooth-related
+    # is explicitly forced to false. Touching `kernel-modules.disable` at
+    # all pulls in cynicsketch/nix-mineral's separate secureblue-derived
+    # combo set (kernel-modules/combos/secureblue-disable.nix) — ~20 more
+    # module-blacklist options that default to `true` on their own,
+    # independent of anything we set here. One of them
+    # (`secureblue-additional`) blacklists `sunrpc`, which NFS (nfsd,
+    # rpc_pipefs, lockd) depends on entirely — confirmed live: this broke
+    # nfs-server.service outright ("unknown filesystem type 'nfsd'",
+    # modprobe resolving nfsd/sunrpc to nix-mineral's disabled-module-alert
+    # stub) the first time homeserver actually rebooted into a generation
+    # with this config. `unused-filesystems` likely also covers nfsd
+    # itself. Never audited these before enabling — not doing that again;
+    # explicit false for every one we don't specifically want.
     kernel-modules.disable = {
       intelme-related = true;
       bluetooth-related = true;
+
+      unused-network-protocols = false;
+      firewire-related = false;
+      thunderbolt-related = false;
+      unused-filesystems = false;
+      gnss-related = false;
+      cdrom-related = false;
+      esp4-and-esp6 = false;
+      xfrm-related = false;
+      ipsec-related = false;
+      l2tp-related = false;
+      legacy-interfaces = false;
+      kernel-debugging-related = false;
+      automotive-related = false;
+      rdma-related = false;
+      gpib-related = false;
+      dvb-and-tv-receivers = false;
+      joystick-drivers = false;
+      remote-controls = false;
+      legacy-digital-cameras = false;
+      radio-tuners = false;
+      secureblue-additional = false;
     };
   };
 }
