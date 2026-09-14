@@ -151,28 +151,13 @@
     "vm.mmap_rnd_compat_bits" = 16;
   };
 
-  # Generated via `shh` (strace-profiling based hardening) against
-  # sshd.service — profiled login + scp + sftp. Required temporarily
-  # lowering nix-mineral's yama to "admin-only" for the profiling session
-  # (ptrace_scope=3 blocks strace outright); reverted above once done.
-  # No AF_INET6 / ipv6:tcp — this host has networking.enableIPv6 = false.
-  # CapabilityBoundingSet/SystemCallFilter match the desktop sshd profile
-  # exactly (cross-checked across two independent hosts).
-  systemd.services.sshd.serviceConfig = {
-    ProtectSystem = "full";
-    PrivateDevices = true;
-    PrivateMounts = true;
-    ProtectKernelTunables = true;
-    ProtectKernelModules = true;
-    ProtectKernelLogs = true;
-    ProtectControlGroups = true;
-    LockPersonality = true;
-    RestrictRealtime = true;
-    ProtectClock = true;
-    MemoryDenyWriteExecute = true;
-    RestrictAddressFamilies = ["AF_INET" "AF_NETLINK" "AF_UNIX"];
-    SocketBindDeny = ["ipv4:udp" "ipv6:tcp" "ipv6:udp"];
-    CapabilityBoundingSet = ["~CAP_BLOCK_SUSPEND" "CAP_BPF" "CAP_IPC_LOCK" "CAP_MKNOD" "CAP_NET_RAW" "CAP_PERFMON" "CAP_SYS_BOOT" "CAP_SYS_MODULE" "CAP_SYS_PACCT" "CAP_SYS_PTRACE" "CAP_SYS_TIME" "CAP_SYSLOG" "CAP_WAKE_ALARM"];
-    SystemCallFilter = ["~@aio:EPERM" "@clock:EPERM" "@cpu-emulation:EPERM" "@debug:EPERM" "@keyring:EPERM" "@memlock:EPERM" "@module:EPERM" "@obsolete:EPERM" "@pkey:EPERM" "@raw-io:EPERM" "@reboot:EPERM" "@sandbox:EPERM" "@swap:EPERM"];
-  };
+  # REVERTED (see git history for the shh-generated version that was here
+  # briefly): applying ProtectSystem=full / PrivateDevices / PrivateMounts /
+  # ProtectKernelTunables to sshd.service turned out to leak into every SSH
+  # login session's mount namespace on this host, not just the daemon —
+  # made /etc, /usr read-only and hid /dev/zfs, /dev/kmsg for every shell
+  # opened over SSH, including ones needed to run nixos-rebuild to fix it.
+  # Locked out `nixos-rebuild` from writing /etc over SSH entirely; had to
+  # fix via physical console. Do not reapply those four directives to
+  # sshd on this host without testing from a non-SSH session first.
 }
