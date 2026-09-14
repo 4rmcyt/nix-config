@@ -79,32 +79,22 @@
     RestrictAddressFamilies = ["AF_INET" "AF_INET6"];
     SocketBindDeny = ["ipv4:udp" "ipv6:tcp" "ipv6:udp"];
     CapabilityBoundingSet = lib.mkForce "~CAP_BLOCK_SUSPEND CAP_BPF CAP_CHOWN CAP_IPC_LOCK CAP_MKNOD CAP_NET_RAW CAP_PERFMON CAP_SYS_BOOT CAP_SYS_CHROOT CAP_SYS_MODULE CAP_SYS_NICE CAP_SYS_PACCT CAP_SYS_PTRACE CAP_SYS_TIME CAP_SYSLOG CAP_WAKE_ALARM";
-    # Each group needs its own "~" as a separate list entry: systemd only
-    # applies a leading "~" to the first token of a value, so a single
-    # space-joined string here would silently drop the ":EPERM" handling
-    # for every group after the first ("Allow-listed system calls cannot
-    # take error number, ignoring" — hit this exact bug on the other *arr
-    # services today, see their git history).
-    SystemCallFilter = [
-      "~@aio:EPERM"
-      "~@chown:EPERM"
-      "~@clock:EPERM"
-      "~@cpu-emulation:EPERM"
-      "~@debug:EPERM"
-      "~@keyring:EPERM"
-      "~@memlock:EPERM"
-      "~@module:EPERM"
-      "~@mount:EPERM"
-      "~@obsolete:EPERM"
-      "~@pkey:EPERM"
-      "~@privileged:EPERM"
-      "~@raw-io:EPERM"
-      "~@reboot:EPERM"
-      "~@resources:EPERM"
-      "~@sandbox:EPERM"
-      "~@setuid:EPERM"
-      "~@swap:EPERM"
-    ];
+    # CORRECTED 2026-09-14 (second correction): the previous fix — a Nix
+    # list of "~@group:EPERM" strings, one per group — was itself wrong.
+    # NixOS's systemd module renders each list element as its own
+    # "SystemCallFilter=" line but only the first line keeps a leading "~"
+    # in the final unit; the rest silently lose it and get parsed as
+    # allow-list entries, which can't carry ":EPERM" ("Allow-listed system
+    # calls cannot take error number, ignoring" — confirmed live still
+    # happening after the first fix, and independently this exact
+    # SocketBindDeny=ipv4:tcp interaction made komga fail to bind its own
+    # port outright). The documented, unambiguous pattern (systemd.exec,
+    # and every real-world example found) is: set SystemCallErrorNumber=
+    # once, and give SystemCallFilter a single "~"-prefixed string with no
+    # per-item ":ERRNO" at all — the leading "~" then applies to the whole
+    # list exactly once, no merge ambiguity.
+    SystemCallErrorNumber = "EPERM";
+    SystemCallFilter = "~@aio @chown @clock @cpu-emulation @debug @keyring @memlock @module @mount @obsolete @pkey @privileged @raw-io @reboot @resources @sandbox @setuid @swap";
   };
 
   systemd.tmpfiles.rules = [
