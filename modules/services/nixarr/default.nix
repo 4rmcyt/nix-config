@@ -183,9 +183,16 @@ in {
     }))
     # bazarr and lidarr's nixpkgs modules leave CapabilityBoundingSet at the
     # full default set with NoNewPrivileges=no (verified via `systemctl
-    # show`) — unlike sonarr/radarr/prowlarr, whose modules already clear
-    # capabilities entirely. Same *arr-suite C#/.NET codebase, no reason
-    # bazarr/lidarr need more than sonarr/radarr do. Not touching
+    # show`). prowlarr is cleared too, but only because prowlarr/default.nix
+    # forces it explicitly (see there) — its nixpkgs module doesn't clear it
+    # either. sonarr and radarr are NOT cleared: re-verified via `systemctl
+    # show sonarr.service radarr.service -p CapabilityBoundingSet` on
+    # homeserver on 2026-09-14, both still carry the broad default set
+    # (including cap_sys_ptrace, cap_sys_admin, cap_net_raw, ...) — same gap
+    # as bazarr/lidarr, just not yet closed here. Same *arr-suite C#/.NET
+    # codebase, no reason bazarr/lidarr need more than sonarr/radarr do —
+    # if anything the gap should be closed on sonarr/radarr too, not used
+    # as the baseline. Not touching
     # ProtectSystem here: bazarr needs read/write access to the media
     # library outside its own dataDir for its ffmpeg subtitle burn-in
     # (Settings > Subtitles), and isn't in servicesWithMediaAccess's
