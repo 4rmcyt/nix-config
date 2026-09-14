@@ -118,4 +118,12 @@
       secureblue-additional = false;
     };
   };
+
+  # Max out mmap ASLR entropy (arch ceiling on x86_64 is 32/16) — pure
+  # runtime sysctl, no functional dependency, flagged by
+  # kernel-hardening-checker as CONFIG_ARCH_MMAP_RND_BITS FAIL (28/8 stock).
+  boot.kernel.sysctl = {
+    "vm.mmap_rnd_bits" = 32;
+    "vm.mmap_rnd_compat_bits" = 16;
+  };
 }
