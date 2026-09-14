@@ -151,4 +151,44 @@
   systemd.services."getty@tty1".enable = false;
   systemd.services."systemd-vconsole-setup".enable = false;
   systemd.services."systemd-rfkill".enable = false;
+
+  # google-compute-config.nix (nixpkgs) writes accounts_daemon =
+  # boolToString config.users.mutableUsers into instance_configs.cfg. With
+  # the NixOS default (mutableUsers = true) google-guest-agent provisions
+  # local accounts and SSH keys straight from GCE project/instance
+  # metadata — on top of the zeev user already declared statically in
+  # ./default.nix. Anyone with edit access to the project's SSH-keys
+  # metadata would get a local account on this host. No config here
+  # depends on mutable users, so turn the whole path off.
+  users.mutableUsers = false;
+
+  # google-guest-agent ships with zero systemd sandboxing (upstream unit is
+  # just Type=notify + ExecStart + Restart=always). It's structurally like
+  # sshd/tailscaled above, not like nscd: it spawns useradd/passwd for
+  # account management, calls sethostname, and touches network setup — so
+  # only additive-only directives that don't touch capabilities,
+  # namespaces, syscalls, or address families. Deliberately NOT set:
+  # ProtectClock (needs CAP_SYS_TIME for clock-skew correction),
+  # ProtectHostname (agent calls sethostname; harmless here since
+  # networking.hostName is mkForce'd, but would fail the syscall),
+  # ProtectKernelTunables (network interface setup path), SystemCallFilter/
+  # MemoryDenyWriteExecute/PrivateUsers (same directives that already
+  # crashed alloy.service on this repo and are skipped on sshd/tailscaled
+  # for the same reason — account management and PAM-adjacent code paths
+  # don't tolerate them).
+  #
+  # google-guest-agent-manager.service (plugin manager, downloads and runs
+  # plugins on demand from GCE metadata) is deliberately left untouched:
+  # it's a code-execution channel by design, and sandboxing the loader
+  # process doesn't change that — the real control is restricting who can
+  # write to the project's metadata.
+  systemd.services.google-guest-agent.serviceConfig = {
+    ProtectKernelLogs = lib.mkDefault true;
+    ProtectKernelModules = lib.mkDefault true;
+    ProtectControlGroups = lib.mkDefault true;
+    LockPersonality = lib.mkDefault true;
+    RestrictRealtime = lib.mkDefault true;
+    RemoveIPC = lib.mkDefault true;
+    UMask = lib.mkDefault "0077";
+  };
 }

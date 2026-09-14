@@ -50,6 +50,7 @@ in {
           "networkmanager"
           "podman"
           "samba"
+          "systemd-journal"
           "video"
           "wheel"
           "zeev"
