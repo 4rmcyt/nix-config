@@ -109,7 +109,6 @@
     # TEMPORARY, more so than the above: revert this sysctl line too once
     # done profiling this round of services (reboot required either way).
     settings.system.yama = "none";
-    boot.kernel.sysctl."kernel.yama.ptrace_scope" = 0;
 
     # Real Intel ME hardware here, never touched over any network path we
     # manage — pure attack-surface reduction, no downside.
@@ -165,6 +164,10 @@
   # runtime sysctl, no functional dependency, flagged by
   # kernel-hardening-checker as CONFIG_ARCH_MMAP_RND_BITS FAIL (28/8 stock).
   boot.kernel.sysctl = {
+    # TEMPORARY, tied to nix-mineral's settings.system.yama = "none" above —
+    # revert both together once done profiling this round of services.
+    "kernel.yama.ptrace_scope" = 0;
+
     "vm.mmap_rnd_bits" = 32;
     "vm.mmap_rnd_compat_bits" = 16;
   };

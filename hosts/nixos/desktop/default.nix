@@ -37,7 +37,7 @@
     ../../../modules/TUI/tty.nix
     ../../../modules/users/zeev
 
-    ./hardening.nix
+    # ./hardening.nix
   ];
 
   sops = {
