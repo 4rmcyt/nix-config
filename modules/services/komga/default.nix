@@ -66,7 +66,9 @@
     # Left out below — do not re-add "ipv4:tcp".
     ProtectSystem = "full";
     ProtectHome = true;
-    PrivateTmp = "disconnected";
+    # nixpkgs' komga.nix hardcodes PrivateTmp = true (plain, not mkDefault) —
+    # needs mkForce to override with "disconnected".
+    PrivateTmp = lib.mkForce "disconnected";
     PrivateDevices = true;
     PrivateMounts = true;
     ProtectKernelTunables = true;
@@ -76,7 +78,9 @@
     LockPersonality = true;
     RestrictRealtime = true;
     ProtectClock = true;
-    RestrictAddressFamilies = ["AF_INET" "AF_INET6"];
+    # nixpkgs' komga.nix hardcodes this too (plain, not mkDefault; includes
+    # AF_NETLINK, which we drop) — needs mkForce.
+    RestrictAddressFamilies = lib.mkForce ["AF_INET" "AF_INET6"];
     SocketBindDeny = ["ipv4:udp" "ipv6:tcp" "ipv6:udp"];
     CapabilityBoundingSet = lib.mkForce "~CAP_BLOCK_SUSPEND CAP_BPF CAP_CHOWN CAP_IPC_LOCK CAP_MKNOD CAP_NET_RAW CAP_PERFMON CAP_SYS_BOOT CAP_SYS_CHROOT CAP_SYS_MODULE CAP_SYS_NICE CAP_SYS_PACCT CAP_SYS_PTRACE CAP_SYS_TIME CAP_SYSLOG CAP_WAKE_ALARM";
     # CORRECTED 2026-09-14 (second correction): the previous fix — a Nix
