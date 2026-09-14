@@ -143,6 +143,12 @@ in {
     stateDir = "/data/media/.state/nixarr";
 
     audiobookshelf.enable = true;
+    # Default ffmpeg-full builds with withGPL=true, withUnfree=false, which
+    # disables libfdk-aac -- without it, xHE-AAC audiobooks (M4B) fail to
+    # scan/transcode. allowUnfree is already set globally (shared-nixos-settings.nix).
+    audiobookshelf.package = pkgs.audiobookshelf.override {
+      ffmpeg-full = pkgs.ffmpeg-full.override {withUnfree = true;};
+    };
     jellyfin.enable = false; # Handled by ./jellyfin
     lidarr.enable = true;
 
