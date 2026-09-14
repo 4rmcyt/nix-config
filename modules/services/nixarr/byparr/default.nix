@@ -8,6 +8,7 @@ _: {
       # Camoufox/Firefox needs more than podman's 64m default shm, or it
       # crashes mid-challenge-solve (upstream: ThePhaseless/Byparr#283)
       "--shm-size=1gb"
+      "--security-opt=no-new-privileges"
     ];
     environment = {
       PORT = "8191";

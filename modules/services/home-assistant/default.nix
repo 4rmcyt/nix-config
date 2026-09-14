@@ -60,6 +60,7 @@ in {
       "--label=io.containers.autoupdate=registry"
       "--cap-add=NET_ADMIN"
       "--cap-add=NET_RAW"
+      "--security-opt=no-new-privileges"
       # USB passthrough for Zigbee/Z-Wave dongle (uncomment + adjust device path):
       # "--device=/dev/ttyACM0:/dev/ttyACM0"
     ];

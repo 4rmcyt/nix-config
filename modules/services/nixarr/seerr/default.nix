@@ -9,6 +9,7 @@
       "--env=PGID=${toString config.users.groups.seerr.gid}"
       "--env=UMASK=002"
       "--env=TZ=${config.my.defaults.timezone}"
+      "--security-opt=no-new-privileges"
     ];
     volumes = [
       "/data/media/.state/nixarr/seerr:/config"

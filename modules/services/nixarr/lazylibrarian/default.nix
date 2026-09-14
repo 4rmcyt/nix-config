@@ -5,6 +5,7 @@
     extraOptions = [
       "--network=host"
       "--label=io.containers.autoupdate=registry"
+      "--security-opt=no-new-privileges"
     ];
     environment = {
       PUID = "1000";
