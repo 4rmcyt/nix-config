@@ -9,6 +9,7 @@
   nixosHm = config.modules.nixos.hm;
   nixosBareMetal = config.modules.nixos.bareMetal;
   nixosWorkstationGui = config.modules.nixos.workstationGui;
+  nixosNixMineral = config.modules.nixos.nixMineral;
   hmWorkstation = config.modules.homeManager.workstation;
 in {
   configurations.nixos.desktop.module = {pkgs, ...}: {
@@ -17,7 +18,7 @@ in {
       nixosHm
       nixosBareMetal
       nixosWorkstationGui
-      inputs.nix-mineral.nixosModules.nix-mineral
+      nixosNixMineral
       ../../../hosts/nixos/desktop
       inputs.noctalia.nixosModules.default
       ../../../modules/nix/lix

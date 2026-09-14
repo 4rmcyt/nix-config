@@ -1,5 +1,6 @@
 {config, ...}: let
   nixosBase = config.modules.nixos.base;
+  nixosNixMineral = config.modules.nixos.nixMineral;
 in {
   configurations.nixos.gcp-relay.module = {
     lib,
@@ -9,7 +10,7 @@ in {
   }: {
     imports = [
       nixosBase
-      inputs.nix-mineral.nixosModules.nix-mineral
+      nixosNixMineral
       ../../../hosts/nixos/gcp-relay
       # No modules/nix/lix here (unlike every other host) — gcp-relay runs the
       # stock nixpkgs nix daemon on purpose.

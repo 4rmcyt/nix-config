@@ -34,6 +34,7 @@ parts/                      # Auto-imported flake-parts modules
                            # modules.nixos.workstationGui — GUI/{chrome,flatpak,kdeconnect,nemo} + nfs-client (desktop/matebook);
                            # modules.homeManager.workstation — GUI/TUI HM apps (desktop/matebook)
   shared-programs.nix       # modules.nixos.base — common programs on all hosts (zsh, nh)
+  nix-mineral.nix           # modules.nixos.nixMineral — inputs.nix-mineral's NixOS module (desktop/gcp-relay/homeserver; not matebook)
   meta.nix                  # options.meta (stateVersion, owner)
   owner.nix                 # meta.owner — sourced from the private `private` flake input (identity + LAN topology)
   schemas.nix               # flake.schemas — flake-schemas + custom topology schema
@@ -136,16 +137,17 @@ headless — it imports only `nixosBase`, no HM, no bare-metal modules.
 **desktop** and **matebook** additionally import `nixosWorkstationGui`
 (`modules.nixos.workstationGui`) and `hmWorkstation`.
 
-**gcp-relay** and **homeserver** additionally import
-`inputs.nix-mineral.nixosModules.nix-mineral` (their respective
-`parts/hosts/<host>/configuration.nix`) — settings in
+**desktop**, **gcp-relay**, and **homeserver** additionally import
+`nixosNixMineral` (`modules.nixos.nixMineral`, defined in
+[`parts/nix-mineral.nix`](../parts/nix-mineral.nix)) — settings in
+[`hosts/nixos/desktop/hardening.nix`](../hosts/nixos/desktop/hardening.nix) /
 [`hosts/nixos/gcp-relay/hardening.nix`](../hosts/nixos/gcp-relay/hardening.nix) /
 [`hosts/nixos/homeserver/hardening.nix`](../hosts/nixos/homeserver/hardening.nix).
 Alpha software (`cynicsketch/nix-mineral`), tracks the `main` branch (no tag
-pin in `flake.nix`). Not wired into `modules.nixos.base` since
-each host needs different filesystem/network overrides (ZFS vs Btrfs vs
-single-partition, exit-node routing); desktop is a candidate for its own
-`hardening.nix` later, matebook is not planned.
+pin in `flake.nix`). `modules.nixos.nixMineral` only wires in the module
+itself — not merged into `modules.nixos.base` — since each host needs
+different filesystem/network overrides (ZFS vs Btrfs vs single-partition,
+exit-node routing); matebook is not planned.
 
 `modules/security/hardening.nix` (the old hand-rolled `my.hardening.*`
 module: SSH ciphers, sysctl, per-service systemd hardening) is **deleted**.

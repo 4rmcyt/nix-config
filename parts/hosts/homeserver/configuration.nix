@@ -8,13 +8,14 @@
   nixosBase = config.modules.nixos.base;
   nixosHm = config.modules.nixos.hm;
   nixosBareMetal = config.modules.nixos.bareMetal;
+  nixosNixMineral = config.modules.nixos.nixMineral;
 in {
   configurations.nixos.homeserver.module = {...}: {
     imports = [
       nixosBase
       nixosHm
       nixosBareMetal
-      inputs.nix-mineral.nixosModules.nix-mineral
+      nixosNixMineral
       ../../../hosts/nixos/homeserver
       inputs.nixarr.nixosModules.default
       ../../../modules/nix/lix
