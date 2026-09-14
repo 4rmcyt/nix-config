@@ -48,6 +48,7 @@
       alejandra
       shh
       strace
+      kernel-hardening-checker
       cachix
       cmake-format
       comma
