@@ -168,7 +168,13 @@
   services = {
     gnome.gnome-keyring.enable = true;
 
-    openssh.enable = true;
+    openssh = {
+      enable = true;
+      settings = {
+        PasswordAuthentication = false;
+        PermitRootLogin = "no";
+      };
+    };
 
     tailscale = {
       authKeyFile = config.sops.secrets.tailscale_auth_key.path;
