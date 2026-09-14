@@ -184,8 +184,10 @@
     ProtectClock = true;
     RestrictAddressFamilies = ["AF_INET" "AF_UNIX"];
     SocketBindDeny = ["ipv4:udp" "ipv6:tcp" "ipv6:udp"];
-    CapabilityBoundingSet = ["~CAP_BLOCK_SUSPEND" "CAP_BPF" "CAP_CHOWN" "CAP_IPC_LOCK" "CAP_KILL" "CAP_MKNOD" "CAP_NET_RAW" "CAP_PERFMON" "CAP_SYS_BOOT" "CAP_SYS_CHROOT" "CAP_SYS_MODULE" "CAP_SYS_PACCT" "CAP_SYS_PTRACE" "CAP_SYS_TIME" "CAP_SYS_TTY_CONFIG" "CAP_SYSLOG" "CAP_WAKE_ALARM"];
-    SystemCallFilter = ["~@aio:EPERM" "@chown:EPERM" "@clock:EPERM" "@cpu-emulation:EPERM" "@debug:EPERM" "@keyring:EPERM" "@memlock:EPERM" "@module:EPERM" "@mount:EPERM" "@obsolete:EPERM" "@pkey:EPERM" "@privileged:EPERM" "@raw-io:EPERM" "@reboot:EPERM" "@sandbox:EPERM" "@setuid:EPERM" "@swap:EPERM"];
+    # nixpkgs' sonarr.nix hardcodes both (plain, not mkDefault) — needs
+    # mkForce to override with shh's tighter versions.
+    CapabilityBoundingSet = lib.mkForce ["~CAP_BLOCK_SUSPEND" "CAP_BPF" "CAP_CHOWN" "CAP_IPC_LOCK" "CAP_KILL" "CAP_MKNOD" "CAP_NET_RAW" "CAP_PERFMON" "CAP_SYS_BOOT" "CAP_SYS_CHROOT" "CAP_SYS_MODULE" "CAP_SYS_PACCT" "CAP_SYS_PTRACE" "CAP_SYS_TIME" "CAP_SYS_TTY_CONFIG" "CAP_SYSLOG" "CAP_WAKE_ALARM"];
+    SystemCallFilter = lib.mkForce ["~@aio:EPERM" "@chown:EPERM" "@clock:EPERM" "@cpu-emulation:EPERM" "@debug:EPERM" "@keyring:EPERM" "@memlock:EPERM" "@module:EPERM" "@mount:EPERM" "@obsolete:EPERM" "@pkey:EPERM" "@privileged:EPERM" "@raw-io:EPERM" "@reboot:EPERM" "@sandbox:EPERM" "@setuid:EPERM" "@swap:EPERM"];
   };
 
   systemd.services.radarr.serviceConfig = {
@@ -198,8 +200,10 @@
     ProtectClock = true;
     RestrictAddressFamilies = ["AF_INET" "AF_UNIX"];
     SocketBindDeny = ["ipv4:udp" "ipv6:tcp" "ipv6:udp"];
-    CapabilityBoundingSet = ["~CAP_BLOCK_SUSPEND" "CAP_BPF" "CAP_CHOWN" "CAP_IPC_LOCK" "CAP_KILL" "CAP_MKNOD" "CAP_NET_RAW" "CAP_PERFMON" "CAP_SYS_BOOT" "CAP_SYS_CHROOT" "CAP_SYS_MODULE" "CAP_SYS_PACCT" "CAP_SYS_PTRACE" "CAP_SYS_TIME" "CAP_SYS_TTY_CONFIG" "CAP_SYSLOG" "CAP_WAKE_ALARM"];
-    SystemCallFilter = ["~@aio:EPERM" "@chown:EPERM" "@clock:EPERM" "@cpu-emulation:EPERM" "@debug:EPERM" "@keyring:EPERM" "@memlock:EPERM" "@module:EPERM" "@mount:EPERM" "@obsolete:EPERM" "@pkey:EPERM" "@privileged:EPERM" "@raw-io:EPERM" "@reboot:EPERM" "@sandbox:EPERM" "@setuid:EPERM" "@swap:EPERM"];
+    # nixpkgs' radarr.nix hardcodes both (plain, not mkDefault) — needs
+    # mkForce to override with shh's tighter versions.
+    CapabilityBoundingSet = lib.mkForce ["~CAP_BLOCK_SUSPEND" "CAP_BPF" "CAP_CHOWN" "CAP_IPC_LOCK" "CAP_KILL" "CAP_MKNOD" "CAP_NET_RAW" "CAP_PERFMON" "CAP_SYS_BOOT" "CAP_SYS_CHROOT" "CAP_SYS_MODULE" "CAP_SYS_PACCT" "CAP_SYS_PTRACE" "CAP_SYS_TIME" "CAP_SYS_TTY_CONFIG" "CAP_SYSLOG" "CAP_WAKE_ALARM"];
+    SystemCallFilter = lib.mkForce ["~@aio:EPERM" "@chown:EPERM" "@clock:EPERM" "@cpu-emulation:EPERM" "@debug:EPERM" "@keyring:EPERM" "@memlock:EPERM" "@module:EPERM" "@mount:EPERM" "@obsolete:EPERM" "@pkey:EPERM" "@privileged:EPERM" "@raw-io:EPERM" "@reboot:EPERM" "@sandbox:EPERM" "@setuid:EPERM" "@swap:EPERM"];
   };
 
   systemd.services.bazarr.serviceConfig = {
@@ -256,10 +260,13 @@
     LockPersonality = true;
     RestrictRealtime = true;
     ProtectClock = true;
-    RestrictAddressFamilies = ["AF_INET" "AF_INET6"];
+    # nixpkgs' komga.nix hardcodes all three below (plain, not mkDefault;
+    # RestrictAddressFamilies there includes AF_NETLINK, which we drop) —
+    # needs mkForce to override with shh's tighter versions.
+    RestrictAddressFamilies = lib.mkForce ["AF_INET" "AF_INET6"];
     SocketBindDeny = ["ipv4:udp" "ipv6:tcp" "ipv6:udp"];
-    CapabilityBoundingSet = ["~CAP_BLOCK_SUSPEND" "CAP_BPF" "CAP_CHOWN" "CAP_IPC_LOCK" "CAP_MKNOD" "CAP_NET_RAW" "CAP_PERFMON" "CAP_SYS_BOOT" "CAP_SYS_CHROOT" "CAP_SYS_MODULE" "CAP_SYS_NICE" "CAP_SYS_PACCT" "CAP_SYS_PTRACE" "CAP_SYS_TIME" "CAP_SYSLOG" "CAP_WAKE_ALARM"];
-    SystemCallFilter = ["~@aio:EPERM" "@chown:EPERM" "@clock:EPERM" "@cpu-emulation:EPERM" "@debug:EPERM" "@keyring:EPERM" "@memlock:EPERM" "@module:EPERM" "@mount:EPERM" "@obsolete:EPERM" "@pkey:EPERM" "@privileged:EPERM" "@raw-io:EPERM" "@reboot:EPERM" "@resources:EPERM" "@sandbox:EPERM" "@setuid:EPERM" "@swap:EPERM"];
+    CapabilityBoundingSet = lib.mkForce ["~CAP_BLOCK_SUSPEND" "CAP_BPF" "CAP_CHOWN" "CAP_IPC_LOCK" "CAP_MKNOD" "CAP_NET_RAW" "CAP_PERFMON" "CAP_SYS_BOOT" "CAP_SYS_CHROOT" "CAP_SYS_MODULE" "CAP_SYS_NICE" "CAP_SYS_PACCT" "CAP_SYS_PTRACE" "CAP_SYS_TIME" "CAP_SYSLOG" "CAP_WAKE_ALARM"];
+    SystemCallFilter = lib.mkForce ["~@aio:EPERM" "@chown:EPERM" "@clock:EPERM" "@cpu-emulation:EPERM" "@debug:EPERM" "@keyring:EPERM" "@memlock:EPERM" "@module:EPERM" "@mount:EPERM" "@obsolete:EPERM" "@pkey:EPERM" "@privileged:EPERM" "@raw-io:EPERM" "@reboot:EPERM" "@resources:EPERM" "@sandbox:EPERM" "@setuid:EPERM" "@swap:EPERM"];
   };
 
   systemd.services.loki.serviceConfig = {
