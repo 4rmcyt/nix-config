@@ -97,6 +97,21 @@
     # and privacy-extension temp addresses simultaneously.
     settings.network.max-addresses = 8;
 
+    # Both default true, both explicitly documented as targeting "multiple
+    # interfaces on the same subnet" — exactly this host's enp12s0+wlp13s0
+    # dual-homed setup. arp_ignore=2 (ignore, default "link") only answers
+    # ARP if the target matches the SPECIFIC incoming interface; arp_filter=1
+    # restricts replies to one interface based on routing table state. With
+    # two interfaces racing on the same L2 segment this desyncs which
+    # interface the router thinks owns which IP, black-holing return WAN
+    # traffic for whichever interface loses the race — reproduced live:
+    # enp12s0 got 100% packet loss to any WAN address while wlp13s0 worked
+    # fine on the same gateway, independent of MAC/IP renewal.
+    settings.network.arp = {
+      ignore = "none";
+      filter = false;
+    };
+
     # Default false disables ia32_emulation entirely — breaks 32-bit Steam
     # games/libraries outright.
     settings.system.multilib = true;
