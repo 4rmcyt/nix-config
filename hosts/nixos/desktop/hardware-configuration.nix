@@ -80,6 +80,7 @@
       # amd_prefcore: only valid value is "disable"; prefcore is on by default with amd_pstate=active
       "microcode.amd_sha_check=off"
       "random.trust_cpu=on"
+      "pci=realloc" # Fix chipset PCIe bridge BAR assignment failures at boot
 
       "amdgpu.dpm=1" # Enable dynamic power management
 

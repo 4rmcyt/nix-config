@@ -55,6 +55,20 @@
     # otherwise enable it via mkDefault.
     settings.network.ip-forwarding = true;
 
+    # Desktop runs wired (enp12s0) and wifi (wlp13s0) simultaneously, both
+    # with active default routes at different metrics (see `ip route`).
+    # nix-mineral's default rp_filter=strict (mkOverride 900) drops packets
+    # whose reverse path (per the routing table) doesn't match the
+    # interface they arrived on — exactly what happens here for wifi
+    # traffic when the wired route is preferred. Disabling it is the
+    # documented trade-off for multi-homed hosts.
+    settings.network.rp-filter = false;
+
+    # nix-mineral's default "restrict" disables accept_ra_pinfo, which
+    # breaks IPv6 SLAAC prefix autoconfiguration — desktop's IPv6 addresses
+    # are SLAAC-assigned. "on" keeps normal RA handling.
+    settings.network.router-advertisements = "on";
+
     # Default panics the kernel on any oops (boot.kernelParams "oops=panic").
     # A flaky GPU/wine driver oops mid-game or mid-VM shouldn't force an
     # unclean reboot — same reasoning as homeserver/gcp-relay.
@@ -86,45 +100,36 @@
     # (security.sudo.wheelNeedsPassword), unaffected.
     extras.system.lock-root = true;
 
-    # Every category explicit false — same policy as homeserver/gcp-relay:
-    # touching kernel-modules.disable at all pulls in nix-mineral's
-    # secureblue-derived combo set, ~20 module-blacklist options that
-    # default to true independent of anything set here. Never audited
-    # blind; not starting now on the host with the widest hardware/driver
-    # surface of the three (GPU, controllers, Bluetooth headset, NFS
-    # client via modules.nixos.workstationGui).
-    #
-    # bluetooth-related and intelme-related are NOT forced true here unlike
-    # homeserver: desktop actually uses Bluetooth (BT headset, see
-    # services.upower comment in ./default.nix) and is an AMD platform
-    # (boot.extraModprobeConfig kvm-amd, no Intel ME hardware to disable).
-    # joystick-drivers stays false — controllers are in active use
-    # (hid_nintendo, xpadneo in modules/gaming).
+    # Every category audited against actual hardware/config on this host
+    # (lspci/lsusb/lsblk/ip link, repo grep for VPN/NFS usage) rather than
+    # left at nix-mineral's own default (touching kernel-modules.disable at
+    # all pulls in the full secureblue combo set, defaulting every category
+    # to true). false = hardware/usage present; true = confirmed absent.
     kernel-modules.disable = {
       bluetooth-related = false;
       intelme-related = false;
-
-      unused-network-protocols = false;
-      firewire-related = false;
-      thunderbolt-related = false;
       unused-filesystems = false;
-      gnss-related = false;
-      cdrom-related = false;
-      esp4-and-esp6 = false;
-      xfrm-related = false;
-      ipsec-related = false;
-      l2tp-related = false;
-      legacy-interfaces = false;
-      kernel-debugging-related = false;
-      automotive-related = false;
-      rdma-related = false;
-      gpib-related = false;
-      dvb-and-tv-receivers = false;
+      secureblue-additional = false;
       joystick-drivers = false;
-      remote-controls = false;
-      legacy-digital-cameras = false;
-      radio-tuners = false;
-      secureblue-additional = false; # sunrpc — same NFS break homeserver hit
+
+      unused-network-protocols = true;
+      firewire-related = true;
+      thunderbolt-related = true;
+      gnss-related = true;
+      esp4-and-esp6 = true;
+      xfrm-related = true;
+      ipsec-related = true;
+      l2tp-related = true;
+      legacy-interfaces = true;
+      kernel-debugging-related = true;
+      cdrom-related = true;
+      gpib-related = true;
+      dvb-and-tv-receivers = true;
+      automotive-related = true;
+      rdma-related = true;
+      legacy-digital-cameras = true;
+      radio-tuners = true;
+      remote-controls = true;
     };
   };
 
