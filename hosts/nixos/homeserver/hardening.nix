@@ -182,7 +182,7 @@
     LockPersonality = true;
     RestrictRealtime = true;
     ProtectClock = true;
-    RestrictAddressFamilies = ["AF_INET" "AF_UNIX"];
+    RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_UNIX"];
     SocketBindDeny = ["ipv4:udp" "ipv6:tcp" "ipv6:udp"];
     # nixpkgs' sonarr.nix hardcodes both (plain, not mkDefault) — needs
     # mkForce to override with shh's tighter versions.
@@ -198,7 +198,7 @@
     LockPersonality = true;
     RestrictRealtime = true;
     ProtectClock = true;
-    RestrictAddressFamilies = ["AF_INET" "AF_UNIX"];
+    RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_UNIX"];
     SocketBindDeny = ["ipv4:udp" "ipv6:tcp" "ipv6:udp"];
     # nixpkgs' radarr.nix hardcodes both (plain, not mkDefault) — needs
     # mkForce to override with shh's tighter versions.

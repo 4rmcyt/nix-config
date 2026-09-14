@@ -44,13 +44,7 @@
       CapabilityBoundingSet = lib.mkForce "";
       NoNewPrivileges = lib.mkDefault true;
       PrivateDevices = lib.mkDefault true;
-      # No AF_INET6 — this module is homeserver-only, and
-      # networking.enableIPv6 = false there. With AF_INET6 present, `shh`
-      # (strace-profiling hardening helper) crashes trying to read
-      # /proc/sys/net/ipv6/bindv6only, which doesn't exist when IPv6 is
-      # fully disabled — took prowlarr.service into a restart-loop/
-      # start-limit-hit the first time this was profiled.
-      RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_UNIX"];
+      RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
       ProtectClock = lib.mkDefault true;
       ProtectKernelLogs = lib.mkDefault true;
       ProtectKernelModules = lib.mkDefault true;

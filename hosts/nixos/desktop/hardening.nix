@@ -69,6 +69,52 @@
     # are SLAAC-assigned. "on" keeps normal RA handling.
     settings.network.router-advertisements = "on";
 
+    # nix-mineral defaults binfmt-misc to false (disabled) — breaks Wine/
+    # Proton (Steam), Java, and AppImages, which this host runs.
+    settings.kernel.binfmt-misc = true;
+
+    # Default auto-true on kernel >=6.17 (xanmod 7.2.4 qualifies) — adds
+    # significant memory-allocation overhead for red-zoning/sanity checks.
+    # No active memory-corruption debugging need here; pure perf cost on a
+    # gaming box.
+    settings.kernel.slab-debug = false;
+
+    # Default false disables 32-bit vDSO — breaks native (non-Proton) 32-bit
+    # Linux games in the Steam library.
+    settings.kernel.vdso32 = true;
+
+    # Perf over the SMT-disabling default — gaming box, not a multi-tenant
+    # server. Still applies standard CPU mitigations, just keeps SMT on.
+    settings.kernel.cpu-mitigations = "smt-on";
+
+    # Default true randomizes MAC via NetworkManager (active on this host).
+    # my.network.hosts.desktop_lan/desktop_wifi imply DHCP reservations keyed
+    # to the real hardware MAC — randomizing would break those reservations.
+    settings.network.random-mac = false;
+
+    # Default (1) conflicts with ipv6-tempaddr (also default true, needs
+    # room for permanent + temporary address) — this host runs both SLAAC
+    # and privacy-extension temp addresses simultaneously.
+    settings.network.max-addresses = 8;
+
+    # Default false disables ia32_emulation entirely — breaks 32-bit Steam
+    # games/libraries outright.
+    settings.system.multilib = true;
+
+    # Default "ptrace" restricts mmap/mprotect remapping to ptrace-based
+    # access for every process on the system, not just debugging tools —
+    # likely to break JIT compilers, Wine, and dynamic linkers broadly.
+    settings.system.proc-mem-force = "none";
+
+    # Default false disables core dumps — want them for debugging game/
+    # Proton crashes.
+    settings.debug.coredump = true;
+
+    # Default true pulls Kicksecure's bluetooth/main.conf, which sets
+    # AutoEnable=false — the adapter would stay off after every boot until
+    # manually enabled. Breaks the always-used BT headset.
+    settings.etc.kicksecure-bluetooth = false;
+
     # Default panics the kernel on any oops (boot.kernelParams "oops=panic").
     # A flaky GPU/wine driver oops mid-game or mid-VM shouldn't force an
     # unclean reboot — same reasoning as homeserver/gcp-relay.

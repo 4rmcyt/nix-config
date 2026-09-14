@@ -92,7 +92,7 @@
     hostName = "homeserver";
     hostId = "0b8d0f5a";
     useDHCP = true;
-    enableIPv6 = false;
+    enableIPv6 = true;
 
     dnssec = {
       enable = true;
