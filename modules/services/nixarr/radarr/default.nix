@@ -36,6 +36,13 @@
       # nixpkgs' module hardcodes 0022; we need group-writable output to
       # match the rest of the media stack's shared "media" group access.
       UMask = lib.mkForce "0002";
+
+      # No AF_INET6 — homeserver-only module, networking.enableIPv6 = false
+      # there. nixpkgs hardcodes AF_INET6 here; with it present, `shh`
+      # (strace-profiling hardening helper) crashes reading
+      # /proc/sys/net/ipv6/bindv6only, which doesn't exist when IPv6 is
+      # fully disabled (same crash seen profiling prowlarr.service).
+      RestrictAddressFamilies = lib.mkForce ["AF_INET" "AF_UNIX"];
     };
   };
 }

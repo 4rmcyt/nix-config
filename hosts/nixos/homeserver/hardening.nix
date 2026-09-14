@@ -77,8 +77,10 @@
     # wraps the service's ExecStart in strace to record its syscalls.
     # "admin-only" (ptrace_scope=2) allows root/CAP_SYS_PTRACE to ptrace,
     # which is what `sudo shh service start-profile ...` needs. Revert to
-    # "restricted" (or just delete this line) once done profiling services
-    # on this host — it's meaningfully weaker than the default otherwise.
+    # "restricted" (or just delete this line) once done profiling every
+    # service on this host we plan to — it's meaningfully weaker than the
+    # default otherwise, and lowering it back live requires a reboot
+    # (Yama's ptrace_scope only ratchets up without one).
     settings.system.yama = "admin-only";
 
     # Real Intel ME hardware here, never touched over any network path we
@@ -137,5 +139,30 @@
   boot.kernel.sysctl = {
     "vm.mmap_rnd_bits" = 32;
     "vm.mmap_rnd_compat_bits" = 16;
+  };
+
+  # Generated via `shh` (strace-profiling based hardening) against
+  # sshd.service — profiled login + scp + sftp. Required temporarily
+  # lowering nix-mineral's yama to "admin-only" for the profiling session
+  # (ptrace_scope=3 blocks strace outright); reverted above once done.
+  # No AF_INET6 / ipv6:tcp — this host has networking.enableIPv6 = false.
+  # CapabilityBoundingSet/SystemCallFilter match the desktop sshd profile
+  # exactly (cross-checked across two independent hosts).
+  systemd.services.sshd.serviceConfig = {
+    ProtectSystem = "full";
+    PrivateDevices = true;
+    PrivateMounts = true;
+    ProtectKernelTunables = true;
+    ProtectKernelModules = true;
+    ProtectKernelLogs = true;
+    ProtectControlGroups = true;
+    LockPersonality = true;
+    RestrictRealtime = true;
+    ProtectClock = true;
+    MemoryDenyWriteExecute = true;
+    RestrictAddressFamilies = ["AF_INET" "AF_NETLINK" "AF_UNIX"];
+    SocketBindDeny = ["ipv4:udp" "ipv6:tcp" "ipv6:udp"];
+    CapabilityBoundingSet = ["~CAP_BLOCK_SUSPEND" "CAP_BPF" "CAP_IPC_LOCK" "CAP_MKNOD" "CAP_NET_RAW" "CAP_PERFMON" "CAP_SYS_BOOT" "CAP_SYS_MODULE" "CAP_SYS_PACCT" "CAP_SYS_PTRACE" "CAP_SYS_TIME" "CAP_SYSLOG" "CAP_WAKE_ALARM"];
+    SystemCallFilter = ["~@aio:EPERM" "@clock:EPERM" "@cpu-emulation:EPERM" "@debug:EPERM" "@keyring:EPERM" "@memlock:EPERM" "@module:EPERM" "@obsolete:EPERM" "@pkey:EPERM" "@raw-io:EPERM" "@reboot:EPERM" "@sandbox:EPERM" "@swap:EPERM"];
   };
 }
