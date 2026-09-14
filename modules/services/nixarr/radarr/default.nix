@@ -63,32 +63,17 @@
       # SystemCallFilter below, there's no per-item ":ERRNO" suffix here to
       # trip over, so one merged "~"-prefixed line is fine.)
       CapabilityBoundingSet = lib.mkForce "~CAP_BLOCK_SUSPEND CAP_BPF CAP_CHOWN CAP_IPC_LOCK CAP_KILL CAP_MKNOD CAP_NET_RAW CAP_PERFMON CAP_SYS_BOOT CAP_SYS_CHROOT CAP_SYS_MODULE CAP_SYS_PACCT CAP_SYS_PTRACE CAP_SYS_TIME CAP_SYS_TTY_CONFIG CAP_SYSLOG CAP_WAKE_ALARM";
-      # CORRECTED 2026-09-14: shh printed this as one space-separated string
-      # with a single leading "~", but systemd only applies "~" to the
-      # first token of a given value — everything after it silently reverts
-      # to allow-list parsing, which can't carry ":EPERM" (confirmed live:
-      # "Allow-listed system calls cannot take error number, ignoring").
-      # Each group needs its own "~" as a separate list entry instead
-      # (systemd merges repeated SystemCallFilter= lines).
-      SystemCallFilter = [
-        "~@aio:EPERM"
-        "~@chown:EPERM"
-        "~@clock:EPERM"
-        "~@cpu-emulation:EPERM"
-        "~@debug:EPERM"
-        "~@keyring:EPERM"
-        "~@memlock:EPERM"
-        "~@module:EPERM"
-        "~@mount:EPERM"
-        "~@obsolete:EPERM"
-        "~@pkey:EPERM"
-        "~@privileged:EPERM"
-        "~@raw-io:EPERM"
-        "~@reboot:EPERM"
-        "~@sandbox:EPERM"
-        "~@setuid:EPERM"
-        "~@swap:EPERM"
-      ];
+      # CORRECTED 2026-09-14 (second correction): a Nix list of
+      # "~@group:EPERM" strings renders as one "SystemCallFilter=" line per
+      # element, but NixOS/systemd only keeps the leading "~" on the first
+      # line — the rest silently parse as allow-list entries, which can't
+      # carry ":EPERM" ("Allow-listed system calls cannot take error
+      # number, ignoring"). The documented, unambiguous pattern: set
+      # SystemCallErrorNumber= once, and give SystemCallFilter a single
+      # "~"-prefixed string with no per-item ":ERRNO" — the leading "~"
+      # then applies to the whole list exactly once, no merge ambiguity.
+      SystemCallErrorNumber = "EPERM";
+      SystemCallFilter = "~@aio @chown @clock @cpu-emulation @debug @keyring @memlock @module @mount @obsolete @pkey @privileged @raw-io @reboot @sandbox @setuid @swap";
     };
   };
 }

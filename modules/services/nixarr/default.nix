@@ -223,33 +223,18 @@ in {
         ProtectClock = true;
         RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_NETLINK" "AF_UNIX"];
         SocketBindDeny = ["ipv4:udp" "ipv6:udp"];
-        # CORRECTED 2026-09-14: shh printed this as one space-separated
-        # string with a single leading "~", but systemd only applies "~" to
-        # the first token of a given value — everything after it silently
-        # reverts to allow-list parsing, which can't carry ":EPERM"
-        # (confirmed live: "Allow-listed system calls cannot take error
-        # number, ignoring"). Each group needs its own "~" as a separate
-        # list entry instead (systemd merges repeated SystemCallFilter=
-        # lines).
-        SystemCallFilter = [
-          "~@aio:EPERM"
-          "~@chown:EPERM"
-          "~@clock:EPERM"
-          "~@cpu-emulation:EPERM"
-          "~@debug:EPERM"
-          "~@keyring:EPERM"
-          "~@memlock:EPERM"
-          "~@module:EPERM"
-          "~@mount:EPERM"
-          "~@obsolete:EPERM"
-          "~@pkey:EPERM"
-          "~@privileged:EPERM"
-          "~@raw-io:EPERM"
-          "~@reboot:EPERM"
-          "~@sandbox:EPERM"
-          "~@setuid:EPERM"
-          "~@swap:EPERM"
-        ];
+        # CORRECTED 2026-09-14 (second correction): a Nix list of
+        # "~@group:EPERM" strings renders as one "SystemCallFilter=" line
+        # per element, but NixOS/systemd only keeps the leading "~" on the
+        # first line — the rest silently parse as allow-list entries,
+        # which can't carry ":EPERM" ("Allow-listed system calls cannot
+        # take error number, ignoring"). The documented, unambiguous
+        # pattern: set SystemCallErrorNumber= once, and give
+        # SystemCallFilter a single "~"-prefixed string with no per-item
+        # ":ERRNO" — the leading "~" then applies to the whole list
+        # exactly once, no merge ambiguity.
+        SystemCallErrorNumber = "EPERM";
+        SystemCallFilter = "~@aio @chown @clock @cpu-emulation @debug @keyring @memlock @module @mount @obsolete @pkey @privileged @raw-io @reboot @sandbox @setuid @swap";
       };
       # audiobookshelf's module already has ProtectSystem=strict,
       # NoNewPrivileges=yes (verified via `systemctl show`) but the same
@@ -272,34 +257,18 @@ in {
         LockPersonality = true;
         RestrictAddressFamilies = ["AF_INET" "AF_NETLINK"];
         SocketBindDeny = ["ipv4:udp" "ipv6:tcp" "ipv6:udp"];
-        # CORRECTED 2026-09-14: shh printed this as one space-separated
-        # string with a single leading "~", but systemd only applies "~" to
-        # the first token of a given value — everything after it silently
-        # reverts to allow-list parsing, which can't carry ":EPERM"
-        # (confirmed live: "Allow-listed system calls cannot take error
-        # number, ignoring"). Each group needs its own "~" as a separate
-        # list entry instead (systemd merges repeated SystemCallFilter=
-        # lines).
-        SystemCallFilter = [
-          "~@aio:EPERM"
-          "~@chown:EPERM"
-          "~@clock:EPERM"
-          "~@cpu-emulation:EPERM"
-          "~@debug:EPERM"
-          "~@keyring:EPERM"
-          "~@memlock:EPERM"
-          "~@module:EPERM"
-          "~@mount:EPERM"
-          "~@obsolete:EPERM"
-          "~@pkey:EPERM"
-          "~@privileged:EPERM"
-          "~@raw-io:EPERM"
-          "~@reboot:EPERM"
-          "~@resources:EPERM"
-          "~@sandbox:EPERM"
-          "~@setuid:EPERM"
-          "~@swap:EPERM"
-        ];
+        # CORRECTED 2026-09-14 (second correction): a Nix list of
+        # "~@group:EPERM" strings renders as one "SystemCallFilter=" line
+        # per element, but NixOS/systemd only keeps the leading "~" on the
+        # first line — the rest silently parse as allow-list entries,
+        # which can't carry ":EPERM" ("Allow-listed system calls cannot
+        # take error number, ignoring"). The documented, unambiguous
+        # pattern: set SystemCallErrorNumber= once, and give
+        # SystemCallFilter a single "~"-prefixed string with no per-item
+        # ":ERRNO" — the leading "~" then applies to the whole list
+        # exactly once, no merge ambiguity.
+        SystemCallErrorNumber = "EPERM";
+        SystemCallFilter = "~@aio @chown @clock @cpu-emulation @debug @keyring @memlock @module @mount @obsolete @pkey @privileged @raw-io @reboot @resources @sandbox @setuid @swap";
       };
     }
   ];
