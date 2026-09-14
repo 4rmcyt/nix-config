@@ -265,7 +265,9 @@
   systemd.services.loki.serviceConfig = {
     ProtectSystem = "full";
     ProtectHome = true;
-    PrivateTmp = "disconnected";
+    # nixpkgs' loki.nix hardcodes PrivateTmp = true (plain, not mkDefault) —
+    # needs mkForce to override with shh's stronger "disconnected".
+    PrivateTmp = lib.mkForce "disconnected";
     PrivateDevices = true;
     PrivateMounts = true;
     ProtectKernelTunables = true;
