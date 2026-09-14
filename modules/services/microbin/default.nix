@@ -68,7 +68,7 @@ in {
       # (verified via `systemctl show microbin.service`) — already tight,
       # and already proven to work under those. Only gap: CapabilityBoundingSet
       # left at the full default set despite AmbientCapabilities being empty.
-      CapabilityBoundingSet = lib.mkForce [];
+      CapabilityBoundingSet = lib.mkForce "";
       LoadCredential = [
         "admin_password:${config.sops.secrets.microbin_admin_password.path}"
         "uploader_password:${config.sops.secrets.microbin_uploader_password.path}"

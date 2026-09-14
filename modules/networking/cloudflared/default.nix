@@ -68,7 +68,7 @@ in {
   # doesn't request any capability, it only makes outbound QUIC/HTTP2
   # connections to Cloudflare's edge.
   systemd.services."cloudflared-tunnel-57a75d0b-ba3c-4b13-9e45-8854e13fc0fb".serviceConfig = {
-    CapabilityBoundingSet = lib.mkForce [];
+    CapabilityBoundingSet = lib.mkForce "";
     RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
     ProtectClock = lib.mkDefault true;
     ProtectKernelLogs = lib.mkDefault true;

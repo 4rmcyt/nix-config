@@ -187,11 +187,11 @@ in {
     # is a separate pass, not blind here.
     {
       bazarr.serviceConfig = {
-        CapabilityBoundingSet = lib.mkForce [];
+        CapabilityBoundingSet = lib.mkForce "";
         NoNewPrivileges = lib.mkDefault true;
       };
       lidarr.serviceConfig = {
-        CapabilityBoundingSet = lib.mkForce [];
+        CapabilityBoundingSet = lib.mkForce "";
         NoNewPrivileges = lib.mkDefault true;
       };
       # audiobookshelf's module already has ProtectSystem=strict,
@@ -200,7 +200,7 @@ in {
       # it's a Node.js app, and V8's JIT needs W+X memory — same risk class
       # that killed alloy.service (Go) here, don't need a second confirmed
       # incident to know better.
-      audiobookshelf.serviceConfig.CapabilityBoundingSet = lib.mkForce [];
+      audiobookshelf.serviceConfig.CapabilityBoundingSet = lib.mkForce "";
     }
   ];
 

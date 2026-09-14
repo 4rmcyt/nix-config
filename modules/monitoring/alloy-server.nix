@@ -125,7 +125,7 @@
       # the priority filter before any list-merge happens — confirmed via
       # `systemctl show` after mkDefault made no difference on this exact
       # module on homeserver).
-      CapabilityBoundingSet = lib.mkForce [];
+      CapabilityBoundingSet = lib.mkForce "";
       RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
       SystemCallArchitectures = lib.mkDefault "native";
       # SystemCallFilter/MemoryDenyWriteExecute/PrivateUsers deliberately

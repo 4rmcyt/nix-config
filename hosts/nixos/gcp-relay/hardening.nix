@@ -86,7 +86,7 @@
   # block, duplicated here rather than restructuring modules/base for one
   # host's import quirk.
   systemd.services.nscd.serviceConfig = {
-    CapabilityBoundingSet = lib.mkForce [];
+    CapabilityBoundingSet = lib.mkForce "";
     RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX" "AF_NETLINK"];
     SystemCallFilter = lib.mkDefault ["@system-service"];
     SystemCallArchitectures = lib.mkDefault "native";

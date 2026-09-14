@@ -104,7 +104,7 @@
         # default set with AmbientCapabilities empty (verified via
         # `systemctl show couchdb.service`) — it doesn't request any
         # capability, runs as its own "couchdb" user.
-        CapabilityBoundingSet = lib.mkForce [];
+        CapabilityBoundingSet = lib.mkForce "";
         RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
         ProtectClock = lib.mkDefault true;
         ProtectKernelLogs = lib.mkDefault true;
