@@ -62,8 +62,17 @@
       RestrictSUIDSGID = lib.mkDefault true;
       LockPersonality = lib.mkDefault true;
       RestrictRealtime = lib.mkDefault true;
-      ProtectProc = lib.mkDefault "invisible";
-      ProcSubset = lib.mkDefault "pid";
+      # TEMPORARY: forced (not mkDefault) to "default"/"all" for shh
+      # profiling — ProcSubset=pid hides /proc/sys entirely from the
+      # sandboxed process, and shh unconditionally reads
+      # /proc/sys/net/ipv6/bindv6only while profiling regardless of this
+      # unit's RestrictAddressFamilies, crashing with ENOENT. radarr/sonarr
+      # don't hit this: their modules don't set ProtectProc/ProcSubset at
+      # all (only nixpkgs' looser defaults). Revert to "invisible"/"pid"
+      # once done profiling prowlarr.service, same cleanup pass as
+      # kernel.yama.ptrace_scope in hosts/nixos/homeserver/hardening.nix.
+      ProtectProc = lib.mkForce "default";
+      ProcSubset = lib.mkForce "all";
       UMask = lib.mkDefault "0077";
       RemoveIPC = lib.mkDefault true;
       # Deliberately NOT setting SystemCallFilter/MemoryDenyWriteExecute:
