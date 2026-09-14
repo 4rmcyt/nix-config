@@ -43,6 +43,41 @@
     # password hash unmatchable. zeev's sudo still needs its own password
     # (security.sudo.wheelNeedsPassword), unaffected.
     extras.system.lock-root = true;
+
+    # nix-mineral's kernel-modules/combos/secureblue-disable.nix declares
+    # ~20 module-blacklist combos (DVB/TV tuners, joystick, RDMA, GPIB,
+    # IPSec/xfrm/esp, legacy interfaces, kernel debugging, sunrpc via
+    # secureblue-additional, ...) that each default to `true` on the option
+    # itself — they apply the moment nix-mineral.enable = true, regardless
+    # of whether kernel-modules.disable is touched at all. Discovered this
+    # by way of it breaking NFS on homeserver (secureblue-additional
+    # blacklists sunrpc, which nfsd/rpc_pipefs/lockd need). Nothing on this
+    # host currently depends on any of these categories, but that was true
+    # on homeserver too until a reboot actually exercised it — not leaving
+    # ~20 unaudited defaults active here either.
+    kernel-modules.disable = {
+      unused-network-protocols = false;
+      firewire-related = false;
+      thunderbolt-related = false;
+      unused-filesystems = false;
+      gnss-related = false;
+      cdrom-related = false;
+      esp4-and-esp6 = false;
+      xfrm-related = false;
+      ipsec-related = false;
+      l2tp-related = false;
+      legacy-interfaces = false;
+      kernel-debugging-related = false;
+      automotive-related = false;
+      rdma-related = false;
+      gpib-related = false;
+      dvb-and-tv-receivers = false;
+      joystick-drivers = false;
+      remote-controls = false;
+      legacy-digital-cameras = false;
+      radio-tuners = false;
+      secureblue-additional = false;
+    };
   };
 
   # gcp-relay imports only modules/base/logging, not all of modules/base
