@@ -3,7 +3,7 @@
 # from extras.misc.ssh-hardening below; the crowdsec/prometheus systemd
 # hardening that used to live there moved into their own modules
 # (modules/security/crowdsec, modules/monitoring/prometheus.nix).
-{
+{lib, ...}: {
   nix-mineral = {
     enable = true;
 
@@ -244,7 +244,9 @@
   systemd.services.komga.serviceConfig = {
     ProtectSystem = "full";
     ProtectHome = true;
-    PrivateTmp = "disconnected";
+    # nixpkgs' komga.nix hardcodes PrivateTmp = true (plain, not mkDefault) —
+    # needs mkForce to override with shh's stronger "disconnected".
+    PrivateTmp = lib.mkForce "disconnected";
     PrivateDevices = true;
     PrivateMounts = true;
     ProtectKernelTunables = true;
