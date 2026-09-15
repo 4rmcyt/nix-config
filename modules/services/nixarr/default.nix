@@ -216,7 +216,9 @@ in {
         NoNewPrivileges = lib.mkDefault true;
         ProtectSystem = "full";
         PrivateMounts = true;
+        ProtectKernelTunables = true;
         ProtectKernelModules = true;
+        ProtectKernelLogs = true;
         ProtectControlGroups = true;
         LockPersonality = true;
         RestrictRealtime = true;
