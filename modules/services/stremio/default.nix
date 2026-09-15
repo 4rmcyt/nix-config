@@ -3,6 +3,7 @@
     autoStart = true;
     image = "docker.io/tsaridas/stremio-docker:latest";
     environment = {
+      TZ = config.my.defaults.timezone;
       # Web player and streaming server both sit behind the image's own
       # nginx on one port -- Traefik only needs to proxy this single port.
       # Renamed off the image's 8080 default: that collides on the host

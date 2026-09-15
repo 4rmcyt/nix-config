@@ -1,4 +1,4 @@
-_: {
+{config, ...}: {
   virtualisation.oci-containers.containers.byparr = {
     autoStart = true;
     image = "ghcr.io/thephaseless/byparr:latest";
@@ -12,6 +12,7 @@ _: {
     ];
     environment = {
       PORT = "8191";
+      TZ = config.my.defaults.timezone;
     };
   };
 

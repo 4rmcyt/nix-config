@@ -26,6 +26,9 @@
   virtualisation.oci-containers.containers.comet = {
     autoStart = true;
     image = "ghcr.io/g0ldyy/comet:latest";
+    environment = {
+      TZ = config.my.defaults.timezone;
+    };
     environmentFiles = [config.sops.templates."comet.env".path];
     volumes = ["/var/lib/comet:/app/data"];
     # Host networking (like byparr) instead of the podman bridge: Comet and

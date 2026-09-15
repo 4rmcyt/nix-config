@@ -20,6 +20,9 @@
   virtualisation.oci-containers.containers.aiostreams = {
     autoStart = true;
     image = "ghcr.io/viren070/aiostreams:latest";
+    environment = {
+      TZ = config.my.defaults.timezone;
+    };
     environmentFiles = [config.sops.templates."aiostreams.env".path];
     volumes = ["/var/lib/aiostreams:/app/data"];
     # Host networking (like byparr/comet) -- needs to reach Comet on
