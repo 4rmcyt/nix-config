@@ -33,6 +33,57 @@ in {
     settings = {
       alwaysThinkingEnabled = false;
       effortLevel = "medium";
+      hooks = {
+        PreToolUse = [
+          {
+            matcher = "Bash";
+            hooks = [
+              {
+                type = "command";
+                command = ''
+                  c=$(jq -r '.tool_input.command // empty')
+                  if { [ -n "$SSH_CONNECTION" ] && echo "$c" | grep -qE '(^|[;&|][[:space:]]*)sudo\b'; } || { echo "$c" | grep -qE '\bssh\b' && echo "$c" | grep -qE '\bsudo\b'; }; then
+                    echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"sudo over SSH is forbidden - run it on the remote host yourself."}}'
+                  fi
+                '';
+              }
+              {
+                type = "command";
+                command = ''
+                  c=$(jq -r '.tool_input.command // empty')
+                  if echo "$c" | grep -qE '\bnixos-rebuild\b|\bnh[[:space:]]+os\b|\bnix[[:space:]]+build\b|\bnix[[:space:]]+flake[[:space:]]+check\b'; then
+                    echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Build, rebuild and flake check are not run from here - state the change and stop."}}'
+                  fi
+                '';
+              }
+              {
+                type = "command";
+                command = ''
+                  c=$(jq -r '.tool_input.command // empty')
+                  if echo "$c" | grep -qE '\bsops[[:space:]]+(-e\b|--encrypt\b|encrypt\b)'; then
+                    echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Never run sops encrypt from a tool call - give the user the command instead."}}'
+                  fi
+                '';
+              }
+            ];
+          }
+        ];
+        PostToolUseFailure = [
+          {
+            matcher = "Bash";
+            hooks = [
+              {
+                type = "command";
+                command = ''
+                  if grep -qi "permission denied"; then
+                    echo '{"hookSpecificOutput":{"hookEventName":"PostToolUseFailure","additionalContext":"Permission denied - stop and ask the user how to proceed instead of retrying alternate commands."}}'
+                  fi
+                '';
+              }
+            ];
+          }
+        ];
+      };
     };
 
     agents = {
