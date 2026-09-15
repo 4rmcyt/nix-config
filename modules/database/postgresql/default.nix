@@ -46,6 +46,10 @@
       name = "comet";
       secret = "comet_db_password";
     }
+    {
+      name = "kombayn";
+      secret = "kombayn_db_password";
+    }
   ];
 in {
   sops.secrets = {
@@ -115,6 +119,13 @@ in {
     comet_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "comet_db_password";
+      owner = config.users.users.postgres.name;
+      group = config.users.groups.postgres.name;
+      mode = "0440";
+    };
+    kombayn_db_password = {
+      sopsFile = ../../../secrets/postgresql.yaml;
+      key = "kombayn_db_password";
       owner = config.users.users.postgres.name;
       group = config.users.groups.postgres.name;
       mode = "0440";
@@ -198,8 +209,6 @@ in {
         ensureDBOwnership = true;
       }
       {
-        # peer-auth only (local unix socket, no TCP/password) — see
-        # modules/services/job-kombayn, not part of `dbUsers` above on purpose
         name = "kombayn";
         ensureDBOwnership = true;
       }
@@ -222,6 +231,8 @@ in {
       host  all all 127.0.0.1/32 scram-sha-256
       host  all all ::1/128      scram-sha-256
       host  all all ${config.my.network.subnets.podman} scram-sha-256
+      # k3s pod network (flannel default), job-kombayn only
+      host  kombayn kombayn 10.42.0.0/16 scram-sha-256
     '';
   };
 
@@ -283,10 +294,6 @@ in {
           ${pkgs.postgresql}/bin/psql -d "${user.name}" -c "GRANT ALL ON SCHEMA public TO ${user.name};" || true
         '')
         dbUsers}
-
-      # kombayn: peer-auth only, not in dbUsers (no password to wait for), but
-      # still needs the same PG15+ public-schema grant as everyone else
-      ${pkgs.postgresql}/bin/psql -d "kombayn" -c "GRANT ALL ON SCHEMA public TO kombayn;" || true
 
       # Fix ownership and schema access for *-log databases (created by ensureDatabases, owned by postgres)
       for db_user in radarr sonarr prowlarr; do
