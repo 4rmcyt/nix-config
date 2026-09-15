@@ -47,7 +47,7 @@
       }
       {
         # No dashboard-icons entry and no dedicated Homepage widget for
-        # Comet yet (checked both homarr-labs and walkxcode icon sets) --
+        # Comet yet (checked walkxcode, homarr-labs, and selfh.st/icons) --
         # plain link, no icon.
         Comet = {
           href = "{{HOMEPAGE_VAR_COMET_URL}}";
@@ -55,8 +55,10 @@
         };
       }
       {
-        # Same as Comet above -- no icon available upstream.
+        # No dedicated Homepage widget, but selfh.st/icons has an icon
+        # (dashboard-icons -- walkxcode/homarr-labs -- doesn't).
         AIOStreams = {
+          icon = "sh-aiostreams.svg";
           href = "{{HOMEPAGE_VAR_AIOSTREAMS_URL}}";
           description = "Stremio Addon Aggregator";
         };
