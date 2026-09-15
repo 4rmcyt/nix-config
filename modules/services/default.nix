@@ -1,6 +1,8 @@
 {...}: {
   imports = [
+    ./aiostreams
     ./atuin-server
+    ./comet
     ./dispatcharr
     ./home-assistant
     ./homepage

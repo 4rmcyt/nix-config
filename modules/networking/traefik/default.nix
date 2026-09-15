@@ -75,6 +75,8 @@
     atuin.port = config.services.atuin.port;
     livesync.port = config.services.couchdb.port;
     dispatcharr.port = config.my.network.ports.dispatcharr;
+    comet.port = config.my.network.ports.comet;
+    aiostreams.port = config.my.network.ports.aiostreams;
     radicale = {
       port = config.my.network.ports.radicale;
       host = "cal.${domain}";

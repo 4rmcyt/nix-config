@@ -79,6 +79,16 @@
     # RestrictAddressFamilies/SocketBindDeny as a separate round.
     RestrictAddressFamilies = lib.mkForce ["AF_INET" "AF_INET6"];
     SocketBindDeny = ["ipv4:udp" "ipv6:udp"];
+
+    # BISECT round 3: rounds 1+2 (above) confirmed working live 2026-09-14.
+    # Adding SystemCallFilter last, isolated — this is the one direction not
+    # yet tested cleanly on its own. SystemCallErrorNumber= once + a single
+    # "~"-prefixed string (not a per-item ":ERRNO" list) is the documented,
+    # unambiguous pattern; if this alone still breaks bind(), the group list
+    # itself (not the syntax) is the problem — check which @group actually
+    # covers network syscalls before assuming syntax again.
+    SystemCallErrorNumber = "EPERM";
+    SystemCallFilter = "~@aio @chown @clock @cpu-emulation @debug @keyring @memlock @module @mount @obsolete @pkey @privileged @raw-io @reboot @resources @sandbox @setuid @swap";
   };
 
   systemd.tmpfiles.rules = [

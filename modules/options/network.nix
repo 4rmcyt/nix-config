@@ -170,6 +170,16 @@
       scope = "lan";
       desc = "Dispatcharr IPTV/EPG manager";
     };
+    comet = {
+      port = 8000;
+      scope = "lan";
+      desc = "Comet Stremio torrent/debrid search addon (Prowlarr-backed)";
+    };
+    aiostreams = {
+      port = 3000;
+      scope = "lan";
+      desc = "AIOStreams Stremio addon aggregator";
+    };
     ntfy = {
       port = 9991;
       scope = "internet";
