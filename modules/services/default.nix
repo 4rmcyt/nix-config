@@ -9,6 +9,7 @@
     ./job-kombayn
     ./komf
     ./komga
+    ./local-registry
     ./microbin
     ./miniflux
     ./nixarr

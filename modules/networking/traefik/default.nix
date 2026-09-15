@@ -83,6 +83,10 @@
       host = "cal.${domain}";
     };
     ntfy.port = config.my.network.ports.ntfy;
+    local-registry = {
+      port = config.my.network.ports.local-registry;
+      host = "registry.${domain}";
+    };
   };
 
   generatedRoutes = lib.foldl' lib.recursiveUpdate {} (lib.mapAttrsToList mkProxiedRouter proxiedServices);

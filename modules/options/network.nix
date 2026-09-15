@@ -212,6 +212,11 @@
       scope = "lan";
       desc = "Network UPS Tools (NUT) upsd server";
     };
+    local-registry = {
+      port = 5000;
+      scope = "lan";
+      desc = "Unauthenticated local Docker registry — k3s image delivery + LAN push, deliberately not internet-exposed";
+    };
   };
 
   mkPort = d:
