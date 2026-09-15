@@ -23,6 +23,9 @@
       "--network=host"
       "--label=io.containers.autoupdate=registry"
       "--security-opt=no-new-privileges"
+      # Web player + streaming server + ffmpeg, all on unprivileged ports,
+      # no /dev/dri passthrough configured here -- safe to drop everything.
+      "--cap-drop=all"
     ];
   };
 

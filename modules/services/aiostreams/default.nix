@@ -31,6 +31,9 @@
       "--network=host"
       "--label=io.containers.autoupdate=registry"
       "--security-opt=no-new-privileges"
+      # Plain Node app on an unprivileged port (>1024), no chroot/device
+      # access/raw sockets needed -- safe to drop the whole default set.
+      "--cap-drop=all"
     ];
   };
 

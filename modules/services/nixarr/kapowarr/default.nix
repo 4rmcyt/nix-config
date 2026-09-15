@@ -9,6 +9,16 @@
       "--env=PGID=${toString config.users.groups.media.gid}"
       "--env=TZ=${config.my.defaults.timezone}"
       "--security-opt=no-new-privileges"
+      # LinuxServer.io-style s6-overlay init needs these to chown /config and
+      # setuid/setgid down to PUID/PGID at startup -- cap-drop=all alone
+      # breaks the permission-drop step.
+      "--cap-drop=all"
+      "--cap-add=CHOWN"
+      "--cap-add=DAC_OVERRIDE"
+      "--cap-add=FOWNER"
+      "--cap-add=KILL"
+      "--cap-add=SETGID"
+      "--cap-add=SETUID"
     ];
     volumes = [
       "/data/media/.state/nixarr/kapowarr:/app/db"

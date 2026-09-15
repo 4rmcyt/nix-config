@@ -9,6 +9,9 @@
       # crashes mid-challenge-solve (upstream: ThePhaseless/Byparr#283)
       "--shm-size=1gb"
       "--security-opt=no-new-privileges"
+      # Dockerfile ends on USER 1000, no root-only chown/setuid dance and no
+      # device passthrough -- unprivileged process, safe to drop everything.
+      "--cap-drop=all"
     ];
     environment = {
       PORT = "8191";
