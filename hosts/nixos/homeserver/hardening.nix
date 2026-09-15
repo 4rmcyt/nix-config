@@ -187,6 +187,20 @@
     # tolerates the CNI bridge's asymmetric routing.
     "net.ipv4.conf.all.rp_filter" = 2;
     "net.ipv4.conf.default.rp_filter" = 2;
+
+    # k3s's apiserver binds --bind-address=127.0.0.1 only; kube-proxy DNATs
+    # the in-cluster ClusterIP (10.43.0.1) to that loopback address, which the
+    # kernel only allows for traffic whose *ingress* interface has
+    # route_localnet=1. kube-proxy sets route_localnet=1 at its own startup,
+    # but cni0 doesn't exist yet at that point (created later by flannel), so
+    # it's stuck on the kernel default (0) — every pod's request to the
+    # in-cluster API times out (confirmed: `dial tcp 10.43.0.1:443: i/o
+    # timeout` from argocd-redis/metrics-server/local-path-provisioner, while
+    # the same connect from the host itself works fine). `default` covers
+    # cni0 getting recreated on a future k3s restart/reboot; the explicit
+    # `cni0` entry fixes the interface that already exists right now.
+    "net.ipv4.conf.default.route_localnet" = 1;
+    "net.ipv4.conf.cni0.route_localnet" = 1;
   };
 
   # REVERTED (see git history for the shh-generated version that was here
