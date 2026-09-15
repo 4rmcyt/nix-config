@@ -60,7 +60,14 @@ in {
       done
 
       kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
-      kubectl apply -n argocd -f ${argocdManifest}
+      # --server-side: client-side `kubectl apply` stores the whole previous
+      # config in the kubectl.kubernetes.io/last-applied-configuration
+      # annotation, and ArgoCD's applicationsets.argoproj.io CRD schema is
+      # large enough to blow past the 256KiB annotation limit ("metadata.annotations:
+      # Too long"). Server-side apply tracks field ownership instead, no
+      # annotation involved. --force-conflicts since this was previously
+      # (attempted) client-side applied.
+      kubectl apply --server-side --force-conflicts -n argocd -f ${argocdManifest}
       kubectl -n argocd rollout status deployment/argocd-server --timeout=300s || true
 
       # Repo credentials + NodePort for the UI (Traefik proxies homeserver:30080)
