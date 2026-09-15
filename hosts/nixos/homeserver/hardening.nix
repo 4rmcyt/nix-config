@@ -52,6 +52,16 @@
     # dispatcharr, kapowarr) needs it too.
     settings.network.ip-forwarding = true;
 
+    # Default (rp_filter=1, strict) drops traffic between a pod veth and the
+    # cni0 bridge as spoofed ("IPv4: martian source") — confirmed live via
+    # `journalctl -k`: pods timing out reaching the in-cluster API ClusterIP
+    # (10.43.0.1), argocd-redis/metrics-server stuck CrashLoopBackOff. rp_filter
+    # is effectively max(conf.all, conf.<iface>), so a per-interface override
+    # for cni0/flannel.1 alone doesn't work — has to come down host-wide.
+    # Disable nix-mineral's strict toggle here, set loose (2) below instead of
+    # leaving it fully unfiltered.
+    settings.network.rp-filter = false;
+
     # Default panics the kernel on any oops (boot.kernelParams "oops=panic").
     # Too aggressive for a multi-service box with 3 ZFS pools under active
     # write load — a single flaky driver oops shouldn't force an unclean
@@ -170,6 +180,13 @@
 
     "vm.mmap_rnd_bits" = 32;
     "vm.mmap_rnd_compat_bits" = 16;
+
+    # Loose (not disabled) reverse-path filtering — see
+    # settings.network.rp-filter = false above for why strict breaks k3s.
+    # Loose still drops packets with no route back out any interface, just
+    # tolerates the CNI bridge's asymmetric routing.
+    "net.ipv4.conf.all.rp_filter" = 2;
+    "net.ipv4.conf.default.rp_filter" = 2;
   };
 
   # REVERTED (see git history for the shh-generated version that was here
