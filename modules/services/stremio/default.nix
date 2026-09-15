@@ -23,9 +23,18 @@
       "--network=host"
       "--label=io.containers.autoupdate=registry"
       "--security-opt=no-new-privileges"
-      # Web player + streaming server + ffmpeg, all on unprivileged ports,
-      # no /dev/dri passthrough configured here -- safe to drop everything.
+      # NOT actually safe to drop everything: confirmed live (2026-09-15) --
+      # entrypoint creates /var/lib/nginx/tmp/client_body and opens
+      # /var/lib/nginx/logs/error.log before dropping to its own user, which
+      # needs DAC_OVERRIDE/CHOWN or it's "Permission denied (13)" and the
+      # container crash-loops. Same LSIO-style baseline as kapowarr/seerr.
       "--cap-drop=all"
+      "--cap-add=CHOWN"
+      "--cap-add=DAC_OVERRIDE"
+      "--cap-add=FOWNER"
+      "--cap-add=KILL"
+      "--cap-add=SETGID"
+      "--cap-add=SETUID"
     ];
   };
 
