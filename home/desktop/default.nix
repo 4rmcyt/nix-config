@@ -83,6 +83,7 @@
       vdpauinfo
       vulkan-tools
       waydroid-helper
+      stremio-linux-shell
       (pkgs.texliveSmall.withPackages (ps:
         with ps; [
           scheme-medium
