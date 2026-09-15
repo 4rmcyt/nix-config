@@ -52,17 +52,33 @@
       "LD_LIBRARY_PATH=${lib.makeLibraryPath [pkgs.libheif pkgs.libjxl]}"
     ];
 
-    # TEMPORARY 2026-09-14: entire shh-generated hardening block below
-    # stripped for bisection — komga still fails with "Operation not
-    # permitted" on Tomcat's own port bind (java.net.SocketException at
-    # Net.bind0) after THREE different guessed causes (SocketBindDeny
-    # ipv4:tcp, then AF_NETLINK, then SystemCallFilter syntax) each turned
-    # out insufficient. Reverting to the known-working baseline (just
-    # UMask/BindPaths/Environment, confirmed working this morning) to
-    # re-add options in groups and actually isolate the real cause instead
-    # of guessing further. Full block preserved in git history (this file,
-    # commit before this one) — do not retype from scratch, restore pieces
-    # from there once the real cause is found.
+    # BISECT 2026-09-14, round 1: baseline (just UMask/BindPaths/Environment)
+    # confirmed working live. Re-adding the non-networking half of the
+    # shh-generated hardening now (mount/kernel-protection directives +
+    # CapabilityBoundingSet); RestrictAddressFamilies/SocketBindDeny/
+    # SystemCallFilter deliberately left out this round to isolate whether
+    # the bind failure lives in this half or the networking/syscall half.
+    ProtectSystem = "full";
+    ProtectHome = true;
+    PrivateTmp = lib.mkForce "disconnected";
+    PrivateDevices = true;
+    PrivateMounts = true;
+    ProtectKernelTunables = true;
+    ProtectKernelModules = true;
+    ProtectKernelLogs = true;
+    ProtectControlGroups = true;
+    LockPersonality = true;
+    RestrictRealtime = true;
+    ProtectClock = true;
+    CapabilityBoundingSet = lib.mkForce "~CAP_BLOCK_SUSPEND CAP_BPF CAP_CHOWN CAP_IPC_LOCK CAP_MKNOD CAP_NET_RAW CAP_PERFMON CAP_SYS_BOOT CAP_SYS_CHROOT CAP_SYS_MODULE CAP_SYS_NICE CAP_SYS_PACCT CAP_SYS_PTRACE CAP_SYS_TIME CAP_SYSLOG CAP_WAKE_ALARM";
+
+    # BISECT round 2: round 1 (above) confirmed working live 2026-09-14
+    # (komga served 200 OK with just mount/kernel-protection + capabilities).
+    # Adding the networking restrictions now, from a fresh shh profile —
+    # SystemCallFilter deliberately still left out, to isolate it from
+    # RestrictAddressFamilies/SocketBindDeny as a separate round.
+    RestrictAddressFamilies = lib.mkForce ["AF_INET" "AF_INET6"];
+    SocketBindDeny = ["ipv4:udp" "ipv6:udp"];
   };
 
   systemd.tmpfiles.rules = [
