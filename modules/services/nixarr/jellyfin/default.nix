@@ -53,4 +53,13 @@ in {
     test -f "${config.services.jellyfin.configDir}/system.xml" || install -m 640 ${systemXml} "${config.services.jellyfin.configDir}/system.xml"
     install -m 640 ${encodingXml} "${config.services.jellyfin.configDir}/encoding.xml"
   '';
+
+  # nixpkgs' services.jellyfin module hardcodes UMask=0077, so anything
+  # Jellyfin writes under the setgid (2775) media library dirs -- .nfo saves,
+  # .trickplay tiles -- gets created group-inaccessible (0700) despite
+  # inheriting group "media", causing Permission denied on the next
+  # read/write (own or another *arr service's). Match the UMask=0002 used
+  # for servicesWithMediaAccess in ../default.nix so new content stays
+  # group-writable.
+  systemd.services.jellyfin.serviceConfig.UMask = lib.mkForce "0002";
 }
