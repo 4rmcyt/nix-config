@@ -45,6 +45,22 @@
           description = "IPTV Stream Manager";
         };
       }
+      {
+        # No dashboard-icons entry and no dedicated Homepage widget for
+        # Comet yet (checked both homarr-labs and walkxcode icon sets) --
+        # plain link, no icon.
+        Comet = {
+          href = "{{HOMEPAGE_VAR_COMET_URL}}";
+          description = "Stremio Torrent/Debrid Search";
+        };
+      }
+      {
+        # Same as Comet above -- no icon available upstream.
+        AIOStreams = {
+          href = "{{HOMEPAGE_VAR_AIOSTREAMS_URL}}";
+          description = "Stremio Addon Aggregator";
+        };
+      }
     ];
   }
   {

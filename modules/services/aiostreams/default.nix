@@ -24,6 +24,7 @@
     volumes = ["/var/lib/aiostreams:/app/data"];
     ports = ["127.0.0.1:${toString config.my.network.ports.aiostreams}:${toString config.my.network.ports.aiostreams}"];
     extraOptions = [
+      "--add-host=host.containers.internal:host-gateway"
       "--label=io.containers.autoupdate=registry"
       "--security-opt=no-new-privileges"
     ];
