@@ -22,9 +22,10 @@
     image = "ghcr.io/viren070/aiostreams:latest";
     environmentFiles = [config.sops.templates."aiostreams.env".path];
     volumes = ["/var/lib/aiostreams:/app/data"];
-    ports = ["127.0.0.1:${toString config.my.network.ports.aiostreams}:${toString config.my.network.ports.aiostreams}"];
+    # Host networking (like byparr/comet) -- needs to reach Comet on
+    # localhost, no --add-host or extra port publishing needed.
     extraOptions = [
-      "--add-host=host.containers.internal:host-gateway"
+      "--network=host"
       "--label=io.containers.autoupdate=registry"
       "--security-opt=no-new-privileges"
     ];
