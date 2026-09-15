@@ -79,45 +79,18 @@
     # (security.sudo.wheelNeedsPassword), unaffected.
     extras.system.lock-root = true;
 
-    # TEMPORARY: nix-mineral's default (settings.system.yama = "restricted",
-    # kernel.yama.ptrace_scope=3 via mkForce) blocks ptrace for every
-    # process including root — this took down sshd.service outright when
-    # `shh` (strace-based profiling, see modules/base/common-packages) tried
-    # to attach to it ("PTRACE_TRACEME: Operation not permitted"), since shh
-    # wraps the service's ExecStart in strace to record its syscalls.
-    #
-    # "admin-only" (ptrace_scope=2) worked for sshd (runs as root, full
-    # capabilities) but NOT for radarr/prowlarr/etc under shh's own
-    # profiling fragment. Originally attributed this to CapabilityBoundingSet
-    # being nixpkgs-default-empty for the *arr modules — WRONG, corrected
-    # 2026-09-14: `systemctl show radarr.service sonarr.service -p
-    # CapabilityBoundingSet` on homeserver shows both still carry the broad
-    # default set (prowlarr's is empty, but only because prowlarr/default.nix
-    # forces it explicitly, not upstream — see modules/services/nixarr/).
-    # The actual reason admin-only failed and relaxed is needed: "relaxed"
-    # (ptrace_scope=1) permits ptrace purely by parent/child relationship
-    # with no privilege check, which is exactly shh's model (strace forks
-    # and execs the target as its own child) — works regardless of the
-    # target unit's capability set, so it was never about capabilities.
-    #
-    # Revert to "restricted" (or delete this line) once done profiling every
-    # service on this host we plan to — it's meaningfully weaker than the
-    # default otherwise, and lowering it back live requires a reboot
-    # (Yama's ptrace_scope only ratchets up without one).
-    #
-    # "relaxed" alone (ptrace_scope=1) still isn't enough for shh profiling
-    # radarr/sonarr/etc: strace runs with `--daemonize=grandchild` (double
-    # fork), which breaks the direct parent/child relationship "relaxed"
-    # requires — PTRACE_TRACEME then gets denied. Confirmed against
-    # nix-mineral's settings/system/yama.nix: "none" does NOT set the sysctl
-    # to 0, it just skips setting it at all (config = mkIf (cfg != "none")),
-    # and the kernel's own compiled-in default is scope 1 (YAMA_SCOPE_
-    # RELATIONAL, security/yama/yama_lsm.c) — same as "relaxed". So getting
-    # actual scope 0 needs an explicit sysctl below, same pattern as
-    # modules/gaming/default.nix does for desktop.
-    #
-    # TEMPORARY, more so than the above: revert this sysctl line too once
-    # done profiling this round of services (reboot required either way).
+    # TEMPORARY (revert together, needs reboot — ptrace_scope only ratchets
+    # up live): nix-mineral's default (settings.system.yama = "restricted",
+    # ptrace_scope=3) blocks ptrace entirely, breaking `shh` (strace-based
+    # service profiling, see modules/base/common-packages) — strace attaches
+    # via PTRACE_TRACEME and runs with --daemonize=grandchild (double fork),
+    # so even "relaxed" (ptrace_scope=1, parent/child only) isn't enough;
+    # "admin-only" (ptrace_scope=2, needs CAP_SYS_PTRACE) fails for the same
+    # double-fork reason, not because of any target unit's capability set.
+    # Only scope 0 ("none") lets strace attach unconditionally. nix-mineral's
+    # yama.nix "none" doesn't set the sysctl itself (mkIf (cfg != "none")),
+    # so the explicit sysctl below is required too — same pattern as
+    # modules/gaming/default.nix for desktop.
     settings.system.yama = "none";
 
     # Real Intel ME hardware here, never touched over any network path we
