@@ -73,7 +73,7 @@
     RestrictRealtime = true;
     ProtectClock = true;
     CapabilityBoundingSet = lib.mkForce "~CAP_BLOCK_SUSPEND CAP_BPF CAP_CHOWN CAP_IPC_LOCK CAP_MKNOD CAP_NET_RAW CAP_PERFMON CAP_SYS_BOOT CAP_SYS_CHROOT CAP_SYS_MODULE CAP_SYS_NICE CAP_SYS_PACCT CAP_SYS_PTRACE CAP_SYS_TIME CAP_SYSLOG CAP_WAKE_ALARM";
-    RestrictAddressFamilies = lib.mkForce ["AF_INET" "AF_INET6"];
+    RestrictAddressFamilies = lib.mkForce ["AF_INET" "AF_INET6" "AF_NETLINK"];
     SocketBindDeny = ["ipv4:udp" "ipv6:udp"];
     # SystemCallErrorNumber= once + a single "~"-prefixed SystemCallFilter
     # string (not a per-item ":ERRNO" list) is the documented, unambiguous
