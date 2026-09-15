@@ -128,6 +128,7 @@
       kubent
       kubebuilder
       kubernetes-helm
+      k9s
 
       cue
       golangci-lint
