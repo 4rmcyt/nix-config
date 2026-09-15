@@ -3,10 +3,10 @@
   pkgs,
   ...
 }: let
-  argocdVersion = "v3.5.2";
+  argocdVersion = "v3.5.3";
   argocdManifest = pkgs.fetchurl {
     url = "https://raw.githubusercontent.com/argoproj/argo-cd/${argocdVersion}/manifests/install.yaml";
-    hash = "sha256-mofys+FMJ48SUB6w71w5VbJ88FNwykJTgcapCM+FpcU=";
+    hash = "sha256-fv4ta7wD9jYjZA8eQZjxbIQAnVEPuBDvceVt8bdhS6k=";
   };
 in {
   # PAT for cloning the private 4rmcyt/gitops repo over HTTPS.
