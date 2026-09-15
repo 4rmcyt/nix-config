@@ -84,6 +84,8 @@
     wireguard-tools
 
     betula
+
+    k9s
   ];
 
   environment.shells = with pkgs; [zsh];

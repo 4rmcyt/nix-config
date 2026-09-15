@@ -108,6 +108,7 @@
       ktlint
       prometheus # promtool linter
       iw
+      k9s
     ];
   };
 
