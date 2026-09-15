@@ -320,6 +320,10 @@
       enableBot = true; # Applied/Skip inline buttons on vacancy cards
       enableApi = true; # HTTP API for the web frontend (jobko.<domain>/api)
       enableWeb = true; # static SPA (jobko.<domain>)
+      # Mirrors job-kombayn.env into a k8s Secret for the k3s deployment
+      # (gitops: k3s/job-kombayn/) — runs alongside the systemd units above,
+      # not a replacement yet.
+      enableK3sSecretSync = true;
       webBuild = pkgs.buildNpmPackage {
         pname = "job-kombayn-web";
         version = "0.1.0";

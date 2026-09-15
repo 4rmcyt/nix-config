@@ -73,6 +73,8 @@
     echo "=== done: $(date -Is) ==="
   '';
 in {
+  imports = [./k8s-secret.nix];
+
   options.services.jobKombayn = {
     enable = lib.mkEnableOption "job-kombayn hourly scan";
 

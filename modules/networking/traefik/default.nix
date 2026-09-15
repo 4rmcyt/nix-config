@@ -87,8 +87,6 @@
 
   generatedRoutes = lib.foldl' lib.recursiveUpdate {} (lib.mapAttrsToList mkProxiedRouter proxiedServices);
 in {
-  imports = [./kubernetes-crd.nix];
-
   options.my.traefik = {
     enable = lib.mkEnableOption "Traefik reverse proxy";
   };
