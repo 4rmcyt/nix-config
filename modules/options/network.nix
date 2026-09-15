@@ -180,6 +180,11 @@
       scope = "lan";
       desc = "AIOStreams Stremio addon aggregator";
     };
+    stremio = {
+      port = 8020;
+      scope = "lan";
+      desc = "Stremio server + web player (tsaridas/stremio-docker)";
+    };
     ntfy = {
       port = 9991;
       scope = "internet";

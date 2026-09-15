@@ -63,6 +63,15 @@
           description = "Stremio Addon Aggregator";
         };
       }
+      {
+        # No dedicated Homepage widget -- plain link. Icon confirmed present
+        # in walkxcode/dashboard-icons (svg/stremio.svg).
+        Stremio = {
+          icon = "stremio.png";
+          href = "{{HOMEPAGE_VAR_STREMIO_URL}}";
+          description = "Stremio Server + Web Player";
+        };
+      }
     ];
   }
   {
