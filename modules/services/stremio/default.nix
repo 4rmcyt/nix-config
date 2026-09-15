@@ -1,7 +1,7 @@
 {config, ...}: {
   virtualisation.oci-containers.containers.stremio = {
     autoStart = true;
-    image = "tsaridas/stremio-docker:latest";
+    image = "docker.io/tsaridas/stremio-docker:latest";
     environment = {
       # Web player and streaming server both sit behind the image's own
       # nginx on one port -- Traefik only needs to proxy this single port.
