@@ -42,7 +42,7 @@ in {
       (bind "SUPER,W" (noctalia "desktop-widgets-toggle") "")
 
       (bind "none,Print" "spawn_shell" ''grim -g "$(slurp)" - | wl-copy'')
-      (bind "SUPER,Print" "spawn_shell" ''grim - | satty -f -'')
+      (bind "SUPER,Print" "spawn_shell" ''grim - | wl-copy'')
 
       (bind "SUPER,Tab" "focuslast" "")
 
