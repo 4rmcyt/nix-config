@@ -30,6 +30,7 @@
     satty
     wayland
     wl-clip-persist
+    wl-clipboard
     wlr-randr
   ];
 

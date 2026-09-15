@@ -41,7 +41,7 @@ in {
       # from Settings/wallpaper UI, not exposed for direct binding.
       (bind "SUPER,W" (noctalia "desktop-widgets-toggle") "")
 
-      (bind "none,Print" "spawn_shell" ''grim -g "$(slurp)" - | satty -f -'')
+      (bind "none,Print" "spawn_shell" ''grim -g "$(slurp)" - | wl-copy'')
       (bind "SUPER,Print" "spawn_shell" ''grim - | satty -f -'')
 
       (bind "SUPER,Tab" "focuslast" "")
