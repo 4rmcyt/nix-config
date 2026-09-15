@@ -1,124 +1,46 @@
-# nix-mineral hardening baseline (inputs.nix-mineral, tracks main in flake.nix).
-# Replaces modules/security/hardening.nix (deleted) — SSH ciphers now come
-# from extras.misc.ssh-hardening below; the crowdsec/prometheus systemd
-# hardening that used to live there moved into their own modules
-# (modules/security/crowdsec, modules/monitoring/prometheus.nix).
 {...}: {
   nix-mineral = {
     enable = true;
 
-    # /home and /var/log are real, separate ZFS datasets (own mountpoint,
-    # see modules/disko/homeserver), not subdirectories of the root dataset.
-    # nix-mineral's default self bind-mount ("bind" = true) assumes the
-    # opposite (a single-partition layout where hardened paths are bound
-    # onto themselves) and breaks stage-2 activation on a real separate
-    # mount — same class of issue as Btrfs subvolumes, see nix-mineral's
-    # own FAQ / issue #11. /var, /root, /tmp, /var/tmp, /etc, /srv all live
-    # inside the "root" zfs dataset ("/"), so the default is correct there.
-    # /boot is a real ESP mount too, but nix-mineral already ships
-    # bind = false for it by default.
-    #
-    # noexec off too: zeev has a full interactive shell here (zsh/p10k),
-    # and gitstatusd (powerlevel10k's git-status daemon) caches its binary
-    # at ~/.cache/gitstatus/gitstatusd-linux-x86_64 — under noexec that's
-    # just a silent "gitstatus failed to initialize" at every login, no
-    # exec-denied message pointing at the actual cause. Confirmed live:
-    # `mount` showed /home as noexec, the binary sat right there refusing
-    # to run.
+    # /home is a separate ZFS dataset, not a subdir of root; noexec breaks gitstatusd.
     filesystems.normal."/home" = {
       options."bind" = false;
       options."noexec" = false;
     };
+    # Separate ZFS dataset too.
     filesystems.normal."/var/log".options."bind" = false;
 
-    # Native *arr services (sonarr/radarr/prowlarr/bazarr) keep state and any
-    # custom scripts/Recyclarr connect-hooks under /var/lib/<service>, which
-    # is on the same "root" dataset as /var — nix-mineral's default noexec on
-    # /var would otherwise reach them. Same override nix-mineral's own
-    # compatibility preset uses for this exact reason.
+    # *arr services run scripts from /var/lib; default noexec would block them.
     filesystems.normal."/var/lib" = {
       enable = true;
       options."noexec" = false;
       options."exec" = true;
     };
 
-    # Homeserver is a Tailscale exit node + subnet router
-    # (advertiseExitNode / advertiseRoutes in ./default.nix) — the tailscale
-    # module forces IP forwarding on via mkDefault, but nix-mineral's own
-    # default (false) disables it at a higher override priority (900 vs
-    # mkDefault's 1000), which would actually break exit-node/subnet-router
-    # routing here, not just in theory. Podman's bridge networking (heavily
-    # used here — home-assistant, seerr, lazylibrarian, komf, byparr,
-    # dispatcharr, kapowarr) needs it too.
+    # Needed for tailscale exit node/subnet router + podman bridge networking.
     settings.network.ip-forwarding = true;
 
-    # Default (rp_filter=1, strict) drops traffic between a pod veth and the
-    # cni0 bridge as spoofed ("IPv4: martian source") — confirmed live via
-    # `journalctl -k`: pods timing out reaching the in-cluster API ClusterIP
-    # (10.43.0.1), argocd-redis/metrics-server stuck CrashLoopBackOff. rp_filter
-    # is effectively max(conf.all, conf.<iface>), so a per-interface override
-    # for cni0/flannel.1 alone doesn't work — has to come down host-wide.
-    # Disable nix-mineral's strict toggle here, set loose (2) below instead of
-    # leaving it fully unfiltered.
+    # Strict rp_filter drops k3s CNI (cni0) traffic as spoofed.
     settings.network.rp-filter = false;
 
-    # Default panics the kernel on any oops (boot.kernelParams "oops=panic").
-    # Too aggressive for a multi-service box with 3 ZFS pools under active
-    # write load — a single flaky driver oops shouldn't force an unclean
-    # reboot. See docs/Infrastructure.md ZFS Safety Rules.
+    # Don't panic-reboot on a driver oops — 3 ZFS pools under active write load.
     settings.kernel.oops-panic = false;
 
-    # Replaces the SSH cipher/auth hardening that used to come from
-    # modules/security/hardening.nix. Non-overlapping SSH settings
-    # (AllowUsers, ...) stay inline in ./default.nix.
+    # Replaces modules/security/hardening.nix's SSH cipher hardening.
     extras.misc.ssh-hardening = true;
 
-    # PermitRootLogin=no already blocks SSH root login; this closes the
-    # remaining path (su/console password auth as root) by making the
-    # password hash unmatchable. zeev's sudo still needs its own password
-    # (security.sudo.wheelNeedsPassword), unaffected.
+    # Blocks su/console root password auth (SSH root login already off).
     extras.system.lock-root = true;
 
-    # TEMPORARY (revert together, needs reboot — ptrace_scope only ratchets
-    # up live): nix-mineral's default (settings.system.yama = "restricted",
-    # ptrace_scope=3) blocks ptrace entirely, breaking `shh` (strace-based
-    # service profiling, see modules/base/common-packages) — strace attaches
-    # via PTRACE_TRACEME and runs with --daemonize=grandchild (double fork),
-    # so even "relaxed" (ptrace_scope=1, parent/child only) isn't enough;
-    # "admin-only" (ptrace_scope=2, needs CAP_SYS_PTRACE) fails for the same
-    # double-fork reason, not because of any target unit's capability set.
-    # Only scope 0 ("none") lets strace attach unconditionally. nix-mineral's
-    # yama.nix "none" doesn't set the sysctl itself (mkIf (cfg != "none")),
-    # so the explicit sysctl below is required too — same pattern as
-    # modules/gaming/default.nix for desktop.
+    # TEMPORARY: needed for `shh` strace profiling (double-fork breaks relaxed/admin-only). Revert with the sysctl below.
     settings.system.yama = "none";
 
-    # Real Intel ME hardware here, never touched over any network path we
-    # manage — pure attack-surface reduction, no downside.
-    #
-    # hardware.bluetooth.enable is already false
-    # (hosts/nixos/homeserver/hardware-configuration.nix) — bluetooth is
-    # already unused, this just blocks the kernel modules too instead of
-    # only disabling the service.
-    #
-    # Every option below this point except intelme-related/bluetooth-related
-    # is explicitly forced to false. Touching `kernel-modules.disable` at
-    # all pulls in cynicsketch/nix-mineral's separate secureblue-derived
-    # combo set (kernel-modules/combos/secureblue-disable.nix) — ~20 more
-    # module-blacklist options that default to `true` on their own,
-    # independent of anything we set here. One of them
-    # (`secureblue-additional`) blacklists `sunrpc`, which NFS (nfsd,
-    # rpc_pipefs, lockd) depends on entirely — confirmed live: this broke
-    # nfs-server.service outright ("unknown filesystem type 'nfsd'",
-    # modprobe resolving nfsd/sunrpc to nix-mineral's disabled-module-alert
-    # stub) the first time homeserver actually rebooted into a generation
-    # with this config. `unused-filesystems` likely also covers nfsd
-    # itself. Never audited these before enabling — not doing that again;
-    # explicit false for every one we don't specifically want.
+    # Real hardware, unused, no downside to blocking the modules.
     kernel-modules.disable = {
       intelme-related = true;
       bluetooth-related = true;
 
+      # Unaudited — leave false. secureblue-additional once broke nfs-server via sunrpc.
       unused-network-protocols = false;
       firewire-related = false;
       thunderbolt-related = false;
@@ -143,35 +65,19 @@
     };
   };
 
-  # Max out mmap ASLR entropy (arch ceiling on x86_64 is 32/16) — pure
-  # runtime sysctl, no functional dependency, flagged by
-  # kernel-hardening-checker as CONFIG_ARCH_MMAP_RND_BITS FAIL (28/8 stock).
   boot.kernel.sysctl = {
-    # TEMPORARY, tied to nix-mineral's settings.system.yama = "none" above —
-    # revert both together once done profiling this round of services.
+    # TEMPORARY, tied to settings.system.yama = "none" above — revert together.
     "kernel.yama.ptrace_scope" = 0;
 
+    # Max mmap ASLR entropy.
     "vm.mmap_rnd_bits" = 32;
     "vm.mmap_rnd_compat_bits" = 16;
 
-    # Loose (not disabled) reverse-path filtering — see
-    # settings.network.rp-filter = false above for why strict breaks k3s.
-    # Loose still drops packets with no route back out any interface, just
-    # tolerates the CNI bridge's asymmetric routing.
+    # Loose, not strict — k3s CNI bridge routing needs it.
     "net.ipv4.conf.all.rp_filter" = 2;
     "net.ipv4.conf.default.rp_filter" = 2;
 
-    # k3s's apiserver binds --bind-address=127.0.0.1 only; kube-proxy DNATs
-    # the in-cluster ClusterIP (10.43.0.1) to that loopback address, which the
-    # kernel only allows for traffic whose *ingress* interface has
-    # route_localnet=1. kube-proxy sets route_localnet=1 at its own startup,
-    # but cni0 doesn't exist yet at that point (created later by flannel), so
-    # it's stuck on the kernel default (0) — every pod's request to the
-    # in-cluster API times out (confirmed: `dial tcp 10.43.0.1:443: i/o
-    # timeout` from argocd-redis/metrics-server/local-path-provisioner, while
-    # the same connect from the host itself works fine). `default` covers
-    # cni0 getting recreated on a future k3s restart/reboot; the explicit
-    # `cni0` entry fixes the interface that already exists right now.
+    # k3s apiserver binds 127.0.0.1; cni0 needs route_localnet for ClusterIP DNAT.
     "net.ipv4.conf.default.route_localnet" = 1;
     "net.ipv4.conf.cni0.route_localnet" = 1;
   };

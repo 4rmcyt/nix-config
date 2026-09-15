@@ -146,11 +146,15 @@
     # <lan-ip>:6443, not loopback), so without this every in-cluster
     # API call times out (confirmed: argocd-redis/metrics-server/
     # local-path-provisioner all stuck in CrashLoopBackOff on
-    # `dial tcp 10.43.0.1:443: i/o timeout`). 5432 is Postgres, for
-    # job-kombayn's k3s workloads (see modules/database/postgresql's
-    # kombayn pg_hba rule for the matching 10.42.0.0/16 allow).
+    # `dial tcp 10.43.0.1:443: i/o timeout`). 10250 is kubelet's own metrics/
+    # exec port — metrics-server scrapes it directly on the node's real IP,
+    # firewall.rejectPackets turns the block into an immediate "connection
+    # refused" rather than a timeout, confirmed live the same way. 5432 is
+    # Postgres, for job-kombayn's k3s workloads (see
+    # modules/database/postgresql's kombayn pg_hba rule for the matching
+    # 10.42.0.0/16 allow).
     firewall.interfaces.cni0 = {
-      allowedTCPPorts = [6443 5432];
+      allowedTCPPorts = [6443 10250 5432];
     };
 
     firewall = {
