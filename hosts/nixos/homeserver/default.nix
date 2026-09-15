@@ -140,6 +140,19 @@
       allowedTCPPorts = [5432 6379];
     };
 
+    # Allow k3s pods to reach host services: 6443 is k3s's own API supervisor
+    # port — the in-cluster `kubernetes` Service ClusterIP gets DNAT'd to the
+    # host's real LAN IP on this port (its Endpoints object points at
+    # <lan-ip>:6443, not loopback), so without this every in-cluster
+    # API call times out (confirmed: argocd-redis/metrics-server/
+    # local-path-provisioner all stuck in CrashLoopBackOff on
+    # `dial tcp 10.43.0.1:443: i/o timeout`). 5432 is Postgres, for
+    # job-kombayn's k3s workloads (see modules/database/postgresql's
+    # kombayn pg_hba rule for the matching 10.42.0.0/16 allow).
+    firewall.interfaces.cni0 = {
+      allowedTCPPorts = [6443 5432];
+    };
+
     firewall = {
       enable = true;
 
