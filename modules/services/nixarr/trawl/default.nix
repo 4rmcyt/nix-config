@@ -4,15 +4,20 @@
     image = "ghcr.io/germondai/trawl:latest";
     environment = {
       TZ = config.my.defaults.timezone;
+      PORT = "8193";
       # No external Redis for this trial -- bounded in-process cache is enough
       # at BROWSER_POOL_SIZE=1, and keeps trawl self-contained to rip out if
       # it doesn't pan out against Byparr.
       SESSION_CACHE_DRIVER = "memory";
     };
-    # Bound to loopback like dispatcharr -- Prowlarr calls it over 127.0.0.1,
-    # no LAN exposure needed.
-    ports = ["127.0.0.1:8193:8191"];
     extraOptions = [
+      # Diagnostic: bridge networking (with port mapping to 127.0.0.1:8193)
+      # hung every request forever -- even a Tier 1 plain-HTTP fetch with no
+      # browser involved -- while byparr and comet, both on --network=host,
+      # work fine. Isolating whether podman's bridge/NAT path is broken for
+      # this container's egress. PORT moved to 8193 since there's no port
+      # mapping to fall back on in host mode.
+      "--network=host"
       "--label=io.containers.autoupdate=registry"
       # Camoufox/Firefox needs more than podman's 64m default shm (same
       # reasoning as byparr's --shm-size).
