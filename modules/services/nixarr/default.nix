@@ -142,7 +142,7 @@ in {
     # pythonMetadataCheckPhase; skipping only skips the version-string check.
     nixarr-py.package =
       (pkgs.callPackage "${inputs.nixarr}/nixarr/lib/nixarr-py" {
-        jellyfin = config.nixarr.jellyfin.package;
+        jellyfin = config.services.jellyfin.package;
       })
       .overrideAttrs (_: {
         dontCheckPythonMetadata = true;
