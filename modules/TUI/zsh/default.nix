@@ -83,6 +83,15 @@
         zle -N sudo-command-line
         bindkey '\e\e' sudo-command-line
 
+        # Recover termios/terminal modes (kitty keyboard protocol, mouse
+        # tracking, bracketed paste) left dangling by a program that died
+        # abruptly (ssh drop, killed vim/zellij, etc.) instead of exiting clean.
+        _reset-tty() {
+          stty sane 2>/dev/null
+          printf '\e[?2004l\e[?1000l\e[?1002l\e[?1003l\e[?1006l\e[>4;0m'
+        }
+        precmd_functions+=(_reset-tty)
+
         zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
         zstyle ':completion:*' menu no
         zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
