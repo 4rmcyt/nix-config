@@ -1,4 +1,31 @@
-_: {
+_: let
+  # Shokz OpenRun Pro 2 — edge shelves only, filters 1+6 of AutoEq's 10-band
+  # Rtings/B&K5128 correction (rest discarded as coupler artifacts). No BRIR/crossfeed.
+  shokzOpenrunPro2Bands = {
+    band0 = {
+      type = "Lo-shelf";
+      mode = "RLC (BT)";
+      slope = "x1";
+      solo = false;
+      mute = false;
+      frequency = 105.0;
+      gain = 5.9;
+      q = 0.7;
+      width = 4.0;
+    };
+    band1 = {
+      type = "Hi-shelf";
+      mode = "RLC (BT)";
+      slope = "x1";
+      solo = false;
+      mute = false;
+      frequency = 10000.0;
+      gain = 4.1;
+      q = 0.7;
+      width = 4.0;
+    };
+  };
+in {
   # Grado SR325x output chain, generated with ASH-Toolset (https://github.com/ShanonPearce/ASH-Toolset):
   #
   #   convolver#0  - BRIR true-stereo impulse (ASH Listening Room AS-180, KEMAR HRTF,
@@ -47,6 +74,25 @@ _: {
         autogain = true;
         dry = -100.0;
         wet = 0.0;
+      };
+    };
+
+    extraPresets.shokz-openrun-pro2.output = {
+      blocklist = [];
+      plugins_order = ["equalizer#0"];
+
+      "equalizer#0" = {
+        bypass = false;
+        input-gain = -6.0;
+        output-gain = 0.0;
+        mode = "IIR";
+        num-bands = 2;
+        split-channels = false;
+        balance = 0.0;
+        pitch-left = 0.0;
+        pitch-right = 0.0;
+        left = shokzOpenrunPro2Bands;
+        right = shokzOpenrunPro2Bands;
       };
     };
   };
