@@ -1,7 +1,6 @@
 {config, ...}: {
   sops.secrets.ntfy_env = {
     sopsFile = ../../../secrets/ntfy.yaml;
-    owner = config.services.ntfy-sh.user;
   };
 
   services.ntfy-sh = {
