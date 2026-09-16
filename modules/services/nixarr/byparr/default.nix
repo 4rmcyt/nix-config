@@ -16,6 +16,10 @@
       # too slow for camoufox's browser-context crashes (upstream #294), where
       # the process stays up but serves 500/408 for minutes. Tighten the cadence
       # and have podman restart on failure instead of just reporting unhealthy.
+      # --health-cmd must be respecified: this podman version refuses
+      # --health-on-failure without one, even though the image already
+      # declares the identical check via Dockerfile HEALTHCHECK.
+      "--health-cmd=curl -f http://127.0.0.1:8191/health || exit 1"
       "--health-interval=1m"
       "--health-timeout=30s"
       "--health-retries=2"
