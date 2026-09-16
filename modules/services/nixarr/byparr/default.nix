@@ -12,18 +12,12 @@
       # Dockerfile ends on USER 1000, no root-only chown/setuid dance and no
       # device passthrough -- unprivileged process, safe to drop everything.
       "--cap-drop=all"
-      # Image's own HEALTHCHECK CMD (curl /health) runs every 15m by default --
-      # too slow for camoufox's browser-context crashes (upstream #294), where
-      # the process stays up but serves 500/408 for minutes. Tighten the cadence
-      # and have podman restart on failure instead of just reporting unhealthy.
-      # --health-cmd must be respecified: this podman version refuses
-      # --health-on-failure without one, even though the image already
-      # declares the identical check via Dockerfile HEALTHCHECK.
-      "--health-cmd=curl -f http://127.0.0.1:8191/health || exit 1"
-      "--health-interval=1m"
-      "--health-timeout=30s"
-      "--health-retries=2"
-      "--health-on-failure=restart"
+      # Tried tightening the image's own HEALTHCHECK (curl /health, 15m
+      # interval) to catch hung challenge-solves faster, with
+      # --health-on-failure=restart. Reverted: /health launches a real
+      # browser and routinely takes >30s, so a 1m/30s/2-retry cadence just
+      # health-fails and restarts the container every ~100s, killing
+      # in-flight solves -- worse than the problem it was meant to fix.
     ];
     environment = {
       PORT = "8191";
