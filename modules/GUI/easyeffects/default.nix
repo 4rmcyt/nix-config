@@ -44,6 +44,16 @@ in {
   xdg.dataFile = {
     "easyeffects/irs/brir-ash-listening-room.irs".source = ./brir-ash-listening-room.wav;
     "easyeffects/irs/hpcf-grado-sr325x.irs".source = ./hpcf-grado-sr325x.wav;
+
+    # Captured from EasyEffects' own Autoload UI (Presets > Autoload) after
+    # pairing the Shokz — device/route strings aren't guessable, they come
+    # from its live PipeWire node model.
+    "easyeffects/autoload/output/bluez_output.A0_0C_E2_7B_7F_4A.1:Headphones.json".text = builtins.toJSON {
+      device = "bluez_output.A0_0C_E2_7B_7F_4A.1";
+      device-description = "OpenRun Pro 2 by Shokz";
+      device-profile = "Headphones";
+      preset-name = "shokz-openrun-pro2";
+    };
   };
 
   services.easyeffects = {
