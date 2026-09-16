@@ -11,7 +11,12 @@
       "--security-opt=no-new-privileges"
       # Dockerfile ends on USER 1000, no root-only chown/setuid dance and no
       # device passthrough -- unprivileged process, safe to drop everything.
-      "--cap-drop=all"
+      # Diagnostic: byparr hangs forever on real page navigation (health/pool
+      # startup work fine) with this set, same symptom as trawl's identical
+      # flag -- testing whether Firefox's content-process spawn needs
+      # something this strips. Re-add once we know which capability (if any)
+      # is actually required.
+      # "--cap-drop=all"
       # Tried tightening the image's own HEALTHCHECK (curl /health, 15m
       # interval) to catch hung challenge-solves faster, with
       # --health-on-failure=restart. Reverted: /health launches a real

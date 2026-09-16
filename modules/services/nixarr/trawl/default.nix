@@ -18,7 +18,12 @@
       # reasoning as byparr's --shm-size).
       "--shm-size=1gb"
       "--security-opt=no-new-privileges"
-      "--cap-drop=all"
+      # Diagnostic: byparr and trawl are both Firefox-based (playwright/camoufox)
+      # and both hang forever on real page navigation with --cap-drop=all set,
+      # while health/pool-warmup (no navigation) work fine. Testing whether
+      # Firefox's content-process spawn needs something this strips. Re-add
+      # once we know which capability (if any) is actually required.
+      # "--cap-drop=all"
     ];
   };
 }
