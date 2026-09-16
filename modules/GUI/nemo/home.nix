@@ -23,25 +23,19 @@
 in {
   home.packages = [kdeconnectShare];
 
-  # noctalia-shell's Quickshell.iconPath() (legacy v4, archived upstream —
-  # see modules/WM/noctalia.nix) fails to resolve the generic
-  # freedesktop icon name "system-file-manager" in the launcher, even
-  # though the file exists in every icon theme tried (Tela-dark,
-  # Papirus-Dark) and other apps' icons resolve fine. App-specific icon
-  # names work where the generic one doesn't, so point Nemo's Icon= at its
-  # own name instead. ~/.local/share/applications/ shadows the package's
-  # /share/applications/nemo.desktop in XDG desktop-file lookup.
+  # noctalia-shell's Quickshell.iconPath() fails to resolve the generic freedesktop icon
+  # name "system-file-manager" (app-specific names work fine), so point Nemo's Icon= at
+  # its own name — ~/.local/share/applications/ shadows the package's nemo.desktop.
   xdg.dataFile."applications/nemo.desktop".source = pkgs.runCommand "nemo-desktop-icon-fix" {} ''
     sed 's/^Icon=system-file-manager$/Icon=nemo/' ${pkgs.nemo-with-extensions}/share/applications/nemo.desktop > $out
   '';
 
-  # GTK bookmarks sidebar entry — nfs-client module auto-mounts homeserver:/data at /mnt/media
+  # nfs-client module auto-mounts homeserver:/data at /mnt/media
   xdg.configFile."gtk-3.0/bookmarks".text = ''
     file:///mnt/media Homeserver
   '';
 
-  # Right-click "Send via KDE Connect" — shares to every reachable paired
-  # device (kdeconnect-cli has no "pick a device" prompt of its own).
+  # Shares to every reachable paired device (kdeconnect-cli has no "pick a device" prompt).
   xdg.dataFile."nemo/actions/kdeconnect-share.nemo_action".text = ''
     [Nemo Action]
     Active=true

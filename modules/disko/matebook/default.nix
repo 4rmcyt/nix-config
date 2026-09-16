@@ -42,7 +42,7 @@ _: {
     };
   };
 
-  # Swap file configuration (16GB for hibernation support)
+  # 16GB for hibernation support
   swapDevices = [
     {
       device = "/swapfile";

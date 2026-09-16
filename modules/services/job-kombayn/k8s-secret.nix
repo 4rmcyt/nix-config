@@ -1,9 +1,5 @@
-# Mirrors the existing job-kombayn.env sops secret into a k8s Secret in the
-# job-kombayn namespace, for the k3s-based deployment (gitops:
-# k3s/job-kombayn/) to consume via envFrom — same env vars the systemd units
-# already use via `environmentFile`, no separate k8s-specific secret to keep
-# in sync by hand. NOT a replacement for the systemd deployment; the two run
-# side by side until the k3s path is verified and cut over.
+# NOT a replacement for the systemd deployment; the two run side by side until the
+# k3s path is verified and cut over.
 {
   config,
   lib,

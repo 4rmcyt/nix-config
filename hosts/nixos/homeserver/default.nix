@@ -6,13 +6,11 @@
   ...
 }: {
   imports = [
-    # Hardware and system base
     ./hardware-configuration.nix
     ../../../modules/base
     ../../../modules/disko/homeserver
     ../../../modules/options
 
-    # Infrastructure services
     ../../../modules/containers
     ../../../modules/database
     ../../../modules/monitoring
@@ -142,19 +140,10 @@
       allowedTCPPorts = [5432 6379];
     };
 
-    # Allow k3s pods to reach host services: 6443 is k3s's own API supervisor
-    # port — the in-cluster `kubernetes` Service ClusterIP gets DNAT'd to the
-    # host's real LAN IP on this port (its Endpoints object points at
-    # <lan-ip>:6443, not loopback), so without this every in-cluster
-    # API call times out (confirmed: argocd-redis/metrics-server/
-    # local-path-provisioner all stuck in CrashLoopBackOff on
-    # `dial tcp 10.43.0.1:443: i/o timeout`). 10250 is kubelet's own metrics/
-    # exec port — metrics-server scrapes it directly on the node's real IP,
-    # firewall.rejectPackets turns the block into an immediate "connection
-    # refused" rather than a timeout, confirmed live the same way. 5432 is
-    # Postgres, for job-kombayn's k3s workloads (see
-    # modules/database/postgresql's kombayn pg_hba rule for the matching
-    # 10.42.0.0/16 allow).
+    # 6443: in-cluster `kubernetes` Service ClusterIP DNATs to the host's real LAN IP,
+    # not loopback, so without this every in-cluster API call times out (confirmed:
+    # CrashLoopBackOff on `dial tcp 10.43.0.1:443: i/o timeout`). 10250: kubelet
+    # metrics/exec. 5432: Postgres for job-kombayn's k3s workloads.
     firewall.interfaces.cni0 = {
       allowedTCPPorts = [6443 10250 5432];
     };
@@ -199,11 +188,10 @@
     ];
     paths = [
       "/var/lib/kanidm"
-      # Bazarr provider credentials, hashed passwords and settings live in
-      # config.yaml, not in its Postgres DB -- back it up separately.
+      # Bazarr provider credentials/settings live in config.yaml, not its Postgres DB.
       "/data/media/.state/nixarr/bazarr/config"
-      # job-kombayn's dedup index, generated resume/cover PDFs and geocode
-      # cache live in its StateDirectory, not in the kombayn Postgres DB.
+      # job-kombayn's dedup index, resume/cover PDFs, and geocode cache live in its
+      # StateDirectory, not the kombayn Postgres DB.
       "/var/lib/job-kombayn"
       # Obsidian LiveSync vault — CouchDB is the only copy of live sync history.
       "/var/lib/couchdb"
@@ -320,18 +308,15 @@
       enableBot = true; # Applied/Skip inline buttons on vacancy cards
       enableApi = true; # HTTP API for the web frontend (jobko.<domain>/api)
       enableWeb = true; # static SPA (jobko.<domain>)
-      # Mirrors job-kombayn.env into a k8s Secret for the k3s deployment
-      # (gitops: k3s/job-kombayn/) — runs alongside the systemd units above,
-      # not a replacement yet.
+      # Mirrors job-kombayn.env into a k8s Secret (gitops: k3s/job-kombayn/); runs
+      # alongside the systemd units above, not a replacement yet.
       enableK3sSecretSync = true;
       webBuild = pkgs.buildNpmPackage {
         pname = "job-kombayn-web";
         version = "0.1.0";
         src = "${inputs.jobshunting}/frontend";
-        # importNpmLock reads the per-package integrity hashes already in
-        # package-lock.json instead of a single pinned npmDepsHash, so a
-        # frontend dependency bump (package-lock.json change) never needs a
-        # matching hash update here.
+        # importNpmLock reads per-package hashes from package-lock.json, so a frontend
+        # dependency bump never needs a matching npmDepsHash update here.
         npmDeps = pkgs.importNpmLock {npmRoot = "${inputs.jobshunting}/frontend";};
         npmConfigHook = pkgs.importNpmLock.npmConfigHook;
         installPhase = ''

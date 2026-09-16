@@ -45,21 +45,13 @@ in {
           hide-identity = true;
           hide-version = true;
 
-          # domain is a real registered name with public DNSSEC delegation.
-          # The validator tries to build a chain of trust for ts.domain as if
-          # it were a real public name, fails (private zone, no real
-          # delegation/signature), and marks it bogus -> SERVFAIL. Tell the
-          # validator to treat the whole domain as unsigned so local
-          # overrides and the ts.domain forward both resolve.
+          # domain has public DNSSEC delegation, but ts.domain is a private zone with no
+          # real signature — the validator would mark it bogus/SERVFAIL without this.
           domain-insecure = ["${domain}"];
 
-          # *.domain → homeserver (Tailscale IP + LAN IP)
-          # ts.domain is a subzone of domain, so redirect covers it unless
-          # carved out with "transparent" (nodefault only disables unbound's
-          # own built-in default zones, it does not exempt a subzone from a
-          # local-zone you configured yourself) — it must fall through to the
-          # Tailscale stub resolver below, since it holds per-node MagicDNS
-          # records (e.g. matebook.ts.domain) that vary per host.
+          # ts.domain must be carved out with "transparent": since it's a subzone of
+          # domain, redirect would otherwise swallow it too, and ts.domain needs to fall
+          # through to the Tailscale stub resolver for per-node MagicDNS records.
           local-zone = [
             ''"ts.${domain}." transparent''
             ''"${domain}." redirect''

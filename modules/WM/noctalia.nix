@@ -5,6 +5,5 @@
     settings = {};
   };
 
-  # playerctl for media key bindings
   home.packages = [pkgs.playerctl];
 }

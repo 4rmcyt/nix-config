@@ -25,14 +25,11 @@
     };
     environmentFiles = [config.sops.templates."aiostreams.env".path];
     volumes = ["/var/lib/aiostreams:/app/data"];
-    # Host networking (like byparr/comet) -- needs to reach Comet on
-    # localhost, no --add-host or extra port publishing needed.
+    # Host networking: needs to reach Comet on localhost.
     extraOptions = [
       "--network=host"
       "--label=io.containers.autoupdate=registry"
       "--security-opt=no-new-privileges"
-      # Plain Node app on an unprivileged port (>1024), no chroot/device
-      # access/raw sockets needed -- safe to drop the whole default set.
       "--cap-drop=all"
     ];
   };

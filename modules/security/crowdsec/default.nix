@@ -54,18 +54,16 @@ in {
       mode = "0400";
     };
 
-    # tmpfiles-resetup skips crowdsec subdirs due to unsafe path transition on /var/lib/private/crowdsec
-    # (owned by nobody — normal for DynamicUser). StateDirectory lets systemd manage them correctly
-    # without relying on tmpfiles, which fails on live systems due to the DynamicUser/nobody ownership.
+    # tmpfiles-resetup skips crowdsec subdirs (unsafe path transition on DynamicUser's
+    # nobody-owned /var/lib/private/crowdsec) — StateDirectory lets systemd manage them instead.
     systemd.services.crowdsec.serviceConfig.StateDirectory = lib.mkIf (!isRemoteLapi) (lib.mkForce [
       "crowdsec"
       "crowdsec/state"
       "crowdsec/state/hub"
     ]);
 
-    # ExecStartPre's config test (-t) does a non-follow journalctl read to validate the
-    # journalctl acquisitions, which linearly scans the on-disk journal. Right after boot
-    # that scan hits a cold page cache and can exceed the default 90s TimeoutStartSec.
+    # ExecStartPre's config test linearly scans the on-disk journal; right after boot
+    # that hits a cold page cache and can exceed the default 90s TimeoutStartSec.
     systemd.services.crowdsec.serviceConfig.TimeoutStartSec = lib.mkIf (!isRemoteLapi) "5min";
     systemd.services.crowdsec.serviceConfig.Restart = lib.mkIf (!isRemoteLapi) "on-failure";
     systemd.services.crowdsec.serviceConfig.RestrictSUIDSGID = lib.mkIf (!isRemoteLapi) true;

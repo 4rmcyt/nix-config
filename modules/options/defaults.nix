@@ -1,8 +1,4 @@
-# my.defaults.* — identity, locale and a couple of infra scalars used across
-# NixOS modules at eval time. Network addresses and ports live in my.network.*
-# (modules/options/network.nix). Real values come from the private `private`
-# flake input (see modules/options/private-example.nix for the schema); this
-# file only declares the options and maps the private data onto them.
+# Network addresses and ports live in my.network.* (modules/options/network.nix).
 {
   lib,
   inputs,

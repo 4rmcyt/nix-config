@@ -31,18 +31,12 @@
     };
     environmentFiles = [config.sops.templates."comet.env".path];
     volumes = ["/var/lib/comet:/app/data"];
-    # Host networking (like byparr) instead of the podman bridge: Comet and
-    # AIOStreams both need to reach each other and Postgres on localhost --
-    # host networking makes that plain 127.0.0.1, no --add-host or extra
-    # port publishing needed. Firewall stays closed on this port (not in
-    # allowedTCPPorts below), so it's still not LAN/WAN reachable, only via
-    # loopback (Traefik) or tailscale/LAN through Traefik's own routing.
+    # Host networking instead of the podman bridge: Comet and AIOStreams both need to
+    # reach each other and Postgres on localhost with no extra port publishing.
     extraOptions = [
       "--network=host"
       "--label=io.containers.autoupdate=registry"
       "--security-opt=no-new-privileges"
-      # Plain FastAPI app on an unprivileged port (>1024), no chroot/device
-      # access/raw sockets needed -- safe to drop the whole default set.
       "--cap-drop=all"
     ];
   };

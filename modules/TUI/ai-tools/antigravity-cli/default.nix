@@ -15,7 +15,6 @@
 in {
   home.packages = [pkgs.antigravity-cli];
 
-  # Copy config files instead of symlinking
   home.activation.antigravityCliConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
     mkdir -p "$HOME/.gemini/config"
     mkdir -p "$HOME/.gemini/antigravity-cli"

@@ -1,5 +1,3 @@
-# Base home-manager configuration applied to all hosts.
-# Provides: sops, allowUnfree, android SDK license acceptance, overlays, stateVersion.
 {
   config,
   inputs,

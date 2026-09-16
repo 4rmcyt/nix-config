@@ -3,8 +3,6 @@
   lib,
   ...
 }: {
-  # --- Grafana Alloy Log Shipper (server-side: reads Traefik access log +
-  # the systemd journal, ships to the local Loki instance) ---
   services.alloy.enable = true;
 
   environment.etc."alloy/config.alloy".text = ''
@@ -109,29 +107,20 @@
   '';
 
   systemd.services.alloy = {
-    # Not ordered after geoip-update.service: Alloy tolerates a missing or
-    # stale mmdb file at startup, so it shouldn't block on that unit's
-    # network fetch (which can be a multi-minute catch-up run after a
-    # missed monthly timer).
+    # Alloy tolerates a missing/stale mmdb file at startup, so not ordered after
+    # geoip-update.service (its fetch can be a multi-minute catch-up run).
     serviceConfig = {
       SupplementaryGroups = ["systemd-journal"];
 
-      # Same gap as alloy-client.nix on the other hosts: nixpkgs' alloy
-      # module leaves CapabilityBoundingSet at the full default set with
-      # AmbientCapabilities empty — it needs none of it, just journal read
-      # (via the group above) and reading /var/log/traefik/access.log.
-      # mkForce, not mkDefault: mkDefault silently loses here (list-typed
-      # option, nixpkgs' own definition sits at normal priority and wins
-      # the priority filter before any list-merge happens — confirmed via
-      # `systemctl show` after mkDefault made no difference on this exact
-      # module on homeserver).
+      # mkForce, not mkDefault: this is a list-typed option and nixpkgs' own definition
+      # wins the priority filter before any list-merge happens (confirmed via `systemctl
+      # show` — mkDefault made no difference on this exact module).
       CapabilityBoundingSet = lib.mkForce "";
       RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
       SystemCallArchitectures = lib.mkDefault "native";
-      # SystemCallFilter/MemoryDenyWriteExecute/PrivateUsers deliberately
-      # NOT set: this exact binary (Grafana Alloy, Go) already crashed with
-      # SIGSYS from SystemCallFilter=@system-service on gcp-relay
-      # (alloy-client.nix) — not testing that twice.
+      # SystemCallFilter/MemoryDenyWriteExecute/PrivateUsers deliberately NOT set: this
+      # exact binary (Grafana Alloy, Go) already crashed with SIGSYS from
+      # SystemCallFilter=@system-service on gcp-relay (alloy-client.nix).
       NoNewPrivileges = lib.mkDefault true;
       ProtectClock = lib.mkDefault true;
       ProtectKernelLogs = lib.mkDefault true;
@@ -147,9 +136,8 @@
       ProcSubset = lib.mkDefault "pid";
       UMask = lib.mkDefault "0077";
       RemoveIPC = lib.mkDefault true;
-      # ProtectSystem/ProtectHome not set: alloy reads
-      # /var/log/traefik/access.log outside any StateDirectory it owns —
-      # would need explicit ReadOnlyPaths first, separate pass.
+      # ProtectSystem/ProtectHome not set: alloy reads /var/log/traefik/access.log
+      # outside any StateDirectory it owns — needs explicit ReadOnlyPaths first.
     };
   };
 }

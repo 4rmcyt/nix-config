@@ -82,7 +82,6 @@ in {
         TAVILY_KEY="$(${sops} -d ${secretsFile} | ${yq} -r '.tavily_api_key')"
         FIZZY_TOKEN="$(${sops} -d ${secretsFile} | ${yq} -r '.fizzy_access_token')"
 
-        # Generate final mcp.json with HTTP entries
         ${jq} --arg gh "$GITHUB_PAT" --arg fizzy "$FIZZY_TOKEN" \
           '.mcpServers.github = {"type":"http","url":"https://api.githubcopilot.com/mcp/x/all","headers":{"Authorization":"Bearer \($gh)"}} |
            .mcpServers.fizzy = {"type":"http","url":"https://fizzy.fabric.pro/mcp","headers":{"Authorization":"Bearer \($fizzy)"}} |
@@ -90,7 +89,6 @@ in {
           ${staticMcpJson} > "$HOME/.config/mcp/mcp.json"
         chmod 600 "$HOME/.config/mcp/mcp.json"
 
-        # Tavily wrapper
         cat > "$HOME/.local/bin/tavily-mcp-wrapped" << EOF
     #!${pkgs.bash}/bin/bash
     export SOPS_AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"

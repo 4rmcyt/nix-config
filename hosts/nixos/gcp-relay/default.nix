@@ -49,7 +49,7 @@
     networking.tailscaleAuth = {
       enable = true;
       sopsFile = ../../../secrets/tailscale-gcp.yaml;
-      # Connect directly to local headscale — no dependency on Caddy/DNS
+      # No dependency on Caddy/DNS.
       loginServer = "http://127.0.0.1:8080";
       networkInterface = "ens4";
     };
@@ -73,11 +73,8 @@
         }
       ];
       settings = {
-        # PasswordAuthentication, PermitRootLogin, KbdInteractiveAuthentication,
-        # X11Forwarding, AllowTcpForwarding — set by
-        # nix-mineral.extras.misc.ssh-hardening (see ./hardening.nix). Do
-        # not redeclare here — duplicate definitions of the same key at the
-        # same priority fail eval.
+        # PasswordAuthentication/PermitRootLogin/etc. come from ./hardening.nix's
+        # ssh-hardening — don't redeclare, duplicate definitions fail eval.
         UseDns = false;
         AllowUsers = [config.my.defaults.user];
         MaxAuthTries = 3;

@@ -51,14 +51,9 @@ in {
 
     networking.nftables.enable = true;
 
-    # nixpkgs' crowdsec-firewall-bouncer module already sets
-    # CapabilityBoundingSet=cap_net_admin only (no cap_net_raw — verified via
-    # `systemctl show crowdsec-firewall-bouncer.service`, don't assume it
-    # needs more), RestrictAddressFamilies=AF_INET/AF_INET6/AF_NETLINK/AF_UNIX,
-    # a curated SystemCallFilter, and DynamicUser=yes — do not touch those.
-    # These are just the additive sandboxing toggles the module leaves
-    # unset. No IPAddressDeny/Allow: it talks to the LAPI over Tailscale
-    # (homeserver, not local), so it needs outbound beyond just localhost.
+    # Additive sandboxing only — nixpkgs' module already sets CapabilityBoundingSet,
+    # RestrictAddressFamilies, SystemCallFilter, and DynamicUser. No IPAddressDeny/Allow:
+    # it talks to the LAPI over Tailscale, needs outbound beyond localhost.
     systemd.services.crowdsec-firewall-bouncer.serviceConfig = {
       ProtectClock = lib.mkDefault true;
       ProtectKernelLogs = lib.mkDefault true;
@@ -71,14 +66,10 @@ in {
       ProcSubset = lib.mkDefault "pid";
       UMask = lib.mkDefault "0077";
       RemoveIPC = lib.mkDefault true;
-      # PrivateUsers deliberately NOT set: it breaks CAP_NET_ADMIN's netlink
-      # access for nftables — the kernel's netlink permission check doesn't
-      # carry over once the service is in its own user namespace. Confirmed
-      # live: "netlink receive: operation not permitted" on deploy with
-      # PrivateUsers=true.
-      # ProtectControlGroups left alone — the bouncer's nftables backend
-      # sometimes needs cgroup-based matching depending on ruleset; not
-      # worth the risk to verify blind.
+      # PrivateUsers deliberately NOT set: breaks CAP_NET_ADMIN's netlink access for
+      # nftables — confirmed live, "netlink receive: operation not permitted".
+      # ProtectControlGroups left alone: the nftables backend sometimes needs
+      # cgroup-based matching depending on ruleset.
     };
   };
 }

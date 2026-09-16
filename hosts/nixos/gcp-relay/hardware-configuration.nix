@@ -1,6 +1,5 @@
-# GCP e2-micro (2 vCPU / 1 GB RAM / 30 GB disk), us-central1.
-# Boots via nixpkgs' google-compute-image.nix (hosts/nixos/gcp-relay/default.nix),
-# not disko — GCE provisions and partitions the disk itself, so this file is minimal.
+# Boots via nixpkgs' google-compute-image.nix, not disko — GCE provisions and
+# partitions the disk itself, so this file is minimal.
 {
   lib,
   modulesPath,

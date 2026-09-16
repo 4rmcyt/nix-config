@@ -7,10 +7,6 @@
     obsidian
   ];
 
-  # Obsidian configuration directory: ~/.config/obsidian
-  # Plugins are typically installed per-vault via Obsidian's UI
-  # However, you can pre-configure community plugins here if needed
-
   home.file.".config/obsidian/obsidian-livesync-info.md".text = ''
     # Obsidian LiveSync Setup
 

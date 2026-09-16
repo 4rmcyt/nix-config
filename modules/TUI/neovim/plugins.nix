@@ -1,6 +1,5 @@
 {config, ...}: {
   programs.nixvim.plugins = {
-    # File tree (like VSCode Explorer)
     neo-tree = {
       enable = true;
       settings = {
@@ -9,7 +8,7 @@
       };
     };
 
-    # Fuzzy finder (like VSCode Cmd+P / Ctrl+Shift+F)
+    # fuzzy finder
     telescope = {
       enable = true;
       extensions = {
@@ -18,7 +17,6 @@
       };
     };
 
-    # Syntax highlighting
     treesitter = {
       enable = true;
       highlight.enable = true;
@@ -41,7 +39,7 @@
       ];
     };
 
-    # Statusline (like VSCode status bar)
+    # statusline
     lualine = {
       enable = true;
       settings.options = {
@@ -58,7 +56,6 @@
       };
     };
 
-    # Buffer tabs (like VSCode tabs)
     bufferline = {
       enable = true;
       settings.options = {
@@ -74,7 +71,6 @@
       };
     };
 
-    # Git decorations (like VSCode GitLens)
     gitsigns = {
       enable = true;
       settings = {
@@ -91,25 +87,21 @@
       };
     };
 
-    # Git TUI
     lazygit.enable = true;
 
-    # Keybind hints (no VSCode equivalent, but extremely useful)
+    # keybind hints
     which-key = {
       enable = true;
       settings.delay = 300;
     };
 
-    # Auto pairs
     nvim-autopairs = {
       enable = true;
       settings.check_ts = true;
     };
 
-    # Comments (like VSCode Ctrl+/)
     comment.enable = true;
 
-    # Indent guides (like VSCode indent guides)
     indent-blankline = {
       enable = true;
       settings = {
@@ -118,7 +110,6 @@
       };
     };
 
-    # Todo highlights (like VSCode Todo Tree)
     todo-comments = {
       enable = true;
       settings.signs = true;
@@ -130,7 +121,6 @@
       settings.progress.display.done_icon = "✓";
     };
 
-    # Markdown rendering
     render-markdown = {
       enable = true;
       settings = {
@@ -140,37 +130,34 @@
       };
     };
 
-    # Bracket pair colorization (like VSCode bracketPairColorization)
     rainbow-delimiters.enable = true;
 
-    # Nicer UI for inputs/selects
+    # nicer UI for inputs/selects
     dressing.enable = true;
 
-    # Smooth scrolling
+    # motion hints
     precognition.enable = false;
 
-    # Highlight word under cursor
     illuminate.enable = true;
 
-    # Better diagnostics list
+    # diagnostics list
     trouble = {
       enable = true;
       settings.modes.diagnostics.auto_open = false;
     };
 
-    # Jump anywhere on screen with search labels
+    # jump anywhere on screen with search labels
     flash.enable = true;
 
-    # Side-by-side diff viewer + file history
     diffview.enable = true;
 
-    # Notification backend for noice
+    # notification backend for noice
     notify = {
       enable = true;
       settings.timeout = 3000;
     };
 
-    # Floating cmdline, messages, popups
+    # floating cmdline, messages, popups
     noice = {
       enable = true;
       settings = {
@@ -188,10 +175,9 @@
       };
     };
 
-    # Auto-save/restore session per directory
+    # auto-save/restore session per directory
     persistence.enable = true;
 
-    # Claude Code terminal integration
     claude-code = {
       enable = true;
       settings = {
@@ -203,7 +189,7 @@
       };
     };
 
-    # Surround — add/delete/replace surrounding chars (",',(,[,{,<,...)
+    # surround: add/delete/replace surrounding chars
     mini = {
       enable = true;
       mockDevIcons = true;
@@ -223,10 +209,9 @@
       };
     };
 
-    # Treesitter textobjects — af/if (function), ac/ic (class), etc.
+    # af/if (function), ac/ic (class), etc.
     treesitter-textobjects.enable = true;
 
-    # Undo history visualizer
     undotree = {
       enable = true;
       settings = {

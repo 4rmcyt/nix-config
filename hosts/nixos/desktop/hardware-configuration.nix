@@ -7,7 +7,6 @@
 }: {
   imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
-  # 2. Boot Configuration
   boot = {
     initrd.availableKernelModules = [
       "ahci"
@@ -63,33 +62,31 @@
     ];
 
     extraModprobeConfig = ''
-      # Enable v4l2loopback for virtual camera
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
-      # RTL8125: vendor driver required for WoL (r8169 doesn't support it)
+      # r8169 doesn't support WoL; vendor driver required
       options r8125 disable_wol_support=0 s5wol=1 aspm=0
-      # Disable snd-hda-intel index 2 (0000:10:00.6, Ryzen HD Audio Controller) — no codec connected
-      # PCI probe order is fixed: 01:00.1=NVIDIA(0), 10:00.1=AMD-HDMI(1), 10:00.6=Ryzen-HDA(2)
+      # snd-hda-intel index 2 (Ryzen HDA) has no codec connected; fixed PCI probe order 0=NVIDIA,1=AMD-HDMI,2=Ryzen-HDA
       options snd-hda-intel enable=1,1,0
     '';
 
     supportedFilesystems = ["btrfs"];
 
     kernelParams = [
-      "acpi_enforce_resources=lax" # Required for nct6687 hwmon chip access
-      "amd_pstate=active" # Use CPPC EPP driver for best Zen 4 performance
+      "acpi_enforce_resources=lax" # required for nct6687 hwmon chip access
+      "amd_pstate=active"
       # amd_prefcore: only valid value is "disable"; prefcore is on by default with amd_pstate=active
       "microcode.amd_sha_check=off"
       "random.trust_cpu=on"
-      "pci=realloc" # Fix chipset PCIe bridge BAR assignment failures at boot
+      "pci=realloc" # fixes chipset PCIe bridge BAR assignment failures at boot
 
-      "amdgpu.dpm=1" # Enable dynamic power management
+      "amdgpu.dpm=1"
 
       "mitigations=auto"
 
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
 
-      "preempt=full" # Full preemption for desktop responsiveness
+      "preempt=full"
 
       "cfg80211.ieee80211_regdom=CA"
       "loglevel=4"
@@ -99,39 +96,32 @@
       "usb-storage.delay_use=0"
       "usbcore.autosuspend=-1"
 
-      # Display output hints for early modesetting
       "video=DP-4:1920x1080@60"
       "video=DP-5:1920x1080@60"
 
       "amd_iommu=on"
       "iommu=pt"
 
-      # RTL8125 (enp12s0) never got an interface: dmesg showed BAR 0/2/4
-      # all failing with "can't assign; no space", so r8125 loaded but
-      # couldn't bind ("region #1 not an MMIO resource, aborting"). Firmware's
-      # PCI resource layout ran out of address space with the NVIDIA GPU
-      # (large VRAM BARs) and the AMD GPU stubbed for VFIO passthrough below
-      # both competing for it. pci=realloc makes the kernel recompute BAR
-      # assignments from scratch instead of trusting that layout.
+      # Duplicate pci=realloc: NVIDIA's large VRAM BARs + the stubbed AMD GPU below
+      # exhausted PCI address space, leaving RTL8125 (enp12s0) unable to bind.
       "pci=realloc"
 
       "pci-stub.ids=1022:15e3"
       "transparent_hugepage=madvise"
       "processor.max_cstate=1"
-      "irqaffinity=0" # Force hardware interrupts to Core 0 where possible
+      "irqaffinity=0"
     ];
 
     kernel.sysctl = {
       "kernel.split_lock_mitigate" = 0;
-      "kernel.nmi_watchdog" = 0; # Disable NMI watchdog to reduce interrupts and save power
+      "kernel.nmi_watchdog" = 0;
 
-      # VM/Memory optimizations for 62GB RAM system
-      "vm.swappiness" = 10; # Reduce swap usage with abundant RAM
-      "vm.vfs_cache_pressure" = 50; # Keep more inodes/dentries cached
+      "vm.swappiness" = 10;
+      "vm.vfs_cache_pressure" = 50;
 
-      "vm.min_free_kbytes" = 1048576; # 1GB min free
+      "vm.min_free_kbytes" = 1048576;
 
-      # Network — moved from kernelParams (these are sysctl values, not boot params)
+      # sysctl values, not boot params — don't move to kernelParams
       "net.core.default_qdisc" = "fq";
       "net.ipv4.tcp_congestion_control" = "bbr";
 
@@ -161,7 +151,7 @@
     tmp.tmpfsHugeMemoryPages = "within_size";
   };
 
-  # /var/tmp on tmpfs — compilers (rustc, gcc, clang, go) write large intermediates here
+  # tmpfs: compilers (rustc, gcc, clang, go) write large intermediates here
   fileSystems."/var/tmp" = {
     device = "tmpfs";
     fsType = "tmpfs";
@@ -172,7 +162,6 @@
     ];
   };
 
-  # 3. Hardware Configuration
   hardware = {
     amdgpu.overdrive.enable = true;
 
@@ -228,7 +217,6 @@
 
   powerManagement.cpuFreqGovernor = "performance";
 
-  # 4. Boot Loader
   boot.loader = {
     efi.canTouchEfiVariables = true;
     systemd-boot.enable = false;
@@ -241,12 +229,8 @@
       biosSupport = false;
       secureBoot.enable = false; # TODO: re-enable after first boot once sbctl keys are generated + enrolled
       additionalFiles = {
-        # Full Tianocore EDK2 UEFI Shell — the firmware's built-in Boot
-        # Override "UEFI Shell" is a stripped-down build missing commands
-        # (e.g. `mode`) and mishandling FOR-loop variable reuse, which
-        # breaks MSI's svet.efi STARTUP.NSH flashing script. This gives a
-        # full-featured shell at fs0:\efi\BOOT\shell.efi instead. See
-        # docs/efi.md.
+        # Firmware's built-in UEFI Shell is stripped-down and breaks MSI's svet.efi
+        # flashing script; this provides a full Tianocore EDK2 shell instead. See docs/efi.md.
         "efi/BOOT/shell.efi" = "${pkgs.edk2-uefi-shell}/shell.efi";
       };
       extraEntries = ''
@@ -263,7 +247,6 @@
     };
   };
 
-  # 5. Security (hardware-tied: PAM U2F / YubiKey)
   security = {
     polkit.enable = true;
     rtkit.enable = true;
@@ -283,10 +266,8 @@
 
   nixpkgs.config.cudaSupport = true;
 
-  # MT7922: commit ba41835 in linux-firmware broke mt7921e init (WM Version: ____000000).
-  # Replace the two broken firmware blobs with pre-ba41835 versions from 20250808.
-  # linux-firmware uses .zst compression, so we fetch the pre-compressed blobs.
-  # https://github.com/NixOS/nixpkgs/issues/444538
+  # commit ba41835 in linux-firmware broke mt7921e init; pin the two firmware blobs
+  # to pre-ba41835 (20250808). https://github.com/NixOS/nixpkgs/issues/444538
   nixpkgs.overlays = [
     (_final: prev: {
       linux-firmware = prev.linux-firmware.overrideAttrs (old: {
@@ -315,29 +296,13 @@
   ];
 
   programs = {
-    noisetorch.enable = true; # Noise suppression (audio hardware)
+    noisetorch.enable = true;
   };
 
-  # 7. Services
   services = {
-    # CPU scheduling via scx_loader (DBus-managed, hot-swappable at runtime).
-    #
-    # History: a plain `services.scx` running `scx_lavd --performance` 24/7
-    # self-unloaded with "runnable task stall" and froze the desktop for
-    # 30-40s, worst under game load (DarkSoulsII first, then everything).
-    # Root cause was `--performance`: it disables LAVD Core Compaction and
-    # pins every core to max freq, which fell over under the game+GPU
-    # frequency/thermal churn. homeserver runs `scx_lavd --autopilot` with
-    # no such issue.
-    #
-    # New arrangement:
-    #   - daily driver: scx_lavd in "auto" mode (--autopilot, Core Compaction
-    #     on) — good interactivity, powers down when idle.
-    #   - on game launch: gamemode switches to `scx_bpfland -m all` (see
-    #     modules/gaming/default.nix). bpfland is cache-topology-aware, was
-    #     A/B-tied with lavd here, and doesn't force cpufreq the way
-    #     `--performance` did.
-    #   - on game exit: gamemode switches back to scx_lavd auto.
+    # scx_lavd --performance previously froze the desktop under game load (disables
+    # Core Compaction, pins cores to max freq); autopilot mode + gamemode swapping to
+    # scx_bpfland on game launch (modules/gaming/default.nix) avoids it.
     scx-loader = {
       enable = true;
       config = {
@@ -407,9 +372,8 @@
         ];
         context.properties = {
           default.clock.rate = 48000;
-          # Card does up to 192 kHz natively; list the standard families so
-          # hi-res FLAC plays without resampling (44.1 base -> 88.2/176.4,
-          # 48 base -> 96/192).
+          # Card does up to 192 kHz natively; list both families so hi-res FLAC
+          # plays without resampling.
           default.clock.allowed-rates = [
             44100
             48000
@@ -470,18 +434,15 @@
           ENV{ID_VENDOR}=="Yubico", \
           RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
 
-        # I/O scheduler: kyber for NVMe/SSD (low-latency), bfq for HDD
-        # ENV{DEVTYPE}!="partition" prevents errors on partition nodes which have no queue/ sysfs dir
+        # ENV{DEVTYPE}!="partition" avoids errors on partition nodes, which have no queue/ sysfs dir
         ACTION=="add|change", KERNEL=="nvme[0-9]*n[0-9]*", ENV{DEVTYPE}!="partition", ATTR{queue/scheduler}="kyber"
         ACTION=="add|change", KERNEL=="sd[a-z]", ENV{DEVTYPE}!="partition", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="kyber"
         ACTION=="add|change", KERNEL=="sd[a-z]", ENV{DEVTYPE}!="partition", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
 
-        # NVMe queue depth: increase from default 128 for better throughput under ZFS
         ACTION=="add|change", KERNEL=="nvme[0-9]*n[0-9]*", ENV{DEVTYPE}!="partition", ATTR{queue/nr_requests}="1024"
       '';
-      # MT7922 rename must be in a lower-numbered file than 98-ipv6-privacy-extensions.rules
-      # so that $name is already "wlp13s0" when the IPv6 rule's RUN fires.
-      # extraRules goes to 99-local.rules which is too late — use packages instead.
+      # Must be a lower-numbered rules file than 98-ipv6-privacy-extensions.rules so
+      # $name is already "wlp13s0" when that rule's RUN fires; extraRules (99-local.rules) is too late.
       packages =
         [
           (pkgs.writeTextFile {
@@ -501,7 +462,6 @@
     };
   };
 
-  # 8. System Packages (hardware tools)
   environment.systemPackages = with pkgs; [
     pavucontrol
     pamixer
@@ -555,16 +515,9 @@
     # shim-unsigned
   ];
 
-  # 9. Networking (host identity & hardware networking)
-  # nixos-facter-modules' networking module force-enables per-interface
-  # useDHCP (networking.interfaces.<name>.useDHCP = mkDefault true) for every
-  # detected physical interface (enp12s0, wlp13s0), independent of the
-  # top-level networking.useDHCP flag below. That per-interface flag alone
-  # is enough to flip on the global dhcpcd.service (see dhcpcd.nix's
-  # enableDHCP = useDHCP || any interface.useDHCP), which then raced
-  # NetworkManager's own DHCP client for the same interfaces (dhcp6
-  # EADDRINUSE). Disable facter's auto-DHCP entirely — NetworkManager owns
-  # DHCP here.
+  # nixos-facter-modules force-enables per-interface useDHCP independent of
+  # networking.useDHCP, which flips on global dhcpcd and races NetworkManager's
+  # own DHCP client (dhcp6 EADDRINUSE) — disable facter's auto-DHCP entirely.
   facter.detected.dhcp.enable = lib.mkForce false;
 
   networking = {

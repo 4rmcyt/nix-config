@@ -34,10 +34,8 @@
   system.boot.loader.kernelFile = "bzImage";
 
   boot = {
-    # Hibernation: swapfile lives on the ext4 root fs (see modules/disko/matebook).
-    # resume_offset is the physical block offset of /swapfile and MUST be regenerated
-    # any time the swapfile is recreated (e.g. after a fresh disko install):
-    #   filefrag -v /swapfile | awk '$1=="0:" {print $4}' | tr -d '.'
+    # resume_offset must be regenerated whenever /swapfile is recreated:
+    # filefrag -v /swapfile | awk '$1=="0:" {print $4}' | tr -d '.'
     resumeDevice = config.fileSystems."/".device;
     kernelParams = ["resume_offset=63500288"];
 
@@ -174,15 +172,11 @@
     polkit.enable = true;
   };
 
-  # suspend-then-hibernate: go to sleep first, hibernate after this long
-  # (or sooner on low battery). See systemd-sleep.conf(5).
   systemd.sleep.settings.Sleep.HibernateDelaySec = "30m";
 
-  # 5.8GB RAM leaves little headroom: default /sys/power/image_size (~2.2GB)
-  # caused "PM: hibernation: Error -12 creating image" (not enough free pages
-  # to preallocate the snapshot). image_size=0 makes the kernel swap out as
-  # much as possible before snapshotting instead of preserving pages in RAM,
-  # trading a slower resume for hibernation actually succeeding.
+  # Default /sys/power/image_size (~2.2GB) caused "PM: hibernation: Error -12 creating
+  # image" on 5.8GB RAM; 0 makes the kernel swap out more instead, trading resume
+  # speed for hibernation actually succeeding.
   systemd.tmpfiles.rules = ["w /sys/power/image_size - - - - 0"];
 
   services = {
@@ -201,12 +195,8 @@
       enable = true;
       settings = {
         default_session = {
-          # niri-session (not `niri --session`) imports the environment into
-          # the systemd user session and starts niri.service, which is what
-          # activates graphical-session.target. Without it, logind never
-          # promotes the session past class=greeter, so anything gated on
-          # graphical-session.target (xdg-desktop-portal, etc.) spins forever
-          # with "Dependency failed for Portal service".
+          # niri-session (not `niri --session`) starts niri.service, which activates
+          # graphical-session.target; without it logind never promotes past class=greeter.
           command = "${pkgs.niri}/bin/niri-session";
           user = "zeev";
         };

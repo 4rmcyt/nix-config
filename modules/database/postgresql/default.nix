@@ -4,7 +4,6 @@
   lib,
   ...
 }: let
-  # Database users for script generation
   dbUsers = [
     {
       name = "miniflux";
@@ -138,13 +137,9 @@ in {
   };
   users.groups.postgres = {};
 
-  # No global TCP 5432 opening here on purpose: pg_hba below only trusts
-  # loopback + the podman bridge (10.88.0.0/16) anyway, and that range is
-  # already interface-scoped at the host level
-  # (hosts/nixos/homeserver/default.nix: firewall.interfaces.podman0). A
-  # blanket allowedTCPPorts opened the port on every interface (LAN/tailscale
-  # included) for no functional gain, since pg_hba would refuse those source
-  # IPs regardless — pure unnecessary attack surface (port scan/banner recon).
+  # No global TCP 5432 opening on purpose: pg_hba only trusts loopback + the podman
+  # bridge, already interface-scoped at the host level — a blanket allowedTCPPorts
+  # would just add attack surface with no functional gain.
 
   services.postgresql = {
     enable = true;

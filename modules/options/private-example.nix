@@ -1,12 +1,6 @@
-# Schema reference for the private `private` flake input (inputs.private.lib).
-# NOT imported anywhere — the real values live in a separate private repo
-# (git+ssh://git@github.com/4rmcyt/nix-config-private.git). This file documents
-# the shape that repo's `data.nix` must provide so a reader of the public repo
-# knows what is expected.
-#
-# Why a separate repo instead of sops: these values are consumed at Nix
-# evaluation time (string interpolation, networking.hosts, option defaults),
-# and sops-nix only decrypts at activation — too late for eval.
+# Schema reference for inputs.private.lib — NOT imported anywhere, the real values
+# live in a separate private repo. A separate repo (not sops) because these values
+# are consumed at Nix eval time, and sops-nix only decrypts at activation.
 {
   identity = {
     username = "user";

@@ -1,5 +1,3 @@
-# CouchDB for Obsidian LiveSync
-# https://github.com/vrtmrz/obsidian-livesync
 {
   config,
   lib,
@@ -27,17 +25,15 @@
     port = 5984;
     bindAddress = "127.0.0.1";
 
-    # Temporary admin to allow startup - will be replaced by postStart
+    # Temporary; postStart below replaces it with the real admin password.
     adminUser = "admin";
-    adminPass = "-"; # Placeholder, will be set via postStart
+    adminPass = "-";
 
-    # https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/setup_own_server.md
     extraConfig = {
       chttpd = {
         require_valid_user = true;
         enable_cors = true;
-        # 4GB max request size for large vaults
-        max_http_request_size = 4294967296;
+        max_http_request_size = 4294967296; # 4GB, for large vaults
       };
 
       chttpd_auth.require_valid_user = true;
@@ -51,16 +47,13 @@
 
       cors = {
         credentials = true;
-        # Allow Obsidian mobile and desktop apps
         origins = "app://obsidian.md,capacitor://localhost,http://localhost,https://localhost,capacitor://livesync.${config.my.defaults.domain},http://livesync.${config.my.defaults.domain},https://livesync.${config.my.defaults.domain}";
       };
     };
   };
 
-  # No firewall exception needed: bindAddress = "127.0.0.1" above means
-  # nothing ever listens on a non-loopback interface; Traefik reaches it
-  # over loopback, not through the firewall.
-
+  # No firewall exception needed: bindAddress=127.0.0.1 means Traefik reaches
+  # this over loopback, not through the firewall.
   systemd.services.couchdb = {
     postStart = ''
       for i in {1..30}; do
@@ -75,7 +68,6 @@
         -H "Content-Type: application/json" \
         -d "\"$ADMIN_PASS\"" || true
 
-      # Wait a moment for password to be updated
       sleep 2
 
       ${pkgs.curl}/bin/curl -X PUT http://admin:$ADMIN_PASS@127.0.0.1:5984/_users || true
@@ -91,7 +83,6 @@
         ProtectSystem = "strict";
       }
       // {
-        # Allow CouchDB to write to its data directory and runtime directory
         ReadWritePaths = [
           "/var/lib/couchdb"
           "/run/couchdb"
@@ -100,10 +91,8 @@
         MemoryMax = "2G";
         CPUQuota = "100%";
 
-        # nixpkgs' couchdb module leaves CapabilityBoundingSet at the full
-        # default set with AmbientCapabilities empty (verified via
-        # `systemctl show couchdb.service`) — it doesn't request any
-        # capability, runs as its own "couchdb" user.
+        # nixpkgs' module leaves CapabilityBoundingSet at the full default set;
+        # safe to clear since CouchDB requests no capability, runs as its own user.
         CapabilityBoundingSet = lib.mkForce "";
         RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
         ProtectClock = lib.mkDefault true;
@@ -120,27 +109,9 @@
         ProcSubset = lib.mkDefault "pid";
         UMask = lib.mkDefault "0077";
         RemoveIPC = lib.mkDefault true;
-        # Deliberately NOT setting SystemCallFilter, MemoryDenyWriteExecute,
-        # or PrivateUsers: CouchDB runs on the BEAM VM, whose JIT (BeamAsm,
-        # default since OTP 24) needs W+X memory — MemoryDenyWriteExecute
-        # would almost certainly break it the same way a kill-on-violation
-        # directive just killed alloy.service (Go) on gcp-relay. Not worth
-        # testing blind against the Obsidian LiveSync backend.
+        # Deliberately NOT setting SystemCallFilter/MemoryDenyWriteExecute/PrivateUsers:
+        # CouchDB's BEAM VM JIT (BeamAsm) needs W+X memory — same risk class that
+        # killed alloy.service (Go) on gcp-relay.
       };
   };
 }
-# Initial Setup Instructions
-# 1. After first deployment, visit: https://livesync.${config.my.defaults.domain}/_utils
-# 2. Login with admin credentials from secrets/couchdb.yaml
-# 3. Create a new database named "" (or your preferred name)
-# 4. Create a user for your Obsidian client (recommended for securobsidianity)
-# 5. In Obsidian LiveSync plugin settings:
-#    - Remote Database URL: https://livesync.${config.my.defaults.domain}/obsidian
-#    - Username: (your created user)
-#    - Password: (your user's password)
-#    - Enable End-to-End Encryption (recommended)
-#
-# References:
-# - https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/setup_own_server.md
-# - https://github.com/vrtmrz/obsidian-livesync/blob/main/docs/quick_setup.md
-

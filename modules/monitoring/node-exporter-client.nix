@@ -55,7 +55,6 @@
       extraFlags = ["--collector.textfile.directory=/var/lib/prometheus-node-exporter-text-files"];
     };
 
-    # Write current NixOS generation number on every activation
     system.activationScripts.node-exporter-system-version = {
       supportsDryActivation = true;
       text = ''

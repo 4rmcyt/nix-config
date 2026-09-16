@@ -9,14 +9,12 @@
     hash = "sha256-fv4ta7wD9jYjZA8eQZjxbIQAnVEPuBDvceVt8bdhS6k=";
   };
 in {
-  # PAT for cloning the private 4rmcyt/gitops repo over HTTPS.
   sops.secrets.git_access_token = {
     sopsFile = ../../../secrets/common.yaml;
     key = "git_access_token";
     mode = "0400";
   };
 
-  # ArgoCD repository credential secret, rendered from sops (never committed).
   sops.templates."argocd-gitops-repo.yaml" = {
     owner = "root";
     mode = "0400";
@@ -52,7 +50,6 @@ in {
     script = ''
       export KUBECONFIG="/etc/rancher/k3s/k3s.yaml"
 
-      # Wait for k3s API to be ready
       for i in $(seq 1 60); do
         kubectl get --raw='/readyz' &>/dev/null && break
         [ "$i" -eq 60 ] && { echo "k3s not ready after 5m, aborting"; exit 1; }
@@ -60,21 +57,15 @@ in {
       done
 
       kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
-      # --server-side: client-side `kubectl apply` stores the whole previous
-      # config in the kubectl.kubernetes.io/last-applied-configuration
-      # annotation, and ArgoCD's applicationsets.argoproj.io CRD schema is
-      # large enough to blow past the 256KiB annotation limit ("metadata.annotations:
-      # Too long"). Server-side apply tracks field ownership instead, no
-      # annotation involved. --force-conflicts since this was previously
-      # (attempted) client-side applied.
+      # --server-side: client-side apply stores the whole previous config in an
+      # annotation, and ArgoCD's applicationsets CRD schema blows past the 256KiB
+      # annotation limit. --force-conflicts since this was previously client-side applied.
       kubectl apply --server-side --force-conflicts -n argocd -f ${argocdManifest}
       kubectl -n argocd rollout status deployment/argocd-server --timeout=300s || true
 
-      # Repo credentials + NodePort for the UI (Traefik proxies homeserver:30080)
       kubectl apply -f ${config.sops.templates."argocd-gitops-repo.yaml".path}
       kubectl apply -f ${./server-nodeport.yaml}
 
-      # Root Application (app-of-apps): 4rmcyt/gitops//k3s
       kubectl apply -f ${./application.yaml}
     '';
   };

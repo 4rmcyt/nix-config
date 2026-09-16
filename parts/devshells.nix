@@ -1,4 +1,3 @@
-# Development shells via flake-parts perSystem.
 _: {
   perSystem = {pkgs, ...}: {
     devShells = {

@@ -38,7 +38,6 @@
     enable = true;
 
     settings = {
-      # Input — see https://mangowm.github.io/docs/configuration/basics
       xkb_rules_layout = "us";
       mouse_accel_profile = 2; # flat, per mango-config reference
       mouse_accel_speed = 0.0;
@@ -52,26 +51,15 @@
       gappov = 10;
       borderpx = 2;
 
-      # HDR requires the vulkan renderer, and mango's own docs say HDR only
-      # works on the `wl-only` branch, since scenefx (which `main` links
-      # unconditionally) doesn't support that renderer — see the mango
-      # input comment in flake.nix and docs/Architecture.md for the full
-      # trail. Trade-off: `wl-only`'s meson.build drops libscenefx entirely,
-      # so every scenefx-dependent visual (blur, shadows, AND border_radius
-      # — corner radii are drawn via scenefx's fx_corner_radii/
-      # wlr_scene_shadow_create, not plain wlroots) is gone with it, not
-      # just blur/shadow. `border_radius` is not a recognized config
-      # keyword on this branch at all — setting it fails mango-config.conf's
-      # build (`[ERROR]: Unknown keyword: border_radius`), it doesn't just
-      # no-op.
+      # `wl-only` branch (see flake.nix) drops libscenefx entirely, so blur, shadows,
+      # and border_radius (drawn via scenefx, not plain wlroots) are all unavailable —
+      # border_radius isn't even a recognized keyword here, setting it fails the build.
       #
-      # WLR_RENDERER is NOT set here via `env=` — wlroots picks the renderer
-      # backend before mango ever reads config.conf, so a config-file `env=`
-      # directive is too late (confirmed: had no effect on `mmsg get
-      # monitor`'s is_hdr). It's set on greetd's exec instead — see
-      # parts/hosts/desktop/configuration.nix.
+      # WLR_RENDERER is NOT set here via `env=`: wlroots picks the renderer backend
+      # before mango reads config.conf, so it's too late here — set on greetd's exec
+      # instead, see parts/hosts/desktop/configuration.nix.
 
-      # Layouts — scroller matches niri/hyprland's scrolling-tape model
+      # scroller matches niri/hyprland's scrolling-tape model
       circle_layout = "scroller,tile";
       scroller_default_proportion = 0.9;
       scroller_focus_center = 0;

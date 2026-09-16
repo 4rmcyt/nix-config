@@ -102,20 +102,13 @@
     systemd.services.alloy.serviceConfig = {
       SupplementaryGroups = ["systemd-journal"];
 
-      # nixpkgs' alloy module leaves CapabilityBoundingSet at the full
-      # default set and AmbientCapabilities empty (verified via `systemctl
-      # show alloy.service`) — it doesn't actually request any capability,
-      # journal read access comes from the systemd-journal group above, not
-      # a capability. All it does is tail the journal and push over HTTP.
+      # nixpkgs' module leaves this at the full default set; alloy requests no
+      # capability, journal read comes from the systemd-journal group above.
       CapabilityBoundingSet = lib.mkForce "";
       RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
       SystemCallArchitectures = lib.mkDefault "native";
-      # SystemCallFilter=["@system-service"] and MemoryDenyWriteExecute=true
-      # deliberately NOT set: both kill the process on violation by default
-      # (SIGSYS, not a catchable error), and alloy died that way on gcp-relay
-      # (signal=killed status=31/SYS) — Grafana Alloy's Go runtime needs
-      # something outside @system-service that wasn't worth reverse-
-      # engineering via strace on a remote host with no other access.
+      # SystemCallFilter/MemoryDenyWriteExecute deliberately NOT set: both kill on
+      # violation (SIGSYS), and alloy died that way on gcp-relay (signal=killed status=31/SYS).
 
       NoNewPrivileges = lib.mkDefault true;
       ProtectClock = lib.mkDefault true;
@@ -132,16 +125,10 @@
       ProcSubset = lib.mkDefault "pid";
       UMask = lib.mkDefault "0077";
       RemoveIPC = lib.mkDefault true;
-      # PrivateUsers also NOT set — same class of risk as
-      # SystemCallFilter/MemoryDenyWriteExecute above (namespace-related
-      # surprises already broke caddy/crowdsec-firewall-bouncer's network
-      # capabilities elsewhere in this pass); SupplementaryGroups-based
-      # journal read access is exactly the kind of thing that can silently
-      # break under a private user namespace, not worth the risk for a log
-      # shipper.
-      # No IPAddressDeny/Allow — Loki push endpoint varies per host
-      # (config.my.alloyClient.lokiUrl), not worth hardcoding an allowlist
-      # here for a log shipper.
+      # PrivateUsers also NOT set: SupplementaryGroups-based journal read access can
+      # silently break under a private user namespace (same class of risk that broke
+      # caddy/crowdsec-firewall-bouncer's network capabilities elsewhere).
+      # No IPAddressDeny/Allow: Loki push endpoint varies per host (lokiUrl).
     };
   };
 }

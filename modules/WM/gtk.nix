@@ -12,7 +12,6 @@
     twemoji-color-font
   ];
 
-  # Force overwrite GTK config files to avoid conflicts
   xdg.configFile."gtk-3.0/settings.ini".force = true;
   xdg.configFile."gtk-4.0/settings.ini".force = true;
   xdg.configFile."gtk-4.0/gtk.css".force = true;
@@ -53,13 +52,8 @@
     };
   };
 
-  # xdg-desktop-portal-gtk (file chooser, etc.) reads theme/font via
-  # GSettings/dconf under org/gnome/desktop/interface, not the settings.ini
-  # files above — those only cover regular GTK apps. Without a GNOME
-  # session nothing ever populates this dconf path, so the portal falls
-  # back with no font set and renders dialogs with broken/collapsed text
-  # layout. Mirrors the values set in the `gtk` block above.
-  # https://wiki.hypr.land/Nix/Hyprland-on-NixOS/#fixing-problems-with-themes
+  # xdg-desktop-portal-gtk reads theme/font from GSettings/dconf, not settings.ini;
+  # without a GNOME session nothing else populates this path, breaking dialog text layout.
   dconf.settings."org/gnome/desktop/interface" = {
     gtk-theme = "catppuccin-mocha-blue-standard";
     icon-theme = "Papirus-Dark";
@@ -71,10 +65,8 @@
     color-scheme = "prefer-dark";
   };
 
-  # QT_STYLE_OVERRIDE=kvantum (set in hyprland/niri sessionVariables) is a
-  # no-op without an actual Kvantum theme selected — Kvantum falls back to
-  # its unstyled default, which reads as a plain light Qt/Fusion palette.
-  # This affects Kirigami/QQC2 apps (kdeconnect-app) same as QWidgets apps.
+  # QT_STYLE_OVERRIDE=kvantum is a no-op without an actual theme selected — otherwise
+  # falls back to unstyled default (plain light Qt/Fusion palette).
   xdg.dataFile."Kvantum/catppuccin-mocha-blue".source = "${pkgs.catppuccin-kvantum.override {
     variant = "mocha";
     accent = "blue";
@@ -85,17 +77,9 @@
     theme=catppuccin-mocha-blue
   '';
 
-  # Gives QWidgets apps (Ark, kcmshell/systemsettings modules, etc.) a full
-  # dark QPalette instead of Kvantum's default light Fusion fallback, and
-  # routes their native dialogs (file open/save, print, color picker)
-  # through KDE's own implementation instead of Qt's — otherwise those
-  # dialogs stay light even when the app around them is dark. Both keys
-  # confirmed present in libqt5ct.so/libqt6ct.so via strings.
-  #
-  # Does NOT fix Kirigami/QQC2 apps (kdeconnect-app) — those never consult
-  # QWidgets palette/dialog machinery at all; confirmed dead end after
-  # extensive live testing (org.kde.desktop QQC2 style + plasma-integration
-  # + correct kdeglobals still rendered light).
+  # Gives QWidgets apps a dark QPalette and routes native dialogs through KDE's own
+  # implementation. Does NOT fix Kirigami/QQC2 apps (kdeconnect-app) — confirmed dead
+  # end, those never consult QWidgets palette/dialog machinery.
   qt.qt5ctSettings.Appearance = {
     custom_palette = true;
     color_scheme_path = "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors";

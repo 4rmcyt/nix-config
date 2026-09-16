@@ -36,13 +36,11 @@ in {
       ]
       ++ config.my.network.subnets.lan
       ++ [config.my.network.subnets.tailscale]
-      # Cloudflare proxy IPs — real client IP is in X-Forwarded-For
+      # real client IP for Cloudflare's proxy IPs is in X-Forwarded-For
       ++ config.my.network.subnets.cloudflare;
 
-    # SSH — NixOS defines this jail automatically when openssh is enabled.
-    # We override settings to tighten it up and add the cloudflare-waf action
-    # alongside (not instead of) the local ban — SSH isn't proxied through
-    # Cloudflare, so %(action_)s is what actually blocks the attacker.
+    # SSH isn't proxied through Cloudflare, so %(action_)s (local ban) is what
+    # actually blocks the attacker; cloudflare-waf is added on top.
     jails.sshd.settings = {
       enabled = true;
       maxretry = 3;
@@ -54,12 +52,10 @@ in {
       '';
     };
 
-    # traefik-auth jail removed — CrowdSec handles Traefik log parsing
-    # (access log is now JSON format, parsed by crowdsecurity/traefik collection)
+    # traefik-auth jail removed — CrowdSec now handles Traefik log parsing (JSON access log).
 
-    # Jellyfin — reached directly via Traefik (not tunneled through
-    # Cloudflare), so the local ban (%(action_)s) is what actually blocks
-    # the attacker; cloudflare-waf is added defense-in-depth only.
+    # Jellyfin isn't tunneled through Cloudflare, so the local ban is what actually
+    # blocks the attacker; cloudflare-waf is defense-in-depth only.
     jails.jellyfin = ''
       enabled      = true
       backend      = systemd
@@ -72,11 +68,8 @@ in {
                       cloudflare-waf
     '';
 
-    # Grafana — reached directly via Traefik (not tunneled through
-    # Cloudflare); same reasoning as the jellyfin jail above.
-    # Uses the filter shipped by the fail2ban package itself (see removed
-    # environment.etc override below) — matches Grafana's actual log15
-    # output (`lvl=eror`/`lvl=warn`, not `level=`).
+    # Same reasoning as jellyfin above; uses the filter shipped by the fail2ban
+    # package itself, which matches Grafana's actual log15 output (`lvl=`, not `level=`).
     jails.grafana = ''
       enabled      = true
       backend      = systemd
@@ -89,9 +82,8 @@ in {
                       cloudflare-waf
     '';
 
-    # Home Assistant — tunneled through Cloudflare (hass in cloudflared's
-    # tunnel list), so cloudflare-waf alone is effective here; local ban
-    # added anyway for defense-in-depth / direct-LAN access.
+    # hass is tunneled through Cloudflare, so cloudflare-waf alone is effective here;
+    # local ban is added for direct-LAN access too.
     jails.home-assistant = ''
       enabled      = true
       backend      = systemd
@@ -106,10 +98,7 @@ in {
   };
 
   environment.etc = {
-    # Cloudflare WAF Custom Rules action (replaces deprecated
-    # firewall/access_rules API which stopped working May 2024).
-    # Creates a per-IP block rule in the zone's WAF custom ruleset;
-    # deletes it on unban using the rule ID stored in a temp file.
+    # Replaces the deprecated firewall/access_rules API (stopped working May 2024).
     "fail2ban/action.d/cloudflare-waf.conf" = {
       mode = "0644";
       text = ''
@@ -136,19 +125,10 @@ in {
       '';
     };
 
-    # No custom grafana.conf filter here anymore — the fail2ban package
-    # (1.1.1+) now ships its own etc/fail2ban/filter.d/grafana.conf, which
-    # collided with ours ("mismatched duplicate entry" build failure).
-    # Removed rather than kept: ours matched `level=warn`, but Grafana's
-    # actual logger (log15) emits `lvl=warn`/`lvl=eror` — the custom filter
-    # was almost certainly never matching real log lines. The bundled one
-    # (`failregex` on `lvl=err?or ... msg="Invalid username or password"
-    # ... remote_addr=<ADDR>`) matches the real format and is what
-    # `filter = grafana` in the jail below now resolves to.
+    # No custom grafana.conf here: fail2ban 1.1.1+ ships its own filter.d/grafana.conf
+    # and ours collided with it ("mismatched duplicate entry") while also never
+    # matching real lines (ours checked `level=`, Grafana's log15 emits `lvl=`).
 
-    # Home Assistant filter — matches failed login log entries.
-    # HASS logs: Login attempt or request with invalid authentication
-    # from <ip> (<user agent>)
     "fail2ban/filter.d/home-assistant.conf" = {
       mode = "0644";
       text = ''
@@ -158,7 +138,6 @@ in {
       '';
     };
 
-    # Jellyfin filter — matches journald entries for denied auth.
     # Pattern from upstream jellyfin/jellyfin issue #5057.
     "fail2ban/filter.d/jellyfin.conf" = {
       mode = "0644";
@@ -170,18 +149,13 @@ in {
     };
   };
 
-  # Ensure /run/fail2ban exists for storing CF rule IDs
   systemd.tmpfiles.rules = [
     "d /run/fail2ban 0750 root root -"
   ];
 
-  # nixpkgs' fail2ban module already runs as root with a narrow
-  # CapabilityBoundingSet (cap_dac_read_search, cap_net_admin, cap_net_raw,
-  # cap_audit_read — verified via `systemctl show fail2ban.service`) and
-  # ProtectSystem=strict; root is required (manages nftables/iptables bans
-  # and reads root-owned logs), not fixable here. The toggles below are
-  # additive sandboxing the module doesn't set at all — none grant or
-  # require any capability, so they're safe regardless of jail config.
+  # fail2ban's own module already runs as root with a narrow CapabilityBoundingSet and
+  # ProtectSystem=strict (root needed for nftables/iptables + root-owned logs); these
+  # are additive-only toggles the module doesn't set.
   systemd.services.fail2ban.serviceConfig = {
     ProtectClock = lib.mkDefault true;
     ProtectKernelLogs = lib.mkDefault true;
@@ -191,22 +165,13 @@ in {
     RestrictRealtime = lib.mkDefault true;
     RestrictSUIDSGID = lib.mkDefault true;
     SystemCallArchitectures = lib.mkDefault "native";
-    # AF_NETLINK required (nftables/iptables manipulation), AF_UNIX for
-    # journald reads, AF_INET/INET6 for the cloudflare-waf action's curl calls.
+    # AF_NETLINK for nftables/iptables, AF_UNIX for journald, AF_INET/INET6 for cloudflare-waf's curl.
     RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX" "AF_NETLINK"];
     ProtectProc = lib.mkDefault "invisible";
     ProcSubset = lib.mkDefault "pid";
     UMask = lib.mkDefault "0077";
     SystemCallFilter = lib.mkDefault ["@system-service"];
-    # No IPAddressDeny/Allow — cloudflare-waf action needs unrestricted
-    # outbound to api.cloudflare.com.
-    #
-    # PrivateUsers deliberately NOT set: fail2ban needs CAP_NET_ADMIN/
-    # CAP_NET_RAW netlink access to manipulate nftables/iptables bans, which
-    # breaks the same way caddy's CAP_NET_BIND_SERVICE and crowdsec's
-    # CAP_NET_ADMIN did on gcp-relay when PrivateUsers put them in their own
-    # user namespace (kernel's privileged network checks don't carry over).
-    # Never actually failed here — just hadn't banned anyone yet since
-    # reboot — pulled preemptively.
+    # PrivateUsers deliberately NOT set: breaks CAP_NET_ADMIN/CAP_NET_RAW netlink access
+    # the same way it broke caddy/crowdsec on gcp-relay (pulled preemptively, untested here).
   };
 }

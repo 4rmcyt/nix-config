@@ -42,11 +42,8 @@
   console.keyMap = "us";
   time.timeZone = config.my.defaults.timezone;
 
-  # nscd already runs as its own "nscd" user with ProtectSystem=strict and
-  # NoNewPrivileges=yes (NixOS default, not set by this repo) — but still
-  # carries the full ~40-capability default set it never uses (verified via
-  # `systemctl show nscd.service`). Just an NSS lookup cache, needs none of
-  # them.
+  # nscd already runs with ProtectSystem=strict and NoNewPrivileges=yes (NixOS default),
+  # but still carries the full default capability set it never uses.
   systemd.services.nscd.serviceConfig = {
     CapabilityBoundingSet = lib.mkForce "";
     RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX" "AF_NETLINK"];

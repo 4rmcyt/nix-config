@@ -105,12 +105,11 @@ in {
     };
   };
 
-  # Override qBittorrent service to run in VPN namespace
   systemd.services.qbittorrent = {
     after = ["wg.service"];
     requires = ["wg.service"];
     serviceConfig = {
-      # Clear BindPaths from parent nixarr config - they conflict with NetworkNamespacePath
+      # Parent nixarr config's BindPaths conflict with NetworkNamespacePath.
       BindPaths = lib.mkForce [];
       NetworkNamespacePath = "/run/netns/wg";
       BindReadOnlyPaths = lib.mkForce [
@@ -127,7 +126,6 @@ in {
     };
   };
 
-  # Proxy to expose qBittorrent WebUI from VPN namespace to host network
   systemd.sockets.proxy-to-qbittorrent = {
     description = "Socket for qBittorrent proxy";
     wantedBy = ["sockets.target"];

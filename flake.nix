@@ -2,7 +2,6 @@
   description = "4rmcyt's Nix configuration flake";
 
   inputs = {
-    # Core
     nix-auth.url = "github:numtide/nix-auth";
     flake-schemas.url = "github:DeterminateSystems/flake-schemas";
     flake-parts = {
@@ -20,7 +19,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # NixOS infrastructure
     impermanence.url = "github:nix-community/impermanence";
     disko = {
       url = "github:nix-community/disko";
@@ -37,16 +35,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Secrets
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Identity + LAN topology — plaintext values needed at eval time, kept in a
-    # private repo instead of this public one. See modules/options/private-example.nix.
+    # Plaintext identity/LAN topology values needed at eval time, kept out of this
+    # public repo. See modules/options/private-example.nix.
     private.url = "git+ssh://git@github.com/4rmcyt/nix-config-private.git";
 
-    # Hardware & system
     auto-cpufreq = {
       url = "github:AdnanHodzic/auto-cpufreq";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -57,7 +53,6 @@
     };
     ucodenix.url = "github:e-tho/ucodenix";
 
-    # Dev tools
     comma = {
       url = "github:nix-community/comma";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -71,7 +66,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # IDE & editors
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -80,26 +74,13 @@
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Desktop & GUI
     firefox-addons = {
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # NOT the `hdr` branch: tried it (2026-08-23) — it's broken, not just
-    # stale. Its own nix/default.nix requests wlroots_0_19 while its C
-    # source (meson.build) has already moved to wlroots-0.20, so it fails
-    # at meson's configure step ("Dependency wlroots-0.20 not found") —
-    # the branch's Nix packaging was never updated to match its own C code.
-    #
-    # `main` has no working HDR output path: its meson.build unconditionally
-    # requires libscenefx, and scenefx doesn't support the vulkan renderer
-    # HDR's output_color_transform check needs — confirmed both by mango's
-    # own docs/configuration/monitors.md ("HDR is only supported in wl-only
-    # branch, since it requires the vulkan renderer but scenefx is not
-    # supported yet") and by diffing meson.build: `wl-only` drops the
-    # scenefx dependency() call and its executable() link entirely, while
-    # `main` keeps both. wlroots pin matches main (wlroots-0.20), so unlike
-    # `hdr` this branch isn't known-broken packaging-wise.
+    # Not `hdr` (broken packaging: requests wlroots_0_19 but its C source needs 0.20).
+    # Not `main` either: no working HDR output path (requires scenefx, which doesn't
+    # support the vulkan renderer HDR needs) — `wl-only` drops that scenefx dependency.
     mango = {
       url = "github:mangowm/mango/wl-only";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -112,15 +93,9 @@
       url = "github:amaanq/nirinit";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # cachix branch, not main — always points at the latest commit noctalia's
-    # own CI has finished caching to noctalia.cachix.org, so this never pulls
-    # an uncached main commit that would force a local compile.
-    #
-    # No `inputs.nixpkgs.follows` here (unlike most other inputs): overriding
-    # noctalia's nixpkgs changes its derivation hash and causes a cache miss
-    # against noctalia.cachix.org, forcing a full local meson/ninja C++
-    # build instead of a substituted binary. Costs one extra nixpkgs
-    # evaluation in the closure; buys a guaranteed cache hit.
+    # `cachix` branch always points at the latest CI-cached commit, avoiding an
+    # uncached main commit that forces a local compile. No nixpkgs.follows here:
+    # overriding it changes the derivation hash and causes a cache miss.
     noctalia.url = "github:noctalia-dev/noctalia/cachix";
     # No nixpkgs input to follow — the flake only ships bare nixos/home-manager modules.
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
@@ -128,7 +103,6 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Shell & TUI
     zellij-nix = {
       url = "github:a-kenji/zellij-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -136,14 +110,12 @@
 
     nixos-needsreboot.url = "git+https://codeberg.org/Mynacol/nixos-needsreboot.git";
 
-    # Headscale control server — not following nixpkgs: upstream pins its own
-    # nixpkgs branch for a Go 1.26.4 security fix (GO-2026-5037/5039) that
-    # hasn't reached nixpkgs-unstable yet.
+    # Not following nixpkgs: upstream pins its own branch for a Go 1.26.4 security
+    # fix (GO-2026-5037/5039) not yet in nixpkgs-unstable.
     headscale = {
       url = "github:juanfont/headscale";
     };
 
-    # Services & infrastructure
     ephraim-nur = {
       url = "github:EphraimSiegfried/nur-packages";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -163,14 +135,10 @@
       url = "github:rasmus-kirk/nixarr";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Sonarr/Radarr/Prowlarr/Bazarr/Jellyfin built from upstream release tags,
-    # not nixpkgs' pin. Deliberately NOT following nixpkgs: these packages are
-    # pre-built and pushed to Cachix against arr-packages' own nixpkgs rev —
-    # following ours would change the derivation hash and force a local rebuild.
+    # Not following nixpkgs: pre-built and pushed to Cachix against arr-packages'
+    # own nixpkgs rev — following ours would change the derivation hash and force
+    # a local rebuild.
     arr-packages.url = "github:4rmcyt/arr-packages";
-    # job-kombayn: script tree (run.py, kombayn/, profiles/). Now a real flake
-    # (formatter only, via treefmt-nix) - follow our nixpkgs so it doesn't
-    # pull its own copy just to build the treefmt wrapper.
     jobshunting = {
       url = "github:4rmcyt/jobshunting";
       inputs.nixpkgs.follows = "nixpkgs";

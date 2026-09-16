@@ -10,9 +10,6 @@ in {
     mode = "0400";
   };
 
-  # ── OCI Container ─────────────────────────────────────────────────────────
-  # Backend (podman) is set in modules/containers/default.nix — no need to repeat.
-  # Declarative configuration.yaml — injected via sops template (contains secrets).
   # HA never writes to this file; automations/scripts/scenes go to separate includes.
   sops.templates."homeassistant-configuration.yaml" = {
     owner = "root";
@@ -75,10 +72,8 @@ in {
     "d /var/lib/hass 0750 root root -"
   ];
 
-  # ── Mosquitto MQTT Broker ─────────────────────────────────────────────────
-  # HA container (--network=host) connects to mosquitto via homeserver_lan on
-  # config.my.network.ports.mosquitto.
-  # IoT devices on the LAN also reach the broker at this address.
+  # HA container (--network=host) and IoT devices on the LAN both reach mosquitto
+  # via homeserver_lan.
   users.users.mosquitto = {
     isSystemUser = true;
     group = "mosquitto";

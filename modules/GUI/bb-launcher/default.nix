@@ -1,6 +1,4 @@
-# Dedicated shadPS4 launcher for Bloodborne (mod manager, save backups,
-# trophy viewing). Not in nixpkgs — wrapped from upstream's prebuilt Linux
-# AppImage. https://github.com/rainmakerv3/BB_Launcher
+# Not in nixpkgs — wrapped from upstream's prebuilt Linux AppImage.
 {
   lib,
   pkgs,
@@ -39,11 +37,9 @@
     };
   };
 
-  # Bloodborne is played through this launcher (it spawns shadPS4), so neither
-  # process ever registers with gamemode on its own. Wrap the entry point in
-  # gamemoderun: gamemode's LD_PRELOAD propagates to the shadPS4 child, and
-  # the scx_loader scheduler swap (modules/gaming/default.nix) fires for it
-  # like any Steam/Lutris/Heroic title.
+  # Neither this launcher nor the shadPS4 child it spawns registers with gamemode on
+  # its own; gamemoderun's LD_PRELOAD propagates to the child so the scx_loader
+  # scheduler swap (modules/gaming/default.nix) fires like any Steam/Lutris title.
   bb-launcher-gamemode = pkgs.symlinkJoin {
     name = "${pname}-${version}";
     paths = [bb-launcher];

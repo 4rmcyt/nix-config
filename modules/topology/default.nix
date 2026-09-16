@@ -1,16 +1,5 @@
-# nix-topology per-host annotations.
-#
-# nix-topology's NixOS module is imported on every host (parts/home-manager-integration.nix),
-# and its service extractor picks up most homeserver services automatically. This module adds
-# the parts it cannot infer: physical/virtual interfaces (all hosts are NetworkManager/DHCP),
-# network membership and hardware descriptions.
-#
 # Interface `addresses` here are deliberately descriptive labels, not real IPs, so the
-# rendered SVGs are safe to commit to this public repo — they expose nothing beyond
-# docs/Infrastructure.md (hostnames, interface names, /24 CIDRs, device models).
-#
-# The global topology — internet, ISP router, switches, APs, network CIDRs — lives in
-# parts/topology.nix. Build the diagrams with `just topology`.
+# rendered SVGs are safe to commit to this public repo.
 {
   config,
   lib,
@@ -18,7 +7,6 @@
 }: let
   host = config.networking.hostName;
 
-  # tailscale0 overlay interface — every host is on the Headscale tailnet.
   tailnet = {
     tailscale0 = {
       network = "tailnet";
@@ -43,11 +31,8 @@ in {
         }
         // tailnet;
       services = {
-        # The Traefik extractor dumps every http.router + backend URL (job-kombayn
-        # included); the restic extractor dumps the full backup path inventory;
-        # mosquitto's listener binds the real LAN IP; grafana/kanidm expose the
-        # real domain in `info`. Keep the cards, drop the leaky detail so the
-        # committed SVG stays IP-/domain-/layout-free.
+        # Extractors dump real backend URLs/IPs/domains; keep the cards, drop the
+        # leaky detail so the committed SVG stays IP-/domain-/layout-free.
         traefik.details = lib.mkForce {};
         mosquitto.details = lib.mkForce {};
         grafana.info = lib.mkForce "";
@@ -97,8 +82,7 @@ in {
         }
         // tailnet;
       services = {
-        # caddy's virtualHost key + headscale's `info` are the real domain; restic
-        # dumps its backup paths. Drop all three from the committed SVG.
+        # caddy's virtualHost key + headscale's `info` are the real domain — drop both.
         caddy.details = lib.mkForce {};
         headscale.info = lib.mkForce "";
         main.hidden = lib.mkForce true;

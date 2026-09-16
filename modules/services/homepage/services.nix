@@ -46,17 +46,14 @@
         };
       }
       {
-        # No dashboard-icons entry and no dedicated Homepage widget for
-        # Comet yet (checked walkxcode, homarr-labs, and selfh.st/icons) --
-        # plain link, no icon.
+        # No dashboard-icons entry or Homepage widget for Comet yet — plain link, no icon.
         Comet = {
           href = "{{HOMEPAGE_VAR_COMET_URL}}";
           description = "Stremio Torrent/Debrid Search";
         };
       }
       {
-        # No dedicated Homepage widget, but selfh.st/icons has an icon
-        # (dashboard-icons -- walkxcode/homarr-labs -- doesn't).
+        # No dedicated Homepage widget, but selfh.st/icons has an icon (dashboard-icons doesn't).
         AIOStreams = {
           icon = "sh-aiostreams.svg";
           href = "{{HOMEPAGE_VAR_AIOSTREAMS_URL}}";
@@ -64,8 +61,7 @@
         };
       }
       {
-        # No dedicated Homepage widget -- plain link. Icon confirmed present
-        # in walkxcode/dashboard-icons (svg/stremio.svg).
+        # No dedicated Homepage widget -- plain link.
         Stremio = {
           icon = "stremio.png";
           href = "{{HOMEPAGE_VAR_STREMIO_URL}}";

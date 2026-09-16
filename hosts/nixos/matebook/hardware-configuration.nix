@@ -7,7 +7,6 @@
 }: {
   imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
-  # 2. Boot Configuration
   boot = {
     initrd.availableKernelModules = [
       "nvme"
@@ -25,23 +24,20 @@
     extraModulePackages = [];
 
     kernelParams = [
-      # AMD GPU optimizations (Vega 8 iGPU)
       "amdgpu.gpu_recovery=1"
       # ppfeaturemask=0xffffffff enables OC features, raises idle power on 15W iGPU — omit
-      "amdgpu.dpm=1" # Dynamic power management for battery life
+      "amdgpu.dpm=1"
 
-      # AMD CPU (Zen+ - prioritize battery life over security)
-      "amd_pstate=passive" # Passive mode for Zen+ (active is for Zen 3+)
+      "amd_pstate=passive" # active mode is for Zen 3+
       "microcode.amd_sha_check=off"
 
-      # Security mitigations (disabled for battery life on Zen+)
-      "retbleed=off" # Save 14-39% performance
-      "spectre_v2=off" # Save 5-15% performance
-      "spec_store_bypass_disable=off" # Save 2-5% performance
-      "pti=off" # AMD not affected by Meltdown
+      # Mitigations disabled for battery life on Zen+ (AMD not affected by Meltdown/pti)
+      "retbleed=off" # saves 14-39% performance
+      "spectre_v2=off" # saves 5-15% performance
+      "spec_store_bypass_disable=off" # saves 2-5% performance
+      "pti=off"
 
-      # PCIe ASPM: force L1 on devices where firmware left it disabled — saves 1-2W
-      "pcie_aspm=force"
+      "pcie_aspm=force" # forces L1 on devices where firmware left it disabled, saves 1-2W
       "pcie_aspm.policy=powersupersave"
 
       "quiet"
@@ -57,12 +53,11 @@
     kernel.sysctl = {
       "kernel.nmi_watchdog" = 0;
 
-      # VM/Memory optimizations for laptop (assume 8-16GB RAM)
-      "vm.swappiness" = 60; # Higher for laptops (may have less RAM)
+      "vm.swappiness" = 60;
       "vm.vfs_cache_pressure" = 50;
       "vm.dirty_ratio" = 20;
       "vm.dirty_background_ratio" = 10;
-      "vm.dirty_writeback_centisecs" = 1500; # Longer for battery life
+      "vm.dirty_writeback_centisecs" = 1500; # longer for battery life
 
       "net.ipv4.tcp_fastopen" = 3;
       "net.core.default_qdisc" = "fq";
@@ -70,7 +65,6 @@
     };
   };
 
-  # 3. Hardware Configuration
   hardware = {
     graphics = {
       enable = true;
@@ -127,14 +121,9 @@
     };
   };
 
-  # nixos-facter-modules' networking module force-enables per-interface
-  # useDHCP (networking.interfaces.wlp2s0.useDHCP = mkDefault true), which
-  # alone flips on the global dhcpcd.service (dhcpcd.nix's enableDHCP =
-  # useDHCP || any interface.useDHCP). That raced NetworkManager's own DHCP
-  # client on wlp2s0, crashing dhcpcd with SEGV in dhcp_deconfigure on every
-  # sleep/hibernate resume (netlink events handled by both clients at once).
-  # NetworkManager owns DHCP here — see hosts/nixos/desktop/hardware-configuration.nix
-  # for the same fix.
+  # nixos-facter-modules force-enables per-interface useDHCP, which flips on global
+  # dhcpcd and raced NetworkManager's own client on wlp2s0, crashing dhcpcd with SEGV
+  # in dhcp_deconfigure on every sleep/hibernate resume. Same fix as desktop's hardware-configuration.nix.
   facter.detected.dhcp.enable = lib.mkForce false;
   networking.useDHCP = lib.mkForce false;
 }

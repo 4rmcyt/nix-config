@@ -28,7 +28,6 @@
     ];
 
     sessionVariables = {
-      # Graphics & Display (AMD) — Wayland vars provided by modules/WM/niri
       LIBVA_DRIVER_NAME = "radeonsi";
       VDPAU_DRIVER = "radeonsi";
     };

@@ -1,4 +1,3 @@
-# Treefmt-based code formatting via flake-parts perSystem.
 {inputs, ...}: {
   perSystem = {pkgs, ...}: {
     formatter = let

@@ -7,8 +7,6 @@ with lib; let
   cfg = config.my.headscale;
   inherit (config.my.defaults) domain;
 
-  # Fixed: headscale listens on 127.0.0.1:8080, metrics on 127.0.0.1:9091,
-  # server_url is https://hs.<domain>. Never varied per host.
   port = 8080;
   metricsPort = 9091;
 in {
@@ -113,13 +111,9 @@ in {
 
     networking.firewall.allowedUDPPorts = [3478];
 
-    # nixpkgs' headscale module already sets CapabilityBoundingSet=cap_chown,
-    # RestrictAddressFamilies=AF_INET/AF_INET6/AF_UNIX and a curated
-    # SystemCallFilter (verified via `systemctl show headscale.service`) — do
-    # not touch those, they're already tight. These are just the additive
-    # sandboxing toggles the module leaves unset. No IPAddressDeny/Allow:
-    # derp.auto_update_enabled fetches https://controlplane.tailscale.com
-    # periodically, so outbound can't be locked down to the tailnet only.
+    # Additive sandboxing only — nixpkgs' module already sets CapabilityBoundingSet,
+    # RestrictAddressFamilies, and SystemCallFilter. No IPAddressDeny/Allow:
+    # derp.auto_update_enabled fetches controlplane.tailscale.com periodically.
     systemd.services.headscale.serviceConfig = {
       ProtectClock = mkDefault true;
       ProtectKernelLogs = mkDefault true;
@@ -128,12 +122,8 @@ in {
       ProtectControlGroups = mkDefault true;
       ProtectHostname = mkDefault true;
       RestrictNamespaces = mkDefault true;
-      # MemoryDenyWriteExecute deliberately NOT set: same class of directive
-      # (kills the process on violation, no catchable error) that just
-      # killed alloy.service on gcp-relay (SIGSYS) — same Go runtime family.
-      # headscale hasn't crashed with it yet, but this is the single
-      # control-plane instance with no physical access; not worth finding
-      # out the hard way under real traffic.
+      # MemoryDenyWriteExecute deliberately NOT set: same directive class that killed
+      # alloy.service on gcp-relay (same Go runtime family) — not worth testing here.
       ProtectProc = mkDefault "invisible";
       ProcSubset = mkDefault "pid";
       UMask = mkDefault "0077";

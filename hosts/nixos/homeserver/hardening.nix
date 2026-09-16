@@ -1,4 +1,4 @@
-{...}: {
+_: {
   nix-mineral = {
     enable = true;
 

@@ -6,17 +6,13 @@
   cfg = config.my.traefik;
   inherit (config.my.defaults) domain;
 
-  # Declarative table for the common case: one router + one service per
-  # backend, proxied to a localhost port behind the standard security
-  # middlewares. Anything with non-standard routing (path-based rules,
-  # priority, internal-only entrypoints) is defined by hand instead —
-  # see traefik-dashboard/traefik-api-internal/kombayn-* below.
+  # Covers the common case only; non-standard routing (path rules, priority,
+  # internal entrypoints) is defined by hand — see traefik-dashboard/kombayn-* below.
   mkProxiedRouter = name: {
     port,
     middlewares ? ["security-headers" "crowdsec"],
     host ? "${name}.${domain}",
-    # Backend scheme + an optional serversTransport (e.g. insecureSkipVerify)
-    # for backends that only speak HTTPS, such as kanidm's self-signed cert.
+    # For backends that only speak HTTPS with a self-signed cert (e.g. kanidm).
     scheme ? "http",
     serversTransport ? null,
   }:
@@ -96,10 +92,8 @@ in {
   };
 
   config = lib.mkMerge [
-    # Expose the router-building helper so other modules (e.g. kanidm, which
-    # needs an HTTPS backend + serversTransport) can reuse it instead of
-    # hand-rolling their own Traefik router/service block. Unconditional —
-    # the helper is a pure function, independent of my.traefik.enable.
+    # Exposed unconditionally (pure function) so modules like kanidm can reuse it
+    # instead of hand-rolling their own router/service block.
     {_module.args.mkProxiedRouter = mkProxiedRouter;}
 
     (lib.mkIf cfg.enable {
@@ -135,8 +129,7 @@ in {
                   }
                 ];
               };
-              # Trust Cloudflare's IPs so CF-Connecting-IP / X-Forwarded-For
-              # carries the real client IP (needed for fail2ban on hass).
+              # Needed for X-Forwarded-For to carry the real client IP (fail2ban on hass).
               forwardedHeaders.trustedIPs = config.my.network.subnets.cloudflare;
             };
           };
@@ -212,8 +205,7 @@ in {
                 stsSeconds = 31536000;
                 customFrameOptionsValue = "SAMEORIGIN";
               };
-              # Komga: like security-headers but allow the komf webui to embed
-              # Komga (iframe) and call its API cross-origin (CORS with creds).
+              # Allows the komf webui to embed Komga (iframe) and call its API cross-origin.
               komga-headers.headers = {
                 browserXssFilter = true;
                 contentTypeNosniff = true;
@@ -250,12 +242,8 @@ in {
                 crowdsecLapiHost = "127.0.0.1:${toString config.my.network.ports.crowdsec-lapi}";
                 crowdsecLapiScheme = "http";
                 updateIntervalSeconds = 60;
-                # Don't block Traefik startup on the first LAPI sync, and never
-                # flip the stream to unhealthy on sync failures — otherwise every
-                # request gets a blanket 403 for the ~2min CrowdSec takes to come
-                # up (hub sync) after a reboot, since Traefik has no ordering
-                # dependency on crowdsec.service (see systemd.services.traefik.after
-                # below).
+                # Otherwise every request 403s for the ~2min crowdsec.service takes to
+                # hub-sync after a reboot (Traefik has no ordering dependency on it).
                 streamStartupBlock = false;
                 updateMaxFailure = -1;
                 forwardedHeadersTrustedIPs = config.my.network.subnets.cloudflare;
@@ -293,9 +281,8 @@ in {
                   "PATCH"
                 ];
                 accessControlAllowHeaders = ["*"];
-                # komf has no authentication, so CORS provides no protection here.
-                # Allow any origin so the komf browser extension (moz-extension://…)
-                # can reach the API. Credentials must be off when origin is "*".
+                # komf has no auth, so CORS provides no real protection; wildcard origin
+                # lets the komf browser extension (moz-extension://…) reach the API.
                 accessControlAllowOriginList = ["*"];
                 accessControlAllowCredentials = false;
                 accessControlMaxAge = 100;
@@ -325,8 +312,7 @@ in {
                   middlewares = [];
                 };
 
-                # job-kombayn: API on /api (higher priority = more specific path
-                # wins over the SPA catch-all below), everything else -> static SPA.
+                # Higher priority so /api wins over the SPA catch-all below.
                 kombayn-api = {
                   rule = "Host(`jobko.${domain}`) && PathPrefix(`/api`)";
                   entryPoints = ["websecure"];
@@ -380,26 +366,10 @@ in {
       systemd.services.traefik.serviceConfig = {
         EnvironmentFile = config.sops.secrets.cloudflare_acme_credentials.path;
 
-        # nixpkgs' traefik module already sets CapabilityBoundingSet=
-        # cap_net_bind_service (matches AmbientCapabilities exactly),
-        # ProtectSystem=full, PrivateUsers=no, NoNewPrivileges=yes (verified
-        # via `systemctl show traefik.service`) — don't touch those.
-        #
-        # Deliberately NOT setting SystemCallFilter, MemoryDenyWriteExecute,
-        # or PrivateUsers here:
-        # - SystemCallFilter/MemoryDenyWriteExecute kill the process on
-        #   violation (SIGSYS), not a catchable error — this exact class of
-        #   directive just killed alloy.service on gcp-relay. Traefik loads
-        #   the crowdsec-bouncer and geoblock plugins via Yaegi (a Go
-        #   *interpreter*, experimental.localPlugins above), which is far
-        #   more likely than plain compiled Go to hit something outside
-        #   @system-service or need W+X pages — not worth the risk on the
-        #   service every other host on the LAN/tailnet routes through.
-        # - PrivateUsers breaks AmbientCapabilities=CAP_NET_BIND_SERVICE for
-        #   binding <1024 (the kernel's privileged-port check doesn't
-        #   recognize the capability once the service is in its own user
-        #   namespace) — confirmed live on caddy on gcp-relay, same ambient
-        #   capability here for :80/:443.
+        # Deliberately NOT setting SystemCallFilter/MemoryDenyWriteExecute (Traefik loads
+        # plugins via the Yaegi Go interpreter, same directive class that killed
+        # alloy.service) or PrivateUsers (breaks AmbientCapabilities=CAP_NET_BIND_SERVICE
+        # for :80/:443, confirmed on caddy/gcp-relay).
         RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX"];
         ProtectClock = lib.mkDefault true;
         ProtectKernelLogs = lib.mkDefault true;
@@ -415,14 +385,12 @@ in {
         ProcSubset = lib.mkDefault "pid";
         UMask = lib.mkDefault "0077";
         RemoveIPC = lib.mkDefault true;
-        # No IPAddressDeny/Allow — Traefik proxies to arbitrary localhost
-        # backends and does DNS-01 ACME to Cloudflare's API, needs open
-        # outbound.
+        # No IPAddressDeny/Allow: needs open outbound for arbitrary localhost backends
+        # and DNS-01 ACME to Cloudflare's API.
       };
 
-      # CrowdSec bouncer runs in stream mode and caches decisions locally —
-      # Traefik does not need to wait for it. crowdsec-setup takes ~2min on
-      # boot (hub sync) which caused Traefik to delay that long.
+      # No dependency on crowdsec.service: the bouncer caches decisions locally in
+      # stream mode, and crowdsec-setup's ~2min hub sync would otherwise delay Traefik.
       systemd.services.traefik.after = ["network-online.target" "sops-nix.service"];
       systemd.services.traefik.wants = ["network-online.target"];
     })

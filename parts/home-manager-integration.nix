@@ -1,6 +1,4 @@
-# Base NixOS module imports applied to all hosts.
-# HM wiring lives in parts/hm.nix (modules.nixos.hm) — imported only on hosts that use HM.
-# Workstation-specific modules (ucodenix, facter, gnupg, nh) live in parts/workstation.nix.
+# HM wiring lives in parts/hm.nix; workstation-specific modules live in parts/workstation.nix.
 {inputs, ...}: {
   modules.nixos.base = {
     imports = [

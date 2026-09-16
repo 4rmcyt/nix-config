@@ -14,7 +14,6 @@ in {
 
   hardware.graphics.enable = lib.mkDefault true;
 
-  # clipboard sharing between host and waydroid
   environment.systemPackages = [pkgs.wl-clipboard];
 
   networking.firewall.trustedInterfaces = ["waydroid0"];

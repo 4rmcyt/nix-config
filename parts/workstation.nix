@@ -1,18 +1,10 @@
-# Deferred modules for real (bare-metal) machines. Defines three:
-#   modules.nixos.bareMetal      — hardware/CPU/dev plumbing on every physical
-#                                  host (desktop, matebook, homeserver);
-#                                  skipped on the gcp-relay VM.
-#   modules.nixos.workstationGui  — GUI NixOS bits (desktop, matebook).
-#   modules.homeManager.workstation — GUI/TUI HM apps (desktop, matebook).
 {
   inputs,
   lib,
   ...
 }: {
-  # `pkgs` is a NixOS-module arg (supplied when this deferred module is
-  # imported into a host), NOT a flake-parts top-level arg (that's only
-  # injected inside `perSystem`) — so this has to be a function taking its
-  # own {pkgs, ...}, not reach for the outer flake-parts scope's pkgs.
+  # `pkgs` here is a NixOS-module arg, not the flake-parts top-level one (only
+  # injected inside `perSystem`) — needs its own {pkgs, ...}.
   modules.nixos.bareMetal = {
     config,
     pkgs,
@@ -42,10 +34,7 @@
     ];
   };
 
-  # GUI workstation NixOS modules — desktop, matebook only. Not on homeserver
-  # (no GUI) or gcp-relay (headless). nfs-client rides along here since only
-  # the GUI workstations mount the homeserver NFS shares (homeserver is the
-  # server, gcp-relay has no need).
+  # nfs-client rides along here since only the GUI workstations mount homeserver's NFS shares.
   modules.nixos.workstationGui.imports = [
     ../modules/GUI/chrome
     ../modules/GUI/flatpak
@@ -54,8 +43,6 @@
     ../modules/networking/nfs-client
   ];
 
-  # GUI workstation Home Manager modules — desktop, matebook. Not imported
-  # on homeserver (no GUI) or headless appliances.
   modules.homeManager.workstation = {
     imports = [
       ../modules/GUI/chrome/home.nix

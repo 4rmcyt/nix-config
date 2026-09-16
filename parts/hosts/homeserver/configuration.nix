@@ -1,4 +1,3 @@
-# Homeserver host definition via Dendritic configurations.nixos option.
 {
   config,
   inputs,

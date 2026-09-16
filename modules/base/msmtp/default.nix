@@ -33,7 +33,7 @@
       aliases = "/etc/aliases";
       port = 587;
       tls = true;
-      tls_certcheck = true; # Enabled by default, but good to be explicit
+      tls_certcheck = true;
       tls_trust_file = "/etc/ssl/certs/ca-certificates.crt";
     };
     accounts = {

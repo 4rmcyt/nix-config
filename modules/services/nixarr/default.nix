@@ -11,20 +11,10 @@
     "qbittorrent"
   ];
 
-  # Pinned explicitly (not left to dynamic useradd allocation) because
-  # oci-containers PUID/PGID env vars are interpolated at Nix eval time —
-  # config.users.users.<name>.uid is null until activation otherwise,
-  # so ${toString ...} silently renders as an empty string.
-  #
-  # radarr/sonarr users are NOT here: their nixpkgs service modules already
-  # create users.users.{radarr,sonarr} pinned to config.ids.uids.* -- they
-  # only need extraGroups added, done separately below. Their group GIDs
-  # ARE overridden below (lib.mkForce) because nixpkgs pins them to
-  # config.ids.gids.{radarr,sonarr} (274/275), which no longer matches the
-  # GIDs actually present in /etc/group on homeserver (970/975, from before
-  # these services were declared here); without the override, activation
-  # just warns ("not applying GID change") and leaves /etc/group untouched
-  # anyway, so this documents reality instead of fighting it every rebuild.
+  # Pinned explicitly: oci-containers interpolate PUID/PGID at eval time, before
+  # dynamically-allocated uids exist. radarr/sonarr excluded (their modules already
+  # pin uids); their GIDs are forced below since nixpkgs' ids no longer match
+  # homeserver's actual /etc/group.
   serviceIds = {
     audiobookshelf = {
       uid = 156;
@@ -114,12 +104,10 @@ in {
         extraGroups = ["users" "media"];
       })
       serviceIds)
-    # radarr/sonarr users/groups are created by their own nixpkgs service
-    # modules (services.radarr/services.sonarr) -- just add the extra group
-    # memberships the media stack needs on top of that.
+    # radarr/sonarr users/groups come from their own nixpkgs service modules.
     {
       radarr.extraGroups = ["users" "media"];
-      # sonarr-sync-config runs as sonarr:sonarr and reads sonarr.api-key (group sonarr-api)
+      # sonarr-sync-config runs as sonarr:sonarr and reads sonarr.api-key (group sonarr-api).
       sonarr.extraGroups = ["users" "media" "sonarr-api"];
     }
   ];
@@ -143,19 +131,15 @@ in {
     stateDir = "/data/media/.state/nixarr";
 
     audiobookshelf.enable = true;
-    # Default ffmpeg-full builds with withGPL=true, withUnfree=false, which
-    # disables libfdk-aac -- without it, xHE-AAC audiobooks (M4B) fail to
-    # scan/transcode. allowUnfree is already set globally (shared-nixos-settings.nix).
+    # Default ffmpeg-full disables libfdk-aac, breaking xHE-AAC (M4B) audiobook scanning.
     audiobookshelf.package = pkgs.audiobookshelf.override {
       ffmpeg_8-full = pkgs.ffmpeg_8-full.override {withUnfree = true;};
     };
-    jellyfin.enable = false; # Handled by ./jellyfin
+    jellyfin.enable = false; # handled by ./jellyfin
     lidarr.enable = true;
 
-    # Upstream bug: pname = "nixarr" but pyproject.toml declares name =
-    # "nixarr_py", so nixpkgs' pythonMetadataCheckPhase can't find metadata
-    # for "nixarr" and fails the build. Skip the check — it only verifies
-    # the version string in pyproject.toml matches the derivation version.
+    # Upstream bug: pname "nixarr" vs pyproject.toml's "nixarr_py" fails nixpkgs'
+    # pythonMetadataCheckPhase; skipping only skips the version-string check.
     nixarr-py.package =
       (pkgs.callPackage "${inputs.nixarr}/nixarr/lib/nixarr-py" {
         jellyfin = config.nixarr.jellyfin.package;
@@ -166,8 +150,8 @@ in {
   };
 
   systemd.services = lib.mkMerge [
-    # nixarr passes an absolute path to StateDirectory= which systemd rejects with a warning.
-    # StateDirectory= must be relative. Clear it — the dir already exists via tmpfiles.
+    # nixarr passes an absolute path to StateDirectory=, which systemd rejects; the
+    # dir already exists via tmpfiles so clearing it is safe.
     {
       audiobookshelf.serviceConfig.StateDirectory = lib.mkForce "";
     }
@@ -181,36 +165,16 @@ in {
         ];
       };
     }))
-    # bazarr and lidarr's nixpkgs modules leave CapabilityBoundingSet at the
-    # full default set with NoNewPrivileges=no (verified via `systemctl
-    # show`). prowlarr is cleared too, but only because prowlarr/default.nix
-    # forces it explicitly (see there) — its nixpkgs module doesn't clear it
-    # either. sonarr and radarr are NOT cleared: re-verified via `systemctl
-    # show sonarr.service radarr.service -p CapabilityBoundingSet` on
-    # homeserver on 2026-09-14, both still carry the broad default set
-    # (including cap_sys_ptrace, cap_sys_admin, cap_net_raw, ...) — same gap
-    # as bazarr/lidarr, just not yet closed here. Same *arr-suite C#/.NET
-    # codebase, no reason bazarr/lidarr need more than sonarr/radarr do —
-    # if anything the gap should be closed on sonarr/radarr too, not used
-    # as the baseline. Not touching
-    # ProtectSystem here: bazarr needs read/write access to the media
-    # library outside its own dataDir for its ffmpeg subtitle burn-in
-    # (Settings > Subtitles), and isn't in servicesWithMediaAccess's
-    # BindPaths above — auditing exactly what strict + BindPaths would need
-    # is a separate pass, not blind here.
+    # sonarr/radarr still carry the full default CapabilityBoundingSet, unlike
+    # bazarr/lidarr/prowlarr here — same gap, not yet closed for them.
+    # ProtectSystem left alone for bazarr: its ffmpeg subtitle burn-in needs
+    # read/write to the media library outside dataDir, outside BindPaths above.
     {
       bazarr.serviceConfig = {
         CapabilityBoundingSet = lib.mkForce "";
         NoNewPrivileges = lib.mkDefault true;
       };
-      # lidarr.serviceConfig below generated in part by `shh service
-      # finish-profile lidarr.service` after a live profiling run
-      # (2026-09-14) with kernel.yama.ptrace_scope temporarily relaxed to 0
-      # (see hosts/nixos/homeserver/hardening.nix). shh's CapabilityBoundingSet
-      # suggestion (a partial denylist) is weaker than the fully empty set
-      # already forced below, so not applied. No MemoryDenyWriteExecute:
-      # lidarr is .NET like radarr/sonarr and shh correctly didn't suggest it
-      # (JIT needs W+X memory).
+      # No MemoryDenyWriteExecute: lidarr is .NET like radarr/sonarr, JIT needs W+X memory.
       lidarr.serviceConfig = {
         CapabilityBoundingSet = lib.mkForce "";
         NoNewPrivileges = lib.mkDefault true;
@@ -225,50 +189,20 @@ in {
         ProtectClock = true;
         RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_NETLINK" "AF_UNIX"];
         SocketBindDeny = ["ipv4:udp" "ipv6:udp"];
-        # CORRECTED 2026-09-14 (second correction): a Nix list of
-        # "~@group:EPERM" strings renders as one "SystemCallFilter=" line
-        # per element, but NixOS/systemd only keeps the leading "~" on the
-        # first line — the rest silently parse as allow-list entries,
-        # which can't carry ":EPERM" ("Allow-listed system calls cannot
-        # take error number, ignoring"). The documented, unambiguous
-        # pattern: set SystemCallErrorNumber= once, and give
-        # SystemCallFilter a single "~"-prefixed string with no per-item
-        # ":ERRNO" — the leading "~" then applies to the whole list
-        # exactly once, no merge ambiguity.
+        # A Nix list of "~@group:EPERM" strings renders as one SystemCallFilter= line
+        # per element, but systemd only honors the leading "~" on the first line —
+        # set SystemCallErrorNumber once and pass a single "~"-prefixed string instead.
         SystemCallErrorNumber = "EPERM";
         SystemCallFilter = "~@aio @chown @clock @cpu-emulation @debug @keyring @memlock @module @mount @obsolete @pkey @privileged @raw-io @reboot @sandbox @setuid @swap";
       };
-      # audiobookshelf's module already has ProtectSystem=strict,
-      # NoNewPrivileges=yes (verified via `systemctl show`) but the same
-      # full-default-capability-set gap. Not setting MemoryDenyWriteExecute:
-      # it's a Node.js app, and V8's JIT needs W+X memory — same risk class
-      # that killed alloy.service (Go) here, don't need a second confirmed
-      # incident to know better.
-      # Rest generated by `shh service finish-profile audiobookshelf.service`
-      # after a live profiling run (2026-09-14) with kernel.yama.ptrace_scope
-      # temporarily relaxed to 0 (see hosts/nixos/homeserver/hardening.nix).
-      # Checked live via `systemctl show audiobookshelf.service` first:
-      # ProtectSystem/ProtectHome/PrivateDevices/PrivateTmp/
-      # ProtectKernelTunables/ProtectKernelLogs/ProtectControlGroups/
-      # PrivateMounts/ProtectClock/RestrictRealtime are already at or
-      # stricter than what shh suggested (nixpkgs module default), so only
-      # adding what wasn't already set: LockPersonality was "no",
-      # RestrictAddressFamilies/SocketBindDeny were unset.
+      # No MemoryDenyWriteExecute: Node.js/V8 JIT needs W+X memory (same class as
+      # the Go alloy.service incident).
       audiobookshelf.serviceConfig = {
         CapabilityBoundingSet = lib.mkForce "";
         LockPersonality = true;
         RestrictAddressFamilies = ["AF_INET" "AF_NETLINK"];
         SocketBindDeny = ["ipv4:udp" "ipv6:tcp" "ipv6:udp"];
-        # CORRECTED 2026-09-14 (second correction): a Nix list of
-        # "~@group:EPERM" strings renders as one "SystemCallFilter=" line
-        # per element, but NixOS/systemd only keeps the leading "~" on the
-        # first line — the rest silently parse as allow-list entries,
-        # which can't carry ":EPERM" ("Allow-listed system calls cannot
-        # take error number, ignoring"). The documented, unambiguous
-        # pattern: set SystemCallErrorNumber= once, and give
-        # SystemCallFilter a single "~"-prefixed string with no per-item
-        # ":ERRNO" — the leading "~" then applies to the whole list
-        # exactly once, no merge ambiguity.
+        # Same SystemCallFilter merge quirk as lidarr above — single "~"-prefixed string.
         SystemCallErrorNumber = "EPERM";
         SystemCallFilter = "~@aio @chown @clock @cpu-emulation @debug @keyring @memlock @module @mount @obsolete @pkey @privileged @raw-io @reboot @resources @sandbox @setuid @swap";
       };
@@ -303,22 +237,13 @@ in {
     "d /data/media/.state/nixarr/audiobookshelf/metadata 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/audiobookshelf/config 775 audiobookshelf audiobookshelf -"
     "d /data/media/.state/nixarr/lidarr 775 lidarr lidarr -"
-    # prowlarr's dataDir tmpfiles rule (bind-mount source dir) is now managed
-    # by services.prowlarr itself -- a second rule here for the same path
-    # would conflict with it.
-    # radarr's dataDir tmpfiles rule is now managed by services.radarr itself
-    # (unconditionally, mode 0700) -- a second rule here would conflict.
-    # sonarr's is NOT auto-managed by services.sonarr for a custom dataDir
-    # (only for its own default path), so its rule below is still needed.
+    # prowlarr/radarr/bazarr dataDir tmpfiles rules are managed by their own nixpkgs
+    # service modules — a rule here would conflict. sonarr's isn't (custom dataDir),
+    # so it still needs one below.
     "d /data/media/.state/nixarr/sonarr 775 sonarr sonarr -"
-    # bazarr's dataDir tmpfiles rule is now managed by services.bazarr itself
-    # (nixpkgs' bazarr.nix module, mode 0700) -- a second rule here for the
-    # same path would conflict with it.
 
-    # mode "-" (unchanged): only owner/group are re-synced recursively, not mode —
-    # forcing a numeric mode here would apply directory bits (setgid, exec) to
-    # regular files too, since Z can't distinguish files from directories.
-    # Correct file/dir mode for new content comes from each container's UMASK.
+    # mode "-": Z can't distinguish files from dirs, so a numeric mode here would
+    # wrongly apply directory bits (setgid, exec) to files too.
     "Z /data/media/movies - ${config.my.defaults.user} media -"
     "Z /data/media/shows - ${config.my.defaults.user} media -"
     "Z /data/media/anime - ${config.my.defaults.user} media -"

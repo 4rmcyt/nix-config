@@ -1,6 +1,5 @@
 _: {
   programs.nixvim.keymaps = [
-    # ── Explorer ──────────────────────────────────────────────────────────
     {
       mode = "n";
       key = "<leader>e";
@@ -14,7 +13,6 @@ _: {
       options.desc = "Focus Explorer";
     }
 
-    # ── Telescope ─────────────────────────────────────────────────────────
     {
       mode = "n";
       key = "<leader>ff";
@@ -58,7 +56,6 @@ _: {
       options.desc = "Document Symbols";
     }
 
-    # ── Git (LazyGit + Gitsigns) ──────────────────────────────────────────
     {
       mode = "n";
       key = "<leader>gg";
@@ -90,7 +87,6 @@ _: {
       options.desc = "Prev Hunk";
     }
 
-    # ── LSP ───────────────────────────────────────────────────────────────
     {
       mode = "n";
       key = "gd";
@@ -134,7 +130,6 @@ _: {
       options.desc = "Format Buffer";
     }
 
-    # ── Diagnostics ───────────────────────────────────────────────────────
     {
       mode = "n";
       key = "]d";
@@ -160,7 +155,6 @@ _: {
       options.desc = "Buffer Diagnostics";
     }
 
-    # ── Buffers ───────────────────────────────────────────────────────────
     {
       mode = "n";
       key = "<S-h>";
@@ -180,7 +174,6 @@ _: {
       options.desc = "Close Buffer";
     }
 
-    # ── Window splits ─────────────────────────────────────────────────────
     {
       mode = "n";
       key = "<leader>wv";
@@ -218,7 +211,6 @@ _: {
       options.desc = "Move to Upper Window";
     }
 
-    # ── Misc ──────────────────────────────────────────────────────────────
     {
       mode = "n";
       key = "<Esc>";
@@ -244,7 +236,6 @@ _: {
       options.desc = "Search TODOs";
     }
 
-    # ── Flash ─────────────────────────────────────────────────────────────
     {
       mode = ["n" "x" "o"];
       key = "s";
@@ -258,7 +249,6 @@ _: {
       options.desc = "Flash Treesitter";
     }
 
-    # ── Diffview ──────────────────────────────────────────────────────────
     {
       mode = "n";
       key = "<leader>gd";
@@ -278,7 +268,6 @@ _: {
       options.desc = "Close Diff View";
     }
 
-    # ── Undotree ──────────────────────────────────────────────────────────
     {
       mode = "n";
       key = "<leader>u";
@@ -286,7 +275,6 @@ _: {
       options.desc = "Undo Tree";
     }
 
-    # ── Treesitter textobjects ────────────────────────────────────────────
     {
       mode = ["x" "o"];
       key = "af";
@@ -324,7 +312,6 @@ _: {
       options.desc = "Prev function";
     }
 
-    # ── Persistence ───────────────────────────────────────────────────────
     {
       mode = "n";
       key = "<leader>qs";

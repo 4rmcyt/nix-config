@@ -17,17 +17,15 @@ in {
     };
   };
 
-  # Create redis user/group for secret ownership
   users.users.redis = {
     isSystemUser = true;
     group = "redis";
   };
   users.groups.redis = {};
 
-  # NixOS Redis module creates dynamic user/group: redis-homeserver
-  # Add services to redis-homeserver group for socket access
+  # NixOS's Redis module creates its own dynamic user/group: redis-homeserver.
   users.groups.redis-homeserver = {
-    members = []; # Services that need Redis socket access
+    members = [];
   };
 
   services.redis.servers.homeserver = {
@@ -36,12 +34,11 @@ in {
     bind = "127.0.0.1 ${podmanGateway}";
     port = 6379;
 
-    # Unix socket for better performance
     unixSocket = "/run/redis-homeserver/redis.sock";
     unixSocketPerm = 660;
 
-    # Secret is still named redis-oauth2-proxy-password from an earlier
-    # setup; the only current consumer is dispatcharr (database 3).
+    # Secret is still named redis-oauth2-proxy-password from an earlier setup; the
+    # only current consumer is dispatcharr (database 3).
     requirePassFile = config.sops.secrets.redis-oauth2-proxy-password.path;
 
     databases = 16;
@@ -68,12 +65,10 @@ in {
   };
 
   networking.firewall.allowedTCPPorts = [
-    # 6379 # Commented out - only allow local connections
   ];
 
-  # Pre-create the podman bridge with its gateway IP so redis (and postgres)
-  # can bind it at boot — netavark otherwise only creates podman0 when the
-  # first container starts, long after redis-homeserver.
+  # netavark otherwise only creates podman0 when the first container starts, long
+  # after redis-homeserver needs to bind it.
   systemd.services.podman-bridge = {
     description = "Pre-create ${podmanBridge} bridge for host services binding the podman gateway";
     wantedBy = ["multi-user.target"];
@@ -108,7 +103,6 @@ in {
         MemoryMax = "1.2G";
         CPUQuota = "75%";
 
-        # Allow Redis to write to its data directory
         ReadWritePaths = [
           "/var/lib/redis-homeserver"
           "/run/redis-homeserver"

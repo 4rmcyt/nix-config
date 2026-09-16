@@ -10,7 +10,6 @@
   };
 
   programs.zsh = {
-    # Use XDG config directory for zsh (new default behavior)
     dotDir = "${config.xdg.configHome}/zsh";
 
     antidote = {
@@ -57,11 +56,10 @@
         bindkey '\e[F' end-of-line
         bindkey '\e[1~' beginning-of-line
 
-        # bracketed paste: use built-in only — bracketed-paste-magic triggers
-        # syntax highlighting on every pasted character (O(n²) hang on large pastes)
+        # bracketed-paste-magic triggers syntax highlighting on every pasted character
+        # (O(n²) hang on large pastes); use built-in only.
         set zle_bracketed_paste
 
-        # sudo: Esc-Esc to prepend sudo
         __sudo-replace-buffer() {
           local old=$1 new=$2 space=''${2:+ }
           if [[ $CURSOR -le ''${#old} ]]; then

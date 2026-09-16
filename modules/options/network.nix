@@ -5,17 +5,9 @@
 }: let
   net = inputs.private.lib.network;
 
-  # Service ports plus their exposure class — single source of truth for both
-  # my.network.ports.<name> (a bare int, consumed everywhere) and the derived
-  # read-only my.network.portScope.<name>:
-  #   internet  — reachable from the public internet via the Cloudflare tunnel
-  #               (ingress allowlist in modules/networking/cloudflared)
-  #   lan       — LAN / Tailscale only: a Traefik :443 router with no tunnel
-  #               ingress, or a firewall-opened port scraped over the tailnet
-  #   localhost — bound to 127.0.0.1, no external reachability
-  # Documentation contract — nothing here enforces it; actual routing lives in
-  # modules/networking/{traefik,cloudflared} and per-host firewall rules. Keep
-  # in sync when adding a service or giving one a public route.
+  # Single source of truth for my.network.ports.<name> and the derived
+  # my.network.portScope.<name> (internet/lan/localhost). Documentation contract only —
+  # nothing here enforces it; actual routing lives in modules/networking/{traefik,cloudflared}.
   portDefs = {
     jellyfin = {
       port = 8096;
@@ -270,8 +262,7 @@ in {
         description = "IP address of Matebook wireless — trusted VLAN";
       };
 
-      # Tailscale (tailnet) addresses — CGNAT range, not modeled in the
-      # private flake since they're only reachable over the tailnet itself.
+      # CGNAT range, not modeled in the private flake since only reachable over the tailnet.
       desktop_ts = lib.mkOption {
         type = lib.types.str;
         default = "100.64.0.1";
@@ -297,9 +288,6 @@ in {
       };
     };
 
-    # MAC addresses referenced outside the DHCP reservation list (currently just
-    # the desktop Wi-Fi NIC, for a udev naming rule). Keyed attrset from the
-    # private flake.
     mac = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = net.mac or {};
@@ -312,10 +300,8 @@ in {
       description = "Infrastructure IPs by device key (defined in the private flake).";
     };
 
-    # Full home device inventory — drives the /etc/hosts and SSH aliases
-    # derived from it. Defined in the private
-    # flake so device names never land in the public repo. Each entry:
-    #   { hostname; mac; ip; subnetId; aliases ? []; }
+    # Drives the /etc/hosts and SSH aliases derived from it; defined in the private
+    # flake so device names never land in the public repo.
     reservations = lib.mkOption {
       type = lib.types.listOf (lib.types.attrsOf lib.types.anything);
       default = net.reservations or [];
@@ -401,11 +387,8 @@ in {
       };
     };
 
-    # Bare int per service — generated from portDefs above. Unchanged shape
-    # for all consumers (config.my.network.ports.<name> is an int).
     ports = lib.mapAttrs (_: mkPort) portDefs;
 
-    # Derived exposure class per service port — see portDefs above.
     portScope = lib.mkOption {
       type = lib.types.attrsOf (lib.types.enum [
         "internet"

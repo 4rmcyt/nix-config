@@ -1,5 +1,3 @@
-# Shared NixOS settings applied to all hosts via modules.nixos.base.
-# Merges with the HM integration in home-manager-integration.nix.
 {
   config,
   inputs,
@@ -23,11 +21,8 @@ in {
       owner = "root";
       restartUnits = ["nix-access-tokens.service"];
     };
-    # nix_access_token value format: "access-tokens = github.com=<token>"
-    # Oneshot service writes the token to /run/ early in boot, before any nix
-    # client runs. Kept root:wheel 0640 — the daemon (root) and interactive
-    # nix run by the operator (wheel) are the only readers; it's a GitHub PAT,
-    # not something every login user needs.
+    # Kept root:wheel 0640 — daemon (root) and interactive nix (wheel) are the only
+    # readers needed for this GitHub PAT.
     systemd.services.nix-access-tokens = {
       description = "Write nix access tokens to /run";
       wantedBy = ["multi-user.target"];
@@ -58,8 +53,6 @@ in {
     nix.channel.enable = false;
     nix.registry.nixpkgs.flake = inputs.nixpkgs;
 
-    # Common nix daemon settings (host-specific bits — cores, max-jobs,
-    # trusted-users, extra-system-features — are set per host).
     nix.settings = {
       experimental-features = [
         "flakes"
@@ -81,13 +74,10 @@ in {
       min-free = 5368709120; # 5GB
       max-free = 10737418240; # 10GB
       builders-use-substitutes = true;
-      # NixOS's own nix.nix module already contributes "root" at normal
-      # priority (concatenated in, not overridden) — only "@wheel" needs
-      # adding here. Hosts that need more (e.g. "nix-builder") append their
-      # own single-entry list; same-priority list definitions concatenate.
+      # NixOS's own nix.nix module already contributes "root" at normal priority; hosts
+      # that need more (e.g. "nix-builder") append their own single-entry list.
       trusted-users = ["@wheel"];
 
-      # Binary caches
       extra-substituters = [
         "https://arr-packages.cachix.org?priority=0"
         "https://nix-community.cachix.org?priority=1"

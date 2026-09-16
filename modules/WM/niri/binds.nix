@@ -23,12 +23,9 @@ in {
     "Mod+T".action = a.spawn "noctalia" "msg" "theme-mode-toggle";
     "Mod+Shift+N".action = a.spawn "noctalia" "msg" "nightlight-toggle";
 
-    # Mod+C (colorPicker toggle) dropped: v5 has no standalone color-picker
-    # panel/IPC command — the picker is now an internal dialog reached only
-    # from Settings/wallpaper UI, not exposed for direct binding.
+    # Mod+C (colorPicker toggle) dropped: v5's picker is an internal dialog now,
+    # not exposed for direct binding.
     "Mod+W".action = a.spawn "noctalia" "msg" "desktop-widgets-toggle";
-
-    # SCREENSHOTS - niri native
 
     "Print".action.screenshot = {};
     "Mod+Print".action.screenshot-screen = {};

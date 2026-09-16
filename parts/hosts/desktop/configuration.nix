@@ -1,4 +1,3 @@
-# Desktop host definition via Dendritic configurations.nixos option.
 {
   config,
   inputs,
@@ -31,8 +30,7 @@ in {
     in {
       extra-substituters =
         [
-          # cuda-maintainers.cachix.org migrated here; the old cachix URL no
-          # longer serves nix-cache-info (404s the substituter handshake).
+          # cuda-maintainers.cachix.org migrated here; old URL 404s the substituter handshake.
           "https://cache.nixos-cuda.org?priority=1"
         ]
         ++ own.extra-substituters
@@ -45,30 +43,17 @@ in {
         ++ gcp.extra-trusted-public-keys;
     };
 
-    # `programs.mango` is nixpkgs' own module now (portal + systemPackages
-    # wiring only — packages the stable v0.16.1 release, which has no HDR).
-    # We no longer import inputs.mango.nixosModules.mango — it duplicate-
-    # declared the same `programs.mango.enable` option nixpkgs now ships,
-    # which errors at eval time (two non-identical mkEnableOption
-    # declarations of the same option path don't merge). Point `package` at
-    # our own flake's build so systemPackages/portals match the binary
-    # greetd actually execs below.
+    # Not importing inputs.mango.nixosModules.mango: it duplicate-declares the same
+    # `programs.mango.enable` nixpkgs now ships, which errors at eval time. `package`
+    # points at our own flake's build so it matches the binary greetd execs below.
     programs.mango = {
       enable = true;
       package = inputs.mango.packages.${pkgs.stdenv.hostPlatform.system}.mango;
     };
 
-    # No UWSM — mango's own HM module (wayland.windowManager.mango.systemd)
-    # already binds a mango-session.target to graphical-session.target and
-    # imports the environment, so greetd just execs the compositor directly.
-    #
-    # WLR_RENDERER=vulkan must be in mango's own process environment before
-    # wlroots picks a renderer backend, which happens before mango ever
-    # reads config.conf — so `env=WLR_RENDERER,vulkan` inside config.conf
-    # (modules/WM/mango/default.nix) is too late and silently has no effect
-    # (confirmed: `mmsg get monitor` still reports is_hdr:false with that
-    # config-file directive alone). It has to be set here, on the actual
-    # exec that starts mango.
+    # WLR_RENDERER=vulkan must be in mango's process environment before wlroots picks a
+    # renderer backend, which happens before mango ever reads config.conf — setting it
+    # via config.conf (modules/WM/mango/default.nix) is too late and silently no-ops.
     services.greetd = {
       enable = true;
       settings.default_session = {

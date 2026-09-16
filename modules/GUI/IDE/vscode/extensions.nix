@@ -4,10 +4,10 @@
     foxundermoon.shell-format
     redhat.vscode-yaml
     tamasfe.even-better-toml
-    vscodevim.vim
     yzhang.markdown-all-in-one
     mikestead.dotenv
     visualjj.visualjj
+    esbenp.prettier-vscode
 
     jnoortheen.nix-ide
     ms-python.isort
@@ -24,7 +24,6 @@
 
     pkief.material-icon-theme
     qufiwefefwoyn.kanagawa
-    metaphore.kanagawa-vscode-color-theme
 
     tomoki1207.pdf
     github.vscode-github-actions

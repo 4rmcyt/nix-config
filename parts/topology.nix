@@ -1,15 +1,6 @@
-# nix-topology integration via flakeModule.
-# Generates topology.${system}.config.output with SVG infrastructure diagrams
-# (a physical "main" view and a network-centric view).
-#
-# Per-host interface/hardware annotations live in modules/topology/ (a NixOS module).
-# This file defines the global topology: the internet, the ISP router, the NixOS
-# router, the two switches, the Wi-Fi APs and the logical network CIDRs.
-#
-# The NixOS `router` host was removed from the flake, so its node is described by
-# hand here now. Interface addresses are descriptive labels (not real IPs), so the
-# rendered SVGs are safe to commit and are embedded in the README.
-# Regenerate with `just topology` (or `nix build .#topology.x86_64-linux.config.output`).
+# Per-host interface/hardware annotations live in modules/topology/; this file defines
+# the global topology. Interface addresses are descriptive labels, not real IPs, so the
+# rendered SVGs are safe to commit. Regenerate with `just topology`.
 {
   inputs,
   config,
@@ -61,7 +52,6 @@ in {
           };
         };
 
-        # The internet, reached via the ISP router; the GCP relay sits on it too.
         nodes.internet = mkInternet {
           connections = [
             (mkConnection "isp-router" "wan")
@@ -69,15 +59,14 @@ in {
           ];
         };
 
-        # ISP-provided gateway — WAN uplink + trusted Wi-Fi AP.
         nodes.isp-router = mkRouter "ISP Router" {
           info = "Technicolor NH20T";
           interfaceGroups = [["lan"] ["wan"]];
           connections.lan = mkConnection "router" "enp5s0";
         };
 
-        # NixOS router (Sophos SG110/120) — described by hand: the host was
-        # removed from the flake but the appliance still anchors the topology.
+        # Described by hand: the host was removed from the flake but the appliance
+        # still anchors the topology.
         nodes.router = mkRouter "🧱 router" {
           info = "Sophos SG110/120 · Intel Atom D525 · 2 GB — config-only, not deployed";
           interfaces = {
@@ -117,10 +106,8 @@ in {
           };
         };
 
-        # TP-Link TL-SG108E #1 — 802.1Q managed; port 1 is the tagged trunk to the
-        # router. 802.1Q is not representable here, so the switch is drawn as the
-        # trusted-VLAN segment it mostly carries; the IoT AP on port 8 is instead
-        # hung off the router's vlan20 interface below.
+        # 802.1Q isn't representable here, so this switch is drawn as the trusted-VLAN
+        # segment it mostly carries; the IoT AP is instead hung off the router's vlan20.
         nodes.switch-office = mkSwitch "Office Switch" {
           info = "TP-Link TL-SG108E · 802.1Q — trunk on port 1";
           interfaceGroups = [["port1" "port2" "port3"]];
@@ -132,7 +119,6 @@ in {
           interfaces.port1.network = "trusted";
         };
 
-        # TP-Link TL-SG108E #2 — used unmanaged; all ports one L2 domain.
         nodes.switch-livingroom = mkSwitch "Living Room Switch" {
           info = "TP-Link TL-SG108E · unmanaged use — all ports untagged";
           interfaceGroups = [["port1" "port2" "port3" "port4" "port5"]];
@@ -140,7 +126,6 @@ in {
           interfaces.port1.network = "media";
         };
 
-        # Wi-Fi APs.
         nodes.ap-trusted = mkDevice "Trusted Wi-Fi AP" {
           info = "ISP AP — bridged into the trusted VLAN via router enp2s0";
           connections = {

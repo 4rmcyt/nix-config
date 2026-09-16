@@ -63,11 +63,8 @@ in {
   ];
   systemd.services.microbin = {
     serviceConfig = {
-      # nixpkgs' microbin module already sets PrivateUsers=yes,
-      # MemoryDenyWriteExecute=yes, DynamicUser=yes, ProtectSystem=strict
-      # (verified via `systemctl show microbin.service`) — already tight,
-      # and already proven to work under those. Only gap: CapabilityBoundingSet
-      # left at the full default set despite AmbientCapabilities being empty.
+      # nixpkgs' module already sets PrivateUsers/MemoryDenyWriteExecute/DynamicUser/
+      # ProtectSystem=strict; only gap is CapabilityBoundingSet.
       CapabilityBoundingSet = lib.mkForce "";
       LoadCredential = [
         "admin_password:${config.sops.secrets.microbin_admin_password.path}"
@@ -85,9 +82,6 @@ in {
   };
 
   services = {
-    # Microbin is exposed via Traefik - see modules/networking/traefik/default.nix
-    # Traefik handles TLS termination, authentication, and security headers
-
     microbin = {
       enable = true;
       settings = {

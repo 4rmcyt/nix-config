@@ -38,7 +38,6 @@ in {
     gpu-context=wayland
     hwdec=nvdec-copy
 
-    # HDR passthrough
     target-colorspace-hint=yes
     target-prim=auto
     target-trc=auto

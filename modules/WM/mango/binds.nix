@@ -1,9 +1,6 @@
 _: let
-  # "MODS,KEY" string (mango's own comma-separated bind grammar, not
-  # Hyprland/niri's). dispatcher + args are appended as extra comma fields.
-  # See https://mangowm.github.io/docs/nix-options (settings.bind) and
-  # https://github.com/DreamMaoMao/mango-config/blob/main/bind.conf for the
-  # real dispatcher names (no exhaustive dispatcher reference page exists).
+  # mango's own comma-separated bind grammar, not Hyprland/niri's; dispatcher names
+  # are only documented at github.com/DreamMaoMao/mango-config/blob/main/bind.conf.
   bind = keys: dispatcher: args:
     "${keys},${dispatcher}"
     + (
@@ -36,9 +33,8 @@ in {
       (bind "SUPER,T" (noctalia "theme-mode-toggle") "")
       (bind "SUPER+SHIFT,N" (noctalia "nightlight-toggle") "")
 
-      # Mod+C (colorPicker toggle) dropped: v5 has no standalone color-picker
-      # panel/IPC command — the picker is now an internal dialog reached only
-      # from Settings/wallpaper UI, not exposed for direct binding.
+      # Mod+C (colorPicker toggle) dropped: v5's picker is an internal dialog now,
+      # not exposed for direct binding.
       (bind "SUPER,W" (noctalia "desktop-widgets-toggle") "")
 
       (bind "none,Print" "spawn_shell" ''grim -g "$(slurp)" - | wl-copy'')
@@ -56,8 +52,7 @@ in {
       (bind "SUPER,K" "focusdir" "up")
       (bind "SUPER,J" "focusdir" "down")
 
-      # MOVE WINDOW (swap with neighbor — mango has no "move to column",
-      # only exchange_client, since it isn't a scrolling-tape-native model)
+      # mango has no "move to column", only exchange_client (swap with neighbor).
       (bind "SUPER+CTRL,Left" "exchange_client" "left")
       (bind "SUPER+CTRL,Right" "exchange_client" "right")
       (bind "SUPER+CTRL,Up" "exchange_client" "up")
@@ -78,7 +73,6 @@ in {
       (bind "SUPER+SHIFT+CTRL,Up" "tagmon" "up")
       (bind "SUPER+SHIFT+CTRL,Down" "tagmon" "down")
 
-      # TAGS (mango's workspace equivalent)
       (bind "SUPER,1" "view" "1,0")
       (bind "SUPER,2" "view" "2,0")
       (bind "SUPER,3" "view" "3,0")
@@ -108,7 +102,6 @@ in {
       (bind "SUPER,bracketright" "switch_proportion_preset" "")
       (bind "SUPER+SHIFT,R" "set_proportion" "1.0")
 
-      # CONFIG RELOAD (hot-reload, no compositor restart needed)
       (bind "SUPER,R" "reload_config" "")
 
       (bind "SUPER,Minus" "scroller_stack" "left")

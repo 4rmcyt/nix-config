@@ -14,7 +14,6 @@
       };
     };
 
-    # Formatter (like VSCode formatOnSave)
     plugins.conform-nvim = {
       enable = true;
       settings = {
@@ -32,7 +31,6 @@
       };
     };
 
-    # Completion
     plugins.cmp = {
       enable = true;
       autoEnableSources = true;
@@ -61,14 +59,12 @@
     };
     plugins.friendly-snippets.enable = true;
 
-    # LSP UI improvements
     plugins.lspkind = {
       enable = true;
       cmp.enable = true;
     };
     plugins.fidget.enable = true;
 
-    # Formatters/linters as extra packages
     extraPackages = with pkgs; [
       alejandra
       ruff

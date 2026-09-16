@@ -30,8 +30,7 @@
       LimitCORE = "infinity";
       TasksMax = "infinity";
       # traefik + servicelb disabled: homeserver already runs a NixOS Traefik on
-      # :80/:443 and its own load-balancing. External access to cluster services
-      # is via the NodePort range below.
+      # :80/:443; external access to cluster services is via the NodePort range below.
       ExecStart = ''
         ${pkgs.k3s}/bin/k3s server \
           --token-file=${config.sops.secrets.k3s_token_file.path} \
@@ -42,7 +41,6 @@
     };
   };
 
-  # Firewall - NodePort range for external service access
   networking.firewall.allowedTCPPortRanges = [
     {
       from = 30000;
@@ -50,7 +48,6 @@
     }
   ];
 
-  # Allow users in wheel group to access kubeconfig
   systemd.tmpfiles.rules = [
     "z /etc/rancher/k3s/k3s.yaml 0640 root wheel -"
   ];

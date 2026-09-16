@@ -1,17 +1,5 @@
-# NixOS module: run job-kombayn hourly via a systemd timer.
-#
-# Usage:
-#   services.jobKombayn.enable = true;
-#   services.jobKombayn.src = inputs.jobshunting;   # or a local path checkout
-#   services.jobKombayn.user = "kombayn";           # default; dedicated system user, peer-auth'd to Postgres
-#   services.jobKombayn.environmentFile = config.sops.secrets.job_kombayn_env.path;
-#
-# `src` is read-only (typically a flake input in /nix/store), so all runtime
-# state — dedup index.json, generated resume/cover HTML+PDF, geocode cache —
-# lives under systemd's StateDirectory (/var/lib/job-kombayn), not under src.
-# Secrets (ANTHROPIC_API_KEY, TELEGRAM_*, ADZUNA_*, RAPIDAPI_KEY, HOME_LAT/LON,
-# ...) come from `environmentFile` (an EnvironmentFile) instead of a .env
-# sitting next to the script — src has no writable/secret-holding directory.
+# `src` is read-only (typically a flake input in /nix/store); all runtime state
+# lives under systemd's StateDirectory instead, and secrets come from `environmentFile`.
 {
   config,
   lib,
@@ -24,18 +12,9 @@
     lib.optional cfg.pdf "--pdf" ++ lib.optional cfg.notify "--notify"
   );
 
-  # No hardening at all here previously (verified via `systemctl show
-  # job-kombayn-api.service`: full CapabilityBoundingSet, ProtectSystem=no,
-  # NoNewPrivileges=no) — this is our own, least-audited code on the box.
-  # Deliberately NOT setting SystemCallFilter/MemoryDenyWriteExecute/
-  # PrivateUsers: weasyprint pulls in cairo/pango (C libs doing their own
-  # font/rendering syscalls), psycopg and argon2-cffi are C extensions —
-  # same class of directive that killed alloy.service (Go) on gcp-relay via
-  # an unexpected syscall, not worth testing blind against untested paths
-  # (PDF rendering, JWT auth) with no equivalent live evidence either way.
-  # None of these bind <1024 or touch netlink, so PrivateUsers' specific
-  # failure mode (caddy/crowdsec-firewall-bouncer) shouldn't apply — skipped
-  # anyway, consistent with the rest of this pass.
+  # Deliberately NOT setting SystemCallFilter/MemoryDenyWriteExecute/PrivateUsers:
+  # weasyprint/psycopg/argon2-cffi are C extensions, same directive class that
+  # killed alloy.service (Go) on gcp-relay via an unexpected syscall.
   commonHardening = {
     CapabilityBoundingSet = lib.mkForce "";
     NoNewPrivileges = lib.mkDefault true;
@@ -63,11 +42,8 @@
   runScript = pkgs.writeShellScript "job-kombayn-run" ''
     set -euo pipefail
     echo "=== kombayn run: $(date -Is) ==="
-    # Profiles are DB-backed (kombayn/profiles_db.py) since the 2026-08-21
-    # multi-tenant migration: scan-all iterates every `profiles` row, so
-    # self-service signups are picked up with no deploy change. The metrics
-    # `profile` label set is therefore dynamic (one series per row); drop
-    # stale .prom files first so a removed/renamed profile stops alerting.
+    # Profiles are DB-backed: the `profile` metric label set is dynamic (one series
+    # per row), so drop stale .prom files first or a removed profile keeps alerting.
     rm -f /var/lib/prometheus-node-exporter-text-files/job_kombayn_*.prom
     "${cfg.pythonPackage}/bin/python3" ${cfg.src}/run.py scan-all ${scriptArgs}
     echo "=== done: $(date -Is) ==="
@@ -247,10 +223,8 @@ in {
           WorkingDirectory = "/var/lib/job-kombayn";
           EnvironmentFile = lib.mkIf (cfg.environmentFile != null) cfg.environmentFile;
           ExecStart = "${pkgs.bash}/bin/bash ${runScript}";
-          # be a good citizen on a homeserver
           Nice = 10;
           IOSchedulingClass = "idle";
-          # don't let one run pile onto another
           TimeoutStartSec = "20min";
         };
     };
@@ -273,9 +247,8 @@ in {
       path = [cfg.apiPythonPackage];
       environment = {
         KOMBAYN_CORS_ORIGINS = "https://jobko.${config.my.defaults.domain}";
-        # WorkingDirectory is /var/lib/job-kombayn (not cfg.src, see below),
-        # so `kombayn` is no longer importable via the CWD-relative sys.path
-        # entry Python adds automatically -- point it at src explicitly.
+        # WorkingDirectory below is /var/lib/job-kombayn, not cfg.src, so `kombayn`
+        # isn't importable via Python's CWD-relative sys.path entry — point at src explicitly.
         PYTHONPATH = cfg.src;
       };
       serviceConfig =
@@ -284,13 +257,9 @@ in {
           Type = "simple";
           User = cfg.user;
           StateDirectory = "job-kombayn";
-          # Must match job-kombayn.service's WorkingDirectory: the scan timer
-          # writes Postgres `applications.folder` as a path relative to its own
-          # CWD (run.py's --root defaults to "applications", never passed
-          # explicitly). If this service's CWD differs, api.py's
-          # Path(folder).exists() checks resolve against the wrong directory
-          # and every resume.pdf/cover.pdf lookup 404s even when the file is
-          # really there under /var/lib/job-kombayn/applications/.
+          # Must match job-kombayn.service's WorkingDirectory — the scan timer writes
+          # Postgres `applications.folder` relative to its own CWD, so a mismatch here
+          # 404s every resume.pdf/cover.pdf lookup even though the file exists.
           WorkingDirectory = "/var/lib/job-kombayn";
           EnvironmentFile = lib.mkIf (cfg.environmentFile != null) cfg.environmentFile;
           ExecStart = "${cfg.apiPythonPackage}/bin/uvicorn kombayn.api:app --host 127.0.0.1 --port ${toString cfg.apiPort}";

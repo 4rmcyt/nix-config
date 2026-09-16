@@ -10,7 +10,6 @@
   certDir = "/var/lib/kanidm/tls";
   kanidmVersion = import ./version.nix;
 in {
-  # Generate self-signed TLS cert for kanidm (it requires HTTPS natively)
   systemd.services.kanidm-tls-cert = {
     description = "Generate self-signed TLS certificate for Kanidm";
     before = ["kanidm.service"];
@@ -62,8 +61,8 @@ in {
 
     provision = {
       enable = true;
-      # instanceUrl defaults to https://localhost:${port}, so
-      # acceptInvalidCerts is already true by default — no need to set it.
+      # instanceUrl defaults to https://localhost:${port}, so acceptInvalidCerts
+      # is already true by default.
       adminPasswordFile = config.sops.secrets.kanidm_admin_password.path;
       idmAdminPasswordFile = config.sops.secrets.kanidm_idm_admin_password.path;
 
@@ -127,10 +126,8 @@ in {
 
       systems.oauth2.audiobookshelf = {
         displayName = "Audiobookshelf";
-        # Only ABS's own server callbacks go here. Custom mobile-app URI
-        # schemes (e.g. audiobookshelf://oauth) are registered inside ABS
-        # itself (Settings > Allowed Mobile Redirect URIs), not with the
-        # OIDC provider — see audiobookshelf.org/docs/.../oidc-authentication
+        # Mobile-app URI schemes (audiobookshelf://oauth) are registered inside ABS
+        # itself (Settings > Allowed Mobile Redirect URIs), not with the OIDC provider.
         originUrl = [
           "https://audiobookshelf.${domain}/auth/openid/callback"
           "https://audiobookshelf.${domain}/auth/openid/mobile-redirect"
@@ -212,16 +209,9 @@ in {
     "d /var/lib/kanidm/tls 0750 kanidm kanidm -"
   ];
 
-  # nixpkgs' kanidm module already sets CapabilityBoundingSet=
-  # cap_net_bind_service (matches AmbientCapabilities), a curated
-  # SystemCallFilter, RestrictAddressFamilies=AF_INET/AF_INET6/AF_UNIX,
-  # MemoryDenyWriteExecute=yes (already running fine — Kanidm is Rust, not
-  # Go/BEAM, no JIT), and StateDirectory=kanidm (verified via `systemctl
-  # show kanidm.service`) — don't touch those, they're already tight.
-  # The one real gap: ProtectSystem was "no" — filesystem access is
-  # completely unrestricted. StateDirectory already covers /var/lib/kanidm
-  # (including the TLS cert dir kanidm-tls-cert writes to) even under
-  # "strict", so this shouldn't need any extra ReadWritePaths.
+  # nixpkgs' module already sets CapabilityBoundingSet, SystemCallFilter,
+  # RestrictAddressFamilies, and MemoryDenyWriteExecute (safe — Kanidm is Rust, no JIT).
+  # The one real gap: ProtectSystem was "no".
   systemd.services.kanidm.serviceConfig = {
     ProtectSystem = lib.mkDefault "strict";
     ProtectHome = lib.mkDefault true;
@@ -240,15 +230,9 @@ in {
     ProcSubset = lib.mkDefault "pid";
     UMask = lib.mkDefault "0077";
     RemoveIPC = lib.mkDefault true;
-    # PrivateUsers deliberately not set: same class of risk demonstrated
-    # live on caddy/crowdsec-firewall-bouncer (breaks the kernel's
-    # privileged-port check for AmbientCapabilities=CAP_NET_BIND_SERVICE
-    # once the service is in its own user namespace) — kanidm has the exact
-    # same ambient capability, for the exact same reason (binding via
-    # Traefik's serversTransport doesn't apply here, kanidm itself binds
-    # 127.0.0.1:3013 — unprivileged port, so this is precautionary, not
-    # confirmed necessary, but not worth testing against the SSO for
-    # Grafana/Miniflux/Jellyfin/Headscale/Audiobookshelf).
+    # PrivateUsers deliberately not set: same AmbientCapabilities=CAP_NET_BIND_SERVICE
+    # risk demonstrated live on caddy/crowdsec-firewall-bouncer, precautionary here
+    # since kanidm actually binds an unprivileged port (127.0.0.1:3013).
   };
 
   services.traefik.dynamicConfigOptions.http = mkProxiedRouter "kanidm" {

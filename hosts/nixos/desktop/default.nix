@@ -9,7 +9,6 @@
   my.alloyClient.enable = true;
 
   imports = [
-    # Hardware and system base
     ./hardware-configuration.nix
     ../../../modules/base
     ../../../modules/base/logging/desktop.nix
@@ -17,11 +16,9 @@
     ../../../modules/fonts
     ../../../modules/options
 
-    # Monitoring
     ../../../modules/monitoring/node-exporter-client.nix
     ../../../modules/monitoring/alloy-client.nix
 
-    # Features and roles
     # GUI/{chrome,flatpak,kdeconnect,nemo} + networking/nfs-client come from
     # modules.nixos.workstationGui (parts/workstation.nix).
     ../../../modules/containers
@@ -30,7 +27,6 @@
     ../../../modules/networking/nut-client
     ../../../modules/networking/ssh
 
-    # Users & GUI
     ../../../modules/GUI/coolercontrol
     ../../../modules/GUI/virt-manager
     ../../../modules/GUI/waydroid
@@ -86,7 +82,6 @@
       XDG_DATA_HOME = "$HOME/.local/share";
       XDG_STATE_HOME = "$HOME/.local/state";
 
-      # Add home-manager and flatpak paths for fonts and icons in all sessions (including TTY)
       XDG_DATA_DIRS = lib.mkAfter [
         "$HOME/.nix-profile/share"
         "$HOME/.local/share/flatpak/exports/share"
@@ -97,7 +92,6 @@
     shells = lib.mkBefore (with pkgs; [zsh]);
 
     systemPackages = with pkgs; [
-      # Dev workstation tools (not on all hosts)
       ansible
       awscli2
       s3cmd
@@ -231,8 +225,8 @@
     };
   };
 
-  # No battery on desktop — keep UPower running (wireplumber needs it for BT headset battery)
-  # but disable all power management polling since there's no battery
+  # No battery: keep UPower running (wireplumber needs it for BT headset battery) but
+  # disable all polling.
   services.upower = {
     enable = true;
     ignoreLid = true;

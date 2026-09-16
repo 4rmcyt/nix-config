@@ -28,19 +28,16 @@ in {
   system.activationScripts.sshConfig = ''
     mkdir -p /home/${user}/.ssh
     cat > /home/${user}/.ssh/config << 'EOF'
-    # Default options for all hosts
     Host *
       AddKeysToAgent yes
       ControlMaster auto
       ControlPersist 10m
 
-    # Ephemeral libvirt lab VMs (openstack-lab-*, 192.168.20x.0/24) — no PQ
-    # KEX on stock RHEL-family OpenSSH, and not worth caring about for
-    # throwaway internal VMs. See openssh.com/pq.html.
+    # Ephemeral libvirt lab VMs: no PQ KEX on stock RHEL-family OpenSSH, not worth
+    # caring about for throwaway internal VMs. See openssh.com/pq.html.
     Host 192.168.20?.*
       WarnWeakCrypto no
 
-    # Internal hosts
     Host homeserver
       HostName homeserver.ts.${domain}
       User ${user}
@@ -66,7 +63,6 @@ in {
       IdentityFile ~/.ssh/${user}
       IdentitiesOnly yes
 
-    # External services
     Host gcp-relay
       HostName gcp-relay.ts.${domain}
       User ${user}
@@ -93,9 +89,8 @@ in {
       "${config.my.network.infrastructure.switch-office}" = ["switch-office"];
       "${config.my.network.infrastructure.switch-living-room}" = ["switch-living-room"];
     }
-    # Smart-home / entertainment / phone entries — generated from the private
-    # DHCP reservation list (iot + media VLANs, plus any trusted-VLAN entry that
-    # carries extra aliases).
+    # Generated from the private DHCP reservation list (iot + media VLANs, plus any
+    # trusted-VLAN entry with extra aliases).
     // lib.listToAttrs (map
       (r: lib.nameValuePair r.ip ([r.hostname] ++ (r.aliases or [])))
       (lib.filter (r: r.subnetId != 10 || (r.aliases or []) != []) config.my.network.reservations));

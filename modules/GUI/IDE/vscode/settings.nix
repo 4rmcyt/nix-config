@@ -5,9 +5,6 @@
   pkgs,
   ...
 }: let
-  mcpServerNames = builtins.attrNames config.programs.mcp.servers;
-  mcpList = lib.concatMapStringsSep "\n" (name: "- `${name}`") mcpServerNames;
-
   settings = {
     "password-store" = "gnome-libsecret";
     "editor.fontFamily" = "'Maple Mono NF', 'MesloLGS NF', 'FiraCode Nerd Font', monospace";
@@ -51,7 +48,6 @@
     "workbench.editorAssociations" = {
       "*.md" = "vscode.markdown.preview.editor";
     };
-    "vim.enable" = false;
     "workbench.editor.limit.perEditorGroup" = true;
     "workbench.iconTheme" = "material-icon-theme";
     "workbench.startupEditor" = "none";
@@ -104,7 +100,7 @@
     "extensions.autoCheckUpdates" = false;
     "update.mode" = "none";
 
-    # Disable Copilot, use Continue instead
+    # Disable Copilot — using Claude Code instead
     "github.copilot.enable" = {
       "*" = false;
     };
@@ -118,26 +114,6 @@
     "claude.code.enableMCP" = true;
     "claude.code.terminal.shell" = "zsh";
     "claudeCode.hideOnboarding" = true;
-
-    # Cline (Claude Dev) System Prompt
-    "cline.customSystemPrompt" = ''
-      # Role: Senior Systems Architect (zeev)
-      # Environment: NixOS (Canada)
-
-      ## Operational Rules
-      - Priority: Always use NixOS-idiomatic solutions (Flakes, modules).
-      - Brevity: Extreme brevity. No conversational filler.
-      - Context: Primary configs are in /etc/nixos and /home/zeev/src/nix-config.
-
-      ## Available MCP Servers
-      ${mcpList}
-
-      ## Tool Usage Guidelines
-      - Use `sequential-thinking` for all complex architectural changes.
-      - Use `mcp-nixos` to search packages before suggesting Nix installs.
-      - Use `filesystem` for file operations within allowed directories.
-      - Use `python` for code execution and package management tasks.
-    '';
 
     # CommitCraft — local llama-cpp commit message generation
     "commitCraft.apiBaseUrl" = "http://127.0.0.1:8080/v1";
@@ -224,9 +200,6 @@
       "kubernetes" = [
         "k3s/*.yaml"
         "k8s/*.yaml"
-      ];
-      "file:///home/zeev/.vscode/extensions/Continue.continue/config-yaml-schema.json" = [
-        ".continue/**/*.yaml"
       ];
     };
   };

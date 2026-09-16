@@ -1,4 +1,3 @@
-# Common programs enabled on all hosts via modules.nixos.base.
 {config, ...}: let
   inherit (config.meta) owner;
 in {
