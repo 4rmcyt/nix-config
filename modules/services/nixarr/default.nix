@@ -54,7 +54,6 @@ in {
     ./recyclarr
     ./seerr
     ./sonarr
-    ./trawl
     ./upnp-fix.nix
   ];
 
