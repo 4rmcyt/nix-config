@@ -140,10 +140,20 @@ in {
 
     # Upstream bug: pname "nixarr" vs pyproject.toml's "nixarr_py" fails nixpkgs'
     # pythonMetadataCheckPhase; skipping only skips the version-string check.
+    # nixarr's jellyfin-version -> openapi hash map also lags upstream; patched in until it catches up.
     nixarr-py.package =
-      (pkgs.callPackage "${inputs.nixarr}/nixarr/lib/nixarr-py" {
-        jellyfin = config.services.jellyfin.package;
-      })
+      (pkgs.callPackage
+        (pkgs.runCommand "nixarr-py-patched" {} ''
+          cp -r ${inputs.nixarr}/nixarr/lib/nixarr-py $out
+          chmod -R u+w $out
+          substituteInPlace $out/python-deps.nix \
+            --replace-fail \
+              '"12.0" = "sha256-hu9rbOp+R0tbsjT0Tl639uj0WM5tfYT6uZ6NH0p1zjk=";' \
+              '"12.0" = "sha256-hu9rbOp+R0tbsjT0Tl639uj0WM5tfYT6uZ6NH0p1zjk="; "12.1" = "sha256-bMc4br+KUqcmSWn6Y6eG3HRunjevVzur+LNbz6G1Ah0=";'
+        '')
+        {
+          jellyfin = config.services.jellyfin.package;
+        })
       .overrideAttrs (_: {
         dontCheckPythonMetadata = true;
       });
