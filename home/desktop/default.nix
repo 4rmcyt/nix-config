@@ -22,6 +22,8 @@
     ../../modules/dev/android.nix
   ];
 
+  programs.starship.presets = ["pastel-powerline"];
+
   # WirePlumber: always use SBC-XQ for OpenRun Pro 2 (best codec it supports)
   xdg.configFile."wireplumber/wireplumber.conf.d/51-shokz-openrun.conf".text = ''
     monitor.bluez.rules = [

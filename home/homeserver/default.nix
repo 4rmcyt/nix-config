@@ -7,9 +7,12 @@
     ../../modules/TUI/helix
     ../../modules/TUI/neovim
     ../../modules/TUI/zsh
+    ../../modules/TUI/starship
     ../../modules/TUI/atuin
     ../../modules/TUI/zellij
   ];
+
+  programs.starship.presets = ["tokyo-night"];
 
   home = {
     sessionVariables = {

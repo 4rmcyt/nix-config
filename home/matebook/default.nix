@@ -9,10 +9,11 @@
     inputs.private.homeModules.thunderbird
     ../../modules/GUI/IDE/vscode
     ../../modules/TUI/tmux
-    ../../modules/TUI/starship
     ../../modules/WM/niri
     ../../modules/WM/niri/monitors/matebook.nix
   ];
+  programs.starship.presets = ["pastel-powerline"];
+
   home = {
     packages = with pkgs; [
       bat

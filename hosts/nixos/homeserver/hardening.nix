@@ -2,7 +2,8 @@ _: {
   nix-mineral = {
     enable = true;
 
-    # /home is a separate ZFS dataset, not a subdir of root; noexec breaks gitstatusd.
+    # /home is a separate ZFS dataset, not a subdir of root; pyenv builds and execs
+    # Python binaries out of $HOME (PYENV_ROOT), which noexec would break.
     filesystems.normal."/home" = {
       options."bind" = false;
       options."noexec" = false;
