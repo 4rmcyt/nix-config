@@ -55,7 +55,7 @@
       github-mcp-server
       gst_all_1.gst-libav
       ifrextractor-rs
-      jellycli
+      jellyfin-tui
       jujutsu
       libreoffice
       materialgram
