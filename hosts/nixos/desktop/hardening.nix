@@ -8,7 +8,7 @@
     # default self bind-mount assumes the latter and breaks stage-2 activation otherwise.
     filesystems.normal."/var/log".options."bind" = false;
 
-    # gitstatusd under noexec breaks zsh/p10k (same issue as homeserver's /home).
+    # Steam/Proton, Wine prefixes, and AppImages all exec binaries out of $HOME.
     filesystems.normal."/home" = {
       options."bind" = false;
       options."noexec" = false;

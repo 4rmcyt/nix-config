@@ -55,6 +55,7 @@
       ../modules/TUI/helix
       ../modules/TUI/neovim
       ../modules/TUI/zsh
+      ../modules/TUI/starship
       ../modules/TUI/atuin
       ../modules/TUI/zellij
       ../modules/WM/noctalia.nix

@@ -17,7 +17,6 @@
       plugins = [
         "Aloxaf/fzf-tab"
         "MichaelAquilina/zsh-you-should-use"
-        "romkatv/powerlevel10k"
         "zdharma-continuum/fast-syntax-highlighting"
         "zsh-users/zsh-autosuggestions"
         "zsh-users/zsh-history-substring-search"
@@ -32,16 +31,9 @@
     # Skip compaudit — completions are Nix-managed, always safe
     completionInit = "autoload -Uz compinit && compinit -C";
 
-    # p10k instant prompt must be first — before any output
-    initContent = lib.mkMerge [
-      (lib.mkBefore ''
-        skip_global_compinit=1
-        typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
-        if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
-          source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
-        fi
-      '')
-      ''
+    initContent = let
+      # Keybindings and line-editor behavior.
+      keybindings = ''
         bindkey '^f' autosuggest-accept
         bindkey '^p' history-search-backward
         bindkey '^n' history-search-forward
@@ -59,7 +51,10 @@
         # bracketed-paste-magic triggers syntax highlighting on every pasted character
         # (O(n²) hang on large pastes); use built-in only.
         set zle_bracketed_paste
+      '';
 
+      # Esc-Esc toggles sudo on the current/last command.
+      sudoCommandLine = ''
         __sudo-replace-buffer() {
           local old=$1 new=$2 space=''${2:+ }
           if [[ $CURSOR -le ''${#old} ]]; then
@@ -82,36 +77,44 @@
         }
         zle -N sudo-command-line
         bindkey '\e\e' sudo-command-line
+      '';
 
-        # Recover termios/terminal modes (kitty keyboard protocol, mouse
-        # tracking, bracketed paste) left dangling by a program that died
-        # abruptly (ssh drop, killed vim/zellij, etc.) instead of exiting clean.
+      # Recover termios/terminal modes (kitty keyboard protocol, mouse
+      # tracking, bracketed paste) left dangling by a program that died
+      # abruptly (ssh drop, killed vim/zellij, etc.) instead of exiting clean.
+      resetTty = ''
         _reset-tty() {
-          # skip the very first prompt: nothing could have dirtied the tty yet,
-          # and writing here lands inside p10k's instant-prompt output capture
-          (( _reset_tty_seen )) || { typeset -g _reset_tty_seen=1; return }
+          # skip the very first prompt: nothing could have dirtied the tty yet
+          (( _reset_tty_seen )) || { typeset -g _reset_tty_seen=1; return; }
           stty sane 2>/dev/null
           printf '\e[?2004l\e[?1000l\e[?1002l\e[?1003l\e[?1006l\e[>4;0m'
         }
         precmd_functions+=(_reset-tty)
+      '';
 
+      completion = ''
         zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
         zstyle ':completion:*' menu no
         zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
         zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
         zstyle ':completion:*:*:docker:*' option-stacking yes
         zstyle ':completion:*:*:docker-*:*' option-stacking yes
+      '';
 
+      integrations = ''
         # VSCodium: rich shell integration (command decorations, exit codes, nav)
         if [[ $TERM_PROGRAM == vscode ]] && (( $+commands[codium] )); then
           . "$(codium --locate-shell-integration-path zsh)"
         fi
-
-        # Disable gitstatus on headless hosts — it fails to initialize and hangs the prompt
-        [[ $HOST == homeserver ]] && typeset -g POWERLEVEL9K_DISABLE_GITSTATUS=true
-        [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-      ''
-    ];
+      '';
+    in
+      lib.concatStringsSep "\n" [
+        keybindings
+        sudoCommandLine
+        resetTty
+        completion
+        integrations
+      ];
 
     sessionVariables = {
       EDITOR = "nvim";

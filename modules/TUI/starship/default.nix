@@ -176,6 +176,7 @@ _: let
 in {
   programs.starship = {
     enable = true;
+    enableZshIntegration = true;
     settings = mkConfig themes.gruvbox-dark;
   };
 }
