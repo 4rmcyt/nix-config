@@ -12,7 +12,7 @@
     ../../modules/TUI/zellij
   ];
 
-  programs.starship.presets = ["tokyo-night"];
+  programs.starship.presets = ["bracketed-segments"];
 
   home = {
     sessionVariables = {
