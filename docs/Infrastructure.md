@@ -103,6 +103,8 @@ Game launch/exit swap the scheduler via gamemode custom hooks (`modules/gaming/d
 
 ### matebook
 
+**Status: decommissioned — no longer in use.**
+
 **Role:** Laptop — portable workstation  
 **WiFi IP:** static in the trusted VLAN (`my.network.hosts.matebook_wifi`)
 

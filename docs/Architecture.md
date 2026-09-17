@@ -400,7 +400,7 @@ Updates are manual everywhere — no auto-upgrade timer.
 - **`parts/topology.nix`** — flakeModule wiring + the global topology: `internet`, `isp-router`, the hand-described `router` appliance node (the NixOS host was removed), `switch-office`, `switch-livingroom`, `ap-trusted`, `ap-iot`, and the `trusted` / `iot` / `media` / `work` / `tailnet` network CIDRs. Four hosts are included (desktop, homeserver, matebook, gcp-relay).
 - **`modules/topology/default.nix`** — NixOS module imported into `modules.nixos.base` (every host). Per-host `topology.self`: interfaces, network membership, hardware blurbs, a shared `tailscale0` overlay interface. Also forces `services.traefik.details = {}` on homeserver so the diagram does **not** enumerate every Traefik router and backend URL (job-kombayn included).
 - 802.1Q is not representable in nix-topology — the office switch is drawn as the trusted segment it mostly carries; the IoT AP hangs off the router's `vlan20` interface.
-- `matebook` currently exists only in config, not yet deployed — noted in its `hardware.info`.
+- `matebook` is decommissioned — config kept for reference, no longer deployed.
 
 ## Terraform / OpenTofu
 

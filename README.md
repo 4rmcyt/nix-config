@@ -20,7 +20,7 @@ live in a separate private flake so this repo can stay public.
 
 <table>
   <tr><td><strong>desktop</strong></td><td>AMD Zen 4 + NVIDIA workstation. Wayland via <strong>mango</strong> + <strong>noctalia</strong>, gaming, libvirt, waydroid, local LLM, CUDA caches.</td></tr>
-  <tr><td><strong>matebook</strong></td><td>AMD Zen 1 laptop. <strong>niri</strong> + noctalia, Limine + Secure Boot, suspend-then-hibernate, auto-cpufreq.</td></tr>
+  <tr><td><strong>matebook</strong></td><td>AMD Zen 1 laptop. <strong>niri</strong> + noctalia, Limine + Secure Boot, suspend-then-hibernate, auto-cpufreq. <em>Decommissioned — no longer in use.</em></td></tr>
   <tr><td><strong>homeserver</strong></td><td>Intel Coffee Lake. Every service: Traefik, media stack (nixarr), Postgres / Redis / CouchDB, Prometheus/Grafana/Loki, Kanidm, CrowdSec, restic.</td></tr>
   <tr><td><strong>gcp-relay</strong></td><td>GCP <code>e2-micro</code>. <strong>Headscale</strong> control plane + DERP server, Caddy TLS, fail2ban, hardened.</td></tr>
 </table>

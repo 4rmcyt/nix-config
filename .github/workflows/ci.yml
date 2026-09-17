@@ -98,12 +98,13 @@ jobs:
         # desktop stack) regularly exceeds GitHub-hosted runner disk/RAM and
         # kills the runner outright (no build error, no log, job just dies).
         # Built locally on that machine instead (see "user builds himself").
+        # `matebook` — decommissioned, no longer in use.
         env:
-          EXCLUDE: "desktop"
+          EXCLUDE: "desktop matebook"
         run: |
           systems=$(
             for d in parts/hosts/*/; do basename "$d"; done \
-              | grep -vxF "$EXCLUDE" \
+              | grep -vxFf <(tr ' ' '\n' <<< "$EXCLUDE") \
               | jq -R . | jq -sc .
           )
           echo "systems=$systems" >> "$GITHUB_OUTPUT"
@@ -133,7 +134,7 @@ jobs:
       max-parallel: 3 # Build systems in parallel
       matrix:
         # Host list from the discover-hosts job (flake nixosConfigurations
-        # minus CI exclusions). Currently: homeserver, matebook, gcp-relay.
+        # minus CI exclusions). Currently: homeserver, gcp-relay.
         system: ${{ fromJSON(needs.discover-hosts.outputs.systems) }}
     # Keyed per-system too — otherwise the 4 matrix jobs would share one
     # group and cancel each other instead of only superseded runs.
@@ -191,7 +192,7 @@ jobs:
             All checks passed:
             ✅ Validation (Format &amp; Flake)
             ✅ Security (Trivy, TruffleHog, SOPS, syntax)
-            ✅ All systems built (homeserver, matebook, gcp-relay)
+            ✅ All systems built (homeserver, gcp-relay)
             <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Workflow</a>
       - name: Notify - Issues Detected
         if: needs.validate.result != 'success' || needs.security-checks.result != 'success' || needs.build-and-check-systems.result != 'success'
