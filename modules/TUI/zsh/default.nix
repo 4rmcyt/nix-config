@@ -87,6 +87,9 @@
         # tracking, bracketed paste) left dangling by a program that died
         # abruptly (ssh drop, killed vim/zellij, etc.) instead of exiting clean.
         _reset-tty() {
+          # skip the very first prompt: nothing could have dirtied the tty yet,
+          # and writing here lands inside p10k's instant-prompt output capture
+          (( _reset_tty_seen )) || { typeset -g _reset_tty_seen=1; return }
           stty sane 2>/dev/null
           printf '\e[?2004l\e[?1000l\e[?1002l\e[?1003l\e[?1006l\e[>4;0m'
         }
