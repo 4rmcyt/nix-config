@@ -9,7 +9,7 @@
   nixosBareMetal = config.modules.nixos.bareMetal;
   nixosNixMineral = config.modules.nixos.nixMineral;
 in {
-  configurations.nixos.homeserver.module = {...}: {
+  configurations.nixos.homeserver.module = {pkgs, ...}: {
     imports = [
       nixosBase
       nixosHm
@@ -35,6 +35,21 @@ in {
           ;
       })
     ];
+
+    # nixarr's nixarr-py hardcodes a jellyfin-version -> openapi-spec hash
+    # map (lib/nixarr-py/python-deps.nix) that it hasn't caught up to yet.
+    # Patch a copy of that map in until upstream adds the entry:
+    # https://github.com/rasmus-kirk/nixarr/blob/master/lib/nixarr-py/python-deps.nix
+    nixarr.nixarr-py.package = pkgs.callPackage
+      (pkgs.runCommand "nixarr-py-patched" {} ''
+        cp -r ${inputs.nixarr}/lib/nixarr-py $out
+        chmod -R u+w $out
+        substituteInPlace $out/python-deps.nix \
+          --replace-fail \
+            '"12.0" = "sha256-hu9rbOp+R0tbsjT0Tl639uj0WM5tfYT6uZ6NH0p1zjk=";' \
+            '"12.0" = "sha256-hu9rbOp+R0tbsjT0Tl639uj0WM5tfYT6uZ6NH0p1zjk="; "12.1" = "sha256-bMc4br+KUqcmSWn6Y6eG3HRunjevVzur+LNbz6G1Ah0=";'
+      '')
+      {jellyfin = pkgs.jellyfin;};
 
     home-manager.users.${owner.username}.imports = [
       ../../../home/homeserver
