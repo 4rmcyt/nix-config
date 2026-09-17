@@ -36,13 +36,10 @@ in {
       })
     ];
 
-    # nixarr's nixarr-py hardcodes a jellyfin-version -> openapi-spec hash
-    # map (lib/nixarr-py/python-deps.nix) that it hasn't caught up to yet.
-    # Patch a copy of that map in until upstream adds the entry:
-    # https://github.com/rasmus-kirk/nixarr/blob/master/lib/nixarr-py/python-deps.nix
+    # nixarr's jellyfin-version -> openapi hash map lags upstream; patched in until it catches up.
     nixarr.nixarr-py.package = pkgs.callPackage
       (pkgs.runCommand "nixarr-py-patched" {} ''
-        cp -r ${inputs.nixarr}/lib/nixarr-py $out
+        cp -r ${inputs.nixarr}/nixarr/lib/nixarr-py $out
         chmod -R u+w $out
         substituteInPlace $out/python-deps.nix \
           --replace-fail \
