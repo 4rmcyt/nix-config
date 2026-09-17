@@ -22,12 +22,7 @@
     ../../modules/dev/android.nix
   ];
 
-  programs.starship = {
-    presets = ["gruvbox-rainbow"];
-    # gruvbox-rainbow ships [jj_bookmark]/[jj_status] styles but doesn't wire
-    # them into format; splice them in next to the git segment for jj repos.
-    settings.format = "[](color_orange)$os$username[](bg:color_yellow fg:color_orange)$directory[](fg:color_yellow bg:color_aqua)$git_branch$git_status$jj_bookmark$jj_status[](fg:color_aqua bg:color_blue)$c$cpp$rust$golang$nodejs$bun$php$java$kotlin$haskell$python[](fg:color_blue bg:color_bg3)$docker_context$conda$pixi[](fg:color_bg3 bg:color_bg1)$time[ ](fg:color_bg1)$line_break$character";
-  };
+  programs.starship.presets = ["gruvbox-rainbow"];
 
   # WirePlumber: always use SBC-XQ for OpenRun Pro 2 (best codec it supports)
   xdg.configFile."wireplumber/wireplumber.conf.d/51-shokz-openrun.conf".text = ''
