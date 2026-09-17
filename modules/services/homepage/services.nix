@@ -10,6 +10,7 @@
             type = "jellyfin";
             url = "{{HOMEPAGE_VAR_JELLYFIN_INTERNAL_URL}}";
             key = "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}";
+            version = 2;
           };
         };
       }
