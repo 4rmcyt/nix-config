@@ -12,7 +12,7 @@
     ../../modules/WM/niri
     ../../modules/WM/niri/monitors/matebook.nix
   ];
-  programs.starship.presets = ["pastel-powerline"];
+  programs.starship.presets = ["gruvbox-rainbow"];
 
   home = {
     packages = with pkgs; [

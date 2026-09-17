@@ -6,7 +6,6 @@
     tamasfe.even-better-toml
     yzhang.markdown-all-in-one
     mikestead.dotenv
-    visualjj.visualjj
     esbenp.prettier-vscode
 
     jnoortheen.nix-ide
