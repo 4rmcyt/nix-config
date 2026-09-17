@@ -15,7 +15,4 @@ inputs: [
   inputs.nur.overlays.default
   inputs.nix-vscode-extensions.overlays.default
   inputs.noctalia.overlays.default
-
-  # temp shim: sops-nix hardcodes buildGo125Module, removed as EOL upstream; drop once sops-nix bumps it
-  (final: _prev: {buildGo125Module = final.buildGoModule;})
 ]

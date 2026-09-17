@@ -7,10 +7,5 @@
       inputs.nix-topology.nixosModules.default
       ../modules/topology
     ];
-
-    # temp shim: sops-nix hardcodes buildGo125Module, removed as EOL upstream; drop once sops-nix bumps it
-    nixpkgs.overlays = [
-      (final: _prev: {buildGo125Module = final.buildGoModule;})
-    ];
   };
 }
