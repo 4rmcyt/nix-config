@@ -126,6 +126,11 @@
       inputs.flake-parts.follows = "flake-parts";
     };
     mcp-servers-nix.url = "github:natsukium/mcp-servers-nix";
+    ik-llama-cpp = {
+      url = "github:ikawrakow/ik_llama.cpp";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+    };
     nix-topology = {
       url = "github:oddlama/nix-topology";
       inputs.nixpkgs.follows = "nixpkgs";

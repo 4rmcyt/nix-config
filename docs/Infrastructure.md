@@ -294,7 +294,7 @@ services are reached via the NodePort range `30000-32767`.
 
 | Service   | Notes                                                                    |
 |-----------|--------------------------------------------------------------------------|
-| llama-cpp | Desktop only (`modules/TUI/ai-tools/llama-cpp`). CPU inference server, on-demand (no `WantedBy`), auto-unloads after 5 min idle. Model: `Qwen2.5-32B-Instruct-Q4_K_M` (bartowski GGUF), used for story.json generation. A lighter `cpu.nix` variant also exists. |
+| llama-cpp | Desktop only (`modules/TUI/ai-tools/llama-cpp`). CPU inference server on the `ik_llama.cpp` fork (`inputs.ik-llama-cpp`, built with `-march=znver4`), socket-activated: `:8090` socket → `systemd-socket-proxyd --exit-idle-time=5min` → backend `llama-cpp-story-backend` on `:8091` (`StopWhenUnneeded`); the fork lacks `--sleep-idle-seconds`. Model: `Qwen2.5-32B-Instruct-Q4_K_M` (bartowski GGUF), used for story.json generation. A lighter `cpu.nix` variant (mainline llama.cpp) also exists. |
 
 ---
 

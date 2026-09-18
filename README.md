@@ -131,9 +131,11 @@ Services published behind Traefik (`*.<domain>`):
 - **desktop** `default.nix` — Gemma 4 E4B on CUDA (`:8080`, all layers offloaded,
   16K ctx, flash-attn), unloads after 15 min idle. Companion `mcp-proxy` (`:8081`)
   bridges `~/.config/mcp/mcp.json` into the llama web UI.
-- **desktop** `qwen32b-cpu.nix` — Qwen2.5-32B on CPU (`:8090`), on-demand only
-  (~28 GB, no `WantedBy`); started/stopped by the fairy-tale pipeline's
-  `generate_story.py`, unloads after 5 min idle.
+- **desktop** `qwen32b-cpu.nix` — Qwen2.5-32B on CPU via the
+  [ik_llama.cpp](https://github.com/ikawrakow/ik_llama.cpp) fork (`:8090`), on-demand
+  only (~28 GB): socket `:8090` -> `systemd-socket-proxyd` (exits after 5 min idle) ->
+  backend on `:8091` (`StopWhenUnneeded`), since the fork has no `--sleep-idle-seconds`.
+  Built with `-march=znver4` for the AVX512 kernel path.
 - **matebook** `cpu.nix` — Qwen2.5-3B on CPU (`:8080`, 8K ctx, 4 GB cap).
 
 ## 🔁 CI
