@@ -58,6 +58,7 @@ in {
         "--port ${toString backendPort}"
         "--n-gpu-layers 99"
         "--ctx-size 16384"
+        "--jinja"
         "--webui-mcp-proxy"
         "--reasoning off"
         "--flash-attn on"
