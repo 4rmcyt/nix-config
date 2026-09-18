@@ -125,17 +125,18 @@ Services published behind Traefik (`*.<domain>`):
 ## 🤖 Local inference
 
 [`modules/TUI/ai-tools/llama-cpp/`](modules/TUI/ai-tools/llama-cpp/default.nix) —
-`llama-server` as a user service on `127.0.0.1`, models pinned as `fetchurl` GGUFs
-(no runtime downloads):
+[ik_llama.cpp](https://github.com/ikawrakow/ik_llama.cpp) `llama-server` (flake input
+`ik-llama-cpp`, built from `.devops/nix/package.nix`) as user services on `127.0.0.1`,
+models pinned as `fetchurl` GGUFs (no runtime downloads). The fork has no
+`--sleep-idle-seconds`, so idle unload is a `systemd-socket-proxyd` in front of a
+`StopWhenUnneeded` backend:
 
-- **desktop** `default.nix` — Gemma 4 E4B on CUDA (`:8080`, all layers offloaded,
-  16K ctx, flash-attn), unloads after 15 min idle. Companion `mcp-proxy` (`:8081`)
+- **desktop** `default.nix` — Gemma 4 E4B on CUDA (sm_86 only; socket `:8080`, backend
+  `:8092`, all layers offloaded, 16K ctx, flash-attn), unloads after 15 min idle. Companion `mcp-proxy` (`:8081`)
   bridges `~/.config/mcp/mcp.json` into the llama web UI.
-- **desktop** `qwen32b-cpu.nix` — Qwen2.5-32B on CPU via the
-  [ik_llama.cpp](https://github.com/ikawrakow/ik_llama.cpp) fork (`:8090`), on-demand
-  only (~28 GB): socket `:8090` -> `systemd-socket-proxyd` (exits after 5 min idle) ->
-  backend on `:8091` (`StopWhenUnneeded`), since the fork has no `--sleep-idle-seconds`.
-  Built with `-march=znver4` for the AVX512 kernel path.
+- **desktop** `qwen32b-cpu.nix` — Qwen2.5-32B on CPU, on-demand only (~28 GB): socket
+  `:8090`, backend `:8091`, unloads after 5 min idle. Built with `-march=znver4` for
+  the AVX512 kernel path.
 - **matebook** `cpu.nix` — Qwen2.5-3B on CPU (`:8080`, 8K ctx, 4 GB cap).
 
 ## 🔁 CI

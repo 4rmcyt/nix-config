@@ -1,25 +1,27 @@
 {
   pkgs,
   lib,
+  inputs,
   ...
 }: let
+  ik-llama-cpp = pkgs.callPackage "${inputs.ik-llama-cpp}/.devops/nix/package.nix" {};
   qwen-model = pkgs.fetchurl {
     url = "https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf";
     hash = "sha256-YmtKZni4ZEIkDjPfgZ4AEy07p93f4c3E+7GOCpYVxi0=";
   };
 in {
-  home.packages = [pkgs.llama-cpp];
+  home.packages = [ik-llama-cpp];
 
   systemd.user.services.llama-cpp = {
     Unit = {
-      Description = "llama.cpp inference server (CPU)";
+      Description = "ik_llama.cpp inference server (CPU)";
       After = ["default.target"];
     };
 
     Service = {
       Type = "simple";
       ExecStart = lib.concatStringsSep " " [
-        "${pkgs.llama-cpp}/bin/llama-server"
+        "${ik-llama-cpp}/bin/llama-server"
         "--model ${qwen-model}"
         "--alias qwen-local"
         "--host 127.0.0.1"

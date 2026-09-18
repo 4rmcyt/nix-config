@@ -5,7 +5,7 @@
   ...
 }: let
   # package.nix builds with GGML_NATIVE=false; HAVE_FANCY_SIMD needs avx512{f,vl,bw,dq,vnni}, which GGML_AVX512* don't all enable.
-  ik-llama-cpp = inputs.ik-llama-cpp.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+  ik-llama-cpp = (pkgs.callPackage "${inputs.ik-llama-cpp}/.devops/nix/package.nix" {}).overrideAttrs (old: {
     cmakeFlags =
       (old.cmakeFlags or [])
       ++ [

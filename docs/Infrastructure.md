@@ -294,7 +294,7 @@ services are reached via the NodePort range `30000-32767`.
 
 | Service   | Notes                                                                    |
 |-----------|--------------------------------------------------------------------------|
-| llama-cpp | Desktop only (`modules/TUI/ai-tools/llama-cpp`). CPU inference server on the `ik_llama.cpp` fork (`inputs.ik-llama-cpp`, built with `-march=znver4`), socket-activated: `:8090` socket → `systemd-socket-proxyd --exit-idle-time=5min` → backend `llama-cpp-story-backend` on `:8091` (`StopWhenUnneeded`); the fork lacks `--sleep-idle-seconds`. Model: `Qwen2.5-32B-Instruct-Q4_K_M` (bartowski GGUF), used for story.json generation. A lighter `cpu.nix` variant (mainline llama.cpp) also exists. |
+| llama-cpp | Desktop only (`modules/TUI/ai-tools/llama-cpp`). All servers run the `ik_llama.cpp` fork (`inputs.ik-llama-cpp`, `.devops/nix/package.nix`); it lacks `--sleep-idle-seconds`, so idle unload is a socket-activated `systemd-socket-proxyd --exit-idle-time` in front of a `StopWhenUnneeded` backend. `default.nix`: Gemma 4 E4B on CUDA (sm_86 only), `:8080` socket → backend `:8092`, 15 min idle. `qwen32b-cpu.nix`: `Qwen2.5-32B-Instruct-Q4_K_M` (bartowski GGUF) for story.json generation, built with `-march=znver4`, `:8090` socket → backend `:8091`, 5 min idle. A lighter `cpu.nix` variant (Qwen2.5-3B, matebook, decommissioned) also exists. |
 
 ---
 
