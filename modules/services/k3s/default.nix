@@ -18,6 +18,7 @@
     after = ["network-online.target"];
     wants = ["network-online.target"];
     wantedBy = ["multi-user.target"];
+    path = [config.boot.zfs.package];
 
     serviceConfig = {
       Type = "notify";
