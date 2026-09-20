@@ -41,13 +41,13 @@ in {
     environment.sessionVariables.NIX_USER_CONF_FILES = "/run/nix-access-tokens.conf";
 
     environment.systemPackages = [
-      inputs.nixos-needsreboot.packages.${pkgs.system}.default
-      inputs.nix-auth.packages.${pkgs.system}.default
+      inputs.nixos-needsreboot.packages.${pkgs.stdenv.hostPlatform.system}.default
+      inputs.nix-auth.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
 
     system.activationScripts.nixos-needsreboot = {
       supportsDryActivation = true;
-      text = "${lib.getExe inputs.nixos-needsreboot.packages.${pkgs.system}.default} \"$systemConfig\" || true";
+      text = "${lib.getExe inputs.nixos-needsreboot.packages.${pkgs.stdenv.hostPlatform.system}.default} \"$systemConfig\" || true";
     };
 
     nix.channel.enable = false;

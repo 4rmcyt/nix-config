@@ -25,7 +25,7 @@ in {
     nixpkgs.overlays = [
       (_final: prev: {
         inherit
-          (inputs.arr-packages.packages.${prev.system})
+          (inputs.arr-packages.packages.${prev.stdenv.hostPlatform.system})
           sonarr
           radarr
           prowlarr
