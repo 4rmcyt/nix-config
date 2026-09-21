@@ -44,6 +44,8 @@
       require-sigs = false;
     };
 
+    programs.nh.clean.dates = "daily";
+
     sops.age.keyFile = "/root/.config/sops/age/keys.txt";
 
     networking.tailscaleAuth = {
