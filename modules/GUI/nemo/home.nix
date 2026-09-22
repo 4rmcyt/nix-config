@@ -23,6 +23,24 @@
 in {
   home.packages = [kdeconnectShare];
 
+  # Nemo/Nautilus-family custom folder icons via the freedesktop .directory convention
+  # (Papirus-Dark ships all three names). Matches the icon already set for ~/src via
+  # Nemo's UI (gvfs metadata) so it survives a fresh home.
+  home.file = {
+    "Downloads/.directory".text = ''
+      [Desktop Entry]
+      Icon=folder-download
+    '';
+    "Documents/.directory".text = ''
+      [Desktop Entry]
+      Icon=folder-documents
+    '';
+    "src/.directory".text = ''
+      [Desktop Entry]
+      Icon=folder-black-code
+    '';
+  };
+
   # noctalia-shell's Quickshell.iconPath() fails to resolve the generic freedesktop icon
   # name "system-file-manager" (app-specific names work fine), so point Nemo's Icon= at
   # its own name — ~/.local/share/applications/ shadows the package's nemo.desktop.
@@ -32,6 +50,9 @@ in {
 
   # nfs-client module auto-mounts homeserver:/data at /mnt/media
   xdg.configFile."gtk-3.0/bookmarks".text = ''
+    file:///home/zeev/Downloads Downloads
+    file:///home/zeev/Documents Documents
+    file:///home/zeev/src src
     file:///mnt/media Homeserver
   '';
 
