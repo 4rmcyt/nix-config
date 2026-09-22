@@ -54,7 +54,7 @@ modules/
   GUI/                  # GUI apps (firefox, chrome, zed, obsidian, terminal, IDE, etc.)
   TUI/                  # Terminal tools (zsh, zellij, atuin, ai-tools, llama-cpp)
   services/             # nixarr, homepage, miniflux, home-assistant, atuin-server, etc.
-                        # k3s, argocd — disabled (modules exist)
+                        # k3s, argocd — enabled, homeserver only
   networking/           # SSH, tailscale, traefik, headscale, cloudflared, caddy, nfs, etc.
   security/             # kanidm, crowdsec, fail2ban
   monitoring/           # split by concern: grafana.nix, loki.nix, prometheus.nix,

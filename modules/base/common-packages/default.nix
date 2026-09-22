@@ -11,7 +11,6 @@
       uutils-util-linux
       uutils-tar
       uutils-login
-      uutils-procps
       curl
       duf
       eza
@@ -21,7 +20,6 @@
       gnugrep
       gnumake
       gnused
-      gnutar
       gzip
       mc
       moreutils
@@ -32,7 +30,6 @@
       pciutils
       procs
       ripgrep
-      unixtools.watch
       unzip
       usbutils
       wget
@@ -50,7 +47,6 @@
       strace
       kernel-hardening-checker
       cachix
-      cmake-format
       comma
       deadnix
       dockfmt
@@ -83,10 +79,8 @@
 
       gnupg
       ssh-to-age
-      libargon2
 
       git
-      git-crypt
       delta
       gh
       gh-dash
@@ -100,7 +94,6 @@
       mask
       mob
       presenterm
-      slides
       termdown
       viddy
       ytt
