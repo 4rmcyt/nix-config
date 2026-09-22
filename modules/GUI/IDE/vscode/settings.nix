@@ -74,6 +74,7 @@
     "window.menuBarVisibility" = "visible";
     "window.titleBarStyle" = "custom";
     "window.autoDetectColorScheme" = false;
+    "window.restoreWindows" = "one";
 
     "git.autofetch" = true;
     "git.confirmSync" = false;
