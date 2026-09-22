@@ -91,6 +91,7 @@
     lutris
     protonup-qt
     pcsx2
+    shadps4-qtlauncher
 
     jstest-gtk
 

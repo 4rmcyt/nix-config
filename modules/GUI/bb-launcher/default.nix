@@ -5,14 +5,14 @@
   ...
 }: let
   pname = "bb-launcher";
-  version = "16.10";
+  version = "16.11";
 
   src = pkgs.fetchurl {
     # "Downloader" build bundles QtWebEngine so non-premium mod downloads
     # work from within the launcher (the other Linux build can't: no native
     # web API for QtWebView on Linux, per upstream README).
     url = "https://github.com/rainmakerv3/BB_Launcher/releases/download/Release${version}/BB_Launcher-qt-Downloader.AppImage";
-    hash = "sha256-iWCiDbqSk+0LeJRH7OnvfYtmTCwT6PjX3B2yDyHG/mI=";
+    hash = "sha256-UUoVSdXbBfESmEAsTWIXghC2cZsfG8DZ6T9zdvNOHoo=";
   };
 
   appimageContents = pkgs.appimageTools.extract {inherit pname version src;};
