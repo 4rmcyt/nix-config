@@ -102,7 +102,6 @@
       presenterm
       slides
       termdown
-      tmate
       viddy
       ytt
       zk
