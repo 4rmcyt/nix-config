@@ -90,6 +90,7 @@
     # vesktop
     lutris
     protonup-qt
+    pcsx2
 
     jstest-gtk
 
