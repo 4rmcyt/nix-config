@@ -92,6 +92,7 @@
     protonup-qt
     pcsx2
     shadps4-qtlauncher
+    vulkan-tools
 
     jstest-gtk
 
