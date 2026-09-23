@@ -80,6 +80,7 @@
       supersonic
       tcpdump
       terraform-mcp-server
+      dmidecode
       uefitool
       uefitoolPackages.old-engine
       vdpauinfo
