@@ -631,11 +631,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790179150,
-        "narHash": "sha256-F9QLfgNI/4zCeJbOuIChffu0wzZVAXjoC2CDdEST8W0=",
+        "lastModified": 1790140715,
+        "narHash": "sha256-QipTJP7Jjt9Hsx8NZwN2pdgBuM1emqDf8mj+QvWBjYo=",
         "owner": "ikawrakow",
         "repo": "ik_llama.cpp",
-        "rev": "f3d6e6e3020ddfebad60113845bf521620766da5",
+        "rev": "3267612a5206fb238829d31a4362614a37d07577",
         "type": "github"
       },
       "original": {
