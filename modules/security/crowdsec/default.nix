@@ -12,14 +12,14 @@
     owner = "maxlerebourg";
     repo = "crowdsec-bouncer-traefik-plugin";
     rev = "v1.7.1";
-    hash = lib.fakeHash; # nix-prefetch-github maxlerebourg crowdsec-bouncer-traefik-plugin --rev v1.7.1
+    hash = "sha256-hefOKDVsBxn+rCAylPHqbCNfPMbU/vtO4QpiftIPcUU=";
   };
 
   geoblockPlugin = pkgs.fetchFromGitHub {
     owner = "david-garcia-garcia";
     repo = "traefik-geoblock";
     rev = "v1.2.1";
-    hash = lib.fakeHash; # nix-prefetch-github david-garcia-garcia traefik-geoblock --rev v1.2.1
+    hash = "sha256-xo/4BxgjsrLEy1w/fHnGmZFrPRmza3OzBoTTWxqbwCY=";
   };
 in {
   options.my.crowdsec = {
