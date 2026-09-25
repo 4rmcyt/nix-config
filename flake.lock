@@ -641,6 +641,7 @@
       "original": {
         "owner": "ikawrakow",
         "repo": "ik_llama.cpp",
+        "rev": "1aaf7105be6e55a97fa4a9fd6f5bd362b08436dc",
         "type": "github"
       }
     },
