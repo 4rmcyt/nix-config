@@ -83,7 +83,9 @@ secrets/                # sops-encrypted YAML (NEVER commit plaintext)
 
 **NixOS vs HM boundary:** System-level config belongs in NixOS modules. User-level config belongs in Home Manager. Use single-responsibility modules.
 
-**Verify config keys:** Before writing ANY config key for ANY app, terminal, or daemon — fetch the official docs first (`mcp__fetch__fetch` or `tavily`). Never guess option names. Applies to: terminal emulators (rio, ghostty, alacritty, wezterm, kitty), daemons (bluetoothd, pipewire, wireplumber), HM/NixOS modules, everything. Read the schema, then write. No exceptions.
+**Verify config keys:** Before writing ANY config key for ANY app, terminal, or daemon — fetch the official docs first (`mcp__fetch__fetch` or `tavily`). Never guess option names. Applies to: terminal emulators (rio, ghostty, alacritty, wezterm, kitty), daemons (bluetoothd, pipewire, wireplumber), HM/NixOS modules, everything. Read the schema, then write. No exceptions. Cite the source (file path + line, or doc URL + quote) inline in the same message — don't just assert "verified".
+
+**Ports:** Before assigning a new `my.network.ports.<name>` entry, `grep -rn "<port>" modules/ hosts/ parts/` for that exact number first — not just `portDefs`. Includes commented-out reservations (e.g. a future service's port left in a host's `allowedTCPPorts`).
 
 ## Reference Docs — Read First, Update Always
 
