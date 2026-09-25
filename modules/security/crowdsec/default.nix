@@ -11,15 +11,15 @@
   crowdsecPlugin = pkgs.fetchFromGitHub {
     owner = "maxlerebourg";
     repo = "crowdsec-bouncer-traefik-plugin";
-    rev = "v1.6.0";
-    hash = "sha256-Wf2R2vgwBzUxuk96njtGFu8w7mdP5bm+5ZuO3D1+AbA=";
+    rev = "v1.7.1";
+    hash = lib.fakeHash; # nix-prefetch-github maxlerebourg crowdsec-bouncer-traefik-plugin --rev v1.7.1
   };
 
   geoblockPlugin = pkgs.fetchFromGitHub {
     owner = "david-garcia-garcia";
     repo = "traefik-geoblock";
-    rev = "v1.1.4";
-    hash = "sha256-qgLM6nrlDXLS7OsLw6cDKjhx9B+CnJR4TB32pg/MvEo=";
+    rev = "v1.2.1";
+    hash = lib.fakeHash; # nix-prefetch-github david-garcia-garcia traefik-geoblock --rev v1.2.1
   };
 in {
   options.my.crowdsec = {
