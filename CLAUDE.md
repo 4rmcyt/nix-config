@@ -79,6 +79,8 @@ secrets/                # sops-encrypted YAML (NEVER commit plaintext)
 
 **Commits:** Conventional style: `type(scope): description`. Scope = module name or host.
 
+**Comments:** One short line, no paragraphs. Rationale goes in the commit message or chat, not the file.
+
 **NixOS vs HM boundary:** System-level config belongs in NixOS modules. User-level config belongs in Home Manager. Use single-responsibility modules.
 
 **Verify config keys:** Before writing ANY config key for ANY app, terminal, or daemon — fetch the official docs first (`mcp__fetch__fetch` or `tavily`). Never guess option names. Applies to: terminal emulators (rio, ghostty, alacritty, wezterm, kitty), daemons (bluetoothd, pipewire, wireplumber), HM/NixOS modules, everything. Read the schema, then write. No exceptions.

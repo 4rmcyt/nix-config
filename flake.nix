@@ -127,7 +127,8 @@
     };
     mcp-servers-nix.url = "github:natsukium/mcp-servers-nix";
     ik-llama-cpp = {
-      url = "github:ikawrakow/ik_llama.cpp";
+      # Pinned rev so `nix flake update` can't bump it; bump by hand.
+      url = "github:ikawrakow/ik_llama.cpp/1aaf7105be6e55a97fa4a9fd6f5bd362b08436dc";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
     };
