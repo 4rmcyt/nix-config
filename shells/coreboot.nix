@@ -7,7 +7,7 @@
 with import <nixpkgs> { };
 mkShellNoCC {
   buildInputs = [
-    gnat11 # gcc with ada
+    gnat14 # gcc with ada
     #gnatboot # gnat1
     ncurses # make menuconfig
     m4 flex bison # Generate flashmap descriptor parser
