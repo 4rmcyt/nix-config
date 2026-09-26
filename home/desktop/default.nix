@@ -88,6 +88,7 @@
       waydroid-helper
       stremio-linux-shell
       flashrom
+      ifdtool
       (pkgs.texliveSmall.withPackages (ps:
         with ps; [
           scheme-medium
