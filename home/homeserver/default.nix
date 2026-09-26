@@ -34,6 +34,7 @@
       tuptime
       yamllint
       zip
+      dmidecode
     ];
   };
 
