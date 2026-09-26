@@ -35,6 +35,7 @@
       yamllint
       zip
       dmidecode
+      flashrom
     ];
   };
 
