@@ -36,6 +36,9 @@
       zip
       dmidecode
       flashrom
+      pciutils
+      zlib
+      pkg-config
     ];
   };
 
