@@ -14,7 +14,6 @@ mkShellNoCC {
     #clang
     zlib
     #acpica-tools # iasl
-    pkgconfig
     qemu # test the image
     flashrom
     pciutils
