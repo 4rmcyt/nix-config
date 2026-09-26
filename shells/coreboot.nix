@@ -16,6 +16,8 @@ mkShellNoCC {
     #acpica-tools # iasl
     pkgconfig
     qemu # test the image
+    flashrom
+    pciutils
   ];
   shellHook = ''
     # TODO remove?
