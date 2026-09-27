@@ -19,8 +19,9 @@ in {
 
   config = lib.mkIf cfg.enable {
     systemd.services.unbound = {
-      after = ["tailscale.service" "tailscale-autoconnect.service"];
-      wants = ["tailscale.service"];
+      after = ["tailscale.service" "tailscale-autoconnect.service" "sys-subsystem-net-devices-tailscale0.device"];
+      wants = ["tailscale.service" "sys-subsystem-net-devices-tailscale0.device"];
+      serviceConfig.Restart = "on-failure";
     };
 
     services.unbound = {

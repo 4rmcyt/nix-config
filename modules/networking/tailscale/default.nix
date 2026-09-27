@@ -78,17 +78,17 @@ in {
     systemd.services.tailscale-autoconnect = {
       description = "Automatic connection to Tailscale";
       after = [
-        "network-pre.target"
+        "network-online.target"
         "tailscale.service"
       ];
       wants = [
-        "network-pre.target"
+        "network-online.target"
         "tailscale.service"
       ];
       wantedBy = ["multi-user.target"];
       serviceConfig = {
         Type = "oneshot";
-        TimeoutStartSec = "30";
+        TimeoutStartSec = "60";
       };
       script = with pkgs; ''
         sleep 2
