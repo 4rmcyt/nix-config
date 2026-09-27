@@ -13,10 +13,17 @@ mkShellNoCC {
     m4 flex bison # Generate flashmap descriptor parser
     #clang
     zlib
-    #acpica-tools # iasl
+    acpica-tools # iasl
     qemu # test the image
+    nasm
+    python3
     flashrom
     pciutils
+    me_cleaner
+    curl
+    ifdtool
+    cbfstool
+    intelmetool
   ];
   shellHook = ''
     # TODO remove?
