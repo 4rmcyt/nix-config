@@ -124,27 +124,11 @@ in {
             type = "zfs_fs";
             options = {
               "com.sun:auto-snapshot" = "false";
-              # Required for systemd-journald to set per-user ACLs on journal
-              # files (avoids "Failed to set ACL … Operation not supported")
+              # Needed for journald per-user ACLs (avoids "Failed to set ACL … Operation not supported")
               acltype = "posixacl";
               xattr = "sa";
             };
             mountpoint = "/var/log";
-          };
-          "postgresql" = {
-            type = "zfs_fs";
-            options."com.sun:auto-snapshot" = "false";
-            mountpoint = "/var/lib/postgresql";
-            options."recordsize" = "16K";
-            postCreateHook = "zfs snapshot zroot/postgresql@empty";
-          };
-          "containers" = {
-            type = "zfs_fs";
-            options = {
-              acltype = "posixacl";
-              "com.sun:auto-snapshot" = "false";
-            };
-            mountpoint = "/var/lib/containers";
           };
           "kanidm" = {
             type = "zfs_fs";
@@ -167,6 +151,32 @@ in {
             options."com.sun:auto-snapshot" = "false";
             options.sync = "disabled";
             mountpoint = "/data";
+          };
+          # Moved off zroot (overheating boot NVMe); sync stays standard, unlike "data" above.
+          "postgresql" = {
+            type = "zfs_fs";
+            options."com.sun:auto-snapshot" = "false";
+            options."recordsize" = "16K";
+            mountpoint = "/var/lib/postgresql";
+            postCreateHook = "zfs snapshot zdata/postgresql@empty";
+          };
+          "containers" = {
+            type = "zfs_fs";
+            options = {
+              acltype = "posixacl";
+              "com.sun:auto-snapshot" = "false";
+            };
+            mountpoint = "/var/lib/containers";
+          };
+          "loki" = {
+            type = "zfs_fs";
+            options."com.sun:auto-snapshot" = "false";
+            mountpoint = "/var/lib/loki";
+          };
+          "prometheus2" = {
+            type = "zfs_fs";
+            options."com.sun:auto-snapshot" = "false";
+            mountpoint = "/var/lib/prometheus2";
           };
         };
       };

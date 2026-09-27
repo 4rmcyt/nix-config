@@ -56,10 +56,7 @@ in {
       disableUpstreamLogging = true;
     };
 
-    # Tunes GRO offload for Tailscale throughput. Runs as a plain oneshot
-    # bound to the interface's device unit instead of networkd-dispatcher,
-    # since this host doesn't use systemd-networkd (networkd-dispatcher's
-    # rules never fire without it).
+    # Plain oneshot bound to the device unit, not networkd-dispatcher (no systemd-networkd here).
     systemd.services.tailscale-ethtool-tune = {
       description = "Tune GRO offload on ${cfg.networkInterface} for Tailscale";
       after = [

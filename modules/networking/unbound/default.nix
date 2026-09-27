@@ -46,13 +46,10 @@ in {
           hide-identity = true;
           hide-version = true;
 
-          # domain has public DNSSEC delegation, but ts.domain is a private zone with no
-          # real signature — the validator would mark it bogus/SERVFAIL without this.
+          # ts.domain is a private zone with no real DNSSEC signature — would SERVFAIL otherwise.
           domain-insecure = ["${domain}"];
 
-          # ts.domain must be carved out with "transparent": since it's a subzone of
-          # domain, redirect would otherwise swallow it too, and ts.domain needs to fall
-          # through to the Tailscale stub resolver for per-node MagicDNS records.
+          # "transparent" so redirect on the parent zone doesn't swallow MagicDNS lookups too.
           local-zone = [
             ''"ts.${domain}." transparent''
             ''"${domain}." redirect''

@@ -140,10 +140,7 @@
       allowedTCPPorts = [5432 6379];
     };
 
-    # 6443: in-cluster `kubernetes` Service ClusterIP DNATs to the host's real LAN IP,
-    # not loopback, so without this every in-cluster API call times out (confirmed:
-    # CrashLoopBackOff on `dial tcp 10.43.0.1:443: i/o timeout`). 10250: kubelet
-    # metrics/exec. 5432: Postgres for job-kombayn's k3s workloads.
+    # 6443: ClusterIP DNATs to LAN IP not loopback (else CrashLoopBackOff/timeout). 10250: kubelet. 5432: Postgres.
     firewall.interfaces.cni0 = {
       allowedTCPPorts = [6443 10250 5432];
     };
@@ -190,8 +187,7 @@
       "/var/lib/kanidm"
       # Bazarr provider credentials/settings live in config.yaml, not its Postgres DB.
       "/data/media/.state/nixarr/bazarr/config"
-      # job-kombayn's dedup index, resume/cover PDFs, and geocode cache live in its
-      # StateDirectory, not the kombayn Postgres DB.
+      # job-kombayn's dedup index, resume/cover PDFs, geocode cache live in its StateDirectory.
       "/var/lib/job-kombayn"
       # Obsidian LiveSync vault — CouchDB is the only copy of live sync history.
       "/var/lib/couchdb"
@@ -292,10 +288,7 @@
         }
       ];
       settings = {
-        # PasswordAuthentication, PermitRootLogin — set by
-        # nix-mineral.extras.misc.ssh-hardening (see ./hardening.nix). Do not
-        # redeclare here — duplicate definitions of the same key at the same
-        # priority fail eval.
+        # PasswordAuthentication/PermitRootLogin set by ./hardening.nix — don't redeclare, dup priority fails eval.
         AllowUsers = [config.my.defaults.user "nix-builder"];
       };
     };
@@ -308,15 +301,13 @@
       enableBot = true; # Applied/Skip inline buttons on vacancy cards
       enableApi = true; # HTTP API for the web frontend (jobko.<domain>/api)
       enableWeb = true; # static SPA (jobko.<domain>)
-      # Mirrors job-kombayn.env into a k8s Secret (gitops: k3s/job-kombayn/); runs
-      # alongside the systemd units above, not a replacement yet.
+      # Mirrors job-kombayn.env into a k8s Secret (gitops: k3s/job-kombayn/), not a replacement yet.
       enableK3sSecretSync = true;
       webBuild = pkgs.buildNpmPackage {
         pname = "job-kombayn-web";
         version = "0.1.0";
         src = "${inputs.jobshunting}/frontend";
-        # importNpmLock reads per-package hashes from package-lock.json, so a frontend
-        # dependency bump never needs a matching npmDepsHash update here.
+        # importNpmLock reads hashes from package-lock.json — no npmDepsHash to update on bumps.
         npmDeps = pkgs.importNpmLock {npmRoot = "${inputs.jobshunting}/frontend";};
         npmConfigHook = pkgs.importNpmLock.npmConfigHook;
         installPhase = ''
@@ -329,9 +320,7 @@
 
   my.unbound = {
     enable = true;
-    # Listen on all interfaces rather than binding to tailscale0/enp0s31f6 by name:
-    # access-control already restricts by subnet, and a named-interface bind fails
-    # to start unbound entirely (killing LAN/WAN DNS too) if tailscale0 isn't up yet.
+    # All interfaces: named-interface bind fails unbound entirely if tailscale0 isn't up yet.
     interfaces = ["0.0.0.0" "::0"];
   };
 

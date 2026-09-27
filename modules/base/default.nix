@@ -31,10 +31,7 @@
 
   services.timesyncd = {
     enable = true;
-    # IP literals first: if the clock is far enough off that DoT/TLS to the DNS
-    # forwarder fails cert validation, timesyncd must be able to sync without
-    # resolving a hostname at all. Google/Cloudflare public NTP anycast IPs are
-    # stable; pool.ntp.org hostnames stay as a fallback once DNS is healthy.
+    # IP literals first so sync doesn't depend on DoT DNS validating a clock-dependent cert.
     servers = [
       "216.239.35.0" # time.google.com anycast
       "216.239.35.4" # time.google.com anycast
@@ -49,8 +46,7 @@
   console.keyMap = "us";
   time.timeZone = config.my.defaults.timezone;
 
-  # nscd already runs with ProtectSystem=strict and NoNewPrivileges=yes (NixOS default),
-  # but still carries the full default capability set it never uses.
+  # nscd still carries the full default capability set it never uses.
   systemd.services.nscd.serviceConfig = {
     CapabilityBoundingSet = lib.mkForce "";
     RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX" "AF_NETLINK"];
