@@ -87,6 +87,7 @@
       vulkan-tools
       waydroid-helper
       stremio-linux-shell
+      uefitoolPackages.old-engine
       (pkgs.texliveSmall.withPackages (ps:
         with ps; [
           scheme-medium
