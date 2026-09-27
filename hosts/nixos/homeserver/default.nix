@@ -320,8 +320,8 @@
 
   my.unbound = {
     enable = true;
-    # All interfaces: named-interface bind fails unbound entirely if tailscale0 isn't up yet.
-    interfaces = ["0.0.0.0" "::0"];
+    # Not 0.0.0.0: comet runs --network=host and its bundled unbound already holds the wildcard bind on 53.
+    interfaces = ["tailscale0" "enp0s31f6"];
   };
 
   users = {
