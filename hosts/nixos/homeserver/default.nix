@@ -329,7 +329,10 @@
 
   my.unbound = {
     enable = true;
-    interfaces = ["tailscale0" "enp0s31f6"];
+    # Listen on all interfaces rather than binding to tailscale0/enp0s31f6 by name:
+    # access-control already restricts by subnet, and a named-interface bind fails
+    # to start unbound entirely (killing LAN/WAN DNS too) if tailscale0 isn't up yet.
+    interfaces = ["0.0.0.0" "::0"];
   };
 
   users = {
