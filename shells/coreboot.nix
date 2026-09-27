@@ -1,9 +1,7 @@
 # shell.nix
-
 # NOTE we need mkShellNoCC
 # mkShell would add the regular gcc, which has no ada (gnat)
 # https://github.com/NixOS/nixpkgs/issues/142943
-
 with import <nixpkgs> { };
 mkShellNoCC {
   buildInputs = [
@@ -28,5 +26,7 @@ mkShellNoCC {
   shellHook = ''
     # TODO remove?
     NIX_LDFLAGS="$NIX_LDFLAGS -lncurses"
+    export NIX_LDFLAGS="$NIX_LDFLAGS -L${ncurses.out}/lib -lncurses"
+    export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE -I${ncurses.dev}/include"
   '';
 }
