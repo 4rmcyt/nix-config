@@ -130,11 +130,6 @@ in {
             };
             mountpoint = "/var/log";
           };
-          "kanidm" = {
-            type = "zfs_fs";
-            options."com.sun:auto-snapshot" = "false";
-            mountpoint = "/var/lib/kanidm";
-          };
         };
       };
 
@@ -177,6 +172,21 @@ in {
             type = "zfs_fs";
             options."com.sun:auto-snapshot" = "false";
             mountpoint = "/var/lib/prometheus2";
+          };
+          "kanidm" = {
+            type = "zfs_fs";
+            options."com.sun:auto-snapshot" = "false";
+            mountpoint = "/var/lib/kanidm";
+          };
+          "redis-homeserver" = {
+            type = "zfs_fs";
+            options."com.sun:auto-snapshot" = "false";
+            mountpoint = "/var/lib/redis-homeserver";
+          };
+          "couchdb" = {
+            type = "zfs_fs";
+            options."com.sun:auto-snapshot" = "false";
+            mountpoint = "/var/lib/couchdb";
           };
         };
       };
