@@ -9,6 +9,7 @@ mkShellNoCC {
     #gnatboot # gnat1
     ncurses # make menuconfig
     m4 flex bison # Generate flashmap descriptor parser
+    pkg-config
     #clang
     zlib
     acpica-tools # iasl
@@ -22,6 +23,7 @@ mkShellNoCC {
     ifdtool
     cbfstool
     intelmetool
+    util-linux
   ];
   shellHook = ''
     # TODO remove?
