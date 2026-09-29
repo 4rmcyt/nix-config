@@ -14,6 +14,12 @@
     spiceUSBRedirection.enable = true;
   };
 
+  # Clipboard sharing between host desktop and SPICE VMs (e.g. win11).
+  services.spice-vdagentd.enable = true;
+
+  # VirtIO drivers ISO for Windows guests.
+  environment.systemPackages = [pkgs.virtio-win];
+
   # libvirt's upstream unit hardcodes /usr/bin/sh which doesn't exist on NixOS.
   # Use systemd.units with raw drop-in text so ExecStart= (empty) clears the original
   # before setting ours — otherwise both run and /usr/bin/sh fails first.
