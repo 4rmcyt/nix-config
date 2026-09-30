@@ -28,7 +28,7 @@ parts/                      # Auto-imported flake-parts modules
   shared-nixos-settings.nix # modules.nixos.base — shared nix daemon / caches / sops / access-token wiring
   home-manager-integration.nix # modules.nixos.base — imports sops-nix, disko, nix-topology NixOS modules
   hm.nix                    # modules.nixos.hm — Home Manager NixOS module + HM base wiring (opt-in per host)
-  home-manager-base.nix     # modules.homeManager.base — sops, nixvim, overlays, stateVersion
+  home-manager-base.nix     # modules.homeManager.base — sops, nixvim, overlays (shared + HM-only), stateVersion
   workstation.nix          # modules.nixos.bareMetal — facter + ucodenix + gnupg + nix dev tools
                            #   (every physical host: desktop/matebook/homeserver; NOT the gcp-relay VM);
                            # modules.nixos.workstationGui — GUI/{chrome,flatpak,kdeconnect,nemo} + nfs-client (desktop/matebook);
@@ -44,7 +44,7 @@ parts/                      # Auto-imported flake-parts modules
 hosts/nixos/<name>/         # NixOS system config + hardware-configuration.nix
 home/<name>/                # Home Manager config per host
 modules/                    # NixOS/HM modules (NOT auto-imported; referenced by host configs)
-lib/                        # Plain helpers imported by path: overlays.nix, cachix.nix, cloudflare-acme-secret.nix
+lib/                        # Plain helpers imported by path: overlays.nix, overlays-hm.nix, cachix.nix, cloudflare-acme-secret.nix
 secrets/                    # sops-encrypted YAML/binary files
 tools/                      # Helper scripts and tooling
 ```
@@ -202,8 +202,9 @@ GitHub access token loaded via sops secret `nix_access_token`, written to `/run/
 
 ## Package Overlays
 
-- **HM scope** — the list lives in [`lib/overlays.nix`](lib/overlays.nix) (`import`ed by `parts/home-manager-base.nix`): `mcp-servers-nix`, `nur`, `nix-vscode-extensions`, `noctalia`, plus a small local overlay that restores `mcp-server-{memory,filesystem,sequential-thinking}` from vanilla nixpkgs (mcp-servers-nix's TS builds of those are broken from source; it's kept only for `tavily-mcp`).
-- **System scope** — no shared list; each is inline in the one host or module that needs it:
+- **Shared (HM + system)** — [`lib/overlays.nix`](lib/overlays.nix): generic upstream-bug workarounds, not tied to any one host. Currently: `cudaPackages.buildRedist` `__structuredAttrs = false` (nixpkgs#323126/#422989 — multi-output fixup crashes) and `intel-compute-runtime-legacy1` `-Wno-error=sfinae-incomplete` (gcc-16 stricter diagnostics, no upstream patch). `import`ed by `parts/home-manager-base.nix` and by every NixOS host's `nixpkgs.overlays`.
+- **HM-only scope** — [`lib/overlays-hm.nix`](lib/overlays-hm.nix) (`import`ed by `parts/home-manager-base.nix` alongside the shared list): `mcp-servers-nix`, `nur`, `nix-vscode-extensions`, `noctalia`, plus a small local overlay that restores `mcp-server-{memory,filesystem,sequential-thinking}` from vanilla nixpkgs (mcp-servers-nix's TS builds of those are broken from source; it's kept only for `tavily-mcp`).
+- **Host-specific system scope** — appended after the shared list in the one host or module that needs it:
   - `parts/hosts/homeserver/configuration.nix` — `sonarr`/`radarr`/`prowlarr`/`bazarr`/`jellyfin`/`jellyfin-web` from `inputs.arr-packages`
   - `parts/hosts/gcp-relay/configuration.nix` — `inputs.headscale.overlays.default`
   - `hosts/nixos/desktop/hardware-configuration.nix` — `linux-firmware` MT7922 Wi-Fi blob rollback (hardware-specific)

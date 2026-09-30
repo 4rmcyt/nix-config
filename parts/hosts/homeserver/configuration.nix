@@ -22,26 +22,21 @@ in {
 
     nix.settings = import ../../../lib/cachix.nix "homeserver" "QUtDyIxhMJRwispauvcutxugqz0I1PieNprFlIkhBZo=";
 
-    nixpkgs.overlays = [
-      (_final: prev: {
-        inherit
-          (inputs.arr-packages.packages.${prev.stdenv.hostPlatform.system})
-          sonarr
-          radarr
-          prowlarr
-          bazarr
-          jellyfin
-          jellyfin-web
-          ;
-      })
-
-      # intel-compute-runtime-legacy1 fails under gcc-16's -Werror=sfinae-incomplete (no upstream fix)
-      (_final: prev: {
-        intel-compute-runtime-legacy1 = prev.intel-compute-runtime-legacy1.overrideAttrs (old: {
-          NIX_CFLAGS_COMPILE = toString (old.NIX_CFLAGS_COMPILE or "") + " -Wno-error=sfinae-incomplete";
-        });
-      })
-    ];
+    nixpkgs.overlays =
+      import ../../../lib/overlays.nix inputs
+      ++ [
+        (_final: prev: {
+          inherit
+            (inputs.arr-packages.packages.${prev.stdenv.hostPlatform.system})
+            sonarr
+            radarr
+            prowlarr
+            bazarr
+            jellyfin
+            jellyfin-web
+            ;
+        })
+      ];
 
     home-manager.users.${owner.username}.imports = [
       ../../../home/homeserver

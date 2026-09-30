@@ -20,7 +20,7 @@ in {
 
     nixpkgs.config.allowUnfree = true;
     nixpkgs.config.android_sdk.accept_license = true;
-    nixpkgs.overlays = import ../lib/overlays.nix inputs;
+    nixpkgs.overlays = import ../lib/overlays.nix inputs ++ import ../lib/overlays-hm.nix inputs;
 
     sops.age.keyFile = "/home/${owner.username}/.config/sops/age/keys.txt";
 
