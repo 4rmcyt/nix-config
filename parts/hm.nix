@@ -17,9 +17,9 @@ in {
       sharedModules = [
         {home.enableNixpkgsReleaseCheck = false;}
         {
-          # home-manager's own modules/programs/noctalia.nix conflicts with
-          # inputs.noctalia.homeModules.default's nix/home-module.nix.
-          disabledModules = ["programs/noctalia.nix"];
+          # home-manager's own modules/programs/noctalia/ (now a directory, not a flat .nix file)
+          # conflicts with inputs.noctalia.homeModules.default's nix/home-module.nix.
+          disabledModules = ["programs/noctalia"];
         }
       ];
       extraSpecialArgs = {inherit inputs;};
