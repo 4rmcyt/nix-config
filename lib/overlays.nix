@@ -24,4 +24,12 @@ inputs: [
       buildRedist = args: (cprev.buildRedist args).overrideAttrs (_old: {__structuredAttrs = false;});
     });
   })
+
+  # intel-compute-runtime-legacy1 (frozen at 24.35.30872.41, no gcc16 patch upstream) fails
+  # under gcc-16's stricter -Werror=sfinae-incomplete; downgrade it to a warning
+  (_final: prev: {
+    intel-compute-runtime-legacy1 = prev.intel-compute-runtime-legacy1.overrideAttrs (old: {
+      NIX_CFLAGS_COMPILE = toString (old.NIX_CFLAGS_COMPILE or "") + " -Wno-error=sfinae-incomplete";
+    });
+  })
 ]
