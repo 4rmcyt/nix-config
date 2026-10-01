@@ -586,11 +586,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790819692,
-        "narHash": "sha256-rvubAPbh3QCliic3sAK+CXTrPCGgJstY52OTs/5H1J4=",
+        "lastModified": 1790883051,
+        "narHash": "sha256-g84X5VU81CZAgY7Q0m1RrdvwNIoFd4UzKG9YaORuRFE=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "c8ecc29e5175452bee4a2aa1ba2383856d795338",
+        "rev": "d85475546a5f6696233bba981933e2227a584047",
         "type": "github"
       },
       "original": {
@@ -1182,6 +1182,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-cuda-pin": {
+      "locked": {
+        "lastModified": 1790597201,
+        "narHash": "sha256-wS4s31iMqFqsuXZCuOUKT06J+zzLMN5WpAn5X5Dafmw=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "53d7456928419067dfc75e34f8b74e83d56598c4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "53d7456928419067dfc75e34f8b74e83d56598c4",
+        "type": "github"
+      }
+    },
     "nixpkgs-lib": {
       "locked": {
         "lastModified": 1774748309,
@@ -1353,17 +1369,17 @@
     },
     "nixpkgs_8": {
       "locked": {
-        "lastModified": 1790597201,
-        "narHash": "sha256-wS4s31iMqFqsuXZCuOUKT06J+zzLMN5WpAn5X5Dafmw=",
+        "lastModified": 1790822859,
+        "narHash": "sha256-69xHQhAeMAD2wDXO7T2pcOZIF9Sga2W+JkmY2a11Ops=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "53d7456928419067dfc75e34f8b74e83d56598c4",
+        "rev": "c59305bab2065cfecc4944690d9eedbb56f3a9fa",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
-        "rev": "53d7456928419067dfc75e34f8b74e83d56598c4",
         "type": "github"
       }
     },
@@ -1429,11 +1445,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790880594,
-        "narHash": "sha256-wNdsZInXDe6VDS3t4pom6UAsAA0AgNdo3a8F3sZ/Fa0=",
+        "lastModified": 1790884530,
+        "narHash": "sha256-cXOhwR/mMRegup21LtwfqKozo+uMyEP2yCffAtrMvX0=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "a06ebe3754c886fafc69f9d128a80b6c51313bc8",
+        "rev": "a80df1eaa98be8da78814163713248d6bec9498b",
         "type": "github"
       },
       "original": {
@@ -1507,6 +1523,7 @@
         "nixos-facter-modules": "nixos-facter-modules",
         "nixos-needsreboot": "nixos-needsreboot",
         "nixpkgs": "nixpkgs_8",
+        "nixpkgs-cuda-pin": "nixpkgs-cuda-pin",
         "nixvim": "nixvim",
         "noctalia": "noctalia",
         "nur": "nur",

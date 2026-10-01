@@ -1,0 +1,31 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-nix-comments.py\"",
+            "statusMessage": "Checking Nix comment style..."
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "c=$(jq -r '.tool_input.command // empty'); if echo \"$c\" | grep -qE '(^|[;&|][[:space:]]*)sudo\\b'; then echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"sudo is never run from here (CLAUDE.md) - give the user the command instead.\"}}'; fi",
+            "statusMessage": "Checking for sudo..."
+          },
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/pre-commit-fmt.sh\"",
+            "statusMessage": "Running nix fmt before commit..."
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -5,9 +5,15 @@
   config,
   ...
 }: let
+  # Pre-staging-next pin: cuda-modules buildRedistHook broken on nixos-unstable (nixpkgs#568961).
+  cudaPinnedPkgs = import inputs.nixpkgs-cuda-pin {
+    inherit (pkgs.stdenv.hostPlatform) system;
+    config.allowUnfree = true;
+    config.cudaSupport = true;
+  };
   # Built from HM's own pkgs (unfree CUDA allowed there) rather than the fork's flake `packages.cuda`.
   ik-llama-cpp-cuda =
-    (pkgs.callPackage "${inputs.ik-llama-cpp}/.devops/nix/package.nix" {useCuda = true;}).overrideAttrs
+    (cudaPinnedPkgs.callPackage "${inputs.ik-llama-cpp}/.devops/nix/package.nix" {useCuda = true;}).overrideAttrs
     (old: {
       # RTX 3050 only (sm_86); the default builds every capability.
       cmakeFlags = (old.cmakeFlags or []) ++ ["-DCMAKE_CUDA_ARCHITECTURES=86"];

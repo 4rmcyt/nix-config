@@ -140,12 +140,13 @@ in {
 
     # Upstream bug: pname "nixarr" vs pyproject.toml's "nixarr_py" fails nixpkgs'
     # pythonMetadataCheckPhase; skipping only skips the version-string check.
-    nixarr-py.package = (pkgs.callPackage "${inputs.nixarr}/nixarr/lib/nixarr-py" {
-      jellyfin = config.services.jellyfin.package;
-    })
+    nixarr-py.package =
+      (pkgs.callPackage "${inputs.nixarr}/nixarr/lib/nixarr-py" {
+        jellyfin = config.services.jellyfin.package;
+      })
     .overrideAttrs (_: {
-      dontCheckPythonMetadata = true;
-    });
+        dontCheckPythonMetadata = true;
+      });
   };
 
   systemd.services = lib.mkMerge [
