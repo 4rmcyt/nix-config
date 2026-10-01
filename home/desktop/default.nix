@@ -6,7 +6,8 @@
   imports = [
     ../../modules/GUI/IDE
     ../../modules/TUI/ai-tools
-    ../../modules/TUI/ai-tools/llama-cpp
+    # cuda build broken upstream (nixpkgs cuda-modules buildRedistHook, propagatedBuildOutputs bug)
+    # ../../modules/TUI/ai-tools/llama-cpp
     ../../modules/TUI/ai-tools/llama-cpp/qwen32b-cpu.nix
 
     ../../modules/GUI/bb-launcher
