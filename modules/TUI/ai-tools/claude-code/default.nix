@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }: let
   systemPrompts = import ../system-prompt;
@@ -110,9 +111,23 @@ in {
       "review-code" = builtins.readFile ../commands/review-code.md;
     };
 
-    skills = {
-      "nixos-advisor" = builtins.readFile ../skills/nixos-advisor/SKILL.md;
-      "nixos-command-not-found" = builtins.readFile ../skills/nixos-command-not-found/SKILL.md;
-    };
+    skills =
+      {
+        "nixos-advisor" = builtins.readFile ../skills/nixos-advisor/SKILL.md;
+        "nixos-command-not-found" = builtins.readFile ../skills/nixos-command-not-found/SKILL.md;
+      }
+      // lib.listToAttrs (map
+        (name: {
+          inherit name;
+          value = "${inputs.obsidian-skills}/skills/${name}";
+        })
+        [
+          "obsidian-markdown"
+          "obsidian-bases"
+          "json-canvas"
+          "obsidian-cli"
+          "defuddle"
+          "knap"
+        ]);
   };
 }

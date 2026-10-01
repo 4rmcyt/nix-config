@@ -149,6 +149,10 @@
       url = "github:4rmcyt/jobshunting";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    obsidian-skills = {
+      url = "github:kepano/obsidian-skills";
+      flake = false;
+    };
   };
 
   outputs = inputs:
