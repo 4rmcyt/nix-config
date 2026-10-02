@@ -17,6 +17,12 @@
     # oops shouldn't force a reboot on top of that.
     settings.kernel.oops-panic = false;
 
+    # e2-micro is 1 core x 2 threads — nosmt halves the CPU.
+    settings.kernel.cpu-mitigations = "smt-on";
+
+    # slab_debug=FZ is too costly on a shared-core vCPU.
+    settings.kernel.slab-debug = false;
+
     # Non-overlapping SSH settings (AllowUsers, MaxAuthTries, ...) stay inline in ./default.nix.
     extras.misc.ssh-hardening = true;
 
