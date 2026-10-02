@@ -42,6 +42,8 @@
       cores = 2;
       max-jobs = "auto";
       require-sigs = false;
+      # Hardlinking every deployed path is too costly on this disk/vCPU.
+      auto-optimise-store = lib.mkForce false;
     };
 
     programs.nh.clean.dates = "daily";
