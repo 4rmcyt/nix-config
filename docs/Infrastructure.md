@@ -174,8 +174,8 @@ On homeserver, listening on Tailscale + LAN interfaces. Forwards to NextDNS prof
 
 ### CrowdSec
 
-- **homeserver**: LAPI at `127.0.0.1:8088`; Traefik bouncer (stream mode); collections: `linux`, `sshd`, `traefik`
-- **gcp-relay**: nftables bouncer; remote LAPI via Tailscale pointing to homeserver
+- **homeserver**: LAPI at `127.0.0.1:8088`; Traefik bouncer (stream mode); collections: `linux`, `sshd`, `traefik`, `caddy`
+- **gcp-relay**: nftables bouncer; remote LAPI via Tailscale pointing to homeserver. Caddy access log → journal → alloy → Loki → homeserver CrowdSec (`loki` datasource, `my.crowdsec.lokiCaddy`) — no agent on the relay
 - Whitelists: Tailscale CGNAT `100.64.0.0/10`, LAN `192.168.1.0/24`, Cloudflare IPs
 
 ### Cloudflared

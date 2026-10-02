@@ -25,6 +25,14 @@ in {
   options.my.crowdsec = {
     traefik.enable = lib.mkEnableOption "CrowdSec Traefik bouncer plugin wiring";
     caddy.enable = lib.mkEnableOption "CrowdSec Caddy log acquisition";
+    lokiCaddy = {
+      enable = lib.mkEnableOption "CrowdSec acquisition of remote Caddy access logs from Loki";
+      query = lib.mkOption {
+        type = lib.types.str;
+        description = "LogQL stream selector for the remote Caddy journal lines.";
+        example = ''{host="gcp-relay", unit="caddy.service"}'';
+      };
+    };
     nftables = {
       enable = lib.mkEnableOption "CrowdSec nftables firewall bouncer";
       lapiUrl = lib.mkOption {
@@ -85,7 +93,7 @@ in {
           "crowdsecurity/sshd"
         ]
         ++ lib.optionals cfg.traefik.enable ["crowdsecurity/traefik"]
-        ++ lib.optionals cfg.caddy.enable ["crowdsecurity/caddy"];
+        ++ lib.optionals (cfg.caddy.enable || cfg.lokiCaddy.enable) ["crowdsecurity/caddy"];
 
       settings.general.api.server = {
         enable = true;
@@ -123,6 +131,14 @@ in {
           {
             source = "journalctl";
             journalctl_filter = ["_SYSTEMD_UNIT=caddy.service"];
+            labels.type = "caddy";
+          }
+        ]
+        ++ lib.optionals cfg.lokiCaddy.enable [
+          {
+            source = "loki";
+            url = "http://127.0.0.1:${toString config.my.network.ports.loki}";
+            inherit (cfg.lokiCaddy) query;
             labels.type = "caddy";
           }
         ];

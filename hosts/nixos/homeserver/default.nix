@@ -255,6 +255,10 @@
 
   my.traefik.enable = true;
   my.crowdsec.traefik.enable = true;
+  my.crowdsec.lokiCaddy = {
+    enable = true;
+    query = ''{host="gcp-relay", unit="caddy.service"}'';
+  };
   my.crowdsec.nftables = {
     enable = true;
     secretsFile = ../../../secrets/crowdsec.yaml;

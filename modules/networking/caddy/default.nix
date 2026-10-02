@@ -29,6 +29,11 @@ in {
       # Caddy instead of Traefik: Traefik drops the non-standard Upgrade header
       # required by the Tailscale control protocol.
       virtualHosts."hs.${domain}" = lib.mkIf cfg.headscale.enable {
+        # Journal instead of file so alloy ships it to Loki for CrowdSec on homeserver.
+        logFormat = ''
+          output stderr
+          format json
+        '';
         extraConfig = ''
           tls {
             dns cloudflare {env.CLOUDFLARE_DNS_API_TOKEN}
