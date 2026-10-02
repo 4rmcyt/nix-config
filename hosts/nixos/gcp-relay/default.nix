@@ -18,7 +18,6 @@
     ../../../modules/networking/tailscale
     ./crowdsec-bouncer.nix
     ../../../modules/backup
-    ../../../modules/security/fail2ban
     ./hardening.nix
   ];
 
@@ -68,6 +67,8 @@
     services.openssh = {
       enable = true;
       ports = [22];
+      # Tailnet-only (tailscale0 is trusted); fallback is GCE Serial Console.
+      openFirewall = false;
       hostKeys = [
         {
           path = "/etc/ssh/ssh_host_ed25519_key";
@@ -156,25 +157,6 @@
     my.caddy = {
       enable = true;
       headscale.enable = true;
-    };
-
-    services.fail2ban = {
-      enable = true;
-      maxretry = 5;
-      bantime = "1h";
-      bantime-increment = {
-        enable = true;
-        multipliers = "2 4 8 16 32 64";
-        maxtime = "168h";
-        overalljails = true;
-      };
-      ignoreIP = ["127.0.0.0/8" config.my.network.subnets.tailscale];
-      jails.sshd.settings = {
-        enabled = true;
-        maxretry = 3;
-        bantime = "24h";
-        findtime = "10m";
-      };
     };
 
     # 30 GB root disk — cap journal

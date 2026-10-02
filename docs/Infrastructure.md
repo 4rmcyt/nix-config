@@ -134,7 +134,7 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 - **DERP** relay: region ID 901, `gcp-us-central1`, STUN on `0.0.0.0:3478`
 - **Caddy** TLS termination (replaces Traefik for this host)
 - **CrowdSec** nftables bouncer: remote LAPI via Tailscale pointing to homeserver
-- **fail2ban**: SSH jail, incremental bans up to 168h
+- **SSH**: tailnet only (port 22 closed publicly); fallback via GCE Serial Console
 - Root disk: 10 GB, zram swap, journal capped at 500 MB / 14 days
 - node_exporter scraped by homeserver Prometheus
 
