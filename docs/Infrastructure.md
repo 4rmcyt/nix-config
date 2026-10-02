@@ -135,6 +135,7 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 - **Caddy** TLS termination (replaces Traefik for this host)
 - **CrowdSec** nftables bouncer: remote LAPI via Tailscale pointing to homeserver
 - **SSH**: tailnet only (port 22 closed publicly); fallback via GCE Serial Console
+- **Shell**: zsh + starship via NixOS options (`hosts/nixos/gcp-relay/shell.nix`), no Home Manager
 - Root disk: 10 GB, zram swap, journal capped at 500 MB / 14 days
 - node_exporter scraped by homeserver Prometheus
 

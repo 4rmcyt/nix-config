@@ -19,6 +19,7 @@
     ./crowdsec-bouncer.nix
     ../../../modules/backup
     ./hardening.nix
+    ./shell.nix
   ];
 
   config = {
