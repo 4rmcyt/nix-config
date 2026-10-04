@@ -1,10 +1,12 @@
 # Deploy to gcp-relay
 deploy-gcp:
+    ./tools/scripts/caddy-plugins-update.sh --hashes-only gcp-relay
     nixos-rebuild switch --flake .#gcp-relay --target-host zeev@gcp-relay --build-host localhost --elevate=sudo --ask-elevate-password
     nix build .#nixosConfigurations.gcp-relay.config.system.build.toplevel --no-link --print-out-paths | cachix push 4rmcyt-gcp
 
 # Deploy to homeserver
 deploy-homeserver:
+    ./tools/scripts/caddy-plugins-update.sh --hashes-only homeserver
     nixos-rebuild switch --flake .#homeserver --target-host zeev@homeserver --build-host localhost --elevate=sudo --ask-elevate-password
 
 # Deploy to matebook

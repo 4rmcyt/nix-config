@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2016 # $m/$v/$h below are jq variables, not shell ones
 # Bump Caddy plugins to the latest stable tag within their major, then refresh per-host withPlugins hashes.
+# Usage: caddy-plugins-update.sh [--hashes-only] [host...]  (no hosts = every host in the JSON)
 set -euo pipefail
+
+hashes_only=false
+if [[ ${1:-} == --hashes-only ]]; then
+  hashes_only=true
+  shift
+fi
 
 cd "$(git rev-parse --show-toplevel)"
 json=modules/networking/caddy-plugins.json
@@ -13,8 +20,8 @@ update_json() {
   mv "$tmp" "$json"
 }
 
-echo "== plugins"
-for mod in $(jq -r '.plugins | keys[]' "$json"); do
+bump_plugin() {
+  local mod=$1 cur major tags latest newest
   cur=$(jq -r --arg m "$mod" '.plugins[$m]' "$json")
   major=$(cut -d. -f1 <<<"$cur")
   tags=$(git ls-remote --tags --refs "https://$mod" |
@@ -35,14 +42,14 @@ for mod in $(jq -r '.plugins | keys[]' "$json"); do
   else
     echo "  $mod: $cur (up to date)"
   fi
-done
+}
 
-echo "== hashes"
-for host in $(jq -r '.hosts | keys[]' "$json"); do
+refresh_hash() {
+  local host=$1 attr out got
   attr=".#nixosConfigurations.${host}.config.services.caddy.package.src"
   if out=$(nix build --no-link "$attr" 2>&1); then
     echo "  $host: ok"
-    continue
+    return
   fi
 
   got=$(grep -oP 'got:\s+\Ksha256-\S+' <<<"$out" || true)
@@ -55,4 +62,21 @@ for host in $(jq -r '.hosts | keys[]' "$json"); do
   echo "  $host: hash -> $got"
   update_json --arg h "$host" --arg v "$got" '.hosts[$h].hash = $v'
   nix build --no-link "$attr"
+}
+
+if ! $hashes_only; then
+  echo "== plugins"
+  for mod in $(jq -r '.plugins | keys[]' "$json"); do
+    bump_plugin "$mod"
+  done
+fi
+
+hosts=("$@")
+if [[ ${#hosts[@]} -eq 0 ]]; then
+  mapfile -t hosts < <(jq -r '.hosts | keys[]' "$json")
+fi
+
+echo "== hashes"
+for host in "${hosts[@]}"; do
+  refresh_hash "$host"
 done
