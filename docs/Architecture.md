@@ -344,9 +344,9 @@ The `default` dev shell (`nix develop`) is defined inline in [`parts/devshells.n
 
 | Recipe | What it does |
 |--------|-------------|
-| `deploy-gcp` | `caddy-plugins-update.sh --hashes-only gcp-relay`, then `nixos-rebuild switch --flake .#gcp-relay --target-host zeev@gcp-relay --build-host localhost --elevate=sudo --ask-elevate-password`, then `cachix push 4rmcyt-gcp`, then `nh clean all` |
-| `deploy-homeserver` / `deploy-matebook` | `nixos-rebuild switch --flake .#<host> --target-host zeev@<host> --build-host localhost --elevate=sudo --ask-elevate-password`; `deploy-homeserver` first runs `caddy-plugins-update.sh --hashes-only homeserver` |
-| `deploy-local` | `sudo nixos-rebuild switch --flake ".#$(hostname)"` — for desktop, which is built on-machine, never in CI |
+| `deploy-gcp` | `caddy-plugins-update.sh --hashes-only gcp-relay`, then `nh os switch . -H gcp-relay --target-host zeev@gcp-relay`, then `cachix push 4rmcyt-gcp` |
+| `deploy-homeserver` / `deploy-matebook` | `nh os switch . -H <host> --target-host zeev@<host>`; `deploy-homeserver` first runs `caddy-plugins-update.sh --hashes-only homeserver` |
+| `deploy-local` | `nh os switch .` — for desktop, which is built on-machine, never in CI |
 | `update` | `nix flake update`, `just caddy-update`, then build homeserver/matebook/gcp-relay locally |
 | `caddy-update` | `tools/scripts/caddy-plugins-update.sh`: bump Caddy plugin tags in `modules/networking/caddy-plugins.json` (latest stable, same major; warns on new major), then rebuild each host's `services.caddy.package.src` FOD and write the `got:` hash back |
 | `check` | `nix flake check` |

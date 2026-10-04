@@ -1,21 +1,21 @@
 # Deploy to gcp-relay
 deploy-gcp:
     ./tools/scripts/caddy-plugins-update.sh --hashes-only gcp-relay
-    nixos-rebuild switch --flake .#gcp-relay --target-host zeev@gcp-relay --build-host localhost --elevate=sudo --ask-elevate-password
+    nh os switch . -H gcp-relay --target-host zeev@gcp-relay
     nix build .#nixosConfigurations.gcp-relay.config.system.build.toplevel --no-link --print-out-paths | cachix push 4rmcyt-gcp
 
 # Deploy to homeserver
 deploy-homeserver:
     ./tools/scripts/caddy-plugins-update.sh --hashes-only homeserver
-    nixos-rebuild switch --flake .#homeserver --target-host zeev@homeserver --build-host localhost --elevate=sudo --ask-elevate-password
+    nh os switch . -H homeserver --target-host zeev@homeserver
 
 # Deploy to matebook
 deploy-matebook:
-    nixos-rebuild switch --flake .#matebook --target-host zeev@matebook --build-host localhost --elevate=sudo --ask-elevate-password
+    nh os switch . -H matebook --target-host zeev@matebook
 
 # Rebuild the local machine (desktop is built here, never in CI)
 deploy-local:
-    sudo nixos-rebuild switch --flake ".#$(hostname)"
+    nh os switch .
 
 # Bump Caddy plugin tags (same major) and refresh their withPlugins hashes
 caddy-update:
