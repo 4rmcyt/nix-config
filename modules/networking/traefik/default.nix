@@ -253,9 +253,7 @@ in {
                 enabled = true;
                 defaultAllow = false;
                 allowPrivate = true;
-                # DB is bundled with the plugin source in the Nix store
-                databaseFilePath = "/var/lib/traefik/plugins-local/src/github.com/david-garcia-garcia/traefik-geoblock/IP2LOCATION-LITE-DB1.IPV6.BIN";
-                databaseAutoUpdate = true;
+                # Bundled seed via TRAEFIK_PLUGIN_GEOBLOCK_PATH; dated updates land here.
                 databaseAutoUpdateDir = "/var/lib/traefik/geoblock";
                 allowedCountries = [
                   "CA"
@@ -365,6 +363,8 @@ in {
 
       systemd.services.traefik.serviceConfig = {
         EnvironmentFile = config.sops.secrets.cloudflare_acme_credentials.path;
+        # geoblock >=1.2 resolves its bundled seeds/ DB only via this plugin-root env.
+        Environment = ["TRAEFIK_PLUGIN_GEOBLOCK_PATH=/var/lib/traefik/plugins-local/src/github.com/david-garcia-garcia/traefik-geoblock"];
 
         # Deliberately NOT setting SystemCallFilter/MemoryDenyWriteExecute (Traefik loads
         # plugins via the Yaegi Go interpreter, same directive class that killed
