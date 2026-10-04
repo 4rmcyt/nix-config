@@ -21,6 +21,8 @@ in {
       package = import ../../../lib/caddy-with-plugins.nix pkgs "gcp-relay";
       globalConfig = ''
         email ${email}
+        # Below the unit's TimeoutStopSec=5s; eternal default left /ts2021 long-polls open until SIGKILL.
+        grace_period 3s
       '';
 
       # Caddy instead of Traefik: Traefik drops the non-standard Upgrade header

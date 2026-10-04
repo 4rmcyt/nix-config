@@ -272,6 +272,8 @@ in {
 
       globalConfig = ''
         email ${email}
+        # Below the unit's TimeoutStopSec=5s; eternal default left websockets open until SIGKILL.
+        grace_period 3s
         admin localhost:${toString ports.caddy-admin}
         metrics {
           per_host
