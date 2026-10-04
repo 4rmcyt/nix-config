@@ -193,6 +193,11 @@
       scope = "localhost";
       desc = "Traefik API entrypoint (localhost only, used by the homepage widget)";
     };
+    crowdsec-appsec = {
+      port = 7422;
+      scope = "localhost";
+      desc = "CrowdSec AppSec (WAF) component — queried by the Caddy bouncer";
+    };
     caddy-admin = {
       port = 2019;
       scope = "localhost";

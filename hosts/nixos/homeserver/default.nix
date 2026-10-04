@@ -159,6 +159,9 @@
         # 11434 # Ollama API
         # 11435 # Ollama WebUI
       ];
+      allowedUDPPorts = [
+        443 # HTTP/3 (caddy)
+      ];
       rejectPackets = true;
     };
   };

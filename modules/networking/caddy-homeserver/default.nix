@@ -123,6 +123,8 @@
     geo ? false,
     limit ? false,
     lan ? false,
+    waf ? false,
+    compress ? true,
     body ? proxyTo {inherit port scheme insecureTls;},
   }:
     lib.nameValuePair host {
@@ -130,10 +132,12 @@
       extraConfig = ''
         route {
           crowdsec
+          ${lib.optionalString waf "appsec"}
           ${lib.optionalString lan lanOnly}
           ${lib.optionalString geo geoblock}
           ${lib.optionalString limit (rateLimit name)}
           ${headerSets.${headers}}
+          ${lib.optionalString compress "encode zstd gzip"}
           ${body}
         }
       '';
@@ -165,10 +169,12 @@
     };
     audiobookshelf.port = ports.audiobookshelf;
 
+    # waf = true on the Cloudflare Tunnel hostnames (modules/networking/cloudflared).
     hass = {
       port = ports.home-assistant;
       geo = true;
       limit = true;
+      waf = true;
     };
 
     homepage = {
@@ -177,7 +183,10 @@
     };
     microbin.port = ports.microbin;
     atuin.port = config.services.atuin.port;
-    livesync.port = config.services.couchdb.port;
+    livesync = {
+      port = config.services.couchdb.port;
+      waf = true;
+    };
     dispatcharr.port = ports.dispatcharr;
     comet.port = ports.comet;
     aiostreams.port = ports.aiostreams;
@@ -185,8 +194,14 @@
     radicale = {
       port = ports.radicale;
       host = "cal.${domain}";
+      waf = true;
     };
-    ntfy.port = ports.ntfy;
+    ntfy = {
+      port = ports.ntfy;
+      waf = true;
+      # Streams JSON/SSE subscriptions; keep them unbuffered.
+      compress = false;
+    };
     local-registry = {
       port = ports.local-registry;
       host = "registry.${domain}";
@@ -195,6 +210,7 @@
     # Self-signed TLS internally (see modules/security/kanidm).
     kanidm = {
       host = "idm.${domain}";
+      waf = true;
       body = ''
         reverse_proxy https://${config.services.kanidm.server.settings.bindaddress} {
           transport http {
@@ -204,14 +220,17 @@
       '';
     };
 
-    jobko.body = ''
-      handle /api* {
-        reverse_proxy localhost:${toString config.services.jobKombayn.apiPort}
-      }
-      handle {
-        reverse_proxy localhost:${toString config.services.jobKombayn.webPort}
-      }
-    '';
+    jobko = {
+      waf = true;
+      body = ''
+        handle /api* {
+          reverse_proxy localhost:${toString config.services.jobKombayn.apiPort}
+        }
+        handle {
+          reverse_proxy localhost:${toString config.services.jobKombayn.webPort}
+        }
+      '';
+    };
 
     # k3s NodePort (modules/services/argocd/server-nodeport.yaml); argocd-server runs TLS, not --insecure.
     argocd = {
@@ -260,6 +279,9 @@ in {
           api_url http://127.0.0.1:${toString ports.crowdsec-lapi}
           api_key {$CROWDSEC_API_KEY}
           ticker_interval 60s
+          appsec_url http://127.0.0.1:${toString ports.crowdsec-appsec}
+          # Availability over blocking while crowdsec.service restarts / hub-syncs after boot.
+          appsec_fail_open
         }
 
         servers {
@@ -283,6 +305,7 @@ in {
     };
 
     my.crowdsec.caddy.enable = true;
+    my.crowdsec.appsec.enable = true;
 
     services.prometheus.scrapeConfigs = [
       {

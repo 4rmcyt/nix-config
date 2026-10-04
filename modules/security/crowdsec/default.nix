@@ -25,6 +25,7 @@ in {
   options.my.crowdsec = {
     traefik.enable = lib.mkEnableOption "CrowdSec Traefik bouncer plugin wiring";
     caddy.enable = lib.mkEnableOption "CrowdSec Caddy log acquisition";
+    appsec.enable = lib.mkEnableOption "CrowdSec AppSec (WAF) component on localhost";
     lokiCaddy = {
       enable = lib.mkEnableOption "CrowdSec acquisition of remote Caddy access logs from Loki";
       query = lib.mkOption {
@@ -93,7 +94,11 @@ in {
           "crowdsecurity/sshd"
         ]
         ++ lib.optionals cfg.traefik.enable ["crowdsecurity/traefik"]
-        ++ lib.optionals (cfg.caddy.enable || cfg.lokiCaddy.enable) ["crowdsecurity/caddy"];
+        ++ lib.optionals (cfg.caddy.enable || cfg.lokiCaddy.enable) ["crowdsecurity/caddy"]
+        ++ lib.optionals cfg.appsec.enable [
+          "crowdsecurity/appsec-virtual-patching"
+          "crowdsecurity/appsec-generic-rules"
+        ];
 
       settings.general.api.server = {
         enable = true;
@@ -132,6 +137,15 @@ in {
             source = "journalctl";
             journalctl_filter = ["_SYSTEMD_UNIT=caddy.service"];
             labels.type = "caddy";
+          }
+        ]
+        ++ lib.optionals cfg.appsec.enable [
+          {
+            source = "appsec";
+            name = "caddy-appsec";
+            appsec_configs = ["crowdsecurity/appsec-default"];
+            listen_addr = "127.0.0.1:${toString config.my.network.ports.crowdsec-appsec}";
+            labels.type = "appsec";
           }
         ]
         ++ lib.optionals cfg.lokiCaddy.enable [

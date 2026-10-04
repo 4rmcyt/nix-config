@@ -162,7 +162,8 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 - Plugins via `pkgs.caddy.withPlugins`: `caddy-dns/cloudflare`, `hslatman/caddy-crowdsec-bouncer`, `porech/caddy-maxmind-geolocation`, `mholt/caddy-ratelimit`. Tags + per-host hashes in `modules/networking/caddy-plugins.json` (shared with gcp-relay), refreshed by `just caddy-update` (part of `just update`)
 - One wildcard `*.<domain>` cert (DNS-01); per-site blocks reuse it (Caddy ≥2.10), unknown subdomains → 404
 - Same site set as Traefik + `kanidm` (`idm.`), `jobko` (`/api*` split) and k3s `argocd.<domain>` → NodePort `30080` (HTTPS upstream, LAN/Tailscale only)
-- Per-site `route`: `crowdsec` → (`hass`: geoblock CA/US via `/var/lib/geoip/city.mmdb` + `rate_limit` 100/s) → headers (security / komga / komf CORS) → `reverse_proxy`
+- Per-site `route`: `crowdsec` → `appsec` (CrowdSec WAF, tunnel hostnames only: hass, livesync, cal, ntfy, jobko, idm; `appsec_fail_open`) → (`hass`: geoblock CA/US via `/var/lib/geoip/city.mmdb` + `rate_limit` 100/s) → headers (security / komga / komf CORS) → `encode zstd gzip` (not ntfy — streaming) → `reverse_proxy`
+- HTTP/3: UDP 443 open in the homeserver firewall
 - `trusted_proxies`: Cloudflare + loopback (cloudflared); client IP from `Cf-Connecting-IP`/`X-Forwarded-For`
 - Access logs JSON → journal → CrowdSec (`my.crowdsec.caddy`) + Alloy/Loki
 - Admin API + `/metrics` on `localhost:2019`: Prometheus job `caddy`, homepage `caddy` widget, Grafana dashboard `caddy-homeserver` (no Traefik-style web UI)
@@ -187,7 +188,7 @@ On homeserver, listening on Tailscale + LAN interfaces. Forwards to NextDNS prof
 
 ### CrowdSec
 
-- **homeserver**: LAPI at `127.0.0.1:8088`; Caddy bouncer (stream mode); collections: `linux`, `sshd`, `traefik`, `caddy`
+- **homeserver**: LAPI at `127.0.0.1:8088`; Caddy bouncer (stream mode); AppSec (WAF) component on `127.0.0.1:7422` (`my.crowdsec.appsec`, `appsec-default` config, `appsec-virtual-patching` + `appsec-generic-rules`); collections: `linux`, `sshd`, `caddy`
 - **gcp-relay**: nftables bouncer; remote LAPI via Tailscale pointing to homeserver. Caddy access log → journal → alloy → Loki → homeserver CrowdSec (`loki` datasource, `my.crowdsec.lokiCaddy`) — no agent on the relay
 - Whitelists: Tailscale CGNAT `100.64.0.0/10`, LAN `192.168.1.0/24`, Cloudflare IPs
 
