@@ -25,6 +25,8 @@
   headerSets = {
     security = ''
       header {
+        # Apply after reverse_proxy so we replace upstream's copies instead of duplicating them.
+        defer
         ${sts}
         X-Frame-Options "SAMEORIGIN"
         X-Content-Type-Options "nosniff"
@@ -34,6 +36,7 @@
     # Allows the komf webui to embed Komga (iframe) and call its API cross-origin.
     komga = ''
       header {
+        defer
         ${sts}
         X-Content-Type-Options "nosniff"
         X-XSS-Protection "1; mode=block"
@@ -56,6 +59,7 @@
     # komf has no auth, so CORS provides no real protection; wildcard lets the browser extension in.
     komf = ''
       header {
+        defer
         Access-Control-Allow-Origin "*"
         ${corsMethods}
         Access-Control-Allow-Headers "*"
