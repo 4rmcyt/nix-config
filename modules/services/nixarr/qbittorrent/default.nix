@@ -137,7 +137,33 @@ in {
     description = "Proxy to qBittorrent in VPN namespace";
     after = ["qbittorrent.service"];
     requires = ["qbittorrent.service"];
-    serviceConfig.ExecStart = "${pkgs.util-linux}/bin/nsenter --net=/run/netns/wg ${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:${toString webuiPort}";
+    serviceConfig = {
+      ExecStart = "${pkgs.systemd}/lib/systemd/systemd-socket-proxyd 127.0.0.1:${toString webuiPort}";
+      # systemd joins the netns before exec, so no root/CAP_SYS_ADMIN for nsenter; the socket unit stays in the host netns.
+      NetworkNamespacePath = "/run/netns/wg";
+      DynamicUser = true;
+      CapabilityBoundingSet = "";
+      NoNewPrivileges = true;
+      PrivateDevices = true;
+      ProtectClock = true;
+      ProtectKernelLogs = true;
+      ProtectKernelModules = true;
+      ProtectKernelTunables = true;
+      ProtectControlGroups = true;
+      ProtectHostname = true;
+      ProtectProc = "invisible";
+      ProcSubset = "pid";
+      RestrictNamespaces = true;
+      RestrictRealtime = true;
+      RestrictSUIDSGID = true;
+      LockPersonality = true;
+      MemoryDenyWriteExecute = true;
+      SystemCallArchitectures = "native";
+      SystemCallFilter = ["@system-service" "~@privileged" "~@resources"];
+      RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_UNIX"];
+      UMask = "0077";
+      # PrivateUsers deliberately NOT set: a new userns can't join a netns owned by the init userns.
+    };
   };
 
   systemd.services.qbittorrent-categories = {
