@@ -143,7 +143,7 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 
 ## Networking Stack (homeserver)
 
-### Traefik (reverse proxy)
+### Traefik (reverse proxy — disabled, replaced by Caddy; module kept for rollback)
 
 - HTTP → HTTPS redirect; wildcard TLS via Cloudflare DNS-01 ACME
 - Plugins (local, from Nix store): **crowdsec-bouncer**, **traefik-geoblock**
@@ -153,6 +153,19 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 - Public-facing `hass`: additionally `rate-limit` + `geoblock` (CA/US only)
 - Metrics endpoint on `127.0.0.1:8080`; internal API on `127.0.0.1:8083` (homepage widget)
 - Access logs: JSON, errors + slow requests only, 14-day rotation
+- geoblock ≥1.2 loads its bundled IP2Location seed via `TRAEFIK_PLUGIN_GEOBLOCK_PATH` (plugin root); auto-updates land in `/var/lib/traefik/geoblock`
+
+### Caddy (reverse proxy)
+
+`modules/networking/caddy-homeserver`, option `my.caddyHomeserver.enable` (asserts `my.traefik.enable = false`). Enabled on homeserver.
+
+- Plugins via `pkgs.caddy.withPlugins`: `caddy-dns/cloudflare`, `hslatman/caddy-crowdsec-bouncer`, `porech/caddy-maxmind-geolocation`, `mholt/caddy-ratelimit`. `hash = lib.fakeHash` until first build
+- One wildcard `*.<domain>` cert (DNS-01); per-site blocks reuse it (Caddy ≥2.10), unknown subdomains → 404
+- Same site set as Traefik + `kanidm` (`idm.`), `jobko` (`/api*` split) and k3s `argocd.<domain>` → NodePort `30080` (HTTPS upstream, LAN/Tailscale only)
+- Per-site `route`: `crowdsec` → (`hass`: geoblock CA/US via `/var/lib/geoip/city.mmdb` + `rate_limit` 100/s) → headers (security / komga / komf CORS) → `reverse_proxy`
+- `trusted_proxies`: Cloudflare + loopback (cloudflared); client IP from `Cf-Connecting-IP`/`X-Forwarded-For`
+- Access logs JSON → journal → CrowdSec (`my.crowdsec.caddy`) + Alloy/Loki
+- Admin API + `/metrics` on `localhost:2019`: Prometheus job `caddy`, homepage `caddy` widget, Grafana dashboard `caddy-homeserver` (no Traefik-style web UI)
 
 ### Headscale (Tailnet control plane)
 
@@ -174,7 +187,7 @@ On homeserver, listening on Tailscale + LAN interfaces. Forwards to NextDNS prof
 
 ### CrowdSec
 
-- **homeserver**: LAPI at `127.0.0.1:8088`; Traefik bouncer (stream mode); collections: `linux`, `sshd`, `traefik`, `caddy`
+- **homeserver**: LAPI at `127.0.0.1:8088`; Caddy bouncer (stream mode); collections: `linux`, `sshd`, `traefik`, `caddy`
 - **gcp-relay**: nftables bouncer; remote LAPI via Tailscale pointing to homeserver. Caddy access log → journal → alloy → Loki → homeserver CrowdSec (`loki` datasource, `my.crowdsec.lokiCaddy`) — no agent on the relay
 - Whitelists: Tailscale CGNAT `100.64.0.0/10`, LAN `192.168.1.0/24`, Cloudflare IPs
 
@@ -200,11 +213,11 @@ NUT server on homeserver; NUT client on desktop. Prometheus NUT exporter scrapes
 
 ## Services (homeserver)
 
-Most services are behind Traefik at `*.<domain>`. A subset is additionally exposed via **Cloudflare Tunnel** (no open inbound ports required).
+Most services are behind Caddy at `*.<domain>`. A subset is additionally exposed via **Cloudflare Tunnel** (no open inbound ports required).
 
 ### Cloudflare Tunnel
 
-Active tunnels (proxied through `localhost:443` → Traefik):
+Active tunnels (proxied through `localhost:443` → Caddy):
 
 | Hostname                 | Purpose                      | Cloudflare Access |
 |--------------------------|-------------------------------|-------------------|
@@ -259,7 +272,7 @@ All configured via the Cloudflare dashboard/API (zone `<domain>`, Free plan) —
 
 | Service  | Port  | URL                    | Notes                                                     |
 |----------|-------|------------------------|-----------------------------------------------------------|
-| Kanidm   | 3013  | `idm.<domain>`     | OIDC provider for Grafana, Miniflux, Jellyfin, Audiobookshelf, Headscale. Self-signed TLS internally, Traefik terminates externally via `insecureSkipVerify`. Provisioned declaratively via sops secrets. |
+| Kanidm   | 3013  | `idm.<domain>`     | OIDC provider for Grafana, Miniflux, Jellyfin, Audiobookshelf, Headscale. Self-signed TLS internally, Caddy terminates externally via `tls_insecure_skip_verify`. Provisioned declaratively via sops secrets. |
 
 ### Productivity / Home
 
@@ -278,7 +291,7 @@ All configured via the Cloudflare dashboard/API (zone `<domain>`, Free plan) —
 **Status: enabled** — `./k3s` + `./argocd` imported in `modules/services/default.nix`, running on homeserver.
 
 Single-node k3s on homeserver (`modules/services/k3s`). Embedded Traefik and
-servicelb are **disabled** — homeserver's NixOS Traefik owns `:80/:443`; cluster
+servicelb are **disabled** — homeserver's NixOS Caddy owns `:80/:443`; cluster
 services are reached via the NodePort range `30000-32767`.
 
 | Component | Notes |
@@ -303,17 +316,16 @@ services are reached via the NodePort range `30000-32767`.
 ```
 node_exporter (all hosts) ──┐
 NUT exporter                ├──► Prometheus :9090 ──► Grafana :3003  ──► grafana.<domain>
-Traefik metrics :8080       │         │
+Caddy metrics :2019         │         │
 CrowdSec metrics :6060      │         └──► Alertmanager ──► alertmanager-ntfy ──► ntfy
                             │
-Systemd journal ────────────┤──► Alloy ──► Loki :3100
-Traefik access.log ─────────┘
+Systemd journal (incl. Caddy access log) ──► Alloy ──► Loki :3100
 ```
 
-- **Prometheus** scrape targets: homeserver, desktop, matebook, gcp-relay node exporters; NUT; Traefik; CrowdSec; Prometheus self
+- **Prometheus** scrape targets: homeserver, desktop, matebook, gcp-relay node exporters; NUT; Caddy; CrowdSec; Prometheus self
 - **Grafana** OIDC via Kanidm; backend PostgreSQL; datasources: Prometheus + Loki; dashboards from `modules/monitoring/dashboards/`
 - **Loki** retention 30 days; TSDB schema v13; filesystem storage; Loki alert rules in `modules/monitoring/alerts/loki-rules.yaml`
-- **Alloy** ships: Traefik access log, systemd journal (last 12h); Python container log-level fix pipeline
+- **Alloy** ships: systemd journal (last 12h, incl. Caddy access log), Traefik access log only when `my.traefik.enable`; Python container log-level fix pipeline
 - **Alertmanager** → **alertmanager-ntfy** bridge → ntfy topic `alerts`
 - **GeoIP** monthly auto-update from db-ip.com (city MMDB, no account required)
 - Alert rules: `modules/monitoring/alerts/homeserver.yaml` (Prometheus), `modules/monitoring/alerts/loki-rules.yaml` (Loki)
@@ -360,7 +372,7 @@ secrets/
   gcp-relay-age-key                    # GCP age encryption key (bootstrap only, not in the flake)
 
   # Security
-  crowdsec.yaml                        # Traefik bouncer API key (homeserver)
+  crowdsec.yaml                        # Caddy bouncer API key (homeserver)
   crowdsec-gcp.yaml                    # nftables bouncer API key (gcp-relay)
 
   # Databases

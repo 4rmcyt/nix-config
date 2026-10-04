@@ -63,7 +63,7 @@ modules/
                             #   just imports them); plus client-side alloy-client.nix and
                             #   node-exporter-client.nix (imported directly by non-homeserver hosts)
   networking/               # ssh, tailscale, traefik, headscale, cloudflared,
-                            #   caddy, dnssec, nfs, nut-client/server, wireguard
+                            #   caddy, caddy-homeserver, dnssec, nfs, nut-client/server, wireguard
   security/                 # crowdsec, fail2ban, kanidm
   services/                 # Application services: home-assistant, radicale, homepage, miniflux,
                             #   nixarr, atuin-server, dispatcharr, microbin, komf, komga, ntfy,
@@ -108,7 +108,8 @@ Thunderbird account config also lives there (`inputs.private.homeModules.thunder
 |----------------------|-------------------------------|----------------------------------------------|
 | `my.defaults.*`      | `options/defaults.nix`        | user, email, git identity, domain, timezone, locale, GCP relay IP, NextDNS profile id (from `inputs.private`) |
 | `my.network.*`       | `options/network.nix`         | gateway, subnets, service ports (`ports.<name>` int + derived read-only `portScope.<name>` = internet/lan/localhost) — local defaults; host addresses/MACs/infrastructure/DHCP reservations sourced from `inputs.private` |
-| `my.traefik.*`       | `networking/traefik/`         | Traefik reverse proxy                        |
+| `my.traefik.*`       | `networking/traefik/`         | Traefik reverse proxy (disabled, rollback)   |
+| `my.caddyHomeserver.*` | `networking/caddy-homeserver/` | Caddy reverse proxy for homeserver (replaced Traefik) |
 | `my.headscale.*`     | `networking/headscale/`       | Headscale coordination server                |
 | `my.nodeExporter.*`  | `monitoring/node-exporter-client.nix` | Per-host Prometheus node exporter   |
 | `my.unbound.*`       | `networking/unbound/`         | Unbound DNS resolver                         |

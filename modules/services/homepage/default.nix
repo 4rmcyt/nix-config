@@ -28,7 +28,7 @@
     allowedHosts = "home.${config.my.defaults.domain}";
     environmentFiles = [config.sops.secrets.homepage_env.path];
 
-    services = import ./services.nix;
+    services = import ./services.nix {inherit config;};
     widgets = import ./widgets.nix;
     bookmarks = import ./bookmarks.nix;
     settings = import ./settings.nix;

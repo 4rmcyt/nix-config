@@ -1,4 +1,4 @@
-[
+{config}: [
   {
     Media = [
       {
@@ -327,17 +327,32 @@
           };
         };
       }
-      {
-        Traefik = {
-          icon = "traefik.png";
-          href = "{{HOMEPAGE_VAR_TRAEFIK_URL}}";
-          description = "Reverse Proxy";
-          widget = {
-            type = "traefik";
-            url = "{{HOMEPAGE_VAR_TRAEFIK_INTERNAL_URL}}";
+      (
+        if config.my.caddyHomeserver.enable
+        then {
+          Caddy = {
+            icon = "caddy.png";
+            # No built-in UI; link to the provisioned Grafana dashboard.
+            href = "{{HOMEPAGE_VAR_GRAFANA_URL}}/d/caddy-homeserver";
+            description = "Reverse Proxy";
+            widget = {
+              type = "caddy";
+              url = "http://localhost:${toString config.my.network.ports.caddy-admin}";
+            };
           };
-        };
-      }
+        }
+        else {
+          Traefik = {
+            icon = "traefik.png";
+            href = "{{HOMEPAGE_VAR_TRAEFIK_URL}}";
+            description = "Reverse Proxy";
+            widget = {
+              type = "traefik";
+              url = "{{HOMEPAGE_VAR_TRAEFIK_INTERNAL_URL}}";
+            };
+          };
+        }
+      )
       {
         CrowdSec = {
           icon = "crowdsec.png";

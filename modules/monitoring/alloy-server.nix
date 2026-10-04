@@ -13,19 +13,21 @@
       }
     }
 
-    // ── Traefik access log ────────────────────────────────────────
-    local.file_match "traefik" {
-      path_targets = [{
-        __path__ = "/var/log/traefik/access.log",
-        job       = "traefik",
-        host      = "homeserver",
-      }]
-    }
+    ${lib.optionalString config.my.traefik.enable ''
+      // ── Traefik access log ────────────────────────────────────────
+      local.file_match "traefik" {
+        path_targets = [{
+          __path__ = "/var/log/traefik/access.log",
+          job       = "traefik",
+          host      = "homeserver",
+        }]
+      }
 
-    loki.source.file "traefik" {
-      targets    = local.file_match.traefik.targets
-      forward_to = [loki.write.default.receiver]
-    }
+      loki.source.file "traefik" {
+        targets    = local.file_match.traefik.targets
+        forward_to = [loki.write.default.receiver]
+      }
+    ''}
 
     // ── Systemd journal ───────────────────────────────────────────
     // relabel rules stored here, applied via relabel_rules= in source.journal

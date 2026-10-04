@@ -152,8 +152,8 @@
       logRefusedConnections = false; # Avoid log spam
 
       allowedTCPPorts = [
-        80 # HTTP (traefik)
-        443 # HTTPS (traefik)
+        80 # HTTP (caddy)
+        443 # HTTPS (caddy)
         2222 # SSH
         # 8000  # TP-Link Exporter
         # 11434 # Ollama API
@@ -253,8 +253,7 @@
     after = ["zfs-import-zbackup.service"];
   };
 
-  my.traefik.enable = true;
-  my.crowdsec.traefik.enable = true;
+  my.caddyHomeserver.enable = true;
   my.crowdsec.lokiCaddy = {
     enable = true;
     query = ''{host="gcp-relay", unit="caddy.service"}'';

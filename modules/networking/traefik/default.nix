@@ -345,6 +345,13 @@ in {
         };
       };
 
+      services.prometheus.scrapeConfigs = [
+        {
+          job_name = "traefik";
+          static_configs = [{targets = ["localhost:${toString config.my.network.ports.traefik-metrics}"];}];
+        }
+      ];
+
       systemd.tmpfiles.rules = [
         "d /var/lib/traefik 0755 traefik traefik -"
         "d /var/log/traefik 0755 traefik traefik -"

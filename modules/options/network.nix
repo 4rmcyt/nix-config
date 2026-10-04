@@ -193,6 +193,11 @@
       scope = "localhost";
       desc = "Traefik API entrypoint (localhost only, used by the homepage widget)";
     };
+    caddy-admin = {
+      port = 2019;
+      scope = "localhost";
+      desc = "Caddy admin API + /metrics (homeserver Caddy; Prometheus and homepage widget)";
+    };
 
     atuin = {
       port = 8881;

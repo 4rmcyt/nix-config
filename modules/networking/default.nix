@@ -1,5 +1,6 @@
 {...}: {
   imports = [
+    ./caddy-homeserver
     ./cloudflared
     ./dnssec
     ./headscale

@@ -72,10 +72,6 @@
         static_configs = [{targets = ["localhost:${toString config.my.network.ports.prometheus}"];}];
       }
       {
-        job_name = "traefik";
-        static_configs = [{targets = ["localhost:${toString config.my.network.ports.traefik-metrics}"];}];
-      }
-      {
         job_name = "crowdsec";
         static_configs = [{targets = ["localhost:6060"];}];
       }
