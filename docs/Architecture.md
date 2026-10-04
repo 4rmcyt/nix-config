@@ -44,7 +44,7 @@ parts/                      # Auto-imported flake-parts modules
 hosts/nixos/<name>/         # NixOS system config + hardware-configuration.nix
 home/<name>/                # Home Manager config per host
 modules/                    # NixOS/HM modules (NOT auto-imported; referenced by host configs)
-lib/                        # Plain helpers imported by path: overlays.nix, overlays-hm.nix, cachix.nix, cloudflare-acme-secret.nix
+lib/                        # Plain helpers imported by path: overlays.nix, overlays-hm.nix, cachix.nix, cloudflare-acme-secret.nix, caddy-with-plugins.nix
 secrets/                    # sops-encrypted YAML/binary files
 tools/                      # Helper scripts and tooling
 ```
@@ -347,7 +347,8 @@ The `default` dev shell (`nix develop`) is defined inline in [`parts/devshells.n
 | `deploy-gcp` | `nixos-rebuild switch --flake .#gcp-relay --target-host zeev@gcp-relay --build-host localhost --elevate=sudo --ask-elevate-password`, then `cachix push 4rmcyt-gcp`, then `nh clean all` |
 | `deploy-homeserver` / `deploy-matebook` | `nixos-rebuild switch --flake .#<host> --target-host zeev@<host> --build-host localhost --elevate=sudo --ask-elevate-password` |
 | `deploy-local` | `sudo nixos-rebuild switch --flake ".#$(hostname)"` — for desktop, which is built on-machine, never in CI |
-| `update` | `nix flake update`, then build homeserver/matebook/gcp-relay locally |
+| `update` | `nix flake update`, `just caddy-update`, then build homeserver/matebook/gcp-relay locally |
+| `caddy-update` | `tools/scripts/caddy-plugins-update.sh`: bump Caddy plugin tags in `modules/networking/caddy-plugins.json` (latest stable, same major; warns on new major), then rebuild each host's `services.caddy.package.src` FOD and write the `got:` hash back |
 | `check` | `nix flake check` |
 | `fmt` | `nix fmt` |
 | `push-caches` | `cachix push 4rmcyt-$(hostname) /run/current-system` |
@@ -360,6 +361,7 @@ Pre-commit and CI helper scripts in `tools/scripts/`:
 | Script | Trigger | Purpose |
 |--------|---------|---------|
 | `check-dangerous-patterns.sh` | pre-commit (`dangerous-shell-patterns` hook), `.nix` + `.sh` files | Blocks `exec zellij/tmux/screen/wezterm` in shell configs — causes lockouts if zsh init runs `exec` unconditionally |
+| `caddy-plugins-update.sh` | `just caddy-update` / `just update` | Bumps Caddy plugin tags in `modules/networking/caddy-plugins.json` (latest stable within the current major) and rewrites per-host `withPlugins` hashes from the FOD `got:` line |
 | `check-installer-keys.sh` | (manual) | Validates `hosts/installer/authorized_keys`: ensures file exists, fixes permissions to 600, validates each line is a valid SSH public key via `ssh-keygen -lf` |
 
 ### Desktop Hardware Notes

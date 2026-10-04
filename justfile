@@ -17,7 +17,7 @@ deploy-local:
 
 # Bump Caddy plugin tags (same major) and refresh their withPlugins hashes
 caddy-update:
-    ./scripts/caddy-plugins-update.sh
+    ./tools/scripts/caddy-plugins-update.sh
 
 # Update all flake inputs, then build the CI-covered hosts locally
 update:

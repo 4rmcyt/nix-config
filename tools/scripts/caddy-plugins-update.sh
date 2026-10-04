@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2016 # $m/$v/$h below are jq variables, not shell ones
 # Bump Caddy plugins to the latest stable tag within their major, then refresh per-host withPlugins hashes.
 set -euo pipefail
-# shellcheck disable=SC2016 # $m/$v/$h below are jq variables, not shell ones
 
 cd "$(git rev-parse --show-toplevel)"
 json=modules/networking/caddy-plugins.json
