@@ -6,4 +6,6 @@ owner: {
   group = owner;
   mode = "0400";
   format = "dotenv";
+  # Proxies read it as EnvironmentFile at start only; owner doubles as the unit name.
+  restartUnits = ["${owner}.service"];
 }

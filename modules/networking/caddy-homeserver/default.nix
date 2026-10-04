@@ -239,6 +239,8 @@ in {
     sops.templates."caddy-crowdsec.env" = {
       content = "CROWDSEC_API_KEY=${config.sops.placeholder.crowdsec_bouncer_key}\n";
       owner = "caddy";
+      # Env is read at process start; reload wouldn't pick up a rotated key.
+      restartUnits = ["caddy.service"];
     };
 
     services.caddy = {
