@@ -250,7 +250,7 @@ in {
           "github.com/porech/caddy-maxmind-geolocation@v1.0.3"
           "github.com/mholt/caddy-ratelimit@v0.1.0"
         ];
-        hash = lib.fakeHash;
+        hash = "sha256-KQ1MuFWgECYMLh1lbsDiitVkIQ59ftRWJc6xWN6gXZk=";
       };
 
       globalConfig = ''
