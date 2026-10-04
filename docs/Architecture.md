@@ -384,14 +384,14 @@ Pre-commit and CI helper scripts in `tools/scripts/`:
 
 ## Deployment
 
-Remote hosts are deployed manually via `nixos-rebuild` over SSH — recipes live in the [`justfile`](../justfile). Build happens on the local machine (`--build-host localhost`), activation on the target with `--elevate=sudo`. No deploy-rs.
+Remote hosts are deployed manually via `nh os switch --target-host` over SSH — recipes live in the [`justfile`](../justfile). Build happens on the local machine (no `--build-host`), activation on the target; nh prompts for the remote sudo password itself (`--elevation-strategy auto`). No deploy-rs.
 
 | Host       | Recipe / method |
 |------------|-----------------|
-| homeserver | `just deploy-homeserver` → `nixos-rebuild switch --flake .#homeserver --target-host zeev@homeserver --build-host localhost --elevate=sudo` |
+| homeserver | `just deploy-homeserver` → `nh os switch . -H homeserver --target-host zeev@homeserver` |
 | matebook   | `just deploy-matebook` (same shape, `zeev@matebook`) |
-| gcp-relay  | `just deploy-gcp` → deploy `.#gcp-relay`, then push closure to `4rmcyt-gcp` Cachix, then `nh clean all` |
-| desktop    | Local: `just deploy-local` (`sudo nixos-rebuild switch --flake ".#$(hostname)"`) / `nh os switch` |
+| gcp-relay  | `just deploy-gcp` → deploy `.#gcp-relay`, then push closure to `4rmcyt-gcp` Cachix |
+| desktop    | Local: `just deploy-local` (`nh os switch .`) |
 
 Updates are manual everywhere — no auto-upgrade timer.
 
