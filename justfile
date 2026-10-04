@@ -15,9 +15,14 @@ deploy-matebook:
 deploy-local:
     sudo nixos-rebuild switch --flake ".#$(hostname)"
 
+# Bump Caddy plugin tags (same major) and refresh their withPlugins hashes
+caddy-update:
+    ./scripts/caddy-plugins-update.sh
+
 # Update all flake inputs, then build the CI-covered hosts locally
 update:
     nix flake update
+    just caddy-update
     nix build .#nixosConfigurations.homeserver.config.system.build.toplevel
     nix build .#nixosConfigurations.matebook.config.system.build.toplevel
     nix build .#nixosConfigurations.gcp-relay.config.system.build.toplevel

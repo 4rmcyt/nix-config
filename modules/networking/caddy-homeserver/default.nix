@@ -243,15 +243,7 @@ in {
 
     services.caddy = {
       enable = true;
-      package = pkgs.caddy.withPlugins {
-        plugins = [
-          "github.com/caddy-dns/cloudflare@v0.2.4"
-          "github.com/hslatman/caddy-crowdsec-bouncer@v0.14.1"
-          "github.com/porech/caddy-maxmind-geolocation@v1.0.3"
-          "github.com/mholt/caddy-ratelimit@v0.1.0"
-        ];
-        hash = "sha256-KQ1MuFWgECYMLh1lbsDiitVkIQ59ftRWJc6xWN6gXZk=";
-      };
+      package = import ../../../lib/caddy-with-plugins.nix pkgs "homeserver";
 
       globalConfig = ''
         email ${email}

@@ -1,0 +1,23 @@
+{
+  "plugins": {
+    "github.com/caddy-dns/cloudflare": "v0.2.4",
+    "github.com/hslatman/caddy-crowdsec-bouncer": "v0.14.1",
+    "github.com/porech/caddy-maxmind-geolocation": "v1.0.3",
+    "github.com/mholt/caddy-ratelimit": "v0.1.0"
+  },
+  "hosts": {
+    "gcp-relay": {
+      "plugins": ["github.com/caddy-dns/cloudflare"],
+      "hash": "sha256-Oirb6ZtU/c6C/SfICWpfBAEGDTepWShPQdWW0LlhF20="
+    },
+    "homeserver": {
+      "plugins": [
+        "github.com/caddy-dns/cloudflare",
+        "github.com/hslatman/caddy-crowdsec-bouncer",
+        "github.com/porech/caddy-maxmind-geolocation",
+        "github.com/mholt/caddy-ratelimit"
+      ],
+      "hash": "sha256-KQ1MuFWgECYMLh1lbsDiitVkIQ59ftRWJc6xWN6gXZk="
+    }
+  }
+}
