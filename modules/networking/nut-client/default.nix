@@ -2,7 +2,10 @@
   config,
   pkgs,
   ...
-}: {
+}: let
+  # LAN, not MagicDNS: on outage the router is down, only the UPS-powered switch remains.
+  upsSystem = "apc@${config.my.network.hosts.homeserver_lan}:${toString config.my.network.ports.nut}";
+in {
   users.groups.nut = {};
 
   power.ups = {
@@ -11,7 +14,7 @@
 
     upsmon = {
       monitor.apc = {
-        system = "apc@homeserver";
+        system = upsSystem;
         user = "upsmon";
         type = "secondary";
         passwordFile = config.sops.secrets.nut_password.path;
@@ -30,7 +33,7 @@
       # Bounded retry: fail fast instead of hanging boot forever if
       # homeserver's NUT server is unreachable; systemd's Restart=on-failure
       # then retries the whole unit.
-      ExecStart = "${pkgs.bash}/bin/bash -c 'for i in $(seq 1 30); do ${pkgs.nut}/bin/upsc apc@homeserver &>/dev/null && exit 0; sleep 2; done; exit 1'";
+      ExecStart = "${pkgs.bash}/bin/bash -c 'for i in $(seq 1 30); do ${pkgs.nut}/bin/upsc ${upsSystem} &>/dev/null && exit 0; sleep 2; done; exit 1'";
       Restart = "on-failure";
       RestartSec = "10s";
     };

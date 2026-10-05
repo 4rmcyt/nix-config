@@ -14,6 +14,8 @@ in {
       "${homeserver_lan}:${toString port}:${toString port}"
     ];
     extraOptions = [
+      # Container root maps to an unprivileged subuid; idmap keeps host-side ownership root:root.
+      "--userns=auto"
       "--security-opt=no-new-privileges"
       "--cap-drop=all"
     ];
@@ -21,7 +23,7 @@ in {
       REGISTRY_HTTP_ADDR = "0.0.0.0:${toString port}";
     };
     volumes = [
-      "/var/lib/local-registry:/var/lib/registry"
+      "/var/lib/local-registry:/var/lib/registry:idmap"
     ];
   };
 
