@@ -5,8 +5,19 @@
 }: let
   # LAN, not MagicDNS: on outage the router is down, only the UPS-powered switch remains.
   upsSystem = "apc@${config.my.network.hosts.homeserver_lan}:${toString config.my.network.ports.nut}";
+
+  # Secondary FSD skips setfsd and runs SHUTDOWNCMD locally; homeserver keeps running.
+  upsschedCmd = pkgs.writeShellScript "upssched-cmd" ''
+    case "$1" in
+      onbatt) ${config.power.ups.package}/sbin/upsmon -c fsd ;;
+    esac
+  '';
 in {
   users.groups.nut = {};
+
+  systemd.tmpfiles.rules = [
+    "d /run/upssched 0750 ${config.power.ups.upsmon.user} ${config.power.ups.upsmon.group} -"
+  ];
 
   power.ups = {
     enable = true;
@@ -19,30 +30,26 @@ in {
         type = "secondary";
         passwordFile = config.sops.secrets.nut_password.path;
       };
+      settings.NOTIFYFLAG = [
+        ["ONBATT" "SYSLOG+WALL+EXEC"]
+        ["ONLINE" "SYSLOG+WALL+EXEC"]
+      ];
     };
+
+    # Desktop draws most of the load; leave early so homeserver gets the battery.
+    schedulerRules = toString (pkgs.writeText "upssched.conf" ''
+      CMDSCRIPT ${upsschedCmd}
+      PIPEFN /run/upssched/upssched.pipe
+      LOCKFN /run/upssched/upssched.lock
+      AT ONBATT * START-TIMER onbatt 30
+      AT ONLINE * CANCEL-TIMER onbatt
+    '');
   };
 
-  systemd.services.nut-wait-homeserver = {
-    description = "Wait for NUT server on homeserver:${toString config.my.network.ports.nut}";
+  # No wait-for-server unit: upsmon reconnects on its own if homeserver is down at boot.
+  systemd.services.upsmon = {
     after = ["network-online.target"];
     wants = ["network-online.target"];
-    before = ["upsmon.service"];
-    wantedBy = ["upsmon.service"];
-    serviceConfig = {
-      Type = "oneshot";
-      # Bounded retry: fail fast instead of hanging boot forever if
-      # homeserver's NUT server is unreachable; systemd's Restart=on-failure
-      # then retries the whole unit.
-      ExecStart = "${pkgs.bash}/bin/bash -c 'for i in $(seq 1 30); do ${pkgs.nut}/bin/upsc ${upsSystem} &>/dev/null && exit 0; sleep 2; done; exit 1'";
-      Restart = "on-failure";
-      RestartSec = "10s";
-    };
-  };
-
-  systemd.services.upsmon = {
-    after = ["network-online.target" "nut-wait-homeserver.service"];
-    wants = ["network-online.target"];
-    requires = ["nut-wait-homeserver.service"];
   };
 
   sops.secrets.nut_password = {

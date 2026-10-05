@@ -139,12 +139,12 @@ in {
       ];
     };
 
-    # ES 550 raises LB only ~2 min before empty; shut down after 60s on battery instead.
+    # Desktop leaves after 30s (nut-client); homeserver alone lasts ~9 min to LB, so FSD at 5 min.
     schedulerRules = toString (pkgs.writeText "upssched.conf" ''
       CMDSCRIPT ${upsschedCmd}
       PIPEFN /run/upssched/upssched.pipe
       LOCKFN /run/upssched/upssched.lock
-      AT ONBATT * START-TIMER onbatt 60
+      AT ONBATT * START-TIMER onbatt 300
       AT ONLINE * CANCEL-TIMER onbatt
     '');
   };
