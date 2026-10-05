@@ -326,12 +326,6 @@ in {
         description = "Work VLAN subnet (vlan40)";
       };
 
-      podman = lib.mkOption {
-        type = lib.types.str;
-        default = "10.88.0.0/16";
-        description = "Podman container network subnet";
-      };
-
       private = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [

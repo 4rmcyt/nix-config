@@ -115,9 +115,7 @@ in {
   };
   users.groups.postgres = {};
 
-  # No global TCP 5432 opening on purpose: pg_hba only trusts loopback + the podman
-  # bridge, already interface-scoped at the host level — a blanket allowedTCPPorts
-  # would just add attack surface with no functional gain.
+  # No global TCP 5432 opening: pg_hba only allows loopback + k3s pods (cni0-scoped firewall rule).
 
   services.postgresql = {
     enable = true;
@@ -193,7 +191,6 @@ in {
       # Require password authentication for network connections (both IPv4 and IPv6)
       host  all all 127.0.0.1/32 scram-sha-256
       host  all all ::1/128      scram-sha-256
-      host  all all ${config.my.network.subnets.podman} scram-sha-256
       # k3s pod network (flannel default), job-kombayn only
       host  kombayn kombayn 10.42.0.0/16 scram-sha-256
     '';
