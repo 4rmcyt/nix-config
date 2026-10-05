@@ -38,14 +38,6 @@
       secret = "prowlarr_db_password";
     }
     {
-      name = "dispatcharr";
-      secret = "dispatcharr_db_password";
-    }
-    {
-      name = "comet";
-      secret = "comet_db_password";
-    }
-    {
       name = "kombayn";
       secret = "kombayn_db_password";
     }
@@ -108,20 +100,6 @@ in {
       group = config.users.groups.prowlarr.name;
       mode = "0440";
     };
-    dispatcharr_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "dispatcharr_db_password";
-      owner = config.users.users.postgres.name;
-      group = config.users.groups.postgres.name;
-      mode = "0440";
-    };
-    comet_db_password = {
-      sopsFile = ../../../secrets/postgresql.yaml;
-      key = "comet_db_password";
-      owner = config.users.users.postgres.name;
-      group = config.users.groups.postgres.name;
-      mode = "0440";
-    };
     kombayn_db_password = {
       sopsFile = ../../../secrets/postgresql.yaml;
       key = "kombayn_db_password";
@@ -157,9 +135,7 @@ in {
       "sonarr-log"
       "prowlarr"
       "prowlarr-log"
-      "dispatcharr"
       "kombayn"
-      "comet"
     ];
 
     ensureUsers = [
@@ -193,14 +169,6 @@ in {
       }
       {
         name = "prowlarr";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "dispatcharr";
-        ensureDBOwnership = true;
-      }
-      {
-        name = "comet";
         ensureDBOwnership = true;
       }
       {

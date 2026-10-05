@@ -191,10 +191,6 @@
       port = config.services.couchdb.port;
       waf = true;
     };
-    dispatcharr.port = ports.dispatcharr;
-    comet.port = ports.comet;
-    aiostreams.port = ports.aiostreams;
-    stremio.port = ports.stremio;
     radicale = {
       port = ports.radicale;
       host = "cal.${domain}";

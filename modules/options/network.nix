@@ -157,26 +157,6 @@
       scope = "lan";
       desc = "Microbin pastebin/file-sharing service";
     };
-    dispatcharr = {
-      port = 9191;
-      scope = "lan";
-      desc = "Dispatcharr IPTV/EPG manager";
-    };
-    comet = {
-      port = 8000;
-      scope = "lan";
-      desc = "Comet Stremio torrent/debrid search addon (Prowlarr-backed)";
-    };
-    aiostreams = {
-      port = 3000;
-      scope = "lan";
-      desc = "AIOStreams Stremio addon aggregator";
-    };
-    stremio = {
-      port = 8020;
-      scope = "lan";
-      desc = "Stremio server + web player (tsaridas/stremio-docker)";
-    };
     ntfy = {
       port = 9991;
       scope = "internet";

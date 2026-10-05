@@ -259,8 +259,7 @@ All configured via the Cloudflare dashboard/API (zone `<domain>`, Free plan) —
 | Seerr           | 5055  | `seerr.<domain>`          | Request management — OCI container |
 | Audiobookshelf  | 9292  | `audiobookshelf.<domain>` | Audiobooks                         |
 | Recyclarr       | —     | (no UI)                       | Auto-sync quality profiles to *arr |
-| Byparr          | 8191  | (internal only)               | Cloudflare bypass for Prowlarr — FlareSolverr-compatible, OCI container |
-| Dispatcharr     | 9191  | `dispatcharr.<domain>`    | Stream dispatch — OCI container    |
+| Byparr          | 8191  | (internal only)               | Cloudflare bypass for Prowlarr — FlareSolverr-compatible, OCI container on the podman bridge, published on 127.0.0.1 + LAN IP |
 
 ### Reading / Library
 

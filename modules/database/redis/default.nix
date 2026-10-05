@@ -1,12 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: let
-  inherit (config.my.network) podmanBridge podmanGateway;
-  podmanPrefix = lib.elemAt (lib.splitString "/" config.my.network.subnets.podman) 1;
-in {
+{config, ...}: {
   sops.secrets = {
     redis-oauth2-proxy-password = {
       sopsFile = ../../../secrets/redis.yaml;

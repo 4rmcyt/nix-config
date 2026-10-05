@@ -3,12 +3,17 @@
 # even though crictl lists the image fine — a real registry pull avoids it.
 {config, ...}: let
   port = config.my.network.ports.local-registry;
+  inherit (config.my.network.hosts) homeserver_lan;
 in {
   virtualisation.oci-containers.containers.local-registry = {
     autoStart = true;
     image = "docker.io/library/registry:2";
+    # Published ports are DNAT'd past the NixOS firewall: bind loopback (k3s) + LAN IP only.
+    ports = [
+      "127.0.0.1:${toString port}:${toString port}"
+      "${homeserver_lan}:${toString port}:${toString port}"
+    ];
     extraOptions = [
-      "--network=host"
       "--security-opt=no-new-privileges"
       "--cap-drop=all"
     ];
@@ -32,7 +37,4 @@ in {
         endpoint:
           - "http://localhost:${toString port}"
   '';
-
-  # LAN only: no auth, so keep it off anything wider than the trusted home LAN.
-  networking.firewall.interfaces.enp0s31f6.allowedTCPPorts = [port];
 }

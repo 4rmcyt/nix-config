@@ -181,7 +181,6 @@
       "sonarr-log"
       "prowlarr"
       "prowlarr-log"
-      "dispatcharr"
       "kombayn"
       "hass"
       "grafana"
@@ -326,7 +325,6 @@
 
   my.unbound = {
     enable = true;
-    # Not 0.0.0.0: comet runs --network=host and its bundled unbound already holds the wildcard bind on 53.
     interfaces = ["tailscale0" "enp0s31f6"];
   };
 

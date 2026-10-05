@@ -70,10 +70,6 @@
     microbin.port = config.my.network.ports.microbin;
     atuin.port = config.services.atuin.port;
     livesync.port = config.services.couchdb.port;
-    dispatcharr.port = config.my.network.ports.dispatcharr;
-    comet.port = config.my.network.ports.comet;
-    aiostreams.port = config.my.network.ports.aiostreams;
-    stremio.port = config.my.network.ports.stremio;
     radicale = {
       port = config.my.network.ports.radicale;
       host = "cal.${domain}";

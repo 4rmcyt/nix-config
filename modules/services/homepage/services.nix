@@ -39,36 +39,6 @@
           };
         };
       }
-      {
-        Dispatcharr = {
-          icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/dispatcharr.png";
-          href = "{{HOMEPAGE_VAR_DISPATCHARR_URL}}";
-          description = "IPTV Stream Manager";
-        };
-      }
-      {
-        # No dashboard-icons entry or Homepage widget for Comet yet — plain link, no icon.
-        Comet = {
-          href = "{{HOMEPAGE_VAR_COMET_URL}}";
-          description = "Stremio Torrent/Debrid Search";
-        };
-      }
-      {
-        # No dedicated Homepage widget, but selfh.st/icons has an icon (dashboard-icons doesn't).
-        AIOStreams = {
-          icon = "sh-aiostreams.svg";
-          href = "{{HOMEPAGE_VAR_AIOSTREAMS_URL}}";
-          description = "Stremio Addon Aggregator";
-        };
-      }
-      {
-        # No dedicated Homepage widget -- plain link.
-        Stremio = {
-          icon = "stremio.png";
-          href = "{{HOMEPAGE_VAR_STREMIO_URL}}";
-          description = "Stremio Server + Web Player";
-        };
-      }
     ];
   }
   {
