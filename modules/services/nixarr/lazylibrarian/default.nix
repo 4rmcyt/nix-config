@@ -1,9 +1,17 @@
-{config, ...}: {
+{config, ...}: let
+  port = toString config.my.network.ports.lazylibrarian;
+in {
   virtualisation.oci-containers.containers.lazylibrarian = {
     autoStart = true;
     image = "lscr.io/linuxserver/lazylibrarian:latest";
+    # Published ports are DNAT'd past the NixOS firewall: bind loopback (reverse proxy, prowlarr sync) + LAN IP only.
+    ports = [
+      "127.0.0.1:${port}:${port}"
+      "${config.my.network.hosts.homeserver_lan}:${port}:${port}"
+    ];
     extraOptions = [
-      "--network=host"
+      # Bridge DNS can't see the LAN split-horizon; reach qBittorrent via host Caddy, not the unauthenticated :8081 proxy.
+      "--add-host=qb.${config.my.defaults.domain}:host-gateway"
       "--label=io.containers.autoupdate=registry"
       "--security-opt=no-new-privileges"
       # LinuxServer.io-style s6-overlay init needs these to chown /config and
@@ -37,7 +45,8 @@
     requires = ["data.mount"];
   };
 
-  networking.firewall.allowedTCPPorts = [config.my.network.ports.lazylibrarian];
+  # Torznab feeds come from Prowlarr on the host (host.containers.internal).
+  networking.firewall.interfaces.podman0.allowedTCPPorts = [config.my.network.ports.prowlarr];
 
   systemd.tmpfiles.rules = [
     "d /data/media/.state/nixarr/lazylibrarian 775 ${config.my.defaults.user} media -"
