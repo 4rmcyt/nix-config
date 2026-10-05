@@ -63,6 +63,8 @@ in {
           "${pkgs.nfs-utils}/bin/rpc.mountd --no-tcp --no-udp"
         ];
         RestrictAddressFamilies = ["AF_UNIX" "AF_NETLINK" "AF_INET" "AF_INET6"];
+        # Kernel resolves export paths in mountd's mount ns; RO there = EROFS for every client.
+        ReadWritePaths = ["/data"];
       };
 
     # No ProtectKernelTunables: writes /proc/fs/nfsd/v4_end_grace.
