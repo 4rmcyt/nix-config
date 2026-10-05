@@ -320,6 +320,9 @@ in {
       }
     ];
 
+    # maxmind_geolocation keeps the mmdb open until the matcher is cleaned up on reload.
+    systemd.services.geoip-update.serviceConfig.ExecStartPost = "${pkgs.systemd}/bin/systemctl try-reload-or-restart caddy.service";
+
     services.grafana.provision.dashboards.settings.providers = [
       {
         name = "caddy";
