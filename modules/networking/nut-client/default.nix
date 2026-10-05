@@ -3,8 +3,11 @@
   pkgs,
   ...
 }: let
-  # LAN, not MagicDNS: on outage the router is down, only the UPS-powered switch remains.
+  # LAN address: on outage the router is down, only the UPS-powered switch remains.
   upsSystem = "apc@${config.my.network.hosts.homeserver_lan}:${toString config.my.network.ports.nut}";
+
+  # Beats Tailscale's `5270 lookup 52` (accepted homeserver subnet route) for NUT only.
+  nutRule = "to ${config.my.network.hosts.homeserver_lan} ipproto tcp dport ${toString config.my.network.ports.nut} lookup main priority 5200";
 
   # Secondary FSD skips setfsd and runs SHUTDOWNCMD locally; homeserver keeps running.
   upsschedCmd = pkgs.writeShellScript "upssched-cmd" ''
@@ -46,9 +49,22 @@ in {
     '');
   };
 
+  systemd.services.nut-lan-route = {
+    description = "Route NUT traffic to homeserver via LAN, bypassing Tailscale";
+    before = ["upsmon.service"];
+    wantedBy = ["upsmon.service"];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStartPre = "-${pkgs.iproute2}/bin/ip rule del ${nutRule}";
+      ExecStart = "${pkgs.iproute2}/bin/ip rule add ${nutRule}";
+      ExecStop = "${pkgs.iproute2}/bin/ip rule del ${nutRule}";
+    };
+  };
+
   # No wait-for-server unit: upsmon reconnects on its own if homeserver is down at boot.
   systemd.services.upsmon = {
-    after = ["network-online.target"];
+    after = ["network-online.target" "nut-lan-route.service"];
     wants = ["network-online.target"];
   };
 
