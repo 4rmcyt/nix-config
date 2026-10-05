@@ -10,6 +10,8 @@ in {
       "${config.my.network.hosts.homeserver_lan}:${port}:${port}"
     ];
     extraOptions = [
+      # Bridge DNS can't see the LAN split-horizon; reach qBittorrent via host Caddy, not the unauthenticated :8081 proxy.
+      "--add-host=qb.${config.my.defaults.domain}:host-gateway"
       "--label=io.containers.autoupdate=registry"
       "--env=PUID=1000"
       "--env=PGID=${toString config.users.groups.media.gid}"
