@@ -19,7 +19,7 @@
         "github.com/porech/caddy-maxmind-geolocation",
         "github.com/mholt/caddy-ratelimit"
       ],
-      "hash": "sha256-KQ1MuFWgECYMLh1lbsDiitVkIQ59ftRWJc6xWN6gXZk="
+      "hash": "sha256-jrBmIfCniFh4zzmS2nHxcjTdQ9I89Qp7uTAp04Lo0ZA="
     }
   }
 }
