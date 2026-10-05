@@ -1,23 +1,23 @@
-# windowrule=Param:Values,Param:Values,appid:Regex,title:Regex
+# window_rule=Param:Values,Param:Values,app_id:Regex,title:Regex
 # See https://mangowm.github.io/docs/window-management/rules
 _: {
-  wayland.windowManager.mango.settings.windowrule = [
-    "isfloating:1,title:^(Open File|Save File|File Upload|Confirm to replace files|File Operation Progress)$"
+  wayland.windowManager.mango.settings.window_rule = [
+    "is_floating:1,title:^(Open File|Save File|File Upload|Confirm to replace files|File Operation Progress)$"
 
-    "isfloating:1,appid:^(org\\.gnome\\.Calculator|org\\.gnome\\.FileRoller)$"
+    "is_floating:1,app_id:^(org\\.gnome\\.Calculator|org\\.gnome\\.FileRoller)$"
 
-    "isfloating:1,appid:^(org\\.pulseaudio\\.pavucontrol|zenity)$"
+    "is_floating:1,app_id:^(org\\.pulseaudio\\.pavucontrol|zenity)$"
 
-    "isfloating:1,appid:^(Viewnior|loupe|org\\.gnome\\.Loupe)$"
+    "is_floating:1,app_id:^(Viewnior|loupe|org\\.gnome\\.Loupe)$"
 
-    "isfloating:1,appid:^(mpv)$"
-    "isfloating:1,title:^(Picture-in-Picture)$"
+    "is_floating:1,app_id:^(mpv)$"
+    "is_floating:1,title:^(Picture-in-Picture)$"
 
-    "isfloating:1,appid:^(\\.sameboy-wrapped)$"
+    "is_floating:1,app_id:^(\\.sameboy-wrapped)$"
 
-    "isfloating:1,appid:^(walker)$"
+    "is_floating:1,app_id:^(walker)$"
 
-    "isfloating:1,title:^(Volume Control)$"
-    "isfloating:1,title:^(Transmission)$"
+    "is_floating:1,title:^(Volume Control)$"
+    "is_floating:1,title:^(Transmission)$"
   ];
 }

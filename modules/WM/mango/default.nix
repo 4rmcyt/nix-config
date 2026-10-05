@@ -41,15 +41,15 @@
       xkb_rules_layout = "us";
       mouse_accel_profile = 2; # flat, per mango-config reference
       mouse_accel_speed = 0.0;
-      sloppyfocus = 0; # matches niri/hyprland focus-follows-mouse=false
+      sloppy_focus = 0; # matches niri/hyprland focus-follows-mouse=false
       cursor_theme = "Bibata-Modern-Ice";
       cursor_size = 24;
 
-      gappih = 5;
-      gappiv = 5;
-      gappoh = 10;
-      gappov = 10;
-      borderpx = 2;
+      gap_inner_horizontal = 5;
+      gap_inner_vertical = 5;
+      gap_outer_horizontal = 10;
+      gap_outer_vertical = 10;
+      border_px = 2;
 
       # `wl-only` branch (see flake.nix) drops libscenefx entirely, so blur, shadows,
       # and border_radius (drawn via scenefx, not plain wlroots) are all unavailable —

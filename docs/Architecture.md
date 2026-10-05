@@ -222,9 +222,9 @@ GitHub access token loaded via sops secret `nix_access_token`, written to `/run/
 | `modules/WM/mango/default.nix` | mango settings (structured Nix → `config.conf`), session vars, qt theming, scroller layout, blur/shadow effects |
 | `modules/WM/mango/noctalia.nix` | noctalia HM config |
 | `modules/WM/mango/binds.nix` | keybindings (`bind`/`mousebind` in mango's own comma-separated grammar) |
-| `modules/WM/mango/startup.nix` | `autostart_sh`: cliphist, wl-clip-persist, noctalia, materialgram, vesktop, coolercontrol |
-| `modules/WM/mango/windowrules.nix` | floating rules (`windowrule=` strings) |
-| `modules/WM/mango/monitors/desktop.nix` | ASUS VG289 ×2, 4K@60Hz, 2× scale, matched by make+model+serial (`monitorrule=`) |
+| `modules/WM/mango/startup.nix` | own `autostart.sh` via `xdg.configFile` + `exec_once` (upstream `autostart_sh` emits `exec-once`): cliphist, wl-clip-persist, noctalia, materialgram, vesktop, coolercontrol |
+| `modules/WM/mango/windowrules.nix` | floating rules (`window_rule=` strings) |
+| `modules/WM/mango/monitors/desktop.nix` | ASUS VG289 ×2, 4K@60Hz, 2× scale, matched by make+model+serial (`monitor_rule=`) |
 | `modules/WM/mango/nvidia.nix` | NVIDIA env vars (`LIBVA_DRIVER_NAME`, GSync/VRR, `GLVidHeapReuseRatio` app profile), set both via HM sessionVariables and mango's own `env=` config lines |
 
 **mango wiring:** desktop uses **nixpkgs' own `programs.mango`** module (portal + systemPackages wiring), with `programs.mango.package` and greetd's exec both pointed at `inputs.mango.packages.<system>.mango` (`github:mangowm/mango/wl-only`). `inputs.mango.nixosModules.mango` is deliberately **not** imported — it re-declares `programs.mango.enable` and conflicts with the nixpkgs module. `inputs.mango.hmModules.mango` (`wayland.windowManager.mango`) is imported on the HM side.
