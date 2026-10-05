@@ -1,9 +1,13 @@
-{config, ...}: {
+{config, ...}: let
+  inherit (config.my.network) ports;
+  port = toString ports.seerr;
+in {
   virtualisation.oci-containers.containers.seerr = {
     autoStart = true;
     image = "ghcr.io/hotio/seerr:latest";
+    # Reverse proxy only; published ports are DNAT'd past the NixOS firewall, so loopback-only.
+    ports = ["127.0.0.1:${port}:${port}"];
     extraOptions = [
-      "--network=host"
       "--label=io.containers.autoupdate=registry"
       "--env=PUID=${toString config.users.users.seerr.uid}"
       "--env=PGID=${toString config.users.groups.seerr.gid}"
@@ -30,4 +34,7 @@
     after = ["data.mount"];
     requires = ["data.mount"];
   };
+
+  # Jellyfin/Radarr/Sonarr on the host, reached via host.containers.internal.
+  networking.firewall.interfaces.podman0.allowedTCPPorts = [ports.jellyfin ports.radarr ports.sonarr];
 }
