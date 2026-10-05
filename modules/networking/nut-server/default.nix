@@ -49,6 +49,33 @@
     RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_UNIX"];
   };
 
+  # Root parent runs SHUTDOWNCMD, child drops to nutmon via `-u`.
+  systemd.services.upsmon.serviceConfig = {
+    # SETUID/SETGID for the drop; CHOWN/FOWNER/DAC_OVERRIDE for ExecStartPre's `install -o nutmon` + replace-secret on a nutmon-owned 0600 file.
+    CapabilityBoundingSet = ["CAP_SETUID" "CAP_SETGID" "CAP_CHOWN" "CAP_FOWNER" "CAP_DAC_OVERRIDE"];
+    NoNewPrivileges = true;
+    # full, not strict: POWERDOWNFLAG (/run/killpower) is created at FSD time, can't pre-list it.
+    ProtectSystem = "full";
+    PrivateTmp = true;
+    ProtectHome = true;
+    PrivateDevices = true;
+    ProtectClock = true;
+    ProtectKernelLogs = true;
+    ProtectKernelModules = true;
+    ProtectKernelTunables = true;
+    ProtectControlGroups = true;
+    ProtectHostname = true;
+    RestrictNamespaces = true;
+    RestrictRealtime = true;
+    RestrictSUIDSGID = true;
+    LockPersonality = true;
+    MemoryDenyWriteExecute = true;
+    SystemCallArchitectures = "native";
+    SystemCallFilter = ["@system-service"];
+    SystemCallErrorNumber = "EPERM";
+    RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_UNIX"];
+  };
+
   systemd.services.prometheus-nut-exporter = lib.mkIf config.services.prometheus.exporters.nut.enable {
     after = ["upsd.service"];
     wants = ["upsd.service"];

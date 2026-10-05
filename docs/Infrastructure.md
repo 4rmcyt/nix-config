@@ -198,7 +198,7 @@ Cloudflare Tunnel for select services (configured in `modules/networking/cloudfl
 
 ### NFS
 
-NFS server on homeserver (`modules/networking/nfs/`); NFS client on desktop (`modules/networking/nfs-client/`).
+NFS server on homeserver (`modules/networking/nfs/`), **NFSv4-only** (`vers3=n`; rpcbind/rpc-statd masked, rpc.mountd has no network listeners — only tcp/2049); NFS client on desktop (`modules/networking/nfs-client/`).
 
 | Client subnet | Access | Notes |
 |---------------|--------|-------|
@@ -208,7 +208,7 @@ NFS server on homeserver (`modules/networking/nfs/`); NFS client on desktop (`mo
 
 ### UPS (NUT)
 
-NUT server on homeserver; NUT client on desktop. Prometheus NUT exporter scrapes battery/load metrics.
+NUT server on homeserver; NUT client on desktop. Prometheus NUT exporter scrapes battery/load metrics. `upsd` and `upsmon` on homeserver run sandboxed (capability-bounded, `ProtectSystem`, syscall filter) in `modules/networking/nut-server/`.
 
 ---
 

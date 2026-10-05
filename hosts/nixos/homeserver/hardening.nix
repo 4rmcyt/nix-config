@@ -66,6 +66,72 @@ _: {
     };
   };
 
+  systemd.services = {
+    # No PrivateDevices/ProtectClock (latter implies DeviceAllow): smartd needs raw /dev disks.
+    smartd.serviceConfig = {
+      NoNewPrivileges = true;
+      ProtectSystem = "strict";
+      PrivateTmp = true;
+      ProtectHome = true;
+      ProtectKernelLogs = true;
+      ProtectKernelModules = true;
+      ProtectKernelTunables = true;
+      ProtectControlGroups = true;
+      ProtectHostname = true;
+      RestrictNamespaces = true;
+      RestrictRealtime = true;
+      RestrictSUIDSGID = true;
+      LockPersonality = true;
+      MemoryDenyWriteExecute = true;
+      SystemCallArchitectures = "native";
+      # INET for msmtp mail notifications.
+      RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_UNIX"];
+    };
+
+    # No ProtectKernelTunables: rasdaemon enables events by writing to tracefs under /sys.
+    rasdaemon.serviceConfig = {
+      NoNewPrivileges = true;
+      ProtectSystem = "strict";
+      PrivateTmp = true;
+      ProtectHome = true;
+      PrivateNetwork = true;
+      PrivateDevices = true;
+      ProtectClock = true;
+      ProtectKernelLogs = true;
+      ProtectKernelModules = true;
+      ProtectControlGroups = true;
+      ProtectHostname = true;
+      RestrictNamespaces = true;
+      RestrictRealtime = true;
+      RestrictSUIDSGID = true;
+      LockPersonality = true;
+      MemoryDenyWriteExecute = true;
+      SystemCallArchitectures = "native";
+      RestrictAddressFamilies = ["AF_UNIX"];
+    };
+
+    # No ProtectKernelTunables/RestrictRealtime: lavd may touch cpufreq sysfs, untested.
+    scx.serviceConfig = {
+      NoNewPrivileges = true;
+      ProtectSystem = "strict";
+      PrivateTmp = true;
+      ProtectHome = true;
+      PrivateNetwork = true;
+      PrivateDevices = true;
+      ProtectClock = true;
+      ProtectKernelLogs = true;
+      ProtectKernelModules = true;
+      ProtectControlGroups = true;
+      ProtectHostname = true;
+      RestrictNamespaces = true;
+      RestrictSUIDSGID = true;
+      LockPersonality = true;
+      MemoryDenyWriteExecute = true;
+      SystemCallArchitectures = "native";
+      RestrictAddressFamilies = ["AF_UNIX"];
+    };
+  };
+
   boot.kernel.sysctl = {
     # TEMPORARY, tied to settings.system.yama = "none" above — revert together.
     "kernel.yama.ptrace_scope" = 0;

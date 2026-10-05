@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   inherit (config.my.network) subnets;
@@ -16,6 +17,17 @@ in {
       ]
     );
   };
+
+  # NFSv4-only: v3 needs rpcbind/statd/MOUNT, all clients mount with nfsvers=4.2.
+  services.nfs.settings.nfsd.vers3 = false;
+  services.rpcbind.enable = lib.mkForce false;
+  systemd.services.rpc-statd.enable = false;
+  systemd.services.rpc-statd-notify.enable = false;
+  # mountd still serves nfsd's export upcalls, just no MOUNT listeners.
+  systemd.services.nfs-mountd.serviceConfig.ExecStart = [
+    ""
+    "${pkgs.nfs-utils}/bin/rpc.mountd --no-tcp --no-udp"
+  ];
 
   # gvfs trash support on NFS: XDG trash spec requires $topdir/.Trash-<uid>.
   # 1000 is the first regular-user uid NixOS allocates (config.my.defaults.user
