@@ -190,7 +190,7 @@ SSH config uses MagicDNS hostnames (`homeserver.ts.<domain>`, `matebook.ts.<doma
 
 ### Unbound (recursive DNS)
 
-On homeserver, listening on Tailscale + LAN interfaces. Forwards to NextDNS profile `<nextdns-profile>` with DNSSEC validation. Desktop and matebook use homeserver as resolver.
+On homeserver, listening on Tailscale + LAN interfaces. Forwards to NextDNS profile `<nextdns-profile>` with DNSSEC validation. Clients reach it only through MagicDNS split DNS (`<domain>` → `homeserver_ts`); desktop/homeserver `resolved` itself uses MagicDNS on `tailscale0` plus global NextDNS DoT. The router's DHCP-provided NextDNS on `enp*` never answers (global `DNSOverTLS=true`). Low-level flows (NUT, Prometheus, Loki, NFS, alerts) use IPs or `/etc/hosts`, not DNS.
 
 `<domain>` is a `redirect` local-zone (answers homeserver's IPs for the whole zone). `ts.<domain>` is carved out as `transparent` and forwarded to the Tailscale stub resolver (`100.100.100.100`), so individual per-node MagicDNS names (e.g. `matebook.ts.<domain>`) resolve to their actual current Tailscale IP instead of being swallowed by the redirect.
 
