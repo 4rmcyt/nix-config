@@ -55,7 +55,8 @@ in {
     extraOptions = [
       "--network=host"
       "--label=io.containers.autoupdate=registry"
-      "--cap-add=NET_ADMIN"
+      # NET_RAW for DHCP discovery; NET_ADMIN only served Bluetooth (disabled on this host) and is host-wide under --network=host.
+      "--cap-drop=all"
       "--cap-add=NET_RAW"
       "--security-opt=no-new-privileges"
       # USB passthrough for Zigbee/Z-Wave dongle (uncomment + adjust device path):
