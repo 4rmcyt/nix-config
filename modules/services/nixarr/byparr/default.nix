@@ -1,6 +1,5 @@
 {config, ...}: {
   virtualisation.oci-containers.containers.byparr = {
-    # Keep off --network=host: IPv4-only bridge egress matches prowlarr's IP, else cf_clearance mismatches.
     autoStart = true;
     image = "ghcr.io/thephaseless/byparr:latest";
     # Published ports are DNAT'd past the NixOS firewall: bind loopback (prowlarr) + LAN IP only.

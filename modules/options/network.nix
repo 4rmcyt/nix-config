@@ -199,6 +199,11 @@
       scope = "lan";
       desc = "Unauthenticated local Docker registry — k3s image delivery + LAN push, deliberately not internet-exposed";
     };
+    flaresolverr = {
+      port = 8193;
+      scope = "localhost";
+      desc = "FlareSolverr (POST-capable Cloudflare solver) — Prowlarr proxy for RuTracker login; byparr keeps 8191";
+    };
   };
 
   mkPort = d:

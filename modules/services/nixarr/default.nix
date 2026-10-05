@@ -45,6 +45,7 @@ in {
   imports = [
     ./bazarr
     ./byparr
+    ./flaresolverr
     ./jellyfin
     ./kapowarr
     ./lazylibrarian

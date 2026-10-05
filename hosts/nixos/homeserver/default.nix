@@ -92,6 +92,8 @@
     hostName = "homeserver";
     hostId = "0b8d0f5a";
     useDHCP = true;
+    # Keep dhcpcd off container/k3s/VPN virtual links: IPv4LL on 20+ veths breaks multicast joins (HA SSDP ENOBUFS).
+    dhcpcd.denyInterfaces = ["veth*" "flannel*" "cni*" "podman*" "wg-br"];
     enableIPv6 = true;
 
     dnssec = {
