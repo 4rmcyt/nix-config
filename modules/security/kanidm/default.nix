@@ -56,6 +56,12 @@ in {
           schedule = "0 3 * * *";
           versions = 7;
         };
+        # nixpkgs feb3f31915 passes a derivation here; its filterAttrsRecursive then walks stdenv.is* (deprecation warnings). Same linkFarm, as a string.
+        migration_path = lib.mkForce "${pkgs.linkFarm "kanidm-entry-management" (lib.mapAttrsToList (name: value: {
+            name = "${name}.json";
+            path = (pkgs.formats.json {}).generate "${name}.json" value;
+          })
+          config.services.kanidm.server.entryManagement.migrations)}";
       };
     };
 
