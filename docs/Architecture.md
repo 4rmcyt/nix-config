@@ -64,7 +64,7 @@ modules/
                             #   node-exporter-client.nix (imported directly by non-homeserver hosts)
   networking/               # ssh, tailscale, traefik, headscale, cloudflared,
                             #   caddy, caddy-homeserver, dnssec, nfs, nut-client/server, wireguard,
-                            #   lan-routing (desktop: LAN reply ip rule vs Tailscale subnet route)
+                            #   lan-routing (desktop: keeps trusted LAN off the Tailscale subnet route)
   security/                 # crowdsec, fail2ban, kanidm
   services/                 # Application services: home-assistant, radicale, homepage, miniflux,
                             #   nixarr, atuin-server, microbin, komf, komga, ntfy,

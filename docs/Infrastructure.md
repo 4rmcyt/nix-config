@@ -88,12 +88,9 @@ Disko config in `modules/disko/desktop/`. GPT: `/boot` ESP + Btrfs remainder (la
 
 #### Networking
 
-Desktop runs Tailscale with `--accept-routes`, so homeserver's advertised `192.168.1.0/24` lands in table 52 (`ip rule 5270`) and LAN traffic to homeserver goes via `tailscale0` by default. Policy rules that keep specific flows on the LAN:
+Desktop runs Tailscale with `--accept-routes`, so homeserver's advertised `192.168.1.0/24` lands in table 52 (`ip rule 5270`). Without an override, all desktop→LAN traffic (router, printer, homeserver by LAN IP) hairpins through homeserver over `tailscale0`, and replies to LAN-originated connections leave via `tailscale0` with a LAN source and get dropped.
 
-| Priority | Rule | Module | Why |
-|----------|------|--------|-----|
-| 5200 | `to <homeserver_lan> ipproto tcp dport <nut> lookup main` | `nut-client` | NUT must survive router/Tailscale loss |
-| 5205 | `from <trusted> to <trusted> lookup main` | `lan-routing` | Replies to LAN-originated connections (e.g. Prometheus scrape of `:9100`) otherwise leave via `tailscale0` with a LAN source and get dropped |
+`modules/networking/lan-routing` (unit `lan-route`) adds `ip rule to <trusted> lookup main priority 5200`, ahead of Tailscale's rules: trusted-LAN traffic stays on the wire, so it survives homeserver, `tailscaled`, router or internet loss (NUT relies on this). Tailnet `100.x` traffic is unaffected.
 
 #### Nix Build
 
@@ -218,7 +215,7 @@ NFS server on homeserver (`modules/networking/nfs/`), **NFSv4-only** (`vers3=n`;
 
 ### UPS (NUT)
 
-NUT server on homeserver (`modules/networking/nut-server/`, upsmon `primary`); NUT client on desktop (`modules/networking/nut-client/`, upsmon `secondary`, connects via `homeserver_lan`; desktop accepts homeserver's Tailscale subnet route, so `nut-lan-route` adds `ip rule … dport <nut> lookup main priority 5200` to keep NUT on the LAN while other traffic stays on tailscale0; the LAN switch is on UPS power). Prometheus NUT exporter scrapes battery/load metrics. `upsd` and `upsmon` on homeserver run sandboxed (capability-bounded, `ProtectSystem`, syscall filter).
+NUT server on homeserver (`modules/networking/nut-server/`, upsmon `primary`); NUT client on desktop (`modules/networking/nut-client/`, upsmon `secondary`, connects via `homeserver_lan`; kept off tailscale0 by desktop's `lan-routing` rule, see desktop → Networking; the LAN switch is on UPS power). Prometheus NUT exporter scrapes battery/load metrics. `upsd` and `upsmon` on homeserver run sandboxed (capability-bounded, `ProtectSystem`, syscall filter).
 
 Graceful shutdown: each host runs `upssched` with an `ONBATT` timer cancelled on `ONLINE`; on expiry it runs `upsmon -c fsd`. Desktop (heavy load) fires at 30s and only shuts itself down (secondary FSD doesn't set FSD on upsd). Homeserver fires at 5 min (alone it lasts ~9 min to `LB`): sets FSD, waits up to `HOSTSYNC` (15s) for secondaries, then shuts down; `ups-killpower` runs `upsdrvctl shutdown` at the end so the UPS cycles and powers hosts back on when mains returns (needs BIOS "Restore on AC power loss = Power On"). UPS's own `LB` remains a fallback trigger. `upsdrv` has `TimeoutStopSec=10s`: `usbhid-ups` was seen hanging after SIGTERM during an FSD shutdown, stalling it 90s.
 
