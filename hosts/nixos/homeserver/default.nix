@@ -256,6 +256,7 @@
   };
 
   my.caddyHomeserver.enable = true;
+  my.uaExit.enable = true;
   my.crowdsec.lokiCaddy = {
     enable = true;
     query = ''{host="gcp-relay", unit="caddy.service"}'';

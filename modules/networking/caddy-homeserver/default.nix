@@ -240,6 +240,13 @@
       lan = true;
     };
   };
+
+  # Only these sites exist on the guest port, so headscale's guest@ grant can't reach the rest.
+  guestSites = ["jellyfin" "audiobookshelf" "komga" "seerr"];
+  guestVirtualHosts = lib.mapAttrs' (name: site: let
+    s = mkSite name site;
+  in
+    lib.nameValuePair "${s.name}:${toString ports.caddy-guest}" s.value) (lib.getAttrs guestSites sites);
 in {
   options.my.caddyHomeserver = {
     enable = lib.mkEnableOption "Caddy reverse proxy for homeserver (Traefik replacement)";
@@ -295,6 +302,7 @@ in {
 
       virtualHosts =
         lib.mapAttrs' mkSite sites
+        // guestVirtualHosts
         // {
           # One wildcard cert; Caddy >=2.10 reuses it for every subdomain site above.
           "*.${domain}" = {
@@ -305,6 +313,8 @@ in {
           };
         };
     };
+
+    networking.firewall.interfaces.tailscale0.allowedTCPPorts = [ports.caddy-guest];
 
     my.crowdsec.caddy.enable = true;
     my.crowdsec.appsec.enable = true;

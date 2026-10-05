@@ -171,10 +171,15 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 - Same site set as Traefik + `kanidm` (`idm.`), `jobko` (`/api*` split) and k3s `argocd.<domain>` → NodePort `30080` (HTTPS upstream, LAN/Tailscale only)
 - Per-site `route`: `crowdsec` → `appsec` (CrowdSec WAF, tunnel hostnames only: hass, livesync, cal, ntfy, jobko, idm; `appsec_fail_open`) → (`hass`: geoblock CA/US via `/var/lib/geoip/city.mmdb` + `rate_limit` 100/s) → headers (security / komga / komf CORS) → `encode zstd gzip` (not ntfy — streaming) → `reverse_proxy`
 - HTTP/3: UDP 443 open in the homeserver firewall
+- Guest listener on `:8443` (`ports.caddy-guest`, firewall: `tailscale0` only): only `guestSites` (jellyfin, audiobookshelf, komga, seerr) exist there, same per-site route as `:443`. Headscale's `guest@` grant allows only this port + 53, so guest devices can't reach any other site. `http://` redirects still go to 443 (Caddy prefers the HTTPS port when a host is on several)
 - `geoip-update` (monthly) runs `systemctl try-reload-or-restart caddy` afterwards: the maxmind matcher keeps the mmdb open until reload
 - `trusted_proxies`: Cloudflare + loopback (cloudflared); client IP from `Cf-Connecting-IP`/`X-Forwarded-For`
 - Access logs JSON → journal → CrowdSec (`my.crowdsec.caddy`) + Alloy/Loki
 - Admin API + `/metrics` on `localhost:2019`: Prometheus job `caddy`, homepage `caddy` widget, Grafana dashboard `caddy-homeserver` (no Traefik-style web UI)
+
+### ua-exit (Tailscale exit node via Ukraine)
+
+`modules/networking/ua-exit`, `my.uaExit.enable` (homeserver). VPN-Confinement netns `ua` (`192.168.16.0/24`, `fd93:9701:1d01::/64`) with the ClearVPN Ukraine WireGuard config (`secrets/wg-ua.conf`, sops binary). A second `tailscaled` (`tailscaled-ua.service`, state `/var/lib/tailscale-ua`, socket `/run/tailscale-ua/tailscaled.sock`) runs inside it as tailnet node `ua-exit` advertising an exit node; CLI wrapper `tailscale-ua`. Select it on a client when Ukrainian sites are needed. The host's own tailscaled is unaffected.
 
 ### Headscale (Tailnet control plane)
 
@@ -186,13 +191,26 @@ manual `UPDATE nodes SET ipv4=...` in headscale's sqlite DB after registration
 (headscale has no declarative per-node static IP — it otherwise assigns them
 sequentially).
 
+**Policy (default-deny grants)** — `modules/networking/headscale/policy.nix`, rendered to a JSON file (`settings.policy.mode = "file"`). Host aliases come from `my.network.hosts.*_ts` (hence the pinned IPs above) plus `lan` = `subnets.trusted`:
+
+| Source | Destination | Ports |
+|--------|-------------|-------|
+| desktop | `*`, `autogroup:internet` | all |
+| s23plus, s23ultra | homeserver, desktop, `lan` (subnet route), `autogroup:internet` (exit nodes) | all |
+| gcp-relay | homeserver | tcp crowdsec-lapi, tcp loki, 53 (split DNS) |
+| homeserver | gcp-relay | tcp node-exporter |
+| homeserver | desktop | tcp 22 (nix-builder) |
+| `guest@` (any device of headscale user `guest`) | homeserver | tcp caddy-guest (8443), 53 |
+
+Not listed (router, matebook, ua-exit as a source) get nothing. `autogroup:internet` covers every approved exit node (homeserver, ua-exit). Route/exit-node approvals stay manual (no `autoApprovers`). A new node needs a pinned IP + `*_ts` option + a grant before it can talk to anything.
+
 SSH config uses MagicDNS hostnames (`homeserver.ts.<domain>`, `matebook.ts.<domain>`, `gcp-relay.ts.<domain>`) so SSH works from any network without hardcoded LAN IPs. Operator mode enabled on desktop + matebook (`extraSetFlags = ["--operator=zeev"]`) so `tailscale file cp` works without sudo.
 
 ### Unbound (recursive DNS)
 
 On homeserver, listening on Tailscale + LAN interfaces. Forwards to NextDNS profile `<nextdns-profile>` with DNSSEC validation. Clients reach it only through MagicDNS split DNS (`<domain>` → `homeserver_ts`); desktop/homeserver `resolved` itself uses MagicDNS on `tailscale0` plus global NextDNS DoT. The router's DHCP-provided NextDNS on `enp*` never answers (global `DNSOverTLS=true`). Low-level flows (NUT, Prometheus, Loki, NFS, alerts) use IPs or `/etc/hosts`, not DNS.
 
-`<domain>` is a `redirect` local-zone (answers homeserver's IPs for the whole zone). `ts.<domain>` is carved out as `transparent` and forwarded to the Tailscale stub resolver (`100.100.100.100`), so individual per-node MagicDNS names (e.g. `matebook.ts.<domain>`) resolve to their actual current Tailscale IP instead of being swallowed by the redirect.
+`<domain>` is a `redirect` local-zone answering homeserver's IP for the whole zone, split by source via `access-control-view`: tailnet clients (`100.64.0.0/10`, i.e. everything arriving through MagicDNS split DNS) get the `tailnet` view → `homeserver_ts` only; everyone else gets the global zones → `homeserver_lan` only. The view repeats the `ts`/`hs`/`hp` carve-outs because view zones replace the global ones. `ts.<domain>` is carved out as `transparent` and forwarded to the Tailscale stub resolver (`100.100.100.100`), so individual per-node MagicDNS names (e.g. `matebook.ts.<domain>`) resolve to their actual current Tailscale IP instead of being swallowed by the redirect.
 
 ### CrowdSec
 

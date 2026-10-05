@@ -6,6 +6,21 @@
   cfg = config.my.unbound;
   inherit (config.my.defaults) domain gcpRelayIp nextdnsProfileId;
   inherit (config.my.network.hosts) homeserver_lan homeserver_ts;
+
+  # "transparent" so redirect on the parent zone doesn't swallow MagicDNS lookups too.
+  zones = homeserverIp: {
+    local-zone = [
+      ''"ts.${domain}." transparent''
+      ''"${domain}." redirect''
+      ''"hs.${domain}." static''
+      ''"hp.${domain}." static''
+    ];
+    local-data = [
+      ''"${domain}. A ${homeserverIp}"''
+      ''"hs.${domain}. A ${gcpRelayIp}"''
+      ''"hp.${domain}. A ${gcpRelayIp}"''
+    ];
+  };
 in {
   options.my.unbound = {
     enable = lib.mkEnableOption "Unbound split DNS for Tailscale";
@@ -49,20 +64,16 @@ in {
           # ts.domain is a private zone with no real DNSSEC signature — would SERVFAIL otherwise.
           domain-insecure = ["${domain}"];
 
-          # "transparent" so redirect on the parent zone doesn't swallow MagicDNS lookups too.
-          local-zone = [
-            ''"ts.${domain}." transparent''
-            ''"${domain}." redirect''
-            ''"hs.${domain}." static''
-            ''"hp.${domain}." static''
-          ];
-          local-data = [
-            ''"${domain}. A ${homeserver_ts}"''
-            ''"${domain}. A ${homeserver_lan}"''
-            ''"hs.${domain}. A ${gcpRelayIp}"''
-            ''"hp.${domain}. A ${gcpRelayIp}"''
-          ];
+          # Tailnet clients (MagicDNS split DNS) get only homeserver_ts; others get homeserver_lan.
+          access-control-view = ["${config.my.network.subnets.tailscale} tailnet"];
+
+          inherit (zones homeserver_lan) local-zone local-data;
         };
+
+        # View zones replace the global ones entirely, so hs/hp/ts carve-outs are repeated via zones.
+        view = [
+          ({name = "tailnet";} // zones homeserver_ts)
+        ];
 
         forward-zone = [
           {

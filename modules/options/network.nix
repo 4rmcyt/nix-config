@@ -183,6 +183,11 @@
       scope = "localhost";
       desc = "Caddy admin API + /metrics (homeserver Caddy; Prometheus and homepage widget)";
     };
+    caddy-guest = {
+      port = 8443;
+      scope = "lan";
+      desc = "Caddy guest listener — tailscale0 only, guest-allowed sites (headscale guest@ grant)";
+    };
 
     atuin = {
       port = 8881;
@@ -268,6 +273,18 @@ in {
         type = lib.types.str;
         default = "100.64.0.5";
         description = "IP address of gcp-relay — Tailscale/Headscale tailnet";
+      };
+
+      s23plus_ts = lib.mkOption {
+        type = lib.types.str;
+        default = "100.64.0.2";
+        description = "IP address of S23+ phone — Tailscale/Headscale tailnet";
+      };
+
+      s23ultra_ts = lib.mkOption {
+        type = lib.types.str;
+        default = "100.64.0.6";
+        description = "IP address of S23 Ultra phone — Tailscale/Headscale tailnet";
       };
     };
 

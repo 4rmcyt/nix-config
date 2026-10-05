@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 with lib; let
@@ -106,6 +107,11 @@ in {
         };
 
         metrics_listen_addr = "127.0.0.1:${toString metricsPort}";
+
+        policy = {
+          mode = "file";
+          path = pkgs.writeText "headscale-policy.json" (builtins.toJSON (import ./policy.nix {inherit config;}));
+        };
       };
     };
 
