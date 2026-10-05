@@ -8,6 +8,8 @@ in {
     # Reverse proxy only; published ports are DNAT'd past the NixOS firewall, so loopback-only.
     ports = ["127.0.0.1:${port}:${port}"];
     extraOptions = [
+      # PUID/PGID are set at runtime, not in the image passwd, so pin the range size instead of auto-estimating.
+      "--userns=auto:size=65536"
       "--label=io.containers.autoupdate=registry"
       "--env=PUID=${toString config.users.users.seerr.uid}"
       "--env=PGID=${toString config.users.groups.seerr.gid}"
@@ -26,7 +28,7 @@ in {
       "--cap-add=SETUID"
     ];
     volumes = [
-      "/data/media/.state/nixarr/seerr:/config"
+      "/data/media/.state/nixarr/seerr:/config:idmap"
     ];
   };
 

@@ -10,6 +10,8 @@ in {
       "${config.my.network.hosts.homeserver_lan}:${port}:${port}"
     ];
     extraOptions = [
+      # PUID/PGID are set at runtime, not in the image passwd, so pin the range size instead of auto-estimating.
+      "--userns=auto:size=65536"
       # Bridge DNS can't see the LAN split-horizon; reach qBittorrent via host Caddy, not the unauthenticated :8081 proxy.
       "--add-host=qb.${config.my.defaults.domain}:host-gateway"
       "--label=io.containers.autoupdate=registry"
@@ -29,10 +31,10 @@ in {
       "--cap-add=SETUID"
     ];
     volumes = [
-      "/data/media/.state/nixarr/kapowarr:/app/db"
-      "/data/Downloads/kapowarr:/app/temp_downloads"
-      "/data/media/manga:/manga"
-      "/data/media/comics:/comics"
+      "/data/media/.state/nixarr/kapowarr:/app/db:idmap"
+      "/data/Downloads/kapowarr:/app/temp_downloads:idmap"
+      "/data/media/manga:/manga:idmap"
+      "/data/media/comics:/comics:idmap"
     ];
   };
 

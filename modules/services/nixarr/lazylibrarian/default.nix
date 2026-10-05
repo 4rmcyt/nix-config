@@ -10,6 +10,8 @@ in {
       "${config.my.network.hosts.homeserver_lan}:${port}:${port}"
     ];
     extraOptions = [
+      # PUID/PGID are set at runtime, not in the image passwd, so pin the range size instead of auto-estimating.
+      "--userns=auto:size=65536"
       # Bridge DNS can't see the LAN split-horizon; reach qBittorrent via host Caddy, not the unauthenticated :8081 proxy.
       "--add-host=qb.${config.my.defaults.domain}:host-gateway"
       "--label=io.containers.autoupdate=registry"
@@ -32,11 +34,11 @@ in {
       DOCKER_MODS = "linuxserver/mods:universal-calibre|linuxserver/mods:lazylibrarian-ffmpeg";
     };
     volumes = [
-      "/data/media/.state/nixarr/lazylibrarian:/config"
-      "/data/media/books:/books"
-      "/data/Downloads/books:/downloads"
-      "/data/media/audiobooks:/audiobooks"
-      "/data/Downloads/audiobooks:/downloads-audiobooks"
+      "/data/media/.state/nixarr/lazylibrarian:/config:idmap"
+      "/data/media/books:/books:idmap"
+      "/data/Downloads/books:/downloads:idmap"
+      "/data/media/audiobooks:/audiobooks:idmap"
+      "/data/Downloads/audiobooks:/downloads-audiobooks:idmap"
     ];
   };
 

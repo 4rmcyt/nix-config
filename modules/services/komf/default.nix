@@ -7,6 +7,8 @@ in {
     # Reverse proxy only; published ports are DNAT'd past the NixOS firewall, so loopback-only.
     ports = ["127.0.0.1:${port}:${port}"];
     extraOptions = [
+      # media gid comes from --user, not the image passwd, so pin the range size instead of auto-estimating.
+      "--userns=auto:size=65536"
       # Bridge DNS can't see the LAN split-horizon; application.yml points at https://komga.<domain> via host Caddy.
       "--add-host=komga.${config.my.defaults.domain}:host-gateway"
       "--label=io.containers.autoupdate=registry"
@@ -20,9 +22,9 @@ in {
       "--cap-add=CHOWN"
     ];
     volumes = [
-      "/var/lib/komf:/config"
-      "/data/media/manga:/data/media/manga"
-      "/data/media/comics:/data/media/comics"
+      "/var/lib/komf:/config:idmap"
+      "/data/media/manga:/data/media/manga:idmap"
+      "/data/media/comics:/data/media/comics:idmap"
     ];
   };
   systemd.tmpfiles.rules = [
