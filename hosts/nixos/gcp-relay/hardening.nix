@@ -91,7 +91,7 @@
     ProtectClock = lib.mkDefault true;
     ProtectKernelLogs = lib.mkDefault true;
     ProtectKernelModules = lib.mkDefault true;
-    ProtectKernelTunables = lib.mkDefault true;
+    # No ProtectKernelTunables: nh activates in the SSH session (no systemd-run), RO /proc/sys breaks the modprobe snippet.
     ProtectHostname = lib.mkDefault true;
     LockPersonality = lib.mkDefault true;
     RestrictRealtime = lib.mkDefault true;
