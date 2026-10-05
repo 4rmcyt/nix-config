@@ -209,7 +209,9 @@ NFS server on homeserver (`modules/networking/nfs/`), **NFSv4-only** (`vers3=n`;
 
 ### UPS (NUT)
 
-NUT server on homeserver; NUT client on desktop. Prometheus NUT exporter scrapes battery/load metrics. `upsd` and `upsmon` on homeserver run sandboxed (capability-bounded, `ProtectSystem`, syscall filter) in `modules/networking/nut-server/`.
+NUT server on homeserver (`modules/networking/nut-server/`, upsmon `primary`); NUT client on desktop (`modules/networking/nut-client/`, upsmon `secondary`). Prometheus NUT exporter scrapes battery/load metrics. `upsd` and `upsmon` on homeserver run sandboxed (capability-bounded, `ProtectSystem`, syscall filter).
+
+Graceful shutdown: on `ONBATT` homeserver's `upssched` starts a 60s timer (cancelled on `ONLINE`); on expiry it runs `upsmon -c fsd`. Desktop (secondary) sees FSD and shuts down, homeserver waits up to `HOSTSYNC` (15s) then shuts down; `ups-killpower` runs `upsdrvctl shutdown` at the end so the UPS cycles and powers hosts back on when mains returns (needs BIOS "Restore on AC power loss = Power On"). UPS's own `LB` remains a fallback trigger.
 
 ---
 

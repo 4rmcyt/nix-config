@@ -1,8 +1,16 @@
 {
   config,
   lib,
+  pkgs,
   ...
-}: {
+}: let
+  # Forces FSD on upsd: secondaries (desktop) shut down first, then this host, then killpower.
+  upsschedCmd = pkgs.writeShellScript "upssched-cmd" ''
+    case "$1" in
+      onbatt) ${config.power.ups.package}/sbin/upsmon -c fsd ;;
+    esac
+  '';
+in {
   users.users.nut = {
     isSystemUser = true;
     group = "nut";
@@ -14,6 +22,7 @@
 
   systemd.tmpfiles.rules = [
     "z /etc/nut/upsd.conf 0640 root nut -"
+    "d /run/upssched 0750 ${config.power.ups.upsmon.user} ${config.power.ups.upsmon.group} -"
   ];
 
   systemd.services.upsdrv.wantedBy = ["multi-user.target"];
@@ -120,7 +129,20 @@
         user = "upsmon";
         type = "primary";
       };
+      settings.NOTIFYFLAG = [
+        ["ONBATT" "SYSLOG+WALL+EXEC"]
+        ["ONLINE" "SYSLOG+WALL+EXEC"]
+      ];
     };
+
+    # ES 550 raises LB only ~2 min before empty; shut down after 60s on battery instead.
+    schedulerRules = toString (pkgs.writeText "upssched.conf" ''
+      CMDSCRIPT ${upsschedCmd}
+      PIPEFN /run/upssched/upssched.pipe
+      LOCKFN /run/upssched/upssched.lock
+      AT ONBATT * START-TIMER onbatt 60
+      AT ONLINE * CANCEL-TIMER onbatt
+    '');
   };
 
   sops.secrets.nut_password = {

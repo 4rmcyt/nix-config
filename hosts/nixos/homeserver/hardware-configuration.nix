@@ -125,7 +125,6 @@ in {
     sessionVariables.LIBVA_DRIVER_NAME = "iHD";
 
     systemPackages = with pkgs; [
-      apcupsd
       clinfo
       cpuid
       fwupd
@@ -135,7 +134,6 @@ in {
       microcode-intel
       msr-tools
       powertop
-      prometheus-apcupsd-exporter
       rasdaemon
       smartmontools
       zfs

@@ -480,7 +480,6 @@
     anydesk
     teamviewer
 
-    apcupsd
     cifs-utils
     fwupd
     microcode-amd
