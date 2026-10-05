@@ -29,7 +29,7 @@
     user = "bazarr";
     group = "bazarr";
     dataDir = "/data/media/.state/nixarr/bazarr";
-    listenPort = config.my.network.ports.bazarr;
+    settings.general.port = config.my.network.ports.bazarr;
   };
 
   systemd.services.bazarr = {
