@@ -37,6 +37,7 @@
           --token-file=${config.sops.secrets.k3s_token_file.path} \
           --disable=traefik \
           --disable=servicelb \
+          --kube-controller-manager-arg=terminated-pod-gc-threshold=50 \
           --write-kubeconfig-mode=0640
       '';
     };

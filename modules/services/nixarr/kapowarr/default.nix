@@ -1,9 +1,15 @@
-{config, ...}: {
+{config, ...}: let
+  port = toString config.my.network.ports.kapowarr;
+in {
   virtualisation.oci-containers.containers.kapowarr = {
     autoStart = true;
     image = "docker.io/mrcas/kapowarr:latest";
+    # Published ports are DNAT'd past the NixOS firewall: bind loopback (reverse proxy) + LAN IP only.
+    ports = [
+      "127.0.0.1:${port}:${port}"
+      "${config.my.network.hosts.homeserver_lan}:${port}:${port}"
+    ];
     extraOptions = [
-      "--network=host"
       "--label=io.containers.autoupdate=registry"
       "--env=PUID=1000"
       "--env=PGID=${toString config.users.groups.media.gid}"
@@ -32,10 +38,6 @@
     after = ["data.mount"];
     requires = ["data.mount"];
   };
-
-  networking.firewall.allowedTCPPorts = [
-    config.my.network.ports.kapowarr
-  ];
 
   systemd.tmpfiles.rules = [
     "d /data/media/.state/nixarr/kapowarr 775 ${config.my.defaults.user} media -"
