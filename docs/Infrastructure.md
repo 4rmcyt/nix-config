@@ -86,6 +86,15 @@ Disko config in `modules/disko/desktop/`. GPT: `/boot` ESP + Btrfs remainder (la
 - **Portal:** handled by nixpkgs' own `programs.mango` module (portal-wlr + portal-gtk, gnome-keyring for secrets) — no repo-local xdg module
 - Ran Hyprland until 2026-08-22, then fully migrated to mango
 
+#### Networking
+
+Desktop runs Tailscale with `--accept-routes`, so homeserver's advertised `192.168.1.0/24` lands in table 52 (`ip rule 5270`) and LAN traffic to homeserver goes via `tailscale0` by default. Policy rules that keep specific flows on the LAN:
+
+| Priority | Rule | Module | Why |
+|----------|------|--------|-----|
+| 5200 | `to <homeserver_lan> ipproto tcp dport <nut> lookup main` | `nut-client` | NUT must survive router/Tailscale loss |
+| 5205 | `from <trusted> to <trusted> lookup main` | `lan-routing` | Replies to LAN-originated connections (e.g. Prometheus scrape of `:9100`) otherwise leave via `tailscale0` with a LAN source and get dropped |
+
 #### Nix Build
 
 - `cores = 0` (all), `max-jobs = auto`, `big-parallel + kvm` features

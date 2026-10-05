@@ -24,6 +24,7 @@
     ../../../modules/containers
     ../../../modules/gaming
     ../../../modules/networking/dnssec
+    ../../../modules/networking/lan-routing
     ../../../modules/networking/nut-client
     ../../../modules/networking/ssh
 
