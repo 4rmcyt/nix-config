@@ -211,7 +211,7 @@ NFS server on homeserver (`modules/networking/nfs/`), **NFSv4-only** (`vers3=n`;
 
 NUT server on homeserver (`modules/networking/nut-server/`, upsmon `primary`); NUT client on desktop (`modules/networking/nut-client/`, upsmon `secondary`, connects via `homeserver_lan` — not Tailscale — so it survives the router going dark; the LAN switch is on UPS power). Prometheus NUT exporter scrapes battery/load metrics. `upsd` and `upsmon` on homeserver run sandboxed (capability-bounded, `ProtectSystem`, syscall filter).
 
-Graceful shutdown: on `ONBATT` homeserver's `upssched` starts a 60s timer (cancelled on `ONLINE`); on expiry it runs `upsmon -c fsd`. Desktop (secondary) sees FSD and shuts down, homeserver waits up to `HOSTSYNC` (15s) then shuts down; `ups-killpower` runs `upsdrvctl shutdown` at the end so the UPS cycles and powers hosts back on when mains returns (needs BIOS "Restore on AC power loss = Power On"). UPS's own `LB` remains a fallback trigger.
+Graceful shutdown: on `ONBATT` homeserver's `upssched` starts a 60s timer (cancelled on `ONLINE`); on expiry it runs `upsmon -c fsd`. Desktop (secondary) sees FSD and shuts down, homeserver waits up to `HOSTSYNC` (15s) then shuts down; `ups-killpower` runs `upsdrvctl shutdown` at the end so the UPS cycles and powers hosts back on when mains returns (needs BIOS "Restore on AC power loss = Power On"). UPS's own `LB` remains a fallback trigger. `upsdrv` has `TimeoutStopSec=10s`: `usbhid-ups` was seen hanging after SIGTERM during an FSD shutdown, stalling it 90s.
 
 ---
 

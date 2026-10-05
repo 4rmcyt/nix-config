@@ -25,7 +25,11 @@ in {
     "d /run/upssched 0750 ${config.power.ups.upsmon.user} ${config.power.ups.upsmon.group} -"
   ];
 
-  systemd.services.upsdrv.wantedBy = ["multi-user.target"];
+  systemd.services.upsdrv = {
+    wantedBy = ["multi-user.target"];
+    # usbhid-ups can hang after SIGTERM; default 90s stall eats battery during FSD.
+    serviceConfig.TimeoutStopSec = "10s";
+  };
 
   # nixpkgs still runs `upsd -u root` (upstream TODO); keep uid 0 but strip what it can do.
   systemd.services.upsd.serviceConfig = {
