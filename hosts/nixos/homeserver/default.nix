@@ -135,9 +135,9 @@
       allowedUDPPorts = [53];
     };
 
-    # Allow Podman containers to reach host services (Postgres, Redis)
+    # Allow Podman containers to reach host Postgres
     firewall.interfaces.podman0 = {
-      allowedTCPPorts = [5432 6379];
+      allowedTCPPorts = [5432];
     };
 
     # 6443: ClusterIP DNATs to LAN IP not loopback (else CrashLoopBackOff/timeout). 10250: kubelet. 5432: Postgres.

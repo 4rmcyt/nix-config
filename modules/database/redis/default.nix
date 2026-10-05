@@ -23,14 +23,13 @@
   services.redis.servers.homeserver = {
     enable = true;
 
-    bind = "127.0.0.1 ${podmanGateway}";
+    bind = "127.0.0.1";
     port = 6379;
 
     unixSocket = "/run/redis-homeserver/redis.sock";
     unixSocketPerm = 660;
 
-    # Secret is still named redis-oauth2-proxy-password from an earlier setup; the
-    # only current consumer is dispatcharr (database 3).
+    # No consumers left; kept idle. Secret name is from an earlier oauth2-proxy setup.
     requirePassFile = config.sops.secrets.redis-oauth2-proxy-password.path;
 
     databases = 16;
@@ -59,29 +58,8 @@
   networking.firewall.allowedTCPPorts = [
   ];
 
-  # netavark otherwise only creates podman0 when the first container starts, long
-  # after redis-homeserver needs to bind it.
-  systemd.services.podman-bridge = {
-    description = "Pre-create ${podmanBridge} bridge for host services binding the podman gateway";
-    wantedBy = ["multi-user.target"];
-    before = ["redis-homeserver.service" "postgresql.service" "podman.service"];
-    after = ["network-pre.target"];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = pkgs.writeShellScript "podman-bridge-up" ''
-        set -eu
-        ${pkgs.iproute2}/bin/ip link show ${podmanBridge} >/dev/null 2>&1 \
-          || ${pkgs.iproute2}/bin/ip link add name ${podmanBridge} type bridge
-        ${pkgs.iproute2}/bin/ip addr replace ${podmanGateway}/${podmanPrefix} dev ${podmanBridge}
-        ${pkgs.iproute2}/bin/ip link set ${podmanBridge} up
-      '';
-    };
-  };
-
   systemd.services.redis-homeserver = {
-    after = ["network.target" "podman-bridge.service"];
-    requires = ["podman-bridge.service"];
+    after = ["network.target"];
     serviceConfig =
       {
         NoNewPrivileges = true;

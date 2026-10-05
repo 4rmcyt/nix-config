@@ -338,7 +338,7 @@ Systemd journal (incl. Caddy access log) ──► Alloy ──► Loki :3100
 | Service    | Notes                                          |
 |------------|------------------------------------------------|
 | PostgreSQL | Used by: Grafana, Miniflux, Atuin, others       |
-| Redis      | Cache layer for various services               |
+| Redis      | Idle (no consumers since dispatcharr removal), loopback only |
 | CouchDB    | Obsidian LiveSync backend (`livesync.<domain>`) |
 
 ---

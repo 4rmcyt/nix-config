@@ -215,18 +215,6 @@ in {
       description = "Default gateway — router appliance, trusted VLAN";
     };
 
-    podmanBridge = lib.mkOption {
-      type = lib.types.str;
-      default = "podman0";
-      description = "Podman default network bridge interface name.";
-    };
-
-    podmanGateway = lib.mkOption {
-      type = lib.types.str;
-      default = "10.88.0.1";
-      description = "Podman default network gateway IP — host side of the bridge; host services (redis, postgres) bind it.";
-    };
-
     hosts = {
       homeserver_lan = lib.mkOption {
         type = lib.types.str;
