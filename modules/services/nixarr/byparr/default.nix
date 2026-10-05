@@ -8,6 +8,7 @@
       "${config.my.network.hosts.homeserver_lan}:8191:8191"
     ];
     extraOptions = [
+      "--userns=auto"
       "--label=io.containers.autoupdate=registry"
       # Camoufox/Firefox needs more than podman's 64m default shm, or it
       # crashes mid-challenge-solve (upstream: ThePhaseless/Byparr#283)
