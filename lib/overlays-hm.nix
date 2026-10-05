@@ -4,7 +4,7 @@ inputs: [
   # mcp-servers-nix's TS builds are broken from source (tsc can't resolve @types/node); use nixpkgs' instead
   (_final: prev: {
     inherit
-      (import inputs.nixpkgs {inherit (prev) system;})
+      (import inputs.nixpkgs {inherit (prev.stdenv.hostPlatform) system;})
       mcp-server-memory
       mcp-server-filesystem
       mcp-server-sequential-thinking
