@@ -1,6 +1,6 @@
 {config, ...}: {
   sops.secrets.ntfy_alertmanager_config = {
-    sopsFile = ../../secrets/ntfy.yaml;
+    sopsFile = ../../../secrets/ntfy.yaml;
   };
 
   services.prometheus.alertmanager = {

@@ -8,12 +8,12 @@
   inherit (config.my.defaults) domain email;
   inherit (config.my.network) ports subnets;
 
-  # Downloaded monthly by modules/monitoring/geoip.nix (db-ip lite, MaxMind MMDB format).
+  # Downloaded monthly by modules/monitoring/geoip (db-ip lite, MaxMind MMDB format).
   geoipDb = "/var/lib/geoip/city.mmdb";
   # Tailscale CGNAT isn't in Caddy's private_ranges shortcut.
   lanRanges = "private_ranges ${subnets.tailscale} ${subnets.trusted}";
 
-  # Journal so CrowdSec (my.crowdsec.caddy) and Alloy pick it up.
+  # Journal so CrowdSec (my.crowdsec.caddy) and journal-upload pick it up.
   journalLog = ''
     output stderr
     format json

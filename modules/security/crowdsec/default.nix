@@ -26,12 +26,12 @@ in {
     traefik.enable = lib.mkEnableOption "CrowdSec Traefik bouncer plugin wiring";
     caddy.enable = lib.mkEnableOption "CrowdSec Caddy log acquisition";
     appsec.enable = lib.mkEnableOption "CrowdSec AppSec (WAF) component on localhost";
-    lokiCaddy = {
-      enable = lib.mkEnableOption "CrowdSec acquisition of remote Caddy access logs from Loki";
+    remoteCaddy = {
+      enable = lib.mkEnableOption "CrowdSec acquisition of remote Caddy access logs from VictoriaLogs";
       query = lib.mkOption {
         type = lib.types.str;
-        description = "LogQL stream selector for the remote Caddy journal lines.";
-        example = ''{host="gcp-relay", unit="caddy.service"}'';
+        description = "LogsQL query selecting the remote Caddy journal lines (tail mode).";
+        example = ''{_HOSTNAME="gcp-relay", _SYSTEMD_UNIT="caddy.service"} remote_ip:="100.64.0.5"'';
       };
     };
     nftables = {
@@ -73,6 +73,9 @@ in {
 
     # ExecStartPre's config test linearly scans the on-disk journal; right after boot
     # that hits a cold page cache and can exceed the default 90s TimeoutStartSec.
+    # The victorialogs datasource gives up if VictoriaLogs isn't answering when crowdsec starts.
+    systemd.services.crowdsec.after = lib.mkIf cfg.remoteCaddy.enable ["victorialogs.service"];
+    systemd.services.crowdsec.wants = lib.mkIf cfg.remoteCaddy.enable ["victorialogs.service"];
     systemd.services.crowdsec.serviceConfig.TimeoutStartSec = lib.mkIf (!isRemoteLapi) "5min";
     systemd.services.crowdsec.serviceConfig.Restart = lib.mkIf (!isRemoteLapi) "on-failure";
     systemd.services.crowdsec.serviceConfig.RestrictSUIDSGID = lib.mkIf (!isRemoteLapi) true;
@@ -94,7 +97,7 @@ in {
           "crowdsecurity/sshd"
         ]
         ++ lib.optionals cfg.traefik.enable ["crowdsecurity/traefik"]
-        ++ lib.optionals (cfg.caddy.enable || cfg.lokiCaddy.enable) ["crowdsecurity/caddy"]
+        ++ lib.optionals (cfg.caddy.enable || cfg.remoteCaddy.enable) ["crowdsecurity/caddy"]
         ++ lib.optionals cfg.appsec.enable [
           "crowdsecurity/appsec-virtual-patching"
           "crowdsecurity/appsec-generic-rules"
@@ -148,11 +151,12 @@ in {
             labels.type = "appsec";
           }
         ]
-        ++ lib.optionals cfg.lokiCaddy.enable [
+        ++ lib.optionals cfg.remoteCaddy.enable [
           {
-            source = "loki";
-            url = "http://127.0.0.1:${toString config.my.network.ports.loki}";
-            inherit (cfg.lokiCaddy) query;
+            source = "victorialogs";
+            mode = "tail";
+            url = "http://127.0.0.1:${toString config.my.network.ports.victorialogs}";
+            inherit (cfg.remoteCaddy) query;
             labels.type = "caddy";
           }
         ];

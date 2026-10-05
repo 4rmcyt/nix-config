@@ -174,7 +174,7 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 - Guest listener on `:8443` (`ports.caddy-guest`, firewall: `tailscale0` only): only `guestSites` (jellyfin, audiobookshelf, komga, seerr) exist there, same per-site route as `:443`. Headscale's `guest@` grant allows only this port + 53, so guest devices can't reach any other site. `http://` redirects still go to 443 (Caddy prefers the HTTPS port when a host is on several)
 - `geoip-update` (monthly) runs `systemctl try-reload-or-restart caddy` afterwards: the maxmind matcher keeps the mmdb open until reload
 - `trusted_proxies`: Cloudflare + loopback (cloudflared); client IP from `Cf-Connecting-IP`/`X-Forwarded-For`
-- Access logs JSON → journal → CrowdSec (`my.crowdsec.caddy`) + Alloy/Loki
+- Access logs JSON → journal → CrowdSec (`my.crowdsec.caddy`) + journal-upload → VictoriaLogs
 - Admin API + `/metrics` on `localhost:2019`: Prometheus job `caddy`, homepage `caddy` widget, Grafana dashboard `caddy-homeserver` (no Traefik-style web UI)
 
 ### ua-exit (Tailscale exit node via Ukraine)
@@ -197,7 +197,7 @@ sequentially).
 |--------|-------------|-------|
 | desktop | `*`, `autogroup:internet` | all |
 | s23plus, s23ultra | homeserver, desktop, `lan` (subnet route), `autogroup:internet` (exit nodes) | all |
-| gcp-relay | homeserver | tcp crowdsec-lapi, tcp loki, 53 (split DNS) |
+| gcp-relay | homeserver | tcp crowdsec-lapi, tcp victorialogs (journal-upload), 53 (split DNS) |
 | homeserver | gcp-relay | tcp node-exporter |
 | homeserver | desktop | tcp 22 (nix-builder) |
 | `guest@` (any device of headscale user `guest`) | homeserver | tcp caddy-guest (8443), 53 |
@@ -208,14 +208,14 @@ SSH config uses MagicDNS hostnames (`homeserver.ts.<domain>`, `matebook.ts.<doma
 
 ### Unbound (recursive DNS)
 
-On homeserver, listening on Tailscale + LAN interfaces. Forwards to NextDNS profile `<nextdns-profile>` with DNSSEC validation. Clients reach it only through MagicDNS split DNS (`<domain>` → `homeserver_ts`); desktop/homeserver `resolved` itself uses MagicDNS on `tailscale0` plus global NextDNS DoT. The router's DHCP-provided NextDNS on `enp*` never answers (global `DNSOverTLS=true`). Low-level flows (NUT, Prometheus, Loki, NFS, alerts) use IPs or `/etc/hosts`, not DNS.
+On homeserver, listening on Tailscale + LAN interfaces. Forwards to NextDNS profile `<nextdns-profile>` with DNSSEC validation. Clients reach it only through MagicDNS split DNS (`<domain>` → `homeserver_ts`); desktop/homeserver `resolved` itself uses MagicDNS on `tailscale0` plus global NextDNS DoT. The router's DHCP-provided NextDNS on `enp*` never answers (global `DNSOverTLS=true`). Low-level flows (NUT, Prometheus, log shipping, NFS, alerts) use IPs or `/etc/hosts`, not DNS.
 
 `<domain>` is a `redirect` local-zone answering homeserver's IP for the whole zone, split by source via `access-control-view`: tailnet clients (`100.64.0.0/10`, i.e. everything arriving through MagicDNS split DNS) get the `tailnet` view → `homeserver_ts` only; everyone else gets the global zones → `homeserver_lan` only. The view repeats the `ts`/`hs`/`hp` carve-outs because view zones replace the global ones. `ts.<domain>` is carved out as `transparent` and forwarded to the Tailscale stub resolver (`100.100.100.100`), so individual per-node MagicDNS names (e.g. `matebook.ts.<domain>`) resolve to their actual current Tailscale IP instead of being swallowed by the redirect.
 
 ### CrowdSec
 
 - **homeserver**: LAPI at `127.0.0.1:8088`; Caddy bouncer (stream mode); AppSec (WAF) component on `127.0.0.1:7422` (`my.crowdsec.appsec`, `appsec-default` config, `appsec-virtual-patching` + `appsec-generic-rules`); collections: `linux`, `sshd`, `caddy`
-- **gcp-relay**: nftables bouncer; remote LAPI via Tailscale pointing to homeserver. Caddy access log → journal → alloy → Loki → homeserver CrowdSec (`loki` datasource, `my.crowdsec.lokiCaddy`) — no agent on the relay
+- **gcp-relay**: nftables bouncer; remote LAPI via Tailscale pointing to homeserver. Caddy access log → journal → journal-upload → VictoriaLogs → homeserver CrowdSec (`victorialogs` datasource in tail mode, `my.crowdsec.remoteCaddy`, query pinned to `remote_ip` = gcp-relay tailnet IP) — no agent on the relay
 - Whitelists: Tailscale CGNAT `100.64.0.0/10`, LAN `192.168.1.0/24`, Cloudflare IPs
 
 ### Cloudflared
@@ -348,16 +348,20 @@ NUT exporter                ├──► Prometheus :9090 ──► Grafana :300
 Caddy metrics :2019         │         │
 CrowdSec metrics :6060      │         └──► Alertmanager ──► alertmanager-ntfy ──► ntfy
                             │
-Systemd journal (incl. Caddy access log) ──► Alloy ──► Loki :3100
+systemd journal (every host, incl. Caddy access log)
+  ──► systemd-journal-upload ──► VictoriaLogs :9428 ──► Grafana / CrowdSec (gcp-relay Caddy)
+                                       └──► vmalert :8880 (LogsQL rules) ──► Alertmanager
 ```
 
 - **Prometheus** scrape targets: homeserver, desktop, matebook, gcp-relay node exporters; NUT; Caddy; CrowdSec; Prometheus self
-- **Grafana** OIDC via Kanidm; backend PostgreSQL; datasources: Prometheus + Loki; dashboards from `modules/monitoring/dashboards/`
-- **Loki** retention 30 days; TSDB schema v13; filesystem storage; Loki alert rules in `modules/monitoring/alerts/loki-rules.yaml`
-- **Alloy** ships: systemd journal (last 12h, incl. Caddy access log), Traefik access log only when `my.traefik.enable`; Python container log-level fix pipeline
+- **Grafana** OIDC via Kanidm; backend PostgreSQL; datasources: Prometheus + VictoriaLogs (`victoriametrics-logs-datasource`, uid `victorialogs`); `declarativePlugins` lists the core `prometheus` plugin too, since a declarative list replaces the preinstalled ones; dashboards from `modules/monitoring/grafana/dashboards/` (`victorialogs-logs.json` = System Logs)
+- **Log shipping**: no agent. Every host runs systemd's own `systemd-journal-upload` (`modules/monitoring/journal-upload/`, `my.journalUpload`, zstd) to `/insert/journald`: desktop via `homeserver_lan`, gcp-relay via `homeserver_ts`, homeserver via loopback. VictoriaLogs derives stream fields `_MACHINE_ID, _HOSTNAME, _SYSTEMD_UNIT` and `level` (from `PRIORITY`: emerg, alert, critical, error, warning, notice, info, debug)
+- **VictoriaLogs** (`modules/monitoring/victorialogs/`): retention 30d, data on `zdata/victorialogs` → `/var/lib/private/victorialogs` (DynamicUser). `-journald.useRemoteIP` stores the sender as `remote_ip`; port 9428 is open only on the LAN NIC and `tailscale0`, not globally. No auth — anyone on the LAN can read/write logs; CrowdSec's gcp-relay query pins `remote_ip` so injected lines can't trigger bans
+- **vmalert** (`vmalert-logs`, loopback only): LogsQL alert rules in `modules/monitoring/victorialogs/rules.nix` (type `vlogs`, explicit `_time` windows) → Alertmanager
+- Not carried over from Alloy: the Python-container `level` downgrade (INFO/DEBUG on stderr marked error) — do it at query time if needed. Old Loki data stays on `zdata/loki` (`/var/lib/loki`, disko entry kept) until deleted manually
 - **Alertmanager** → **alertmanager-ntfy** bridge → ntfy topic `alerts`
 - **GeoIP** monthly auto-update from db-ip.com (city MMDB, no account required)
-- Alert rules: `modules/monitoring/alerts/homeserver.yaml` (Prometheus), `modules/monitoring/alerts/loki-rules.yaml` (Loki)
+- Alert rules: `modules/monitoring/prometheus/alerts.yaml` (Prometheus), `modules/monitoring/victorialogs/rules.nix` (vmalert/LogsQL)
 
 ---
 

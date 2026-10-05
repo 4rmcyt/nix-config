@@ -11,8 +11,8 @@
     "${modulesPath}/virtualisation/google-compute-image.nix"
     ../../../modules/options
     ../../../modules/base/logging
-    ../../../modules/monitoring/node-exporter-client.nix
-    ../../../modules/monitoring/alloy-client.nix
+    ../../../modules/monitoring/node-exporter
+    ../../../modules/monitoring/journal-upload
     ../../../modules/networking/caddy
     ../../../modules/networking/headscale
     ../../../modules/networking/tailscale
@@ -138,9 +138,9 @@
     };
 
     my.nodeExporter.enable = true;
-    my.alloyClient = {
+    my.journalUpload = {
       enable = true;
-      lokiUrl = "http://${config.my.network.hosts.homeserver_ts}:${toString config.my.network.ports.loki}/loki/api/v1/push";
+      url = "http://${config.my.network.hosts.homeserver_ts}:${toString config.my.network.ports.victorialogs}/insert/journald";
     };
 
     my.headscale = {

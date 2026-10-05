@@ -168,6 +168,12 @@ in {
             options."com.sun:auto-snapshot" = "false";
             mountpoint = "/var/lib/loki";
           };
+          # DynamicUser StateDirectory lives under /var/lib/private.
+          "victorialogs" = {
+            type = "zfs_fs";
+            options."com.sun:auto-snapshot" = "false";
+            mountpoint = "/var/lib/private/victorialogs";
+          };
           "prometheus2" = {
             type = "zfs_fs";
             options."com.sun:auto-snapshot" = "false";

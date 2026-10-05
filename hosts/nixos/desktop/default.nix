@@ -6,7 +6,7 @@
 }: {
   my.nodeExporter.enable = true;
 
-  my.alloyClient.enable = true;
+  my.journalUpload.enable = true;
 
   imports = [
     ./hardware-configuration.nix
@@ -16,8 +16,8 @@
     ../../../modules/fonts
     ../../../modules/options
 
-    ../../../modules/monitoring/node-exporter-client.nix
-    ../../../modules/monitoring/alloy-client.nix
+    ../../../modules/monitoring/node-exporter
+    ../../../modules/monitoring/journal-upload
 
     # GUI/{chrome,flatpak,kdeconnect,nemo} + networking/nfs-client come from
     # modules.nixos.workstationGui (parts/workstation.nix).

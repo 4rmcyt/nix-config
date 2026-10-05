@@ -85,7 +85,7 @@
 
   # sshd (PAM shells) and tailscaled (needs CAP_NET_ADMIN/RAW + TUN) can't go past
   # UNSAFE. Deliberately NOT set: SystemCallFilter/MemoryDenyWriteExecute/PrivateUsers —
-  # same directives that crashed alloy.service (modules/monitoring/alloy-client.nix);
+  # same directives that crashed alloy.service (former log shipper);
   # PAM sessions are known to break under PrivateUsers.
   systemd.services.sshd.serviceConfig = {
     ProtectClock = lib.mkDefault true;

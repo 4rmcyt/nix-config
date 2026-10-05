@@ -1,12 +1,11 @@
-# Client-side agents (alloy-client.nix, node-exporter-client.nix) live alongside this
-# directory but are imported directly by non-homeserver hosts.
+# homeserver's monitoring stack; journal-upload and node-exporter are the per-host clients other hosts import directly.
 {
   imports = [
-    ./geoip.nix
-    ./alloy-server.nix
-    ./grafana.nix
-    ./loki.nix
-    ./prometheus.nix
-    ./alertmanager.nix
+    ./alertmanager
+    ./geoip
+    ./grafana
+    ./journal-upload
+    ./prometheus
+    ./victorialogs
   ];
 }

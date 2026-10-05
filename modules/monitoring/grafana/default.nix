@@ -1,21 +1,25 @@
-{config, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   sops.secrets = {
     grafana_admin_password = {
-      sopsFile = ../../secrets/grafana.yaml;
+      sopsFile = ../../../secrets/grafana.yaml;
       key = "grafana_admin_password";
       owner = config.users.users.grafana.name;
     };
     grafana_db_password = {
-      sopsFile = ../../secrets/postgresql.yaml;
+      sopsFile = ../../../secrets/postgresql.yaml;
       owner = config.users.users.postgres.name;
     };
     grafana_oidc_client_secret = {
-      sopsFile = ../../secrets/kanidm.yaml;
+      sopsFile = ../../../secrets/kanidm.yaml;
       key = "kanidm_grafana_secret";
       owner = config.users.users.grafana.name;
     };
     grafana_secret_key = {
-      sopsFile = ../../secrets/grafana.yaml;
+      sopsFile = ../../../secrets/grafana.yaml;
       key = "grafana_secret_key";
       owner = config.users.users.grafana.name;
     };
@@ -32,6 +36,8 @@
 
   services.grafana = {
     enable = true;
+    # Declarative list replaces Grafana's preinstalled plugins, so the core Prometheus datasource must be listed too.
+    declarativePlugins = with pkgs.grafanaPlugins; [prometheus victoriametrics-logs-datasource];
     settings = {
       database = {
         type = "postgres";
@@ -72,10 +78,11 @@
         isDefault = true;
       }
       {
-        name = "Loki";
-        type = "loki";
+        name = "VictoriaLogs";
+        type = "victoriametrics-logs-datasource";
+        uid = "victorialogs";
         access = "proxy";
-        url = "http://localhost:${toString config.my.network.ports.loki}";
+        url = "http://localhost:${toString config.my.network.ports.victorialogs}";
       }
     ];
     provision.dashboards.settings.providers = [

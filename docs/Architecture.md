@@ -58,10 +58,13 @@ modules/
   base/                     # Shared base: logging, msmtp, scx-hardening (sandbox for services.scx when enabled)
   options/                  # Custom options: my.defaults.*, my.network.*
   database/                 # postgresql, redis, couchdb
-  monitoring/               # Split by concern: grafana.nix, loki.nix, prometheus.nix,
-                            #   alertmanager.nix, alloy-server.nix, geoip.nix (default.nix
-                            #   just imports them); plus client-side alloy-client.nix and
-                            #   node-exporter-client.nix (imported directly by non-homeserver hosts)
+  monitoring/               # One folder per component, each a default.nix plus its data:
+                            #   grafana/ (+ dashboards/), prometheus/ (+ alerts.yaml),
+                            #   victorialogs/ (+ vmalert, rules.nix), alertmanager/, geoip/ —
+                            #   homeserver stack, imported by monitoring/default.nix.
+                            #   journal-upload/ and node-exporter/ are per-host clients,
+                            #   imported directly by each host (homeserver gets journal-upload
+                            #   via monitoring/default.nix)
   networking/               # ssh, tailscale, traefik, headscale, cloudflared,
                             #   caddy, caddy-homeserver, dnssec, nfs, nut-client/server, wireguard,
                             #   lan-routing (desktop: keeps trusted LAN off the Tailscale subnet route)
@@ -113,7 +116,7 @@ Thunderbird account config also lives there (`inputs.private.homeModules.thunder
 | `my.caddyHomeserver.*` | `networking/caddy-homeserver/` | Caddy reverse proxy for homeserver (replaced Traefik) |
 | `my.uaExit.*`         | `networking/ua-exit/`         | Second tailscaled as `ua-exit` exit node inside a Ukraine WireGuard netns |
 | `my.headscale.*`     | `networking/headscale/`       | Headscale coordination server                |
-| `my.nodeExporter.*`  | `monitoring/node-exporter-client.nix` | Per-host Prometheus node exporter   |
+| `my.nodeExporter.*`  | `monitoring/node-exporter/` | Per-host Prometheus node exporter   |
 | `my.unbound.*`       | `networking/unbound/`         | Unbound DNS resolver                         |
 | `my.crowdsec.*`      | `security/crowdsec/`          | CrowdSec IDS + bouncer                       |
 
@@ -161,7 +164,7 @@ per-service systemd hardening at all (out of scope upstream):
 `systemd.services.crowdsec.serviceConfig` in
 [`modules/security/crowdsec/default.nix`](../modules/security/crowdsec/default.nix),
 `systemd.services.prometheus.serviceConfig` in
-[`modules/monitoring/prometheus.nix`](../modules/monitoring/prometheus.nix),
+[`modules/monitoring/prometheus/`](../modules/monitoring/prometheus/default.nix),
 `systemd.services.caddy.serviceConfig` in
 [`modules/networking/caddy/default.nix`](../modules/networking/caddy/default.nix).
 The old module's `my.hardening.serviceBase` constant (used by

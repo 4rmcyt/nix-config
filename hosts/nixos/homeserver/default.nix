@@ -14,7 +14,7 @@
     ../../../modules/containers
     ../../../modules/database
     ../../../modules/monitoring
-    ../../../modules/monitoring/node-exporter-client.nix
+    ../../../modules/monitoring/node-exporter
     ../../../modules/networking
     ../../../modules/networking/ssh
     ../../../modules/networking/nut-server
@@ -125,7 +125,7 @@
         80
         443
         config.my.network.ports.grafana
-        config.my.network.ports.loki # gcp-relay alloy-client
+        config.my.network.ports.victorialogs # gcp-relay journal-upload
         config.my.network.ports.crowdsec-lapi # gcp-relay bouncer
         config.my.network.ports.prometheus
         9091 # Database & infrastructure
@@ -136,7 +136,10 @@
     };
 
     firewall.interfaces.enp0s31f6 = {
-      allowedTCPPorts = [53];
+      allowedTCPPorts = [
+        53
+        config.my.network.ports.victorialogs # desktop journal-upload
+      ];
       allowedUDPPorts = [53];
     };
 
@@ -257,9 +260,10 @@
 
   my.caddyHomeserver.enable = true;
   my.uaExit.enable = true;
-  my.crowdsec.lokiCaddy = {
+  my.crowdsec.remoteCaddy = {
     enable = true;
-    query = ''{host="gcp-relay", unit="caddy.service"}'';
+    # remote_ip pins the sender: a LAN host can't inject fake gcp-relay Caddy lines to get IPs banned.
+    query = ''{_HOSTNAME="gcp-relay", _SYSTEMD_UNIT="caddy.service"} remote_ip:="${config.my.network.hosts.gcp-relay_ts}"'';
   };
   my.crowdsec.nftables = {
     enable = true;

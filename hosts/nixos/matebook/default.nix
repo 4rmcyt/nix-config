@@ -10,8 +10,8 @@
     ../../../modules/disko/matebook
     ../../../modules/options
 
-    ../../../modules/monitoring/node-exporter-client.nix
-    ../../../modules/monitoring/alloy-client.nix
+    ../../../modules/monitoring/node-exporter
+    ../../../modules/monitoring/journal-upload
 
     ../../../modules/networking/ssh
 
@@ -129,7 +129,7 @@
   # backupFileExtension is set in commonHomeManagerNixosConfig with unique timestamp
 
   my.nodeExporter.enable = true;
-  my.alloyClient.enable = true;
+  my.journalUpload.enable = true;
 
   networking = {
     enableIPv6 = true;

@@ -71,10 +71,15 @@
       scope = "lan";
       desc = "Grafana metrics visualization";
     };
-    loki = {
-      port = 3100;
+    victorialogs = {
+      port = 9428;
       scope = "lan";
-      desc = "Loki log aggregation server";
+      desc = "VictoriaLogs log database (journald ingest from systemd-journal-upload, LogsQL)";
+    };
+    vmalert = {
+      port = 8880;
+      scope = "localhost";
+      desc = "vmalert evaluating LogsQL alert rules against VictoriaLogs";
     };
     node-exporter = {
       port = 9100;

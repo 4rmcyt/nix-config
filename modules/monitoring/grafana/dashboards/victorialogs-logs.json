@@ -1,0 +1,312 @@
+{
+  "title": "System Logs (VictoriaLogs)",
+  "uid": "homeserver-logs",
+  "tags": ["victorialogs", "logs", "systemd"],
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "editable": true,
+  "templating": {
+    "list": [
+      {
+        "name": "host",
+        "label": "host",
+        "type": "query",
+        "datasource": {
+          "type": "victoriametrics-logs-datasource",
+          "uid": "victorialogs"
+        },
+        "query": {
+          "refId": "host",
+          "type": "fieldValue",
+          "field": "_HOSTNAME",
+          "query": "*",
+          "limit": 200
+        },
+        "definition": "fieldValue _HOSTNAME",
+        "multi": true,
+        "includeAll": true,
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": ["All"],
+          "value": ["$__all"]
+        },
+        "refresh": 2,
+        "sort": 1
+      },
+      {
+        "name": "unit",
+        "label": "unit",
+        "type": "query",
+        "datasource": {
+          "type": "victoriametrics-logs-datasource",
+          "uid": "victorialogs"
+        },
+        "query": {
+          "refId": "unit",
+          "type": "fieldValue",
+          "field": "_SYSTEMD_UNIT",
+          "query": "{_HOSTNAME=~\"${host:regex}\"}",
+          "limit": 200
+        },
+        "definition": "fieldValue _SYSTEMD_UNIT",
+        "multi": true,
+        "includeAll": true,
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": ["All"],
+          "value": ["$__all"]
+        },
+        "refresh": 2,
+        "sort": 1
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Log volume by level",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "victorialogs"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "stacking": {
+              "mode": "normal"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "victorialogs"
+          },
+          "queryType": "statsRange",
+          "editorMode": "code",
+          "expr": "{_HOSTNAME=~\"${host:regex}\"} _SYSTEMD_UNIT:~\"^(${unit:regex})$\" | stats by (level) count() as logs",
+          "legendFormat": "{{level}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Log volume by unit",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "victorialogs"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "stacking": {
+              "mode": "normal"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "victorialogs"
+          },
+          "queryType": "statsRange",
+          "editorMode": "code",
+          "expr": "{_HOSTNAME=~\"${host:regex}\"} _SYSTEMD_UNIT:~\"^(${unit:regex})$\" | stats by (_SYSTEMD_UNIT) count() as logs",
+          "legendFormat": "{{_SYSTEMD_UNIT}}"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "logs",
+      "title": "Last Errors / Critical",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "victorialogs"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "options": {
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogLines": false,
+        "enableLogDetails": false,
+        "showLabels": false
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "victorialogs"
+          },
+          "queryType": "instant",
+          "editorMode": "code",
+          "expr": "{_HOSTNAME=~\"${host:regex}\"} _SYSTEMD_UNIT:~\"^(${unit:regex})$\" level:in(error, critical, alert, emerg)",
+          "maxLines": 500
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "logs",
+      "title": "Last Warnings",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "victorialogs"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "options": {
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogLines": false,
+        "enableLogDetails": false,
+        "showLabels": false
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "victorialogs"
+          },
+          "queryType": "instant",
+          "editorMode": "code",
+          "expr": "{_HOSTNAME=~\"${host:regex}\"} _SYSTEMD_UNIT:~\"^(${unit:regex})$\" level:=warning",
+          "maxLines": 500
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "logs",
+      "title": "Last Info Logs",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "victorialogs"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "options": {
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogLines": false,
+        "enableLogDetails": false,
+        "showLabels": false
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "victorialogs"
+          },
+          "queryType": "instant",
+          "editorMode": "code",
+          "expr": "{_HOSTNAME=~\"${host:regex}\"} _SYSTEMD_UNIT:~\"^(${unit:regex})$\" level:=info",
+          "maxLines": 500
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "logs",
+      "title": "Raw Log Stream",
+      "datasource": {
+        "type": "victoriametrics-logs-datasource",
+        "uid": "victorialogs"
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      },
+      "options": {
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogLines": true,
+        "enableLogDetails": true,
+        "showLabels": true
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "victoriametrics-logs-datasource",
+            "uid": "victorialogs"
+          },
+          "queryType": "instant",
+          "editorMode": "code",
+          "expr": "{_HOSTNAME=~\"${host:regex}\"} _SYSTEMD_UNIT:~\"^(${unit:regex})$\"",
+          "maxLines": 500
+        }
+      ]
+    }
+  ]
+}

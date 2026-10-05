@@ -5,7 +5,7 @@
   ];
 
   systemd.services.geoip-update = {
-    description = "Download db-ip city MMDB for Alloy geoip enrichment";
+    description = "Download db-ip city MMDB for Caddy geoblocking";
     after = ["network-online.target"];
     wants = ["network-online.target"];
     serviceConfig = {

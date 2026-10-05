@@ -26,7 +26,7 @@ in {
     {
       src = ["gcp-relay"];
       dst = ["homeserver"];
-      ip = ["tcp:${toString ports.crowdsec-lapi}" "tcp:${toString ports.loki}" "53"];
+      ip = ["tcp:${toString ports.crowdsec-lapi}" "tcp:${toString ports.victorialogs}" "53"];
     }
     {
       src = ["homeserver"];

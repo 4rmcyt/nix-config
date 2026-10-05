@@ -21,7 +21,7 @@
     port = config.my.network.ports.prometheus;
     retentionTime = "30d";
     globalConfig.scrape_interval = "1m";
-    ruleFiles = [./alerts/homeserver.yaml];
+    ruleFiles = [./alerts.yaml];
     alertmanagers = [
       {
         static_configs = [{targets = ["127.0.0.1:${toString config.my.network.ports.alertmanager}"];}];
@@ -78,10 +78,6 @@
       {
         job_name = "gcp-relay-node";
         static_configs = [{targets = ["${config.my.network.hosts."gcp-relay_ts"}:${toString config.my.network.ports.node-exporter}"];}];
-      }
-      {
-        job_name = "matebook-node";
-        static_configs = [{targets = ["${config.my.network.hosts.matebook_wifi}:${toString config.my.network.ports.node-exporter}"];}];
       }
     ];
   };
