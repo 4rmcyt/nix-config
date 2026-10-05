@@ -370,11 +370,6 @@
           icon = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextdns.svg";
           href = "{{HOMEPAGE_VAR_NEXTDNS_URL}}";
           description = "DNS Filtering";
-          widget = {
-            type = "nextdns";
-            profile = "{{HOMEPAGE_VAR_NEXTDNS_PROFILE}}";
-            key = "{{HOMEPAGE_VAR_NEXTDNS_API_KEY}}";
-          };
         };
       }
     ];
