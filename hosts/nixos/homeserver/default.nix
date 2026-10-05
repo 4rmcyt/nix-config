@@ -96,6 +96,9 @@
     dhcpcd.denyInterfaces = ["veth*" "flannel*" "cni*" "podman*" "wg-br"];
     enableIPv6 = true;
 
+    # Server-side OIDC (Grafana, Miniflux) hits local Caddy, not MagicDNS → would hit Cloudflare Access if tailscaled is down.
+    hosts."127.0.0.1" = ["idm.${config.my.defaults.domain}"];
+
     dnssec = {
       enable = true;
       profileId = config.my.defaults.nextdnsProfileId;

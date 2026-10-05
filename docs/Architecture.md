@@ -69,7 +69,7 @@ modules/
   services/                 # Application services: home-assistant, radicale, homepage, miniflux,
                             #   nixarr, atuin-server, microbin, komf, komga, ntfy,
                             #   k3s + argocd (homeserver; see Infrastructure.md)
-  containers/               # Podman support; containers on the bridge (only home-assistant uses --network=host), ports published on 127.0.0.1/LAN IP, host deps via host.containers.internal + per-port podman0 firewall
+  containers/               # Podman support; containers on the bridge (only home-assistant uses --network=host), ports published on 127.0.0.1/LAN IP, host deps via host.containers.internal + per-port podman0 firewall; all but home-assistant run --userns=auto (subuid range for user `containers`) with :idmap volumes
   disko/                    # Declarative disk layouts per host
   users/                    # Per-user NixOS config (zeev)
   backup/                   # Backup tooling
