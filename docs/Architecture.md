@@ -55,7 +55,7 @@ Modules are **not** auto-imported. They are referenced explicitly from host conf
 
 ```
 modules/
-  base/                     # Shared base: logging, msmtp
+  base/                     # Shared base: logging, msmtp, scx-hardening (sandbox for services.scx when enabled)
   options/                  # Custom options: my.defaults.*, my.network.*
   database/                 # postgresql, redis, couchdb
   monitoring/               # Split by concern: grafana.nix, loki.nix, prometheus.nix,
