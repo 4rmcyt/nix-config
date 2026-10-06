@@ -76,11 +76,11 @@ in {
       description = "Automatic connection to Tailscale";
       after = [
         "network-online.target"
-        "tailscale.service"
+        "tailscaled.service"
       ];
       wants = [
         "network-online.target"
-        "tailscale.service"
+        "tailscaled.service"
       ];
       wantedBy = ["multi-user.target"];
       serviceConfig = {
@@ -88,8 +88,11 @@ in {
         TimeoutStartSec = "60";
       };
       script = with pkgs; ''
-        sleep 2
-        status="$(${tailscale}/bin/tailscale status -json | ${jq}/bin/jq -r .BackendState)"
+        # Wait out tailscaled's startup states so a still-booting backend isn't treated as logged out (bounded by TimeoutStartSec).
+        while
+          status="$(${tailscale}/bin/tailscale status -json 2>/dev/null | ${jq}/bin/jq -r .BackendState || true)"
+          case "$status" in "" | NoState | Starting) true ;; *) false ;; esac
+        do sleep 1; done
         if [ "$status" = "Running" ]; then
           current_url="$(${tailscale}/bin/tailscale debug prefs | ${jq}/bin/jq -r .ControlURL)"
           if [ "$current_url" != "${cfg.loginServer}" ]; then
