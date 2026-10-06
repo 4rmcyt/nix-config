@@ -21,8 +21,8 @@ live in a separate private flake so this repo can stay public.
 <table>
   <tr><td><strong>desktop</strong></td><td>AMD Zen 4 + NVIDIA workstation. Wayland via <strong>mango</strong> + <strong>noctalia</strong>, gaming, libvirt, waydroid, local LLM, CUDA caches.</td></tr>
   <tr><td><strong>matebook</strong></td><td>AMD Zen 1 laptop. <strong>niri</strong> + noctalia, Limine + Secure Boot, suspend-then-hibernate, auto-cpufreq. <em>Decommissioned — no longer in use.</em></td></tr>
-  <tr><td><strong>homeserver</strong></td><td>Intel Coffee Lake. Every service: Traefik, media stack (nixarr), Postgres / Redis / CouchDB, Prometheus/Grafana/Loki, Kanidm, CrowdSec, restic.</td></tr>
-  <tr><td><strong>gcp-relay</strong></td><td>GCP <code>e2-micro</code>. <strong>Headscale</strong> control plane + DERP server, Caddy TLS, fail2ban, hardened.</td></tr>
+  <tr><td><strong>homeserver</strong></td><td>Intel Coffee Lake. Every service: Caddy, media stack (nixarr), Postgres / Redis / CouchDB, Prometheus/Grafana/VictoriaLogs, Kanidm, CrowdSec, restic.</td></tr>
+  <tr><td><strong>gcp-relay</strong></td><td>GCP <code>e2-micro</code>. <strong>Headscale</strong> control plane + DERP server, Caddy TLS, CrowdSec bouncer, hardened.</td></tr>
 </table>
 
 ```bash
@@ -68,7 +68,7 @@ Interface labels are deliberately IP-free — the diagrams expose nothing beyond
   - `base/` — core system (logging, msmtp)
   - `WM/` · `GUI/` · `TUI/` — mango · niri · noctalia · firefox · zsh · ai-tools
   - `services/` — nixarr · homepage · miniflux · hass · komga · ntfy
-  - `networking/` — traefik · caddy · headscale · tailscale · unbound
+  - `networking/` — caddy · headscale · tailscale · unbound
   - `security/` · `monitoring/` · `database/` — kanidm/crowdsec · grafana/loki · postgres/redis
   - `disko/` · `backup/` · `containers/` · `nix/` — disks · restic · podman · lix
 - **`secrets/`** — sops-encrypted YAML/env (age)
@@ -109,18 +109,18 @@ same base.
   LAN subnet + an exit node.
 - **DNS** — Unbound on homeserver, split DNS for the private domain,
   NextDNS DoT upstream.
-- **Ingress** — public traffic to homeserver terminates at **Traefik** (Cloudflare
+- **Ingress** — traffic to homeserver terminates at **Caddy** (Cloudflare
   DNS-01 wildcard cert, CrowdSec bouncer); a few services also go through a
   Cloudflare Tunnel.
 
-Services published behind Traefik (`*.<domain>`):
+Services published behind Caddy (`*.<domain>`):
 
 | Group | Subdomains |
 |-------|------------|
 | **Media** | `jellyfin` · `qb` · `sonarr` · `radarr` · `prowlarr` · `bazarr` · `lidarr` · `seerr` · `audiobookshelf` · `lazylibrarian` · `kapowarr` |
 | **Reading** | `komga` · `komf` · `miniflux` |
 | **Home & personal** | `home` · `hass` · `cal` · `ntfy` · `atuin` · `livesync` · `microbin` |
-| **Identity & ops** | `idm` · `grafana` · `jobko` · `traefik` |
+| **Identity & ops** | `idm` · `grafana` · `jobko` · `argocd` |
 
 ## 🤖 Local inference
 

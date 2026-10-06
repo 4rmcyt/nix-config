@@ -7,7 +7,7 @@
 
   # Single source of truth for my.network.ports.<name> and the derived
   # my.network.portScope.<name> (internet/lan/localhost). Documentation contract only —
-  # nothing here enforces it; actual routing lives in modules/networking/{traefik,cloudflared}.
+  # nothing here enforces it; actual routing lives in modules/networking/{caddy-homeserver,cloudflared}.
   portDefs = {
     jellyfin = {
       port = 8096;
@@ -91,11 +91,6 @@
       scope = "lan";
       desc = "Prometheus node exporter";
     };
-    traefik-metrics = {
-      port = 8080;
-      scope = "localhost";
-      desc = "Traefik Prometheus metrics entrypoint (localhost only)";
-    };
 
     miniflux = {
       port = 8086;
@@ -172,11 +167,6 @@
       port = 8088;
       scope = "lan";
       desc = "CrowdSec local API (LAPI) — local bouncers plus the gcp-relay remote bouncer over Tailscale";
-    };
-    traefik-api = {
-      port = 8083;
-      scope = "localhost";
-      desc = "Traefik API entrypoint (localhost only, used by the homepage widget)";
     };
     crowdsec-appsec = {
       port = 7422;

@@ -20,7 +20,7 @@ in {
   topology.self = lib.mkMerge [
     (lib.mkIf (host == "homeserver") {
       name = "🗄️ homeserver";
-      hardware.info = "Intel Coffee Lake · 8-core · ZFS (zroot/zdata/zbackup) — Traefik, media, monitoring, SSO";
+      hardware.info = "Intel Coffee Lake · 8-core · ZFS (zroot/zdata/zbackup) — Caddy, media, monitoring, SSO";
       interfaces =
         {
           enp0s31f6 = {
@@ -33,7 +33,6 @@ in {
       services = {
         # Extractors dump real backend URLs/IPs/domains; keep the cards, drop the
         # leaky detail so the committed SVG stays IP-/domain-/layout-free.
-        traefik.details = lib.mkForce {};
         mosquitto.details = lib.mkForce {};
         grafana.info = lib.mkForce "";
         kanidm.info = lib.mkForce "";

@@ -139,7 +139,7 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 
 - **Headscale** coordination server: `https://hs.<domain>` (port 8080 behind Caddy)
 - **DERP** relay: region ID 901, `gcp-us-central1`, STUN on `0.0.0.0:3478`
-- **Caddy** TLS termination (replaces Traefik for this host)
+- **Caddy** TLS termination
 - **CrowdSec** nftables bouncer: remote LAPI via Tailscale pointing to homeserver
 - **SSH**: tailnet only (port 22 closed publicly); fallback via GCE Serial Console
 - **Shell**: zsh + starship via NixOS options (`hosts/nixos/gcp-relay/shell.nix`), no Home Manager
@@ -150,18 +150,6 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 
 ## Networking Stack (homeserver)
 
-### Traefik (reverse proxy — disabled, replaced by Caddy; module kept for rollback)
-
-- HTTP → HTTPS redirect; wildcard TLS via Cloudflare DNS-01 ACME
-- Plugins (local, from Nix store): **crowdsec-bouncer**, **traefik-geoblock**
-- Middlewares applied to all routers: `security-headers`, `crowdsec`
-- `komga`: uses `komga-headers` instead of `security-headers` — allows the komf webui to iframe Komga (`frame-ancestors https://komf.<domain>`) and call its API cross-origin (CORS with credentials)
-- `komf`: uses `komf-headers` — CORS `Access-Control-Allow-Origin: *` (komf is Tailscale/LAN-only and unauthenticated, so the komf browser extension can reach it)
-- Public-facing `hass`: additionally `rate-limit` + `geoblock` (CA/US only)
-- Metrics endpoint on `127.0.0.1:8080`; internal API on `127.0.0.1:8083` (homepage widget)
-- Access logs: JSON, errors + slow requests only, 14-day rotation
-- geoblock ≥1.2 loads its bundled IP2Location seed via `TRAEFIK_PLUGIN_GEOBLOCK_PATH` (plugin root); auto-updates land in `/var/lib/traefik/geoblock`
-
 ### Firewall exposure (homeserver)
 
 Global (all interfaces): 2222 (SSH), 2049 (NFS, exports restrict to trusted/media). Caddy 80/443 (+ UDP 443): every interface except the LAN NIC, where IPv4 only — the ISP router (Telus NH20T) passes inbound IPv6 :443 to homeserver even on firewall level Low.
@@ -170,18 +158,18 @@ Every other service UI is loopback/Caddy-only; container ports are published on 
 
 ### Caddy (reverse proxy)
 
-`modules/networking/caddy-homeserver`, option `my.caddyHomeserver.enable` (asserts `my.traefik.enable = false`). Enabled on homeserver.
+`modules/networking/caddy-homeserver`, option `my.caddyHomeserver.enable`. Enabled on homeserver.
 
 - Plugins via `pkgs.caddy.withPlugins`: `caddy-dns/cloudflare`, `hslatman/caddy-crowdsec-bouncer`, `porech/caddy-maxmind-geolocation`, `mholt/caddy-ratelimit`. Tags + per-host hashes in `modules/networking/caddy-plugins.json` (shared with gcp-relay), refreshed by `just caddy-update` (part of `just update`)
 - One wildcard `*.<domain>` cert (DNS-01); per-site blocks reuse it (Caddy ≥2.10), unknown subdomains → 404
-- Same site set as Traefik + `kanidm` (`idm.`), `jobko` (`/api*` split) and k3s `argocd.<domain>` → NodePort `30080` on loopback (HTTPS upstream; site LAN/Tailscale only)
+- Sites: media/*arr, reading, home & personal, `kanidm` (`idm.`), `jobko` (`/api*` split) and k3s `argocd.<domain>` → NodePort `30080` on loopback (HTTPS upstream; site LAN/Tailscale only)
 - Per-site `route`: `crowdsec` → `appsec` (CrowdSec WAF, tunnel hostnames only: hass, livesync, cal, ntfy, jobko, idm; `appsec_fail_open`) → (`hass`: geoblock CA/US via `/var/lib/geoip/city.mmdb` + `rate_limit` 100/s) → headers (security / komga / komf CORS) → `encode zstd gzip` (not ntfy — streaming) → `reverse_proxy`
 - HTTP/3: UDP 443 open in the homeserver firewall
 - Guest listener on `:8443` (`ports.caddy-guest`, firewall: `tailscale0` only): only `guestSites` (jellyfin, audiobookshelf, komga, seerr) exist there, same per-site route as `:443`. Headscale's `guest@` grant allows only this port + 53, so guest devices can't reach any other site. `http://` redirects still go to 443 (Caddy prefers the HTTPS port when a host is on several)
 - `geoip-update` (monthly) runs `systemctl try-reload-or-restart caddy` afterwards: the maxmind matcher keeps the mmdb open until reload
 - `trusted_proxies`: Cloudflare + loopback (cloudflared); client IP from `Cf-Connecting-IP`/`X-Forwarded-For`
 - Access logs JSON → journal → CrowdSec (`my.crowdsec.caddy`) + journal-upload → VictoriaLogs
-- Admin API + `/metrics` on `localhost:2019`: Prometheus job `caddy`, homepage `caddy` widget, Grafana dashboard `caddy-homeserver` (no Traefik-style web UI)
+- Admin API + `/metrics` on `localhost:2019`: Prometheus job `caddy`, homepage `caddy` widget, Grafana dashboard `caddy-homeserver` (no web UI)
 
 ### ua-exit (Tailscale exit node via Ukraine)
 
@@ -404,7 +392,7 @@ secrets/
   nix-builder-homeserver.yaml          # nix-builder SSH private key
 
   # Networking / TLS
-  cloudflare_acme_credentials.env      # CF_DNS_API_TOKEN for Traefik ACME
+  cloudflare_acme_credentials.env      # CF_DNS_API_TOKEN for Caddy ACME
   cloudflare.yaml                      # Cloudflare API token
   cloudflare_tunnel_cert.pem           # Cloudflare Tunnel account cert
   cloudflare_tunnel_credentials.bin    # Cloudflare Tunnel credentials

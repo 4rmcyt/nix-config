@@ -1,5 +1,4 @@
-# Shared shape for the Cloudflare DNS-01 ACME credentials secret, owned by
-# whichever reverse proxy (traefik or caddy) is enabled on a given host.
+# Shared shape for the Cloudflare DNS-01 ACME credentials secret, owned by the host's Caddy.
 owner: {
   sopsFile = ../secrets/cloudflare_acme_credentials.env;
   inherit owner;

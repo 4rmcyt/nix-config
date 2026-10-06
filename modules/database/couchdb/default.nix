@@ -52,7 +52,7 @@
     };
   };
 
-  # No firewall exception needed: bindAddress=127.0.0.1 means Traefik reaches
+  # No firewall exception needed: bindAddress=127.0.0.1 means Caddy reaches
   # this over loopback, not through the firewall.
   systemd.services.couchdb = {
     postStart = ''

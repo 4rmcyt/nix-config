@@ -65,10 +65,10 @@ modules/
                             #   journal-upload/ and node-exporter/ are per-host clients,
                             #   imported directly by each host (homeserver gets journal-upload
                             #   via monitoring/default.nix)
-  networking/               # ssh, tailscale, traefik, headscale, cloudflared,
+  networking/               # ssh, tailscale, headscale, cloudflared,
                             #   caddy, caddy-homeserver, dnssec, nfs, nut-client/server, wireguard,
                             #   lan-routing (desktop: keeps trusted LAN off the Tailscale subnet route)
-  security/                 # crowdsec, fail2ban, kanidm
+  security/                 # crowdsec, kanidm
   services/                 # Application services: home-assistant, radicale, homepage, miniflux,
                             #   nixarr, atuin-server, microbin, komf, komga, ntfy,
                             #   k3s + argocd (homeserver; see Infrastructure.md)
@@ -112,8 +112,7 @@ Thunderbird account config also lives there (`inputs.private.homeModules.thunder
 |----------------------|-------------------------------|----------------------------------------------|
 | `my.defaults.*`      | `options/defaults.nix`        | user, email, git identity, domain, timezone, locale, GCP relay IP, NextDNS profile id (from `inputs.private`) |
 | `my.network.*`       | `options/network.nix`         | subnets, service ports (`ports.<name>` int + derived read-only `portScope.<name>` = internet/lan/localhost) — local defaults; gateway, host addresses/MACs/infrastructure/DHCP reservations sourced from `inputs.private` |
-| `my.traefik.*`       | `networking/traefik/`         | Traefik reverse proxy (disabled, rollback)   |
-| `my.caddyHomeserver.*` | `networking/caddy-homeserver/` | Caddy reverse proxy for homeserver (replaced Traefik) |
+| `my.caddyHomeserver.*` | `networking/caddy-homeserver/` | Caddy reverse proxy for homeserver |
 | `my.uaExit.*`         | `networking/ua-exit/`         | Second tailscaled as `ua-exit` exit node inside a Ukraine WireGuard netns |
 | `my.headscale.*`     | `networking/headscale/`       | Headscale coordination server                |
 | `my.nodeExporter.*`  | `monitoring/node-exporter/` | Per-host Prometheus node exporter   |
@@ -407,7 +406,7 @@ Updates are manual everywhere — no auto-upgrade timer.
 `just topology` (or `nix build .#topology.x86_64-linux.config.output`) generates two SVGs via **nix-topology** — physical `main.svg` and `network.svg` — written to `docs/topology.svg` / `docs/topology-network.svg` and embedded in the README. Interface `addresses` in the annotations are descriptive labels, not real IPs, so the committed SVGs expose nothing beyond `docs/Infrastructure.md`.
 
 - **`parts/topology.nix`** — flakeModule wiring + the global topology: `internet`, `isp-router`, the hand-described `router` appliance node (the NixOS host was removed), `switch-office`, `switch-livingroom`, `ap-trusted`, `ap-iot`, and the `trusted` / `iot` / `media` / `work` / `tailnet` network CIDRs. Four hosts are included (desktop, homeserver, matebook, gcp-relay).
-- **`modules/topology/default.nix`** — NixOS module imported into `modules.nixos.base` (every host). Per-host `topology.self`: interfaces, network membership, hardware blurbs, a shared `tailscale0` overlay interface. Also forces `services.traefik.details = {}` on homeserver so the diagram does **not** enumerate every Traefik router and backend URL (job-kombayn included).
+- **`modules/topology/default.nix`** — NixOS module imported into `modules.nixos.base` (every host). Per-host `topology.self`: interfaces, network membership, hardware blurbs, a shared `tailscale0` overlay interface. Also blanks extractor `details`/`info` for leaky homeserver services (mosquitto, grafana, kanidm, …) so the committed diagram stays IP-/domain-free.
 - 802.1Q is not representable in nix-topology — the office switch is drawn as the trusted segment it mostly carries; the IoT AP hangs off the router's `vlan20` interface.
 - `matebook` is decommissioned — config kept for reference, no longer deployed.
 

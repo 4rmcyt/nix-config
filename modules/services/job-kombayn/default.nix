@@ -147,7 +147,7 @@ in {
         127.0.0.1:''${toString cfg.apiPort} — read/PATCH-status HTTP API for
         the web frontend, gated by email+password login (kombayn/auth.py;
         users provisioned by hand via `python -m kombayn.auth create-user`,
-        not by this module). Reachable via Traefik at
+        not by this module). Reachable via Caddy at
         jobko.''${config.my.defaults.domain}/api or over the tailnet.
       '';
     };
@@ -163,7 +163,7 @@ in {
       default = false;
       description = ''
         Serve the built `frontend/` SPA (static-web-server) on
-        127.0.0.1:''${toString cfg.webPort}, fronted by Traefik at
+        127.0.0.1:''${toString cfg.webPort}, fronted by Caddy at
         jobko.''${config.my.defaults.domain}.
       '';
     };

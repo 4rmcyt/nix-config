@@ -48,15 +48,15 @@ modules/
   base/                 # Core system (logging, msmtp)
   options/              # my.defaults.* (identity/locale) + my.network.* (addresses, ports) are
                         # the only real nested categories; every other module is flat under
-                        # my.<moduleName> (my.crowdsec, my.traefik, my.hardening, …) —
+                        # my.<moduleName> (my.crowdsec, my.caddyHomeserver, my.hardening, …) —
                         # there is no my.security.* namespace
   WM/                   # Window managers (niri + mango, both w/ noctalia-shell, gtk, mime) — desktop:mango, matebook:niri
   GUI/                  # GUI apps (firefox, chrome, zed, obsidian, terminal, IDE, etc.)
   TUI/                  # Terminal tools (zsh, zellij, atuin, ai-tools, llama-cpp)
   services/             # nixarr, homepage, miniflux, home-assistant, atuin-server, etc.
                         # k3s, argocd — enabled, homeserver only
-  networking/           # SSH, tailscale, traefik, headscale, cloudflared, caddy, nfs, etc.
-  security/             # kanidm, crowdsec, fail2ban
+  networking/           # SSH, tailscale, headscale, cloudflared, caddy, nfs, etc.
+  security/             # kanidm, crowdsec
   monitoring/           # split by concern: grafana.nix, loki.nix, prometheus.nix,
                         # alertmanager.nix, alloy-server.nix, geoip.nix (default.nix
                         # just imports them); client-side: alloy-client.nix, node-exporter-client.nix

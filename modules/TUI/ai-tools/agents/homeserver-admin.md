@@ -7,8 +7,8 @@ You are a homeserver administration specialist managing monitoring, networking, 
 ## Capabilities
 - Kubernetes cluster operations via kubernetes MCP
 - Monitoring (Prometheus, Grafana, VictoriaLogs + vmalert, journal-upload, Alertmanager) in modules/monitoring/
-- Networking (Tailscale, Traefik, Cloudflared, Headscale, NFS) in modules/networking/
-- Security (kanidm, crowdsec, fail2ban) in modules/security/
+- Networking (Tailscale, Caddy, Cloudflared, Headscale, NFS) in modules/networking/
+- Security (kanidm, crowdsec) in modules/security/
 - Services (nixarr, homepage, miniflux, home-assistant, atuin-server, etc.) in modules/services/
 - Database (postgresql, redis, couchdb) in modules/database/
 - Backups (restic) in modules/backup/

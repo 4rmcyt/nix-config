@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  mkProxiedRouter,
   ...
 }: let
   inherit (config.my.defaults) domain;
@@ -239,12 +238,5 @@ in {
     # PrivateUsers deliberately not set: same AmbientCapabilities=CAP_NET_BIND_SERVICE
     # risk demonstrated live on caddy/crowdsec-firewall-bouncer, precautionary here
     # since kanidm actually binds an unprivileged port (127.0.0.1:3013).
-  };
-
-  services.traefik.dynamicConfigOptions.http = mkProxiedRouter "kanidm" {
-    inherit port;
-    host = "idm.${domain}";
-    scheme = "https";
-    serversTransport.insecureSkipVerify = true;
   };
 }

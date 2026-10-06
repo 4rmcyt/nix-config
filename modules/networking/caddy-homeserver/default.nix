@@ -84,7 +84,7 @@
     respond @geoblocked 403
   '';
 
-  # Sliding-window approximation of Traefik's average=100/burst=50.
+  # Sliding window: 100 requests/s per client IP.
   rateLimit = name: ''
     rate_limit {
       zone ${name} {
@@ -246,17 +246,10 @@
     lib.nameValuePair "${s.name}:${toString ports.caddy-guest}" s.value) (lib.getAttrs guestSites sites);
 in {
   options.my.caddyHomeserver = {
-    enable = lib.mkEnableOption "Caddy reverse proxy for homeserver (Traefik replacement)";
+    enable = lib.mkEnableOption "Caddy reverse proxy for homeserver";
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = !config.my.traefik.enable;
-        message = "my.caddyHomeserver and my.traefik both bind :80/:443 and share the CrowdSec bouncer key.";
-      }
-    ];
-
     sops.secrets.cloudflare_acme_credentials = import ../../../lib/cloudflare-acme-secret.nix "caddy";
     sops.secrets.crowdsec_bouncer_key.sopsFile = ../../../secrets/crowdsec.yaml;
     sops.templates."caddy-crowdsec.env" = {
@@ -359,7 +352,7 @@ in {
         ProtectControlGroups = lib.mkDefault true;
         ProtectHostname = lib.mkDefault true;
         RestrictNamespaces = lib.mkDefault true;
-        # Safe here unlike Traefik: plugins are compiled in, no Yaegi interpreter.
+        # Safe: plugins are compiled in, no runtime interpreter.
         MemoryDenyWriteExecute = lib.mkDefault true;
         RestrictAddressFamilies = lib.mkDefault ["AF_INET" "AF_INET6" "AF_UNIX" "AF_NETLINK"];
         ProtectProc = lib.mkDefault "invisible";

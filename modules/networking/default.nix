@@ -7,7 +7,6 @@
     ./nfs
     ./ssh
     ./tailscale
-    ./traefik
     ./ua-exit
     ./unbound
     ./wireguard
