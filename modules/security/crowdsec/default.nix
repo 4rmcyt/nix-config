@@ -79,6 +79,8 @@ in {
       };
 
       settings.lapi.credentialsFile = "/var/lib/crowdsec/state/lapi-credentials.yaml";
+      # Non-null makes the module run `cscli capi register` and pull the community blocklist (sharing on).
+      settings.capi.credentialsFile = "/var/lib/crowdsec/state/capi-credentials.yaml";
 
       localConfig.acquisitions =
         [
