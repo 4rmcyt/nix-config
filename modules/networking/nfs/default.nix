@@ -27,13 +27,11 @@ in {
   services.nfs.server = {
     enable = true;
     nproc = 8;
-    exports = lib.concatStringsSep "\n" (
-      (map (subnet: "/data  ${subnet}(rw,sync,no_subtree_check,no_root_squash,insecure)") subnets.lan)
-      ++ [
-        "/data  ${subnets.tailscale}(rw,sync,no_subtree_check,no_root_squash,insecure)"
-        "/data  ${subnets.media}(ro,sync,no_subtree_check,root_squash,insecure)"
-      ]
-    );
+    # rw only to the trusted VLAN: no tailnet (gcp-relay/phones) and no ISP-router subnet.
+    exports = lib.concatStringsSep "\n" [
+      "/data  ${subnets.trusted}(rw,sync,no_subtree_check,no_root_squash,insecure)"
+      "/data  ${subnets.media}(ro,sync,no_subtree_check,root_squash,insecure)"
+    ];
   };
 
   # NFSv4-only: v3 needs rpcbind/statd/MOUNT, all clients mount with nfsvers=4.2.
@@ -86,9 +84,6 @@ in {
     "d /data/.Trash-1000 0700 ${config.my.defaults.user} users -"
   ];
 
-  networking.firewall = {
-    allowedTCPPorts = [2049];
-    allowedUDPPorts = [2049];
-    interfaces.tailscale0.allowedTCPPorts = [2049];
-  };
+  # NFSv4 is TCP-only.
+  networking.firewall.allowedTCPPorts = [2049];
 }

@@ -229,8 +229,7 @@ NFS server on homeserver (`modules/networking/nfs/`), **NFSv4-only** (`vers3=n`;
 
 | Client subnet | Access | Notes |
 |---------------|--------|-------|
-| `192.168.1.0/24` (trusted) | rw, no_root_squash | Desktop, matebook, servers |
-| `100.64.0.0/10` (tailscale) | rw, no_root_squash | Remote access via tailnet |
+| `192.168.1.0/24` (trusted) | rw, no_root_squash | Desktop (over LAN via `lan-routing`, not tailnet). Only rw export: no tailnet (gcp-relay/phones) and no ISP-router `192.168.0.0/24` |
 | `192.168.30.0/24` (media) | ro, root_squash | Read-only; gateway forwards tcp/2049 media→trusted |
 
 ### UPS (NUT)
