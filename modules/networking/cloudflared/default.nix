@@ -15,10 +15,8 @@
   mkIngress = name: {
     "${name}.${domain}" = {
       service = "https://localhost:443";
-      originRequest = {
-        originServerName = "${name}.${domain}";
-        noTLSVerify = true;
-      };
+      # Caddy serves a Let's Encrypt cert for this name, so the origin cert is verified.
+      originRequest.originServerName = "${name}.${domain}";
     };
   };
 in {
