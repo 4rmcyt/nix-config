@@ -139,7 +139,8 @@ in {
           {
             source = "journalctl";
             journalctl_filter = ["_SYSTEMD_UNIT=caddy.service"];
-            labels.type = "caddy";
+            # journalctl emits syslog-style lines; syslog-logs strips the prefix and sets program=caddy for caddy-logs.
+            labels.type = "syslog";
           }
         ]
         ++ lib.optionals cfg.appsec.enable [
