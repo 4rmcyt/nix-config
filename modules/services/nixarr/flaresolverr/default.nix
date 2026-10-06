@@ -8,5 +8,7 @@
   systemd.services.flaresolverr.environment = {
     HOST = "127.0.0.1";
     TZ = config.my.defaults.timezone;
+    # INFO logs request bodies, incl. RuTracker login_password.
+    LOG_LEVEL = "warning";
   };
 }
