@@ -80,7 +80,7 @@
         type = "victoriametrics-logs-datasource";
         uid = "victorialogs";
         access = "proxy";
-        url = "http://localhost:${toString config.my.network.ports.victorialogs}";
+        url = "http://127.0.0.1:${toString config.my.network.ports.victorialogs}";
       }
     ];
     provision.dashboards.settings.providers = [

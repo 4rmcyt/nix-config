@@ -125,7 +125,7 @@
         80
         443
         config.my.network.ports.grafana
-        config.my.network.ports.victorialogs # gcp-relay journal-upload
+        config.my.network.ports.victorialogs-ingest # gcp-relay journal-upload (write-only Caddy front)
         config.my.network.ports.crowdsec-lapi # gcp-relay bouncer
         config.my.network.ports.prometheus
         9091 # Database & infrastructure
@@ -138,7 +138,6 @@
     firewall.interfaces.enp0s31f6 = {
       allowedTCPPorts = [
         53
-        config.my.network.ports.victorialogs # desktop journal-upload
         config.my.network.ports.jellyfin # LAN/media-VLAN clients by IP
         8920 # Jellyfin HTTPS
       ];
@@ -148,6 +147,11 @@
         7359 # Jellyfin auto-discovery
       ];
     };
+
+    # VictoriaLogs ingest front (write-only): from the LAN only desktop may reach it; tailnet side is gated by the headscale ACL.
+    firewall.extraInputRules = ''
+      iifname "enp0s31f6" ip saddr { ${config.my.network.hosts.desktop_lan}, ${config.my.network.hosts.desktop_wifi} } tcp dport ${toString config.my.network.ports.victorialogs-ingest} accept
+    '';
 
     # Containers reach host services via host.containers.internal / host-gateway on podman0.
     firewall.interfaces.podman0.allowedTCPPorts = [

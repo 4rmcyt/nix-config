@@ -222,7 +222,6 @@ Full guide: [DEPLOYMENT.md](DEPLOYMENT.md)
 ### Existing Service Ports
 All existing services operate on different ports:
 - **587**: SMTP (msmtp)
-- **1883**: MQTT (Home Assistant)
 - **3001**: Uptime Kuma
 - **3003**: Grafana
 - **3493**: NUT (Network UPS Tools)

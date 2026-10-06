@@ -164,8 +164,8 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 
 ### Firewall exposure (homeserver)
 
-Global (all interfaces): 80/443 (Caddy, + UDP 443), 2222 (SSH), 2049 (NFS, exports restrict to trusted/media), 3493 (NUT), 1883 (Mosquitto).
-Per interface: LAN NIC — 53, Jellyfin 8096/8920 + UDP 1900/7359 (TVs/DLNA by IP), VictoriaLogs 9428; `podman0` — Prowlarr, Jellyfin, Radarr, Sonarr (containers via `host.containers.internal`); `tailscale0` and `cni0` — see `hosts/nixos/homeserver/default.nix`.
+Global (all interfaces): 80/443 (Caddy, + UDP 443), 2222 (SSH), 2049 (NFS, exports restrict to trusted/media), 3493 (NUT).
+Per interface: LAN NIC — 53, Jellyfin 8096/8920 + UDP 1900/7359 (TVs/DLNA by IP), VictoriaLogs ingest 9429 from desktop's IPs only (`extraInputRules`); `podman0` — Prowlarr, Jellyfin, Radarr, Sonarr (containers via `host.containers.internal`); `tailscale0` and `cni0` — see `hosts/nixos/homeserver/default.nix`.
 Every other service UI is loopback/Caddy-only; container ports are published on `127.0.0.1` only (published ports are DNAT'd past the NixOS firewall, so a LAN-IP publish would bypass it).
 
 ### Caddy (reverse proxy)
@@ -203,7 +203,7 @@ sequentially).
 |--------|-------------|-------|
 | desktop | `*`, `autogroup:internet` | all |
 | s23plus, s23ultra | homeserver, desktop, `lan` (subnet route), `autogroup:internet` (exit nodes) | all |
-| gcp-relay | homeserver | tcp crowdsec-lapi, tcp victorialogs (journal-upload), 53 (split DNS) |
+| gcp-relay | homeserver | tcp crowdsec-lapi, tcp victorialogs-ingest 9429 (journal-upload), 53 (split DNS) |
 | homeserver | gcp-relay | tcp node-exporter |
 | homeserver | desktop | tcp 22 (nix-builder) |
 | `guest@` (any device of headscale user `guest`) | homeserver | tcp caddy-guest (8443), 53 |
@@ -363,8 +363,8 @@ systemd journal (every host, incl. Caddy access log)
 
 - **Prometheus** scrape targets: homeserver, desktop, matebook, gcp-relay node exporters; NUT; Caddy; CrowdSec; Prometheus self
 - **Grafana** OIDC via Kanidm; backend PostgreSQL; datasources: Prometheus + VictoriaLogs (`victoriametrics-logs-datasource`, uid `victorialogs`); `declarativePlugins` lists the core `prometheus` plugin too, since a declarative list replaces the preinstalled ones; dashboards from `modules/monitoring/grafana/dashboards/` (`victorialogs-logs.json` = System Logs)
-- **Log shipping**: no agent. Every host runs systemd's own `systemd-journal-upload` (`modules/monitoring/journal-upload/`, `my.journalUpload`, zstd) to `/insert/journald`: desktop via `homeserver_lan`, gcp-relay via `homeserver_ts`, homeserver via loopback. VictoriaLogs derives stream fields `_MACHINE_ID, _HOSTNAME, _SYSTEMD_UNIT` and `level` (from `PRIORITY`: emerg, alert, critical, error, warning, notice, info, debug)
-- **VictoriaLogs** (`modules/monitoring/victorialogs/`): retention 30d, data on `zdata/victorialogs` → `/var/lib/private/victorialogs` (DynamicUser). `-journald.useRemoteIP` stores the sender as `remote_ip`; port 9428 is open only on the LAN NIC and `tailscale0`, not globally. No auth — anyone on the LAN can read/write logs; CrowdSec's gcp-relay query pins `remote_ip` so injected lines can't trigger bans
+- **Log shipping**: no agent. Every host runs systemd's own `systemd-journal-upload` (`modules/monitoring/journal-upload/`, `my.journalUpload`, zstd) to `/insert/journald`: desktop via `homeserver_lan:9429`, gcp-relay via `homeserver_ts:9429` (Caddy ingest front), homeserver directly via `127.0.0.1:9428`. VictoriaLogs derives stream fields `_MACHINE_ID, _HOSTNAME, _SYSTEMD_UNIT` and `level` (from `PRIORITY`: emerg, alert, critical, error, warning, notice, info, debug)
+- **VictoriaLogs** (`modules/monitoring/victorialogs/`): retention 30d, data on `zdata/victorialogs` → `/var/lib/private/victorialogs` (DynamicUser). `-journald.useRemoteIP` stores the sender as `remote_ip`; no auth, so it listens on `127.0.0.1:9428` only — reads (Grafana, CrowdSec, vmalert) and homeserver's own journal-upload are local. Remote writers go through a write-only Caddy front `http://:9429` (`ports.victorialogs-ingest`): `POST /insert/journald/*` is proxied, anything else is 403, no access log (would loop back into VictoriaLogs). 9429 is reachable from the LAN only from desktop's addresses (`networking.firewall.extraInputRules`, nftables `ip saddr {desktop_lan, desktop_wifi}`) and on `tailscale0` only from gcp-relay (headscale ACL). VictoriaLogs takes `remote_ip` from `X-Forwarded-For` unconditionally, so it is only trustworthy behind Caddy, which drops clients' own XFF (they aren't in `trusted_proxies`) — CrowdSec's gcp-relay query pins that `remote_ip`
 - **vmalert** (`vmalert-logs`, loopback only): LogsQL alert rules in `modules/monitoring/victorialogs/rules.nix` (type `vlogs`, explicit `_time` windows) → Alertmanager
 - Not carried over from Alloy: the Python-container `level` downgrade (INFO/DEBUG on stderr marked error) — do it at query time if needed. Old Loki data stays on `zdata/loki` (`/var/lib/loki`, disko entry kept) until deleted manually
 - **Alertmanager** → **alertmanager-ntfy** bridge → ntfy topic `alerts`

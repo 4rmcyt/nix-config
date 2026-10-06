@@ -73,8 +73,13 @@
     };
     victorialogs = {
       port = 9428;
+      scope = "localhost";
+      desc = "VictoriaLogs log database (LogsQL reads: Grafana, CrowdSec, vmalert)";
+    };
+    victorialogs-ingest = {
+      port = 9429;
       scope = "lan";
-      desc = "VictoriaLogs log database (journald ingest from systemd-journal-upload, LogsQL)";
+      desc = "Caddy write-only front for VictoriaLogs: POST /insert/journald/* from remote journal-upload";
     };
     vmalert = {
       port = 8880;
@@ -112,11 +117,6 @@
       port = 8123;
       scope = "internet";
       desc = "Home Assistant smart home platform";
-    };
-    mosquitto = {
-      port = 1883;
-      scope = "lan";
-      desc = "Mosquitto MQTT broker";
     };
 
     alertmanager = {

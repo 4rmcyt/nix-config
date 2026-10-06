@@ -2,14 +2,31 @@
   inherit (config.my.network) ports;
   url = "http://127.0.0.1:${toString ports.victorialogs}";
 in {
+  # Loopback only: reads (Grafana, CrowdSec, vmalert) are local; remote hosts write via the Caddy ingest front below.
   services.victorialogs = {
     enable = true;
-    listenAddress = ":${toString ports.victorialogs}";
+    listenAddress = "127.0.0.1:${toString ports.victorialogs}";
     extraOptions = [
       "-retentionPeriod=30d"
-      # Stores the sender IP as remote_ip, so CrowdSec only trusts Caddy lines that really came from gcp-relay.
+      # remote_ip comes from X-Forwarded-For, which only Caddy sets (clients' own XFF is dropped) — CrowdSec pins gcp-relay on it.
       "-journald.useRemoteIP=true"
     ];
+  };
+
+  # Write-only front: POST /insert/journald/* is proxied, everything else (LogsQL reads) is 403.
+  services.caddy.virtualHosts."http://:${toString ports.victorialogs-ingest}" = {
+    # No access log: each ingest request would itself be shipped back into VictoriaLogs.
+    logFormat = null;
+    extraConfig = ''
+      @ingest {
+        method POST
+        path /insert/journald/*
+      }
+      handle @ingest {
+        reverse_proxy ${url}
+      }
+      respond 403
+    '';
   };
 
   # zdata/victorialogs (disko) must be mounted before the DynamicUser StateDirectory is used.

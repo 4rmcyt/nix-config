@@ -1,6 +1,6 @@
 {config, ...}: let
   inherit (config.my.defaults) domain timezone;
-  inherit (config.my.network.hosts) homeserver_lan desktop_lan desktop_wifi;
+  inherit (config.my.network.hosts) desktop_lan desktop_wifi;
   inherit (config.my.network.mac) desktop-wifi desktop-lan;
 in {
   sops.secrets.hass_alexa_client_secret = {
@@ -72,27 +72,4 @@ in {
   systemd.tmpfiles.rules = [
     "d /var/lib/hass 0750 root root -"
   ];
-
-  # HA container (--network=host) and IoT devices on the LAN both reach mosquitto
-  # via homeserver_lan.
-  users.users.mosquitto = {
-    isSystemUser = true;
-    group = "mosquitto";
-  };
-  users.groups.mosquitto = {};
-
-  services.mosquitto = {
-    enable = true;
-    listeners = [
-      {
-        address = homeserver_lan;
-        port = config.my.network.ports.mosquitto;
-        acl = ["pattern readwrite #"];
-        omitPasswordAuth = true;
-        settings.allow_anonymous = true;
-      }
-    ];
-  };
-
-  networking.firewall.allowedTCPPorts = [config.my.network.ports.mosquitto];
 }

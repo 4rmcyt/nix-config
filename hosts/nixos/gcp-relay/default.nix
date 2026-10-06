@@ -140,7 +140,7 @@
     my.nodeExporter.enable = true;
     my.journalUpload = {
       enable = true;
-      url = "http://${config.my.network.hosts.homeserver_ts}:${toString config.my.network.ports.victorialogs}/insert/journald";
+      url = "http://${config.my.network.hosts.homeserver_ts}:${toString config.my.network.ports.victorialogs-ingest}/insert/journald";
     };
 
     my.headscale = {
