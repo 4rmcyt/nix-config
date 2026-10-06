@@ -2,7 +2,18 @@
   config,
   pkgs,
   ...
-}: {
+}: let
+  # Node Exporter Full (grafana.com 1860), stock upstream — fetched instead of vendoring 23k lines.
+  nodeExporterFull = pkgs.fetchurl {
+    url = "https://grafana.com/api/dashboards/1860/revisions/45/download";
+    hash = "sha256-GExrdAnzBtp1Ul13cvcZRbEM6iOtFrXXjEaY6g6lGYY=";
+  };
+  dashboards = pkgs.runCommand "grafana-dashboards" {} ''
+    mkdir $out
+    ln -s ${./dashboards}/*.json $out/
+    ln -s ${nodeExporterFull} $out/node-exporter-full.json
+  '';
+in {
   sops.secrets = {
     grafana_admin_password = {
       sopsFile = ../../../secrets/grafana.yaml;
@@ -86,7 +97,7 @@
     provision.dashboards.settings.providers = [
       {
         name = "dashboards";
-        options.path = ./dashboards;
+        options.path = dashboards;
         disableDeletion = false;
         updateIntervalSeconds = 30;
       }
