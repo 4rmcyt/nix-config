@@ -215,6 +215,7 @@ On homeserver, listening on Tailscale + LAN interfaces. Forwards to NextDNS prof
 ### CrowdSec
 
 - **homeserver**: LAPI at `127.0.0.1:8088`; Caddy bouncer (stream mode); AppSec (WAF) component on `127.0.0.1:7422` (`my.crowdsec.appsec`, `appsec-default` config, `appsec-virtual-patching` + `appsec-generic-rules`); collections: `linux`, `sshd`, `caddy`
+- Local Caddy log acquisition is `journalctl` with `labels.type: syslog`, not `caddy`: journalctl emits `Mon DD hh:mm:ss host caddy[pid]: {json}`, and only `syslog-logs` strips that prefix (sets `program=caddy`) so `caddy-logs` can parse the JSON. With `type: caddy` every line failed `UnmarshalJSON` (broken from the Caddy switch on 2026-10-04 until 2026-10-05). Bans use Caddy's `client_ip` (real client behind Cloudflare via `trusted_proxies`)
 - **gcp-relay**: nftables bouncer; remote LAPI via Tailscale pointing to homeserver. Caddy access log → journal → journal-upload → VictoriaLogs → homeserver CrowdSec (`victorialogs` datasource in tail mode, `my.crowdsec.remoteCaddy`, query pinned to `remote_ip` = gcp-relay tailnet IP) — no agent on the relay
 - Whitelists: Tailscale CGNAT `100.64.0.0/10`, LAN `192.168.1.0/24`, Cloudflare IPs
 
