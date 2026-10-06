@@ -164,8 +164,8 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 
 ### Firewall exposure (homeserver)
 
-Global (all interfaces): 80/443 (Caddy, + UDP 443), 2222 (SSH), 2049 (NFS, exports restrict to trusted/media), 3493 (NUT).
-Per interface: LAN NIC — 53, Jellyfin 8096/8920 + UDP 1900/7359 (TVs/DLNA by IP), VictoriaLogs ingest 9429 from desktop's IPs only (`extraInputRules`); `podman0` — Prowlarr, Jellyfin, Radarr, Sonarr (containers via `host.containers.internal`); `tailscale0` and `cni0` — see `hosts/nixos/homeserver/default.nix`.
+Global (all interfaces): 80/443 (Caddy, + UDP 443), 2222 (SSH), 2049 (NFS, exports restrict to trusted/media).
+Per interface: LAN NIC — 53, Jellyfin 8096/8920 + UDP 1900/7359 (TVs/DLNA by IP), VictoriaLogs ingest 9429 and NUT 3493 from desktop's IPs only (`extraInputRules`); `podman0` — Prowlarr, Jellyfin, Radarr, Sonarr (containers via `host.containers.internal`); `tailscale0` and `cni0` — see `hosts/nixos/homeserver/default.nix`.
 Every other service UI is loopback/Caddy-only; container ports are published on `127.0.0.1` only (published ports are DNAT'd past the NixOS firewall, so a LAN-IP publish would bypass it).
 
 ### Caddy (reverse proxy)
@@ -240,7 +240,7 @@ NFS server on homeserver (`modules/networking/nfs/`), **NFSv4-only** (`vers3=n`;
 
 ### UPS (NUT)
 
-NUT server on homeserver (`modules/networking/nut-server/`, upsmon `primary`); NUT client on desktop (`modules/networking/nut-client/`, upsmon `secondary`, connects via `homeserver_lan`; kept off tailscale0 by desktop's `lan-routing` rule, see desktop → Networking; the LAN switch is on UPS power). Prometheus NUT exporter scrapes battery/load metrics. `upsd` and `upsmon` on homeserver run sandboxed (capability-bounded, `ProtectSystem`, syscall filter).
+NUT server on homeserver (`modules/networking/nut-server/`, upsmon `primary`); NUT client on desktop (`modules/networking/nut-client/`, own upsd user `upsmon-desktop` with `upsmon secondary` — can't request FSD; connects via `homeserver_lan`; kept off tailscale0 by desktop's `lan-routing` rule, see desktop → Networking; the LAN switch is on UPS power). Prometheus NUT exporter scrapes battery/load metrics. `upsd` and `upsmon` on homeserver run sandboxed (capability-bounded, `ProtectSystem`, syscall filter).
 
 Graceful shutdown: each host runs `upssched` with an `ONBATT` timer cancelled on `ONLINE`; on expiry it runs `upsmon -c fsd`. Desktop (heavy load) fires at 30s and only shuts itself down (secondary FSD doesn't set FSD on upsd). Homeserver fires at 5 min (alone it lasts ~9 min to `LB`): sets FSD, waits up to `HOSTSYNC` (15s) for secondaries, then shuts down; `ups-killpower` runs `upsdrvctl shutdown` at the end so the UPS cycles and powers hosts back on when mains returns (needs BIOS "Restore on AC power loss = Power On"). UPS's own `LB` remains a fallback trigger. `upsdrv` has `TimeoutStopSec=10s`: `usbhid-ups` was seen hanging after SIGTERM during an FSD shutdown, stalling it 90s.
 

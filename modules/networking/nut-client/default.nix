@@ -26,9 +26,9 @@ in {
     upsmon = {
       monitor.apc = {
         system = upsSystem;
-        user = "upsmon";
+        user = "upsmon-desktop";
         type = "secondary";
-        passwordFile = config.sops.secrets.nut_password.path;
+        passwordFile = config.sops.secrets.nut_desktop_password.path;
       };
       settings.NOTIFYFLAG = [
         ["ONBATT" "SYSLOG+WALL+EXEC"]
@@ -52,7 +52,7 @@ in {
     wants = ["network-online.target"];
   };
 
-  sops.secrets.nut_password = {
+  sops.secrets.nut_desktop_password = {
     sopsFile = ../../../secrets/nut.yaml;
     owner = "root";
     group = "nut";

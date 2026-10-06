@@ -97,9 +97,10 @@ in {
     };
   };
 
-  networking.firewall.allowedTCPPorts = [
-    config.my.network.ports.nut
-  ];
+  # Only desktop's upsmon is remote; HA (host network) and the exporter use loopback.
+  networking.firewall.extraInputRules = ''
+    iifname "enp0s31f6" ip saddr { ${config.my.network.hosts.desktop_lan}, ${config.my.network.hosts.desktop_wifi} } tcp dport ${toString config.my.network.ports.nut} accept
+  '';
 
   power.ups = {
     enable = true;
@@ -121,6 +122,12 @@ in {
     users.upsmon = {
       passwordFile = config.sops.secrets.nut_password.path;
       upsmon = "primary";
+    };
+
+    # Secondary can't request FSD, so a leaked desktop password can't power off homeserver.
+    users.upsmon-desktop = {
+      passwordFile = config.sops.secrets.nut_desktop_password.path;
+      upsmon = "secondary";
     };
 
     users.homeassistant = {
@@ -150,6 +157,13 @@ in {
   };
 
   sops.secrets.nut_password = {
+    sopsFile = ../../../secrets/nut.yaml;
+    owner = "root";
+    group = "nut";
+    mode = "0440";
+  };
+
+  sops.secrets.nut_desktop_password = {
     sopsFile = ../../../secrets/nut.yaml;
     owner = "root";
     group = "nut";
