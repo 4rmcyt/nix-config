@@ -4,10 +4,9 @@ in {
   virtualisation.oci-containers.containers.lazylibrarian = {
     autoStart = true;
     image = "lscr.io/linuxserver/lazylibrarian:latest";
-    # Published ports are DNAT'd past the NixOS firewall: bind loopback (reverse proxy, prowlarr sync) + LAN IP only.
+    # Published ports are DNAT'd past the NixOS firewall: bind loopback only (reverse proxy, prowlarr sync).
     ports = [
       "127.0.0.1:${port}:${port}"
-      "${config.my.network.hosts.homeserver_lan}:${port}:${port}"
     ];
     extraOptions = [
       # PUID/PGID are set at runtime, not in the image passwd, so pin the range size instead of auto-estimating.

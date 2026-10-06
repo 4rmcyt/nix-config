@@ -32,8 +32,6 @@
   };
   users.groups.grafana = {};
 
-  networking.firewall.allowedTCPPorts = [config.my.network.ports.grafana];
-
   services.grafana = {
     enable = true;
     # Declarative list replaces Grafana's preinstalled plugins, so the core Prometheus datasource must be listed too.

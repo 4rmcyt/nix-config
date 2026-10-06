@@ -2,10 +2,9 @@
   virtualisation.oci-containers.containers.byparr = {
     autoStart = true;
     image = "ghcr.io/thephaseless/byparr:latest";
-    # Published ports are DNAT'd past the NixOS firewall: bind loopback (prowlarr) + LAN IP only.
+    # Published ports are DNAT'd past the NixOS firewall: bind loopback only (prowlarr).
     ports = [
       "127.0.0.1:8191:8191"
-      "${config.my.network.hosts.homeserver_lan}:8191:8191"
     ];
     extraOptions = [
       "--userns=auto"

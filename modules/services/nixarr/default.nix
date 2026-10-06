@@ -256,19 +256,5 @@ in {
     "Z /data/Downloads - ${config.my.defaults.user} media -"
   ];
 
-  networking.firewall.allowedTCPPorts = [
-    config.my.network.ports.seerr
-    config.my.network.ports.bazarr
-    config.my.network.ports.radarr
-    config.my.network.ports.jellyfin
-    config.my.network.ports.lidarr
-    8920 # Jellyfin HTTPS
-    config.my.network.ports.sonarr
-    config.my.network.ports.audiobookshelf
-    config.my.network.ports.prowlarr
-  ];
-  networking.firewall.allowedUDPPorts = [
-    1900 # DLNA/UPnP
-    7359 # Jellyfin auto-discovery
-  ];
+  # No global openings: UIs go through Caddy; LAN (Jellyfin) and podman0 (containers) are per-interface in the host config.
 }

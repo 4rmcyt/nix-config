@@ -139,9 +139,23 @@
       allowedTCPPorts = [
         53
         config.my.network.ports.victorialogs # desktop journal-upload
+        config.my.network.ports.jellyfin # LAN/media-VLAN clients by IP
+        8920 # Jellyfin HTTPS
       ];
-      allowedUDPPorts = [53];
+      allowedUDPPorts = [
+        53
+        1900 # DLNA/UPnP
+        7359 # Jellyfin auto-discovery
+      ];
     };
+
+    # Containers reach host services via host.containers.internal / host-gateway on podman0.
+    firewall.interfaces.podman0.allowedTCPPorts = [
+      config.my.network.ports.prowlarr # lazylibrarian Torznab
+      config.my.network.ports.jellyfin # seerr
+      config.my.network.ports.radarr # seerr
+      config.my.network.ports.sonarr # seerr
+    ];
 
     # 6443: ClusterIP DNATs to LAN IP not loopback (else CrashLoopBackOff/timeout). 10250: kubelet. 5432: Postgres.
     firewall.interfaces.cni0 = {
@@ -272,7 +286,7 @@
 
   my.nodeExporter = {
     enable = true;
-    openFirewall = false; # port already open in networking.firewall
+    openFirewall = false; # scraped locally; tailnet access via firewall.interfaces.tailscale0
     extraCollectors = ["pressure" "thermal_zone" "zfs"];
     textfileWriters = [config.my.defaults.user "kombayn"];
   };

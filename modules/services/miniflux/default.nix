@@ -230,10 +230,6 @@ in {
   };
   users.groups.miniflux = {};
 
-  networking.firewall.allowedTCPPorts = [
-    config.my.network.ports.miniflux
-  ];
-
   environment.systemPackages = [pkgs.miniflux];
   services.miniflux = {
     enable = true;

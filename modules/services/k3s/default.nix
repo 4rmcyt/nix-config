@@ -30,25 +30,18 @@
       LimitNPROC = "infinity";
       LimitCORE = "infinity";
       TasksMax = "infinity";
-      # traefik + servicelb disabled: homeserver already runs a NixOS Traefik on
-      # :80/:443; external access to cluster services is via the NodePort range below.
+      # NodePorts loopback-only (iptables proxier): Caddy reaches them on localhost, nothing else on the LAN can.
       ExecStart = ''
         ${pkgs.k3s}/bin/k3s server \
           --token-file=${config.sops.secrets.k3s_token_file.path} \
           --disable=traefik \
           --disable=servicelb \
           --kube-controller-manager-arg=terminated-pod-gc-threshold=50 \
+          --kube-proxy-arg=nodeport-addresses=127.0.0.0/8 \
           --write-kubeconfig-mode=0640
       '';
     };
   };
-
-  networking.firewall.allowedTCPPortRanges = [
-    {
-      from = 30000;
-      to = 32767;
-    }
-  ];
 
   systemd.tmpfiles.rules = [
     "z /etc/rancher/k3s/k3s.yaml 0640 root wheel -"

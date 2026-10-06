@@ -15,10 +15,6 @@
   };
   users.groups.homepage-dashboard = {};
 
-  networking.firewall.allowedTCPPorts = [
-    config.my.network.ports.homepage
-  ];
-
   environment.systemPackages = [pkgs.homepage-dashboard];
 
   services.homepage-dashboard = {

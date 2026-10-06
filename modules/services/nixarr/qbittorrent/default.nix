@@ -14,7 +14,8 @@ in {
     group = "media";
     inherit webuiPort;
     torrentingPort = 63998;
-    openFirewall = true;
+    # Runs in the wg netns: host-side 8080 is dead; torrent port is handled by modules/networking/wireguard.
+    openFirewall = false;
 
     serverConfig = {
       Preferences = {

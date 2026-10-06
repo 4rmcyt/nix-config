@@ -40,10 +40,6 @@ in {
   };
   users.groups.microbin = {};
 
-  networking.firewall.allowedTCPPorts = [
-    config.my.network.ports.microbin
-  ];
-
   nixpkgs.overlays = [
     (_final: prev: {
       microbin = prev.microbin.overrideAttrs (

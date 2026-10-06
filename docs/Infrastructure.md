@@ -162,13 +162,19 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 - Access logs: JSON, errors + slow requests only, 14-day rotation
 - geoblock ≥1.2 loads its bundled IP2Location seed via `TRAEFIK_PLUGIN_GEOBLOCK_PATH` (plugin root); auto-updates land in `/var/lib/traefik/geoblock`
 
+### Firewall exposure (homeserver)
+
+Global (all interfaces): 80/443 (Caddy, + UDP 443), 2222 (SSH), 2049 (NFS, exports restrict to trusted/media), 3493 (NUT), 1883 (Mosquitto), 63998 (torrent port mapped into the `wg` netns).
+Per interface: LAN NIC — 53, Jellyfin 8096/8920 + UDP 1900/7359 (TVs/DLNA by IP), VictoriaLogs 9428; `podman0` — Prowlarr, Jellyfin, Radarr, Sonarr (containers via `host.containers.internal`); `tailscale0` and `cni0` — see `hosts/nixos/homeserver/default.nix`.
+Every other service UI is loopback/Caddy-only; container ports are published on `127.0.0.1` only (published ports are DNAT'd past the NixOS firewall, so a LAN-IP publish would bypass it).
+
 ### Caddy (reverse proxy)
 
 `modules/networking/caddy-homeserver`, option `my.caddyHomeserver.enable` (asserts `my.traefik.enable = false`). Enabled on homeserver.
 
 - Plugins via `pkgs.caddy.withPlugins`: `caddy-dns/cloudflare`, `hslatman/caddy-crowdsec-bouncer`, `porech/caddy-maxmind-geolocation`, `mholt/caddy-ratelimit`. Tags + per-host hashes in `modules/networking/caddy-plugins.json` (shared with gcp-relay), refreshed by `just caddy-update` (part of `just update`)
 - One wildcard `*.<domain>` cert (DNS-01); per-site blocks reuse it (Caddy ≥2.10), unknown subdomains → 404
-- Same site set as Traefik + `kanidm` (`idm.`), `jobko` (`/api*` split) and k3s `argocd.<domain>` → NodePort `30080` (HTTPS upstream, LAN/Tailscale only)
+- Same site set as Traefik + `kanidm` (`idm.`), `jobko` (`/api*` split) and k3s `argocd.<domain>` → NodePort `30080` on loopback (HTTPS upstream; site LAN/Tailscale only)
 - Per-site `route`: `crowdsec` → `appsec` (CrowdSec WAF, tunnel hostnames only: hass, livesync, cal, ntfy, jobko, idm; `appsec_fail_open`) → (`hass`: geoblock CA/US via `/var/lib/geoip/city.mmdb` + `rate_limit` 100/s) → headers (security / komga / komf CORS) → `encode zstd gzip` (not ntfy — streaming) → `reverse_proxy`
 - HTTP/3: UDP 443 open in the homeserver firewall
 - Guest listener on `:8443` (`ports.caddy-guest`, firewall: `tailscale0` only): only `guestSites` (jellyfin, audiobookshelf, komga, seerr) exist there, same per-site route as `:443`. Headscale's `guest@` grant allows only this port + 53, so guest devices can't reach any other site. `http://` redirects still go to 443 (Caddy prefers the HTTPS port when a host is on several)
@@ -286,7 +292,7 @@ All configured via the Cloudflare dashboard/API (zone `<domain>`, Free plan) —
 | Seerr           | 5055  | `seerr.<domain>`          | Request management — OCI container |
 | Audiobookshelf  | 9292  | `audiobookshelf.<domain>` | Audiobooks                         |
 | Recyclarr       | —     | (no UI)                       | Auto-sync quality profiles to *arr |
-| Byparr          | 8191  | (internal only)               | Cloudflare bypass for Prowlarr — FlareSolverr-compatible (GET only), OCI container on the podman bridge, published on 127.0.0.1 + LAN IP |
+| Byparr          | 8191  | (internal only)               | Cloudflare bypass for Prowlarr — FlareSolverr-compatible (GET only), OCI container on the podman bridge, published on 127.0.0.1 only |
 | FlareSolverr    | 8193  | (internal only)               | POST-capable Cloudflare solver, native `services.flaresolverr` on 127.0.0.1 — Prowlarr proxy for RuTracker login only |
 
 ### Reading / Library
@@ -321,7 +327,9 @@ All configured via the Cloudflare dashboard/API (zone `<domain>`, Free plan) —
 
 Single-node k3s on homeserver (`modules/services/k3s`). Embedded Traefik and
 servicelb are **disabled** — homeserver's NixOS Caddy owns `:80/:443`; cluster
-services are reached via the NodePort range `30000-32767`.
+services are reached via NodePorts that kube-proxy serves on loopback only
+(`--kube-proxy-arg=nodeport-addresses=127.0.0.0/8`, iptables proxier) — Caddy proxies
+`localhost:<nodePort>`; NodePorts are not reachable from the LAN and the range is not opened in the firewall.
 
 | Component | Notes |
 |-----------|-------|

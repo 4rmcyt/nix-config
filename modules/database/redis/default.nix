@@ -55,9 +55,6 @@
     };
   };
 
-  networking.firewall.allowedTCPPorts = [
-  ];
-
   systemd.services.redis-homeserver = {
     after = ["network.target"];
     serviceConfig =

@@ -18,8 +18,6 @@
   };
   users.groups.radicale = {};
 
-  networking.firewall.allowedTCPPorts = [config.my.network.ports.radicale];
-
   environment.systemPackages = [pkgs.radicale];
   services.radicale = {
     enable = true;

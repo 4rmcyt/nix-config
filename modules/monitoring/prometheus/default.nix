@@ -10,12 +10,6 @@
   };
   users.groups.prometheus = {};
 
-  networking.firewall.allowedTCPPorts = [
-    config.my.network.ports.prometheus
-    config.my.network.ports.node-exporter
-    9199 # NUT Exporter
-  ];
-
   services.prometheus = {
     enable = true;
     port = config.my.network.ports.prometheus;
