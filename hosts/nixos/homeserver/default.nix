@@ -124,13 +124,10 @@
         53
         80
         443
-        config.my.network.ports.grafana
         config.my.network.ports.victorialogs-ingest # gcp-relay journal-upload (write-only Caddy front)
         config.my.network.ports.crowdsec-lapi # gcp-relay bouncer
         config.my.network.ports.prometheus
-        9091 # Database & infrastructure
         config.my.network.ports.node-exporter
-        27196 # Cloudflare Exporter
       ];
       allowedUDPPorts = [53];
     };

@@ -30,7 +30,6 @@
         ${sts}
         X-Frame-Options "SAMEORIGIN"
         X-Content-Type-Options "nosniff"
-        X-XSS-Protection "1; mode=block"
       }
     '';
     # Allows the komf webui to embed Komga (iframe) and call its API cross-origin.
@@ -39,8 +38,6 @@
         defer
         ${sts}
         X-Content-Type-Options "nosniff"
-        X-XSS-Protection "1; mode=block"
-        X-Frame-Options "ALLOW-FROM https://komf.${domain}"
         Content-Security-Policy "frame-ancestors 'self' https://komf.${domain}"
         Access-Control-Allow-Origin "https://komf.${domain}"
         Access-Control-Allow-Credentials "true"

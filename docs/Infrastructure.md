@@ -307,7 +307,7 @@ All configured via the Cloudflare dashboard/API (zone `<domain>`, Free plan) —
 
 | Service  | Port  | URL                    | Notes                                                     |
 |----------|-------|------------------------|-----------------------------------------------------------|
-| Kanidm   | 3013  | `idm.<domain>`     | OIDC provider for Grafana, Miniflux, Jellyfin, Audiobookshelf, Headscale. Self-signed TLS internally, Caddy terminates externally via `tls_insecure_skip_verify`. Provisioned declaratively via sops secrets. |
+| Kanidm   | 3013  | `idm.<domain>`     | OIDC provider for Grafana, Miniflux, Jellyfin, Audiobookshelf. Self-signed TLS internally, Caddy terminates externally via `tls_insecure_skip_verify`. Provisioned declaratively via sops secrets. |
 
 ### Productivity / Home
 
