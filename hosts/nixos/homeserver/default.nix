@@ -151,6 +151,11 @@
     # VictoriaLogs ingest front (write-only): from the LAN only desktop may reach it; tailnet side is gated by the headscale ACL.
     firewall.extraInputRules = ''
       iifname "enp0s31f6" ip saddr { ${config.my.network.hosts.desktop_lan}, ${config.my.network.hosts.desktop_wifi} } tcp dport ${toString config.my.network.ports.victorialogs-ingest} accept
+      # Caddy everywhere except IPv6 on the LAN NIC: the router passes inbound IPv6 :443 to homeserver's global addresses.
+      iifname != "enp0s31f6" tcp dport { 80, 443 } accept
+      iifname != "enp0s31f6" udp dport 443 accept
+      iifname "enp0s31f6" meta nfproto ipv4 tcp dport { 80, 443 } accept
+      iifname "enp0s31f6" meta nfproto ipv4 udp dport 443 accept
     '';
 
     # Containers reach host services via host.containers.internal / host-gateway on podman0.
@@ -172,16 +177,12 @@
       logReversePathDrops = true;
       logRefusedConnections = false; # Avoid log spam
 
+      # 80/443 (Caddy) live in extraInputRules: IPv4-only on the LAN NIC.
       allowedTCPPorts = [
-        80 # HTTP (caddy)
-        443 # HTTPS (caddy)
         2222 # SSH
         # 8000  # TP-Link Exporter
         # 11434 # Ollama API
         # 11435 # Ollama WebUI
-      ];
-      allowedUDPPorts = [
-        443 # HTTP/3 (caddy)
       ];
       rejectPackets = true;
     };
