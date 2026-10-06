@@ -164,7 +164,7 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 
 ### Firewall exposure (homeserver)
 
-Global (all interfaces): 80/443 (Caddy, + UDP 443), 2222 (SSH), 2049 (NFS, exports restrict to trusted/media), 3493 (NUT), 1883 (Mosquitto), 63998 (torrent port mapped into the `wg` netns).
+Global (all interfaces): 80/443 (Caddy, + UDP 443), 2222 (SSH), 2049 (NFS, exports restrict to trusted/media), 3493 (NUT), 1883 (Mosquitto).
 Per interface: LAN NIC — 53, Jellyfin 8096/8920 + UDP 1900/7359 (TVs/DLNA by IP), VictoriaLogs 9428; `podman0` — Prowlarr, Jellyfin, Radarr, Sonarr (containers via `host.containers.internal`); `tailscale0` and `cni0` — see `hosts/nixos/homeserver/default.nix`.
 Every other service UI is loopback/Caddy-only; container ports are published on `127.0.0.1` only (published ports are DNAT'd past the NixOS firewall, so a LAN-IP publish would bypass it).
 

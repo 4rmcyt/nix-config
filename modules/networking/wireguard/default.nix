@@ -1,5 +1,5 @@
 {config, ...}: let
-  # Transmission peer port, forwarded through the VPN namespace.
+  # qBittorrent peer port: AirVPN static forward into the tunnel; no host-side mapping (replies leave via the VPN anyway).
   vpnPort = 63998;
 in {
   sops.secrets.wg_conf = {
@@ -19,24 +19,11 @@ in {
         "127.0.0.1/32"
       ];
 
-    portMappings = [
-      {
-        from = vpnPort;
-        to = vpnPort;
-        protocol = "both";
-      }
-    ];
-
     openVPNPorts = [
       {
         port = vpnPort;
         protocol = "both";
       }
     ];
-  };
-
-  networking.firewall = {
-    allowedTCPPorts = [vpnPort];
-    allowedUDPPorts = [vpnPort];
   };
 }
