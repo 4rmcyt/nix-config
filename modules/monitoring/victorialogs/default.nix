@@ -38,6 +38,13 @@ in {
     url = "${url}/insert/journald";
   };
 
+  # Tie the local uploader to VictoriaLogs: a VL restart mid-activation otherwise leaves it failed (exit 4, nh skips the profile).
+  systemd.services.systemd-journal-upload = {
+    after = ["victorialogs.service"];
+    partOf = ["victorialogs.service"];
+    wantedBy = ["victorialogs.service"];
+  };
+
   services.vmalert.instances.logs = {
     enable = true;
     settings = {
