@@ -281,10 +281,13 @@
     # remote_ip pins the sender: a LAN host can't inject fake gcp-relay Caddy lines to get IPs banned.
     query = ''{_HOSTNAME="gcp-relay", _SYSTEMD_UNIT="caddy.service"} remote_ip:="${config.my.network.hosts.gcp-relay_ts}"'';
   };
-  my.crowdsec.nftables = {
-    enable = true;
-    secretsFile = ../../../secrets/crowdsec.yaml;
+  my.crowdsec.nftables.enable = true;
+  # gcp-relay's bouncer key, registered in this host's LAPI.
+  sops.secrets.crowdsec_bouncer_key_gcp_relay = {
+    sopsFile = ../../../secrets/crowdsec-gcp.yaml;
+    key = "crowdsec_bouncer_key_nftables";
   };
+  my.crowdsec.bouncers.gcp-relay-bouncer = config.sops.secrets.crowdsec_bouncer_key_gcp_relay.path;
 
   my.nodeExporter = {
     enable = true;

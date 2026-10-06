@@ -308,6 +308,7 @@ in {
 
     my.crowdsec.caddy.enable = true;
     my.crowdsec.appsec.enable = true;
+    my.crowdsec.bouncers.caddy-bouncer = config.sops.secrets.crowdsec_bouncer_key.path;
 
     services.prometheus.scrapeConfigs = [
       {

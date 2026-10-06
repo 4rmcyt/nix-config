@@ -1,11 +1,13 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   cfg = config.my.crowdsec;
-  defaultLapiUrl = "http://127.0.0.1:${toString config.my.network.ports.crowdsec-lapi}";
-  isRemoteLapi = cfg.nftables.lapiUrl != defaultLapiUrl;
+  cs = config.services.crowdsec;
+  # nixpkgs' cscli wrapper breaks under DynamicUser and /etc/crowdsec/config.yaml doesn't exist; rebuild the module's config path.
+  cscli = "${lib.getExe' cs.package "cscli"} -c ${(pkgs.formats.yaml {}).generate "crowdsec.yaml" cs.settings.general}";
 in {
   options.my.crowdsec = {
     caddy.enable = lib.mkEnableOption "CrowdSec Caddy log acquisition";
@@ -18,54 +20,46 @@ in {
         example = ''{_HOSTNAME="gcp-relay", _SYSTEMD_UNIT="caddy.service"} remote_ip:="100.64.0.5"'';
       };
     };
-    nftables = {
-      enable = lib.mkEnableOption "CrowdSec nftables firewall bouncer";
-      lapiUrl = lib.mkOption {
-        type = lib.types.str;
-        default = defaultLapiUrl;
-        description = "CrowdSec LAPI URL (local or remote via Tailscale).";
-      };
-      secretsFile = lib.mkOption {
-        type = lib.types.path;
-        default = ../../../secrets/crowdsec.yaml;
-        description = "Sops file containing crowdsec_bouncer_key_nftables.";
-      };
+    nftables.enable = lib.mkEnableOption "CrowdSec nftables firewall bouncer";
+    bouncers = lib.mkOption {
+      type = lib.types.attrsOf lib.types.path;
+      default = {};
+      description = "Bouncer name → API key file; registered in the LAPI database if missing.";
     };
   };
 
   config = {
     sops.secrets.crowdsec_bouncer_key_nftables = lib.mkIf cfg.nftables.enable {
-      sopsFile = cfg.nftables.secretsFile;
+      sopsFile = ../../../secrets/crowdsec.yaml;
       owner = "root";
       mode = "0400";
     };
 
-    # tmpfiles-resetup skips crowdsec subdirs (unsafe path transition on DynamicUser's
-    # nobody-owned /var/lib/private/crowdsec) — StateDirectory lets systemd manage them instead.
-    systemd.services.crowdsec.serviceConfig.StateDirectory = lib.mkIf (!isRemoteLapi) (lib.mkForce [
-      "crowdsec"
-      "crowdsec/state"
-      "crowdsec/state/hub"
-    ]);
-
-    # ExecStartPre's config test linearly scans the on-disk journal; right after boot
-    # that hits a cold page cache and can exceed the default 90s TimeoutStartSec.
     # The victorialogs datasource gives up if VictoriaLogs isn't answering when crowdsec starts.
     systemd.services.crowdsec.after = lib.mkIf cfg.remoteCaddy.enable ["victorialogs.service"];
     systemd.services.crowdsec.wants = lib.mkIf cfg.remoteCaddy.enable ["victorialogs.service"];
-    systemd.services.crowdsec.serviceConfig.TimeoutStartSec = lib.mkIf (!isRemoteLapi) "5min";
-    systemd.services.crowdsec.serviceConfig.Restart = lib.mkIf (!isRemoteLapi) "on-failure";
-    systemd.services.crowdsec.serviceConfig.RestrictSUIDSGID = lib.mkIf (!isRemoteLapi) true;
-    systemd.services.crowdsec.serviceConfig.ProtectKernelTunables = lib.mkIf (!isRemoteLapi) true;
-    systemd.services.crowdsec.serviceConfig.ProtectControlGroups = lib.mkIf (!isRemoteLapi) true;
-    systemd.services.crowdsec.serviceConfig.ProtectKernelModules = lib.mkIf (!isRemoteLapi) true;
-    systemd.services.crowdsec.serviceConfig.ProtectKernelLogs = lib.mkIf (!isRemoteLapi) true;
-    systemd.services.crowdsec.serviceConfig.LockPersonality = lib.mkIf (!isRemoteLapi) true;
-    systemd.services.crowdsec.serviceConfig.RestrictRealtime = lib.mkIf (!isRemoteLapi) true;
-    systemd.services.crowdsec.serviceConfig.RestrictNamespaces = lib.mkIf (!isRemoteLapi) true;
-    systemd.services.crowdsec.serviceConfig.SystemCallArchitectures = lib.mkIf (!isRemoteLapi) "native";
+    systemd.services.crowdsec.serviceConfig = {
+      # tmpfiles-resetup skips subdirs of DynamicUser's nobody-owned /var/lib/private/crowdsec; let systemd own them.
+      StateDirectory = lib.mkForce [
+        "crowdsec"
+        "crowdsec/state"
+        "crowdsec/state/hub"
+      ];
+      # ExecStartPre's config test scans the journal; cold page cache after boot exceeds the default 90s.
+      TimeoutStartSec = "5min";
+      Restart = "on-failure";
+      RestrictSUIDSGID = true;
+      ProtectKernelTunables = true;
+      ProtectControlGroups = true;
+      ProtectKernelModules = true;
+      ProtectKernelLogs = true;
+      LockPersonality = true;
+      RestrictRealtime = true;
+      RestrictNamespaces = true;
+      SystemCallArchitectures = "native";
+    };
 
-    services.crowdsec = lib.mkIf (!isRemoteLapi) {
+    services.crowdsec = {
       enable = true;
 
       hub.collections =
@@ -133,27 +127,13 @@ in {
         ];
     };
 
-    environment.etc."crowdsec/parsers/s02-enrich/tailscale-whitelist.yaml" = lib.mkIf (!isRemoteLapi) {
+    # Parser stage: trusted events are dropped before reaching buckets.
+    environment.etc."crowdsec/parsers/s02-enrich/local-trusted-networks.yaml" = {
       user = "crowdsec";
       group = "crowdsec";
       mode = "0640";
       text = ''
-        name: tailscale-whitelist
-        description: "Whitelist Tailscale CGNAT range"
-        filter: "evt.Meta.source_ip startsWith '100.'"
-        whitelist:
-          reason: "Tailscale CGNAT"
-          cidr:
-            - "${config.my.network.subnets.tailscale}"
-      '';
-    };
-
-    environment.etc."crowdsec/postoverflows/s01-whitelist/local-trusted-networks.yaml" = lib.mkIf (!isRemoteLapi) {
-      user = "crowdsec";
-      group = "crowdsec";
-      mode = "0640";
-      text = ''
-        name: local-trusted-networks
+        name: local/trusted-networks
         description: "Whitelist LAN, Tailscale and Cloudflare IPs"
         whitelist:
           reason: "trusted network"
@@ -172,9 +152,35 @@ in {
       enable = true;
       registerBouncer.enable = false;
       secrets.apiKeyPath = config.sops.secrets.crowdsec_bouncer_key_nftables.path;
-      settings.api_url = cfg.nftables.lapiUrl;
+      settings.api_url = "http://127.0.0.1:${toString config.my.network.ports.crowdsec-lapi}";
     };
 
     networking.nftables.enable = lib.mkIf cfg.nftables.enable true;
+
+    my.crowdsec.bouncers.homeserver-nftables = lib.mkIf cfg.nftables.enable config.sops.secrets.crowdsec_bouncer_key_nftables.path;
+
+    # Bouncer keys live in sops, not in the LAPI DB backup: re-register them after a state loss.
+    systemd.services.crowdsec-bouncers-register = lib.mkIf (cfg.bouncers != {}) {
+      description = "Register declared CrowdSec bouncers in the local API";
+      wantedBy = ["multi-user.target"];
+      after = ["crowdsec.service"];
+      requires = ["crowdsec.service"];
+      path = [pkgs.jq];
+      script = lib.concatStrings (lib.mapAttrsToList (name: _: ''
+          if ! ${cscli} bouncers list -o json | jq -e --arg n ${lib.escapeShellArg name} 'any(.[]; .name == $n)' >/dev/null; then
+            ${cscli} bouncers add ${lib.escapeShellArg name} --key "$(cat "$CREDENTIALS_DIRECTORY/${name}")"
+          fi
+        '')
+        cfg.bouncers);
+      serviceConfig = {
+        Type = "oneshot";
+        # Same identity as crowdsec.service so cscli can open its state (mirrors nixpkgs' crowdsec-firewall-bouncer-register).
+        User = cs.user;
+        Group = cs.group;
+        DynamicUser = true;
+        StateDirectory = "crowdsec";
+        LoadCredential = lib.mapAttrsToList (name: path: "${name}:${path}") cfg.bouncers;
+      };
+    };
   };
 }
