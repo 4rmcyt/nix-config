@@ -226,7 +226,7 @@ in {
   options.my.network = {
     gateway = lib.mkOption {
       type = lib.types.str;
-      default = "192.168.1.1";
+      default = net.gateway;
       description = "Default gateway — router appliance, trusted VLAN";
     };
 

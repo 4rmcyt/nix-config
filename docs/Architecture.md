@@ -111,7 +111,7 @@ Thunderbird account config also lives there (`inputs.private.homeModules.thunder
 | Option namespace     | File                          | Purpose                                      |
 |----------------------|-------------------------------|----------------------------------------------|
 | `my.defaults.*`      | `options/defaults.nix`        | user, email, git identity, domain, timezone, locale, GCP relay IP, NextDNS profile id (from `inputs.private`) |
-| `my.network.*`       | `options/network.nix`         | gateway, subnets, service ports (`ports.<name>` int + derived read-only `portScope.<name>` = internet/lan/localhost) — local defaults; host addresses/MACs/infrastructure/DHCP reservations sourced from `inputs.private` |
+| `my.network.*`       | `options/network.nix`         | subnets, service ports (`ports.<name>` int + derived read-only `portScope.<name>` = internet/lan/localhost) — local defaults; gateway, host addresses/MACs/infrastructure/DHCP reservations sourced from `inputs.private` |
 | `my.traefik.*`       | `networking/traefik/`         | Traefik reverse proxy (disabled, rollback)   |
 | `my.caddyHomeserver.*` | `networking/caddy-homeserver/` | Caddy reverse proxy for homeserver (replaced Traefik) |
 | `my.uaExit.*`         | `networking/ua-exit/`         | Second tailscaled as `ua-exit` exit node inside a Ukraine WireGuard netns |
