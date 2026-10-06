@@ -8,6 +8,13 @@
   cs = config.services.crowdsec;
   # nixpkgs' cscli wrapper breaks under DynamicUser and /etc/crowdsec/config.yaml doesn't exist; rebuild the module's config path.
   cscli = "${lib.getExe' cs.package "cscli"} -c ${(pkgs.formats.yaml {}).generate "crowdsec.yaml" cs.settings.general}";
+  hasBouncers = cfg.bouncers != {};
+  registerBouncers = pkgs.writeShellScript "crowdsec-bouncers-register" (lib.concatStrings (lib.mapAttrsToList (name: _: ''
+      if ! ${cscli} bouncers list -o json | ${lib.getExe pkgs.jq} -e --arg n ${lib.escapeShellArg name} 'any(.[]; .name == $n)' >/dev/null; then
+        ${cscli} bouncers add ${lib.escapeShellArg name} --key "$(<"$CREDENTIALS_DIRECTORY/${name}")"
+      fi
+    '')
+    cfg.bouncers));
 in {
   options.my.crowdsec = {
     caddy.enable = lib.mkEnableOption "CrowdSec Caddy log acquisition";
@@ -57,6 +64,10 @@ in {
       RestrictRealtime = true;
       RestrictNamespaces = true;
       SystemCallArchitectures = "native";
+      # Bouncer keys live in sops, not the LAPI DB: re-register missing ones in crowdsec's own sandbox.
+      LoadCredential = lib.mkIf hasBouncers (lib.mapAttrsToList (name: path: "${name}:${path}") cfg.bouncers);
+      # "-": a failed registration is logged but doesn't take crowdsec down.
+      ExecStartPost = lib.mkIf hasBouncers "-${registerBouncers}";
     };
 
     services.crowdsec = {
@@ -160,29 +171,5 @@ in {
     networking.nftables.enable = lib.mkIf cfg.nftables.enable true;
 
     my.crowdsec.bouncers.homeserver-nftables = lib.mkIf cfg.nftables.enable config.sops.secrets.crowdsec_bouncer_key_nftables.path;
-
-    # Bouncer keys live in sops, not in the LAPI DB backup: re-register them after a state loss.
-    systemd.services.crowdsec-bouncers-register = lib.mkIf (cfg.bouncers != {}) {
-      description = "Register declared CrowdSec bouncers in the local API";
-      wantedBy = ["multi-user.target"];
-      after = ["crowdsec.service"];
-      requires = ["crowdsec.service"];
-      path = [pkgs.jq];
-      script = lib.concatStrings (lib.mapAttrsToList (name: _: ''
-          if ! ${cscli} bouncers list -o json | jq -e --arg n ${lib.escapeShellArg name} 'any(.[]; .name == $n)' >/dev/null; then
-            ${cscli} bouncers add ${lib.escapeShellArg name} --key "$(cat "$CREDENTIALS_DIRECTORY/${name}")"
-          fi
-        '')
-        cfg.bouncers);
-      serviceConfig = {
-        Type = "oneshot";
-        # Same identity as crowdsec.service so cscli can open its state (mirrors nixpkgs' crowdsec-firewall-bouncer-register).
-        User = cs.user;
-        Group = cs.group;
-        DynamicUser = true;
-        StateDirectory = "crowdsec";
-        LoadCredential = lib.mapAttrsToList (name: path: "${name}:${path}") cfg.bouncers;
-      };
-    };
   };
 }
