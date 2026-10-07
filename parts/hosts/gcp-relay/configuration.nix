@@ -17,11 +17,9 @@ in {
     ];
 
     nixpkgs.hostPlatform = lib.mkForce "x86_64-linux";
-    nixpkgs.overlays =
-      import ../../../lib/overlays.nix inputs
-      ++ [
-        inputs.headscale.overlays.default
-      ];
+    nixpkgs.overlays = [
+      inputs.headscale.overlays.default
+    ];
 
     environment.systemPackages = [pkgs.fastfetch];
 

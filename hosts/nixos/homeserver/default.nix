@@ -74,7 +74,6 @@
 
   environment.systemPackages = with pkgs; [
     lsof
-    openssh
     sysstat
 
     iproute2

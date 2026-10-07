@@ -12,6 +12,16 @@ in {
     _module.args = {inherit inputs;};
 
     nixpkgs.config.allowUnfree = true;
+    nixpkgs.overlays = import ../lib/overlays.nix inputs;
+
+    # TODO: drop once nixpkgs#570987 (staging) reaches nixos-unstable; sshd follows this via services.openssh.package default
+    programs.ssh.package = pkgs.openssh.overrideAttrs (_old: rec {
+      version = "10.6p1";
+      src = pkgs.fetchurl {
+        url = "mirror://openbsd/OpenSSH/portable/openssh-${version}.tar.gz";
+        hash = "sha256-qdyVZd/+hkD2TYY80poyvEo9vewFZqf8RMXW7nZ9Xzk=";
+      };
+    });
 
     sops.age.keyFile = lib.mkDefault "/root/.config/sops/age/keys.txt";
 
