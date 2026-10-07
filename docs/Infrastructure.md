@@ -201,7 +201,7 @@ sequentially).
 | homeserver | desktop | tcp 22 (nix-builder) |
 | `guest@` (any device of headscale user `guest`) | homeserver | tcp caddy-guest (8443), 53 |
 
-Not listed (router, matebook, ua-exit as a source) get nothing. `autogroup:internet` covers every approved exit node (homeserver, ua-exit). Route/exit-node approvals stay manual (no `autoApprovers`). A new node needs a pinned IP + `*_ts` option + a grant before it can talk to anything.
+Not listed (router, matebook, ua-exit/ua-exit-ovpn as a source) get nothing. `autogroup:internet` covers every approved exit node (homeserver, ua-exit, ua-exit-ovpn). Route/exit-node approvals stay manual (no `autoApprovers`). A new node needs a pinned IP + `*_ts` option + a grant before it can talk to anything.
 
 SSH config uses MagicDNS hostnames (`homeserver.ts.<domain>`, `matebook.ts.<domain>`, `gcp-relay.ts.<domain>`) so SSH works from any network without hardcoded LAN IPs. Operator mode enabled on desktop + matebook (`extraSetFlags = ["--operator=zeev"]`) so `tailscale file cp` works without sudo.
 
