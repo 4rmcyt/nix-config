@@ -22,6 +22,7 @@
         "zsh-users/zsh-history-substring-search"
         "elithrar/zsh-git-to-jj"
         "ohmyzsh/ohmyzsh path:plugins/git-auto-fetch"
+        "ohmyzsh/ohmyzsh path:plugins/sudo"
       ];
       useFriendlyNames = true;
     };
@@ -51,32 +52,6 @@
         # bracketed-paste-magic triggers syntax highlighting on every pasted character
         # (O(n²) hang on large pastes); use built-in only.
         set zle_bracketed_paste
-      '';
-
-      # Esc-Esc toggles sudo on the current/last command.
-      sudoCommandLine = ''
-        __sudo-replace-buffer() {
-          local old=$1 new=$2 space=''${2:+ }
-          if [[ $CURSOR -le ''${#old} ]]; then
-            BUFFER="''${new}''${space}''${BUFFER#$old }"
-            CURSOR=''${#new}
-          else
-            LBUFFER="''${new}''${space}''${LBUFFER#$old }"
-          fi
-        }
-        sudo-command-line() {
-          [[ -z $BUFFER ]] && LBUFFER="$(fc -ln -1)"
-          local WHITESPACE=""
-          if [[ ''${LBUFFER:0:1} = " " ]]; then WHITESPACE=" "; LBUFFER="''${LBUFFER:1}"; fi
-          case "$BUFFER" in
-            sudo\ *) __sudo-replace-buffer "sudo" "" ;;
-            *) LBUFFER="sudo $LBUFFER" ;;
-          esac
-          LBUFFER="''${WHITESPACE}''${LBUFFER}"
-          zle && zle redisplay
-        }
-        zle -N sudo-command-line
-        bindkey '\e\e' sudo-command-line
       '';
 
       # Recover termios/terminal modes (kitty keyboard protocol, mouse
@@ -110,7 +85,6 @@
     in
       lib.concatStringsSep "\n" [
         keybindings
-        sudoCommandLine
         resetTty
         completion
         integrations
