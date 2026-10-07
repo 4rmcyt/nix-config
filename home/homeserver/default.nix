@@ -17,11 +17,11 @@
     git_status = {
       stashed = "";
       untracked = "";
-      modified = "📝";
+      modified = builtins.fromJSON ''"\uEB43"''; # nf-cod-request_changes
     };
     custom.nix = {
       detect_files = ["flake.nix"];
-      symbol = "❄️";
+      symbol = builtins.fromJSON ''"\uF313"''; # nf-linux-nixos
       format = "\\[[$symbol]($style)\\]";
       style = "bold blue";
     };
