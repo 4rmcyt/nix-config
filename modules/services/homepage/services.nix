@@ -313,11 +313,30 @@
         CrowdSec = {
           icon = "crowdsec.png";
           description = "Threat Intelligence";
+          # Native crowdsec widget hardcodes include_capi=false, so the community blocklist never shows; read Prometheus instead.
           widget = {
-            type = "crowdsec";
-            url = "{{HOMEPAGE_VAR_CROWDSEC_INTERNAL_URL}}";
-            username = "{{HOMEPAGE_VAR_CROWDSEC_USERNAME}}";
-            password = "{{HOMEPAGE_VAR_CROWDSEC_PASSWORD}}";
+            type = "prometheusmetric";
+            url = "http://localhost:${toString config.my.network.ports.prometheus}";
+            metrics = [
+              {
+                label = "Blocklist";
+                query = ''sum(cs_active_decisions{origin="CAPI"}) or vector(0)'';
+                format.type = "number";
+              }
+              {
+                label = "Own bans";
+                query = ''sum(cs_active_decisions{origin!="CAPI"}) or vector(0)'';
+                format.type = "number";
+              }
+              {
+                label = "WAF 24h";
+                query = "sum(increase(cs_appsec_block_total[24h])) or vector(0)";
+                format = {
+                  type = "number";
+                  options.maximumFractionDigits = 0;
+                };
+              }
+            ];
           };
         };
       }
