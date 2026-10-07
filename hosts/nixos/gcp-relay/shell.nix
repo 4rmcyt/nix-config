@@ -7,6 +7,19 @@
   programs.starship = {
     enable = true;
     presets = ["bracketed-segments"];
+    settings = {
+      git_status = {
+        stashed = "";
+        untracked = "";
+        modified = builtins.fromJSON ''"\uEB43 "''; # nf-cod-request_changes
+      };
+      custom.nix = {
+        detect_files = ["flake.nix"];
+        symbol = builtins.fromJSON ''"\uF313 "''; # nf-linux-nixos
+        format = "\\[[$symbol]($style)\\]";
+        style = "bold blue";
+      };
+    };
   };
 
   programs.zsh = {

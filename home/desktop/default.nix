@@ -23,6 +23,14 @@
   ];
 
   programs.starship.presets = ["gruvbox-rainbow"];
+  programs.starship.settings = {
+    os.symbols.NixOS = builtins.fromJSON ''"\uF313"''; # nf-linux-nixos
+    git_status = {
+      stashed = "";
+      untracked = "";
+      modified = builtins.fromJSON ''"\uEB43"''; # nf-cod-request_changes
+    };
+  };
 
   # WirePlumber: always use SBC-XQ for OpenRun Pro 2 (best codec it supports)
   xdg.configFile."wireplumber/wireplumber.conf.d/51-shokz-openrun.conf".text = ''
