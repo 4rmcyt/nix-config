@@ -30,6 +30,14 @@
     interactiveShellInit = lib.mkOrder 1600 ''
       source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
+      # Esc Esc toggles sudo prefix (empty line: last command)
+      sudo-command-line() {
+        [[ -z $BUFFER ]] && LBUFFER="$(fc -ln -1)"
+        if [[ $BUFFER == sudo\ * ]]; then LBUFFER="''${LBUFFER#sudo }"; else LBUFFER="sudo $LBUFFER"; fi
+      }
+      zle -N sudo-command-line
+      bindkey '\e\e' sudo-command-line
+
       bindkey '^f' autosuggest-accept
       bindkey '^p' history-search-backward
       bindkey '^n' history-search-forward
