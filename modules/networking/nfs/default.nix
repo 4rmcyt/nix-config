@@ -84,6 +84,8 @@ in {
     "d /data/.Trash-1000 0700 ${config.my.defaults.user} users -"
   ];
 
-  # NFSv4 is TCP-only.
-  networking.firewall.allowedTCPPorts = [2049];
+  # NFSv4 is TCP-only; IPv4 only since exports are IPv4 subnets and the ISP router passes some inbound IPv6.
+  networking.firewall.extraInputRules = ''
+    meta nfproto ipv4 tcp dport 2049 accept
+  '';
 }

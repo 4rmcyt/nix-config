@@ -152,8 +152,9 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 
 ### Firewall exposure (homeserver)
 
-Global (all interfaces): 2049 (NFS, exports restrict to trusted/media). SSH 2222: `tailscale0` + LAN NIC IPv4 only (`services.openssh.openFirewall = false`; a 2026-10-07 external scan found inbound IPv6 :2222 passed by the router). Caddy 80/443 (+ UDP 443): every interface except the LAN NIC, where IPv4 only — the ISP router (Telus NH20T) passes inbound IPv6 :443 to homeserver even on firewall level Low.
-Per interface: LAN NIC — 53, Jellyfin 8096/8920 + UDP 1900/7359 (TVs/DLNA by IP), VictoriaLogs ingest 9429 and NUT 3493 from desktop's IPs only (`extraInputRules`); `podman0` — Prowlarr, Jellyfin, Radarr, Sonarr (containers via `host.containers.internal`); `tailscale0` and `cni0` — see `hosts/nixos/homeserver/default.nix`.
+The ISP router (Telus NH20T) passes some inbound IPv6 to homeserver's global addresses even on firewall level Low (seen: :443, and :2222 in a 2026-10-07 external scan), so everything on the LAN NIC is IPv4-only (`meta nfproto ipv4` in `extraInputRules`); nothing is opened via plain `allowedTCPPorts` there.
+NFS 2049: IPv4 on any interface (module-level rule; exports restrict to trusted/media). SSH 2222: `tailscale0` + LAN NIC IPv4 (`services.openssh.openFirewall = false`). Caddy 80/443 (+ UDP 443): every non-LAN interface + LAN NIC IPv4.
+Per interface: LAN NIC (IPv4) — 53, Jellyfin 8096/8920 + UDP 1900/7359 (TVs/DLNA by IP), VictoriaLogs ingest 9429 and NUT 3493 from desktop's IPs only; `podman0` — Prowlarr, Jellyfin, Radarr, Sonarr (containers via `host.containers.internal`); `tailscale0` and `cni0` — see `hosts/nixos/homeserver/default.nix`.
 Every other service UI is loopback/Caddy-only; container ports are published on `127.0.0.1` only (published ports are DNAT'd past the NixOS firewall, so a LAN-IP publish would bypass it).
 
 ### Caddy (reverse proxy)

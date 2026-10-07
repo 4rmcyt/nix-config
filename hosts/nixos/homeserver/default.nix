@@ -133,19 +133,6 @@
       allowedUDPPorts = [53];
     };
 
-    firewall.interfaces.enp0s31f6 = {
-      allowedTCPPorts = [
-        53
-        config.my.network.ports.jellyfin # LAN/media-VLAN clients by IP
-        8920 # Jellyfin HTTPS
-      ];
-      allowedUDPPorts = [
-        53
-        1900 # DLNA/UPnP
-        7359 # Jellyfin auto-discovery
-      ];
-    };
-
     # VictoriaLogs ingest front (write-only): from the LAN only desktop may reach it; tailnet side is gated by the headscale ACL.
     firewall.extraInputRules = ''
       iifname "enp0s31f6" ip saddr { ${config.my.network.hosts.desktop_lan}, ${config.my.network.hosts.desktop_wifi} } tcp dport ${toString config.my.network.ports.victorialogs-ingest} accept
@@ -156,6 +143,9 @@
       iifname "enp0s31f6" meta nfproto ipv4 udp dport 443 accept
       # SSH: IPv4 only on the LAN NIC (the router passed inbound IPv6 :2222 from the internet); tailnet via tailscale0.
       iifname "enp0s31f6" meta nfproto ipv4 tcp dport 2222 accept
+      # DNS + Jellyfin (8920 HTTPS) for LAN/media-VLAN clients by IP; DLNA 1900 + Jellyfin discovery 7359. IPv4 only, same reason.
+      iifname "enp0s31f6" meta nfproto ipv4 tcp dport { 53, ${toString config.my.network.ports.jellyfin}, 8920 } accept
+      iifname "enp0s31f6" meta nfproto ipv4 udp dport { 53, 1900, 7359 } accept
     '';
 
     # Containers reach host services via host.containers.internal / host-gateway on podman0.
