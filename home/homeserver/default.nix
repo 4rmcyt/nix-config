@@ -13,6 +13,19 @@
   ];
 
   programs.starship.presets = ["bracketed-segments"];
+  programs.starship.settings = {
+    git_status = {
+      stashed = "";
+      untracked = "";
+      modified = "📝";
+    };
+    custom.nix = {
+      detect_files = ["flake.nix"];
+      symbol = "❄️";
+      format = "\\[[$symbol]($style)\\]";
+      style = "bold blue";
+    };
+  };
 
   home = {
     sessionVariables = {
