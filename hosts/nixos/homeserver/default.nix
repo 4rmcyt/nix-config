@@ -124,6 +124,7 @@
         53
         80
         443
+        2222 # SSH
         config.my.network.ports.victorialogs-ingest # gcp-relay journal-upload (write-only Caddy front)
         config.my.network.ports.crowdsec-lapi # gcp-relay bouncer
         config.my.network.ports.prometheus
@@ -153,6 +154,8 @@
       iifname != "enp0s31f6" udp dport 443 accept
       iifname "enp0s31f6" meta nfproto ipv4 tcp dport { 80, 443 } accept
       iifname "enp0s31f6" meta nfproto ipv4 udp dport 443 accept
+      # SSH: IPv4 only on the LAN NIC (the router passed inbound IPv6 :2222 from the internet); tailnet via tailscale0.
+      iifname "enp0s31f6" meta nfproto ipv4 tcp dport 2222 accept
     '';
 
     # Containers reach host services via host.containers.internal / host-gateway on podman0.
@@ -174,9 +177,8 @@
       logReversePathDrops = true;
       logRefusedConnections = false; # Avoid log spam
 
-      # 80/443 (Caddy) live in extraInputRules: IPv4-only on the LAN NIC.
+      # 80/443 (Caddy) and 2222 (SSH) live in extraInputRules: IPv4-only on the LAN NIC.
       allowedTCPPorts = [
-        2222 # SSH
         # 8000  # TP-Link Exporter
         # 11434 # Ollama API
         # 11435 # Ollama WebUI
@@ -305,6 +307,8 @@
     openssh = {
       enable = true;
       ports = [2222];
+      # Default true opens 2222 on every interface/family; per-interface rules live in networking.firewall above.
+      openFirewall = false;
       hostKeys = [
         {
           type = "ed25519";
