@@ -176,6 +176,10 @@ Every other service UI is loopback/Caddy-only; container ports are published on 
 
 `modules/networking/ua-exit`, `my.uaExit.enable` (homeserver). VPN-Confinement netns `ua` (`192.168.16.0/24`, `fd93:9701:1d01::/64`) with the ClearVPN Ukraine WireGuard config (`secrets/wg-ua.conf`, sops binary). A second `tailscaled` (`tailscaled-ua.service`, state `/var/lib/tailscale-ua`, socket `/run/tailscale-ua/tailscaled.sock`) runs inside it as tailnet node `ua-exit` advertising an exit node; CLI wrapper `tailscale-ua`. Select it on a client when Ukrainian sites are needed. The host's own tailscaled is unaffected.
 
+### ua-exit-ovpn (same, over ClearVPN OpenVPN)
+
+`modules/networking/ua-exit-ovpn`, `my.uaExitOvpn.enable` (homeserver). Fallback for ClearVPN WireGuard configs, which were seen silently stop being accepted (2026-10-06). VPN-Confinement is WireGuard-only, so the netns is hand-made: `netns-uao.service` creates an empty netns `uao` (lo only, no veth — no leak path). `openvpn-ua-ovpn.service` (`services.openvpn.servers.ua-ovpn`, config `secrets/wg-ua-ovpn.conf`, sops binary; credentials `secrets/ua-ovpn-auth.yaml` keys `username`/`password` rendered to a two-line `auth-user-pass` file via `sops.templates`) keeps its TCP socket in the host netns; its `up` script (`ifconfig-noexec`/`route-noexec`, `disable-dco`) moves the tun into `uao`, sets address + default route there and writes `/etc/netns/uao/resolv.conf` from the pushed DNS. Third `tailscaled` (`tailscaled-uao.service`, `NetworkNamespacePath=/run/netns/uao`, resolv.conf bind-mounted, nscd hidden; state `/var/lib/tailscale-uao`, CLI wrapper `tailscale-uao`) is tailnet node `ua-exit-ovpn`.
+
 ### Headscale (Tailnet control plane)
 
 Running on GCP relay. Split DNS: `<domain>` → homeserver's Tailscale IP.  

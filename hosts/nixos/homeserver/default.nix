@@ -268,6 +268,7 @@
 
   my.caddyHomeserver.enable = true;
   my.uaExit.enable = true;
+  my.uaExitOvpn.enable = true;
   my.crowdsec.remoteCaddy = {
     enable = true;
     # remote_ip pins the sender: a LAN host can't inject fake gcp-relay Caddy lines to get IPs banned.

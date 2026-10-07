@@ -8,6 +8,7 @@
     ./ssh
     ./tailscale
     ./ua-exit
+    ./ua-exit-ovpn
     ./unbound
     ./wireguard
   ];
