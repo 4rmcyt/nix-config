@@ -73,7 +73,7 @@ secrets/                # sops-encrypted YAML (NEVER commit plaintext)
 
 **Metadata:** In NixOS module scope use `config.my.defaults.*` / `config.my.network.*`; in flake-parts scope use `config.meta.owner.*` (currently just `username`). Both ultimately come from the private `private` flake input (`inputs.private.lib.{identity,network}` — schema in `modules/options/private-example.nix`). Never hardcode them.
 
-**Secrets:** sops-nix + age. Age key at `/root/.config/sops/age/keys.txt` (system) and `~/.config/sops/age/keys.txt` (HM). Reference secrets as `config.sops.secrets.<name>.path`. Never run `sops encrypt` via tool call — give the user the command.
+**Secrets:** sops-nix + age. Age key at `/root/.config/sops/age/keys.txt` (system) and `~/.config/sops/age/keys.txt` (HM). Reference secrets as `config.sops.secrets.<name>.path`. Never run `sops` in any form (decrypt, edit, encrypt, `--extract`) via tool call — give the user the exact command and let him run it.
 
 **Formatting:** `nix fmt` via treefmt. Uses alejandra (not nixfmt-rfc-style) for Nix. Always format before committing.
 
