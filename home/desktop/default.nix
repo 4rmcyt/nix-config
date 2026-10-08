@@ -56,6 +56,7 @@
       bat
       bettercap
       claude-agent-acp
+      corefonts
       distrobox
       ffmpegthumbnailer
       foliate
@@ -65,7 +66,6 @@
       ifrextractor-rs
       jellyfin-tui
       jujutsu
-      libreoffice
       materialgram
       mcat
       mcp-grafana
@@ -73,6 +73,7 @@
       nixos-anywhere
       nmap
       nvtopPackages.nvidia
+      onlyoffice-desktopeditors
       opencode-desktop
       pcsc-tools
       pmbootstrap
@@ -92,6 +93,7 @@
       uefitool
       uefitoolPackages.old-engine
       vdpauinfo
+      vista-fonts
       vulkan-tools
       waydroid-helper
       uefitoolPackages.old-engine
