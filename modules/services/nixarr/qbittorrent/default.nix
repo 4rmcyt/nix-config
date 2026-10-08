@@ -32,14 +32,6 @@ in {
           MaxActiveTorrents = -1;
           MaxActiveUploads = -1;
         };
-        IPFilter = {
-          Enabled = true;
-          # Apply the blocklist to peers/seeds only, never to trackers —
-          # the Naunter list catches private-tracker IPs (e.g. fuzer.xyz)
-          # and silently kills their announces otherwise.
-          FilterTracker = false;
-          File = "/data/media/.state/nixarr/qbittorrent/ipfilter.p2p";
-        };
         Connection = {
           GlobalMaxConnections = 500;
           GlobalMaxUploads = 50;
@@ -71,38 +63,6 @@ in {
         AddTrackersFromURLEnabled = true;
         AdditionalTrackersURL = "https://newtrackon.com/api/stable";
       };
-    };
-  };
-
-  systemd.services.qbittorrent-blocklist-update = {
-    description = "Update qBittorrent IP blocklist";
-    after = [
-      "network.target"
-      "wg.service"
-    ];
-    startAt = "daily";
-    path = with pkgs; [
-      curl
-      gnugrep
-      util-linux
-    ];
-    script = ''
-      set -euo pipefail
-      STATE_DIR="/data/media/.state/nixarr/qbittorrent"
-      curl -sSLf "https://raw.githubusercontent.com/Naunter/BT_BlockLists/refs/heads/master/bt_blocklists" \
-        | grep -E '^.+:[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}-[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$' \
-        | grep -vE ':(10\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}-|172\.(1[6-9]|2[0-9]|3[0-1])\.[0-9]{1,3}\.[0-9]{1,3}-|192\.168\.[0-9]{1,3}\.[0-9]{1,3}-|100\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\.[0-9]{1,3}\.[0-9]{1,3}-)' \
-        > "$STATE_DIR/ipfilter.p2p"
-      chown qbittorrent:media "$STATE_DIR/ipfilter.p2p"
-      chmod 644 "$STATE_DIR/ipfilter.p2p"
-      nsenter --net=/run/netns/wg curl -s -X POST "http://localhost:${toString webuiPort}/api/v2/app/setPreferences" \
-        --data "json={\"ip_filter_enabled\":false}"
-      nsenter --net=/run/netns/wg curl -s -X POST "http://localhost:${toString webuiPort}/api/v2/app/setPreferences" \
-        --data "json={\"ip_filter_enabled\":true}"
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
     };
   };
 
