@@ -85,6 +85,8 @@ secrets/                # sops-encrypted YAML (NEVER commit plaintext)
 
 **Verify config keys:** Before writing ANY config key for ANY app, terminal, or daemon — fetch the official docs first (`mcp__fetch__fetch` or `tavily`). Never guess option names. Applies to: terminal emulators (rio, ghostty, alacritty, wezterm, kitty), daemons (bluetoothd, pipewire, wireplumber), HM/NixOS modules, everything. Read the schema, then write. No exceptions. Cite the source (file path + line, or doc URL + quote) inline in the same message — don't just assert "verified".
 
+**Hardening every new service:** Any new systemd service or OCI container ships hardened in the same change — never as a follow-up. First read what the upstream module/image already sets, then add on top: tight `ReadWritePaths`/`ProtectSystem`, empty `CapabilityBoundingSet`, `NoNewPrivileges`, `SystemCallFilter` (single `~`-prefixed string + `SystemCallErrorNumber`), `RestrictAddressFamilies`, `SocketBindAllow`/`SocketBindDeny`, `MemoryDenyWriteExecute` unless a JIT (.NET, Node/V8, Chromium) needs W+X; containers: `--cap-drop=all` + minimal `--cap-add`, `no-new-privileges`, `--userns=auto`, loopback-only ports. Every directive left off gets a one-line reason (e.g. VPN netns forbids `PrivateUsers`). Check existing gotchas in `modules/services/nixarr/default.nix` and memory before writing.
+
 **Ports:** Before assigning a new `my.network.ports.<name>` entry, `grep -rn "<port>" modules/ hosts/ parts/` for that exact number first — not just `portDefs`. Includes commented-out reservations (e.g. a future service's port left in a host's `allowedTCPPorts`).
 
 ## Reference Docs — Read First, Update Always
