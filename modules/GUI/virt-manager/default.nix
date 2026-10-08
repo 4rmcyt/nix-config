@@ -9,7 +9,10 @@
     podman.enable = true;
     libvirtd = {
       enable = true;
-      qemu.vhostUserPackages = with pkgs; [virtiofsd];
+      qemu = {
+        vhostUserPackages = with pkgs; [virtiofsd];
+        swtpm.enable = true;
+      };
     };
     spiceUSBRedirection.enable = true;
   };
