@@ -117,7 +117,7 @@ Services published behind Caddy (`*.<domain>`):
 
 | Group | Subdomains |
 |-------|------------|
-| **Media** | `jellyfin` · `qb` · `sonarr` · `radarr` · `prowlarr` · `bazarr` · `lidarr` · `seerr` · `audiobookshelf` · `lazylibrarian` · `kapowarr` |
+| **Media** | `jellyfin` · `qb` · `sonarr` · `radarr` · `prowlarr` · `bazarr` · `lidarr` · `seerr` · `audiobookshelf` · `shelfmark` · `kapowarr` |
 | **Reading** | `komga` · `komf` · `miniflux` |
 | **Home & personal** | `home` · `hass` · `cal` · `ntfy` · `atuin` · `livesync` · `microbin` |
 | **Identity & ops** | `idm` · `grafana` · `jobko` · `argocd` |

@@ -134,24 +134,10 @@
         };
       }
       {
-        LazyLibrarian = {
-          icon = "lazylibrarian.png";
-          href = "{{HOMEPAGE_VAR_LAZYLIBRARIAN_URL}}";
+        Shelfmark = {
+          icon = "shelfmark.png";
+          href = "https://shelfmark.${config.my.defaults.domain}";
           description = "Books";
-          widget = {
-            type = "customapi";
-            url = "{{HOMEPAGE_VAR_LAZYLIBRARIAN_INTERNAL_URL}}/api?cmd=showstats&apikey={{HOMEPAGE_VAR_LAZYLIBRARIAN_API_KEY}}";
-            mappings = [
-              {
-                label = "Books Wanted";
-                field = {book_stats = "Wanted";};
-              }
-              {
-                label = "Books Snatched";
-                field = {book_stats = "Snatched";};
-              }
-            ];
-          };
         };
       }
     ];

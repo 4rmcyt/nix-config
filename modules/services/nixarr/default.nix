@@ -48,12 +48,12 @@ in {
     ./flaresolverr
     ./jellyfin
     ./kapowarr
-    ./lazylibrarian
     ./prowlarr
     ./qbittorrent
     ./radarr
     ./recyclarr
     ./seerr
+    ./shelfmark
     ./sonarr
     ./upnp-fix.nix
   ];

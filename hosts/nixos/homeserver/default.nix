@@ -149,7 +149,6 @@
 
     # Containers reach host services via host.containers.internal / host-gateway on podman0.
     firewall.interfaces.podman0.allowedTCPPorts = [
-      config.my.network.ports.prowlarr # lazylibrarian Torznab
       config.my.network.ports.jellyfin # seerr
       config.my.network.ports.radarr # seerr
       config.my.network.ports.sonarr # seerr
@@ -233,7 +232,7 @@
       "/data/media/.state/nixarr/audiobookshelf"
       "/data/media/.state/nixarr/bazarr"
       "/data/media/.state/nixarr/kapowarr"
-      "/data/media/.state/nixarr/lazylibrarian"
+      "/data/media/.state/nixarr/shelfmark"
       "/data/media/.state/nixarr/lidarr"
       "/data/media/.state/nixarr/prowlarr"
       "/data/media/.state/nixarr/qbittorrent"

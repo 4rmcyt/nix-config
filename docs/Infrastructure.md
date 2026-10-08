@@ -283,7 +283,7 @@ All configured via the Cloudflare dashboard/API (zone `<domain>`, Free plan) —
 | Prowlarr        | 9696  | `prowlarr.<domain>`       | Indexer — native `services.prowlarr`, Postgres backend |
 | Bazarr          | 6767  | `bazarr.<domain>`         | Subtitles — native `services.bazarr`, Postgres backend |
 | Lidarr          | 8686  | `lidarr.<domain>`         | Music                               |
-| LazyLibrarian   | 5299  | `lazylibrarian.<domain>`  | Books — OCI container               |
+| Shelfmark       | 8084  | `shelfmark.<domain>`      | Books & audiobooks search/download — `nixarr.shelfmark` (native `services.shelfmark`), runs on host (not VPN). Ingest `/data/media/books`, audiobooks `/data/media/audiobooks`, staging `/data/Downloads/shelfmark`. Sources/clients set in web UI |
 | Kapowarr        | 5656  | `kapowarr.<domain>`       | Comics & manga — OCI container. DDL temp folder `/app/temp_downloads` → `/data/Downloads/kapowarr`; library roots `/comics`, `/manga`. qBittorrent category `kapowarr` saves to the same path (Remote Path Mapping `/data/Downloads/kapowarr`→`/app/temp_downloads` in the web UI). ComicVine key set in web UI. |
 | Seerr           | 5055  | `seerr.<domain>`          | Request management — OCI container |
 | Audiobookshelf  | 9292  | `audiobookshelf.<domain>` | Audiobooks                         |

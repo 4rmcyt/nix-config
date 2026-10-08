@@ -45,10 +45,10 @@
       scope = "lan";
       desc = "Lidarr music automation";
     };
-    lazylibrarian = {
-      port = 5299;
+    shelfmark = {
+      port = 8084;
       scope = "lan";
-      desc = "LazyLibrarian ebooks/audiobooks automation";
+      desc = "Shelfmark ebooks/audiobooks search & download";
     };
     bazarr = {
       port = 6767;

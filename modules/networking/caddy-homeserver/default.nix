@@ -150,7 +150,7 @@
     prowlarr.port = ports.prowlarr;
     bazarr.port = ports.bazarr;
     lidarr.port = ports.lidarr;
-    lazylibrarian.port = ports.lazylibrarian;
+    shelfmark.port = ports.shelfmark;
     kapowarr.port = ports.kapowarr;
     seerr.port = ports.seerr;
 
