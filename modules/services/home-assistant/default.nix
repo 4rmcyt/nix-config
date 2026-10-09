@@ -20,7 +20,7 @@ in {
 
       homeassistant:
         external_url: "https://hass.${domain}"
-        internal_url: "http://localhost:${toString config.my.network.ports.home-assistant}"
+        internal_url: "https://hass.${domain}"
 
       frontend:
         themes: !include_dir_merge_named themes
