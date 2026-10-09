@@ -117,9 +117,8 @@
   "media.gpu-process-decoder" = true;
   "media.hardwaremediakeys.enabled" = true;
   "media.hardware-video-decoding.enabled" = true;
-  # If about:support still shows NVIDIA blocklisted after rebuild, try true —
-  # real cause was missing MOZ_DISABLE_RDD_SANDBOX=1 (modules/WM/mango/nvidia.nix)
-  "media.hardware-video-decoding.force-enabled" = false;
+  "media.hardware-video-decoding.force-enabled" = true; # GfxInfo.cpp blocklists all NVIDIA and skips the VA-API probe otherwise
+
   "media.hevc.enabled" = true;
   "media.hls.enabled" = true;
   "media.navigator.mediadatadecoder_vpx_enabled" = true;
