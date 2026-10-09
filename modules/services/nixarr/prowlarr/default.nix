@@ -25,18 +25,15 @@
     settings.server.port = config.my.network.ports.prowlarr;
   };
 
-  # nixpkgs' root:0700 rule re-steals the DynamicUser-owned dataDir on every activation.
-  systemd.tmpfiles.settings."10-prowlarr".${config.services.prowlarr.dataDir}.d = {
-    user = lib.mkForce ":root";
-    group = lib.mkForce ":root";
-    mode = lib.mkForce ":0700";
-  };
+  # nixpkgs' root:0700 tmpfiles rule fights DynamicUser's chown; dataDir already exists on ZFS.
+  systemd.tmpfiles.settings."10-prowlarr" = lib.mkForce {};
 
   systemd.services.prowlarr = {
     after = ["data.mount" "prowlarr-pg-env.service"];
     requires = ["data.mount" "prowlarr-pg-env.service"];
     serviceConfig = {
       EnvironmentFile = "/run/prowlarr-secrets/pg-env";
+      StateDirectoryMode = "0700";
 
       # nixpkgs' module leaves CapabilityBoundingSet at the full default set (same gap
       # as bazarr/lidarr); safe to clear since prowlarr has no filesystem access outside dataDir.
