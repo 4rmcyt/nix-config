@@ -25,6 +25,13 @@
     settings.server.port = config.my.network.ports.prowlarr;
   };
 
+  # nixpkgs' root:0700 rule re-steals the DynamicUser-owned dataDir on every activation.
+  systemd.tmpfiles.settings."10-prowlarr".${config.services.prowlarr.dataDir}.d = {
+    user = lib.mkForce ":root";
+    group = lib.mkForce ":root";
+    mode = lib.mkForce ":0700";
+  };
+
   systemd.services.prowlarr = {
     after = ["data.mount" "prowlarr-pg-env.service"];
     requires = ["data.mount" "prowlarr-pg-env.service"];
