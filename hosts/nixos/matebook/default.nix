@@ -17,7 +17,7 @@
 
     ../../../modules/users/zeev
 
-    # GUI/{chrome,flatpak,kdeconnect,nemo} + networking/nfs-client come from
+    # GUI/{browsers/chrome,flatpak,kdeconnect,nemo} + networking/nfs-client come from
     # modules.nixos.workstationGui (parts/workstation.nix).
   ];
 

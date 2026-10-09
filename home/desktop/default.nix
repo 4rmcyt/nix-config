@@ -10,7 +10,7 @@
     ../../modules/TUI/ai-tools/llama-cpp/qwen32b-cpu.nix
 
     ../../modules/GUI/bb-launcher
-    ../../modules/GUI/chromium
+    ../../modules/GUI/browsers/chromium
     ../../modules/GUI/jellyfin-mpv-shim
 
     ../../modules/WM

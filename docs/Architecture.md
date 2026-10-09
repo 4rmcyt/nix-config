@@ -31,7 +31,7 @@ parts/                      # Auto-imported flake-parts modules
   home-manager-base.nix     # modules.homeManager.base — sops, nixvim, overlays (shared + HM-only), stateVersion
   workstation.nix          # modules.nixos.bareMetal — facter + ucodenix + gnupg + nix dev tools
                            #   (every physical host: desktop/matebook/homeserver; NOT the gcp-relay VM);
-                           # modules.nixos.workstationGui — GUI/{chrome,flatpak,kdeconnect,nemo} + nfs-client (desktop/matebook);
+                           # modules.nixos.workstationGui — GUI/{browsers/chrome,flatpak,kdeconnect,nemo} + nfs-client (desktop/matebook);
                            # modules.homeManager.workstation — GUI/TUI HM apps (desktop/matebook)
   shared-programs.nix       # modules.nixos.base — common programs on all hosts (zsh, nh)
   nix-mineral.nix           # modules.nixos.nixMineral — inputs.nix-mineral's NixOS module (desktop/gcp-relay/homeserver; not matebook)
@@ -83,7 +83,7 @@ modules/
     mime/                   # MIME type associations
     mango/                  # mango WM (desktop): settings, keybinds, startup, windowrules, nvidia, monitors
     niri/                   # niri WM (matebook): settings, keybinds, startup, windowrules, nvidia, monitors
-  GUI/                      # GUI apps: firefox, chrome, chromium, obsidian, mpv, IDE (vscode, zed),
+  GUI/                      # GUI apps: browsers/ (gecko-common, firefox, zen, chrome, chromium), obsidian, mpv, IDE (vscode, zed),
                             #   terminal, discord, easyeffects, nemo, coolercontrol, kdeconnect,
                             #   virt-manager, waydroid, flatpak, jellyfin-mpv-shim, bb-launcher
                             #   (thunderbird module removed — personal account config lives in inputs.private)
@@ -142,6 +142,15 @@ configurations.nixos.homeserver.module = {...}: {
 headless — it imports only `nixosBase`, no HM, no bare-metal modules.
 **desktop** and **matebook** additionally import `nixosWorkstationGui`
 (`modules.nixos.workstationGui`) and `hmWorkstation`.
+
+`hmWorkstation` includes [`modules/GUI/browsers/zen`](../modules/GUI/browsers/zen/default.nix),
+which imports `inputs.zen-browser.homeModules.beta` (`0xc000022070/zen-browser-flake`).
+Firefox and Zen both pull engine-level prefs (media/gfx/network/security/telemetry/AI),
+`policies` (addons, uBlock) and search engines from
+[`modules/GUI/browsers/gecko-common`](../modules/GUI/browsers/gecko-common/default.nix)
+(plain attrsets, `import`ed with `{lib}`). Firefox-only UI/session/scroll prefs and the
+locked toolbar layout stay in `browsers/firefox/`; Zen keeps its own defaults for those
+(sessionstore interval, resetPBM, smooth scroll) plus `zen.*` prefs. Firefox stays the default browser.
 
 **desktop**, **gcp-relay**, and **homeserver** additionally import
 `nixosNixMineral` (`modules.nixos.nixMineral`, defined in

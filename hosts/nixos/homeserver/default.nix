@@ -87,6 +87,9 @@
 
   environment.shells = with pkgs; [zsh];
 
+  # IPv4-only to the internet; ULA bridges and tailscale0 keep IPv6. Applied on NIC add by udev → systemd-sysctl.
+  boot.kernel.sysctl."net.ipv6.conf.enp0s31f6.disable_ipv6" = 1;
+
   networking = {
     hostName = "homeserver";
     hostId = "0b8d0f5a";

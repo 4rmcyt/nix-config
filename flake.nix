@@ -80,6 +80,11 @@
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
     # Not `hdr` (broken packaging: requests wlroots_0_19 but its C source needs 0.20).
     # Not `main` either: no working HDR output path (requires scenefx, which doesn't
     # support the vulkan renderer HDR needs) — `wl-only` drops that scenefx dependency.

@@ -51,7 +51,7 @@ modules/
                         # my.<moduleName> (my.crowdsec, my.caddyHomeserver, my.hardening, …) —
                         # there is no my.security.* namespace
   WM/                   # Window managers (niri + mango, both w/ noctalia-shell, gtk, mime) — desktop:mango, matebook:niri
-  GUI/                  # GUI apps (firefox, chrome, zed, obsidian, terminal, IDE, etc.)
+  GUI/                  # GUI apps (browsers/{gecko-common,firefox,zen,chrome,chromium}, zed, obsidian, terminal, IDE, etc.)
   TUI/                  # Terminal tools (zsh, zellij, atuin, ai-tools, llama-cpp)
   services/             # nixarr, homepage, miniflux, home-assistant, atuin-server, etc.
                         # k3s, argocd — enabled, homeserver only

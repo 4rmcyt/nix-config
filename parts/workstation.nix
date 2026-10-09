@@ -36,7 +36,7 @@
 
   # nfs-client rides along here since only the GUI workstations mount homeserver's NFS shares.
   modules.nixos.workstationGui.imports = [
-    ../modules/GUI/chrome
+    ../modules/GUI/browsers/chrome
     ../modules/GUI/flatpak
     ../modules/GUI/kdeconnect
     ../modules/GUI/nemo
@@ -45,8 +45,9 @@
 
   modules.homeManager.workstation = {
     imports = [
-      ../modules/GUI/chrome/home.nix
-      ../modules/GUI/firefox
+      ../modules/GUI/browsers/chrome/home.nix
+      ../modules/GUI/browsers/firefox
+      ../modules/GUI/browsers/zen
       ../modules/GUI/terminal
       ../modules/GUI/mpv
       ../modules/GUI/nemo/home.nix
