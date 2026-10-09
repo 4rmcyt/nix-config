@@ -22,7 +22,13 @@
   services.prowlarr = {
     enable = true;
     dataDir = "/data/media/.state/nixarr/prowlarr";
-    settings.server.port = config.my.network.ports.prowlarr;
+    settings = {
+      server.port = config.my.network.ports.prowlarr;
+      # Caddy proxies from loopback; trust its X-Forwarded-For for real client IPs.
+      server.trustednetworks = "127.0.0.1";
+      auth.method = "Forms";
+      auth.required = "Enabled";
+    };
   };
 
   # nixpkgs' root:0700 tmpfiles rule fights DynamicUser's chown; dataDir already exists on ZFS.
