@@ -24,7 +24,13 @@
     user = "sonarr";
     group = "sonarr";
     dataDir = "/data/media/.state/nixarr/sonarr";
-    settings.server.port = config.my.network.ports.sonarr;
+    settings = {
+      server.port = config.my.network.ports.sonarr;
+      # Caddy proxies from loopback; trust its X-Forwarded-For for real client IPs.
+      server.trustednetworks = "127.0.0.1";
+      auth.method = "Forms";
+      auth.required = "Enabled";
+    };
   };
 
   systemd.services.sonarr = {

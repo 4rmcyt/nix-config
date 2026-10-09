@@ -150,6 +150,13 @@ in {
       });
   };
 
+  # Port comes from nixarr; same auth/proxy pinning as radarr/sonarr/prowlarr.
+  services.lidarr.settings = {
+    server.trustednetworks = "127.0.0.1";
+    auth.method = "Forms";
+    auth.required = "Enabled";
+  };
+
   systemd.services = lib.mkMerge [
     # nixarr passes an absolute path to StateDirectory=, which systemd rejects; the
     # dir already exists via tmpfiles so clearing it is safe.
