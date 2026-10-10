@@ -99,6 +99,40 @@ groups:
         annotations:
           summary: "UPS forced shutdown in progress"
           description: "UPS FSD (Forced Shutdown) flag is set — imminent power loss."
+  - name: CrowdSec Alerts
+    rules:
+      - alert: CrowdSecJournalStalled
+        expr: (sum(rate(cs_journalctlsource_hits_total[15m])) or vector(0)) == 0
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CrowdSec stopped reading the journal"
+          description: "No journalctl lines acquired for 30m — sshd/caddy attacks are not being detected."
+      - alert: CrowdSecRemoteCaddyStalled
+        expr: (sum(rate(cs_victorialogssource_hits_total[6h])) or vector(0)) == 0
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CrowdSec gets no gcp-relay Caddy logs"
+          description: "No lines from the VictoriaLogs datasource for 6h — check journal-upload on gcp-relay, VictoriaLogs and tailscale."
+      - alert: CrowdSecCapiEmpty
+        expr: (sum(cs_active_decisions{origin="CAPI"}) or vector(0)) == 0
+        for: 3h
+        labels:
+          severity: warning
+        annotations:
+          summary: "CrowdSec community blocklist is empty"
+          description: "No active CAPI decisions for 3h — CAPI pull is broken or credentials were lost."
+      - alert: CrowdSecAppsecSilent
+        expr: (sum(rate(cs_appsec_reqs_total[6h])) or vector(0)) == 0
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CrowdSec AppSec receives no requests"
+          description: "WAF saw no requests for 6h — with appsec_fail_open Caddy is passing traffic uninspected."
   - name: job-kombayn Alerts
     rules:
       - alert: JobKombaynRunFailed

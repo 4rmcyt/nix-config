@@ -16,6 +16,31 @@
     retentionTime = "30d";
     globalConfig.scrape_interval = "1m";
     ruleFiles = [./alerts.yaml];
+    # Per-bouncer rule: `or vector(0)` also fires when the series never appeared (bad key after restart).
+    rules = [
+      (builtins.toJSON {
+        groups = [
+          {
+            name = "CrowdSec Bouncer Alerts";
+            rules =
+              map (name: {
+                alert = "CrowdSecBouncerSilent";
+                expr = ''sum(rate(cs_lapi_bouncer_requests_total{bouncer="${name}"}[15m]) or vector(0)) == 0'';
+                for = "15m";
+                labels = {
+                  severity = "warning";
+                  bouncer = name;
+                };
+                annotations = {
+                  summary = "CrowdSec bouncer ${name} stopped polling LAPI";
+                  description = "No authenticated LAPI requests from bouncer '${name}' for 30m — its bans are not being applied (bad key, network, or bouncer down).";
+                };
+              })
+              (lib.attrNames config.my.crowdsec.bouncers);
+          }
+        ];
+      })
+    ];
     alertmanagers = [
       {
         static_configs = [{targets = ["127.0.0.1:${toString config.my.network.ports.alertmanager}"];}];
