@@ -155,7 +155,7 @@ Disk: NVMe, GPT: ESP + **ext4** root (no ZFS). Swapfile (`/swapfile`, TRIM-enabl
 The ISP router (Telus NH20T) passes some inbound IPv6 to homeserver's global addresses even on firewall level Low (seen: :443, and :2222 in a 2026-10-07 external scan), so everything on the LAN NIC is IPv4-only (`meta nfproto ipv4` in `extraInputRules`); nothing is opened via plain `allowedTCPPorts` there.
 IPv6 is disabled on the LAN NIC itself (`net.ipv6.conf.enp0s31f6.disable_ipv6 = 1`): no global IPv6 addresses, all internet egress is IPv4. IPv6 stays on the ULA bridges (`wg-br`, `ua-br`) and `tailscale0`; the tailnet exit node serves IPv4 only.
 NFS 2049: IPv4 on any interface (module-level rule; exports restrict to trusted/media). SSH 2222: `tailscale0` + LAN NIC IPv4 (`services.openssh.openFirewall = false`). Caddy 80/443 (+ UDP 443): every non-LAN interface + LAN NIC IPv4.
-Per interface: LAN NIC (IPv4) — 53, Jellyfin 8096/8920 + UDP 1900/7359 (TVs/DLNA by IP), VictoriaLogs ingest 9429 and NUT 3493 from desktop's IPs only; `podman0` — Prowlarr, Jellyfin, Radarr, Sonarr (containers via `host.containers.internal`); `tailscale0` and `cni0` — see `hosts/nixos/homeserver/default.nix`.
+Per interface: LAN NIC (IPv4) — 53, Jellyfin 8096/8920 + UDP 1900/7359 (TVs/DLNA by IP), VictoriaLogs ingest 9429 and NUT 3493 from desktop's IPs only; `podman0` — Jellyfin, Radarr, Sonarr (seerr via `host.containers.internal`); `tailscale0` and `cni0` — see `hosts/nixos/homeserver/default.nix`.
 Every other service UI is loopback/Caddy-only; container ports are published on `127.0.0.1` only (published ports are DNAT'd past the NixOS firewall, so a LAN-IP publish would bypass it).
 
 ### Caddy (reverse proxy)
@@ -290,7 +290,7 @@ All configured via the Cloudflare dashboard/API (zone `<domain>`, Free plan) —
 | Audiobookshelf  | 9292  | `audiobookshelf.<domain>` | Audiobooks                         |
 | Recyclarr       | —     | (no UI)                       | Auto-sync quality profiles to *arr |
 | Byparr          | 8191  | (internal only)               | Cloudflare bypass for Prowlarr — FlareSolverr-compatible (GET only), OCI container on the podman bridge, published on 127.0.0.1 only |
-| FlareSolverr    | 8193  | (internal only)               | POST-capable Cloudflare solver, native `services.flaresolverr` on 127.0.0.1 — Prowlarr proxy for RuTracker login only; `LOG_LEVEL=warning` (INFO logs POST bodies incl. passwords) |
+| FlareSolverr    | 8193  | (internal only)               | Cloudflare solver, native `services.flaresolverr` on 127.0.0.1, currently unused (kept for later; not reachable from containers — no auth, so exposing it on `podman0` would let containers SSRF loopback-only services). Not for Prowlarr logins: its `request.post` triggers RuTracker's login captcha (RuTracker uses Byparr). `LOG_LEVEL=warning` (INFO logs POST bodies incl. passwords) |
 
 ### Reading / Library
 

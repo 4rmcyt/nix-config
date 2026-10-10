@@ -1,5 +1,5 @@
 {config, ...}: {
-  # Byparr is GET-only; RuTracker's Cloudflare-challenged login POST needs FlareSolverr's request.post.
+  # Not for Prowlarr logins: its request.post triggers RuTracker's login captcha (RuTracker uses byparr).
   services.flaresolverr = {
     enable = true;
     port = config.my.network.ports.flaresolverr;
