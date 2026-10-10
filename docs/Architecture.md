@@ -295,6 +295,34 @@ All desktop HM imports include this module. Sub-modules:
 | `mcp`               | MCP server configs (stdio + HTTP with sops secrets)                                       |
 | `llama-cpp`         | Local LLM inference (desktop only, imported directly)                                     |
 
+## VSCodium Profiles (`modules/GUI/IDE/vscode/`)
+
+HM `programs.vscodium`. Imported on desktop (via `modules/GUI/IDE`) and matebook (directly).
+
+| File | Purpose |
+|------|---------|
+| `default.nix` | `mkProfile`: base extensions ++ profile extensions, `lib.recursiveUpdate` base settings with profile settings, `mutableUserSettings = true` |
+| `extensions.nix` | Plain function `{pkgs}: [...]` — base extension list shared by every profile |
+| `settings.nix` | Plain function `{osConfig, config, lib}: {...}` — base settings shared by every profile |
+| `profiles/<name>.nix` | Plain function `{pkgs}: {extensions; settings;}` — per-profile additions |
+| `ai.nix` | Claude Desktop MCP config + CLAUDE.md (unrelated to profiles) |
+
+| Profile | Adds | Used for |
+|---------|------|----------|
+| `default` | nothing (base: nix-ide, direnv, just, yaml, toml, shell-format, prettier, claude-code, …) | nix-config, nix-config-private, arr-packages |
+| `python` | `detachhead.basedpyright`, `charliermarsh.ruff`; ruff as `[python]` formatter, `basedpyright.importStrategy = "useBundled"` | Python projects (job-kombayn, trendbot, …) |
+| `web` | `dbaeumer.vscode-eslint`, `vitest.explorer`, `ms-playwright.playwright` | mis-kitchen (TS/React) |
+| `infra` | `opentofu.vscode-opentofu`, `ms-kubernetes-tools.vscode-kubernetes-tools` | gitops, openstack-lab |
+
+**Adding a profile:** create `profiles/<name>.nix`, add `<name> = import ./profiles/<name>.nix {inherit pkgs;};` to the attrset in `default.nix`.
+
+**Notes:**
+- HM registers non-default profiles in `globalStorage/storage.json` without `useDefaultFlags`, so profiles share nothing at runtime — base extensions/settings are merged in Nix by `mkProfile`.
+- `mutableUserSettings`: HM writes a real file and merges `jq '$dynamic * $static'` — Nix keys win, UI-only keys survive, removed Nix keys are **not** deleted from the file.
+- Which profile a folder opens with is VSCodium runtime state (pick once via Profiles menu), not declared in Nix.
+- No ms-python: the nixpkgs build lacks the bundled `python_files/lib/jedilsp`, so its Jedi fallback crashes without Pylance (which doesn't run in VSCodium). basedpyright needs `useBundled` without ms-python (basedpyright#1188).
+- Microsoft Remote-SSH/Containers and Docker extensions intentionally absent (proprietary / non-OSI license; Dockerfile + compose syntax is built in).
+
 ## Critical Patterns
 
 ### Verify daemon config keys before writing

@@ -1,217 +1,200 @@
 {
-  osConfig ? null,
+  osConfig,
   config,
   lib,
-  pkgs,
-  ...
-}: let
-  settings = {
-    "password-store" = "gnome-libsecret";
-    "editor.fontFamily" = "'Maple Mono NF', 'MesloLGS NF', 'FiraCode Nerd Font', monospace";
-    "editor.fontLigatures" = true;
-    "editor.fontSize" = 16;
-    "editor.quickSuggestions" = {
-      "other" = true;
-      "comments" = false;
-      "strings" = true;
-    };
-    "editor.bracketPairColorization.enabled" = true;
-    "editor.formatOnSave" = true;
-    "editor.guides.bracketPairs" = "active";
-    "editor.rulers" = [
-      80
-      120
-    ];
+}: {
+  "password-store" = "gnome-libsecret";
+  "editor.fontFamily" = "'Maple Mono NF', 'MesloLGS NF', 'FiraCode Nerd Font', monospace";
+  "editor.fontLigatures" = true;
+  "editor.fontSize" = 16;
+  "editor.quickSuggestions" = {
+    "other" = true;
+    "comments" = false;
+    "strings" = true;
+  };
+  "editor.bracketPairColorization.enabled" = true;
+  "editor.formatOnSave" = true;
+  "editor.guides.bracketPairs" = "active";
+  "editor.rulers" = [
+    80
+    120
+  ];
 
-    "files.autoSave" = "afterDelay";
-    "files.autoSaveDelay" = 1000;
-    "files.enableTrash" = false;
-    "files.eol" = "\n";
-    "files.insertFinalNewline" = true;
-    "files.trimFinalNewlines" = true;
-    "files.trimTrailingWhitespace" = true;
-    "files.exclude" = {
-      "**/.classpath" = true;
-      "**/.devenv" = true;
-      "**/.direnv" = true;
-      "**/.factorypath" = true;
-      "**/.project" = true;
-      "**/.settings" = true;
-    };
-    "files.watcherExclude" = {
-      "**/.devenv" = true;
-      "**/.direnv" = true;
-    };
+  "files.autoSave" = "afterDelay";
+  "files.autoSaveDelay" = 1000;
+  "files.enableTrash" = false;
+  "files.eol" = "\n";
+  "files.insertFinalNewline" = true;
+  "files.trimFinalNewlines" = true;
+  "files.trimTrailingWhitespace" = true;
+  "files.exclude" = {
+    "**/.classpath" = true;
+    "**/.devenv" = true;
+    "**/.direnv" = true;
+    "**/.factorypath" = true;
+    "**/.project" = true;
+    "**/.settings" = true;
+  };
+  "files.watcherExclude" = {
+    "**/.devenv" = true;
+    "**/.direnv" = true;
+  };
 
-    "workbench.colorTheme" = "Kanagawa";
-    "workbench.editor.enablePreview" = false;
-    "workbench.editorAssociations" = {
-      "*.md" = "vscode.markdown.preview.editor";
-    };
-    "workbench.editor.limit.perEditorGroup" = true;
-    "workbench.iconTheme" = "material-icon-theme";
-    "workbench.startupEditor" = "none";
-    "workbench.settings.applyToAllProfiles" = [];
+  "workbench.colorTheme" = "Kanagawa";
+  "workbench.editor.enablePreview" = false;
+  "workbench.editorAssociations" = {
+    "*.md" = "vscode.markdown.preview.editor";
+  };
+  "workbench.editor.limit.perEditorGroup" = true;
+  "workbench.iconTheme" = "material-icon-theme";
+  "workbench.startupEditor" = "none";
+  "workbench.settings.applyToAllProfiles" = [];
 
-    "explorer.confirmDelete" = false;
-    "explorer.confirmDragAndDrop" = false;
+  "explorer.confirmDelete" = false;
+  "explorer.confirmDragAndDrop" = false;
 
-    "diffEditor.ignoreTrimWhitespace" = true;
+  "diffEditor.ignoreTrimWhitespace" = true;
 
-    "search.exclude" = {
-      "**/.devenv" = true;
-      "**/.direnv" = true;
-    };
+  "search.exclude" = {
+    "**/.devenv" = true;
+    "**/.direnv" = true;
+  };
 
-    "terminal.integrated.defaultProfile.linux" = "zsh";
-    "terminal.integrated.defaultProfile.osx" = "zsh";
-    "terminal.integrated.fontFamily" = "MesloLGS NF";
-    "terminal.integrated.tabs.defaultColor" = "terminal.ansiBlack";
-    "terminal.integrated.fontWeight" = "500";
-    "terminal.integrated.profiles.linux".nu.path = "/etc/profiles/per-user/${config.home.username}/bin/nu";
-    "terminal.integrated.scrollback" = 100000;
+  "terminal.integrated.defaultProfile.linux" = "zsh";
+  "terminal.integrated.defaultProfile.osx" = "zsh";
+  "terminal.integrated.fontFamily" = "MesloLGS NF";
+  "terminal.integrated.tabs.defaultColor" = "terminal.ansiBlack";
+  "terminal.integrated.fontWeight" = "500";
+  "terminal.integrated.profiles.linux".nu.path = "/etc/profiles/per-user/${config.home.username}/bin/nu";
+  "terminal.integrated.scrollback" = 100000;
 
-    "window.menuBarVisibility" = "visible";
-    "window.titleBarStyle" = "custom";
-    "window.autoDetectColorScheme" = false;
-    "window.restoreWindows" = "one";
+  "window.menuBarVisibility" = "visible";
+  "window.titleBarStyle" = "custom";
+  "window.autoDetectColorScheme" = false;
+  "window.restoreWindows" = "one";
 
-    "git.autofetch" = true;
-    "git.confirmSync" = false;
-    "git.enableCommitSigning" = true;
-    "git.enableSmartCommit" = true;
-    "git.ignoreRebaseWarning" = true;
-    "github.gitProtocol" = "ssh";
+  "git.autofetch" = true;
+  "git.confirmSync" = false;
+  "git.enableCommitSigning" = true;
+  "git.enableSmartCommit" = true;
+  "git.ignoreRebaseWarning" = true;
+  "github.gitProtocol" = "ssh";
 
-    "security.allowedUNCHosts" = ["wsl.localhost"];
-    "security.workspace.trust.untrustedFiles" = "open";
-    "telemetry.telemetryLevel" = "off";
+  "security.allowedUNCHosts" = ["wsl.localhost"];
+  "security.workspace.trust.untrustedFiles" = "open";
+  "telemetry.telemetryLevel" = "off";
 
-    "remote.SSH.remotePlatform" =
-      {
-        "wsl.localhost" = "linux";
-      }
-      // lib.optionalAttrs (osConfig != null && osConfig ? my.defaults) {
-        "${osConfig.my.network.hosts.homeserver_lan}" = "linux";
-        "${osConfig.my.network.hosts.matebook_wifi}" = "linux";
-        "${osConfig.my.network.hosts.desktop_lan}" = "linux";
-      };
-
-    "todo-tree.regex.regex" = "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!";
-    "extensions.autoCheckUpdates" = false;
-    "update.mode" = "none";
-
-    # Disable Copilot — using Claude Code instead
-    "github.copilot.enable" = {
-      "*" = false;
-    };
-    "github.copilot.nextEditSuggestions.enabled" = false;
-    "github.copilot.chat.commitMessageGeneration.instructions" = [];
-    "github.copilot.chat.generateCommitMessage" = false;
-
-    "redhat.telemetry.enabled" = false;
-
-    "claude.code.autoApplyEdits" = true;
-    "claude.code.enableMCP" = true;
-    "claude.code.terminal.shell" = "zsh";
-    "claudeCode.hideOnboarding" = true;
-
-    # CommitCraft — local llama-cpp commit message generation
-    "commitCraft.apiBaseUrl" = "http://127.0.0.1:8080/v1";
-    "commitCraft.apiKey" = "dummy";
-    "commitCraft.customModel" = "gemma-local";
-    "commitCraft.style" = "conventional";
-    "commitCraft.detail" = "concise";
-    "commitCraft.language" = "English";
-
-    "[nix]" = {
-      "editor.tabSize" = 2;
-      "editor.detectIndentation" = true;
-      "editor.defaultFormatter" = "jnoortheen.nix-ide";
-    };
-    "nix.enableLanguageServer" = true;
-    "nix.serverPath" = "nil";
-    "nix.serverSettings" = {
-      nil = {
-        formatting.command = ["alejandra"];
-      };
-    };
-    "nix.formatterPath" = "alejandra";
-    "nixEnvSelector.useFlakes" = true;
-
-    "[shellscript]" = {
-      "editor.defaultFormatter" = "foxundermoon.shell-format";
-      "files.autoSave" = "afterDelay";
+  "remote.SSH.remotePlatform" =
+    {
+      "wsl.localhost" = "linux";
+    }
+    // lib.optionalAttrs (osConfig != null && osConfig ? my.defaults) {
+      "${osConfig.my.network.hosts.homeserver_lan}" = "linux";
+      "${osConfig.my.network.hosts.matebook_wifi}" = "linux";
+      "${osConfig.my.network.hosts.desktop_lan}" = "linux";
     };
 
-    "[yaml]" = {
-      "diffEditor.ignoreTrimWhitespace" = false;
-      "editor.autoIndent" = "keep";
-      "editor.insertSpaces" = true;
-      "editor.quickSuggestions" = {
-        "comments" = false;
-        "other" = true;
-        "strings" = true;
-      };
-      "editor.tabSize" = 2;
-    };
+  "todo-tree.regex.regex" = "(//|#|<!--|;|/\\*|^|^[ \\t]*(-|\\d+.))\\s*($TAGS)|todo!";
+  "extensions.autoCheckUpdates" = false;
+  "update.mode" = "none";
 
-    "[dockercompose]" = {
-      "editor.autoIndent" = "advanced";
-      "editor.defaultFormatter" = "redhat.vscode-yaml";
-      "editor.insertSpaces" = true;
-      "editor.quickSuggestions" = {
-        "comments" = false;
-        "other" = true;
-        "strings" = true;
-      };
-      "editor.tabSize" = 2;
-    };
+  # Disable Copilot — using Claude Code instead
+  "github.copilot.enable" = {
+    "*" = false;
+  };
+  "github.copilot.nextEditSuggestions.enabled" = false;
+  "github.copilot.chat.commitMessageGeneration.instructions" = [];
+  "github.copilot.chat.generateCommitMessage" = false;
 
-    "[github-actions-workflow]"."editor.defaultFormatter" = "redhat.vscode-yaml";
+  "redhat.telemetry.enabled" = false;
 
-    "[json]"."editor.defaultFormatter" = "vscode.json-language-features";
-    "[jsonc]"."editor.defaultFormatter" = "vscode.json-language-features";
+  "claude.code.autoApplyEdits" = true;
+  "claude.code.enableMCP" = true;
+  "claude.code.terminal.shell" = "zsh";
+  "claudeCode.hideOnboarding" = true;
 
-    "[javascript]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
-    "[javascriptreact]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
-    "[typescript]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
-    "[typescriptreact]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+  # CommitCraft — local llama-cpp commit message generation
+  "commitCraft.apiBaseUrl" = "http://127.0.0.1:8080/v1";
+  "commitCraft.apiKey" = "dummy";
+  "commitCraft.customModel" = "gemma-local";
+  "commitCraft.style" = "conventional";
+  "commitCraft.detail" = "concise";
+  "commitCraft.language" = "English";
 
-    "[markdown]" = {
-      "editor.defaultFormatter" = "esbenp.prettier-vscode";
-      "files.trimTrailingWhitespace" = false;
-    };
-
-    "[python]"."editor.defaultFormatter" = "ms-python.python";
-    "python.analysis.enableTroubleshootMissingImports" = true;
-
-    "[toml]"."editor.defaultFormatter" = "tamasfe.even-better-toml";
-
-    "yaml.disableSchemaDetection" = [
-      "**/.github/workflows/*.yml"
-      "**/.github/workflows/*.yaml"
-      "**/.gitea/workflows/*.yml"
-      "**/.gitea/workflows/*.yaml"
-      "**/.forgejo/workflows/*.yml"
-      "**/.forgejo/workflows/*.yaml"
-    ];
-
-    "yaml.schemas" = {
-      "kubernetes" = [
-        "k3s/*.yaml"
-        "k8s/*.yaml"
-      ];
+  "[nix]" = {
+    "editor.tabSize" = 2;
+    "editor.detectIndentation" = true;
+    "editor.defaultFormatter" = "jnoortheen.nix-ide";
+  };
+  "nix.enableLanguageServer" = true;
+  "nix.serverPath" = "nil";
+  "nix.serverSettings" = {
+    nil = {
+      formatting.command = ["alejandra"];
     };
   };
-  settingsFile = pkgs.writeText "vscode-settings.json" (builtins.toJSON settings);
-  settingsPath = ".config/VSCodium/User/settings.json";
-in {
-  home.activation.vscodeSettings = lib.hm.dag.entryAfter ["linkGeneration"] ''
-    settings_dest="$HOME/${settingsPath}"
-    $DRY_RUN_CMD mkdir -p "$(dirname "$settings_dest")"
-    [[ -L "$settings_dest" ]] && $DRY_RUN_CMD rm "$settings_dest"
-    $DRY_RUN_CMD cp ${settingsFile} "$settings_dest"
-    $DRY_RUN_CMD chmod 644 "$settings_dest"
-  '';
+  "nix.formatterPath" = "alejandra";
+  "nixEnvSelector.useFlakes" = true;
+
+  "[shellscript]" = {
+    "editor.defaultFormatter" = "foxundermoon.shell-format";
+    "files.autoSave" = "afterDelay";
+  };
+
+  "[yaml]" = {
+    "diffEditor.ignoreTrimWhitespace" = false;
+    "editor.autoIndent" = "keep";
+    "editor.insertSpaces" = true;
+    "editor.quickSuggestions" = {
+      "comments" = false;
+      "other" = true;
+      "strings" = true;
+    };
+    "editor.tabSize" = 2;
+  };
+
+  "[dockercompose]" = {
+    "editor.autoIndent" = "advanced";
+    "editor.defaultFormatter" = "redhat.vscode-yaml";
+    "editor.insertSpaces" = true;
+    "editor.quickSuggestions" = {
+      "comments" = false;
+      "other" = true;
+      "strings" = true;
+    };
+    "editor.tabSize" = 2;
+  };
+
+  "[github-actions-workflow]"."editor.defaultFormatter" = "redhat.vscode-yaml";
+
+  "[json]"."editor.defaultFormatter" = "vscode.json-language-features";
+  "[jsonc]"."editor.defaultFormatter" = "vscode.json-language-features";
+
+  "[javascript]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+  "[javascriptreact]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+  "[typescript]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+  "[typescriptreact]"."editor.defaultFormatter" = "esbenp.prettier-vscode";
+
+  "[markdown]" = {
+    "editor.defaultFormatter" = "esbenp.prettier-vscode";
+    "files.trimTrailingWhitespace" = false;
+  };
+
+  "[toml]"."editor.defaultFormatter" = "tamasfe.even-better-toml";
+
+  "yaml.disableSchemaDetection" = [
+    "**/.github/workflows/*.yml"
+    "**/.github/workflows/*.yaml"
+    "**/.gitea/workflows/*.yml"
+    "**/.gitea/workflows/*.yaml"
+    "**/.forgejo/workflows/*.yml"
+    "**/.forgejo/workflows/*.yaml"
+  ];
+
+  "yaml.schemas" = {
+    "kubernetes" = [
+      "k3s/*.yaml"
+      "k8s/*.yaml"
+    ];
+  };
 }

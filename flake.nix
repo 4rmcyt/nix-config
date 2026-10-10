@@ -77,7 +77,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     firefox-addons = {
-      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      url = "git+https://gitlab.com/rycee/nur-expressions?dir=pkgs/firefox-addons&shallow=1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     zen-browser = {
