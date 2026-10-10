@@ -21,7 +21,6 @@
         "zsh-users/zsh-autosuggestions"
         "zsh-users/zsh-history-substring-search"
         "elithrar/zsh-git-to-jj"
-        "ohmyzsh/ohmyzsh path:plugins/git-auto-fetch"
         "ohmyzsh/ohmyzsh path:plugins/sudo"
       ];
       useFriendlyNames = true;
@@ -98,7 +97,6 @@
       LEDGER_COLOR = "true";
       LESS = "-FRSXM";
       LESSCHARSET = "utf-8";
-      GIT_AUTO_FETCH_INTERVAL = "300";
       SYSTEMD_LESS = "FRSXMK";
       PAGER = "less";
     };

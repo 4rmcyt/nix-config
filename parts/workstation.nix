@@ -67,5 +67,9 @@
     ];
 
     home.sessionVariables.BROWSER = lib.mkForce "firefox";
+
+    # Not on homeserver: gpg-agent pinentry-tty ignores the plugin's ssh BatchMode and prompts on cd.
+    programs.zsh.antidote.plugins = ["ohmyzsh/ohmyzsh path:plugins/git-auto-fetch"];
+    programs.zsh.sessionVariables.GIT_AUTO_FETCH_INTERVAL = "300";
   };
 }
