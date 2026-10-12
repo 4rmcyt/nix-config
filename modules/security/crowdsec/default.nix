@@ -15,6 +15,16 @@
       fi
     '')
     cfg.bouncers));
+  svc = config.systemd.services.crowdsec.serviceConfig;
+  # Manual cscli inside crowdsec.service's sandbox: new state files land on the idmapped StateDirectory, not as root.
+  cscliSandboxed = pkgs.writeShellScriptBin "cscli" ''
+    exec ${config.systemd.package}/bin/systemd-run --quiet --pipe --pty --wait --collect --service-type=exec \
+      -p User=${cs.user} -p Group=${cs.group} -p DynamicUser=yes -p UMask=0077 \
+      -p StateDirectory=${lib.escapeShellArg (lib.concatStringsSep " " svc.StateDirectory)} \
+      -p ReadWritePaths=${lib.escapeShellArg (lib.concatStringsSep " " svc.ReadWritePaths)} \
+      -E PATH=${lib.makeBinPath [cs.package]} \
+      ${cscli} "$@"
+  '';
 in {
   options.my.crowdsec = {
     caddy.enable = lib.mkEnableOption "CrowdSec Caddy log acquisition";
@@ -47,6 +57,9 @@ in {
     # The victorialogs datasource gives up if VictoriaLogs isn't answering when crowdsec starts.
     systemd.services.crowdsec.after = lib.mkIf cfg.remoteCaddy.enable ["victorialogs.service"];
     systemd.services.crowdsec.wants = lib.mkIf cfg.remoteCaddy.enable ["victorialogs.service"];
+    # hiPrio: system-path ignores collisions, so this must outrank nixpkgs' `sudo -u crowdsec` wrapper.
+    environment.systemPackages = [(lib.hiPrio cscliSandboxed)];
+
     # nixpkgs' `d … crowdsec crowdsec` rules re-chown state/ to 949 on every tmpfiles run, breaking new hub data files.
     systemd.tmpfiles.settings."10-crowdsec" = {
       "/var/lib/crowdsec/state" = lib.mkForce {};

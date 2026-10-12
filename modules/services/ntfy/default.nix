@@ -11,7 +11,7 @@
       listen-http = "127.0.0.1:${toString config.my.network.ports.ntfy}";
       auth-default-access = "deny-all";
       behind-proxy = true;
-      # Caddy appends its loopback peer to X-Forwarded-For; drop it so the real client is right-most.
+      # Caddy appends its loopback peer to X-Forwarded-For; drop it so the real client is right-most. No spaces: ntfy doesn't trim.
       proxy-trusted-hosts = "127.0.0.1/32,::1/128";
       # CrowdSec's ntfy parser reads JSON; 401/403 are debug-level upstream, so lift only those.
       log-format = "json";
