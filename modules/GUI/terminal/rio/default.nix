@@ -48,7 +48,7 @@ _: {
       };
 
       window = {
-        opacity = 0.4;
+        opacity = 0.92;
         decorations = "Disabled";
       };
 
