@@ -132,6 +132,7 @@
       rustup
 
       kitty.terminfo
+      ghostty.terminfo
       wezterm.terminfo
     ]
   );

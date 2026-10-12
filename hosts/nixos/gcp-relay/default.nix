@@ -194,6 +194,7 @@
       tcpdump
       vim
       kitty.terminfo
+      ghostty.terminfo
       wezterm.terminfo
     ];
 

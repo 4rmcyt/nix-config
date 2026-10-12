@@ -13,15 +13,18 @@ _: {
       copy-on-select = "clipboard";
       cursor-style = "block";
       cursor-style-blink = true;
-      font-family = "JetBrainsMono Nerd Font";
-      font-size = 13;
+      font-family = "MesloLGS Nerd Font";
+      font-size = 14;
+      font-codepoint-map = "${import ../nerd-symbol-ranges.nix}=Symbols Nerd Font";
       keybind = ["f11=toggle_fullscreen"];
       minimum-contrast = 1.15;
       mouse-hide-while-typing = true;
+      notify-on-command-finish = "unfocused";
+      notify-on-command-finish-after = "10s";
       right-click-action = "paste";
       # Bytes, not lines.
       scrollback-limit = 100000000;
-      shell-integration-features = "sudo,ssh-env,no-title";
+      shell-integration-features = "sudo,no-title";
       unfocused-split-opacity = 0.85;
       window-decoration = "none";
       window-padding-balance = true;

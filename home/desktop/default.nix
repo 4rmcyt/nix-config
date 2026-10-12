@@ -13,7 +13,6 @@
     ../../modules/GUI/browsers/chromium
     ../../modules/GUI/jellyfin-mpv-shim
     ../../modules/GUI/terminal/ghostty
-    ../../modules/GUI/terminal/rio
 
     ../../modules/WM
     ../../modules/WM/mango

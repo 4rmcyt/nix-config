@@ -47,8 +47,14 @@ in {
     # The victorialogs datasource gives up if VictoriaLogs isn't answering when crowdsec starts.
     systemd.services.crowdsec.after = lib.mkIf cfg.remoteCaddy.enable ["victorialogs.service"];
     systemd.services.crowdsec.wants = lib.mkIf cfg.remoteCaddy.enable ["victorialogs.service"];
+    # nixpkgs' `d … crowdsec crowdsec` rules re-chown state/ to 949 on every tmpfiles run, breaking new hub data files.
+    systemd.tmpfiles.settings."10-crowdsec" = {
+      "/var/lib/crowdsec/state" = lib.mkForce {};
+      "/var/lib/crowdsec/state/hub/" = lib.mkForce {};
+    };
+
     systemd.services.crowdsec.serviceConfig = {
-      # tmpfiles-resetup skips subdirs of DynamicUser's nobody-owned /var/lib/private/crowdsec; let systemd own them.
+      # DynamicUser state dirs are created and owned by systemd, not tmpfiles.
       StateDirectory = lib.mkForce [
         "crowdsec"
         "crowdsec/state"
