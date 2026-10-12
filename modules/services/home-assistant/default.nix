@@ -49,6 +49,8 @@ in {
     '';
   };
 
+  my.crowdsec.homeAssistant.enable = true;
+
   virtualisation.oci-containers.containers.homeassistant = {
     autoStart = true;
     environment.TZ = timezone;

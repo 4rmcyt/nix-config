@@ -8,8 +8,7 @@
       size = 14;
     };
     extraConfig = ''
-      include dank-theme.conf
-      include dank-tabs.conf
+      include themes/noctalia.conf
       mouse_map right press ungrabbed paste_from_clipboard
       map media_pause no_op
       map media_play no_op

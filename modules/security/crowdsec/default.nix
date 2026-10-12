@@ -19,6 +19,8 @@ in {
   options.my.crowdsec = {
     caddy.enable = lib.mkEnableOption "CrowdSec Caddy log acquisition";
     appsec.enable = lib.mkEnableOption "CrowdSec AppSec (WAF) component on localhost";
+    homeAssistant.enable = lib.mkEnableOption "CrowdSec Home Assistant failed-login detection";
+    ntfy.enable = lib.mkEnableOption "CrowdSec ntfy failed-auth detection";
     remoteCaddy = {
       enable = lib.mkEnableOption "CrowdSec acquisition of remote Caddy access logs from VictoriaLogs";
       query = lib.mkOption {
@@ -82,7 +84,10 @@ in {
         ++ lib.optionals cfg.appsec.enable [
           "crowdsecurity/appsec-virtual-patching"
           "crowdsecurity/appsec-generic-rules"
-        ];
+          "crowdsecurity/appsec-crs"
+        ]
+        ++ lib.optionals cfg.homeAssistant.enable ["crowdsecurity/home-assistant"]
+        ++ lib.optionals cfg.ntfy.enable ["Jgigantino31/ntfy"];
 
       settings.general.api.server = {
         enable = true;
@@ -92,6 +97,27 @@ in {
       settings.lapi.credentialsFile = "/var/lib/crowdsec/state/lapi-credentials.yaml";
       # Non-null makes the module run `cscli capi register` and pull the community blocklist (sharing on).
       settings.capi.credentialsFile = "/var/lib/crowdsec/state/capi-credentials.yaml";
+      # console.yaml is in the store, so `cscli console enroll` can't write its share flags; set them here.
+      settings.console.configuration = {
+        share_manual_decisions = true;
+        share_custom = true;
+        share_tainted = true;
+        share_context = true;
+      };
+
+      # Module defaults plus escalation: each repeat ban for the same value lasts 4h longer.
+      localConfig.profiles = map (scope: {
+        name = "default_${lib.toLower scope}_remediation";
+        filters = ["Alert.Remediation == true && Alert.GetScope() == '${scope}'"];
+        decisions = [
+          {
+            type = "ban";
+            duration = "4h";
+          }
+        ];
+        duration_expr = "Sprintf('%dh', (GetDecisionsCount(Alert.GetValue()) + 1) * 4)";
+        on_success = "break";
+      }) ["Ip" "Range"];
 
       localConfig.acquisitions =
         [
@@ -124,9 +150,25 @@ in {
           {
             source = "appsec";
             name = "caddy-appsec";
-            appsec_configs = ["crowdsecurity/appsec-default"];
+            # appsec-default: in-band vpatch + generic; crs: out-of-band OWASP CRS, bans on repeat hits.
+            appsec_configs = ["crowdsecurity/appsec-default" "crowdsecurity/crs"];
             listen_addr = "127.0.0.1:${toString config.my.network.ports.crowdsec-appsec}";
             labels.type = "appsec";
+          }
+        ]
+        ++ lib.optionals cfg.homeAssistant.enable [
+          {
+            source = "journalctl";
+            journalctl_filter = ["CONTAINER_NAME=homeassistant"];
+            # SYSLOG_IDENTIFIER=homeassistant matches the parser's `program endsWith 'homeassistant'`.
+            labels.type = "syslog";
+          }
+        ]
+        ++ lib.optionals cfg.ntfy.enable [
+          {
+            source = "journalctl";
+            journalctl_filter = ["_SYSTEMD_UNIT=ntfy-sh.service"];
+            labels.type = "syslog";
           }
         ]
         ++ lib.optionals cfg.remoteCaddy.enable [
