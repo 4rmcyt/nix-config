@@ -48,7 +48,6 @@
       ProtectKernelTunables = true;
       ProtectKernelModules = true;
       ProtectKernelLogs = true;
-      ProtectControlGroups = true;
       LockPersonality = true;
       RestrictRealtime = true;
       ProtectClock = true;
