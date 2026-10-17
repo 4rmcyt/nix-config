@@ -71,7 +71,7 @@
     settings.debug.coredump = true;
 
     # Default pulls Kicksecure's AutoEnable=false, leaving the BT headset off after boot.
-    settings.etc.kicksecure-bluetooth = false;
+    settings.etc.harden-bluetooth = false;
 
     # Default panics the kernel on any oops; a flaky GPU/wine oops shouldn't force
     # an unclean reboot.
