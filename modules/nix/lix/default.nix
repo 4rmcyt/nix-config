@@ -3,7 +3,7 @@
   lib,
   ...
 }: {
-  nix.package = lib.mkDefault pkgs.lixPackageSets.latest.lix;
+  nix.package = lib.mkDefault pkgs.lixPackageSets.lix_2_96.lix;
 
   nix.settings = {
     extra-substituters = ["https://cache.lix.systems?priority=1"];

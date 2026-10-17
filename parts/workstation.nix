@@ -20,17 +20,17 @@
     programs.gnupg.agent.enable = true;
 
     environment.systemPackages = with pkgs; [
-      lixPackageSets.latest.nixpkgs-review
-      lixPackageSets.latest.nix-eval-jobs
-      lixPackageSets.latest.nix-fast-build
-      lixPackageSets.latest.colmena
-      lixPackageSets.latest.nix-direnv
-      lixPackageSets.latest.nix-serve-ng
-      lixPackageSets.latest.boehmgc
-      lixPackageSets.latest.nil
-      lixPackageSets.latest.nurl
-      lixPackageSets.latest.nix-init
-      lixPackageSets.latest.nix-update
+      lixPackageSets.lix_2_96.nixpkgs-review
+      lixPackageSets.lix_2_96.nix-eval-jobs
+      lixPackageSets.lix_2_96.nix-fast-build
+      lixPackageSets.lix_2_96.colmena
+      lixPackageSets.lix_2_96.nix-direnv
+      lixPackageSets.lix_2_96.nix-serve-ng
+      lixPackageSets.lix_2_96.boehmgc
+      lixPackageSets.lix_2_96.nil
+      lixPackageSets.lix_2_96.nurl
+      lixPackageSets.lix_2_96.nix-init
+      lixPackageSets.lix_2_96.nix-update
     ];
   };
 
