@@ -25,7 +25,6 @@
       lixPackageSets.lix_2_96.nix-fast-build
       lixPackageSets.lix_2_96.colmena
       lixPackageSets.lix_2_96.nix-direnv
-      lixPackageSets.lix_2_96.nix-serve-ng
       lixPackageSets.lix_2_96.boehmgc
       lixPackageSets.lix_2_96.nil
       lixPackageSets.lix_2_96.nurl
