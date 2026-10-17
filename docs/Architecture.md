@@ -237,7 +237,7 @@ GitHub access token loaded via sops secret `nix_access_token`, written to `/run/
 | `modules/WM/mango/default.nix` | mango settings (structured Nix → `config.conf`), session vars, qt theming, scroller layout, blur/shadow effects |
 | `modules/WM/mango/noctalia.nix` | noctalia HM config |
 | `modules/WM/mango/binds.nix` | keybindings (`bind`/`mousebind` in mango's own comma-separated grammar) |
-| `modules/WM/mango/startup.nix` | own `autostart.sh` via `xdg.configFile` + `exec_once` (upstream `autostart_sh` emits `exec-once`): cliphist, wl-clip-persist, noctalia, materialgram, vesktop, coolercontrol |
+| `modules/WM/mango/startup.nix` | own `autostart.sh` via `xdg.configFile` + `exec_once` (upstream `autostart_sh` emits `exec-once`): cliphist, wl-clip-persist, noctalia, Telegram, vesktop, coolercontrol |
 | `modules/WM/mango/windowrules.nix` | floating rules (`window_rule=` strings) |
 | `modules/WM/mango/monitors/desktop.nix` | ASUS VG289 ×2, 4K@60Hz, 2× scale, matched by make+model+serial (`monitor_rule=`) |
 | `modules/WM/mango/nvidia.nix` | NVIDIA env vars (`LIBVA_DRIVER_NAME`, GSync/VRR, `GLVidHeapReuseRatio` app profile), set both via HM sessionVariables and mango's own `env=` config lines |

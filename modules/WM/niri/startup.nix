@@ -20,7 +20,7 @@ _: {
 
       {command = ["noctalia"];}
 
-      {command = ["materialgram"];}
+      {command = ["Telegram"];}
       {command = ["vesktop" "--start-minimized"];}
 
       # --disable-gpu works around a QtWebEngine/NVIDIA GBM bug that corrupts glyph

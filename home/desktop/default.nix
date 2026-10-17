@@ -67,7 +67,7 @@
       ifrextractor-rs
       jellyfin-tui
       jujutsu
-      materialgram
+      telegram-desktop
       mcat
       mcp-grafana
       mcp-k8s-go

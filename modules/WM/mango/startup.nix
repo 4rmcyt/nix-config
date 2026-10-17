@@ -30,7 +30,7 @@ in {
       # v5 is a single native binary, no Quickshell instance-identity problem (unlike legacy-v4)
       noctalia &
 
-      materialgram &
+      Telegram &
       vesktop --start-minimized &
 
       # --disable-gpu works around NVIDIA QtWebEngine glyph corruption

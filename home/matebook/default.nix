@@ -19,7 +19,7 @@
       bat
       brightnessctl
       davfs2
-      materialgram
+      telegram-desktop
       pam_u2f
       pcsc-tools
       ryzen-monitor-ng
