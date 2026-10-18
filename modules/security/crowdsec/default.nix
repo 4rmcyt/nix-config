@@ -64,6 +64,14 @@ in {
     systemd.tmpfiles.settings."10-crowdsec" = {
       "/var/lib/crowdsec/state" = lib.mkForce {};
       "/var/lib/crowdsec/state/hub/" = lib.mkForce {};
+      # cscli symlinks hub appsec-configs here; keep it crowdsec-owned when environment.etc creates it first.
+      "/etc/crowdsec/appsec-configs" = lib.mkIf cfg.appsec.enable {
+        d = {
+          inherit (cs) user;
+          inherit (cs) group;
+          mode = "0700";
+        };
+      };
     };
 
     systemd.services.crowdsec.serviceConfig = {
@@ -170,7 +178,8 @@ in {
             source = "appsec";
             name = "caddy-appsec";
             # appsec-default: in-band vpatch + generic; crs: out-of-band OWASP CRS, bans on repeat hits.
-            appsec_configs = ["crowdsecurity/appsec-default" "crowdsecurity/crs"];
+            # Must stay last: it cancels the per-request WAF alerts both configs above send.
+            appsec_configs = ["crowdsecurity/appsec-default" "crowdsecurity/crs" "local/no-waf-alerts"];
             listen_addr = "127.0.0.1:${toString config.my.network.ports.crowdsec-appsec}";
             labels.type = "appsec";
           }
@@ -202,6 +211,26 @@ in {
     };
 
     # Parser stage: trusted events are dropped before reaching buckets.
+    # Per-request WAF alerts burn the Console quota; events stay, so appsec-vpatch / appsec-outofband still ban.
+    environment.etc."crowdsec/appsec-configs/no-waf-alerts.yaml" = lib.mkIf cfg.appsec.enable {
+      user = "crowdsec";
+      group = "crowdsec";
+      mode = "0640";
+      # Scalars from the last config override earlier ones unconditionally, so default_remediation must be set.
+      text = ''
+        name: local/no-waf-alerts
+        default_remediation: ban
+        inband:
+          on_match:
+            - apply:
+                - CancelAlert()
+        outofband:
+          on_match:
+            - apply:
+                - CancelAlert()
+      '';
+    };
+
     environment.etc."crowdsec/parsers/s02-enrich/local-trusted-networks.yaml" = {
       user = "crowdsec";
       group = "crowdsec";
