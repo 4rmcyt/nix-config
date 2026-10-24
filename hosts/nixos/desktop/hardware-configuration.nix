@@ -4,7 +4,18 @@
   pkgs,
   modulesPath,
   ...
-}: {
+}: let
+  kp = config.boot.kernelPackages;
+  kbuild = "${kp.kernel.dev}/lib/modules/${kp.kernel.modDirVersion}/build";
+  # Body of stdenv's default installPhase (setup.sh); overrideAttrs can't unset a package's custom one.
+  defaultInstallPhase = ''
+    runHook preInstall
+    local flagsArray=(SHELL="$SHELL")
+    concatTo flagsArray makeFlags makeFlagsArray installFlags installFlagsArray installTargets=install
+    make "''${flagsArray[@]}"
+    runHook postInstall
+  '';
+in {
   imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
   boot = {
@@ -53,19 +64,51 @@
       "nct6683"
     ];
 
-    # NixOS/nixpkgs#576406: kernel.dev's System.map makes modules_install run depmod into each package; drop those files.
-    extraModulePackages = map (pkg:
-      pkgs.runCommand "${pkg.name}-nodepmod" {} ''
-        cp -rs ${pkg} $out
-        chmod -R u+w $out
-        find $out/lib/modules -mindepth 2 -maxdepth 2 -name 'modules.*' -delete
-      '') (with config.boot.kernelPackages; [
-      r8125
-      v4l2loopback
-      zenergy
-      ryzen-smu
-      nct6687d
-    ]);
+    # Backports until nixos-unstable has them: Kbuild modules_install for .ko.cer (nixpkgs#575192), DEPMOD=true (#576406).
+    extraModulePackages = [
+      # nixpkgs#576564
+      (kp.r8125.overrideAttrs (old: {
+        preBuild = "";
+        postPatch = ''
+          substituteInPlace src/Makefile --replace-fail "BASEDIR :=" "BASEDIR ?="
+        '';
+        makeFlags =
+          old.makeFlags
+          ++ [
+            "INSTALL_MOD_PATH=${placeholder "out"}"
+            "INSTALL_MOD_DIR=kernel/drivers/net/ethernet/realtek"
+            "INSTALL_MOD_STRIP=1"
+            "DEPMOD=true"
+          ];
+        installTargets = ["modules_install"];
+        installFlags = ["-C" kbuild "M=$(PWD)/src"];
+        installPhase = defaultInstallPhase;
+      }))
+      # nixpkgs#575861
+      (kp.v4l2loopback.overrideAttrs {
+        preBuild = "";
+        installFlags = ["DEPMOD=true" "INSTALL_MOD_PATH=${placeholder "out"}"];
+      })
+      (kp.zenergy.overrideAttrs (old: {installFlags = (old.installFlags or []) ++ ["DEPMOD=true"];}))
+      # nixpkgs#576504; keeps the package's installPhase for monitor_cpu, swaps its hand-copied .ko for modules_install.
+      (kp.ryzen-smu.overrideAttrs (old: {
+        makeFlags =
+          kp.kernelModuleMakeFlags
+          ++ old.makeFlags
+          ++ [
+            "INSTALL_MOD_PATH=${placeholder "out"}"
+            "INSTALL_MOD_DIR=kernel/drivers/ryzen_smu"
+            "DEPMOD=true"
+          ];
+        postInstall = ''
+          rm -r $out/lib/modules
+          local flagsArray=()
+          concatTo flagsArray makeFlags makeFlagsArray
+          make "''${flagsArray[@]}" -C ${kbuild} M="$PWD" modules_install
+        '';
+      }))
+      (kp.nct6687d.overrideAttrs (old: {installFlags = (old.installFlags or []) ++ ["DEPMOD=true"];}))
+    ];
 
     extraModprobeConfig = ''
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1

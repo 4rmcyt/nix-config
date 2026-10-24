@@ -113,7 +113,7 @@
   # is a real access path; these units exist only because NixOS enables them by default.
   systemd.services."autovt@tty1".enable = false;
   systemd.services."getty@tty1".enable = false;
-  systemd.services."systemd-vconsole-setup".enable = false;
+  console.enable = false;
   systemd.services."systemd-rfkill".enable = false;
 
   # With mutableUsers=true, google-guest-agent provisions local accounts/SSH keys from
