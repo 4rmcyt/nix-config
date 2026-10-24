@@ -121,7 +121,8 @@ in {
             duration = "4h";
           }
         ];
-        duration_expr = "Sprintf('%dh', (GetDecisionsCount(Alert.GetValue()) + 1) * 4)";
+        # No `%`: the module writes profiles.yaml via a tmpfiles argument, where `%d` is a specifier.
+        duration_expr = "string((GetDecisionsCount(Alert.GetValue()) + 1) * 4) + 'h'";
         on_success = "break";
       }) ["Ip" "Range"];
 
