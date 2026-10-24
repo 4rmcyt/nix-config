@@ -6,8 +6,7 @@
 }: let
   cfg = config.my.crowdsec;
   cs = config.services.crowdsec;
-  # nixpkgs' cscli wrapper breaks under DynamicUser and /etc/crowdsec/config.yaml doesn't exist; rebuild the module's config path.
-  cscli = "${lib.getExe' cs.package "cscli"} -c ${(pkgs.formats.yaml {}).generate "crowdsec.yaml" cs.settings.general}";
+  cscli = lib.getExe' cs.package "cscli";
   hasBouncers = cfg.bouncers != {};
   registerBouncers = pkgs.writeShellScript "crowdsec-bouncers-register" (lib.concatStrings (lib.mapAttrsToList (name: _: ''
       if ! ${cscli} bouncers list -o json | ${lib.getExe pkgs.jq} -e --arg n ${lib.escapeShellArg name} 'any(.[]; .name == $n)' >/dev/null; then
@@ -15,15 +14,9 @@
       fi
     '')
     cfg.bouncers));
-  svc = config.systemd.services.crowdsec.serviceConfig;
-  # Manual cscli inside crowdsec.service's sandbox: new state files land on the idmapped StateDirectory, not as root.
-  cscliSandboxed = pkgs.writeShellScriptBin "cscli" ''
-    exec ${config.systemd.package}/bin/systemd-run --quiet --pipe --pty --wait --collect --service-type=exec \
-      -p User=${cs.user} -p Group=${cs.group} -p DynamicUser=yes -p UMask=0077 \
-      -p StateDirectory=${lib.escapeShellArg (lib.concatStringsSep " " svc.StateDirectory)} \
-      -p ReadWritePaths=${lib.escapeShellArg (lib.concatStringsSep " " svc.ReadWritePaths)} \
-      -E PATH=${lib.makeBinPath [cs.package]} \
-      ${cscli} "$@"
+  # `sudo cscli` as root would leave root-owned hub/state files the service can't read; drop to the service user.
+  cscliAsService = pkgs.writeShellScriptBin "cscli" ''
+    exec ${lib.getExe' pkgs.util-linux "setpriv"} --reuid=${cs.user} --regid=${cs.group} --init-groups ${cscli} "$@"
   '';
 in {
   options.my.crowdsec = {
@@ -57,13 +50,10 @@ in {
     # The victorialogs datasource gives up if VictoriaLogs isn't answering when crowdsec starts.
     systemd.services.crowdsec.after = lib.mkIf cfg.remoteCaddy.enable ["victorialogs.service"];
     systemd.services.crowdsec.wants = lib.mkIf cfg.remoteCaddy.enable ["victorialogs.service"];
-    # hiPrio: system-path ignores collisions, so this must outrank nixpkgs' `sudo -u crowdsec` wrapper.
-    environment.systemPackages = [(lib.hiPrio cscliSandboxed)];
+    # hiPrio: system-path ignores collisions, so this must outrank the bare cscli from cs.package.
+    environment.systemPackages = [(lib.hiPrio cscliAsService)];
 
-    # nixpkgs' `d … crowdsec crowdsec` rules re-chown state/ to 949 on every tmpfiles run, breaking new hub data files.
     systemd.tmpfiles.settings."10-crowdsec" = {
-      "/var/lib/crowdsec/state" = lib.mkForce {};
-      "/var/lib/crowdsec/state/hub/" = lib.mkForce {};
       # cscli symlinks hub appsec-configs here; keep it crowdsec-owned when environment.etc creates it first.
       "/etc/crowdsec/appsec-configs" = lib.mkIf cfg.appsec.enable {
         d = {
@@ -74,25 +64,11 @@ in {
       };
     };
 
+    # Upstream sandbox (createServiceConfig) covers the rest; ProtectKernelLogs stays upstream's false.
     systemd.services.crowdsec.serviceConfig = {
-      # DynamicUser state dirs are created and owned by systemd, not tmpfiles.
-      StateDirectory = lib.mkForce [
-        "crowdsec"
-        "crowdsec/state"
-        "crowdsec/state/hub"
-      ];
       # ExecStartPre's config test scans the journal; cold page cache after boot exceeds the default 90s.
       TimeoutStartSec = "5min";
-      Restart = "on-failure";
       RestrictSUIDSGID = true;
-      ProtectKernelTunables = true;
-      ProtectControlGroups = true;
-      ProtectKernelModules = true;
-      ProtectKernelLogs = true;
-      LockPersonality = true;
-      RestrictRealtime = true;
-      RestrictNamespaces = true;
-      SystemCallArchitectures = "native";
       # Bouncer keys live in sops, not the LAPI DB: re-register missing ones in crowdsec's own sandbox.
       LoadCredential = lib.mkIf hasBouncers (lib.mapAttrsToList (name: path: "${name}:${path}") cfg.bouncers);
       # "-": a failed registration is logged but doesn't take crowdsec down.
@@ -116,15 +92,18 @@ in {
         ++ lib.optionals cfg.homeAssistant.enable ["crowdsecurity/home-assistant"]
         ++ lib.optionals cfg.ntfy.enable ["Jgigantino31/ntfy"];
 
-      settings.general.api.server = {
-        enable = true;
-        listen_uri = "0.0.0.0:${toString config.my.network.ports.crowdsec-lapi}";
+      settings.config = {
+        # Pre-rewrite layout: DB, LAPI/CAPI credentials and hub live here, not in the new default /var/lib/crowdsec/data.
+        config_paths.data_dir = "/var/lib/crowdsec/state";
+        api.client.credentials_path = "/var/lib/crowdsec/state/lapi-credentials.yaml";
+        api.server = {
+          listen_uri = "0.0.0.0:${toString config.my.network.ports.crowdsec-lapi}";
+          # Non-null makes crowdsec-setup run `cscli capi register` and pull the community blocklist (sharing on).
+          online_client.credentials_path = "/var/lib/crowdsec/state/capi-credentials.yaml";
+        };
       };
 
-      settings.lapi.credentialsFile = "/var/lib/crowdsec/state/lapi-credentials.yaml";
-      # Non-null makes the module run `cscli capi register` and pull the community blocklist (sharing on).
-      settings.capi.credentialsFile = "/var/lib/crowdsec/state/capi-credentials.yaml";
-      # console.yaml is in the store, so `cscli console enroll` can't write its share flags; set them here.
+      # tmpfiles rewrites console.yaml on every run, so the share flags must be declared here.
       settings.console.configuration = {
         share_manual_decisions = true;
         share_custom = true;
@@ -133,7 +112,7 @@ in {
       };
 
       # Module defaults plus escalation: each repeat ban for the same value lasts 4h longer.
-      localConfig.profiles = map (scope: {
+      settings.profiles = map (scope: {
         name = "default_${lib.toLower scope}_remediation";
         filters = ["Alert.Remediation == true && Alert.GetScope() == '${scope}'"];
         decisions = [
@@ -146,7 +125,7 @@ in {
         on_success = "break";
       }) ["Ip" "Range"];
 
-      localConfig.acquisitions =
+      settings.acquisitions =
         [
           {
             source = "journalctl";

@@ -79,11 +79,6 @@
       enable = true;
       package = pkgs.opentofu;
     };
-    toml-sort = {
-      enable = true;
-      includes = ["*.toml"];
-      package = pkgs.toml-sort;
-    };
     yamlfmt = {
       enable = true;
       includes = [
