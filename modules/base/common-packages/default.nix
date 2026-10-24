@@ -72,7 +72,6 @@
       shfmt
       sops
       statix
-      toml-sort
       treefmt
       vulnix
       yamlfmt

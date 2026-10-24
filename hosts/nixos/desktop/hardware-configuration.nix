@@ -53,13 +53,19 @@
       "nct6683"
     ];
 
-    extraModulePackages = with config.boot.kernelPackages; [
+    # NixOS/nixpkgs#576406: kernel.dev's System.map makes modules_install run depmod into each package; drop those files.
+    extraModulePackages = map (pkg:
+      pkgs.runCommand "${pkg.name}-nodepmod" {} ''
+        cp -rs ${pkg} $out
+        chmod -R u+w $out
+        find $out/lib/modules -mindepth 2 -maxdepth 2 -name 'modules.*' -delete
+      '') (with config.boot.kernelPackages; [
       r8125
       v4l2loopback
       zenergy
       ryzen-smu
       nct6687d
-    ];
+    ]);
 
     extraModprobeConfig = ''
       options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
