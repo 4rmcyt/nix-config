@@ -44,10 +44,11 @@
       command = "${pkgs.uv}/bin/uvx";
       args = ["mcp-python-interpreter"];
     };
+    # nixpkgs mcp-server-fetch 2026.8.31 needs mcp<2; back to pkgs once nixpkgs bumps it.
     fetch = {
       type = "stdio";
-      command = lib.getExe pkgs.mcp-server-fetch;
-      args = [];
+      command = "${pkgs.uv}/bin/uvx";
+      args = ["mcp-server-fetch==2026.10.28"];
     };
     mcp-nixos = {
       type = "stdio";
