@@ -132,9 +132,12 @@ in {
     stateDir = "/data/media/.state/nixarr";
 
     audiobookshelf.enable = true;
-    # Default ffmpeg-full disables libfdk-aac, breaking xHE-AAC (M4B) audiobook scanning.
+    # Default ffmpeg-headless disables libfdk-aac, breaking xHE-AAC (M4B) audiobook scanning.
     audiobookshelf.package = pkgs.audiobookshelf.override {
-      ffmpeg_8-full = pkgs.ffmpeg_8-full.override {withUnfree = true;};
+      ffmpeg_8-headless = pkgs.ffmpeg_8-headless.override {
+        withUnfree = true;
+        withFdkAac = true;
+      };
     };
     jellyfin.enable = false; # handled by ./jellyfin
     lidarr.enable = true;
