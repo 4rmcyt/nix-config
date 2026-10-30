@@ -39,7 +39,7 @@ Tailnet login server: `https://hs.<domain>` (self-hosted Headscale)
 #### Networking
 
 - SSH on port **2222** (port 22 has no listener)
-- Unbound DNS resolver: interfaces `tailscale0`, `enp0s31f6`; NextDNS profile `<nextdns-profile>`
+- Unbound DNS resolver: listens on `homeserver_ts` + `homeserver_lan` IPs (`ip-freebind`, no tailscaled start-order dependency); NextDNS profile `<nextdns-profile>`
 - Tailscale with DNSSEC: NextDNS upstream, split DNS for `<domain>` → homeserver
 - `/etc/hosts`: `idm.<domain>` → `127.0.0.1`, so server-side OIDC (Grafana, Miniflux) reaches Kanidm via local Caddy without MagicDNS
 

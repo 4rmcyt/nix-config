@@ -345,7 +345,7 @@
 
   my.unbound = {
     enable = true;
-    interfaces = ["tailscale0" "enp0s31f6"];
+    interfaces = with config.my.network.hosts; [homeserver_ts homeserver_lan];
   };
 
   users = {

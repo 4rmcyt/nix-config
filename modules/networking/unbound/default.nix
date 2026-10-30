@@ -28,16 +28,12 @@ in {
     interfaces = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [];
-      description = "Interfaces to listen on.";
+      description = "IP addresses to listen on.";
     };
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.services.unbound = {
-      after = ["tailscaled.service" "tailscale-autoconnect.service" "sys-subsystem-net-devices-tailscale0.device"];
-      wants = ["tailscaled.service" "sys-subsystem-net-devices-tailscale0.device"];
-      serviceConfig.Restart = "on-failure";
-    };
+    systemd.services.unbound.serviceConfig.Restart = "on-failure";
 
     services.unbound = {
       enable = true;
@@ -45,6 +41,8 @@ in {
       settings = {
         server = {
           interface = cfg.interfaces;
+          # Bind listed IPs even before tailscaled assigns them; interface names are resolved only at start.
+          ip-freebind = true;
           access-control =
             ["127.0.0.1/8 allow"]
             ++ map (subnet: "${subnet} allow") [
