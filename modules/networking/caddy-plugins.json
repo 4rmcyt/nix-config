@@ -7,7 +7,9 @@
   },
   "hosts": {
     "gcp-relay": {
-      "plugins": ["github.com/caddy-dns/cloudflare"],
+      "plugins": [
+        "github.com/caddy-dns/cloudflare"
+      ],
       "hash": "sha256-tubXIDCJnO2mvdnPlZclwDhNGaeeYLSt7lnni3+pXDo="
     },
     "homeserver": {
@@ -17,7 +19,7 @@
         "github.com/porech/caddy-maxmind-geolocation",
         "github.com/mholt/caddy-ratelimit"
       ],
-      "hash": "sha256-PCbaHvvLbotc4P5qAgKBNMDfz+AJXlT1sr0VZfNhekE="
+      "hash": "sha256-VqtUx9/xu50QbGz4OkhUd3p1tuZXhCa8+2FjWWOWRBw="
     }
   }
 }
