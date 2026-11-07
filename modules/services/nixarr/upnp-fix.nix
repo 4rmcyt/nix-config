@@ -4,7 +4,7 @@
   pkgs,
   ...
 }:
-# nixarr's own module has a typo: it references cfg.openUpdPorts instead of cfg.openUdpPorts.
+# nixarr's upnpc script joins strings with `++` (eval error) and aborts on the first failed upnpc call.
 {
   config = lib.mkIf config.util-nixarr.upnp.enable {
     systemd.services.upnpc = lib.mkForce {

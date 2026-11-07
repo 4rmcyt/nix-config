@@ -10,9 +10,6 @@
   jq = lib.getExe pkgs.jq;
 
   staticServers = {
-    # memory / sequential-thinking / filesystem come from nixpkgs (via the
-    # vanilla overlay in parts/home-manager-base.nix), not mcp-servers-nix —
-    # the latter's @modelcontextprotocol/servers TS build is broken from source.
     memory = {
       type = "stdio";
       command = lib.getExe pkgs.mcp-server-memory;

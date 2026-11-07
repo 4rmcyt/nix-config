@@ -5,7 +5,7 @@
   config,
   ...
 }: let
-  # Pre-staging-next pin: cuda-modules buildRedistHook broken on nixos-unstable (nixpkgs#568961).
+  # Separately-locked nixpkgs for CUDA so it can be bumped independently of the main nixpkgs.
   cudaPinnedPkgs = import inputs.nixpkgs-cuda-pin {
     inherit (pkgs.stdenv.hostPlatform) system;
     config.allowUnfree = true;

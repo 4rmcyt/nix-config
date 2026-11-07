@@ -14,8 +14,8 @@
     };
     import-tree.url = "github:vic/import-tree";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    # pre-staging-next (#566094) pin for cuda builds only: post-merge cuda-modules buildRedistHook regression, unfixed upstream (nixpkgs#568961)
-    nixpkgs-cuda-pin.url = "github:nixos/nixpkgs/53d7456928419067dfc75e34f8b74e83d56598c4";
+    # Separately-locked nixpkgs for cuda builds only; bump with `nix flake update nixpkgs-cuda-pin`
+    nixpkgs-cuda-pin.url = "github:nixos/nixpkgs/nixos-unstable";
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
