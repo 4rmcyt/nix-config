@@ -180,8 +180,14 @@ sonarr:
           # General Streaming Services
           # AMZN
           - d660701077794679fd59e8bdf4ce3a29
+          # ATV
+          - d9e511921c8cedc7282e291b0209cdc5
           # ATVP
           - f67c9ca88f463a48346062e8ad07713f
+          # PLAY
+          - 6eb71887a8db6e783dd398446eb0e65d
+          # ROKU
+          - da393fd4e2c0cce7c9dc2669c43e0593
           # CC
           - 77a7b25585c18af08f60b1547bb9b4fb
           # DCU
@@ -280,7 +286,7 @@ sonarr:
           # HDR Optional
           # DV (Disk)
           - ef4963043b0987f8485bc9106f16db38
-          # DV (WEBDL)
+          # DV (w/o HDR fallback)
           - 9b27ab6498ec0f31a3353992e19434ca
           # Language profiles
           # Language: Not Original
@@ -295,6 +301,8 @@ sonarr:
           # Unwanted
           # BR-DISK
           - 85c61753df5da1fb2aab6f2a47426b09
+          # BW
+          - 21d9d08e39b05523ec36811ab06b8308
           # Extras
           - fbcb31d8dabd2a319072b84fc0b7249c
           # LQ
@@ -535,8 +543,14 @@ radarr:
           # General Streaming Services
           # AMZN
           - b3b3a6ac74ecbd56bcdbefa4799fb9df
+          # ATV
+          - df13ed57843877b21ad969184ab6888f
           # ATVP
           - 40e9380490e748672c2522eaaeb692f7
+          # PLAY
+          - 350e9170619683a55cb9191d0b1ababa
+          # ROKU
+          - 44c2b54d7c81c1a442a8b2cabeaef54f
           # BCORE
           - cc5e51a9e85a6296ceefe097a77f12f4
           # CRiT
@@ -624,7 +638,7 @@ radarr:
           # HDR Optional
           # DV (Disk)
           - f700d29429c023a5734505e77daeaea7
-          # DV (WEBDL)
+          # DV (w/o HDR fallback)
           - 923b6abef9b17f937fab56cfcf89e1f1
           # Language profiles
           # Language: Not Original
@@ -643,6 +657,8 @@ radarr:
           - b8cd450cbfa689c0259a01d9e29ba3d6
           # BR-DISK
           - ed38b889b31be83fda192888e2286d83
+          # Line/Mic Dubbed
+          - c465ccc73923871b3eb1802042331306
           # Extras
           - 0a3f082873eb454bde444150b70253cc
           # Generated Dynamic HDR
