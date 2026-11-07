@@ -52,7 +52,7 @@ Tailnet login server: `https://hs.<domain>` (self-hosted Headscale)
 
 **Do not add `isolcpus`/`nohz_full`/`rcu_nocbs` kernel params without pinning a specific workload to the isolated cores.** They shipped in the original hardware-configuration (undocumented, no service ever used the isolated range) and silently parked all real work onto CPU0 — `mpstat` showed 0.00% usr on cores 1-7 despite services having full `0-7` affinity masks, because isolated CPUs are excluded from the default SMP load-balancing domain even though the affinity mask still permits them. Removed 2026-08-11; required a reboot (`nixos-rebuild boot`, not `switch`) since it's a boot param, not live-switchable.
 
-**Scheduler:** `services.scx` — `scx_lavd --autopilot` (CPU: `i7-9700T`, homogeneous 8-core, no P/E-core split). Chosen 2026-08-11 after A/B testing `default`/`bpfland`/`lavd`/`flow`/`rusty`/`tickless` under a real software `libx265` transcode + `schbench` wakeup-latency load (post-isolcpus-fix): `lavd` matched top throughput (22.32 fps vs 21.80 `default`) and won typical-case latency by two orders of magnitude (90th percentile 16µs vs ~1000µs for `bpfland`/`default`), at the cost of a longer but still sub-8ms worst-case tail vs `bpfland`. `tickless` (the scheduler's own stated "server-oriented" pick) underperformed `default` in several percentiles without `nohz_full` and is explicitly marked "not recommended for production use" upstream — dropped. `--autopilot` (not `--performance`) so the box powers down when idle overnight and ramps only under real transcode load.
+**Scheduler:** `services.scx-loader` — `scx_lavd` in `Auto` mode, `auto_mode` overridden to plain `--autopilot` (CPU: `i7-9700T`, homogeneous 8-core, no P/E-core split). Chosen 2026-08-11 after A/B testing `default`/`bpfland`/`lavd`/`flow`/`rusty`/`tickless` under a real software `libx265` transcode + `schbench` wakeup-latency load (post-isolcpus-fix): `lavd` matched top throughput (22.32 fps vs 21.80 `default`) and won typical-case latency by two orders of magnitude (90th percentile 16µs vs ~1000µs for `bpfland`/`default`), at the cost of a longer but still sub-8ms worst-case tail vs `bpfland`. `tickless` (the scheduler's own stated "server-oriented" pick) underperformed `default` in several percentiles without `nohz_full` and is explicitly marked "not recommended for production use" upstream — dropped. `--autopilot` (not `--performance`) so the box powers down when idle overnight and ramps only under real transcode load.
 
 ---
 
@@ -110,7 +110,7 @@ Game launch/exit swap the scheduler via gamemode custom hooks (`modules/gaming/d
 
 ### matebook
 
-**Status: decommissioned — no longer in use.**
+**Status: retired — no longer in use or maintained.** Config kept for reference only and no longer evaluates (still uses `services.scx`, removed from nixpkgs 2026-11).
 
 **Role:** Laptop — portable workstation  
 **WiFi IP:** static in the trusted VLAN (`my.network.hosts.matebook_wifi`)

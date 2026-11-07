@@ -7,9 +7,7 @@
   },
   "hosts": {
     "gcp-relay": {
-      "plugins": [
-        "github.com/caddy-dns/cloudflare"
-      ],
+      "plugins": ["github.com/caddy-dns/cloudflare"],
       "hash": "sha256-tubXIDCJnO2mvdnPlZclwDhNGaeeYLSt7lnni3+pXDo="
     },
     "homeserver": {

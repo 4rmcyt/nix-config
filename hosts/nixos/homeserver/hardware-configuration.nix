@@ -149,11 +149,13 @@ in {
 
   services = {
     thermald.enable = lib.mkDefault false;
-    scx = {
+    scx-loader = {
       enable = true;
-      package = pkgs.scx.full;
-      scheduler = "scx_lavd";
-      extraArgs = ["--autopilot"];
+      config = {
+        default_sched = "scx_lavd";
+        default_mode = "Auto";
+        scheds.scx_lavd.auto_mode = ["--autopilot"];
+      };
     };
 
     smartd = {

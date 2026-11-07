@@ -55,7 +55,7 @@ Modules are **not** auto-imported. They are referenced explicitly from host conf
 
 ```
 modules/
-  base/                     # Shared base: logging, msmtp, scx-hardening (sandbox for services.scx when enabled)
+  base/                     # Shared base: logging, msmtp
   options/                  # Custom options: my.defaults.*, my.network.*
   database/                 # postgresql, redis, couchdb
   monitoring/               # One folder per component, each a default.nix plus its data:
@@ -447,7 +447,7 @@ Updates are manual everywhere — no auto-upgrade timer.
 - **`parts/topology.nix`** — flakeModule wiring + the global topology: `internet`, `isp-router`, the hand-described `router` appliance node (the NixOS host was removed), `switch-office`, `switch-livingroom`, `ap-trusted`, `ap-iot`, and the `trusted` / `iot` / `media` / `work` / `tailnet` network CIDRs. Four hosts are included (desktop, homeserver, matebook, gcp-relay).
 - **`modules/topology/default.nix`** — NixOS module imported into `modules.nixos.base` (every host). Per-host `topology.self`: interfaces, network membership, hardware blurbs, a shared `tailscale0` overlay interface. Also blanks extractor `details`/`info` for leaky homeserver services (mosquitto, grafana, kanidm, …) so the committed diagram stays IP-/domain-free.
 - 802.1Q is not representable in nix-topology — the office switch is drawn as the trusted segment it mostly carries; the IoT AP hangs off the router's `vlan20` interface.
-- `matebook` is decommissioned — config kept for reference, no longer deployed.
+- `matebook` is retired — config kept for reference, no longer deployed or maintained (does not evaluate on current nixpkgs).
 
 ## Terraform / OpenTofu
 

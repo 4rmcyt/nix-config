@@ -7,7 +7,6 @@
     ./common-packages
     ./logging
     ./msmtp
-    ./scx-hardening
   ];
 
   i18n = {
