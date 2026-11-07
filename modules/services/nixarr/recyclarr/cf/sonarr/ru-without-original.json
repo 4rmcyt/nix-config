@@ -4,21 +4,12 @@
   "includeCustomFormatWhenRenaming": false,
   "specifications": [
     {
-      "name": "Cyrillic title",
+      "name": "Cyrillic title or RU voice-over tags",
       "implementation": "ReleaseTitleSpecification",
       "negate": false,
-      "required": false,
+      "required": true,
       "fields": {
-        "value": "[А-Яа-яЁё]"
-      }
-    },
-    {
-      "name": "RU voice-over tags",
-      "implementation": "ReleaseTitleSpecification",
-      "negate": false,
-      "required": false,
-      "fields": {
-        "value": "\\b(MVO|DVO|AVO|Dub)\\b"
+        "value": "[А-Яа-яЁё]|\\b(MVO|DVO|AVO|Dub)\\b"
       }
     },
     {
