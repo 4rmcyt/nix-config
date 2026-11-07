@@ -198,7 +198,7 @@ sequentially).
 | desktop | `*`, `autogroup:internet` | all |
 | s23plus, s23ultra | homeserver, desktop, `lan` (subnet route), `autogroup:internet` (exit nodes) | all |
 | gcp-relay | homeserver | tcp crowdsec-lapi, tcp victorialogs-ingest 9429 (journal-upload), 53 (split DNS) |
-| homeserver | gcp-relay | tcp node-exporter |
+| homeserver | gcp-relay | tcp node-exporter, tcp 22 (ssh) |
 | homeserver | desktop | tcp 22 (nix-builder) |
 | `guest@` (any device of headscale user `guest`) | homeserver | tcp caddy-guest (8443), 53 |
 

@@ -31,7 +31,7 @@ in {
     {
       src = ["homeserver"];
       dst = ["gcp-relay"];
-      ip = ["tcp:${toString ports.node-exporter}"];
+      ip = ["tcp:${toString ports.node-exporter}" "tcp:22"];
     }
     {
       src = ["homeserver"];
