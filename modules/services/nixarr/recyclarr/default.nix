@@ -4,6 +4,16 @@
   ...
 }: let
   stateDir = "/data/media/.state/nixarr/recyclarr";
+  settings = (pkgs.formats.yaml {}).generate "recyclarr-settings.yml" {
+    resource_providers = [
+      {
+        name = "local-sonarr-cfs";
+        type = "custom-formats";
+        path = "${./cf/sonarr}";
+        service = "sonarr";
+      }
+    ];
+  };
 in {
   systemd.services.recyclarr-setup = {
     description = "Write Recyclarr environment file";
@@ -57,5 +67,6 @@ in {
 
   systemd.tmpfiles.rules = [
     "d ${stateDir} 0750 recyclarr recyclarr -"
+    "L+ ${stateDir}/settings.yml - - - - ${settings}"
   ];
 }

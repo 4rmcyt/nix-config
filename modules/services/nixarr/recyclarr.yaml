@@ -310,6 +310,16 @@ sonarr:
             score: -10000
           - name: Ultra-HD
             score: -10000
+      # Local CF (recyclarr/cf/sonarr): updating packs like "S1E1-2 of 10 (обновляемая)"
+      - trash_ids:
+          - local-incomplete-season-pack
+        assign_scores_to:
+          - name: All
+            score: -10000
+          - name: Ultra-HD
+            score: -10000
+          - name: Remux-1080p - Anime
+            score: -10000
       # Anime: scores inherited from guide's "anime-sonarr" score set (see score_set on the profile)
       - trash_ids:
           # Anime CF/Scoring

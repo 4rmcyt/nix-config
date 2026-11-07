@@ -1,0 +1,25 @@
+{
+  "trash_id": "local-incomplete-season-pack",
+  "name": "Incomplete Season Pack",
+  "includeCustomFormatWhenRenaming": false,
+  "specifications": [
+    {
+      "name": "Partial range (S1E1-2 of 10)",
+      "implementation": "ReleaseTitleSpecification",
+      "negate": false,
+      "required": false,
+      "fields": {
+        "value": "\\bS\\d+E\\d+-(\\d+)\\s*(of|из)\\s*(?!\\1\\b)\\d+"
+      }
+    },
+    {
+      "name": "Updating release",
+      "implementation": "ReleaseTitleSpecification",
+      "negate": false,
+      "required": false,
+      "fields": {
+        "value": "обновляем|\\bupdating\\b"
+      }
+    }
+  ]
+}
