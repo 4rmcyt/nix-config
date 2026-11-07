@@ -328,6 +328,14 @@ sonarr:
             score: -10000
           - name: Remux-1080p - Anime
             score: -10000
+      # Local CF (recyclarr/cf/sonarr): RU release whose title doesn't mention the original track
+      - trash_ids:
+          - local-ru-without-original
+        assign_scores_to:
+          - name: All
+            score: -50
+          - name: Ultra-HD
+            score: -50
       # Anime: scores inherited from guide's "anime-sonarr" score set (see score_set on the profile)
       - trash_ids:
           # Anime CF/Scoring
