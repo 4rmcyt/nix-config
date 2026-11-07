@@ -61,14 +61,14 @@ in {
           };
         }
         {
-          # gcp-relay's journal is never quiet (~400 lines/h), unlike its Caddy log, so silence means the pipeline broke.
+          # Hourly logrotate.timer is gcp-relay's only steady log source; 2h tolerates one missed run.
           alert = "GcpRelayLogsStalled";
-          expr = ''_time:30m {_HOSTNAME="gcp-relay"} | stats count() as n | filter n:=0'';
+          expr = ''_time:2h {_HOSTNAME="gcp-relay"} | stats count() as n | filter n:=0'';
           for = "0m";
           labels.severity = "warning";
           annotations = {
             summary = "No logs from gcp-relay";
-            description = "No journal lines from gcp-relay for 30m — check journal-upload on gcp-relay, the 9429 ingest front and tailscale.";
+            description = "No journal lines from gcp-relay for 2h — check journal-upload on gcp-relay, the 9429 ingest front and tailscale.";
           };
         }
       ];
