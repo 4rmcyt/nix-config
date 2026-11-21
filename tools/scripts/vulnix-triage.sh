@@ -29,26 +29,26 @@ echo
 
 suspect_count=0
 while IFS= read -r drv; do
-  name=$(basename "$drv" .drv)
-  inputs=$(nix derivation show "$drv" 2>/dev/null | jq -r '.[].inputDrvs | keys[]?' || true)
+	name=$(basename "$drv" .drv)
+	inputs=$(nix derivation show "$drv" 2>/dev/null | jq -r '.[].inputDrvs | keys[]?' || true)
 
-  reason=""
-  if grep -qE '/crate-[^/]+\.drv$' <<<"$inputs"; then
-    reason="Rust crate vendored via cargo (crate-*.drv input) — crate version scheme unrelated to any C library of the same name"
-  elif grep -qiE '/(ghc-|cabal-|hackage2nix)' <<<"$inputs"; then
-    reason="Haskell build input present"
-  elif [[ $name =~ -[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z].*)?$ ]]; then
-    reason="4-component version suffix (Haskell PVP-style, e.g. 3.2.8.0) — check it's not a real 4-part upstream version first"
-  fi
+	reason=""
+	if grep -qE '/crate-[^/]+\.drv$' <<<"$inputs"; then
+		reason="Rust crate vendored via cargo (crate-*.drv input) — crate version scheme unrelated to any C library of the same name"
+	elif grep -qiE '/(ghc-|cabal-|hackage2nix)' <<<"$inputs"; then
+		reason="Haskell build input present"
+	elif [[ $name =~ -[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z].*)?$ ]]; then
+		reason="4-component version suffix (Haskell PVP-style, e.g. 3.2.8.0) — check it's not a real 4-part upstream version first"
+	fi
 
-  if [ -n "$reason" ]; then
-    suspect_count=$((suspect_count + 1))
-    echo "SUSPECT: ${name}"
-    echo "  reason: ${reason}"
-    echo "  drv:    ${drv}"
-    echo "  verify: nix derivation show ${drv} | jq '.[].env.pname, .[].env.version'"
-    echo
-  fi
+	if [ -n "$reason" ]; then
+		suspect_count=$((suspect_count + 1))
+		echo "SUSPECT: ${name}"
+		echo "  reason: ${reason}"
+		echo "  drv:    ${drv}"
+		echo "  verify: nix derivation show ${drv} | jq '.[].env.pname, .[].env.version'"
+		echo
+	fi
 done < <(jq -r '.[].derivation' "$FINDINGS_JSON" | sort -u)
 
 echo "----------------------------------------------------------------------"

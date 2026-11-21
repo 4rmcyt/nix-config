@@ -19,53 +19,53 @@ rm -f "$CF"
 
 echo "==> Logging in to Office_SW1 ($SW)..."
 curl -sf -sc "$CF" -o /dev/null -X POST \
-  -d "username=admin&password=$PASS&cpassword=&logon=Login" \
-  "http://$SW/logon.cgi"
+	-d "username=admin&password=$PASS&cpassword=&logon=Login" \
+	"http://$SW/logon.cgi"
 
 # ── System name ────────────────────────────────────────────────────────────────
 echo "==> Setting system name..."
 curl -sf -b "$CF" -sc "$CF" -o /dev/null \
-  "http://$SW/system_name_set.cgi?sysName=Office_SW1"
+	"http://$SW/system_name_set.cgi?sysName=Office_SW1"
 
 # ── Management IP (stays 192.168.1.111, gateway → router vlan10) ──────────────
 echo "==> Setting management IP..."
 curl -sf -b "$CF" -sc "$CF" -o /dev/null \
-  "http://$SW/ip_setting.cgi?dhcpSetting=disable&ip_address=192.168.1.111&ip_netmask=255.255.255.0&ip_gateway=192.168.1.1"
+	"http://$SW/ip_setting.cgi?dhcpSetting=disable&ip_address=192.168.1.111&ip_netmask=255.255.255.0&ip_gateway=192.168.1.1"
 
 # ── Loop prevention ────────────────────────────────────────────────────────────
 echo "==> Enabling loop prevention..."
 curl -sf -b "$CF" -sc "$CF" -o /dev/null \
-  "http://$SW/loop_prevention_set.cgi?lpEn=1&apply=Apply"
+	"http://$SW/loop_prevention_set.cgi?lpEn=1&apply=Apply"
 
 # ── IGMP Snooping ──────────────────────────────────────────────────────────────
 echo "==> Enabling IGMP snooping..."
 curl -sf -b "$CF" -sc "$CF" -o /dev/null \
-  "http://$SW/igmpSnooping.cgi?igmp_mode=1&reportSu_mode=1&Apply=Apply"
+	"http://$SW/igmpSnooping.cgi?igmp_mode=1&reportSu_mode=1&Apply=Apply"
 
 # ── QoS mode (port-based) ─────────────────────────────────────────────────────
 echo "==> Setting QoS mode..."
 curl -sf -b "$CF" -sc "$CF" -o /dev/null -X POST \
-  -d "rd_qosmode=2&qosmode=Apply" \
-  "http://$SW/qos_mode_set.cgi"
+	-d "rd_qosmode=2&qosmode=Apply" \
+	"http://$SW/qos_mode_set.cgi"
 
 # ── Storm control — all 8 ports, 8192 Kbit/sec, BC+MC+UL-Frame ───────────────
 echo "==> Setting storm control..."
 curl -sf -b "$CF" -sc "$CF" -o /dev/null -X POST \
-  -d "state=1&rate=8192&stormType=1&stormType=2&stormType=4&sel_1=1&sel_2=1&sel_3=1&sel_4=1&sel_5=1&sel_6=1&sel_7=1&sel_8=1&applay=Apply" \
-  "http://$SW/qos_storm_set.cgi"
+	-d "state=1&rate=8192&stormType=1&stormType=2&stormType=4&sel_1=1&sel_2=1&sel_3=1&sel_4=1&sel_5=1&sel_6=1&sel_7=1&sel_8=1&applay=Apply" \
+	"http://$SW/qos_storm_set.cgi"
 
 # ── 802.1Q VLANs ──────────────────────────────────────────────────────────────
 echo "==> Creating VLAN 10 (trusted)..."
 curl -sf -b "$CF" -sc "$CF" -o /dev/null \
-  "http://$SW/qvlanSet.cgi?vid=10&vname=trusted&selType_1=1&selType_2=0&selType_3=0&selType_4=0&selType_5=0&selType_6=0&selType_7=2&selType_8=2&qvlan_add=Add%2FModify"
+	"http://$SW/qvlanSet.cgi?vid=10&vname=trusted&selType_1=1&selType_2=0&selType_3=0&selType_4=0&selType_5=0&selType_6=0&selType_7=2&selType_8=2&qvlan_add=Add%2FModify"
 
 echo "==> Creating VLAN 20 (iot)..."
 curl -sf -b "$CF" -sc "$CF" -o /dev/null \
-  "http://$SW/qvlanSet.cgi?vid=20&vname=iot&selType_1=1&selType_2=2&selType_3=2&selType_4=2&selType_5=2&selType_6=2&selType_7=2&selType_8=0&qvlan_add=Add%2FModify"
+	"http://$SW/qvlanSet.cgi?vid=20&vname=iot&selType_1=1&selType_2=2&selType_3=2&selType_4=2&selType_5=2&selType_6=2&selType_7=2&selType_8=0&qvlan_add=Add%2FModify"
 
 echo "==> Creating VLAN 40 (work)..."
 curl -sf -b "$CF" -sc "$CF" -o /dev/null \
-  "http://$SW/qvlanSet.cgi?vid=40&vname=work&selType_1=1&selType_2=2&selType_3=2&selType_4=2&selType_5=2&selType_6=2&selType_7=0&selType_8=2&qvlan_add=Add%2FModify"
+	"http://$SW/qvlanSet.cgi?vid=40&vname=work&selType_1=1&selType_2=2&selType_3=2&selType_4=2&selType_5=2&selType_6=2&selType_7=0&selType_8=2&qvlan_add=Add%2FModify"
 
 # ── PVIDs ─────────────────────────────────────────────────────────────────────
 echo "==> Setting PVIDs..."
