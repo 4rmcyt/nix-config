@@ -119,7 +119,7 @@ in {
       // lib.listToAttrs (map
         (name: {
           inherit name;
-          value = "${inputs.obsidian-skills}/skills/${name}";
+          value = "${inputs.obsidian-skills}/plugins/obsidian/skills/${name}";
         })
         [
           "obsidian-markdown"
