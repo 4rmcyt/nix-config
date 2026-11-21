@@ -53,6 +53,14 @@ in {
           cleanup = true;
           share_limit_action = "Stop";
         };
+        # Imported (hardlinked) arr torrents: seed to ratio 3, then drop; the library copy survives via its hardlink.
+        imported = {
+          priority = 2;
+          categories = arrCategories;
+          max_ratio = 3.0;
+          cleanup = true;
+          share_limit_action = "Stop";
+        };
         default = {
           priority = 999;
           max_ratio = -1;

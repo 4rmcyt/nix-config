@@ -54,9 +54,12 @@ in {
         # Username only; the password hash is injected at start from sops (see injectPassword).
         WebUI.Username = "admin";
       };
+      # UPnP/NAT-PMP is useless inside the VPN netns; the peer port is forwarded by AirVPN.
+      Network.PortForwardingEnabled = false;
       BitTorrent.Session = {
         DefaultSavePath = "/data/Downloads";
         TempPath = "/data/Downloads/.incomplete";
+        TempPathEnabled = true;
         TorrentBackupEnabled = true;
         TorrentBackupDirectory = "/data/Downloads/torrents";
         Preallocation = true;
@@ -76,17 +79,15 @@ in {
         MaxConnectionsPerTorrent = 100;
         MaxUploadsPerTorrent = 8;
         Port = 63998;
-        UPnP = false;
         GlobalDLSpeedLimit = -1;
         GlobalUPSpeedLimit = -1;
         DiskCacheSize = 1024;
         DiskCacheTTL = 60;
-        UseOSCache = false;
         AnnounceToAllTrackers = true;
         AnnounceToAllTiers = true;
         ReannounceWhenAddressChanged = true;
-        AsyncIOThreads = 10;
-        HashingThreads = 2;
+        AsyncIOThreadsCount = 10;
+        HashingThreadsCount = 2;
         AddTrackersEnabled = true;
         AddTrackersFromURLEnabled = true;
         AdditionalTrackersURL = "https://newtrackon.com/api/stable";
