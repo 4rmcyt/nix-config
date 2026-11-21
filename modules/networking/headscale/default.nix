@@ -70,14 +70,16 @@ in {
           magic_dns = true;
           base_domain = "ts.${domain}";
           nameservers.global = cfg.dns.nameservers;
-          nameservers.split = listToAttrs (map (d: {
-              name = d;
-              value =
-                if cfg.dns.splitNameservers != []
-                then cfg.dns.splitNameservers
-                else cfg.dns.nameservers;
-            })
-            cfg.dns.splitDomains);
+          nameservers.split =
+            listToAttrs (map (d: {
+                name = d;
+                value =
+                  if cfg.dns.splitNameservers != []
+                  then cfg.dns.splitNameservers
+                  else cfg.dns.nameservers;
+              })
+              cfg.dns.splitDomains)
+            // config.my.network.tailnetSplitDns;
           search_domains = [];
         };
 

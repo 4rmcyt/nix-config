@@ -295,6 +295,12 @@ in {
       description = "Infrastructure IPs by device key (defined in the private flake).";
     };
 
+    tailnetSplitDns = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.listOf lib.types.str);
+      default = net.tailnetSplitDns or {};
+      description = "Extra Headscale split-DNS entries: domain → nameservers (defined in the private flake).";
+    };
+
     # Drives the /etc/hosts and SSH aliases derived from it; defined in the private
     # flake so device names never land in the public repo.
     reservations = lib.mkOption {

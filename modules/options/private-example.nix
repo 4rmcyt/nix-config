@@ -38,6 +38,11 @@
 
     nextdns.profileId = "abcdef";
 
+    # → my.network.tailnetSplitDns, merged into Headscale dns.nameservers.split.
+    tailnetSplitDns = {
+      "corp.example" = ["198.51.100.11" "198.51.100.50"];
+    };
+
     # Full device inventory → my.network.reservations. Drives the /etc/hosts and
     # SSH aliases (modules/networking/ssh). `subnetId` is the DHCP subnet id
     # (10 trusted, 20 iot, 30 media); `aliases` is optional.
