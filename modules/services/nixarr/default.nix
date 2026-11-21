@@ -49,6 +49,7 @@ in {
     ./jellyfin
     ./kapowarr
     ./prowlarr
+    ./qbit-manage
     ./qbittorrent
     ./radarr
     ./recyclarr
