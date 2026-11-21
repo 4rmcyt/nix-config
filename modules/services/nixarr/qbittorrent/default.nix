@@ -33,7 +33,7 @@
   '';
 in {
   sops.secrets.qbittorrent_password = {
-    sopsFile = ../../../secrets/medialib.yaml;
+    sopsFile = ../../../../secrets/medialib.yaml;
     owner = "qbittorrent";
     group = "media";
     mode = "0400";
