@@ -207,11 +207,10 @@ All hosts get:
 - `nixos-needsreboot` — checks if a rebuild requires a reboot; runs as activation script
 
 Binary caches (from `parts/shared-nixos-settings.nix`, priority order):
-1. `arr-packages.cachix.org` (priority 0)
-2. `nix-community.cachix.org`, `cache.nixos.org`, `cache.flox.dev`, `llama-cpp.cachix.org` (priority 1)
-3. `noctalia.cachix.org` (2), `devenv.cachix.org` (3), `nixpkgs-unfree.cachix.org` (5)
-4. Per-host push cache added in `parts/hosts/<host>/configuration.nix`: `4rmcyt-<host>.cachix.org`
-5. desktop additionally: `cache.nixos-cuda.org` (CUDA cache; migrated from `cuda-maintainers.cachix.org`, which no longer serves `nix-cache-info`), `4rmcyt-gcp.cachix.org`
+1. `nix-community.cachix.org`, `cache.nixos.org`, `cache.flox.dev`, `llama-cpp.cachix.org` (priority 1)
+2. `noctalia.cachix.org` (2), `devenv.cachix.org` (3), `nixpkgs-unfree.cachix.org` (5)
+3. Per-host push cache added in `parts/hosts/<host>/configuration.nix`: `4rmcyt-<host>.cachix.org`
+4. desktop additionally: `cache.nixos-cuda.org` (CUDA cache; migrated from `cuda-maintainers.cachix.org`, which no longer serves `nix-cache-info`), `4rmcyt-gcp.cachix.org`
 
 GitHub access token loaded via sops secret `nix_access_token`, written to `/run/nix-access-tokens.conf` by a oneshot systemd service at boot. `NIX_USER_CONF_FILES` points to this file for both the nix daemon and user sessions.
 
@@ -220,7 +219,6 @@ GitHub access token loaded via sops secret `nix_access_token`, written to `/run/
 - **Shared (HM + system)** — [`lib/overlays.nix`](lib/overlays.nix): generic upstream-bug workarounds, not tied to any one host. Currently: `intel-compute-runtime-legacy1` `-Wno-error=sfinae-incomplete` (gcc-16 stricter diagnostics, no upstream patch). `import`ed by `parts/home-manager-base.nix` and by `modules.nixos.base` in `parts/shared-nixos-settings.nix` (so every NixOS host gets it at system level).
 - **HM-only scope** — [`lib/overlays-hm.nix`](lib/overlays-hm.nix) (`import`ed by `parts/home-manager-base.nix` alongside the shared list): `mcp-servers-nix`, `nur`, `nix-vscode-extensions`, `noctalia`.
 - **Host-specific system scope** — set in the one host or module that needs it; NixOS merges these lists with the shared one from `modules.nixos.base`:
-  - `parts/hosts/homeserver/configuration.nix` — `sonarr`/`radarr`/`prowlarr`/`bazarr`/`jellyfin`/`jellyfin-web` from `inputs.arr-packages`
   - `parts/hosts/gcp-relay/configuration.nix` — `inputs.headscale.overlays.default`
   - `modules/services/microbin/default.nix` — `microbin` theming/asset override (coupled to the module)
 - **Separate CUDA nixpkgs** — `inputs.nixpkgs-cuda-pin` (`nixos-unstable`, locked independently of `nixpkgs`) is imported only by `modules/TUI/ai-tools/llama-cpp/default.nix` for the CUDA build of ik_llama.cpp; bump with `nix flake update nixpkgs-cuda-pin`.

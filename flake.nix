@@ -148,10 +148,6 @@
       url = "github:rasmus-kirk/nixarr";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Not following nixpkgs: pre-built and pushed to Cachix against arr-packages'
-    # own nixpkgs rev — following ours would change the derivation hash and force
-    # a local rebuild.
-    arr-packages.url = "github:4rmcyt/arr-packages";
     jobshunting = {
       url = "github:4rmcyt/jobshunting";
       inputs.nixpkgs.follows = "nixpkgs";

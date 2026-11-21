@@ -22,20 +22,6 @@ in {
 
     nix.settings = import ../../../lib/cachix.nix "homeserver" "QUtDyIxhMJRwispauvcutxugqz0I1PieNprFlIkhBZo=";
 
-    nixpkgs.overlays = [
-      (_final: prev: {
-        inherit
-          (inputs.arr-packages.packages.${prev.stdenv.hostPlatform.system})
-          sonarr
-          radarr
-          prowlarr
-          bazarr
-          jellyfin
-          jellyfin-web
-          ;
-      })
-    ];
-
     home-manager.users.${owner.username}.imports = [
       ../../../home/homeserver
     ];
