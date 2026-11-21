@@ -281,8 +281,8 @@ All configured via the Cloudflare dashboard/API (zone `<domain>`, Free plan) —
 | Service         | Port  | URL                           | Notes                              |
 |-----------------|-------|-------------------------------|------------------------------------|
 | Jellyfin        | 8096  | `jellyfin.<domain>`       | `inputs.arr-packages` build         |
-| qBittorrent     | 8081  | `qb.<domain>`             | via nixarr; WebUI `admin` + sops `qbittorrent_password` (PBKDF2 injected at start), no localhost bypass |
-| qbit-manage     | —     | —                         | Runs in wg netns every 30 min; tags `tv-sonarr`/`radarr` torrents without library hardlinks (`noHL`) and deletes them after 1d seeding → `/data/Downloads/.RecycleBin` (emptied after 1d). Currently `--dry-run` |
+| qBittorrent     | 8081  | `qb.<domain>`             | via nixarr; WebUI `admin` + sops `qbittorrent_password` (PBKDF2 injected at start), no localhost bypass. Auto TMM: categories `tv-sonarr` `radarr` `lidarr` `kapowarr` `audiobooks` `courses` `games` → `/data/Downloads/<cat>`, uncategorized → `/data/Downloads` |
+| qbit-manage     | —     | —                         | Runs in wg netns every 30 min; tags `tv-sonarr`/`radarr` torrents without library hardlinks (`noHL`) and deletes them after 1d seeding → `/data/Downloads/.RecycleBin` (emptied after 1d) |
 | Sonarr          | 8990  | `sonarr.<domain>`         | TV — native `services.sonarr`, Postgres backend |
 | Radarr          | 7878  | `radarr.<domain>`         | Movies — native `services.radarr`, Postgres backend |
 | Prowlarr        | 9696  | `prowlarr.<domain>`       | Indexer — native `services.prowlarr`, Postgres backend |

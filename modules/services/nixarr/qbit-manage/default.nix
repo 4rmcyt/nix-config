@@ -17,8 +17,6 @@ in {
     enable = true;
     group = "media";
     environmentFile = config.sops.templates."qbit-manage.env".path;
-    # First rollout: log only; drop after reviewing what it would delete.
-    extraArgs = ["--dry-run"];
 
     commands = {
       schedule = 30;
@@ -40,7 +38,7 @@ in {
         recycle_bin = "${root}/.RecycleBin";
       };
 
-      cat = lib.genAttrs ["audiobooks" "kapowarr" "lidarr" "radarr" "tv-sonarr"] (c: "${root}/${c}");
+      cat = lib.genAttrs ["audiobooks" "courses" "games" "kapowarr" "lidarr" "radarr" "tv-sonarr"] (c: "${root}/${c}");
       tracker = {};
 
       nohardlinks = lib.genAttrs arrCategories (_: {ignore_root_dir = true;});

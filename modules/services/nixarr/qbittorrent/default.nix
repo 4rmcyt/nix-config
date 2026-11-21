@@ -51,29 +51,30 @@ in {
 
     serverConfig = {
       Preferences = {
-        Downloads = {
-          SavePath = "/data/Downloads";
-          TorrentExportDir = "/data/Downloads/torrents";
-          TempPath = "/data/Downloads/.incomplete";
-          PreAllocation = true;
-          UseIncompleteExtension = true;
-        };
-        Queueing = {
-          QueueingEnabled = true;
-          MaxActiveDownloads = 8;
-          MaxActiveTorrents = -1;
-          MaxActiveUploads = -1;
-        };
-        Connection = {
-          GlobalMaxConnections = 500;
-          GlobalMaxUploads = 50;
-          MaxConnections = 100;
-          MaxUploads = 8;
-        };
         # Username only; the password hash is injected at start from sops (see injectPassword).
         WebUI.Username = "admin";
       };
       BitTorrent.Session = {
+        DefaultSavePath = "/data/Downloads";
+        TempPath = "/data/Downloads/.incomplete";
+        TorrentBackupEnabled = true;
+        TorrentBackupDirectory = "/data/Downloads/torrents";
+        Preallocation = true;
+        AddExtensionToIncompleteFiles = true;
+        # Auto TMM: torrents land in their category's save_path (categories.json below).
+        DisableAutoTMMByDefault = false;
+        DisableAutoTMMTriggers = {
+          CategorySavePathChanged = false;
+          DefaultSavePathChanged = false;
+        };
+        QueueingSystemEnabled = true;
+        MaxActiveDownloads = 8;
+        MaxActiveTorrents = -1;
+        MaxActiveUploads = -1;
+        MaxConnections = 500;
+        MaxUploads = 50;
+        MaxConnectionsPerTorrent = 100;
+        MaxUploadsPerTorrent = 8;
         Port = 63998;
         UPnP = false;
         GlobalDLSpeedLimit = -1;
@@ -173,6 +174,12 @@ in {
       {
           "audiobooks": {
               "save_path": "/data/Downloads/audiobooks"
+          },
+          "courses": {
+              "save_path": "/data/Downloads/courses"
+          },
+          "games": {
+              "save_path": "/data/Downloads/games"
           },
           "kapowarr": {
               "save_path": "/data/Downloads/kapowarr"

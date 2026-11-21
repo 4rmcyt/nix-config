@@ -232,6 +232,8 @@ in {
     "d /data/Downloads/radarr 775 ${config.my.defaults.user} media -"
     "d /data/Downloads/lidarr 775 ${config.my.defaults.user} media -"
     "d /data/Downloads/audiobooks 775 ${config.my.defaults.user} media -"
+    "d /data/Downloads/courses 775 ${config.my.defaults.user} media -"
+    "d /data/Downloads/games 775 ${config.my.defaults.user} media -"
 
     "d /data/media/library 2775 root media -"
 
