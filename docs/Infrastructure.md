@@ -185,6 +185,7 @@ Every other service UI is loopback/Caddy-only; container ports are published on 
 
 Running on GCP relay. Split DNS: `<domain>` → homeserver's Tailscale IP.  
 Magic DNS base domain: `ts.<domain>`. DERP: GCP US Central + Tailscale default map.
+Module: upstream `inputs.headscale.nixosModules.default` (tracks `main`, currently 0.30 dev) — DB migrations are one-way, back up `db.sqlite` before bumping the input.
 
 Each node is pinned to a fixed address in the `100.64.0.0/10` CGNAT range via a
 manual `UPDATE nodes SET ipv4=...` in headscale's sqlite DB after registration

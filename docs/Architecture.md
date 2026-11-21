@@ -158,6 +158,10 @@ locked toolbar layout stay in `browsers/firefox/`; Zen keeps its own defaults fo
 [`hosts/nixos/desktop/hardening.nix`](../hosts/nixos/desktop/hardening.nix) /
 [`hosts/nixos/gcp-relay/hardening.nix`](../hosts/nixos/gcp-relay/hardening.nix) /
 [`hosts/nixos/homeserver/hardening.nix`](../hosts/nixos/homeserver/hardening.nix).
+
+**gcp-relay** also imports `inputs.headscale.nixosModules.default` (headscale `main`): it
+disables nixpkgs' `services/networking/headscale.nix` and sets `services.headscale.package`
+from the flake; config and policy are checked with `headscale check` at build and pre-switch.
 Alpha software (`cynicsketch/nix-mineral`), tracks the `main` branch (no tag
 pin in `flake.nix`). `modules.nixos.nixMineral` only wires in the module
 itself — not merged into `modules.nixos.base` — since each host needs
@@ -219,7 +223,6 @@ GitHub access token loaded via sops secret `nix_access_token`, written to `/run/
 - **Shared (HM + system)** — [`lib/overlays.nix`](lib/overlays.nix): generic upstream-bug workarounds, not tied to any one host. Currently: `intel-compute-runtime-legacy1` `-Wno-error=sfinae-incomplete` (gcc-16 stricter diagnostics, no upstream patch). `import`ed by `parts/home-manager-base.nix` and by `modules.nixos.base` in `parts/shared-nixos-settings.nix` (so every NixOS host gets it at system level).
 - **HM-only scope** — [`lib/overlays-hm.nix`](lib/overlays-hm.nix) (`import`ed by `parts/home-manager-base.nix` alongside the shared list): `mcp-servers-nix`, `nur`, `nix-vscode-extensions`, `noctalia`.
 - **Host-specific system scope** — set in the one host or module that needs it; NixOS merges these lists with the shared one from `modules.nixos.base`:
-  - `parts/hosts/gcp-relay/configuration.nix` — `inputs.headscale.overlays.default`
   - `modules/services/microbin/default.nix` — `microbin` theming/asset override (coupled to the module)
 - **Separate CUDA nixpkgs** — `inputs.nixpkgs-cuda-pin` (`nixos-unstable`, locked independently of `nixpkgs`) is imported only by `modules/TUI/ai-tools/llama-cpp/default.nix` for the CUDA build of ik_llama.cpp; bump with `nix flake update nixpkgs-cuda-pin`.
 

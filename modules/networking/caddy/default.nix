@@ -39,7 +39,7 @@ in {
             resolvers 1.1.1.1
           }
 
-          reverse_proxy 127.0.0.1:${toString config.services.headscale.port} {
+          reverse_proxy ${config.services.headscale.settings.listen_addr} {
             transport http {
               keepalive off
               compression off
