@@ -7,7 +7,39 @@
   # qBittorrent's own WebUI, reachable only inside the VPN netns — distinct
   # from config.my.network.ports.qb (the host-side proxy socket below).
   webuiPort = 8080;
+  confFile = "${config.services.qbittorrent.profileDir}/qBittorrent/config/qBittorrent.conf";
+
+  # Same format as qBittorrent's Utils::Password::PBKDF2::generate: sha512, 100k iters, 16-byte salt.
+  injectPassword = pkgs.writers.writePython3 "qbittorrent-inject-password" {} ''
+    import base64
+    import hashlib
+    import os
+    import sys
+
+    conf, secret = sys.argv[1], sys.argv[2]
+    with open(secret, "rb") as f:
+        pw = f.read().rstrip(b"\n")
+    salt = os.urandom(16)
+    dk = hashlib.pbkdf2_hmac("sha512", pw, salt, 100000)
+    b64 = base64.b64encode
+    value = "@ByteArray(%s:%s)" % (b64(salt).decode(), b64(dk).decode())
+    line = 'WebUI\\Password_PBKDF2="%s"\n' % value
+    with open(conf) as f:
+        lines = f.readlines()
+    idx = lines.index("[Preferences]\n") + 1
+    lines.insert(idx, line)
+    with open(conf, "w") as f:
+        f.writelines(lines)
+  '';
 in {
+  sops.secrets.qbittorrent_password = {
+    sopsFile = ../../../secrets/medialib.yaml;
+    owner = "qbittorrent";
+    group = "media";
+    mode = "0400";
+    restartUnits = ["qbittorrent.service"];
+  };
+
   services.qbittorrent = {
     enable = true;
     user = "qbittorrent";
@@ -38,11 +70,8 @@ in {
           MaxConnections = 100;
           MaxUploads = 8;
         };
-        WebUI = {
-          LocalHostAuth = false;
-          AuthSubnetWhitelistEnabled = true;
-          AuthSubnetWhitelist = "127.0.0.0/8";
-        };
+        # Username only; the password hash is injected at start from sops (see injectPassword).
+        WebUI.Username = "admin";
       };
       BitTorrent.Session = {
         Port = 63998;
@@ -57,8 +86,6 @@ in {
         ReannounceWhenAddressChanged = true;
         AsyncIOThreads = 10;
         HashingThreads = 2;
-        MaxRatioEnforcement = true;
-        MaxRatioAction = 0;
         AddTrackersEnabled = true;
         AddTrackersFromURLEnabled = true;
         AdditionalTrackersURL = "https://newtrackon.com/api/stable";
@@ -70,6 +97,8 @@ in {
     after = ["wg.service"];
     requires = ["wg.service"];
     serviceConfig = {
+      # mkAfter: must run after the module's ExecStartPre that installs the generated config.
+      ExecStartPre = lib.mkAfter ["${injectPassword} ${confFile} ${config.sops.secrets.qbittorrent_password.path}"];
       # Parent nixarr config's BindPaths conflict with NetworkNamespacePath.
       BindPaths = lib.mkForce [];
       NetworkNamespacePath = "/run/netns/wg";

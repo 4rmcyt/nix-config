@@ -281,7 +281,7 @@ All configured via the Cloudflare dashboard/API (zone `<domain>`, Free plan) —
 | Service         | Port  | URL                           | Notes                              |
 |-----------------|-------|-------------------------------|------------------------------------|
 | Jellyfin        | 8096  | `jellyfin.<domain>`       | `inputs.arr-packages` build         |
-| qBittorrent     | 8081  | `qb.<domain>`             | via nixarr                          |
+| qBittorrent     | 8081  | `qb.<domain>`             | via nixarr; WebUI `admin` + sops `qbittorrent_password` (PBKDF2 injected at start), no localhost bypass |
 | Sonarr          | 8990  | `sonarr.<domain>`         | TV — native `services.sonarr`, Postgres backend |
 | Radarr          | 7878  | `radarr.<domain>`         | Movies — native `services.radarr`, Postgres backend |
 | Prowlarr        | 9696  | `prowlarr.<domain>`       | Indexer — native `services.prowlarr`, Postgres backend |
